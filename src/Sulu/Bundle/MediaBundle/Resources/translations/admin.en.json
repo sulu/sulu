@@ -79,6 +79,8 @@
     "sulu_media.point": "Point",
     "sulu_media.rectangle": "Rectangle",
     "sulu_media.parent_collection": "Parent Collection",
+    "sulu_media.delete_collection_dependant_warning_title": "{1}Delete one subelement?|]1,Inf[Delete %count% subelements?",
+    "sulu_media.delete_collection_dependant_warning_detail": "{1}Are you sure that you also want to delete one subcollection or media?|]1,Inf[Are you sure that you also want to delete %count% subcollection or media?",
     "sulu_activity.resource.collections": "Collection",
     "sulu_activity.description.collections.created": "{userFullName} has created the collection \"{resourceTitle}\"",
     "sulu_activity.description.collections.modified": "{userFullName} has changed the collection \"{resourceTitle}\"",

@@ -1590,6 +1590,8 @@ class CategoryControllerTest extends SuluTestCase
                 'id' => $category1Id,
                 'resourceKey' => 'categories',
             ],
+            'title' => 'Delete 3 subcategories?',
+            'detail' => 'Are you sure that you also want to delete 3 subcategories?',
         ], $content);
     }
 

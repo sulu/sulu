@@ -39,7 +39,11 @@ Array [
         <header
           class="header"
         >
-          sulu_admin.delete_linked_warning_title
+          <span
+            class="headerItem"
+          >
+            sulu_admin.delete_linked_warning_title
+          </span>
         </header>
         <article
           class="article center"
@@ -123,7 +127,11 @@ Array [
         <header
           class="header"
         >
-          sulu_admin.item_not_deletable
+          <span
+            class="headerItem"
+          >
+            sulu_admin.item_not_deletable
+          </span>
         </header>
         <article
           class="article center"

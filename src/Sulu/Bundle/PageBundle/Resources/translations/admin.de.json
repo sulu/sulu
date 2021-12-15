@@ -63,6 +63,8 @@
     "sulu_page.add_schedule": "Zeitfenster hinzufügen",
     "sulu_page.schedules_label": "Zeitfenster zuweisen",
     "sulu_page.schedules_description": "Der Block wird nur angezeigt, wenn mindestens einer der Bedingungen erfüllt wird.",
+    "sulu_page.delete_page_dependant_warning_title": "{1}Eine Unterseite löschen?|]1,Inf[%count% Unterseiten löschen?",
+    "sulu_page.delete_page_dependant_warning_detail": "{1}Sind Sie sich sicher, dass Sie zusätzlich eine Unterseiten löschen möchten?|]1,Inf[Sind Sie sich sicher, dass Sie zusätzlich %count% Unterseiten löschen möchten?",
     "sulu_activity.resource.pages": "Seite",
     "sulu_activity.resource.pages.translation": "Übersetzung",
     "sulu_activity.description.pages.created": "{userFullName} hat die Seite \"{resourceTitle}\" erstellt",

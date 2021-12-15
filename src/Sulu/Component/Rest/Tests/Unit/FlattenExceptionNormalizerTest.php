@@ -12,8 +12,8 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 
 use PHPUnit\Framework\TestCase;
-use Sulu\Component\Rest\Exception\DependantResourcesFoundException;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundException;
+use Sulu\Component\Rest\Exception\RemoveDependantResourcesFoundException;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Sulu\Component\Rest\FlattenExceptionNormalizer;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
@@ -168,7 +168,7 @@ class FlattenExceptionNormalizerTest extends TestCase
             $translator->reveal()
         );
 
-        $exception = new DependantResourcesFoundException(
+        $exception = new RemoveDependantResourcesFoundException(
             ['id' => 1, 'resourceKey' => 'collections'],
             [
                 [
@@ -222,7 +222,7 @@ class FlattenExceptionNormalizerTest extends TestCase
             $translator->reveal()
         );
 
-        $exception = new DependantResourcesFoundException(
+        $exception = new RemoveDependantResourcesFoundException(
             ['id' => 1, 'resourceKey' => 'collections'],
             [
                 [

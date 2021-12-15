@@ -31,6 +31,14 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
 
     promises: Array<RequestPromise<any>> = [];
 
+    @computed get title(): string {
+        return this.props.dependantResourcesData.title;
+    }
+
+    @computed get detail(): string {
+        return this.props.dependantResourcesData.detail;
+    }
+
     @computed get dependantResourceBatches(): DependantResourceBatches {
         return this.props.dependantResourcesData.dependantResourceBatches;
     }
@@ -183,15 +191,11 @@ class DeleteDependantResourcesDialog extends React.Component<Props> {
                 open={!this.closed}
                 snackbarMessage={this.snackbarMessage}
                 snackbarType={this.snackbarType}
-                title={translate('sulu_admin.delete_dependants_warning_title', {
-                    count: this.dependantResourcesCount,
-                })}
+                title={this.title}
             >
                 {!this.inProgress && !this.finished && !this.errored && (
                     <p>
-                        {translate('sulu_admin.delete_dependants_warning', {
-                            count: this.dependantResourcesCount,
-                        })}
+                        {this.detail}
                     </p>
                 )}
 

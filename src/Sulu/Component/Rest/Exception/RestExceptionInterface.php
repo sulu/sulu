@@ -46,7 +46,7 @@ interface RestExceptionInterface extends \Throwable
     public const EXCEPTION_CODE_INSUFFICIENT_DESCENDANT_PERMISSIONS = 1104;
 
     /**
-     * @see DependantResourcesFoundExceptionInterface
+     * @see RemoveDependantResourcesFoundExceptionInterface
      *
      * @var int
      */

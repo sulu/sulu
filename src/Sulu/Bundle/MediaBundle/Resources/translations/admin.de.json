@@ -79,6 +79,8 @@
     "sulu_media.point": "Punkt",
     "sulu_media.rectangle": "Rechteck",
     "sulu_media.parent_collection": "Elternkollektion",
+    "sulu_media.delete_collection_dependant_warning_title": "{1}Ein Unterelement löschen?|]1,Inf[%count% Unterelemente löschen?",
+    "sulu_media.delete_collection_dependant_warning_detail": "{1}Sind Sie sich sicher, dass Sie zusätzlich einen Unterordner oder ein Medium löschen möchten?|]1,Inf[Sind Sie sich sicher, dass Sie zusätzlich %count% Unterordner beziehungsweise Medien löschen möchten?",
     "sulu_activity.resource.collections": "Ordner",
     "sulu_activity.description.collections.created": "{userFullName} hat den Ordner \"{resourceTitle}\" erstellt",
     "sulu_activity.description.collections.modified": "{userFullName} hat den Ordner \"{resourceTitle}\" geändert",

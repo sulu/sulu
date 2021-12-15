@@ -1329,6 +1329,8 @@ class CollectionControllerTest extends SuluTestCase
                     ],
                 ],
             ],
+            'title' => 'Delete 7 subelements?',
+            'detail' => 'Are you sure that you also want to delete 7 subcollection or media?',
         ], $content);
     }
 

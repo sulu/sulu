@@ -289,6 +289,8 @@ class List extends React.Component<Props> {
                 this.dependantResourcesData = {
                     dependantResourceBatches: data.dependantResourceBatches,
                     dependantResourcesCount: data.dependantResourcesCount,
+                    detail: data.detail,
+                    title: data.title,
                 };
 
                 const promise: Promise<ResolveDeleteArgument> = new Promise(

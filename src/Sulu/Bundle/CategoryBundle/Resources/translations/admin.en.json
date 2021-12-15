@@ -11,6 +11,8 @@
     "sulu_category.no_category_selected": "No category selected",
     "sulu_category.single_category_selection_overlay_title": "Choose category",
     "sulu_category.key_assigned_to_other_category": "The key \"{key}\" is already assigned to another category.",
+    "sulu_category.delete_category_dependant_warning_title": "{1}Delete one subcategory?|]1,Inf[Delete %count% subcategories?",
+    "sulu_category.delete_category_dependant_warning_detail": "{1}Are you sure that you also want to delete one subcategory?|]1,Inf[Are you sure that you also want to delete %count% subcategories?",
     "sulu_activity.resource.categories": "Category",
     "sulu_activity.description.categories.created": "{userFullName} has created the category \"{resourceTitle}\"",
     "sulu_activity.description.categories.modified": "{userFullName} has changed the category \"{resourceTitle}\"",

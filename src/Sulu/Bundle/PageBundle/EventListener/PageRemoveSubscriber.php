@@ -17,13 +17,13 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\Query\RowInterface;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
+use Sulu\Bundle\PageBundle\Domain\Exception\RemovePageDependantResourcesFoundException;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Sulu\Component\Rest\Exception\DependantResourcesFoundException;
 use Sulu\Component\Rest\Exception\InsufficientDescendantPermissionsException;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlRepositoryInterface;
@@ -167,7 +167,7 @@ class PageRemoveSubscriber implements EventSubscriberInterface
         }
 
         if (!empty($descendantPages)) {
-            throw new DependantResourcesFoundException(
+            throw new RemovePageDependantResourcesFoundException(
                 [
                     'id' => $document->getUuid(),
                     'resourceKey' => PageDocument::RESOURCE_KEY,

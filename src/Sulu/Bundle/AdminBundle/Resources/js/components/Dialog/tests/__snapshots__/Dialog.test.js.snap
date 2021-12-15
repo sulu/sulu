@@ -39,7 +39,11 @@ Array [
         <header
           class="header"
         >
-          My dialog title
+          <span
+            class="headerItem"
+          >
+            My dialog title
+          </span>
         </header>
         <article
           class="article center"
