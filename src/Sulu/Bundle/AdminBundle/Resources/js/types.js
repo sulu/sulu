@@ -19,6 +19,8 @@ export type DependantResourceBatches = Resource[][];
 export type DependantResourcesData = {
     dependantResourceBatches: DependantResourceBatches,
     dependantResourcesCount: number,
+    detail: string,
+    title: string,
 };
 
 export type ReferencingResourcesData = {

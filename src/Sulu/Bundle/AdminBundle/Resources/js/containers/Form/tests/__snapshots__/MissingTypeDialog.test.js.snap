@@ -39,7 +39,11 @@ Array [
         <header
           class="header"
         >
-          sulu_admin.missing_type_dialog_title
+          <span
+            class="headerItem"
+          >
+            sulu_admin.missing_type_dialog_title
+          </span>
         </header>
         <article
           class="article left"

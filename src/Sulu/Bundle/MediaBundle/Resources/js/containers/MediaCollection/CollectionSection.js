@@ -175,6 +175,8 @@ class CollectionSection extends React.Component<Props> {
                             this.dependantResourcesData = {
                                 dependantResourceBatches: data.dependantResourceBatches,
                                 dependantResourcesCount: data.dependantResourcesCount,
+                                detail: data.detail,
+                                title: data.title,
                             };
 
                             return;

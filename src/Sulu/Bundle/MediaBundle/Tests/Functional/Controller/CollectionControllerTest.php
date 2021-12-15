@@ -1329,6 +1329,8 @@ class CollectionControllerTest extends SuluTestCase
                     ],
                 ],
             ],
+            'title' => 'Delete 7 additional collection or media',
+            'detail' => 'Are you sure, that you want to delete 7 additional collection or media?',
         ], $content);
     }
 

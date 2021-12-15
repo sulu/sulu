@@ -15,5 +15,8 @@ interface TranslationErrorMessageExceptionInterface
 {
     public function getMessageTranslationKey(): string;
 
+    /**
+     * @return array<string, int|string>
+     */
     public function getMessageTranslationParameters(): array;
 }

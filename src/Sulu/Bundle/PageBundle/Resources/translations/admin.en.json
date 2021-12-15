@@ -63,6 +63,8 @@
     "sulu_page.add_schedule": "Add schedule",
     "sulu_page.schedules_label": "Assign time schedule",
     "sulu_page.schedules_description": "The block will only be visible if at least one condition is valid.",
+    "sulu_page.delete_page_warning_title": "{1}Delete one additional page|]1,Inf[Delete %count% additional pages",
+    "sulu_page.delete_page_warning": "{1}Are you sure, that you want to delete one additional page?|]1,Inf[Are you sure, that you want to delete %count% additional pages?",
     "sulu_activity.resource.pages": "Page",
     "sulu_activity.resource.pages.translation": "Translation",
     "sulu_activity.description.pages.created": "{userFullName} has created the page \"{resourceTitle}\"",

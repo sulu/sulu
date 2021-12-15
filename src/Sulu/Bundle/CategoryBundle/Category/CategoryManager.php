@@ -20,6 +20,7 @@ use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryModifiedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryMovedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRemovedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryTranslationAddedEvent;
+use Sulu\Bundle\CategoryBundle\Domain\Exception\RemoveCategoryDependantResourcesFoundException;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
@@ -33,7 +34,6 @@ use Sulu\Bundle\CategoryBundle\Exception\CategoryKeyNotUniqueException;
 use Sulu\Bundle\CategoryBundle\Exception\CategoryNameMissingException;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
-use Sulu\Component\Rest\Exception\DependantResourcesFoundException;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -303,7 +303,7 @@ class CategoryManager implements CategoryManagerInterface
             return;
         }
 
-        throw new DependantResourcesFoundException(
+        throw new RemoveCategoryDependantResourcesFoundException(
             [
                 'id' => $id,
                 'resourceKey' => CategoryInterface::RESOURCE_KEY,
