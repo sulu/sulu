@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Resolver;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\ContentTypeInterface;
@@ -30,17 +31,17 @@ class StructureResolverTest extends TestCase
     private $structureResolver;
 
     /**
-     * @var ContentTypeManagerInterface
+     * @var ObjectProphecy<ContentTypeManagerInterface>
      */
     private $contentTypeManager;
 
     /**
-     * @var ContentTypeInterface
+     * @var ObjectProphecy<ContentTypeInterface>
      */
     private $contentType;
 
     /**
-     * @var ExtensionManagerInterface
+     * @var ObjectProphecy<ExtensionManagerInterface>
      */
     private $extensionManager;
 
