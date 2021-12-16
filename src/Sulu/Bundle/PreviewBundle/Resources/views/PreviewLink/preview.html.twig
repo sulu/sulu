@@ -1,0 +1,9 @@
+{% extends '@SuluPreview/PreviewLink/base.html.twig' %}
+
+{% block content %}
+    <div class="public-preview__preview-container">
+        <div class="public-preview__iframe-container">
+            <iframe class="public-preview__iframe" src="{{ path('sulu_preview.public_render', {token: token}) }}"></iframe>
+        </div>
+    </div>
+{% endblock %}

@@ -15,12 +15,15 @@ use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 
 interface TrashManagerInterface
 {
-    public function store(string $resourceKey, object $object): TrashItemInterface;
+    /**
+     * @param array<string, mixed> $options
+     */
+    public function store(string $resourceKey, object $object, array $options = []): TrashItemInterface;
 
     /**
      * @param array<string, mixed> $restoreFormData
      */
-    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object;
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object;
 
     public function remove(TrashItemInterface $trashItem): void;
 }

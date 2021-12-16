@@ -63,7 +63,7 @@ EOT
         );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $purge = $input->getOption('purge');
         $force = $input->getOption('force');

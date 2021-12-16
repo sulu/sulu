@@ -19,5 +19,6 @@
     "sulu_activity.description.custom_urls.created": "{userFullName} hat die benutzerdefinierte URL \"{resourceTitle}\" erstellt",
     "sulu_activity.description.custom_urls.modified": "{userFullName} hat die benutzerdefinierte URL \"{resourceTitle}\" geändert",
     "sulu_activity.description.custom_urls.removed": "{userFullName} hat die benutzerdefinierte URL \"{resourceTitle}\" gelöscht",
+    "sulu_activity.description.custom_urls.restored": "{userFullName} hat die benutzerdefinierte URL \"{resourceTitle}\" wiederhergestellt",
     "sulu_activity.description.custom_urls.route_removed": "{userFullName} hat eine Route von der benutzerdefinierten URL \"{resourceTitle}\" gelöscht"
 }

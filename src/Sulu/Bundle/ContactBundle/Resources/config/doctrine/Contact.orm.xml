@@ -39,7 +39,9 @@
             <cascade><cascade-persist/></cascade>
         </one-to-many>
 
-        <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact" mapped-by="contact"/>
+        <one-to-many field="accountContacts" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountContact" mapped-by="contact">
+            <cascade><cascade-persist/></cascade>
+        </one-to-many>
 
         <many-to-one field="avatar" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface">
             <join-columns>

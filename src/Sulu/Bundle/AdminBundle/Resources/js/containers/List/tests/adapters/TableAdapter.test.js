@@ -225,18 +225,22 @@ test('Render data with skin', () => {
 test('Render data with shrunken cell', () => {
     const data = [
         {
+            id: 1,
             title: '1',
             description: 'planned',
         },
         {
+            id: 2,
             title: '2',
             description: 'running',
         },
         {
+            id: 3,
             title: '3',
             description: 'succeeded',
         },
         {
+            id: 4,
             title: '4',
             description: 'failed',
         },

@@ -11,9 +11,12 @@
 
 namespace Sulu\Bundle\CustomUrlBundle\Tests\Functional\Controller;
 
+use Doctrine\Persistence\ObjectRepository;
+use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\DocumentManagerBundle\Slugifier\Urlizer;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -23,6 +26,16 @@ class CustomUrlControllerTest extends SuluTestCase
      * @var DocumentManagerInterface
      */
     private $documentManager;
+
+    /**
+     * @var ObjectRepository<ActivityInterface>
+     */
+    private $activityRepository;
+
+    /**
+     * @var ObjectRepository<TrashItemInterface>
+     */
+    private $trashItemRepository;
 
     /**
      * @var PageDocument
@@ -39,6 +52,8 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->client = $this->createAuthenticatedClient();
         $this->initPhpcr();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->activityRepository = $this->getEntityManager()->getRepository(ActivityInterface::class);
+        $this->trashItemRepository = $this->getEntityManager()->getRepository(TrashItemInterface::class);
         $this->contentDocument = $this->documentManager->find('/cmf/sulu_io/contents', 'en');
     }
 
@@ -602,6 +617,7 @@ class CustomUrlControllerTest extends SuluTestCase
             $this->assertArrayNotHasKey('targetTitle', $responseData);
         }
         $this->assertEquals($url, $responseData['customUrl']);
+        $this->assertEquals('sulu_io', $responseData['webspace']);
     }
 
     public function cgetProvider()
@@ -684,13 +700,17 @@ class CustomUrlControllerTest extends SuluTestCase
     {
         $uuid = $this->testPost($data, $url);
 
-        $this->client->jsonRequest('DELETE', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
+        static::assertNull($this->activityRepository->findOneBy(['resourceId' => $uuid, 'type' => 'removed']));
+        static::assertNull($this->trashItemRepository->findOneBy(['resourceId' => $uuid]));
 
+        $this->client->jsonRequest('DELETE', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(204, $response);
 
-        $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
+        static::assertNotNull($this->activityRepository->findOneBy(['resourceId' => $uuid, 'type' => 'removed']));
+        static::assertNotNull($this->trashItemRepository->findOneBy(['resourceId' => $uuid]));
 
+        $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(404, $response);
     }

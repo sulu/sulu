@@ -647,6 +647,7 @@ class PreviewRendererTest extends TestCase
 
                     $this->assertTrue($request->attributes->get('preview'));
                     $this->assertTrue($request->attributes->get('partial'));
+                    $this->assertSame(['noIndex' => true, 'noFollow' => true], $request->attributes->get('_seo'));
                     $this->assertEquals('sulu-preview-test.io', $requestAttributes->getAttribute('host'));
                     $this->assertEquals(8080, $requestAttributes->getAttribute('port'));
                     $this->assertEqualsWithDelta(new \DateTime(), $requestAttributes->getAttribute('dateTime'), 1);

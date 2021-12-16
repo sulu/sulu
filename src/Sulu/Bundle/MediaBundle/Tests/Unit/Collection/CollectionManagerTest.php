@@ -26,6 +26,7 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
 class CollectionManagerTest extends TestCase
@@ -61,6 +62,11 @@ class CollectionManagerTest extends TestCase
     private $domainEventCollector;
 
     /**
+     * @var TrashManagerInterface|ObjectProphecy
+     */
+    private $trashManager;
+
+    /**
      * @var CollectionManagerInterface
      */
     private $collectionManager;
@@ -73,6 +79,7 @@ class CollectionManagerTest extends TestCase
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
         $this->entityManager = $this->prophesize(EntityManager::class);
         $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
+        $this->trashManager = $this->prophesize(TrashManagerInterface::class);
 
         $this->collectionManager = new CollectionManager(
             $this->collectionRepository->reveal(),
@@ -82,6 +89,7 @@ class CollectionManagerTest extends TestCase
             $this->entityManager->reveal(),
             $this->domainEventCollector->reveal(),
             null,
+            $this->trashManager->reveal(),
             'sulu-50x50',
             ['view' => 64]
         );

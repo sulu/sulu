@@ -53,10 +53,10 @@ class WebspaceImportCommand extends Command
             ->addOption('uuid', 'u', InputOption::VALUE_REQUIRED)
             ->addOption('exportSuluVersion', '', InputOption::VALUE_OPTIONAL, '1.2 or 1.3', '1.3')
             ->addOption('overrideSettings', 'o', InputOption::VALUE_OPTIONAL, 'Override Settings-Tab', 'false')
-            ->setDescription('Import webspace');
+            ->setDescription('Import webspace page translations from xliff file into a specific language.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $webspaceKey = $input->getArgument('webspace');
         $filePath = $input->getArgument('file');
@@ -112,7 +112,7 @@ class WebspaceImportCommand extends Command
 
         $this->printExceptions($import, $output);
 
-        return $import->fails;
+        return (int) $import->fails;
     }
 
     /**

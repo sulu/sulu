@@ -153,7 +153,7 @@ class Webspace implements ArrayableInterface
             $this->setDefaultLocalization($localization);
         }
 
-        if ($localization->isXDefault()) {
+        if ($localization->isXDefault(false)) {
             $this->xDefaultLocalization = $localization;
         }
     }

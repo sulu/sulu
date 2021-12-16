@@ -1,0 +1,98 @@
+@import 'preview.scss';
+@import 'sulu-admin-bundle/components/Toolbar/variables.scss';
+@import 'sulu-admin-bundle/components/Toolbar/button.scss';
+@import 'sulu-admin-bundle/components/Toolbar/items.scss';
+
+:global {
+    .public-preview {
+        height: 100%;
+
+        &__404-message {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            text-align: center;
+
+            h1 {
+                font-size: 28px;
+            }
+
+            h2 {
+                font-size: 14px;
+            }
+
+            header {
+                font-size: 60px;
+                margin-bottom: 40px;
+            }
+        }
+
+        &__iframe {
+            flex-shrink: 0;
+            margin: auto;
+            border: 0;
+            background-color: $white;
+            overflow: auto;
+            width: 100%;
+            height: 100%;
+        }
+
+        &__iframe-container {
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            height: 100%;
+            width: 100%;
+            overflow: auto;
+        }
+
+        &__preview-container {
+            height: calc(100% - $toolbarHeight);
+            overflow: auto;
+        }
+
+        &__toolbar {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            height: $toolbarHeight;
+            margin: 0;
+            box-shadow: 2px 6px 12px 0 rgba($shadowColor, .5);
+        }
+
+        &__toolbar--dark {
+            background: $toolbarBackgroundDarkColor;
+        }
+
+        &__toolbar-controls {
+            display: flex;
+        }
+
+        &__toolbar-button {
+            display: block;
+            text-decoration: none;
+            line-height: 60px;
+            min-width: 60px;
+            position: relative;
+            padding: 0 20px;
+            border: none;
+            height: 60px;
+            font-size: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            color: $buttonTextDarkColor;
+            background-color: $itemsBackgroundDarkColor;
+            border-right: $itemsContainerBorderDark;
+
+            &:not(:disabled) {
+                &:hover,
+                &.active {
+                    color: $buttonTextDarkColorActive;
+                    background-color: $buttonActiveBackgroundDarkColor;
+                }
+            }
+        }
+    }
+}

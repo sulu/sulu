@@ -5,7 +5,7 @@ import formatStore from '../../../stores/formatStore';
 import MediaFormatStore from '../../../stores/MediaFormatStore';
 import CropOverlay from '../CropOverlay';
 
-jest.mock('sulu-admin-bundle/utils', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 

@@ -16,6 +16,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Snippet\Export\SnippetExportInterface;
 
 /**
  * Tests for the Webspace Export class.
@@ -122,22 +123,5 @@ class SnippetTest extends SuluTestCase
                 ],
             ],
         ];
-    }
-
-    /**
-     * Creates and returns a property-array.
-     *
-     * @param PropertyValue $propertyValue
-     *
-     * @return array
-     */
-    protected function getPropertyData(PropertyMetadata $property, $propertyValue)
-    {
-        return $this->createProperty(
-            $property->getName(),
-            $this->exportManager->export($property->getType(), $propertyValue),
-            $this->exportManager->getOptions($property->getType(), $this->format),
-            $property->getType()
-        );
     }
 }

@@ -78,7 +78,7 @@ final class TagTrashItemHandler implements
     /**
      * @param TagInterface $tag
      */
-    public function store(object $tag): TrashItemInterface
+    public function store(object $tag, array $options = []): TrashItemInterface
     {
         Assert::isInstanceOf($tag, TagInterface::class);
 
@@ -87,19 +87,21 @@ final class TagTrashItemHandler implements
         return $this->trashItemRepository->create(
             TagInterface::RESOURCE_KEY,
             (string) $tag->getId(),
+            $tag->getName(),
             [
                 'name' => $tag->getName(),
                 'created' => $tag->getCreated()->format('c'),
                 'creatorId' => $creator ? $creator->getId() : null,
             ],
-            $tag->getName(),
+            null,
+            $options,
             TagAdmin::SECURITY_CONTEXT,
             null,
             null
         );
     }
 
-    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
         $id = (int) $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();

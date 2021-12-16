@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Controller;
 
-use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancer;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancerInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Preview;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
@@ -104,6 +103,11 @@ abstract class WebsiteController extends AbstractController
 
     /**
      * Generates attributes.
+     *
+     * @param mixed[] $attributes
+     * @param bool $preview
+     *
+     * @return mixed[]
      */
     protected function getAttributes($attributes, StructureInterface $structure = null, $preview = false)
     {
@@ -162,13 +166,13 @@ abstract class WebsiteController extends AbstractController
         return $this->get('request_stack')->getCurrentRequest();
     }
 
-    protected function getCacheTimeLifeEnhancer(): ?CacheLifetimeEnhancer
+    protected function getCacheTimeLifeEnhancer(): ?CacheLifetimeEnhancerInterface
     {
         if (!$this->has('sulu_http_cache.cache_lifetime.enhancer')) {
             return null;
         }
 
-        /** @var CacheLifetimeEnhancer $cacheLifetimeEnhancer */
+        /** @var CacheLifetimeEnhancerInterface $cacheLifetimeEnhancer */
         $cacheLifetimeEnhancer = $this->get('sulu_http_cache.cache_lifetime.enhancer');
 
         return $cacheLifetimeEnhancer;

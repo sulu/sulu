@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\RouteBundle\Tests\Unit\Generator;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Sulu\Bundle\RouteBundle\Generator\CannotEvaluateTokenException;
 use Sulu\Bundle\RouteBundle\Generator\SymfonyExpressionTokenProvider;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
@@ -40,7 +41,7 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $translator = $this->prophesize(Translator::class);
         $translator->getLocale()->willReturn('de');
         $translator->setLocale('de')->shouldBeCalled();
-        $translator->trans('test-key')->willReturn('TEST');
+        $translator->trans('test-key', Argument::cetera())->willReturn('TEST');
         $entity = $this->prophesize(RoutableInterface::class);
         $entity->getLocale()->willReturn('en');
 
@@ -73,7 +74,7 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $translator->getLocale()->willReturn('de');
         $translator->setLocale('de')->shouldBeCalled();
         $translator->setLocale('es')->shouldBeCalled();
-        $translator->trans('test-key')->willReturn('TEST');
+        $translator->trans('test-key', Argument::cetera())->willReturn('TEST');
 
         $entity = [
             'title',
@@ -119,5 +120,22 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $entity = new \stdClass();
         $provider = new SymfonyExpressionTokenProvider($translator->reveal());
         $provider->provide($entity, 'object.title');
+    }
+
+    public function testResolveTranslationAddResource(): void
+    {
+        $this->expectException(CannotEvaluateTokenException::class);
+
+        $translator = $this->prophesize(Translator::class);
+        $translator->getLocale()->willReturn('de');
+        $translator->setLocale('de')->shouldBeCalled();
+        $entity = $this->prophesize(RoutableInterface::class);
+        $entity->getLocale()->willReturn('en');
+
+        $entity->getLocale = function() {
+            return 'en';
+        };
+        $provider = new SymfonyExpressionTokenProvider($translator->reveal());
+        $provider->provide($entity, 'translator.addResource("php", "/test.php")');
     }
 }

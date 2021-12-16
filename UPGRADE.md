@@ -53,6 +53,15 @@ A new method has been added to the `StorageInterface` to allow for moving files:
 
 - `move`
 
+### ContactInterface was changed
+
+Extends now from the `AuditableInterface`:
+
+- `getCreated`
+- `getChanged`
+- `getCreator`
+- `getChanger`
+
 ### MediaInterface was changed
 
 A new method has been added to the `MediaInterface`:
@@ -74,6 +83,10 @@ call to pass the correct parameters:
 - `Sulu\Bundle\TagBundle\Tag\TagManager`
 - `Sulu\Bundle\CategoryBundle\Category\CategoryManager`
 - `Sulu\Bundle\MediaBundle\Media\Manager\MediaManager`
+- `Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManager`
+- `Sulu\Bundle\ContactBundle\Contact\ContactManager`
+- `Sulu\Bundle\ContactBundle\Controller\AccountController`
+- `Sulu\Bundle\MediaBundle\Collection\CollectionManager`
 
 ### Added SuluTrashBundle to make resources trashable/restorable
 
@@ -88,10 +101,12 @@ to add the bundle to your `config/bundles.php` file:
 To update your database schema to include the tables that are used by the bundle, you need to execute the following SQL statements:
 
 ```sql
-CREATE TABLE tr_trash_items (id INT AUTO_INCREMENT NOT NULL, resourceKey VARCHAR(191) NOT NULL, resourceId VARCHAR(191) NOT NULL, restoreData JSON NOT NULL, resourceSecurityContext VARCHAR(191) DEFAULT NULL, resourceSecurityObjectType VARCHAR(191) DEFAULT NULL, resourceSecurityObjectId VARCHAR(191) DEFAULT NULL, storeTimestamp DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', defaultLocale VARCHAR(191) DEFAULT NULL, userId INT DEFAULT NULL, INDEX IDX_102989B64B64DCC (userId), UNIQUE INDEX UNIQ_102989B5DAEB55C8CF57CB1 (resourceKey, resourceId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+CREATE TABLE tr_trash_items (id INT AUTO_INCREMENT NOT NULL, resourceKey VARCHAR(191) NOT NULL, resourceId VARCHAR(191) NOT NULL, restoreData JSON NOT NULL, resourceSecurityContext VARCHAR(191) DEFAULT NULL, resourceSecurityObjectType VARCHAR(191) DEFAULT NULL, resourceSecurityObjectId VARCHAR(191) DEFAULT NULL, storeTimestamp DATETIME NOT NULL COMMENT '(DC2Type:datetime_immutable)', defaultLocale VARCHAR(191) DEFAULT NULL, userId INT DEFAULT NULL, INDEX IDX_102989B64B64DCC (userId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+ALTER TABLE tr_trash_items ADD restoreType VARCHAR(191) DEFAULT NULL, ADD restoreOptions JSON NOT NULL;
 CREATE TABLE tr_trash_item_translations (id INT AUTO_INCREMENT NOT NULL, locale VARCHAR(191) DEFAULT NULL, title VARCHAR(191) NOT NULL, trashItemId INT NOT NULL, INDEX IDX_8264DAF45C8D7CA (trashItemId), UNIQUE INDEX UNIQ_8264DAF45C8D7CA4180C698 (trashItemId, locale), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 ALTER TABLE tr_trash_items ADD CONSTRAINT FK_102989B64B64DCC FOREIGN KEY (userId) REFERENCES se_users (id) ON DELETE SET NULL;
 ALTER TABLE tr_trash_item_translations ADD CONSTRAINT FK_8264DAF45C8D7CA FOREIGN KEY (trashItemId) REFERENCES tr_trash_items (id) ON DELETE CASCADE;
+ALTER TABLE tr_trash_items ADD INDEX IDX_102989B5DAEB55C8CF57CB1 (resourceKey, resourceId);
 ```
 
 > For MYSQL 5.6 and lower, the `JSON` type of the `restoreData` column must be replaced with `TEXT`. See the [doctrine/dbal type](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/types.html#json) documentation.
@@ -141,6 +156,51 @@ Two new methods have been added to the `CollectionManagerInterface`:
 
 - `findDescendantCollectionResources`
 - `countUnauthorizedDescendantCollections`
+
+## 2.3.7
+
+### Add missing `kernel.reset` tag for document manager cache services
+
+The configured `doctrine_phpcr.meta_cache_provider` and `doctrine_phpcr.nodes_cache_provider`
+in the `config/packages/prod/sulu_document_manager.yaml` should be tagged with `kernel.reset`
+to be correctly be reseted:
+
+```diff
+# config/packages/prod/sulu_document_manager.yaml
+
+# ...
+
+services:
+    doctrine_phpcr.meta_cache_provider:
+        class: Symfony\Component\Cache\DoctrineProvider
+        public: false
+        arguments:
+            - '@doctrine_phpcr.meta_cache_pool'
++        tags:
++            - { name: 'kernel.reset', method: 'reset' }
+
+    doctrine_phpcr.nodes_cache_provider:
+        class: Symfony\Component\Cache\DoctrineProvider
+        public: false
+        arguments:
+            - '@doctrine_phpcr.nodes_cache_pool'
++        tags:
++            - { name: 'kernel.reset', method: 'reset' }
+
+# ...
+```
+
+### Add missing on delete cascade on CategoryTranslation to Keyword relation
+
+The relation table `ca_category_translation_keywords` is missing a `ON DELETE CASCADE`
+to the related entities.
+
+```sql
+ALTER TABLE ca_category_translation_keywords DROP FOREIGN KEY FK_D15FBE3717CA14DA;
+ALTER TABLE ca_category_translation_keywords DROP FOREIGN KEY FK_D15FBE37F9FC9F05;
+ALTER TABLE ca_category_translation_keywords ADD CONSTRAINT FK_D15FBE3717CA14DA FOREIGN KEY (idCategoryTranslations) REFERENCES ca_category_translations (id) ON DELETE CASCADE;
+ALTER TABLE ca_category_translation_keywords ADD CONSTRAINT FK_D15FBE37F9FC9F05 FOREIGN KEY (idKeywords) REFERENCES ca_keywords (id) ON DELETE CASCADE;
+```
 
 ## 2.3.6
 
@@ -541,6 +601,51 @@ parameter. This makes the available parameters consistent to the `RouteManagerIn
 If you have implemented this interface in your project, you need to add the parameter to the 
 `createOrUpdateByAttributes` method of your implementation.
 
+## 2.2.17
+
+### Add missing `kernel.reset` tag for document manager cache services
+
+The configured `doctrine_phpcr.meta_cache_provider` and `doctrine_phpcr.nodes_cache_provider`
+in the `config/packages/prod/sulu_document_manager.yaml` should be tagged with `kernel.reset`
+to be correctly be reseted:
+
+```diff
+# config/packages/prod/sulu_document_manager.yaml
+
+# ...
+
+services:
+    doctrine_phpcr.meta_cache_provider:
+        class: Symfony\Component\Cache\DoctrineProvider
+        public: false
+        arguments:
+            - '@doctrine_phpcr.meta_cache_pool'
++        tags:
++            - { name: 'kernel.reset', method: 'reset' }
+
+    doctrine_phpcr.nodes_cache_provider:
+        class: Symfony\Component\Cache\DoctrineProvider
+        public: false
+        arguments:
+            - '@doctrine_phpcr.nodes_cache_pool'
++        tags:
++            - { name: 'kernel.reset', method: 'reset' }
+
+# ...
+```
+
+### Add missing on delete cascade on CategoryTranslation to Keyword relation
+
+The relation table `ca_category_translation_keywords` is missing a `ON DELETE CASCADE`
+to the related entities.
+
+```sql
+ALTER TABLE ca_category_translation_keywords DROP FOREIGN KEY FK_D15FBE3717CA14DA;
+ALTER TABLE ca_category_translation_keywords DROP FOREIGN KEY FK_D15FBE37F9FC9F05;
+ALTER TABLE ca_category_translation_keywords ADD CONSTRAINT FK_D15FBE3717CA14DA FOREIGN KEY (idCategoryTranslations) REFERENCES ca_category_translations (id) ON DELETE CASCADE;
+ALTER TABLE ca_category_translation_keywords ADD CONSTRAINT FK_D15FBE37F9FC9F05 FOREIGN KEY (idKeywords) REFERENCES ca_keywords (id) ON DELETE CASCADE;
+```
+
 ## 2.2.15
 
 ### Add doctrine/dbal 3 and doctrine/orm 2.10 support
@@ -548,11 +653,11 @@ If you have implemented this interface in your project, you need to add the para
 The doctrine/orm 2.10 did remove the deprecated `json_array` type which need to be patched to `json` type.
 
 ```sql
-ALTER TABLE se_role_settings CHANGE value value JSON NOT NULL;
-ALTER TABLE we_analytics CHANGE content content JSON NOT NULL;
+ALTER TABLE se_role_settings CHANGE `value` `value` JSON NOT NULL;
+ALTER TABLE we_analytics CHANGE `content` `content` JSON NOT NULL;
 
 -- if you use audience targeting also the following is required:
-ALTER TABLE at_target_group_conditions CHANGE condition condition JSON NOT NULL
+ALTER TABLE at_target_group_conditions CHANGE `condition` `condition` JSON NOT NULL
 ```
 
 If you upgrade doctrine/dbal to Version 3 see the [DBAL 3.0 UPGRADE.md](https://github.com/doctrine/dbal/blob/3.1.x/UPGRADE.md#upgrade-to-30).

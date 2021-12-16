@@ -25,6 +25,7 @@ use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandler
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
+use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\DocumentManager\DocumentAccessor;
@@ -72,7 +73,7 @@ final class PageTrashItemHandler implements
     /**
      * @param PageDocument $page
      */
-    public function store(object $page): TrashItemInterface
+    public function store(object $page, array $options = []): TrashItemInterface
     {
         Assert::isInstanceOf($page, BasePageDocument::class);
 
@@ -87,8 +88,11 @@ final class PageTrashItemHandler implements
             $data['parentUuid'] = $parent->getUuid();
         }
 
+        $restoreType = isset($options['locale']) ? 'translation' : null;
+        $locales = isset($options['locale']) ? [$options['locale']] : $this->documentInspector->getLocales($page);
+
         /** @var string $locale */
-        foreach ($this->documentInspector->getLocales($page) as $locale) {
+        foreach ($locales as $locale) {
             /** @var BasePageDocument $localizedPage */
             $localizedPage = $this->documentManager->find($page->getUuid(), $locale);
             /** @var BasePageDocument|null $redirectTarget */
@@ -125,15 +129,17 @@ final class PageTrashItemHandler implements
         return $this->trashItemRepository->create(
             BasePageDocument::RESOURCE_KEY,
             (string) $page->getUuid(),
-            $data,
             $pageTitles,
+            $data,
+            $restoreType,
+            $options,
             PageAdmin::getPageSecurityContext($page->getWebspaceName()),
             SecurityBehavior::class,
             (string) $page->getUuid()
         );
     }
 
-    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
         $uuid = $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();
@@ -158,7 +164,7 @@ final class PageTrashItemHandler implements
                 $localizedPage = $this->documentManager->find($uuid, $locale, ['load_ghost_content' => false]);
             } catch (DocumentNotFoundException $exception) {
                 /** @var PageDocument $localizedPage */
-                $localizedPage = $this->documentManager->create('page');
+                $localizedPage = $this->documentManager->create(Structure::TYPE_PAGE);
                 $localizedPage->setParent($this->documentManager->find($parentUuid));
 
                 $localizedPageAccessor = new DocumentAccessor($localizedPage);

@@ -15,6 +15,7 @@ use Doctrine\Common\Cache\CacheProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Cache\Memoize;
+use Sulu\Component\Cache\MemoizeInterface;
 
 class MemoizeTest extends TestCase
 {

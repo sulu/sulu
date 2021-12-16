@@ -331,7 +331,9 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     public function isXDefault()
     {
-        @\trigger_error(\sprintf('The "%s" method is deprecated on "%s" use "isDefault" instead.', __METHOD__, __CLASS__), \E_USER_DEPRECATED);
+        if (\func_num_args() < 1 || \func_get_arg(0)) {
+            @\trigger_error(\sprintf('The "%s" method is deprecated on "%s" use "isDefault" instead.', __METHOD__, __CLASS__), \E_USER_DEPRECATED);
+        }
 
         return $this->xDefault;
     }
@@ -386,6 +388,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
         return $this->getLocale();
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [
@@ -401,7 +404,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
         $res['language'] = $this->getLanguage();
         $res['localization'] = $this->getLocale();
         $res['default'] = $this->isDefault();
-        $res['xDefault'] = $this->isXDefault();
+        $res['xDefault'] = $this->isXDefault(false);
         $res['children'] = [];
 
         $children = $this->getChildren();

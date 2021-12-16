@@ -118,7 +118,7 @@ class ProfileController implements ClassResourceInterface
     {
         $this->checkArguments($request);
         $user = $this->tokenStorage->getToken()->getUser();
-        $this->userManager->save($request->request->all(), $request->get('locale'), $user->getId(), true);
+        $this->userManager->save($this->getData($request), $request->get('locale'), $user->getId(), true);
 
         $user->setFirstName($request->get('firstName'));
         $user->setLastName($request->get('lastName'));
@@ -230,5 +230,21 @@ class ProfileController implements ClassResourceInterface
         if (null === $request->get('locale')) {
             throw new MissingArgumentException($this->userClass, 'locale');
         }
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function getData(Request $request): array
+    {
+        $data = [];
+
+        foreach ($request->request->all() as $key => $value) {
+            if (\in_array($key, ['firstName', 'lastName', 'username', 'email', 'password', 'locale'], true)) {
+                $data[$key] = $value;
+            }
+        }
+
+        return $data;
     }
 }

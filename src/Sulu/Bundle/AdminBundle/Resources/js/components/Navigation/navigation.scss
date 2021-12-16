@@ -1,10 +1,12 @@
 @import './variables.scss';
 @import '../../containers/Application/colors.scss';
 
-$color: $white;
-$activeColor: $shakespeare;
+$color: $silver;
+$headerColor: $white;
+$activeColor: $wildSand;
 $backgroundColor: $pickledBluewood;
 $darkBackgroundColor: $ebonyClay;
+$hoverColor: $shakespeare;
 
 .navigation {
     width: $navigationWidth;
@@ -18,9 +20,10 @@ $darkBackgroundColor: $ebonyClay;
 }
 
 .header {
+    color: $headerColor;
     flex: 0 0 60px;
     height: 60px;
-    padding-inline: 20px;
+    padding: 0 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -29,19 +32,33 @@ $darkBackgroundColor: $ebonyClay;
 }
 
 .logo {
+    color: inherit;
     flex: 0 0 auto;
     display: block;
     font-size: 90px;
     line-height: 1;
+    text-decoration: none;
+    transform: translateY(2px); /* visual centering the logo */
 }
 
 .pin {
     flex: 0 0 auto;
     color: $color;
     cursor: pointer;
+    padding: 20px;
+    margin-right: -20px;
+    transition: .3s;
 
     &.active {
         color: $activeColor;
+
+        &:hover {
+            transform: rotateZ(180deg);
+        }
+    }
+
+    &:hover {
+        color: $hoverColor;
     }
 }
 

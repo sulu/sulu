@@ -20,7 +20,7 @@ jest.mock('sulu-admin-bundle/stores', () => ({
     ResourceStore: jest.fn(),
 }));
 
-jest.mock('sulu-admin-bundle/utils', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 

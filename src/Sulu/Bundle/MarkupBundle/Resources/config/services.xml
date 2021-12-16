@@ -27,7 +27,7 @@
         <service id="sulu_markup.response_listener" class="Sulu\Bundle\MarkupBundle\Listener\MarkupListener">
             <argument type="collection"/>
 
-            <tag name="kernel.event_listener" event="kernel.response" method="replaceMarkup" priority="-10"/>
+            <tag name="kernel.event_subscriber"/>
         </service>
 
         <service id="sulu_markup.swift_mailer_listener" class="Sulu\Bundle\MarkupBundle\Listener\SwiftMailerListener">

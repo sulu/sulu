@@ -169,6 +169,11 @@ class PreviewRenderer implements PreviewRendererInterface
             ]
         );
 
+        $attributes['_seo'] = [
+            'noIndex' => true,
+            'noFollow' => true,
+        ];
+
         // get server parameters
         $server = $this->createServerAttributes($portalInformation, $currentRequest);
 

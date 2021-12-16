@@ -32,15 +32,20 @@ class LocalizationFinder implements LocalizationFinderInterface
     public function findAvailableLocale($webspaceName, array $availableLocales, $locale)
     {
         if (!$webspaceName) {
-            return;
+            return null;
         }
 
         // get localization object for querying parent localizations
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceName);
+
+        if (!$webspace) {
+            return null;
+        }
+
         $localization = $webspace->getLocalization($locale);
 
         if (null === $localization) {
-            return;
+            return null;
         }
 
         $resultLocalization = null;
@@ -68,7 +73,7 @@ class LocalizationFinder implements LocalizationFinderInterface
         }
 
         if (!$resultLocalization) {
-            return;
+            return null;
         }
 
         return $resultLocalization->getLocale();
@@ -93,7 +98,7 @@ class LocalizationFinder implements LocalizationFinderInterface
             $localization = $localization->getParent();
         } while (null != $localization);
 
-        return;
+        return null;
     }
 
     /**
@@ -121,7 +126,7 @@ class LocalizationFinder implements LocalizationFinderInterface
         }
 
         // return null if nothing was found
-        return;
+        return null;
     }
 
     /**
@@ -150,6 +155,6 @@ class LocalizationFinder implements LocalizationFinderInterface
             }
         }
 
-        return;
+        return null;
     }
 }

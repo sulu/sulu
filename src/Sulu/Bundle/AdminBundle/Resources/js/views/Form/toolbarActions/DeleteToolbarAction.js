@@ -248,6 +248,8 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
                         this.dependantResourcesData = {
                             dependantResourceBatches: data.dependantResourceBatches,
                             dependantResourcesCount: data.dependantResourcesCount,
+                            detail: data.detail,
+                            title: data.title,
                         };
 
                         return;

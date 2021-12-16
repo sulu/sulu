@@ -11,6 +11,7 @@ import {ResourceListStore} from 'sulu-admin-bundle/stores';
 import {translate} from 'sulu-admin-bundle/utils';
 import {webspaceStore} from 'sulu-page-bundle/stores';
 import previewStyles from './preview.scss';
+import './public-preview.scss';
 import PreviewStore from './stores/PreviewStore';
 import PreviewLinkPopover from './PreviewLinkPopover';
 import type {PreviewMode} from './types';
@@ -415,7 +416,7 @@ class Preview extends React.Component<Props> {
                                 {translate('sulu_preview.reload')}
                             </Toolbar.Button>
                             <Toolbar.Popover
-                                icon="su-exchange"
+                                icon="su-share"
                                 label={translate('sulu_preview.preview_link')}
                             >
                                 {() => (

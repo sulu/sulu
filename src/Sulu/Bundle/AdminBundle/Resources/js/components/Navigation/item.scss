@@ -1,8 +1,9 @@
 @import '../../containers/Application/colors.scss';
 
-$color: $silver;
-$activeColor: $shakespeare;
+$color: $wildSand;
+$activeBorderColor: $shakespeare;
 $activeBackgroundColor: $ebonyClay;
+$hoverColor: $shakespeare;
 
 .item {
     font-size: 14px;
@@ -13,7 +14,7 @@ $activeBackgroundColor: $ebonyClay;
     position: relative;
 
     &.active {
-        border-left: 4px solid $activeColor;
+        border-left: 4px solid $activeBorderColor;
         background: $activeBackgroundColor;
         font-weight: bold;
         padding-left: 0;
@@ -26,7 +27,7 @@ $activeBackgroundColor: $ebonyClay;
         padding: 20px;
 
         &:hover {
-            color: $activeColor;
+            color: $hoverColor;
         }
 
         .icon {

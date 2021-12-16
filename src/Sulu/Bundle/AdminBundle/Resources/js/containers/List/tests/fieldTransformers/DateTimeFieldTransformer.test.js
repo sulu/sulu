@@ -15,7 +15,7 @@ jest.mock('loglevel', () => ({
     error: jest.fn(),
 }));
 
-jest.mock('../../../../utils', () => ({
+jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 

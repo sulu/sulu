@@ -24,6 +24,9 @@ jobs:
                     - node-version: '12'
                     - node-version: '14'
 
+        env:
+            COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
         steps:
             - name: Checkout project
               uses: actions/checkout@v2
@@ -76,6 +79,7 @@ jobs:
             MAILER_URL: null://localhost
             SULU_ADMIN_EMAIL:
             PHPCR_TRANSPORT: ${{ matrix.phpcr-transport }}
+            COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         strategy:
             fail-fast: false
@@ -86,7 +90,7 @@ jobs:
                       phpcr-transport: jackrabbit
                       dependency-versions: 'lowest'
                       php-extensions: 'ctype, iconv, mysql, gd'
-                      tools: 'composer:v1'
+                      tools: 'composer:v2'
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: disabled
                           DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/sulu_test?serverVersion=12.5
@@ -99,6 +103,19 @@ jobs:
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, imagick'
                       tools: 'composer:v2'
+                      env:
+                          SYMFONY_DEPRECATIONS_HELPER: weak
+                          DATABASE_URL: mysql://root:root@127.0.0.1:3306/sulu_test?serverVersion=5.7
+                          DATABASE_CHARSET: utf8mb4
+                          DATABASE_COLLATE: utf8mb4_unicode_ci
+
+                    - php-version: '8.1'
+                      database: mysql
+                      phpcr-transport: doctrinedbal
+                      dependency-versions: 'highest'
+                      php-extensions: 'ctype, iconv, mysql, imagick'
+                      tools: 'composer:v2'
+                      composer-stability: dev
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
                           DATABASE_URL: mysql://root:root@127.0.0.1:3306/sulu_test?serverVersion=5.7
@@ -148,6 +165,10 @@ jobs:
                   composer remove jackalope/jackalope-doctrine-dbal --dev --no-interaction --no-update
                   composer require jackalope/jackalope-jackrabbit:^1.4  --no-interaction --no-update
 
+            - name: Set composer stability
+              if: ${{ matrix.composer-stability }}
+              run: composer config minimum-stability ${{ matrix.composer-stability }}
+
             - name: Install composer dependencies
               uses: ramsey/composer-install@v1
               with:
@@ -170,6 +191,7 @@ jobs:
             APP_SECRET: a448d1dfcaa563fce56c2fd9981f662b
             MAILER_URL: null://localhost
             SULU_ADMIN_EMAIL:
+            COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         steps:
             - name: Checkout project
@@ -178,7 +200,7 @@ jobs:
             - name: Install and configure PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: '8.0'
+                  php-version: '8.1'
                   extensions: 'ctype, iconv, mysql, imagick'
                   tools: 'composer:v2'
                   coverage: none
@@ -202,6 +224,7 @@ jobs:
             SULU_ADMIN_EMAIL:
             DATABASE_URL: mysql://root:root@127.0.0.1:3306/sulu_test?serverVersion=${{ matrix.mysql-version }}
             PHPCR_TRANSPORT: ${{ matrix.phpcr-transport }}
+            COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         strategy:
             fail-fast: false

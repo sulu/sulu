@@ -22,6 +22,9 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
                 enable_target: {
                     value: enableTarget,
                 } = {},
+                enable_title: {
+                    value: enableTitle,
+                } = {},
                 types: {
                     value: unvalidatedTypes,
                 } = {},
@@ -61,11 +64,16 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
             throw new Error('The "target" schema option must be a boolean if given!');
         }
 
+        if (enableTitle !== undefined && enableTitle !== null && typeof enableTitle !== 'boolean') {
+            throw new Error('The "title" schema option must be a boolean if given!');
+        }
+
         return (
             <LinkContainer
                 disabled={!!disabled}
                 enableAnchor={enableAnchor}
                 enableTarget={enableTarget}
+                enableTitle={enableTitle}
                 locale={locale}
                 onChange={onChange}
                 onFinish={onFinish}

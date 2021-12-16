@@ -73,6 +73,7 @@ test('Pass correct props to MultiMediaSelection component', () => {
 
     expect(mediaSelection.find(MultiMediaSelection).props().displayOptions).toEqual([]);
     expect(mediaSelection.find(MultiMediaSelection).props().disabled).toEqual(true);
+    expect(mediaSelection.find(MultiMediaSelection).props().sortable).toEqual(true);
     expect(mediaSelection.find(MultiMediaSelection).props().locale.get()).toEqual('en');
     expect(mediaSelection.find(MultiMediaSelection).props().value).toEqual({ids: [55, 66, 77]});
 });
@@ -128,12 +129,16 @@ test('Set default display option if no value is passed', () => {
     expect(changeSpy).toBeCalledWith({displayOption: 'left', ids: []}, {'isDefaultValue': true});
 });
 
-test('Set types on MultiMediaSelection', () => {
+test('Pass correct props for given schema-options to MultiMediaSelection component', () => {
     const changeSpy = jest.fn();
     const schemaOptions = {
         types: {
             name: 'types',
             value: 'image,video',
+        },
+        sortable: {
+            name: 'sortable',
+            value: false,
         },
     };
 
@@ -154,6 +159,7 @@ test('Set types on MultiMediaSelection', () => {
     );
 
     expect(mediaSelection.find(MultiMediaSelection).props().types).toEqual(['image', 'video']);
+    expect(mediaSelection.find(MultiMediaSelection).props().sortable).toEqual(false);
 });
 
 test('Do not set default display option if value is passed', () => {
@@ -359,6 +365,23 @@ test('Should throw an error if displayOptions schemaOption is given but contains
             schemaOptions={{displayOptions: {name: 'displayOptions', value: [{name: 'test', value: true}]}}}
         />
     )).toThrow(/"test"/);
+});
+
+test('Should throw an error if types schemaOption is given but not an array', () => {
+    const formInspector = new FormInspector(
+        new ResourceFormStore(
+            new ResourceStore('test', undefined, {locale: observable.box('en')}),
+            'test'
+        )
+    );
+
+    expect(() => shallow(
+        <MediaSelection
+            {...fieldTypeDefaultProps}
+            formInspector={formInspector}
+            schemaOptions={{types: {name: 'types', value: true}}}
+        />
+    )).toThrow(/"types"/);
 });
 
 test('Should throw an error if types schemaOption is given but not an array', () => {

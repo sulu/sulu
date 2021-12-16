@@ -68,7 +68,7 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
 
             $result = $this->expressionLanguage->evaluate($name, [
                 'object' => $entity,
-                'translator' => $this->translator,
+                'translator' => new TranslatorWrapper($this->translator),
                 'locale' => $entityLocale,
             ]);
 

@@ -22,13 +22,13 @@ use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManagerInterface;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryMovedEvent;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryRemovedEvent;
+use Sulu\Bundle\CategoryBundle\Domain\Exception\RemoveCategoryDependantResourcesFoundException;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
-use Sulu\Component\Rest\Exception\DependantResourcesFoundException;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -191,7 +191,7 @@ class CategoryManagerTest extends TestCase
 
         $this->domainEventCollector->collect(Argument::any())->shouldNotBeCalled();
 
-        $this->expectException(DependantResourcesFoundException::class);
+        $this->expectException(RemoveCategoryDependantResourcesFoundException::class);
 
         $this->categoryManager->delete($id);
     }

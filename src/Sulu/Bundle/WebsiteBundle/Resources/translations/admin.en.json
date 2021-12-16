@@ -23,6 +23,7 @@
     "sulu_activity.description.analytics.created": "{userFullName} has created the analytics item \"{resourceTitle}\"",
     "sulu_activity.description.analytics.modified": "{userFullName} has changed the analytics item \"{resourceTitle}\"",
     "sulu_activity.description.analytics.removed": "{userFullName} has removed the analytics item \"{resourceTitle}\"",
+    "sulu_activity.description.analytics.restored": "{userFullName} has restored the analytics item \"{resourceTitle}\"",
     "sulu_activity.resource.webspaces": "Webspace",
     "sulu_activity.description.webspaces.cache_cleared": "{userFullName} has cleared the website cache for the webspace \"{resourceTitle}\"."
 }

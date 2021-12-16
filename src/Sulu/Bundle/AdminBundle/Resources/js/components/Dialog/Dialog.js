@@ -134,7 +134,9 @@ class Dialog extends React.Component<Props> {
                                     </div>
 
                                     <header className={dialogStyles.header}>
-                                        {title}
+                                        <span className={dialogStyles.headerItem}>
+                                            {title}
+                                        </span>
                                     </header>
                                     <article className={articleStyle}>
                                         {children}

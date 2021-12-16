@@ -440,6 +440,7 @@ class Property implements PropertyInterface, \JsonSerializable
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $result = [

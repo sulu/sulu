@@ -54,6 +54,8 @@ test('The component should render', () => {
     const dependantResourcesData = {
         dependantResourceBatches,
         dependantResourcesCount,
+        detail: 'Detail',
+        title: 'Title',
     };
 
     const requestOptions = {
@@ -98,6 +100,8 @@ test('The component should call cancel callback', () => {
     const dependantResourcesData = {
         dependantResourceBatches,
         dependantResourcesCount,
+        detail: 'Detail',
+        title: 'Title',
     };
 
     const requestOptions = {
@@ -144,6 +148,8 @@ test('The component should delete dependant resources', () => {
     const dependantResourcesData = {
         dependantResourceBatches,
         dependantResourcesCount,
+        detail: 'Detail',
+        title: 'Title',
     };
 
     const requestOptions = {
@@ -236,6 +242,8 @@ test('The component should reset itself when dependantResourcesData prop has cha
             ],
         ],
         dependantResourcesCount: 1,
+        detail: 'Detail',
+        title: 'Title',
     };
 
     const requestOptions = {
@@ -289,6 +297,8 @@ test('The component should reset itself when requestOptions prop has changed', (
             ],
         ],
         dependantResourcesCount: 1,
+        detail: 'Detail',
+        title: 'Title',
     };
 
     const requestOptions = {
@@ -354,6 +364,8 @@ test('The component should call error callback', () => {
     const dependantResourcesData = {
         dependantResourceBatches,
         dependantResourcesCount,
+        detail: 'Detail',
+        title: 'Title',
     };
 
     const requestOptions = {
@@ -449,6 +461,8 @@ test('The component should abort requests on cancel', () => {
     const dependantResourcesData = {
         dependantResourceBatches,
         dependantResourcesCount,
+        detail: 'Detail',
+        title: 'Title',
     };
 
     const requestOptions = {

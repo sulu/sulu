@@ -11,17 +11,18 @@
 
 namespace Sulu\Component\Rest;
 
-use Sulu\Component\Rest\Exception\DependantResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundExceptionInterface;
+use Sulu\Component\Rest\Exception\RemoveDependantResourcesFoundExceptionInterface;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
+use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal the following class is only for internal use don't use it in your project
  */
-class FlattenExceptionNormalizer implements NormalizerInterface
+class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
 {
     /**
      * @var NormalizerInterface
@@ -66,7 +67,17 @@ class FlattenExceptionNormalizer implements NormalizerInterface
             $data['errors'] = [$errors];
         }
 
-        if ($contextException instanceof DependantResourcesFoundExceptionInterface) {
+        if ($contextException instanceof RemoveDependantResourcesFoundExceptionInterface) {
+            $data['title'] = $this->translator->trans(
+                $contextException->getTitleTranslationKey(),
+                $contextException->getTitleTranslationParameters(),
+                'admin'
+            );
+            $data['detail'] = $this->translator->trans(
+                $contextException->getDetailTranslationKey(),
+                $contextException->getDetailTranslationParameters(),
+                'admin'
+            );
             $data['dependantResourcesCount'] = $contextException->getDependantResourcesCount();
             $data['dependantResourceBatches'] = $contextException->getDependantResourceBatches();
             $data['resource'] = $contextException->getResource();
@@ -81,8 +92,8 @@ class FlattenExceptionNormalizer implements NormalizerInterface
         return $data;
     }
 
-    public function supportsNormalization($data, $format = null)
+    public function supportsNormalization($data, $format = null, array $context = [])
     {
-        return $this->decoratedNormalizer->supportsNormalization($data, $format);
+        return $data instanceof FlattenException && !($context['messenger_serialization'] ?? false);
     }
 }

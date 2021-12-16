@@ -19,6 +19,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\CustomUrlBundle\EventListener\CustomUrlSerializeEventSubscriber;
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
@@ -29,7 +30,12 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
     {
         $generator = $this->prophesize(GeneratorInterface::class);
         $userManager = $this->prophesize(UserManagerInterface::class);
-        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal(), $userManager->reveal());
+        $documentInspector = $this->prophesize(DocumentInspector::class);
+        $subscriber = new CustomUrlSerializeEventSubscriber(
+            $generator->reveal(),
+            $userManager->reveal(),
+            $documentInspector->reveal()
+        );
 
         $events = $subscriber->getSubscribedEvents();
 
@@ -49,7 +55,12 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
     {
         $generator = $this->prophesize(GeneratorInterface::class);
         $userManager = $this->prophesize(UserManagerInterface::class);
-        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal(), $userManager->reveal());
+        $documentInspector = $this->prophesize(DocumentInspector::class);
+        $subscriber = new CustomUrlSerializeEventSubscriber(
+            $generator->reveal(),
+            $userManager->reveal(),
+            $documentInspector->reveal()
+        );
 
         $event = $this->prophesize(ObjectEvent::class);
         $document = $this->prophesize(CustomUrlDocument::class);
@@ -67,6 +78,8 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
         $userManager->getFullNameByUserId(2)->willReturn('test2');
 
         $generator->generate('*.sulu.io', ['prefix' => 'test', 'suffix' => []])->willReturn('test.sulu.io');
+
+        $documentInspector->getWebspace($document->reveal())->willReturn('test-webspace');
 
         $event->getObject()->willReturn($document->reveal());
         $event->getVisitor()->willReturn($visitor->reveal());
@@ -86,6 +99,10 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
         }), 'test.sulu.io')->shouldBeCalled();
 
         $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'webspace' === $metadata->name;
+        }), 'test-webspace')->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'creatorFullName' === $metadata->name;
         }), 'test1')->shouldBeCalled();
 
@@ -98,7 +115,12 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
     {
         $generator = $this->prophesize(GeneratorInterface::class);
         $userManager = $this->prophesize(UserManagerInterface::class);
-        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal(), $userManager->reveal());
+        $documentInspector = $this->prophesize(DocumentInspector::class);
+        $subscriber = new CustomUrlSerializeEventSubscriber(
+            $generator->reveal(),
+            $userManager->reveal(),
+            $documentInspector->reveal()
+        );
 
         $event = $this->prophesize(ObjectEvent::class);
         $document = $this->prophesize(\stdClass::class);
@@ -117,7 +139,12 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
     {
         $generator = $this->prophesize(GeneratorInterface::class);
         $userManager = $this->prophesize(UserManagerInterface::class);
-        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal(), $userManager->reveal());
+        $documentInspector = $this->prophesize(DocumentInspector::class);
+        $subscriber = new CustomUrlSerializeEventSubscriber(
+            $generator->reveal(),
+            $userManager->reveal(),
+            $documentInspector->reveal()
+        );
 
         $event = $this->prophesize(ObjectEvent::class);
         $document = $this->prophesize(CustomUrlDocument::class);
@@ -133,6 +160,8 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 
         $generator->generate('*.sulu.io', ['prefix' => 'test', 'suffix' => []])->willReturn('test.sulu.io');
 
+        $documentInspector->getWebspace($document->reveal())->willReturn('test-webspace');
+
         $event->getObject()->willReturn($document->reveal());
         $event->getVisitor()->willReturn($visitor->reveal());
 
@@ -147,6 +176,10 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
         }), 'test.sulu.io')->shouldBeCalled();
 
         $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'webspace' === $metadata->name;
+        }), 'test-webspace')->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'creatorFullName' === $metadata->name;
         }), 'test1')->shouldBeCalled();
 
@@ -159,7 +192,12 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
     {
         $generator = $this->prophesize(GeneratorInterface::class);
         $userManager = $this->prophesize(UserManagerInterface::class);
-        $subscriber = new CustomUrlSerializeEventSubscriber($generator->reveal(), $userManager->reveal());
+        $documentInspector = $this->prophesize(DocumentInspector::class);
+        $subscriber = new CustomUrlSerializeEventSubscriber(
+            $generator->reveal(),
+            $userManager->reveal(),
+            $documentInspector->reveal()
+        );
 
         $event = $this->prophesize(ObjectEvent::class);
         $document = $this->prophesize(CustomUrlDocument::class);
@@ -178,6 +216,8 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 
         $generator->generate('*.sulu.io', ['prefix' => 'test', 'suffix' => []])->willReturn('test.sulu.io');
 
+        $documentInspector->getWebspace($document->reveal())->willReturn('test-webspace');
+
         $event->getObject()->willReturn($document->reveal());
         $event->getVisitor()->willReturn($visitor->reveal());
 
@@ -194,6 +234,10 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
         $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'customUrl' === $metadata->name;
         }), 'test.sulu.io')->shouldBeCalled();
+
+        $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
+            return 'webspace' === $metadata->name;
+        }), 'test-webspace')->shouldBeCalled();
 
         $visitor->visitProperty(Argument::that(function(StaticPropertyMetadata $metadata) {
             return 'creatorFullName' === $metadata->name;

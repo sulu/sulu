@@ -19,5 +19,6 @@
     "sulu_activity.description.custom_urls.created": "{userFullName} has created the custom url \"{resourceTitle}\"",
     "sulu_activity.description.custom_urls.modified": "{userFullName} has changed the custom url \"{resourceTitle}\"",
     "sulu_activity.description.custom_urls.removed": "{userFullName} has removed the custom url \"{resourceTitle}\"",
+    "sulu_activity.description.custom_urls.restored": "{userFullName} has restored the custom url \"{resourceTitle}\"",
     "sulu_activity.description.custom_urls.route_removed": "{userFullName} has removed a route from the custom url \"{resourceTitle}\""
 }

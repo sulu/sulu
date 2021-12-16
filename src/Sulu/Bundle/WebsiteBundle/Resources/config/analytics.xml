@@ -19,6 +19,7 @@
             <argument type="service" id="sulu_website.domains.repository"/>
             <argument>%kernel.environment%</argument>
             <argument type="service" id="sulu_activity.domain_event_collector"/>
+            <argument type="service" id="sulu_trash.trash_manager" on-invalid="null"/>
         </service>
 
         <service id="sulu_website.analytics.response_listener"

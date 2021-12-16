@@ -369,6 +369,7 @@
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="sulu_activity.domain_event_collector"/>
             <argument type="service" id="security.token_storage" on-invalid="null"/>
+            <argument type="service" id="sulu_trash.trash_manager" on-invalid="null"/>
             <argument type="string">%sulu_media.collection.previews.format%</argument>
             <argument>%sulu_security.permissions%</argument>
         </service>
@@ -390,7 +391,7 @@
         <service id="sulu_media.permission_listener" class="Sulu\Bundle\MediaBundle\Search\EventListener\PermissionListener">
             <argument type="service" id="sulu_media.file_version_meta_repository"/>
             <argument type="service" id="massive_search.search_manager"/>
-            <tag name="kernel.event_listener" event="sulu_security.permission_update" method="onPermissionUpdate"/>
+            <tag name="kernel.event_subscriber"/>
         </service>
 
         <service id="sulu_media.security_context" class="Sulu\Component\Security\Authorization\SecurityCondition">
@@ -436,6 +437,8 @@
         <service id="Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface" alias="sulu_media.system_collections.manager"/>
 
         <service id="sulu_media.system_collections.builder" class="Sulu\Component\Media\SystemCollections\SystemCollectionBuilder">
+            <argument type="service" id="sulu_media.system_collections.manager"/>
+
             <tag name="massive_build.builder" />
         </service>
 
@@ -498,6 +501,13 @@
         <service id="sulu_media.field_metadata_validator.image_map"
                  class="Sulu\Bundle\MediaBundle\Metadata\ImageMapFieldMetadataValidator">
             <tag name="sulu_admin.field_metadata_validator"/>
+        </service>
+
+        <service id="sulu_security.serializer.media_permissions" class="Sulu\Bundle\MediaBundle\Serializer\Subscriber\MediaPermissionsSubscriber">
+            <argument type="service" id="sulu_security.access_control_manager"/>
+            <argument type="service" id="security.token_storage"/>
+            <tag name="jms_serializer.event_subscriber"/>
+            <tag name="sulu.context" context="admin"/>
         </service>
     </services>
 </container>

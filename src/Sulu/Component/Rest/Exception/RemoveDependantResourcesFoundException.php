@@ -13,22 +13,22 @@ declare(strict_types=1);
 
 namespace Sulu\Component\Rest\Exception;
 
-class DependantResourcesFoundException extends \Exception implements DependantResourcesFoundExceptionInterface
+class RemoveDependantResourcesFoundException extends \Exception implements RemoveDependantResourcesFoundExceptionInterface
 {
     /**
      * @var array{id: int|string, resourceKey: string}
      */
-    private $resource;
+    protected $resource;
 
     /**
      * @var array<int, array<array{id: int|string, resourceKey: string}>>
      */
-    private $dependantResourceBatches;
+    protected $dependantResourceBatches;
 
     /**
      * @var int
      */
-    private $dependantResourcesCount;
+    protected $dependantResourcesCount;
 
     /**
      * @param array{id: int|string, resourceKey: string} $resource
@@ -44,6 +44,30 @@ class DependantResourcesFoundException extends \Exception implements DependantRe
             \sprintf('Resource has %d dependant resources.', $this->dependantResourcesCount),
             static::EXCEPTION_CODE_DEPENDANT_RESOURCES_FOUND
         );
+    }
+
+    public function getTitleTranslationKey(): string
+    {
+        return 'sulu_admin.delete_element_dependant_warning_title';
+    }
+
+    public function getTitleTranslationParameters(): array
+    {
+        return [
+            '%count%' => $this->dependantResourcesCount,
+        ];
+    }
+
+    public function getDetailTranslationKey(): string
+    {
+        return 'sulu_admin.delete_element_dependant_warning_detail';
+    }
+
+    public function getDetailTranslationParameters(): array
+    {
+        return [
+            '%count%' => $this->dependantResourcesCount,
+        ];
     }
 
     public function getResource(): array

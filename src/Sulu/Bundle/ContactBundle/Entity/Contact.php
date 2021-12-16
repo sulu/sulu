@@ -24,10 +24,9 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
-use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
-class Contact extends ApiEntity implements ContactInterface, AuditableInterface
+class Contact extends ApiEntity implements ContactInterface
 {
     /**
      * @var int
@@ -52,7 +51,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     protected $lastName;
 
     /**
-     * @var ContactTitle
+     * @var ContactTitle|null
      */
     protected $title;
 
@@ -249,6 +248,7 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
         $this->categories = new ArrayCollection();
         $this->accountContacts = new ArrayCollection();
         $this->contactAddresses = new ArrayCollection();
+        $this->bankAccounts = new ArrayCollection();
         $this->medias = new ArrayCollection();
     }
 
@@ -804,6 +804,26 @@ class Contact extends ApiEntity implements ContactInterface, AuditableInterface
     public function getBankAccounts()
     {
         return $this->bankAccounts;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setCreated(\DateTime $created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setChanged(\DateTime $changed)
+    {
+        $this->changed = $changed;
+
+        return $this;
     }
 
     /**

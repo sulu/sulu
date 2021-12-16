@@ -38,7 +38,7 @@ class BankAccount
     /**
      * @var bool
      */
-    private $public;
+    private $public = false;
 
     /**
      * @var int

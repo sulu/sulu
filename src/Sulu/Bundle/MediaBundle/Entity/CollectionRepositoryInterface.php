@@ -72,7 +72,7 @@ interface CollectionRepositoryInterface
      *
      * @param int $id
      *
-     * @return Collection
+     * @return Collection|null
      */
     public function findCollectionById($id);
 

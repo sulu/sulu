@@ -46,6 +46,7 @@
             <argument type="service" id="sulu.repository.media" />
             <argument type="service" id="sulu_activity.domain_event_collector" />
             <argument type="service" id="sulu.repository.user" />
+            <argument type="service" id="sulu_trash.trash_manager" on-invalid="null"/>
         </service>
         <service id="sulu_contact.twig.cache" class="Doctrine\Common\Cache\ArrayCache"/>
         <service id="sulu_contact.twig" class="Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension">
@@ -115,6 +116,7 @@
             <argument type="service" id="sulu_activity.domain_event_collector"/>
             <argument>%sulu.model.account.class%</argument>
             <argument>%sulu.model.contact.class%</argument>
+            <argument type="service" id="sulu_trash.trash_manager" on-invalid="null"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>

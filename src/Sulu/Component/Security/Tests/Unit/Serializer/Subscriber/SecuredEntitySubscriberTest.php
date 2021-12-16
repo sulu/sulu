@@ -47,10 +47,6 @@ class SecuredEntitySubscriberTest extends TestCase
     private $token;
 
     /**
-     * @var UserInterface
-     */
-
-    /**
      * @var ObjectEvent
      */
     private $objectEvent;

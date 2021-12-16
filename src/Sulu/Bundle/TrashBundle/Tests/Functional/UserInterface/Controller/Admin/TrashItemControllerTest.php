@@ -65,17 +65,19 @@ class TrashItemControllerTest extends SuluTestCase
         static::setUpUserRole();
 
         static::createTrashItem(
-            'test-resource-key',
+            'pages',
             'resource-id-1',
-            ['key1' => 'value1', 'key2' => 'value2'],
-            'unlocalized title'
+            'unlocalized title',
+            ['key1' => 'value1', 'key2' => 'value2']
         );
 
         static::createTrashItem(
-            'test-resource-key',
+            'pages',
             'resource-id-2',
+            ['de' => 'german title', 'en' => 'english title', 'fr' => 'french title'],
             ['key1' => 'value1', 'key2' => 'value2'],
-            ['de' => 'german title', 'en' => 'english title', 'fr' => 'french title']
+            'translation',
+            ['locale' => 'en']
         );
 
         $this->client->jsonRequest('GET', '/api/trash-items', ['locale' => 'de']);
@@ -84,6 +86,8 @@ class TrashItemControllerTest extends SuluTestCase
         self::assertCount(2, $content['_embedded']['trash_items']);
         self::assertSame('unlocalized title', $content['_embedded']['trash_items'][0]['resourceTitle']);
         self::assertSame('german title', $content['_embedded']['trash_items'][1]['resourceTitle']);
+        self::assertSame('Page', $content['_embedded']['trash_items'][0]['resourceType']);
+        self::assertSame('Page (Translation)', $content['_embedded']['trash_items'][1]['resourceType']);
 
         $this->client->jsonRequest('GET', '/api/trash-items', ['locale' => 'en']);
         $content = \json_decode((string) $this->client->getResponse()->getContent(), true);
@@ -91,6 +95,8 @@ class TrashItemControllerTest extends SuluTestCase
         self::assertCount(2, $content['_embedded']['trash_items']);
         self::assertSame('unlocalized title', $content['_embedded']['trash_items'][0]['resourceTitle']);
         self::assertSame('english title', $content['_embedded']['trash_items'][1]['resourceTitle']);
+        self::assertSame('Page', $content['_embedded']['trash_items'][0]['resourceType']);
+        self::assertSame('Page (Translation)', $content['_embedded']['trash_items'][1]['resourceType']);
     }
 
     public function testCgetActionWithSecurity(): void
@@ -109,8 +115,10 @@ class TrashItemControllerTest extends SuluTestCase
                 static::createTrashItem(
                     'test_resource',
                     $resourceId,
-                    [],
                     'Resource title',
+                    [],
+                    null,
+                    [],
                     $resourceSecurityContext,
                     $resourceSecurityObjectType,
                     $resourceSecurityObjectId

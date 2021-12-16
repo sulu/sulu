@@ -39,6 +39,12 @@ class PreviewLinkPopover extends React.Component<Props> {
         }).then(action((previewLink) => {
             this.previewLink = previewLink;
             this.loading = false;
+        })).catch(action((error) => {
+            if (error.status !== 404) {
+                return Promise.reject(error);
+            }
+
+            this.loading = false;
         }));
     }
 
@@ -124,18 +130,14 @@ class PreviewLinkPopover extends React.Component<Props> {
                                 </Button>
                             </div>
                         </div>
-                        <div className={previewLinkStyles.dangerZone}>
-                            <span className={previewLinkStyles.dangerZoneLabel}>
-                                {translate('sulu_preview.danger_zone')}:&nbsp;
-                            </span>
-
-                            <a
-                                className={previewLinkStyles.dangerZoneLink}
-                                href="#"
+                        <div className={previewLinkStyles.revoke}>
+                            <button
+                                className={previewLinkStyles.revokeButton}
                                 onClick={this.handleRevokeClick}
+                                type="button"
                             >
                                 {translate('sulu_preview.revoke')}
-                            </a>
+                            </button>
                         </div>
                     </React.Fragment>
                 )}

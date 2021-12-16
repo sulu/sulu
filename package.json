@@ -28,6 +28,7 @@
         "sulu-search-bundle": "file:src/Sulu/Bundle/SearchBundle/Resources/js",
         "sulu-security-bundle": "file:src/Sulu/Bundle/SecurityBundle/Resources/js",
         "sulu-snippet-bundle": "file:src/Sulu/Bundle/SnippetBundle/Resources/js",
+        "sulu-trash-bundle": "file:src/Sulu/Bundle/TrashBundle/Resources/js",
         "sulu-website-bundle": "file:src/Sulu/Bundle/WebsiteBundle/Resources/js"
     },
     "devDependencies": {
@@ -37,14 +38,14 @@
         "@babel/plugin-transform-flow-strip-types": "^7.4.4",
         "@babel/preset-env": "^7.5.5",
         "@babel/preset-react": "^7.0.0",
-        "@ckeditor/ckeditor5-dev-utils": "^24.4.2",
-        "@ckeditor/ckeditor5-theme-lark": "^27.1.0",
+        "@ckeditor/ckeditor5-dev-utils": "^26.1.0",
+        "@ckeditor/ckeditor5-theme-lark": "^31.0.0",
         "@wojtekmaj/enzyme-adapter-react-17": "^0.6.1",
         "autoprefixer": "^9.8.6",
         "babel-eslint": "^10.0.2",
         "babel-jest": "^26.3.0",
         "babel-loader": "^8.0.6",
-        "clean-webpack-plugin": "^3.0.0",
+        "clean-webpack-plugin": "^4.0.0",
         "core-js": "^3.18.0",
         "css-loader": "^5.2.4",
         "dependency-cruiser": "^10.0.0",
@@ -67,7 +68,7 @@
         "mobx": "^4.0.0",
         "mobx-react": "^5.0.0",
         "moment-timezone": "^0.5.14",
-        "optimize-css-assets-webpack-plugin": "^5.0.3",
+        "optimize-css-assets-webpack-plugin": "^6.0.1",
         "postcss": "^7.0.35",
         "postcss-calc": "^7.0.5",
         "postcss-hexrgba": "^2.0.0",
@@ -88,7 +89,7 @@
         "webpack": "^4.27.0",
         "webpack-clean-obsolete-chunks": "^0.4.0",
         "webpack-cli": "^4.7.0",
-        "webpack-manifest-plugin": "^3.1.1"
+        "webpack-manifest-plugin": "^4.0.2"
     },
     "jest": {
         "moduleNameMapper": {
@@ -109,7 +110,7 @@
         ],
         "clearMocks": true,
         "transformIgnorePatterns": [
-            "node_modules/(?!(@ckeditor|ckeditor5|lodash-es|@react-leaflet|react-leaflet)/)"
+            "node_modules/(?!(@ckeditor|ckeditor5|array-move|lodash-es|@react-leaflet|react-leaflet)/)"
         ],
         "testPathIgnorePatterns": [
             "vendor/friendsofsymfony"

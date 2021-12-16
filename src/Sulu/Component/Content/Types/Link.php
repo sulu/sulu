@@ -78,6 +78,10 @@ class Link extends SimpleContentType
             $result['target'] = $value['target'];
         }
 
+        if (isset($value['title'])) {
+            $result['title'] = $value['title'];
+        }
+
         return $result;
     }
 
@@ -100,6 +104,7 @@ class Link extends SimpleContentType
         if (0 === \count($linkItems)) {
             return null;
         }
+
         $url = \reset($linkItems)->getUrl();
         if (isset($value['anchor'])) {
             $url = \sprintf('%s#%s', $url, $value['anchor']);

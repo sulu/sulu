@@ -35,7 +35,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListViewWithoutResourceKey()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageRegExp('/"setResourceKey"/');
+        $this->expectExceptionMessageMatches('/"setResourceKey"/');
 
         $view = (new ListViewBuilder('sulu_category.list', '/category'))
             ->getView();
@@ -44,7 +44,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListViewWithoutListAdapters()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageRegExp('/"addListAdapters"/');
+        $this->expectExceptionMessageMatches('/"addListAdapters"/');
 
         $view = (new ListViewBuilder('sulu_category.list', '/category'))
             ->setResourceKey('categories')
@@ -155,7 +155,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListWithLocalesWithoutLocalePlaceholder()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageRegExp('":locale"');
+        $this->expectExceptionMessageMatches('":locale"');
 
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -170,7 +170,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListWithoutLocalesWithLocalePlaceholder()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageRegExp('":locale"');
+        $this->expectExceptionMessageMatches('":locale"');
 
         $view = (new ListViewBuilder('sulu_role.list', '/roles/:locale'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -182,7 +182,7 @@ class ListViewBuilderTest extends TestCase
     public function testBuildListWithoutListKey()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessageRegExp('"listKey"');
+        $this->expectExceptionMessageMatches('"listKey"');
 
         $view = (new ListViewBuilder('sulu_role.list', '/roles/:locale'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)

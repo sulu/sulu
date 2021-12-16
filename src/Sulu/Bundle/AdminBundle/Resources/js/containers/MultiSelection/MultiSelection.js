@@ -29,6 +29,7 @@ type Props = {|
     options: Object,
     overlayTitle: string,
     resourceKey: string,
+    sortable: boolean,
     value: Array<string | number>,
 |};
 
@@ -41,6 +42,7 @@ class MultiSelection extends React.Component<Props> {
         displayProperties: [],
         icon: 'su-plus',
         options: {},
+        sortable: true,
         value: [],
     };
 
@@ -140,6 +142,7 @@ class MultiSelection extends React.Component<Props> {
             options,
             overlayTitle,
             resourceKey,
+            sortable,
         } = this.props;
 
         const {items, loading} = this.selectionStore;
@@ -158,6 +161,7 @@ class MultiSelection extends React.Component<Props> {
                     onItemClick={onItemClick}
                     onItemRemove={this.handleRemove}
                     onItemsSorted={this.handleSorted}
+                    sortable={sortable}
                 >
                     {items.map((item, index) => {
                         const itemDisabled = disabledIds.includes(item.id) ||

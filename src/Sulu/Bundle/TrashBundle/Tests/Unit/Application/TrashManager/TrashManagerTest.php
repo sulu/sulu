@@ -22,9 +22,7 @@ use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandler
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManager;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
-use Sulu\Bundle\TrashBundle\Domain\Event\TrashItemCreatedEvent;
 use Sulu\Bundle\TrashBundle\Domain\Event\TrashItemRemovedEvent;
-use Sulu\Bundle\TrashBundle\Domain\Event\TrashItemRestoredEvent;
 use Sulu\Bundle\TrashBundle\Domain\Exception\RestoreTrashItemHandlerNotFoundException;
 use Sulu\Bundle\TrashBundle\Domain\Exception\StoreTrashItemHandlerNotFoundException;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItem;
@@ -89,12 +87,12 @@ class TrashManagerTest extends TestCase
 
         $object = new \stdClass();
         $trashItem = new TrashItem();
+        $options = [];
 
-        $storeTrashItemHandler->store($object)->shouldBeCalled()->willReturn($trashItem);
-        $this->domainEventCollector->collect(Argument::type(TrashItemCreatedEvent::class))->shouldBeCalled();
+        $storeTrashItemHandler->store($object, $options)->shouldBeCalled()->willReturn($trashItem);
         $this->trashItemRepository->add($trashItem)->shouldBeCalled();
 
-        $result = $this->trashManager->store('tags', $object);
+        $result = $this->trashManager->store('tags', $object, $options);
 
         static::assertSame($trashItem, $result);
     }
@@ -123,7 +121,6 @@ class TrashManagerTest extends TestCase
         $object = new \stdClass();
 
         $restoreTrashItemHandler->restore($trashItem, $restoreFormData)->shouldBeCalled()->willReturn($object);
-        $this->domainEventCollector->collect(Argument::type(TrashItemRestoredEvent::class))->shouldBeCalled();
         $this->trashItemRepository->remove($trashItem)->shouldBeCalled();
 
         $result = $this->trashManager->restore($trashItem, $restoreFormData);

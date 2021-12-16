@@ -105,7 +105,7 @@ final class CategoryTrashItemHandler implements
     /**
      * @param CategoryInterface $category
      */
-    public function store(object $category): TrashItemInterface
+    public function store(object $category, array $options = []): TrashItemInterface
     {
         Assert::isInstanceOf($category, CategoryInterface::class);
 
@@ -172,15 +172,17 @@ final class CategoryTrashItemHandler implements
         return $this->trashItemRepository->create(
             CategoryInterface::RESOURCE_KEY,
             (string) $category->getId(),
-            $data,
             $categoryTitles,
+            $data,
+            null,
+            $options,
             CategoryAdmin::SECURITY_CONTEXT,
             null,
             null
         );
     }
 
-    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
         $id = (int) $trashItem->getResourceId();
         $data = $trashItem->getRestoreData();

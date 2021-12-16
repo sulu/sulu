@@ -15,11 +15,13 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
+use Sulu\Component\Security\Event\SecurityEvents;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Removes a document from the index, as soon as it gets secured.
  */
-class PermissionListener
+class PermissionListener implements EventSubscriberInterface
 {
     /**
      * @var DocumentManagerInterface
@@ -35,6 +37,11 @@ class PermissionListener
     {
         $this->documentManager = $documentManager;
         $this->searchManager = $searchManager;
+    }
+
+    public static function getSubscribedEvents(): array
+    {
+        return [SecurityEvents::PERMISSION_UPDATE => 'onPermissionUpdate'];
     }
 
     public function onPermissionUpdate(PermissionUpdateEvent $permissionUpdateEvent)

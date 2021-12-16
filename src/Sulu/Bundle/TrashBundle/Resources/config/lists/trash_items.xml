@@ -83,7 +83,7 @@
 
         <property
             name="storeTimestamp"
-            visibility="no"
+            visibility="yes"
             sortable="true"
             searchability="never"
             translation="sulu_admin.timestamp"

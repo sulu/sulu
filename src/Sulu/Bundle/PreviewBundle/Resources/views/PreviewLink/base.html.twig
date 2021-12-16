@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>{% block title %}{{ 'sulu_preview.title'|trans({}, 'admin') }}{% endblock %}</title>
+        <meta name="robots" content="noIndex,noFollow">
+
+        <link rel="stylesheet" href="{{ asset('main.css', 'sulu_admin') }}">
+    </head>
+    <body>
+        <div class="public-preview">
+            {% block content %}
+            {% endblock %}
+
+            <div class="public-preview__toolbar public-preview__toolbar--dark">
+                <div class="public-preview__toolbar-controls">
+                    <a href="{{ path('sulu_admin') }}" class="public-preview__toolbar-button">
+                        <span aria-label="su-sulu" class="su-sulu"></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

@@ -60,12 +60,20 @@ $transitionDuration: 300ms;
     position: relative;
 
     .header {
+        align-items: center;
+        display: flex;
+        height: $dialogHeaderHeight;
+        padding: 0 30px;
+    }
+
+    .headerItem {
         color: $titleColor;
+        display: block;
         font-size: 22px;
         font-weight: bold;
+        line-height: 1.5em;
         text-align: center;
-        height: $dialogHeaderHeight;
-        line-height: $dialogHeaderHeight;
+        width: 100%;
     }
 
     .footer {

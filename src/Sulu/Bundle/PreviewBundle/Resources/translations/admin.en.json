@@ -10,7 +10,7 @@
     "sulu_preview.copy": "Copy",
     "sulu_preview.revoke": "Revoke share link",
     "sulu_preview.generate_link": "Generate link",
-    "sulu_preview.danger_zone": "Danger zone",
+    "sulu_preview.title": "Public Preview",
     "sulu_preview.not_found.title": "Not found",
     "sulu_preview.not_found.headline": "This link is no longer valid.",
     "sulu_preview.not_found.description": "Please contact the content manager for a new link."

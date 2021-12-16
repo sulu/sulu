@@ -19,6 +19,7 @@ use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 use Sulu\Component\DocumentManager\Event\ClearEvent;
 use Sulu\Component\DocumentManager\Event\FlushEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Event\RemoveLocaleEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -56,6 +57,7 @@ final class PageTrashSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
+            Events::REMOVE_LOCALE => ['storePageTranslationToTrash', 1024],
             Events::REMOVE => ['storePageToTrash', 1024],
             Events::FLUSH => 'flushTrashItem',
             Events::CLEAR => 'clearPendingTrashItem',
@@ -70,7 +72,24 @@ final class PageTrashSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->trashManager->store(BasePageDocument::RESOURCE_KEY, $event->getDocument());
+        $this->trashManager->store(BasePageDocument::RESOURCE_KEY, $document);
+        $this->hasPendingTrashItem = true;
+    }
+
+    public function storePageTranslationToTrash(RemoveLocaleEvent $event): void
+    {
+        $document = $event->getDocument();
+
+        if (!$document instanceof BasePageDocument) {
+            return;
+        }
+
+        $this->trashManager->store(
+            BasePageDocument::RESOURCE_KEY,
+            $document,
+            ['locale' => $event->getLocale()]
+        );
+
         $this->hasPendingTrashItem = true;
     }
 

@@ -28,6 +28,10 @@ interface TrashItemInterface
 
     public function setResourceId(string $resourceId): TrashItemInterface;
 
+    public function getRestoreType(): ?string;
+
+    public function setRestoreType(?string $subResourceKey): TrashItemInterface;
+
     /**
      * @return mixed[]
      */
@@ -37,6 +41,16 @@ interface TrashItemInterface
      * @param mixed[] $restoreData
      */
     public function setRestoreData(array $restoreData): self;
+
+    /**
+     * @return mixed[]
+     */
+    public function getRestoreOptions(): array;
+
+    /**
+     * @param mixed[] $options
+     */
+    public function setRestoreOptions(array $options): TrashItemInterface;
 
     public function getResourceTitle(?string $locale = null): string;
 
@@ -59,6 +73,8 @@ interface TrashItemInterface
     public function setStoreTimestamp(\DateTimeImmutable $storeTimestamp): self;
 
     public function getUser(): ?UserInterface;
+
+    public function getUserId(): ?int;
 
     public function setUser(?UserInterface $user): self;
 

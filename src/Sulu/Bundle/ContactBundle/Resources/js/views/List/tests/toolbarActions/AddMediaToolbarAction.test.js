@@ -7,7 +7,7 @@ import {ResourceStore} from 'sulu-admin-bundle/stores';
 import {List} from 'sulu-admin-bundle/views';
 import AddMediaToolbarAction from '../../toolbarActions/AddMediaToolbarAction';
 
-jest.mock('sulu-admin-bundle/utils', () => ({
+jest.mock('sulu-admin-bundle/utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 

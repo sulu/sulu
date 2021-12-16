@@ -1,8 +1,7 @@
-This is a simple component which renders icons. It uses the [Font Awesome Icon Toolkit](http://fontawesome.io/)
-and our own icon font.
+This is a simple component which renders icons. It supports items of the Sulu icon font (see list of icons below) and the [Font Awesome Icon Toolkit](http://fontawesome.io/).
 
-Pass a name (prefix `fa-` for Font Awesome or `su-` for Sulu) to the component,
-and it will render the corresponding icon:
+Pass an icon name to the component to render the corresponding icon.
+Make sure to specify the `"su-"` prefix for Sulu icons or the `"fa-"`/`"fas fa-"`/`"fab fa-"` for Font Awesome icons.
 
 ```
 <Icon name="fa-floppy-o" />

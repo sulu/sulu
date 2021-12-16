@@ -17,9 +17,7 @@ use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterfa
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RemoveTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\StoreTrashItemHandlerInterface;
-use Sulu\Bundle\TrashBundle\Domain\Event\TrashItemCreatedEvent;
 use Sulu\Bundle\TrashBundle\Domain\Event\TrashItemRemovedEvent;
-use Sulu\Bundle\TrashBundle\Domain\Event\TrashItemRestoredEvent;
 use Sulu\Bundle\TrashBundle\Domain\Exception\RestoreTrashItemHandlerNotFoundException;
 use Sulu\Bundle\TrashBundle\Domain\Exception\StoreTrashItemHandlerNotFoundException;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
@@ -67,7 +65,7 @@ final class TrashManager implements TrashManagerInterface
         $this->removeTrashItemHandlerLocator = $removeTrashItemHandlerLocator;
     }
 
-    public function store(string $resourceKey, object $object): TrashItemInterface
+    public function store(string $resourceKey, object $object, array $options = []): TrashItemInterface
     {
         if (!$this->storeTrashItemHandlerLocator->has($resourceKey)) {
             throw new StoreTrashItemHandlerNotFoundException($resourceKey);
@@ -76,18 +74,14 @@ final class TrashManager implements TrashManagerInterface
         /** @var StoreTrashItemHandlerInterface $storeTrashItemHandler */
         $storeTrashItemHandler = $this->storeTrashItemHandlerLocator->get($resourceKey);
 
-        $trashItem = $storeTrashItemHandler->store($object);
-
-        $this->domainEventCollector->collect(
-            new TrashItemCreatedEvent($trashItem)
-        );
+        $trashItem = $storeTrashItemHandler->store($object, $options);
 
         $this->trashItemRepository->add($trashItem);
 
         return $trashItem;
     }
 
-    public function restore(TrashItemInterface $trashItem, array $restoreFormData): object
+    public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
     {
         $resourceKey = $trashItem->getResourceKey();
 
@@ -99,18 +93,6 @@ final class TrashManager implements TrashManagerInterface
         $restoreTrashItemHandler = $this->restoreTrashItemHandlerLocator->get($resourceKey);
 
         $object = $restoreTrashItemHandler->restore($trashItem, $restoreFormData);
-
-        $translation = $trashItem->getTranslation(null, true);
-
-        $this->domainEventCollector->collect(
-            new TrashItemRestoredEvent(
-                (int) $trashItem->getId(),
-                $trashItem->getResourceKey(),
-                $trashItem->getResourceId(),
-                $translation->getTitle(),
-                $translation->getLocale()
-            )
-        );
 
         $this->trashItemRepository->remove($trashItem);
 

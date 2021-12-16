@@ -49,10 +49,10 @@ class SnippetImportCommand extends Command
         $this->addArgument('file', InputArgument::REQUIRED, 'test.xliff')
             ->addArgument('locale', InputArgument::REQUIRED)
             ->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff')
-            ->setDescription('Import Snippets');
+            ->setDescription('Import snippet translations from xliff file into a specific language.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $filePath = $input->getArgument('file');
 
@@ -98,7 +98,7 @@ class SnippetImportCommand extends Command
 
         $this->printExceptions($import, $output);
 
-        return $import->fails;
+        return (int) $import->fails;
     }
 
     /**

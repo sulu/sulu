@@ -23,8 +23,10 @@ class SuluSnippetExtensionTest extends AbstractExtensionTestCase
         ];
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
+        $this->container->setParameter('kernel.bundles', []);
+
         $this->load([
             'twig' => [
                 'snippet' => [
@@ -34,5 +36,22 @@ class SuluSnippetExtensionTest extends AbstractExtensionTestCase
         ]);
 
         $this->assertContainerBuilderHasParameter('sulu_snippet.twig.snippet.cache_lifetime', 20);
+        $this->assertContainerBuilderNotHasService('sulu_snippet.snippet_trash_subscriber');
+    }
+
+    public function testLoadWithTrashBundle(): void
+    {
+        $this->container->setParameter('kernel.bundles', ['SuluTrashBundle' => true]);
+
+        $this->load([
+            'twig' => [
+                'snippet' => [
+                    'cache_lifetime' => 20,
+                ],
+            ],
+        ]);
+
+        $this->assertContainerBuilderHasParameter('sulu_snippet.twig.snippet.cache_lifetime', 20);
+        $this->assertContainerBuilderHasService('sulu_snippet.snippet_trash_subscriber');
     }
 }

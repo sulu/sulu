@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Cache;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Bundle\WebsiteBundle\Cache\CacheClearer;
 use Sulu\Bundle\WebsiteBundle\Event\CacheClearEvent;
@@ -25,22 +26,22 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class CacheClearerTest extends TestCase
 {
     /**
-     * @var Filesystem
+     * @var Filesystem|ObjectProphecy;
      */
     private $filesystem;
 
     /**
-     * @var RequestStack
+     * @var RequestStack|ObjectProphecy;
      */
     private $requestStack;
 
     /**
-     * @var Request
+     * @var Request|ObjectProphecy;
      */
     private $request;
 
     /**
-     * @var EventDispatcherInterface
+     * @var EventDispatcherInterface|ObjectProphecy;
      */
     private $eventDispatcher;
 
@@ -157,7 +158,8 @@ class CacheClearerTest extends TestCase
         $expectedPath = __DIR__ . '/var/cache/common/test/http_cache';
 
         $this->filesystem->exists($expectedPath)->willReturn(true)->shouldBeCalled();
-        $this->filesystem->remove($expectedPath)->shouldBeCalled();
+        $this->filesystem->rename(Argument::cetera())->shouldBeCalled();
+        $this->filesystem->remove(Argument::cetera())->shouldBeCalled();
 
         $cacheManager = $this->prophesize(CacheManager::class);
         $cacheManager->supportsTags()->willReturn(false);
@@ -178,7 +180,8 @@ class CacheClearerTest extends TestCase
         $expectedPath = __DIR__ . '/var/cache/common/test/http_cache';
 
         $this->filesystem->exists($expectedPath)->willReturn(false)->shouldBeCalled();
-        $this->filesystem->remove($expectedPath)->shouldNotBeCalled();
+        $this->filesystem->rename(Argument::cetera())->shouldNotBeCalled();
+        $this->filesystem->remove(Argument::cetera())->shouldNotBeCalled();
 
         $cacheManager = $this->prophesize(CacheManager::class);
         $cacheManager->supportsTags()->willReturn(false);

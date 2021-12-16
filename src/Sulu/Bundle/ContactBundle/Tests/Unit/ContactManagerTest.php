@@ -26,6 +26,7 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 
 class ContactManagerTest extends TestCase
 {
@@ -75,6 +76,11 @@ class ContactManagerTest extends TestCase
     private $eventCollector;
 
     /**
+     * @var ObjectProphecy|TrashManagerInterface
+     */
+    private $trashManager;
+
+    /**
      * @var ObjectProphecy|UserRepository
      */
     private $userRepository;
@@ -90,6 +96,7 @@ class ContactManagerTest extends TestCase
         $this->mediaRepository = $this->prophesize(MediaRepositoryInterface::class);
         $this->eventCollector = $this->prophesize(DomainEventCollectorInterface::class);
         $this->userRepository = $this->prophesize(UserRepository::class);
+        $this->trashManager = $this->prophesize(TrashManagerInterface::class);
 
         $this->contactManager = new ContactManager(
             $this->em->reveal(),
@@ -100,7 +107,8 @@ class ContactManagerTest extends TestCase
             $this->contactRepository->reveal(),
             $this->mediaRepository->reveal(),
             $this->eventCollector->reveal(),
-            $this->userRepository->reveal()
+            $this->userRepository->reveal(),
+            $this->trashManager->reveal()
         );
     }
 

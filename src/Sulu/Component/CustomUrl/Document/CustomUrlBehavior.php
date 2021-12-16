@@ -31,7 +31,7 @@ interface CustomUrlBehavior extends UuidBehavior, PathBehavior, RobotBehavior, T
     /**
      * Returns state of custom-url.
      *
-     * @return string
+     * @return bool
      */
     public function isPublished();
 
@@ -45,7 +45,7 @@ interface CustomUrlBehavior extends UuidBehavior, PathBehavior, RobotBehavior, T
     /**
      * Returns domain parts of custom-url.
      *
-     * @return array
+     * @return string[]
      */
     public function getDomainParts();
 

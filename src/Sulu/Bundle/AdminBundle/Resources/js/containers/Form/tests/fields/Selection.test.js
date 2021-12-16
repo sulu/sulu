@@ -147,6 +147,7 @@ test('Should pass props correctly to MultiSelection component', () => {
         allowDeselectForDisabledItems: true,
         listKey: 'snippets_list',
         disabled: true,
+        sortable: true,
         displayProperties: ['id', 'title'],
         itemDisabledCondition: undefined,
         label: 'sulu_snippet.selection_label',
@@ -281,6 +282,10 @@ test('Should pass props with schema-options correctly to MultiSelection componen
             name: 'item_disabled_condition',
             value: 'status == "inactive"',
         },
+        sortable: {
+            name: 'sortable',
+            value: false,
+        },
         request_parameters: {
             name: 'request_parameters',
             value: [
@@ -332,6 +337,7 @@ test('Should pass props with schema-options correctly to MultiSelection componen
         adapter: 'table',
         allowDeselectForDisabledItems: false,
         disabled: true,
+        sortable: false,
         displayProperties: ['id', 'title'],
         itemDisabledCondition: 'status == "inactive"',
         label: 'sulu_snippet.selection_label',
@@ -689,6 +695,32 @@ test('Should throw an error if "allow_deselect_for_disabled_items" schema option
             schemaOptions={schemaOptions}
         />
     )).toThrowError(/"allow_deselect_for_disabled_items"/);
+});
+
+test('Should throw an error if "sortable" schema option is not a boolean', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('snippets'), 'pages'));
+    const fieldTypeOptions = {
+        default_type: 'list_overlay',
+        resource_key: 'test',
+        types: {
+            list_overlay: {},
+        },
+    };
+    const schemaOptions = {
+        sortable: {
+            name: 'sortable',
+            value: 'not-boolean',
+        },
+    };
+
+    expect(() => shallow(
+        <Selection
+            {...fieldTypeDefaultProps}
+            fieldTypeOptions={fieldTypeOptions}
+            formInspector={formInspector}
+            schemaOptions={schemaOptions}
+        />
+    )).toThrowError(/"sortable"/);
 });
 
 test('Should throw an error if "request_parameters" schema option is not an array', () => {

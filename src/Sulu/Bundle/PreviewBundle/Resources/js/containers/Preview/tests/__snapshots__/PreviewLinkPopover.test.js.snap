@@ -1,0 +1,114 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Generate link 1`] = `
+<div
+  className="container"
+>
+  <div>
+    <label
+      className="label"
+    >
+      sulu_preview.copy_preview_link
+    </label>
+    <div
+      className="inputContainer"
+    >
+      <input
+        className="input"
+        readOnly={true}
+        value="/admin/p/123-123-123"
+      />
+      <Button
+        active={false}
+        className="copyButton"
+        disabled={false}
+        loading={false}
+        onClick={[Function]}
+        showDropdownIcon={false}
+        size="large"
+        skin="primary"
+        type="button"
+      >
+        sulu_preview.copy
+      </Button>
+    </div>
+  </div>
+  <div
+    className="revoke"
+  >
+    <button
+      className="revokeButton"
+      onClick={[Function]}
+      type="button"
+    >
+      sulu_preview.revoke
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Render popover when no link is available 1`] = `
+<div
+  className="container"
+>
+  <Button
+    active={false}
+    disabled={false}
+    loading={false}
+    onClick={[Function]}
+    showDropdownIcon={false}
+    size="large"
+    skin="primary"
+    type="button"
+  >
+    sulu_preview.generate_link
+  </Button>
+</div>
+`;
+
+exports[`Render popover when preview link is available and copy link to clipboard 1`] = `
+<div
+  className="container"
+>
+  <div>
+    <label
+      className="label"
+    >
+      sulu_preview.copy_preview_link
+    </label>
+    <div
+      className="inputContainer"
+    >
+      <input
+        className="input"
+        readOnly={true}
+        value="/admin/p/123-123-123"
+      />
+      <Button
+        active={false}
+        className="copyButton"
+        disabled={false}
+        loading={false}
+        onClick={[Function]}
+        showDropdownIcon={false}
+        size="large"
+        skin="primary"
+        type="button"
+      >
+        sulu_preview.copy
+      </Button>
+    </div>
+  </div>
+  <div
+    className="revoke"
+  >
+    <button
+      className="revokeButton"
+      onClick={[Function]}
+      type="button"
+    >
+      sulu_preview.revoke
+    </button>
+  </div>
+</div>
+`;

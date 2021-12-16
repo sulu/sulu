@@ -139,7 +139,8 @@ class CategoryController extends AbstractRestController implements ClassResource
                 $defaultSort
             );
         } elseif ($request->query->has('ids')) {
-            $entities = $this->categoryManager->findByIds(\explode(',', $request->query->get('ids')));
+            $ids = \array_filter(\explode(',', $request->query->get('ids')));
+            $entities = $this->categoryManager->findByIds($ids);
             $categories = $this->categoryManager->getApiObjects($entities, $locale);
             $list = new CollectionRepresentation($categories, CategoryInterface::RESOURCE_KEY);
         } else {

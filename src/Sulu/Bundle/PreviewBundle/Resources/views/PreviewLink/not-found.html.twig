@@ -1,73 +1,16 @@
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends '@SuluPreview/PreviewLink/base.html.twig' %}
 
-        <title>{{ 'sulu_preview.not_found.title'|trans({}, 'admin') }}</title>
-        <meta name="robots" content="noindex,nofollow">
+{% block title %}{{ 'sulu_preview.not_found.title'|trans({}, 'admin') }}{% endblock %}
 
-        <link rel="stylesheet" href="{{ asset('main.css', 'sulu_admin') }}">
-        <style>
-            .container {
-                position: absolute;
-                left: 50%;
-                top: 50%;
-                -webkit-transform: translate(-50%, -50%);
-                transform: translate(-50%, -50%);
-                text-align: center;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
-
-            h2 {
-                font-size: 14px;
-            }
-
-            header {
-                font-size: 50px;
-                margin-bottom: 50px;
-            }
-
-            footer {
-                font-size: 25px;
-                margin-top: 100px;
-            }
-
-            footer a {
-                text-decoration: none;
-                position: relative;
-                white-space: nowrap;
-                display: inline-flex;
-                justify-content: center;
-                font-size: 25px;
-                border: 1px solid #52b6ca;
-                border-radius: 3px;
-                line-height: 28px;
-                cursor: pointer;
-                text-align: center;
-                padding: 10px;
-                background: #52b6ca;
-                color: #fff;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
+{% block content %}
+    <div class="public-preview__preview-container">
+        <div class="public-preview__404-message">
             <header>
                 <span aria-label="su-unlink" class="su-unlink"></span>
             </header>
 
             <h1>{{ 'sulu_preview.not_found.headline'|trans({}, 'admin') }}</h1>
             <h2>{{ 'sulu_preview.not_found.description'|trans({}, 'admin') }}</h2>
-
-            <footer>
-                <a href="{{ path('sulu_admin') }}">
-                    <span aria-label="su-sulu" class="su-sulu"></span>
-                </a>
-            </footer>
         </div>
-    </body>
-</html>
+    </div>
+{% endblock %}

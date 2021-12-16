@@ -191,7 +191,7 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         $trashItems = \array_map(
             function(array $trashItem) use ($hiddenFieldDescriptors) {
                 if (isset($trashItem['resourceType'])) {
-                    $trashItem['resourceType'] = $this->getResourceTranslation($trashItem['resourceType']);
+                    $trashItem['resourceType'] = $this->getResourceTranslation($trashItem['resourceType'], $trashItem['restoreType']);
                 }
 
                 foreach ($hiddenFieldDescriptors as $fieldDescriptor) {
@@ -237,8 +237,11 @@ class TrashItemController extends AbstractRestController implements ClassResourc
             PermissionTypes::VIEW
         );
 
+        $context = new Context();
+        $context->setGroups(['trash_item_admin_api']);
+
         return $this->handleView(
-            $this->view($trashItem)
+            $this->view($trashItem)->setContext($context)
         );
     }
 
@@ -380,9 +383,9 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         );
     }
 
-    private function getResourceTranslation(string $resourceKey): string
+    private function getResourceTranslation(string $resourceKey, ?string $restoreType = null): string
     {
-        return $this->translator->trans(
+        $resourceTranslation = $this->translator->trans(
             \sprintf(
                 'sulu_activity.resource.%s',
                 $resourceKey
@@ -390,6 +393,24 @@ class TrashItemController extends AbstractRestController implements ClassResourc
             [],
             'admin'
         );
+
+        if ($restoreType) {
+            $resourceTranslation = \sprintf(
+                '%s (%s)',
+                $resourceTranslation,
+                $this->translator->trans(
+                    \sprintf(
+                        'sulu_activity.resource.%s.%s',
+                        $resourceKey,
+                        $restoreType
+                    ),
+                    [],
+                    'admin'
+                )
+            );
+        }
+
+        return $resourceTranslation;
     }
 
     /**
@@ -412,6 +433,7 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         return [
             'id' => $this->createFieldDescriptor('id'),
             'resourceKey' => $this->createFieldDescriptor('resourceKey'),
+            'restoreType' => $this->createFieldDescriptor('restoreType'),
         ];
     }
 

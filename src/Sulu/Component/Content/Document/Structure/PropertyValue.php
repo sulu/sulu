@@ -50,6 +50,7 @@ class PropertyValue implements \ArrayAccess
         $this->name = $name;
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return \is_array($this->value) && isset($this->value[$offset]);
@@ -64,6 +65,7 @@ class PropertyValue implements \ArrayAccess
         return $this->value[$offset];
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         if (!\is_array($this->value)) {
@@ -73,6 +75,7 @@ class PropertyValue implements \ArrayAccess
         $this->value[$offset] = $value;
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         if (!\is_array($this->value)) {

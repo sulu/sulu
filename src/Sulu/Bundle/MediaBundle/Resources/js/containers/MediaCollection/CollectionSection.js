@@ -63,7 +63,7 @@ class CollectionSection extends React.Component<Props> {
             return resourceStore.clone();
         }
 
-        return new ResourceStore(
+        const newResourceStore = new ResourceStore(
             COLLECTIONS_RESOURCE_KEY,
             null,
             {
@@ -75,6 +75,12 @@ class CollectionSection extends React.Component<Props> {
                 parent: data.parent,
             }
         );
+
+        if (this.collectionId && this.openedCollectionOperationOverlayType === 'create') {
+            newResourceStore.set('parent', this.collectionId);
+        }
+
+        return newResourceStore;
     }
 
     handleCollectionClick = (collectionId: string | number) => {
@@ -106,21 +112,19 @@ class CollectionSection extends React.Component<Props> {
     };
 
     handleCollectionOverlayConfirm = (resourceStore: ResourceStore) => {
-        const options = {};
-        options.breadcrumb = true;
-
-        if (this.collectionId && this.openedCollectionOperationOverlayType === 'create') {
-            options.parent = this.collectionId;
-        }
+        const options = {
+            breadcrumb: true,
+        };
 
         resourceStore.save(options)
             .then(() => this.handleSaveResponse(resourceStore));
     };
 
     handleSaveResponse = (resourceStore: ResourceStore) => {
+        const openedCollectionOperationOverlayType = this.openedCollectionOperationOverlayType;
         this.closeCollectionOperationOverlay();
 
-        if (this.openedCollectionOperationOverlayType === 'update') {
+        if (openedCollectionOperationOverlayType === 'update') {
             this.props.resourceStore.setMultiple(resourceStore.data);
         } else {
             this.props.onCollectionNavigate(resourceStore.id);
@@ -171,6 +175,8 @@ class CollectionSection extends React.Component<Props> {
                             this.dependantResourcesData = {
                                 dependantResourceBatches: data.dependantResourceBatches,
                                 dependantResourcesCount: data.dependantResourcesCount,
+                                detail: data.detail,
+                                title: data.title,
                             };
 
                             return;

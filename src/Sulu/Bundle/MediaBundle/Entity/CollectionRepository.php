@@ -60,7 +60,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         $result = $query->getResult();
 
         if (0 === \count($result)) {
-            return;
+            return null;
         }
 
         return $result[0];

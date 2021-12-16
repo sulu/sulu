@@ -14,7 +14,7 @@ namespace Sulu\Component\Snippet\Export;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\Export\Export;
 use Sulu\Component\Export\Manager\ExportManagerInterface;
@@ -41,7 +41,7 @@ class SnippetExport extends Export implements SnippetExportInterface
     public function __construct(
         Environment $templating,
         SnippetRepository $snippetManager,
-        DocumentManager $documentManager,
+        DocumentManagerInterface $documentManager,
         DocumentInspector $documentInspector,
         ExportManagerInterface $exportManager,
         $formatFilePaths

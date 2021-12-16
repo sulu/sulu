@@ -87,6 +87,30 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('de', $response->locale);
     }
 
+    public function testPutInvalidField()
+    {
+        $this->client->jsonRequest(
+            'PUT',
+            '/api/profile',
+            [
+                'firstName' => 'Hans',
+                'lastName' => 'Mustermann',
+                'username' => 'hansi',
+                'email' => 'hans.mustermann@muster.at',
+                'password' => 'testpassword',
+                'locale' => 'de',
+            ]
+        );
+
+        $response = \json_decode($this->client->getResponse()->getContent());
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertEquals('Hans', $response->firstName);
+        $this->assertEquals('Mustermann', $response->lastName);
+        $this->assertEquals('hansi', $response->username);
+        $this->assertEquals('hans.mustermann@muster.at', $response->email);
+        $this->assertEquals('de', $response->locale);
+    }
+
     public function testPutEmailNotUnique()
     {
         $existingContact = new Contact();

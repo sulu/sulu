@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Component\Rest\Exception;
 
-interface DependantResourcesFoundExceptionInterface extends RestExceptionInterface
+interface RemoveDependantResourcesFoundExceptionInterface extends RestExceptionInterface
 {
     /**
      * @return array{id: int|string, resourceKey: string}
@@ -26,4 +26,18 @@ interface DependantResourcesFoundExceptionInterface extends RestExceptionInterfa
     public function getDependantResourceBatches(): array;
 
     public function getDependantResourcesCount(): int;
+
+    public function getTitleTranslationKey(): string;
+
+    /**
+     * @return array<string, int|string>
+     */
+    public function getTitleTranslationParameters(): array;
+
+    public function getDetailTranslationKey(): string;
+
+    /**
+     * @return array<string, int|string>
+     */
+    public function getDetailTranslationParameters(): array;
 }
