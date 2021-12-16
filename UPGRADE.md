@@ -1,6 +1,6 @@
 # Upgrade
 
-## 2.x
+## 2.4.0
 
 ### Added PreviewLink resource to PreviewBundle
 
