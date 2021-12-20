@@ -66,7 +66,6 @@ class AccessControlQueryEnhancer
             $queryBuilder,
             $user,
             $permission,
-            $this->getEntityIdCondition($entityClass, $entityAlias),
             $entityClass,
             $entityAlias
         );
@@ -125,7 +124,6 @@ class AccessControlQueryEnhancer
         QueryBuilder $queryBuilder,
         ?UserInterface $user,
         int $permission,
-        string $entityIdCondition,
         string $entityClass,
         string $entityAlias
     ): void {
@@ -137,7 +135,7 @@ class AccessControlQueryEnhancer
             AccessControl::class,
             'accessControl',
             'WITH',
-            'accessControl.entityClass = :entityClass AND ' . $entityIdCondition
+            'accessControl.entityClass = :entityClass AND ' . $this->getEntityIdCondition($entityClass, 'entity')
         );
         $subQueryBuilder->leftJoin('accessControl.role', 'role', 'WITH', 'role.system = :system');
         $subQueryBuilder->andWhere(
