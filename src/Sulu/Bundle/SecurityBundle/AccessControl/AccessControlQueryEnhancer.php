@@ -48,29 +48,9 @@ class AccessControlQueryEnhancer
             $queryBuilder,
             $user,
             $permission,
-            'accessControl.entityClass = :entityClass',
-            $this->getEntityIdCondition($entityClass, $entityAlias)
-        );
-
-        $queryBuilder->setParameter('entityClass', $entityClass);
-    }
-
-    public function enhanceCount(
-        QueryBuilder $queryBuilder,
-        ?UserInterface $user,
-        int $permission,
-        string $entityClass,
-        string $entityAlias
-    ): void {
-        $this->enhanceCountQueryWithAccessControl(
-            $queryBuilder,
-            $user,
-            $permission,
             $entityClass,
             $entityAlias
         );
-
-        $queryBuilder->setParameter('entityClass', $entityClass);
     }
 
     public function enhanceWithDynamicEntityClass(
@@ -94,36 +74,6 @@ class AccessControlQueryEnhancer
         QueryBuilder $queryBuilder,
         ?UserInterface $user,
         int $permission,
-        string $entityClassCondition,
-        string $entityIdCondition
-    ): void {
-        $systemRoleQueryBuilder = $this->entityManager->createQueryBuilder()
-            ->from(RoleInterface::class, 'systemRoles')
-            ->select('systemRoles.id')
-            ->where('systemRoles.system = :system');
-
-        $queryBuilder->leftJoin(
-            AccessControl::class,
-            'accessControl',
-            'WITH',
-            $entityClassCondition . ' AND ' . $entityIdCondition . ' '
-            . 'AND accessControl.role IN (' . $systemRoleQueryBuilder->getDQL() . ')'
-        );
-        $queryBuilder->leftJoin('accessControl.role', 'role');
-        $queryBuilder->andWhere(
-            'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
-        );
-
-        $queryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL');
-        $queryBuilder->setParameter('roleIds', $this->getUserRoleIds($user));
-        $queryBuilder->setParameter('permission', $permission);
-        $queryBuilder->setParameter('system', $this->systemStore->getSystem());
-    }
-
-    private function enhanceCountQueryWithAccessControl(
-        QueryBuilder $queryBuilder,
-        ?UserInterface $user,
-        int $permission,
         string $entityClass,
         string $entityAlias
     ): void {
@@ -139,15 +89,20 @@ class AccessControlQueryEnhancer
         );
         $subQueryBuilder->leftJoin('accessControl.role', 'role', 'WITH', 'role.system = :system');
         $subQueryBuilder->andWhere(
-            'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
+            'BIT_AND(accessControl.permissions, :permission) <> :permission AND accessControl.permissions IS NOT NULL'
         );
 
         $subQueryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL');
-        $queryBuilder->setParameter('roleIds', $this->getUserRoleIds($user));
-        $queryBuilder->setParameter('permission', $permission);
-        $queryBuilder->setParameter('system', $this->systemStore->getSystem());
 
-        $queryBuilder->andWhere(\sprintf('%s.id IN (%s)', $entityAlias, $subQueryBuilder->getDQL()));
+        $subQueryBuilder->setParameter('entityClass', $entityClass);
+        $subQueryBuilder->setParameter('roleIds', $this->getUserRoleIds($user));
+        $subQueryBuilder->setParameter('system', $this->systemStore->getSystem());
+        $subQueryBuilder->setParameter('permission', $permission);
+
+        $ids = $subQueryBuilder->getQuery()->getScalarResult();
+
+        $queryBuilder->andWhere(\sprintf('%s.id NOT IN (:accessControlIds)', $entityAlias));
+        $queryBuilder->setParameter('accessControlIds', $ids);
     }
 
     private function getEntityIdCondition(string $entityClass, string $entityAlias): string

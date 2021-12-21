@@ -221,7 +221,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     public function count()
     {
-        $subQueryBuilder = $this->createSubQueryBuilder('COUNT(' . $this->idField->getSelect() . ')', true);
+        $subQueryBuilder = $this->createSubQueryBuilder('COUNT(' . $this->idField->getSelect() . ')');
 
         $this->assignParameters($subQueryBuilder);
 
@@ -446,7 +446,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @return QueryBuilder
      */
-    protected function createSubQueryBuilder(string $select, bool $isCount = false)
+    protected function createSubQueryBuilder(string $select)
     {
         // get all filter-fields
         $filterFields = $this->getAllFields(true);
@@ -470,16 +470,8 @@ class DoctrineListBuilder extends AbstractListBuilder
                     $this->securedEntityIdField,
                     $this->encodeAlias($this->entityName)
                 );
-            } elseif ($this->accessControlQueryEnhancer && !$isCount) {
+            } elseif ($this->accessControlQueryEnhancer) {
                 $this->accessControlQueryEnhancer->enhance(
-                    $queryBuilder,
-                    $this->user,
-                    $this->permissions[$this->permission],
-                    $this->securedEntityName,
-                    $this->encodeAlias($this->securedEntityName)
-                );
-            } elseif ($this->accessControlQueryEnhancer && $isCount) {
-                $this->accessControlQueryEnhancer->enhanceCount(
                     $queryBuilder,
                     $this->user,
                     $this->permissions[$this->permission],
