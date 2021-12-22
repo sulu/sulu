@@ -463,7 +463,7 @@ class QueryBuilderTest extends SuluTestCase
         $request = new Request([], [], ['_sulu' => new RequestAttributes(['webspace' => $webspace])]);
         $this->getContainer()->get('request_stack')->push($request);
 
-        $root = $this->sessionManager->getContentNode('test_io');
+        $root = $this->sessionManager->getContentNode('sulu_io');
 
         /** @var PageDocument $document */
         $document = $this->documentManager->create('page');
@@ -471,7 +471,7 @@ class QueryBuilderTest extends SuluTestCase
         $document->setResourceSegment('/document');
         $document->setStructureType('simple');
         $document->setWorkflowStage(WorkflowStage::PUBLISHED);
-        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/test_io/contents']);
+        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->publish($document, 'en');
 
         $securedDocument = $this->documentManager->create('page');
@@ -480,7 +480,7 @@ class QueryBuilderTest extends SuluTestCase
         $securedDocument->setStructureType('simple');
         $securedDocument->setWorkflowStage(WorkflowStage::PUBLISHED);
         $securedDocument->setPermissions([$this->anonymousRoleSecurity->getId() => ['view' => false]]);
-        $this->documentManager->persist($securedDocument, 'en', ['parent_path' => '/cmf/test_io/contents']);
+        $this->documentManager->persist($securedDocument, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->publish($securedDocument, 'en');
 
         $this->documentManager->flush();
