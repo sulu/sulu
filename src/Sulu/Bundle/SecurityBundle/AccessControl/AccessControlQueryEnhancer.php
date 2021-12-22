@@ -57,35 +57,55 @@ class AccessControlQueryEnhancer
         QueryBuilder $queryBuilder,
         ?UserInterface $user,
         int $permission,
+        string $entityClass,
+        string $entityAlias,
         string $entityClassField,
-        string $entityIdField,
-        string $entityAlias
+        string $entityIdField
     ): void {
         $this->enhanceQueryWithAccessControl(
             $queryBuilder,
             $user,
             $permission,
-            'accessControl.entityClass = ' . $entityAlias . '.' . $entityClassField,
-            'accessControl.entityId = ' . $entityAlias . '.' . $entityIdField
+            $entityClass,
+            $entityAlias,
+            $entityIdField,
+            $entityClassField
         );
     }
 
+    /**
+     * Following function uses an own query to load the restricted (not accessible ids). This is faster as embedding the
+     * query as subquery. Also loading the "accessible" ids would be more performance intense because sulu has more
+     * "accessible" entities that not accessible. Optimized embedded queries are mostly not compatible for MySQL 5.7
+     * because of restrictions.
+     *
+     * As long as we dont have thousands of not "accessible" ids this approach should be faster.
+     */
     private function enhanceQueryWithAccessControl(
         QueryBuilder $queryBuilder,
         ?UserInterface $user,
         int $permission,
         string $entityClass,
-        string $entityAlias
+        string $entityAlias,
+        string $entityIdField = 'id',
+        ?string $entityClassField = null
     ): void {
         $subQueryBuilder = $this->entityManager->createQueryBuilder()
             ->from($entityClass, 'entity')
             ->select('entity.id');
 
+        $accessClassCondition = 'accessControl.entityClass = :entityClass';
+        if ($entityClassField) {
+            $accessClassCondition = 'accessControl.entityClass = entity.' . $entityClassField;
+        } else {
+            $subQueryBuilder->setParameter('entityClass', $entityClass);
+        }
+
         $subQueryBuilder->leftJoin(
             AccessControl::class,
             'accessControl',
             'WITH',
-            'accessControl.entityClass = :entityClass AND ' . $this->getEntityIdCondition($entityClass, 'entity')
+            $accessClassCondition . ' AND ' . $this->getEntityIdCondition($entityClass, 'entity', $entityIdField)
         );
         $subQueryBuilder->leftJoin('accessControl.role', 'role', 'WITH', 'role.system = :system');
         $subQueryBuilder->andWhere(
@@ -94,24 +114,26 @@ class AccessControlQueryEnhancer
 
         $subQueryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL');
 
-        $subQueryBuilder->setParameter('entityClass', $entityClass);
         $subQueryBuilder->setParameter('roleIds', $this->getUserRoleIds($user));
         $subQueryBuilder->setParameter('system', $this->systemStore->getSystem());
         $subQueryBuilder->setParameter('permission', $permission);
 
-        $ids = $subQueryBuilder->getQuery()->getScalarResult();
+        $result = $subQueryBuilder->getQuery()->getScalarResult();
+        $ids = \array_column($result, 'id');
 
-        $queryBuilder->andWhere(\sprintf('%s.id NOT IN (:accessControlIds)', $entityAlias));
-        $queryBuilder->setParameter('accessControlIds', $ids);
+        if (\count($ids) > 0) {
+            $queryBuilder->andWhere(\sprintf('%s.id NOT IN (:accessControlIds)', $entityAlias));
+            $queryBuilder->setParameter('accessControlIds', $ids);
+        }
     }
 
-    private function getEntityIdCondition(string $entityClass, string $entityAlias): string
+    private function getEntityIdCondition(string $entityClass, string $entityAlias, string $entityIdField = 'id'): string
     {
-        $entityIdCondition = 'accessControl.entityId = ' . $entityAlias . '.id';
+        $entityIdCondition = 'accessControl.entityId = ' . $entityAlias . '.' . $entityIdField;
         try {
             $metadata = $this->entityManager->getClassMetadata($entityClass);
-            if ('integer' === $metadata->getTypeOfField('id')) {
-                $entityIdCondition = 'accessControl.entityIdInteger = ' . $entityAlias . '.id';
+            if ('integer' === $metadata->getTypeOfField($entityIdField)) {
+                $entityIdCondition = 'accessControl.entityIdInteger = ' . $entityAlias . '.' . $entityIdField;
             }
         } catch (MappingException $e) {
             $metadata = null;

@@ -466,9 +466,10 @@ class DoctrineListBuilder extends AbstractListBuilder
                     $queryBuilder,
                     $this->user,
                     $this->permissions[$this->permission],
+                    $this->securedEntityName,
+                    $this->encodeAlias($this->securedEntityName),
                     $this->securedEntityClassField,
-                    $this->securedEntityIdField,
-                    $this->encodeAlias($this->entityName)
+                    $this->securedEntityIdField
                 );
             } elseif ($this->accessControlQueryEnhancer) {
                 $this->accessControlQueryEnhancer->enhance(
