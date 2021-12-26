@@ -78,12 +78,12 @@ class LinkTag implements TagInterface
                     $url = $this->urlHelper->getAbsoluteUrl($url);
                 }
 
-                if ($anchor) {
-                    $url .= '#' . $anchor;
-                }
-
                 if ($query) {
                     $url .= '?' . $query;
+                }
+
+                if ($anchor) {
+                    $url .= '#' . $anchor;
                 }
 
                 $title = $item->getTitle();
@@ -214,18 +214,34 @@ class LinkTag implements TagInterface
     /**
      * @param mixed $href
      *
-     * @return array{uuid: string|null, anchor: string|null, query: string|null}
+     * @return array{uuid: string|null, query: string|null, anchor: string|null}
      */
     private function getPartsFromHref($href): array
     {
         $href = (string) $href ?: null;
 
-        /** @var string[] $hrefParts */
-        \preg_match("/(?'uuid'[^#\?]+)(?>#(?'anchor'[^\?]*))?(?>\?(?'query'.*))?/", $href, $hrefParts, PREG_UNMATCHED_AS_NULL);
+        $query = null;
+        $anchor = null;
 
-        $uuid = $hrefParts['uuid'] ?? null;
-        $anchor = $hrefParts['anchor'] ?? null;
-        $query = $hrefParts['query'] ?? null;
+        $hasQuery = strpos($href, '?');
+        $hasAnchor = strpos($href, '#');
+        if ($hasQuery === false && $hasAnchor === false) {
+          $uuid = $href;
+        } else if ($hasQuery === false) { // and $hasAnchor !== false
+          $parts = \explode('#', $href, 2);
+          $uuid = $parts[0];
+          $anchor = $parts[1];
+        } else if ($hasAnchor === false) { // and $hasQuery !== false
+          $parts = \explode('?', $href, 2);
+          $uuid = $parts[0];
+          $query = $parts[1];
+        } else { // both !== false
+          $parts = \explode('?', $href, 2);
+          $uuid = $parts[0];
+          $parts = \explode('#', $parts[1], 2);
+          $query = $parts[0];
+          $anchor = $parts[1];
+        }
 
         return [
             'uuid' => $uuid,
