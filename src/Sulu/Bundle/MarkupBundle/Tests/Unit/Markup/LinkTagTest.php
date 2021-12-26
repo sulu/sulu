@@ -152,6 +152,28 @@ class LinkTagTest extends TestCase
                 [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
                 '<a href="http://sulu.lo/de/test#anchor" title="Test-Title">Test-Content</a>',
             ],
+            [
+                '<sulu-link href="123-123-123?query=parameter" provider="article" title="Test-Title">Test-Content</sulu-link>',
+                [
+                    'href' => '123-123-123?query=parameter',
+                    'title' => 'Test-Title',
+                    'provider' => 'article',
+                    'content' => 'Test-Content',
+                ],
+                [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
+                '<a href="http://sulu.lo/de/test?query=parameter" title="Test-Title">Test-Content</a>',
+            ],
+            [
+                '<sulu-link href="123-123-123?query=parameter#anchor" provider="article" title="Test-Title">Test-Content</sulu-link>',
+                [
+                    'href' => '123-123-123?query=parameter#anchor',
+                    'title' => 'Test-Title',
+                    'provider' => 'article',
+                    'content' => 'Test-Content',
+                ],
+                [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
+                '<a href="http://sulu.lo/de/test?query=parameter#anchor" title="Test-Title">Test-Content</a>',
+            ],
         ];
     }
 
@@ -161,7 +183,7 @@ class LinkTagTest extends TestCase
     public function testParseAll($tag, $attributes, $items, $expected)
     {
         $uuids = [
-            \explode('#', $attributes['href'], 2)[0],
+            \preg_split('/[#?]/', $attributes['href'], 2)[0],
         ];
 
         $this->providers[$attributes['provider']]->preload($uuids, 'de', true)->willReturn($items);
