@@ -220,28 +220,13 @@ class LinkTag implements TagInterface
     {
         $href = (string) $href ?: null;
 
-        $query = null;
-        $anchor = null;
+        /** @var string[] $hrefParts */
+        $hrefParts = $href ? \explode('#', $href, 2) : [];
+        $anchor = $hrefParts[1] ?? null;
 
-        $hasQuery = strpos($href, '?');
-        $hasAnchor = strpos($href, '#');
-        if ($hasQuery === false && $hasAnchor === false) {
-          $uuid = $href;
-        } else if ($hasQuery === false) { // and $hasAnchor !== false
-          $parts = \explode('#', $href, 2);
-          $uuid = $parts[0];
-          $anchor = $parts[1];
-        } else if ($hasAnchor === false) { // and $hasQuery !== false
-          $parts = \explode('?', $href, 2);
-          $uuid = $parts[0];
-          $query = $parts[1];
-        } else { // both !== false
-          $parts = \explode('?', $href, 2);
-          $uuid = $parts[0];
-          $parts = \explode('#', $parts[1], 2);
-          $query = $parts[0];
-          $anchor = $parts[1];
-        }
+        $hrefParts = \explode('?', $hrefParts[0], 2);
+        $uuid = $hrefParts[0] ?? null;
+        $query = $hrefParts[1] ?? null;
 
         return [
             'uuid' => $uuid,
