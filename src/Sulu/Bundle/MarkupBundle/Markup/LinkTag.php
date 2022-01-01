@@ -224,7 +224,7 @@ class LinkTag implements TagInterface
         $hrefParts = $href ? \explode('#', $href, 2) : [];
         $anchor = $hrefParts[1] ?? null;
 
-        $hrefParts = \explode('?', $hrefParts[0], 2);
+        $hrefParts = $hrefParts ? \explode('?', $hrefParts[0], 2) : [];
         $uuid = $hrefParts[0] ?? null;
         $query = $hrefParts[1] ?? null;
 
