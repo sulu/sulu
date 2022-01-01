@@ -193,8 +193,9 @@ class LinkTagTest extends TestCase
      */
     public function testParseAll($tag, $attributes, $items, $expected)
     {
+        $uuid = \preg_split('/[#?]/', $attributes['href'], 2);
         $uuids = [
-            \preg_split('/[#?]/', $attributes['href'], 2)[0],
+            $uuid[0] ?: $attributes['href']
         ];
 
         $this->providers[$attributes['provider']]->preload($uuids, 'de', true)->willReturn($items);
