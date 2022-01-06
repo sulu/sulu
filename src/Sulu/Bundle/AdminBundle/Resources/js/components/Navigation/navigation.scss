@@ -47,6 +47,8 @@ $hoverColor: $shakespeare;
     cursor: pointer;
     padding: 20px;
     margin-right: -20px;
+    border: 0;
+    background-color: transparent;
     transition: .3s;
 
     &.active {
@@ -57,7 +59,8 @@ $hoverColor: $shakespeare;
         }
     }
 
-    &:hover {
+    &:hover,
+    &:focus {
         color: $hoverColor;
     }
 }

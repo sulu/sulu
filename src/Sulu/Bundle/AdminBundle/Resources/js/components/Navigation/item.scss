@@ -23,10 +23,17 @@ $hoverColor: $shakespeare;
     .title {
         display: flex;
         align-items: center;
+        justify-content: flex-start;
+        width: 100%;
         color: $color;
         padding: 20px;
+        border: 0;
+        background-color: transparent;
+        text-align: left;
+        font-weight: inherit;
 
-        &:hover {
+        &:hover,
+        &:focus {
             color: $hoverColor;
         }
 
