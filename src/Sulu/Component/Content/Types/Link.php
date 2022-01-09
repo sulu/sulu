@@ -23,6 +23,8 @@ use Sulu\Component\Content\SimpleContentType;
 class Link extends SimpleContentType
 {
     public const LINK_TYPE_EXTERNAL = 'external';
+    public const LINK_TYPE_PAGE = 'page';
+    public const LINK_TYPE_MEDIA = 'media';
 
     /**
      * @var LinkProviderPoolInterface
