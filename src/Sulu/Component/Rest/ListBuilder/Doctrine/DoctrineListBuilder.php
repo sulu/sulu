@@ -100,7 +100,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     private $distinct = false;
 
     /**
-     * @var FieldDescriptorInterface
+     * @var DoctrineFieldDescriptorInterface
      */
     private $idField;
 
@@ -308,9 +308,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function findIdsByGivenCriteria()
     {
-        $select = $this->getSelectAs($this->idField);
-
-        $subQueryBuilder = $this->createSubQueryBuilder($select);
+        $subQueryBuilder = $this->createSubQueryBuilder($this->getSelectAs($this->idField));
         if (null != $this->limit) {
             $subQueryBuilder->setMaxResults((int) $this->limit)->setFirstResult((int) ($this->limit * ($this->page - 1)));
         }
@@ -446,16 +444,10 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Creates a query-builder for sub-selecting ID's.
      *
-     * @param null|string $select
-     *
      * @return QueryBuilder
      */
-    protected function createSubQueryBuilder($select = null)
+    protected function createSubQueryBuilder(string $select)
     {
-        if (!$select) {
-            $select = $this->getSelectAs($this->idField);
-        }
-
         // get all filter-fields
         $filterFields = $this->getAllFields(true);
 
@@ -474,9 +466,10 @@ class DoctrineListBuilder extends AbstractListBuilder
                     $queryBuilder,
                     $this->user,
                     $this->permissions[$this->permission],
+                    $this->securedEntityName,
+                    $this->encodeAlias($this->securedEntityName),
                     $this->securedEntityClassField,
-                    $this->securedEntityIdField,
-                    $this->encodeAlias($this->entityName)
+                    $this->securedEntityIdField
                 );
             } elseif ($this->accessControlQueryEnhancer) {
                 $this->accessControlQueryEnhancer->enhance(
@@ -703,7 +696,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     /**
      * Set id-field of the "root" entity.
      */
-    public function setIdField(FieldDescriptorInterface $idField)
+    public function setIdField(DoctrineFieldDescriptorInterface $idField)
     {
         $this->idField = $idField;
     }

@@ -44,80 +44,117 @@ class AccessControlQueryEnhancer
         string $entityClass,
         string $entityAlias
     ): void {
-        $entityIdCondition = 'accessControl.entityId = ' . $entityAlias . '.id';
-        try {
-            $metadata = $this->entityManager->getClassMetadata($entityClass);
-            if ('integer' === $metadata->getTypeOfField('id')) {
-                $entityIdCondition = 'accessControl.entityIdInteger = ' . $entityAlias . '.id';
-            }
-        } catch (MappingException $e) {
-            $metadata = null;
-        }
-
         $this->enhanceQueryWithAccessControl(
             $queryBuilder,
             $user,
             $permission,
-            'accessControl.entityClass = :entityClass',
-            $entityIdCondition
+            $entityClass,
+            $entityAlias
         );
-
-        $queryBuilder->setParameter('entityClass', $entityClass);
     }
 
     public function enhanceWithDynamicEntityClass(
         QueryBuilder $queryBuilder,
         ?UserInterface $user,
         int $permission,
+        string $entityClass,
+        string $entityAlias,
         string $entityClassField,
-        string $entityIdField,
-        string $entityAlias
+        string $entityIdField
     ): void {
         $this->enhanceQueryWithAccessControl(
             $queryBuilder,
             $user,
             $permission,
-            'accessControl.entityClass = ' . $entityAlias . '.' . $entityClassField,
-            'accessControl.entityId = ' . $entityAlias . '.' . $entityIdField
+            $entityClass,
+            $entityAlias,
+            $entityIdField,
+            $entityClassField
         );
     }
 
+    /**
+     * Following function uses an own query to load the restricted (not accessible ids). This is faster as embedding the
+     * query as subquery. Also loading the "accessible" ids would be more performance intense because sulu has more
+     * "accessible" entities that not accessible. Optimized embedded queries are mostly not compatible for MySQL 5.7
+     * because of restrictions.
+     *
+     * As long as we dont have thousands of not "accessible" ids this approach should be faster.
+     */
     private function enhanceQueryWithAccessControl(
         QueryBuilder $queryBuilder,
         ?UserInterface $user,
         int $permission,
-        string $entityClassCondition,
-        string $entityIdCondition
+        string $entityClass,
+        string $entityAlias,
+        string $entityIdField = 'id',
+        ?string $entityClassField = null
     ): void {
-        $systemRoleQueryBuilder = $this->entityManager->createQueryBuilder()
-            ->from(RoleInterface::class, 'systemRoles')
-            ->select('systemRoles.id')
-            ->where('systemRoles.system = :system');
+        $subQueryBuilder = $this->entityManager->createQueryBuilder()
+            ->from($entityClass, 'entity')
+            ->select('entity.id');
 
-        $queryBuilder->leftJoin(
+        $accessClassCondition = 'accessControl.entityClass = :entityClass';
+        if ($entityClassField) {
+            $accessClassCondition = 'accessControl.entityClass = entity.' . $entityClassField;
+        } else {
+            $subQueryBuilder->setParameter('entityClass', $entityClass);
+        }
+
+        $subQueryBuilder->leftJoin(
             AccessControl::class,
             'accessControl',
             'WITH',
-            $entityClassCondition . ' AND ' . $entityIdCondition . ' '
-            . 'AND accessControl.role IN (' . $systemRoleQueryBuilder->getDQL() . ')'
+            $accessClassCondition . ' AND ' . $this->getEntityIdCondition($entityClass, 'entity', $entityIdField)
         );
-        $queryBuilder->leftJoin('accessControl.role', 'role');
-        $queryBuilder->andWhere(
-            'BIT_AND(accessControl.permissions, :permission) = :permission OR accessControl.permissions IS NULL'
+        $subQueryBuilder->leftJoin('accessControl.role', 'role', 'WITH', 'role.system = :system');
+        $subQueryBuilder->andWhere(
+            'BIT_AND(accessControl.permissions, :permission) <> :permission AND accessControl.permissions IS NOT NULL'
         );
 
-        if ($user) {
-            $roleIds = \array_map(function(RoleInterface $role) {
-                return $role->getId();
-            }, $user->getRoleObjects());
-        } else {
-            $anonymousRole = $this->systemStore->getAnonymousRole();
-            $roleIds = $anonymousRole ? [$anonymousRole->getId()] : [];
+        $subQueryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL');
+
+        $subQueryBuilder->setParameter('roleIds', $this->getUserRoleIds($user));
+        $subQueryBuilder->setParameter('system', $this->systemStore->getSystem());
+        $subQueryBuilder->setParameter('permission', $permission);
+
+        $result = $subQueryBuilder->getQuery()->getScalarResult();
+        $ids = \array_column($result, 'id');
+
+        if (\count($ids) > 0) {
+            $queryBuilder->andWhere(\sprintf('%s.id NOT IN (:accessControlIds)', $entityAlias));
+            $queryBuilder->setParameter('accessControlIds', $ids);
+        }
+    }
+
+    private function getEntityIdCondition(string $entityClass, string $entityAlias, string $entityIdField = 'id'): string
+    {
+        $entityIdCondition = 'accessControl.entityId = ' . $entityAlias . '.' . $entityIdField;
+        try {
+            $metadata = $this->entityManager->getClassMetadata($entityClass);
+            if ('integer' === $metadata->getTypeOfField($entityIdField)) {
+                $entityIdCondition = 'accessControl.entityIdInteger = ' . $entityAlias . '.' . $entityIdField;
+            }
+        } catch (MappingException $e) {
+            $metadata = null;
         }
 
-        $queryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL');
-        $queryBuilder->setParameter('roleIds', $roleIds);
-        $queryBuilder->setParameter('permission', $permission);
-        $queryBuilder->setParameter('system', $this->systemStore->getSystem());
+        return $entityIdCondition;
+    }
+
+    /**
+     * @return int[]
+     */
+    private function getUserRoleIds(?UserInterface $user): array
+    {
+        if ($user) {
+            return \array_map(function(RoleInterface $role) {
+                return $role->getId();
+            }, $user->getRoleObjects());
+        }
+
+        $anonymousRole = $this->systemStore->getAnonymousRole();
+
+        return $anonymousRole ? [$anonymousRole->getId()] : [];
     }
 }
