@@ -52,6 +52,7 @@ class UserSection extends React.Component<Props> {
                 <button
                     className={buttonClass}
                     onClick={this.handleButtonClick}
+                    type="button"
                 >
                     <div className={userSectionStyles.userImage}>
                         {userImage && (

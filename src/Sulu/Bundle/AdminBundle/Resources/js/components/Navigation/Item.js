@@ -48,7 +48,7 @@ export default class Item extends React.PureComponent<Props> {
 
         return (
             <div className={itemClass}>
-                <button className={itemStyles.title} onClick={this.handleClick}>
+                <button className={itemStyles.title} onClick={this.handleClick} type="button">
                     {icon && <Icon className={itemStyles.icon} name={icon} />}
                     <span className={itemStyles.text}>{title}</span>
                     {children &&
