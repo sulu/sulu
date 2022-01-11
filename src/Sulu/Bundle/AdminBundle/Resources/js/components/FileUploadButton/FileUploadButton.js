@@ -11,6 +11,7 @@ type Props = {|
     icon: string | typeof undefined,
     onUpload: (file: File) => void,
     skin: ButtonSkin | typeof undefined,
+    accept: string | typeof undefined,
 |};
 
 export default class FileUploadButton extends React.Component<Props> {
@@ -18,6 +19,7 @@ export default class FileUploadButton extends React.Component<Props> {
         disabled: false,
         icon: undefined,
         skin: undefined,
+        accept: undefined,
     };
 
     handleDrop = (files: Array<File>) => {
@@ -27,8 +29,8 @@ export default class FileUploadButton extends React.Component<Props> {
     };
 
     render() {
-        const {children, disabled, icon, skin} = this.props;
-
+        const {children, disabled, icon, skin, accept} = this.props;
+        
         return (
             <Dropzone
                 onDrop={this.handleDrop}
@@ -39,7 +41,7 @@ export default class FileUploadButton extends React.Component<Props> {
                         <Button disabled={disabled} icon={icon} skin={skin}>
                             {children}
                         </Button>
-                        <input {...getInputProps()} />
+                        <input {...getInputProps()} accept={accept} />
                     </div>
                 )}
             </Dropzone>
