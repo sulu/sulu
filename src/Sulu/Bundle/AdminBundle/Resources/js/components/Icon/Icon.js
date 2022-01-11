@@ -29,6 +29,19 @@ export default class Icon extends React.PureComponent<Props> {
         onClick();
     };
 
+    handleKeypress = (event: SyntheticEvent<HTMLElement>) => {
+        const {onClick} = this.props;
+
+        if (!onClick) {
+            return;
+        }
+
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.stopPropagation();
+            onClick();
+        }
+    };
+
     render() {
         const {className, name, onClick, style} = this.props;
         let fontClass = '';
@@ -64,6 +77,7 @@ export default class Icon extends React.PureComponent<Props> {
         const onClickProperties = onClick
             ? {
                 onClick: this.handleClick,
+                onKeyPress: this.handleKeypress,
                 role: 'button',
                 tabIndex: 0,
             }
