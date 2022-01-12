@@ -35,13 +35,14 @@ export default class FileUploadButton extends React.Component<Props> {
             <Dropzone
                 onDrop={this.handleDrop}
                 style={{}}
+                accept={accept}
             >
                 {({getInputProps, getRootProps}) => (
                     <div {...getRootProps()}>
                         <Button disabled={disabled} icon={icon} skin={skin}>
                             {children}
                         </Button>
-                        <input {...getInputProps()} accept={accept} />
+                        <input {...getInputProps()} />
                     </div>
                 )}
             </Dropzone>
