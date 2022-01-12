@@ -66,10 +66,10 @@ class Metadata
      * @param string $name Name of field/property in the mapped class
      * @param array $mapping {
      *
-     *   @var string Encoding type to use, @see \Sulu\Component\DocumentManager\PropertyEncoder::encode()
-     *   @var string PHPCR property name (excluding the prefix)
-     *   @var string Type of field (leave blank to determine automatically)
-     *   @var bool If the field should be mapped. Set to false to manually persist and hydrate the data.
+     *   string Encoding type to use, @see \Sulu\Component\DocumentManager\PropertyEncoder::encode()
+     *   string PHPCR property name (excluding the prefix)
+     *   string Type of field (leave blank to determine automatically)
+     *   bool If the field should be mapped. Set to false to manually persist and hydrate the data.
      * }
      */
     public function addFieldMapping($name, $mapping)

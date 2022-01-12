@@ -687,8 +687,6 @@ class ContentMapper implements ContentMapperInterface
         $onlyPublished = true,
         $permission = null
     ) {
-        $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
-
         // reset cache
         $this->initializeExtensionCache();
         $templateName = $this->encoder->localizedSystemName('template', $locale);
@@ -708,28 +706,27 @@ class ContentMapper implements ContentMapperInterface
             return false;
         }
 
-        if (
-            $document instanceof SecurityBehavior
+        if ($document instanceof SecurityBehavior
             && $this->security
             && $permission
-            && $webspace
-            && $webspace->hasWebsiteSecurity()
         ) {
             $permissionKey = \array_search($permission, $this->permissions);
             $documentWebspaceKey = $document->getWebspaceName();
             $documentWebspace = $this->webspaceManager->findWebspaceByKey($documentWebspaceKey);
-            $documentWebspaceSecurity = $documentWebspace->getSecurity();
 
-            $permissions = $this->accessControlManager->getUserPermissionByArray(
-                $document->getLocale(),
-                PageAdmin::SECURITY_CONTEXT_PREFIX . $documentWebspaceKey,
-                $document->getPermissions(),
-                $this->security->getUser(),
-                $documentWebspaceSecurity->getSystem()
-            );
+            if ($documentWebspace && $documentWebspace->hasWebsiteSecurity()) {
+                $documentWebspaceSecurity = $documentWebspace->getSecurity();
+                $permissions = $this->accessControlManager->getUserPermissionByArray(
+                    $document->getLocale(),
+                    PageAdmin::SECURITY_CONTEXT_PREFIX . $documentWebspaceKey,
+                    $document->getPermissions(),
+                    $this->security->getUser(),
+                    $documentWebspaceSecurity->getSystem()
+                );
 
-            if (isset($permissions[$permissionKey]) && !$permissions[$permissionKey]) {
-                return false;
+                if (isset($permissions[$permissionKey]) && !$permissions[$permissionKey]) {
+                    return false;
+                }
             }
         }
 

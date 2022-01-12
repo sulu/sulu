@@ -40,7 +40,8 @@ class ForwardedUrlRequestProcessor implements RequestProcessorInterface
             return new RequestAttributes();
         }
 
-        $originalRequest = Request::create($request->headers->get($this->urlHeader));
+        // Pass original server headers to request, to make sure placeholders in webspaces work
+        $originalRequest = Request::create($request->headers->get($this->urlHeader), 'GET', [], [], [], $request->server->all());
         $host = $originalRequest->getHost();
         $port = $originalRequest->getPort();
 
