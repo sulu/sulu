@@ -46,6 +46,14 @@ export default class Icon extends React.PureComponent<Props> {
         const {className, name, onClick, style} = this.props;
         let fontClass = '';
 
+        if (onClick) {
+            // @deprecated
+            log.warn(
+                'The "onClick" option is deprecated and will be removed. ' +
+                'Render icons in buttons instead.'
+            );
+        }
+
         if (!name || name.length <= 0) {
             logInvalidIconWarning(name);
 
