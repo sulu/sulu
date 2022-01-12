@@ -18,6 +18,7 @@ use Sulu\Bundle\ContactBundle\Entity\Address;
 use Sulu\Bundle\ContactBundle\Entity\AddressType;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\ContactBundle\Entity\ContactAddress;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
 use Sulu\Bundle\ContactBundle\Entity\Email;
 use Sulu\Bundle\ContactBundle\Entity\EmailType;
@@ -1717,6 +1718,39 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
+    }
+
+    public function testPutReplaceAccount()
+    {
+        $accountOld = $this->createAccount('Musterfirma Old');
+        $accountNew = $this->createAccount('Musterfirma New');
+        $contact = $this->createContact(
+            'Max',
+            'Mustermann'
+        );
+        $accountContact = new AccountContact();
+        $accountContact->setAccount($accountOld);
+        $accountContact->setContact($contact);
+        $accountContact->setMain(true);
+        $contact->addAccountContact($accountContact);
+
+        $this->em->flush();
+
+        $this->client->jsonRequest(
+            'PUT',
+            '/api/contacts/' . $contact->getId(),
+            [
+                'firstName' => 'Max',
+                'lastName' => 'Mustermann',
+                'account' => [
+                    'id' => $accountNew->getId(),
+                ],
+            ]
+        );
+
+        $contact = $this->getEntityManager()->find(ContactInterface::class, $contact->getId());
+        $this->assertSame('Musterfirma New', $contact->getMainAccount()->getName());
+        $this->assertCount(1, $contact->getAccountContacts());
     }
 
     public function testPutNotExisting()
