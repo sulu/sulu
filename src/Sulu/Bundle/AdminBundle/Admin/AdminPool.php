@@ -26,7 +26,9 @@ class AdminPool
     /**
      * Adds a new admin.
      *
-     * @var Admin
+     * @param Admin $admin
+     *
+     * @return void
      */
     public function addAdmin($admin)
     {
