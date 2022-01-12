@@ -32,7 +32,7 @@ type Props = {
 @observer
 class MultiMediaDropzone extends React.Component<Props> {
     static defaultProps = {
-        accept, undefined,
+        accept: undefined,
         disabled: false,
     };
 
