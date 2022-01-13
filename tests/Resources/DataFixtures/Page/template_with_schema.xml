@@ -26,6 +26,12 @@
                     <property name="article2" mandatory="true"/>
                 </properties>
             </schema>
+            <schema>
+                <properties>
+                    <property name="checkbox1" value="true"/>
+                    <property name="checkbox2" value="false"/>
+                </properties>
+            </schema>
         </anyOf>
     </schema>
 
@@ -53,5 +59,7 @@
 
         <property name="article1" type="text_area"/>
         <property name="article2" type="text_area"/>
+        <property name="checkbox1" type="checkbox"/>
+        <property name="checkbox2" type="checkbox"/>
     </properties>
 </template>

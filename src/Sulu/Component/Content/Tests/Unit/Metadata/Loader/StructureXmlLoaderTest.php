@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Metadata\Loader;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\InvalidDefaultTypeException;
@@ -38,7 +39,7 @@ class StructureXmlLoaderTest extends TestCase
     ];
 
     /**
-     * @var TranslatorInterface
+     * @var TranslatorInterface|ObjectProphecy
      */
     private $translator;
 
@@ -48,12 +49,12 @@ class StructureXmlLoaderTest extends TestCase
     private $loader;
 
     /**
-     * @var ContentTypeManagerInterface
+     * @var ContentTypeManagerInterface|ObjectProphecy
      */
     private $contentTypeManager;
 
     /**
-     * @var CacheLifetimeResolverInterface
+     * @var CacheLifetimeResolverInterface|ObjectProphecy
      */
     private $cacheLifetimeResolver;
 
@@ -103,6 +104,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->contentTypeManager->has('text_area')->willReturn(true);
         $this->contentTypeManager->has('smart_content_selection')->willReturn(true);
         $this->contentTypeManager->has('image_selection')->willReturn(true);
+        $this->contentTypeManager->has('checkbox')->willReturn(true);
 
         $this->cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
             ->willReturn(true);
@@ -123,6 +125,17 @@ class StructureXmlLoaderTest extends TestCase
                             'article2',
                         ],
                         'type' => 'object',
+                    ],
+                    [
+                        'type' => 'object',
+                        'properties' => [
+                            'checkbox1' => [
+                                'const' => true,
+                            ],
+                            'checkbox2' => [
+                                'const' => false,
+                            ],
+                        ],
                     ],
                 ],
             ],
