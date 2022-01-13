@@ -29,7 +29,7 @@ export default class Icon extends React.PureComponent<Props> {
         onClick();
     };
 
-    handleKeypress = (event: SyntheticEvent<HTMLElement>) => {
+    handleKeypress = (event: SyntheticKeyboardEvent<HTMLElement>) => {
         const {onClick} = this.props;
 
         if (!onClick) {
