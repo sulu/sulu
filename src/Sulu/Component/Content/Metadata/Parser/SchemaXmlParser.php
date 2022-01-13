@@ -77,7 +77,7 @@ class SchemaXmlParser
     {
         $value = $this->getValueFromXPath('@value', $xpath, $contextNode);
 
-        if ($value) {
+        if (null !== $value) {
             return new PropertyMetadata(
                 $this->getValueFromXPath('@name', $xpath, $contextNode),
                 $this->getValueFromXPath('@mandatory', $xpath, $contextNode, false),

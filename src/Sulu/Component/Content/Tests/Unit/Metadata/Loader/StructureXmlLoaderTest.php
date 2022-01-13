@@ -103,6 +103,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->contentTypeManager->has('text_area')->willReturn(true);
         $this->contentTypeManager->has('smart_content_selection')->willReturn(true);
         $this->contentTypeManager->has('image_selection')->willReturn(true);
+        $this->contentTypeManager->has('checkbox')->willReturn(true);
 
         $this->cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
             ->willReturn(true);
@@ -123,6 +124,17 @@ class StructureXmlLoaderTest extends TestCase
                             'article2',
                         ],
                         'type' => 'object',
+                    ],
+                    [
+                        'type' => 'object',
+                        'properties' => [
+                            'checkbox1' => [
+                                'const' => true,
+                            ],
+                            'checkbox2' => [
+                                'const' => false,
+                            ],
+                        ],
                     ],
                 ],
             ],
