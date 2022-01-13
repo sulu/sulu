@@ -8,7 +8,6 @@ $hoverColor: $shakespeare;
 .item {
     font-size: 14px;
     line-height: 16px;
-    cursor: pointer;
     box-sizing: border-box;
     padding-left: 4px;
     position: relative;
@@ -23,10 +22,18 @@ $hoverColor: $shakespeare;
     .title {
         display: flex;
         align-items: center;
+        justify-content: flex-start;
+        width: 100%;
         color: $color;
         padding: 20px;
+        border: 0;
+        background-color: transparent;
+        text-align: left;
+        font-weight: inherit;
+        cursor: pointer;
 
-        &:hover {
+        &:hover,
+        &:focus {
             color: $hoverColor;
         }
 

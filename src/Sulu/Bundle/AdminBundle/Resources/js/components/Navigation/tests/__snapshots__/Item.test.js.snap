@@ -4,9 +4,9 @@ exports[`The component should render 1`] = `
 <div
   class="item"
 >
-  <div
+  <button
     class="title"
-    role="button"
+    type="button"
   >
     <span
       aria-label="su-search"
@@ -17,7 +17,7 @@ exports[`The component should render 1`] = `
     >
       Test
     </span>
-  </div>
+  </button>
 </div>
 `;
 
@@ -25,9 +25,9 @@ exports[`The component should render active 1`] = `
 <div
   class="item active"
 >
-  <div
+  <button
     class="title"
-    role="button"
+    type="button"
   >
     <span
       aria-label="su-search"
@@ -38,7 +38,7 @@ exports[`The component should render active 1`] = `
     >
       Test
     </span>
-  </div>
+  </button>
 </div>
 `;
 
@@ -46,9 +46,9 @@ exports[`The component should render with children 1`] = `
 <div
   class="item"
 >
-  <div
+  <button
     class="title"
-    role="button"
+    type="button"
   >
     <span
       aria-label="su-cog"
@@ -61,11 +61,9 @@ exports[`The component should render with children 1`] = `
     </span>
     <span
       aria-label="su-angle-right"
-      class="su-angle-right clickable childrenIndicator"
-      role="button"
-      tabindex="0"
+      class="su-angle-right childrenIndicator"
     />
-  </div>
+  </button>
 </div>
 `;
 
@@ -73,9 +71,9 @@ exports[`The component should render with children an active child and expanded 
 <div
   class="item active"
 >
-  <div
+  <button
     class="title"
-    role="button"
+    type="button"
   >
     <span
       aria-label="su-cog"
@@ -88,39 +86,37 @@ exports[`The component should render with children an active child and expanded 
     </span>
     <span
       aria-label="su-angle-down"
-      class="su-angle-down clickable childrenIndicator"
-      role="button"
-      tabindex="0"
+      class="su-angle-down childrenIndicator"
     />
-  </div>
+  </button>
   <div>
     <div
       class="item"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           class="text"
         >
           Settings 1
         </span>
-      </div>
+      </button>
     </div>
     <div
       class="item active"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           class="text"
         >
           Settings 2
         </span>
-      </div>
+      </button>
     </div>
   </div>
 </div>

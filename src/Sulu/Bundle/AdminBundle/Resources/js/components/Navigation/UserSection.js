@@ -49,10 +49,10 @@ class UserSection extends React.Component<Props> {
 
         return (
             <div className={userSectionStyles.userSection}>
-                <div
+                <button
                     className={buttonClass}
                     onClick={this.handleButtonClick}
-                    role="button"
+                    type="button"
                 >
                     <div className={userSectionStyles.userImage}>
                         {userImage && (
@@ -72,9 +72,9 @@ class UserSection extends React.Component<Props> {
                     </span>
 
                     <Icon name={this.open ? 'su-angle-down' : 'su-angle-up'} />
-                </div>
+                </button>
 
-                <div className={menuClass}>
+                <div className={menuClass} hidden={!this.open}>
                     <Button
                         className={userSectionStyles.menuButton}
                         icon="su-user"

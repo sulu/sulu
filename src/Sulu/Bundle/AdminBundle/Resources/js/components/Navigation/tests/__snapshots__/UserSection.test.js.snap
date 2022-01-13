@@ -4,9 +4,9 @@ exports[`The component should render with all available props and handle clicks 
 <div
   class="userSection"
 >
-  <div
+  <button
     class="button"
-    role="button"
+    type="button"
   >
     <div
       class="userImage"
@@ -27,9 +27,10 @@ exports[`The component should render with all available props and handle clicks 
       aria-label="su-angle-up"
       class="su-angle-up"
     />
-  </div>
+  </button>
   <div
     class="menu"
+    hidden=""
   >
     <button
       class="button text hasText menuButton"

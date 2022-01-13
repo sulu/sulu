@@ -17,8 +17,11 @@ $lightColor: $silver;
     height: 60px;
     cursor: pointer;
     color: $color;
+    border: 0;
+    background-color: transparent;
 
-    &:hover {
+    &:hover,
+    &:focus {
         color: $hoverColor;
     }
 
@@ -83,7 +86,8 @@ $lightColor: $silver;
     color: $lightColor;
     padding-block: 10px;
 
-    &:hover {
+    &:hover,
+    &:focus {
         color: $hoverColor;
     }
 }
