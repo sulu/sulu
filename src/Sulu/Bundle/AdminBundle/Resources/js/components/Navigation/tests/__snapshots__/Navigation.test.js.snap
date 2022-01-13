@@ -23,9 +23,9 @@ exports[`The component should render and handle clicks correctly 1`] = `
     <div
       class="item"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           aria-label="su-search"
@@ -36,14 +36,14 @@ exports[`The component should render and handle clicks correctly 1`] = `
         >
           Search
         </span>
-      </div>
+      </button>
     </div>
     <div
       class="item"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           aria-label="fa-bullseye"
@@ -54,7 +54,7 @@ exports[`The component should render and handle clicks correctly 1`] = `
         >
           Webspaces
         </span>
-      </div>
+      </button>
     </div>
   </div>
   <div
@@ -63,9 +63,9 @@ exports[`The component should render and handle clicks correctly 1`] = `
     <div
       class="userSection"
     >
-      <div
+      <button
         class="button"
-        role="button"
+        type="button"
       >
         <div
           class="userImage"
@@ -84,9 +84,10 @@ exports[`The component should render and handle clicks correctly 1`] = `
           aria-label="su-angle-up"
           class="su-angle-up"
         />
-      </div>
+      </button>
       <div
         class="menu"
+        hidden=""
       >
         <button
           class="button text hasText menuButton"
@@ -138,15 +139,15 @@ exports[`The component should render with all available props and handle clicks 
         class="su-sulu-logo"
       />
     </span>
-    <div
+    <button
       class="pin"
-      role="button"
+      type="button"
     >
       <span
         aria-label="su-stick-right"
         class="su-stick-right pinIcon"
       />
-    </div>
+    </button>
   </div>
   <div
     class="items"
@@ -154,9 +155,9 @@ exports[`The component should render with all available props and handle clicks 
     <div
       class="item"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           aria-label="su-search"
@@ -167,14 +168,14 @@ exports[`The component should render with all available props and handle clicks 
         >
           Search
         </span>
-      </div>
+      </button>
     </div>
     <div
       class="item"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           aria-label="su-webspace"
@@ -185,14 +186,14 @@ exports[`The component should render with all available props and handle clicks 
         >
           Webspaces
         </span>
-      </div>
+      </button>
     </div>
     <div
       class="item"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           aria-label="fa-image"
@@ -203,14 +204,14 @@ exports[`The component should render with all available props and handle clicks 
         >
           Media
         </span>
-      </div>
+      </button>
     </div>
     <div
       class="item"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           aria-label="fa-newspaper-o"
@@ -221,14 +222,14 @@ exports[`The component should render with all available props and handle clicks 
         >
           Article
         </span>
-      </div>
+      </button>
     </div>
     <div
       class="item"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           aria-label="fa-sticky-note-o"
@@ -239,14 +240,14 @@ exports[`The component should render with all available props and handle clicks 
         >
           Snippets
         </span>
-      </div>
+      </button>
     </div>
     <div
       class="item active"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           aria-label="su-user-1"
@@ -259,62 +260,60 @@ exports[`The component should render with all available props and handle clicks 
         </span>
         <span
           aria-label="su-angle-down"
-          class="su-angle-down clickable childrenIndicator"
-          role="button"
-          tabindex="0"
+          class="su-angle-down childrenIndicator"
         />
-      </div>
+      </button>
       <div>
         <div
           class="item"
         >
-          <div
+          <button
             class="title"
-            role="button"
+            type="button"
           >
             <span
               class="text"
             >
               Contact 1
             </span>
-          </div>
+          </button>
         </div>
         <div
           class="item active"
         >
-          <div
+          <button
             class="title"
-            role="button"
+            type="button"
           >
             <span
               class="text"
             >
               Contact 2
             </span>
-          </div>
+          </button>
         </div>
         <div
           class="item"
         >
-          <div
+          <button
             class="title"
-            role="button"
+            type="button"
           >
             <span
               class="text"
             >
               Contact 3
             </span>
-          </div>
+          </button>
         </div>
       </div>
     </div>
     <div
       class="item"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           aria-label="fa-gear"
@@ -327,11 +326,9 @@ exports[`The component should render with all available props and handle clicks 
         </span>
         <span
           aria-label="su-angle-right"
-          class="su-angle-right clickable childrenIndicator"
-          role="button"
-          tabindex="0"
+          class="su-angle-right childrenIndicator"
         />
-      </div>
+      </button>
     </div>
   </div>
   <div
@@ -340,9 +337,9 @@ exports[`The component should render with all available props and handle clicks 
     <div
       class="userSection"
     >
-      <div
+      <button
         class="button"
-        role="button"
+        type="button"
       >
         <div
           class="userImage"
@@ -363,9 +360,10 @@ exports[`The component should render with all available props and handle clicks 
           aria-label="su-angle-up"
           class="su-angle-up"
         />
-      </div>
+      </button>
       <div
         class="menu"
+        hidden=""
       >
         <button
           class="button text hasText menuButton"

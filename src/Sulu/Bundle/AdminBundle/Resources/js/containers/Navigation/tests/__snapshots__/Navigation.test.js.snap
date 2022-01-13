@@ -16,15 +16,15 @@ exports[`Should render navigation 1`] = `
         class="su-sulu-logo"
       />
     </span>
-    <div
+    <button
       class="pin"
-      role="button"
+      type="button"
     >
       <span
         aria-label="su-stick-right"
         class="su-stick-right pinIcon"
       />
-    </div>
+    </button>
   </div>
   <div
     class="items"
@@ -32,9 +32,9 @@ exports[`Should render navigation 1`] = `
     <div
       class="item active"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           aria-label="su-options"
@@ -43,14 +43,14 @@ exports[`Should render navigation 1`] = `
         <span
           class="text"
         />
-      </div>
+      </button>
     </div>
     <div
       class="item"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           aria-label="su-article"
@@ -59,14 +59,14 @@ exports[`Should render navigation 1`] = `
         <span
           class="text"
         />
-      </div>
+      </button>
     </div>
     <div
       class="item active"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           aria-label="su-options"
@@ -77,35 +77,33 @@ exports[`Should render navigation 1`] = `
         />
         <span
           aria-label="su-angle-down"
-          class="su-angle-down clickable childrenIndicator"
-          role="button"
-          tabindex="0"
+          class="su-angle-down childrenIndicator"
         />
-      </div>
+      </button>
       <div>
         <div
           class="item active"
         >
-          <div
+          <button
             class="title"
-            role="button"
+            type="button"
           >
             <span
               class="text"
             />
-          </div>
+          </button>
         </div>
         <div
           class="item"
         >
-          <div
+          <button
             class="title"
-            role="button"
+            type="button"
           >
             <span
               class="text"
             />
-          </div>
+          </button>
         </div>
       </div>
     </div>
@@ -116,9 +114,9 @@ exports[`Should render navigation 1`] = `
     <div
       class="userSection"
     >
-      <div
+      <button
         class="button"
-        role="button"
+        type="button"
       >
         <div
           class="userImage"
@@ -135,9 +133,10 @@ exports[`Should render navigation 1`] = `
           aria-label="su-angle-up"
           class="su-angle-up"
         />
-      </div>
+      </button>
       <div
         class="menu"
+        hidden=""
       >
         <button
           class="button text hasText menuButton"
@@ -189,15 +188,15 @@ exports[`Should render navigation without appVersion 1`] = `
         class="su-sulu-logo"
       />
     </span>
-    <div
+    <button
       class="pin"
-      role="button"
+      type="button"
     >
       <span
         aria-label="su-stick-right"
         class="su-stick-right pinIcon"
       />
-    </div>
+    </button>
   </div>
   <div
     class="items"
@@ -205,9 +204,9 @@ exports[`Should render navigation without appVersion 1`] = `
     <div
       class="item active"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           aria-label="su-options"
@@ -216,14 +215,14 @@ exports[`Should render navigation without appVersion 1`] = `
         <span
           class="text"
         />
-      </div>
+      </button>
     </div>
     <div
       class="item"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           aria-label="su-article"
@@ -232,14 +231,14 @@ exports[`Should render navigation without appVersion 1`] = `
         <span
           class="text"
         />
-      </div>
+      </button>
     </div>
     <div
       class="item active"
     >
-      <div
+      <button
         class="title"
-        role="button"
+        type="button"
       >
         <span
           aria-label="su-options"
@@ -250,35 +249,33 @@ exports[`Should render navigation without appVersion 1`] = `
         />
         <span
           aria-label="su-angle-down"
-          class="su-angle-down clickable childrenIndicator"
-          role="button"
-          tabindex="0"
+          class="su-angle-down childrenIndicator"
         />
-      </div>
+      </button>
       <div>
         <div
           class="item active"
         >
-          <div
+          <button
             class="title"
-            role="button"
+            type="button"
           >
             <span
               class="text"
             />
-          </div>
+          </button>
         </div>
         <div
           class="item"
         >
-          <div
+          <button
             class="title"
-            role="button"
+            type="button"
           >
             <span
               class="text"
             />
-          </div>
+          </button>
         </div>
       </div>
     </div>
@@ -289,9 +286,9 @@ exports[`Should render navigation without appVersion 1`] = `
     <div
       class="userSection"
     >
-      <div
+      <button
         class="button"
-        role="button"
+        type="button"
       >
         <div
           class="userImage"
@@ -308,9 +305,10 @@ exports[`Should render navigation without appVersion 1`] = `
           aria-label="su-angle-up"
           class="su-angle-up"
         />
-      </div>
+      </button>
       <div
         class="menu"
+        hidden=""
       >
         <button
           class="button text hasText menuButton"

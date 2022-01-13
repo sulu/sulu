@@ -23,15 +23,15 @@ Array [
               class="su-sulu-logo"
             />
           </span>
-          <div
+          <button
             class="pin"
-            role="button"
+            type="button"
           >
             <span
               aria-label="su-stick-right"
               class="su-stick-right pinIcon"
             />
-          </div>
+          </button>
         </div>
         <div
           class="items"
@@ -42,9 +42,9 @@ Array [
           <div
             class="userSection"
           >
-            <div
+            <button
               class="button"
-              role="button"
+              type="button"
             >
               <div
                 class="userImage"
@@ -63,9 +63,10 @@ Array [
                 aria-label="su-angle-up"
                 class="su-angle-up"
               />
-            </div>
+            </button>
             <div
               class="menu"
+              hidden=""
             >
               <button
                 class="button text hasText menuButton"
@@ -211,15 +212,15 @@ Array [
               class="su-sulu-logo"
             />
           </span>
-          <div
+          <button
             class="pin"
-            role="button"
+            type="button"
           >
             <span
               aria-label="su-stick-right"
               class="su-stick-right pinIcon"
             />
-          </div>
+          </button>
         </div>
         <div
           class="items"
@@ -230,9 +231,9 @@ Array [
           <div
             class="userSection"
           >
-            <div
+            <button
               class="button"
-              role="button"
+              type="button"
             >
               <div
                 class="userImage"
@@ -251,9 +252,10 @@ Array [
                 aria-label="su-angle-up"
                 class="su-angle-up"
               />
-            </div>
+            </button>
             <div
               class="menu"
+              hidden=""
             >
               <button
                 class="button text hasText menuButton"
@@ -741,15 +743,15 @@ Array [
               class="su-sulu-logo"
             />
           </span>
-          <div
+          <button
             class="pin"
-            role="button"
+            type="button"
           >
             <span
               aria-label="su-stick-right"
               class="su-stick-right pinIcon"
             />
-          </div>
+          </button>
         </div>
         <div
           class="items"
@@ -760,9 +762,9 @@ Array [
           <div
             class="userSection"
           >
-            <div
+            <button
               class="button"
-              role="button"
+              type="button"
             >
               <div
                 class="userImage"
@@ -781,9 +783,10 @@ Array [
                 aria-label="su-angle-up"
                 class="su-angle-up"
               />
-            </div>
+            </button>
             <div
               class="menu"
+              hidden=""
             >
               <button
                 class="button text hasText menuButton"
@@ -933,15 +936,15 @@ Array [
               class="su-sulu-logo"
             />
           </span>
-          <div
+          <button
             class="pin"
-            role="button"
+            type="button"
           >
             <span
               aria-label="su-stick-right"
               class="su-stick-right pinIcon"
             />
-          </div>
+          </button>
         </div>
         <div
           class="items"
@@ -952,9 +955,9 @@ Array [
           <div
             class="userSection"
           >
-            <div
+            <button
               class="button"
-              role="button"
+              type="button"
             >
               <div
                 class="userImage"
@@ -973,9 +976,10 @@ Array [
                 aria-label="su-angle-up"
                 class="su-angle-up"
               />
-            </div>
+            </button>
             <div
               class="menu"
+              hidden=""
             >
               <button
                 class="button text hasText menuButton"
