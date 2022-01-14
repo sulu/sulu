@@ -121,7 +121,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
 
         return (
             <Fragment>
-                <label
+                <div
                     className={labelClass}
                     ref={labelRef ? this.setLabelRef : undefined}
                 >
@@ -172,7 +172,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
                             />
                         </div>
                     }
-                </label>
+                </div>
                 {maxCharacters &&
                     <CharacterCounter max={maxCharacters} value={value} />
                 }
