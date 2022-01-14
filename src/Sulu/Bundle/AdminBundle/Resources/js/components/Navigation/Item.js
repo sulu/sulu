@@ -9,6 +9,7 @@ type Props = {
     active?: boolean,
     children?: ChildrenArray<Element<typeof Item> | false>,
     expanded?: boolean,
+    url?: string,
     icon?: string,
     onClick?: (value: string) => void,
     title: string,
@@ -17,19 +18,23 @@ type Props = {
 
 export default class Item extends React.PureComponent<Props> {
     handleClick = () => {
-        const {onClick, value} = this.props;
+        const {onClick, value, url} = this.props;
 
         if (!onClick) {
             return;
         }
-
+        
+        if (url) {
+            window.location = url;
+            return;
+        }
+        
         onClick(value);
     };
 
     render() {
-        const {title, children, expanded, icon} = this.props;
+        const {title, children, expanded, icon, url} = this.props;
         let {active} = this.props;
-
         // check for active children
         if (children) {
             React.Children.forEach(children, (child: Element<typeof Item>) => {
@@ -57,6 +62,11 @@ export default class Item extends React.PureComponent<Props> {
                             name={expanded ? 'su-angle-down' : 'su-angle-right'}
                             onClick={this.handleClick}
                         />
+                    }
+                    {url &&
+                    <Icon name="su-link"
+                        className={itemStyles.childrenIndicator}
+                    />
                     }
                 </div>
 

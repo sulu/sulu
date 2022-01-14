@@ -16,16 +16,16 @@ use Sulu\Bundle\AdminBundle\Exception\NavigationItemNotFoundException;
 class NavigationItemCollection
 {
     /**
-     * @var NavigationItem[]
+     * @var NavigationItemInterface[]
      */
     private $navigationItems = [];
 
-    public function add(NavigationItem $navigationItem): void
+    public function add(NavigationItemInterface $navigationItem): void
     {
         $this->navigationItems[$navigationItem->getName()] = $navigationItem;
     }
 
-    public function get(string $navigationItemName): NavigationItem
+    public function get(string $navigationItemName): NavigationItemInterface
     {
         if (!\array_key_exists($navigationItemName, $this->navigationItems)) {
             throw new NavigationItemNotFoundException($navigationItemName);
@@ -40,7 +40,7 @@ class NavigationItemCollection
     }
 
     /**
-     * @return NavigationItem[]
+     * @return NavigationItemInterface[]
      */
     public function all(): array
     {

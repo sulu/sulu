@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\Navigation;
 
-class NavigationItem implements \Iterator, NavigationItemInterface
+class NavigationExternalItem implements \Iterator, NavigationItemInterface
 {
     /**
      * The id of the NavigationItem.
@@ -42,7 +42,7 @@ class NavigationItem implements \Iterator, NavigationItemInterface
     /**
      * @var string
      */
-    protected $view;
+    protected $url;
 
     /**
      * @var string[]
@@ -162,14 +162,14 @@ class NavigationItem implements \Iterator, NavigationItemInterface
         return $this->icon;
     }
 
-    public function setView(string $view = null): void
+    public function setUrl(string $url = null): void
     {
-        $this->view = $view;
+        $this->url = $url;
     }
 
-    public function getView(): ?string
+    public function getUrl(): ?string
     {
-        return $this->view;
+        return $this->url;
     }
 
     public function setChildViews(array $childViews): void
@@ -276,7 +276,7 @@ class NavigationItem implements \Iterator, NavigationItemInterface
     public function copyChildless()
     {
         $new = $this->copyWithName();
-        $new->setView($this->getView());
+        $new->setUrl($this->getUrl());
         $new->setChildViews($this->getChildViews());
         $new->setIcon($this->getIcon());
         $new->setId($this->getId());
@@ -369,7 +369,6 @@ class NavigationItem implements \Iterator, NavigationItemInterface
      *
      * @see http://php.net/manual/en/iterator.next.php
      */
-    #[\ReturnTypeWillChange]
     public function next()
     {
         ++$this->position;
@@ -395,7 +394,6 @@ class NavigationItem implements \Iterator, NavigationItemInterface
      * @return bool The return value will be casted to boolean and then evaluated.
      *              Returns true on success or false on failure
      */
-    #[\ReturnTypeWillChange]
     public function valid()
     {
         return $this->position < \count($this->children);
@@ -406,7 +404,6 @@ class NavigationItem implements \Iterator, NavigationItemInterface
      *
      * @see http://php.net/manual/en/iterator.rewind.php
      */
-    #[\ReturnTypeWillChange]
     public function rewind()
     {
         $this->position = 0;
@@ -423,7 +420,7 @@ class NavigationItem implements \Iterator, NavigationItemInterface
             'title' => $this->getName(),
             'label' => $this->getLabel(),
             'icon' => $this->getIcon(),
-            'view' => $this->getView(),
+            'url' => $this->getUrl(),
             'disabled' => $this->getDisabled(),
             'visible' => $this->getVisible(),
             'id' => (null != $this->getId()) ? $this->getId() : \str_replace('.', '', \uniqid('', true)), //FIXME don't use uniqid()
@@ -452,4 +449,5 @@ class NavigationItem implements \Iterator, NavigationItemInterface
 
         return $array;
     }
+    
 }

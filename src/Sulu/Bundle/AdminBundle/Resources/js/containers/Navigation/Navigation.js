@@ -93,6 +93,7 @@ class Navigation extends React.Component<Props> {
                         active={this.isItemActive(item)}
                         icon={item.icon}
                         key={item.id}
+                        url={item.url}
                         title={item.label}
                         value={item.id}
                     >
@@ -102,6 +103,7 @@ class Navigation extends React.Component<Props> {
                                 <NavigationComponent.Item
                                     active={this.isItemActive(subItem)}
                                     key={subItem.id}
+                                    url={subItem.url}
                                     title={subItem.label}
                                     value={subItem.id}
                                 />

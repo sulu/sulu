@@ -75,9 +75,7 @@ class NavigationRegistry
             $admin->configureNavigationItems($navigationItemCollection);
         }
 
-        $navigationItems = \array_filter($navigationItemCollection->all(), function($navigationItem) {
-            return $navigationItem->getChildren() || $navigationItem->getView();
-        });
+        $navigationItems = $navigationItemCollection->all();
 
         foreach ($navigationItems as $navigationItem) {
             $this->processNavigationItem($navigationItem);
@@ -85,7 +83,7 @@ class NavigationRegistry
 
         \usort(
             $navigationItems,
-            function(NavigationItem $a, NavigationItem $b) {
+            function(NavigationItemInterface $a, NavigationItemInterface $b) {
                 $aPosition = $a->getPosition() ?? \PHP_INT_MAX;
                 $bPosition = $b->getPosition() ?? \PHP_INT_MAX;
 
@@ -99,7 +97,7 @@ class NavigationRegistry
     /**
      * Adds the translation and the child views to the given navigation item.
      */
-    private function processNavigationItem(NavigationItem $navigationItem): void
+    private function processNavigationItem(NavigationItemInterface $navigationItem): void
     {
         // create label from name when no label is set
         if (!$navigationItem->getLabel()) {
