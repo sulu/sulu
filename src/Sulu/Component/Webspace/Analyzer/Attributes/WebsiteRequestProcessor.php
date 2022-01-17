@@ -65,10 +65,10 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
             $portalInformations,
             function(PortalInformation $a, PortalInformation $b) {
                 if ($a->getPriority() === $b->getPriority()) {
-                    return \strlen($a->getUrl()) < \strlen($b->getUrl());
+                    return \strlen($a->getUrl()) < \strlen($b->getUrl()) ? 1 : -1;
                 }
 
-                return $a->getPriority() < $b->getPriority();
+                return $a->getPriority() < $b->getPriority() ? 1 : -1;
             }
         );
 
