@@ -99,8 +99,8 @@ final class PageTrashItemHandler implements
             $redirectTarget = $localizedPage->getRedirectTarget();
 
             $extensionsData = ($localizedPage->getExtensionsData() instanceof ExtensionContainer)
-                ? $data['extensionsData'] = $localizedPage->getExtensionsData()->toArray()
-                : $data['extensionsData'] = $localizedPage->getExtensionsData();
+                ? $localizedPage->getExtensionsData()->toArray()
+                : $localizedPage->getExtensionsData();
 
             $pageTitles[$locale] = $localizedPage->getTitle();
 
