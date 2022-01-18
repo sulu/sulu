@@ -164,7 +164,6 @@ class RoutableSubscriber implements EventSubscriberInterface
 
         $document->setUuid($event->getNode()->getIdentifier());
 
-        // TODO: maybe read route path from document
         $propertyName = $this->getRoutePathPropertyName($document, $event->getLocale());
         $routePath = $event->getNode()->getPropertyValueWithDefault($propertyName, null);
 
