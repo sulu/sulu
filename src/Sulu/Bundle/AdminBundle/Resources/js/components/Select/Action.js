@@ -52,6 +52,7 @@ export default class Action<T> extends React.PureComponent<Props<T>> {
                     className={actionStyles.action}
                     onClick={this.handleButtonClick}
                     ref={this.setButtonRef}
+                    type="button"
                 >
                     {this.props.children}
                 </button>
