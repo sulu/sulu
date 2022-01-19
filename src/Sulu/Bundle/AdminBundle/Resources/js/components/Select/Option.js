@@ -104,6 +104,7 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
                     onClick={this.handleButtonClick}
                     ref={this.setButtonRef}
                     style={{minWidth: anchorWidth + ANCHOR_WIDTH_DIFFERENCE}}
+                    type="button"
                 >
                     {this.renderSelectedVisualization()}
                     {children}
