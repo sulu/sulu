@@ -136,7 +136,7 @@ trait DataProviderRepositoryTrait
                     $queryBuilder,
                     $tagRelation,
                     $filters['tags'],
-                    \strtolower($filters['tagOperator']),
+                    (isset($filters['tagOperator'])) ? \strtolower($filters['tagOperator']) : 'or',
                     'adminTags'
                 )
             );
@@ -163,7 +163,7 @@ trait DataProviderRepositoryTrait
                     $queryBuilder,
                     $categoryRelation,
                     $filters['categories'],
-                    \strtolower($filters['categoryOperator']),
+                    (isset($filters['categoryOperator'])) ? \strtolower($filters['categoryOperator']) : 'or',
                     'adminCategories'
                 )
             );
