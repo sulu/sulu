@@ -14,6 +14,7 @@ namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\EventListener;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Ramsey\Uuid\Uuid;
 use Sulu\Bundle\HttpCacheBundle\EventSubscriber\TagsSubscriber;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -30,32 +31,32 @@ class TagsSubscriberTest extends TestCase
     private $tagsSubscriber;
 
     /**
-     * @var ReferenceStorePoolInterface
+     * @var ReferenceStorePoolInterface|ObjectProphecy
      */
     private $referenceStorePool;
 
     /**
-     * @var SymfonyResponseTagger
+     * @var SymfonyResponseTagger|ObjectProphecy
      */
     private $symfonyResponseTagger;
 
     /**
-     * @var Request
+     * @var Request|ObjectProphecy
      */
     private $request;
 
     /**
-     * @var RequestStack
+     * @var RequestStack|ObjectProphecy
      */
     private $requestStack;
 
     /**
-     * @var ReferenceStoreInterface[]
+     * @var (ReferenceStoreInterface|ObjectProphecy)[]
      */
     private $referenceStores;
 
     /**
-     * @var StructureInterface
+     * @var StructureInterface|ObjectProphecy
      */
     private $structure;
 
