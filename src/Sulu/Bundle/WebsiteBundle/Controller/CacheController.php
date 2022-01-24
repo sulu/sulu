@@ -60,7 +60,8 @@ class CacheController
         $webspaceKey = $request->query->get('webspaceKey');
         if ($webspaceKey && !$this->checkLivePermissionForWebspace($webspaceKey)) {
             return new JsonResponse(null, 403);
-        } elseif (!$this->checkLivePermissionForAllWebspaces()) {
+        }
+        if (!$webspaceKey && !$this->checkLivePermissionForAllWebspaces()) {
             return new JsonResponse(null, 403);
         }
 
