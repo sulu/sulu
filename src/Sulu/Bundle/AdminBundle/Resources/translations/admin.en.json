@@ -89,6 +89,8 @@
     "sulu_admin.choose_language": "Choose language",
     "sulu_admin.characters_left": "characters left",
     "sulu_admin.segments_left": "segments left",
+    "sulu_admin.create_copy": "Create copy",
+    "sulu_admin.copy_dialog_description": "This operation creates a copy of the current item. Do you wish to proceed?",
     "sulu_admin.copy_locale": "Copy locale",
     "sulu_admin.choose_target_locale": "Choose target locales",
     "sulu_admin.copy_locale_dialog_description": "* New locale will be created",

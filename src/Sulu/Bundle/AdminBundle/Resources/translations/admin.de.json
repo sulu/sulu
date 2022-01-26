@@ -88,6 +88,8 @@
     "sulu_admin.choose_language": "Sprache wählen",
     "sulu_admin.characters_left": "Zeichen übrig",
     "sulu_admin.segments_left": "Segmente übrig",
+    "sulu_admin.create_copy": "Kopie erstellen",
+    "sulu_admin.copy_dialog_description": "Diese Operation erstellt eine Kopie des aktuellen Elements. Wollen Sie fortfahren?",
     "sulu_admin.copy_locale": "Sprachvariante kopieren",
     "sulu_admin.choose_target_locale": "Wähle Zielsprachen",
     "sulu_admin.copy_locale_dialog_description": "* Neue Sprachvariante wird erstellt",

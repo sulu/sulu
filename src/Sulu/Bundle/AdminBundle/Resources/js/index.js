@@ -98,6 +98,7 @@ import {
 import {textEditorRegistry} from './containers/TextEditor';
 import Form, {
     formToolbarActionRegistry,
+    CopyToolbarAction as FormCopyToolbarAction,
     CopyLocaleToolbarAction as FormCopyLocaleToolbarAction,
     DeleteDraftToolbarAction as FormDeleteDraftToolbarAction,
     DeleteToolbarAction as FormDeleteToolbarAction,
@@ -314,6 +315,7 @@ function registerInternalLinkTypes(internalLinkTypes) {
 }
 
 function registerFormToolbarActions() {
+    formToolbarActionRegistry.add('sulu_admin.copy', FormCopyToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.copy_locale', FormCopyLocaleToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.delete', FormDeleteToolbarAction);
     formToolbarActionRegistry.add('sulu_admin.delete_draft', FormDeleteDraftToolbarAction);
