@@ -1,5 +1,15 @@
 # Upgrade
 
+## 2.4.x
+
+### Change PreviewLinkInterface
+
+Added the following method to the `PreviewLinkInterface`:
+
+```php
+public static function create(string $token, string $resourceKey, string $resourceId, string $locale, array $options): self;
+```
+
 ## 2.4.0
 
 ### Added PreviewLink resource to PreviewBundle
