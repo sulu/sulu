@@ -53,6 +53,15 @@ class PreviewLink implements PreviewLinkInterface
      */
     private $lastVisit;
 
+    public function __construct(string $token, string $resourceKey, string $resourceId, string $locale, array $options)
+    {
+        $this->token = $token;
+        $this->resourceKey = $resourceKey;
+        $this->resourceId = $resourceId;
+        $this->locale = $locale;
+        $this->options = $options;
+    }
+
     public function getId(): int
     {
         return $this->id;
@@ -106,14 +115,12 @@ class PreviewLink implements PreviewLinkInterface
      */
     public static function create(string $token, string $resourceKey, string $resourceId, string $locale, array $options): PreviewLinkInterface
     {
-        $previewLink = new self();
-
-        $previewLink->token = $token;
-        $previewLink->resourceKey = $resourceKey;
-        $previewLink->resourceId = $resourceId;
-        $previewLink->locale = $locale;
-        $previewLink->options = $options;
-
-        return $previewLink;
+        return new self(
+            $token,
+            $resourceKey,
+            $resourceId,
+            $locale,
+            $options
+        );
     }
 }
