@@ -104,7 +104,7 @@ class PreviewLink implements PreviewLinkInterface
     /**
      * @param mixed[] $options
      */
-    public static function create(string $token, string $resourceKey, string $resourceId, string $locale, array $options): self
+    public static function create(string $token, string $resourceKey, string $resourceId, string $locale, array $options): PreviewLinkInterface
     {
         $previewLink = new self();
 
