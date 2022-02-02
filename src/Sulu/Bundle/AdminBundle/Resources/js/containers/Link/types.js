@@ -2,20 +2,20 @@
 import type {IObservableValue} from 'mobx/lib/mobx';
 
 export type LinkTypeOverlayProps = {|
-    query?: ?string,
     anchor?: ?string,
     href: ?string | number,
     locale?: ?IObservableValue<string>,
     onAnchorChange?: ?(anchor: ?string) => void,
-    onQueryChange?: ?(query: ?string) => void,
     onCancel: () => void,
     onConfirm: () => void,
     onHrefChange: (id: ?string | number, item: ?Object) => void,
+    onQueryChange?: ?(query: ?string) => void,
     onRelChange?: ?(rel: ?string) => void,
     onTargetChange?: ?(target: string) => void,
     onTitleChange?: ?(title: ?string) => void,
     open: boolean,
     options?: ?LinkTypeOptions,
+    query?: ?string,
     rel?: ?string,
     target?: ?string,
     title?: ?string,
