@@ -39,7 +39,7 @@ class PreviewLinkRepository implements PreviewLinkRepositoryInterface
     {
         $token = $this->generateToken();
 
-        /** @var class-string<PreviewLinkInterface>|PreviewLinkInterface $className */
+        /** @var class-string<PreviewLinkInterface>$className */
         $className = $this->entityRepository->getClassName();
 
         return $className::create($token, $resourceKey, $resourceId, $locale, $options);
