@@ -1193,7 +1193,7 @@ class PageControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertEquals(true, $response['shadowOn']);
-        $this->assertEquals('default', $response['template']);
+        $this->assertEquals('overview', $response['template']);
 
         $this->client->jsonRequest(
             'PUT',
