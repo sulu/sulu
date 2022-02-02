@@ -2,14 +2,9 @@
 import React from 'react';
 import {action, observable} from 'mobx';
 import jexl from 'jexl';
-import log from 'loglevel';
 import Dialog from '../../../components/Dialog';
 import ResourceRequester from '../../../services/ResourceRequester';
-import ResourceStore from '../../../stores/ResourceStore';
 import {translate} from '../../../utils/Translator';
-import {ResourceFormStore} from '../../../containers/Form';
-import Form from '../Form';
-import Router from '../../../services/Router';
 import AbstractFormToolbarAction from './AbstractFormToolbarAction';
 
 export default class CopyToolbarAction extends AbstractFormToolbarAction {
@@ -56,7 +51,6 @@ export default class CopyToolbarAction extends AbstractFormToolbarAction {
     @action handleCopyDialogConfirm = () => {
         const {
             id,
-            locale,
             options: {
                 webspace,
             },

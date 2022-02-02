@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Display confirmation dialog when button is clicked 1`] = `
+Array [
+  <div
+    class="backdrop visible fixed"
+    role="button"
+  />,
+  <div
+    class="dialogContainer open"
+  >
+    <div
+      class="dialog"
+    >
+      <section
+        class="content"
+      >
+        <div
+          class="snackbar"
+        >
+          <div
+            class="snackbar error"
+            role="button"
+          >
+            <span
+              aria-label="su-exclamation-triangle"
+              class="su-exclamation-triangle icon"
+            />
+            <div
+              class="text"
+            >
+              <strong>
+                sulu_admin.error
+              </strong>
+               - 
+            </div>
+          </div>
+        </div>
+        <header
+          class="header"
+        >
+          <span
+            class="headerItem"
+          >
+            sulu_admin.create_copy
+          </span>
+        </header>
+        <article
+          class="article center"
+        >
+          sulu_admin.copy_dialog_description
+        </article>
+        <footer
+          class="footer"
+        >
+          <button
+            class="button primary hasText"
+            type="button"
+          >
+            <span
+              class="buttonText"
+            >
+              sulu_admin.ok
+            </span>
+          </button>
+          <button
+            class="button secondary hasText"
+            type="button"
+          >
+            <span
+              class="buttonText"
+            >
+              sulu_admin.cancel
+            </span>
+          </button>
+        </footer>
+      </section>
+    </div>
+  </div>,
+]
+`;
