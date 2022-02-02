@@ -16,6 +16,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\LocalizedStructureBehavior;
+use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\LocalizationState;
 use Sulu\Component\Content\Document\Structure\ManagedStructure;
@@ -222,7 +223,11 @@ class StructureSubscriber implements EventSubscriberInterface
         }
 
         $node = $event->getNode();
-        $propertyName = $this->getStructureTypePropertyName($document, $event->getLocale());
+        $locale = $event->getLocale();
+        if ($document instanceof ShadowLocaleBehavior && $document->isShadowLocaleEnabled()) {
+            $locale = $document->getOriginalLocale();
+        }
+        $propertyName = $this->getStructureTypePropertyName($document, $locale);
         $structureType = $node->getPropertyValueWithDefault($propertyName, null);
 
         if (!$structureType && $rehydrate) {
