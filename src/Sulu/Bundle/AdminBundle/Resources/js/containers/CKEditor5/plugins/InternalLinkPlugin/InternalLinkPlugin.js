@@ -41,6 +41,7 @@ export default class InternalLinkPlugin extends Plugin {
     @observable target: ?string = DEFAULT_TARGET;
     @observable id: ?string | number = undefined;
     @observable title: ?string;
+    @observable query: ?string;
     @observable anchor: ?string;
     defaultText: ?string;
     balloon: typeof ContextualBalloon;
@@ -50,17 +51,22 @@ export default class InternalLinkPlugin extends Plugin {
     }
 
     @computed get href(): ?string | number {
-        const {id, anchor} = this;
+        const {id, query, anchor} = this;
+        let append = '';
 
         if (!id) {
             return null;
         }
 
-        if (anchor) {
-            return id + '#' + anchor.replace(/^#+/g, '');
+        if (query) {
+            append += '?' + query.replace(/^\?+/g, '');
         }
 
-        return id;
+        if (anchor) {
+            append += '#' + anchor.replace(/^#+/g, '');
+        }
+
+        return id + append;
     }
 
     init() {
@@ -79,11 +85,14 @@ export default class InternalLinkPlugin extends Plugin {
             const node = findModelItemInSelection(this.editor);
 
             const href = node.getAttribute(LINK_HREF_ATTRIBUTE);
-            const hrefParts = href.split('#', 2);
-            const id = hrefParts[0] || null;
+            let hrefParts = href.split('#', 2);
             const anchor = hrefParts[1] || null;
+            hrefParts = hrefParts[0]?.split('?', 2);
+            const id = hrefParts[0] || null;
+            const query = hrefParts[1] || null;
             this.id = !isNaN(id) ? parseInt(id) : id;
             this.anchor = anchor;
+            this.query = query;
             this.target = node.getAttribute(LINK_TARGET_ATTRIBUTE);
             this.title = node.getAttribute(LINK_TITLE_ATTRIBUTE);
             this.openOverlay = node.getAttribute(LINK_PROVIDER_ATTRIBUTE);
@@ -111,10 +120,12 @@ export default class InternalLinkPlugin extends Plugin {
                                         onCancel={this.handleOverlayClose}
                                         onConfirm={this.handleOverlayConfirm}
                                         onHrefChange={this.handleHrefChange}
+                                        onQueryChange={this.handleQueryChange}
                                         onTargetChange={this.handleTargetChange}
                                         onTitleChange={this.handleTitleChange}
                                         open={this.openOverlay === key}
                                         options={linkTypeRegistry.getOptions(key)}
+                                        query={this.query}
                                         target={this.target}
                                         title={this.title}
                                     />
@@ -189,6 +200,7 @@ export default class InternalLinkPlugin extends Plugin {
                     this.target = DEFAULT_TARGET;
                     this.title = undefined;
                     this.id = undefined;
+                    this.query = undefined;
                     this.anchor = undefined;
                 }));
 
@@ -252,6 +264,10 @@ export default class InternalLinkPlugin extends Plugin {
 
     @action handleOverlayClose = () => {
         this.openOverlay = undefined;
+    };
+
+    @action handleQueryChange = (query: ?string) => {
+        this.query = query;
     };
 
     @action handleAnchorChange = (anchor: ?string) => {

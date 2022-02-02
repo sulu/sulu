@@ -11,9 +11,11 @@ import type {LinkTypeOverlayProps} from '../types';
 export default class LinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
     render() {
         const {
+            query,
             anchor,
             href,
             locale,
+            onQueryChange,
             onAnchorChange,
             onCancel,
             onConfirm,
@@ -63,6 +65,12 @@ export default class LinkTypeOverlay extends React.Component<LinkTypeOverlayProp
                             value={href}
                         />
                     </Form.Field>
+
+                    {onQueryChange &&
+                        <Form.Field label={translate('sulu_admin.link_query')}>
+                            <Input onChange={onQueryChange} value={query} />
+                        </Form.Field>
+                    }
 
                     {onAnchorChange &&
                         <Form.Field label={translate('sulu_admin.link_anchor')}>
