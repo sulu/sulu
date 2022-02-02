@@ -18,7 +18,7 @@ interface PreviewLinkInterface
     /**
      * @param mixed[] $options
      */
-    public function __construct(string $token, string $resourceKey, string $resourceId, string $locale, array $options);
+    public static function create(string $token, string $resourceKey, string $resourceId, string $locale, array $options): self;
 
     public function getId(): int;
 

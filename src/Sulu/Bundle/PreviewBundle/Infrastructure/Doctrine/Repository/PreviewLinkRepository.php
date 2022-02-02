@@ -42,7 +42,7 @@ class PreviewLinkRepository implements PreviewLinkRepositoryInterface
         /** @var class-string<PreviewLinkInterface> $className */
         $className = $this->entityRepository->getClassName();
 
-        return new $className($token, $resourceKey, $resourceId, $locale, $options);
+        return $className::create($token, $resourceKey, $resourceId, $locale, $options);
     }
 
     public function findByResource(string $resourceKey, string $resourceId, string $locale): ?PreviewLinkInterface
