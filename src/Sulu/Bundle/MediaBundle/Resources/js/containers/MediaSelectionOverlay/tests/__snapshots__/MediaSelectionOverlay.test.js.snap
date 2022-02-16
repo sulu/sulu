@@ -36,6 +36,7 @@ Array [
           >
             <div
               class="dropzone"
+              role="button"
               tabindex="0"
             >
               <div>
@@ -723,6 +724,7 @@ Array [
           >
             <div
               class="dropzone"
+              role="button"
               tabindex="0"
             >
               <div>

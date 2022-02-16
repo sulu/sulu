@@ -3,6 +3,7 @@
 exports[`Render a SingleMediaDropzone 1`] = `
 <div
   class="mediaContainer default"
+  role="button"
   tabindex="0"
 >
   <img
@@ -35,6 +36,7 @@ exports[`Render a SingleMediaDropzone 1`] = `
 exports[`Render a SingleMediaDropzone in disabled state 1`] = `
 <div
   class="mediaContainer default disabled"
+  role="button"
 >
   <img
     class="thumbnail"
@@ -66,6 +68,7 @@ exports[`Render a SingleMediaDropzone in disabled state 1`] = `
 exports[`Render a SingleMediaDropzone while uploading 1`] = `
 <div
   class="mediaContainer default"
+  role="button"
   tabindex="0"
 >
   <img
@@ -127,6 +130,7 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
 exports[`Render a SingleMediaDropzone with a MimeTypeIndicator if an error appeared during image loading 1`] = `
 <div
   class="mediaContainer default"
+  role="button"
   tabindex="0"
 >
   <div
@@ -168,6 +172,7 @@ exports[`Render a SingleMediaDropzone with a MimeTypeIndicator if an error appea
 exports[`Render a SingleMediaDropzone with a loader if image has not been loaded yet 1`] = `
 <div
   class="mediaContainer default"
+  role="button"
   tabindex="0"
 >
   <img
@@ -212,6 +217,7 @@ exports[`Render a SingleMediaDropzone with an error text 1`] = `
 Array [
   <div
     class="mediaContainer default"
+    role="button"
     tabindex="0"
   >
     <div
@@ -254,6 +260,7 @@ Array [
 exports[`Render a SingleMediaDropzone with the default empty icon 1`] = `
 <div
   class="mediaContainer default"
+  role="button"
   tabindex="0"
 >
   <div
@@ -290,6 +297,7 @@ exports[`Render a SingleMediaDropzone with the default empty icon 1`] = `
 exports[`Render a SingleMediaDropzone with the passed empty icon 1`] = `
 <div
   class="mediaContainer default"
+  role="button"
   tabindex="0"
 >
   <div
@@ -326,6 +334,7 @@ exports[`Render a SingleMediaDropzone with the passed empty icon 1`] = `
 exports[`Render a SingleMediaDropzone with the round skin 1`] = `
 <div
   class="mediaContainer round"
+  role="button"
   tabindex="0"
 >
   <img
@@ -358,6 +367,7 @@ exports[`Render a SingleMediaDropzone with the round skin 1`] = `
 exports[`Render a SingleMediaDropzone without a loader if image has been loaded after an error occured before 1`] = `
 <div
   class="mediaContainer default"
+  role="button"
   tabindex="0"
 >
   <img
@@ -390,6 +400,7 @@ exports[`Render a SingleMediaDropzone without a loader if image has been loaded 
 exports[`Render a SingleMediaDropzone without a loader if image has been loaded yet 1`] = `
 <div
   class="mediaContainer default"
+  role="button"
   tabindex="0"
 >
   <img

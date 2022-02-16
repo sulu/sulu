@@ -4,6 +4,7 @@ exports[`Render a SingleMediaUpload 1`] = `
 Array [
   <div
     class="mediaContainer default"
+    role="button"
     tabindex="0"
   >
     <img
@@ -74,6 +75,7 @@ Array [
 exports[`Render a SingleMediaUpload in disabled state 1`] = `
 <div
   class="mediaContainer default disabled"
+  role="button"
 >
   <img
     class="thumbnail"
@@ -111,6 +113,7 @@ exports[`Render a SingleMediaUpload with a different image size 1`] = `
 Array [
   <div
     class="mediaContainer default"
+    role="button"
     tabindex="0"
   >
     <img
@@ -181,6 +184,7 @@ Array [
 exports[`Render a SingleMediaUpload with an empty icon if no image is passed 1`] = `
 <div
   class="mediaContainer default"
+  role="button"
   tabindex="0"
 >
   <div
@@ -223,6 +227,7 @@ exports[`Render a SingleMediaUpload with an error message from the MediaUploadSt
 Array [
   <div
     class="mediaContainer default disabled"
+    role="button"
   >
     <img
       class="thumbnail"
@@ -266,6 +271,7 @@ exports[`Render a SingleMediaUpload with the round skin 1`] = `
 Array [
   <div
     class="mediaContainer round"
+    role="button"
     tabindex="0"
   >
     <img
@@ -337,6 +343,7 @@ exports[`Render a SingleMediaUpload without delete and download button 1`] = `
 Array [
   <div
     class="mediaContainer default"
+    role="button"
     tabindex="0"
   >
     <img
