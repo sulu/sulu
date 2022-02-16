@@ -4,6 +4,7 @@ exports[`Render a MediaVersionUpload field for images 1`] = `
 Array [
   <div
     class="mediaContainer default"
+    role="button"
     tabindex="0"
   >
     <img
@@ -78,6 +79,7 @@ exports[`Render a MediaVersionUpload field for videos 1`] = `
 Array [
   <div
     class="mediaContainer default"
+    role="button"
     tabindex="0"
   >
     <img
@@ -117,6 +119,7 @@ Array [
     class="buttons"
   >
     <div
+      role="button"
       tabindex="0"
     >
       <button
@@ -163,6 +166,7 @@ exports[`Render a MediaVersionUpload field for videos without assigned preview i
 Array [
   <div
     class="mediaContainer default"
+    role="button"
     tabindex="0"
   >
     <img
@@ -202,6 +206,7 @@ Array [
     class="buttons"
   >
     <div
+      role="button"
       tabindex="0"
     >
       <button

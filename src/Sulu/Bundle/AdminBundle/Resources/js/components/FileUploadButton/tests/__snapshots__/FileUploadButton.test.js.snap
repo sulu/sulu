@@ -2,6 +2,7 @@
 
 exports[`Render a FileUploadButton 1`] = `
 <div
+  role="button"
   tabindex="0"
 >
   <button
@@ -26,6 +27,7 @@ exports[`Render a FileUploadButton 1`] = `
 
 exports[`Render a FileUploadButton with other skin and icon 1`] = `
 <div
+  role="button"
   tabindex="0"
 >
   <button
@@ -54,6 +56,7 @@ exports[`Render a FileUploadButton with other skin and icon 1`] = `
 
 exports[`Render a disabled FileUploadButton 1`] = `
 <div
+  role="button"
   tabindex="0"
 >
   <button
