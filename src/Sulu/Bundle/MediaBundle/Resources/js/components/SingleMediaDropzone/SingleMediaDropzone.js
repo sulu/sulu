@@ -11,7 +11,7 @@ import singleMediaDropzoneStyles from './singleMediaDropzone.scss';
 const UPLOAD_ICON = 'su-upload';
 
 type Props = {|
-    accept: string,
+    accept?: string,
     disabled: boolean,
     emptyIcon: string,
     errorText?: ?string,

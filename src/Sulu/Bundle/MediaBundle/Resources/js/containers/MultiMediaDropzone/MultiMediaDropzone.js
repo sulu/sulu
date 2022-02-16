@@ -16,7 +16,7 @@ import type {ElementRef, Node} from 'react';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 type Props = {
-    accept: string,
+    accept?: string,
     children: Node,
     className?: string,
     collectionId: ?string | number,
