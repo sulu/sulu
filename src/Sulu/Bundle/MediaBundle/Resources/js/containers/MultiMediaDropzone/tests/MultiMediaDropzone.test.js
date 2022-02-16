@@ -85,6 +85,30 @@ test('Render the DropzoneOverlay when the open prop is set to true', () => {
     expect(multiMediaDropzone.find('DropzoneOverlay').prop('open')).toBeTruthy();
 });
 
+test('Component pass correct props to Dropzone component', () => {
+    const multiMediaDropzone = shallow(
+        <MultiMediaDropzone
+            accept="application/json"
+            collectionId={3}
+            disabled={false}
+            locale={observable.box()}
+            onClose={jest.fn()}
+            onOpen={jest.fn()}
+            onUpload={jest.fn()}
+            onUploadError={jest.fn()}
+            open={true}
+        >
+            <div />
+        </MultiMediaDropzone>
+    );
+
+    expect(multiMediaDropzone.find('Dropzone').props()).toEqual(expect.objectContaining({
+        accept: 'application/json',
+        disabled: false,
+        noClick: true,
+    }));
+});
+
 test('Disable dropzone if disabled prop is set to true', () => {
     const multiMediaDropzone = mount(
         <MultiMediaDropzone
