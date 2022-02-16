@@ -18,6 +18,7 @@ security:
         - { path: ^/admin/translations, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/p/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_USER }
 
     firewalls:

@@ -22,7 +22,7 @@
     "support": {
         "issues": "https://github.com/sulu/skeleton/issues",
         "source": "https://github.com/sulu/skeleton",
-        "docs": "http://docs.sulu.io/"
+        "docs": "https://docs.sulu.io/"
     },
     "require": {
         "php": "^7.2 || ^8.0",
