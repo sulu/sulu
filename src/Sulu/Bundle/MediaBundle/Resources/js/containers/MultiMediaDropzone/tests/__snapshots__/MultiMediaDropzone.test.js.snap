@@ -4,6 +4,7 @@ exports[`Render a MultiMediaDropzone 1`] = `
 Array [
   <div
     class="dropzone"
+    role="button"
     tabindex="0"
   >
     <div />

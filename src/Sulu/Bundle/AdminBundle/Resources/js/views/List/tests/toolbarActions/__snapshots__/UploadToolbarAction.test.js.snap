@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should correctly render node 1`] = `
-<div>
+<div
+  role="button"
+>
   <input
     accept="text/csv"
     autocomplete="off"

@@ -195,7 +195,7 @@ class LinkTagTest extends TestCase
     {
         $uuid = \preg_split('/[#?]/', $attributes['href'], 2);
         $uuids = [
-            $uuid[0] ?: $attributes['href']
+            $uuid ? $uuid[0] : $attributes['href'],
         ];
 
         $this->providers[$attributes['provider']]->preload($uuids, 'de', true)->willReturn($items);
