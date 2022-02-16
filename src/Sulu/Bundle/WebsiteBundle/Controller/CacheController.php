@@ -84,7 +84,7 @@ class CacheController
     private function checkLivePermissionForAllWebspaces()
     {
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            $context = PageAdmin::SECURITY_CONTEXT_PREFIX . $webspace->getKey();
+            $context = PageAdmin::getPageSecurityContext($webspace->getKey());
             if (!$this->securityChecker->hasPermission($context, PermissionTypes::LIVE)) {
                 return false;
             }
@@ -96,7 +96,7 @@ class CacheController
     private function checkLivePermissionForWebspace(string $webspaceKey): bool
     {
         return $this->securityChecker->hasPermission(
-            PageAdmin::SECURITY_CONTEXT_PREFIX . $webspaceKey,
+            PageAdmin::getPageSecurityContext($webspaceKey),
             PermissionTypes::LIVE
         );
     }
