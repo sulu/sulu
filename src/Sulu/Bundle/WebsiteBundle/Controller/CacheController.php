@@ -60,7 +60,8 @@ class CacheController
         $webspaceKey = $request->query->get('webspaceKey');
         if ($webspaceKey && !$this->checkLivePermissionForWebspace($webspaceKey)) {
             return new JsonResponse(null, 403);
-        } elseif (!$this->checkLivePermissionForAllWebspaces()) {
+        }
+        if (!$webspaceKey && !$this->checkLivePermissionForAllWebspaces()) {
             return new JsonResponse(null, 403);
         }
 
@@ -83,7 +84,7 @@ class CacheController
     private function checkLivePermissionForAllWebspaces()
     {
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            $context = PageAdmin::SECURITY_CONTEXT_PREFIX . $webspace->getKey();
+            $context = PageAdmin::getPageSecurityContext($webspace->getKey());
             if (!$this->securityChecker->hasPermission($context, PermissionTypes::LIVE)) {
                 return false;
             }
@@ -95,7 +96,7 @@ class CacheController
     private function checkLivePermissionForWebspace(string $webspaceKey): bool
     {
         return $this->securityChecker->hasPermission(
-            PageAdmin::SECURITY_CONTEXT_PREFIX . $webspaceKey,
+            PageAdmin::getPageSecurityContext($webspaceKey),
             PermissionTypes::LIVE
         );
     }
