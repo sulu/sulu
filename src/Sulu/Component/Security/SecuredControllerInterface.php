@@ -28,7 +28,7 @@ interface SecuredControllerInterface
     /**
      * Returns the locale for the given request.
      *
-     * @return string
+     * @return string|null
      */
     public function getLocale(Request $request);
 }
