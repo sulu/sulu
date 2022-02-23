@@ -696,11 +696,12 @@ class ContentRepositoryTest extends SuluTestCase
             $page->getUuid(),
             'de',
             'sulu_io',
-            MappingBuilder::create()->addProperties(['title'])->getMapping()
+            MappingBuilder::create()->addProperties(['title'])->setResolveUrl(true)->getMapping()
         );
 
         $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-2', $result->getPath());
+        $this->assertEquals('/test-1', $result->getUrl());
         $this->assertEquals('test-2', $result['title']);
     }
 
