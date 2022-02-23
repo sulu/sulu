@@ -12,7 +12,10 @@
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Trash;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectRepository;
+use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
+use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PageBundle\Trash\PageTrashItemHandler;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -38,6 +41,11 @@ class PageTrashItemHandlerTest extends SuluTestCase
      */
     private $entityManager;
 
+    /**
+     * @var ObjectRepository<ActivityInterface>
+     */
+    private $activityRepository;
+
     public function setUp(): void
     {
         static::purgeDatabase();
@@ -46,6 +54,7 @@ class PageTrashItemHandlerTest extends SuluTestCase
         $this->documentManager = static::getContainer()->get('sulu_document_manager.document_manager');
         $this->pageTrashItemHandler = static::getContainer()->get('sulu_page.page_trash_item_handler');
         $this->entityManager = static::getEntityManager();
+        $this->activityRepository = $this->entityManager->getRepository(ActivityInterface::class);
     }
 
     public function testStoreAndRestore(): void
@@ -131,6 +140,7 @@ class PageTrashItemHandlerTest extends SuluTestCase
         static::assertSame('test-title-de', $trashItem->getResourceTitle());
         static::assertSame('test-title-en', $trashItem->getResourceTitle('en'));
         static::assertSame('test-title-de', $trashItem->getResourceTitle('de'));
+        static::assertSame([], $trashItem->getRestoreOptions());
 
         /** @var PageDocument $restoredPage */
         $restoredPage = $this->pageTrashItemHandler->restore($trashItem, ['parentUuid' => $page2De->getUuid()]);
@@ -205,6 +215,10 @@ class PageTrashItemHandlerTest extends SuluTestCase
             $restoredPageEn->getPermissions()
         );
         static::assertSame(['other'], $restoredPageEn->getNavigationContexts());
+
+        $activity = $this->activityRepository->findOneBy(['type' => 'restored']);
+        $this->assertNotNull($activity);
+        $this->assertSame($originalPageUuid, $activity->getResourceId());
     }
 
     public function testStoreAndRestoreShadowPage(): void
@@ -373,6 +387,161 @@ class PageTrashItemHandlerTest extends SuluTestCase
         static::assertSame(RedirectType::EXTERNAL, $restoredPageEn->getRedirectType());
         static::assertNull($restoredPageEn->getRedirectTarget());
         static::assertSame('www.google.com', $restoredPageEn->getRedirectExternal());
+    }
+
+    public function testStoreAndRestoreSingleTranslation(): void
+    {
+        $role = $this->createRole();
+        /** @var HomeDocument $homepageDocument */
+        $homepageDocument = $this->documentManager->find('/cmf/test_io/contents');
+
+        /** @var PageDocument $page1De */
+        $page1De = $this->documentManager->create(Structure::TYPE_PAGE);
+        $page1De->setParent($homepageDocument);
+        $page1De->setTitle('test-title-de');
+        $page1De->setResourceSegment('test-resource-segment-de');
+        $page1De->setSuluOrder(555);
+        $page1De->setLocale('de');
+        $page1De->setCreator(101);
+        $page1De->setCreated(new \DateTime('1999-04-20'));
+        $page1De->setAuthor(202);
+        $page1De->setAuthored(new \DateTime('2000-04-20'));
+        $page1De->setStructureType('article');
+        $page1De->getStructure()->bind([
+            'article' => 'german article content',
+        ]);
+        $page1De->setExtensionsData([
+            'excerpt' => [
+                'title' => 'excerpt title de',
+            ],
+            'seo' => [
+                'title' => 'seo title de',
+            ],
+        ]);
+        $page1De->setPermissions([
+            $role->getId() => [
+                'view' => true,
+                'edit' => true,
+                'delete' => false,
+            ],
+        ]);
+        $page1De->setNavigationContexts(['main', 'other']);
+        $this->documentManager->persist($page1De, 'de');
+
+        /** @var PageDocument $page1En */
+        $page1En = $this->documentManager->find($page1De->getUuid(), 'en', ['load_ghost_content' => false]);
+        $page1En->setTitle('test-title-en');
+        $page1En->setResourceSegment('test-resource-segment-en');
+        $page1En->setLocale('en');
+        $page1En->setCreator(303);
+        $page1En->setCreated(new \DateTime('1999-04-22'));
+        $page1En->setAuthor(404);
+        $page1En->setAuthored(new \DateTime('2000-04-22'));
+        $page1En->setStructureType('article');
+        $page1En->getStructure()->bind([
+            'article' => 'english article content',
+        ]);
+        $page1En->setExtensionsData([
+            'excerpt' => [
+                'title' => 'excerpt title en',
+            ],
+            'seo' => [
+                'title' => 'seo title en',
+            ],
+        ]);
+        $page1En->setNavigationContexts(['other']);
+        $this->documentManager->persist($page1En, 'en');
+
+        $this->documentManager->flush();
+        $originalPageUuid = $page1De->getUuid();
+
+        $trashItem = $this->pageTrashItemHandler->store($page1En, ['locale' => 'en']);
+        $this->documentManager->removeLocale($page1En, 'en');
+        $this->documentManager->flush();
+        $this->documentManager->clear();
+
+        static::assertSame($originalPageUuid, $trashItem->getResourceId());
+        static::assertSame('test-title-en', $trashItem->getResourceTitle());
+        static::assertSame('test-title-en', $trashItem->getResourceTitle('en'));
+        static::assertSame(['locale' => 'en'], $trashItem->getRestoreOptions());
+
+        /** @var PageDocument $restoredPage */
+        $restoredPage = $this->pageTrashItemHandler->restore($trashItem, ['parentUuid' => $homepageDocument->getUuid()]);
+        /** @var BasePageDocument $restoredPageParent */
+        $restoredPageParent = $restoredPage->getParent();
+        static::assertSame($originalPageUuid, $restoredPage->getUuid());
+        static::assertSame($homepageDocument->getUuid(), $restoredPageParent->getUuid());
+
+        /** @var PageDocument $restoredPageDe */
+        $restoredPageDe = $this->documentManager->find($originalPageUuid, 'de');
+        /** @var BasePageDocument $restoredPageDeParent */
+        $restoredPageDeParent = $restoredPageDe->getParent();
+        static::assertSame($originalPageUuid, $restoredPageDe->getUuid());
+        static::assertSame($homepageDocument->getUuid(), $restoredPageDeParent->getUuid());
+        static::assertSame('test-title-de', $restoredPageDe->getTitle());
+        static::assertSame('test-resource-segment-de', $restoredPageDe->getResourceSegment());
+        static::assertSame(555, $restoredPageDe->getSuluOrder());
+        static::assertSame('de', $restoredPageDe->getLocale());
+        static::assertSame(101, $restoredPageDe->getCreator());
+        static::assertSame('1999-04-20T00:00:00+00:00', $restoredPageDe->getCreated()->format('c'));
+        static::assertSame(202, $restoredPageDe->getAuthor());
+        static::assertSame('2000-04-20T00:00:00+00:00', $restoredPageDe->getAuthored()->format('c'));
+        static::assertSame('article', $restoredPageDe->getStructureType());
+        static::assertSame('german article content', $restoredPageDe->getStructure()->toArray()['article']);
+        static::assertSame('excerpt title de', $restoredPageDe->getExtensionsData()['excerpt']['title']);
+        static::assertSame('seo title de', $restoredPageDe->getExtensionsData()['seo']['title']);
+        static::assertSame(
+            [
+                $role->getId() => [
+                    'view' => true,
+                    'add' => false,
+                    'edit' => true,
+                    'delete' => false,
+                    'archive' => false,
+                    'live' => false,
+                    'security' => false,
+                ],
+            ],
+            $restoredPageDe->getPermissions()
+        );
+        static::assertSame(['main', 'other'], $restoredPageDe->getNavigationContexts());
+
+        /** @var PageDocument $restoredPageEn */
+        $restoredPageEn = $this->documentManager->find($originalPageUuid, 'en');
+        /** @var BasePageDocument $restoredPageEnParent */
+        $restoredPageEnParent = $restoredPageEn->getParent();
+        static::assertSame($originalPageUuid, $restoredPageEn->getUuid());
+        static::assertSame($homepageDocument->getUuid(), $restoredPageEnParent->getUuid());
+        static::assertSame('test-title-en', $restoredPageEn->getTitle());
+        static::assertSame('test-resource-segment-en', $restoredPageEn->getResourceSegment());
+        static::assertSame('en', $restoredPageEn->getLocale());
+        static::assertSame(303, $restoredPageEn->getCreator());
+        static::assertSame('1999-04-22T00:00:00+00:00', $restoredPageEn->getCreated()->format('c'));
+        static::assertSame(404, $restoredPageEn->getAuthor());
+        static::assertSame('2000-04-22T00:00:00+00:00', $restoredPageEn->getAuthored()->format('c'));
+        static::assertSame('article', $restoredPageEn->getStructureType());
+        static::assertSame('english article content', $restoredPageEn->getStructure()->toArray()['article']);
+        static::assertSame('excerpt title en', $restoredPageEn->getExtensionsData()['excerpt']['title']);
+        static::assertSame('seo title en', $restoredPageEn->getExtensionsData()['seo']['title']);
+        static::assertSame(
+            [
+                $role->getId() => [
+                    'view' => true,
+                    'add' => false,
+                    'edit' => true,
+                    'delete' => false,
+                    'archive' => false,
+                    'live' => false,
+                    'security' => false,
+                ],
+            ],
+            $restoredPageEn->getPermissions()
+        );
+        static::assertSame(['other'], $restoredPageEn->getNavigationContexts());
+
+        $activity = $this->activityRepository->findOneBy(['type' => 'translation_restored']);
+        $this->assertNotNull($activity);
+        $this->assertSame($originalPageUuid, $activity->getResourceId());
     }
 
     private function createRole(string $name = 'Role', string $system = 'Website'): Role
