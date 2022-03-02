@@ -27,9 +27,11 @@ class CachingTest extends SuluTestCase
     public function testFirstRequestIsACacheMiss()
     {
         $this->purgeDatabase();
+
         $cacheKernel = new AppCache(self::bootKernel());
         $cookieJar = new CookieJar();
         $client = new KernelBrowser($cacheKernel, [], null, $cookieJar);
+        $client->disableReboot();
 
         $client->request('PURGE', 'http://sulu.lo');
 
@@ -42,7 +44,6 @@ class CachingTest extends SuluTestCase
         $this->assertContains('X-Sulu-Segment', $response->getVary());
         $this->assertStringContainsString('miss', $response->headers->get('x-symfony-cache'));
         $this->assertCount(0, $response->headers->getCookies());
-        /* @var Cookie $visitorTargetGroupCookie */
         $this->assertEquals(0, $response->headers->getCacheControlDirective('max-age'));
         $this->assertEquals(0, $response->headers->getCacheControlDirective('s-maxage'));
 

@@ -143,7 +143,11 @@
         "react/no-deprecated": "error",
         "react/jsx-curly-brace-presence": [
             "error",
-            "never"
+            {
+                "props": "never",
+                "children": "never",
+                "propElementValues": "always"
+            }
         ],
         "react/jsx-curly-spacing": [
             "error",

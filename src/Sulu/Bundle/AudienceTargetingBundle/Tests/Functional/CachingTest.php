@@ -38,6 +38,7 @@ class CachingTest extends SuluTestCase
         $cacheKernel = new AppCache(self::bootKernel());
         $cookieJar = new CookieJar();
         $client = new KernelBrowser($cacheKernel, [], null, $cookieJar);
+        $client->disableReboot();
 
         $client->request('PURGE', '/');
 
