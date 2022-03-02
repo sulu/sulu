@@ -386,6 +386,9 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         );
     }
 
+    /**
+     * @return string
+     */
     public function getLocale(Request $request)
     {
         if ($request->query->has('locale')) {

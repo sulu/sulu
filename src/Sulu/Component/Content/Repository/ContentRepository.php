@@ -820,6 +820,11 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
             $type
         );
 
+        if ($mapping->resolveUrl()) {
+            $content->setUrl($linkedContent->getUrl());
+            $content->setUrls($linkedContent->getUrls());
+        }
+
         if (!$content->getTemplate() || !$this->structureManager->getStructure($content->getTemplate())) {
             $content->setBrokenTemplate();
         }

@@ -32,7 +32,7 @@ test('The component should call the callbacks after press space', () => {
     const onClick = jest.fn();
     const afterAction = jest.fn();
     const action = shallow(<Action afterAction={afterAction} onClick={onClick} value="my-option">My action</Action>);
-    action.find('button').simulate('keydown', {key: 'Space', preventDefault: jest.fn(), stopPropagation: jest.fn()});
+    action.find('button').simulate('keydown', {key: ' ', preventDefault: jest.fn(), stopPropagation: jest.fn()});
     expect(onClick).toBeCalled();
     expect(afterAction).toBeCalled();
 });

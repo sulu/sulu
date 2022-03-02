@@ -41,3 +41,21 @@ test('Icon should call the callback on click', () => {
     expect(onClick).toBeCalled();
     expect(stopPropagation).toBeCalled();
 });
+
+test('Icon should call the callback on when space is pressed', () => {
+    const onClick = jest.fn();
+    const stopPropagation = jest.fn();
+    const icon = shallow(<Icon className="test" name="su-pen" onClick={onClick} />);
+    icon.simulate('keypress', {key: ' ', stopPropagation});
+    expect(onClick).toBeCalled();
+    expect(stopPropagation).toBeCalled();
+});
+
+test('Icon should call the callback on when enter is pressed', () => {
+    const onClick = jest.fn();
+    const stopPropagation = jest.fn();
+    const icon = shallow(<Icon className="test" name="su-pen" onClick={onClick} />);
+    icon.simulate('keypress', {key: 'Enter', stopPropagation});
+    expect(onClick).toBeCalled();
+    expect(stopPropagation).toBeCalled();
+});

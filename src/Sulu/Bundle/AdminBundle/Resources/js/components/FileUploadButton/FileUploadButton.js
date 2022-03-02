@@ -6,15 +6,17 @@ import type {Node} from 'react';
 import type {ButtonSkin} from '../Button';
 
 type Props = {|
+    accept?: string,
     children?: Node,
     disabled: boolean,
-    icon: string | typeof undefined,
+    icon?: string,
     onUpload: (file: File) => void,
-    skin: ButtonSkin | typeof undefined,
+    skin?: ButtonSkin,
 |};
 
 export default class FileUploadButton extends React.Component<Props> {
     static defaultProps = {
+        accept: undefined,
         disabled: false,
         icon: undefined,
         skin: undefined,
@@ -27,10 +29,11 @@ export default class FileUploadButton extends React.Component<Props> {
     };
 
     render() {
-        const {children, disabled, icon, skin} = this.props;
+        const {children, disabled, icon, skin, accept} = this.props;
 
         return (
             <Dropzone
+                accept={accept}
                 onDrop={this.handleDrop}
                 style={{}}
             >

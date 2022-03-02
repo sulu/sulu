@@ -1,5 +1,5 @@
 // @flow
-import {computed} from 'mobx';
+import {computed, toJS} from 'mobx';
 import ResourceStore from '../../../stores/ResourceStore';
 import {ResourceFormStore, FormInspector, conditionDataProviderRegistry} from '../../../containers/Form';
 import Router from '../../../services/Router';
@@ -24,7 +24,7 @@ export default class AbstractFormToolbarAction {
             function(data, conditionDataProvider) {
                 return {...data, ...conditionDataProvider(data, undefined, formInspector)};
             },
-            {...data}
+            {...toJS(data)}
         );
     }
 

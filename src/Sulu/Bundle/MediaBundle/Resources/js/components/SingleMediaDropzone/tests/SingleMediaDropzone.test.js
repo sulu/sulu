@@ -114,6 +114,25 @@ test('Render img tag with key to avoid keeping old image on new upload', () => {
     expect(singleMediaDropzone.find('img').key()).not.toBe(null);
 });
 
+test('Component pass correct props to Dropzone component', () => {
+    const singleMediaDropzone = shallow(
+        <SingleMediaDropzone
+            accept="application/json"
+            disabled={true}
+            image="http://lorempixel.com/400/400"
+            onDrop={jest.fn()}
+            uploading={false}
+        />
+    );
+
+    expect(singleMediaDropzone.find('Dropzone').props()).toEqual(expect.objectContaining({
+        accept: 'application/json',
+        disabled: true,
+        noClick: false,
+        multiple: false,
+    }));
+});
+
 test('Dragging a file over the area will show the upload indicator', () => {
     const singleMediaDropzone = shallow(
         <SingleMediaDropzone
