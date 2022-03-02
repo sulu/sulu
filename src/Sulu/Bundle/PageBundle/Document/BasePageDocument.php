@@ -240,7 +240,7 @@ class BasePageDocument implements
      *
      * @var array
      */
-    protected $permissions;
+    protected $permissions = [];
 
     /**
      * List of versions.

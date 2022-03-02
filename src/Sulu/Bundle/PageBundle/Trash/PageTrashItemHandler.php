@@ -183,7 +183,7 @@ final class PageTrashItemHandler implements
             $localizedPage->setStructureType($localeData['structureType']);
             $localizedPage->getStructure()->bind($localeData['structureData']);
             $localizedPage->setExtensionsData($localeData['extensionsData']);
-            $localizedPage->setPermissions($localeData['permissions']);
+            $localizedPage->setPermissions($localeData['permissions'] ?: []);
             $localizedPage->setNavigationContexts($localeData['navigationContexts']);
             $localizedPage->setShadowLocaleEnabled($localeData['shadowLocaleEnabled']);
             $localizedPage->setShadowLocale($localeData['shadowLocale']);
