@@ -20,18 +20,19 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * An UserProvider which returns always the same user for testing purposes.
  */
-class TestUserProvider implements UserProviderInterface
+class TestUserProvider implements UserProviderInterface, ResetInterface
 {
     public const TEST_USER_USERNAME = 'test';
 
     /**
-     * @var UserInterface
+     * @var UserInterface|null
      */
-    private $user;
+    private $user = null;
 
     /**
      * @var EntityManager
@@ -159,5 +160,10 @@ class TestUserProvider implements UserProviderInterface
     public function supportsClass($class)
     {
         return $this->userProvider->supportsClass($class);
+    }
+
+    public function reset(): void
+    {
+        $this->user = null;
     }
 }

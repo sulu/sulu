@@ -880,7 +880,6 @@ class PageControllerTest extends SuluTestCase
             ],
         ])[0];
 
-        $this->client->disableReboot();
         $this->client->jsonRequest('DELETE', '/api/pages/' . $page1['id'] . '?webspace=sulu_io&language=en');
 
         $response = $this->client->getResponse();
