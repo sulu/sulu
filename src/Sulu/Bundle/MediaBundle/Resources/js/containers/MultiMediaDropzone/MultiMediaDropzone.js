@@ -16,6 +16,7 @@ import type {ElementRef, Node} from 'react';
 const COLLECTIONS_RESOURCE_KEY = 'collections';
 
 type Props = {
+    accept?: string,
     children: Node,
     className?: string,
     collectionId: ?string | number,
@@ -31,6 +32,7 @@ type Props = {
 @observer
 class MultiMediaDropzone extends React.Component<Props> {
     static defaultProps = {
+        accept: undefined,
         disabled: false,
     };
 
@@ -136,7 +138,7 @@ class MultiMediaDropzone extends React.Component<Props> {
     };
 
     render() {
-        const {children, className, disabled, locale, open} = this.props;
+        const {accept, children, className, disabled, locale, open} = this.props;
 
         const dropzoneClass = classNames(
             dropzoneStyles.dropzone,
@@ -146,6 +148,7 @@ class MultiMediaDropzone extends React.Component<Props> {
         return (
             <>
                 <Dropzone
+                    accept={accept}
                     disabled={disabled}
                     noClick={true}
                     onDragEnter={this.handleDragEnter}

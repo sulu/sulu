@@ -98,6 +98,6 @@ class CustomUrlRouteController extends AbstractRestController implements Secured
 
     public function getLocale(Request $request)
     {
-        return;
+        return null;
     }
 }

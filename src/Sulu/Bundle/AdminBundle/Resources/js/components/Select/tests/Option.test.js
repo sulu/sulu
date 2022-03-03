@@ -42,7 +42,7 @@ test('Pressing enter on the component should fire the callback', () => {
 test('Pressing space on the component should fire the callback', () => {
     const clickSpy = jest.fn();
     const option = shallow(<Option onClick={clickSpy}>My option</Option>);
-    option.find('button').simulate('keydown', {key: 'Space', preventDefault: jest.fn(), stopPropagation: jest.fn()});
+    option.find('button').simulate('keydown', {key: ' ', preventDefault: jest.fn(), stopPropagation: jest.fn()});
     expect(clickSpy).toBeCalled();
 });
 

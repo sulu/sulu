@@ -182,6 +182,9 @@ class VersionController extends AbstractRestController implements
         }
     }
 
+    /**
+     * @return string
+     */
     public function getLocale(Request $request)
     {
         return $this->getRequestParameter($request, 'locale', true);

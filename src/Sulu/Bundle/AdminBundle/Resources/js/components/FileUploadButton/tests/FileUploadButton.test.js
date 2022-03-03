@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
 import Dropzone from 'react-dropzone';
 import FileUploadButton from '../FileUploadButton';
 
@@ -30,4 +30,14 @@ test('Call onUpload callback when a file is uploaded', () => {
 
     expect(uploadSpy).toBeCalledTimes(1);
     expect(uploadSpy).toBeCalledWith(testFileData);
+});
+
+test('Pass correct props to Dropzone component', () => {
+    const fileUploadButton = shallow(
+        <FileUploadButton accept="application/json" onUpload={jest.fn()}>Upload something!</FileUploadButton>
+    );
+
+    expect(fileUploadButton.find('Dropzone').props()).toEqual(expect.objectContaining({
+        accept: 'application/json',
+    }));
 });

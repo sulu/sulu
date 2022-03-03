@@ -195,6 +195,6 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
 
     public function getLocale(Request $request)
     {
-        return;
+        return null;
     }
 }

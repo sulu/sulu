@@ -2,6 +2,7 @@
 import Form from './Form';
 import formToolbarActionRegistry from './registries/formToolbarActionRegistry';
 import AbstractFormToolbarAction from './toolbarActions/AbstractFormToolbarAction';
+import CopyToolbarAction from './toolbarActions/CopyToolbarAction';
 import CopyLocaleToolbarAction from './toolbarActions/CopyLocaleToolbarAction';
 import DeleteDraftToolbarAction from './toolbarActions/DeleteDraftToolbarAction';
 import DeleteToolbarAction from './toolbarActions/DeleteToolbarAction';
@@ -19,6 +20,7 @@ export default Form;
 export {
     formToolbarActionRegistry,
     AbstractFormToolbarAction,
+    CopyToolbarAction,
     CopyLocaleToolbarAction,
     DeleteDraftToolbarAction,
     DeleteToolbarAction,

@@ -19,6 +19,7 @@ use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PageBundle\Domain\Event\PageRestoredEvent;
+use Sulu\Bundle\PageBundle\Domain\Event\PageTranslationRestoredEvent;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfiguration;
 use Sulu\Bundle\TrashBundle\Application\RestoreConfigurationProvider\RestoreConfigurationProviderInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RestoreTrashItemHandlerInterface;
@@ -197,7 +198,10 @@ final class PageTrashItemHandler implements
         }
 
         Assert::isInstanceOf($localizedPage, PageDocument::class);
-        $this->documentDomainEventCollector->collect(new PageRestoredEvent($localizedPage, $data));
+        $event = 'translation' === $trashItem->getRestoreType()
+            ? new PageTranslationRestoredEvent($localizedPage, $trashItem->getRestoreOptions()['locale'], $data)
+            : new PageRestoredEvent($localizedPage, $data);
+        $this->documentDomainEventCollector->collect($event);
         $this->documentManager->flush();
 
         return $localizedPage;

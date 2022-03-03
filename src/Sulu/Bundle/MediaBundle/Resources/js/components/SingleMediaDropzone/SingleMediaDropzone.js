@@ -11,6 +11,7 @@ import singleMediaDropzoneStyles from './singleMediaDropzone.scss';
 const UPLOAD_ICON = 'su-upload';
 
 type Props = {|
+    accept?: string,
     disabled: boolean,
     emptyIcon: string,
     errorText?: ?string,
@@ -26,6 +27,7 @@ type Props = {|
 @observer
 class SingleMediaDropzone extends React.Component<Props> {
     static defaultProps = {
+        accept: undefined,
         disabled: false,
         emptyIcon: 'su-image',
         mimeType: '',
@@ -95,6 +97,7 @@ class SingleMediaDropzone extends React.Component<Props> {
 
     render() {
         const {
+            accept,
             disabled,
             emptyIcon,
             errorText,
@@ -118,6 +121,7 @@ class SingleMediaDropzone extends React.Component<Props> {
         return (
             <>
                 <Dropzone
+                    accept={accept}
                     disabled={disabled}
                     multiple={false}
                     noClick={uploading}
