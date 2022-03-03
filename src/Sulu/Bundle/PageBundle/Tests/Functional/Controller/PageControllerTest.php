@@ -69,6 +69,7 @@ class PageControllerTest extends SuluTestCase
     public function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
+        $this->client->disableReboot(); // see https://github.com/symfony/symfony/issues/45580
         $this->purgeDatabase();
         $this->initPhpcr();
         $this->session = $this->getContainer()->get('sulu_document_manager.default_session');
