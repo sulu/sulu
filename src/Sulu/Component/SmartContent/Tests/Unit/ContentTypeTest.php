@@ -399,7 +399,12 @@ class ContentTypeTest extends TestCase
 
         $viewData = $smartContent->getViewData($property);
 
-        $this->assertContains(\array_merge($config, ['page' => 1, 'hasNextPage' => true]), $viewData);
+        $expectedViewData = \array_merge($config, ['page' => 1, 'hasNextPage' => true]);
+
+        foreach ($expectedViewData as $key => $value) {
+            $this->assertArrayHasKey($key, $viewData);
+            $this->assertSame($value, $viewData[$key]);
+        }
     }
 
     public function testGetContentData()
