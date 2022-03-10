@@ -126,7 +126,7 @@
         "phpstan/phpstan-phpunit": "^1.0",
         "phpstan/phpstan-symfony": "^1.0",
         "phpstan/phpstan-webmozart-assert": "^1.0",
-        "phpunit/phpunit": "^8.5.21",
+        "phpunit/phpunit": "^8.5.24 || ^9.5.18",
         "psr/event-dispatcher": "^1.0",
         "superbalist/flysystem-google-storage": "^7.1",
         "symfony/browser-kit": "^4.4 || ^5.0",
