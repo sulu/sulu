@@ -2277,16 +2277,16 @@ class ContactControllerTest extends SuluTestCase
 
         $this->assertContains(
             [
-                'primaryAddress' => false,
                 'street' => 'Musterstraße',
+                'primaryAddress' => false,
             ],
             $filteredAddresses
         );
 
         $this->assertContains(
             [
-                'primaryAddress' => true,
                 'street' => 'Musterstraße 2',
+                'primaryAddress' => true,
             ],
             $filteredAddresses
         );

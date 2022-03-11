@@ -961,16 +961,17 @@ class WebspaceManagerTest extends WebspaceTestCase
             ],
             $localizations
         );
+
         $this->assertContains(
             [
-                'country' => null,
+                'country' => '',
                 'language' => 'de',
             ],
             $localizations
         );
         $this->assertContains(
             [
-                'country' => null,
+                'country' => '',
                 'language' => 'en',
             ],
             $localizations

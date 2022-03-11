@@ -1144,17 +1144,24 @@ class ContentRepositoryTest extends SuluTestCase
         );
 
         $homepageUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
-        $this->assertContains(
-            ['uuid' => $homepageUuid, 'hasChildren' => true, 'children' => [], 'permissions' => []],
-            $items
+
+        $this->assertSame(
+            [
+                'uuid' => $homepageUuid,
+                'hasChildren' => true,
+                'children' => null,
+                'permissions' => []
+            ],
+            $items[0]
         );
-        $this->assertContains(
+
+        $this->assertSame(
             [
                 'uuid' => $page1->getUuid(),
                 'hasChildren' => true,
-                'children' => [],
+                'children' => null,
                 'permissions' => [
-                    $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                    $role1->getId() => ['view' => false, 'add' => false, 'edit' => true, 'delete' => false],
                     $role2->getId() => [
                         'view' => true,
                         'add' => false,
@@ -1170,11 +1177,16 @@ class ContentRepositoryTest extends SuluTestCase
                     ],
                 ],
             ],
-            $items
+            $items[1]
         );
-        $this->assertContains(
-            ['uuid' => $page2->getUuid(), 'hasChildren' => false, 'children' => [], 'permissions' => []],
-            $items
+        $this->assertSame(
+            [
+                'uuid' => $page2->getUuid(),
+                'hasChildren' => false,
+                'children' => null,
+                'permissions' => []
+            ],
+            $items[2]
         );
     }
 
@@ -1227,13 +1239,13 @@ class ContentRepositoryTest extends SuluTestCase
             $result
         );
 
-        $this->assertContains(
+        $this->assertSame(
             [
                 'uuid' => $page1->getUuid(),
                 'hasChildren' => true,
-                'children' => [],
+                'children' => null,
                 'permissions' => [
-                    $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                    $role1->getId() => ['view' => false, 'add' => false, 'edit' => true, 'delete' => false],
                     $role2->getId() => [
                         'view' => true,
                         'add' => false,
@@ -1249,16 +1261,16 @@ class ContentRepositoryTest extends SuluTestCase
                     ],
                 ],
             ],
-            $items
+            $items[0]
         );
-        $this->assertContains(
+        $this->assertSame(
             [
                 'uuid' => $page2->getUuid(),
                 'hasChildren' => false,
-                'children' => [],
+                'children' => null,
                 'permissions' => [],
             ],
-            $items
+            $items[1]
         );
     }
 
@@ -1319,7 +1331,7 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertContains(
             [
-                $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                $role1->getId() => ['view' => false, 'add' => false, 'edit' => true, 'delete' => false],
                 $role2->getId() => [
                     'view' => true,
                     'add' => false,
