@@ -93,7 +93,7 @@ class Configuration implements ConfigurationInterface
                         ->prototype('scalar')->end()->defaultValue([
                             'Expires' => '+1 month',
                             'Pragma' => 'public',
-                            'Cache-Control' => 'public',
+                            'Cache-Control' => 'public, immutable, max-age=31536000',
                         ])
                     ->end()
                     ->arrayNode('default_imagine_options')
