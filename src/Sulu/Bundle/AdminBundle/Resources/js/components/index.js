@@ -34,6 +34,7 @@ import Overlay from './Overlay';
 import Phone from './Phone';
 import Popover from './Popover';
 import PublishIndicator from './PublishIndicator';
+import QRCode from './QRCode';
 import RectangleSelection from './RectangleSelection';
 import ResourceLocator from './ResourceLocator';
 import SingleSelect from './SingleSelect';
@@ -81,6 +82,7 @@ export {
     Phone,
     Popover,
     PublishIndicator,
+    QRCode,
     RectangleSelection,
     ResourceLocator,
     SingleSelect,
