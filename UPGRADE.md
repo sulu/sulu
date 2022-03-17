@@ -1,6 +1,6 @@
 # Upgrade
 
-## 2.4.x
+## 2.4.1
 
 ### Change PreviewLinkInterface
 
