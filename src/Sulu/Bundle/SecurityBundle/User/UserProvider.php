@@ -52,13 +52,18 @@ class UserProvider implements UserProviderInterface
 
     public function loadUserByUsername($username)
     {
+        return $this->loadUserByIdentifier($username);
+    }
+
+    public function loadUserByIdentifier(string $identifier)
+    {
         $exceptionMessage = \sprintf(
             'Unable to find an Sulu\Component\Security\Authentication\UserInterface object identified by %s',
-            $username
+            $identifier
         );
 
         try {
-            $user = $this->userRepository->findUserByIdentifier($username);
+            $user = $this->userRepository->findUserByIdentifier($identifier);
 
             if (!$user->getEnabled()) {
                 throw new DisabledException('User is not enabled yet.');
