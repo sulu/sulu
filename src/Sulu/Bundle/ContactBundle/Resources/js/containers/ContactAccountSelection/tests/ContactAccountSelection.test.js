@@ -87,6 +87,30 @@ test('Load items when being updated', () => {
     expect(contactAccountSelection.instance().store.loadItems).toBeCalledWith(['a1', 'c2']);
 });
 
+test('Load items when being updated without infinite loop', () => {
+    // $FlowFixMe
+    ContactAccountSelectionStore.mockImplementation(function() {
+        this.loadItems = jest.fn(() => {
+            this.items = [
+                {id: 'a1', fullName: 'Acme GmbH'},
+                {id: 'c2', fullName: 'Erika Mustermann'},
+            ];
+        });
+        this.items = [];
+    });
+
+    const contactAccountSelection = mount(
+        <ContactAccountSelection onChange={jest.fn()} value={['a1', 'c1', 'c2']} />
+    );
+
+    expect(contactAccountSelection.instance().store.loadItems).toHaveBeenCalledWith(['a1', 'c1', 'c2']);
+    expect(contactAccountSelection.instance().store.loadItems).toHaveBeenCalledTimes(1);
+
+    contactAccountSelection.setProps({value: ['a1', 'c1', 'c2']});
+
+    expect(contactAccountSelection.instance().store.loadItems).toHaveBeenCalledTimes(1);
+});
+
 test('Close contact overlay if close button is clicked', () => {
     const contactAccountSelection = mount(
         <ContactAccountSelection onChange={jest.fn()} value={undefined} />

@@ -35,15 +35,13 @@ class ContactAccountSelection extends React.Component<Props> {
         this.store.loadItems(value);
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps: Props) {
         const {value} = this.props;
 
+        const oldIds = toJS(prevProps.value);
         const newIds = toJS(value);
-        const loadedIds = this.loadedIds;
 
-        newIds.sort();
-        loadedIds.sort();
-        if (!equals(newIds, loadedIds) && !this.store.loading) {
+        if (!equals(oldIds, newIds) && !this.store.loading) {
             this.store.loadItems(value);
         }
     }
