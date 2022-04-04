@@ -207,6 +207,7 @@ class ContentRepositoryTest extends TestCase
 
         $result = $this->contentRepository->find('123-123-123', 'de', 'sulu_io', $mapping);
 
+        $this->assertNotNull($result);
         $this->assertTrue($result->isBrokenTemplate());
     }
 }

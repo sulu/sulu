@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
+use PHPCR\ItemNotFoundException;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
@@ -27,6 +28,7 @@ use Sulu\Component\Content\Repository\ContentRepository;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\PropertyEncoder;
+use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -126,7 +128,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->homeDocument = $this->documentManager->find($this->sessionManager->getContentPath('sulu_io'), 'de');
     }
 
-    public function testFindByParent()
+    public function testFindByParent(): void
     {
         $role1 = $this->createRole('Role 1', 'Sulu');
         $role2 = $this->createRole('Role 2', 'Sulu');
@@ -195,7 +197,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals([], $result[2]->getPermissions());
     }
 
-    public function testFindDescendantIdsById()
+    public function testFindDescendantIdsById(): void
     {
         $page1 = $this->createPage('test-1', 'de');
         $page2 = $this->createPage('test-2', 'de', [], $page1);
@@ -212,7 +214,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals($page3->getUuid(), $result[2]);
     }
 
-    public function testFindByParentMapping()
+    public function testFindByParentMapping(): void
     {
         $this->createPage('test-1', 'de');
         $this->createPage('test-2', 'de');
@@ -234,7 +236,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
-    public function testFindByParentWithShadow()
+    public function testFindByParentWithShadow(): void
     {
         $this->createShadowPage('test-1', 'de', 'en');
         $this->createPage('test-2', 'en');
@@ -256,7 +258,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
-    public function testFindByParentWithShadowNoHydrate()
+    public function testFindByParentWithShadowNoHydrate(): void
     {
         $this->createShadowPage('test-1', 'en_us', 'en');
         $this->createPage('test-2', 'en');
@@ -277,7 +279,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[1]['title']);
     }
 
-    public function testFindByParentWithGhost()
+    public function testFindByParentWithGhost(): void
     {
         $this->createPage('test-1', 'en');
         $this->createPage('test-2', 'de');
@@ -306,7 +308,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
-    public function testFindByParentWithGhostNoHydrate()
+    public function testFindByParentWithGhostNoHydrate(): void
     {
         $this->createPage('test-1', 'en');
         $this->createPage('test-2', 'de');
@@ -327,7 +329,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[1]['title']);
     }
 
-    public function testFindByParentWithInternalLink()
+    public function testFindByParentWithInternalLink(): void
     {
         $link = $this->createPage('test-1', 'de');
         $this->createInternalLinkPage('test-2', 'de', $link);
@@ -350,7 +352,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
-    public function testFindByParentWithDraftInternalLink()
+    public function testFindByParentWithDraftInternalLink(): void
     {
         $link = $this->createPage('test-1', 'de');
         $this->createInternalLinkPage('test-2', 'de', $link, false);
@@ -374,7 +376,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
-    public function testFindByParentWithInternalLinkNotFollow()
+    public function testFindByParentWithInternalLinkNotFollow(): void
     {
         $link = $this->createPage('test-1', 'de');
         $this->createInternalLinkPage('test-2', 'de', $link);
@@ -396,7 +398,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
-    public function testFindByParentWithInternalLinkAndShadow()
+    public function testFindByParentWithInternalLinkAndShadow(): void
     {
         $link = $this->createShadowPage('test-1', 'de', 'en');
         $this->createInternalLinkPage('test-2', 'en', $link);
@@ -419,7 +421,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
-    public function testFindByParentOneLayer()
+    public function testFindByParentOneLayer(): void
     {
         $page1 = $this->createPage('test-1', 'de');
         $this->createPage('test-1-1', 'de', [], $page1);
@@ -444,7 +446,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('/test-3', $result[2]->getPath());
     }
 
-    public function testFindByWebspaceRoot()
+    public function testFindByWebspaceRoot(): void
     {
         $this->createPage('test-1', 'de');
         $this->createPage('test-2', 'de');
@@ -463,7 +465,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('/test-3', $result[2]->getPath());
     }
 
-    public function testFindByWebspaceRootWithPermissions()
+    public function testFindByWebspaceRootWithPermissions(): void
     {
         $role1 = $this->createRole('Role 1', 'Website');
         $role2 = $this->createRole('Role 2', 'Website');
@@ -522,7 +524,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals([], $result[2]->getPermissions());
     }
 
-    public function testFindByWebspaceRootNonExistingLocale()
+    public function testFindByWebspaceRootNonExistingLocale(): void
     {
         $this->createPage('test-1', 'de');
 
@@ -537,7 +539,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('fr', $result[0]->getLocale());
     }
 
-    public function testFindByWebspaceRootMapping()
+    public function testFindByWebspaceRootMapping(): void
     {
         $this->createPage('test-1', 'de');
         $this->createPage('test-2', 'de');
@@ -556,7 +558,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
-    public function testFindByWebspaceRootWithShadow()
+    public function testFindByWebspaceRootWithShadow(): void
     {
         $this->createShadowPage('test-1', 'de', 'en');
         $this->createPage('test-2', 'en');
@@ -575,7 +577,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
-    public function testFindByWebspaceRootWithInternalLink()
+    public function testFindByWebspaceRootWithInternalLink(): void
     {
         $link = $this->createPage('test-1', 'de');
         $this->createInternalLinkPage('test-2', 'de', $link);
@@ -594,7 +596,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
-    public function testFindByWebspaceRootWithInternalLinkAndShadow()
+    public function testFindByWebspaceRootWithInternalLinkAndShadow(): void
     {
         $link = $this->createShadowPage('test-1', 'de', 'en');
         $this->createInternalLinkPage('test-2', 'en', $link);
@@ -613,7 +615,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-3', $result[2]['title']);
     }
 
-    public function testFindByWebspaceRootOneLayer()
+    public function testFindByWebspaceRootOneLayer(): void
     {
         $page1 = $this->createPage('test-1', 'de');
         $this->createPage('test-1-1', 'de', [], $page1);
@@ -635,7 +637,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('/test-3', $result[2]->getPath());
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         $page = $this->createPage('test-1', 'de');
 
@@ -653,7 +655,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-1', $result['title']);
     }
 
-    public function testFindWithGhost()
+    public function testFindWithGhost(): void
     {
         $page = $this->createPage('test-1', 'en');
 
@@ -670,7 +672,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-1', $result['title']);
     }
 
-    public function testFindWithShadow()
+    public function testFindWithShadow(): void
     {
         $page = $this->createShadowPage('test-1', 'de', 'en');
 
@@ -687,7 +689,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-1', $result['title']);
     }
 
-    public function testFindWithInternalLink()
+    public function testFindWithInternalLink(): void
     {
         $link = $this->createPage('test-1', 'de');
         $page = $this->createInternalLinkPage('test-2', 'de', $link);
@@ -705,7 +707,39 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-2', $result['title']);
     }
 
-    public function testFindWithEmptyInternalLink()
+    public function testFindWithUnpublishedInternalLink(): void
+    {
+        $link = $this->createPage('test-1', 'de', [], null, [], false);
+        $page = $this->createInternalLinkPage('test-2', 'de', $link);
+
+        // should load content with requested node and not try to follow internal link
+
+        $result = $this->contentRepository->find(
+            $page->getUuid(),
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
+
+        $this->assertEquals($page->getUuid(), $result->getId());
+        $this->assertEquals('/test-2', $result->getPath());
+        $this->assertEquals('test-2', $result['title']);
+
+        static::bootKernel([
+            'sulu.context' => SuluKernel::CONTEXT_WEBSITE,
+        ]);
+        $this->setUp();
+
+        $this->expectException(ItemNotFoundException::class);
+        $result = $this->contentRepository->find(
+            $page->getUuid(),
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
+    }
+
+    public function testFindWithEmptyInternalLink(): void
     {
         $link = $this->createPage('test-1', 'de');
         $page = $this->createInternalLinkPage('test-2', 'de', $link);
@@ -726,9 +760,22 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals($page->getUuid(), $result->getId());
         $this->assertEquals('/test-2', $result->getPath());
         $this->assertEquals('test-2', $result['title']);
+
+        static::bootKernel([
+            'sulu.context' => SuluKernel::CONTEXT_WEBSITE,
+        ]);
+        $this->setUp();
+
+        $this->expectException(ItemNotFoundException::class);
+        $result = $this->contentRepository->find(
+            $page->getUuid(),
+            'de',
+            'sulu_io',
+            MappingBuilder::create()->addProperties(['title'])->getMapping()
+        );
     }
 
-    public function testFindWithInternalLinkToItself()
+    public function testFindWithInternalLinkToItself(): void
     {
         $link = $this->createPage('test-1', 'de');
         $page = $this->createInternalLinkPage('test-2', 'de', $link);
@@ -751,7 +798,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-2', $result['title']);
     }
 
-    public function testFindWithInternalLinkAndShadow()
+    public function testFindWithInternalLinkAndShadow(): void
     {
         $link = $this->createShadowPage('test-1', 'de', 'en');
         $page = $this->createInternalLinkPage('test-2', 'de', $link);
@@ -768,7 +815,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-2', $result['title']);
     }
 
-    public function testFindWithNonFallbackProperties()
+    public function testFindWithNonFallbackProperties(): void
     {
         $link = $this->createPage('test-1', 'de');
         \sleep(1); // create a difference between link and page (created / changed)
@@ -827,7 +874,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('test-2', $result['title']);
     }
 
-    public function testFindPermissions()
+    public function testFindPermissions(): void
     {
         $role1 = $this->createRole('Role 1', 'Sulu');
         $role2 = $this->createRole('Role 2', 'Sulu');
@@ -881,7 +928,7 @@ class ContentRepositoryTest extends SuluTestCase
         );
     }
 
-    public function testFindWithoutPermissions()
+    public function testFindWithoutPermissions(): void
     {
         $role1 = $this->prophesize(RoleInterface::class);
         $role1->getId()->willReturn(1);
@@ -914,7 +961,7 @@ class ContentRepositoryTest extends SuluTestCase
         );
     }
 
-    public function testFindWithPermissionsNotGranted()
+    public function testFindWithPermissionsNotGranted(): void
     {
         $role1 = $this->createRole('Role 1', 'Sulu');
         $role2 = $this->createRole('Role 2', 'Sulu');
@@ -970,7 +1017,7 @@ class ContentRepositoryTest extends SuluTestCase
     /**
      * @dataProvider provideWebspaceKeys
      */
-    public function testFindParentsWithSiblingsByUuid($webspaceKey)
+    public function testFindParentsWithSiblingsByUuid($webspaceKey): void
     {
         $role1 = $this->createRole('Role 1', 'Sulu');
         $role2 = $this->createRole('Role 2', 'Sulu');
@@ -1078,7 +1125,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals([], $layer[1]->getPermissions());
     }
 
-    public function testFindParentsWithSiblingsByUuidWithoutWebspaceKey()
+    public function testFindParentsWithSiblingsByUuidWithoutWebspaceKey(): void
     {
         $page = $this->createPage('test-1', 'de');
 
@@ -1094,7 +1141,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals($page->getWebspaceName(), $result[0]->getWebspaceKey());
     }
 
-    public function testFindByPaths()
+    public function testFindByPaths(): void
     {
         $role1 = $this->createRole('Role 1', 'Sulu');
         $role2 = $this->createRole('Role 2', 'Sulu');
@@ -1178,7 +1225,7 @@ class ContentRepositoryTest extends SuluTestCase
         );
     }
 
-    public function testFindByUuids()
+    public function testFindByUuids(): void
     {
         $role1 = $this->createRole('Role 1', 'Sulu');
         $role2 = $this->createRole('Role 2', 'Sulu');
@@ -1262,7 +1309,7 @@ class ContentRepositoryTest extends SuluTestCase
         );
     }
 
-    public function testFindAll()
+    public function testFindAll(): void
     {
         $role1 = $this->createRole('Role 1', 'Sulu');
         $role2 = $this->createRole('Role 2', 'Sulu');
@@ -1338,7 +1385,7 @@ class ContentRepositoryTest extends SuluTestCase
         );
     }
 
-    public function testFindAllNoPage()
+    public function testFindAllNoPage(): void
     {
         $result = $this->contentRepository->findAll(
             'de',
@@ -1358,7 +1405,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertContains('/', $paths);
     }
 
-    public function testFindAllByPortal()
+    public function testFindAllByPortal(): void
     {
         $role1 = $this->createRole('Role 1', 'Sulu');
         $role2 = $this->createRole('Role 2', 'Sulu');
@@ -1425,7 +1472,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('/', $urls['en_us']);
     }
 
-    public function testFindUrl()
+    public function testFindUrl(): void
     {
         $page1 = $this->createPage('test-1', 'de');
 
@@ -1449,7 +1496,7 @@ class ContentRepositoryTest extends SuluTestCase
         );
     }
 
-    public function testFindUrls()
+    public function testFindUrls(): void
     {
         $page1 = $this->createShadowPage('test-1', 'de', 'en');
 
@@ -1472,7 +1519,7 @@ class ContentRepositoryTest extends SuluTestCase
         );
     }
 
-    public function testFindByWebspaceRootPublished()
+    public function testFindByWebspaceRootPublished(): void
     {
         $page1 = $this->createPage('test-1', 'de');
         $page2 = $this->createPage('test-2', 'de');
@@ -1496,7 +1543,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals('/test-1', $result[0]->getPath());
     }
 
-    public function testFindContentLocales()
+    public function testFindContentLocales(): void
     {
         $page = $this->createShadowPage('test', 'de', 'en');
 
@@ -1510,7 +1557,7 @@ class ContentRepositoryTest extends SuluTestCase
         $this->assertEquals(['de'], $result->getContentLocales());
     }
 
-    public function testFindNonExistingProperty()
+    public function testFindNonExistingProperty(): void
     {
         $page = $this->createShadowPage('test', 'de', 'en');
 
@@ -1531,7 +1578,7 @@ class ContentRepositoryTest extends SuluTestCase
      *
      * @return PageDocument
      */
-    private function createPage($title, $locale, $data = [], $parentDocument = null, array $permissions = [])
+    private function createPage($title, $locale, $data = [], $parentDocument = null, array $permissions = [], bool $publish = true)
     {
         /** @var PageDocument $document */
         $document = $this->documentManager->create('page');
@@ -1561,7 +1608,11 @@ class ContentRepositoryTest extends SuluTestCase
                 'auto_create' => true,
             ]
         );
-        $this->documentManager->publish($document, $locale);
+
+        if ($publish) {
+            $this->documentManager->publish($document, $locale);
+        }
+
         $this->documentManager->flush();
 
         return $document;
