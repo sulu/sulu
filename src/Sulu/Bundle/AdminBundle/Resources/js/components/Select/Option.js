@@ -40,6 +40,14 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
         this.triggerButton();
     };
 
+    handleButtonKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            event.stopPropagation();
+            this.triggerButton();
+        }
+    };
+
     setItemRef = (ref: ?ElementRef<'li'>) => {
         const {
             optionRef,
@@ -102,6 +110,7 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
                     className={optionClass}
                     disabled={disabled}
                     onClick={this.handleButtonClick}
+                    onKeyDown={this.handleButtonKeyDown}
                     ref={this.setButtonRef}
                     style={{minWidth: anchorWidth + ANCHOR_WIDTH_DIFFERENCE}}
                     type="button"
