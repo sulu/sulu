@@ -4,6 +4,7 @@ exports[`The component should render 1`] = `
 <li>
   <button
     class="action"
+    type="button"
   >
     My action
   </button>
