@@ -31,6 +31,14 @@ export default class Action<T> extends React.PureComponent<Props<T>> {
         this.triggerButton();
     };
 
+    handleButtonKeyDown = (event: KeyboardEvent) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            event.stopPropagation();
+            this.triggerButton();
+        }
+    };
+
     setButtonRef = (ref: ?ElementRef<'button'>) => {
         const {buttonRef} = this.props;
 
@@ -51,6 +59,7 @@ export default class Action<T> extends React.PureComponent<Props<T>> {
                 <button
                     className={actionStyles.action}
                     onClick={this.handleButtonClick}
+                    onKeyDown={this.handleButtonKeyDown}
                     ref={this.setButtonRef}
                     type="button"
                 >
