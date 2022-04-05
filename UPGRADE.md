@@ -4,9 +4,9 @@
 
 ### Rename labelRef to inputContainerRef
 
-The `labelRef` properties of the js components `Input`, `SingleAutoComplete`,
-was renamed to `inputContainerRef` as it is no longer a label tag for
-accessibility reasons.
+The `labelRef` properties of the js components `Input` was renamed
+to `inputContainerRef` as it is no longer a label tag for improving
+accessibility of the interface.
 
 ### User table two factory authentication column added
 
