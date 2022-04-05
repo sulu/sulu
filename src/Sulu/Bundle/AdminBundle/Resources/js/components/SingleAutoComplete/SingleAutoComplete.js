@@ -33,7 +33,7 @@ class SingleAutoComplete extends React.Component<Props> {
         disabled: false,
     };
 
-    @observable labelRef: ElementRef<'label'>;
+    @observable inputContainerRef: ElementRef<*>;
 
     @observable displaySuggestions = false;
     @observable inputValue: ?string = this.props.value ? this.props.value[this.props.displayProperty] : undefined;
@@ -59,14 +59,14 @@ class SingleAutoComplete extends React.Component<Props> {
         this.inputValue = value;
     }
 
-    @action setLabelRef = (labelRef: ?ElementRef<'label'>) => {
-        if (labelRef) {
-            this.labelRef = labelRef;
+    @action setInputContainerRef = (inputContainerRef: ?ElementRef<*>) => {
+        if (inputContainerRef) {
+            this.inputContainerRef = inputContainerRef;
         }
     };
 
     @computed get popoverMinWidth() {
-        return this.labelRef ? this.labelRef.scrollWidth - 10 : 0;
+        return this.inputContainerRef ? this.inputContainerRef.scrollWidth - 10 : 0;
     }
 
     @action search = (query: string) => {
@@ -124,7 +124,7 @@ class SingleAutoComplete extends React.Component<Props> {
                     icon={LENS_ICON}
                     id={id}
                     inputClass="mousetrap"
-                    labelRef={this.setLabelRef}
+                    inputContainerRef={this.setInputContainerRef}
                     loading={loading}
                     onBlur={onFinish}
                     onChange={this.handleInputChange}
@@ -133,7 +133,7 @@ class SingleAutoComplete extends React.Component<Props> {
                     value={inputValue}
                 />
                 <AutoCompletePopover
-                    anchorElement={this.labelRef}
+                    anchorElement={this.inputContainerRef}
                     minWidth={this.popoverMinWidth}
                     onClose={this.handlePopoverClose}
                     onSelect={this.handlePopoverSelect}

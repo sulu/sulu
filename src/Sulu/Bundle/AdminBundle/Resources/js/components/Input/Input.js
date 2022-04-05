@@ -31,14 +31,14 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
         inputRef(ref);
     };
 
-    setLabelRef = (ref: ?ElementRef<'label'>) => {
-        const {labelRef} = this.props;
+    setInputContainerRef = (ref: ?ElementRef<*>) => {
+        const {inputContainerRef} = this.props;
 
-        if (!labelRef) {
+        if (!inputContainerRef) {
             return;
         }
 
-        labelRef(ref);
+        inputContainerRef(ref);
     };
 
     handleChange = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -81,14 +81,14 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
             iconClassName,
             inputMode,
             inputRef,
-            labelRef,
+            inputContainerRef,
             skin,
             min,
             max,
             step,
         } = this.props;
 
-        const labelClass = classNames(
+        const inputContainerClass = classNames(
             inputStyles.input,
             inputStyles[skin],
             inputStyles[alignment],
@@ -122,8 +122,8 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
         return (
             <Fragment>
                 <div
-                    className={labelClass}
-                    ref={labelRef ? this.setLabelRef : undefined}
+                    className={inputContainerClass}
+                    ref={inputContainerRef ? this.setInputContainerRef : undefined}
                 >
                     {!loading && icon &&
                         <div className={prependContainerClass}>
