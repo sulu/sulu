@@ -1197,7 +1197,7 @@ class ContentRepositoryTest extends SuluTestCase
                 'uuid' => $homepageUuid,
                 'hasChildren' => true,
                 'children' => null,
-                'permissions' => []
+                'permissions' => [],
             ],
             $items[0]
         );
@@ -1231,7 +1231,7 @@ class ContentRepositoryTest extends SuluTestCase
                 'uuid' => $page2->getUuid(),
                 'hasChildren' => false,
                 'children' => null,
-                'permissions' => []
+                'permissions' => [],
             ],
             $items[2]
         );
