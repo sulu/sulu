@@ -2,6 +2,12 @@
 
 ## 2.5.0
 
+### Rename labelRef to inputContainerRef
+
+The `labelRef` properties of the js components `Input`, `SingleAutoComplete`,
+was renamed to `inputContainerRef` as it is no longer a label tag for
+accessibility reasons.
+
 ### User table two factory authentication column added
 
 To add support for two factor authentication the following
