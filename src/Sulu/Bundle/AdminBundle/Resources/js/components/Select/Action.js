@@ -32,7 +32,7 @@ export default class Action<T> extends React.PureComponent<Props<T>> {
     };
 
     handleButtonKeyDown = (event: KeyboardEvent) => {
-        if (event.key === 'Enter' || event.key === ' ') {
+        if (event.key === 'Enter') {
             event.preventDefault();
             event.stopPropagation();
             this.triggerButton();
@@ -61,6 +61,7 @@ export default class Action<T> extends React.PureComponent<Props<T>> {
                     onClick={this.handleButtonClick}
                     onKeyDown={this.handleButtonKeyDown}
                     ref={this.setButtonRef}
+                    type="button"
                 >
                     {this.props.children}
                 </button>

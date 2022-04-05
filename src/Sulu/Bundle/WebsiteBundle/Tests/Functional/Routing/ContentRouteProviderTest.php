@@ -9,14 +9,14 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\RouteBundle\Tests\Functional\Controller;
+namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Routing;
 
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
 use Symfony\Component\HttpFoundation\Request;
 
 class ContentRouteProviderTest extends WebsiteTestCase
 {
-    public function testRouteIncludesUtf8Option()
+    public function testRouteIncludesUtf8Option(): void
     {
         static::initPhpcr();
 
