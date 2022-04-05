@@ -738,15 +738,15 @@ class ContentMapper implements ContentMapperInterface
             if (RedirectType::INTERNAL === $redirectType) {
                 $target = $document->getRedirectTarget();
 
-                if ($target) {
-                    $url = $target->getResourceSegment();
-
-                    $document = $target;
-                    $node = $this->inspector->getNode($document);
+                if (!$target instanceof ResourceSegmentBehavior) {
+                    return false;
                 }
-            }
 
-            if (RedirectType::EXTERNAL === $redirectType) {
+                $url = $target->getResourceSegment();
+
+                $document = $target;
+                $node = $this->inspector->getNode($document);
+            } elseif (RedirectType::EXTERNAL === $redirectType) {
                 $url = $document->getRedirectExternal();
             }
         }

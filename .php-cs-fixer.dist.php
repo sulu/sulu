@@ -30,6 +30,7 @@ $config->setRiskyAllowed(true)
         'phpdoc_align' => ['align' => 'left'],
         'phpdoc_types_order' => false,
         'single_line_throw' => false,
+        'single_line_comment_spacing' => false,
     ])
     ->setFinder($finder);
 

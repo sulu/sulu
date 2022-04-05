@@ -128,6 +128,17 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         $this->qomFactory = $this->session->getWorkspace()->getQueryManager()->getQOMFactory();
     }
 
+    /**
+     * Find content by uuid.
+     *
+     * @param string $uuid
+     * @param string $locale
+     * @param string $webspaceKey
+     * @param MappingInterface $mapping Includes array of property names
+     * @param UserInterface $user
+     *
+     * @return Content|null
+     */
     public function find($uuid, $locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null)
     {
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
@@ -656,7 +667,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      * @param string $locale
      * @param string $locales
      *
-     * @return Content
+     * @return Content|null
      */
     private function resolveContent(
         Row $row,
@@ -682,12 +693,12 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         $type = null;
         if ($row->getValue('shadowOn')) {
             if (!$mapping->shouldHydrateShadow()) {
-                return;
+                return null;
             }
             $type = StructureType::getShadow($row->getValue('shadowBase'));
         } elseif (null !== $ghostLocale && $ghostLocale !== $originalLocale) {
             if (!$mapping->shouldHydrateGhost()) {
-                return;
+                return null;
             }
             $locale = $ghostLocale;
             $type = StructureType::getGhost($locale);
@@ -783,7 +794,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      * @param StructureType $type
      * @param UserInterface $user
      *
-     * @return Content
+     * @return Content|null
      */
     public function resolveInternalLinkContent(
         Row $row,
@@ -794,6 +805,10 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         UserInterface $user = null
     ) {
         $linkedContent = $this->find($row->getValue('internalLink'), $locale, $webspaceKey, $mapping);
+        if (null === $linkedContent) {
+            return null;
+        }
+
         $data = $linkedContent->getData();
 
         // return value of source node instead of link destination for title and non-fallback-properties

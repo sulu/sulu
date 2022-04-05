@@ -17,6 +17,8 @@ use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
+use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
@@ -184,11 +186,17 @@ class ContentRouteProvider implements RouteProviderInterface
                 }
                 $collection->add('redirect_' . \uniqid(), $this->getRedirectRoute($request, $url));
             } elseif (RedirectType::INTERNAL === $document->getRedirectType()) {
+                $redirectTarget = $document->getRedirectTarget();
+
+                if (!$redirectTarget instanceof ResourceSegmentBehavior || !$redirectTarget instanceof WebspaceBehavior) {
+                    return $collection;
+                }
+
                 $redirectUrl = $this->webspaceManager->findUrlByResourceLocator(
-                    $document->getRedirectTarget()->getResourceSegment(),
+                    $redirectTarget->getResourceSegment(),
                     null,
                     $document->getLocale(),
-                    $document->getRedirectTarget()->getWebspaceName()
+                    $redirectTarget->getWebspaceName()
                 );
 
                 if ($request->getQueryString()) {

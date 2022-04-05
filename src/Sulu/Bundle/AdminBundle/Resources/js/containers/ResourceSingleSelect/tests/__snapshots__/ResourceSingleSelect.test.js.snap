@@ -150,6 +150,7 @@ exports[`Render with data 2`] = `
   <li>
     <button
       class="action"
+      type="button"
     >
       sulu_admin.please_choose
     </button>
@@ -158,6 +159,7 @@ exports[`Render with data 2`] = `
     <button
       class="option icon"
       style="min-width: 10px;"
+      type="button"
     >
       Test 1
     </button>
@@ -166,6 +168,7 @@ exports[`Render with data 2`] = `
     <button
       class="option icon"
       style="min-width: 10px;"
+      type="button"
     >
       Test 2
     </button>
@@ -223,6 +226,7 @@ exports[`Render with data with editable option 2`] = `
   <li>
     <button
       class="action"
+      type="button"
     >
       sulu_admin.please_choose
     </button>
@@ -231,6 +235,7 @@ exports[`Render with data with editable option 2`] = `
     <button
       class="option icon"
       style="min-width: 10px;"
+      type="button"
     >
       Test 1
     </button>
@@ -239,6 +244,7 @@ exports[`Render with data with editable option 2`] = `
     <button
       class="option icon"
       style="min-width: 10px;"
+      type="button"
     >
       Test 2
     </button>
@@ -249,6 +255,7 @@ exports[`Render with data with editable option 2`] = `
   <li>
     <button
       class="action"
+      type="button"
     >
       sulu_admin.edit
     </button>

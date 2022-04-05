@@ -31,6 +31,7 @@ use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrateg
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
+use Sulu\Component\DocumentManager\Document\UnknownDocument;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\Localization\Localization;
@@ -98,7 +99,7 @@ class ContentRouteProviderTest extends TestCase
         $this->resourceLocatorStrategyPool->getStrategyByWebspaceKey(Argument::any())->willReturn($this->resourceLocatorStrategy->reveal());
     }
 
-    public function testStateTest()
+    public function testStateTest(): void
     {
         $localization = new Localization();
         $localization->setLanguage('de');
@@ -123,7 +124,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertCount(0, $routes);
     }
 
-    public function testGetCollectionForRequest()
+    public function testGetCollectionForRequest(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -188,7 +189,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals(false, $defaults['partial']);
     }
 
-    public function testSecurityChecker()
+    public function testSecurityChecker(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -271,7 +272,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals(false, $defaults['partial']);
     }
 
-    public function testSecurityCheckerWithoutPermissionCheck()
+    public function testSecurityCheckerWithoutPermissionCheck(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -347,7 +348,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals(false, $defaults['partial']);
     }
 
-    public function testGetCollectionForRequestWithWrongSegment()
+    public function testGetCollectionForRequestWithWrongSegment(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -412,7 +413,7 @@ class ContentRouteProviderTest extends TestCase
         $contentRouteProvider->getRouteCollectionForRequest($request);
     }
 
-    public function testGetCollectionForRequestWithUmlauts()
+    public function testGetCollectionForRequestWithUmlauts(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -482,7 +483,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals('/de/käße', $route->getPath());
     }
 
-    public function testGetCollectionForRequestWithMissingStructure()
+    public function testGetCollectionForRequestWithMissingStructure(): void
     {
         $localization = new Localization();
         $localization->setLanguage('de');
@@ -518,7 +519,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertCount(0, $routes);
     }
 
-    public function testGetCollectionForRequestWithPartialFlag()
+    public function testGetCollectionForRequestWithPartialFlag(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -583,7 +584,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals(true, $defaults['partial']);
     }
 
-    public function testGetCollectionForRequestNoLocalization()
+    public function testGetCollectionForRequestNoLocalization(): void
     {
         $portal = new Portal();
         $portal->setKey('portal');
@@ -600,7 +601,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertCount(0, $routes);
     }
 
-    public function testGetCollectionForNotExistingRequest()
+    public function testGetCollectionForNotExistingRequest(): void
     {
         $localization = new Localization();
         $localization->setLanguage('de');
@@ -622,7 +623,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertCount(0, $routes);
     }
 
-    public function testGetRedirectForInternalLink()
+    public function testGetRedirectForInternalLink(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -677,7 +678,52 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals('sulu.io/de/other-test', $route->getDefaults()['url']);
     }
 
-    public function testGetRedirectForInternalLinkWithQueryString()
+    public function testGetRedirectForInternalLinkWithUnpublishedTarget(): void
+    {
+        $attributes = $this->prophesize(RequestAttributes::class);
+
+        $portal = new Portal();
+        $portal->setKey('portal');
+        $webspace = new Webspace();
+        $webspace->setKey('webspace');
+        $webspace->setTheme('theme');
+        $portal->setWebspace($webspace);
+        $attributes->getAttribute('portal', null)->willReturn($portal);
+
+        $attributes->getAttribute('localization', null)->willReturn(new Localization('de'));
+
+        $attributes->getAttribute('matchType', null)->willReturn(RequestAnalyzer::MATCH_TYPE_FULL);
+        $attributes->getAttribute('resourceLocator', null)->willReturn('/test');
+        $attributes->getAttribute('resourceLocatorPrefix', null)->willReturn('/de');
+
+        $this->resourceLocatorStrategy->loadByResourceLocator('/test', 'webspace', 'de')->willReturn('some-uuid');
+
+        $redirectTargetDocument = $this->prophesize(UnknownDocument::class);
+
+        $document = $this->prophesize(TitleBehavior::class)
+            ->willImplement(RedirectTypeBehavior::class)
+            ->willImplement(StructureBehavior::class)
+            ->willImplement(UuidBehavior::class);
+        $document->getTitle()->willReturn('some-title');
+        $document->getRedirectType()->willReturn(RedirectType::INTERNAL);
+        $document->getRedirectTarget()->willReturn($redirectTargetDocument->reveal());
+        $document->getStructureType()->willReturn('default');
+        $document->getUuid()->willReturn('some-uuid');
+        $document->getLocale()->willReturn('de');
+        $this->documentManager->find('some-uuid', 'de', ['load_ghost_content' => false])->willReturn($document->reveal());
+
+        $request = new Request(
+            [], [], ['_sulu' => $attributes->reveal()], [], [], ['REQUEST_URI' => \rawurlencode('/de/test')]
+        );
+
+        // Test the route provider
+        $contentRouteProvider = $this->createContentRouteProvider();
+        $routes = $contentRouteProvider->getRouteCollectionForRequest($request);
+
+        $this->assertCount(0, $routes);
+    }
+
+    public function testGetRedirectForInternalLinkWithQueryString(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -736,7 +782,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals('sulu.io/de/other-test?test1=value1', $route->getDefaults()['url']);
     }
 
-    public function testGetRedirectForInternalLinkWithJsonFormat()
+    public function testGetRedirectForInternalLinkWithJsonFormat(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -775,7 +821,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals('/de/new-test.json', $route->getDefaults()['url']);
     }
 
-    public function testGetRedirectForExternalLink()
+    public function testGetRedirectForExternalLink(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -823,7 +869,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals('http://www.example.org', $route->getDefaults()['url']);
     }
 
-    public function testGetCollectionMovedResourceLocator()
+    public function testGetCollectionMovedResourceLocator(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -859,7 +905,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals('/de/new-test', $route->getDefaults()['url']);
     }
 
-    public function testGetCollectionForSingleLanguageRequestSlashOnly()
+    public function testGetCollectionForSingleLanguageRequestSlashOnly(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -915,7 +961,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals($pageBridge->reveal(), $routes->getIterator()->current()->getDefaults()['structure']);
     }
 
-    public function testGetCollectionTrailingSlash()
+    public function testGetCollectionTrailingSlash(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -956,7 +1002,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals('/de/qwertz', $route->getDefaults()['url']);
     }
 
-    public function testGetCollectionTrailingSlashWithQueryParams()
+    public function testGetCollectionTrailingSlashWithQueryParams(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
         $portal = new Portal();
@@ -1001,7 +1047,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals('/de/foo?bar=baz', $route->getDefaults()['url']);
     }
 
-    public function testGetCollectionTrailingSlashWithoutPrefix()
+    public function testGetCollectionTrailingSlashWithoutPrefix(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -1042,7 +1088,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals('/qwertz', $route->getDefaults()['url']);
     }
 
-    public function testGetCollectionTrailingSlashForHomepage()
+    public function testGetCollectionTrailingSlashForHomepage(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -1085,7 +1131,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals('/de', $route->getDefaults()['url']);
     }
 
-    public function testGetCollectionTrailingSlashForHomepageWithoutLocalization()
+    public function testGetCollectionTrailingSlashForHomepageWithoutLocalization(): void
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
@@ -1143,7 +1189,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertEquals($pageBridge->reveal(), $route->getDefaults()['structure']);
     }
 
-    public function testGetCollectionForEmptyFormat()
+    public function testGetCollectionForEmptyFormat(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getRequestFormat()->willReturn('');

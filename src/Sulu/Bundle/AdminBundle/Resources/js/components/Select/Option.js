@@ -41,7 +41,7 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
     };
 
     handleButtonKeyDown = (event: KeyboardEvent) => {
-        if (event.key === 'Enter' || event.key === ' ') {
+        if (event.key === 'Enter') {
             event.preventDefault();
             event.stopPropagation();
             this.triggerButton();
@@ -113,6 +113,7 @@ export default class Option<T> extends React.PureComponent<Props<T>> {
                     onKeyDown={this.handleButtonKeyDown}
                     ref={this.setButtonRef}
                     style={{minWidth: anchorWidth + ANCHOR_WIDTH_DIFFERENCE}}
+                    type="button"
                 >
                     {this.renderSelectedVisualization()}
                     {children}
