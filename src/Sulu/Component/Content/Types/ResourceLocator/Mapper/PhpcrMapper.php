@@ -15,7 +15,6 @@ use DateTime;
 use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;
 use PHPCR\PathNotFoundException;
-use PHPCR\RepositoryException;
 use PHPCR\Util\PathHelper;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
