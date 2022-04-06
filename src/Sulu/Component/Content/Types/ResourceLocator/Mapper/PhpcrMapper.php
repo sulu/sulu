@@ -250,7 +250,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
         );
 
         if (!PathHelper::assertValidAbsolutePath($path, false, false)) {
-            throw new ResourceLocatorNotFoundException(\sprintf('Path "%s" not found', $path), null, $e);
+            throw new ResourceLocatorNotFoundException(\sprintf('Path "%s" not found', $path));
         }
 
         try {
