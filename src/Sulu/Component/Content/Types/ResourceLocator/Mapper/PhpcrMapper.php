@@ -16,6 +16,7 @@ use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;
 use PHPCR\PathNotFoundException;
 use PHPCR\RepositoryException;
+use PHPCR\Util\PathHelper;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
@@ -243,12 +244,17 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
     {
         $resourceLocator = \ltrim($resourceLocator, '/');
 
+        $path = \sprintf(
+            '%s/%s',
+            $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey),
+            $resourceLocator
+        );
+
+        if (!PathHelper::assertValidAbsolutePath($path, false, false)) {
+            throw new ResourceLocatorNotFoundException(\sprintf('Path "%s" not found', $path), null, $e);
+        }
+
         try {
-            $path = \sprintf(
-                '%s/%s',
-                $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey),
-                $resourceLocator
-            );
             if ('' !== $resourceLocator) {
                 // get requested resource locator route node
                 $route = $this->sessionManager->getSession()->getNode($path);
@@ -257,8 +263,6 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
                 $route = $this->getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey);
             }
         } catch (PathNotFoundException $e) {
-            throw new ResourceLocatorNotFoundException(\sprintf('Path "%s" not found', $path), null, $e);
-        } catch (RepositoryException $e) {
             throw new ResourceLocatorNotFoundException(\sprintf('Path "%s" not found', $path), null, $e);
         }
 

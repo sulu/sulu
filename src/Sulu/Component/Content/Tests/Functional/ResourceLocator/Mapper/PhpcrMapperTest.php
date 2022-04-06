@@ -270,7 +270,7 @@ class PhpcrMapperTest extends SuluTestCase
 
     public function testLoadFailureInvalidPath()
     {
-        $this->expectException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
+        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
         $this->phpcrMapper->loadByResourceLocator('/https://sulu.io/test/test-1', 'sulu_io', 'de');
     }
 
