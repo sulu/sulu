@@ -115,7 +115,7 @@ class Link extends Component<Props> {
                 target: enableTarget ? target : undefined,
                 anchor: enableAnchor ? anchor : undefined,
                 href,
-                title: enableTitle || title.length ? title : undefined,
+                title: enableTitle || (title != undefined && title.length) ? title : undefined,
                 locale: toJS(locale),
             }
         );
