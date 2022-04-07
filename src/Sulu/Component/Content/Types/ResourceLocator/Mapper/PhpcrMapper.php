@@ -15,6 +15,7 @@ use DateTime;
 use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;
 use PHPCR\PathNotFoundException;
+use PHPCR\Util\PathHelper;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
@@ -246,6 +247,16 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
             $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey),
             $resourceLocator
         );
+
+        $path = \sprintf(
+            '%s/%s',
+            $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey),
+            $resourceLocator
+        );
+
+        if (!PathHelper::assertValidAbsolutePath($path, false, false)) {
+            throw new ResourceLocatorNotFoundException(\sprintf('Path "%s" not found', $path));
+        }
 
         try {
             if ('' !== $resourceLocator) {
