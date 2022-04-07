@@ -2,7 +2,9 @@
 
 .qrcode {
     background: white;
-    box-sizing: content-box;
+    height: auto;
     margin-top: 20px;
-    padding: 6px;
+    max-width: 100%;
+    padding: 16px;
+    width: auto;
 }
