@@ -275,10 +275,16 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertEquals('/products/news/content1-news', $result);
     }
 
-    public function testLoadFailure()
+    public function testLoadFailureNotFound()
     {
         $this->expectException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
         $this->phpcrMapper->loadByResourceLocator('/test/test-1', 'sulu_io', 'de');
+    }
+
+    public function testLoadFailureInvalidPath()
+    {
+        $this->setExpectedException('Sulu\Component\Content\Exception\ResourceLocatorNotFoundException');
+        $this->phpcrMapper->loadByResourceLocator('/https://sulu.io/test/test-1', 'sulu_io', 'de');
     }
 
     public function testLoad()
