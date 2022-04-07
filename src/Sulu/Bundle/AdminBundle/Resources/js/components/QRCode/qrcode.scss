@@ -1,5 +1,8 @@
 @import '../../containers/Application/colors.scss';
 
 .qrcode {
+    background: white;
+    box-sizing: content-box;
     margin-top: 20px;
+    padding: 6px;
 }
