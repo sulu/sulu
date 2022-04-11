@@ -249,12 +249,12 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
             $resourceLocator
         );
 
-        if (!PathHelper::assertValidAbsolutePath($path, false, false)) {
-            throw new ResourceLocatorNotFoundException(\sprintf('Path "%s" not found', $path));
-        }
-
         try {
             if ('' !== $resourceLocator) {
+                if (!PathHelper::assertValidAbsolutePath($path, false, false)) {
+                    throw new ResourceLocatorNotFoundException(\sprintf('Path "%s" not found', $path));
+                }
+
                 // get requested resource locator route node
                 $route = $this->sessionManager->getSession()->getNode($path);
             } else {
