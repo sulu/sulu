@@ -274,6 +274,12 @@ class PhpcrMapperTest extends SuluTestCase
         $this->phpcrMapper->loadByResourceLocator('/https://sulu.io/test/test-1', 'sulu_io', 'de');
     }
 
+    public function testLoadHomepage()
+    {
+        $uuid = $this->phpcrMapper->loadByResourceLocator('', 'sulu_io', 'de');
+        $this->assertSame($this->homeDocument->getUuid(), $uuid);
+    }
+
     public function testLoad()
     {
         // create route for content
