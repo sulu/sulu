@@ -97,7 +97,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
             );
             $this->documentManager->publish($routeDocument, $locale);
         } catch (ItemExistsException $e) {
-            throw new ResourceLocatorAlreadyExistsException($document->getResourceSegment(), $routeDocumentPath);
+            throw new ResourceLocatorAlreadyExistsException($document->getResourceSegment(), $routeDocumentPath, $e);
         }
     }
 
@@ -242,24 +242,19 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null)
     {
         $resourceLocator = \ltrim($resourceLocator, '/');
-        $path = \sprintf(
-            '%s/%s',
-            $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey),
-            $resourceLocator
-        );
 
         $path = \sprintf(
             '%s/%s',
             $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey),
             $resourceLocator
         );
-
-        if (!PathHelper::assertValidAbsolutePath($path, false, false)) {
-            throw new ResourceLocatorNotFoundException(\sprintf('Path "%s" not found', $path));
-        }
 
         try {
             if ('' !== $resourceLocator) {
+                if (!PathHelper::assertValidAbsolutePath($path, false, false)) {
+                    throw new ResourceLocatorNotFoundException(\sprintf('Path "%s" not found', $path));
+                }
+
                 // get requested resource locator route node
                 $route = $this->sessionManager->getSession()->getNode($path);
             } else {

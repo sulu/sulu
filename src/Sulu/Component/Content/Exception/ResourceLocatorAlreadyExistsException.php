@@ -25,7 +25,7 @@ class ResourceLocatorAlreadyExistsException extends \Exception implements Transl
      */
     private $path;
 
-    public function __construct($resourceLocator, $path)
+    public function __construct($resourceLocator, $path, \Throwable $previous = null)
     {
         $this->resourceLocator = $resourceLocator;
         $this->path = $path;
@@ -37,7 +37,8 @@ class ResourceLocatorAlreadyExistsException extends \Exception implements Transl
                 $this->resourceLocator,
                 $this->path
             ),
-            1103
+            1103,
+            $previous
         );
     }
 
