@@ -26,7 +26,7 @@ class ResourceLocatorAlreadyExistsException extends \Exception implements RestEx
      */
     private $path;
 
-    public function __construct($resourceLocator, $path)
+    public function __construct($resourceLocator, $path, \Throwable $previous = null)
     {
         $this->resourceLocator = $resourceLocator;
         $this->path = $path;
@@ -38,7 +38,8 @@ class ResourceLocatorAlreadyExistsException extends \Exception implements RestEx
                 $this->resourceLocator,
                 $this->path
             ),
-            static::EXCEPTION_CODE_RESOURCE_LOCATOR_ALREADY_EXISTS
+            static::EXCEPTION_CODE_RESOURCE_LOCATOR_ALREADY_EXISTS,
+            $previous
         );
     }
 
