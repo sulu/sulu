@@ -130,15 +130,31 @@ class UpdateBuildCommand extends Command
             '.babelrc' => 'babel.config.json',
         ];
 
-        // files which are expected to be changed but requires then a manual build
-        $appFiles = ['app.js'];
+        $deletedFiles = [
+            '.babelrc',
+        ];
+
+        $appFiles = ['app.js']; // files which are expected to be changed but requires then a manual build
 
         foreach ($renamedFiles as $oldFile => $newFile) {
-            if ($filesystem->exists($this->projectDir . $oldFile)) {
+            if (
+                $filesystem->exists($this->projectDir . static::ASSETS_DIR . $oldFile)
+                && !$filesystem->exists($this->projectDir . static::ASSETS_DIR . $newFile)
+            ) {
                 if ('y' === \strtolower(
                     $ui->ask(\sprintf('The "%s" should be renamed to "%s" should wo do this now?', $oldFile, $newFile), 'y')
                 )) {
-                    $filesystem->rename($this->projectDir . $oldFile, $this->projectDir . $newFile);
+                    $filesystem->rename($this->projectDir . static::ASSETS_DIR . $oldFile, $this->projectDir . static::ASSETS_DIR . $newFile);
+                }
+            }
+        }
+
+        foreach ($deletedFiles as $deletedFile) {
+            if ($filesystem->exists($this->projectDir . static::ASSETS_DIR . $deletedFile)) {
+                if ('y' === \strtolower(
+                    $ui->ask(\sprintf('The "%s" should be deleted should wo do this now?', $deletedFile), 'y')
+                )) {
+                    $filesystem->remove($this->projectDir . static::ASSETS_DIR . $deletedFile);
                 }
             }
         }
