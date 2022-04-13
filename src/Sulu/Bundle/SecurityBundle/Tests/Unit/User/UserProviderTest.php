@@ -19,7 +19,6 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\SecurityBundle\User\UserProvider;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\DisabledException;
 use Symfony\Component\Security\Core\Exception\LockedException;
 
@@ -29,11 +28,6 @@ class UserProviderTest extends TestCase
      * @var ObjectProphecy<UserRepositoryInterface>
      */
     private $userRepository;
-
-    /**
-     * @var ObjectProphecy<RequestStack>
-     */
-    private $requestStack;
 
     /**
      * @var ObjectProphecy<SystemStoreInterface>
@@ -53,9 +47,8 @@ class UserProviderTest extends TestCase
     public function setUp(): void
     {
         $this->userRepository = $this->prophesize(UserRepositoryInterface::class);
-        $this->requestStack = $this->prophesize(RequestStack::class);
         $this->systemStore = $this->prophesize(SystemStoreInterface::class);
-        $this->userProvider = new UserProvider($this->userRepository->reveal(), $this->requestStack->reveal(), $this->systemStore->reveal());
+        $this->userProvider = new UserProvider($this->userRepository->reveal(), $this->systemStore->reveal());
 
         $this->user = new User();
         $this->user->setUsername('sulu');

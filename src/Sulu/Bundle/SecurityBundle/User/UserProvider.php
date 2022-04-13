@@ -15,7 +15,6 @@ use Doctrine\ORM\NoResultException;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\DisabledException;
 use Symfony\Component\Security\Core\Exception\LockedException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -35,19 +34,13 @@ class UserProvider implements UserProviderInterface
     private $userRepository;
 
     /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
      * @var SystemStoreInterface
      */
     private $systemStore;
 
-    public function __construct(UserRepositoryInterface $userRepository, RequestStack $requestStack, SystemStoreInterface $systemStore)
+    public function __construct(UserRepositoryInterface $userRepository, SystemStoreInterface $systemStore)
     {
         $this->userRepository = $userRepository;
-        $this->requestStack = $requestStack;
         $this->systemStore = $systemStore;
     }
 
