@@ -1,5 +1,12 @@
 # Upgrade
 
+## 2.5.0
+
+### User Provider service definition changed
+
+The user provider service now requires the `SystemStoreInterface` service
+instead of the `RequestStack` to read correct set **security system**.
+
 ## 2.4.1
 
 ### Change PreviewLinkInterface

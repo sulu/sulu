@@ -12,9 +12,9 @@
 namespace Sulu\Bundle\SecurityBundle\User;
 
 use Doctrine\ORM\NoResultException;
+use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\DisabledException;
 use Symfony\Component\Security\Core\Exception\LockedException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -34,20 +34,14 @@ class UserProvider implements UserProviderInterface
     private $userRepository;
 
     /**
-     * @var RequestStack
+     * @var SystemStoreInterface
      */
-    private $requestStack;
+    private $systemStore;
 
-    /**
-     * @var string
-     */
-    private $suluSystem;
-
-    public function __construct(UserRepositoryInterface $userRepository, RequestStack $requestStack, $suluSystem)
+    public function __construct(UserRepositoryInterface $userRepository, SystemStoreInterface $systemStore)
     {
         $this->userRepository = $userRepository;
-        $this->requestStack = $requestStack;
-        $this->suluSystem = $suluSystem;
+        $this->systemStore = $systemStore;
     }
 
     public function loadUserByUsername($username)
@@ -73,8 +67,10 @@ class UserProvider implements UserProviderInterface
                 throw new LockedException('User is locked.');
             }
 
+            $currentSystem = $this->systemStore->getSystem();
+
             foreach ($user->getRoleObjects() as $role) {
-                if ($role->getSystem() === $this->getSystem()) {
+                if ($role->getSystem() === $currentSystem) {
                     return $user;
                 }
             }
@@ -113,26 +109,5 @@ class UserProvider implements UserProviderInterface
     public function supportsClass($class)
     {
         return \is_subclass_of($class, UserInterface::class);
-    }
-
-    /**
-     * Returns the required system for the current request.
-     *
-     * @return string
-     */
-    private function getSystem()
-    {
-        $system = $this->suluSystem;
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (null !== $request
-            && $request->attributes->has('_sulu')
-            && null !== ($webspace = $request->attributes->get('_sulu')->getAttribute('webspace'))
-            && null !== ($security = $webspace->getSecurity())
-        ) {
-            $system = $security->getSystem();
-        }
-
-        return $system;
     }
 }
