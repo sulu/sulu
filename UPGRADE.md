@@ -5,7 +5,7 @@
 ### User Provider service definition changed
 
 The user provider service now requires the `SystemStoreInterface` service
-to read correct set **security system**.
+instead of the `RequestStack` to read correct set **security system**.
 
 ## 2.4.1
 
