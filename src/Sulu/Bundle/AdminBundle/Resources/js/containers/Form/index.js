@@ -25,6 +25,7 @@ import Input from './fields/Input';
 import Number from './fields/Number';
 import PasswordConfirmation from './fields/PasswordConfirmation';
 import Phone from './fields/Phone';
+import QRCode from './fields/QRCode';
 import SingleSelect from './fields/SingleSelect';
 import Select from './fields/Select';
 import ResourceLocator from './fields/ResourceLocator';
@@ -61,6 +62,7 @@ export {
     Number,
     PasswordConfirmation,
     Phone,
+    QRCode,
     Renderer,
     ResourceLocator,
     Select,

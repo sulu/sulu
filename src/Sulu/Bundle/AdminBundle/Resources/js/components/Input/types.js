@@ -2,7 +2,7 @@
 import type {ElementRef} from 'react';
 
 export type InputProps<T: ?string | ?number> = {|
-    alignment: 'left' | 'center' | 'right',
+    alignment?: 'left' | 'center' | 'right',
     autocomplete?: string,
     collapsed?: boolean,
     disabled: boolean,
@@ -31,7 +31,7 @@ export type InputProps<T: ?string | ?number> = {|
     segmentDelimiter?: string,
     skin?: 'default' | 'dark',
     step?: ?T,
-    type: string,
+    type?: string,
     valid: boolean,
     value: ?T,
 |};
