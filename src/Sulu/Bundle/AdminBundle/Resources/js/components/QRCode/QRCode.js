@@ -15,7 +15,7 @@ export default class QRCode<T: ?string | ?number> extends React.PureComponent<QR
                 <QRCodeComponent
                     className={qrCodeStyles.qrcode}
                     value={this.props.value || ''}
-                    viewBox='0 0 256 256'
+                    viewBox="0 0 256 256"
                 />
             </Fragment>
         );
