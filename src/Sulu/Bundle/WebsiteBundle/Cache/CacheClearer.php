@@ -65,7 +65,7 @@ class CacheClearer implements CacheClearerInterface
         EventDispatcherInterface $eventDispatcher,
         string $varDir,
         ?CacheManager $cacheManager,
-        bool $tagsEnabled
+        bool $tagsEnabled = true
     ) {
         $this->kernelEnvironment = $kernelEnvironment;
         $this->filesystem = $filesystem;
@@ -87,7 +87,7 @@ class CacheClearer implements CacheClearerInterface
 
         $tags = \func_num_args() >= 1 ? \func_get_arg(0) : null;
 
-        if (null !== $tags && $this->cacheManager && $this->cacheManager->supportsTags() && $this->tagsEnabled) {
+        if (null !== $tags && $this->tagsEnabled && $this->cacheManager && $this->cacheManager->supportsTags()) {
             foreach ($tags as $tag) {
                 $this->cacheManager->invalidateTag($tag);
             }
