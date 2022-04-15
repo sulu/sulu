@@ -144,19 +144,29 @@ class SnippetContentTest extends BaseFunctionalTestCase
 
     public function testGetContentDataNotExistingValue(): void
     {
+        $snippet = $this->createSnippet(
+            'hotel',
+            [
+                'de' => [
+                    'title' => 'Hotel to be removed',
+                ],
+            ]
+        );
+
         $page = new PageDocument();
         $page->setTitle('Other hotels page');
         $page->setStructureType('hotel_page');
         $page->setResourceSegment('/other-hotels');
         $page->getStructure()->bind([
             'hotels' => [
-                '0526b49b-be4c-45a0-9fe0-b55b3a3bd596', // Not existing snippet
+                $snippet->getUuid(),
             ],
         ]);
-
         $this->getContainer()->get('sulu_document_manager.document_manager')->persist($page, 'de', [
             'path' => '/cmf/sulu_io/contents/other-hotels',
         ]);
+        $this->getContainer()->get('sulu_document_manager.document_manager')->flush();
+        $this->getContainer()->get('sulu_document_manager.document_manager')->remove($snippet);
         $this->getContainer()->get('sulu_document_manager.document_manager')->flush();
         $this->getContainer()->get('sulu_document_manager.document_manager')->clear();
 

@@ -39,7 +39,7 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
      */
     private $manager;
 
-    private function createSnippet($type, array $localizedData)
+    protected function createSnippet($type, array $localizedData)
     {
         $snippet = new SnippetDocument();
         $snippet->setStructureType($type);
