@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Snippet;
 
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 
 /**
  * Resolves snippets by UUIDs.
@@ -47,7 +48,11 @@ class SnippetResolver implements SnippetResolverInterface
         $snippets = [];
         foreach ($uuids as $uuid) {
             if (!\array_key_exists($uuid, $this->snippetCache)) {
-                $snippet = $this->contentMapper->load($uuid, $webspaceKey, $locale);
+                try {
+                    $snippet = $this->contentMapper->load($uuid, $webspaceKey, $locale);
+                } catch (DocumentNotFoundException $e) {
+                    continue;
+                }
 
                 if (!$snippet->getHasTranslation() && null !== $shadowLocale) {
                     $snippet = $this->contentMapper->load($uuid, $webspaceKey, $shadowLocale);

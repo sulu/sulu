@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 use PHPCR\SessionInterface;
 use PHPCR\Util\UUIDHelper;
 use Prophecy\Argument;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
@@ -139,6 +140,31 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertEquals('Le grande budapest', $hotel1['title']);
         $hotel2 = \next($data);
         $this->assertEquals('L\'Hôtel New Hampshire', $hotel2['title']);
+    }
+
+    public function testGetContentDataNotExistingValue(): void
+    {
+        $page = new PageDocument();
+        $page->setTitle('Other hotels page');
+        $page->setStructureType('hotel_page');
+        $page->setResourceSegment('/other-hotels');
+        $page->getStructure()->bind([
+            'hotels' => [
+                '0526b49b-be4c-45a0-9fe0-b55b3a3bd596', // Not existing snippet
+            ],
+        ]);
+
+        $this->getContainer()->get('sulu_document_manager.document_manager')->persist($page, 'de', [
+            'path' => '/cmf/sulu_io/contents/other-hotels',
+        ]);
+        $this->getContainer()->get('sulu_document_manager.document_manager')->flush();
+        $this->getContainer()->get('sulu_document_manager.document_manager')->clear();
+
+        $pageNode = $this->session->getNode('/cmf/sulu_io/contents/other-hotels');
+        $pageStructure = $this->contentMapper->loadByNode($pageNode, 'de');
+        $property = $pageStructure->getProperty('hotels');
+        $data = $this->contentType->getContentData($property);
+        $this->assertCount(0, $data);
     }
 
     public function testGetContentDataShadow()
