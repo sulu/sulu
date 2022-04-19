@@ -87,9 +87,15 @@ class CacheClearer implements CacheClearerInterface
 
         $tags = \func_num_args() >= 1 ? \func_get_arg(0) : null;
 
-        if (null !== $tags && $this->tagsEnabled && $this->cacheManager && $this->cacheManager->supportsTags()) {
-            foreach ($tags as $tag) {
-                $this->cacheManager->invalidateTag($tag);
+        if ($this->cacheManager && $this->cacheManager->supportsInvalidate()) {
+            if (null !== $tags && $this->tagsEnabled && $this->cacheManager->supportsTags()) {
+                foreach ($tags as $tag) {
+                    $this->cacheManager->invalidateTag($tag);
+                }
+
+                $this->eventDispatcher->dispatch(new CacheClearEvent($tags), Events::CACHE_CLEAR);
+
+                return;
             }
 
             $request = $this->requestStack->getCurrentRequest();
