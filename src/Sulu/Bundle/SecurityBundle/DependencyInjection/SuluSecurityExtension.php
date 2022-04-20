@@ -44,6 +44,10 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
         $container->setParameter('sulu_security.system', $config['system']);
         $container->setParameter('sulu_security.security_types.fixture', $config['security_types']['fixture']);
 
+        $passwordPolicyEnabled = $config['password_policy']['enabled'];
+        $container->setParameter('sulu_security.password_policy.pattern', $passwordPolicyEnabled ? $config['password_policy']['pattern'] : null);
+        $container->setParameter('sulu_security.password_policy.information_translation_key', $passwordPolicyEnabled ? $config['password_policy']['information_translation_key'] : null);
+
         foreach ($config['reset_password']['mail'] as $option => $value) {
             $container->setParameter('sulu_security.reset_password.mail.' . $option, $value);
         }

@@ -41,6 +41,7 @@
     "sulu_admin.welcome": "Willkommen",
     "sulu_admin.reset_password": "Passwort zurücksetzen",
     "sulu_admin.reset_password_error": "Die Passwörter stimmen nicht überein",
+    "sulu_admin.reset_password_pattern_error": "Das Passwort entspricht nicht den Sicherheitsbestimmungen",
     "sulu_admin.back_to_website": "Zurück zur Website",
     "sulu_admin.username_or_email": "Username oder Email",
     "sulu_admin.password": "Passwort",

@@ -85,6 +85,15 @@ class UserManager implements UserManagerInterface
     /**
      * @param PasswordHasherFactoryInterface|EncoderFactoryInterface|null $passwordHasherFactory
      */
+
+    /**
+     * @var string|null
+     */
+    private $passwordPattern;
+
+    /**
+     * @param PasswordHasherFactoryInterface|EncoderFactoryInterface|null $passwordHasherFactory
+     */
     public function __construct(
         ObjectManager $em,
         $passwordHasherFactory,
@@ -93,7 +102,8 @@ class UserManager implements UserManagerInterface
         ContactManager $contactManager,
         SaltGenerator $saltGenerator,
         UserRepositoryInterface $userRepository,
-        DomainEventCollectorInterface $domainEventCollector
+        DomainEventCollectorInterface $domainEventCollector,
+        ?string $passwordPattern = null
     ) {
         $this->em = $em;
         $this->passwordHasherFactory = $passwordHasherFactory;
@@ -103,6 +113,7 @@ class UserManager implements UserManagerInterface
         $this->saltGenerator = $saltGenerator;
         $this->userRepository = $userRepository;
         $this->domainEventCollector = $domainEventCollector;
+        $this->passwordPattern = $passwordPattern;
     }
 
     /**
@@ -417,7 +428,15 @@ class UserManager implements UserManagerInterface
      */
     public function isValidPassword($password)
     {
-        return !empty($password);
+        if (empty($password)) {
+            return false;
+        }
+
+        if (null === $this->passwordPattern) {
+            return true;
+        }
+
+        return 1 === \preg_match(\sprintf('/%s/', $this->passwordPattern), $password);
     }
 
     /**

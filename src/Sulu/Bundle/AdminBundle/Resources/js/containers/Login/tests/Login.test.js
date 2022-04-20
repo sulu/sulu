@@ -58,6 +58,10 @@ jest.mock('../../../stores/userStore', () => {
         get forgotPasswordSuccess() {
             return mockUserStoreForgotPasswordSuccess();
         }
+
+        validatePassword(password: string): boolean {
+            return (new RegExp('.{6,}')).test(password);
+        }
     };
 });
 
@@ -180,5 +184,51 @@ test('Should call the submit handler of the reset password view', () => {
 
     return promise.then(() => {
         expect(router.reset).toBeCalled();
+    });
+});
+
+test('Should not call the submit handler of the reset password view with an invalid password', () => {
+    const promise = Promise.resolve();
+    mockUserStoreResetPassword.mockReturnValue(promise);
+
+    const router = new Router();
+    router.attributes.forgotPasswordToken = 'some-uuid';
+
+    const eventMock = {preventDefault: () => {}};
+    const login = mount(
+        <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
+    );
+
+    login.find('Input[icon="su-lock"]').at(0).prop('onChange')('test');
+    login.find('Input[icon="su-lock"]').at(1).prop('onChange')('test');
+    login.find('form').prop('onSubmit')(eventMock);
+
+    expect(mockUserStoreResetPassword).not.toBeCalled();
+
+    return promise.then(() => {
+        expect(router.reset).not.toBeCalled();
+    });
+});
+
+test('Should not call the submit handler of the reset password view with not matching passwords', () => {
+    const promise = Promise.resolve();
+    mockUserStoreResetPassword.mockReturnValue(promise);
+
+    const router = new Router();
+    router.attributes.forgotPasswordToken = 'some-uuid';
+
+    const eventMock = {preventDefault: () => {}};
+    const login = mount(
+        <Login initialized={true} onLoginSuccess={jest.fn()} router={router} />
+    );
+
+    login.find('Input[icon="su-lock"]').at(0).prop('onChange')('test');
+    login.find('Input[icon="su-lock"]').at(1).prop('onChange')('testpassword');
+    login.find('form').prop('onSubmit')(eventMock);
+
+    expect(mockUserStoreResetPassword).not.toBeCalled();
+
+    return promise.then(() => {
+        expect(router.reset).not.toBeCalled();
     });
 });

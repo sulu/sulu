@@ -184,9 +184,16 @@ class UserStore {
     }
 
     getPersistentSetting(key: string): * {
-        const value = this.persistentSettings.get(key);
+        return this.persistentSettings.get(key);
+    }
 
-        return value;
+    validatePassword(password: string): boolean {
+        const pattern = Config.passwordPattern;
+        if (!pattern) {
+            return true;
+        }
+
+        return new RegExp(pattern).test(password);
     }
 }
 

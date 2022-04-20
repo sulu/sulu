@@ -3,9 +3,12 @@ import React, {Fragment} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
+import {Config} from '../../services';
 import {translate} from '../../utils/index';
 import Button from '../../components/Button/index';
 import Input from '../../components/Input/index';
+import fieldStyles from '../../components/Form/field.scss';
+import {userStore} from '../../stores';
 import formStyles from './form.scss';
 import Header from './Header';
 import type {ElementRef} from 'react';
@@ -17,6 +20,11 @@ type Props = {|
     onSubmit: (data: ResetPasswordFormData) => void,
 |};
 
+const ERROR_MAP = {
+    match: 'sulu_admin.reset_password_error',
+    pattern: 'sulu_admin.reset_password_pattern_error',
+};
+
 @observer
 class ResetPasswordForm extends React.Component<Props> {
     static defaultProps = {
@@ -25,13 +33,18 @@ class ResetPasswordForm extends React.Component<Props> {
 
     @observable inputRef: ?ElementRef<*>;
 
-    @observable error: boolean;
+    @observable error: ?string = null;
+    @observable errorKey: string;
 
     @observable password1: ?string;
     @observable password2: ?string;
 
     @computed get submitButtonDisabled(): boolean {
         return !(this.password1 && this.password2);
+    }
+
+    @computed get matchPattern(): boolean {
+        return userStore.validatePassword(this.password1 || '');
     }
 
     @action setInputRef = (ref: ?ElementRef<*>) => {
@@ -46,26 +59,30 @@ class ResetPasswordForm extends React.Component<Props> {
 
     @action handlePassword1Change = (password1: ?string) => {
         this.password1 = password1;
+
+        this.error = null;
     };
 
     @action handlePassword2Change = (password2: ?string) => {
         this.password2 = password2;
+
+        this.error = null;
     };
 
     @action handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (!this.password1 || !this.password2) {
-            this.error = true;
+        if (!this.password1 || !this.password2 || this.password1 !== this.password2) {
+            this.error = 'match';
             return;
         }
 
-        if (this.password1 !== this.password2) {
-            this.error = true;
+        if (!this.matchPattern) {
+            this.error = 'pattern';
             return;
         }
 
-        this.error = false;
+        this.error = null;
 
         const {onSubmit} = this.props;
 
@@ -76,14 +93,14 @@ class ResetPasswordForm extends React.Component<Props> {
         const inputFieldClass = classNames(
             formStyles.inputField,
             {
-                [formStyles.error]: this.error,
+                [formStyles.error]: this.error !== null,
             }
         );
 
         return (
             <Fragment>
-                <Header small={this.error}>
-                    {translate(this.error ? 'sulu_admin.reset_password_error' : 'sulu_admin.reset_password')}
+                <Header small={this.error !== null}>
+                    {translate(this.error ? ERROR_MAP[this.error] : 'sulu_admin.reset_password')}
                 </Header>
                 <form className={formStyles.form} onSubmit={this.handleSubmit}>
                     <fieldset>
@@ -114,6 +131,11 @@ class ResetPasswordForm extends React.Component<Props> {
                                 value={this.password2}
                             />
                         </label>
+                        {Config.passwordInformationKey &&
+                            <label className={fieldStyles.descriptionLabel}>
+                                {translate(Config.passwordInformationKey)}
+                            </label>
+                        }
                         <div className={formStyles.buttons}>
                             <Button onClick={this.props.onChangeForm} skin="link">
                                 {translate('sulu_admin.to_login')}

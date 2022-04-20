@@ -41,6 +41,7 @@
     "sulu_admin.welcome": "Welcome",
     "sulu_admin.reset_password": "Reset password",
     "sulu_admin.reset_password_error": "The passwords do not match",
+    "sulu_admin.reset_password_pattern_error": "The password does not meet the security requirements",
     "sulu_admin.back_to_website": "Back to website",
     "sulu_admin.username_or_email": "Username or Email",
     "sulu_admin.password": "Password",

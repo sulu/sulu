@@ -20,6 +20,18 @@ jest.mock('../../../stores/localizationStore', () => ({
     localizations: [],
 }));
 
+jest.mock('../../../services/Config', () => ({
+    fallbackLocale: 'en',
+    endpoints: {
+        loginCheck: 'login_check_url',
+        forgotPasswordReset: 'forgot_password_reset_url',
+        resetPassword: 'reset_password_url',
+        logout: 'logout_url',
+        profileSettings: 'profile_settings_url',
+    },
+    passwordPattern: '.{6,}',
+}));
+
 beforeEach(() => {
     userStore.clear();
 });
@@ -183,7 +195,7 @@ test('Should login after the password was reset', () => {
     expect(userStore.loading).toBe(true);
 
     return resetPromise.then(() => {
-        expect(Requester.post).toBeCalledWith('reset_password', {password: 'test', token: 'some-uuid'});
+        expect(Requester.post).toBeCalledWith('reset_password_url', {password: 'test', token: 'some-uuid'});
         expect(initializer.initialize).toBeCalledWith(true);
 
         return initializePromise.then(() => {
@@ -285,4 +297,9 @@ test('Should update persistent settings on updateContentLocale', () => {
     userStore.updateContentLocale('fr');
     expect(Requester.patch).toBeCalledWith('profile_settings_url', {'sulu_admin.content_locale': 'fr'});
     expect(userStore.contentLocale).toBe('fr');
+});
+
+test('Should validate password', () => {
+    expect(userStore.validatePassword('12345')).toBeFalsy();
+    expect(userStore.validatePassword('123456')).toBeTruthy();
 });
