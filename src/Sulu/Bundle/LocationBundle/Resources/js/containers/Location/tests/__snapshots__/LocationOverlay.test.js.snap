@@ -77,7 +77,7 @@ Array [
                   class="field"
                 >
                   <div
-                    class="map leaflet-container leaflet-grab leaflet-touch-drag"
+                    class="map leaflet-container leaflet-touch leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
                     style="position: relative;"
                     tabindex="0"
                   >
@@ -107,6 +107,9 @@ Array [
                         </div>
                       </div>
                       <div
+                        class="leaflet-pane leaflet-overlay-pane"
+                      />
+                      <div
                         class="leaflet-pane leaflet-shadow-pane"
                       >
                         <img
@@ -117,14 +120,12 @@ Array [
                         />
                       </div>
                       <div
-                        class="leaflet-pane leaflet-overlay-pane"
-                      />
-                      <div
                         class="leaflet-pane leaflet-marker-pane"
                       >
                         <img
-                          alt=""
+                          alt="Marker"
                           class="leaflet-marker-icon leaflet-zoom-hide leaflet-interactive leaflet-marker-draggable"
+                          role="button"
                           src="marker-icon.png"
                           style="margin-left: -12px; margin-top: -41px; width: 25px; height: 41px; left: 0px; top: 0px; z-index: 0;"
                           tabindex="0"
@@ -147,22 +148,32 @@ Array [
                           class="leaflet-control-zoom leaflet-bar leaflet-control"
                         >
                           <a
+                            aria-disabled="false"
                             aria-label="Zoom in"
                             class="leaflet-control-zoom-in"
                             href="#"
                             role="button"
                             title="Zoom in"
                           >
-                            +
+                            <span
+                              aria-hidden="true"
+                            >
+                              +
+                            </span>
                           </a>
                           <a
+                            aria-disabled="false"
                             aria-label="Zoom out"
                             class="leaflet-control-zoom-out"
                             href="#"
                             role="button"
                             title="Zoom out"
                           >
-                            −
+                            <span
+                              aria-hidden="true"
+                            >
+                              −
+                            </span>
                           </a>
                         </div>
                       </div>
@@ -550,7 +561,7 @@ Array [
                   class="field"
                 >
                   <div
-                    class="map leaflet-container leaflet-grab leaflet-touch-drag"
+                    class="map leaflet-container leaflet-touch leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
                     style="position: relative;"
                     tabindex="0"
                   >
@@ -601,6 +612,9 @@ Array [
                         </div>
                       </div>
                       <div
+                        class="leaflet-pane leaflet-overlay-pane"
+                      />
+                      <div
                         class="leaflet-pane leaflet-shadow-pane"
                       >
                         <img
@@ -611,14 +625,12 @@ Array [
                         />
                       </div>
                       <div
-                        class="leaflet-pane leaflet-overlay-pane"
-                      />
-                      <div
                         class="leaflet-pane leaflet-marker-pane"
                       >
                         <img
-                          alt=""
+                          alt="Marker"
                           class="leaflet-marker-icon leaflet-zoom-hide leaflet-interactive leaflet-marker-draggable"
+                          role="button"
                           src="marker-icon.png"
                           style="margin-left: -12px; margin-top: -41px; width: 25px; height: 41px; left: 0px; top: 0px; z-index: 0;"
                           tabindex="0"
@@ -641,22 +653,32 @@ Array [
                           class="leaflet-control-zoom leaflet-bar leaflet-control"
                         >
                           <a
+                            aria-disabled="false"
                             aria-label="Zoom in"
                             class="leaflet-control-zoom-in"
                             href="#"
                             role="button"
                             title="Zoom in"
                           >
-                            +
+                            <span
+                              aria-hidden="true"
+                            >
+                              +
+                            </span>
                           </a>
                           <a
+                            aria-disabled="false"
                             aria-label="Zoom out"
                             class="leaflet-control-zoom-out"
                             href="#"
                             role="button"
                             title="Zoom out"
                           >
-                            −
+                            <span
+                              aria-hidden="true"
+                            >
+                              −
+                            </span>
                           </a>
                         </div>
                       </div>

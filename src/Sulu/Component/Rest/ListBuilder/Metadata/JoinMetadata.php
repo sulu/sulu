@@ -40,14 +40,14 @@ class JoinMetadata
     private $condition = null;
 
     /**
-     * @var string
+     * @var 'ON'|'WITH'
      */
     private $conditionMethod = self::JOIN_CONDITION_METHOD_WITH;
 
     /**
      * Defines the join method (left, right or inner join).
      *
-     * @var string
+     * @var 'LEFT'|'INNER'|'RIGHT'
      */
     private $method = self::JOIN_METHOD_LEFT;
 
@@ -106,7 +106,7 @@ class JoinMetadata
     }
 
     /**
-     * @return string
+     * @return 'ON'|'WITH'
      */
     public function getConditionMethod()
     {
@@ -114,7 +114,7 @@ class JoinMetadata
     }
 
     /**
-     * @param string $conditionMethod
+     * @param 'ON'|'WITH' $conditionMethod
      */
     public function setConditionMethod($conditionMethod)
     {
@@ -124,7 +124,7 @@ class JoinMetadata
     /**
      * The method for the condition to apply (on or with).
      *
-     * @return string
+     * @return 'LEFT'|'INNER'|'RIGHT'
      */
     public function getMethod()
     {
@@ -132,7 +132,7 @@ class JoinMetadata
     }
 
     /**
-     * @param string $method
+     * @param 'LEFT'|'INNER'|'RIGHT' $method
      */
     public function setMethod($method)
     {
