@@ -85,6 +85,7 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
 
         $container->setParameter('sulu_http_cache.cache.max_age', $config['cache']['max_age']);
         $container->setParameter('sulu_http_cache.cache.shared_max_age', $config['cache']['shared_max_age']);
+        $container->setParameter('sulu_http_cache.tags.enabled', $config['tags']['enabled']);
 
         $proxyClientAvailable = false;
         if (\array_key_exists('proxy_client', $config)) {

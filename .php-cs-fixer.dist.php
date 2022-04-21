@@ -31,6 +31,9 @@ $config->setRiskyAllowed(true)
         'phpdoc_types_order' => false,
         'single_line_throw' => false,
         'single_line_comment_spacing' => false,
+        'phpdoc_to_comment' => [
+            'ignored_tags' => ['todo', 'var'],
+        ],
     ])
     ->setFinder($finder);
 

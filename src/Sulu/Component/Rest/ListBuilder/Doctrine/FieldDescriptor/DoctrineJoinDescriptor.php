@@ -52,17 +52,21 @@ class DoctrineJoinDescriptor
     /**
      * The method for the condition to apply.
      *
-     * @var string
+     * @var 'ON'|'WITH'
      */
     private $joinConditionMethod;
 
     /**
      * Defines the join method (left, right or inner join).
      *
-     * @var string
+     * @var 'LEFT'|'INNER'|'RIGHT'
      */
     private $joinMethod;
 
+    /**
+     * @param 'LEFT'|'INNER'|'RIGHT' $joinMethod
+     * @param 'ON'|'WITH' $joinConditionMethod
+     */
     public function __construct(
         string $entityName,
         string $join = null,
@@ -111,7 +115,7 @@ class DoctrineJoinDescriptor
     }
 
     /**
-     * @return string
+     * @return 'ON'|'WITH'
      */
     public function getJoinConditionMethod()
     {
@@ -119,7 +123,7 @@ class DoctrineJoinDescriptor
     }
 
     /**
-     * @return string
+     * @return 'LEFT'|'INNER'|'RIGHT'
      */
     public function getJoinMethod()
     {

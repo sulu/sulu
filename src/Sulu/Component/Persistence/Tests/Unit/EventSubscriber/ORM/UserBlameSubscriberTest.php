@@ -14,10 +14,11 @@ namespace Sulu\Component\Persistence\Tests\Unit\EventSubscriber\ORM;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\UnitOfWork;
-use Doctrine\Persistence\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Persistence\EventSubscriber\ORM\UserBlameSubscriber;
 use Sulu\Component\Persistence\Model\UserBlameInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -28,12 +29,12 @@ use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 class UserBlameSubscriberTest extends TestCase
 {
     /**
-     * @var LoadClassMetadataEventArgs
+     * @var ObjectProphecy<LoadClassMetadataEventArgs>
      */
     private $loadClassMetadataEvent;
 
     /**
-     * @var OnFlushEventArgs
+     * @var ObjectProphecy<OnFlushEventArgs>
      */
     private $onFlushEvent;
 
@@ -43,17 +44,17 @@ class UserBlameSubscriberTest extends TestCase
     private $userBlameObject;
 
     /**
-     * @var ClassMetadata
+     * @var ObjectProphecy<ClassMetadata>
      */
     private $classMetadata;
 
     /**
-     * @var \ReflectionClass
+     * @var ObjectProphecy<\ReflectionClass>
      */
     private $refl;
 
     /**
-     * @var EntityManager
+     * @var ObjectProphecy<EntityManager>
      */
     private $entityManager;
 
@@ -68,12 +69,12 @@ class UserBlameSubscriberTest extends TestCase
     private $user;
 
     /**
-     * @var TokenInterface
+     * @var ObjectProphecy<TokenInterface>
      */
     private $token;
 
     /**
-     * @var TokenStorageInterface
+     * @var ObjectProphecy<TokenStorageInterface>
      */
     private $tokenStorage;
 
@@ -91,7 +92,7 @@ class UserBlameSubscriberTest extends TestCase
 
         $this->userBlameObject = $this->prophesize(\stdClass::class)
             ->willImplement(UserBlameInterface::class);
-        $this->classMetadata = $this->prophesize(\Doctrine\ORM\Mapping\ClassMetadata::class);
+        $this->classMetadata = $this->prophesize(ClassMetadata::class);
         $this->refl = $this->prophesize(\ReflectionClass::class);
         $this->entityManager = $this->prophesize(EntityManager::class);
         $this->user = $this->prophesize(UserInterface::class);
