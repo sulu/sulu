@@ -118,7 +118,7 @@
         "matthiasnoback/symfony-config-test": "^4.0",
         "matthiasnoback/symfony-dependency-injection-test": "^4.0",
         "microsoft/azure-storage-blob": "^1.2",
-        "php-ffmpeg/php-ffmpeg": "0.13 - 0.17",
+        "php-ffmpeg/php-ffmpeg": "0.13 - 0.17 || ^1.0",
         "phpcr/phpcr-shell": "^1.0",
         "phpspec/prophecy": "^1.14",
         "phpstan/phpstan": "^1.0",
