@@ -351,10 +351,12 @@ class ListXmlLoader
         }
 
         if (null !== $conditionMethod = XmlUtil::getValueFromXPath('x:condition-method', $xpath, $joinNode)) {
+            /** @var 'ON'|'WITH' $conditionMethod */
             $joinMetadata->setConditionMethod($this->resolveParameter($conditionMethod));
         }
 
         if (null !== $method = XmlUtil::getValueFromXPath('x:method', $xpath, $joinNode)) {
+            /** @var 'LEFT'|'INNER'|'RIGHT' $method */
             $joinMetadata->setMethod($method);
         }
 
