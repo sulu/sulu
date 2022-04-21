@@ -17,6 +17,7 @@ use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 
 class SnippetResolverTest extends TestCase
 {
@@ -97,6 +98,22 @@ class SnippetResolverTest extends TestCase
                 $item
             );
         }
+    }
+
+    public function testResolveNotExistingUuid(): void
+    {
+        $contentMapper = $this->prophesize(ContentMapperInterface::class);
+        $structureResolver = $this->prophesize(StructureResolverInterface::class);
+        $resolver = new SnippetResolver($contentMapper->reveal(), $structureResolver->reveal());
+
+        $contentMapper->load('123-123-123', 'test_io', 'en')
+            ->shouldBeCalledTimes(1)
+            ->willThrow(new DocumentNotFoundException());
+
+        $this->assertSame(
+            [],
+            $resolver->resolve(['123-123-123'], 'test_io', 'en')
+        );
     }
 
     public function testResolveWithShadowLocale()
