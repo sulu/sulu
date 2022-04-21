@@ -52,6 +52,10 @@ class SwiftMailerListenerTest extends TestCase
 
     protected function setUp(): void
     {
+        if (!\class_exists(\Swift_Mailer::class)) {
+            $this->markTestSkipped('Require "swiftmailer" to be installed.');
+        }
+
         /* @var MarkupParserInterface|ObjectProphecy markupParser */
         $this->markupParser = $this->prophesize(MarkupParserInterface::class);
         /* @var \Swift_Events_SendEvent|ObjectProphecy event */
