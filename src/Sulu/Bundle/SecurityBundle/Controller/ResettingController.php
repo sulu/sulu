@@ -30,6 +30,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -79,7 +81,7 @@ class ResettingController
     protected $dispatcher;
 
     /**
-     * @var \Swift_Mailer
+     * @var Mailer
      */
     protected $mailer;
 
@@ -155,7 +157,7 @@ class ResettingController
         Environment $templating,
         TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $dispatcher,
-        \Swift_Mailer $mailer,
+        Mailer $mailer,
         EncoderFactoryInterface $encoderFactory,
         UserRepositoryInterface $userRepository,
         UrlGeneratorInterface $router,
@@ -440,14 +442,14 @@ class ResettingController
         if (new \DateTime() < $user->getPasswordResetTokenExpiresAt() && $user->getPasswordResetTokenEmailsSent() === \intval($maxNumberEmails)) {
             throw new TokenEmailsLimitReachedException($maxNumberEmails, $user);
         }
-        $mailer = $this->mailer;
-        $message = $mailer->createMessage()
-            ->setSubject($this->getSubject())
-            ->setFrom($from)
-            ->setTo($to)
-            ->setBody($this->getMessage($user, $token), 'text/html');
 
-        $mailer->send($message);
+        $message = (new Email())
+            ->subject($this->getSubject())
+            ->from($from)
+            ->to($to)
+            ->html($this->getMessage($user, $token));
+
+        $this->mailer->send($message);
         $user->setPasswordResetTokenEmailsSent($user->getPasswordResetTokenEmailsSent() + 1);
         $this->entityManager->persist($user);
         $this->entityManager->flush();

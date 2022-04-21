@@ -20,6 +20,9 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\Mailer\DataCollector\MessageDataCollector;
+use Symfony\Component\Mailer\Event\MessageEvent;
+use Symfony\Component\Mime\Email;
 
 class ResettingControllerTest extends SuluTestCase
 {
@@ -126,7 +129,8 @@ class ResettingControllerTest extends SuluTestCase
             'user' => $this->users[0]->getUsername(),
         ]);
 
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        /** @var MessageDataCollector $mailCollector */
+        $mailCollector = $this->client->getProfile()->getCollector('mailer');
 
         $response = \json_decode($this->client->getResponse()->getContent());
 
@@ -143,16 +147,23 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
         $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
 
-        $message = $mailCollector->getMessages()[0];
+        $events = $mailCollector->getEvents();
+
+        /** @var MessageEvent $event */
+        $event = $events[0];
+
+        $this->assertEquals(1, $events);
+
+        $message = $event->getMessage();
+        $this->assertInstanceOf(Email::class, $message);
+
         // asserting sent mail
-        \preg_match('/forgotPasswordToken=(.*)/', $message->getBody(), $regexMatches);
+        \preg_match('/forgotPasswordToken=(.*)/', $message->getHtmlBody(), $regexMatches);
         $token = $regexMatches[1];
         $expectedEmailData = $this->getExpectedEmailData($this->client, $user, $token);
 
-        $this->assertEquals(1, $mailCollector->getMessageCount());
-        $this->assertInstanceOf('Swift_Message', $message);
-        $this->assertEquals($expectedEmailData['sender'], \key($message->getFrom()));
-        $this->assertEquals($user->getEmail(), \key($message->getTo()));
+        $this->assertEquals($expectedEmailData['sender'], $message->getFrom()[0]->getAddress());
+        $this->assertEquals($user->getEmail(), $message->getTo()[0]->getAddress());
         $this->assertEquals($expectedEmailData['subject'], $message->getSubject());
         $this->assertEquals($expectedEmailData['body'], $message->getBody());
     }

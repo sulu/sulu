@@ -48,7 +48,7 @@
             <argument type="service" id="twig"/>
             <argument type="service" id="security.token_storage"/>
             <argument type="service" id="event_dispatcher"/>
-            <argument type="service" id="mailer"/>
+            <argument type="service" id="mailer.mailer"/>
             <argument type="service" id="sulu_security.encoder_factory"/>
             <argument type="service" id="sulu.repository.user"/>
             <argument type="service" id="router"/>
