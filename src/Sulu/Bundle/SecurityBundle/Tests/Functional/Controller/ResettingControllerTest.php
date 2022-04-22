@@ -108,14 +108,10 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertTrue(\is_string($user->getPasswordResetToken()));
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
 
-        $events = $mailCollector->getEvents();
+        $messages = $mailCollector->getEvents()->getMessages();
+        $this->assertCount(1, $messages);
 
-        /** @var MessageEvent $event */
-        $event = $events[0];
-
-        $this->assertEquals(1, $events);
-
-        $message = $event->getMessage();
+        $message = $messages[0];
         $this->assertInstanceOf(Email::class, $message);
 
         // asserting sent mail
@@ -126,7 +122,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals($expectedEmailData['sender'], $message->getFrom()[0]->getAddress());
         $this->assertEquals($user->getEmail(), $message->getTo()[0]->getAddress());
         $this->assertEquals($expectedEmailData['subject'], $message->getSubject());
-        $this->assertEquals($expectedEmailData['body'], $message->getBody());
+        $this->assertEquals($expectedEmailData['body'], $message->getHtmlBody());
     }
 
     public function testSendEmailActionWithUsername()
@@ -155,14 +151,10 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
         $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
 
-        $events = $mailCollector->getEvents();
+        $messages = $mailCollector->getEvents()->getMessages();
+        $this->assertCount(1, $messages);
 
-        /** @var MessageEvent $event */
-        $event = $events[0];
-
-        $this->assertEquals(1, $events);
-
-        $message = $event->getMessage();
+        $message = $messages[0];
         $this->assertInstanceOf(Email::class, $message);
 
         // asserting sent mail
@@ -173,7 +165,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals($expectedEmailData['sender'], $message->getFrom()[0]->getAddress());
         $this->assertEquals($user->getEmail(), $message->getTo()[0]->getAddress());
         $this->assertEquals($expectedEmailData['subject'], $message->getSubject());
-        $this->assertEquals($expectedEmailData['body'], $message->getBody());
+        $this->assertEquals($expectedEmailData['body'], $message->getHtmlBody());
     }
 
     public function testSendEmailActionWithUserWithoutEmail()
@@ -202,14 +194,10 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
         $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
 
-        $events = $mailCollector->getEvents();
+        $messages = $mailCollector->getEvents()->getMessages();
+        $this->assertCount(1, $messages);
 
-        /** @var MessageEvent $event */
-        $event = $events[0];
-
-        $this->assertEquals(1, $events);
-
-        $message = $event->getMessage();
+        $message = $messages[0];
         $this->assertInstanceOf(Email::class, $message);
 
         // asserting sent mail
@@ -220,7 +208,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals($expectedEmailData['sender'], $message->getFrom()[0]->getAddress());
         $this->assertEquals('installation.email@sulu.test', $message->getTo()[0]->getAddress());
         $this->assertEquals($expectedEmailData['subject'], $message->getSubject());
-        $this->assertEquals($expectedEmailData['body'], $message->getBody());
+        $this->assertEquals($expectedEmailData['body'], $message->getHtmlBody());
     }
 
     public function testResendEmailActionTooMuch()
@@ -235,12 +223,13 @@ class ResettingControllerTest extends SuluTestCase
                 'user' => $this->users[2]->getEmail(),
             ]);
 
+            /** @var MessageDataCollector $mailCollector */
             $mailCollector = $this->client->getProfile()->getCollector('mailer');
             $response = \json_decode($this->client->getResponse()->getContent());
 
             $this->assertHttpStatusCode(204, $this->client->getResponse());
             $this->assertEquals(null, $response);
-            $this->assertEquals(1, $mailCollector->getMessageCount());
+            $this->assertCount(1, $mailCollector->getEvents()->getMessages());
         }
 
         // now this request should fail
@@ -258,7 +247,7 @@ class ResettingControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
         $this->assertEquals(null, $response);
-        $this->assertCount(0, $mailCollector->getEvents());
+        $this->assertCount(0, $mailCollector->getEvents()->getMessages());
         $this->assertEquals($counter, $user->getPasswordResetTokenEmailsSent());
     }
 
@@ -275,7 +264,7 @@ class ResettingControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
         $this->assertEquals(null, $response);
-        $this->assertEquals(0, $mailCollector->getEvents());
+        $this->assertCount(0, $mailCollector->getEvents()->getMessages());
     }
 
     public function testSendEmailActionWithNotExistingUser()
@@ -293,7 +282,7 @@ class ResettingControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
         $this->assertEquals(null, $response);
-        $this->assertCount(0, $mailCollector->getEvents());
+        $this->assertCount(0, $mailCollector->getEvents()->getMessages());
     }
 
     public function testSendEmailActionMultipleTimes()
@@ -319,7 +308,7 @@ class ResettingControllerTest extends SuluTestCase
         // asserting response
         $this->assertHttpStatusCode(204, $this->client->getResponse());
         $this->assertEquals(null, $response);
-        $this->assertCount(1, $mailCollector->getEvents());
+        $this->assertCount(1, $mailCollector->getEvents()->getMessages());
     }
 
     public function testResetAction()
@@ -329,9 +318,11 @@ class ResettingControllerTest extends SuluTestCase
         $this->client->jsonRequest('GET', '/security/reset/email', [
             'user' => $this->users[2]->getUsername(),
         ]);
+        /** @var MessageDataCollector $mailCollector */
         $mailCollector = $this->client->getProfile()->getCollector('mailer');
-        $message = $mailCollector->getMessages()[0];
-        \preg_match('/forgotPasswordToken=(.*)/', $message->getBody(), $regexMatches);
+        $message = $mailCollector->getEvents()->getMessages()[0];
+        $this->assertInstanceOf(Email::class, $message);
+        \preg_match('/forgotPasswordToken=(.*)/', $message->getHtmlBody(), $regexMatches);
         $token = $regexMatches[1];
 
         $this->client->jsonRequest('GET', '/security/reset', [
