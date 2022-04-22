@@ -81,7 +81,7 @@ class ResettingController
     protected $dispatcher;
 
     /**
-     * @var Mailer
+     * @var Mailer|\Swift_Mailer
      */
     protected $mailer;
 
@@ -157,7 +157,7 @@ class ResettingController
         Environment $templating,
         TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $dispatcher,
-        Mailer $mailer,
+        $mailer,
         EncoderFactoryInterface $encoderFactory,
         UserRepositoryInterface $userRepository,
         UrlGeneratorInterface $router,
@@ -443,13 +443,24 @@ class ResettingController
             throw new TokenEmailsLimitReachedException($maxNumberEmails, $user);
         }
 
-        $message = (new Email())
-            ->subject($this->getSubject())
-            ->from($from)
-            ->to($to)
-            ->html($this->getMessage($user, $token));
+        if ($this->mailer instanceof \Swift_Mailer) {
+            $message = $this->mailer->createMessage()
+                ->setSubject($this->getSubject())
+                ->setFrom($from)
+                ->setTo($to)
+                ->setBody($this->getMessage($user, $token), 'text/html');
 
-        $this->mailer->send($message);
+            $this->mailer->send($message);
+        } else {
+            $message = (new Email())
+                ->subject($this->getSubject())
+                ->from($from)
+                ->to($to)
+                ->html($this->getMessage($user, $token));
+
+            $this->mailer->send($message);
+        }
+
         $user->setPasswordResetTokenEmailsSent($user->getPasswordResetTokenEmailsSent() + 1);
         $this->entityManager->persist($user);
         $this->entityManager->flush();

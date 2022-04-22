@@ -26,6 +26,10 @@ parameters:
         - %currentWorkingDirectory%/*/Tests/app/var/*
         # RestController extends FOSRestController which was removed in friendsofsymfony/rest-bundle:3.0
         - %currentWorkingDirectory%/src/Sulu/Component/Rest/RestController.php
+        # SwiftMailer was removed and con not be analyzed by phpstan anymore
+        - %currentWorkingDirectory%/src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/LegacyResettingControllerTest.php
+        - %currentWorkingDirectory%/src/Sulu/Bundle/MarkupBundle/Listener/SwiftMailerListener.php
+        - %currentWorkingDirectory%/src/Sulu/Bundle/MarkupBundle/Tests/Unit/Listener/SwiftMailerListenerTest.php
     symfony:
         container_xml_path: %currentWorkingDirectory%/var/cache/admin/dev/App_KernelDevDebugContainer.xml
         console_application_loader: tests/phpstan/console-application.php
