@@ -2,6 +2,18 @@
 
 ## 2.5.0
 
+### FOSJSRoutingBundle upgraded
+
+The FOSJSRoutingBundle was upgraded and requires to change the routing include for it:
+
+```diff
+# config/routes/fos_js_routing_admin.yaml
+fos_js_routing:
+    prefix: /admin
+-    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
++    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing-sf4.xml"
+```
+
 ### User Provider service definition changed
 
 The user provider service now requires the `SystemStoreInterface` service
