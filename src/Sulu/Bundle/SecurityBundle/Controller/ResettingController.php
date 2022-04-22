@@ -366,7 +366,7 @@ class ResettingController
         try {
             $user = $this->userRepository->findUserByIdentifier($identifier);
         } catch (NoResultException $exc) {
-            throw new EntityNotFoundException($this->userRepository->getClassName(), $identifier);
+            throw new EntityNotFoundException($this->userRepository->getClassName(), $identifier, $exc);
         }
 
         if (!$this->hasSystem($user)) {
@@ -396,7 +396,7 @@ class ResettingController
 
             return $user;
         } catch (NoResultException $exc) {
-            throw new InvalidTokenException($token);
+            throw new InvalidTokenException($token, $exc);
         }
     }
 

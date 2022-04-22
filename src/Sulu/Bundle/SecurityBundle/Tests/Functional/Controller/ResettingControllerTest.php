@@ -114,14 +114,16 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertInstanceOf(Email::class, $message);
 
         // asserting sent mail
-        \preg_match('/forgotPasswordToken=(.*)/', $message->getHtmlBody(), $regexMatches);
+        $htmlBody = $message->getHtmlBody();
+        $this->assertIsString($htmlBody);
+        \preg_match('/forgotPasswordToken=(.*)/', $htmlBody, $regexMatches);
         $token = $regexMatches[1];
         $expectedEmailData = $this->getExpectedEmailData($this->client, $user, $token);
 
         $this->assertEquals($expectedEmailData['sender'], $message->getFrom()[0]->getAddress());
         $this->assertEquals($user->getEmail(), $message->getTo()[0]->getAddress());
         $this->assertEquals($expectedEmailData['subject'], $message->getSubject());
-        $this->assertEquals($expectedEmailData['body'], $message->getHtmlBody());
+        $this->assertEquals($expectedEmailData['body'], $htmlBody);
     }
 
     public function testSendEmailActionWithUsername()
@@ -157,14 +159,16 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertInstanceOf(Email::class, $message);
 
         // asserting sent mail
-        \preg_match('/forgotPasswordToken=(.*)/', $message->getHtmlBody(), $regexMatches);
+        $htmlBody = $message->getHtmlBody();
+        $this->assertIsString($htmlBody);
+        \preg_match('/forgotPasswordToken=(.*)/', $htmlBody, $regexMatches);
         $token = $regexMatches[1];
         $expectedEmailData = $this->getExpectedEmailData($this->client, $user, $token);
 
         $this->assertEquals($expectedEmailData['sender'], $message->getFrom()[0]->getAddress());
         $this->assertEquals($user->getEmail(), $message->getTo()[0]->getAddress());
         $this->assertEquals($expectedEmailData['subject'], $message->getSubject());
-        $this->assertEquals($expectedEmailData['body'], $message->getHtmlBody());
+        $this->assertEquals($expectedEmailData['body'], $htmlBody);
     }
 
     public function testSendEmailActionWithUserWithoutEmail()
@@ -200,14 +204,16 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertInstanceOf(Email::class, $message);
 
         // asserting sent mail
-        \preg_match('/forgotPasswordToken=(.*)/', $message->getHtmlBody(), $regexMatches);
+        $htmlBody = $message->getHtmlBody();
+        $this->assertIsString($htmlBody);
+        \preg_match('/forgotPasswordToken=(.*)/', $htmlBody, $regexMatches);
         $token = $regexMatches[1];
         $expectedEmailData = $this->getExpectedEmailData($this->client, $user, $token);
 
         $this->assertEquals($expectedEmailData['sender'], $message->getFrom()[0]->getAddress());
         $this->assertEquals('installation.email@sulu.test', $message->getTo()[0]->getAddress());
         $this->assertEquals($expectedEmailData['subject'], $message->getSubject());
-        $this->assertEquals($expectedEmailData['body'], $message->getHtmlBody());
+        $this->assertEquals($expectedEmailData['body'], $htmlBody);
     }
 
     public function testResendEmailActionTooMuch()
@@ -321,7 +327,10 @@ class ResettingControllerTest extends SuluTestCase
         $mailCollector = $this->client->getProfile()->getCollector('mailer');
         $message = $mailCollector->getEvents()->getMessages()[0];
         $this->assertInstanceOf(Email::class, $message);
-        \preg_match('/forgotPasswordToken=(.*)/', $message->getHtmlBody(), $regexMatches);
+
+        $htmlBody = $message->getHtmlBody();
+        $this->assertIsString($htmlBody);
+        \preg_match('/forgotPasswordToken=(.*)/', $htmlBody, $regexMatches);
         $token = $regexMatches[1];
 
         $this->client->jsonRequest('GET', '/security/reset', [

@@ -57,7 +57,7 @@ class MailerListener implements EventSubscriberInterface
 
         $html = $message->getHtmlBody();
 
-        if (!$html) {
+        if (!$html || !\is_string($html)) {
             return;
         }
 
