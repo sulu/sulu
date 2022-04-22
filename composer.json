@@ -59,7 +59,7 @@
         "jms/serializer-bundle": "^3.0 || ^4.0",
         "massive/build-bundle": "^0.3 || ^0.4 || ^0.5",
         "massive/search-bundle": "^2.0",
-        "matomo/device-detector": "^3.7 || ^4.0.1",
+        "matomo/device-detector": "^3.7 || ^4.0.1 || ^5.0 || ^6.0",
         "nyholm/psr7": "^1.0",
         "oro/doctrine-extensions": "^1.0.8 || ^2.0",
         "ramsey/uuid": "^3.1 || ^4.0",
