@@ -2,6 +2,11 @@
 
 ## 2.5.0
 
+### Drop support for PHP 7.4, 7.3 and 7.2
+
+The support for older PHP versions 7.4, 7.3 and 7.2 were dropped.
+Please upgrade PHP to the [latest version](https://www.php.net/supported-versions.php) for your projects.
+
 ### FOSJSRoutingBundle upgraded
 
 The FOSJSRoutingBundle was upgraded and requires to change the routing include for it:
