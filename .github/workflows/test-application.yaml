@@ -62,6 +62,8 @@ jobs:
               with:
                   php-version: '8.1'
                   tools: 'composer:v2'
+                  ini-values: memory_limit=-1
+                  coverage: none
 
             - name: Install php dependencies
               run: rm composer.json && composer require friendsofsymfony/jsrouting-bundle:^2.3 --no-interaction
@@ -145,6 +147,7 @@ jobs:
                   php-version: ${{ matrix.php-version }}
                   extensions: ${{ matrix.php-extensions }}
                   tools: ${{ matrix.tools }}
+                  ini-values: memory_limit=-1
                   coverage: none
 
             - name: Require jackrabbit dependencies
@@ -196,6 +199,7 @@ jobs:
                   php-version: '8.1'
                   extensions: 'ctype, iconv, mysql, imagick'
                   tools: 'composer:v2'
+                  ini-values: memory_limit=-1
                   coverage: none
 
             - name: Install composer dependencies
@@ -244,7 +248,8 @@ jobs:
                   php-version: ${{ matrix.php-version }}
                   extensions: ${{ matrix.php-extensions }}
                   tools: ${{ matrix.tools }}
-                  ini-values: 'memory_limit=-1'
+                  ini-values: memory_limit=-1
+                  coverage: none
 
             - name: Install and configure MySQL
               uses: shogo82148/actions-setup-mysql@v1.0.1

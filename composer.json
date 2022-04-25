@@ -86,7 +86,6 @@
         "symfony/mailer": "^5.4",
         "symfony/mime": "^5.4",
         "symfony/options-resolver": "^5.4",
-        "symfony/polyfill-mbstring": "^1.0",
         "symfony/process": "^5.4",
         "symfony/property-access": "^5.4",
         "symfony/proxy-manager-bridge": "^5.4",
