@@ -227,7 +227,7 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                    - php-version: '8.1'
+                    - php-version: '8.0'
                       mysql-version: '8.0'
                       phpcr-transport: 'doctrinedbal'
                       dependency-versions: 'highest'
