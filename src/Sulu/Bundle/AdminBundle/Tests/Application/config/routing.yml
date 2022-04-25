@@ -1,7 +1,7 @@
 # Required vendor routes
 fos_js_routing:
     prefix: /admin
-    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing-sf4.xml"
 
 # Sulu Routes
 sulu_admin:

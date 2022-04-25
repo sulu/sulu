@@ -48,7 +48,7 @@
         "friendsofphp/proxy-manager-lts": "^1.0",
         "friendsofsymfony/http-cache": "^2.5",
         "friendsofsymfony/http-cache-bundle": "^2.6",
-        "friendsofsymfony/jsrouting-bundle": "^2.3",
+        "friendsofsymfony/jsrouting-bundle": "^2.3 || ^3.0",
         "friendsofsymfony/rest-bundle": "^2.8 || ^3.0",
         "gedmo/doctrine-extensions": "^2.4 || ^3.0",
         "guzzlehttp/promises": "^1.0",
