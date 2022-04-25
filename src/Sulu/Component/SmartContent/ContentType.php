@@ -225,6 +225,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
 
         // prepare filters
         $filters = $property->getValue();
+
         $filters['excluded'] = [$property->getStructure()->getUuid()];
 
         // default value of tags/category is an empty array
