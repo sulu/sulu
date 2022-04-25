@@ -27,9 +27,6 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 
-/**
- * @group legacy
- */
 class LegacyPropertyFactoryTest extends TestCase
 {
     use ProphecyTrait;

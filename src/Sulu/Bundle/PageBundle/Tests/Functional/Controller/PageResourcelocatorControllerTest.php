@@ -15,9 +15,6 @@ use PHPCR\SessionInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
-/**
- * @group webtest
- */
 class PageResourcelocatorControllerTest extends SuluTestCase
 {
     /**

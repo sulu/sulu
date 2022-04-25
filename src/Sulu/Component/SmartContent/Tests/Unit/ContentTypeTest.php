@@ -35,9 +35,6 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * @group unit
- */
 class ContentTypeTest extends TestCase
 {
     use ProphecyTrait;

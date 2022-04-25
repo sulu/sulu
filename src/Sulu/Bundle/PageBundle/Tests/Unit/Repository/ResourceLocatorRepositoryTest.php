@@ -24,10 +24,6 @@ use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrateg
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
-/**
- * @group unit
- * @group repository
- */
 class ResourceLocatorRepositoryTest extends TestCase
 {
     use ProphecyTrait;

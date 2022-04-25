@@ -33,10 +33,6 @@ use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
-/**
- * @group functional
- * @group repository
- */
 class NodeRepositoryTest extends SuluTestCase
 {
     /**
