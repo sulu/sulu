@@ -18,6 +18,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
@@ -43,6 +44,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DoctrineListBuilderTest extends TestCase
 {
+    use ProphecyTrait;
     use ReadObjectAttributeTrait;
 
     /**

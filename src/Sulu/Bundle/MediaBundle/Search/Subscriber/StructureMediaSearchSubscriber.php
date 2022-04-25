@@ -11,8 +11,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Search\Subscriber;
 
+use InvalidArgumentException;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
 use Massive\Bundle\SearchBundle\Search\SearchEvents;
+use RuntimeException;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
@@ -110,8 +112,8 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
      *
      * @return string|null
      *
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
+     * @throws RuntimeException
+     * @throws InvalidArgumentException
      */
     private function getImageUrl($data, $locale)
     {
@@ -155,7 +157,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
         }
 
         if (!isset($formats[$this->searchImageFormat])) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 \sprintf('Search image format "%s" is not known', $this->searchImageFormat)
             );
         }

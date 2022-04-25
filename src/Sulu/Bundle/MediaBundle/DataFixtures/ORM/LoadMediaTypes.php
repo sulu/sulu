@@ -13,6 +13,8 @@ namespace Sulu\Bundle\MediaBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\ORM\Id\AssignedGenerator;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 
@@ -22,8 +24,8 @@ class LoadMediaTypes extends AbstractFixture implements OrderedFixtureInterface
     {
         // set id manually
         $metadata = $manager->getClassMetaData(MediaType::class);
-        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
-        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+        $metadata->setIdGenerator(new AssignedGenerator());
+        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
         $mediaDocument = new MediaType();
         $mediaDocument->setId(1);

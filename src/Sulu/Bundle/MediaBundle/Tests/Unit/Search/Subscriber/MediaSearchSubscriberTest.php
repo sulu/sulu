@@ -18,7 +18,9 @@ use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
+use stdClass;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -30,6 +32,8 @@ use Sulu\Bundle\SearchBundle\Search\Document;
 
 class MediaSearchSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     private $mediaManager;
 
     private $subscriber;
@@ -96,7 +100,7 @@ class MediaSearchSubscriberTest extends TestCase
     public function testNotMedia()
     {
         $this->indexMetadata->getName()->willReturn('Foo');
-        $this->event->getSubject()->willReturn(new \stdClass());
+        $this->event->getSubject()->willReturn(new stdClass());
         $this->fileVersionMeta->getFileVersion()->shouldNotBeCalled();
 
         $this->subscriber->handlePreIndex($this->event->reveal());

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PreviewBundle\Tests\Unit\UserInterface\Controller;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PreviewBundle\Preview\PreviewInterface;
 use Sulu\Bundle\PreviewBundle\UserInterface\Controller\PreviewController;
@@ -23,6 +24,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class PreviewControllerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PreviewInterface|ObjectProphecy
      */

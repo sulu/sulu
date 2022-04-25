@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
+use InvalidArgumentException;
+
 /**
  * Collection to store the localized FormMetadata objects in each locale.
  */
@@ -29,7 +31,7 @@ class LocalizedFormMetadataCollection
     public function get(string $locale): FormMetadata
     {
         if (!isset($this->items[$locale])) {
-            throw new \InvalidArgumentException(\sprintf('Locale "%s" does not exist in collection.', $locale));
+            throw new InvalidArgumentException(\sprintf('Locale "%s" does not exist in collection.', $locale));
         }
 
         return $this->items[$locale];

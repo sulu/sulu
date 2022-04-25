@@ -13,11 +13,14 @@ namespace Sulu\Component\Rest\Tests\Unit\Listing;
 
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Rest\Listing\ListRestHelper;
 use Symfony\Component\HttpFoundation\Request;
 
 class ListRestHelperTest extends TestCase
 {
+    use ProphecyTrait;
+
     protected $em;
 
     public function setUp(): void

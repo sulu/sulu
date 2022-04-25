@@ -17,6 +17,7 @@ use PHPCR\Query\QueryResultInterface;
 use PHPCR\SessionInterface;
 use PHPCR\WorkspaceInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\Collection\QueryResultCollection;
 use Sulu\Component\DocumentManager\Event\QueryCreateEvent;
 use Sulu\Component\DocumentManager\Event\QueryExecuteEvent;
@@ -26,6 +27,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class QuerySubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SessionInterface
      */

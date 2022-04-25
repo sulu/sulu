@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\View;
 
+use DomainException;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\View\ResourceTabViewBuilder;
 use Sulu\Component\Security\Authentication\RoleInterface;
@@ -27,7 +28,7 @@ class ResourceTabViewBuilderTest extends TestCase
 
     public function testBuildResourceTabViewWithoutResourceKey()
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
         $this->expectExceptionMessageMatches('/"setResourceKey"/');
 
         $view = (new ResourceTabViewBuilder('sulu_category.list', '/category'))
@@ -168,7 +169,7 @@ class ResourceTabViewBuilderTest extends TestCase
 
     public function testBuildResourceTabWithLocalesWithoutLocalePlaceholder()
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');
 
         $view = (new ResourceTabViewBuilder('sulu_role.list', '/roles'))
@@ -180,7 +181,7 @@ class ResourceTabViewBuilderTest extends TestCase
 
     public function testBuildResourceTabWithoutLocalesWithLocalePlaceholder()
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');
 
         $view = (new ResourceTabViewBuilder('sulu_role.list', '/roles/:locale'))

@@ -17,11 +17,14 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Persistence\EventSubscriber\ORM\TimestampableSubscriber;
 use Sulu\Component\Persistence\Model\TimestampableInterface;
 
 class TimestampableSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function setUp(): void
     {
         parent::setUp();

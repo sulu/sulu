@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\LocalizationFinder;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
@@ -24,6 +25,8 @@ use Sulu\Component\Webspace\Webspace;
 
 class FallbackLocalizationSubscriberTest extends SubscriberTestCase
 {
+    use ProphecyTrait;
+
     public const FIX_LOCALE = 'en';
 
     public const FIX_WEBSPACE = 'sulu_io';

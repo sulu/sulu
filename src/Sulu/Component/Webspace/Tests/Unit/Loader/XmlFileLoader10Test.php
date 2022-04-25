@@ -12,6 +12,7 @@
 namespace Sulu\Component\Webspace\Tests\Unit\Loader;
 
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Webspace\Exception\InvalidWebspaceException;
 use Sulu\Component\Webspace\Loader\XmlFileLoader10;
 use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
@@ -19,6 +20,8 @@ use Symfony\Component\Config\FileLocatorInterface;
 
 class XmlFileLoader10Test extends WebspaceTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var XmlFileLoader10
      */

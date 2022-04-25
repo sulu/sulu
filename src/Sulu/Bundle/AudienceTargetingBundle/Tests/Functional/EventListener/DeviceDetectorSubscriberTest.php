@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Functional\EventListener;
 
 use App\Kernel;
 use DeviceDetector\DeviceDetector;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AudienceTargetingBundle\EventListener\DeviceDetectorSubscriber;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,6 +21,8 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class DeviceDetectorSubscriberTest extends SuluTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DeviceDetector
      */

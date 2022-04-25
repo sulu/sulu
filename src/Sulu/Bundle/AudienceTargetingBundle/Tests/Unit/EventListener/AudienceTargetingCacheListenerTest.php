@@ -14,6 +14,7 @@ namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\EventListener;
 use FOS\HttpCache\SymfonyCache\CacheEvent;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AudienceTargetingBundle\EventListener\AudienceTargetingCacheListener;
 use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
@@ -24,6 +25,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class AudienceTargetingCacheListenerTest extends TestCase
 {
+    use ProphecyTrait;
     use ReadObjectAttributeTrait;
 
     public function testHandle(): void

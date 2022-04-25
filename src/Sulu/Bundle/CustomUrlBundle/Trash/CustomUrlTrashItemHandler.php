@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\CustomUrlBundle\Trash;
 
+use DateTime;
 use Sulu\Bundle\CustomUrlBundle\Admin\CustomUrlAdmin;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRestoredEvent;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -115,7 +116,7 @@ final class CustomUrlTrashItemHandler implements
         $customUrl->setTitle($data['title']);
         $customUrl->setParent($this->documentManager->find($data['parentUuid']));
         $customUrl->setCreator($data['creator']);
-        $customUrl->setCreated(new \DateTime($data['created']));
+        $customUrl->setCreated(new DateTime($data['created']));
         $customUrl->setBaseDomain($data['baseDomain']);
         $customUrl->setDomainParts($data['domainParts']);
         $customUrl->setCanonical($data['canonical']);

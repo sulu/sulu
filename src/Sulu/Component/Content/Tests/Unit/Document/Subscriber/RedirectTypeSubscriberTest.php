@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Subscriber\RedirectTypeSubscriber;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
@@ -19,6 +20,8 @@ use Sulu\Component\DocumentManager\Metadata;
 
 class RedirectTypeSubscriberTest extends SubscriberTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var RedirectTypeSubscriber
      */

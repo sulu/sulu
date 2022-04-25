@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
+use ReflectionClass;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -58,7 +59,7 @@ class SubscriberDebugCommand extends Command
 
         foreach ($listeners as $listenerTuple) {
             list($listener, $methodName) = $listenerTuple;
-            $refl = new \ReflectionClass(\get_class($listener));
+            $refl = new ReflectionClass(\get_class($listener));
             $priority = $this->getPriority($eventName, $methodName, $listener);
             $rows[] = [
                 \sprintf(
@@ -121,7 +122,7 @@ class SubscriberDebugCommand extends Command
 
     private function showEventNames(OutputInterface $output): int
     {
-        $refl = new \ReflectionClass(Events::class);
+        $refl = new ReflectionClass(Events::class);
         $constants = $refl->getConstants();
         $output->writeln('Specify one of the following event names to display the subscribers:');
 

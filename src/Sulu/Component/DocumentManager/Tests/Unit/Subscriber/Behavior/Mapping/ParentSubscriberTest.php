@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\NodeType\NodeTypeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\DocumentManager;
@@ -26,6 +27,8 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\ParentSubscriber;
 
 class ParentSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var HydrateEvent
      */

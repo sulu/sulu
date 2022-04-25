@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Command;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Command\FormatCacheRegenerateCommand;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
@@ -21,6 +22,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class FormatCacheRegenerateCommandTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy|FormatManagerInterface
      */

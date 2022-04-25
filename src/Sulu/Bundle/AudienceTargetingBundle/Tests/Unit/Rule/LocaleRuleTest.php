@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Rule;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\LocaleRule;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -19,6 +20,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LocaleRuleTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var Request
      */

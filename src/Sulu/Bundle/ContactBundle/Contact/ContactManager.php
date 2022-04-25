@@ -150,7 +150,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     /**
      * Deletes the contact for the given id.
      *
-     * @return \Closure
+     * @return Closure
      */
     public function delete()
     {
@@ -462,12 +462,12 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      *
      * @return ContactAddress
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function addAddress($contact, Address $address, $isMain)
     {
         if (!$contact || !$address) {
-            throw new \Exception('Contact and Address cannot be null');
+            throw new Exception('Contact and Address cannot be null');
         }
         $contactAddress = new ContactAddress();
         $contactAddress->setContact($contact);
@@ -491,12 +491,12 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      *
      * @return mixed|void
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function removeAddressRelation($contact, $contactAddress)
     {
         if (!$contact || !$contactAddress) {
-            throw new \Exception('Contact and ContactAddress cannot be null');
+            throw new Exception('Contact and ContactAddress cannot be null');
         }
 
         // reload address to get all data (including relational data)

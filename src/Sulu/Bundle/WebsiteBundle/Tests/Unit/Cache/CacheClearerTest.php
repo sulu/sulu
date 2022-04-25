@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Cache;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Bundle\WebsiteBundle\Cache\CacheClearer;
@@ -25,6 +26,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class CacheClearerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var Filesystem|ObjectProphecy;
      */

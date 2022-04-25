@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\DependencyInjection\Compiler;
 
+use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -25,7 +26,7 @@ class AddRulesPass implements CompilerPassInterface
         $ruleReferences = [];
         foreach ($taggedServices as $id => $attributes) {
             if (!isset($attributes[0]['alias'])) {
-                throw new \InvalidArgumentException(
+                throw new InvalidArgumentException(
                     \sprintf('No "alias" specified for audience targeting rule with service ID: "%s"', $id)
                 );
             }

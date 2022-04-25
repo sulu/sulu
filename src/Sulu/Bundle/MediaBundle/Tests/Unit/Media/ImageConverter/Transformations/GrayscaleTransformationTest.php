@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Transformation
 
 use Imagine\Effects\EffectsInterface;
 use Imagine\Image\ImageInterface;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\GrayscaleTransformation;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -21,6 +22,8 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
  */
 class GrayscaleTransformationTest extends SuluTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var GrayscaleTransformation
      */

@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\CategoryBundle\Exception;
 
+use Exception;
+
 /**
  * An instance of this exception signals that no category is assigned to a specific key.
  */
-class CategoryKeyNotFoundException extends \Exception
+class CategoryKeyNotFoundException extends Exception
 {
     /**
      * @var mixed

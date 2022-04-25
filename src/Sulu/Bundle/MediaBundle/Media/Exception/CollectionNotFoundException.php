@@ -11,12 +11,14 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
+use Throwable;
+
 class CollectionNotFoundException extends MediaException
 {
     /**
      * @param string|int $id
      */
-    public function __construct($id, \Throwable $previous = null)
+    public function __construct($id, Throwable $previous = null)
     {
         parent::__construct(
             'Collection with the ID ' . $id . ' was not found',

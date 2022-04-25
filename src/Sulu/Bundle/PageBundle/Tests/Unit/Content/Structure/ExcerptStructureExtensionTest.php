@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Content\Structure;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PageBundle\Content\Structure\ExcerptStructureExtension;
 use Sulu\Bundle\SearchBundle\Search\Factory;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -23,6 +24,8 @@ use Sulu\Component\Import\Manager\ImportManagerInterface;
 
 class ExcerptStructureExtensionTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testSaveSetLocaleAndWebspace()
     {
         $structure = $this->prophesize(StructureInterface::class);

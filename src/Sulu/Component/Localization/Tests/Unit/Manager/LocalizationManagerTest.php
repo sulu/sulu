@@ -12,12 +12,15 @@
 namespace Sulu\Component\Localization\Tests\Unit\Manager;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Manager\LocalizationManager;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 
 class LocalizationManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var LocalizationManagerInterface
      */

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Component\Persistence\Model\AuditableInterface;
@@ -143,12 +144,12 @@ interface CategoryTranslationInterface extends AuditableInterface
     public function setChanger($changer);
 
     /**
-     * @param \DateTime $created
+     * @param DateTime $created
      */
     public function setCreated($created);
 
     /**
-     * @param \DateTime $changed
+     * @param DateTime $changed
      */
     public function setChanged($changed);
 }

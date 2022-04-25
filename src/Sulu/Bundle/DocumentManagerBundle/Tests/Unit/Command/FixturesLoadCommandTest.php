@@ -11,8 +11,10 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command;
 
+use ArrayObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Command\FixturesLoadCommand;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
@@ -26,6 +28,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class FixturesLoadCommandTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DocumentExecutor
      */
@@ -47,7 +51,7 @@ class FixturesLoadCommandTest extends TestCase
     private $commandTester;
 
     /**
-     * @var \ArrayObject
+     * @var ArrayObject
      */
     private $fixtures;
 
@@ -55,7 +59,7 @@ class FixturesLoadCommandTest extends TestCase
     {
         $this->executor = $this->prophesize(DocumentExecutor::class);
         $this->fixture1 = $this->prophesize(DocumentFixtureInterface::class);
-        $this->fixtures = new \ArrayObject([]);
+        $this->fixtures = new ArrayObject([]);
 
         $application = new Application();
         $application->add(new FixturesLoadCommand(

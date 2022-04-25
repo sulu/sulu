@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
+use DOMNode;
 use Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\MissingScaleDimensionException;
 
 /**
@@ -22,12 +23,12 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
 
     public const SCHEME_PATH = '/schema/formats/formats-1.1.xsd';
 
-    protected function getKeyFromFormatNode(\DOMNode $formatNode)
+    protected function getKeyFromFormatNode(DOMNode $formatNode)
     {
         return $this->xpath->query('@key', $formatNode)->item(0)->nodeValue;
     }
 
-    protected function getInternalFlagFromFormatNode(\DOMNode $formatNode)
+    protected function getInternalFlagFromFormatNode(DOMNode $formatNode)
     {
         $internalNode = $this->xpath->query('@internal', $formatNode)->item(0);
 
@@ -38,7 +39,7 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
         return 'true' === $internalNode->nodeValue;
     }
 
-    protected function getMetaFromFormatNode(\DOMNode $formatNode)
+    protected function getMetaFromFormatNode(DOMNode $formatNode)
     {
         $meta = [
             'title' => [],
@@ -52,7 +53,7 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
         return $meta;
     }
 
-    protected function getScaleFromFormatNode(\DOMNode $formatNode)
+    protected function getScaleFromFormatNode(DOMNode $formatNode)
     {
         $scale = null;
 
@@ -88,7 +89,7 @@ class XmlFormatLoader11 extends BaseXmlFormatLoader
         return $scale;
     }
 
-    protected function getTransformationsFromFormatNode(\DOMNode $formatNode)
+    protected function getTransformationsFromFormatNode(DOMNode $formatNode)
     {
         $transformations = [];
 

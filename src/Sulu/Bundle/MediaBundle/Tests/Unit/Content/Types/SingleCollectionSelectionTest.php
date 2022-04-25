@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
@@ -24,6 +25,8 @@ use Sulu\Component\Content\Compat\StructureInterface;
 
 class SingleCollectionSelectionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SingleCollectionSelection
      */

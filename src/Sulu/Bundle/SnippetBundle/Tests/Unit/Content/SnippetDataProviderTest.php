@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Content;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\VirtualProxyInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
@@ -32,6 +33,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class SnippetDataProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ContentQueryExecutorInterface
      */

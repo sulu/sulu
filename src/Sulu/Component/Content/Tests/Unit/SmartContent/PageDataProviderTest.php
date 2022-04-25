@@ -15,6 +15,7 @@ use PHPCR\ItemNotFoundException;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use ProxyManager\Configuration;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
@@ -40,6 +41,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class PageDataProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @param array|null $initValue
      *

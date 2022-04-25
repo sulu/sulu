@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Tests\Unit\Analyzer\Attributes;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
@@ -28,6 +29,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class WebsiteRequestProcessorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var WebsiteRequestProcessor
      */

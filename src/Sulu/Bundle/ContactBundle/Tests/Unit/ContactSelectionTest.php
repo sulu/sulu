@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\ContactBundle\Content\Types\ContactSelection;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
@@ -24,6 +25,8 @@ use Sulu\Component\Content\Compat\Property;
 
 class ContactSelectionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ContactSelection
      */

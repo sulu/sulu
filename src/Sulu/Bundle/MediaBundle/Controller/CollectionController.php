@@ -135,7 +135,7 @@ class CollectionController extends AbstractRestController implements ClassResour
     /**
      * Shows a single collection with the given id.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getAction($id, Request $request)
     {
@@ -205,7 +205,7 @@ class CollectionController extends AbstractRestController implements ClassResour
     /**
      * lists all collections.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction(Request $request)
     {
@@ -281,7 +281,7 @@ class CollectionController extends AbstractRestController implements ClassResour
     /**
      * Creates a new collection.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function postAction(Request $request)
     {
@@ -291,9 +291,9 @@ class CollectionController extends AbstractRestController implements ClassResour
     /**
      * Edits the existing collection with the given id.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      */
     public function putAction($id, Request $request)
     {
@@ -303,7 +303,7 @@ class CollectionController extends AbstractRestController implements ClassResour
     /**
      * Delete a collection with the given id.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction($id, Request $request)
     {
@@ -387,7 +387,7 @@ class CollectionController extends AbstractRestController implements ClassResour
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     protected function saveEntity($id, Request $request)
     {

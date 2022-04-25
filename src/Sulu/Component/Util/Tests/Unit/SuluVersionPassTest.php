@@ -12,11 +12,14 @@
 namespace Sulu\Component\Util\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Util\SuluVersionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class SuluVersionPassTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testProcess()
     {
         $versionPass = new SuluVersionPass();

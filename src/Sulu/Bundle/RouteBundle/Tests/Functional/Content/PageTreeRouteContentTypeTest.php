@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\RouteBundle\Content\Type\PageTreeRouteContentType;
@@ -30,6 +31,8 @@ use Sulu\Component\Route\Document\Behavior\RoutableBehavior;
 
 class PageTreeRouteContentTypeTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DocumentManagerInterface
      */

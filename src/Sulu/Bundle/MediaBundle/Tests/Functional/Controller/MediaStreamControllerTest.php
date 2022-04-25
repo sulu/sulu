@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
+use Imagick;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes;
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
@@ -143,7 +144,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
 
     public function testGetImageActionSvgAsJpg()
     {
-        if (!\class_exists(\Imagick::class)) {
+        if (!\class_exists(Imagick::class)) {
             $this->markTestSkipped('Imagick pecl extension is not installed.');
 
             return;

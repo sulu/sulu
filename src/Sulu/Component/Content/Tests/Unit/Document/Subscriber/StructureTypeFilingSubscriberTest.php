@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
 use Sulu\Component\Content\Document\Subscriber\StructureTypeFilingSubscriber;
@@ -26,6 +27,8 @@ use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 
 class StructureTypeFilingSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PersistEvent
      */

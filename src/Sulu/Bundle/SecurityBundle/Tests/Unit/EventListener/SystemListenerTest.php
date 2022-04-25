@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\EventListener;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Security;
@@ -20,6 +21,8 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class SystemListenerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SystemStoreInterface
      */

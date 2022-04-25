@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Twig;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathTwigExtension;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -21,6 +22,8 @@ use Sulu\Component\Webspace\Webspace;
 
 class ContentPathTwigExtensionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var WebspaceManagerInterface
      */

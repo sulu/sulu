@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
@@ -28,6 +29,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ProxyFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var NodeInterface
      */

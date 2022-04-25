@@ -12,6 +12,7 @@
 namespace Sulu\Component\CustomUrl\Tests\Unit\Routing\Enhancers;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
@@ -25,6 +26,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ContentEnhancerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function enhanceProvider()
     {
         return [

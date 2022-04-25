@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="./vendor/autoload.php" colors="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         bootstrap="./vendor/autoload.php"
+         colors="true"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+    <coverage>
+        <include>
+            <directory>./src/Sulu/Component/</directory>
+        </include>
+
+        <exclude>
+            <directory>./tests</directory>
+            <directory>./vendor</directory>
+            <directory>./*/Tests</directory>
+        </exclude>
+    </coverage>
+
     <testsuites>
         <testsuite name="components">
             <directory suffix="Test.php">./src/Sulu/Component/*/Tests</directory>
         </testsuite>
     </testsuites>
-
-    <!-- Code coverage filter -->
-    <filter>
-        <whitelist>
-            <directory>./src/Sulu/Component/</directory>
-            <exclude>
-                <directory>./tests</directory>
-                <directory>./vendor</directory>
-                <directory>./*/Tests</directory>
-            </exclude>
-        </whitelist>
-    </filter>
 
     <php>
         <env name="SYMFONY_PHPUNIT_VERSION" value="8.0"/>
@@ -25,6 +28,6 @@
     </php>
 
     <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
+        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
     </listeners>
 </phpunit>

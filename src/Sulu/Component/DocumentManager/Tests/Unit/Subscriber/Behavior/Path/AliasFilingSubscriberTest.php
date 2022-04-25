@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Audit\Pa
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\Behavior\Path\AliasFilingBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -23,6 +24,8 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\AliasFilingSubscribe
 
 class AliasFilingSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PersistEvent
      */

@@ -14,6 +14,7 @@ namespace Sulu\Component\SmartContent\Tests\Unit;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -39,6 +40,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class ContentTypeTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var TagManagerInterface
      */

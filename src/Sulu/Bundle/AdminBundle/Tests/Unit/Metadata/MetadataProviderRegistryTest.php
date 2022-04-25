@@ -12,12 +12,15 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Exception\MetadataProviderNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 
 class MetadataProviderRegistryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var MetadataProviderRegistry
      */

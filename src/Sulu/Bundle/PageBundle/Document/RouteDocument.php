@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\Document;
 
+use DateTime;
 use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
@@ -59,12 +60,12 @@ class RouteDocument implements
     protected $history = false;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     protected $created;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     protected $changed;
 
@@ -108,7 +109,7 @@ class RouteDocument implements
         return $this->created;
     }
 
-    public function setCreated(\DateTime $created)
+    public function setCreated(DateTime $created)
     {
         $this->created = $created;
     }
@@ -118,7 +119,7 @@ class RouteDocument implements
         return $this->changed;
     }
 
-    public function setChanged(\DateTime $changed)
+    public function setChanged(DateTime $changed)
     {
         $this->changed = $changed;
     }

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Api;
 
+use DateTime;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
@@ -154,7 +155,7 @@ class Account extends ApiWrapper
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      * @VirtualProperty
      * @SerializedName("created")
      * @Groups({"fullAccount"})
@@ -167,7 +168,7 @@ class Account extends ApiWrapper
     /**
      * Get changed.
      *
-     * @return \DateTime
+     * @return DateTime
      * @VirtualProperty
      * @SerializedName("changed")
      * @Groups({"fullAccount"})

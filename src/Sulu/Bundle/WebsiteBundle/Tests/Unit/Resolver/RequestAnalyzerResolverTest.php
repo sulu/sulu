@@ -10,6 +10,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzer;
@@ -22,6 +23,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestAnalyzerResolverTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var RequestAnalyzerResolver
      */

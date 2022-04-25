@@ -12,11 +12,14 @@
 namespace Sulu\Bundle\SecurityBundle\Tests\Unit\Domain\Event;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\SecurityBundle\Domain\Event\UserCreatedEvent;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 class UserCreatedEventTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testGetEventType(): void
     {
         $user = $this->prophesize(UserInterface::class);

@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Session;
 
+use DOMDocument;
+use DOMXPath;
 use PHPCR\CredentialsInterface;
 use PHPCR\SessionInterface;
 
@@ -167,9 +169,9 @@ class Session implements SessionInterface
         \rewind($memoryStream);
         $content = \stream_get_contents($memoryStream);
 
-        $document = new \DOMDocument();
+        $document = new DOMDocument();
         $document->loadXML($content);
-        $xpath = new \DOMXPath($document);
+        $xpath = new DOMXPath($document);
         $xpath->registerNamespace('sv', 'http://www.jcp.org/jcr/sv/1.0');
 
         foreach ($xpath->query('//sv:property[@sv:name="sulu:versions" or @sv:name="jcr:versionHistory" or @sv:name="jcr:baseVersion" or @sv:name="jcr:predecessors" or @sv:name="jcr:isCheckedOut"]') as $element) {

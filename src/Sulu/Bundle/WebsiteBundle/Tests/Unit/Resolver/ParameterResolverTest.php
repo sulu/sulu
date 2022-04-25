@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Resolver;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolverInterface;
@@ -28,6 +29,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ParameterResolverTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var StructureResolverInterface|ObjectProphecy
      */

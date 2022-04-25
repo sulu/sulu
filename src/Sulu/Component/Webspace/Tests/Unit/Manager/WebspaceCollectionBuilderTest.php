@@ -12,6 +12,7 @@
 namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
 use Sulu\Component\Webspace\Loader\XmlFileLoader10;
@@ -24,6 +25,8 @@ use Symfony\Component\Config\Loader\LoaderResolver;
 
 class WebspaceCollectionBuilderTest extends WebspaceTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DelegatingLoader
      */

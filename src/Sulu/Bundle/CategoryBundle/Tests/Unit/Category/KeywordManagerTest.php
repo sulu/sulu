@@ -14,6 +14,7 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\CategoryBundle\Category\KeywordManager;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordAddedEvent;
@@ -27,6 +28,8 @@ use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 
 class KeywordManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function provideSaveData()
     {
         return [

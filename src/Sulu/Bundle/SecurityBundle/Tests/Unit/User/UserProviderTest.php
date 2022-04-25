@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Tests\Unit\User;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -24,6 +25,8 @@ use Symfony\Component\Security\Core\Exception\LockedException;
 
 class UserProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy<UserRepositoryInterface>
      */

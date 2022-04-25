@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Compat;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
@@ -23,6 +24,8 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 
 class StructureManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var StructureMetadataFactory
      */

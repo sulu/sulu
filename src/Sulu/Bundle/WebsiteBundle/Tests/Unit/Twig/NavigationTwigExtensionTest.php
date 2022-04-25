@@ -10,6 +10,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Navigation\NavigationTwigExtension;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
@@ -21,6 +22,8 @@ use Sulu\Component\Webspace\Webspace;
 
 class NavigationTwigExtensionTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function activeElementProvider()
     {
         return [

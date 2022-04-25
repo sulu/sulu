@@ -13,6 +13,8 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\Generator;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use stdClass;
 use Sulu\Bundle\RouteBundle\Generator\CannotEvaluateTokenException;
 use Sulu\Bundle\RouteBundle\Generator\SymfonyExpressionTokenProvider;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
@@ -20,6 +22,8 @@ use Symfony\Component\Translation\Translator;
 
 class SymfonyExpressionTokenProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testResolve()
     {
         $translator = $this->prophesize(Translator::class);
@@ -95,7 +99,7 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $translator->getLocale()->willReturn('de');
         $translator->setLocale('de')->shouldBeCalled();
 
-        $entity = new \stdClass();
+        $entity = new stdClass();
         $array = ['first-array-value'];
 
         $provider = new SymfonyExpressionTokenProvider($translator->reveal());
@@ -117,7 +121,7 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $translator = $this->prophesize(Translator::class);
         $translator->getLocale()->willReturn('en');
         $translator->setLocale('en')->shouldBeCalled();
-        $entity = new \stdClass();
+        $entity = new stdClass();
         $provider = new SymfonyExpressionTokenProvider($translator->reveal());
         $provider->provide($entity, 'object.title');
     }

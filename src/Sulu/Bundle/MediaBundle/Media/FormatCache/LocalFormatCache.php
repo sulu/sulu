@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatCache;
 
+use RuntimeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyUrlNotFoundException;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -81,7 +82,7 @@ class LocalFormatCache implements FormatCacheInterface
         $oldCacheDir = $realCacheDir . '_old';
 
         if (!\is_writable($realCacheDir)) {
-            throw new \RuntimeException(\sprintf('Unable to write in the "%s" directory', $realCacheDir));
+            throw new RuntimeException(\sprintf('Unable to write in the "%s" directory', $realCacheDir));
         }
 
         if ($this->filesystem->exists($oldCacheDir)) {
@@ -151,7 +152,7 @@ class LocalFormatCache implements FormatCacheInterface
      *
      * @return int
      *
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl
+     * @throws ImageProxyInvalidUrl
      */
     protected function getIdFromUrl($url)
     {
@@ -188,7 +189,7 @@ class LocalFormatCache implements FormatCacheInterface
      *
      * @return string
      *
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl
+     * @throws ImageProxyInvalidUrl
      */
     protected function getFormatFromUrl($url)
     {

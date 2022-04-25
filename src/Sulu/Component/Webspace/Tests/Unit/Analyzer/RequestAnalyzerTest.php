@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Tests\Unit\Analyzer;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestProcessorInterface;
@@ -26,6 +27,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestAnalyzerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testAnalyzeAndValidate()
     {
         $provider = $this->prophesize(RequestProcessorInterface::class);

@@ -11,19 +11,23 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Unit\Content\Types;
 
+use DateTime;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PageBundle\Content\Types\Date;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
 class DateTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testRead()
     {
         $webspaceKey = 'sulu_io';
         $locale = 'de';
-        $dateValue = new \DateTime();
+        $dateValue = new DateTime();
 
         $node = $this->prophesize(NodeInterface::class);
         $node->hasProperty('test')->willReturn(true);
@@ -62,7 +66,7 @@ class DateTest extends TestCase
     {
         $webspaceKey = 'sulu_io';
         $locale = 'de';
-        $dateValue = new \DateTime();
+        $dateValue = new DateTime();
 
         $node = $this->prophesize(NodeInterface::class);
         $property = $this->prophesize(PropertyInterface::class);
@@ -72,13 +76,13 @@ class DateTest extends TestCase
         $date = new Date('test.html.twig');
 
         // to avoid second jumps
-        $dateValue = new \DateTime();
+        $dateValue = new DateTime();
         $date->write($node->reveal(), $property->reveal(), 1, $webspaceKey, $locale, null);
 
         $node->setProperty(
             'test',
             Argument::that(
-                function(\DateTime $value) use ($dateValue) {
+                function(DateTime $value) use ($dateValue) {
                     // let there a delta of 2 seconds is ok
                     $this->assertEqualsWithDelta($dateValue->getTimestamp(), $value->getTimestamp(), 60);
 

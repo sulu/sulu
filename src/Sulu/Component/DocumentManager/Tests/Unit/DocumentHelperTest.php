@@ -12,11 +12,14 @@
 namespace Sulu\Component\DocumentManager\tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\DocumentHelper;
 
 class DocumentHelperTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function setUp(): void
     {
         $this->document = new \stdClass();

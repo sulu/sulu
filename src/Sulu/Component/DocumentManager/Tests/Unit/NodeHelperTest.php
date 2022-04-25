@@ -15,12 +15,15 @@ use Jackalope\Workspace;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\DocumentManager\NodeHelper;
 use Sulu\Component\DocumentManager\NodeHelperInterface;
 
 class NodeHelperTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var NodeHelperInterface
      */

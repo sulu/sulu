@@ -14,12 +14,15 @@ namespace Sulu\Component\Webspace\Tests\Unit\Settings;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Session\SessionManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface as DeprecatedSessionManagerInterface;
 use Sulu\Component\Webspace\Settings\SettingsManager;
 
 class SettingsManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SettingsManager
      */

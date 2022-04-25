@@ -15,10 +15,13 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Rest\AbstractRestController;
+use Sulu\Component\Rest\Exception\MissingParameterException;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\SmartContent\DataProviderPoolInterface;
+use Sulu\Component\SmartContent\Exception\DataProviderNotExistsException;
 use Sulu\Component\SmartContent\Rest\ItemCollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -52,10 +55,10 @@ class SmartContentItemController extends AbstractRestController
     /**
      * Resolves filter for smart-content UI.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      *
-     * @throws \Sulu\Component\Rest\Exception\MissingParameterException
-     * @throws \Sulu\Component\SmartContent\Exception\DataProviderNotExistsException
+     * @throws MissingParameterException
+     * @throws DataProviderNotExistsException
      */
     public function getItemsAction(Request $request)
     {

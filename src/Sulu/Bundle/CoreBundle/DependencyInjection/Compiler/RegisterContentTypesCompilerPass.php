@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CoreBundle\DependencyInjection\Compiler;
 
+use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -32,7 +33,7 @@ class RegisterContentTypesCompilerPass implements CompilerPassInterface
         $ids = $container->findTaggedServiceIds(self::CONTENT_TYPE_TAG);
         foreach ($ids as $id => $attributes) {
             if (!isset($attributes[0]['alias'])) {
-                throw new \InvalidArgumentException(
+                throw new InvalidArgumentException(
                     \sprintf(
                         'No "alias" specified for content type with service ID: "%s"',
                         $id

@@ -11,9 +11,11 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Unit\Trash;
 
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
@@ -54,6 +56,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 class AccountTrashItemHandlerTest extends TestCase
 {
+    use ProphecyTrait;
     use SetGetPrivatePropertyTrait;
 
     /**
@@ -285,8 +288,8 @@ class AccountTrashItemHandlerTest extends TestCase
         $account = new Account();
         $account->setId(1);
         $account->setName('Minimal Company');
-        $account->setCreated(new \DateTime('2020-11-05T12:15:00+01:00'));
-        $account->setChanged(new \DateTime('2020-12-10T14:15:00+01:00'));
+        $account->setCreated(new DateTime('2020-11-05T12:15:00+01:00'));
+        $account->setChanged(new DateTime('2020-12-10T14:15:00+01:00'));
 
         return $account;
     }
@@ -337,8 +340,8 @@ class AccountTrashItemHandlerTest extends TestCase
         $account->setPlaceOfJurisdiction('Place of Jurisdiction');
         $account->setRegisterNumber('123456');
         $account->setNote('123456');
-        $account->setCreated(new \DateTime('2020-11-05T12:15:00+01:00'));
-        $account->setChanged(new \DateTime('2020-12-10T14:15:00+01:00'));
+        $account->setCreated(new DateTime('2020-11-05T12:15:00+01:00'));
+        $account->setChanged(new DateTime('2020-12-10T14:15:00+01:00'));
 
         $creator = new User();
         static::setPrivateProperty($creator, 'id', 21);

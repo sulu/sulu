@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Scaler;
 
+use Imagick;
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
@@ -103,7 +104,7 @@ class ScalerTest extends SuluTestCase
 
     private function createImagine()
     {
-        if (\class_exists(\Imagick::class)) {
+        if (\class_exists(Imagick::class)) {
             return new ImagickImagine();
         }
 

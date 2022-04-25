@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Exception;
 
-class MetadataNotFoundException extends \Exception
+use Exception;
+
+class MetadataNotFoundException extends Exception
 {
     /**
      * @var string

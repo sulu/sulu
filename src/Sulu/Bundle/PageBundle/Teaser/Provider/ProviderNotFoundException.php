@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\PageBundle\Teaser\Provider;
 
+use Exception;
+
 /**
  * Indicates not existing provider.
  */
-class ProviderNotFoundException extends \Exception
+class ProviderNotFoundException extends Exception
 {
     /**
      * @var string

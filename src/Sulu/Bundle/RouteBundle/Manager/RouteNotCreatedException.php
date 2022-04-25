@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\RouteBundle\Manager;
 
+use Exception;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 
 /**
  * This exception indicates that a entity already has a route.
  */
-class RouteNotCreatedException extends \Exception
+class RouteNotCreatedException extends Exception
 {
     /**
      * @var RoutableInterface

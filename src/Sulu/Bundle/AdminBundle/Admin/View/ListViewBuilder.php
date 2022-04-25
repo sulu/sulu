@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\View;
 
+use DomainException;
+
 class ListViewBuilder implements ListViewBuilderInterface
 {
     use ViewBuilderTrait;
@@ -286,34 +288,34 @@ class ListViewBuilder implements ListViewBuilderInterface
     public function getView(): View
     {
         if (!$this->view->getOption('resourceKey')) {
-            throw new \DomainException(
+            throw new DomainException(
                 'A view for a list view needs a "resourceKey" option.'
                 . ' You have likely forgotten to call the "setResourceKey" method.'
             );
         }
 
         if (!$this->view->getOption('listKey')) {
-            throw new \DomainException(
+            throw new DomainException(
                 'A view for a list view needs a "listKey" option.'
                 . ' You have likely forgotten to call the "setListKey" method.'
             );
         }
 
         if (!$this->view->getOption('adapters')) {
-            throw new \DomainException(
+            throw new DomainException(
                 'A view for a list needs a "adapters" option.'
                 . ' You have likely forgotten to call the "addListAdapters" method.'
             );
         }
 
         if ($this->view->getOption('locales') && false === \strpos($this->view->getPath(), ':locale')) {
-            throw new \DomainException(
+            throw new DomainException(
                 'A view for a list needs a ":locale" placeholder in its URL if some "locales" have been set.'
             );
         }
 
         if (!$this->view->getOption('locales') && false !== \strpos($this->view->getPath(), ':locale')) {
-            throw new \DomainException(
+            throw new DomainException(
                 'A view for a list cannot have a ":locale" placeholder in its URL if no "locales" have been set.'
             );
         }

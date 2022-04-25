@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
+use RuntimeException;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -98,7 +99,7 @@ class MediaStreamController
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getImageAction(Request $request)
     {
@@ -192,7 +193,7 @@ class MediaStreamController
             return $this->createBinaryFileResponse($fileVersion, $this->storage, $locale, $dispositionType);
         }
 
-        throw new \RuntimeException(\sprintf('Storage type "%s" not supported.', $storageType));
+        throw new RuntimeException(\sprintf('Storage type "%s" not supported.', $storageType));
     }
 
     private function createBinaryFileResponse(
@@ -250,7 +251,7 @@ class MediaStreamController
      *
      * @return FileVersion|null
      *
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
+     * @throws FileVersionNotFoundException
      */
     protected function getFileVersion($id, $version)
     {

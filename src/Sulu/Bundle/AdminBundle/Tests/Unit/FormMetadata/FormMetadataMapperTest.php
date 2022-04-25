@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadata as ExternalFormMetadata;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
@@ -30,6 +31,8 @@ use Sulu\Component\Content\Metadata\SectionMetadata as ExternalSectionMetadata;
 
 class FormMetadataMapperTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var FormMetadataMapper
      */

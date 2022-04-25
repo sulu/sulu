@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Search;
 
 use PHPCR\SessionInterface;
+use ReflectionProperty;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -82,7 +83,7 @@ class BaseTestCase extends SuluTestCase
         $document->setParent($this->homeDocument);
         $document->setResourceSegment($url);
 
-        $webspaceReflection = new \ReflectionProperty(PageDocument::class, 'webspaceName');
+        $webspaceReflection = new ReflectionProperty(PageDocument::class, 'webspaceName');
         $webspaceReflection->setAccessible(true);
         $webspaceReflection->setValue($document, 'sulu_io');
 

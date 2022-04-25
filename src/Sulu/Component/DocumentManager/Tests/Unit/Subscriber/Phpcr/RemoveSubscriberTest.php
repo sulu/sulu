@@ -14,6 +14,7 @@ namespace Sulu\Comonent\DocumentManager\Tests\Unit\Subscriber;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\NodeManager;
@@ -21,6 +22,8 @@ use Sulu\Component\DocumentManager\Subscriber\Phpcr\RemoveSubscriber;
 
 class RemoveSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function setUp(): void
     {
         $this->nodeManager = $this->prophesize(NodeManager::class);

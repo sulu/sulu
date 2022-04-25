@@ -11,6 +11,7 @@
 
 namespace Functional\Entity;
 
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -173,8 +174,8 @@ class MediaRepositoryTest extends SuluTestCase
         $fileVersion->setFile($file);
         $fileVersion->setSize(1124214);
         $fileVersion->setDownloadCounter(2);
-        $fileVersion->setChanged(new \DateTime('1937-04-20'));
-        $fileVersion->setCreated(new \DateTime('1937-04-20'));
+        $fileVersion->setChanged(new DateTime('1937-04-20'));
+        $fileVersion->setCreated(new DateTime('1937-04-20'));
         $fileVersion->setStorageOptions(['segment' => 1, 'fileName' => $name . '.jpeg']);
         if (!\file_exists(__DIR__ . '/../../uploads/media/1')) {
             \mkdir(__DIR__ . '/../../uploads/media/1', 0777, true);

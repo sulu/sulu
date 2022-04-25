@@ -17,6 +17,9 @@ use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use ReflectionClass;
+use stdClass;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\CustomUrlBundle\EventListener\CustomUrlSerializeEventSubscriber;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -26,6 +29,8 @@ use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 
 class CustomUrlSerializeEventSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testGetSubscribedEvents()
     {
         $generator = $this->prophesize(GeneratorInterface::class);
@@ -39,7 +44,7 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 
         $events = $subscriber->getSubscribedEvents();
 
-        $reflection = new \ReflectionClass(\get_class($subscriber));
+        $reflection = new ReflectionClass(\get_class($subscriber));
 
         foreach ($events as $event) {
             $this->assertTrue($reflection->hasMethod($event['method']));
@@ -123,7 +128,7 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
         );
 
         $event = $this->prophesize(ObjectEvent::class);
-        $document = $this->prophesize(\stdClass::class);
+        $document = $this->prophesize(stdClass::class);
         $visitor = $this->prophesize(SerializationVisitorInterface::class);
 
         $event->getObject()->willReturn($document->reveal());

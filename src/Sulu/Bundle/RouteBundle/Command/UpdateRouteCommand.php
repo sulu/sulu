@@ -13,6 +13,7 @@ namespace Sulu\Bundle\RouteBundle\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use LogicException;
 use Sulu\Bundle\RouteBundle\Manager\RouteManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -48,7 +49,7 @@ class UpdateRouteCommand extends Command
         RouteManagerInterface $routeManager
     ) {
         if (!$translator instanceof LocaleAwareInterface) {
-            throw new \LogicException(\sprintf(
+            throw new LogicException(\sprintf(
                 'Expected "translator" in "%s" to be instance of "%s" but "%s" given.',
                 __CLASS__,
                 LocaleAwareInterface::class,

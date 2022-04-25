@@ -26,6 +26,7 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @RouteResource("contact-position")
@@ -74,7 +75,7 @@ class PositionController extends AbstractRestController implements ClassResource
      *
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getAction($id)
     {
@@ -92,7 +93,7 @@ class PositionController extends AbstractRestController implements ClassResource
      * lists all positions
      * optional parameter 'flat' calls listAction.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction(Request $request)
     {
@@ -116,7 +117,7 @@ class PositionController extends AbstractRestController implements ClassResource
     /**
      * Creates a new position.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function postAction(Request $request)
     {
@@ -155,7 +156,7 @@ class PositionController extends AbstractRestController implements ClassResource
      *
      * @param int $id The id of the position to update
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function putAction(Request $request, $id)
     {
@@ -228,7 +229,7 @@ class PositionController extends AbstractRestController implements ClassResource
      *
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction($id)
     {
@@ -264,7 +265,7 @@ class PositionController extends AbstractRestController implements ClassResource
     /**
      * Add or update a bunch of positions.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cpatchAction(Request $request)
     {

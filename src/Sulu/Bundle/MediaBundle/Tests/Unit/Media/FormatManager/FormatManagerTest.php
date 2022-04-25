@@ -13,6 +13,8 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use ReflectionClass;
 use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -22,6 +24,8 @@ use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
 
 class FormatManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var MediaRepositoryInterface
      */
@@ -105,7 +109,7 @@ class FormatManagerTest extends TestCase
     public function testReturnImage()
     {
         $media = new Media();
-        $reflection = new \ReflectionClass(\get_class($media));
+        $reflection = new ReflectionClass(\get_class($media));
         $property = $reflection->getProperty('id');
         $property->setAccessible(true);
         $property->setValue($media, 1);
@@ -141,7 +145,7 @@ class FormatManagerTest extends TestCase
     public function testReturnImageWithVideo()
     {
         $media = new Media();
-        $reflection = new \ReflectionClass(\get_class($media));
+        $reflection = new ReflectionClass(\get_class($media));
         $property = $reflection->getProperty('id');
         $property->setAccessible(true);
         $property->setValue($media, 1);

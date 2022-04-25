@@ -11,9 +11,11 @@
 
 namespace Sulu\Bundle\PreviewBundle\Preview\Exception;
 
+use Exception;
+
 /**
  * Indicates an exception with the preview.
  */
-class PreviewException extends \Exception
+class PreviewException extends Exception
 {
 }

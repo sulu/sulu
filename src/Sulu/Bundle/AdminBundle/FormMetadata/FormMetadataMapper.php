@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\FormMetadata;
 
+use Exception;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
@@ -56,7 +57,7 @@ class FormMetadataMapper
             } elseif ($child instanceof ContentSectionMetadata) {
                 $item = $this->mapSection($child, $locale);
             } else {
-                throw new \Exception('Unsupported property given "' . \get_class($child) . '"');
+                throw new Exception('Unsupported property given "' . \get_class($child) . '"');
             }
 
             $items[$item->getName()] = $item;
@@ -110,7 +111,7 @@ class FormMetadataMapper
             } elseif ($component instanceof ContentSectionMetadata) {
                 $item = $this->mapSection($component, $locale);
             } else {
-                throw new \Exception('Unsupported property given "' . \get_class($property) . '"');
+                throw new Exception('Unsupported property given "' . \get_class($property) . '"');
             }
 
             $section->addItem($item);
@@ -178,7 +179,7 @@ class FormMetadataMapper
             $option->setValue($parameter['value']);
             $this->mapOptionMeta($parameter, $locale, $option);
         } else {
-            throw new \Exception('Unsupported parameter given "' . \get_class($parameter) . '"');
+            throw new Exception('Unsupported parameter given "' . \get_class($parameter) . '"');
         }
 
         return $option;

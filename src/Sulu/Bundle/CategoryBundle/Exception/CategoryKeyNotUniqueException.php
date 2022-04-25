@@ -11,12 +11,13 @@
 
 namespace Sulu\Bundle\CategoryBundle\Exception;
 
+use Exception;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 
 /**
  * An instance of this exception signals that a specific key is already assigned to another category.
  */
-class CategoryKeyNotUniqueException extends \Exception implements TranslationErrorMessageExceptionInterface
+class CategoryKeyNotUniqueException extends Exception implements TranslationErrorMessageExceptionInterface
 {
     /**
      * @var mixed

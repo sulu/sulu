@@ -17,13 +17,15 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
+use JsonSerializable;
+use ReturnTypeWillChange;
 
 /**
  * Type of social media profile (i.e. Facebook,...).
  *
  * @ExclusionPolicy("All")
  */
-class SocialMediaProfileType implements \JsonSerializable
+class SocialMediaProfileType implements JsonSerializable
 {
     /**
      * @var int
@@ -126,7 +128,7 @@ class SocialMediaProfileType implements \JsonSerializable
      * @return mixed data which can be serialized by <b>json_encode</b>,
      *               which is a value of any type other than a resource
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

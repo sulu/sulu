@@ -12,12 +12,15 @@
 namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Preview\Object;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistry;
 
 class PreviewObjectProviderRegistryTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testGetPreviewObjectProviders(): void
     {
         $provider = $this->prophesize(PreviewObjectProviderInterface::class);

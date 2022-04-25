@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\tests\Unit\Subscriber\Core;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\Event\CreateEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Metadata;
@@ -22,6 +23,8 @@ use Sulu\Component\DocumentManager\Subscriber\Core\InstantiatorSubscriber;
 
 class InstantiatorSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     public const ALIAS = 'alias';
 
     private $subscriber;

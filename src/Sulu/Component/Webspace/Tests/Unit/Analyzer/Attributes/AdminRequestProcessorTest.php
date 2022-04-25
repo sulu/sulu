@@ -12,6 +12,7 @@
 namespace Sulu\Component\Webspace\Tests\Unit\Analyzer\Attributes;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\AdminRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -21,6 +22,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AdminRequestProcessorTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function provideData()
     {
         return [

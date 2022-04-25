@@ -18,13 +18,17 @@ use League\Flysystem\Filesystem;
 use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use RuntimeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 
 class AzureBlobStorageTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testConstruct(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $adapter = $this->prophesize(AdapterInterface::class);
         $flysystem = $this->prophesize(Filesystem::class);

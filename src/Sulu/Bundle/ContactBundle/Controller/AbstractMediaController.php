@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use Sulu\Bundle\ContactBundle\Contact\AbstractContactManager;
 use Sulu\Bundle\MediaBundle\Api\Media;
@@ -178,7 +179,7 @@ abstract class AbstractMediaController extends AbstractRestController
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $view = $this->view($e->getMessage(), 400);
         }
 
@@ -231,7 +232,7 @@ abstract class AbstractMediaController extends AbstractRestController
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $view = $this->view($e->getMessage(), 400);
         }
 

@@ -12,11 +12,14 @@
 namespace Sulu\Bundle\RouteBundle\Tests\Unit\Routing\Defaults;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProvider;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
 
 class RouteDefaultsProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var RouteDefaultsProviderInterface
      */

@@ -12,11 +12,14 @@
 namespace Sulu\Bundle\CoreBundle\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\CoreBundle\DataFixtures\ReplacerXmlLoader;
 use Symfony\Component\Config\FileLocatorInterface;
 
 class ReplacerXmlLoaderTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testLoad()
     {
         $filename = 'replacers.xml';

@@ -12,7 +12,9 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Id\AssignedGenerator;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use stdClass;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -142,7 +144,7 @@ class CollectionControllerTest extends SuluTestCase
     {
         // force id = 1
         $metadata = $this->em->getClassMetaData(CollectionType::class);
-        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
+        $metadata->setIdGenerator(new AssignedGenerator());
         $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
         $this->collectionType1 = $this->createCollectionType(
@@ -389,7 +391,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
 
-        $this->assertInstanceOf(\stdClass::class, $response);
+        $this->assertInstanceOf(stdClass::class, $response);
         $this->assertNotEmpty($response->_embedded->collections);
 
         $this->assertCount(2, $response->_embedded->collections);
@@ -635,7 +637,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $style = new \stdClass();
+        $style = new stdClass();
         $style->type = 'circle';
         $style->color = $generateColor;
 
@@ -672,7 +674,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->_embedded->collections[0]));
         $responseFirstEntity = $response->_embedded->collections[0];
 
-        $style = new \stdClass();
+        $style = new stdClass();
         $style->type = 'circle';
         $style->color = '#ffcc00';
 
@@ -689,7 +691,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->_embedded->collections[1]));
         $responseSecondEntity = $response->_embedded->collections[1];
 
-        $style = new \stdClass();
+        $style = new stdClass();
         $style->type = 'circle';
         $style->color = $generateColor;
 
@@ -732,7 +734,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $style = new \stdClass();
+        $style = new stdClass();
         $style->type = 'circle';
         $style->color = $generateColor;
 
@@ -769,7 +771,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->_embedded->collections[0]));
         $responseFirstEntity = $response->_embedded->collections[0];
 
-        $style = new \stdClass();
+        $style = new stdClass();
         $style->type = 'circle';
         $style->color = $generateColor;
 
@@ -898,7 +900,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->_embedded->collections[0]));
         $responseFirstEntity = $response->_embedded->collections[0];
 
-        $style = new \stdClass();
+        $style = new stdClass();
         $style->type = 'circle';
         $style->color = '#ffcc00';
 
@@ -944,7 +946,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->_embedded->collections[0]));
         $responseFirstEntity = $response->_embedded->collections[0];
 
-        $style = new \stdClass();
+        $style = new stdClass();
         $style->type = 'circle';
         $style->color = '#ffcc00';
 
@@ -1032,7 +1034,7 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $style = new \stdClass();
+        $style = new stdClass();
         $style->type = 'circle';
         $style->color = '#00ccff';
 
@@ -1070,7 +1072,7 @@ class CollectionControllerTest extends SuluTestCase
             $responseFirstEntity = $response->_embedded->collections[1];
         }
 
-        $style = new \stdClass();
+        $style = new stdClass();
         $style->type = 'circle';
         $style->color = '#00ccff';
 
@@ -1205,7 +1207,7 @@ class CollectionControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $style = new \stdClass();
+        $style = new stdClass();
         $style->type = 'quader';
         $style->color = '#00ccff';
 

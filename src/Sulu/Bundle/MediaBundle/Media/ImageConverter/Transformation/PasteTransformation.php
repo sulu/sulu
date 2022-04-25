@@ -15,6 +15,7 @@ use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use Imagine\Image\Point;
+use RuntimeException;
 use Symfony\Component\Config\FileLocator;
 
 /**
@@ -48,7 +49,7 @@ class PasteTransformation implements TransformationInterface
         $maskPath = isset($parameters['image']) ? $this->fileLocator->locate($parameters['image']) : null;
 
         if (!$maskPath) {
-            throw new \RuntimeException('The parameter "image" is required for "paste" transformation.');
+            throw new RuntimeException('The parameter "image" is required for "paste" transformation.');
         }
 
         $originalWidth = $image->getSize()->getWidth();

@@ -19,6 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use ZipArchive;
 
 class DownloadLanguageCommand extends Command
 {
@@ -68,7 +69,7 @@ class DownloadLanguageCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (!\class_exists(\ZipArchive::class)) {
+        if (!\class_exists(ZipArchive::class)) {
             $ui = new SymfonyStyle($input, $output);
             $ui->error('The "sulu:admin:download-language" command requires the "zip" php extension.');
 
@@ -165,7 +166,7 @@ class DownloadLanguageCommand extends Command
         $this->filesystem->dumpFile($tempFile, $response->getContent());
 
         $translations = [];
-        $zip = new \ZipArchive();
+        $zip = new ZipArchive();
         if ($zip->open($tempFile)) {
             $output->writeln('<info>Extract ZIP archive...</info>');
             $zip->extractTo($tempDirectory);

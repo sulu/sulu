@@ -14,6 +14,8 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Bridge;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use stdClass;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
@@ -31,6 +33,8 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class DocumentInspectorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DocumentRegistry
      */
@@ -47,7 +51,7 @@ class DocumentInspectorTest extends TestCase
     private $namespaceRegistry;
 
     /**
-     * @var \stdClass
+     * @var stdClass
      */
     private $document;
 
@@ -96,7 +100,7 @@ class DocumentInspectorTest extends TestCase
         $this->documentRegistry = $this->prophesize(DocumentRegistry::class);
         $this->pathSegmentRegistry = $this->prophesize(PathSegmentRegistry::class);
         $this->namespaceRegistry = $this->prophesize(NamespaceRegistry::class);
-        $this->document = new \stdClass();
+        $this->document = new stdClass();
         $this->node = $this->prophesize(NodeInterface::class);
         $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $this->structureMetadataFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
@@ -148,7 +152,7 @@ class DocumentInspectorTest extends TestCase
      */
     public function testGetStructure()
     {
-        $structure = new \stdClass();
+        $structure = new stdClass();
         $document = $this->prophesize(StructureBehavior::class);
         $document->getStructureType()->willReturn('foo');
 
@@ -216,7 +220,7 @@ class DocumentInspectorTest extends TestCase
      */
     public function testGetLocale()
     {
-        $document = new \stdClass();
+        $document = new stdClass();
         $this->documentRegistry->hasDocument($document)->willReturn(true);
         $this->documentRegistry->getLocaleForDocument($document)->willReturn('fr');
         $locale = $this->documentInspector->getLocale($document);
@@ -229,7 +233,7 @@ class DocumentInspectorTest extends TestCase
      */
     public function testGetLocaleNotRegistered()
     {
-        $document = new \stdClass();
+        $document = new stdClass();
         $this->documentRegistry->hasDocument($document)->willReturn(false);
         $locale = $this->documentInspector->getLocale($document);
 

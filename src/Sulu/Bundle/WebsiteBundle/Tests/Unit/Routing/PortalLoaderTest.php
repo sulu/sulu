@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Routing;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\Routing\PortalLoader;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -24,6 +25,8 @@ use Symfony\Component\Routing\RouteCollection;
 
 class PortalLoaderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PortalLoader
      */

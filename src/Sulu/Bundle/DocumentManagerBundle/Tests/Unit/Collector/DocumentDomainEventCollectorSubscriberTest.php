@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\TagBundle\Tests\Unit\Application\Dispatcher;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface;
 use Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorSubscriber;
@@ -20,6 +21,8 @@ use Sulu\Component\DocumentManager\Event\FlushEvent;
 
 class DocumentDomainEventCollectorSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DocumentDomainEventCollectorInterface|ObjectProphecy
      */

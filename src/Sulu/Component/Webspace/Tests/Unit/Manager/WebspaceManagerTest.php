@@ -12,6 +12,7 @@
 namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
@@ -32,6 +33,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class WebspaceManagerTest extends WebspaceTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DelegatingLoader
      */

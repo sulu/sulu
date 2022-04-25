@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\PageBundle\Repository;
 
+use PHPCR\NodeInterface;
+
 /**
  * repository for node objects.
  *
@@ -126,7 +128,7 @@ interface NodeRepositoryInterface
      *
      * @param string $uuid
      *
-     * @return \PHPCR\NodeInterface[]
+     * @return NodeInterface[]
      */
     public function getReferences($uuid);
 

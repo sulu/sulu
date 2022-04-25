@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -142,14 +143,14 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated();
 
     /**
      * Get changed.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getChanged();
 

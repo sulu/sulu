@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -20,6 +21,8 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class SubscriberTestCase extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PersistEvent
      */

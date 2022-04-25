@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
@@ -26,6 +27,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MediaAdminTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ViewBuilderFactoryInterface|ObjectProphecy
      */

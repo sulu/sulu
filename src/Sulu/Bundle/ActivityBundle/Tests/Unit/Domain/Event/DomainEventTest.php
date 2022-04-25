@@ -11,12 +11,16 @@
 
 namespace Sulu\Bundle\ActivityBundle\Tests\Unit\Domain\Event;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\ActivityBundle\Tests\Application\Domain\Event\TestDomainEvent;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 class DomainEventTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testEventType(): void
     {
         $event = $this->createTestDomainEvent();
@@ -41,9 +45,9 @@ class DomainEventTest extends TestCase
     public function testEventDateTime(): void
     {
         $event = $this->createTestDomainEvent();
-        $dateTime = new \DateTimeImmutable('2020-01-01');
+        $dateTime = new DateTimeImmutable('2020-01-01');
 
-        static::assertEqualsWithDelta(new \DateTimeImmutable('now'), $event->getEventDateTime(), 10);
+        static::assertEqualsWithDelta(new DateTimeImmutable('now'), $event->getEventDateTime(), 10);
         static::assertSame($event, $event->setEventDateTime($dateTime));
         static::assertSame($dateTime, $event->getEventDateTime());
     }

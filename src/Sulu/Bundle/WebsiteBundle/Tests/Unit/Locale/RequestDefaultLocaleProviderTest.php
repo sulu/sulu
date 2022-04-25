@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Locale;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\Locale\DefaultLocaleProviderInterface;
 use Sulu\Bundle\WebsiteBundle\Locale\RequestDefaultLocaleProvider;
 use Sulu\Component\Localization\Localization;
@@ -22,6 +23,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestDefaultLocaleProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var Portal
      */

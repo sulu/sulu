@@ -21,6 +21,7 @@ use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
@@ -31,6 +32,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CategoryConverterTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy<CategoryManagerInterface>
      */

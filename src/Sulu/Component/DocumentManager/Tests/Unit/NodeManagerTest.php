@@ -16,11 +16,14 @@ use PHPCR\PathNotFoundException;
 use PHPCR\SessionInterface;
 use PHPCR\WorkspaceInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\DocumentManager\NodeManager;
 
 class NodeManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public const UUID1 = '0dd2270d-c1e1-4d4e-9b7c-6da0efb6e91d';
 
     public const PATH1 = '/path/to';

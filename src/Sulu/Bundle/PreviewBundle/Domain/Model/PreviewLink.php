@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\PreviewBundle\Domain\Model;
 
+use DateTimeImmutable;
+
 class PreviewLink implements PreviewLinkInterface
 {
     /**
@@ -49,7 +51,7 @@ class PreviewLink implements PreviewLinkInterface
     private $visitCount = 0;
 
     /**
-     * @var \DateTimeImmutable|null
+     * @var DateTimeImmutable|null
      */
     private $lastVisit;
 
@@ -100,12 +102,12 @@ class PreviewLink implements PreviewLinkInterface
     public function increaseVisitCount(): PreviewLinkInterface
     {
         ++$this->visitCount;
-        $this->lastVisit = new \DateTimeImmutable();
+        $this->lastVisit = new DateTimeImmutable();
 
         return $this;
     }
 
-    public function getLastVisit(): ?\DateTimeImmutable
+    public function getLastVisit(): ?DateTimeImmutable
     {
         return $this->lastVisit;
     }

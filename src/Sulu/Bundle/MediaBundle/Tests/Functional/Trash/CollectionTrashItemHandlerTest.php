@@ -11,9 +11,11 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Trash;
 
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
@@ -32,6 +34,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 class CollectionTrashItemHandlerTest extends TestCase
 {
+    use ProphecyTrait;
     use SetGetPrivatePropertyTrait;
 
     /**
@@ -259,8 +262,8 @@ class CollectionTrashItemHandlerTest extends TestCase
     {
         $collection = new Collection();
         static::setPrivateProperty($collection, 'id', 1);
-        $collection->setCreated(new \DateTime('2020-11-05T12:15:00+01:00'));
-        $collection->setChanged(new \DateTime('2020-12-10T14:15:00+01:00'));
+        $collection->setCreated(new DateTime('2020-11-05T12:15:00+01:00'));
+        $collection->setChanged(new DateTime('2020-12-10T14:15:00+01:00'));
 
         $collectionType = new CollectionType();
         static::setPrivateProperty($collectionType, 'id', 11);
@@ -300,8 +303,8 @@ class CollectionTrashItemHandlerTest extends TestCase
         $collection = new Collection();
         static::setPrivateProperty($collection, 'id', 1);
         $collection->setKey('key');
-        $collection->setCreated(new \DateTime('2020-11-05T12:15:00+01:00'));
-        $collection->setChanged(new \DateTime('2020-12-10T14:15:00+01:00'));
+        $collection->setCreated(new DateTime('2020-11-05T12:15:00+01:00'));
+        $collection->setChanged(new DateTime('2020-12-10T14:15:00+01:00'));
 
         $creator = new User();
         static::setPrivateProperty($creator, 'id', 21);

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ActivityBundle\Tests\Unit\Application\Subscriber;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Subscriber\SetDomainEventUserSubscriber;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
@@ -21,6 +22,8 @@ use Symfony\Component\Security\Core\Security;
 
 class SetDomainEventUserSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var Security|ObjectProphecy
      */

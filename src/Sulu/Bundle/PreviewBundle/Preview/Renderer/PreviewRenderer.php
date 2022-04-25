@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\PreviewBundle\Preview\Renderer;
 
+use DateTime;
+use Exception;
+use InvalidArgumentException;
 use Sulu\Bundle\PreviewBundle\Preview\Events;
 use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\RouteDefaultsProviderNotFoundException;
@@ -165,7 +168,7 @@ class PreviewRenderer implements PreviewRendererInterface
                 'scheme' => $currentRequest->getScheme(),
                 'host' => $currentRequest->getHost(),
                 'port' => $currentRequest->getPort(),
-                'dateTime' => isset($options['dateTime']) ? new \DateTime($options['dateTime']) : new \DateTime(),
+                'dateTime' => isset($options['dateTime']) ? new DateTime($options['dateTime']) : new DateTime(),
             ]
         );
 
@@ -197,9 +200,9 @@ class PreviewRenderer implements PreviewRendererInterface
             }
 
             throw new TwigException($e, $object, $id, $webspace, $locale);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             throw new TemplateNotFoundException($e, $object, $id, $webspace, $locale);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new UnexpectedException($e, $object, $id, $webspace, $locale);
         }
 
@@ -211,7 +214,7 @@ class PreviewRenderer implements PreviewRendererInterface
      *
      * @return Response
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function handle(Request $request)
     {

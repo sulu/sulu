@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\MoveEvent;
@@ -28,6 +29,8 @@ use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
 
 class AutoNameSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     public const DEFAULT_LOCALE = 'en';
 
     /**

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Api;
 
+use DateTime;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
@@ -745,14 +746,14 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @param \DateTime|string $changed
+     * @param DateTime|string $changed
      *
      * @return $this
      */
     public function setChanged($changed)
     {
         if (\is_string($changed)) {
-            $changed = new \DateTime($changed);
+            $changed = new DateTime($changed);
         }
         $this->getFileVersion()->setChanged($changed);
 
@@ -763,7 +764,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("changed")
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getChanged()
     {
@@ -802,7 +803,7 @@ class Media extends ApiWrapper
      * @VirtualProperty
      * @SerializedName("created")
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -882,7 +883,7 @@ class Media extends ApiWrapper
     /**
      * @return FileVersion
      *
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
+     * @throws FileVersionNotFoundException
      */
     public function getFileVersion()
     {
@@ -912,7 +913,7 @@ class Media extends ApiWrapper
     /**
      * @return File
      *
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileNotFoundException
+     * @throws FileNotFoundException
      */
     public function getFile()
     {

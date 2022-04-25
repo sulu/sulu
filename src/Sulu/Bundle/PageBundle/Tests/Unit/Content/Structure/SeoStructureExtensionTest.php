@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Structure;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PageBundle\Content\Structure\SeoStructureExtension;
 
 /**
@@ -21,6 +22,8 @@ use Sulu\Bundle\PageBundle\Content\Structure\SeoStructureExtension;
  */
 class SeoStructureExtensionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var NodeInterface
      */

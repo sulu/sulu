@@ -15,6 +15,7 @@ use Doctrine\Common\Cache\ArrayCache;
 use JMS\Serializer\SerializationContext;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TagBundle\Twig\TagTwigExtension;
@@ -29,6 +30,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class TagTwigExtensionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * Returns memoize cache instance.
      *

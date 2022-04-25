@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\Navigation;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
@@ -23,6 +24,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class NavigationRegistryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var NavigationRegistry
      */

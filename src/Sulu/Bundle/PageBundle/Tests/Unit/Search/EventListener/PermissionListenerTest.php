@@ -14,12 +14,16 @@ namespace Sulu\Bundle\PageBundle\Search\EventListener;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use stdClass;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
 
 class PermissionListenerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PermissionListener
      */
@@ -48,7 +52,7 @@ class PermissionListenerTest extends TestCase
 
     public function testOnPermissionUpdate()
     {
-        $document = new \stdClass();
+        $document = new stdClass();
         $event = new PermissionUpdateEvent(SecurityBehavior::class, '1', null);
 
         $this->documentManager->find('1')->willReturn($document);
@@ -59,7 +63,7 @@ class PermissionListenerTest extends TestCase
 
     public function testOnPermissionUpdateNotSecured()
     {
-        $event = new PermissionUpdateEvent(\stdClass::class, '1', null);
+        $event = new PermissionUpdateEvent(stdClass::class, '1', null);
 
         $this->searchManager->deindex(Argument::any())->shouldNotBeCalled();
 

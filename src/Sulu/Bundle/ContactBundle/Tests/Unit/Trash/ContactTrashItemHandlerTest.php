@@ -11,9 +11,11 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Unit\Trash;
 
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
@@ -56,6 +58,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 class ContactTrashItemHandlerTest extends TestCase
 {
+    use ProphecyTrait;
     use SetGetPrivatePropertyTrait;
 
     /**
@@ -290,8 +293,8 @@ class ContactTrashItemHandlerTest extends TestCase
         static::setPrivateProperty($contact, 'id', 1);
         $contact->setFirstName('Minimal');
         $contact->setLastName('Contact');
-        $contact->setCreated(new \DateTime('2020-11-05T12:15:00+01:00'));
-        $contact->setChanged(new \DateTime('2020-12-10T14:15:00+01:00'));
+        $contact->setCreated(new DateTime('2020-11-05T12:15:00+01:00'));
+        $contact->setChanged(new DateTime('2020-12-10T14:15:00+01:00'));
 
         return $contact;
     }
@@ -336,7 +339,7 @@ class ContactTrashItemHandlerTest extends TestCase
         $contact->setFirstName('Complex');
         $contact->setMiddleName('"Captain"');
         $contact->setLastName('Contact');
-        $contact->setBirthday(new \DateTime('1991-10-17'));
+        $contact->setBirthday(new DateTime('1991-10-17'));
         $contact->setSalutation('Mr.');
         $contact->setFormOfAddress(1);
         $contact->setNewsletter(true);
@@ -346,8 +349,8 @@ class ContactTrashItemHandlerTest extends TestCase
         $contact->setMainPhone('+43 12345 6789');
         $contact->setMainFax('+43 12345 1234 1');
         $contact->setNote('123456');
-        $contact->setCreated(new \DateTime('2020-11-05T12:15:00+01:00'));
-        $contact->setChanged(new \DateTime('2020-12-10T14:15:00+01:00'));
+        $contact->setCreated(new DateTime('2020-11-05T12:15:00+01:00'));
+        $contact->setChanged(new DateTime('2020-12-10T14:15:00+01:00'));
 
         $creator = new User();
         static::setPrivateProperty($creator, 'id', 21);

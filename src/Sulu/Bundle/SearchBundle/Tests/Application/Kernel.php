@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SearchBundle\Tests\Application;
 
+use Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\TestBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -21,7 +22,7 @@ class Kernel extends SuluTestKernel
         return \array_merge(
             parent::registerBundles(),
             [
-                new \Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\TestBundle(),
+                new TestBundle(),
             ]
         );
     }

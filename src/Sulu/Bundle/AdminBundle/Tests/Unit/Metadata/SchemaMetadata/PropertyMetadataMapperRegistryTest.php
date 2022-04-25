@@ -11,7 +11,10 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\SchemaMetadata;
 
+use Exception;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\NotFoundExceptionInterface;
 use Sulu\Bundle\AdminBundle\Exception\PropertyMetadataMapperNotFoundException;
@@ -21,6 +24,8 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class PropertyMetadataMapperRegistryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy<ServiceLocator>
      */
@@ -74,7 +79,7 @@ class PropertyMetadataMapperRegistryTest extends TestCase
 
     public function testGetOtherException(): void
     {
-        $exception = new \Exception();
+        $exception = new Exception();
 
         $this->serviceLocator->get('mapper')->willThrow($exception);
 
@@ -85,7 +90,7 @@ class PropertyMetadataMapperRegistryTest extends TestCase
 
     private function createNotFoundException(): NotFoundExceptionInterface
     {
-        return new class() extends \InvalidArgumentException implements NotFoundExceptionInterface {
+        return new class() extends InvalidArgumentException implements NotFoundExceptionInterface {
         };
     }
 }

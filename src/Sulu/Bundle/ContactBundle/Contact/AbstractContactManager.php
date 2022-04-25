@@ -1073,8 +1073,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * @param DoctrineEntity $contact
      * @param array $faxData
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityIdAlreadySetException
+     * @throws EntityNotFoundException
      */
     protected function addFax($contact, $faxData)
     {
@@ -1231,8 +1231,8 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * @param array $addressData
      * @param bool $isMain returns if address is main address
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityIdAlreadySetException
+     * @throws EntityNotFoundException
      *
      * @return Address
      */
@@ -1321,7 +1321,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * @param mixed $entry The entry with the new data
      * @param bool $isMain returns if address should be set to main
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      *
      * @return bool True if successful, otherwise false
      */
@@ -1469,7 +1469,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
      *
      * @return bool True if there was no error, otherwise false
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
+     * @throws EntityIdAlreadySetException
      */
     protected function addNote($contact, $noteData)
     {

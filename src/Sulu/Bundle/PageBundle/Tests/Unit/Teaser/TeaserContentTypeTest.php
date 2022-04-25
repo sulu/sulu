@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Tests\Unit\Teaser;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
 use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
@@ -28,6 +29,8 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 
 class TeaserContentTypeTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var TeaserProviderPoolInterface
      */

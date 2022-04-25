@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Metadata\Factory;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Factory\Exception\DocumentTypeNotFoundException;
@@ -28,6 +29,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StructureMetadataFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var string
      */

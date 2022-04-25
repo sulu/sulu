@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Block;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -19,6 +20,8 @@ use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 class BlockPropertyTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testSetValue()
     {
         $data = [['type' => 'test', 'title' => 'my title', 'description' => 'my description']];

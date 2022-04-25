@@ -12,12 +12,15 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeInterface;
 use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeNotFoundException;
 use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry;
 
 class FilterTypeRegistryTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testGetFieldType()
     {
         $textFilterType = $this->prophesize(FilterTypeInterface::class);

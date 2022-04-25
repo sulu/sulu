@@ -11,9 +11,13 @@
 
 namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Preview\Renderer;
 
+use DateTime;
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use stdClass;
 use Sulu\Bundle\PreviewBundle\Preview\Events;
 use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\RouteDefaultsProviderNotFoundException;
@@ -42,6 +46,8 @@ use Twig\Error\RuntimeError;
 
 class PreviewRendererTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var RouteDefaultsProviderInterface
      */
@@ -138,7 +144,7 @@ class PreviewRendererTest extends TestCase
      */
     public function testRender($scheme, $portalUrl)
     {
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(stdClass::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -211,7 +217,7 @@ class PreviewRendererTest extends TestCase
 
     public function testRenderWithTargetGroup()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(stdClass::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -254,7 +260,7 @@ class PreviewRendererTest extends TestCase
 
     public function testRenderWithSegment()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(stdClass::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -300,7 +306,7 @@ class PreviewRendererTest extends TestCase
 
     public function testRenderWithDateTime()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(stdClass::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -330,7 +336,7 @@ class PreviewRendererTest extends TestCase
             Argument::that(function(Request $request) use ($dateTimeString) {
                 $dateTime = $request->attributes->get('_sulu')->getAttribute('dateTime');
 
-                return $dateTime->getTimestamp() === (new \DateTime($dateTimeString))->getTimestamp();
+                return $dateTime->getTimestamp() === (new DateTime($dateTimeString))->getTimestamp();
             }),
             HttpKernelInterface::MASTER_REQUEST,
             false
@@ -347,7 +353,7 @@ class PreviewRendererTest extends TestCase
 
     public function testRenderPortalNotFound()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(stdClass::class);
 
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
             ->willReturn([]);
@@ -378,7 +384,7 @@ class PreviewRendererTest extends TestCase
     public function testRenderWebspaceNotFound()
     {
         $this->expectException(WebspaceNotFoundException::class);
-        $object = new \stdClass();
+        $object = new stdClass();
 
         $request = new Request();
         $this->requestStack->getCurrentRequest()->willReturn($request);
@@ -400,7 +406,7 @@ class PreviewRendererTest extends TestCase
         $request = new Request();
         $this->requestStack->getCurrentRequest()->willReturn($request);
 
-        $object = new \stdClass();
+        $object = new stdClass();
         $this->routeDefaultsProvider->supports(\get_class($object))->willReturn(true);
 
         $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale('sulu_io', 'de', $this->environment)
@@ -416,7 +422,7 @@ class PreviewRendererTest extends TestCase
     {
         $this->expectException(RouteDefaultsProviderNotFoundException::class, '', 9902);
 
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(stdClass::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -450,7 +456,7 @@ class PreviewRendererTest extends TestCase
     {
         $this->expectException(TwigException::class, '', 9903);
 
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(stdClass::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -484,7 +490,7 @@ class PreviewRendererTest extends TestCase
     {
         $this->expectException(TemplateNotFoundException::class, '', 9904);
 
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(stdClass::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -506,7 +512,7 @@ class PreviewRendererTest extends TestCase
             ->shouldBeCalled();
 
         $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
-            ->shouldBeCalled()->willThrow(new \InvalidArgumentException());
+            ->shouldBeCalled()->willThrow(new InvalidArgumentException());
 
         $request = new Request();
         $this->requestStack->getCurrentRequest()->willReturn($request);
@@ -518,7 +524,7 @@ class PreviewRendererTest extends TestCase
     {
         $this->expectException(TemplateNotFoundException::class, '', 9904);
 
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(stdClass::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -541,7 +547,7 @@ class PreviewRendererTest extends TestCase
 
         $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
             ->shouldBeCalled()->willThrow(
-                new HttpException(406, 'Error encountered when rendering content', new \InvalidArgumentException())
+                new HttpException(406, 'Error encountered when rendering content', new InvalidArgumentException())
             );
 
         $request = new Request();
@@ -554,7 +560,7 @@ class PreviewRendererTest extends TestCase
     {
         $this->expectException(UnexpectedException::class, '', 9905);
 
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(stdClass::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -588,7 +594,7 @@ class PreviewRendererTest extends TestCase
 
     public function testRenderRequestWithServerAttributes()
     {
-        $object = $this->prophesize(\stdClass::class);
+        $object = $this->prophesize(stdClass::class);
 
         $portalInformation = $this->prophesize(PortalInformation::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -650,7 +656,7 @@ class PreviewRendererTest extends TestCase
                     $this->assertSame(['noIndex' => true, 'noFollow' => true], $request->attributes->get('_seo'));
                     $this->assertEquals('sulu-preview-test.io', $requestAttributes->getAttribute('host'));
                     $this->assertEquals(8080, $requestAttributes->getAttribute('port'));
-                    $this->assertEqualsWithDelta(new \DateTime(), $requestAttributes->getAttribute('dateTime'), 1);
+                    $this->assertEqualsWithDelta(new DateTime(), $requestAttributes->getAttribute('dateTime'), 1);
 
                     // Assert equals will throw exception so also true can be returned.
                     return true;

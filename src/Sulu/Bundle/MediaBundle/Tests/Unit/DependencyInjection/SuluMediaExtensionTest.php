@@ -13,11 +13,14 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MediaBundle\DependencyInjection\SuluMediaExtension;
 use Symfony\Component\Process\ExecutableFinder;
 
 class SuluMediaExtensionTest extends AbstractExtensionTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ExecutableFinder
      */

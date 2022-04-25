@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\Preview;
 
+use InvalidArgumentException;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -74,7 +75,7 @@ class PageObjectProvider implements PreviewObjectProviderInterface
         foreach ($data as $property => $value) {
             try {
                 $propertyAccess->setValue($structure, $property, $value);
-            } catch (\InvalidArgumentException $e) {
+            } catch (InvalidArgumentException $e) {
                 //ignore not existing properties
             }
         }

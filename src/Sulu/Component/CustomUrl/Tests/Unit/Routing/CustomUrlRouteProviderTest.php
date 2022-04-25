@@ -12,6 +12,7 @@
 namespace Sulu\Component\CustomUrl\Tests\Unit\Routing;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
@@ -25,6 +26,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CustomUrlRouteProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function dataProvider()
     {
         return [

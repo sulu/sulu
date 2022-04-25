@@ -89,7 +89,7 @@ interface CollectionManagerInterface
      * @param array $sortBy
      * @param bool $systemCollections Whether or not system collectino should be included in the result
      *
-     * @return \Sulu\Bundle\MediaBundle\Api\Collection[]
+     * @return Collection[]
      */
     public function getTree(
         $locale,

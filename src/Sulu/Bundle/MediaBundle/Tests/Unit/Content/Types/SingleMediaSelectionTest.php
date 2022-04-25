@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -35,6 +36,8 @@ use Sulu\Component\Webspace\Webspace;
 
 class SingleMediaSelectionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SingleMediaSelection
      */

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Repository;
 
 use PHPCR\RepositoryException;
+use RuntimeException;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\PageBundle\Content\PageSelectionContainer;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -623,7 +624,7 @@ class NodeRepository implements NodeRepositoryInterface
         }
 
         if (!$found) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 \sprintf(
                     'Could not find target node in with UUID "%s" in tier. This should not happen.',
                     $uuid

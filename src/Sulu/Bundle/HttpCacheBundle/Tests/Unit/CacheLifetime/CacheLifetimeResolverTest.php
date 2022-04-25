@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\CacheLifetime;
 
 use Cron\CronExpression;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolver;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
@@ -54,7 +55,7 @@ class CacheLifetimeResolverTest extends TestCase
     public function testResolveExpression()
     {
         $cacheLifetimeResolver = new CacheLifetimeResolver();
-        $now = new \DateTime();
+        $now = new DateTime();
         $this->assertLessThanOrEqual(
             CronExpression::factory('@daily')->getNextRunDate()->getTimestamp() - $now->getTimestamp(),
             $cacheLifetimeResolver->resolve(CacheLifetimeResolverInterface::TYPE_EXPRESSION, '@daily')

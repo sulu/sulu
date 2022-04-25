@@ -14,6 +14,7 @@ namespace Sulu\Component\Rest\Tests\Unit\Csv;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Rest\Csv\CsvHandler;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
@@ -24,6 +25,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CsvHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testNonListResponse()
     {
         $this->expectException(ObjectNotSupportedException::class);

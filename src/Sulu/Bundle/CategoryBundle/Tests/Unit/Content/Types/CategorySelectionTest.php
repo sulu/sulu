@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Content\Types;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\CategoryBundle\Api\Category;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Content\Types\CategorySelection;
@@ -22,6 +23,8 @@ use Sulu\Component\Content\Compat\StructureInterface;
 
 class CategorySelectionTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testGetContentData()
     {
         $entity1 = $this->prophesize(CategoryInterface::class);

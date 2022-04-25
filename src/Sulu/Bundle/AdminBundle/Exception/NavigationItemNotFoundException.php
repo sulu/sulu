@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Exception;
 
-class NavigationItemNotFoundException extends \Exception
+use Exception;
+
+class NavigationItemNotFoundException extends Exception
 {
     /**
      * @var string

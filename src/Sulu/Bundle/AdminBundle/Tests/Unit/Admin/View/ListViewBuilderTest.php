@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\View;
 
+use DomainException;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\View\Badge;
 use Sulu\Bundle\AdminBundle\Admin\View\ListViewBuilder;
@@ -34,7 +35,7 @@ class ListViewBuilderTest extends TestCase
 
     public function testBuildListViewWithoutResourceKey()
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
         $this->expectExceptionMessageMatches('/"setResourceKey"/');
 
         $view = (new ListViewBuilder('sulu_category.list', '/category'))
@@ -43,7 +44,7 @@ class ListViewBuilderTest extends TestCase
 
     public function testBuildListViewWithoutListAdapters()
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
         $this->expectExceptionMessageMatches('/"addListAdapters"/');
 
         $view = (new ListViewBuilder('sulu_category.list', '/category'))
@@ -154,7 +155,7 @@ class ListViewBuilderTest extends TestCase
 
     public function testBuildListWithLocalesWithoutLocalePlaceholder()
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');
 
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
@@ -169,7 +170,7 @@ class ListViewBuilderTest extends TestCase
 
     public function testBuildListWithoutLocalesWithLocalePlaceholder()
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');
 
         $view = (new ListViewBuilder('sulu_role.list', '/roles/:locale'))
@@ -181,7 +182,7 @@ class ListViewBuilderTest extends TestCase
 
     public function testBuildListWithoutListKey()
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
         $this->expectExceptionMessageMatches('"listKey"');
 
         $view = (new ListViewBuilder('sulu_role.list', '/roles/:locale'))

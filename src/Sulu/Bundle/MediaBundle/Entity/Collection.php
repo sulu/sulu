@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use JMS\Serializer\Annotation\Exclude;
@@ -51,12 +52,12 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     protected $depth;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     protected $created;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     protected $changed;
 
@@ -268,7 +269,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -278,7 +279,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * Get changed.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getChanged()
     {
@@ -288,7 +289,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * @return $this
      */
-    public function setCreated(\DateTime $created)
+    public function setCreated(DateTime $created)
     {
         $this->created = $created;
 
@@ -298,7 +299,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * @return $this
      */
-    public function setChanged(\DateTime $changed)
+    public function setChanged(DateTime $changed)
     {
         $this->changed = $changed;
 

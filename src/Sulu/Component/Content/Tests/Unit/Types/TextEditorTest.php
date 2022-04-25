@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\Types;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface as NodePropertyInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -21,6 +22,8 @@ use Sulu\Component\Content\Types\TextEditor;
 
 class TextEditorTest extends TestCase
 {
+    use ProphecyTrait;
+
     public const VALIDATE_REMOVED = 'removed';
 
     public const VALIDATE_UNPUBLISHED = 'unpublished';

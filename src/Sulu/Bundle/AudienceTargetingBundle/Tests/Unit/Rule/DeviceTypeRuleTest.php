@@ -13,11 +13,14 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Rule;
 
 use DeviceDetector\DeviceDetector;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\DeviceTypeRule;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DeviceTypeRuleTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DeviceDetector
      */

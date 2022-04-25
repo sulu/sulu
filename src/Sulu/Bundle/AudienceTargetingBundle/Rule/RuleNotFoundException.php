@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Rule;
 
+use RuntimeException;
+
 /**
  * This exception is thrown when a rule is tried to access, which does not exist.
  */
-class RuleNotFoundException extends \RuntimeException
+class RuleNotFoundException extends RuntimeException
 {
     /**
      * @var string

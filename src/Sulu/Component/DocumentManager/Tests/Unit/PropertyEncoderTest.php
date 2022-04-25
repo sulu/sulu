@@ -13,11 +13,14 @@ namespace Sulu\Component\DocumentManager\tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class PropertyEncoderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PropertyEncoder
      */

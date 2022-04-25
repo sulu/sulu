@@ -16,6 +16,7 @@ use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber;
@@ -32,6 +33,8 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class WorkflowStageSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PropertyEncoder|ObjectProphecy
      */

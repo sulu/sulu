@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\DependencyInjection;
 
+use RuntimeException;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
@@ -53,7 +54,7 @@ class SuluPreviewExtension extends Extension implements PrependExtensionInterfac
 
         if ($config['cache']['type']) {
             if (!$container->hasExtension('doctrine_cache')) {
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     'Deprecated "sulu_preview.cache" configuration used, but DoctrineCacheBundle was not registered.' . \PHP_EOL .
                     'Register the DoctrineCacheBundle or use the "sulu_preview.cache_adapter" configuration.'
                 );

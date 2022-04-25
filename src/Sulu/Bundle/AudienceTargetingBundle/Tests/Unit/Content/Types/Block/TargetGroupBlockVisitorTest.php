@@ -12,6 +12,8 @@
 namespace Sulu\Component\Content\Tests\Unit\Types\Block;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use stdClass;
 use Sulu\Bundle\AudienceTargetingBundle\Content\Types\Block\TargetGroupBlockVisitor;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
@@ -19,6 +21,8 @@ use Sulu\Component\Content\Compat\Metadata;
 
 class TargetGroupBlockVisitorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var TargetGroupStoreInterface
      */
@@ -38,7 +42,7 @@ class TargetGroupBlockVisitorTest extends TestCase
     public function testShouldNotSkipWithObjectAsSettings()
     {
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
-        $blockPropertyType->setSettings(new \stdClass());
+        $blockPropertyType->setSettings(new stdClass());
 
         $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }

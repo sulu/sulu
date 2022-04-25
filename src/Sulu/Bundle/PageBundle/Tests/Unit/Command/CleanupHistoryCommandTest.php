@@ -15,6 +15,8 @@ use Jackalope\Workspace;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use ReflectionMethod;
 use Sulu\Bundle\PageBundle\Command\CleanupHistoryCommand;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,6 +24,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CleanupHistoryCommandTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SessionManagerInterface
      */
@@ -130,7 +134,7 @@ class CleanupHistoryCommandTest extends TestCase
         $this->defaultSession->save()->shouldBeCalled();
         $this->liveSession->save()->shouldBeCalled();
 
-        $executeMethod = new \ReflectionMethod(CleanupHistoryCommand::class, 'execute');
+        $executeMethod = new ReflectionMethod(CleanupHistoryCommand::class, 'execute');
         $executeMethod->setAccessible(true);
 
         $executeMethod->invoke($this->cleanupHistoryCommand, $this->input->reveal(), $this->output->reveal());
@@ -182,7 +186,7 @@ class CleanupHistoryCommandTest extends TestCase
         $this->defaultSession->save()->shouldNotBeCalled();
         $this->liveSession->save()->shouldNotBeCalled();
 
-        $executeMethod = new \ReflectionMethod(CleanupHistoryCommand::class, 'execute');
+        $executeMethod = new ReflectionMethod(CleanupHistoryCommand::class, 'execute');
         $executeMethod->setAccessible(true);
 
         $executeMethod->invoke($this->cleanupHistoryCommand, $this->input->reveal(), $this->output->reveal());

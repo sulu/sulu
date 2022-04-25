@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AudienceTargetingBundle\Controller\TargetGroupEvaluationController;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
@@ -24,6 +25,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class TargetGroupEvaluationControllerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var TargetGroupEvaluatorInterface|ObjectProphecy
      */

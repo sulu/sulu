@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\PreviewBundle\Preview\Exception;
 
+use InvalidArgumentException;
+
 /**
  * This exception will be thrown when the twig-template was not found.
  */
@@ -21,7 +23,7 @@ class TemplateNotFoundException extends PreviewRendererException
      * @param string $webspaceKey
      * @param string $locale
      */
-    public function __construct(\InvalidArgumentException $exception, $object, $id, $webspaceKey, $locale)
+    public function __construct(InvalidArgumentException $exception, $object, $id, $webspaceKey, $locale)
     {
         parent::__construct(
             $exception->getMessage(),

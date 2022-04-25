@@ -15,6 +15,7 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
@@ -41,6 +42,8 @@ class Query extends AbstractQuery
 
 class DataProviderRepositoryTraitTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DataProviderRepositoryTrait
      */

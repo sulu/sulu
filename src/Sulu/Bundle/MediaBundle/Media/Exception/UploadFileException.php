@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
+use Throwable;
+
 /**
  * This Exception is thrown when a Uploaded File is not valid.
  */
@@ -20,7 +22,7 @@ class UploadFileException extends MediaException
      * @param string $message
      * @param int $code
      */
-    public function __construct($message, $code, \Throwable $previous = null)
+    public function __construct($message, $code, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

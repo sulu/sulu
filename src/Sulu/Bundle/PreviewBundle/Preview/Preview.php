@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PreviewBundle\Preview;
 
 use Doctrine\Common\Cache\Cache;
 use Psr\Cache\CacheItemPoolInterface;
+use RuntimeException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface;
@@ -180,7 +181,7 @@ class Preview implements PreviewInterface
         $parts = \explode(self::CONTENT_REPLACER, $html);
 
         if (!isset($parts[2])) {
-            throw new \RuntimeException('The "{% block content %}" could not be found in the twig template.');
+            throw new RuntimeException('The "{% block content %}" could not be found in the twig template.');
         }
 
         return $parts[0] . self::CONTENT_REPLACER . $parts[2];

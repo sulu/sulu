@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\RouteBundle\Generator;
 
+use InvalidArgumentException;
 use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -55,7 +56,7 @@ class RouteGenerator implements RouteGeneratorInterface
 
         $path = \strtr($routeSchema, $tokens);
         if (0 !== \strpos($path, '/')) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 \sprintf(
                     'Generated path "%s" for object "%s" has to start with a slash',
                     $path,

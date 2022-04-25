@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Compat\Structure;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
@@ -27,6 +28,8 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 
 class StructureBridgeTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testCopyFrom()
     {
         $titleProperty = $this->prophesize(PropertyMetadata::class);

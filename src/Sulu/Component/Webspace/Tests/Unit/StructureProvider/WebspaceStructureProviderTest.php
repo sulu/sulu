@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Tests\Unit\StructureProvider;
 
 use Doctrine\Common\Cache\ArrayCache;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -23,6 +24,8 @@ use Twig\Loader\FilesystemLoader;
 
 class WebspaceStructureProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testGetStructures()
     {
         $cache = new ArrayCache();

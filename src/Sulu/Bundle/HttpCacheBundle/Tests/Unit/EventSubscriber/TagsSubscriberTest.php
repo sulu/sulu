@@ -14,8 +14,10 @@ namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\EventListener;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Ramsey\Uuid\Uuid;
+use stdClass;
 use Sulu\Bundle\HttpCacheBundle\EventSubscriber\TagsSubscriber;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
@@ -25,6 +27,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class TagsSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var TagsSubscriber
      */
@@ -150,7 +154,7 @@ class TagsSubscriberTest extends TestCase
 
     public function testGetWithWrongStructure()
     {
-        $this->request->get('structure')->willReturn(\stdClass::class);
+        $this->request->get('structure')->willReturn(stdClass::class);
         $expectedTags = [
             'test-1',
             'test-2',

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\Content\Types;
 
+use InvalidArgumentException;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use Sulu\Bundle\PageBundle\Content\PageSelectionContainer;
@@ -123,7 +124,7 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
             $ids = [];
             foreach ($selectedNodes as $selectedNode) {
                 if ($selectedNode->getIdentifier() === $node->getIdentifier()) {
-                    throw new \InvalidArgumentException('You are not allowed to link a page to itself!');
+                    throw new InvalidArgumentException('You are not allowed to link a page to itself!');
                 }
                 $ids[] = $selectedNode->getIdentifier();
             }

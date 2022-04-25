@@ -21,6 +21,7 @@ use Massive\Bundle\SearchBundle\Search\SearchEvents;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\SearchBundle\Search\Converter\StructureConverter;
@@ -30,6 +31,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class StructureConverterTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */

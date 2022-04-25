@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\Form\Type;
 
+use InvalidArgumentException;
 use Sulu\Component\Content\Form\Type\DocumentObjectType;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Metadata\MetadataFactory;
@@ -84,7 +85,7 @@ class PageDocumentType extends BasePageDocumentType
         $parent = $this->documentManager->find($this->sessionManager->getContentPath($webspaceKey));
 
         if (null === $parent) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 \sprintf(
                     'Could not determine parent for document with title "%s" in webspace "%s"',
                     $document->getTitle(),

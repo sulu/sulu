@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata\Validation;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\ChainFieldMetadataValidator;
@@ -19,6 +20,8 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\FieldMetadataValida
 
 class ChainFieldMetadataValidatorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy&FieldMetadataValidatorInterface
      */

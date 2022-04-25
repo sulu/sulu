@@ -12,12 +12,15 @@
 namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Rule;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleCollection;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\RuleNotFoundException;
 
 class RuleCollectionTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testGetName()
     {
         $rule1 = $this->prophesize(RuleInterface::class);

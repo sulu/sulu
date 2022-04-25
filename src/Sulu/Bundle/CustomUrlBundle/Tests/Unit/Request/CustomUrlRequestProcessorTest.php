@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CustomUrlBundle\Tests\Unit\Request;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\CustomUrlBundle\Request\CustomUrlRequestProcessor;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -29,6 +30,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class CustomUrlRequestProcessorTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function dataProvider()
     {
         return [

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Tests\Unit\Teaser\Provider;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\PageBundle\Teaser\Provider\ProviderNotFoundException;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderInterface;
@@ -20,6 +21,8 @@ use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 
 class TeaserProviderPoolTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var TeaserProviderInterface[]
      */

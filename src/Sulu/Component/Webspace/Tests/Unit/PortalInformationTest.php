@@ -12,10 +12,13 @@
 namespace Sulu\Component\Webspace\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Webspace\PortalInformation;
 
 class PortalInformationTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PortalInformation
      */

@@ -15,6 +15,7 @@ use Jackalope\Node;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\PageBundle\Content\Types\SinglePageSelection;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
@@ -33,6 +34,8 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class BlockContentTypeTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var BlockContentType
      */

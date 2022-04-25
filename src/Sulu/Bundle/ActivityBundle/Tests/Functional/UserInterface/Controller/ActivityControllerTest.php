@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\ActivityBundle\Tests\Functional\UserInterface\Controller;
 
+use DateTimeImmutable;
+use Generator;
 use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
@@ -85,9 +87,9 @@ class ActivityControllerTest extends SuluTestCase
     }
 
     /**
-     * @return \Generator<mixed[]>
+     * @return Generator<mixed[]>
      */
-    public function provideCgetAction(): \Generator
+    public function provideCgetAction(): Generator
     {
         yield [
             [],
@@ -198,7 +200,7 @@ class ActivityControllerTest extends SuluTestCase
         $activity->setType('created');
         $activity->setContext(['foo' => 'bar']);
         $activity->setPayload(['bar' => 'baz']);
-        $activity->setTimestamp(new \DateTimeImmutable());
+        $activity->setTimestamp(new DateTimeImmutable());
         $activity->setBatch('batch-1234');
         $activity->setUser($testUser);
         $activity->setResourceKey($resourceKey);

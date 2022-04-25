@@ -17,10 +17,13 @@ use PHPCR\PropertyInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 
 class SuluNodeTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function provideDelegateData()
     {
         return [

@@ -12,12 +12,15 @@
 namespace Sulu\Bundle\TagBundle\Tests\Unit\Domain\Event;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\TagBundle\Domain\Event\TagMergedEvent;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
 class TagMergedEventTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var TagInterface|ObjectProphecy
      */

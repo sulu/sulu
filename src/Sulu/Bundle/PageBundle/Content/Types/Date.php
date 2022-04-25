@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\Content\Types;
 
+use DateTime;
 use PHPCR\NodeInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
@@ -37,7 +38,7 @@ class Date extends SimpleContentType
     ) {
         $value = $property->getValue();
         if (null != $value) {
-            $value = \DateTime::createFromFormat(static::FORMAT, $value);
+            $value = DateTime::createFromFormat(static::FORMAT, $value);
 
             $node->setProperty($property->getName(), $value);
         } else {
@@ -52,7 +53,7 @@ class Date extends SimpleContentType
             /** @var \DateTime $propertyValue */
             $propertyValue = $node->getPropertyValue($property->getName());
 
-            if ($propertyValue instanceof \DateTime) {
+            if ($propertyValue instanceof DateTime) {
                 $value = $propertyValue->format(static::FORMAT);
             }
         }

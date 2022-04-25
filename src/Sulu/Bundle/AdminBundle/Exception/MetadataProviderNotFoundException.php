@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Exception;
 
-class MetadataProviderNotFoundException extends \Exception
+use Exception;
+
+class MetadataProviderNotFoundException extends Exception
 {
     private $type;
 

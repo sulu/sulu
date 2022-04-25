@@ -14,6 +14,7 @@ namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Category;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\CategoryBundle\Api\Category;
@@ -34,6 +35,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class CategoryManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var CategoryRepositoryInterface|ObjectProphecy
      */
@@ -108,7 +111,7 @@ class CategoryManagerTest extends TestCase
     {
         $entity = $this->prophesize(CategoryInterface::class);
         $wrapper = $this->categoryManager->getApiObject($entity->reveal(), 'en');
-        $this->assertTrue($wrapper instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
+        $this->assertTrue($wrapper instanceof Category);
 
         $wrapper2 = $this->categoryManager->getApiObject($wrapper, 'en');
         $this->assertSame($wrapper->getEntity(), $wrapper2->getEntity());
@@ -132,10 +135,10 @@ class CategoryManagerTest extends TestCase
 
         $wrappers = $this->categoryManager->getApiObjects($entities, 'en');
 
-        $this->assertTrue($wrappers[0] instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
+        $this->assertTrue($wrappers[0] instanceof Category);
         $this->assertEquals(null, $wrappers[1]);
-        $this->assertTrue($wrappers[2] instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
-        $this->assertTrue($wrappers[3] instanceof \Sulu\Bundle\CategoryBundle\Api\Category);
+        $this->assertTrue($wrappers[2] instanceof Category);
+        $this->assertTrue($wrappers[3] instanceof Category);
         $this->assertEquals(null, $wrappers[4]);
     }
 

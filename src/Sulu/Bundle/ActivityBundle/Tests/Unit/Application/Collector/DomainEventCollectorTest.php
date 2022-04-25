@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ActivityBundle\Tests\Unit\Application\Dispatcher;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollector;
 use Sulu\Bundle\ActivityBundle\Application\Dispatcher\DomainEventDispatcherInterface;
@@ -20,6 +21,8 @@ use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 
 class DomainEventCollectorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DomainEventDispatcherInterface|ObjectProphecy
      */

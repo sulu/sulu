@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\SmartContent\Orm;
 use JMS\Serializer\SerializationContext;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
@@ -29,6 +30,8 @@ use Symfony\Component\Security\Core\Security;
 
 class BaseDataProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testGetDefaultPropertyParameter()
     {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);

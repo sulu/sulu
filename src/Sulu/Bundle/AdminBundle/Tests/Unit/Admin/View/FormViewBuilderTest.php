@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Admin\View;
 
+use DomainException;
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\AdminBundle\Admin\View\Badge;
 use Sulu\Bundle\AdminBundle\Admin\View\FormViewBuilder;
@@ -30,7 +31,7 @@ class FormViewBuilderTest extends TestCase
 
     public function testBuildFormViewWithoutResourceKey()
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
         $this->expectExceptionMessageMatches('/"setResourceKey"/');
 
         $view = (new FormViewBuilder('sulu_category.edit_form.details', '/details'))
@@ -289,7 +290,7 @@ class FormViewBuilderTest extends TestCase
 
     public function testBuildFormWithLocalesWithoutLocalePlaceholder()
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');
 
         $view = (new FormViewBuilder('sulu_role.list', '/roles'))
@@ -302,7 +303,7 @@ class FormViewBuilderTest extends TestCase
 
     public function testBuildFormWithoutLocalesWithLocalePlaceholder()
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');
 
         $view = (new FormViewBuilder('sulu_role.list', '/roles/:locale'))
@@ -313,7 +314,7 @@ class FormViewBuilderTest extends TestCase
 
     public function testBuildFormWithRedirectToItself()
     {
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
         $this->expectExceptionMessageMatches('"editView"');
 
         $view = (new FormViewBuilder('sulu_role.list', '/roles'))

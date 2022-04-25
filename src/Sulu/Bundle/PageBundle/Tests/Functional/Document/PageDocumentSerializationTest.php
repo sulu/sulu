@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Document;
 
 use JMS\Serializer\SerializerInterface;
+use ReflectionProperty;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\Structure\Structure;
@@ -144,7 +145,7 @@ class PageDocumentSerializationTest extends SuluTestCase
     {
         $page = new PageDocument();
 
-        $uuidReflection = new \ReflectionProperty(PageDocument::class, 'uuid');
+        $uuidReflection = new ReflectionProperty(PageDocument::class, 'uuid');
         $uuidReflection->setAccessible(true);
         $uuidReflection->setValue($page, '59336be4-814b-4054-818a-78668389a85a');
 

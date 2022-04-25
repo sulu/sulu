@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\PageBundle\Trash;
 
+use DateTime;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
@@ -177,9 +178,9 @@ final class PageTrashItemHandler implements
             $localizedPage->setSuluOrder($localeData['suluOrder']);
             $localizedPage->setLocale($locale);
             $localizedPage->setCreator($localeData['creator']);
-            $localizedPage->setCreated(new \DateTime($localeData['created']));
+            $localizedPage->setCreated(new DateTime($localeData['created']));
             $localizedPage->setAuthor($localeData['author']);
-            $localizedPage->setAuthored(new \DateTime($localeData['authored']));
+            $localizedPage->setAuthored(new DateTime($localeData['authored']));
             $localizedPage->setStructureType($localeData['structureType']);
             $localizedPage->getStructure()->bind($localeData['structureData']);
             $localizedPage->setExtensionsData($localeData['extensionsData']);

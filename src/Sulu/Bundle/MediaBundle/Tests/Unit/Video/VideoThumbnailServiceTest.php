@@ -16,10 +16,13 @@ use FFMpeg\FFMpeg;
 use FFMpeg\Media\Frame;
 use FFMpeg\Media\Video;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailService;
 
 class VideoThumbnailServiceTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var Video
      */

@@ -13,6 +13,7 @@ namespace Sulu\Component\Media\Tests\Unit\SystemCollections;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
 use Sulu\Component\Cache\CacheInterface;
@@ -24,6 +25,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class SystemCollectionManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function configProvider()
     {
         return [

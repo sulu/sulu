@@ -12,6 +12,7 @@
 namespace Sulu\Component\Tag\Tests\Unit\Request;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Tag\Request\TagRequestHandler;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,6 +20,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class TagRequestHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function getProvider()
     {
         return [

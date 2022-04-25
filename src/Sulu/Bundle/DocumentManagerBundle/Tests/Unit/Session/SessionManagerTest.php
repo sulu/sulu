@@ -14,10 +14,13 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Session;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Session\SessionManager;
 
 class SessionManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SessionInterface
      */

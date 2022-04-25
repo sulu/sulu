@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
@@ -2367,8 +2368,8 @@ class AccountControllerTest extends SuluTestCase
         $fileVersion->setFile($file);
         $fileVersion->setSize(111111);
         $fileVersion->setDownloadCounter(2);
-        $fileVersion->setChanged(new \DateTime('1950-04-20'));
-        $fileVersion->setCreated(new \DateTime('1950-04-20'));
+        $fileVersion->setChanged(new DateTime('1950-04-20'));
+        $fileVersion->setCreated(new DateTime('1950-04-20'));
         $file->addFileVersion($fileVersion);
         $this->em->persist($fileVersion);
 

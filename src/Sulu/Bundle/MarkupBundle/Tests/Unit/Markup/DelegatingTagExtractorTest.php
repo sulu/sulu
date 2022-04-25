@@ -12,12 +12,15 @@
 namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Markup;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MarkupBundle\Markup\DelegatingTagExtractor;
 use Sulu\Bundle\MarkupBundle\Markup\TagExtractorInterface;
 use Sulu\Bundle\MarkupBundle\Markup\TagMatchGroup;
 
 class DelegatingTagExtractorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var string
      */

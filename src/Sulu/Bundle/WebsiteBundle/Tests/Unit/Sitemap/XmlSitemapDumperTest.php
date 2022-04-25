@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sitemap;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderInterface;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPoolInterface;
 use Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumper;
@@ -22,6 +23,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class XmlSitemapDumperTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var XmlSitemapRendererInterface
      */

@@ -12,6 +12,7 @@
 namespace Sulu\Component\CustomUrl\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface;
 use Sulu\Component\CustomUrl\WebspaceCustomUrlProvider;
 use Sulu\Component\Webspace\Url;
@@ -19,6 +20,8 @@ use Sulu\Component\Webspace\Webspace;
 
 class WebspaceCustomUrlProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testGetUrls()
     {
         $customUrlManager = $this->prophesize(CustomUrlManagerInterface::class);

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
+use RuntimeException;
 use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
 
 class GoogleCloudStorage extends FlysystemStorage
@@ -27,7 +28,7 @@ class GoogleCloudStorage extends FlysystemStorage
         parent::__construct($filesystem, $segments);
 
         if (!$filesystem instanceof Filesystem || !$filesystem->getAdapter() instanceof GoogleStorageAdapter) {
-            throw new \RuntimeException();
+            throw new RuntimeException();
         }
 
         $this->adapter = $filesystem->getAdapter();

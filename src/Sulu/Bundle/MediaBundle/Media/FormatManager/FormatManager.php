@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
+use DateTime;
+use finfo;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -148,7 +150,7 @@ class FormatManager implements FormatManagerInterface
             $status = 200;
             $setExpireHeaders = true;
 
-            $finfo = new \finfo(\FILEINFO_MIME_TYPE);
+            $finfo = new finfo(\FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer($responseContent);
 
             // Save image.
@@ -289,7 +291,7 @@ class FormatManager implements FormatManagerInterface
         );
 
         if (isset($this->responseHeaders['Expires']) && $setExpireHeaders) {
-            $date = new \DateTime();
+            $date = new DateTime();
             $date->modify($this->responseHeaders['Expires']);
             $headers['Expires'] = $date->format('D, d M Y H:i:s \G\M\T');
         } else {

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ActivityBundle\Domain\Model;
 
+use DateTimeImmutable;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 interface ActivityInterface
@@ -42,9 +43,9 @@ interface ActivityInterface
      */
     public function setPayload(?array $payload): ActivityInterface;
 
-    public function getTimestamp(): \DateTimeImmutable;
+    public function getTimestamp(): DateTimeImmutable;
 
-    public function setTimestamp(\DateTimeImmutable $timestamp): ActivityInterface;
+    public function setTimestamp(DateTimeImmutable $timestamp): ActivityInterface;
 
     public function getBatch(): ?string;
 

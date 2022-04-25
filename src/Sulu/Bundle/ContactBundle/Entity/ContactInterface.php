@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
@@ -114,7 +115,7 @@ interface ContactInterface extends AuditableInterface
     /**
      * Set birthday.
      *
-     * @param \DateTime|null $birthday
+     * @param DateTime|null $birthday
      *
      * @return ContactInterface
      */
@@ -123,7 +124,7 @@ interface ContactInterface extends AuditableInterface
     /**
      * Get birthday.
      *
-     * @return \DateTime|null
+     * @return DateTime|null
      */
     public function getBirthday();
 

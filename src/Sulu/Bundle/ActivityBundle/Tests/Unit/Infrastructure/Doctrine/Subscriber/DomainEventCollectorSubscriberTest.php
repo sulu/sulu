@@ -14,12 +14,15 @@ namespace Sulu\Bundle\ActivityBundle\Tests\Unit\Infrastructure\Doctrine\Subscrib
 use Doctrine\ORM\Event\OnClearEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Subscriber\DomainEventCollectorSubscriber;
 
 class DomainEventCollectorSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DomainEventCollectorInterface|ObjectProphecy
      */

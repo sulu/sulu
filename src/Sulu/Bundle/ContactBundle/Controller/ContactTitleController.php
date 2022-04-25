@@ -26,6 +26,7 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @RouteResource("contact-title")
@@ -74,7 +75,7 @@ class ContactTitleController extends AbstractRestController implements ClassReso
      *
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getAction($id)
     {
@@ -92,7 +93,7 @@ class ContactTitleController extends AbstractRestController implements ClassReso
      * lists all contact titles
      * optional parameter 'flat' calls listAction.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction()
     {
@@ -109,7 +110,7 @@ class ContactTitleController extends AbstractRestController implements ClassReso
     /**
      * Creates a new contact title.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function postAction(Request $request)
     {
@@ -148,7 +149,7 @@ class ContactTitleController extends AbstractRestController implements ClassReso
      *
      * @param int $id The id of the title to update
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function putAction(Request $request, $id)
     {
@@ -221,7 +222,7 @@ class ContactTitleController extends AbstractRestController implements ClassReso
      *
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction($id)
     {
@@ -257,7 +258,7 @@ class ContactTitleController extends AbstractRestController implements ClassReso
     /**
      * Add or update a bunch of contact titles.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cpatchAction(Request $request)
     {

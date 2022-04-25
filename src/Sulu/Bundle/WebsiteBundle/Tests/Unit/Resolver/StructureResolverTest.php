@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Resolver;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
@@ -25,6 +26,8 @@ use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 
 class StructureResolverTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var StructureResolverInterface
      */

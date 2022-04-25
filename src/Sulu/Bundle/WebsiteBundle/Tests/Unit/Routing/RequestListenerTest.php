@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Routing;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\Routing\RequestListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\PortalInformation;
@@ -23,6 +24,8 @@ use Symfony\Component\Routing\RouterInterface;
 
 class RequestListenerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var RequestAnalyzerInterface
      */

@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\ResourceLocator\Strategy;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -33,6 +34,8 @@ use Sulu\Component\Util\SuluNodeHelper;
 
 class TreeLeafEditStrategyTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ResourceLocatorMapperInterface
      */

@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
 use Sulu\Bundle\ContactBundle\Content\Types\SingleAccountSelection;
@@ -27,6 +28,8 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 
 class SingleAccountSelectionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SingleAccountSelection
      */

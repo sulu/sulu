@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Command;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use stdClass;
 use Sulu\Component\Content\Import\WebspaceImportInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -118,7 +119,7 @@ class WebspaceImportCommand extends Command
     /**
      * Print the completion message after import is done.
      *
-     * @param \stdClass $import
+     * @param stdClass $import
      * @param OutputInterface $output
      */
     protected function printExceptions($import, $output = null)

@@ -14,10 +14,13 @@ namespace Sulu\Component\Persistence\Tests\Unit\EventSubscriber\ORM;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Persistence\Repository\ORM\OrderByTrait;
 
 class OrderByTraitTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var QueryBuilder
      */

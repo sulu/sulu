@@ -13,12 +13,15 @@ namespace Sulu\Bundle\ActivityBundle\Tests\Unit\Infrastructure\Sulu\Metadata;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Metadata\ActivitiesListMetadataVisitor;
 use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadata;
 
 class ActivitiesListMetadataVisitorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ActivitiesListMetadataVisitor
      */

@@ -11,13 +11,17 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
+use JsonSerializable;
+use ReturnTypeWillChange;
 
 /**
  * FaxType.
  */
-class FaxType implements \JsonSerializable
+class FaxType implements JsonSerializable
 {
     /**
      * @var string
@@ -32,7 +36,7 @@ class FaxType implements \JsonSerializable
     private $id;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      * @Exclude
      */
     private $faxes;
@@ -42,7 +46,7 @@ class FaxType implements \JsonSerializable
      */
     public function __construct()
     {
-        $this->faxes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->faxes = new ArrayCollection();
     }
 
     /**
@@ -112,7 +116,7 @@ class FaxType implements \JsonSerializable
     /**
      * Get faxes.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getFaxes()
     {
@@ -128,7 +132,7 @@ class FaxType implements \JsonSerializable
      * @return mixed data which can be serialized by <b>json_encode</b>,
      *               which is a value of any type other than a resource
      */
-    #[\ReturnTypeWillChange]
+    #[ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return [

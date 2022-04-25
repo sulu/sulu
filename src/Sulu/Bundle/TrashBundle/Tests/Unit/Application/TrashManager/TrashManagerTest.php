@@ -15,6 +15,7 @@ namespace Sulu\Bundle\TrashBundle\Tests\Unit\Application\TrashManager;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashItemHandler\RemoveTrashItemHandlerInterface;
@@ -31,6 +32,8 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class TrashManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy<TrashItemRepositoryInterface>
      */

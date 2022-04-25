@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\ImageConverter;
 
+use InvalidArgumentException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\TransformationInterface;
 
 /**
@@ -36,7 +37,7 @@ class TransformationPool implements TransformationPoolInterface
      *
      * @return TransformationInterface
      *
-     * @throws \InvalidArgumentException If the transformation doesn't exist
+     * @throws InvalidArgumentException If the transformation doesn't exist
      */
     public function get($name)
     {
@@ -44,7 +45,7 @@ class TransformationPool implements TransformationPoolInterface
             return $this->transformations[$name];
         }
 
-        throw new \InvalidArgumentException(
+        throw new InvalidArgumentException(
             \sprintf(
                 'A image transformation transformation named "%s" does not exist.',
                 $name

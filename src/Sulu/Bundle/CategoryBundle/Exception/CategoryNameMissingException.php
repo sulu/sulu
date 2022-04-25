@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\CategoryBundle\Exception;
 
+use Exception;
+
 /**
  * An instance of this exception signals that a category has no set name.
  */
-class CategoryNameMissingException extends \Exception
+class CategoryNameMissingException extends Exception
 {
     /**
      * CategoryNameMissingException constructor.

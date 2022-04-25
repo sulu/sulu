@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sitemap;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\Exception\SitemapProviderNotFoundException;
 use Sulu\Bundle\WebsiteBundle\Sitemap\Sitemap;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderInterface;
@@ -19,6 +20,8 @@ use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPool;
 
 class SitemapProviderPoolTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SitemapProviderInterface
      */

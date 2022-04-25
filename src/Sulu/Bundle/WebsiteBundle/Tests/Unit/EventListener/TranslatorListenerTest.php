@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\EventListener;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\EventListener\TranslatorListener;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -22,6 +23,8 @@ use Symfony\Component\Translation\Translator;
 
 class TranslatorListenerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var HttpKernelInterface
      */

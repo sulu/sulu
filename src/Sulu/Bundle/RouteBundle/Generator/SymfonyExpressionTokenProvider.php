@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\RouteBundle\Generator;
 
+use Exception;
+use LogicException;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
@@ -34,7 +36,7 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
     public function __construct(TranslatorInterface $translator)
     {
         if (!$translator instanceof LocaleAwareInterface) {
-            throw new \LogicException(\sprintf(
+            throw new LogicException(\sprintf(
                 'Expected "translator" in "%s" to be instance of "%s" but "%s" given.',
                 __CLASS__,
                 LocaleAwareInterface::class,
@@ -73,7 +75,7 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
             ]);
 
             return $result;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new CannotEvaluateTokenException($name, $entity, $e);
         } finally {
             $this->translator->setLocale($locale);

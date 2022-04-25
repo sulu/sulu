@@ -11,8 +11,10 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Unit\Markup\Link;
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfiguration;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\PageBundle\Markup\Link\PageLinkProvider;
@@ -32,6 +34,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PageLinkProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ContentRepositoryInterface
      */
@@ -143,8 +147,8 @@ class PageLinkProviderTest extends TestCase
 
         $contents = [
             $this->createContent(1, 'Test 1', '/test-1'),
-            $this->createContent(2, 'Test 2', '/test-2', new \DateTime('-1 day')),
-            $this->createContent(3, 'Test 3', '/test-3', new \DateTime('-2 day')),
+            $this->createContent(2, 'Test 2', '/test-2', new DateTime('-1 day')),
+            $this->createContent(3, 'Test 3', '/test-3', new DateTime('-2 day')),
         ];
 
         $this->contentRepository->findByUuids(
@@ -188,7 +192,7 @@ class PageLinkProviderTest extends TestCase
 
         $contents = [
             $this->createContent(1, 'Test 1', '/test-1'),
-            $this->createContent(2, 'Test 2', '/test-2', new \DateTime('-1 day')),
+            $this->createContent(2, 'Test 2', '/test-2', new DateTime('-1 day')),
         ];
 
         $this->contentRepository->findByUuids(
@@ -388,7 +392,7 @@ class PageLinkProviderTest extends TestCase
      * @param string $id
      * @param string $title
      * @param string $url
-     * @param \DateTime|null $published
+     * @param DateTime|null $published
      * @param string|null $domain
      *
      * @return Content

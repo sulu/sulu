@@ -13,6 +13,8 @@ namespace Sulu\Bundle\MediaBundle\Media\PropertiesProvider;
 
 use FFMpeg\Exception\ExecutableNotFoundException;
 use FFMpeg\FFProbe;
+use InvalidArgumentException;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\File\File;
 
 class VideoPropertiesProvider implements MediaPropertiesProviderInterface
@@ -48,9 +50,9 @@ class VideoPropertiesProvider implements MediaPropertiesProviderInterface
                     $properties['width'] = $dimensions->getWidth();
                     $properties['height'] = $dimensions->getHeight();
                 }
-            } catch (\InvalidArgumentException $e) {
+            } catch (InvalidArgumentException $e) {
                 // @ignoreException Exception is thrown if the video stream could not be obtained
-            } catch (\RuntimeException $e) { // @phpstan-ignore-line
+            } catch (RuntimeException $e) { // @phpstan-ignore-line
                 // @ignoreException Exception is thrown if the dimension could not be extracted
             }
         } catch (ExecutableNotFoundException $e) {

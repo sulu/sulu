@@ -13,6 +13,8 @@ namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\EventListener;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
+use stdClass;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Bundle\HttpCacheBundle\EventSubscriber\InvalidationSubscriber;
@@ -40,6 +42,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class InvalidationSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var InvalidationSubscriber
      */
@@ -267,7 +271,7 @@ class InvalidationSubscriberTest extends TestCase
 
     public function testInvalidateDocumentBeforePublishingWrongDocument()
     {
-        $document = new \stdClass();
+        $document = new stdClass();
         $event = $this->prophesize(PublishEvent::class);
         $event->getDocument()->willReturn($document);
 
@@ -377,7 +381,7 @@ class InvalidationSubscriberTest extends TestCase
 
     public function testInvalidateDocumentBeforeUnpublishingWrongDocument()
     {
-        $document = new \stdClass();
+        $document = new stdClass();
         $event = $this->prophesize(PublishEvent::class);
         $event->getDocument()->willReturn($document);
 
@@ -573,7 +577,7 @@ class InvalidationSubscriberTest extends TestCase
 
     public function testInvalidateDocumentBeforeRemovingWrongDocument()
     {
-        $document = new \stdClass();
+        $document = new stdClass();
         $event = $this->prophesize(RemoveEvent::class);
         $event->getDocument()->willReturn($document);
 

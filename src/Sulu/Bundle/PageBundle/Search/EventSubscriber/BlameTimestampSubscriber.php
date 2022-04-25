@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\Search\EventSubscriber;
 
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Massive\Bundle\SearchBundle\Search\Event\HitEvent;
 use Massive\Bundle\SearchBundle\Search\Event\PreIndexEvent;
@@ -107,10 +108,10 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     /**
      * Map timestamps to the search document.
      *
-     * @param \DateTime $created
-     * @param \DateTime $changed
+     * @param DateTime $created
+     * @param DateTime $changed
      */
-    private function mapTimestamp(Document $document, \DateTime $created = null, \DateTime $changed = null)
+    private function mapTimestamp(Document $document, DateTime $created = null, DateTime $changed = null)
     {
         $document->addField(
             $this->factory->createField('created', $created ? $created->format('c') : null, 'string')

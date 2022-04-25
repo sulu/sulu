@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\PageBundle\Document;
 
+use ArrayIterator;
+use DateTime;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuditableBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
@@ -72,14 +74,14 @@ class BasePageDocument implements
     /**
      * Datetime of create document.
      *
-     * @var \DateTime
+     * @var DateTime
      */
     protected $created;
 
     /**
      * Changed date of page.
      *
-     * @var \DateTime
+     * @var DateTime
      */
     protected $changed;
 
@@ -252,7 +254,7 @@ class BasePageDocument implements
     /**
      * Date of authoring.
      *
-     * @var \DateTime
+     * @var DateTime
      */
     protected $authored;
 
@@ -269,7 +271,7 @@ class BasePageDocument implements
         $this->redirectType = RedirectType::NONE;
         $this->structure = new Structure();
         $this->extensions = new ExtensionContainer();
-        $this->children = new \ArrayIterator();
+        $this->children = new ArrayIterator();
     }
 
     public function getNodeName()
@@ -293,7 +295,7 @@ class BasePageDocument implements
     }
 
     /**
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return void
      */
@@ -518,7 +520,7 @@ class BasePageDocument implements
     }
 
     /**
-     * @param \DateTime $authored
+     * @param DateTime $authored
      *
      * @return void
      */

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
@@ -30,6 +31,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaStreamControllerAdminTest extends SuluTestCase
 {
+    use ProphecyTrait;
+
     public function testDownloadActionCheckPermissionCalled()
     {
         $this->initDatabase();

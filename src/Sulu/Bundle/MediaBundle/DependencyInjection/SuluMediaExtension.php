@@ -13,7 +13,9 @@ namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
 use Contao\ImagineSvg\Imagine as SvgImagine;
 use FFMpeg\FFMpeg;
+use Imagick;
 use Imagine\Vips\Imagine as VipsImagine;
+use InvalidArgumentException;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
@@ -32,7 +34,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Process\ExecutableFinder;
 
@@ -315,7 +317,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         );
 
         // load services
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('command.xml');
 
@@ -334,7 +336,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $adapter = 'gd';
             if ($hasVipsAdapter) {
                 $adapter = 'vips';
-            } elseif (\class_exists(\Imagick::class)) {
+            } elseif (\class_exists(Imagick::class)) {
                 $adapter = 'imagick';
             }
 
@@ -347,7 +349,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         // enable search
         if (true === $config['search']['enabled']) {
             if (!\class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
-                throw new \InvalidArgumentException(
+                throw new InvalidArgumentException(
                     'You have enabled sulu search integration for the SuluMediaBundle, but the SuluSearchBundle must be installed'
                 );
             }

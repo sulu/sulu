@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CoreBundle\Tests\Unit\DependencyInjection\Compiler;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\ListBuilderMetadataProviderCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -20,6 +21,8 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class ListBuilderMetadataProviderCompilerPassTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function dataProcessProvider()
     {
         return [

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\SearchIntegration;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MediaBundle\Api\Media as ApiMedia;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
 use Sulu\Bundle\MediaBundle\Entity\Media;
@@ -23,6 +24,8 @@ use Sulu\Component\DocumentManager\NodeManager;
 
 class SearchIntegrationTest extends SuluTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DocumentManagerInterface
      */

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\Content\Types;
 
+use InvalidArgumentException;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -46,7 +47,7 @@ class SinglePageSelection extends SimpleContentType implements PreResolvableCont
         $value = $property->getValue();
 
         if (null !== $node->getIdentifier() && $value === $node->getIdentifier()) {
-            throw new \InvalidArgumentException('Single page selection node cannot reference itself');
+            throw new InvalidArgumentException('Single page selection node cannot reference itself');
         }
 
         parent::write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);

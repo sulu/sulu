@@ -13,10 +13,13 @@ namespace Sulu\Bundle\SearchBundle\Search\Configuration;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class IndexConfigurationProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var TranslatorInterface
      */
