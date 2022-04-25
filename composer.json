@@ -25,7 +25,7 @@
         "docs": "https://docs.sulu.io/"
     },
     "require": {
-        "php": "^7.2 || ^8.0",
+        "php": "^8.0 || ^8.1",
         "ext-dom": "*",
         "ext-json": "*",
         "ext-simplexml": "*",
