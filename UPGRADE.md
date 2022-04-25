@@ -28,6 +28,10 @@ It is possible to use a tool like [PHP Rector Symfony](https://github.com/rector
 
 For a detailed overview of changed dependencies see [sulu/sulu#6553](https://github.com/sulu/sulu/pull/6553/files).
 
+The Symfony 4.4 compatibility service
+`Sulu\Bundle\WebsiteBundle\Controller\ExceptionController` / `sulu_website.exception_controller`
+was removed. See also [UPGRADE 2.1.0-RC1](#210-rc1).
+
 ### FOSJSRoutingBundle upgraded
 
 The FOSJSRoutingBundle was upgraded and requires to change the routing include for it:
