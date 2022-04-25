@@ -6,6 +6,8 @@ framework:
         storage_id: session.storage.mock_file
     profiler:
         enabled: false
+    mailer:
+        dsn: 'null://null'
 
 doctrine:
     orm:
@@ -40,10 +42,6 @@ sulu_document_manager:
 jms_serializer:
     metadata:
         debug: '%kernel.debug%'
-
-swiftmailer:
-    url: 'null://localhost'
-    spool: { type: 'memory' }
 
 sulu_website:
     twig:

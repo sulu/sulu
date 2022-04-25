@@ -1,0 +1,4 @@
+swiftmailer:
+    url: 'null://localhost'
+    spool: { type: 'memory' }
+    disable_delivery: true

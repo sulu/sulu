@@ -47,7 +47,6 @@ class SuluTestKernel extends SuluKernel
             new \DTL\Bundle\PhpcrMigrations\PhpcrMigrationsBundle(),
             new \Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new \JMS\SerializerBundle\JMSSerializerBundle(),
-            new \Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new \FOS\RestBundle\FOSRestBundle(),
             new \HandcraftedInTheAlps\RestRoutingBundle\RestRoutingBundle(),
             new \FOS\JsRoutingBundle\FOSJsRoutingBundle(),
@@ -83,6 +82,10 @@ class SuluTestKernel extends SuluKernel
 
         if (\class_exists(\Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle::class)) {
             $bundles[] = new \Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle();
+        }
+
+        if (\class_exists(\Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class)) {
+            $bundles[] = new \Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle();
         }
 
         if (\class_exists(\Symfony\Bundle\MonologBundle\MonologBundle::class)) {

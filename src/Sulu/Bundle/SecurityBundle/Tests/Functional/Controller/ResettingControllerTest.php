@@ -20,6 +20,8 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\Mailer\DataCollector\MessageDataCollector;
+use Symfony\Component\Mime\Email;
 
 class ResettingControllerTest extends SuluTestCase
 {
@@ -50,6 +52,10 @@ class ResettingControllerTest extends SuluTestCase
 
     public function setUp(): void
     {
+        if (\class_exists(\Swift_Mailer::class)) {
+            $this->markTestSkipped('Skip ResettingControllerTest for swift mailer.');
+        }
+
         $this->client = $this->createAuthenticatedClient();
         $this->em = $this->getEntityManager();
         $this->activityRepository = $this->em->getRepository(ActivityInterface::class);
@@ -88,7 +94,8 @@ class ResettingControllerTest extends SuluTestCase
             'user' => $this->users[0]->getEmail(),
         ]);
 
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        /** @var MessageDataCollector $mailCollector */
+        $mailCollector = $this->client->getProfile()->getCollector('mailer');
 
         $response = \json_decode($this->client->getResponse()->getContent());
 
@@ -104,18 +111,23 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertTrue(\is_string($user->getPasswordResetToken()));
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
 
-        $this->assertEquals(1, $mailCollector->getMessageCount());
-        $message = $mailCollector->getMessages()[0];
+        $messages = $mailCollector->getEvents()->getMessages();
+        $this->assertCount(1, $messages);
+
+        $message = $messages[0];
+        $this->assertInstanceOf(Email::class, $message);
 
         // asserting sent mail
-        \preg_match('/forgotPasswordToken=(.*)/', $message->getBody(), $regexMatches);
+        $htmlBody = $message->getHtmlBody();
+        $this->assertIsString($htmlBody);
+        \preg_match('/forgotPasswordToken=(.*)/', $htmlBody, $regexMatches);
         $token = $regexMatches[1];
         $expectedEmailData = $this->getExpectedEmailData($this->client, $user, $token);
-        $this->assertInstanceOf('Swift_Message', $message);
-        $this->assertEquals($expectedEmailData['sender'], \key($message->getFrom()));
-        $this->assertEquals($user->getEmail(), \key($message->getTo()));
+
+        $this->assertEquals($expectedEmailData['sender'], $message->getFrom()[0]->getAddress());
+        $this->assertEquals($user->getEmail(), $message->getTo()[0]->getAddress());
         $this->assertEquals($expectedEmailData['subject'], $message->getSubject());
-        $this->assertEquals($expectedEmailData['body'], $message->getBody());
+        $this->assertEquals($expectedEmailData['body'], $htmlBody);
     }
 
     public function testSendEmailActionWithUsername()
@@ -126,7 +138,8 @@ class ResettingControllerTest extends SuluTestCase
             'user' => $this->users[0]->getUsername(),
         ]);
 
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        /** @var MessageDataCollector $mailCollector */
+        $mailCollector = $this->client->getProfile()->getCollector('mailer');
 
         $response = \json_decode($this->client->getResponse()->getContent());
 
@@ -143,18 +156,23 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
         $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
 
-        $message = $mailCollector->getMessages()[0];
+        $messages = $mailCollector->getEvents()->getMessages();
+        $this->assertCount(1, $messages);
+
+        $message = $messages[0];
+        $this->assertInstanceOf(Email::class, $message);
+
         // asserting sent mail
-        \preg_match('/forgotPasswordToken=(.*)/', $message->getBody(), $regexMatches);
+        $htmlBody = $message->getHtmlBody();
+        $this->assertIsString($htmlBody);
+        \preg_match('/forgotPasswordToken=(.*)/', $htmlBody, $regexMatches);
         $token = $regexMatches[1];
         $expectedEmailData = $this->getExpectedEmailData($this->client, $user, $token);
 
-        $this->assertEquals(1, $mailCollector->getMessageCount());
-        $this->assertInstanceOf('Swift_Message', $message);
-        $this->assertEquals($expectedEmailData['sender'], \key($message->getFrom()));
-        $this->assertEquals($user->getEmail(), \key($message->getTo()));
+        $this->assertEquals($expectedEmailData['sender'], $message->getFrom()[0]->getAddress());
+        $this->assertEquals($user->getEmail(), $message->getTo()[0]->getAddress());
         $this->assertEquals($expectedEmailData['subject'], $message->getSubject());
-        $this->assertEquals($expectedEmailData['body'], $message->getBody());
+        $this->assertEquals($expectedEmailData['body'], $htmlBody);
     }
 
     public function testSendEmailActionWithUserWithoutEmail()
@@ -165,7 +183,8 @@ class ResettingControllerTest extends SuluTestCase
             'user' => $this->users[1]->getUsername(),
         ]);
 
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        /** @var MessageDataCollector $mailCollector */
+        $mailCollector = $this->client->getProfile()->getCollector('mailer');
 
         $response = \json_decode($this->client->getResponse()->getContent());
 
@@ -182,18 +201,23 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
         $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
 
-        $message = $mailCollector->getMessages()[0];
+        $messages = $mailCollector->getEvents()->getMessages();
+        $this->assertCount(1, $messages);
+
+        $message = $messages[0];
+        $this->assertInstanceOf(Email::class, $message);
+
         // asserting sent mail
-        \preg_match('/forgotPasswordToken=(.*)/', $message->getBody(), $regexMatches);
+        $htmlBody = $message->getHtmlBody();
+        $this->assertIsString($htmlBody);
+        \preg_match('/forgotPasswordToken=(.*)/', $htmlBody, $regexMatches);
         $token = $regexMatches[1];
         $expectedEmailData = $this->getExpectedEmailData($this->client, $user, $token);
 
-        $this->assertEquals(1, $mailCollector->getMessageCount());
-        $this->assertInstanceOf('Swift_Message', $message);
-        $this->assertEquals($expectedEmailData['sender'], \key($message->getFrom()));
-        $this->assertEquals('installation.email@sulu.test', \key($message->getTo()));
+        $this->assertEquals($expectedEmailData['sender'], $message->getFrom()[0]->getAddress());
+        $this->assertEquals('installation.email@sulu.test', $message->getTo()[0]->getAddress());
         $this->assertEquals($expectedEmailData['subject'], $message->getSubject());
-        $this->assertEquals($expectedEmailData['body'], $message->getBody());
+        $this->assertEquals($expectedEmailData['body'], $htmlBody);
     }
 
     public function testResendEmailActionTooMuch()
@@ -208,12 +232,13 @@ class ResettingControllerTest extends SuluTestCase
                 'user' => $this->users[2]->getEmail(),
             ]);
 
-            $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+            /** @var MessageDataCollector $mailCollector */
+            $mailCollector = $this->client->getProfile()->getCollector('mailer');
             $response = \json_decode($this->client->getResponse()->getContent());
 
             $this->assertHttpStatusCode(204, $this->client->getResponse());
             $this->assertEquals(null, $response);
-            $this->assertEquals(1, $mailCollector->getMessageCount());
+            $this->assertCount(1, $mailCollector->getEvents()->getMessages());
         }
 
         // now this request should fail
@@ -221,7 +246,8 @@ class ResettingControllerTest extends SuluTestCase
             'user' => $this->users[2]->getEmail(),
         ]);
 
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        /** @var MessageDataCollector $mailCollector */
+        $mailCollector = $this->client->getProfile()->getCollector('mailer');
         $response = \json_decode($this->client->getResponse()->getContent());
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
                 'SuluSecurityBundle:User',
@@ -230,7 +256,7 @@ class ResettingControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
         $this->assertEquals(null, $response);
-        $this->assertEquals(0, $mailCollector->getMessageCount());
+        $this->assertCount(0, $mailCollector->getEvents()->getMessages());
         $this->assertEquals($counter, $user->getPasswordResetTokenEmailsSent());
     }
 
@@ -240,13 +266,14 @@ class ResettingControllerTest extends SuluTestCase
 
         $this->client->jsonRequest('GET', '/security/reset/email');
 
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        /** @var MessageDataCollector $mailCollector */
+        $mailCollector = $this->client->getProfile()->getCollector('mailer');
 
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
         $this->assertEquals(null, $response);
-        $this->assertEquals(0, $mailCollector->getMessageCount());
+        $this->assertCount(0, $mailCollector->getEvents()->getMessages());
     }
 
     public function testSendEmailActionWithNotExistingUser()
@@ -257,13 +284,14 @@ class ResettingControllerTest extends SuluTestCase
             'user' => 'lord.voldemort@askab.an',
         ]);
 
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        /** @var MessageDataCollector $mailCollector */
+        $mailCollector = $this->client->getProfile()->getCollector('mailer');
 
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
         $this->assertEquals(null, $response);
-        $this->assertEquals(0, $mailCollector->getMessageCount());
+        $this->assertCount(0, $mailCollector->getEvents()->getMessages());
     }
 
     public function testSendEmailActionMultipleTimes()
@@ -283,11 +311,13 @@ class ResettingControllerTest extends SuluTestCase
             'user' => $this->users[0]->getUsername(),
         ]);
         $response = \json_decode($this->client->getResponse()->getContent());
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+
+        /** @var MessageDataCollector $mailCollector */
+        $mailCollector = $this->client->getProfile()->getCollector('mailer');
         // asserting response
         $this->assertHttpStatusCode(204, $this->client->getResponse());
         $this->assertEquals(null, $response);
-        $this->assertEquals(1, $mailCollector->getMessageCount());
+        $this->assertCount(1, $mailCollector->getEvents()->getMessages());
     }
 
     public function testResetAction()
@@ -297,9 +327,14 @@ class ResettingControllerTest extends SuluTestCase
         $this->client->jsonRequest('GET', '/security/reset/email', [
             'user' => $this->users[2]->getUsername(),
         ]);
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
-        $message = $mailCollector->getMessages()[0];
-        \preg_match('/forgotPasswordToken=(.*)/', $message->getBody(), $regexMatches);
+        /** @var MessageDataCollector $mailCollector */
+        $mailCollector = $this->client->getProfile()->getCollector('mailer');
+        $message = $mailCollector->getEvents()->getMessages()[0];
+        $this->assertInstanceOf(Email::class, $message);
+
+        $htmlBody = $message->getHtmlBody();
+        $this->assertIsString($htmlBody);
+        \preg_match('/forgotPasswordToken=(.*)/', $htmlBody, $regexMatches);
         $token = $regexMatches[1];
 
         $this->client->jsonRequest('GET', '/security/reset', [

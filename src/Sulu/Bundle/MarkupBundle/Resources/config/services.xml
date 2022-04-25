@@ -30,12 +30,12 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="sulu_markup.swift_mailer_listener" class="Sulu\Bundle\MarkupBundle\Listener\SwiftMailerListener">
-            <argument type="tagged" tag="sulu_markup.parser" index-by="type"/>
+        <service id="sulu_markup.mailer_listener" class="Sulu\Bundle\MarkupBundle\Listener\MailerListener">
+            <argument type="service" id="sulu_markup.parser"/>
             <argument type="service" id="request_stack"/>
             <argument>%kernel.default_locale%</argument>
 
-            <tag name="swiftmailer.default.plugin"/>
+            <tag name="kernel.event_subscriber"/>
         </service>
 
         <service id="sulu_markup.link_tag.provider_pool"

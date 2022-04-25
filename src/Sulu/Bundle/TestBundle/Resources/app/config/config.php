@@ -18,3 +18,7 @@ if (!$filesystem->exists($path . 'parameters.yml')) {
 }
 $loader->import('parameters.yml');
 $loader->import('context_' . $context . '.yml');
+
+if (\class_exists(\Swift_Mailer::class)) {
+    $loader->import('swiftmailer.yml');
+}

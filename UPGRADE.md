@@ -7,6 +7,23 @@
 The user provider service now requires the `SystemStoreInterface` service
 instead of the `RequestStack` to read correct set **security system**.
 
+### Replace SwiftMailer with Symfony Mailer
+
+To provide support for Symfony 6 the deprecated **SwiftMailer** which was
+used to send password forget emails was replaced with the **Symfony Mailer**.
+
+This requires to configure the symfony mailer as your email provider:
+
+```yaml
+# config/packages/mailer.yaml
+framework:
+    mailer:
+        dsn: '%env(MAILER_DSN)%'
+```
+
+It should also be considered to remove the **SwiftMailer** and **SwiftMailerBundle**
+from your application and replace it with [**Symfony Mailer**](https://symfony.com/doc/6.1/mailer.html).
+
 ## 2.4.1
 
 ### Change PreviewLinkInterface

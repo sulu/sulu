@@ -34,7 +34,7 @@ interface MarkupParserInterface
      * @param string $content
      * @param string $locale
      *
-     * @return array
+     * @return array<string, string>
      */
     public function validate($content, $locale);
 }
