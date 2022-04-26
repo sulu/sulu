@@ -509,7 +509,7 @@ class UserManager implements UserManagerInterface
      *
      * @param $userRoleData
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      *
      * @return bool
      */
@@ -536,7 +536,7 @@ class UserManager implements UserManagerInterface
      *
      * @param $userRoleData
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      *
      * @return bool
      */
@@ -576,7 +576,7 @@ class UserManager implements UserManagerInterface
      *
      * @param $userGroupData
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      *
      * @return bool
      */
@@ -604,7 +604,7 @@ class UserManager implements UserManagerInterface
      *
      * @param $userGroupData
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      *
      * @return bool
      */
@@ -631,7 +631,7 @@ class UserManager implements UserManagerInterface
      *
      * @param int $id
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      *
      * @return Contact
      */

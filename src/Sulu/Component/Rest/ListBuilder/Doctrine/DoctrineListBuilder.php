@@ -575,7 +575,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param DoctrineJoinDescriptor[]|null $joins Define which joins should be made
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return QueryBuilder
      */
     protected function createQueryBuilder($joins = null)
     {

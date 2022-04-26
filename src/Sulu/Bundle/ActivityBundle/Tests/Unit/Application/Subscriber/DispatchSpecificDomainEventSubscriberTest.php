@@ -37,7 +37,7 @@ class DispatchSpecificDomainEventSubscriberTest extends TestCase
         $subscriber = $this->createDispatchSpecificDomainEventSubscriber();
 
         $event = new TestDomainEvent();
-        $this->eventDispatcher->dispatch($event, TestDomainEvent::class)
+        $this->eventDispatcher->dispatch($event)
             ->shouldBeCalled()
             ->willReturn($event);
 

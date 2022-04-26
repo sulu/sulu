@@ -138,7 +138,7 @@ trait RestControllerTrait
      * @param string $id
      * @param callable $deleteCallback
      *
-     * @return \FOS\RestBundle\View\View
+     * @return View
      */
     public function responseDelete($id, $deleteCallback)
     {

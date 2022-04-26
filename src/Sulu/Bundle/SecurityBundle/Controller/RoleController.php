@@ -23,6 +23,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Exception\RoleKeyAlreadyExistsException;
 use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;
 use Sulu\Component\Rest\AbstractRestController;
+use Sulu\Component\Rest\Exception\EntityIdAlreadySetException;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\InvalidArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -36,6 +37,7 @@ use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Makes the roles accessible through a REST-API.
@@ -137,7 +139,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     /**
      * returns all roles.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction(Request $request)
     {
@@ -184,7 +186,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
      *
      * @param $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getAction($id)
     {
@@ -203,10 +205,10 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     /**
      * Creates a new role with the given data.
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityIdAlreadySetException
+     * @throws EntityNotFoundException
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function postAction(Request $request)
     {
@@ -248,9 +250,9 @@ class RoleController extends AbstractRestController implements ClassResourceInte
                 $view = $this->view($this->convertRole($role), 200);
             } catch (UniqueConstraintViolationException $e) {
                 if (\strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
-                    throw new RoleNameAlreadyExistsException($name);
+                    throw new RoleNameAlreadyExistsException($name, $e);
                 } else {
-                    throw new RoleKeyAlreadyExistsException($key);
+                    throw new RoleKeyAlreadyExistsException($key, $e);
                 }
             }
         } catch (RestException $e) {
@@ -265,7 +267,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
      *
      * @param $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function putAction(Request $request, $id)
     {
@@ -302,9 +304,9 @@ class RoleController extends AbstractRestController implements ClassResourceInte
             $view = $this->view($enfe->toArray(), 404);
         } catch (UniqueConstraintViolationException $e) {
             if (\strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
-                throw new RoleNameAlreadyExistsException($name);
+                throw new RoleNameAlreadyExistsException($name, $e);
             } else {
-                throw new RoleKeyAlreadyExistsException($key);
+                throw new RoleKeyAlreadyExistsException($key, $e);
             }
         } catch (RestException $re) {
             $view = $this->view($re->toArray(), 400);
@@ -318,7 +320,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
      *
      * @param $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction($id)
     {
@@ -487,7 +489,7 @@ class RoleController extends AbstractRestController implements ClassResourceInte
      * @param RoleInterface $role
      * @param $securityTypeData
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      */
     private function setSecurityType($role, $securityTypeData)
     {

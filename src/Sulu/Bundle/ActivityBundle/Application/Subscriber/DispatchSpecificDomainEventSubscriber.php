@@ -41,6 +41,6 @@ class DispatchSpecificDomainEventSubscriber implements EventSubscriberInterface
         // allows to register listeners that listen to all domain events.
         // this subscriber additionally dispatches the event with a specific event-name such as TagRemovedEvent::class
         // to allow for registering listeners for a specific type of event.
-        $this->eventDispatcher->dispatch($event, \get_class($event));
+        $this->eventDispatcher->dispatch($event);
     }
 }

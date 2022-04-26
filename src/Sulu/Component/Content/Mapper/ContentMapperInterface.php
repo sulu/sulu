@@ -16,6 +16,7 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
+use Sulu\Component\Content\Exception\InvalidOrderPositionException;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Localization\Localization;
 
@@ -196,8 +197,8 @@ interface ContentMapperInterface
      * @param string $webspaceKey
      * @param string $languageCode
      *
-     * @throws \Sulu\Component\Content\Exception\InvalidOrderPositionException
-     *                                                                         thrown if position is out of range
+     * @throws InvalidOrderPositionException
+     *                                       thrown if position is out of range
      *
      * @return StructureInterface
      */

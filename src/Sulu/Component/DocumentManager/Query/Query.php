@@ -12,6 +12,7 @@
 namespace Sulu\Component\DocumentManager\Query;
 
 use PHPCR\Query\QueryInterface;
+use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\DocumentManager\Event\QueryExecuteEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
@@ -87,7 +88,7 @@ class Query
     /**
      * @param string $hydrationMode
      *
-     * @return mixed|\PHPCR\Query\QueryResultInterface
+     * @return mixed|QueryResultInterface
      *
      * @throws DocumentManagerException
      */

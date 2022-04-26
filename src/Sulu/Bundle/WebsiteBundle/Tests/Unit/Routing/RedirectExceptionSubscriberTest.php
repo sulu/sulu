@@ -107,7 +107,7 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->event = new ExceptionEvent(
             $this->kernel->reveal(),
             $this->request->reveal(),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             new NotFoundHttpException()
         );
     }

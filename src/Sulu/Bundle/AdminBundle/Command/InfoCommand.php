@@ -31,7 +31,7 @@ class InfoCommand extends Command
         $this->suluVersion = $suluVersion;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $docsVersion = 'latest';
         if (false !== \strpos($this->suluVersion, '.')) {

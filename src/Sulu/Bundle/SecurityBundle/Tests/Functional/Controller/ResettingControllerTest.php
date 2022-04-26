@@ -22,6 +22,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\Mailer\DataCollector\MessageDataCollector;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Routing\Router;
 
 class ResettingControllerTest extends SuluTestCase
 {
@@ -436,7 +437,7 @@ class ResettingControllerTest extends SuluTestCase
         $resetUrl = $this->getContainer()->get('router')->generate(
             'sulu_admin',
             [],
-            \Symfony\Component\Routing\Router::ABSOLUTE_URL
+            Router::ABSOLUTE_URL
         );
         $body = $this->getContainer()->get('twig')->render($template, [
             'user' => $user,

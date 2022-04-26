@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SnippetBundle\Snippet;
 
 use Jackalope\Query\Query;
+use PHPCR\NodeInterface;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
 use PHPCR\Util\QOM\QueryBuilder;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
@@ -61,7 +62,7 @@ class SnippetRepository
      *
      * @param string $uuid
      *
-     * @return \PHPCR\NodeInterface[]
+     * @return NodeInterface[]
      */
     public function getReferences($uuid)
     {

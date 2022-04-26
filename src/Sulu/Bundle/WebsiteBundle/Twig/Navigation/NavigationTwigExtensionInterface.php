@@ -50,7 +50,7 @@ interface NavigationTwigExtensionInterface extends ExtensionInterface
      * @param bool $loadExcerpt
      * @param int $level
      *
-     * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
+     * @return NavigationItem[]
      */
     public function treeNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null);
 
@@ -63,7 +63,7 @@ interface NavigationTwigExtensionInterface extends ExtensionInterface
      * @param bool $loadExcerpt
      * @param int $level
      *
-     * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
+     * @return NavigationItem[]
      */
     public function flatNavigationFunction($uuid, $context = null, $depth = 1, $loadExcerpt = false, $level = null);
 
@@ -72,7 +72,7 @@ interface NavigationTwigExtensionInterface extends ExtensionInterface
      *
      * @param string $uuid
      *
-     * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
+     * @return NavigationItem[]
      */
     public function breadcrumbFunction($uuid);
 
@@ -82,7 +82,7 @@ interface NavigationTwigExtensionInterface extends ExtensionInterface
      * @param string $requestUrl
      * @param string $itemUrl
      *
-     * @return \Sulu\Bundle\WebsiteBundle\Navigation\NavigationItem[]
+     * @return NavigationItem[]
      */
     public function navigationIsActiveFunction($requestUrl, $itemUrl);
 }

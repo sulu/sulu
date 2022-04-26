@@ -76,7 +76,7 @@ class MarkupListenerTest extends TestCase
         $this->event = new ResponseEvent(
             $this->kernel->reveal(),
             $this->request->reveal(),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $this->response->reveal()
         );
 

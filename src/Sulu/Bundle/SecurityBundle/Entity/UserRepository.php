@@ -12,11 +12,11 @@
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 use Sulu\Component\Persistence\Repository\ORM\OrderByTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
 /**
  * Repository for the User, implementing some additional functions
@@ -287,7 +287,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      * Returns the query for the user with the joins for retrieving the permissions. Especially useful for security
      * related queries.
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return QueryBuilder
      */
     private function getUserWithPermissionsQuery()
     {

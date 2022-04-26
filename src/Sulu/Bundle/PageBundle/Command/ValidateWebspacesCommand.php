@@ -96,7 +96,7 @@ class ValidateWebspacesCommand extends Command
         $this->setDescription('Dumps webspaces and will show an error when template could not be loaded');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->output = $output;
 

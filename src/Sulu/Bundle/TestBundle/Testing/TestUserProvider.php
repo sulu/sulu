@@ -17,7 +17,7 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Contracts\Service\ResetInterface;
@@ -118,15 +118,20 @@ class TestUserProvider implements UserProviderInterface, ResetInterface
      *
      * @see UsernameNotFoundException
      *
-     * @throws UsernameNotFoundException if the user is not found
+     * @throws UserNotFoundException if the user is not found
      */
     public function loadUserByUsername($username)
     {
-        if (self::TEST_USER_USERNAME === $username) {
+        return $this->loadUserByIdentifier($username);
+    }
+
+    public function loadUserByIdentifier(string $identifier): UserInterface
+    {
+        if (self::TEST_USER_USERNAME === $identifier) {
             return $this->getUser();
         }
 
-        return $this->userProvider->loadUserByUsername($username);
+        return $this->userProvider->loadUserByIdentifier($identifier);
     }
 
     /**

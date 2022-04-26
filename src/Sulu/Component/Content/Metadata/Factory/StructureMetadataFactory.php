@@ -13,6 +13,8 @@ namespace Sulu\Component\Content\Metadata\Factory;
 
 use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\InflectorFactory;
+use Sulu\Component\Content\Metadata\Factory\Exception\DocumentTypeNotFoundException;
+use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -110,7 +112,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
             try {
                 $filePath = $fileLocator->locate(\sprintf('%s.xml', $structureType));
             } catch (\InvalidArgumentException $e) {
-                throw new Exception\StructureTypeNotFoundException(
+                throw new StructureTypeNotFoundException(
                     \sprintf(
                         'Could not load structure type "%s" for document type "%s", looked in "%s"',
                         $structureType,
@@ -203,7 +205,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     private function assertExists($type)
     {
         if (!isset($this->typePaths[$type])) {
-            throw new Exception\DocumentTypeNotFoundException(
+            throw new DocumentTypeNotFoundException(
                 \sprintf(
                     'Structure path for document type "%s" is not mapped. Mapped structure types: "%s"',
                     $type,

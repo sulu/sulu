@@ -101,7 +101,7 @@ class RouterListenerTest extends TestCase
         return new RequestEvent(
             $this->kernel->reveal(),
             $request,
-            HttpKernelInterface::MASTER_REQUEST
+            HttpKernelInterface::MAIN_REQUEST
         );
     }
 }

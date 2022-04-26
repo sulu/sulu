@@ -35,12 +35,12 @@ class TranslatorWrapper implements TranslatorInterface, LocaleAwareInterface
     /**
      * @param mixed[] $parameters
      */
-    public function trans($id, array $parameters = [], $domain = null, $locale = null): string
+    public function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string
     {
         return $this->translator->trans($id, $parameters, $domain, $locale);
     }
 
-    public function setLocale($locale): void
+    public function setLocale(string $locale): void
     {
         throw new \LogicException('Not supported.');
     }

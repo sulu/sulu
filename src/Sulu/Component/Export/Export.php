@@ -17,6 +17,7 @@ use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\Export\Manager\ExportManagerInterface;
@@ -208,7 +209,7 @@ class Export
         /** @var BasePageDocument $loadedDocument */
         $loadedDocument = $this->documentManager->find($document->getUuid(), $locale);
 
-        /** @var \Sulu\Component\Content\Metadata\StructureMetadata $metaData */
+        /** @var StructureMetadata $metaData */
         $metaData = $this->documentInspector->getStructureMetadata($document);
 
         $propertyValues = $loadedDocument->getStructure()->toArray();

@@ -16,6 +16,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Url;
+use Sulu\Component\Webspace\Url\WebspaceUrlProvider;
 use Sulu\Component\Webspace\Webspace;
 
 class WebspaceUrlProviderTest extends TestCase
@@ -49,7 +50,7 @@ class WebspaceUrlProviderTest extends TestCase
             )
         );
 
-        $provider = new Url\WebspaceUrlProvider();
+        $provider = new WebspaceUrlProvider();
         $this->assertEquals($urls, $provider->getUrls($webspace->reveal(), 'prod'));
     }
 }

@@ -25,7 +25,7 @@ use Sulu\Component\Security\Authorization\AccessControl\DescendantProviderInterf
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
@@ -50,7 +50,7 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
         $container->registerForAutoconfiguration(DescendantProviderInterface::class)
             ->addTag('sulu_security.access_control_descendant_provider');
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('command.xml');
 

@@ -196,7 +196,7 @@ class PreviewRendererTest extends TestCase
                         && $request->getScheme() === $expectedScheme;
                 }
             ),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             false
         )->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
 
@@ -242,7 +242,7 @@ class PreviewRendererTest extends TestCase
             Argument::that(function(Request $request) {
                 return 2 == $request->headers->get('X-Sulu-Target-Group');
             }),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             false
         )->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
 
@@ -288,7 +288,7 @@ class PreviewRendererTest extends TestCase
             Argument::that(function(Request $request) use ($segment) {
                 return $request->attributes->get('_sulu')->getAttribute('segment') === $segment;
             }),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             false
         )->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
 
@@ -335,7 +335,7 @@ class PreviewRendererTest extends TestCase
 
                 return $dateTime->getTimestamp() === (new \DateTime($dateTimeString))->getTimestamp();
             }),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             false
         )->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
 
@@ -367,7 +367,7 @@ class PreviewRendererTest extends TestCase
         $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
             ->shouldBeCalled();
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MAIN_REQUEST, false)
             ->willReturn(new Response('<title>Hallo</title>'));
 
         $request = new Request();
@@ -440,7 +440,7 @@ class PreviewRendererTest extends TestCase
         $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
             ->shouldNotBeCalled();
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MAIN_REQUEST, false)
             ->shouldNotBeCalled();
 
         $request = new Request();
@@ -474,7 +474,7 @@ class PreviewRendererTest extends TestCase
         $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
             ->shouldBeCalled();
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MAIN_REQUEST, false)
             ->shouldBeCalled()->willThrow(new RuntimeError('Test error'));
 
         $request = new Request();
@@ -508,7 +508,7 @@ class PreviewRendererTest extends TestCase
         $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
             ->shouldBeCalled();
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MAIN_REQUEST, false)
             ->shouldBeCalled()->willThrow(new \InvalidArgumentException());
 
         $request = new Request();
@@ -542,7 +542,7 @@ class PreviewRendererTest extends TestCase
         $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
             ->shouldBeCalled();
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MAIN_REQUEST, false)
             ->shouldBeCalled()->willThrow(
                 new HttpException(406, 'Error encountered when rendering content', new \InvalidArgumentException())
             );
@@ -578,7 +578,7 @@ class PreviewRendererTest extends TestCase
         $this->eventDispatcher->dispatch(Argument::type(PreRenderEvent::class), Events::PRE_RENDER)
             ->shouldBeCalled();
 
-        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MASTER_REQUEST, false)
+        $this->httpKernel->handle(Argument::type(Request::class), HttpKernelInterface::MAIN_REQUEST, false)
             ->shouldBeCalled()->willThrow(
                 new HttpException(406, 'Error encountered when rendering content')
             );
@@ -659,7 +659,7 @@ class PreviewRendererTest extends TestCase
                     return true;
                 }
             ),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             false
         )->shouldBeCalled()->willReturn(new Response('<title>Hallo</title>'));
 

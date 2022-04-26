@@ -172,7 +172,7 @@ class TagController extends AbstractRestController implements ClassResourceInter
     /**
      * Inserts a new tag.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      *
      * @throws \Exception
      */
@@ -209,7 +209,7 @@ class TagController extends AbstractRestController implements ClassResourceInter
      *
      * @param $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      *
      * @throws \Exception
      */
