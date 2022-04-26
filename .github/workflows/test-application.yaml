@@ -248,7 +248,7 @@ jobs:
                   php-version: ${{ matrix.php-version }}
                   extensions: ${{ matrix.php-extensions }}
                   tools: ${{ matrix.tools }}
-                  ini-values: memory_limit=-1
+                  ini-values: memory_limit=-1, realpath_cache_size=4096K, realpath_cache_ttl=600, opcache.memory_consumption=256, opcache.max_accelerated_files=32000, opcache.enable=1, opcache.enable_cli=1
                   coverage: none
 
             - name: Install and configure MySQL
