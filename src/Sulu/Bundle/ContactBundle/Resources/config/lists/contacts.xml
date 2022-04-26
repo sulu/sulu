@@ -300,8 +300,9 @@
             visibility="yes"
             translation="sulu_tag.tags"
             glue=","
+            distinct="true"
         >
-            <field-name>id</field-name>
+            <field-name>name</field-name>
             <entity-name>SuluTagBundle:Tag</entity-name>
 
             <joins ref="tags"/>
