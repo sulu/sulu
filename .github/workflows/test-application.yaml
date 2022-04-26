@@ -105,18 +105,6 @@ jobs:
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, imagick'
                       tools: 'composer:v2'
-                      env:
-                          SYMFONY_DEPRECATIONS_HELPER: weak
-                          DATABASE_URL: mysql://root:root@127.0.0.1:3306/sulu_test?serverVersion=5.7
-                          DATABASE_CHARSET: utf8mb4
-                          DATABASE_COLLATE: utf8mb4_unicode_ci
-
-                    - php-version: '8.1'
-                      database: mysql
-                      phpcr-transport: doctrinedbal
-                      dependency-versions: 'highest'
-                      php-extensions: 'ctype, iconv, mysql, imagick'
-                      tools: 'composer:v2'
                       composer-stability: dev
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
@@ -239,11 +227,10 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                    - php-version: '8.0'
+                    - php-version: '8.1'
                       mysql-version: '8.0'
                       phpcr-transport: 'doctrinedbal'
-                      dependency-versions: 'highest'
-                      composer-stability: dev
+                      dependency-versions: 'lowest'
                       php-extensions: 'ctype, iconv, intl, mysql, pdo_mysql, php_fileinfo, imagick'
                       tools: 'composer'
                       env:
@@ -290,10 +277,6 @@ jobs:
               run: |
                   composer remove jackalope/jackalope-doctrine-dbal --dev --no-interaction --no-update
                   composer require jackalope/jackalope-jackrabbit:^1.4  --no-interaction --no-update
-
-            - name: Set composer stability
-              if: ${{ matrix.composer-stability }}
-              run: composer config minimum-stability ${{ matrix.composer-stability }}
 
             - name: Install composer dependencies
               uses: ramsey/composer-install@v1
