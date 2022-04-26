@@ -17,6 +17,7 @@ use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Bundle\TrashBundle\Infrastructure\Symfony\DependencyInjection\SuluTrashExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluTrashBundle extends Bundle
@@ -33,7 +34,7 @@ class SuluTrashBundle extends Bundle
         );
     }
 
-    public function getContainerExtension()
+    public function getContainerExtension(): ExtensionInterface
     {
         return new SuluTrashExtension();
     }
