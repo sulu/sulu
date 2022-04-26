@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\MarkupBundle\Listener;
 
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
-use Swift_Events_SendEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class SwiftMailerListener implements \Swift_Events_SendListener
@@ -39,7 +38,7 @@ class SwiftMailerListener implements \Swift_Events_SendListener
         $this->defaultLocale = $defaultLocale;
     }
 
-    public function beforeSendPerformed(Swift_Events_SendEvent $event)
+    public function beforeSendPerformed(\Swift_Events_SendEvent $event)
     {
         $message = $event->getMessage();
 
@@ -66,7 +65,7 @@ class SwiftMailerListener implements \Swift_Events_SendListener
         );
     }
 
-    public function sendPerformed(Swift_Events_SendEvent $evt)
+    public function sendPerformed(\Swift_Events_SendEvent $evt)
     {
     }
 }

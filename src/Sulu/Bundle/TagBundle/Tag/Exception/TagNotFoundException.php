@@ -11,12 +11,10 @@
 
 namespace Sulu\Bundle\TagBundle\Tag\Exception;
 
-use Exception;
-
 /**
  * This Exception is thrown when a Tag is not found.
  */
-class TagNotFoundException extends Exception
+class TagNotFoundException extends \Exception
 {
     /**
      * The id of the tag, which was not found.

@@ -19,7 +19,6 @@ use Doctrine\ORM\Tools\Event\GenerateSchemaTableEventArgs;
 use Doctrine\ORM\Tools\ToolEvents;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
-use RuntimeException;
 
 /**
  * Adds a "references" option to the Doctrine schema.
@@ -124,7 +123,7 @@ class ReferencesOption implements EventSubscriber
             $unknownOptions = \array_diff_key($referencesOptions, \array_flip(self::$knownOptions));
 
             if (\count($unknownOptions) > 0) {
-                throw new RuntimeException(
+                throw new \RuntimeException(
                     \sprintf(
                         'Unknown options "%s" in the "references" option in the Doctrine schema of %s::%s.',
                         \implode('", "', \array_keys($unknownOptions)),
@@ -135,7 +134,7 @@ class ReferencesOption implements EventSubscriber
             }
 
             if (!isset($referencesOptions['entity'])) {
-                throw new RuntimeException(
+                throw new \RuntimeException(
                     \sprintf(
                         'Missing option "entity" in the "references" option in the Doctrine schema of %s::%s.',
                         $classMetadata->getReflectionClass()->getName(),
@@ -145,7 +144,7 @@ class ReferencesOption implements EventSubscriber
             }
 
             if (!isset($referencesOptions['field'])) {
-                throw new RuntimeException(
+                throw new \RuntimeException(
                     \sprintf(
                         'Missing option "field" in the "references" option in the Doctrine schema of %s::%s.',
                         $classMetadata->getReflectionClass()->getName(),

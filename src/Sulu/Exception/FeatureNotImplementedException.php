@@ -11,8 +11,6 @@
 
 namespace Sulu\Exception;
 
-use Exception;
-
-class FeatureNotImplementedException extends Exception
+class FeatureNotImplementedException extends \Exception
 {
 }

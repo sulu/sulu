@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use DateTime;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Type;
 use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
@@ -125,7 +124,7 @@ abstract class Structure implements StructureInterface
     /**
      * datetime of creation.
      *
-     * @var DateTime
+     * @var \DateTime
      * @Type("DateTime")
      */
     private $created;
@@ -133,7 +132,7 @@ abstract class Structure implements StructureInterface
     /**
      * datetime of last changed.
      *
-     * @var DateTime
+     * @var \DateTime
      * @Type("DateTime")
      */
     private $changed;
@@ -141,7 +140,7 @@ abstract class Structure implements StructureInterface
     /**
      * first published.
      *
-     * @var DateTime
+     * @var \DateTime
      * @Type("DateTime")
      */
     private $published;
@@ -404,7 +403,7 @@ abstract class Structure implements StructureInterface
     /**
      * return created datetime.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getCreated()
     {
@@ -416,7 +415,7 @@ abstract class Structure implements StructureInterface
      *
      * @return \DateTime
      */
-    public function setCreated(DateTime $created)
+    public function setCreated(\DateTime $created)
     {
         return $this->created = $created;
     }
@@ -424,7 +423,7 @@ abstract class Structure implements StructureInterface
     /**
      * returns changed DateTime.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getChanged()
     {
@@ -434,7 +433,7 @@ abstract class Structure implements StructureInterface
     /**
      * sets changed datetime.
      */
-    public function setChanged(DateTime $changed)
+    public function setChanged(\DateTime $changed)
     {
         $this->changed = $changed;
     }

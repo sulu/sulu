@@ -12,8 +12,6 @@
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
 use Doctrine\Persistence\ObjectManager;
-use ReflectionClass;
-use ReflectionException;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
@@ -139,8 +137,8 @@ class DoctrineAccessControlProvider implements AccessControlProviderInterface
     public function supports($type)
     {
         try {
-            $class = new ReflectionClass($type);
-        } catch (ReflectionException $e) {
+            $class = new \ReflectionClass($type);
+        } catch (\ReflectionException $e) {
             // in case the class does not exist there is no support
             return false;
         }

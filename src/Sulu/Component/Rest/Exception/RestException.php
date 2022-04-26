@@ -11,9 +11,7 @@
 
 namespace Sulu\Component\Rest\Exception;
 
-use Exception;
-
-class RestException extends Exception
+class RestException extends \Exception
 {
     public function toArray()
     {
