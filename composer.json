@@ -100,7 +100,7 @@
         "symfony/twig-bundle": "^5.4",
         "symfony/validator": "^5.4",
         "symfony/yaml": "^5.4",
-        "toflar/psr6-symfony-http-cache-store": "^3.0",
+        "toflar/psr6-symfony-http-cache-store": "^3.0 || ^4.0",
         "twig/twig": "^2.13 || ^3.0",
         "webmozart/assert": "^1.9"
     },
