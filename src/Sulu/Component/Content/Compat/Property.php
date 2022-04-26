@@ -227,7 +227,7 @@ class Property implements PropertyInterface, \JsonSerializable
     /**
      * returns tags defined in xml.
      *
-     * @return \Sulu\Component\Content\Compat\PropertyTag[]
+     * @return PropertyTag[]
      */
     public function getTags()
     {

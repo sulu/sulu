@@ -50,12 +50,6 @@ class RouteDefaultOptionsCompilerPass implements CompilerPassInterface
         // https://github.com/symfony/symfony/pull/31900
         $routeDefaultOptions = $container->getDefinition('routing.loader')->getArgument(1);
 
-        // symfony 4.4 passes the default options on index 2 instead of index 1
-        $deprecatedRouteDefaultOptions = $container->getDefinition('routing.loader')->getArgument(2);
-        if (\is_array($deprecatedRouteDefaultOptions) && isset($deprecatedRouteDefaultOptions['utf8'])) {
-            $routeDefaultOptions = $deprecatedRouteDefaultOptions;
-        }
-
         $container->getDefinition($this->targetService)->replaceArgument(
             $this->targetDefaultOptionsArgument,
             $routeDefaultOptions

@@ -146,7 +146,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     /**
      * Returns list of snippets.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction(Request $request)
     {
@@ -212,7 +212,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      *
      * @param string $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getAction(Request $request, $id = null)
     {
@@ -227,7 +227,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     /**
      * Saves a new snippet.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function postAction(Request $request)
     {
@@ -242,7 +242,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      *
      * @param string $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function putAction(Request $request, $id)
     {
@@ -298,7 +298,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      *
      * @param string $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function postTriggerAction($id, Request $request)
     {

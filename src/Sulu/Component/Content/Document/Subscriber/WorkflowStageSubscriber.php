@@ -25,6 +25,7 @@ use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RestoreEvent;
 use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -81,7 +82,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
     /**
      * Sets the workflow properties from the node on the document.
      *
-     * @throws \Sulu\Component\DocumentManager\Exception\DocumentManagerException
+     * @throws DocumentManagerException
      */
     public function setWorkflowStageOnDocument(HydrateEvent $event)
     {
@@ -224,7 +225,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
      * @param string $locale
      * @param string $live
      *
-     * @throws \Sulu\Component\DocumentManager\Exception\DocumentManagerException
+     * @throws DocumentManagerException
      */
     private function setWorkflowStage(
         WorkflowStageBehavior $document,

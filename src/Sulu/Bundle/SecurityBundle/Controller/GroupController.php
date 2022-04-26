@@ -28,6 +28,7 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Makes the groups accessible through a REST-API.
@@ -94,7 +95,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     /**
      * returns all groups.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction(Request $request)
     {
@@ -128,7 +129,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
      *
      * @param $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getAction($id)
     {
@@ -147,9 +148,9 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     /**
      * Creates a new group with the given data.
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function postAction(Request $request)
     {
@@ -184,7 +185,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
      *
      * @param $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function putAction(Request $request, $id)
     {
@@ -252,7 +253,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
      *
      * @param $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction($id)
     {
@@ -279,7 +280,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
      *
      * @return bool
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      */
     private function addRole(Group $group, $roleData)
     {

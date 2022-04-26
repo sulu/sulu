@@ -85,7 +85,7 @@ class SitemapController
      * Render sitemap-index of all available sitemap.xml files.
      * If only one provider exists this provider will be rendered directly.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(Request $request)
     {

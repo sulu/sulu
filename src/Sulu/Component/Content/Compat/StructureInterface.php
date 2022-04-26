@@ -206,14 +206,14 @@ interface StructureInterface extends \JsonSerializable
     public function getPropertyNames();
 
     /**
-     * @param \Sulu\Component\Content\Compat\StructureType $type
+     * @param StructureType $type
      */
     public function setType($type);
 
     /**
      * Return type of structure.
      *
-     * @return \Sulu\Component\Content\Compat\StructureType
+     * @return StructureType
      */
     public function getType();
 
@@ -267,7 +267,7 @@ interface StructureInterface extends \JsonSerializable
      *
      * @param string $tagName
      *
-     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
+     * @throws NoSuchPropertyException
      *
      * @return PropertyInterface[]
      */

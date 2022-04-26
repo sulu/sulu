@@ -31,6 +31,7 @@ use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Makes the users accessible through a rest api.
@@ -138,7 +139,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
      *
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getAction($id)
     {
@@ -156,7 +157,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
     /**
      * Creates a new user in the system.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function postAction(Request $request)
     {
@@ -181,7 +182,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
     /**
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function postTriggerAction($id, Request $request)
     {
@@ -218,7 +219,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
      *
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function putAction(Request $request, $id)
     {
@@ -243,7 +244,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
      *
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function patchAction(Request $request, $id)
     {
@@ -267,7 +268,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
      *
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction($id)
     {
@@ -280,12 +281,10 @@ class UserController extends AbstractRestController implements ClassResourceInte
     /**
      * Checks if all the arguments are given, and throws an exception if one is missing.
      *
-     * @throws \Sulu\Component\Rest\Exception\MissingArgumentException
+     * @throws MissingArgumentException
      */
-
     // TODO: Use schema validation see:
     // https://github.com/sulu-io/sulu/issues/1136
-
     private function checkArguments(Request $request)
     {
         if (null == $request->get('username')) {
@@ -306,7 +305,7 @@ class UserController extends AbstractRestController implements ClassResourceInte
      * Returns a user with a specific contact id or all users
      * optional parameter 'flat' calls listAction.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction(Request $request)
     {

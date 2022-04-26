@@ -147,7 +147,7 @@ class PortalInformation implements ArrayableInterface
     /**
      * Sets the portal for this PortalInformation.
      *
-     * @param \Sulu\Component\Webspace\Portal $portal
+     * @param Portal $portal
      */
     public function setPortal($portal)
     {
@@ -157,7 +157,7 @@ class PortalInformation implements ArrayableInterface
     /**
      * Returns the portal for this PortalInformation.
      *
-     * @return \Sulu\Component\Webspace\Portal
+     * @return Portal
      */
     public function getPortal()
     {
@@ -201,7 +201,7 @@ class PortalInformation implements ArrayableInterface
      *
      * @deprecated Is not set anymore since https://github.com/sulu/sulu/pull/5277
      *
-     * @param \Sulu\Component\Webspace\Segment $segment
+     * @param Segment $segment
      */
     public function setSegment($segment)
     {
@@ -217,7 +217,7 @@ class PortalInformation implements ArrayableInterface
      *
      * @deprecated Is not set anymore since https://github.com/sulu/sulu/pull/5277
      *
-     * @return \Sulu\Component\Webspace\Segment
+     * @return Segment
      */
     public function getSegment()
     {
@@ -307,7 +307,7 @@ class PortalInformation implements ArrayableInterface
     /**
      * Sets the webspace for this PortalInformation.
      *
-     * @param \Sulu\Component\Webspace\Webspace $webspace
+     * @param Webspace $webspace
      */
     public function setWebspace($webspace)
     {
@@ -317,7 +317,7 @@ class PortalInformation implements ArrayableInterface
     /**
      * Returns the webspace for this PortalInformation.
      *
-     * @return \Sulu\Component\Webspace\Webspace
+     * @return Webspace
      */
     public function getWebspace()
     {

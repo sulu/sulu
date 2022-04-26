@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Security\Authentication;
 
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Sulu\Component\Persistence\Repository\RepositoryInterface;
 
@@ -45,7 +46,7 @@ interface UserRepositoryInterface extends RepositoryInterface
      * @return UserInterface
      *
      * @throws NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function findUserWithSecurityById($id);
 

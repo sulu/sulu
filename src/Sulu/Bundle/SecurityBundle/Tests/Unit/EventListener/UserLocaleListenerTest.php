@@ -70,7 +70,7 @@ class UserLocaleListenerTest extends TestCase
         $this->event = new RequestEvent(
             $this->kernel->reveal(),
             $this->request->reveal(),
-            HttpKernelInterface::MASTER_REQUEST
+            HttpKernelInterface::MAIN_REQUEST
         );
 
         $this->token = $this->prophesize(TokenInterface::class);

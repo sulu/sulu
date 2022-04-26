@@ -290,7 +290,7 @@ class Webspace implements ArrayableInterface
     /**
      * Sets the portals of this webspace.
      *
-     * @param \Sulu\Component\Webspace\Portal[] $portals
+     * @param Portal[] $portals
      */
     public function setPortals($portals)
     {
@@ -300,7 +300,7 @@ class Webspace implements ArrayableInterface
     /**
      * Returns the portals of this webspace.
      *
-     * @return \Sulu\Component\Webspace\Portal[]
+     * @return Portal[]
      */
     public function getPortals()
     {
@@ -322,7 +322,7 @@ class Webspace implements ArrayableInterface
     /**
      * Sets the segments of this webspace.
      *
-     * @param \Sulu\Component\Webspace\Segment[] $segments
+     * @param Segment[] $segments
      */
     public function setSegments($segments)
     {
@@ -332,7 +332,7 @@ class Webspace implements ArrayableInterface
     /**
      * Returns the segments of this webspace.
      *
-     * @return \Sulu\Component\Webspace\Segment[]
+     * @return Segment[]
      */
     public function getSegments()
     {

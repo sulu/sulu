@@ -98,7 +98,7 @@ interface SessionManagerInterface
     /**
      * returns the snippet node.
      *
-     * @return \PHPCR\NodeInterface
+     * @return NodeInterface
      *
      * @deprecated Do not use anymore, because the node is always returned from the default session, although multiple
      *             sessions can exist

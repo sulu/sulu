@@ -76,7 +76,7 @@ class MultipleTranslatedProperties
      *
      * @param string $key
      *
-     * @throws \Sulu\Component\Content\Exception\NoSuchPropertyException
+     * @throws NoSuchPropertyException
      *
      * @return string
      */

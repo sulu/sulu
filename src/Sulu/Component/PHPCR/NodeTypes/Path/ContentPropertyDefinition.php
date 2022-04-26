@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\PHPCR\NodeTypes\Path;
 
+use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\NodeType\PropertyDefinitionInterface;
 use PHPCR\PropertyType;
 use PHPCR\Version\OnParentVersionAction;
@@ -25,7 +26,7 @@ class ContentPropertyDefinition implements PropertyDefinitionInterface
      * PropertyDefinitionTemplate) that is not attached to a live NodeType. In
      * such cases this method returns null.
      *
-     * @return \PHPCR\NodeType\NodeTypeInterface A NodeType object
+     * @return NodeTypeInterface A NodeType object
      *
      * @api
      */

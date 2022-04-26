@@ -65,14 +65,14 @@ class UserProviderTest extends TestCase
     {
         $this->expectException(DisabledException::class);
         $this->user->setEnabled(false);
-        $this->userProvider->loadUserByUsername('sulu');
+        $this->userProvider->loadUserByIdentifier('sulu');
     }
 
     public function testLoginFailLockedUser(): void
     {
         $this->expectException(LockedException::class);
         $this->user->setLocked(true);
-        $this->userProvider->loadUserByUsername('sulu');
+        $this->userProvider->loadUserByIdentifier('sulu');
     }
 
     public function testLoadUserByUsername(): void
@@ -85,7 +85,7 @@ class UserProviderTest extends TestCase
         $this->systemStore->getSystem()
             ->willReturn('Sulu')
             ->shouldBeCalled();
-        $user = $this->userProvider->loadUserByUsername('sulu');
+        $user = $this->userProvider->loadUserByIdentifier('sulu');
 
         $this->assertEquals('test@sulu.io', $user->getEmail());
     }

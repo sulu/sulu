@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Types\ResourceLocator\Mapper;
 use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;
 use PHPCR\PathNotFoundException;
+use PHPCR\PropertyInterface;
 use PHPCR\Util\PathHelper;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
@@ -131,7 +132,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
      * @param string $languageCode
      * @param string $segmentKey
      *
-     * @return \PHPCR\NodeInterface
+     * @return NodeInterface
      */
     private function iterateRouteNodes(
         NodeInterface $node,
@@ -148,7 +149,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
 
         // search for references with name 'content'
         foreach ($node->getReferences('sulu:content') as $ref) {
-            if ($ref instanceof \PHPCR\PropertyInterface) {
+            if ($ref instanceof PropertyInterface) {
                 $routeNode = $ref->getParent();
                 if (0 !== \strpos($routeNode->getPath(), $routePath)) {
                     continue;
@@ -376,7 +377,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
      * @param string $languageCode
      * @param string $segmentKey
      *
-     * @return \PHPCR\NodeInterface base node of routes
+     * @return NodeInterface base node of routes
      */
     private function getWebspaceRouteNode($webspaceKey, $languageCode, $segmentKey)
     {

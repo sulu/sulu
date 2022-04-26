@@ -128,7 +128,7 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
         $targetGroupRequest->headers->set(static::USER_CONTEXT_URL_HEADER, $request->getUri());
 
         try {
-            $targetGroupResponse = $kernel->handle($targetGroupRequest, HttpKernelInterface::MASTER_REQUEST, false);
+            $targetGroupResponse = $kernel->handle($targetGroupRequest, HttpKernelInterface::MAIN_REQUEST, false);
         } catch (NotFoundHttpException $e) {
             // happens on command execution in the admin context because there is no target-group-url route registered
             return null;

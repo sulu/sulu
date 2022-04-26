@@ -460,7 +460,7 @@ class AppendAnalyticsListenerTest extends TestCase
         return new ResponseEvent(
             $kernel->reveal(),
             $request,
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             $response
         );
     }

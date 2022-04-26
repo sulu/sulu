@@ -20,6 +20,7 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\Routing\Router;
 
 class LegacyResettingControllerTest extends SuluTestCase
 {
@@ -405,7 +406,7 @@ class LegacyResettingControllerTest extends SuluTestCase
         $resetUrl = $this->getContainer()->get('router')->generate(
             'sulu_admin',
             [],
-            \Symfony\Component\Routing\Router::ABSOLUTE_URL
+            Router::ABSOLUTE_URL
         );
         $body = $this->getContainer()->get('twig')->render($template, [
             'user' => $user,

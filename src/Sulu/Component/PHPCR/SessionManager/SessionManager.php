@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\PHPCR\SessionManager;
 
+use PHPCR\PathNotFoundException;
 use PHPCR\SessionInterface;
 
 class SessionManager implements SessionManagerInterface
@@ -97,7 +98,7 @@ class SessionManager implements SessionManagerInterface
 
         try {
             $node = $this->getSession()->getNode($nodePath);
-        } catch (\PHPCR\PathNotFoundException $e) {
+        } catch (PathNotFoundException $e) {
             $node = $this->getSession()->getNode($snippetPath)->addNode($templateKey);
         }
 

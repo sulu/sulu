@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager;
 
 use PHPCR\NodeInterface;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
+use ProxyManager\Proxy\GhostObjectInterface;
 use ProxyManager\Proxy\LazyLoadingInterface;
 use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
 use Sulu\Component\DocumentManager\Collection\ReferrerCollection;
@@ -66,7 +67,7 @@ class ProxyFactory
      * @param object $fromDocument
      * @param array $options
      *
-     * @return \ProxyManager\Proxy\GhostObjectInterface
+     * @return GhostObjectInterface
      */
     public function createProxyForNode($fromDocument, NodeInterface $targetNode, $options = [])
     {

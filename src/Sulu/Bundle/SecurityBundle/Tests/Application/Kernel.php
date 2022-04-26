@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Tests\Application;
 
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 class Kernel extends SuluTestKernel
@@ -21,7 +22,7 @@ class Kernel extends SuluTestKernel
         return \array_merge(
             parent::registerBundles(),
             [
-                new \Symfony\Bundle\DebugBundle\DebugBundle(),
+                new DebugBundle(),
             ]
         );
     }

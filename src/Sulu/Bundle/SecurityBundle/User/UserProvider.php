@@ -18,7 +18,7 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\Security\Core\Exception\DisabledException;
 use Symfony\Component\Security\Core\Exception\LockedException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface as BaseUserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -75,10 +75,10 @@ class UserProvider implements UserProviderInterface
                 }
             }
         } catch (NoResultException $e) {
-            throw new UsernameNotFoundException($exceptionMessage, 0, $e);
+            throw new UserNotFoundException($exceptionMessage, 0, $e);
         }
 
-        throw new UsernameNotFoundException($exceptionMessage, 0);
+        throw new UserNotFoundException($exceptionMessage, 0);
     }
 
     public function refreshUser(BaseUserInterface $user)

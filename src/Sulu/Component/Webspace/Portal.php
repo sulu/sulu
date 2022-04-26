@@ -209,7 +209,7 @@ class Portal
     /**
      * Sets the environments for this portal.
      *
-     * @param \Sulu\Component\Webspace\Environment[] $environments
+     * @param Environment[] $environments
      */
     public function setEnvironments(array $environments)
     {
@@ -223,7 +223,7 @@ class Portal
     /**
      * Returns the environment for this portal.
      *
-     * @return \Sulu\Component\Webspace\Environment[]
+     * @return Environment[]
      */
     public function getEnvironments()
     {
@@ -237,7 +237,7 @@ class Portal
      *
      * @throws Exception\EnvironmentNotFoundException
      *
-     * @return \Sulu\Component\Webspace\Environment
+     * @return Environment
      */
     public function getEnvironment($type)
     {
@@ -248,16 +248,13 @@ class Portal
         return $this->environments[$type];
     }
 
-    /**
-     * @param \Sulu\Component\Webspace\Webspace $webspace
-     */
     public function setWebspace(Webspace $webspace)
     {
         $this->webspace = $webspace;
     }
 
     /**
-     * @return \Sulu\Component\Webspace\Webspace
+     * @return Webspace
      */
     public function getWebspace()
     {

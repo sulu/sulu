@@ -148,7 +148,7 @@ class AudienceTargetingCacheListenerTest extends TestCase
         $httpCache = $this->prophesize(SuluHttpCache::class);
         $httpCache->handle(
             Argument::any(),
-            HttpKernelInterface::MASTER_REQUEST,
+            HttpKernelInterface::MAIN_REQUEST,
             false
         )->willReturn($targetGroupResponse->reveal());
 

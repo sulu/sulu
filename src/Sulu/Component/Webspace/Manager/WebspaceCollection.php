@@ -172,7 +172,7 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * @param \Sulu\Component\Webspace\Webspace[] $webspaces
+     * @param Webspace[] $webspaces
      */
     public function setWebspaces($webspaces)
     {
@@ -180,7 +180,7 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * @return \Sulu\Component\Webspace\Webspace[]
+     * @return Webspace[]
      */
     public function getWebspaces()
     {

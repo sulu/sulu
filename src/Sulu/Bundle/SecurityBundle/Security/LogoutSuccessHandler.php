@@ -11,14 +11,14 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security;
 
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
+use Symfony\Component\Security\Http\Event\LogoutEvent;
 
-class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
+class LogoutSuccessHandler implements EventSubscriberInterface
 {
     /**
      * @var RouterInterface
@@ -30,14 +30,26 @@ class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
         $this->router = $router;
     }
 
-    public function onLogoutSuccess(Request $request)
+    public function onLogoutSuccess(LogoutEvent $logoutEvent): void
     {
-        if ($request->isXmlHttpRequest()) {
+        if (null !== $logoutEvent->getResponse()) {
+            return;
+        }
+
+        if ($logoutEvent->getRequest()->isXmlHttpRequest()) {
             $response = new JsonResponse(null, Response::HTTP_OK);
         } else {
             $response = new RedirectResponse($this->router->generate('sulu_admin'));
         }
 
-        return $response;
+        $logoutEvent->setResponse($response);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public static function getSubscribedEvents(): array
+    {
+        return [LogoutEvent::class => ['onLogout', 64]];
     }
 }

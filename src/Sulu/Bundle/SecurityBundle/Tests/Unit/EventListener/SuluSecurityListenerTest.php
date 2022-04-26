@@ -19,7 +19,7 @@ use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerI
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\SecuredControllerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -149,7 +149,7 @@ class SuluSecurityListenerTest extends TestCase
     {
         $this->securityChecker->checkPermission(Argument::cetera())->shouldNotHaveBeenCalled();
 
-        $controller = $this->prophesize(Controller::class);
+        $controller = $this->prophesize(AbstractController::class);
 
         $request = $this->prophesize(Request::class);
 
@@ -291,7 +291,7 @@ class SuluSecurityListenerTest extends TestCase
             $this->kernel->reveal(),
             $controller,
             $request,
-            HttpKernelInterface::MASTER_REQUEST
+            HttpKernelInterface::MAIN_REQUEST
         );
     }
 }
