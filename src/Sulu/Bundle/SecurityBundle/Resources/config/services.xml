@@ -360,7 +360,7 @@
             <argument type="service" id="sulu_security.salt_generator"/>
             <argument type="service" id="sulu.repository.user"/>
             <argument type="service" id="sulu_activity.domain_event_collector"/>
-            <argument>%sulu_security.password_policy.pattern%</argument>
+            <argument>%sulu_security.password_policy_pattern%</argument>
         </service>
 
         <service
@@ -368,8 +368,8 @@
             class="Sulu\Bundle\SecurityBundle\Metadata\PasswordPolicyFormMetadataVisitor"
         >
             <argument type="service" id="translator"/>
-            <argument>%sulu_security.password_policy.pattern%</argument>
-            <argument>%sulu_security.password_policy.information_translation_key%</argument>
+            <argument>%sulu_security.password_policy_pattern%</argument>
+            <argument>%sulu_security.password_policy_info_translation_key%</argument>
 
             <tag name="sulu_admin.form_metadata_visitor" />
         </service>

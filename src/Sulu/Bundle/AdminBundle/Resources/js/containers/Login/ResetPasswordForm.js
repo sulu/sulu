@@ -34,7 +34,6 @@ class ResetPasswordForm extends React.Component<Props> {
     @observable inputRef: ?ElementRef<*>;
 
     @observable error: ?string = null;
-    @observable errorKey: string;
 
     @observable password1: ?string;
     @observable password2: ?string;

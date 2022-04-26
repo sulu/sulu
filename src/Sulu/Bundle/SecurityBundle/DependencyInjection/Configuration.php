@@ -53,7 +53,7 @@ class Configuration implements ConfigurationInterface
                             ->cannotBeEmpty()
                             ->defaultValue('.{8,}')
                         ->end()
-                        ->scalarNode('information_translation_key')
+                        ->scalarNode('info_translation_key')
                             ->cannotBeEmpty()
                             ->defaultValue('sulu_security.password_policy_information')
                         ->end()
