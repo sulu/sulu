@@ -25,7 +25,7 @@ class S3Kernel extends Kernel implements CompilerPassInterface
         $loader->load(__DIR__ . '/config/config_s3.yml');
     }
 
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return $this->getProjectDir() . \DIRECTORY_SEPARATOR
             . 'var' . \DIRECTORY_SEPARATOR

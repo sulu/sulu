@@ -13,8 +13,8 @@ namespace Sulu\Bundle\TestBundle\Testing;
 
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
-use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -50,26 +50,29 @@ class TestUserProvider implements UserProviderInterface, ResetInterface
     private $userRepository;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var PasswordHasherFactoryInterface|EncoderFactoryInterface
      */
-    private $userPasswordEncoderFactory;
+    private $passwordHasherFactory;
 
     /**
      * @var UserProviderInterface
      */
     private $userProvider;
 
+    /**
+     * @param PasswordHasherFactoryInterface|EncoderFactoryInterface $passwordHasherFactory
+     */
     public function __construct(
         EntityManager $entityManager,
         ContactRepositoryInterface $contactRepository,
         UserRepositoryInterface $userRepository,
-        EncoderFactoryInterface $userPasswordEncoderFactory,
+        $passwordHasherFactory,
         UserProviderInterface $userProvider
     ) {
         $this->entityManager = $entityManager;
         $this->contactRepository = $contactRepository;
         $this->userRepository = $userRepository;
-        $this->userPasswordEncoderFactory = $userPasswordEncoderFactory;
+        $this->passwordHasherFactory = $passwordHasherFactory;
         $this->userProvider = $userProvider;
     }
 
@@ -95,8 +98,16 @@ class TestUserProvider implements UserProviderInterface, ResetInterface
 
         $user->setUsername(self::TEST_USER_USERNAME);
         $user->setSalt('');
-        $encoder = $this->userPasswordEncoderFactory->getEncoder($user);
-        $user->setPassword($encoder->encodePassword('test', $user->getSalt()));
+
+        if ($this->passwordHasherFactory instanceof PasswordHasherFactoryInterface) {
+            $hasher = $this->passwordHasherFactory->getPasswordHasher($user);
+            $password = $hasher->hash('test');
+        } else {
+            $encoder = $this->passwordHasherFactory->getEncoder($user);
+            $password = $encoder->encodePassword('test', $user->getSalt());
+        }
+
+        $user->setPassword($password);
         $user->setLocale('en');
 
         $this->entityManager->flush();

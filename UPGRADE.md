@@ -32,6 +32,33 @@ The Symfony 4.4 compatibility service
 `Sulu\Bundle\WebsiteBundle\Controller\ExceptionController` / `sulu_website.exception_controller`
 was removed. See also [UPGRADE 2.1.0-RC1](#210-rc1).
 
+### Kernel Return Types changed
+
+The Symfony Kernel requires the following return types now:
+
+- `public function registerBundles(): iterable`
+- `protected function getContainerClass(): string`
+- `public function getCacheDir(): string`
+- `public function getCommonCacheDir(): string`
+- `public function getLogDir(): string`
+- `protected function getKernelParameters(): array`
+- `public function getEnvironment(): string`
+- `public function isDebug(): bool`
+- `public function getCharset(): string`
+- `public function getStartTime(): float`
+- `public function getContainer(): ContainerInterface`
+- `public function getBundle(string $name): BundleInterface`
+- `public function getBundles(): array`
+- `public function locateResource(string $name): string`
+
+If a method was overwritten it is required to be updated to the new return types.
+
+### DoctrineCacheBundle integration removed
+
+All integration of the deprecated DoctrineCacheBundle were removed.
+
+See [Doctrine Cache Bundle removed](#doctrinecachebundle-removed) upgrade.
+
 ### FOSJSRoutingBundle upgraded
 
 The FOSJSRoutingBundle was upgraded and requires to change the routing include for it:

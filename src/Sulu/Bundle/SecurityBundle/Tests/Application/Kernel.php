@@ -17,17 +17,17 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 class Kernel extends SuluTestKernel
 {
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         return \array_merge(
-            parent::registerBundles(),
+            [...parent::registerBundles()],
             [
                 new DebugBundle(),
             ]
         );
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         parent::registerContainerConfiguration($loader);
 

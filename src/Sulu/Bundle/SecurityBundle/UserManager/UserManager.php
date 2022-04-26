@@ -35,7 +35,8 @@ use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authentication\SaltGenerator;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class UserManager implements UserManagerInterface
 {
@@ -72,7 +73,7 @@ class UserManager implements UserManagerInterface
     private $saltGenerator;
 
     /**
-     * @var PasswordHasherFactory|null
+     * @var PasswordHasherFactoryInterface|EncoderFactoryInterface|null
      */
     private $passwordHasherFactory;
 
@@ -81,9 +82,12 @@ class UserManager implements UserManagerInterface
      */
     private $domainEventCollector;
 
+    /**
+     * @param PasswordHasherFactoryInterface|EncoderFactoryInterface|null $passwordHasherFactory
+     */
     public function __construct(
         ObjectManager $em,
-        PasswordHasherFactory $passwordHasherFactory = null,
+        $passwordHasherFactory,
         RoleRepositoryInterface $roleRepository,
         GroupRepository $groupRepository,
         ContactManager $contactManager,
@@ -672,9 +676,16 @@ class UserManager implements UserManagerInterface
             );
         }
 
-        $encoder = $this->passwordHasherFactory->getEncoder($user);
+        if ($this->passwordHasherFactory instanceof EncoderFactoryInterface) {
+            // @deprecated symfony 5.4 backward compatibility bridge
+            $encoder = $this->passwordHasherFactory->getEncoder($user);
 
-        return $encoder->encodePassword($password, $salt);
+            return $encoder->encodePassword($password, $salt);
+        }
+
+        $hasher = $this->passwordHasherFactory->getPasswordHasher($user);
+
+        return $hasher->hash($password);
     }
 
     /**

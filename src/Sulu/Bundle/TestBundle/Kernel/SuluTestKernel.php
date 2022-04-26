@@ -32,10 +32,7 @@ class SuluTestKernel extends SuluKernel
         parent::__construct($environment, $debug, $suluContext);
     }
 
-    /**
-     * @return BundleInterface[]
-     */
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         $bundles = [
             // Dependencies
@@ -80,10 +77,6 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\TrashBundle\SuluTrashBundle(),
         ];
 
-        if (\class_exists(\Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle::class)) {
-            $bundles[] = new \Doctrine\Bundle\DoctrineCacheBundle\DoctrineCacheBundle();
-        }
-
         if (\class_exists(\Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class)) {
             $bundles[] = new \Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle();
         }
@@ -112,7 +105,7 @@ class SuluTestKernel extends SuluKernel
             $bundles[] = new \Symfony\Bundle\SecurityBundle\SecurityBundle();
         }
 
-        // @phpstan-ignore-next-line
+        /** @var iterable<mixed, BundleInterface> */
         return $bundles;
     }
 
@@ -121,7 +114,7 @@ class SuluTestKernel extends SuluKernel
      *
      * @return string The project root dir
      */
-    public function getProjectDir()
+    public function getProjectDir(): string
     {
         if (null === $this->projectDir) {
             $r = new \ReflectionObject($this);
