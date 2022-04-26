@@ -60,8 +60,10 @@ jobs:
             - name: Install and configure PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: '7.4'
+                  php-version: '8.1'
                   tools: 'composer:v2'
+                  ini-values: memory_limit=-1
+                  coverage: none
 
             - name: Install php dependencies
               run: rm composer.json && composer require friendsofsymfony/jsrouting-bundle:^2.3 --no-interaction
@@ -85,7 +87,7 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                    - php-version: '7.2'
+                    - php-version: '8.0'
                       database: postgres
                       phpcr-transport: jackrabbit
                       dependency-versions: 'lowest'
@@ -96,18 +98,6 @@ jobs:
                           DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/sulu_test?serverVersion=12.5
                           DATABASE_CHARSET: UTF8
                           DATABASE_COLLATE:
-
-                    - php-version: '8.0'
-                      database: mysql
-                      phpcr-transport: doctrinedbal
-                      dependency-versions: 'highest'
-                      php-extensions: 'ctype, iconv, mysql, imagick'
-                      tools: 'composer:v2'
-                      env:
-                          SYMFONY_DEPRECATIONS_HELPER: weak
-                          DATABASE_URL: mysql://root:root@127.0.0.1:3306/sulu_test?serverVersion=5.7
-                          DATABASE_CHARSET: utf8mb4
-                          DATABASE_COLLATE: utf8mb4_unicode_ci
 
                     - php-version: '8.1'
                       database: mysql
@@ -157,6 +147,7 @@ jobs:
                   php-version: ${{ matrix.php-version }}
                   extensions: ${{ matrix.php-extensions }}
                   tools: ${{ matrix.tools }}
+                  ini-values: memory_limit=-1
                   coverage: none
 
             - name: Require jackrabbit dependencies
@@ -208,6 +199,7 @@ jobs:
                   php-version: '8.1'
                   extensions: 'ctype, iconv, mysql, imagick'
                   tools: 'composer:v2'
+                  ini-values: memory_limit=-1
                   coverage: none
 
             - name: Install composer dependencies
@@ -235,10 +227,10 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                    - php-version: '7.4'
+                    - php-version: '8.1'
                       mysql-version: '8.0'
                       phpcr-transport: 'doctrinedbal'
-                      dependency-versions: 'highest'
+                      dependency-versions: 'lowest'
                       php-extensions: 'ctype, iconv, intl, mysql, pdo_mysql, php_fileinfo, imagick'
                       tools: 'composer'
                       env:
@@ -256,7 +248,8 @@ jobs:
                   php-version: ${{ matrix.php-version }}
                   extensions: ${{ matrix.php-extensions }}
                   tools: ${{ matrix.tools }}
-                  ini-values: 'memory_limit=-1'
+                  ini-values: memory_limit=-1, realpath_cache_size=4096K, realpath_cache_ttl=600, opcache.memory_consumption=256, opcache.max_accelerated_files=32000, opcache.enable=1, opcache.enable_cli=1
+                  coverage: none
 
             - name: Install and configure MySQL
               uses: shogo82148/actions-setup-mysql@v1.0.1

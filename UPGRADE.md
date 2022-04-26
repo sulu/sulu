@@ -2,6 +2,36 @@
 
 ## 2.5.0
 
+### Drop support for PHP 7.4, 7.3 and 7.2
+
+The support for older PHP versions 7.4, 7.3 and 7.2 were dropped.
+Upgrade PHP to the [latest version](https://www.php.net/supported-versions.php) for your projects.
+
+- [https://www.php.net/manual/en/migration73.php](https://www.php.net/manual/en/migration73.php)
+- [https://www.php.net/manual/en/migration74.php](https://www.php.net/manual/en/migration74.php)
+- [https://www.php.net/manual/en/migration80.php](https://www.php.net/manual/en/migration80.php)
+- [https://www.php.net/manual/en/migration81.php](https://www.php.net/manual/en/migration81.php) (not required but recommended)
+
+It is possible to use a tool like [PHP Rector](https://github.com/rectorphp/rector/) to make this easier.
+
+For a detailed overview of changed dependencies see [sulu/sulu#6553](https://github.com/sulu/sulu/pull/6553/files).
+
+### Drop support for Symfony 5.3 and lower
+
+The support for Symfony 5.3 and lower was dropped.
+Upgrade the used Symfony Components to 5.4 or greater.
+
+ - [https://symfony.com/doc/5.4/setup/upgrade_minor.html](https://symfony.com/doc/5.4/setup/upgrade_minor.html)
+ - [https://symfony.com/doc/5.0/setup/upgrade_major.html](https://symfony.com/doc/5.0/setup/upgrade_major.html)
+
+It is possible to use a tool like [PHP Rector Symfony](https://github.com/rectorphp/rector-symfony/) to make this easier.
+
+For a detailed overview of changed dependencies see [sulu/sulu#6553](https://github.com/sulu/sulu/pull/6553/files).
+
+The Symfony 4.4 compatibility service
+`Sulu\Bundle\WebsiteBundle\Controller\ExceptionController` / `sulu_website.exception_controller`
+was removed. See also [UPGRADE 2.1.0-RC1](#210-rc1).
+
 ### FOSJSRoutingBundle upgraded
 
 The FOSJSRoutingBundle was upgraded and requires to change the routing include for it:

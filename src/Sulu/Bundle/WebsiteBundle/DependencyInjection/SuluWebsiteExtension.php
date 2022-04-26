@@ -16,7 +16,6 @@ use Sulu\Bundle\WebsiteBundle\Controller\DefaultController;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepositoryInterface;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderInterface;
 use Sulu\Component\HttpKernel\SuluKernel;
-use Symfony\Bundle\TwigBundle\Controller\ExceptionController;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -34,12 +33,6 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
 
     public function prepend(ContainerBuilder $container)
     {
-        if ($container->hasExtension('twig') && \class_exists(ExceptionController::class)) {
-            $container->prependExtensionConfig('twig', [
-                'exception_controller' => null,
-            ]);
-        }
-
         if ($container->hasExtension('sulu_admin')) {
             $container->prependExtensionConfig(
                 'sulu_admin',
@@ -155,10 +148,6 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
             // add alias for default controller
             $container->setAlias(DefaultController::class, 'sulu_website.default_controller')
                 ->setPublic(true);
-
-            if (\class_exists(ExceptionController::class)) {
-                $loader->load('exception_controller.xml');
-            }
         }
 
         $this->configurePersistence($config['objects'], $container);
