@@ -11,12 +11,10 @@
 
 namespace Sulu\Bundle\TagBundle\Tag\Exception;
 
-use Exception;
-
 /**
  * This Exception is thrown when a Tag already exists.
  */
-class TagAlreadyExistsException extends Exception
+class TagAlreadyExistsException extends \Exception
 {
     /**
      * The id of the tag, which was not found.

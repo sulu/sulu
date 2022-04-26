@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Compat;
 
-use DateTime;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 
 /**
@@ -92,26 +91,26 @@ interface StructureInterface extends \JsonSerializable
     /**
      * return created datetime.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getCreated();
 
     /**
      * sets created datetime.
      */
-    public function setCreated(DateTime $created);
+    public function setCreated(\DateTime $created);
 
     /**
      * returns changed DateTime.
      *
-     * @return DateTime
+     * @return \DateTime
      */
     public function getChanged();
 
     /**
      * sets changed datetime.
      */
-    public function setChanged(DateTime $changed);
+    public function setChanged(\DateTime $changed);
 
     /**
      * key of template definition.

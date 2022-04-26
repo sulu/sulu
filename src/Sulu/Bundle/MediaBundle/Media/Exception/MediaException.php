@@ -11,12 +11,10 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Exception;
 
-use Exception;
-
 /**
  * This Exception is thrown when a Uploaded File is not valid.
  */
-class MediaException extends Exception
+class MediaException extends \Exception
 {
     /**
      * Used when $_FILES['error'] > 0.

@@ -11,8 +11,6 @@
 
 namespace Sulu\Component\Persistence;
 
-use Traversable;
-
 /**
  * Offers methods for easier handling of relations.
  */
@@ -22,7 +20,7 @@ trait RelationTrait
      * This method processes a put request (delete non-existing entities, update existing entities, add new
      * entries), and let the single actions be modified by callbacks.
      *
-     * @param Traversable $entities The list of entities to work on
+     * @param \Traversable $entities The list of entities to work on
      * @param array $requestEntities The entities as retrieved from the request
      * @param callable $get Return id of entity
      * @param callable $add
@@ -54,7 +52,7 @@ trait RelationTrait
     /**
      * Compares entities with data array and calls the given callbacks.
      *
-     * @param Traversable $entities The list of entities to work on
+     * @param \Traversable $entities The list of entities to work on
      * @param array $requestEntities The entities as retrieved from the request
      * @param callable $compare return true if data matches entity
      * @param callable $add
@@ -83,7 +81,7 @@ trait RelationTrait
      * Applies a given compare function to a given set of data entries. Returns the entity itself and its key with the
      * $matchedEntry and $matchKey parameters.
      *
-     * @param Traversable $entity The entity to compare
+     * @param \Traversable $entity The entity to compare
      * @param array $requestEntities The set of entities to search in
      * @param callable $compare Compare function, which defines if data matches the entity
      * @param array $matchedEntry
@@ -107,7 +105,7 @@ trait RelationTrait
     /**
      * function compares entities with data of array and makes callback.
      *
-     * @param Traversable $entities
+     * @param \Traversable $entities
      * @param callable $compare
      * @param callable $add
      * @param callable $update

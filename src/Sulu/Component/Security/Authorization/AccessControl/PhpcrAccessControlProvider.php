@@ -11,8 +11,6 @@
 
 namespace Sulu\Component\Security\Authorization\AccessControl;
 
-use ReflectionClass;
-use ReflectionException;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
@@ -97,8 +95,8 @@ class PhpcrAccessControlProvider implements AccessControlProviderInterface
     public function supports($type)
     {
         try {
-            $class = new ReflectionClass($type);
-        } catch (ReflectionException $e) {
+            $class = new \ReflectionClass($type);
+        } catch (\ReflectionException $e) {
             // in case the class does not exist there is no support
             return false;
         }

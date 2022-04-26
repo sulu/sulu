@@ -11,8 +11,6 @@
 
 namespace Sulu\Component\Content\Types\ResourceLocator;
 
-use DateTime;
-
 /**
  * holds information for one Resourcelocator and his history.
  */
@@ -24,7 +22,7 @@ class ResourceLocatorInformation
     private $resourceLocator;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     private $created;
 

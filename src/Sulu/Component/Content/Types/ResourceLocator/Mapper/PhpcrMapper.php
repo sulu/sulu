@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Types\ResourceLocator\Mapper;
 
-use DateTime;
 use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;
 use PHPCR\PathNotFoundException;
@@ -216,7 +215,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
                     $result[] = new ResourceLocatorInformation(
                     //backward compability
                         $resourceLocator,
-                        $node->getPropertyValueWithDefault('sulu:created', new DateTime()),
+                        $node->getPropertyValueWithDefault('sulu:created', new \DateTime()),
                         $node->getIdentifier()
                     );
                 }

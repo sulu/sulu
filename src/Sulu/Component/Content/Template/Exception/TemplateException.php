@@ -11,12 +11,10 @@
 
 namespace Sulu\Component\Content\Template\Exception;
 
-use Exception;
-
 /**
  * Thrown when there is an error concerning a template.
  */
-class TemplateException extends Exception
+class TemplateException extends \Exception
 {
     /**
      * The template causing the error.

@@ -11,9 +11,7 @@
 
 namespace Sulu\Component\Content\Exception;
 
-use Exception;
-
-class ResourceLocatorMovedException extends Exception
+class ResourceLocatorMovedException extends \Exception
 {
     /**
      * new resource locator after move.
