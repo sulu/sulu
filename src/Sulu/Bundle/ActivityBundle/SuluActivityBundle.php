@@ -15,6 +15,7 @@ use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\ActivityBundle\Infrastructure\Symfony\DependencyInjection\SuluActivityExtension;
 use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluActivityBundle extends Bundle
@@ -31,7 +32,7 @@ class SuluActivityBundle extends Bundle
         );
     }
 
-    public function getContainerExtension()
+    public function getContainerExtension(): ExtensionInterface
     {
         return new SuluActivityExtension();
     }
