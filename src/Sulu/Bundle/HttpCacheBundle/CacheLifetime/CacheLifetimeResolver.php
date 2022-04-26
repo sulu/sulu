@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\HttpCacheBundle\CacheLifetime;
 
 use Cron\CronExpression;
-use DateTime;
 
 /**
  * The cache lifetime resolver resolves the given cache lifetime metadata based on the type
@@ -78,7 +77,7 @@ class CacheLifetimeResolver implements CacheLifetimeResolverInterface
             return 0;
         }
 
-        $now = new DateTime();
+        $now = new \DateTime();
         $cronExpression = CronExpression::factory($expression);
         $endTime = $cronExpression->getNextRunDate($now);
 

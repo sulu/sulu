@@ -11,11 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
-use DOMDocument;
-use DOMNode;
-use DOMXPath;
 use Imagine\Image\ImageInterface;
-use InvalidArgumentException;
 use Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\InvalidMediaFormatException;
 use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Config\Util\XmlUtils;
@@ -38,7 +34,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
     public const SCALE_FORCE_RATIO_DEFAULT = true;
 
     /**
-     * @var DOMXPath
+     * @var \DOMXPath
      */
     protected $xpath;
 
@@ -119,7 +115,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
         // load xml file
         $xmlDoc = $this->tryLoad($file);
 
-        $this->xpath = new DOMXPath($xmlDoc);
+        $this->xpath = new \DOMXPath($xmlDoc);
         $this->xpath->registerNamespace('x', static::XML_NAMESPACE_URI);
 
         foreach ($this->xpath->query('/x:formats/x:format') as $formatNode) {
@@ -135,7 +131,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
      *
      * @param array $formats
      */
-    private function addFormatFromFormatNode(DOMNode $formatNode, &$formats)
+    private function addFormatFromFormatNode(\DOMNode $formatNode, &$formats)
     {
         $key = $this->getKeyFromFormatNode($formatNode);
         $internal = $this->getInternalFlagFromFormatNode($formatNode);
@@ -160,7 +156,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
      *
      * @param string $file The path to the xml file
      *
-     * @return DOMDocument
+     * @return \DOMDocument
      *
      * @throws InvalidMediaFormatException
      */
@@ -168,7 +164,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
     {
         try {
             return XmlUtils::loadFile($file, __DIR__ . static::SCHEME_PATH);
-        } catch (InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
             throw new InvalidMediaFormatException(
                 \sprintf('Could not parse image formats XML file "%s"', $file),
                 null,
@@ -203,7 +199,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
      * For a given dom node returns an array of parameters. The xml name of the parameter
      * tag can be passed as an argument.
      *
-     * @param DOMNode $node
+     * @param \DOMNode $node
      * @param string $parameterName
      *
      * @return array
@@ -228,42 +224,42 @@ abstract class BaseXmlFormatLoader extends FileLoader
      *
      * @return string
      */
-    abstract protected function getKeyFromFormatNode(DOMNode $formatNode);
+    abstract protected function getKeyFromFormatNode(\DOMNode $formatNode);
 
     /**
      * For a given format node returns the internal flag of the format.
      *
      * @return bool
      */
-    abstract protected function getInternalFlagFromFormatNode(DOMNode $formatNode);
+    abstract protected function getInternalFlagFromFormatNode(\DOMNode $formatNode);
 
     /**
      * For a given format node returns the meta information of the format.
      *
      * @return array
      */
-    abstract protected function getMetaFromFormatNode(DOMNode $formatNode);
+    abstract protected function getMetaFromFormatNode(\DOMNode $formatNode);
 
     /**
      * For a given format node returns the scale information of the format.
      *
      * @return array
      */
-    abstract protected function getScaleFromFormatNode(DOMNode $formatNode);
+    abstract protected function getScaleFromFormatNode(\DOMNode $formatNode);
 
     /**
      * For a given format node returns the transformations for it.
      *
      * @return array
      */
-    abstract protected function getTransformationsFromFormatNode(DOMNode $formatNode);
+    abstract protected function getTransformationsFromFormatNode(\DOMNode $formatNode);
 
     /**
      * For a given format node returns the options for it.
      *
      * @return array
      */
-    private function getOptionsFromFormatNode(DOMNode $formatNode)
+    private function getOptionsFromFormatNode(\DOMNode $formatNode)
     {
         $optionsNode = $this->xpath->query('x:options', $formatNode)->item(0);
 

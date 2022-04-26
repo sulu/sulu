@@ -11,9 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\ListMetadata\Exception;
 
-use Exception;
-
-class FieldMetadataNotFoundException extends Exception
+class FieldMetadataNotFoundException extends \Exception
 {
     /**
      * @var string

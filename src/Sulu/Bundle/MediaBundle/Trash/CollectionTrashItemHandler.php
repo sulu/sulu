@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\MediaBundle\Trash;
 
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
@@ -153,10 +152,10 @@ final class CollectionTrashItemHandler implements
 
         if ($collection instanceof Collection) {
             if ($data['changed'] ?? null) {
-                $collection->setChanged(new DateTime($data['changed']));
+                $collection->setChanged(new \DateTime($data['changed']));
             }
             if ($data['created'] ?? null) {
-                $collection->setCreated(new DateTime($data['created']));
+                $collection->setCreated(new \DateTime($data['created']));
             }
             $collection->setCreator($this->findEntity(UserInterface::class, $data['creatorId'] ?? null));
             $collection->setChanger($this->findEntity(UserInterface::class, $data['changerId'] ?? null));

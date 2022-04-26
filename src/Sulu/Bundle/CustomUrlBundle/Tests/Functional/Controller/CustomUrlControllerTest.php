@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CustomUrlBundle\Tests\Functional\Controller;
 
-use DateTime;
 use Doctrine\Persistence\ObjectRepository;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\DocumentManagerBundle\Slugifier\Urlizer;
@@ -156,8 +155,8 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertArrayHasKey('creator', $responseData);
         $this->assertArrayHasKey('changer', $responseData);
 
-        $this->assertLessThanOrEqual(new DateTime(), new DateTime($responseData['created']));
-        $this->assertLessThanOrEqual(new DateTime(), new DateTime($responseData['changed']));
+        $this->assertLessThanOrEqual(new \DateTime(), new \DateTime($responseData['created']));
+        $this->assertLessThanOrEqual(new \DateTime(), new \DateTime($responseData['changed']));
         $this->assertEquals(Urlizer::urlize($data['title']), $responseData['nodeName']);
         if (\array_key_exists('targetDocument', $data)) {
             $this->assertEquals('Homepage', $responseData['targetTitle']);
@@ -546,8 +545,8 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertArrayHasKey('creator', $responseData);
         $this->assertArrayHasKey('changer', $responseData);
 
-        $this->assertLessThanOrEqual(new DateTime(), new DateTime($responseData['created']));
-        $this->assertLessThanOrEqual(new DateTime(), new DateTime($responseData['changed']));
+        $this->assertLessThanOrEqual(new \DateTime(), new \DateTime($responseData['created']));
+        $this->assertLessThanOrEqual(new \DateTime(), new \DateTime($responseData['changed']));
         $this->assertEquals(Urlizer::urlize($data['title']), $responseData['nodeName']);
         if (\array_key_exists('targetDocument', $data)) {
             $this->assertEquals('Homepage', $responseData['targetTitle']);
@@ -592,7 +591,7 @@ class CustomUrlControllerTest extends SuluTestCase
 
         $uuid = $this->testPost($data, $url);
 
-        $dateTime = new DateTime();
+        $dateTime = new \DateTime();
 
         $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/custom-urls/' . $uuid);
 
@@ -609,8 +608,8 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertArrayHasKey('creator', $responseData);
         $this->assertArrayHasKey('changer', $responseData);
 
-        $this->assertGreaterThanOrEqual(new DateTime($responseData['created']), $dateTime);
-        $this->assertGreaterThanOrEqual(new DateTime($responseData['changed']), $dateTime);
+        $this->assertGreaterThanOrEqual(new \DateTime($responseData['created']), $dateTime);
+        $this->assertGreaterThanOrEqual(new \DateTime($responseData['changed']), $dateTime);
         $this->assertEquals(Urlizer::urlize($data['title']), $responseData['nodeName']);
         if (\array_key_exists('targetDocument', $data)) {
             $this->assertEquals('Homepage', $responseData['targetTitle']);
@@ -665,7 +664,7 @@ class CustomUrlControllerTest extends SuluTestCase
         }
 
         $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/custom-urls');
-        $requestTime = new DateTime();
+        $requestTime = new \DateTime();
 
         $response = $this->client->getResponse();
         $responseDataComplete = \json_decode($response->getContent(), true);
@@ -684,8 +683,8 @@ class CustomUrlControllerTest extends SuluTestCase
             $this->assertArrayHasKey('creator', $responseData);
             $this->assertArrayHasKey('changer', $responseData);
 
-            $this->assertLessThanOrEqual($requestTime, new DateTime($responseData['created']));
-            $this->assertLessThanOrEqual($requestTime, new DateTime($responseData['changed']));
+            $this->assertLessThanOrEqual($requestTime, new \DateTime($responseData['created']));
+            $this->assertLessThanOrEqual($requestTime, new \DateTime($responseData['changed']));
             if (\array_key_exists('targetDocument', $data)) {
                 $this->assertEquals('Homepage', $responseData['targetTitle']);
             } else {

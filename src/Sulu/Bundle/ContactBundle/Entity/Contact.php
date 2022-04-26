@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Accessor;
@@ -57,17 +56,17 @@ class Contact extends ApiEntity implements ContactInterface
     protected $title;
 
     /**
-     * @var DateTime|null
+     * @var \DateTime|null
      */
     protected $birthday;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     protected $created;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     protected $changed;
 
@@ -810,7 +809,7 @@ class Contact extends ApiEntity implements ContactInterface
     /**
      * @return $this
      */
-    public function setCreated(DateTime $created)
+    public function setCreated(\DateTime $created)
     {
         $this->created = $created;
 
@@ -820,7 +819,7 @@ class Contact extends ApiEntity implements ContactInterface
     /**
      * @return $this
      */
-    public function setChanged(DateTime $changed)
+    public function setChanged(\DateTime $changed)
     {
         $this->changed = $changed;
 

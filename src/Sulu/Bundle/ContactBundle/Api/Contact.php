@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Api;
 
-use DateTime;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
@@ -289,7 +288,7 @@ class Contact extends ApiWrapper
     /**
      * Set birthday.
      *
-     * @param DateTime $birthday
+     * @param \DateTime $birthday
      *
      * @return Contact
      */
@@ -303,7 +302,7 @@ class Contact extends ApiWrapper
     /**
      * Get birthday.
      *
-     * @return DateTime
+     * @return \DateTime
      *
      * @VirtualProperty
      * @SerializedName("birthday")
@@ -317,7 +316,7 @@ class Contact extends ApiWrapper
     /**
      * Get created.
      *
-     * @return DateTime
+     * @return \DateTime
      *
      * @VirtualProperty
      * @SerializedName("created")
@@ -331,7 +330,7 @@ class Contact extends ApiWrapper
     /**
      * Get changed.
      *
-     * @return DateTime
+     * @return \DateTime
      *
      * @VirtualProperty
      * @SerializedName("changed")

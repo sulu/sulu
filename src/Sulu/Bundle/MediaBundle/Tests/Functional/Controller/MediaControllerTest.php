@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
-use DateTime;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
@@ -290,8 +289,8 @@ class MediaControllerTest extends SuluTestCase
         $fileVersion->addCategory($this->category2);
         $fileVersion->addTag($this->tag1);
         $fileVersion->addTag($this->tag2);
-        $fileVersion->setChanged(new DateTime('1937-04-20'));
-        $fileVersion->setCreated(new DateTime('1937-04-20'));
+        $fileVersion->setChanged(new \DateTime('1937-04-20'));
+        $fileVersion->setCreated(new \DateTime('1937-04-20'));
         $fileVersion->setStorageOptions(['segment' => '1', 'fileName' => $name . '.' . $extension]);
         $storagePath = $this->getStoragePath();
 
@@ -387,9 +386,9 @@ class MediaControllerTest extends SuluTestCase
             '/uploads/media/50x50/1/0-photo.jpg'
         );
         $this->assertFalse($this->client->getResponse()->isCacheable());
-        $expiresDate = new DateTime($this->client->getResponse()->headers->get('Expires'));
+        $expiresDate = new \DateTime($this->client->getResponse()->headers->get('Expires'));
         $expiresDate->modify('+1 second');
-        $this->assertGreaterThanOrEqual(new DateTime(), $expiresDate);
+        $this->assertGreaterThanOrEqual(new \DateTime(), $expiresDate);
     }
 
     /**

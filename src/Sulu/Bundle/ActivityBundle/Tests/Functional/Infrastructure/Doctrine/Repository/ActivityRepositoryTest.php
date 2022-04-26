@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ActivityBundle\Tests\Functional\Infrastructure\Doctrine\Repository;
 
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -51,7 +50,7 @@ class ActivityRepositoryTest extends SuluTestCase
         $this->domainEvent->getEventType()->willReturn('created');
         $this->domainEvent->getEventContext()->willReturn(['relatedPageId' => 'page-123']);
         $this->domainEvent->getEventPayload()->willReturn(['name' => 'name-123', 'description' => 'description-123']);
-        $this->domainEvent->getEventDateTime()->willReturn(new DateTimeImmutable());
+        $this->domainEvent->getEventDateTime()->willReturn(new \DateTimeImmutable());
         $this->domainEvent->getEventBatch()->willReturn('batch-1234');
         $this->domainEvent->getUser()->willReturn(null);
         $this->domainEvent->getResourceKey()->willReturn('pages');
@@ -67,7 +66,7 @@ class ActivityRepositoryTest extends SuluTestCase
 
     public function testCreateForDomainEvent(): void
     {
-        $dateTime = new DateTimeImmutable('2020-01-01');
+        $dateTime = new \DateTimeImmutable('2020-01-01');
         $user = $this->prophesize(UserInterface::class);
 
         $this->domainEvent->getEventDateTime()->willReturn($dateTime);

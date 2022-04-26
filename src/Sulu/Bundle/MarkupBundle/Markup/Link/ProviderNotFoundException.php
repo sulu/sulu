@@ -11,12 +11,10 @@
 
 namespace Sulu\Bundle\MarkupBundle\Markup\Link;
 
-use Exception;
-
 /**
  * Indicates not existing provider.
  */
-class ProviderNotFoundException extends Exception
+class ProviderNotFoundException extends \Exception
 {
     /**
      * @var string

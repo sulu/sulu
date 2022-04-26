@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\SearchBundle\Search;
 
-use DateTime;
 use Massive\Bundle\SearchBundle\Search\Document as BaseDocument;
 
 /**
@@ -21,7 +20,7 @@ use Massive\Bundle\SearchBundle\Search\Document as BaseDocument;
 class Document extends BaseDocument
 {
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     protected $created;
 
@@ -36,7 +35,7 @@ class Document extends BaseDocument
     protected $creatorId;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     protected $changed;
 

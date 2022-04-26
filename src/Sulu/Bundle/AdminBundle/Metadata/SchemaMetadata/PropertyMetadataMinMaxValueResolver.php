@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
-use InvalidArgumentException;
 use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Webmozart\Assert\Assert;
 
@@ -24,7 +23,7 @@ class PropertyMetadataMinMaxValueResolver
      * ?int $max - value of max parameter
      * </code>.
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function resolveMinMaxValue(
         ContentPropertyMetadata $propertyMetadata,

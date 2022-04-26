@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\View;
 
-use DomainException;
-
 class PreviewFormViewBuilder implements PreviewFormViewBuilderInterface
 {
     use ViewBuilderTrait;
@@ -189,33 +187,33 @@ class PreviewFormViewBuilder implements PreviewFormViewBuilderInterface
     public function getView(): View
     {
         if (!$this->view->getOption('resourceKey')) {
-            throw new DomainException(
+            throw new \DomainException(
                 'A view for a Form view needs a "resourceKey" option.'
                 . ' You have likely forgotten to call the "setResourceKey" method.'
             );
         }
 
         if (!$this->view->getOption('formKey')) {
-            throw new DomainException(
+            throw new \DomainException(
                 'A view for a Form view needs a "formKey" option.'
                 . ' You have likely forgotten to call the "setFormKey" method.'
             );
         }
 
         if ($this->view->getOption('locales') && false === \strpos($this->view->getPath(), ':locale')) {
-            throw new DomainException(
+            throw new \DomainException(
                 'A view for a Form view needs a ":locale" placeholder in its URL if some "locales" have been set.'
             );
         }
 
         if (!$this->view->getOption('locales') && false !== \strpos($this->view->getPath(), ':locale')) {
-            throw new DomainException(
+            throw new \DomainException(
                 'A view for a Form view cannot have a ":locale" placeholder in its URL if no "locales" have been set.'
             );
         }
 
         if ($this->view->getOption('editView') === $this->view->getName()) {
-            throw new DomainException(
+            throw new \DomainException(
                 'A view for a Form view should not redirect to itself using the "editView" option.'
             );
         }

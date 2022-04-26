@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Repository;
 
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\ItemNotFoundException;
 use PHPCR\SessionInterface;
@@ -844,11 +843,11 @@ class ContentRepositoryTest extends SuluTestCase
         // Jackalope Jackrabbit will return a \DateTime and DBAL will return a
         // string. See: https://github.com/jackalope/jackalope-doctrine-dbal/issues/325
         if (\is_string($created)) {
-            $created = new DateTime($result['created']);
+            $created = new \DateTime($result['created']);
         }
 
         if (\is_string($changed)) {
-            $changed = new DateTime($result['changed']);
+            $changed = new \DateTime($result['changed']);
         }
 
         $this->assertGreaterThan($link->getCreated(), $created);

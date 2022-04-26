@@ -14,7 +14,6 @@ namespace Sulu\Bundle\PreviewBundle\Preview;
 use Doctrine\Common\Cache\Cache;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use RuntimeException;
 
 /**
  * @internal BC Layer between doctrine and symfony cache
@@ -43,7 +42,7 @@ class PreviewCache
         }
 
         if (!$cache instanceof Cache && !$cache instanceof CacheItemPoolInterface) {
-            throw new RuntimeException(
+            throw new \RuntimeException(
                 \sprintf(
                     'The $cache need to be an instance of "%s" or "%s" but got "%s".',
                     CacheItemPoolInterface::class,

@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Command;
 
-use Exception;
-use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,7 +19,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\Process\Process;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use ZipArchive;
 
 class UpdateBuildCommand extends Command
 {
@@ -238,11 +235,11 @@ class UpdateBuildCommand extends Command
         $response = $this->httpClient->request('GET', $remoteArchive);
         \file_put_contents($tempFileZip, $response->getContent());
 
-        if (!\class_exists(ZipArchive::class)) {
-            throw new RuntimeException('The "ext-zip" extension is required to download the admin build.');
+        if (!\class_exists(\ZipArchive::class)) {
+            throw new \RuntimeException('The "ext-zip" extension is required to download the admin build.');
         }
 
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
         if ($zip->open($tempFileZip)) {
             $output->writeln('<info>Extract ZIP archive...</info>');
             $zip->extractTo($tempDirectory);
@@ -310,11 +307,11 @@ class UpdateBuildCommand extends Command
         $additionalJsonArray = \json_decode($additionalJson, true);
 
         if (!$mainJsonArray) {
-            throw new RuntimeException(\sprintf('The following is not a valid json: ' . \PHP_EOL . '%s', $mainJson));
+            throw new \RuntimeException(\sprintf('The following is not a valid json: ' . \PHP_EOL . '%s', $mainJson));
         }
 
         if (!$additionalJsonArray) {
-            throw new RuntimeException(\sprintf('The following is not a valid json: ' . \PHP_EOL . '%s', $additionalJson));
+            throw new \RuntimeException(\sprintf('The following is not a valid json: ' . \PHP_EOL . '%s', $additionalJson));
         }
 
         $jsonArray = \array_replace_recursive($mainJsonArray, $additionalJsonArray);
@@ -367,7 +364,7 @@ class UpdateBuildCommand extends Command
         $packageJson = \json_decode($this->getLocalFile(static::ASSETS_DIR . 'package.json'), true);
 
         if (!$packageJson) {
-            throw new Exception(\sprintf('Could not parse "%s" file', static::ASSETS_DIR . 'package.json'));
+            throw new \Exception(\sprintf('Could not parse "%s" file', static::ASSETS_DIR . 'package.json'));
         }
 
         $suluVendorAssetFolder = \dirname(\dirname(\dirname(\dirname(\dirname(__DIR__)))));

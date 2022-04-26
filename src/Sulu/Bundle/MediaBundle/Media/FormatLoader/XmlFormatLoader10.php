@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
-use DOMNode;
 use Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\MissingScaleDimensionException;
 
 /**
@@ -35,24 +34,24 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
         return parent::load($resource, $type);
     }
 
-    protected function getKeyFromFormatNode(DOMNode $formatNode)
+    protected function getKeyFromFormatNode(\DOMNode $formatNode)
     {
         return $this->xpath->query('x:name', $formatNode)->item(0)->nodeValue;
     }
 
-    protected function getInternalFlagFromFormatNode(DOMNode $formatNode)
+    protected function getInternalFlagFromFormatNode(\DOMNode $formatNode)
     {
         return false;
     }
 
-    protected function getMetaFromFormatNode(DOMNode $formatNode)
+    protected function getMetaFromFormatNode(\DOMNode $formatNode)
     {
         return [
             'title' => [],
         ];
     }
 
-    protected function getScaleFromFormatNode(DOMNode $formatNode)
+    protected function getScaleFromFormatNode(\DOMNode $formatNode)
     {
         foreach ($this->xpath->query('x:commands/x:command', $formatNode) as $commandNode) {
             $action = $this->xpath->query('x:action', $commandNode)->item(0)->nodeValue;
@@ -100,7 +99,7 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
         return;
     }
 
-    protected function getTransformationsFromFormatNode(DOMNode $formatNode)
+    protected function getTransformationsFromFormatNode(\DOMNode $formatNode)
     {
         $transformations = [];
 

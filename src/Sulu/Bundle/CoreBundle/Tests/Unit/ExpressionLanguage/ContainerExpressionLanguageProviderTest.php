@@ -13,7 +13,6 @@ namespace Sulu\Bundle\CoreBundle\Tests\Unit\ExpressionLanguage;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use stdClass;
 use Sulu\Bundle\CoreBundle\ExpressionLanguage\ContainerExpressionLanguageProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -41,7 +40,7 @@ class ContainerExpressionLanguageProviderTest extends TestCase
 
     public function testEvaluateWithService()
     {
-        $testService = new stdClass();
+        $testService = new \stdClass();
         $testService->variable = 'test';
 
         $this->container->get('test_service')->willReturn($testService);

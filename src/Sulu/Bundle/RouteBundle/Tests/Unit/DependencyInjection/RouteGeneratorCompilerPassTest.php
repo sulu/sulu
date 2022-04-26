@@ -14,7 +14,6 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\DependencyInjection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use stdClass;
 use Sulu\Bundle\RouteBundle\DependencyInjection\RouteGeneratorCompilerPass;
 use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -39,7 +38,7 @@ class RouteGeneratorCompilerPassTest extends TestCase
         $container->hasParameter(RouteGeneratorCompilerPass::PARAMETER_NAME)->willReturn(true);
         $container->getParameter(RouteGeneratorCompilerPass::PARAMETER_NAME)->willReturn(
             [
-                stdClass::class => [
+                \stdClass::class => [
                     'generator' => $generatorAlias,
                     'options' => [
                         'route_schema' => '/{entity.getTitle()}',

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Trash;
 
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
@@ -275,7 +274,7 @@ final class ContactTrashItemHandler implements
         $contact->setFirstName($data['firstName'] ?? null);
         $contact->setMiddleName($data['middleName'] ?? null);
         $contact->setLastName($data['lastName'] ?? null);
-        $contact->setBirthday(isset($data['birthday']) ? new DateTime($data['birthday']) : null);
+        $contact->setBirthday(isset($data['birthday']) ? new \DateTime($data['birthday']) : null);
         $contact->setSalutation($data['salutation'] ?? null);
         $contact->setFormOfAddress($data['formOfAddress'] ?? null);
         $contact->setNewsletter($data['newsletter'] ?? null);
@@ -288,10 +287,10 @@ final class ContactTrashItemHandler implements
 
         if ($contact instanceof Contact) {
             if ($data['changed'] ?? null) {
-                $contact->setChanged(new DateTime($data['changed']));
+                $contact->setChanged(new \DateTime($data['changed']));
             }
             if ($data['created'] ?? null) {
-                $contact->setCreated(new DateTime($data['created']));
+                $contact->setCreated(new \DateTime($data['created']));
             }
             $contact->setCreator($this->findEntity(UserInterface::class, $data['creatorId'] ?? null));
             $contact->setChanger($this->findEntity(UserInterface::class, $data['changerId'] ?? null));

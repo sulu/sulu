@@ -19,7 +19,6 @@ use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use ReflectionClass;
 use Sulu\Bundle\PageBundle\EventListener\WebspaceSerializeEventSubscriber;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Localization\Localization;
@@ -93,7 +92,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
     {
         $events = $this->webspaceSerializeEventSubscriber->getSubscribedEvents();
 
-        $reflection = new ReflectionClass(\get_class($this->webspaceSerializeEventSubscriber));
+        $reflection = new \ReflectionClass(\get_class($this->webspaceSerializeEventSubscriber));
 
         foreach ($events as $event) {
             $this->assertTrue($reflection->hasMethod($event['method']));
@@ -130,7 +129,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
 
         $this->webspaceManager->getPortalInformationsByWebspaceKey('prod', 'sulu_io')->willReturn($portalInformation);
 
-        $reflection = new ReflectionClass(\get_class($this->webspaceSerializeEventSubscriber));
+        $reflection = new \ReflectionClass(\get_class($this->webspaceSerializeEventSubscriber));
         $method = $reflection->getMethod('appendPortalInformation');
         $method->setAccessible(true);
 
@@ -165,7 +164,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
             $serialzedData
         )->shouldBeCalled();
 
-        $reflection = new ReflectionClass(\get_class($this->webspaceSerializeEventSubscriber));
+        $reflection = new \ReflectionClass(\get_class($this->webspaceSerializeEventSubscriber));
         $method = $reflection->getMethod('appendUrls');
         $method->setAccessible(true);
 
@@ -230,7 +229,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
             $serialzedData
         )->shouldBeCalled();
 
-        $reflection = new ReflectionClass(\get_class($this->webspaceSerializeEventSubscriber));
+        $reflection = new \ReflectionClass(\get_class($this->webspaceSerializeEventSubscriber));
         $method = $reflection->getMethod('appendCustomUrls');
         $method->setAccessible(true);
 
@@ -272,7 +271,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
             $serialzedData
         )->shouldBeCalled();
 
-        $reflection = new ReflectionClass(\get_class($this->webspaceSerializeEventSubscriber));
+        $reflection = new \ReflectionClass(\get_class($this->webspaceSerializeEventSubscriber));
         $method = $reflection->getMethod('appendPermissions');
         $method->setAccessible(true);
 

@@ -15,7 +15,6 @@ use League\Flysystem\AzureBlobStorage\AzureBlobStorageAdapter;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
 use MicrosoftAzure\Storage\Blob\BlobRestProxy;
-use RuntimeException;
 
 class AzureBlobStorage extends FlysystemStorage
 {
@@ -43,7 +42,7 @@ class AzureBlobStorage extends FlysystemStorage
         parent::__construct($filesystem, $segments);
 
         if (!$filesystem instanceof Filesystem || !$filesystem->getAdapter() instanceof AzureBlobStorageAdapter) {
-            throw new RuntimeException();
+            throw new \RuntimeException();
         }
 
         $this->client = $client;

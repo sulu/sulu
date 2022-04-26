@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Functional\Model;
 
-use ArrayIterator;
 use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ChildrenBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
@@ -64,7 +63,7 @@ class FullDocument implements
 
     public function __construct()
     {
-        $this->children = new ArrayIterator();
+        $this->children = new \ArrayIterator();
     }
 
     public function getNodeName()

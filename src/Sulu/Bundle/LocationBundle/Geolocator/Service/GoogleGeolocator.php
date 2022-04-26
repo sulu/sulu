@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\LocationBundle\Geolocator\Service;
 
 use GuzzleHttp\ClientInterface;
-use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
@@ -52,7 +51,7 @@ class GoogleGeolocator implements GeolocatorInterface
                 \E_USER_DEPRECATED
             );
         } elseif (!($client instanceof HttpClientInterface)) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 \sprintf('Please provide a %s as client', HttpClientInterface::class)
             );
         }

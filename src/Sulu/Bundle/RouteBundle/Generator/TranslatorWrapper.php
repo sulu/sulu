@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\RouteBundle\Generator;
 
-use LogicException;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -43,7 +42,7 @@ class TranslatorWrapper implements TranslatorInterface, LocaleAwareInterface
 
     public function setLocale($locale): void
     {
-        throw new LogicException('Not supported.');
+        throw new \LogicException('Not supported.');
     }
 
     public function getLocale(): string

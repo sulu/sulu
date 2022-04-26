@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
-use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -243,7 +242,7 @@ interface CategoryInterface extends AuditableInterface
      *
      * @return CategoryInterface
      */
-    public function setCreated(DateTime $created);
+    public function setCreated(\DateTime $created);
 
     /**
      * Set changer.
@@ -259,5 +258,5 @@ interface CategoryInterface extends AuditableInterface
      *
      * @return CategoryInterface
      */
-    public function setChanged(DateTime $changed);
+    public function setChanged(\DateTime $changed);
 }

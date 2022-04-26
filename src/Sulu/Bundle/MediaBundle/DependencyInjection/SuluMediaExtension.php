@@ -13,9 +13,7 @@ namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
 use Contao\ImagineSvg\Imagine as SvgImagine;
 use FFMpeg\FFMpeg;
-use Imagick;
 use Imagine\Vips\Imagine as VipsImagine;
-use InvalidArgumentException;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
@@ -336,7 +334,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             $adapter = 'gd';
             if ($hasVipsAdapter) {
                 $adapter = 'vips';
-            } elseif (\class_exists(Imagick::class)) {
+            } elseif (\class_exists(\Imagick::class)) {
                 $adapter = 'imagick';
             }
 
@@ -349,7 +347,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
         // enable search
         if (true === $config['search']['enabled']) {
             if (!\class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
-                throw new InvalidArgumentException(
+                throw new \InvalidArgumentException(
                     'You have enabled sulu search integration for the SuluMediaBundle, but the SuluSearchBundle must be installed'
                 );
             }

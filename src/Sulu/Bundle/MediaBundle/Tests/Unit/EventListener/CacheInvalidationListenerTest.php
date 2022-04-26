@@ -16,7 +16,6 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use stdClass;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -153,7 +152,7 @@ class CacheInvalidationListenerTest extends TestCase
      */
     public function testPostUpdateOther($functionName)
     {
-        $entity = $this->prophesize(stdClass::class);
+        $entity = $this->prophesize(\stdClass::class);
 
         $eventArgs = $this->prophesize(LifecycleEventArgs::class);
         $eventArgs->getObject()->willReturn($entity->reveal());

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ActivityBundle\Domain\Model;
 
-use DateTimeImmutable;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 class Activity implements ActivityInterface
@@ -37,7 +36,7 @@ class Activity implements ActivityInterface
     private $payload;
 
     /**
-     * @var DateTimeImmutable
+     * @var \DateTimeImmutable
      */
     private $timestamp;
 
@@ -132,12 +131,12 @@ class Activity implements ActivityInterface
         return $this;
     }
 
-    public function getTimestamp(): DateTimeImmutable
+    public function getTimestamp(): \DateTimeImmutable
     {
         return $this->timestamp;
     }
 
-    public function setTimestamp(DateTimeImmutable $timestamp): ActivityInterface
+    public function setTimestamp(\DateTimeImmutable $timestamp): ActivityInterface
     {
         $this->timestamp = $timestamp;
 

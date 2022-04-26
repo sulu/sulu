@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
-use ArrayObject;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureGroupInterface;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
@@ -22,7 +21,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Traversable;
 
 class FixturesLoadCommand extends Command
 {
@@ -34,18 +32,18 @@ class FixturesLoadCommand extends Command
     private $executor;
 
     /**
-     * @var Traversable<DocumentFixtureInterface>
+     * @var \Traversable<DocumentFixtureInterface>
      */
     private $fixtures;
 
     public function __construct(
         DocumentExecutor $executor,
-        Traversable $fixtures = null
+        \Traversable $fixtures = null
     ) {
         parent::__construct();
 
         $this->executor = $executor;
-        $this->fixtures = $fixtures ?: new ArrayObject([]);
+        $this->fixtures = $fixtures ?: new \ArrayObject([]);
     }
 
     protected function configure()

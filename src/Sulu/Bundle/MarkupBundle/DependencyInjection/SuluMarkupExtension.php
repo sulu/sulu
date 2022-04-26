@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MarkupBundle\DependencyInjection;
 
-use Swift_Mailer;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -27,7 +26,7 @@ class SuluMarkupExtension extends Extension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
-        if (\class_exists(Swift_Mailer::class)) {
+        if (\class_exists(\Swift_Mailer::class)) {
             $loader->load('swiftmailer.xml');
         }
     }

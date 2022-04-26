@@ -14,7 +14,6 @@ namespace Sulu\Bundle\MediaBundle\Media\Storage;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
-use RuntimeException;
 
 class S3Storage extends FlysystemStorage
 {
@@ -38,7 +37,7 @@ class S3Storage extends FlysystemStorage
         parent::__construct($filesystem, $segments);
 
         if (!$filesystem instanceof Filesystem || !$filesystem->getAdapter() instanceof AwsS3Adapter) {
-            throw new RuntimeException('This storage can only handle filesystems with "AwsS3Adapter".');
+            throw new \RuntimeException('This storage can only handle filesystems with "AwsS3Adapter".');
         }
 
         $this->adapter = $filesystem->getAdapter();

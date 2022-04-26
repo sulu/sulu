@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle\Search\Metadata;
 
-use InvalidArgumentException;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Factory;
 use Massive\Bundle\SearchBundle\Search\Metadata\ComplexMetadata;
@@ -395,7 +394,7 @@ EOT;
                     $metadata->setImageUrlField($field);
                     break;
                 default:
-                    throw new InvalidArgumentException(
+                    throw new \InvalidArgumentException(
                         \sprintf(
                             'Unknown search field role "%s", role must be one of "%s"',
                             $tagAttributes['role'],

@@ -15,7 +15,6 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use stdClass;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
@@ -53,8 +52,8 @@ class PermissionListenerTest extends TestCase
     public function testOnPermissionUpdate()
     {
         $event = new PermissionUpdateEvent(Collection::class, '1', null);
-        $document1 = new stdClass();
-        $document2 = new stdClass();
+        $document1 = new \stdClass();
+        $document2 = new \stdClass();
 
         $this->fileVersionMetaRepository->findByCollectionId('1')->willReturn([$document1, $document2]);
         $this->searchManager->deindex($document1)->shouldBeCalled();
@@ -65,7 +64,7 @@ class PermissionListenerTest extends TestCase
 
     public function testOnPermissionUpdateWrongType()
     {
-        $event = new PermissionUpdateEvent(stdClass::class, '1', null);
+        $event = new PermissionUpdateEvent(\stdClass::class, '1', null);
 
         $this->fileVersionMetaRepository->findByCollectionId(Argument::any())->shouldNotBeCalled();
         $this->searchManager->deindex(Argument::any())->shouldNotBeCalled();

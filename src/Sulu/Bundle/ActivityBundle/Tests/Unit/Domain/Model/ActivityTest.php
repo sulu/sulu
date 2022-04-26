@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ActivityBundle\Tests\Unit\Model\Event;
 
-use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
@@ -52,7 +51,7 @@ class ActivityTest extends TestCase
     public function testTimestamp(): void
     {
         $event = $this->createActivity();
-        $dateTime = new DateTimeImmutable('2020-01-01');
+        $dateTime = new \DateTimeImmutable('2020-01-01');
 
         static::assertSame($event, $event->setTimestamp($dateTime));
         static::assertSame($dateTime, $event->getTimestamp());

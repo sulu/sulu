@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle;
 
-use DateTime;
 use PHPCR\Migrations\VersionInterface;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
@@ -311,11 +310,11 @@ class Version201511240843 implements VersionInterface, ContainerAwareInterface
      */
     private function upgradeDate(&$value)
     {
-        if ($value instanceof DateTime) {
+        if ($value instanceof \DateTime) {
             return $value;
         }
 
-        $value = DateTime::createFromFormat('Y-m-d', $value);
+        $value = \DateTime::createFromFormat('Y-m-d', $value);
 
         return $value;
     }

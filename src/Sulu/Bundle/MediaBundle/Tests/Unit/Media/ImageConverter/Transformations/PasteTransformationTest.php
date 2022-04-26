@@ -11,14 +11,12 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Transformations;
 
-use Imagick;
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Imagick\Imagine as ImagickImagine;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use RuntimeException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\PasteTransformation;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Component\Config\FileLocator;
@@ -78,7 +76,7 @@ class PasteTransformationTest extends SuluTestCase
     {
         $image = $this->prophesize(ImageInterface::class);
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         $returnImage = $this->pasteTransformation->execute(
             $image->reveal(),
@@ -88,7 +86,7 @@ class PasteTransformationTest extends SuluTestCase
 
     private function createImagine()
     {
-        if (\class_exists(Imagick::class)) {
+        if (\class_exists(\Imagick::class)) {
             return new ImagickImagine();
         }
 

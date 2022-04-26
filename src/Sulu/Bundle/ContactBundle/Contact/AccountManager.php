@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Contact;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ObjectManager;
-use Exception;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\ContactBundle\Api\Account as AccountApi;
 use Sulu\Bundle\ContactBundle\Api\Contact;
@@ -90,14 +89,14 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * @param AddressEntity $address The address to be added
      * @param bool $isMain Defines if the address is the main Address of the contact
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return AccountAddressEntity
      */
     public function addAddress($account, AddressEntity $address, $isMain = false)
     {
         if (!$account || !$address) {
-            throw new Exception('Account and Address cannot be null');
+            throw new \Exception('Account and Address cannot be null');
         }
         $accountAddress = new AccountAddressEntity();
         $accountAddress->setAccount($account);
@@ -120,14 +119,14 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * @param AccountInterface $account
      * @param AccountAddressEntity $accountAddress
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return mixed|void
      */
     public function removeAddressRelation($account, $accountAddress)
     {
         if (!$account || !$accountAddress) {
-            throw new Exception('Account and AccountAddress cannot be null');
+            throw new \Exception('Account and AccountAddress cannot be null');
         }
 
         // Reload address to get all data (including relational data).

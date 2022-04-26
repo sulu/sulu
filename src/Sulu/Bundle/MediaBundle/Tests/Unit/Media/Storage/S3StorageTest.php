@@ -19,7 +19,6 @@ use League\Flysystem\Filesystem;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use RuntimeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 
 class S3StorageTest extends TestCase
@@ -28,7 +27,7 @@ class S3StorageTest extends TestCase
 
     public function testConstruct(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         $adapter = $this->prophesize(AdapterInterface::class);
         $flysystem = $this->prophesize(Filesystem::class);

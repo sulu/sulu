@@ -11,12 +11,10 @@
 
 namespace Sulu\Bundle\AdminBundle\Exception;
 
-use Exception;
-
 /**
  * An instance of this exception signals that no resource with given key was found.
  */
-class ResourceNotFoundException extends Exception
+class ResourceNotFoundException extends \Exception
 {
     /**
      * @var string

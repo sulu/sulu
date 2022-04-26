@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\PreviewBundle\Domain\Model;
 
-use DateTimeImmutable;
-
 interface PreviewLinkInterface
 {
     public const RESOURCE_KEY = 'preview_links';
@@ -41,5 +39,5 @@ interface PreviewLinkInterface
 
     public function increaseVisitCount(): self;
 
-    public function getLastVisit(): ?DateTimeImmutable;
+    public function getLastVisit(): ?\DateTimeImmutable;
 }

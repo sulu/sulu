@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CoreBundle\DataFixtures;
 
-use DOMXPath;
 use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Config\Util\XmlUtils;
 
@@ -37,7 +36,7 @@ class ReplacerXmlLoader extends FileLoader
     {
         // load xml file
         $xmlDoc = XmlUtils::loadFile($path);
-        $xpath = new DOMXPath($xmlDoc);
+        $xpath = new \DOMXPath($xmlDoc);
 
         $result = [];
 

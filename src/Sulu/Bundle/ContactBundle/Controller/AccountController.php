@@ -13,7 +13,6 @@ namespace Sulu\Bundle\ContactBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
-use Exception;
 use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
@@ -288,7 +287,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
      * @param int $accountId
      * @param int $contactId
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return Response
      */
@@ -314,7 +313,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
                 ->getRepository(self::$accountContactEntityName)
                 ->findOneBy(['contact' => $contact, 'account' => $account]);
             if ($accountContact) {
-                throw new Exception('Relation already exists');
+                throw new \Exception('Relation already exists');
             }
 
             // Create relation.
@@ -360,7 +359,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
             $view = $this->view($enfe->toArray(), 404);
         } catch (RestException $exc) {
             $view = $this->view($exc->toArray(), 400);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $view = $this->view($e->getMessage(), 400);
         }
 
@@ -372,7 +371,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
      *
      * @param int $accountId
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return Response
      */

@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\PreviewBundle\Preview\Renderer;
 
 use App\Kernel;
-use ReflectionClass;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -68,7 +67,7 @@ class PreviewKernel extends Kernel
         }
 
         if (null === $this->rootDir) {
-            $reflectionClass = new ReflectionClass(Kernel::class);
+            $reflectionClass = new \ReflectionClass(Kernel::class);
             $this->rootDir = \dirname($reflectionClass->getFileName());
         }
 
@@ -78,7 +77,7 @@ class PreviewKernel extends Kernel
     public function getProjectDir()
     {
         if (null === $this->projectDir) {
-            $reflectionClass = new ReflectionClass(Kernel::class);
+            $reflectionClass = new \ReflectionClass(Kernel::class);
             $dir = $rootDir = \dirname($reflectionClass->getFileName());
             while (!\file_exists($dir . '/composer.json')) {
                 if ($dir === \dirname($dir)) {

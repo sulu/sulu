@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\PersistenceBundle\DependencyInjection\Compiler;
 
-use InvalidArgumentException;
-use RuntimeException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -39,7 +37,7 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
     private function resolve(ContainerBuilder $container)
     {
         if (!$container->hasDefinition('doctrine.orm.listeners.resolve_target_entity')) {
-            throw new RuntimeException('Cannot find Doctrine Target Entity Resolver Listener.');
+            throw new \RuntimeException('Cannot find Doctrine Target Entity Resolver Listener.');
         }
 
         $resolveTargetEntityListener = $container->findDefinition('doctrine.orm.listeners.resolve_target_entity');
@@ -67,7 +65,7 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
      *
      * @return string
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     private function getClass(ContainerBuilder $container, $key)
     {
@@ -79,7 +77,7 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
             return $key;
         }
 
-        throw new InvalidArgumentException(
+        throw new \InvalidArgumentException(
             \sprintf('The class %s does not exist.', $key)
         );
     }

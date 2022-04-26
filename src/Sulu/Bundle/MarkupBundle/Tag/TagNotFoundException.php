@@ -11,12 +11,10 @@
 
 namespace Sulu\Bundle\MarkupBundle\Tag;
 
-use Exception;
-
 /**
  * This exception will be raised when a not existing tag was requested.
  */
-class TagNotFoundException extends Exception
+class TagNotFoundException extends \Exception
 {
     /**
      * @var string

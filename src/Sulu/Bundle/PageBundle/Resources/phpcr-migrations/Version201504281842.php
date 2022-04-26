@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle;
 
-use Exception;
 use PHPCR\Migrations\VersionInterface;
 use PHPCR\SessionInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -74,7 +73,7 @@ EOT;
                             $node->setProperty($internalLinkName, null);
                             $node->setProperty($internalLinkName, $internalNodeUuid);
                         }
-                    } catch (Exception $e) {
+                    } catch (\Exception $e) {
                         echo $e->getMessage() . \PHP_EOL;
                     }
                 }

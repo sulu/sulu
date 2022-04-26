@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
-use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -96,14 +95,14 @@ interface KeywordInterface extends AuditableInterface
     public function setChanger($changer);
 
     /**
-     * @param DateTime $created
+     * @param \DateTime $created
      *
      * @return void
      */
     public function setCreated($created);
 
     /**
-     * @param DateTime $changed
+     * @param \DateTime $changed
      *
      * @return void
      */

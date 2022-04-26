@@ -11,9 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Exception;
 
-use Exception;
-
-class PropertyMetadataMapperNotFoundException extends Exception
+class PropertyMetadataMapperNotFoundException extends \Exception
 {
     /**
      * @var string

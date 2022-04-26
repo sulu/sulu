@@ -15,7 +15,6 @@ use Massive\Bundle\SearchBundle\Search\Reindex\LocalizedReindexProviderInterface
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use stdClass;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Search\Reindex\StructureProvider;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
@@ -106,7 +105,7 @@ class StructureProviderTest extends TestCase
         $maxResults = 10;
         $offset = 5;
         $classFqn = 'Foo';
-        $objects = [new stdClass(), new stdClass()];
+        $objects = [new \stdClass(), new \stdClass()];
 
         $this->metadataFactory->getMetadataForClass($classFqn)->willReturn(
             $this->metadata1->reveal()
@@ -166,7 +165,7 @@ class StructureProviderTest extends TestCase
     public function testCount()
     {
         $class = 'Foo';
-        $objects = [new stdClass(), new stdClass()];
+        $objects = [new \stdClass(), new \stdClass()];
 
         $this->metadataFactory->getMetadataForClass($class)->willReturn(
             $this->metadata1->reveal()

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -62,12 +61,12 @@ class CategoryTranslation implements CategoryTranslationInterface
     protected $changer;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     protected $created;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     protected $changed;
 

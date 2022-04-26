@@ -15,7 +15,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use ReflectionProperty;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\PageBundle\Teaser\PHPCRPageTeaserProvider;
@@ -88,10 +87,10 @@ class PHPCRPageTeaserProviderTest extends TestCase
     {
         $configuration = $this->phpcrPageTeaserProvider->getConfiguration();
 
-        $viewProperty = new ReflectionProperty(TeaserConfiguration::class, 'view');
+        $viewProperty = new \ReflectionProperty(TeaserConfiguration::class, 'view');
         $viewProperty->setAccessible(true);
 
-        $resultToViewProperty = new ReflectionProperty(TeaserConfiguration::class, 'resultToView');
+        $resultToViewProperty = new \ReflectionProperty(TeaserConfiguration::class, 'resultToView');
         $resultToViewProperty->setAccessible(true);
 
         $this->assertEquals('sulu_page.page_edit_form', $viewProperty->getValue($configuration));

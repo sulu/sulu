@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Trash;
 
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
@@ -71,9 +70,9 @@ class PageTrashItemHandlerTest extends SuluTestCase
         $page1De->setSuluOrder(555);
         $page1De->setLocale('de');
         $page1De->setCreator(101);
-        $page1De->setCreated(new DateTime('1999-04-20'));
+        $page1De->setCreated(new \DateTime('1999-04-20'));
         $page1De->setAuthor(202);
-        $page1De->setAuthored(new DateTime('2000-04-20'));
+        $page1De->setAuthored(new \DateTime('2000-04-20'));
         $page1De->setStructureType('article');
         $page1De->getStructure()->bind([
             'article' => 'german article content',
@@ -102,9 +101,9 @@ class PageTrashItemHandlerTest extends SuluTestCase
         $page1En->setResourceSegment('test-resource-segment-en');
         $page1En->setLocale('en');
         $page1En->setCreator(303);
-        $page1En->setCreated(new DateTime('1999-04-22'));
+        $page1En->setCreated(new \DateTime('1999-04-22'));
         $page1En->setAuthor(404);
-        $page1En->setAuthored(new DateTime('2000-04-22'));
+        $page1En->setAuthored(new \DateTime('2000-04-22'));
         $page1En->setStructureType('article');
         $page1En->getStructure()->bind([
             'article' => 'english article content',
@@ -404,9 +403,9 @@ class PageTrashItemHandlerTest extends SuluTestCase
         $page1De->setSuluOrder(555);
         $page1De->setLocale('de');
         $page1De->setCreator(101);
-        $page1De->setCreated(new DateTime('1999-04-20'));
+        $page1De->setCreated(new \DateTime('1999-04-20'));
         $page1De->setAuthor(202);
-        $page1De->setAuthored(new DateTime('2000-04-20'));
+        $page1De->setAuthored(new \DateTime('2000-04-20'));
         $page1De->setStructureType('article');
         $page1De->getStructure()->bind([
             'article' => 'german article content',
@@ -435,9 +434,9 @@ class PageTrashItemHandlerTest extends SuluTestCase
         $page1En->setResourceSegment('test-resource-segment-en');
         $page1En->setLocale('en');
         $page1En->setCreator(303);
-        $page1En->setCreated(new DateTime('1999-04-22'));
+        $page1En->setCreated(new \DateTime('1999-04-22'));
         $page1En->setAuthor(404);
-        $page1En->setAuthored(new DateTime('2000-04-22'));
+        $page1En->setAuthored(new \DateTime('2000-04-22'));
         $page1En->setStructureType('article');
         $page1En->getStructure()->bind([
             'article' => 'english article content',

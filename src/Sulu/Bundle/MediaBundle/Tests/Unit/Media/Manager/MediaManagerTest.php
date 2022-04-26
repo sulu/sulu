@@ -16,7 +16,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use ReflectionProperty;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
@@ -552,7 +551,7 @@ class MediaManagerTest extends TestCase
 
     protected function createMedia($id)
     {
-        $mediaIdReflection = new ReflectionProperty(Media::class, 'id');
+        $mediaIdReflection = new \ReflectionProperty(Media::class, 'id');
         $mediaIdReflection->setAccessible(true);
 
         $media = new Media();

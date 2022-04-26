@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\PreviewBundle\Preview\Exception;
 
-use Exception;
-
 /**
  * Base exception to catch all rendering errors.
  */
@@ -46,9 +44,9 @@ abstract class PreviewRendererException extends PreviewException
      * @param int|string $id
      * @param string $webspaceKey
      * @param string $locale
-     * @param Exception $previous
+     * @param \Exception $previous
      */
-    public function __construct($message, $code, $object, $id, $webspaceKey, $locale, Exception $previous = null)
+    public function __construct($message, $code, $object, $id, $webspaceKey, $locale, \Exception $previous = null)
     {
         parent::__construct($message, $code, $previous);
 

@@ -16,8 +16,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use RuntimeException;
-use stdClass;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
@@ -71,7 +69,7 @@ class PreviewTest extends TestCase
     private $webspaceKey = 'sulu_io';
 
     /**
-     * @var stdClass|ObjectProphecy
+     * @var \stdClass|ObjectProphecy
      */
     private $object;
 
@@ -80,7 +78,7 @@ class PreviewTest extends TestCase
         $this->cache = $this->prophesize(Cache::class);
         $this->renderer = $this->prophesize(PreviewRendererInterface::class);
         $this->provider = $this->prophesize(PreviewObjectProviderInterface::class);
-        $this->object = $this->prophesize(stdClass::class);
+        $this->object = $this->prophesize(\stdClass::class);
 
         $providers = [$this->providerKey => $this->provider->reveal()];
         $objectProviderRegistry = new PreviewObjectProviderRegistry($providers);
@@ -303,7 +301,7 @@ class PreviewTest extends TestCase
     {
         $this->expectException(TokenNotFoundException::class);
 
-        $object = $this->prophesize(stdClass::class);
+        $object = $this->prophesize(\stdClass::class);
 
         $token = '123-123-123';
         $this->cache->contains($token)->willReturn(false);
@@ -385,7 +383,7 @@ class PreviewTest extends TestCase
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
         ];
 
-        $newObject = $this->prophesize(stdClass::class);
+        $newObject = $this->prophesize(\stdClass::class);
         $expectedData = [
             'id' => '1',
             'providerKey' => $this->providerKey,
@@ -446,7 +444,7 @@ class PreviewTest extends TestCase
 
     public function testUpdateContextNoContentReplacer()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The "{% block content %}" could not be found in the twig template');
 
         $data = ['title' => 'Sulu', 'template' => 'default'];
@@ -464,7 +462,7 @@ class PreviewTest extends TestCase
             'html' => '<html><body><div id="content"></div></body></html>',
         ];
 
-        $newObject = $this->prophesize(stdClass::class);
+        $newObject = $this->prophesize(\stdClass::class);
 
         $this->cache->contains($token)->willReturn(true);
         $this->cache->fetch($token)->willReturn(\json_encode($cacheData));
@@ -554,7 +552,7 @@ class PreviewTest extends TestCase
             'html' => '<html><body><div id="content"><!-- CONTENT-REPLACER --></div></body></html>',
         ];
 
-        $newObject = $this->prophesize(stdClass::class);
+        $newObject = $this->prophesize(\stdClass::class);
         $expectedData = [
             'id' => '1',
             'providerKey' => $this->providerKey,

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Compat;
 
-use DateTime;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -102,8 +101,8 @@ class StructureBridgeSerializationTest extends SuluTestCase
         $this->assertEquals('internallinks', $result->getKey());
         $this->assertEquals(1, $result->getChanger());
         $this->assertEquals(1, $result->getCreator());
-        $this->assertInstanceOf(DateTime::class, $result->getChanged());
-        $this->assertInstanceOf(DateTime::class, $result->getCreated());
+        $this->assertInstanceOf(\DateTime::class, $result->getChanged());
+        $this->assertInstanceOf(\DateTime::class, $result->getCreated());
 
         $property = $result->getProperty('internalLinks');
         $this->assertInstanceOf(Property::class, $property);

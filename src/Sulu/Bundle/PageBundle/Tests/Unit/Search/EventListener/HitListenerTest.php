@@ -18,7 +18,6 @@ use Massive\Bundle\SearchBundle\Search\QueryHit;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use ReflectionClass;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Search\EventListener\HitListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -49,7 +48,7 @@ class HitListenerTest extends TestCase
 
     protected function setUp(): void
     {
-        $reflection = $this->prophesize(ReflectionClass::class);
+        $reflection = $this->prophesize(\ReflectionClass::class);
         $reflection->isSubclassOf(BasePageDocument::class)->willReturn(true);
 
         $metadata = $this->prophesize(ClassMetadata::class);

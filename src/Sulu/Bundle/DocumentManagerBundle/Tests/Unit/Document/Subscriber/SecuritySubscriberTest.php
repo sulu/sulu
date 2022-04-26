@@ -13,7 +13,6 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Document\Subscriber;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use stdClass;
 use Sulu\Bundle\DocumentManagerBundle\Document\Subscriber\SecuritySubscriber;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -101,7 +100,7 @@ class SecuritySubscriberTest extends TestCase
         $token = $this->prophesize(TokenInterface::class);
         $this->tokenStorage->getToken()->willReturn($token->reveal());
 
-        $token->getUser()->willReturn(new stdClass());
+        $token->getUser()->willReturn(new \stdClass());
 
         $optionsResolver->setDefault('user', null)->shouldBeCalled();
 

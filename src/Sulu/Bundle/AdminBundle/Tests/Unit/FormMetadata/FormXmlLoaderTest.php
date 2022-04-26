@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -557,7 +556,7 @@ class FormXmlLoaderTest extends TestCase
 
     public function testLoadFormInvalid()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $this->loader->load(
             __DIR__ . \DIRECTORY_SEPARATOR . 'data' . \DIRECTORY_SEPARATOR . 'form_invalid.xml'

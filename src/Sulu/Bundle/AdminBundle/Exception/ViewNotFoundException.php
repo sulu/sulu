@@ -11,12 +11,10 @@
 
 namespace Sulu\Bundle\AdminBundle\Exception;
 
-use Exception;
-
 /**
  * An instance of this exception signals that no view with given name was found.
  */
-class ViewNotFoundException extends Exception
+class ViewNotFoundException extends \Exception
 {
     /**
      * @var string

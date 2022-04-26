@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use RuntimeException;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
@@ -193,7 +192,7 @@ class MediaStreamController
             return $this->createBinaryFileResponse($fileVersion, $this->storage, $locale, $dispositionType);
         }
 
-        throw new RuntimeException(\sprintf('Storage type "%s" not supported.', $storageType));
+        throw new \RuntimeException(\sprintf('Storage type "%s" not supported.', $storageType));
     }
 
     private function createBinaryFileResponse(

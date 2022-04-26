@@ -11,7 +11,6 @@
 
 namespace Functional\Controller;
 
-use DateTime;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -234,8 +233,8 @@ class MediaRedirectControllerTest extends SuluTestCase
         $fileVersion->setDownloadCounter(2);
         $fileVersion->addCategory($this->category);
         $fileVersion->addCategory($this->category2);
-        $fileVersion->setChanged(new DateTime('1937-04-20'));
-        $fileVersion->setCreated(new DateTime('1937-04-20'));
+        $fileVersion->setChanged(new \DateTime('1937-04-20'));
+        $fileVersion->setCreated(new \DateTime('1937-04-20'));
         $fileVersion->setStorageOptions(['segment' => 1, 'fileName' => $name . '.jpeg']);
         if (!\file_exists(__DIR__ . '/../../uploads/media/1')) {
             \mkdir(__DIR__ . '/../../uploads/media/1', 0777, true);

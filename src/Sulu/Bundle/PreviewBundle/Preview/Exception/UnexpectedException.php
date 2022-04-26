@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\PreviewBundle\Preview\Exception;
 
-use Exception;
-
 /**
  * This exception will be thrown when an unexpected exception occurs during rendering.
  */
@@ -23,7 +21,7 @@ class UnexpectedException extends PreviewRendererException
      * @param string $webspaceKey
      * @param string $locale
      */
-    public function __construct(Exception $exception, $object, $id, $webspaceKey, $locale)
+    public function __construct(\Exception $exception, $object, $id, $webspaceKey, $locale)
     {
         parent::__construct(
             $exception->getMessage(),

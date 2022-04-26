@@ -15,7 +15,6 @@ use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use JMS\Serializer\SerializerInterface;
-use stdClass;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry;
@@ -304,7 +303,7 @@ class AdminController
         }
 
         if (0 === \count($translations)) {
-            $translations = new stdClass();
+            $translations = new \stdClass();
         }
 
         return new JsonResponse($translations);

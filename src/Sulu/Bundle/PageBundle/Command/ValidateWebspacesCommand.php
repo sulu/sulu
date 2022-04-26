@@ -11,10 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle\Command;
 
-use Exception;
-use InvalidArgumentException;
-use ReflectionClass;
-use RuntimeException;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -224,7 +220,7 @@ class ValidateWebspacesCommand extends Command
 
         try {
             $this->validateStructure($type, $template);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $status = \sprintf('<error>failed: %s</error>', $e->getMessage());
             $this->errors[] = $e->getMessage();
         }
@@ -247,7 +243,7 @@ class ValidateWebspacesCommand extends Command
      *
      * @return bool
      *
-     * @throws Exception
+     * @throws \Exception
      */
     private function validateStructure($type, $template)
     {
@@ -256,7 +252,7 @@ class ValidateWebspacesCommand extends Command
         $metadata = $this->structureMetadataFactory->getStructureMetadata($type, $template);
 
         if (!$metadata) {
-            throw new RuntimeException(
+            throw new \RuntimeException(
                 \sprintf(
                     'Structure meta data not found for type "%s" and template "%s".',
                     $type,
@@ -267,7 +263,7 @@ class ValidateWebspacesCommand extends Command
 
         foreach (['title', 'url'] as $property) {
             if (!$metadata->hasProperty($property)) {
-                throw new RuntimeException(
+                throw new \RuntimeException(
                     \sprintf(
                         'No property "%s" found in "%s" template.',
                         $property,
@@ -295,7 +291,7 @@ class ValidateWebspacesCommand extends Command
 
         try {
             $this->validateTwigTemplate($template);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $status = \sprintf('<error>failed: %s</error>', $e->getMessage());
             $this->errors[] = $e->getMessage();
         }
@@ -315,13 +311,13 @@ class ValidateWebspacesCommand extends Command
      *
      * @param string $template
      *
-     * @throws Exception
+     * @throws \Exception
      */
     private function validateTwigTemplate($template)
     {
         $loader = $this->twig->getLoader();
         if (!$loader->exists($template)) {
-            throw new Exception(\sprintf(
+            throw new \Exception(\sprintf(
                 'Unable to find template "%s".',
                 $template
             ));
@@ -333,7 +329,7 @@ class ValidateWebspacesCommand extends Command
      *
      * @param string $controllerAction
      *
-     * @throws Exception
+     * @throws \Exception
      */
     private function validateControllerAction($controllerAction)
     {
@@ -341,15 +337,15 @@ class ValidateWebspacesCommand extends Command
             if ($this->controllerNameConverter) {
                 $controllerAction = $this->controllerNameConverter->parse($controllerAction);
             }
-        } catch (InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
         }
 
         list($class, $method) = \explode('::', $controllerAction);
 
         if (!\method_exists($class, $method)) {
-            $reflector = new ReflectionClass($class);
+            $reflector = new \ReflectionClass($class);
 
-            throw new Exception(\sprintf(
+            throw new \Exception(\sprintf(
                 'Controller Action "%s" not exist in "%s" (looked into: %s).',
                 $method,
                 $class,

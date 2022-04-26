@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Media\Manager;
 
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use FFMpeg\FFProbe;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
@@ -358,7 +357,7 @@ class MediaManager implements MediaManagerInterface
     {
         $mediaEntity = $this->getEntityById($data['id']);
         $mediaEntity->setChanger($user);
-        $mediaEntity->setChanged(new DateTime());
+        $mediaEntity->setChanged(new \DateTime());
 
         $files = $mediaEntity->getFiles();
         if (!isset($files[0])) {
@@ -369,7 +368,7 @@ class MediaManager implements MediaManagerInterface
         $file = $files[0]; // currently a media can only have one file
 
         $file->setChanger($user);
-        $file->setChanged(new DateTime());
+        $file->setChanged(new \DateTime());
 
         $version = $file->getVersion();
 
@@ -407,9 +406,9 @@ class MediaManager implements MediaManagerInterface
             $fileVersion = clone $currentFileVersion;
             $this->em->persist($fileVersion);
 
-            $fileVersion->setChanged(new DateTime());
+            $fileVersion->setChanged(new \DateTime());
             $fileVersion->setChanger($user);
-            $fileVersion->setCreated(new DateTime());
+            $fileVersion->setCreated(new \DateTime());
             $fileVersion->setCreator($user);
             $fileVersion->setDownloadCounter(0);
 

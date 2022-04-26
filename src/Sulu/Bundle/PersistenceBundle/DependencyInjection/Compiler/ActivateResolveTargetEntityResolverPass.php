@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PersistenceBundle\DependencyInjection\Compiler;
 
-use RuntimeException;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -23,7 +22,7 @@ class ActivateResolveTargetEntityResolverPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         if (!$container->hasDefinition('doctrine.orm.listeners.resolve_target_entity')) {
-            throw new RuntimeException('Cannot find Doctrine Target Entity Resolver Listener.');
+            throw new \RuntimeException('Cannot find Doctrine Target Entity Resolver Listener.');
         }
 
         $resolveTargetEntityListener = $container->findDefinition('doctrine.orm.listeners.resolve_target_entity');

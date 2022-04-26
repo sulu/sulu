@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Entity;
 
-use DateTime;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -33,7 +32,7 @@ interface MediaInterface extends AuditableInterface
     /**
      * Set created.
      *
-     * @param DateTime $created
+     * @param \DateTime $created
      *
      * @return $this
      */
@@ -42,7 +41,7 @@ interface MediaInterface extends AuditableInterface
     /**
      * Set changed.
      *
-     * @param DateTime $changed
+     * @param \DateTime $changed
      *
      * @return $this
      */

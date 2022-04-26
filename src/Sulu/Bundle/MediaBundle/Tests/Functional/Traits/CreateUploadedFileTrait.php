@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Traits;
 
-use RuntimeException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 trait CreateUploadedFileTrait
@@ -23,7 +22,7 @@ trait CreateUploadedFileTrait
         $tempFilePath = \tempnam(\sys_get_temp_dir(), 'sulu_test_video_');
 
         if (!$tempFilePath) {
-            throw new RuntimeException(\sprintf(
+            throw new \RuntimeException(\sprintf(
                 'Could not create temporary image in "%s".',
                 __CLASS__
             ));
@@ -43,7 +42,7 @@ trait CreateUploadedFileTrait
         $tempFilePath = \tempnam(\sys_get_temp_dir(), 'sulu_test_image_');
 
         if (!$tempFilePath) {
-            throw new RuntimeException(\sprintf(
+            throw new \RuntimeException(\sprintf(
                 'Could not create temporary image in "%s".',
                 __CLASS__
             ));
@@ -61,7 +60,7 @@ trait CreateUploadedFileTrait
         $tempFilePath = \tempnam(\sys_get_temp_dir(), 'sulu_test_image_');
 
         if (!$tempFilePath) {
-            throw new RuntimeException(\sprintf(
+            throw new \RuntimeException(\sprintf(
                 'Could not create temporary image in "%s".',
                 __CLASS__
             ));

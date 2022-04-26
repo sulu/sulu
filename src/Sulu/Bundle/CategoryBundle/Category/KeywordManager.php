@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\Category;
 
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\CategoryBundle\Domain\Event\CategoryKeywordAddedEvent;
@@ -130,8 +129,8 @@ class KeywordManager implements KeywordManagerInterface
         $categoryTranslation->addKeyword($keyword);
 
         // FIXME category and meta will not be updated if only keyword was changed
-        $category->setChanged(new DateTime());
-        $categoryTranslation->setChanged(new DateTime());
+        $category->setChanged(new \DateTime());
+        $categoryTranslation->setChanged(new \DateTime());
 
         return $keyword;
     }
@@ -172,8 +171,8 @@ class KeywordManager implements KeywordManagerInterface
             $categoryTranslation->removeKeyword($keyword);
 
             // FIXME category and meta will not be updated if only keyword was changed
-            $category->setChanged(new DateTime());
-            $categoryTranslation->setChanged(new DateTime());
+            $category->setChanged(new \DateTime());
+            $categoryTranslation->setChanged(new \DateTime());
 
             // dispatch event only if keyword was flushed and therefore has an id
             if ($keyword->getId()) {

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\Sitemap;
 
-use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PageBundle\Sitemap\PagesSitemapProvider;
@@ -134,7 +133,7 @@ class PagesSitemapProviderTest extends TestCase
         $this->assertCount(3, $result);
         for ($i = 0; $i < 3; ++$i) {
             $this->assertEquals('http://localhost' . $pages[$i]->getUrl(), $result[$i]->getLoc());
-            $this->assertEquals(new DateTime($pages[$i]->getData()['changed']), $result[$i]->getLastMod());
+            $this->assertEquals(new \DateTime($pages[$i]->getData()['changed']), $result[$i]->getLastMod());
         }
     }
 
@@ -273,7 +272,7 @@ class PagesSitemapProviderTest extends TestCase
 
         $this->assertCount(1, $result);
         $this->assertEquals('http://localhost/test-1', $result[0]->getLoc());
-        $this->assertEquals(new DateTime($pages[0]->getData()['changed']), $result[0]->getLastMod());
+        $this->assertEquals(new \DateTime($pages[0]->getData()['changed']), $result[0]->getLastMod());
     }
 
     public function testBuildInternalExternalLink()
@@ -306,7 +305,7 @@ class PagesSitemapProviderTest extends TestCase
 
         $this->assertCount(1, $result);
         $this->assertEquals('http://localhost/test-1', $result[0]->getLoc());
-        $this->assertEquals(new DateTime($pages[0]->getData()['changed']), $result[0]->getLastMod());
+        $this->assertEquals(new \DateTime($pages[0]->getData()['changed']), $result[0]->getLastMod());
     }
 
     /**
@@ -335,7 +334,7 @@ class PagesSitemapProviderTest extends TestCase
             $redirectTarget,
             false,
             'default',
-            ['seo-hideInSitemap' => $hideInSitemap, 'changed' => (new DateTime())->format('c')],
+            ['seo-hideInSitemap' => $hideInSitemap, 'changed' => (new \DateTime())->format('c')],
             $permissions
         );
         $content->setUrl($url);

@@ -17,7 +17,6 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
-use InvalidArgumentException;
 use Sulu\Bundle\MediaBundle\Entity\Collection as CollectionEntity;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
@@ -139,7 +138,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     public function countMedia(CollectionInterface $collection)
     {
         if (!$collection || !$collection->getId()) {
-            throw new InvalidArgumentException();
+            throw new \InvalidArgumentException();
         }
 
         $queryBuilder = $this->createQueryBuilder('collection')
@@ -154,7 +153,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     public function countSubCollections(CollectionInterface $collection)
     {
         if (!$collection || !$collection->getId()) {
-            throw new InvalidArgumentException();
+            throw new \InvalidArgumentException();
         }
 
         $queryBuilder = $this->createQueryBuilder('collection')

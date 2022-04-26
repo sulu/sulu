@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle\Sitemap;
 
-use DateTime;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\WebsiteBundle\Sitemap\AbstractSitemapProvider;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapAlternateLink;
@@ -129,7 +128,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
     ) {
         $changed = $contentPage['changed'];
         if (\is_string($changed)) {
-            $changed = new DateTime($changed);
+            $changed = new \DateTime($changed);
         }
 
         $url = $this->webspaceManager->findUrlByResourceLocator(

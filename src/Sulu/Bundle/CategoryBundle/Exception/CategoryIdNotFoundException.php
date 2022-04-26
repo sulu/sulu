@@ -11,12 +11,10 @@
 
 namespace Sulu\Bundle\CategoryBundle\Exception;
 
-use Exception;
-
 /**
  * An instance of this exception signals that no category is assigned to a specific id.
  */
-class CategoryIdNotFoundException extends Exception
+class CategoryIdNotFoundException extends \Exception
 {
     /**
      * @var mixed

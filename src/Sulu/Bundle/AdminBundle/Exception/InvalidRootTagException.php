@@ -11,9 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Exception;
 
-use Exception;
-
-class InvalidRootTagException extends Exception
+class InvalidRootTagException extends \Exception
 {
     /**
      * @var string

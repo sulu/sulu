@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\Tests\Functional\Trash;
 
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
@@ -191,8 +190,8 @@ class CategoryTrashItemHandlerTest extends SuluTestCase
         $fileVersion->setFile($file);
         $fileVersion->setSize(1124214);
         $fileVersion->setDownloadCounter(2);
-        $fileVersion->setChanged(new DateTime('1937-04-20'));
-        $fileVersion->setCreated(new DateTime('1937-04-20'));
+        $fileVersion->setChanged(new \DateTime('1937-04-20'));
+        $fileVersion->setCreated(new \DateTime('1937-04-20'));
 
         // create meta
         $fileVersionMeta = new FileVersionMeta();

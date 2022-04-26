@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CustomUrlBundle\Tests\Functional\Trash;
 
-use DateTime;
 use Sulu\Bundle\CustomUrlBundle\Trash\CustomUrlTrashItemHandler;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -62,7 +61,7 @@ class CustomUrlTrashItemHandlerTest extends SuluTestCase
         $customUrl1->setTitle('test-title-1');
         $customUrl1->setParent($customUrlItemsDocument);
         $customUrl1->setCreator(101);
-        $customUrl1->setCreated(new DateTime('1999-04-20'));
+        $customUrl1->setCreated(new \DateTime('1999-04-20'));
         $customUrl1->setBaseDomain('sulu-test.localhost/*/*');
         $customUrl1->setDomainParts(['custom-path-1', 'custom-path-2']);
         $customUrl1->setCanonical(true);

@@ -15,7 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
-use stdClass;
 use Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\RequestParametersTrait;
@@ -61,7 +60,7 @@ class MediaFormatController extends AbstractRestController implements ClassResou
     {
         $formatOptions = $this->formatOptionsManager->getAll($id);
 
-        return $this->handleView($this->view(\count($formatOptions) > 0 ? $formatOptions : new stdClass()));
+        return $this->handleView($this->view(\count($formatOptions) > 0 ? $formatOptions : new \stdClass()));
     }
 
     /**

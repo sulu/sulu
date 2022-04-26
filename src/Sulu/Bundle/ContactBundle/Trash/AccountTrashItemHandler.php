@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Trash;
 
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
@@ -285,10 +284,10 @@ final class AccountTrashItemHandler implements
 
         if ($account instanceof Account) {
             if ($data['changed'] ?? null) {
-                $account->setChanged(new DateTime($data['changed']));
+                $account->setChanged(new \DateTime($data['changed']));
             }
             if ($data['created'] ?? null) {
-                $account->setCreated(new DateTime($data['created']));
+                $account->setCreated(new \DateTime($data['created']));
             }
             $account->setCreator($this->findEntity(UserInterface::class, $data['creatorId'] ?? null));
             $account->setChanger($this->findEntity(UserInterface::class, $data['changerId'] ?? null));

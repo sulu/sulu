@@ -13,7 +13,6 @@ namespace Sulu\Bundle\MediaBundle\Media\Storage;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use RuntimeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\FilenameAlreadyExistsException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -88,7 +87,7 @@ class LocalStorage implements StorageInterface
         $fileName = $this->getStorageOption($storageOptions, 'fileName');
 
         if (!$segment || !$fileName) {
-            throw new RuntimeException();
+            throw new \RuntimeException();
         }
 
         return $this->getFilesystemPath($directory, $segment, $fileName);

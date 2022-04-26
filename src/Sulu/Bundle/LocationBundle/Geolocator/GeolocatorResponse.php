@@ -11,12 +11,10 @@
 
 namespace Sulu\Bundle\LocationBundle\Geolocator;
 
-use Countable;
-
 /**
  * Container for aggregating geolocations.
  */
-class GeolocatorResponse implements Countable
+class GeolocatorResponse implements \Countable
 {
     protected $locations = [];
 

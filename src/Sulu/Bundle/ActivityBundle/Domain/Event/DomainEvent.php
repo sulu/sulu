@@ -11,13 +11,12 @@
 
 namespace Sulu\Bundle\ActivityBundle\Domain\Event;
 
-use DateTimeImmutable;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 abstract class DomainEvent
 {
     /**
-     * @var DateTimeImmutable
+     * @var \DateTimeImmutable
      */
     private $eventDateTime;
 
@@ -33,7 +32,7 @@ abstract class DomainEvent
 
     public function __construct()
     {
-        $this->eventDateTime = new DateTimeImmutable();
+        $this->eventDateTime = new \DateTimeImmutable();
     }
 
     abstract public function getEventType(): string;
@@ -54,12 +53,12 @@ abstract class DomainEvent
         return null;
     }
 
-    public function getEventDateTime(): DateTimeImmutable
+    public function getEventDateTime(): \DateTimeImmutable
     {
         return $this->eventDateTime;
     }
 
-    public function setEventDateTime(DateTimeImmutable $eventDateTime): DomainEvent
+    public function setEventDateTime(\DateTimeImmutable $eventDateTime): DomainEvent
     {
         $this->eventDateTime = $eventDateTime;
 

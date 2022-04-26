@@ -11,12 +11,10 @@
 
 namespace Sulu\Bundle\RouteBundle\Exception;
 
-use Exception;
-
 /**
  * Missing class mapping configuration exception.
  */
-class MissingClassMappingConfigurationException extends Exception
+class MissingClassMappingConfigurationException extends \Exception
 {
     /**
      * @var string

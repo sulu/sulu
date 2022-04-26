@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-use DateTime;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
@@ -102,7 +101,7 @@ class ContactControllerTest extends SuluTestCase
             'Max',
             'Mustermann',
             'CEO',
-            new DateTime(),
+            new \DateTime(),
             1,
             'Sehr geehrter Herr Dr Mustermann',
             $title,
@@ -921,7 +920,7 @@ class ContactControllerTest extends SuluTestCase
             'Max',
             'Mustermann',
             'CEO',
-            new DateTime(),
+            new \DateTime(),
             0,
             'Sehr geehrter Herr',
             $title,
@@ -1115,7 +1114,7 @@ class ContactControllerTest extends SuluTestCase
             'Max',
             'Mustermann',
             'CEO',
-            new DateTime(),
+            new \DateTime(),
             0,
             'Sehr geehrter Herr'
         );
@@ -1190,7 +1189,7 @@ class ContactControllerTest extends SuluTestCase
             'Max',
             'Mustermann',
             'CEO',
-            new DateTime(),
+            new \DateTime(),
             0,
             'Sehr geehrter Herr',
             null,
@@ -1293,7 +1292,7 @@ class ContactControllerTest extends SuluTestCase
             'Max',
             'Mustermann',
             'CEO',
-            new DateTime(),
+            new \DateTime(),
             0,
             'Sehr geehrter Herr',
             $title,
@@ -1427,7 +1426,7 @@ class ContactControllerTest extends SuluTestCase
             'Max',
             'Mustermann',
             'CEO',
-            new DateTime(),
+            new \DateTime(),
             0,
             'Sehr geehrter Herr',
             $title,
@@ -1543,7 +1542,7 @@ class ContactControllerTest extends SuluTestCase
             'Max',
             'Mustermann',
             'CEO',
-            new DateTime(),
+            new \DateTime(),
             0,
             'Sehr geehrter Herr',
             $title,
@@ -1645,7 +1644,7 @@ class ContactControllerTest extends SuluTestCase
             'Max',
             'Mustermann',
             'CEO',
-            new DateTime(),
+            new \DateTime(),
             0,
             'Sehr geehrter Herr',
             $title,
@@ -1935,7 +1934,7 @@ class ContactControllerTest extends SuluTestCase
             'Max',
             'Mustermann',
             'CEO',
-            new DateTime(),
+            new \DateTime(),
             0,
             'Sehr geehrter Herr',
             $title,
@@ -2320,7 +2319,7 @@ class ContactControllerTest extends SuluTestCase
             'Max',
             'Mustermann',
             'CEO',
-            new DateTime(),
+            new \DateTime(),
             1,
             'Sehr geehrter Herr Dr Mustermann',
             $title,
@@ -2417,7 +2416,7 @@ class ContactControllerTest extends SuluTestCase
 
     public function testPostEmptyBirthday()
     {
-        $contact = $this->createContact('Max', 'Mustermann', null, new DateTime());
+        $contact = $this->createContact('Max', 'Mustermann', null, new \DateTime());
         $this->em->flush();
 
         $this->client->jsonRequest('GET', '/api/contacts/' . $contact->getId());
@@ -2460,7 +2459,7 @@ class ContactControllerTest extends SuluTestCase
         string $firstName,
         string $lastName,
         ?string $positionName = null,
-        ?DateTime $birthday = null,
+        ?\DateTime $birthday = null,
         ?int $formOfAddress = null,
         ?string $salutation = null,
         ?ContactTitle $title = null,
@@ -2743,8 +2742,8 @@ class ContactControllerTest extends SuluTestCase
         $fileVersion->setFile($file);
         $fileVersion->setSize(111111);
         $fileVersion->setDownloadCounter(2);
-        $fileVersion->setChanged(new DateTime('1950-04-20'));
-        $fileVersion->setCreated(new DateTime('1950-04-20'));
+        $fileVersion->setChanged(new \DateTime('1950-04-20'));
+        $fileVersion->setCreated(new \DateTime('1950-04-20'));
         $file->addFileVersion($fileVersion);
         $this->em->persist($fileVersion);
 

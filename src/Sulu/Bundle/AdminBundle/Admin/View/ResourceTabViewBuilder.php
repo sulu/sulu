@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\View;
 
-use DomainException;
-
 class ResourceTabViewBuilder implements ResourceTabViewBuilderInterface
 {
     use ViewBuilderTrait;
@@ -81,21 +79,21 @@ class ResourceTabViewBuilder implements ResourceTabViewBuilderInterface
     public function getView(): View
     {
         if (!$this->view->getOption('resourceKey')) {
-            throw new DomainException(
+            throw new \DomainException(
                 'A view for a ResourceTabs view needs a "resourceKey" option.'
                 . ' You have likely forgotten to call the "setResourceKey" method.'
             );
         }
 
         if ($this->view->getOption('locales') && false === \strpos($this->view->getPath(), ':locale')) {
-            throw new DomainException(
+            throw new \DomainException(
                 'A view for a ResourceTabs view needs a ":locale" placeholder in its URL'
                 . ' if some "locales" have been set.'
             );
         }
 
         if (!$this->view->getOption('locales') && false !== \strpos($this->view->getPath(), ':locale')) {
-            throw new DomainException(
+            throw new \DomainException(
                 'A view for a ResourceTabs view needs a ":locale" placeholder in its URL'
                 . ' if some "locales" have been set.'
             );

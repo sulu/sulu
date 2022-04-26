@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\RouteBundle\Generator;
 
-use ReflectionClass;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Exception\MissingClassMappingConfigurationException;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
@@ -80,7 +79,7 @@ class ChainRouteGenerator implements ChainRouteGeneratorInterface
             ];
         }
 
-        $reflection = new ReflectionClass($className);
+        $reflection = new \ReflectionClass($className);
         while ($reflection = $reflection->getParentClass()) {
             if (\array_key_exists($reflection->getName(), $this->mappings)) {
                 return [

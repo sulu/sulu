@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\PageBundle\EventListener;
 
-use Countable;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
@@ -503,7 +502,7 @@ class DomainEventSubscriber implements EventSubscriberInterface
      */
     private function isNewNode(NodeInterface $node): bool
     {
-        /** @var Countable $properties */
+        /** @var \Countable $properties */
         $properties = $node->getProperties(
             $this->propertyEncoder->encode(
                 'system_localized',
@@ -520,7 +519,7 @@ class DomainEventSubscriber implements EventSubscriberInterface
      */
     private function isNewTranslation(NodeInterface $node, string $locale): bool
     {
-        /** @var Countable $localizedProperties */
+        /** @var \Countable $localizedProperties */
         $localizedProperties = $node->getProperties(
             $this->propertyEncoder->localizedContentName('*', $locale)
         );

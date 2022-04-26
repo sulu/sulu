@@ -15,7 +15,6 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use ReflectionMethod;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Bundle\PageBundle\Command\MaintainResourceLocatorCommand;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -167,7 +166,7 @@ class MaintainResourceLocatorCommandTest extends TestCase
 
         $node->setProperty('i18n:de-url', '/testing')->shouldBeCalled();
 
-        $executeMethod = new ReflectionMethod($this->maintainResourceLocatorCommand, 'execute');
+        $executeMethod = new \ReflectionMethod($this->maintainResourceLocatorCommand, 'execute');
         $executeMethod->setAccessible(true);
 
         $executeMethod->invoke($this->maintainResourceLocatorCommand, $this->input->reveal(), $this->output->reveal());

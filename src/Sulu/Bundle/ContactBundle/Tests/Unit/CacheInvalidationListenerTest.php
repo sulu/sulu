@@ -16,7 +16,6 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
-use stdClass;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
@@ -50,7 +49,7 @@ class CacheInvalidationListenerTest extends TestCase
         return [
             [ContactInterface::class, 'contact'],
             [AccountInterface::class, 'account'],
-            [stdClass::class, null],
+            [\stdClass::class, null],
         ];
     }
 

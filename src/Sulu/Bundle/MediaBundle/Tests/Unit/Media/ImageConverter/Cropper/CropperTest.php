@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter\Cropper;
 
-use Imagick;
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Image\Box;
 use Imagine\Imagick\Imagine as ImagickImagine;
@@ -167,7 +166,7 @@ class CropperTest extends SuluTestCase
 
     private function createImagine()
     {
-        if (\class_exists(Imagick::class)) {
+        if (\class_exists(\Imagick::class)) {
             return new ImagickImagine();
         }
 

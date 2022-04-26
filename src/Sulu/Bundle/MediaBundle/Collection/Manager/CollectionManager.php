@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 
-use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
@@ -424,7 +423,7 @@ class CollectionManager implements CollectionManagerInterface
         $locale = $data['locale'];
         $collection = $this->getById($data['id'], $locale);
         $data['changer'] = $user;
-        $data['changed'] = new DateTime();
+        $data['changed'] = new \DateTime();
 
         /** @var CollectionInterface $collectionEntity */
         $collectionEntity = $collection->getEntity();
@@ -468,8 +467,8 @@ class CollectionManager implements CollectionManagerInterface
     {
         $data['changer'] = $user;
         $data['creator'] = $user;
-        $data['changed'] = new DateTime();
-        $data['created'] = new DateTime();
+        $data['changed'] = new \DateTime();
+        $data['created'] = new \DateTime();
 
         $collectionEntity = new CollectionEntity();
         $collection = $this->getApiEntity($collectionEntity, $data['locale']);

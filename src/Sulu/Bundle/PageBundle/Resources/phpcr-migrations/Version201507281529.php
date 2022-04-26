@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle;
 
-use Exception;
 use PHPCR\Migrations\VersionInterface;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
@@ -78,7 +77,7 @@ class Version201507281529 implements VersionInterface, ContainerAwareInterface
                         } else {
                             $node->setProperty($templatePropertyName, 'external-link');
                         }
-                    } catch (Exception $e) {
+                    } catch (\Exception $e) {
                         echo $e->getMessage() . \PHP_EOL;
                     }
                 }

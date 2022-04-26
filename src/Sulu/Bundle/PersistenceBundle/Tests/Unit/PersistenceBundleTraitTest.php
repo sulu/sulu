@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PersistenceBundle\Tests\Unit;
 
-use InvalidArgumentException;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractContainerBuilderTestCase;
 use Sulu\Bundle\PersistenceBundle\Tests\Unit\Fixture\Bundle\UsingPersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\Definition;
@@ -73,7 +72,7 @@ class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
 
     public function testInvalidModelInterfaceMapping()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $bundle = new UsingPersistenceBundleTrait();
         $bundle->modelInterfaces = [
             'Sulu\Component\Persistence\Model\FooInterface' => 'sulu.model.foo.class',

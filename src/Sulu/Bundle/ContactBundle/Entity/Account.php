@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Accessor;
@@ -50,12 +49,12 @@ class Account implements AccountInterface
     protected $depth;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     private $created;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     private $changed;
 
@@ -784,24 +783,24 @@ class Account implements AccountInterface
         return $this->mainUrl;
     }
 
-    public function getCreated(): DateTime
+    public function getCreated(): \DateTime
     {
         return $this->created;
     }
 
-    public function setCreated(DateTime $created): AccountInterface
+    public function setCreated(\DateTime $created): AccountInterface
     {
         $this->created = $created;
 
         return $this;
     }
 
-    public function getChanged(): DateTime
+    public function getChanged(): \DateTime
     {
         return $this->changed;
     }
 
-    public function setChanged(DateTime $changed): AccountInterface
+    public function setChanged(\DateTime $changed): AccountInterface
     {
         $this->changed = $changed;
 

@@ -13,7 +13,6 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Mapper;
 
 use Jackalope\Session;
 use PHPCR\NodeInterface;
-use stdClass;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\BreadcrumbItemInterface;
@@ -1172,13 +1171,13 @@ class ContentMapperTest extends SuluTestCase
                     'type' => 'default',
                     'title' => 'Block-name-1',
                     'article' => 'Block-Article-1',
-                    'settings' => new stdClass(),
+                    'settings' => new \stdClass(),
                 ],
                 [
                     'type' => 'default',
                     'title' => 'Block-name-2',
                     'article' => 'Block-Article-2',
-                    'settings' => new stdClass(),
+                    'settings' => new \stdClass(),
                 ],
             ],
         ];

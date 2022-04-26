@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -37,12 +36,12 @@ class Category implements CategoryInterface
     protected $depth;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     protected $created;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     protected $changed;
 
@@ -202,7 +201,7 @@ class Category implements CategoryInterface
         return $this;
     }
 
-    public function setCreated(DateTime $created)
+    public function setCreated(\DateTime $created)
     {
         $this->created = $created;
 
@@ -221,7 +220,7 @@ class Category implements CategoryInterface
         return $this;
     }
 
-    public function setChanged(DateTime $changed)
+    public function setChanged(\DateTime $changed)
     {
         $this->changed = $changed;
 

@@ -17,7 +17,6 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Ramsey\Uuid\Uuid;
-use stdClass;
 use Sulu\Bundle\HttpCacheBundle\EventSubscriber\TagsSubscriber;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStorePoolInterface;
@@ -154,7 +153,7 @@ class TagsSubscriberTest extends TestCase
 
     public function testGetWithWrongStructure()
     {
-        $this->request->get('structure')->willReturn(stdClass::class);
+        $this->request->get('structure')->willReturn(\stdClass::class);
         $expectedTags = [
             'test-1',
             'test-2',

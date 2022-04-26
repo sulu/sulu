@@ -11,14 +11,13 @@
 
 namespace Sulu\Bundle\RouteBundle\Exception;
 
-use DomainException;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 
 /**
  * Route is not unique exception.
  */
-class RouteIsNotUniqueException extends DomainException
+class RouteIsNotUniqueException extends \DomainException
 {
     /**
      * @var RouteInterface

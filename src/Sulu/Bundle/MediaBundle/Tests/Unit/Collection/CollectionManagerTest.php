@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Collection;
 
-use ArrayIterator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
@@ -131,7 +130,7 @@ class CollectionManagerTest extends TestCase
             ['test'],
             Argument::any(),
             Argument::any()
-        )->willReturn(new ArrayIterator([]))->shouldBeCalled();
+        )->willReturn(new \ArrayIterator([]))->shouldBeCalled();
         $this->collectionRepository->countCollections(
             0,
             ['search' => 'test', 'locale' => 'de', 'systemCollections' => true],
@@ -150,7 +149,7 @@ class CollectionManagerTest extends TestCase
             ['test'],
             Argument::any(),
             Argument::any()
-        )->willReturn(new ArrayIterator([]))->shouldBeCalled();
+        )->willReturn(new \ArrayIterator([]))->shouldBeCalled();
         $this->collectionRepository->countCollections(
             0,
             ['search' => 'test', 'locale' => 'de', 'systemCollections' => false],

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\RouteBundle\Tests\Functional\Controller;
 
-use stdClass;
 use Sulu\Bundle\RouteBundle\Entity\Route;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -39,7 +38,7 @@ class RouteRepositoryTest extends SuluTestCase
 
         // create route
         $route = $repository->createNew()
-            ->setEntityClass(stdClass::class)
+            ->setEntityClass(\stdClass::class)
             ->setEntityId('123-123-123')
             ->setLocale('de')
             ->setPath('/test');
