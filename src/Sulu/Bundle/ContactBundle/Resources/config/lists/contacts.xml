@@ -296,8 +296,8 @@
         </property>
 
         <group-concat-property
-            name="tagIds"
-            visibility="never"
+            name="tagNames"
+            visibility="yes"
             translation="sulu_tag.tags"
             glue=","
         >
@@ -351,6 +351,29 @@
                 </params>
             </filter>
         </property>
+
+        <group-concat-property
+            name="categoryNames"
+            visibility="yes"
+            translation="sulu_category.categories"
+            glue=","
+            distinct="true"
+        >
+            <field-name>translation</field-name>
+            <entity-name>SuluCategoryBundle:CategoryTranslation</entity-name>
+
+            <joins>
+                <join>
+                    <entity-name>SuluCategoryBundle:Category</entity-name>
+                    <field-name>%sulu.model.contact.class%.categories</field-name>
+                </join>
+                <join>
+                    <entity-name>SuluCategoryBundle:CategoryTranslation</entity-name>
+                    <field-name>SuluCategoryBundle:Category.translations</field-name>
+                    <condition>SuluCategoryBundle:CategoryTranslation.locale = '%default_locale%'</condition>
+                </join>
+            </joins>
+        </group-concat-property>
 
         <property name="user" visibility="no" searchability="yes" translation="sulu_security.user_name">
             <field-name>username</field-name>
