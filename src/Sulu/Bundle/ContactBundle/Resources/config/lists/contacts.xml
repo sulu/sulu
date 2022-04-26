@@ -296,8 +296,20 @@
         </property>
 
         <group-concat-property
+            name="tagIds"
+            visibility="never"
+            translation="sulu_tag.tags"
+            glue=","
+        >
+            <field-name>id</field-name>
+            <entity-name>SuluTagBundle:Tag</entity-name>
+
+            <joins ref="tags"/>
+        </group-concat-property>
+
+        <group-concat-property
             name="tagNames"
-            visibility="yes"
+            visibility="no"
             translation="sulu_tag.tags"
             glue=","
             distinct="true"
@@ -355,7 +367,7 @@
 
         <group-concat-property
             name="categoryNames"
-            visibility="yes"
+            visibility="no"
             translation="sulu_category.categories"
             glue=","
             distinct="true"
