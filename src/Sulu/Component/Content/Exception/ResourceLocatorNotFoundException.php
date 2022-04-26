@@ -11,8 +11,6 @@
 
 namespace Sulu\Component\Content\Exception;
 
-use Exception;
-
-class ResourceLocatorNotFoundException extends Exception
+class ResourceLocatorNotFoundException extends \Exception
 {
 }

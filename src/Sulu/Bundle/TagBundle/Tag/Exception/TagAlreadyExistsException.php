@@ -11,13 +11,12 @@
 
 namespace Sulu\Bundle\TagBundle\Tag\Exception;
 
-use Exception;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 
 /**
  * This Exception is thrown when a Tag already exists.
  */
-class TagAlreadyExistsException extends Exception implements TranslationErrorMessageExceptionInterface
+class TagAlreadyExistsException extends \Exception implements TranslationErrorMessageExceptionInterface
 {
     /**
      * The id of the tag, which was not found.

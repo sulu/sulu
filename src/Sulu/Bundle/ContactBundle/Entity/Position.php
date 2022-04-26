@@ -12,12 +12,11 @@
 namespace Sulu\Bundle\ContactBundle\Entity;
 
 use JMS\Serializer\Annotation\Groups;
-use JsonSerializable;
 
 /**
  * Position.
  */
-class Position implements JsonSerializable
+class Position implements \JsonSerializable
 {
     public const RESOURCE_KEY = 'contact_positions';
 

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Contact;
 
-use DateTime;
 use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\ContactBundle\Api\Contact as ContactApi;
@@ -392,7 +391,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
         if (!$patch || $this->getProperty($data, 'birthday')) {
             $birthday = $this->getProperty($data, 'birthday');
             if (!empty($birthday)) {
-                $birthday = new DateTime($birthday);
+                $birthday = new \DateTime($birthday);
             } else {
                 $birthday = null;
             }
