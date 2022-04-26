@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
-use DateTime;
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -230,7 +229,7 @@ class MediaWebsiteControllerTest extends WebsiteTestCase
     public function testResponseHeader()
     {
         $media = $this->createMedia('photo');
-        $date = new DateTime();
+        $date = new \DateTime();
         $date->modify('+1 month');
 
         $this->client->request(

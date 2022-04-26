@@ -25,6 +25,7 @@ $config->setRiskyAllowed(true)
         'native_constant_invocation' => true,
         'native_function_casing' => true,
         'native_function_invocation' => ['include' => ['@internal']],
+        'global_namespace_import' => ['import_classes' => false, 'import_constants' => false, 'import_functions' => false],
         'no_superfluous_phpdoc_tags' => ['allow_mixed' => true, 'remove_inheritdoc' => true],
         'ordered_imports' => true,
         'phpdoc_align' => ['align' => 'left'],

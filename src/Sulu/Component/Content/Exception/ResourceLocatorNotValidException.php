@@ -11,12 +11,10 @@
 
 namespace Sulu\Component\Content\Exception;
 
-use Exception;
-
 /**
  * Exception indicates not valid resourcelocator.
  */
-class ResourceLocatorNotValidException extends Exception
+class ResourceLocatorNotValidException extends \Exception
 {
     /**
      * @var string

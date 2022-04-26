@@ -11,9 +11,7 @@
 
 namespace Sulu\Component\Content\Exception;
 
-use Exception;
-
-class ResourceLocatorGeneratorException extends Exception
+class ResourceLocatorGeneratorException extends \Exception
 {
     /**
      * @var string

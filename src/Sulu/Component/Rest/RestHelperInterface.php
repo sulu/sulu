@@ -13,7 +13,6 @@ namespace Sulu\Component\Rest;
 
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
-use Traversable;
 
 interface RestHelperInterface
 {
@@ -29,7 +28,7 @@ interface RestHelperInterface
      * This method processes a put request (delete non-existing entities, update existing entities, add new
      * entries), and let the single actions be modified by callbacks.
      *
-     * @param Traversable $entities The list of entities to work on
+     * @param \Traversable $entities The list of entities to work on
      * @param array $requestEntities The entities as retrieved from the request
      * @param callable $get The
      * @param callable $add
