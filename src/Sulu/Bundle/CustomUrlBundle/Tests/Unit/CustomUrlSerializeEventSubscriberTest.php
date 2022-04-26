@@ -17,6 +17,7 @@ use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\CustomUrlBundle\EventListener\CustomUrlSerializeEventSubscriber;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
@@ -26,6 +27,8 @@ use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
 
 class CustomUrlSerializeEventSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testGetSubscribedEvents()
     {
         $generator = $this->prophesize(GeneratorInterface::class);

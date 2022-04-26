@@ -12,6 +12,7 @@
 namespace Sulu\Component\Security\Tests\Unit\Authorization;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\SecurityBundle\Entity\Group;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -26,6 +27,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class SecurityContextVoterTest extends TestCase
 {
+    use ProphecyTrait;
+
     protected $permissions = [
         'view' => 64,
         'add' => 32,

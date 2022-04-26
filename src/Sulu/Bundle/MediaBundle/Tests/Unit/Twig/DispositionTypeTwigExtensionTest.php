@@ -12,12 +12,15 @@
 namespace Sulu\Bundle\MediaBundle\Twig;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class DispositionTypeTwigExtensionTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testGetMediaUrlWithoutForceDispositionType()
     {
         $this->assertEquals(

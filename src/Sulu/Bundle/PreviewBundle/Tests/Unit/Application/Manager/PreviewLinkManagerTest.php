@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Application\Manager;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
@@ -27,6 +28,8 @@ use Symfony\Component\Routing\RouterInterface;
 
 class PreviewLinkManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PreviewLinkRepositoryInterface|ObjectProphecy
      */

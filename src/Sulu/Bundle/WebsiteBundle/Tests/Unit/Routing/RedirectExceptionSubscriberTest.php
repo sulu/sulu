@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Routing;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\EventListener\RedirectExceptionSubscriber;
 use Sulu\Bundle\WebsiteBundle\Locale\DefaultLocaleProviderInterface;
@@ -35,6 +36,8 @@ use Symfony\Component\Routing\Route;
 
 class RedirectExceptionSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var RequestMatcherInterface|ObjectProphecy
      */

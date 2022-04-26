@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Twig;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
@@ -24,6 +25,8 @@ use Sulu\Component\Webspace\Webspace;
 
 class SnippetAreaTwigExtensionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DefaultSnippetManagerInterface
      */

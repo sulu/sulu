@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Unit\UserManager;
 
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
@@ -24,6 +25,8 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
 class UserManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var UserManager
      */

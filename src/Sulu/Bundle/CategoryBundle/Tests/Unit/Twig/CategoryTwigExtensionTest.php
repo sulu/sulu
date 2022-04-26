@@ -15,6 +15,7 @@ use Doctrine\Common\Cache\ArrayCache;
 use JMS\Serializer\SerializationContext;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\CategoryBundle\Api\Category as ApiCategory;
 use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface as EntityCategory;
@@ -31,6 +32,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class CategoryTwigExtensionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * Returns memoize cache instance.
      *

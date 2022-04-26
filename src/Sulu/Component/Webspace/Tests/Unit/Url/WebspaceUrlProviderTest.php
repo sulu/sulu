@@ -12,6 +12,7 @@
 namespace Sulu\Component\Webspace\Tests\Unit\Url;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Url;
@@ -19,6 +20,8 @@ use Sulu\Component\Webspace\Webspace;
 
 class WebspaceUrlProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testGetUrls()
     {
         $urls = [

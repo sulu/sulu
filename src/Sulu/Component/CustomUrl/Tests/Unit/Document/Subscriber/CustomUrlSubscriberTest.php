@@ -12,6 +12,7 @@
 namespace Sulu\Component\CustomUrl\Tests\Unit\Document\Subscriber;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\RouteBehavior;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
@@ -29,6 +30,8 @@ use Sulu\Component\Webspace\Webspace;
 
 class CustomUrlSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var CustomUrlSubscriber
      */

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\EventSubscriber;
 
+use App\Kernel;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\KernelFactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Command\CacheClearCommand;
 use Symfony\Bundle\FrameworkBundle\Command\CacheWarmupCommand;
@@ -75,7 +76,7 @@ class CacheCommandSubscriber implements EventSubscriberInterface
         // avoid to clear cache for preview if no \App\Kernel exists
         // can cause an error in test kernels of bundles
         // this can be removed when https://github.com/sulu/sulu/issues/4782 is fixed
-        if (!\class_exists(\App\Kernel::class)) {
+        if (!\class_exists(Kernel::class)) {
             return;
         }
 

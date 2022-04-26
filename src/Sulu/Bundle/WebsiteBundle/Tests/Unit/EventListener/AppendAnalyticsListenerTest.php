@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\EventListener;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepositoryInterface;
 use Sulu\Bundle\WebsiteBundle\EventListener\AppendAnalyticsListener;
@@ -29,6 +30,8 @@ use Twig\Loader\FilesystemLoader;
 
 class AppendAnalyticsListenerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function formatProvider()
     {
         return [['json'], ['xml']];

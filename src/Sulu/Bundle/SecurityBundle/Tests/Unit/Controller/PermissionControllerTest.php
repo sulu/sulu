@@ -15,6 +15,7 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\SecurityBundle\Controller\PermissionController;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
@@ -24,6 +25,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class PermissionControllerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PermissionController
      */

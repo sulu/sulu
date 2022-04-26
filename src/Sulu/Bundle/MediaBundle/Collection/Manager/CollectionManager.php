@@ -700,7 +700,7 @@ class CollectionManager implements CollectionManagerInterface
      *
      * @param int $userId
      *
-     * @return \Sulu\Component\Security\Authentication\UserInterface
+     * @return UserInterface
      */
     protected function getUser($userId)
     {

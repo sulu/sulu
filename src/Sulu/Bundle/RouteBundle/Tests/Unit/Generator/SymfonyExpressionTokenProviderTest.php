@@ -13,6 +13,7 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\Generator;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\RouteBundle\Generator\CannotEvaluateTokenException;
 use Sulu\Bundle\RouteBundle\Generator\SymfonyExpressionTokenProvider;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
@@ -20,6 +21,8 @@ use Symfony\Component\Translation\Translator;
 
 class SymfonyExpressionTokenProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testResolve()
     {
         $translator = $this->prophesize(Translator::class);

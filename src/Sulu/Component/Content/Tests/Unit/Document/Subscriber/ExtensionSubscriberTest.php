@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
@@ -25,6 +26,8 @@ use Sulu\Component\DocumentManager\NamespaceRegistry;
 
 class ExtensionSubscriberTest extends SubscriberTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DocumentInspector
      */

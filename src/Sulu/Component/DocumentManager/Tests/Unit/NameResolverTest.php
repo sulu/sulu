@@ -13,10 +13,13 @@ namespace Sulu\Component\DocumentManager\tests\Unit;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\NameResolver;
 
 class NameResolverTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var NodeInterface
      */

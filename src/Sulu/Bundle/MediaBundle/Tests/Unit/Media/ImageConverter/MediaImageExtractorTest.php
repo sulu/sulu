@@ -14,12 +14,15 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\ImageConverter;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\MediaImageExtractor;
 use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface;
 
 class MediaImageExtractorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ImagineInterface|ObjectProphecy
      */

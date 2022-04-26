@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaCropModifiedEvent;
@@ -32,6 +33,8 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 
 class FormatOptionsManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var EntityManagerInterface|ObjectProphecy
      */

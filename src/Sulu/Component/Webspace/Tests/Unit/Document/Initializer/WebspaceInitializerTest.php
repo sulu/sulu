@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Document\Initializer;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\PageBundle\Document\RouteDocument;
 use Sulu\Component\DocumentManager\DocumentInspector;
@@ -28,6 +29,8 @@ use Symfony\Component\Console\Output\Output;
 
 class WebspaceInitializerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var WebspaceManagerInterface
      */

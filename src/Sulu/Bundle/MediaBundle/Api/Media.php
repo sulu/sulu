@@ -882,7 +882,7 @@ class Media extends ApiWrapper
     /**
      * @return FileVersion
      *
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
+     * @throws FileVersionNotFoundException
      */
     public function getFileVersion()
     {
@@ -912,7 +912,7 @@ class Media extends ApiWrapper
     /**
      * @return File
      *
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileNotFoundException
+     * @throws FileNotFoundException
      */
     public function getFile()
     {

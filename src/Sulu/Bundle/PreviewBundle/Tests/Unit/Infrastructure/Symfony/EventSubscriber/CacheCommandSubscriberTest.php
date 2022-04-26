@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Infrastructure\Symfony\EventSubsc
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\EventSubscriber\CacheCommandSubscriber;
 use Sulu\Bundle\PreviewBundle\Preview\Renderer\KernelFactoryInterface;
@@ -25,6 +26,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class CacheCommandSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var KernelFactoryInterface|ObjectProphecy
      */

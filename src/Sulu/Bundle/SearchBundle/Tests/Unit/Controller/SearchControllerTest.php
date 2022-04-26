@@ -17,6 +17,7 @@ use Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\SearchBundle\Controller\SearchController;
 use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfiguration;
 use Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProviderInterface;
@@ -27,6 +28,8 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class SearchControllerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SearchManagerInterface
      */

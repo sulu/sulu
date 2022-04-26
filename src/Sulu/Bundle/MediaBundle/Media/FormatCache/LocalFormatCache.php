@@ -151,7 +151,7 @@ class LocalFormatCache implements FormatCacheInterface
      *
      * @return int
      *
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl
+     * @throws ImageProxyInvalidUrl
      */
     protected function getIdFromUrl($url)
     {
@@ -188,7 +188,7 @@ class LocalFormatCache implements FormatCacheInterface
      *
      * @return string
      *
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidUrl
+     * @throws ImageProxyInvalidUrl
      */
     protected function getFormatFromUrl($url)
     {

@@ -16,11 +16,14 @@ use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
 
 class GoogleCloudStorageTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testConstruct(): void
     {
         $this->expectException(\RuntimeException::class);

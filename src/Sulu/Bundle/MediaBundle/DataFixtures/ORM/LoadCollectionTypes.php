@@ -13,6 +13,8 @@ namespace Sulu\Bundle\MediaBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
+use Doctrine\ORM\Id\AssignedGenerator;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
@@ -23,8 +25,8 @@ class LoadCollectionTypes extends AbstractFixture implements OrderedFixtureInter
     {
         // set id manually
         $metadata = $manager->getClassMetaData(CollectionType::class);
-        $metadata->setIdGenerator(new \Doctrine\ORM\Id\AssignedGenerator());
-        $metadata->setIdGeneratorType(\Doctrine\ORM\Mapping\ClassMetadata::GENERATOR_TYPE_NONE);
+        $metadata->setIdGenerator(new AssignedGenerator());
+        $metadata->setIdGeneratorType(ClassMetadata::GENERATOR_TYPE_NONE);
 
         // create or update collectiontype with id 1
         $defaultCollectionType = new CollectionType();

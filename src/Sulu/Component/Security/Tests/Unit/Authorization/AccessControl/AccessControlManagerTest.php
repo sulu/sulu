@@ -14,6 +14,7 @@ namespace Sulu\Component\Security\Tests\Unit\Authorization\AccessControl;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -38,6 +39,7 @@ use Symfony\Component\Security\Core\Security;
 
 class AccessControlManagerTest extends TestCase
 {
+    use ProphecyTrait;
     use ReadObjectAttributeTrait;
 
     /**

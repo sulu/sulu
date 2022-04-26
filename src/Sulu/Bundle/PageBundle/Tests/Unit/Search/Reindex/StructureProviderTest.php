@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Search\Reindex;
 use Massive\Bundle\SearchBundle\Search\Reindex\LocalizedReindexProviderInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Search\Reindex\StructureProvider;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
@@ -27,6 +28,8 @@ use Sulu\Component\DocumentManager\Query\Query;
 
 class StructureProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var LocalizedReindexProviderInterface
      */

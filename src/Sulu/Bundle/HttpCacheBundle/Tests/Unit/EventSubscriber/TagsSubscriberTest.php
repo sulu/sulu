@@ -14,6 +14,7 @@ namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\EventListener;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Ramsey\Uuid\Uuid;
 use Sulu\Bundle\HttpCacheBundle\EventSubscriber\TagsSubscriber;
@@ -25,6 +26,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class TagsSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var TagsSubscriber
      */

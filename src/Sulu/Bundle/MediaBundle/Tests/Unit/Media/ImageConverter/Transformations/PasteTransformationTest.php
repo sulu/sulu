@@ -16,6 +16,7 @@ use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Imagick\Imagine as ImagickImagine;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Transformation\PasteTransformation;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Component\Config\FileLocator;
@@ -26,6 +27,8 @@ use Symfony\Component\Config\FileLocator;
  */
 class PasteTransformationTest extends SuluTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PasteTransformation
      */

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Admin\View;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilder;
@@ -23,6 +24,7 @@ use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 
 class ViewRegistryTest extends TestCase
 {
+    use ProphecyTrait;
     use ReadObjectAttributeTrait;
 
     /**

@@ -12,6 +12,7 @@
 namespace Sulu\Component\Webspace\Tests\Unit\Loader;
 
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Webspace\Exception\InvalidWebspaceException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidCustomUrlException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
@@ -24,6 +25,8 @@ use Symfony\Component\Config\FileLocatorInterface;
 
 class XmlFileLoader11Test extends WebspaceTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var XmlFileLoader11
      */

@@ -12,12 +12,15 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\ReferenceStore;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\WebspaceReferenceStore;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Webspace;
 
 class WebspaceReferenceStoreTest extends TestCase
 {
+    use ProphecyTrait;
+
     private function createReferenceStore(?RequestAnalyzerInterface $requestAnalyzer = null): WebspaceReferenceStore
     {
         return new WebspaceReferenceStore($requestAnalyzer);

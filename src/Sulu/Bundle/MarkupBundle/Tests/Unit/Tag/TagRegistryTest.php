@@ -12,12 +12,15 @@
 namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Tag;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MarkupBundle\Tag\TagInterface;
 use Sulu\Bundle\MarkupBundle\Tag\TagNotFoundException;
 use Sulu\Bundle\MarkupBundle\Tag\TagRegistry;
 
 class TagRegistryTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testGetTag()
     {
         $tag = $this->prophesize(TagInterface::class)->reveal();

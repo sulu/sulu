@@ -12,8 +12,10 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types;
 
 use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Content\Types\ImageMapContentType;
@@ -27,6 +29,8 @@ use Sulu\Component\Content\Types\TextLine;
 
 class ImageMapContentTypeTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ImageMapContentType
      */
@@ -545,11 +549,11 @@ class ImageMapContentTypeTest extends TestCase
             'text'
         );
 
-        $nodeProperty1 = $this->prophesize(\PHPCR\PropertyInterface::class);
+        $nodeProperty1 = $this->prophesize(PropertyInterface::class);
         $nodeProperty1->getName()->willReturn('property1');
         $node->getProperty('property1')->willReturn($nodeProperty1->reveal());
 
-        $nodeProperty2 = $this->prophesize(\PHPCR\PropertyInterface::class);
+        $nodeProperty2 = $this->prophesize(PropertyInterface::class);
         $nodeProperty2->getName()->willReturn('property2');
         $node->getProperty('property2')->willReturn($nodeProperty2->reveal());
 

@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Filter\DateFilterType;
 use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
@@ -19,6 +20,8 @@ use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
 class DateFilterTypeTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DateFilterType
      */

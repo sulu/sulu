@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Markup\Link;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfiguration;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
@@ -20,6 +21,8 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\ProviderNotFoundException;
 
 class LinkProviderPoolTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var LinkProviderInterface[]
      */

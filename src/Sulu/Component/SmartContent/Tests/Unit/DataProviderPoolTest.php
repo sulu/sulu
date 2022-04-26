@@ -12,6 +12,7 @@
 namespace Sulu\Component\SmartContent\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPool;
 use Sulu\Component\SmartContent\Exception\DataProviderAliasAlreadyExistsException;
@@ -19,6 +20,8 @@ use Sulu\Component\SmartContent\Exception\DataProviderNotExistsException;
 
 class DataProviderPoolTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function addProvider()
     {
         $pool1 = new DataProviderPool(true);

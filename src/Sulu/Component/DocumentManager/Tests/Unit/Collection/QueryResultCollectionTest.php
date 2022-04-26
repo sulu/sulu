@@ -16,12 +16,15 @@ use PHPCR\Query\QueryResultInterface;
 use PHPCR\Query\RowInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\Collection\QueryResultCollection;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class QueryResultCollectionTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function setUp(): void
     {
         $this->queryResult = $this->prophesize(QueryResultInterface::class);

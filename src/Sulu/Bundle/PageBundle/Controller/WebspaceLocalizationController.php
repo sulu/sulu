@@ -18,6 +18,7 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Controller for getting localizations.
@@ -41,7 +42,7 @@ class WebspaceLocalizationController extends AbstractRestController implements C
     /**
      * Returns the localizations for the given webspace.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction(Request $request)
     {

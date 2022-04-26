@@ -16,6 +16,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use JMS\Serializer\SerializerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
@@ -44,6 +45,8 @@ use Twig\Environment;
 
 class AdminControllerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var UrlGeneratorInterface
      */

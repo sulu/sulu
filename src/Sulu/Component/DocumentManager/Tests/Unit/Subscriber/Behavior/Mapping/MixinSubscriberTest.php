@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Mapping;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
@@ -23,6 +24,8 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\MixinSubscriber;
 
 class MixinSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var MetadataFactoryInterface|ObjectProphecy
      */

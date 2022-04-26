@@ -17,12 +17,14 @@ use FFMpeg\FFProbe\DataMapping\Stream;
 use FFMpeg\FFProbe\DataMapping\StreamCollection;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\VideoPropertiesProvider;
 use Sulu\Bundle\MediaBundle\Tests\Functional\Traits\CreateUploadedFileTrait;
 
 class VideoPropertiesProviderTest extends TestCase
 {
+    use ProphecyTrait;
     use CreateUploadedFileTrait;
 
     /**

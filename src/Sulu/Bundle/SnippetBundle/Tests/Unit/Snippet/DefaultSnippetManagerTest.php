@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Snippet;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Domain\Event\WebspaceDefaultSnippetModifiedEvent;
@@ -30,6 +31,8 @@ use Sulu\Component\Webspace\Webspace;
 
 class DefaultSnippetManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     private $defaultTypes = [
         'test' => [
             'key' => 'test',

@@ -12,12 +12,15 @@
 namespace Sulu\Component\Symfony\Tests\Unit\CompilerPass;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Symfony\CompilerPass\TaggedServiceCollectorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 class TaggedServiceCollectorCompilerPassTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testProcess()
     {
         $container = $this->prophesize(ContainerBuilder::class);

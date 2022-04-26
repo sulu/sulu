@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Audit\Pa
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\Behavior\Path\BasePathBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -24,6 +25,8 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\BasePathSubscriber;
 
 class BasePathSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PersistEvent
      */

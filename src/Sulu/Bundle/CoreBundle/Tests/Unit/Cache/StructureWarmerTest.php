@@ -12,10 +12,13 @@
 namespace Sulu\Bundle\CoreBundle\Tests\Unit\Cache;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\CoreBundle\Cache\StructureWarmer;
 
 class StructureWarmerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function setUp(): void
     {
         parent::setUp();

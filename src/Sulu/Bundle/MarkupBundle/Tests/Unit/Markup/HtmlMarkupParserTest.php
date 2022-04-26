@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Markup;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MarkupBundle\Markup\DelegatingTagExtractor;
 use Sulu\Bundle\MarkupBundle\Markup\HtmlMarkupParser;
 use Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor;
@@ -22,6 +23,8 @@ use Sulu\Bundle\MarkupBundle\Tag\TagRegistryInterface;
 
 class HtmlMarkupParserTest extends TestCase
 {
+    use ProphecyTrait;
+
     public const VALIDATE_UNPUBLISHED = 'unpublished';
 
     public const VALIDATE_REMOVED = 'removed';

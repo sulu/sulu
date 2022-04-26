@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Export;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Structure;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
@@ -113,7 +114,7 @@ class WebspaceExportTest extends SuluTestCase
      */
     private function prepareData()
     {
-        /** @var \Sulu\Component\Content\Compat\Structure\PageBridge[] $data */
+        /** @var PageBridge[] $data */
         $data = $this->getRawData();
         $extensionDataList = $this->getExtensionDataArray();
         $data[0]['ext'] = $extensionDataList[0];

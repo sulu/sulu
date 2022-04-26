@@ -15,6 +15,7 @@ use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigatorInterface;
 use JMS\Serializer\Visitor\DeserializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\Serializer\PageBridgeHandler;
@@ -26,6 +27,8 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 
 class PageBridgeHandlerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testDeserialize()
     {
         $documentInspector = $this->prophesize(DocumentInspector::class);

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\EventListener;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredObjectControllerInterface;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -44,6 +45,8 @@ class TestCallableClass implements SecuredControllerInterface
 
 class SuluSecurityListenerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SuluSecurityListener
      */

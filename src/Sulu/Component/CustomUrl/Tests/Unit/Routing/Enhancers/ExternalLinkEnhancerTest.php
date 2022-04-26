@@ -12,6 +12,7 @@
 namespace Sulu\Component\CustomUrl\Tests\Unit\Routing\Enhancers;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\CustomUrl\Routing\Enhancers\ExternalLinkEnhancer;
@@ -19,6 +20,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ExternalLinkEnhancerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testEnhance()
     {
         $structure = $this->prophesize(PageBridge::class);

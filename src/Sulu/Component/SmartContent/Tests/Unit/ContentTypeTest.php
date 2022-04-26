@@ -14,6 +14,7 @@ namespace Sulu\Component\SmartContent\Tests\Unit;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -34,11 +35,10 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * @group unit
- */
 class ContentTypeTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var TagManagerInterface
      */
@@ -315,8 +315,6 @@ class ContentTypeTest extends TestCase
         $config = ['dataSource' => 'some-uuid'];
         $parameter = ['max_per_page' => new PropertyParameter('max_per_page', '5')];
 
-        $property->expects($this->at(1))->method('getValue')
-            ->willReturn($config);
         $property->expects($this->any())->method('getValue')
             ->willReturn(\array_merge($config, ['page' => 1, 'hasNextPage' => true]));
 
@@ -393,7 +391,7 @@ class ContentTypeTest extends TestCase
         $structure->getUuid()->willReturn('123-123-123');
         $structure->getLanguageCode()->willReturn('de');
 
-        $this->request->expects($this->at(0))->method('get')
+        $this->request->expects($this->any())->method('get')
             ->with($this->equalTo('p'))
             ->willReturn(1);
 
@@ -516,7 +514,7 @@ class ContentTypeTest extends TestCase
         );
         $structure = $this->prophesize(StructureInterface::class);
 
-        $this->request->expects($this->at(0))->method('get')
+        $this->request->expects($this->any())->method('get')
             ->with($this->equalTo('p'))
             ->willReturn(1);
 
@@ -651,7 +649,7 @@ class ContentTypeTest extends TestCase
         );
         $structure = $this->prophesize(StructureInterface::class);
 
-        $this->request->expects($this->at(0))->method('get')
+        $this->request->expects($this->any())->method('get')
             ->with($this->equalTo('p'))
             ->willReturn((string) $page);
 
@@ -769,7 +767,7 @@ class ContentTypeTest extends TestCase
         );
         $structure = $this->prophesize(StructureInterface::class);
 
-        $this->request->expects($this->at(0))->method('get')
+        $this->request->expects($this->any())->method('get')
             ->with($this->equalTo('p'))
             ->willReturn((string) $page);
 
@@ -835,8 +833,6 @@ class ContentTypeTest extends TestCase
             null
         )->willReturn(new DataProviderResult($expectedData, $hasNextPage));
 
-        $property->expects($this->at(1))->method('getValue')
-            ->willReturn($config);
         $property->expects($this->any())->method('getValue')
             ->willReturn(\array_merge($config, ['page' => $page, 'hasNextPage' => $hasNextPage]));
 

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ActivityBundle\Tests\Unit\Application\Subscriber;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Subscriber\DispatchSpecificDomainEventSubscriber;
 use Sulu\Bundle\ActivityBundle\Tests\Application\Domain\Event\TestDomainEvent;
@@ -19,6 +20,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class DispatchSpecificDomainEventSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var EventDispatcherInterface|ObjectProphecy
      */

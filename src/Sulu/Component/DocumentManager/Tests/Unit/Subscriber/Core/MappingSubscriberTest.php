@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Core;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
@@ -25,6 +26,8 @@ use Sulu\Component\DocumentManager\Subscriber\Core\MappingSubscriber;
 
 class MappingSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var MetadataFactoryInterface
      */

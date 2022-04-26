@@ -13,12 +13,15 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatLoader;
 
 use Imagine\Image\ImageInterface;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MediaBundle\Media\FormatLoader\Exception\MissingScaleDimensionException;
 use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
 use Symfony\Component\Config\FileLocatorInterface;
 
 class XmlFormatLoader11Test extends WebspaceTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var XmlFormatLoader11
      */

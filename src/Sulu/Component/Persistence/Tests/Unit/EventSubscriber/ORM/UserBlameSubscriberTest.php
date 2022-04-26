@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\UnitOfWork;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Persistence\EventSubscriber\ORM\UserBlameSubscriber;
 use Sulu\Component\Persistence\Model\UserBlameInterface;
@@ -28,6 +29,8 @@ use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 
 class UserBlameSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy<LoadClassMetadataEventArgs>
      */

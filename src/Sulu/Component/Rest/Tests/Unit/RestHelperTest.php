@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Rest\Exception\SearchFieldNotFoundException;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
@@ -22,6 +23,8 @@ use Sulu\Component\Rest\RestHelper;
 
 class RestHelperTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var RestHelper
      */

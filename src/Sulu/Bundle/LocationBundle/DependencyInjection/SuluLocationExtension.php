@@ -14,7 +14,7 @@ namespace Sulu\Bundle\LocationBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SuluLocationExtension extends Extension implements PrependExtensionInterface
@@ -53,13 +53,13 @@ class SuluLocationExtension extends Extension implements PrependExtensionInterfa
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
         $this->configureGeolocators($config, $container, $loader);
     }
 
-    private function configureGeolocators(array $config, ContainerBuilder $container, Loader\XmlFileLoader $loader)
+    private function configureGeolocators(array $config, ContainerBuilder $container, XmlFileLoader $loader)
     {
         $geolocatorName = $config['geolocator'] ?? null;
         $geolocators = $config['geolocators'] ?? null;

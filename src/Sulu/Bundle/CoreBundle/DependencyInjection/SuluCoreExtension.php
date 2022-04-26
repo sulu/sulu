@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 
+use Gedmo\Exception;
 use Oro\ORM\Query\AST\Functions\Cast;
 use Oro\ORM\Query\AST\Functions\String\GroupConcat;
 use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
@@ -158,7 +159,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             // depending on the gedmo version it is in gedmo lib or src folder
             // we use the autoloader to detect the correct directory
             // see also: https://github.com/sulu/sulu/pull/5753
-            $reflection = new \ReflectionClass(\Gedmo\Exception::class);
+            $reflection = new \ReflectionClass(Exception::class);
             $gedmoDirectory = \dirname($reflection->getFileName());
 
             $container->prependExtensionConfig(

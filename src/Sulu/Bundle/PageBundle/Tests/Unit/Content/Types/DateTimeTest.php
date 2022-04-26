@@ -14,11 +14,14 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Content\Types;
 use PHPCR\ItemInterface;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PageBundle\Content\Types\DateTime;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
 class DateTimeTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testRead()
     {
         $webspaceKey = 'sulu_io';

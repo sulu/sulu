@@ -12,6 +12,7 @@
 namespace Sulu\Component\CustomUrl\Tests\Unit\Routing\Enhancers;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Routing\Enhancers\RedirectEnhancer;
@@ -21,6 +22,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RedirectEnhancerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testEnhance()
     {
         $request = $this->prophesize(Request::class);

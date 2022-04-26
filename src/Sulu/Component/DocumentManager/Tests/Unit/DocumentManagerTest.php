@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\Collection\QueryResultCollection;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Event\ClearEvent;
@@ -42,6 +43,8 @@ use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 
 class DocumentManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var EventDispatcher
      */

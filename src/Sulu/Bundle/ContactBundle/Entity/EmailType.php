@@ -11,6 +11,8 @@
 
 namespace Sulu\Bundle\ContactBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 
@@ -32,7 +34,7 @@ class EmailType implements \JsonSerializable
     private $id;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      * @Exclude
      */
     private $emails;
@@ -42,7 +44,7 @@ class EmailType implements \JsonSerializable
      */
     public function __construct()
     {
-        $this->emails = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->emails = new ArrayCollection();
     }
 
     /**
@@ -112,7 +114,7 @@ class EmailType implements \JsonSerializable
     /**
      * Get emails.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getEmails()
     {

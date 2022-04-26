@@ -26,7 +26,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SuluAdminExtension extends Extension implements PrependExtensionInterface
@@ -151,7 +151,7 @@ class SuluAdminExtension extends Extension implements PrependExtensionInterface
         $container->setParameter($this->getAlias() . '.forms.directories', $config['forms']['directories'] ?? []);
         $container->setParameter($this->getAlias() . '.lists.directories', $config['lists']['directories'] ?? []);
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
         $container->registerForAutoconfiguration(Admin::class)

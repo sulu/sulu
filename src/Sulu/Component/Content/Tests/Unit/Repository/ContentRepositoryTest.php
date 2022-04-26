@@ -27,6 +27,7 @@ use PHPCR\SessionInterface;
 use PHPCR\WorkspaceInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Content\Compat\LocalizationFinderInterface;
@@ -46,6 +47,8 @@ use Sulu\Component\Webspace\Webspace;
 
 class ContentRepositoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy|SessionInterface
      */

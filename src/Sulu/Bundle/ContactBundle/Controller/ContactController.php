@@ -37,6 +37,7 @@ use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -248,7 +249,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
      * lists all contacts
      * optional parameter 'flat' calls listAction.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function cgetAction(Request $request)
     {
@@ -356,7 +357,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
      *
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction($id)
     {
@@ -375,7 +376,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
      *
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getAction($id)
     {
@@ -402,7 +403,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
     /**
      * Creates a new contact.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function postAction(Request $request)
     {
@@ -433,7 +434,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
     /**
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function putAction($id, Request $request)
     {
@@ -459,7 +460,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
      *
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function patchAction($id, Request $request)
     {

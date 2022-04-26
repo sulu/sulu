@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
@@ -27,6 +28,8 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class StructureFormMetadataLoaderTest extends TestCase
 {
+    use ProphecyTrait;
+
     public const CACHE_DIR = __DIR__ . '/../../../../../../../tests/Resources/cache';
 
     /**

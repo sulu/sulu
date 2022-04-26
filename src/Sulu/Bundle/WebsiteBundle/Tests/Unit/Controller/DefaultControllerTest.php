@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Controller;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\Controller\DefaultController;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
@@ -26,6 +27,8 @@ use Twig\Loader\FilesystemLoader;
 
 class DefaultControllerTest extends TestCase
 {
+    use ProphecyTrait;
+
     private $defaultController;
 
     private $container;

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Command\InitializeCommand;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -23,6 +24,8 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class InitializeCommandTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var mixed
      */

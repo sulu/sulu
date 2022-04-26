@@ -14,6 +14,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Unit;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\ContactBundle\Contact\ContactManager;
@@ -30,6 +31,8 @@ use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
 
 class ContactManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ContactManager
      */

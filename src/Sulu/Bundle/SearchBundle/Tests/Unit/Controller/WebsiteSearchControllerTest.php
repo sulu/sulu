@@ -15,6 +15,7 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Massive\Bundle\SearchBundle\Search\SearchQueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\SearchBundle\Controller\WebsiteSearchController;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
 use Sulu\Component\Localization\Localization;
@@ -27,6 +28,8 @@ use Twig\Loader\FilesystemLoader;
 
 class WebsiteSearchControllerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SearchManagerInterface
      */

@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\tests\Unit\Subscriber\Core;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -22,6 +23,8 @@ use Sulu\Component\DocumentManager\Subscriber\Core\RegistratorSubscriber;
 
 class RegistratorSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DocumentRegistry
      */

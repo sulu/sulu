@@ -14,6 +14,7 @@ namespace Sulu\Comonent\DocumentManager\tests\Unit\Subscriber\Phpcr;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\Event\FindEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Events;
@@ -26,6 +27,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class FindSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function setUp(): void
     {
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);

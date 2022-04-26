@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Tests\Functional\Analyzer;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
@@ -32,6 +33,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestAnalyzerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var RequestAnalyzer
      */

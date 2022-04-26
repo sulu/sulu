@@ -16,6 +16,7 @@ use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Api\Media as MediaApiWrapper;
@@ -29,6 +30,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class MediaPermissionsSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var MediaPermissionsSubscriber
      */

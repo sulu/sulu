@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\ListMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Metadata\ListMetadata\XmlListMetadataLoader;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
@@ -22,6 +23,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class XmlListMetadataLoaderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var XmlListMetadataLoader
      */

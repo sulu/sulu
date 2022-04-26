@@ -12,6 +12,7 @@
 namespace Sulu\Component\Webspace\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Exception\EnvironmentNotFoundException;
@@ -20,6 +21,8 @@ use Sulu\Component\Webspace\Url;
 
 class PortalTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var Portal
      */

@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
@@ -41,6 +42,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class ContentTwigExtensionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var StructureResolverInterface|ObjectProphecy
      */

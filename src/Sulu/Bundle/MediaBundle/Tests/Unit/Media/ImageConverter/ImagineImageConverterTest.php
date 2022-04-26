@@ -17,6 +17,7 @@ use Imagine\Image\Palette\PaletteInterface;
 use Imagine\Image\Palette\RGB;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\CropperInterface;
@@ -30,6 +31,8 @@ use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 
 class ImagineImageConverterTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ImagineInterface
      */

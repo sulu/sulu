@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Resolver;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolver;
@@ -28,6 +29,8 @@ use Symfony\Component\Routing\RouterInterface;
 
 class TemplateAttributeResolverTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var RequestAnalyzerInterface
      */

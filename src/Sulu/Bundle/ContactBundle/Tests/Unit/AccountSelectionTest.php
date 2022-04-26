@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
 use Sulu\Bundle\ContactBundle\Content\Types\AccountSelection;
@@ -25,6 +26,8 @@ use Sulu\Component\Content\Compat\StructureInterface;
 
 class AccountSelectionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var AccountSelection
      */

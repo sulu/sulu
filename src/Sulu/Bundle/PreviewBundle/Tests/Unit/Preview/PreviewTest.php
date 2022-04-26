@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Preview;
 use Doctrine\Common\Cache\Cache;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\ProviderNotFoundException;
 use Sulu\Bundle\PreviewBundle\Preview\Exception\TokenNotFoundException;
@@ -25,6 +26,8 @@ use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface;
 
 class PreviewTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var Cache
      */

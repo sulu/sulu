@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Mapper;
 
 use PHPCR\NodeInterface;
+use PHPCR\PathNotFoundException;
 use PHPCR\SessionInterface;
 use PHPCR\Util\UUIDHelper;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
@@ -120,7 +121,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         try {
             $this->session->getNode($this->snippet1OriginalPath);
             $this->assertTrue(false);
-        } catch (\PHPCR\PathNotFoundException $e) {
+        } catch (PathNotFoundException $e) {
             $this->assertTrue(true);
         }
 
@@ -135,7 +136,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         try {
             $this->session->getNode($this->snippet1OriginalPath);
             $this->assertTrue(false, 'Snippet was found FAIL');
-        } catch (\PHPCR\PathNotFoundException $e) {
+        } catch (PathNotFoundException $e) {
             $this->assertTrue(true);
         }
     }
@@ -158,7 +159,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         try {
             $this->session->getNode($this->snippet1OriginalPath);
             $this->assertTrue(false, 'Snippet was found FAIL');
-        } catch (\PHPCR\PathNotFoundException $e) {
+        } catch (PathNotFoundException $e) {
             $this->assertTrue(true);
         }
     }
@@ -201,7 +202,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         try {
             $this->session->getNode($this->snippet1OriginalPath);
             $this->assertTrue(false, 'Snippet was found FAIL');
-        } catch (\PHPCR\PathNotFoundException $e) {
+        } catch (PathNotFoundException $e) {
             $this->assertTrue(true, 'Snippet was removed');
         }
 

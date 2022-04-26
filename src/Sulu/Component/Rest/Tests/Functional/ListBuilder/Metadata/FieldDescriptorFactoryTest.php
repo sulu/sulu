@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\Tests\Functional\ListBuilder\Metadata;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCaseFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
@@ -30,6 +31,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class FieldDescriptorFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var string
      */

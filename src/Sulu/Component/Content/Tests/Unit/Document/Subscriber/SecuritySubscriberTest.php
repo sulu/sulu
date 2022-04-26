@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Subscriber\SecuritySubscriber;
@@ -25,6 +26,8 @@ use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInte
 
 class SecuritySubscriberTest extends SubscriberTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy|NodeInterface
      */

@@ -27,7 +27,7 @@ class AccountAddress
     private $id;
 
     /**
-     * @var \Sulu\Bundle\ContactBundle\Entity\Address
+     * @var Address
      */
     private $address;
 
@@ -85,7 +85,7 @@ class AccountAddress
     /**
      * Get address.
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\Address
+     * @return Address
      */
     public function getAddress()
     {

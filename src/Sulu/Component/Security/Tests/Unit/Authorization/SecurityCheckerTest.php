@@ -13,6 +13,7 @@ namespace Sulu\Component\Security\Tests\Unit\Authorization;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Security\Authorization\SecurityChecker;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -20,6 +21,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class SecurityCheckerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SecurityCheckerInterface
      */

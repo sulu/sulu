@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Property;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -29,6 +30,8 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 
 class ManagedStructureTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ContentTypeManagerInterface
      */

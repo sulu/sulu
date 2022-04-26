@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Compat\Structure;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Compat\Property;
@@ -26,11 +27,10 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 
-/**
- * @group legacy
- */
 class LegacyPropertyFactoryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var NamespaceRegistry
      */

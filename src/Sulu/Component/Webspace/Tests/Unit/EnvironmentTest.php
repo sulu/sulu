@@ -13,11 +13,14 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Url;
 
 class EnvironmentTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testToArray()
     {
         $expected = [

@@ -17,12 +17,14 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\ImagePropertiesProvider;
 use Sulu\Bundle\MediaBundle\Tests\Functional\Traits\CreateUploadedFileTrait;
 
 class ImagePropertiesProviderTest extends TestCase
 {
+    use ProphecyTrait;
     use CreateUploadedFileTrait;
 
     /**

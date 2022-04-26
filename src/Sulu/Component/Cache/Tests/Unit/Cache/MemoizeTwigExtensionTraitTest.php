@@ -13,6 +13,7 @@ namespace Sulu\Component\Cache\Tests\Unit\Cache;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Cache\MemoizeTwigExtensionTrait;
 use Twig\Extension\ExtensionInterface;
@@ -20,6 +21,8 @@ use Twig\TwigFunction;
 
 class MemoizeTwigExtensionTraitTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var MemoizeTwigExtensionTrait
      */

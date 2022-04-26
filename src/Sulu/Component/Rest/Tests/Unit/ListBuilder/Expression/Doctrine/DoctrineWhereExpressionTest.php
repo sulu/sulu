@@ -14,12 +14,15 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Expression\Doctrine;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 
 class DoctrineWhereExpressionTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var string
      */

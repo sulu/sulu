@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Metadata\Loader;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -26,6 +27,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StructureXmlLoaderTest extends TestCase
 {
+    use ProphecyTrait;
+
     private $requiredTagNames = [
         'page' => ['sulu.rlp'],
         'home' => ['sulu.rlp'],

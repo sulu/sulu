@@ -109,7 +109,7 @@ class Phone
     /**
      * Get phoneType.
      *
-     * @return \Sulu\Bundle\ContactBundle\Entity\PhoneType
+     * @return PhoneType
      */
     public function getPhoneType()
     {

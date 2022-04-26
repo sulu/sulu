@@ -583,7 +583,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
      *
      * @return Response
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      */
     public function putAction($id, Request $request)
     {
@@ -674,7 +674,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
      *
      * @param array $parentData
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
+     * @throws EntityNotFoundException
      */
     private function setParent($parentData, AccountInterface $account)
     {

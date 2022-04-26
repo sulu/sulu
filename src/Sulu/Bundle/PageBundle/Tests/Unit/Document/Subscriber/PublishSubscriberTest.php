@@ -17,6 +17,7 @@ use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Bundle\PageBundle\Document\Subscriber\PublishSubscriber;
@@ -35,6 +36,8 @@ use Sulu\Component\DocumentManager\NodeHelperInterface;
 
 class PublishSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SessionInterface
      */

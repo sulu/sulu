@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
@@ -22,6 +23,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class SnippetAdminTest extends TestCase
 {
+    use ProphecyTrait;
     use ReadObjectAttributeTrait;
 
     /**

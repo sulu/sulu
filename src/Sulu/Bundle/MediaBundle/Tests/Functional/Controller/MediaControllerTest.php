@@ -1006,9 +1006,6 @@ class MediaControllerTest extends SuluTestCase
         $this->assertContains($targetGroup2->getId(), $targetGroups);
     }
 
-    /**
-     * @group postWithoutDetails
-     */
     public function testPostWithoutDetails(): void
     {
         $imagePath = $this->getImagePath();
@@ -1070,9 +1067,6 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotNull($response->id);
     }
 
-    /**
-     * @group postWithoutDetails
-     */
     public function testPostWithSmallFile(): void
     {
         $filePath = $this->getFilePath();

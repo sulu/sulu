@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Controller;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\LocationBundle\Controller\GeolocatorController;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
@@ -20,6 +21,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class GeolocatorControllerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testQuery()
     {
         $geolocatorResponse = $this->prophesize(GeolocatorResponse::class);

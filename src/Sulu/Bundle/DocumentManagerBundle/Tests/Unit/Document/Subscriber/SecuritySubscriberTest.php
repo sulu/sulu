@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Document\Subscriber;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Document\Subscriber\SecuritySubscriber;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -22,6 +23,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class SecuritySubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var TokenStorageInterface
      */

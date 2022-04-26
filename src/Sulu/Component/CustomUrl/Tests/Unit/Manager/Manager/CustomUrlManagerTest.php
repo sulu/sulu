@@ -13,6 +13,7 @@ namespace Sulu\Component\CustomUrl\Tests\Unit\Manager;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlCreatedEvent;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlModifiedEvent;
@@ -40,6 +41,8 @@ use Sulu\Component\Webspace\Webspace;
 
 class CustomUrlManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DocumentManagerInterface|ObjectProphecy
      */

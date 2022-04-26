@@ -12,6 +12,7 @@
 namespace Sulu\Component\CustomUrl\Tests\Unit\Routing\Enhancers;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Routing\Enhancers\TrailingHTMLEnhancer;
 use Sulu\Component\Webspace\Webspace;
@@ -19,6 +20,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class TrailingHTMLEnhancerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testEnhance()
     {
         $customUrl = $this->prophesize(CustomUrlDocument::class);

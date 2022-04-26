@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ActivityBundle\Tests\Functional\Infrastructure\Doctrine\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
@@ -22,6 +23,8 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 class ActivityRepositoryTest extends SuluTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ActivityRepository
      */

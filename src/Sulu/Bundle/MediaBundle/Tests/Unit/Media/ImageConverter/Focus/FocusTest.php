@@ -15,10 +15,13 @@ use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Point;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Focus\Focus;
 
 class FocusTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var Focus
      */

@@ -14,12 +14,15 @@ namespace Sulu\Bundle\TagBundle\Tests\Unit\Search;
 use Massive\Bundle\SearchBundle\Search\Document;
 use Massive\Bundle\SearchBundle\Search\Field;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Search\TagsConverter;
 use Sulu\Bundle\TagBundle\Tag\TagManager;
 
 class TagsConverterTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testConvert()
     {
         $tagManager = $this->prophesize(TagManager::class);

@@ -12,12 +12,15 @@
 namespace Sulu\Bundle\CustomUrlBundle\Tests\Unit\Domain\Event;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRestoredEvent;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 
 class CustomUrlRestoredEventTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var CustomUrlDocument|ObjectProphecy
      */

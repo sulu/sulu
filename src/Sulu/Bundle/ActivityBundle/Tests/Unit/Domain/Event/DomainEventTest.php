@@ -12,11 +12,14 @@
 namespace Sulu\Bundle\ActivityBundle\Tests\Unit\Domain\Event;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\ActivityBundle\Tests\Application\Domain\Event\TestDomainEvent;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 class DomainEventTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testEventType(): void
     {
         $event = $this->createTestDomainEvent();

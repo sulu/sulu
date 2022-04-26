@@ -12,12 +12,15 @@
 namespace Sulu\Bundle\CoreBundle\Tests\Unit\ExpressionLanguage;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\CoreBundle\ExpressionLanguage\ContainerExpressionLanguageProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class ContainerExpressionLanguageProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ExpressionLanguage
      */

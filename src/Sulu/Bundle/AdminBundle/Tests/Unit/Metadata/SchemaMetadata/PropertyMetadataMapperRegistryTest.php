@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Metadata\SchemaMetadata;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Container\NotFoundExceptionInterface;
 use Sulu\Bundle\AdminBundle\Exception\PropertyMetadataMapperNotFoundException;
@@ -21,6 +22,8 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class PropertyMetadataMapperRegistryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy<ServiceLocator>
      */

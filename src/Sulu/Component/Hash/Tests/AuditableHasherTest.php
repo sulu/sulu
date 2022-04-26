@@ -12,6 +12,7 @@
 namespace Sulu\Component\Hash\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuditableBehavior;
 use Sulu\Component\Hash\AuditableHasher;
 use Sulu\Component\Persistence\Model\AuditableInterface;
@@ -19,6 +20,8 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 class AuditableHasherTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var AuditableHasher
      */

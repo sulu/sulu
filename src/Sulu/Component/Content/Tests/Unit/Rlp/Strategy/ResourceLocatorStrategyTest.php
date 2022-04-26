@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\ResourceLocator\Strategy;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -26,6 +27,8 @@ use Sulu\Component\Util\SuluNodeHelper;
 
 class ResourceLocatorStrategyTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ResourceLocatorMapperInterface
      */

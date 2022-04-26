@@ -13,10 +13,13 @@ namespace Sulu\Component\DocumentManager\tests\Unit;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 
 class DocumentRegistryTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DocumentRegistry
      */

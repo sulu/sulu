@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Types;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
@@ -22,6 +23,8 @@ use Sulu\Component\Content\Types\Link;
 
 class LinkTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var Link
      */

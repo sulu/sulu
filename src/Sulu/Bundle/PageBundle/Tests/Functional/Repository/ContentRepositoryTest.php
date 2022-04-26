@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Repository;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\ItemNotFoundException;
 use PHPCR\SessionInterface;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -37,6 +38,8 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class ContentRepositoryTest extends SuluTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SessionInterface
      */

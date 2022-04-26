@@ -20,12 +20,15 @@ use Doctrine\Persistence\Mapping\Driver\MappingDriver;
 use Doctrine\Persistence\Mapping\ReflectionService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Component\Persistence\EventSubscriber\ORM\MetadataSubscriber;
 
 class MetadataSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var LoadClassMetadataEventArgs|ObjectProphecy
      */

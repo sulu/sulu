@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PreviewBundle\Tests\Unit\Preview\Renderer;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PreviewBundle\Preview\Events;
 use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
@@ -42,6 +43,8 @@ use Twig\Error\RuntimeError;
 
 class PreviewRendererTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var RouteDefaultsProviderInterface
      */

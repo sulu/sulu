@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Entity;
 
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class CategoryRepository extends NestedTreeRepository implements CategoryRepositoryInterface
@@ -155,7 +156,7 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
     /**
      * Returns the general part of the query.
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return QueryBuilder
      */
     private function getCategoryQuery()
     {

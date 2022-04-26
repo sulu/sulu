@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Mapping;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\DocumentInspector;
@@ -22,6 +23,8 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\PathSubscriber;
 
 class PathSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var AbstractMappingEvent
      */

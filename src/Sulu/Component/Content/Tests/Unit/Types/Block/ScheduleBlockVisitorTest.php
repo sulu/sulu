@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Types\Block;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Metadata;
@@ -20,6 +21,8 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class ScheduleBlockVisitorTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var RequestAnalyzerInterface
      */

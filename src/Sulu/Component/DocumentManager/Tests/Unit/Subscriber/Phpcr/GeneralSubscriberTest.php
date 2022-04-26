@@ -13,6 +13,7 @@ namespace Sulu\Comonent\DocumentManager\Tests\Unit\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\ClearEvent;
 use Sulu\Component\DocumentManager\Event\CopyEvent;
@@ -25,6 +26,8 @@ use Sulu\Component\DocumentManager\Subscriber\Phpcr\GeneralSubscriber;
 
 class GeneralSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     public const SRC_PATH = '/path/to';
 
     public const DST_PATH = '/dest/path';

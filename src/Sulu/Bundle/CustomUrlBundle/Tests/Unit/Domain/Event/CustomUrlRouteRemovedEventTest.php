@@ -12,12 +12,15 @@
 namespace Sulu\Bundle\CustomUrlBundle\Tests\Unit\Domain\Event;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRouteRemovedEvent;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 
 class CustomUrlRouteRemovedEventTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var CustomUrlDocument|ObjectProphecy
      */

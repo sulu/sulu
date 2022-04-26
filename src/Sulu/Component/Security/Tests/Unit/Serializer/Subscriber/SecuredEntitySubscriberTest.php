@@ -16,6 +16,7 @@ use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
@@ -26,6 +27,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class SecuredEntitySubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var SecuredEntitySubscriber
      */

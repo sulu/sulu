@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager;
@@ -31,6 +32,8 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 
 class CollectionManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var CollectionRepository|ObjectProphecy
      */

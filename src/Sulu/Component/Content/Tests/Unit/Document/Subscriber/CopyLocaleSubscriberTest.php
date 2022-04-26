@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
@@ -23,6 +24,8 @@ use Sulu\Component\DocumentManager\Event\CopyLocaleEvent;
 
 class CopyLocaleSubscriberTest extends SubscriberTestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var DocumentManagerInterface|ObjectProphecy
      */

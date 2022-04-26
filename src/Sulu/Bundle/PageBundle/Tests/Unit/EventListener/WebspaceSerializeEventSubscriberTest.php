@@ -18,6 +18,7 @@ use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PageBundle\EventListener\WebspaceSerializeEventSubscriber;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Localization\Localization;
@@ -37,6 +38,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class WebspaceSerializeEventSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var WebspaceUrlProviderInterface
      */

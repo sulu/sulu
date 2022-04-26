@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Media\Manager;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
@@ -52,6 +53,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class MediaManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var MediaManager
      */

@@ -12,11 +12,14 @@
 namespace Sulu\Component\Content\Tests\Unit\Extension;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManager;
 
 class ExtensionManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     private function getExtension($name)
     {
         $extension = $this->prophesize(ExtensionInterface::class);

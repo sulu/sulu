@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\DependencyInjection\Compiler;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\DependencyInjection\Compiler\AddAdminPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -20,6 +21,8 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 class AddAdminPassTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testProcess(): void
     {
         $adminPass = new AddAdminPass();

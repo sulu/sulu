@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundException;
 use Sulu\Component\Rest\Exception\RemoveDependantResourcesFoundException;
 use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
@@ -22,6 +23,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FlattenExceptionNormalizerTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testNormalizeGeneralExceptionDebugTrue(): void
     {
         $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);

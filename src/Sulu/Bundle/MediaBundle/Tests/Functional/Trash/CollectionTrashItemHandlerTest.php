@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Functional\Trash;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
@@ -32,6 +33,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 class CollectionTrashItemHandlerTest extends TestCase
 {
+    use ProphecyTrait;
     use SetGetPrivatePropertyTrait;
 
     /**

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PreviewBundle\Tests\Unit\UserInterface\Controller;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
@@ -24,6 +25,8 @@ use Twig\Environment;
 
 class PublicPreviewControllerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PreviewRendererInterface|ObjectProphecy
      */

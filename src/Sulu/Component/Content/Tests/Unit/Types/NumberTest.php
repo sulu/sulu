@@ -16,6 +16,7 @@ use PHPCR\PropertyInterface as NodePropertyInterface;
 use PHPCR\PropertyType;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -23,6 +24,8 @@ use Sulu\Component\Content\Types\Number;
 
 class NumberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var string
      */

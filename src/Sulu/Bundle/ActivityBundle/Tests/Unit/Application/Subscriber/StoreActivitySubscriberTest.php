@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ActivityBundle\Tests\Unit\Application\Subscriber;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Subscriber\StoreActivitySubscriber;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
@@ -20,6 +21,8 @@ use Sulu\Bundle\ActivityBundle\Domain\Repository\ActivityRepositoryInterface;
 
 class StoreActivitySubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ActivityRepositoryInterface|ObjectProphecy
      */

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Application;
 
 use Sulu\Bundle\AudienceTargetingBundle\EventListener\AudienceTargetingCacheListener;
 use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class AppCache extends SuluHttpCache implements KernelInterface
@@ -39,7 +40,7 @@ class AppCache extends SuluHttpCache implements KernelInterface
         return $this->kernel->registerBundles();
     }
 
-    public function registerContainerConfiguration(\Symfony\Component\Config\Loader\LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader)
     {
         return $this->kernel->registerContainerConfiguration($loader);
     }

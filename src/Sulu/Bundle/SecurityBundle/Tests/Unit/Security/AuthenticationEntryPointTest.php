@@ -12,9 +12,12 @@
 namespace Sulu\Bundle\SecurityBundle\Security;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class AuthenticationEntryPointTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var AuthenticationEntryPoint
      */

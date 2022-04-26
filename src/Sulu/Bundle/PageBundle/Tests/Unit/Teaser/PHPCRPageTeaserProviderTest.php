@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Teaser;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
@@ -28,6 +29,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PHPCRPageTeaserProviderTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy<ContentQueryExecutorInterface>
      */

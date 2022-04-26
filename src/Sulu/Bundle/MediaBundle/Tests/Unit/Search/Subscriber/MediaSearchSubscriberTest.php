@@ -18,6 +18,7 @@ use Massive\Bundle\SearchBundle\Search\Field;
 use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -30,6 +31,8 @@ use Sulu\Bundle\SearchBundle\Search\Document;
 
 class MediaSearchSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     private $mediaManager;
 
     private $subscriber;

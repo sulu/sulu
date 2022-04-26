@@ -98,7 +98,7 @@ class MediaStreamController
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getImageAction(Request $request)
     {
@@ -250,7 +250,7 @@ class MediaStreamController
      *
      * @return FileVersion|null
      *
-     * @throws \Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException
+     * @throws FileVersionNotFoundException
      */
     protected function getFileVersion($id, $version)
     {

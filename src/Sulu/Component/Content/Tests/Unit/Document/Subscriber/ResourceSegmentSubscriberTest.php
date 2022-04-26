@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -38,6 +39,8 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 
 class ResourceSegmentSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var PropertyEncoder|ObjectProphecy
      */

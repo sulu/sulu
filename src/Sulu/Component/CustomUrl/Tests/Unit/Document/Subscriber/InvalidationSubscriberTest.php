@@ -13,6 +13,7 @@ namespace Sulu\Component\CustomUrl\Tests\Unit\Document\Subscriber;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
@@ -25,6 +26,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class InvalidationSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testInvalidateDocumentBeforePublishing()
     {
         $customUrlManager = $this->prophesize(CustomUrlManagerInterface::class);

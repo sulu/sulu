@@ -14,11 +14,14 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Content\Types;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface as PhpcrPropertyInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PageBundle\Content\Types\SegmentSelect;
 use Sulu\Component\Content\Compat\PropertyInterface;
 
 class SegmentSelectTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testRead()
     {
         $node = $this->prophesize(NodeInterface::class);

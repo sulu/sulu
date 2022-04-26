@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Content\Document\Behavior\NavigationContextBehavior;
 use Sulu\Component\Content\Document\Subscriber\NavigationContextSubscriber;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
@@ -20,6 +21,8 @@ use Sulu\Component\DocumentManager\Metadata;
 
 class NavigationContextSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var NavigationContextSubscriber
      */

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Snippet;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -21,6 +22,8 @@ use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 
 class SnippetResolverTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function dataProvider()
     {
         return [

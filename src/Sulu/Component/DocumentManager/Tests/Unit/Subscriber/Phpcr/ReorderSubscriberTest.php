@@ -13,12 +13,15 @@ namespace Sulu\Comonent\DocumentManager\Tests\Unit\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\NodeHelperInterface;
 use Sulu\Component\DocumentManager\Subscriber\Phpcr\ReorderSubscriber;
 
 class ReorderSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var NodeHelperInterface
      */

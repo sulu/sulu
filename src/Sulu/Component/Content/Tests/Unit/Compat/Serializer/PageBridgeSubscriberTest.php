@@ -19,6 +19,7 @@ use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\Serializer\PageBridgeSubscriber;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
@@ -26,6 +27,8 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 
 class PageBridgeSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function testSerialize()
     {
         $pageBridge = $this->prophesize(PageBridge::class);
