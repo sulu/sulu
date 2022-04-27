@@ -35,7 +35,8 @@ use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authentication\SaltGenerator;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class UserManager implements UserManagerInterface
 {
@@ -72,18 +73,21 @@ class UserManager implements UserManagerInterface
     private $saltGenerator;
 
     /**
-     * @var EncoderFactory|null
+     * @var PasswordHasherFactoryInterface|EncoderFactoryInterface|null
      */
-    private $encoderFactory;
+    private $passwordHasherFactory;
 
     /**
      * @var DomainEventCollectorInterface
      */
     private $domainEventCollector;
 
+    /**
+     * @param PasswordHasherFactoryInterface|EncoderFactoryInterface|null $passwordHasherFactory
+     */
     public function __construct(
         ObjectManager $em,
-        EncoderFactory $encoderFactory = null,
+        $passwordHasherFactory,
         RoleRepositoryInterface $roleRepository,
         GroupRepository $groupRepository,
         ContactManager $contactManager,
@@ -92,7 +96,7 @@ class UserManager implements UserManagerInterface
         DomainEventCollectorInterface $domainEventCollector
     ) {
         $this->em = $em;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasherFactory = $passwordHasherFactory;
         $this->roleRepository = $roleRepository;
         $this->groupRepository = $groupRepository;
         $this->contactManager = $contactManager;
@@ -666,15 +670,22 @@ class UserManager implements UserManagerInterface
      */
     private function encodePassword(UserInterface $user, $password, $salt)
     {
-        if (!$this->encoderFactory) {
+        if (!$this->passwordHasherFactory) {
             throw new \InvalidArgumentException(
-                'For encoding a password the "EncoderFactory" must be passed to the "UserManager".'
+                'For encoding a password the "PasswordHasherFactory" must be passed to the "UserManager".'
             );
         }
 
-        $encoder = $this->encoderFactory->getEncoder($user);
+        if ($this->passwordHasherFactory instanceof EncoderFactoryInterface) {
+            // @deprecated symfony 5.4 backward compatibility bridge
+            $encoder = $this->passwordHasherFactory->getEncoder($user);
 
-        return $encoder->encodePassword($password, $salt);
+            return $encoder->encodePassword($password, $salt);
+        }
+
+        $hasher = $this->passwordHasherFactory->getPasswordHasher($user);
+
+        return $hasher->hash($password);
     }
 
     /**

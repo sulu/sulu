@@ -54,7 +54,7 @@ class PreviewKernel extends Kernel
      *
      * @see SuluKernel::getContainerClass
      */
-    protected function getContainerClass()
+    protected function getContainerClass(): string
     {
         // use parent class to normalize the generated container class.
         return $this->generateContainerClass(\get_parent_class());
@@ -74,7 +74,7 @@ class PreviewKernel extends Kernel
         return $this->rootDir;
     }
 
-    public function getProjectDir()
+    public function getProjectDir(): string
     {
         if (null === $this->projectDir) {
             $reflectionClass = new \ReflectionClass(Kernel::class);
@@ -91,7 +91,7 @@ class PreviewKernel extends Kernel
         return $this->projectDir;
     }
 
-    public function getLogDir()
+    public function getLogDir(): string
     {
         $context = $this->getContext();
         $this->setContext(static::CONTEXT_PREVIEW);
@@ -103,7 +103,7 @@ class PreviewKernel extends Kernel
         return $logDirectory;
     }
 
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         $context = $this->getContext();
         $this->setContext(static::CONTEXT_PREVIEW);
@@ -115,7 +115,7 @@ class PreviewKernel extends Kernel
         return $cacheDirectory;
     }
 
-    public function getKernelParameters()
+    public function getKernelParameters(): array
     {
         return \array_merge(
             parent::getKernelParameters(),

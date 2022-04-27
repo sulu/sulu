@@ -97,10 +97,6 @@
             <argument type="service" id="session"/>
         </service>
 
-        <service id="sulu_security.logout_success_handler" class="Sulu\Bundle\SecurityBundle\Security\LogoutSuccessHandler">
-            <argument type="service" id="router"/>
-        </service>
-
         <service id="sulu_security.mask_converter" class="%sulu_security.mask_converter.class%" public="true">
             <argument>%permissions%</argument>
         </service>
@@ -326,6 +322,13 @@
             <tag name="sulu.context" context="admin"/>
         </service>
 
+        <service id="sulu_security.logout_event_subscriber" class="Sulu\Bundle\SecurityBundle\EventListener\LogoutEventSubscriber">
+            <argument type="service" id="router"/>
+
+            <tag name="kernel.event_subscriber"/>
+            <tag name="sulu.context" context="admin"/>
+        </service>
+
         <service
             id="sulu_security.access_control_query_enhancer"
             class="Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer"
@@ -351,7 +354,7 @@
 
         <service id="sulu_security.user_manager" class="Sulu\Bundle\SecurityBundle\UserManager\UserManager" public="true">
             <argument type="service" id="doctrine.orm.entity_manager"/>
-            <argument type="service" id="security.encoder_factory" on-invalid="null"/>
+            <argument type="service" id="sulu_security.encoder_factory" on-invalid="null"/>
             <argument type="service" id="sulu.repository.role"/>
             <argument type="service" id="sulu_security.group_repository"/>
             <argument type="service" id="sulu_contact.contact_manager"/>

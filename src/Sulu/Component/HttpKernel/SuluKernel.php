@@ -71,7 +71,7 @@ abstract class SuluKernel extends Kernel
         parent::__construct($environment, $debug);
     }
 
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         $contents = require $this->getProjectDir() . '/config/bundles.php';
         foreach ($contents as $class => $envs) {
@@ -115,7 +115,7 @@ abstract class SuluKernel extends Kernel
      *
      * @see https://github.com/symfony/symfony/blob/v4.4.7/src/Symfony/Component/Cache/DependencyInjection/CachePoolPass.php#L56
      */
-    protected function getContainerClass()
+    protected function getContainerClass(): string
     {
         return $this->generateContainerClass(static::class);
     }
@@ -197,7 +197,7 @@ abstract class SuluKernel extends Kernel
         return \array_keys(\iterator_to_array($resources));
     }
 
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return $this->getProjectDir() . \DIRECTORY_SEPARATOR
             . 'var' . \DIRECTORY_SEPARATOR
@@ -206,7 +206,7 @@ abstract class SuluKernel extends Kernel
             . $this->environment;
     }
 
-    public function getCommonCacheDir()
+    public function getCommonCacheDir(): string
     {
         return $this->getProjectDir() . \DIRECTORY_SEPARATOR
             . 'var' . \DIRECTORY_SEPARATOR
@@ -215,7 +215,7 @@ abstract class SuluKernel extends Kernel
             . $this->environment;
     }
 
-    public function getLogDir()
+    public function getLogDir(): string
     {
         return $this->getProjectDir() . \DIRECTORY_SEPARATOR
             . 'var' . \DIRECTORY_SEPARATOR
@@ -251,7 +251,7 @@ abstract class SuluKernel extends Kernel
         return $this;
     }
 
-    protected function getKernelParameters()
+    protected function getKernelParameters(): array
     {
         return \array_merge(
             parent::getKernelParameters(),
