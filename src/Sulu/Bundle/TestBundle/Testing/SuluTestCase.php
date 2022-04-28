@@ -15,7 +15,6 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class SuluTestCase extends WebTestCase
 {
-    use ContainerTrait;
     use KernelTrait;
     use AssertHttpStatusCodeTrait;
     use CreateClientTrait;

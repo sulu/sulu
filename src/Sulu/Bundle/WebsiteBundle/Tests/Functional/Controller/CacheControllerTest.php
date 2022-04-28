@@ -43,7 +43,7 @@ class CacheControllerTest extends SuluTestCase
         $entityManager->persist($contact);
 
         $user = new User();
-        $encoder = self::$container->get('security.encoder_factory')->getEncoder($user);
+        $encoder = self::getContainer()->get('security.encoder_factory')->getEncoder($user);
         $user->setUsername('cache-user');
         $user->setContact($contact);
         $user->setLocale('en');
