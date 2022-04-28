@@ -315,7 +315,7 @@
 
         <service id="sulu_security.login_failure_listener"
                  class="Sulu\Bundle\SecurityBundle\EventListener\AuhenticationFailureListener">
-            <argument type="service" id="security.user_password_encoder.generic"/>
+            <argument type="service" id="sulu_security.encoder_factory"/>
             <argument type="service" id="sulu.repository.user"/>
 
             <tag name="kernel.event_subscriber"/>

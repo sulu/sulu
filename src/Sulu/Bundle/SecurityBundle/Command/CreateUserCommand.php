@@ -28,8 +28,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 
 class CreateUserCommand extends Command
 {
@@ -66,15 +66,18 @@ class CreateUserCommand extends Command
     private $saltGenerator;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var PasswordHasherFactoryInterface|EncoderFactoryInterface
      */
-    private $encoderFactory;
+    private $passwordHasherFactory;
 
     /**
      * @var string[]
      */
     private $locales;
 
+    /**
+     * @param PasswordHasherFactoryInterface|EncoderFactoryInterface $passwordHasherFactory
+     */
     public function __construct(
         EntityManagerInterface $entityManager,
         UserRepository $userRepository,
@@ -82,7 +85,7 @@ class CreateUserCommand extends Command
         ContactRepositoryInterface $contactRepository,
         LocalizationManagerInterface $localizationManager,
         SaltGenerator $saltGenerator,
-        EncoderFactoryInterface $encoderFactory,
+        $passwordHasherFactory,
         array $locales
     ) {
         parent::__construct();
@@ -93,7 +96,7 @@ class CreateUserCommand extends Command
         $this->contactRepository = $contactRepository;
         $this->localizationManager = $localizationManager;
         $this->saltGenerator = $saltGenerator;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasherFactory = $passwordHasherFactory;
         $this->locales = $locales;
     }
 
@@ -341,10 +344,15 @@ class CreateUserCommand extends Command
      */
     private function encodePassword($user, $password, $salt)
     {
-        /** @var PasswordEncoderInterface $encoder */
-        $encoder = $this->encoderFactory->getEncoder($user);
+        if ($this->passwordHasherFactory instanceof PasswordHasherFactoryInterface) {
+            $hasher = $this->passwordHasherFactory->getPasswordHasher($user);
+            $password = $hasher->hash($password);
+        } else {
+            $encoder = $this->passwordHasherFactory->getEncoder($user);
+            $password = $encoder->encodePassword($password, $salt);
+        }
 
-        return $encoder->encodePassword($password, $salt);
+        return $password;
     }
 
     /**

@@ -266,6 +266,9 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
     /**
      * Get salt.
      *
+     * @deprecated The salt functionality was deprecated in Sulu 2.5 and will be removed in Sulu 3.0
+     *             Modern password algorithm do not longer require a salt.
+     *
      * @return string
      */
     public function getSalt()
