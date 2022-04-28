@@ -33,7 +33,7 @@ class InvalidExpressionArgumentException extends ExpressionException
     /**
      * @param string $expression The type of the expression
      * @param string $argument The argument of the expression, which was invalid
-     * @param null $customMessage
+     * @param null|string $customMessage
      */
     public function __construct($expression, $argument, $customMessage = null)
     {
