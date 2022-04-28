@@ -32,6 +32,17 @@ The Symfony 4.4 compatibility service
 `Sulu\Bundle\WebsiteBundle\Controller\ExceptionController` / `sulu_website.exception_controller`
 was removed. See also [UPGRADE 2.1.0-RC1](#210-rc1).
 
+### Password encoded depending service definitions changed
+
+The following service changed its definition:
+
+ - `sulu_security.login_failure_listener`
+ - `test_user_provider`
+ - `sulu_security.command.create_user`
+ - `sulu_security.resetting_controller`
+
+ They require now `sulu_security.encoder_factory` instead of `sulu_security.encoder_factory`.
+
 ### Kernel Return Types changed
 
 The Symfony Kernel requires the following return types now:
@@ -75,6 +86,11 @@ fos_js_routing:
 
 The user provider service now requires the `SystemStoreInterface` service
 instead of the `RequestStack` to read correct set **security system**.
+
+### User getSalt deprecated
+
+The `getSalt` method on the Sulu User Entity is deprecated and will be
+removed in future sulu major release.
 
 ### Replace SwiftMailer with Symfony Mailer
 

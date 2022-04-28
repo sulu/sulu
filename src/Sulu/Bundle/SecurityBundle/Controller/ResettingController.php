@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -86,9 +87,9 @@ class ResettingController
     protected $mailer;
 
     /**
-     * @var EncoderFactoryInterface
+     * @var PasswordHasherFactoryInterface|EncoderFactoryInterface
      */
-    protected $encoderFactory;
+    protected $passwordHasherFactory;
 
     /**
      * @var UserRepositoryInterface
@@ -150,6 +151,9 @@ class ResettingController
      */
     protected $secret;
 
+    /**
+     * @param PasswordHasherFactoryInterface|EncoderFactoryInterface $passwordHasherFactory
+     */
     public function __construct(
         ValidatorInterface $validator,
         TranslatorInterface $translator,
@@ -158,7 +162,7 @@ class ResettingController
         TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $dispatcher,
         $mailer,
-        EncoderFactoryInterface $encoderFactory,
+        $passwordHasherFactory,
         UserRepositoryInterface $userRepository,
         UrlGeneratorInterface $router,
         EntityManagerInterface $entityManager,
@@ -179,7 +183,7 @@ class ResettingController
         $this->tokenStorage = $tokenStorage;
         $this->dispatcher = $dispatcher;
         $this->mailer = $mailer;
-        $this->encoderFactory = $encoderFactory;
+        $this->passwordHasherFactory = $passwordHasherFactory;
         $this->userRepository = $userRepository;
         $this->router = $router;
         $this->entityManager = $entityManager;
@@ -545,9 +549,15 @@ class ResettingController
      */
     private function encodePassword(UserInterface $user, $password, $salt)
     {
-        $encoder = $this->encoderFactory->getEncoder($user);
+        if ($this->passwordHasherFactory instanceof PasswordHasherFactoryInterface) {
+            $hasher = $this->passwordHasherFactory->getPasswordHasher($user);
+            $password = $hasher->hash($password);
+        } else {
+            $encoder = $this->passwordHasherFactory->getEncoder($user);
+            $password = $encoder->encodePassword($password, $salt);
+        }
 
-        return $encoder->encodePassword($password, $salt);
+        return $password;
     }
 
     /**

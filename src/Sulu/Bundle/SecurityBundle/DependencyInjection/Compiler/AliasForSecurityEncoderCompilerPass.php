@@ -21,7 +21,7 @@ class AliasForSecurityEncoderCompilerPass implements CompilerPassInterface
         if ($container->hasAlias('security.encoder_factory')) {
             // @deprecated Symfony 5.4 backward compatibility bridge
             $container->setAlias('sulu_security.encoder_factory', 'security.encoder_factory')->setPublic(true);
-        } elseif ($container->hasAlias('security.password_hasher_factory')) {
+        } elseif ($container->hasDefinition('security.password_hasher_factory')) {
             $container->setAlias('sulu_security.encoder_factory', 'security.password_hasher_factory')->setPublic(true);
         }
     }

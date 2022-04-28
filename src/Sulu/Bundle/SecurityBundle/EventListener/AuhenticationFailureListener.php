@@ -14,7 +14,8 @@ namespace Sulu\Bundle\SecurityBundle\EventListener;
 use Ramsey\Uuid\Uuid;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Event\AuthenticationFailureEvent;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 
@@ -24,18 +25,21 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 class AuhenticationFailureListener implements EventSubscriberInterface
 {
     /**
-     * @var UserPasswordEncoderInterface
+     * @var PasswordHasherFactoryInterface|EncoderFactoryInterface
      */
-    private $passwordEncoder;
+    private $passwordHasherFactory;
 
     /**
      * @var UserRepositoryInterface
      */
     private $userRepository;
 
-    public function __construct(UserPasswordEncoderInterface $passwordEncoder, UserRepositoryInterface $userRepository)
+    /**
+     * @param PasswordHasherFactoryInterface|EncoderFactoryInterface $passwordHasherFactory
+     */
+    public function __construct($passwordHasherFactory, UserRepositoryInterface $userRepository)
     {
-        $this->passwordEncoder = $passwordEncoder;
+        $this->passwordHasherFactory = $passwordHasherFactory;
         $this->userRepository = $userRepository;
     }
 
@@ -50,7 +54,15 @@ class AuhenticationFailureListener implements EventSubscriberInterface
     {
         $previousException = $event->getAuthenticationException()->getPrevious();
         if ($previousException instanceof UsernameNotFoundException) {
-            $this->passwordEncoder->encodePassword($this->userRepository->createNew(), Uuid::uuid4()->toString());
+            $user = $this->userRepository->createNew();
+
+            if ($this->passwordHasherFactory instanceof PasswordHasherFactoryInterface) {
+                $hasher = $this->passwordHasherFactory->getPasswordHasher($user);
+                $hasher->hash(Uuid::uuid4()->toString());
+            } else {
+                $encoder = $this->passwordHasherFactory->getEncoder($user);
+                $encoder->encodePassword(Uuid::uuid4()->toString(), 'dummy-salt');
+            }
         }
     }
 }
