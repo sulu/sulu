@@ -29,7 +29,11 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('system')
                     ->defaultValue('Sulu')
-                    ->setDeprecated('The %node% option is deprecated and will be removed. Setting this option in the admin context will break the permissions registered by the bundles.')
+                    ->setDeprecated(
+                        'sulu/sulu',
+                        '2.1.0',
+                        'The %node% option is deprecated and will be removed. Setting this option in the admin context will break the permissions registered by the bundles.'
+                    )
                 ->end()
                 ->arrayNode('checker')
                     ->canBeEnabled()

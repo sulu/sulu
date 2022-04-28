@@ -48,7 +48,11 @@ class Configuration implements ConfigurationInterface
                     ->info('Define the symfony framework cache adapter for preview')
                 ->end()
                 ->arrayNode('cache')
-                    ->setDeprecated('The "%node%" option is deprecated. Use "cache_adapter" instead.')
+                    ->setDeprecated(
+                        'sulu/sulu',
+                        '2.1.0',
+                        'The "%node%" option is deprecated. Use "cache_adapter" instead.'
+                    )
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->scalarNode('type')->defaultValue(null)->end()

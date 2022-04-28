@@ -100,7 +100,11 @@ class Configuration implements ConfigurationInterface
                         ->prototype('scalar')->end()
                     ->end()
                     ->arrayNode('blocked_file_types')
-                        ->setDeprecated('The configuration "sulu_media.format_manager.blocked_file_types" is deprecated. Use "sulu_media.upload.blocked_file_types" instead.')
+                        ->setDeprecated(
+                            'sulu/sulu',
+                            '2.1.8',
+                            'The configuration "sulu_media.format_manager.blocked_file_types" is deprecated. Use "sulu_media.upload.blocked_file_types" instead.'
+                        )
                         ->prototype('scalar')->end()
                         ->defaultValue([])
                     ->end()
