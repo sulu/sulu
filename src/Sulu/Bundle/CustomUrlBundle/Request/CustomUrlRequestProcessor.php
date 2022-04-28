@@ -62,8 +62,9 @@ class CustomUrlRequestProcessor implements RequestProcessorInterface
     public function process(Request $request, RequestAttributes $requestAttributes)
     {
         $pathInfo = $request->getPathInfo();
-        if (\strrpos($pathInfo, '.')) {
-            $pathInfo = \substr($pathInfo, 0, \strrpos($pathInfo, '.'));
+        $position = \strrpos($pathInfo, '.');
+        if ($position) {
+            $pathInfo = \substr($pathInfo, 0, $position);
         }
 
         $queryString = $request->getQueryString();
