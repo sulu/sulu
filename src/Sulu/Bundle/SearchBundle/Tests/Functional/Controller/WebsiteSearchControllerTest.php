@@ -35,7 +35,7 @@ class WebsiteSearchControllerTest extends SuluTestCase
         }
         $searchManager->flush();
 
-        $documentManager = static::$container->get('sulu_document_manager.document_manager');
+        $documentManager = self::getContainer()->get('sulu_document_manager.document_manager');
 
         /** @var PageDocument $document1 */
         $document1 = $documentManager->create('page');

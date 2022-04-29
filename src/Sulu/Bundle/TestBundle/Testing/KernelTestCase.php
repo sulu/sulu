@@ -15,6 +15,5 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase as SymfonyKernelTestCase;
 
 abstract class KernelTestCase extends SymfonyKernelTestCase
 {
-    use ContainerTrait;
     use KernelTrait;
 }

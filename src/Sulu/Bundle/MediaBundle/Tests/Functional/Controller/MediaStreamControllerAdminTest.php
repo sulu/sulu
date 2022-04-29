@@ -55,7 +55,7 @@ class MediaStreamControllerAdminTest extends SuluTestCase
         }), PermissionTypes::VIEW)
             ->shouldBeCalled();
 
-        self::$container->set('sulu_security.security_checker', $securityChecker->reveal());
+        self::getContainer()->set('sulu_security.security_checker', $securityChecker->reveal());
 
         $client->request('GET', $media->getAdminUrl());
         $response = $client->getResponse();
@@ -119,7 +119,7 @@ class MediaStreamControllerAdminTest extends SuluTestCase
 
         $user->setSalt('');
 
-        $encoder = self::$container->get('security.encoder_factory')->getEncoder($user);
+        $encoder = self::getContainer()->get('security.encoder_factory')->getEncoder($user);
         $user->setPassword($encoder->encodePassword($username, $user->getSalt()));
         $user->setLocale('en');
 
