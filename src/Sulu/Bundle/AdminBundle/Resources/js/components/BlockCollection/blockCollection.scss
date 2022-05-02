@@ -1,3 +1,25 @@
-.blockCollection {
+@import './variables.scss';
+
+.addButtonContainer {
     text-align: center;
+}
+
+.addButtonDivider {
+    /* replace margin of block above with container to display button if space between blocks is hovered */
+    margin-top: -$blockMarginBottom;
+    padding-top: $blockMarginBottom;
+    margin-bottom: 0;
+    height: 0;
+
+    .addButton {
+        display: none;
+    }
+
+    /* display button in the middle of the container when container is hovered */
+    &:hover {
+        .addButton {
+            display: unset;
+            transform: translateY(calc(-50% - $blockMarginBottom / 2));
+        }
+    }
 }

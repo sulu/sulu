@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {Fragment, Node} from 'react';
 import {observer} from 'mobx-react';
 import {SortableContainer} from 'react-sortable-hoc';
 import classNames from 'classnames';
@@ -19,6 +19,7 @@ type Props<T: string, U: {type: T}> = {|
     onSettingsClick?: (index: number) => void,
     onTypeChange?: (type: T, index: number) => void,
     renderBlockContent: RenderBlockContentCallback<T, U>,
+    renderDivider?: (aboveBlockIndex: number) => Node,
     types?: {[key: T]: string},
     value: Array<U>,
 |};
@@ -80,6 +81,7 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
             onRemove,
             onSettingsClick,
             renderBlockContent,
+            renderDivider,
             types,
             value,
         } = this.props;
@@ -94,23 +96,28 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
         return (
             <div className={sortableBlockListClass}>
                 {value && value.map((block, index) => (
-                    <SortableBlock
-                        activeType={block.type}
-                        expanded={!disabled && expandedBlocks[index]}
-                        icons={icons && icons[index]}
-                        index={index}
-                        key={generatedBlockIds[index]}
-                        movable={movable}
-                        onCollapse={onCollapse ? this.handleCollapse : undefined}
-                        onExpand={onExpand ? this.handleExpand : undefined}
-                        onRemove={onRemove ? this.handleRemove : undefined}
-                        onSettingsClick={onSettingsClick ? this.handleSettingsClick : undefined}
-                        onTypeChange={this.handleTypeChange}
-                        renderBlockContent={renderBlockContent}
-                        sortIndex={index}
-                        types={types}
-                        value={block}
-                    />
+                    <Fragment key={index}>
+                        <SortableBlock
+                            activeType={block.type}
+                            expanded={!disabled && expandedBlocks[index]}
+                            icons={icons && icons[index]}
+                            index={index}
+                            key={generatedBlockIds[index]}
+                            movable={movable}
+                            onCollapse={onCollapse ? this.handleCollapse : undefined}
+                            onExpand={onExpand ? this.handleExpand : undefined}
+                            onRemove={onRemove ? this.handleRemove : undefined}
+                            onSettingsClick={onSettingsClick ? this.handleSettingsClick : undefined}
+                            onTypeChange={this.handleTypeChange}
+                            renderBlockContent={renderBlockContent}
+                            sortIndex={index}
+                            types={types}
+                            value={block}
+                        />
+                        {renderDivider && index < value.length - 1 && (
+                            renderDivider(index)
+                        )}
+                    </Fragment>
                 ))}
             </div>
         );
