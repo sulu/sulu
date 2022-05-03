@@ -34,7 +34,7 @@ was removed. See also [UPGRADE 2.1.0-RC1](#210-rc1).
 
 ### User entity method return types changed
 
-The sulu `User` entity required to be changed from:
+The sulu `User` entity requires the following changes:
 
 ```diff
 -public function getRoles();
