@@ -22,6 +22,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\Mailer\DataCollector\MessageDataCollector;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Router;
 
 class ResettingControllerTest extends SuluTestCase
@@ -105,8 +106,9 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals(null, $response);
 
         // asserting user properties
+        /** @var User $user */
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
-            'SuluSecurityBundle:User',
+            User::class,
             $this->users[0]->getId()
         );
         $this->assertTrue(\is_string($user->getPasswordResetToken()));
@@ -149,10 +151,11 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals(null, $response);
 
         // asserting user properties
+        /** @var User $user */
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
-                'SuluSecurityBundle:User',
-                $this->users[0]->getId()
-            );
+            User::class,
+            $this->users[0]->getId()
+        );
         $this->assertTrue(\is_string($user->getPasswordResetToken()));
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
         $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
@@ -194,10 +197,11 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals(null, $response);
 
         // asserting user properties
+        /** @var User $user */
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
-                'SuluSecurityBundle:User',
-                $this->users[1]->getId()
-            );
+            User::class,
+            $this->users[1]->getId()
+        );
         $this->assertTrue(\is_string($user->getPasswordResetToken()));
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
         $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
@@ -250,10 +254,11 @@ class ResettingControllerTest extends SuluTestCase
         /** @var MessageDataCollector $mailCollector */
         $mailCollector = $this->client->getProfile()->getCollector('mailer');
         $response = \json_decode($this->client->getResponse()->getContent());
+        /** @var User $user */
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
-                'SuluSecurityBundle:User',
-                $this->users[2]->getId()
-            );
+            User::class,
+            $this->users[2]->getId()
+        );
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
         $this->assertEquals(null, $response);
@@ -343,10 +348,11 @@ class ResettingControllerTest extends SuluTestCase
             'password' => $newPassword,
         ]);
 
+        /** @var User $user */
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
-                'SuluSecurityBundle:User',
-                $this->users[2]->getId()
-            );
+            User::class,
+            $this->users[2]->getId()
+        );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
@@ -354,8 +360,16 @@ class ResettingControllerTest extends SuluTestCase
         $activity = $this->activityRepository->findOneBy(['type' => 'password_resetted']);
         $this->assertSame((string) $this->users[2]->getId(), $activity->getResourceId());
 
-        $encoder = $this->getContainer()->get('sulu_security.encoder_factory')->getEncoder($user);
-        $this->assertEquals($encoder->encodePassword($newPassword, $user->getSalt()), $user->getPassword());
+        $passwordHasherFactory = $this->getContainer()->get('sulu_security.encoder_factory');
+        if ($passwordHasherFactory instanceof PasswordHasherFactoryInterface) {
+            $hasher = $passwordHasherFactory->getPasswordHasher($user);
+            $password = $hasher->hash($newPassword);
+        } else {
+            $encoder = $passwordHasherFactory->getEncoder($user);
+            $password = $encoder->encodePassword($newPassword, $user->getSalt());
+        }
+
+        $this->assertEquals($password, $user->getPassword());
         $this->assertNull($user->getPasswordResetToken());
         $this->assertNull($user->getPasswordResetTokenExpiresAt());
     }
@@ -368,7 +382,8 @@ class ResettingControllerTest extends SuluTestCase
             'password' => 'thispasswordshouldnotbeapplied',
         ]);
         $response = \json_decode($this->client->getResponse()->getContent());
-        $user = $this->em->find('SuluSecurityBundle:User', $this->users[2]->getId());
+        /** @var User $user */
+        $user = $this->em->find(User::class, $this->users[2]->getId());
 
         $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertEquals(1006, $response->code);
@@ -384,7 +399,8 @@ class ResettingControllerTest extends SuluTestCase
             'password' => 'thispasswordshouldnotbeapplied',
         ]);
         $response = \json_decode($this->client->getResponse()->getContent());
-        $user = $this->em->find('SuluSecurityBundle:User', $this->users[2]->getId());
+        /** @var User $user */
+        $user = $this->em->find(User::class, $this->users[2]->getId());
 
         $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertEquals(1005, $response->code);

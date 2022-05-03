@@ -130,7 +130,7 @@ class SitemapGeneratorTest extends SuluTestCase
         );
 
         $user = $this->getContainer()->get('test_user_provider')->getUser();
-        $this->getContainer()->get('security.token_storage')->setToken(new UsernamePasswordToken($user, '', 'test'));
+        $this->getContainer()->get('security.token_storage')->setToken(new UsernamePasswordToken($user, 'test'));
     }
 
     protected function prepareWebspaceManager()

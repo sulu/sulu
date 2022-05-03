@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Application;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class Kernel extends SuluTestKernel
@@ -29,7 +30,7 @@ class Kernel extends SuluTestKernel
         }
     }
 
-    public function handle(Request $request, $type = HttpKernelInterface::MAIN_REQUEST, $catch = true)
+    public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true): Response
     {
         // emulate that the target group had an influence on the result
         $this->getContainer()->get('sulu_audience_targeting.target_group_store')->getTargetGroupId();

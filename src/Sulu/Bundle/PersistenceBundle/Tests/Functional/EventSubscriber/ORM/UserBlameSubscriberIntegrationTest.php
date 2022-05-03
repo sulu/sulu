@@ -16,7 +16,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\User\User as SymfonyUser;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 
 class UserBlameSubscriberIntegrationTest extends SuluTestCase
 {
@@ -34,8 +34,8 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
     public function testUserBlame()
     {
         $tokenStorage = $this->getContainer()->get('security.token_storage');
-        $token = new UsernamePasswordToken('test', 'test', 'test_provider', []);
         $user = new User();
+        $token = new UsernamePasswordToken($user, 'test', []);
         $user->setUsername('dantleech');
         $user->setPassword('foo');
         $user->setLocale('fr');
@@ -99,8 +99,8 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
     public function testSetUserBlame()
     {
         $tokenStorage = $this->getContainer()->get('security.token_storage');
-        $token = new UsernamePasswordToken('test', 'test', 'test_provider', []);
         $user = new User();
+        $token = new UsernamePasswordToken($user, 'test', []);
         $user->setUsername('dantleech');
         $user->setPassword('foo');
         $user->setLocale('fr');
@@ -145,8 +145,8 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
     private function createExternalUser()
     {
         $tokenStorage = $this->getContainer()->get('security.token_storage');
-        $token = new UsernamePasswordToken('test', 'test', 'test_provider', []);
-        $user = new SymfonyUser('test', 'test');
+        $user = new InMemoryUser('test', 'test');
+        $token = new UsernamePasswordToken($user, 'test', []);
         $token->setUser($user);
         $tokenStorage->setToken($token);
     }
