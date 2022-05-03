@@ -14,6 +14,11 @@ namespace Sulu\Bundle\AdminBundle\Tests\Functional\Controller;
 use Sulu\Bundle\AdminBundle\Entity\Collaboration;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\EventListener\SessionListener;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class CollaborationControllerTest extends SuluTestCase
 {
@@ -30,8 +35,14 @@ class CollaborationControllerTest extends SuluTestCase
 
     public function testPostWithSingleUser()
     {
-        $session = $this->client->getContainer()->get('session');
-        $session->start();
+        $request = Request::create('/');
+        /** @var SessionListener $testSessionListener */
+        $testSessionListener = $this->client->getContainer()->get('test.session.listener');
+        $testSessionListener->onKernelRequest(new RequestEvent(self::$kernel, $request, HttpKernelInterface::MAIN_REQUEST));
+        $request->getSession()->start();
+        $sessionId = $request->getSession()->getId();
+        $this->client->getCookieJar()->set(new Cookie($request->getSession()->getName(), $sessionId));
+
         $this->client->jsonRequest('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
@@ -86,9 +97,15 @@ class CollaborationControllerTest extends SuluTestCase
 
     public function testDelete()
     {
-        $session = $this->client->getContainer()->get('session');
-        $session->start();
-        $cache = $this->getContainer()->get('sulu_admin.collaboration_cache');
+        $request = Request::create('/');
+        /** @var SessionListener $testSessionListener */
+        $testSessionListener = $this->client->getContainer()->get('test.session.listener');
+        $testSessionListener->onKernelRequest(new RequestEvent(self::$kernel, $request, HttpKernelInterface::MAIN_REQUEST));
+        $request->getSession()->start();
+        $sessionId = $request->getSession()->getId();
+        $this->client->getCookieJar()->set(new Cookie($request->getSession()->getName(), $sessionId));
+
+        $cache = $this->client->getContainer()->get('sulu_admin.collaboration_cache');
 
         $cacheItem = $cache->getItem('page_4')->set([
             new Collaboration('collaboration1', 1, 'Max', 'Max Mustermann', 'page', 4),
@@ -98,6 +115,7 @@ class CollaborationControllerTest extends SuluTestCase
         $cache->save($cacheItem);
 
         $this->client->jsonRequest('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
+
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertCount(3, $cache->getItem('page_4')->get());
