@@ -84,6 +84,22 @@ The Symfony Kernel requires the following return types now:
 
 If a method was overwritten it is required to be updated to the new return types.
 
+### RouteProvider and RouteEnhancer return types changed
+
+The following return types on RouteProviders were added
+which effects `RouteProvider`, `ContentRouteProvider`, `CustomUrlRouteProvider` services:
+
+- `public function getRouteCollectionForRequest(Request $request): RouteCollection`
+- `public function getRouteByName($name): Route`
+- `public function getRoutesByNames($names = null): iterable`
+
+The following return types on the RouteEnhancer were added
+which effects `AbstractEnhancer`, `ExternalLinkEnhancer`, `InternalLinkEnhancer`, `StructureEnhancer` services:
+
+- `public function enhance(array $defaults, Request $request): array`
+
+If a method was overwritten it is required to be updated to the new return types.
+
 ### DoctrineCacheBundle integration removed
 
 All integration of the deprecated DoctrineCacheBundle were removed.

@@ -91,7 +91,7 @@ class RouteProvider implements RouteProviderInterface
         $this->defaultOptions = $defaultOptions;
     }
 
-    public function getRouteCollectionForRequest(Request $request)
+    public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
         $collection = new RouteCollection();
         $path = $this->decodePathInfo($request->getPathInfo());
@@ -180,7 +180,7 @@ class RouteProvider implements RouteProviderInterface
         return $this->routeCache[$path];
     }
 
-    public function getRouteByName($name)
+    public function getRouteByName($name): Route
     {
         if (0 !== \strpos($name, self::ROUTE_PREFIX)) {
             throw new RouteNotFoundException();
@@ -216,7 +216,7 @@ class RouteProvider implements RouteProviderInterface
         return $this->createRoute($route, $request, $attributes);
     }
 
-    public function getRoutesByNames($names)
+    public function getRoutesByNames($names = null): iterable
     {
         return [];
     }
