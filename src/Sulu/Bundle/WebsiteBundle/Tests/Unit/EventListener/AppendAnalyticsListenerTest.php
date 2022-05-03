@@ -65,7 +65,8 @@ class AppendAnalyticsListenerTest extends TestCase
         $listener->onResponse($event);
 
         $engine->render(Argument::any(), Argument::any())->shouldNotBeCalled();
-        $response->setContent(Argument::any())->shouldNotBeCalled();
+        $response->setContent(Argument::any())->shouldNotBeCalled()
+            ->willReturn($response->reveal());
     }
 
     public function testBinaryFileResponse()
@@ -91,7 +92,8 @@ class AppendAnalyticsListenerTest extends TestCase
         $listener->onResponse($event);
 
         $engine->render(Argument::any(), Argument::any())->shouldNotBeCalled();
-        $response->setContent(Argument::any())->shouldNotBeCalled();
+        $response->setContent(Argument::any())->shouldNotBeCalled()
+            ->willReturn($response->reveal());
     }
 
     public function testAppendFormat()
@@ -148,7 +150,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $response->getContent()->willReturn('<html><head><title>Test</title></head><body><h1>Title</h1></body></html>');
         $response->setContent(
             '<html><head><title>Test</title><script>var i = 0;</script></head><body><h1>Title</h1></body></html>'
-        )->shouldBeCalled();
+        )->shouldBeCalled()->willReturn($response->reveal());
         $listener->onResponse($event);
     }
 
@@ -206,7 +208,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $response->getContent()->willReturn('<html><head><title>Test</title></head><body><h1>Title</h1></body></html>');
         $response->setContent(
             '<html><head><title>Test</title><script>var i = 0;</script></head><body><h1>Title</h1></body></html>'
-        )->shouldBeCalled();
+        )->shouldBeCalled()->willReturn($response->reveal());
 
         $listener->onResponse($event);
     }
@@ -306,7 +308,7 @@ class AppendAnalyticsListenerTest extends TestCase
             ->willReturn('<html><head><title>Test</title></head><body class="test"><h1>Title</h1></body></html>');
         $response->setContent(
             '<html><head><script>var i = 0;</script><title>Test</title></head><body class="test"><noscript><div>Blabla</div></noscript><h1>Title</h1></body></html>'
-        )->shouldBeCalled();
+        )->shouldBeCalled()->willReturn($response->reveal());
         $listener->onResponse($event);
     }
 
@@ -365,7 +367,7 @@ class AppendAnalyticsListenerTest extends TestCase
             ->willReturn('<html><head><title>Test</title></head><body class="test"><h1>Title</h1></body></html>');
         $response->setContent(
             '<html><head><title>Test</title><script>var i = 0;</script></head><body class="test"><noscript><div>Blabla</div></noscript><h1>Title</h1></body></html>'
-        )->shouldBeCalled();
+        )->shouldBeCalled()->willReturn($response->reveal());
         $listener->onResponse($event);
     }
 
@@ -424,7 +426,7 @@ class AppendAnalyticsListenerTest extends TestCase
             ->willReturn('<html><head maybe-a-attribute-here="true"><title>Test</title></head><body><header><h1>Title</h1></header></body></html>');
         $response->setContent(
             '<html><head maybe-a-attribute-here="true"><script>var nice_var = false;</script><title>Test</title></head><body><header><h1>Title</h1></header></body></html>'
-        )->shouldBeCalled();
+        )->shouldBeCalled()->willReturn($response->reveal());
         $listener->onResponse($event);
     }
 

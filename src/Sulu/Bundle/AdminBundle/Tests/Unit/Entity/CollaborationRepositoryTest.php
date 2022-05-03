@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\Entity;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Cache\CacheItemPoolInterface;
 use Sulu\Bundle\AdminBundle\Entity\Collaboration;
 use Sulu\Bundle\AdminBundle\Entity\CollaborationRepository;
@@ -24,7 +25,7 @@ class CollaborationRepositoryTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var CacheItemPoolInterface
+     * @var ObjectProphecy<CacheItemPoolInterface>
      */
     private $cache;
 
@@ -90,6 +91,9 @@ class CollaborationRepositoryTest extends TestCase
     public function testFindWithNotExistingCacheItem()
     {
         $collaborationRepository = new CollaborationRepository($this->cache->reveal(), 20);
+
+        $cacheItem = new CacheItem();
+        $this->cache->getItem('page_8')->willReturn($cacheItem);
 
         $result = $collaborationRepository->find('page', 8, 'collaboration2');
         $this->assertNull($result);

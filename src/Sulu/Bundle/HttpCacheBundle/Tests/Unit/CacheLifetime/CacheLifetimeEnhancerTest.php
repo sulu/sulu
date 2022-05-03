@@ -14,6 +14,7 @@ namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\CacheLifetime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancer;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
@@ -34,32 +35,32 @@ class CacheLifetimeEnhancerTest extends TestCase
     private $cacheLifetimeEnhancer;
 
     /**
-     * @var CacheLifetimeRequestStore
+     * @var ObjectProphecy<CacheLifetimeRequestStore>
      */
     private $cacheLifetimeRequestStore;
 
     /**
-     * @var CacheLifetimeResolver
+     * @var ObjectProphecy<CacheLifetimeResolver>
      */
     private $cacheLifetimeResolver;
 
     /**
-     * @var PageBridge
+     * @var ObjectProphecy<PageBridge>
      */
     private $page;
 
     /**
-     * @var SnippetBridge
+     * @var ObjectProphecy<SnippetBridge>
      */
     private $snippet;
 
     /**
-     * @var Response
+     * @var ObjectProphecy<Response>
      */
     private $response;
 
     /**
-     * @var ResponseHeaderBag
+     * @var ObjectProphecy<ResponseHeaderBag>
      */
     private $responseHeaderBag;
 
@@ -119,14 +120,14 @@ class CacheLifetimeEnhancerTest extends TestCase
                 ->set(SuluHttpCache::HEADER_REVERSE_PROXY_TTL, $expectedCacheLifetime)
                 ->shouldBeCalled();
 
-            $this->response->setPublic()->shouldBeCalled();
-            $this->response->setMaxAge($this->maxAge)->shouldBeCalled();
-            $this->response->setSharedMaxAge($this->sharedMaxAge)->shouldBeCalled();
+            $this->response->setPublic()->shouldBeCalled()->willReturn($this->response->reveal());
+            $this->response->setMaxAge($this->maxAge)->shouldBeCalled()->willReturn($this->response->reveal());
+            $this->response->setSharedMaxAge($this->sharedMaxAge)->shouldBeCalled()->willReturn($this->response->reveal());
         } else {
-            $this->responseHeaderBag->set(Argument::cetera())->shouldNotBeCalled();
-            $this->response->setPublic()->shouldNotBeCalled();
-            $this->response->setMaxAge(Argument::any())->shouldNotBeCalled();
-            $this->response->setSharedMaxAge(Argument::any())->shouldNotBeCalled();
+            $this->responseHeaderBag->set(Argument::cetera())->shouldNotBeCalled()->willReturn($this->response->reveal());
+            $this->response->setPublic()->shouldNotBeCalled()->willReturn($this->response->reveal());
+            $this->response->setMaxAge(Argument::any())->shouldNotBeCalled()->willReturn($this->response->reveal());
+            $this->response->setSharedMaxAge(Argument::any())->shouldNotBeCalled()->willReturn($this->response->reveal());
         }
 
         if ($requestCacheLifetime) {
