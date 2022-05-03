@@ -341,7 +341,7 @@ class NavigationMapperTest extends SuluTestCase
         $userRole->setRole($this->grantedRole);
         $this->getEntityManager()->persist($userRole);
         $this->user->addUserRole($userRole);
-        $this->tokenStorage->setToken(new UsernamePasswordToken($this->user, '', 'test'));
+        $this->tokenStorage->setToken(new UsernamePasswordToken($this->user, 'test'));
 
         $main = $this->navigationMapper->getRootNavigation(
             'sulu_io',
@@ -460,7 +460,7 @@ class NavigationMapperTest extends SuluTestCase
         $userRole->setRole($this->grantedRole);
         $this->getEntityManager()->persist($userRole);
         $this->user->addUserRole($userRole);
-        $this->tokenStorage->setToken(new UsernamePasswordToken($this->user, '', 'test'));
+        $this->tokenStorage->setToken(new UsernamePasswordToken($this->user, 'test'));
 
         $document = $this->createPageDocument();
         $document->setStructureType('simple');

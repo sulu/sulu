@@ -49,7 +49,7 @@ class UserProvider implements UserProviderInterface
         return $this->loadUserByIdentifier($username);
     }
 
-    public function loadUserByIdentifier(string $identifier)
+    public function loadUserByIdentifier(string $identifier): UserInterface
     {
         $exceptionMessage = \sprintf(
             'Unable to find an Sulu\Component\Security\Authentication\UserInterface object identified by %s',

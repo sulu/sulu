@@ -48,7 +48,7 @@ class UserPasswordResettedEventTest extends TestCase
     public function testGetResourceTitle(): void
     {
         $user = $this->prophesize(UserInterface::class);
-        $user->getUsername()->shouldBeCalled()->willReturn('username');
+        $user->getUserIdentifier()->shouldBeCalled()->willReturn('username');
         $event = new UserPasswordResettedEvent($user->reveal());
 
         $this->assertSame('username', $event->getResourceTitle());

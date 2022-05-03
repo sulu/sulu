@@ -106,7 +106,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->em->flush();
 
         $this->getContainer()->get('sulu_security.system_store')->setSystem('Sulu');
-        $this->getContainer()->get('security.token_storage')->setToken(new UsernamePasswordToken($user, '', 'test'));
+        $this->getContainer()->get('security.token_storage')->setToken(new UsernamePasswordToken($user, 'test'));
     }
 
     private function prepareGetTestData()
