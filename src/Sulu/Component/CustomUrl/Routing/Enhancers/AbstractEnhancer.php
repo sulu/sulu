@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 abstract class AbstractEnhancer implements RouteEnhancerInterface
 {
-    public function enhance(array $defaults, Request $request)
+    public function enhance(array $defaults, Request $request): array
     {
         if ((\array_key_exists('_finalized', $defaults) && true === $defaults['_finalized'])
             || !$this->supports($defaults['_custom_url'])

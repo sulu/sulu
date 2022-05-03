@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ExternalLinkEnhancer implements RouteEnhancerInterface
 {
-    public function enhance(array $defaults, Request $request)
+    public function enhance(array $defaults, Request $request): array
     {
         if (!\array_key_exists('_structure', $defaults)
             || Structure::NODE_TYPE_EXTERNAL_LINK !== $defaults['_structure']->getNodeType()

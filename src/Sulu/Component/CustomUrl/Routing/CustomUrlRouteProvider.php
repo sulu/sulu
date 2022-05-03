@@ -18,6 +18,7 @@ use Sulu\Component\DocumentManager\PathBuilder;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Cmf\Component\Routing\RouteProviderInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -58,7 +59,7 @@ class CustomUrlRouteProvider implements RouteProviderInterface
         $this->defaultOptions = $defaultOptions;
     }
 
-    public function getRouteCollectionForRequest(Request $request)
+    public function getRouteCollectionForRequest(Request $request): RouteCollection
     {
         $collection = new RouteCollection();
 
@@ -111,12 +112,12 @@ class CustomUrlRouteProvider implements RouteProviderInterface
         return $collection;
     }
 
-    public function getRouteByName($name)
+    public function getRouteByName($name): Route
     {
-        // TODO: Implement getRouteByName() method.
+        throw new RouteNotFoundException();
     }
 
-    public function getRoutesByNames($names)
+    public function getRoutesByNames($names = null): iterable
     {
         return [];
     }

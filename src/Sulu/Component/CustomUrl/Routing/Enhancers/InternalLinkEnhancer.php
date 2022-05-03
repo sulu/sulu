@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class InternalLinkEnhancer implements RouteEnhancerInterface
 {
-    public function enhance(array $defaults, Request $request)
+    public function enhance(array $defaults, Request $request): array
     {
         if (!\array_key_exists('_structure', $defaults)
             || Structure::NODE_TYPE_INTERNAL_LINK !== $defaults['_structure']->getNodeType()

@@ -120,9 +120,9 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->request->getPathInfo()->willReturn('/de/test/');
         $this->request->getRequestFormat()->willReturn('html');
 
-        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
-            $this->prophesize(Route::class)->reveal()
-        );
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn([
+            $this->prophesize(Route::class)->reveal(),
+        ]);
 
         $this->exceptionListener->redirectTrailingSlashOrHtml($this->event);
 
@@ -139,9 +139,9 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->request->getPathInfo()->willReturn('//');
         $this->request->getRequestFormat()->willReturn('html');
 
-        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
-            $this->prophesize(Route::class)->reveal()
-        );
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn([
+            $this->prophesize(Route::class)->reveal(),
+        ]);
 
         $this->exceptionListener->redirectTrailingSlashOrHtml($this->event);
 
@@ -158,9 +158,9 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->request->getPathInfo()->willReturn('///');
         $this->request->getRequestFormat()->willReturn('html');
 
-        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
-            $this->prophesize(Route::class)->reveal()
-        );
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn([
+            $this->prophesize(Route::class)->reveal(),
+        ]);
 
         $this->exceptionListener->redirectTrailingSlashOrHtml($this->event);
 
@@ -177,9 +177,9 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->request->getPathInfo()->willReturn('/de/test.html');
         $this->request->getRequestFormat()->willReturn('html');
 
-        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
-            $this->prophesize(Route::class)->reveal()
-        );
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn([
+            $this->prophesize(Route::class)->reveal(),
+        ]);
 
         $this->exceptionListener->redirectTrailingSlashOrHtml($this->event);
 
@@ -196,9 +196,9 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->request->getPathInfo()->willReturn('/de/test.json');
         $this->request->getRequestFormat()->willReturn('json');
 
-        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
-            $this->prophesize(Route::class)->reveal()
-        );
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn([
+            $this->prophesize(Route::class)->reveal(),
+        ]);
 
         $this->exceptionListener->redirectTrailingSlashOrHtml($this->event);
 
@@ -241,9 +241,9 @@ class RedirectExceptionSubscriberTest extends TestCase
         $localization->setLanguage('de');
         $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
 
-        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
-            $this->prophesize(Route::class)->reveal()
-        );
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn([
+            $this->prophesize(Route::class)->reveal(),
+        ]);
 
         $this->exceptionListener->redirectPartialMatch($this->event);
 
@@ -273,9 +273,9 @@ class RedirectExceptionSubscriberTest extends TestCase
         $localization->setLanguage('de');
         $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
 
-        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
-            $this->prophesize(Route::class)->reveal()
-        );
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn([
+            $this->prophesize(Route::class)->reveal(),
+        ]);
 
         $this->exceptionListener->redirectPartialMatch($this->event);
 
@@ -309,9 +309,9 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->urlReplacer->replaceLanguage(Argument::cetera())->shouldBeCalled()->willReturn('sulu.lo/de');
         $this->urlReplacer->replaceLocalization(Argument::cetera())->shouldBeCalled()->willReturn('sulu.lo/de');
 
-        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
-            $this->prophesize(Route::class)->reveal()
-        );
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn([
+            $this->prophesize(Route::class)->reveal(),
+        ]);
 
         $this->exceptionListener->redirectPartialMatch($this->event);
 
@@ -345,9 +345,9 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->urlReplacer->replaceLanguage(Argument::cetera())->shouldBeCalled()->willReturn('sulu.lo/de');
         $this->urlReplacer->replaceLocalization(Argument::cetera())->shouldBeCalled()->willReturn('sulu.lo/de');
 
-        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
-            $this->prophesize(Route::class)->reveal()
-        );
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn([
+            $this->prophesize(Route::class)->reveal(),
+        ]);
 
         $this->request->getUri()->willReturn('sulu.lo/.json');
 
@@ -394,9 +394,9 @@ class RedirectExceptionSubscriberTest extends TestCase
                     return 'http://sulu.lo/de-at' === $request->getUri();
                 }
             )
-        )->willReturn(
-            $this->prophesize(Route::class)->reveal()
-        );
+        )->willReturn([
+            $this->prophesize(Route::class)->reveal(),
+        ]);
 
         $this->exceptionListener->redirectPartialMatch($this->event);
 
@@ -465,9 +465,9 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->urlReplacer->replaceLanguage('sulu.lo', 'de')->shouldBeCalled()->willReturn('sulu.lo');
         $this->urlReplacer->replaceLocalization('sulu.lo', 'de-at')->shouldBeCalled()->willReturn('sulu.lo');
 
-        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
-            $this->prophesize(Route::class)->reveal()
-        );
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn([
+            $this->prophesize(Route::class)->reveal(),
+        ]);
 
         $this->exceptionListener->redirectPartialMatch($this->event);
 
@@ -492,9 +492,9 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->urlReplacer->replaceLanguage(Argument::cetera())->shouldBeCalled()->willReturn('sulu.lo/de-at');
         $this->urlReplacer->replaceLocalization(Argument::cetera())->shouldBeCalled()->willReturn('sulu.lo/de-at');
 
-        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
-            $this->prophesize(Route::class)->reveal()
-        );
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn([
+            $this->prophesize(Route::class)->reveal(),
+        ]);
 
         $this->exceptionListener->redirectPartialMatch($this->event);
 
@@ -573,9 +573,9 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->urlReplacer->replaceLanguage(Argument::cetera())->shouldBeCalled()->willReturn($redirectUrl);
         $this->urlReplacer->replaceLocalization(Argument::cetera())->shouldBeCalled()->willReturn($redirectUrl);
 
-        $this->router->matchRequest(Argument::type(Request::class))->willReturn(
-            $this->prophesize(Route::class)->reveal()
-        );
+        $this->router->matchRequest(Argument::type(Request::class))->willReturn([
+            $this->prophesize(Route::class)->reveal(),
+        ]);
 
         $this->exceptionListener->redirectPartialMatch($this->event);
 
