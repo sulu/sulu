@@ -94,7 +94,6 @@
 
         <service id="sulu_security.authentication_handler" class="%sulu_security.authentication_handler.class%">
             <argument type="service" id="router"/>
-            <argument type="service" id="session"/>
         </service>
 
         <service id="sulu_security.mask_converter" class="%sulu_security.mask_converter.class%" public="true">
