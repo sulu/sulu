@@ -225,7 +225,7 @@ class SuluSecurityListenerTest extends TestCase
     public function testLocale()
     {
         $request = $this->prophesize(Request::class);
-        $request->getMethod()->willReturn(null);
+        $request->getMethod()->willReturn('GET');
         $request->get('id')->willReturn('1');
 
         $controller = $this->prophesize(SecuredControllerInterface::class);
@@ -245,7 +245,7 @@ class SuluSecurityListenerTest extends TestCase
     public function testNullSecurityContext()
     {
         $request = $this->prophesize(Request::class);
-        $request->getMethod()->willReturn(null);
+        $request->getMethod()->willReturn('GET');
         $request->get('id')->willReturn('1');
 
         $controller = $this->prophesize(SecuredControllerInterface::class);

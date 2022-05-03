@@ -216,6 +216,8 @@ class RoleControllerTest extends SuluTestCase
             ]
         );
 
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('Portal Manager', $response->name);
@@ -324,6 +326,8 @@ class RoleControllerTest extends SuluTestCase
                 ],
             ]
         );
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $response = \json_decode($this->client->getResponse()->getContent());
 

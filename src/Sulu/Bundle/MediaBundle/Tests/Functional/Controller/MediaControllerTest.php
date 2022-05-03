@@ -1443,7 +1443,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertEquals(5015, $response->code);
         $this->assertTrue(isset($response->message));
 
-        $this->assertFileNotExists($this->getStoragePath() . '/1/photo.jpeg');
+        $this->assertFalse(\file_exists($this->getStoragePath() . '/1/photo.jpeg'));
     }
 
     public function testDeleteByIdNotExisting(): void
