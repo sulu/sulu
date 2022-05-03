@@ -35,10 +35,6 @@ class CollaborationRepository
     {
         $cacheItem = $this->cache->getItem($this->getCacheId($resourceKey, $id));
 
-        if (!$cacheItem) {
-            return null;
-        }
-
         $collaborations = $cacheItem->get();
 
         if (!$collaborations) {

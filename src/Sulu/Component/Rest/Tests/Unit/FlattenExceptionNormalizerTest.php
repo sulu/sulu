@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Rest\Exception\ReferencingResourcesFoundException;
 use Sulu\Component\Rest\Exception\RemoveDependantResourcesFoundException;
@@ -165,6 +166,10 @@ class FlattenExceptionNormalizerTest extends TestCase
     {
         $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
         $translator = $this->prophesize(TranslatorInterface::class);
+        $translator->trans(Argument::cetera())
+            ->will(function($args) {
+                return $args[0];
+            });
 
         $normalizer = new FlattenExceptionNormalizer(
             $decoratedNormalizer->reveal(),
@@ -219,6 +224,10 @@ class FlattenExceptionNormalizerTest extends TestCase
     {
         $decoratedNormalizer = $this->prophesize(NormalizerInterface::class);
         $translator = $this->prophesize(TranslatorInterface::class);
+        $translator->trans(Argument::cetera())
+            ->will(function($args) {
+                return $args[0];
+            });
 
         $normalizer = new FlattenExceptionNormalizer(
             $decoratedNormalizer->reveal(),

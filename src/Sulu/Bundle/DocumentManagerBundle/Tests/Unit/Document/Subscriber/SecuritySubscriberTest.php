@@ -55,8 +55,8 @@ class SecuritySubscriberTest extends TestCase
         $user->getId()->willReturn(2);
         $token->getUser()->willReturn($user->reveal());
 
-        $optionsResolver->setDefault('user', null)->shouldBeCalled();
-        $optionsResolver->setDefault('user', 2)->shouldBeCalled();
+        $optionsResolver->setDefault('user', null)->shouldBeCalled()->willReturn($optionsResolver->reveal());
+        $optionsResolver->setDefault('user', 2)->shouldBeCalled()->willReturn($optionsResolver->reveal());
 
         $this->securitySubscriber->setDefaultUser($event->reveal());
     }
@@ -70,7 +70,7 @@ class SecuritySubscriberTest extends TestCase
 
         $this->tokenStorage->getToken()->willReturn(null);
 
-        $optionsResolver->setDefault('user', null)->shouldBeCalled();
+        $optionsResolver->setDefault('user', null)->shouldBeCalled()->willReturn($optionsResolver->reveal());
 
         $this->securitySubscriber->setDefaultUser($event->reveal());
     }
@@ -85,7 +85,7 @@ class SecuritySubscriberTest extends TestCase
         $anonymousToken = $this->prophesize(AnonymousToken::class);
         $this->tokenStorage->getToken()->willReturn($anonymousToken->reveal());
 
-        $optionsResolver->setDefault('user', null)->shouldBeCalled();
+        $optionsResolver->setDefault('user', null)->shouldBeCalled()->willReturn($optionsResolver->reveal());
 
         $this->securitySubscriber->setDefaultUser($event->reveal());
     }
@@ -102,7 +102,7 @@ class SecuritySubscriberTest extends TestCase
 
         $token->getUser()->willReturn(new \stdClass());
 
-        $optionsResolver->setDefault('user', null)->shouldBeCalled();
+        $optionsResolver->setDefault('user', null)->shouldBeCalled()->willReturn($optionsResolver->reveal());
 
         $this->securitySubscriber->setDefaultUser($event->reveal());
     }

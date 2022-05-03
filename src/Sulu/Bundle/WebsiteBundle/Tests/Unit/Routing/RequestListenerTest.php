@@ -71,8 +71,10 @@ class RequestListenerTest extends TestCase
         $this->requestContext->hasParameter('prefix')->willReturn(false);
         $this->requestContext->hasParameter('host')->willReturn(false);
 
-        $this->requestContext->setParameter('prefix', 'test/')->shouldBeCalled();
-        $this->requestContext->setParameter('host', 'sulu.io')->shouldBeCalled();
+        $this->requestContext->setParameter('prefix', 'test/')->shouldBeCalled()
+            ->willReturn($this->requestContext->reveal());
+        $this->requestContext->setParameter('host', 'sulu.io')->shouldBeCalled()
+            ->willReturn($this->requestContext->reveal());
 
         $this->router->getContext()->willReturn($this->requestContext);
 

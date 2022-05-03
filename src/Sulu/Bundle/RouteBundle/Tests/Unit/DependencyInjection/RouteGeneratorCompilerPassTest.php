@@ -64,7 +64,7 @@ class RouteGeneratorCompilerPassTest extends TestCase
                     return 1 === \count($argument) && $argument[$generatorAlias]->__toString() === $serviceId;
                 }
             )
-        )->shouldBeCalled();
+        )->shouldBeCalled()->willReturn($definition->reveal());
 
         $container->getDefinition(RouteGeneratorCompilerPass::SERVICE_ID)->willReturn($definition->reveal());
 
@@ -122,7 +122,7 @@ class RouteGeneratorCompilerPassTest extends TestCase
                     return 0 === \count($argument);
                 }
             )
-        )->shouldBeCalled();
+        )->shouldBeCalled()->willReturn($definition->reveal());
 
         $container->getDefinition(RouteGeneratorCompilerPass::SERVICE_ID)->willReturn($definition->reveal());
 

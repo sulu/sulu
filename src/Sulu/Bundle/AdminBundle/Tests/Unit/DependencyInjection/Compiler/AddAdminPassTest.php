@@ -76,14 +76,18 @@ class AddAdminPassTest extends TestCase
         $admins = [];
 
         $poolDefinition->addMethodCall('addAdmin', [$adminDefinition1->reveal()])->will(
-            function() use (&$admins, $adminDefinition1) {
+            function() use (&$admins, $adminDefinition1, $poolDefinition) {
                 $admins[] = $adminDefinition1;
+
+                return $poolDefinition->reveal();
             }
         )->shouldBeCalled();
 
         $poolDefinition->addMethodCall('addAdmin', [$adminDefinition2->reveal()])->will(
-            function() use (&$admins, $adminDefinition2) {
+            function() use (&$admins, $adminDefinition2, $poolDefinition) {
                 $admins[] = $adminDefinition2;
+
+                return $poolDefinition->reveal();
             }
         )->shouldBeCalled();
 
@@ -131,8 +135,10 @@ class AddAdminPassTest extends TestCase
         $admins = [];
 
         $poolDefinition->addMethodCall('addAdmin', [$adminDefinition1->reveal()])->will(
-            function() use (&$admins, $adminDefinition1) {
+            function() use (&$admins, $adminDefinition1, $poolDefinition) {
                 $admins[] = $adminDefinition1;
+
+                return $poolDefinition->reveal();
             }
         )->shouldBeCalled();
 

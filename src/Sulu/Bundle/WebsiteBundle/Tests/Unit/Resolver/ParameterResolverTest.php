@@ -235,6 +235,7 @@ class ParameterResolverTest extends TestCase
             ->willReturn(['webspaceKey' => 'sulu']);
         $this->webspaceManager->findUrlByResourceLocator('/test', null, 'en')->willReturn('/en/test');
         $this->webspaceManager->findUrlByResourceLocator('/test', null, 'de')->willReturn('/de/test');
+        $this->request->getUri()->willReturn('/');
         $this->requestAnalyzer->getPortal()->willReturn($this->portal->reveal())->shouldBeCalledTimes(1);
         $this->portal->getLocalizations()
             ->willReturn([$localization1->reveal(), $localization2->reveal()])->shouldBeCalledTimes(1);
@@ -313,6 +314,7 @@ class ParameterResolverTest extends TestCase
             ->willReturn(['webspaceKey' => 'sulu']);
         $this->webspaceManager->findUrlByResourceLocator('/test', null, 'en_gb')->willReturn('/en/test');
         $this->webspaceManager->findUrlByResourceLocator('/test', null, 'de_at')->willReturn('/de/test');
+        $this->request->getUri()->willReturn('/');
         $this->requestAnalyzer->getPortal()->willReturn($this->portal->reveal())->shouldBeCalledTimes(1);
         $this->portal->getLocalizations()
             ->willReturn([$localization1->reveal(), $localization2->reveal()])->shouldBeCalledTimes(1);
@@ -395,6 +397,7 @@ class ParameterResolverTest extends TestCase
             ->shouldBeCalled()
             ->willReturn('/de');
         $this->requestAnalyzer->getPortal()->willReturn($this->portal->reveal())->shouldBeCalledTimes(1);
+        $this->request->getUri()->willReturn('/');
         $this->portal->getLocalizations()
             ->willReturn([$localization1->reveal(), $localization2->reveal()])->shouldBeCalledTimes(1);
 

@@ -70,7 +70,7 @@ class ListBuilderMetadataProviderCompilerPassTest extends TestCase
                         return true;
                     }
                 )
-            )->shouldBeCalled();
+            )->shouldBeCalled()->willReturn($definition->reveal());
         } else {
             $container->getDefinition(ListBuilderMetadataProviderCompilerPass::CHAIN_PROVIDER_ID)
                 ->shouldNotBeCalled();

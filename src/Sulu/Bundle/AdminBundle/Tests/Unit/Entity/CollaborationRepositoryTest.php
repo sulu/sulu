@@ -91,6 +91,9 @@ class CollaborationRepositoryTest extends TestCase
     {
         $collaborationRepository = new CollaborationRepository($this->cache->reveal(), 20);
 
+        $cacheItem = new CacheItem();
+        $this->cache->getItem('page_8')->willReturn($cacheItem);
+
         $result = $collaborationRepository->find('page', 8, 'collaboration2');
         $this->assertNull($result);
     }

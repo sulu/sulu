@@ -92,7 +92,9 @@ class MarkupListenerTest extends TestCase
         $this->markupParser->parse('<html><sulu-link href="123-123-123"/></html>', 'de')
             ->willReturn('<html><a href="/test">Page-Title</a></html>')->shouldBeCalled();
 
-        $this->response->setContent('<html><a href="/test">Page-Title</a></html>')->shouldBeCalled();
+        $this->response->setContent('<html><a href="/test">Page-Title</a></html>')
+            ->willReturn($this->response->reveal())
+            ->shouldBeCalled();
 
         $this->listener->replaceMarkup($this->event);
     }

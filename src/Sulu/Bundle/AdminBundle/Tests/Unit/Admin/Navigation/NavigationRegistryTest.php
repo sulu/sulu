@@ -182,6 +182,9 @@ class NavigationRegistryTest extends TestCase
         $this->viewRegistry->findViewByName('view1')->shouldBeCalled()
             ->willReturn($view1->reveal())->shouldBeCalledTimes(1);
 
+        $this->translator->trans(Argument::cetera())
+            ->willReturnArgument(0);
+
         $this->navigationRegistry->getNavigationItems();
     }
 
@@ -208,6 +211,9 @@ class NavigationRegistryTest extends TestCase
 
         $this->viewRegistry->getViews()->willReturn([$view1, $view11, $view21]);
         $this->viewRegistry->findViewByName('view1')->willReturn($view1);
+
+        $this->translator->trans(Argument::cetera())
+            ->willReturnArgument(0);
 
         $navigation = $this->navigationRegistry->getNavigationItems();
 
@@ -239,6 +245,9 @@ class NavigationRegistryTest extends TestCase
         $this->viewRegistry->getViews()->willReturn([$view1, $view2]);
         $this->viewRegistry->findViewByName('view1')->willReturn($view1);
         $this->viewRegistry->findViewByName('view2')->willReturn($view2);
+
+        $this->translator->trans(Argument::cetera())
+            ->willReturnArgument(0);
 
         $navigationItems = $this->navigationRegistry->getNavigationItems();
 
