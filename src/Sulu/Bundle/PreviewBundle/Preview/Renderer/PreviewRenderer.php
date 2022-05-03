@@ -218,7 +218,7 @@ class PreviewRenderer implements PreviewRendererInterface
         $kernel = $this->kernelFactory->create($this->environment);
 
         try {
-            return $kernel->handle($request, HttpKernelInterface::MASTER_REQUEST, false);
+            return $kernel->handle($request, HttpKernelInterface::MAIN_REQUEST, false);
         } catch (HttpException $e) {
             if ($e->getPrevious()) {
                 throw $e->getPrevious();
