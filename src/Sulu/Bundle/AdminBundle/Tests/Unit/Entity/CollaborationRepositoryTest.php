@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\Entity;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Cache\CacheItemPoolInterface;
 use Sulu\Bundle\AdminBundle\Entity\Collaboration;
 use Sulu\Bundle\AdminBundle\Entity\CollaborationRepository;
@@ -24,7 +25,7 @@ class CollaborationRepositoryTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var CacheItemPoolInterface
+     * @var ObjectProphecy<CacheItemPoolInterface>
      */
     private $cache;
 

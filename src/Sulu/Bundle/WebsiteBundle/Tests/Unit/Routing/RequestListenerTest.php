@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Routing;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\Routing\RequestListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\PortalInformation;
@@ -27,34 +28,32 @@ class RequestListenerTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var RouterInterface
+     * @var ObjectProphecy<RouterInterface>
      */
     private $router;
 
     /**
-     * @var PortalInformation
+     * @var ObjectProphecy<PortalInformation>
      */
     private $portalInformation;
 
     /**
-     * @var RequestContext
+     * @var ObjectProphecy<RequestContext>
      */
     private $requestContext;
 
     /**
-     * @var HttpKernelInterface
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $kernel;
 
     public function setUp(): void
     {
-        parent::setUp();
-
         $this->kernel = $this->prophesize(HttpKernelInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
         $this->router = $this->prophesize(RouterInterface::class);

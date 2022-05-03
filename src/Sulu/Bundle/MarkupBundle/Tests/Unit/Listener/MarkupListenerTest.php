@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Listener;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Listener\MarkupListener;
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Symfony\Component\HttpFoundation\HeaderBag;
@@ -27,7 +28,7 @@ class MarkupListenerTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var MarkupParserInterface
+     * @var ObjectProphecy<MarkupParserInterface>
      */
     private $markupParser;
 
@@ -37,17 +38,17 @@ class MarkupListenerTest extends TestCase
     private $event;
 
     /**
-     * @var Response
+     * @var ObjectProphecy<Response>
      */
     private $response;
 
     /**
-     * @var HeaderBag
+     * @var ObjectProphecy<HeaderBag>
      */
     private $responseHeaders;
 
     /**
-     * @var Request
+     * @var ObjectProphecy<Request>
      */
     private $request;
 
@@ -57,7 +58,7 @@ class MarkupListenerTest extends TestCase
     private $listener;
 
     /**
-     * @var HttpKernelInterface
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $kernel;
 
