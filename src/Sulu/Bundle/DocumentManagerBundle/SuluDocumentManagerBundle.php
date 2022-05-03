@@ -13,9 +13,9 @@ namespace Sulu\Bundle\DocumentManagerBundle;
 
 use Sulu\Bundle\DocumentManagerBundle\DependencyInjection\Compiler\DocumentFixturePass;
 use Sulu\Bundle\DocumentManagerBundle\DependencyInjection\Compiler\InitializerPass;
+use Sulu\Bundle\DocumentManagerBundle\DependencyInjection\Compiler\RegisterListenersPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluDocumentManagerBundle extends Bundle
