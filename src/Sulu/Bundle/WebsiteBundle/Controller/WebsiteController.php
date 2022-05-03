@@ -54,7 +54,7 @@ abstract class WebsiteController extends AbstractController
 
         $viewTemplate = $structure->getView() . '.' . $requestFormat . '.twig';
 
-        if (!$this->get('twig')->getLoader()->exists($viewTemplate)) {
+        if (!$this->container->get('twig')->getLoader()->exists($viewTemplate)) {
             throw new HttpException(
                 406,
                 \sprintf('Page does not exist in "%s" format.', $requestFormat)
@@ -111,9 +111,9 @@ abstract class WebsiteController extends AbstractController
      */
     protected function getAttributes($attributes, StructureInterface $structure = null, $preview = false)
     {
-        return $this->get('sulu_website.resolver.parameter')->resolve(
+        return $this->container->get('sulu_website.resolver.parameter')->resolve(
             $attributes,
-            $this->get('sulu_core.webspace.request_analyzer'),
+            $this->container->get('sulu_core.webspace.request_analyzer'),
             $structure,
             $preview
         );
@@ -124,7 +124,7 @@ abstract class WebsiteController extends AbstractController
      */
     protected function renderBlock($template, $block, $attributes = [])
     {
-        $twig = $this->get('twig');
+        $twig = $this->container->get('twig');
         $attributes = $twig->mergeGlobals($attributes);
 
         $template = $twig->load($template);
@@ -163,22 +163,22 @@ abstract class WebsiteController extends AbstractController
      */
     public function getRequest()
     {
-        return $this->get('request_stack')->getCurrentRequest();
+        return $this->container->get('request_stack')->getCurrentRequest();
     }
 
     protected function getCacheTimeLifeEnhancer(): ?CacheLifetimeEnhancerInterface
     {
-        if (!$this->has('sulu_http_cache.cache_lifetime.enhancer')) {
+        if (!$this->container->has('sulu_http_cache.cache_lifetime.enhancer')) {
             return null;
         }
 
         /** @var CacheLifetimeEnhancerInterface $cacheLifetimeEnhancer */
-        $cacheLifetimeEnhancer = $this->get('sulu_http_cache.cache_lifetime.enhancer');
+        $cacheLifetimeEnhancer = $this->container->get('sulu_http_cache.cache_lifetime.enhancer');
 
         return $cacheLifetimeEnhancer;
     }
 
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         $subscribedServices = parent::getSubscribedServices();
         $subscribedServices['sulu_website.resolver.parameter'] = ParameterResolverInterface::class;

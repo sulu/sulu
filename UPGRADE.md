@@ -32,6 +32,26 @@ The Symfony 4.4 compatibility service
 `Sulu\Bundle\WebsiteBundle\Controller\ExceptionController` / `sulu_website.exception_controller`
 was removed. See also [UPGRADE 2.1.0-RC1](#210-rc1).
 
+### WebsiteController methods removed and return types changed
+
+With support for Symfony 6 the `get` and `has` method to access services are deprecated and removed with Symfony 6.
+Instead, the methods from the container should be used:
+
+
+```diff
+-$this->has('twig');
+-$this->get('twig');
++$this->container->has('twig');
++$this->container->get('twig');
+```
+
+With the support for Symfony 6 the `getSubscribedServices` requires now an array return type:
+
+```diff
+-    public static function getSubscribedServices()
++    public static function getSubscribedServices(): array
+```
+
 ### Password encoded depending service definitions changed
 
 The following service changed its definition:
