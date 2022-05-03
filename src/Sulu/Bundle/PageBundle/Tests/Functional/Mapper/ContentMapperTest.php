@@ -2692,7 +2692,7 @@ class ContentMapperTest extends SuluTestCase
 
     private function createUserToken(): UsernamePasswordToken
     {
-        return new UsernamePasswordToken($this->getTestUser(), 'testpass', 'fake_provider');
+        return new UsernamePasswordToken($this->getTestUser(), 'testpass');
     }
 
     private function getHomeUuid()

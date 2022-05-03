@@ -20,6 +20,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 
 class SecuritySubscriberTest extends TestCase
 {
@@ -77,6 +78,10 @@ class SecuritySubscriberTest extends TestCase
 
     public function testSetDefaultUserWithAnonymousToken()
     {
+        if (!\class_exists(AnonymousToken::class)) {
+            $this->markTestSkipped('The AnonymousToken is only available on Symfony 5.4');
+        }
+
         $event = $this->prophesize(ConfigureOptionsEvent::class);
 
         $optionsResolver = $this->prophesize(OptionsResolver::class);
@@ -100,7 +105,7 @@ class SecuritySubscriberTest extends TestCase
         $token = $this->prophesize(TokenInterface::class);
         $this->tokenStorage->getToken()->willReturn($token->reveal());
 
-        $token->getUser()->willReturn(new \stdClass());
+        $token->getUser()->willReturn(new InMemoryUser('test', 'test'));
 
         $optionsResolver->setDefault('user', null)->shouldBeCalled()->willReturn($optionsResolver->reveal());
 

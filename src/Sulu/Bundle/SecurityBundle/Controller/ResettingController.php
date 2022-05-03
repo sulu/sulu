@@ -411,7 +411,7 @@ class ResettingController
      */
     private function loginUser(UserInterface $user, $request)
     {
-        $token = new UsernamePasswordToken($user, null, 'admin', $user->getRoles());
+        $token = new UsernamePasswordToken($user, 'admin', $user->getRoles());
         $this->tokenStorage->setToken($token); //now the user is logged in
 
         //now dispatch the login event

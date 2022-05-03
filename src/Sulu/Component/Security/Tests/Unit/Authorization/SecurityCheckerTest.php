@@ -16,6 +16,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Security\Authorization\SecurityChecker;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\NullToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -43,7 +44,8 @@ class SecurityCheckerTest extends TestCase
         parent::setUp();
 
         $this->tokenStorage = $this->prophesize(TokenStorageInterface::class);
-        $this->tokenStorage->getToken()->willReturn(true); // stands for a valid token
+        $token = new NullToken(); // stands for a valid token
+        $this->tokenStorage->getToken()->willReturn($token);
 
         $this->authorizationChecker = $this->prophesize(AuthorizationCheckerInterface::class);
 
