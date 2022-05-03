@@ -129,8 +129,7 @@ class MediaStreamControllerAdminTest extends SuluTestCase
             $password = $encoder->encodePassword($username, $user->getSalt());
         }
 
-        $encoder = self::getContainer()->get('security.encoder_factory')->getEncoder($user);
-        $user->setPassword($encoder->encodePassword($username, $user->getSalt()));
+        $user->setPassword($password);
         $user->setLocale('en');
 
         $role = new Role();
