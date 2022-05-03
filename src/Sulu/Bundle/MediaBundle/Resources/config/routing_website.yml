@@ -17,7 +17,7 @@ sulu_media.website.media.download:
 sulu_media.website.media.download_admin:
     path: "%sulu_media.media_manager.media_download_path_admin%"
     defaults:
-        _controller: sulu_media.media_stream_controller:downloadAction
+        _controller: sulu_media.media_stream_controller::downloadAction
         _requestAnalyzer: false
     requirements:
         id: "\\d+"
