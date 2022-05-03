@@ -27,7 +27,7 @@ security:
             security: false
         admin:
             pattern: ^/admin(\/|$)
-            anonymous: ~
+            lazy: true
             provider: sulu
             entry_point: sulu_security.authentication_entry_point
             json_login:
@@ -40,7 +40,7 @@ security:
 
         sulu-test:
             pattern: ^/
-            anonymous: lazy
+            lazy: true
             form_login:
                 login_path: login
                 check_path: login
@@ -48,9 +48,9 @@ security:
                 path: logout
                 target: /
             remember_me:
-                secret:   "%kernel.secret%"
+                secret: "%kernel.secret%"
                 lifetime: 604800 # 1 week in seconds
-                path:     /
+                path: /
 
 sulu_security:
     checker:
