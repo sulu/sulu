@@ -32,6 +32,17 @@ The Symfony 4.4 compatibility service
 `Sulu\Bundle\WebsiteBundle\Controller\ExceptionController` / `sulu_website.exception_controller`
 was removed. See also [UPGRADE 2.1.0-RC1](#210-rc1).
 
+### User entity method return types changed
+
+The sulu `User` entity requires the following changes:
+
+```diff
+-public function getRoles();
++public function getRoles(): array;
+-public function isEqualTo(SymfonyUserInterface $user);
++public function isEqualTo(SymfonyUserInterface $user): bool;
+```
+
 ### WebsiteController methods removed and return types changed
 
 Symfony 6 has deprecated and removed the `get` and `has` methods to access services.
@@ -61,7 +72,7 @@ The following service changed its definition:
  - `sulu_security.command.create_user`
  - `sulu_security.resetting_controller`
 
- They require now `sulu_security.encoder_factory` instead of `sulu_security.encoder_factory`.
+ They require now `sulu_security.encoder_factory` instead of `security.encoder_factory`.
 
 ### Kernel Return Types changed
 

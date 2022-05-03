@@ -513,7 +513,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
         return $this->passwordResetTokenEmailsSent;
     }
 
-    public function isEqualTo(SymfonyUserInterface $user)
+    public function isEqualTo(SymfonyUserInterface $user): bool
     {
         if (!$user instanceof self) {
             return false;
@@ -561,7 +561,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
      * @VirtualProperty
      * @Groups({"frontend"})
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         $roles = ['ROLE_USER'];
 
