@@ -135,6 +135,7 @@
         "symfony/error-handler": "^5.4",
         "symfony/monolog-bundle": "^3.5",
         "symfony/phpunit-bridge": "^5.4",
+        "symfony/runtime": "^5.4",
         "symfony/stopwatch": "^5.4",
         "symfony/var-dumper": "^5.4",
         "symfony/web-profiler-bundle": "^5.4",
@@ -245,7 +246,8 @@
         },
         "sort-packages": true,
         "allow-plugins": {
-            "composer/package-versions-deprecated": true
+            "composer/package-versions-deprecated": true,
+            "symfony/runtime": true
         }
     }
 }

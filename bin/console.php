@@ -11,40 +11,19 @@
 
 use App\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\ErrorHandler\Debug;
 
-if (false === \in_array(\PHP_SAPI, ['cli', 'phpdbg', 'embed'], true)) {
-    echo 'Warning: The console should be invoked via the CLI version of PHP, not the ' . \PHP_SAPI . ' SAPI' . \PHP_EOL;
+if (!is_file(dirname(__DIR__).'/vendor/autoload_runtime.php')) {
+    throw new LogicException('Symfony Runtime is missing. Try running "composer require symfony/runtime".');
 }
 
-\set_time_limit(0);
+require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
-require \dirname(__DIR__) . '/vendor/autoload.php';
-
-if (!\class_exists(Application::class)) {
-    throw new \RuntimeException('You need to add "symfony/framework-bundle" as a Composer dependency.');
+if (!isset($suluContext)) {
+    $suluContext = Kernel::CONTEXT_ADMIN;
 }
 
-$input = new ArgvInput();
-if (null !== $env = $input->getParameterOption(['--env', '-e'], null, true)) {
-    \putenv('APP_ENV=' . $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $env);
-}
+return function (array $context) use ($suluContext) {
+    $kernel = new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG'], $suluContext);
 
-if ($input->hasParameterOption('--no-debug', true)) {
-    \putenv('APP_DEBUG=' . $_SERVER['APP_DEBUG'] = $_ENV['APP_DEBUG'] = '0');
-}
-
-require \dirname(__DIR__) . '/config/bootstrap.php';
-
-if ($_SERVER['APP_DEBUG']) {
-    \umask(0000);
-
-    if (\class_exists(Debug::class)) {
-        Debug::enable();
-    }
-}
-
-$kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG'], $suluContext);
-$application = new Application($kernel);
-$application->run($input);
+    return new Application($kernel);
+};

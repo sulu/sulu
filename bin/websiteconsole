@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__.'/../vendor/autoload.php';
+// we are not allowed to load the autoloader here to get constant because symfony/runtime does else not work correctly
+$suluContext = 'website';
 
-$suluContext = \Sulu\Component\HttpKernel\SuluKernel::CONTEXT_WEBSITE;
-include __DIR__ . DIRECTORY_SEPARATOR. 'console.php';
+return include __DIR__ . DIRECTORY_SEPARATOR. 'console.php';
