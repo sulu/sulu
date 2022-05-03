@@ -42,4 +42,4 @@ when@prod: &prod
                 doctrine.system_cache_pool:
                     adapter: cache.system
 
-when@stage: &prod
+when@stage: *prod
