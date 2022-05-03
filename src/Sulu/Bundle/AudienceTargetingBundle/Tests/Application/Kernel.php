@@ -29,7 +29,7 @@ class Kernel extends SuluTestKernel
         }
     }
 
-    public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
+    public function handle(Request $request, $type = HttpKernelInterface::MAIN_REQUEST, $catch = true)
     {
         // emulate that the target group had an influence on the result
         $this->getContainer()->get('sulu_audience_targeting.target_group_store')->getTargetGroupId();
