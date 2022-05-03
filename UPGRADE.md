@@ -43,6 +43,17 @@ The sulu `User` entity requires the following changes:
 +public function isEqualTo(SymfonyUserInterface $user): bool;
 ```
 
+### AuthenticationHandler method return types changed
+
+The `AuthenticationHandler` requires the following changes:
+
+```diff
+-public function onAuthenticationSuccess(Request $request, TokenInterface $token)
++public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
+-public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
++public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
+```
+
 ### WebsiteController methods removed and return types changed
 
 Symfony 6 has deprecated and removed the `get` and `has` methods to access services.

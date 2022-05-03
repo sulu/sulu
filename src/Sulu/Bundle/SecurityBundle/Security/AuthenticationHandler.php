@@ -34,30 +34,24 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
      */
     private $router;
 
-    /**
-     * @var Session
-     */
-    private $session;
-
-    public function __construct(RouterInterface $router, Session $session)
+    public function __construct(RouterInterface $router)
     {
         $this->router = $router;
-        $this->session = $session;
     }
 
     /**
      * Handler for AuthenticationSuccess. Returns a JsonResponse if request is an AJAX-request.
      * Returns a RedirectResponse otherwise.
-     *
-     * @return Response
      */
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {
+        $session = $request->getSession();
+
         // get url to redirect (or return in the JSON-response)
-        if ($this->session->get('_security.admin.target_path')
-            && false !== \strpos($this->session->get('_security.admin.target_path'), '#')
+        if ($session->get('_security.admin.target_path')
+            && false !== \strpos($session->get('_security.admin.target_path'), '#')
         ) {
-            $url = $this->session->get('_security.admin.target_path');
+            $url = $session->get('_security.admin.target_path');
         } else {
             $url = $this->router->generate('sulu_admin');
         }
@@ -77,10 +71,8 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     /**
      * Handler for AuthenticationFailure. Returns a JsonResponse if request is an AJAX-request.
      * Returns a Redirect-response otherwise.
-     *
-     * @return Response
      */
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         if ($request->isXmlHttpRequest()) {
             // if AJAX login
@@ -89,7 +81,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
         } else {
             // if form login
             // set authentication exception to session
-            $this->session->set(Security::AUTHENTICATION_ERROR, $exception);
+            $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
             $response = new RedirectResponse($this->router->generate('sulu_admin'));
         }
 
