@@ -74,7 +74,10 @@ class SegmentCacheListenerTests extends TestCase
 
         $response->setMaxAge($maxAge);
         $response->setSharedMaxAge($sharedMaxAge);
-        $response->setVary($header);
+
+        if ($header) {
+            $response->setVary($header);
+        }
 
         $this->segmentCacheListener->postHandle($this->getCacheEvent($request, $response));
 

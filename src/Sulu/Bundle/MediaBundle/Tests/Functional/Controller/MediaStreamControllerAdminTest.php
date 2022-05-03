@@ -28,6 +28,7 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 class MediaStreamControllerAdminTest extends SuluTestCase
 {
@@ -118,6 +119,15 @@ class MediaStreamControllerAdminTest extends SuluTestCase
         $user->setContact($contact);
 
         $user->setSalt('');
+
+        $passwordHasherFactory = self::getContainer()->get('sulu_security.encoder_factory');
+        if ($passwordHasherFactory instanceof PasswordHasherFactoryInterface) {
+            $hasher = $passwordHasherFactory->getPasswordHasher($user);
+            $password = $hasher->hash($username);
+        } else {
+            $encoder = $passwordHasherFactory->getEncoder($user);
+            $password = $encoder->encodePassword($username, $user->getSalt());
+        }
 
         $encoder = self::getContainer()->get('security.encoder_factory')->getEncoder($user);
         $user->setPassword($encoder->encodePassword($username, $user->getSalt()));
