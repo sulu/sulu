@@ -132,6 +132,8 @@
         "phpstan/phpstan-webmozart-assert": "^1.0",
         "phpunit/phpunit": "^9.5.20",
         "psr/event-dispatcher": "^1.0",
+        "scheb/2fa-bundle": "^6.0",
+        "scheb/2fa-email": "^6.0",
         "superbalist/flysystem-google-storage": "^7.1",
         "symfony/browser-kit": "^5.4 || ^6.0",
         "symfony/debug-bundle": "^5.4 || ^6.0",
@@ -185,6 +187,7 @@
         "league/flysystem-azure-blob-storage": "^0.1 Needed for Azure Blob media-storage implementation",
         "superbalist/flysystem-google-storage": "^7.1 - Needed for Google-Bucket media-storage implementation",
         "php-ffmpeg/php-ffmpeg": "Needed (as in require-dev) to generate preview images for videos",
+        "scheb/2fa-bundle": "Needed for two factor authentication.",
         "symfony/monolog-bundle": "^3.1"
     },
     "autoload": {
