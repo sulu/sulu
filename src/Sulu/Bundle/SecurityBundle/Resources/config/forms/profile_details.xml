@@ -40,12 +40,47 @@
             <meta>
                 <title>sulu_security.system_language</title>
             </meta>
+
             <params>
                 <param
                     name="values"
                     type="expression"
                     value="service('sulu_security.system_language_select_helper').getValues()"
                 />
+            </params>
+        </property>
+
+        <property name="twoFactorMethod" type="single_select" colspan="6">
+            <meta>
+                <title>sulu_security.two_factor_method</title>
+            </meta>
+
+            <params>
+                <param name="values" type="collection">
+                    <param name="">
+                        <meta>
+                            <title lang="en">None</title>
+                        </meta>
+                    </param>
+
+                    <param name="email">
+                        <meta>
+                            <title lang="en">Email</title>
+                        </meta>
+                    </param>
+
+                    <param name="google">
+                        <meta>
+                            <title lang="en">Google</title>
+                        </meta>
+                    </param>
+
+                    <param name="totp">
+                        <meta>
+                            <title lang="en">Totp</title>
+                        </meta>
+                    </param>
+                </param>
             </params>
         </property>
     </properties>

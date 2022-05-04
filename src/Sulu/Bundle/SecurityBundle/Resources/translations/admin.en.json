@@ -38,5 +38,6 @@
     "sulu_activity.description.users.enabled": "{userFullName} has enabled the user \"{resourceTitle}\"",
     "sulu_activity.description.users.locked": "{userFullName} has locked the user \"{resourceTitle}\"",
     "sulu_activity.description.users.unlocked": "{userFullName} has unlocked the user \"{resourceTitle}\"",
-    "sulu_activity.description.users.password_resetted": "{userFullName} has resetted the password of the user \"{resourceTitle}\""
+    "sulu_activity.description.users.password_resetted": "{userFullName} has resetted the password of the user \"{resourceTitle}\"",
+    "sulu_security.two_factor_method": "Two-Factor authentication method"
 }
