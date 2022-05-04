@@ -34,6 +34,13 @@
         <field name="apiKey" type="guid" column="apiKey" length="128" nullable="true"/>
         <field name="email" column="email" type="string" length="191" unique="true" nullable="true"/>
 
+        <field name="twoFactorMethod" type="string" column="twoFactorMethod" length="12" nullable="true"/>
+        <field name="twoFactorOptions" type="json" column="twoFactorOptions" nullable="true">
+            <options>
+                <option name="jsonb">true</option>
+            </options>
+        </field>
+
         <one-to-one field="contact" target-entity="Sulu\Bundle\ContactBundle\Entity\ContactInterface">
             <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
         </one-to-one>

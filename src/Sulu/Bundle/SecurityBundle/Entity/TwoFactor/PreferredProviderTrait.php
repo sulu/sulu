@@ -24,7 +24,7 @@ if (\interface_exists(PreferredProviderInterface::class)) {
     {
         public function getPreferredTwoFactorProvider(): ?string
         {
-            return $this->twoFactorType;
+            return $this->twoFactorMethod;
         }
     }
 } else {

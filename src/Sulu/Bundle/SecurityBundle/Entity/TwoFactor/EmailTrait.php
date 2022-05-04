@@ -24,7 +24,7 @@ if (\interface_exists(TwoFactorInterface::class)) {
     {
         public function isEmailAuthEnabled(): bool
         {
-            return 'email' === $this->twoFactorType;
+            return 'email' === $this->twoFactorMethod;
         }
 
         public function getEmailAuthRecipient(): string

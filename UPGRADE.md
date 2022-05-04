@@ -2,6 +2,15 @@
 
 ## 2.5.0
 
+### User table two factory authentication column added
+
+To add support for two factor authentication the following
+columns need to be added:
+
+```sql
+ALTER TABLE se_users ADD twoFactorMethod VARCHAR(12) DEFAULT NULL, ADD twoFactorOptions JSON DEFAULT NULL;
+```
+
 ### Drop support for PHP 7.4, 7.3 and 7.2
 
 The support for older PHP versions 7.4, 7.3 and 7.2 were dropped.
