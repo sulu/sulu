@@ -1,22 +1,4 @@
 #!/usr/bin/env php
 <?php
 
-use Sulu\Component\HttpKernel\SuluKernel;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Style\SymfonyStyle;
-
-require __DIR__.'/../vendor/autoload.php';
-
-$input = new ArgvInput();
-$output = new ConsoleOutput();
-$io = new SymfonyStyle($input, $output);
-
-$ansi = $input->getParameterOption(['--ansi']);
-
-if (!$ansi) {
-    $io->warning('This command will be executed in the "admin" context. For the "website" context, run ./bin/websiteconsole');
-}
-
-$suluContext = SuluKernel::CONTEXT_ADMIN;
-include __DIR__ . DIRECTORY_SEPARATOR. 'console.php';
+return include __DIR__ . DIRECTORY_SEPARATOR. 'console.php';

@@ -12,6 +12,9 @@ trim_trailing_whitespace = true
 insert_final_newline = true
 max_line_length = 120
 
+[{docker-compose.yml,docker-compose.override.yml}]
+indent_size = 2
+
 # markdown uses two trailing spaces for explicit line breaks
 [*.md]
 trim_trailing_whitespace = false

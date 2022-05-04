@@ -1,0 +1,17 @@
+when@prod: &prod
+    sulu_http_cache:
+        proxy_client:
+            symfony:
+                enabled: true # disable this when varnish is used
+
+    # Varnish Configuration:
+    #
+    # See: https://docs.sulu.io/en/2.0/cookbook/caching-with-varnish.html
+    # Changes in the public/index.php is needed to disable the symfony http cache and use varnish instead
+    #
+    #        varnish:
+    #            enabled: true
+    #            servers:
+    #                - '%env(resolve:VARNISH_SERVER)%''
+
+when@stage: *prod

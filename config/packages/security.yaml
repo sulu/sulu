@@ -27,6 +27,7 @@ security:
             security: false
         admin:
             pattern: ^/admin(\/|$)
+            anonymous: true
             lazy: true
             provider: sulu
             entry_point: sulu_security.authentication_entry_point
@@ -38,20 +39,39 @@ security:
                 path: sulu_admin.logout
                 success_handler: sulu_security.logout_success_handler
 
-        sulu-test:
-            pattern: ^/
-            lazy: true
-            form_login:
-                login_path: login
-                check_path: login
-            logout:
-                path: logout
-                target: /
-            remember_me:
-                secret: "%kernel.secret%"
-                lifetime: 604800 # 1 week in seconds
-                path: /
+#        website:
+#            pattern: ^/
+#            anonymous: lazy
+#            # The login and logout routes need to be created.
+#            # For an advanced user management with registration and opt-in emails have a look at the:
+#            # https://github.com/sulu/SuluCommunityBundle
+#            # Also have a look at the user context based caching when you output user role specific data
+#            # https://docs.sulu.io/en/2.2/cookbook/user-context-caching.html
+#            form_login:
+#                login_path: login
+#                check_path: login
+#            logout:
+#                path: logout
+#                target: /
+#            remember_me:
+#                secret:   "%kernel.secret%"
+#                lifetime: 604800 # 1 week in seconds
+#                path:     /
 
 sulu_security:
     checker:
         enabled: true
+
+when@test:
+    security:
+        providers:
+            sulu:
+                id: test_user_provider
+
+        firewalls:
+            admin:
+                http_basic:
+                    provider: sulu
+
+    sulu_test:
+        enable_test_user_provider: true

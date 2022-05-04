@@ -1,3 +1,0 @@
-_portal_errors:
-    resource: "@SuluWebsiteBundle/Resources/config/routing_error.yml"
-    type: portal

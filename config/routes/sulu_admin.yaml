@@ -1,6 +1,6 @@
 sulu_tag_api:
-    type: rest
     resource: "@SuluTagBundle/Resources/config/routing_api.yml"
+    type: rest
     prefix:   /admin/api
 
 sulu_admin:
@@ -98,11 +98,6 @@ sulu_search:
     resource: "@SuluSearchBundle/Resources/config/routing.yml"
     prefix: /admin/search
 
-sulu_audience_targeting_api:
-    type: rest
-    resource: "@SuluAudienceTargetingBundle/Resources/config/routing_api.yml"
-    prefix: /admin/api
-
 sulu_activity_api:
     resource: "@SuluActivityBundle/Resources/config/routing_api.yml"
     type: rest
@@ -111,4 +106,10 @@ sulu_activity_api:
 sulu_trash_api:
     resource: "@SuluTrashBundle/Resources/config/routing_api.yml"
     type: rest
+    prefix: /admin/api
+
+# additional bundles
+sulu_audience_targeting_api:
+    type: rest
+    resource: "@SuluAudienceTargetingBundle/Resources/config/routing_api.yml"
     prefix: /admin/api
