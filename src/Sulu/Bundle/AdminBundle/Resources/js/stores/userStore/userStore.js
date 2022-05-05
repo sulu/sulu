@@ -4,6 +4,7 @@ import debounce from 'debounce';
 import {Config, Requester} from '../../services';
 import initializer from '../../services/initializer';
 import localizationStore from '../localizationStore';
+import {TwoFactorData} from './types';
 import type {Contact, ForgotPasswordData, LoginData, ResetPasswordData, User} from './types';
 
 const UPDATE_PERSISTENT_SETTINGS_DELAY = 2500;
@@ -20,6 +21,7 @@ class UserStore {
     @observable loading: boolean = false;
     @observable loginError: boolean = false;
     @observable forgotPasswordSuccess: boolean = false;
+    @observable twoFactorSuccess: boolean = false;
 
     @action clear() {
         this.persistentSettings = new Map();
@@ -29,6 +31,7 @@ class UserStore {
         this.contact = undefined;
         this.loginError = false;
         this.forgotPasswordSuccess = false;
+        this.twoFactorSuccess = false;
     }
 
     @computed get systemLocale() {
@@ -49,6 +52,10 @@ class UserStore {
 
     @action setForgotPasswordSuccess(forgotPasswordSuccess: boolean) {
         this.forgotPasswordSuccess = forgotPasswordSuccess;
+    }
+
+    @action setTwoFactorSuccess(twoFactorSuccess: boolean) {
+        this.twoFactorSuccess = twoFactorSuccess;
     }
 
     @computed get contentLocale(): string {
@@ -92,6 +99,12 @@ class UserStore {
     }
 
     handleLogin = (data: Object) => {
+        if (data.completed === false) {
+            this.setLoading(false);
+
+            return data;
+        }
+
         if (this.user) {
             // when the user was logged in already and comes again with the same user
             // we don't need to initialize again
@@ -116,7 +129,7 @@ class UserStore {
         this.setLoading(true);
 
         return Requester.post(Config.endpoints.loginCheck, data)
-            .then(() => this.handleLogin(data))
+            .then((data) => this.handleLogin(data))
             .catch((error) => {
                 this.setLoading(false);
                 if (error.status !== 401) {
@@ -124,6 +137,21 @@ class UserStore {
                 }
 
                 this.setLoginError(true);
+            });
+    };
+
+    twoFactorLogin = (data: TwoFactorData) => {
+        this.setLoading(true);
+
+        return Requester.post(Config.endpoints.twoFactorLoginCheck, data)
+            .then((data) => this.handleLogin(data))
+            .catch((error) => {
+                this.setLoading(false);
+                if (error.status !== 401) {
+                    return Promise.reject(error);
+                }
+
+                this.setTwoFactorSuccess(true);
             });
     };
 

@@ -35,3 +35,7 @@ export type LoginData = {
     password: string,
     username: string,
 };
+
+export type TwoFactorData = {
+    authCode: string,
+};

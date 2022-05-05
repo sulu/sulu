@@ -11,7 +11,8 @@ import ForgotPasswordForm from './ForgotPasswordForm';
 import LoginForm from './LoginForm';
 import ResetPasswordForm from './ResetPasswordForm';
 import loginStyles from './login.scss';
-import type {FormTypes, ForgotPasswordFormData, LoginFormData, ResetPasswordFormData} from './types';
+import TwoFactorForm from './TwoFactorForm';
+import type {FormTypes, ForgotPasswordFormData, LoginFormData, ResetPasswordFormData, TwoFactorFormData} from './types';
 
 const BACK_LINK_ARROW_LEFT_ICON = 'su-angle-left';
 
@@ -43,6 +44,10 @@ class Login extends React.Component<Props> {
         return this.visibleForm === 'reset-password';
     }
 
+    @computed get twoFactorVisible(): boolean {
+        return this.visibleForm === 'two-factor';
+    }
+
     @action clearState = () => {
         if (this.loginFormVisible) {
             userStore.setLoginError(false);
@@ -62,12 +67,28 @@ class Login extends React.Component<Props> {
 
     handleLoginFormSubmit = (data: LoginFormData) => {
         userStore.login(data).then(() => {
-            this.props.onLoginSuccess();
+            if (data.completed) {
+                this.props.onLoginSuccess();
+
+                return;
+            }
+
+            action(() => {
+                this.visibleForm = 'two-factor';
+            })();
         });
     };
 
     handleForgotPasswordFormSubmit = (data: ForgotPasswordFormData) => {
-        userStore.forgotPassword(data);
+        userStore.forgotPassword(data).then(() => {
+            this.props.onLoginSuccess();
+        });
+    };
+
+    handleTwoFactorFormSubmit = (data: TwoFactorFormData) => {
+        userStore.twoFactorLogin(data).then(() => {
+            this.props.onLoginSuccess();
+        });
     };
 
     handleResetPasswordFormSubmit = (data: ResetPasswordFormData) => {
@@ -128,6 +149,14 @@ class Login extends React.Component<Props> {
                                 loading={userStore.loading}
                                 onChangeForm={this.handleChangeToLoginForm}
                                 onSubmit={this.handleResetPasswordFormSubmit}
+                            />
+                        }
+                        {initialized && this.twoFactorVisible &&
+                            <TwoFactorForm
+                                loading={userStore.loading}
+                                onChangeForm={this.handleChangeToLoginForm}
+                                onSubmit={this.handleTwoFactorFormSubmit}
+                                success={userStore.twoFactorSuccess}
                             />
                         }
                     </div>

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Security;
 
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,8 +58,21 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
         }
 
         if ($request->isXmlHttpRequest()) {
+            $completed = true;
+            $twoFactorMethods = 'none';
+            if ($token instanceof TwoFactorTokenInterface) {
+                $completed = false;
+                $twoFactorMethods = $token->getTwoFactorProviders();
+            }
+
             // if AJAX login
-            $array = ['url' => $url];
+            $array = [
+                'url' => $url,
+                'ussername' => $token->getUserIdentifier(),
+                'completed' => $completed,
+                'twoFactorMethods' => $twoFactorMethods,
+            ];
+
             $response = new JsonResponse($array, 200);
         } else {
             // if form login

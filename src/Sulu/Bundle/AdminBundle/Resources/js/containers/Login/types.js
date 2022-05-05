@@ -1,6 +1,6 @@
 // @flow
 
-export type FormTypes = 'login' | 'reset-password' | 'forgot-password';
+export type FormTypes = 'login' | 'reset-password' | 'forgot-password' | 'two-factor';
 
 export type ResetPasswordFormData = {
     password: string,
@@ -8,6 +8,10 @@ export type ResetPasswordFormData = {
 
 export type ForgotPasswordFormData = {
     user: string,
+};
+
+export type TwoFactorFormData = {
+    authCode: string,
 };
 
 export type LoginFormData = {

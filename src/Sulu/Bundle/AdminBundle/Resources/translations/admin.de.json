@@ -212,5 +212,7 @@
     "sulu_admin.versions": "Versionierung",
     "sulu_admin.activity_versions": "Aktivität & Versionierung",
     "sulu_admin.insufficient_descendant_permissions": "Nicht ausreichende Berechtigungen für {count} untergeordnete Elemente.",
-    "sulu_admin.unexpected_delete_server_error": "Beim Löschen ist ein unerwarteter Fehler aufgetreten."
+    "sulu_admin.unexpected_delete_server_error": "Beim Löschen ist ein unerwarteter Fehler aufgetreten.",
+    "sulu_admin.two_factor_authentication": "Zwei-Faktor Authentifizierung",
+    "sulu_admin.two_factor_auth_code": "Authentifizierungscode"
 }
