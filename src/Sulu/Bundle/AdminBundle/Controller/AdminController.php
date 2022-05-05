@@ -166,7 +166,7 @@ class AdminController
     /**
      * @var string|null
      */
-    private $passwordInformationKey;
+    private $passwordInfoTranslationKey;
 
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
@@ -194,7 +194,7 @@ class AdminController
         string $collaborationInterval,
         bool $collaborationEnabled = null,
         ?string $passwordPattern = null,
-        ?string $passwordInformationKey = null
+        ?string $passwordInfoTranslationKey = null
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->tokenStorage = $tokenStorage;
@@ -226,7 +226,7 @@ class AdminController
 
         $this->collaborationEnabled = $collaborationEnabled ?? true;
         $this->passwordPattern = $passwordPattern;
-        $this->passwordInformationKey = $passwordInformationKey;
+        $this->passwordInfoTranslationKey = $passwordInfoTranslationKey;
     }
 
     public function indexAction()
@@ -251,7 +251,7 @@ class AdminController
                 'fallback_locale' => $this->fallbackLocale,
                 'endpoints' => $endpoints,
                 'password_pattern' => $this->passwordPattern,
-                'password_information_key' => $this->passwordInformationKey,
+                'password_info_translation_key' => $this->passwordInfoTranslationKey,
                 'sulu_version' => $this->suluVersion,
                 'app_version' => $this->appVersion,
             ]

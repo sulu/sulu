@@ -131,7 +131,7 @@ class AdminControllerTest extends SuluTestCase
             'suluVersion' => '_._._',
             'appVersion' => null,
             'passwordPattern' => null,
-            'passwordInformationKey' => null,
+            'passwordInfoTranslationKey' => null,
         ], $config);
     }
 

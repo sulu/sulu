@@ -20,11 +20,6 @@ type Props = {|
     onSubmit: (data: ResetPasswordFormData) => void,
 |};
 
-const ERROR_MAP = {
-    match: 'sulu_admin.reset_password_error',
-    pattern: 'sulu_admin.reset_password_pattern_error',
-};
-
 @observer
 class ResetPasswordForm extends React.Component<Props> {
     static defaultProps = {
@@ -33,17 +28,13 @@ class ResetPasswordForm extends React.Component<Props> {
 
     @observable inputRef: ?ElementRef<*>;
 
-    @observable error: ?string = null;
+    @observable errorMessage: ?string = null;
 
     @observable password1: ?string;
     @observable password2: ?string;
 
     @computed get submitButtonDisabled(): boolean {
         return !(this.password1 && this.password2);
-    }
-
-    @computed get matchPattern(): boolean {
-        return userStore.validatePassword(this.password1 || '');
     }
 
     @action setInputRef = (ref: ?ElementRef<*>) => {
@@ -59,47 +50,49 @@ class ResetPasswordForm extends React.Component<Props> {
     @action handlePassword1Change = (password1: ?string) => {
         this.password1 = password1;
 
-        this.error = null;
+        this.errorMessage = null;
     };
 
     @action handlePassword2Change = (password2: ?string) => {
         this.password2 = password2;
 
-        this.error = null;
+        this.errorMessage = null;
     };
 
     @action handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         if (!this.password1 || !this.password2 || this.password1 !== this.password2) {
-            this.error = 'match';
+            this.errorMessage = 'sulu_admin.reset_password_error';
+
             return;
         }
 
-        if (!this.matchPattern) {
-            this.error = 'pattern';
+        if (!userStore.validatePassword(this.password1 || '')) {
+            this.errorMessage = 'sulu_admin.reset_password_pattern_error';
+
             return;
         }
 
-        this.error = null;
+        this.errorMessage = null;
 
         const {onSubmit} = this.props;
 
-        onSubmit({password: this.password1});
+        onSubmit({password: this.password1 || ''});
     };
 
     render() {
         const inputFieldClass = classNames(
             formStyles.inputField,
             {
-                [formStyles.error]: this.error !== null,
+                [formStyles.error]: this.errorMessage !== null,
             }
         );
 
         return (
             <Fragment>
-                <Header small={this.error !== null}>
-                    {translate(this.error ? ERROR_MAP[this.error] : 'sulu_admin.reset_password')}
+                <Header small={this.errorMessage !== null}>
+                    {translate(this.errorMessage || 'sulu_admin.reset_password')}
                 </Header>
                 <form className={formStyles.form} onSubmit={this.handleSubmit}>
                     <fieldset>
@@ -113,7 +106,7 @@ class ResetPasswordForm extends React.Component<Props> {
                                 inputRef={this.setInputRef}
                                 onChange={this.handlePassword1Change}
                                 type="password"
-                                valid={!this.error}
+                                valid={!this.errorMessage}
                                 value={this.password1}
                             />
                         </label>
@@ -126,13 +119,13 @@ class ResetPasswordForm extends React.Component<Props> {
                                 icon="su-lock"
                                 onChange={this.handlePassword2Change}
                                 type="password"
-                                valid={!this.error}
+                                valid={!this.errorMessage}
                                 value={this.password2}
                             />
                         </label>
-                        {Config.passwordInformationKey &&
+                        {Config.passwordInfoTranslationKey &&
                             <label className={fieldStyles.descriptionLabel}>
-                                {translate(Config.passwordInformationKey)}
+                                {translate(Config.passwordInfoTranslationKey)}
                             </label>
                         }
                         <div className={formStyles.buttons}>
