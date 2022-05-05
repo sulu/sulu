@@ -11,24 +11,14 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity\TwoFactor;
 
+use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
+
 interface TwoFactorInterface extends PreferredProviderInterface, EmailInterface, GoogleInterface, TotpInterface, BackupCodeInterface, TrustedDeviceInterface
 {
-    public function getTwoFactorMethod(): ?string;
+    public function getTwoFactor(): ?UserTwoFactor;
 
     /**
      * @return static
      */
-    public function setTwoFactorMethod(?string $twoFactorType);
-
-    /**
-     * @return mixed[]|null
-     */
-    public function getTwoFactorOptions(): ?array;
-
-    /**
-     * @param mixed[]|null $twoFactorOptions
-     *
-     * @return static
-     */
-    public function setTwoFactorOptions(?array $twoFactorOptions);
+    public function setTwoFactor(?UserTwoFactor $twoFactor);
 }

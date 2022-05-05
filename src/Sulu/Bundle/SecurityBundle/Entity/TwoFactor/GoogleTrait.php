@@ -24,7 +24,7 @@ if (\interface_exists(TwoFactorInterface::class)) {
     {
         public function isGoogleAuthenticatorEnabled(): bool
         {
-            return 'google' === $this->twoFactorType;
+            return 'google' === $this->getTwoFactor()?->getMethod();
         }
 
         public function getGoogleAuthenticatorUsername(): string
@@ -34,12 +34,12 @@ if (\interface_exists(TwoFactorInterface::class)) {
 
         public function getGoogleAuthenticatorSecret(): ?string
         {
-            // TODO return $this->googleAuthenticatorSecret;
+            return $this->getTwoFactorOption('googleAuthenticatorSecret');
         }
 
         public function setGoogleAuthenticatorSecret(?string $googleAuthenticatorSecret): void
         {
-            // TODO $this->googleAuthenticatorSecret = $googleAuthenticatorSecret;
+            $this->setTwoFactorOption('googleAuthenticatorSecret', $googleAuthenticatorSecret);
         }
     }
 } else {

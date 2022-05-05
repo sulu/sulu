@@ -17,7 +17,9 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
+use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\TwoFactorInterface;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
+use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
 use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -101,6 +103,7 @@ class ProfileController implements ClassResourceInterface
 
         $context = new Context();
         $context->setGroups(['profile']);
+        $context->setSerializeNull(false); // required for sub entity as twoFactor/method can else not be written
 
         $view->setContext($context);
 
@@ -122,7 +125,23 @@ class ProfileController implements ClassResourceInterface
 
         $user->setFirstName($request->request->get('firstName'));
         $user->setLastName($request->request->get('lastName'));
-        $user->setTwoFactorMethod($request->request->getAlpha('twoFactorMethod'));
+
+        if ($user instanceof TwoFactorInterface) {
+            $twoFactorData = $request->request->all('twoFactor');
+            $twoFactorMethod = $twoFactorData['method'] ?? null;
+
+            if ($twoFactorMethod) {
+                $twoFactor = $user->getTwoFactor();
+                if (!$twoFactor) {
+                    $twoFactor = new UserTwoFactor($user);
+                }
+
+                $twoFactor->setMethod($twoFactorData['method']);
+                $user->setTwoFactor($twoFactor);
+            } else {
+                $user->setTwoFactor(null);
+            }
+        }
 
         $this->objectManager->flush();
 

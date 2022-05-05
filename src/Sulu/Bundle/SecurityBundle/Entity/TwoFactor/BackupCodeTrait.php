@@ -22,35 +22,50 @@ if (\interface_exists(BackupCodeInterface::class)) {
      */
     trait BackupCodeTrait
     {
-        /**
-         * Check if it is a valid backup code.
-         */
         public function isBackupCode(string $code): bool
         {
-            // TODO
-            return \in_array($code, $this->backupCodes);
+            $backupCodes = $this->getTwoFactor()?->getOptions()['backupCodes'] ?? [];
+
+            return \in_array($code, $backupCodes);
         }
 
-        /**
-         * Invalidate a backup code.
-         */
         public function invalidateBackupCode(string $code): void
         {
-            // TODO
-            $key = \array_search($code, $this->backupCodes);
+            $twoFactor = $this->getTwoFactor();
+
+            if (!$twoFactor) {
+                return;
+            }
+
+            $options = $twoFactor->getOptions();
+            $key = \array_search($code, $options['backupCodes'] ?? []);
+
             if (false !== $key) {
-                unset($this->backupCodes[$key]);
+                unset($options['backupCodes'][$key]);
+                $twoFactor->setOptions($options);
             }
         }
 
-        /**
-         * Add a backup code.
-         */
         public function addBackUpCode(string $backUpCode): void
         {
-            // TODO
-            if (!\in_array($backUpCode, $this->backupCodes)) {
-                $this->backupCodes[] = $backUpCode;
+            $twoFactor = $this->getTwoFactor();
+
+            if (!$twoFactor) {
+                throw new \LogicException(
+                    \sprintf(
+                        'The method "%s::%s" should not be called without twoFactor being set.',
+                        __CLASS__,
+                        __METHOD__
+                    )
+                );
+            }
+
+            $options = $twoFactor->getOptions();
+            $backupCodes = $options['backupCodes'] ?? [];
+
+            if (!\in_array($backUpCode, $backupCodes)) {
+                $options['backupCodes'][] = $backUpCode;
+                $twoFactor->setOptions($options);
             }
         }
     }

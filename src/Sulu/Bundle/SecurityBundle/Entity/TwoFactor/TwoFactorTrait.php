@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Entity\TwoFactor;
 
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
+use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
 
 /**
  * @internal
@@ -27,51 +28,58 @@ trait TwoFactorTrait
     use TrustedDeviceTrait;
 
     /**
+     * @var UserTwoFactor
      * @Expose
      * @Groups({"profile"})
      */
-    private ?string $twoFactorMethod = null;
+    protected $twoFactor;
 
-    /**
-     * @Expose
-     * @Groups({"profile"})
-     *
-     * @var mixed[]|null
-     */
-    private ?array $twoFactorOptions = null;
-
-    public function getTwoFactorMethod(): ?string
+    public function getTwoFactor(): ?UserTwoFactor
     {
-        return $this->twoFactorMethod;
+        return $this->twoFactor;
     }
 
-    /**
-     * @return static
-     */
-    public function setTwoFactorMethod(?string $twoFactorType)
+    public function setTwoFactor(?UserTwoFactor $twoFactor)
     {
-        $this->twoFactorMethod = $twoFactorType;
+        $this->twoFactor = $twoFactor;
 
         return $this;
     }
 
     /**
-     * @return mixed[]
+     * @internal
      */
-    public function getTwoFactorOptions(): ?array
+    protected function setTwoFactorOption(string $name, string $value): void
     {
-        return $this->twoFactorOptions;
+        $twoFactor = $this->getTwoFactor();
+
+        if (!$twoFactor) {
+            throw new \LogicException(
+                \sprintf(
+                    'The method "%s::%s" should not be called without twoFactor being set.',
+                    __CLASS__,
+                    __METHOD__
+                )
+            );
+        }
+
+        $options = $twoFactor->getOptions() ?: [];
+        $options[$name] = $value;
+
+        $twoFactor->setOptions($options);
     }
 
     /**
-     * @param mixed[] $twoFactorOptions
-     *
-     * @return static
+     * @internal
      */
-    public function setTwoFactorOptions(?array $twoFactorOptions)
+    protected function getTwoFactorOption(string $name): string
     {
-        $this->twoFactorOptions = $twoFactorOptions;
+        $value = $this->getTwoFactor()?->getOptions()[$name] ?? null;
 
-        return $this;
+        if (null === $value) {
+            throw new \LogicException('The ' . $name . ' was not set');
+        }
+
+        return $value;
     }
 }

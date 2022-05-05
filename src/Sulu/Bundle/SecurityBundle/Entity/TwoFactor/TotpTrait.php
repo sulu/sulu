@@ -26,7 +26,7 @@ if (\interface_exists(TwoFactorInterface::class)) {
     {
         public function isTotpAuthenticationEnabled(): bool
         {
-            return 'totp' === $this->twoFactorType;
+            return 'totp' === $this->getTwoFactor()?->getMethod();
         }
 
         public function getTotpAuthenticationUsername(): string

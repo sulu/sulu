@@ -24,7 +24,7 @@ if (\interface_exists(TwoFactorInterface::class)) {
     {
         public function isEmailAuthEnabled(): bool
         {
-            return 'email' === $this->twoFactorMethod;
+            return 'email' === $this->getTwoFactor()?->getMethod();
         }
 
         public function getEmailAuthRecipient(): string
@@ -34,18 +34,12 @@ if (\interface_exists(TwoFactorInterface::class)) {
 
         public function getEmailAuthCode(): string
         {
-            // TODO
-            if (null === $this->authCode) {
-                throw new \LogicException('The email authentication code was not set');
-            }
-
-            return $this->authCode;
+            return $this->getTwoFactorOption('authCode');
         }
 
         public function setEmailAuthCode(string $authCode): void
         {
-            // TODO
-            $this->authCode = $authCode;
+            $this->setTwoFactorOption('authCode', $authCode);
         }
     }
 } else {

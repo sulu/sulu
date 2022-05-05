@@ -50,7 +50,7 @@
             </params>
         </property>
 
-        <property name="twoFactorMethod" type="single_select" colspan="6">
+        <property name="twoFactor/method" type="single_select" colspan="6">
             <meta>
                 <title>sulu_security.two_factor_method</title>
             </meta>

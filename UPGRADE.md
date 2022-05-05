@@ -8,7 +8,8 @@ To add support for two factor authentication the following
 columns need to be added:
 
 ```sql
-ALTER TABLE se_users ADD twoFactorMethod VARCHAR(12) DEFAULT NULL, ADD twoFactorOptions JSON DEFAULT NULL;
+CREATE TABLE se_user_two_factors (id INT AUTO_INCREMENT NOT NULL, method VARCHAR(12) DEFAULT NULL, options LONGTEXT DEFAULT NULL, idUsers INT NOT NULL, UNIQUE INDEX UNIQ_732E8321347E6F4 (idUsers), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+ALTER TABLE se_user_two_factors ADD CONSTRAINT FK_732E8321347E6F4 FOREIGN KEY (idUsers) REFERENCES se_users (id) ON DELETE CASCADE;
 ```
 
 ### Drop support for PHP 7.4, 7.3 and 7.2
