@@ -12,12 +12,19 @@
 namespace Sulu\Bundle\PersistenceBundle;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\Compiler\ActivateResolveTargetEntityResolverPass;
+use Sulu\Bundle\PersistenceBundle\Doctrine\Types\EncryptArray;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluPersistenceBundle extends Bundle
 {
+    public function boot(): void
+    {
+        // TODO find a better way to inject the encryption key
+        EncryptArray::setSecret($this->container->getParameter('sulu_persistence.encryption_key'));
+    }
+
     /**
      * @return void
      */
