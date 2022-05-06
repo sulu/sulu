@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render block with schema 1`] = `
-<section
-  class="blockCollection"
->
+<section>
   <div
     class="sortableBlockList"
   >
@@ -113,6 +111,24 @@ exports[`Render block with schema 1`] = `
         </article>
       </div>
     </section>
+    <div
+      class="addButtonContainer addButtonDivider"
+    >
+      <button
+        class="button secondary hasText addButton"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.add_block
+        </span>
+      </button>
+    </div>
     <section
       class="block expanded"
       role="switch"
@@ -220,27 +236,29 @@ exports[`Render block with schema 1`] = `
       </div>
     </section>
   </div>
-  <button
-    class="button secondary hasText"
-    type="button"
+  <div
+    class="addButtonContainer"
   >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="buttonText"
+    <button
+      class="button secondary hasText addButton"
+      type="button"
     >
-      sulu_admin.add_block
-    </span>
-  </button>
+      <span
+        aria-label="su-plus"
+        class="su-plus buttonIcon"
+      />
+      <span
+        class="buttonText"
+      >
+        sulu_admin.add_block
+      </span>
+    </button>
+  </div>
 </section>
 `;
 
 exports[`Render block with schema and error on fields already being modified 1`] = `
-<section
-  class="blockCollection"
->
+<section>
   <div
     class="sortableBlockList"
   >
@@ -321,6 +339,24 @@ exports[`Render block with schema and error on fields already being modified 1`]
         </article>
       </div>
     </section>
+    <div
+      class="addButtonContainer addButtonDivider"
+    >
+      <button
+        class="button secondary hasText addButton"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.add_block
+        </span>
+      </button>
+    </div>
     <section
       class="block expanded"
       role="switch"
@@ -401,6 +437,24 @@ exports[`Render block with schema and error on fields already being modified 1`]
         </article>
       </div>
     </section>
+    <div
+      class="addButtonContainer addButtonDivider"
+    >
+      <button
+        class="button secondary hasText addButton"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.add_block
+        </span>
+      </button>
+    </div>
     <section
       class="block expanded"
       role="switch"
@@ -479,27 +533,29 @@ exports[`Render block with schema and error on fields already being modified 1`]
       </div>
     </section>
   </div>
-  <button
-    class="button secondary hasText"
-    type="button"
+  <div
+    class="addButtonContainer"
   >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="buttonText"
+    <button
+      class="button secondary hasText addButton"
+      type="button"
     >
-      sulu_admin.add_block
-    </span>
-  </button>
+      <span
+        aria-label="su-plus"
+        class="su-plus buttonIcon"
+      />
+      <span
+        class="buttonText"
+      >
+        sulu_admin.add_block
+      </span>
+    </button>
+  </div>
 </section>
 `;
 
 exports[`Render block with schema and error on fields already being modified 2`] = `
-<section
-  class="blockCollection"
->
+<section>
   <div
     class="sortableBlockList"
   >
@@ -580,6 +636,24 @@ exports[`Render block with schema and error on fields already being modified 2`]
         </article>
       </div>
     </section>
+    <div
+      class="addButtonContainer addButtonDivider"
+    >
+      <button
+        class="button secondary hasText addButton"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.add_block
+        </span>
+      </button>
+    </div>
     <section
       class="block expanded"
       role="switch"
@@ -660,6 +734,24 @@ exports[`Render block with schema and error on fields already being modified 2`]
         </article>
       </div>
     </section>
+    <div
+      class="addButtonContainer addButtonDivider"
+    >
+      <button
+        class="button secondary hasText addButton"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.add_block
+        </span>
+      </button>
+    </div>
     <section
       class="block expanded"
       role="switch"
@@ -741,27 +833,29 @@ exports[`Render block with schema and error on fields already being modified 2`]
       </div>
     </section>
   </div>
-  <button
-    class="button secondary hasText"
-    type="button"
+  <div
+    class="addButtonContainer"
   >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="buttonText"
+    <button
+      class="button secondary hasText addButton"
+      type="button"
     >
-      sulu_admin.add_block
-    </span>
-  </button>
+      <span
+        aria-label="su-plus"
+        class="su-plus buttonIcon"
+      />
+      <span
+        class="buttonText"
+      >
+        sulu_admin.add_block
+      </span>
+    </button>
+  </div>
 </section>
 `;
 
 exports[`Render collapsed blocks with block previews 1`] = `
-<section
-  class="blockCollection"
->
+<section>
   <div
     class="sortableBlockList"
   >
@@ -810,6 +904,24 @@ exports[`Render collapsed blocks with block previews 1`] = `
         </article>
       </div>
     </section>
+    <div
+      class="addButtonContainer addButtonDivider"
+    >
+      <button
+        class="button secondary hasText addButton"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.add_block
+        </span>
+      </button>
+    </div>
     <section
       class="block"
       role="switch"
@@ -856,27 +968,29 @@ exports[`Render collapsed blocks with block previews 1`] = `
       </div>
     </section>
   </div>
-  <button
-    class="button secondary hasText"
-    type="button"
+  <div
+    class="addButtonContainer"
   >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="buttonText"
+    <button
+      class="button secondary hasText addButton"
+      type="button"
     >
-      sulu_admin.add_block
-    </span>
-  </button>
+      <span
+        aria-label="su-plus"
+        class="su-plus buttonIcon"
+      />
+      <span
+        class="buttonText"
+      >
+        sulu_admin.add_block
+      </span>
+    </button>
+  </div>
 </section>
 `;
 
 exports[`Render collapsed blocks with block previews 2`] = `
-<section
-  class="blockCollection"
->
+<section>
   <div
     class="sortableBlockList"
   >
@@ -926,6 +1040,24 @@ exports[`Render collapsed blocks with block previews 2`] = `
         </article>
       </div>
     </section>
+    <div
+      class="addButtonContainer addButtonDivider"
+    >
+      <button
+        class="button secondary hasText addButton"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.add_block
+        </span>
+      </button>
+    </div>
     <section
       class="block"
       role="switch"
@@ -973,27 +1105,29 @@ exports[`Render collapsed blocks with block previews 2`] = `
       </div>
     </section>
   </div>
-  <button
-    class="button secondary hasText"
-    type="button"
+  <div
+    class="addButtonContainer"
   >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="buttonText"
+    <button
+      class="button secondary hasText addButton"
+      type="button"
     >
-      sulu_admin.add_block
-    </span>
-  </button>
+      <span
+        aria-label="su-plus"
+        class="su-plus buttonIcon"
+      />
+      <span
+        class="buttonText"
+      >
+        sulu_admin.add_block
+      </span>
+    </button>
+  </div>
 </section>
 `;
 
 exports[`Render collapsed blocks with block previews and sections 1`] = `
-<section
-  class="blockCollection"
->
+<section>
   <div
     class="sortableBlockList"
   >
@@ -1040,6 +1174,24 @@ exports[`Render collapsed blocks with block previews and sections 1`] = `
         </article>
       </div>
     </section>
+    <div
+      class="addButtonContainer addButtonDivider"
+    >
+      <button
+        class="button secondary hasText addButton"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.add_block
+        </span>
+      </button>
+    </div>
     <section
       class="block"
       role="switch"
@@ -1084,27 +1236,29 @@ exports[`Render collapsed blocks with block previews and sections 1`] = `
       </div>
     </section>
   </div>
-  <button
-    class="button secondary hasText"
-    type="button"
+  <div
+    class="addButtonContainer"
   >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="buttonText"
+    <button
+      class="button secondary hasText addButton"
+      type="button"
     >
-      sulu_admin.add_block
-    </span>
-  </button>
+      <span
+        aria-label="su-plus"
+        class="su-plus buttonIcon"
+      />
+      <span
+        class="buttonText"
+      >
+        sulu_admin.add_block
+      </span>
+    </button>
+  </div>
 </section>
 `;
 
 exports[`Render collapsed blocks with block previews without tags 1`] = `
-<section
-  class="blockCollection"
->
+<section>
   <div
     class="sortableBlockList"
   >
@@ -1154,6 +1308,24 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
         </article>
       </div>
     </section>
+    <div
+      class="addButtonContainer addButtonDivider"
+    >
+      <button
+        class="button secondary hasText addButton"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.add_block
+        </span>
+      </button>
+    </div>
     <section
       class="block"
       role="switch"
@@ -1201,27 +1373,29 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
       </div>
     </section>
   </div>
-  <button
-    class="button secondary hasText"
-    type="button"
+  <div
+    class="addButtonContainer"
   >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="buttonText"
+    <button
+      class="button secondary hasText addButton"
+      type="button"
     >
-      sulu_admin.add_block
-    </span>
-  </button>
+      <span
+        aria-label="su-plus"
+        class="su-plus buttonIcon"
+      />
+      <span
+        class="buttonText"
+      >
+        sulu_admin.add_block
+      </span>
+    </button>
+  </div>
 </section>
 `;
 
 exports[`Render collapsed blocks with block previews without tags and with sections 1`] = `
-<section
-  class="blockCollection"
->
+<section>
   <div
     class="sortableBlockList"
   >
@@ -1271,6 +1445,24 @@ exports[`Render collapsed blocks with block previews without tags and with secti
         </article>
       </div>
     </section>
+    <div
+      class="addButtonContainer addButtonDivider"
+    >
+      <button
+        class="button secondary hasText addButton"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.add_block
+        </span>
+      </button>
+    </div>
     <section
       class="block"
       role="switch"
@@ -1318,19 +1510,23 @@ exports[`Render collapsed blocks with block previews without tags and with secti
       </div>
     </section>
   </div>
-  <button
-    class="button secondary hasText"
-    type="button"
+  <div
+    class="addButtonContainer"
   >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="buttonText"
+    <button
+      class="button secondary hasText addButton"
+      type="button"
     >
-      sulu_admin.add_block
-    </span>
-  </button>
+      <span
+        aria-label="su-plus"
+        class="su-plus buttonIcon"
+      />
+      <span
+        class="buttonText"
+      >
+        sulu_admin.add_block
+      </span>
+    </button>
+  </div>
 </section>
 `;

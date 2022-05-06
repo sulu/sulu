@@ -1,9 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render a fully filled block list 1`] = `
-<section
-  class="blockCollection"
->
+<section>
   <div
     class="sortableBlockList"
   >
@@ -38,6 +36,24 @@ exports[`Should render a fully filled block list 1`] = `
         />
       </div>
     </section>
+    <div
+      class="addButtonContainer addButtonDivider"
+    >
+      <button
+        class="button secondary hasText addButton"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          Add block
+        </span>
+      </button>
+    </div>
     <section
       class="block"
       role="switch"
@@ -75,27 +91,29 @@ exports[`Should render a fully filled block list 1`] = `
       </div>
     </section>
   </div>
-  <button
-    class="button secondary hasText"
-    type="button"
+  <div
+    class="addButtonContainer"
   >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="buttonText"
+    <button
+      class="button secondary hasText addButton"
+      type="button"
     >
-      Add block
-    </span>
-  </button>
+      <span
+        aria-label="su-plus"
+        class="su-plus buttonIcon"
+      />
+      <span
+        class="buttonText"
+      >
+        Add block
+      </span>
+    </button>
+  </div>
 </section>
 `;
 
 exports[`Should render a non-movable block list 1`] = `
-<section
-  class="blockCollection"
->
+<section>
   <div
     class="sortableBlockList"
   >
@@ -125,6 +143,24 @@ exports[`Should render a non-movable block list 1`] = `
         />
       </div>
     </section>
+    <div
+      class="addButtonContainer addButtonDivider"
+    >
+      <button
+        class="button secondary hasText addButton"
+        type="button"
+      >
+        <span
+          aria-label="su-plus"
+          class="su-plus buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          Add block
+        </span>
+      </button>
+    </div>
     <section
       class="block expanded"
       role="switch"
@@ -152,19 +188,23 @@ exports[`Should render a non-movable block list 1`] = `
       </div>
     </section>
   </div>
-  <button
-    class="button secondary hasText"
-    type="button"
+  <div
+    class="addButtonContainer"
   >
-    <span
-      aria-label="su-plus"
-      class="su-plus buttonIcon"
-    />
-    <span
-      class="buttonText"
+    <button
+      class="button secondary hasText addButton"
+      type="button"
     >
-      Add block
-    </span>
-  </button>
+      <span
+        aria-label="su-plus"
+        class="su-plus buttonIcon"
+      />
+      <span
+        class="buttonText"
+      >
+        Add block
+      </span>
+    </button>
+  </div>
 </section>
 `;

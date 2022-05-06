@@ -2,6 +2,7 @@
 import React from 'react';
 import {action, observable, toJS, reaction} from 'mobx';
 import {observer} from 'mobx-react';
+import classNames from 'classnames';
 import {arrayMove} from '../../utils';
 import {translate} from '../../utils/Translator';
 import Button from '../Button';
@@ -86,7 +87,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         }
     };
 
-    @action handleAddBlock = () => {
+    @action handleAddBlock = (insertionIndex: number) => {
         const {defaultType, onChange, value} = this.props;
 
         if (this.hasMaximumReached()) {
@@ -94,11 +95,13 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         }
 
         if (value) {
-            this.expandedBlocks.push(true);
-            this.generatedBlockIds.push(++BlockCollection.idCounter);
+            this.expandedBlocks.splice(insertionIndex, 0, true);
+            this.generatedBlockIds.splice(insertionIndex, 0, ++BlockCollection.idCounter);
 
+            const elementsBefore = value.slice(0, insertionIndex);
+            const elementsAfter = value.slice(insertionIndex);
             // $FlowFixMe
-            onChange([...value, {type: defaultType}]);
+            onChange([...elementsBefore, {type: defaultType}, ...elementsAfter]);
         }
     };
 
@@ -163,9 +166,35 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         return !!minOccurs && value.length <= minOccurs;
     }
 
+    renderAddButton = (aboveBlockIndex: number) => {
+        const {addButtonText, disabled, value} = this.props;
+        const isDividerButton = aboveBlockIndex < value.length - 1;
+
+        const containerClass = classNames(
+            blockCollectionStyles.addButtonContainer,
+            {
+                [blockCollectionStyles.addButtonDivider]: isDividerButton,
+            }
+        );
+
+        return (
+            <div className={containerClass}>
+                <Button
+                    className={blockCollectionStyles.addButton}
+                    disabled={disabled || this.hasMaximumReached()}
+                    icon="su-plus"
+                    onClick={this.handleAddBlock}
+                    skin="secondary"
+                    value={aboveBlockIndex + 1}
+                >
+                    {addButtonText ? addButtonText : translate('sulu_admin.add_block')}
+                </Button>
+            </div>
+        );
+    };
+
     render() {
         const {
-            addButtonText,
             collapsable,
             disabled,
             icons,
@@ -177,7 +206,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         } = this.props;
 
         return (
-            <section className={blockCollectionStyles.blockCollection}>
+            <section>
                 <SortableBlockList
                     disabled={disabled}
                     expandedBlocks={this.expandedBlocks}
@@ -192,18 +221,12 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                     onSortEnd={this.handleSortEnd}
                     onTypeChange={this.handleTypeChange}
                     renderBlockContent={renderBlockContent}
+                    renderDivider={this.renderAddButton}
                     types={types}
                     useDragHandle={true}
                     value={value}
                 />
-                <Button
-                    disabled={disabled || this.hasMaximumReached()}
-                    icon="su-plus"
-                    onClick={this.handleAddBlock}
-                    skin="secondary"
-                >
-                    {addButtonText ? addButtonText : translate('sulu_admin.add_block')}
-                </Button>
+                {this.renderAddButton(value.length - 1)}
             </section>
         );
     }

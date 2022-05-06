@@ -1,8 +1,10 @@
+@import './variables.scss';
+
 .sortableBlockList {
     text-align: left;
 
     & > * {
-        margin-bottom: 10px;
+        margin-bottom: $blockMarginBottom;
     }
 
     &.disabled {
