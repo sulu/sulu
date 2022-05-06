@@ -130,6 +130,8 @@ class AdminControllerTest extends SuluTestCase
             ],
             'suluVersion' => '_._._',
             'appVersion' => null,
+            'passwordPattern' => null,
+            'passwordInfoTranslationKey' => null,
         ], $config);
     }
 

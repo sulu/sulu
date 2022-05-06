@@ -3,9 +3,12 @@ import React, {Fragment} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
+import {Config} from '../../services';
 import {translate} from '../../utils/index';
 import Button from '../../components/Button/index';
 import Input from '../../components/Input/index';
+import fieldStyles from '../../components/Form/field.scss';
+import {userStore} from '../../stores';
 import formStyles from './form.scss';
 import Header from './Header';
 import type {ElementRef} from 'react';
@@ -25,7 +28,7 @@ class ResetPasswordForm extends React.Component<Props> {
 
     @observable inputRef: ?ElementRef<*>;
 
-    @observable error: boolean;
+    @observable errorMessage: ?string = null;
 
     @observable password1: ?string;
     @observable password2: ?string;
@@ -46,44 +49,50 @@ class ResetPasswordForm extends React.Component<Props> {
 
     @action handlePassword1Change = (password1: ?string) => {
         this.password1 = password1;
+
+        this.errorMessage = null;
     };
 
     @action handlePassword2Change = (password2: ?string) => {
         this.password2 = password2;
+
+        this.errorMessage = null;
     };
 
     @action handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        if (!this.password1 || !this.password2) {
-            this.error = true;
+        if (!this.password1 || !this.password2 || this.password1 !== this.password2) {
+            this.errorMessage = 'sulu_admin.reset_password_error';
+
             return;
         }
 
-        if (this.password1 !== this.password2) {
-            this.error = true;
+        if (!userStore.validatePassword(this.password1 || '')) {
+            this.errorMessage = 'sulu_admin.reset_password_pattern_error';
+
             return;
         }
 
-        this.error = false;
+        this.errorMessage = null;
 
         const {onSubmit} = this.props;
 
-        onSubmit({password: this.password1});
+        onSubmit({password: this.password1 || ''});
     };
 
     render() {
         const inputFieldClass = classNames(
             formStyles.inputField,
             {
-                [formStyles.error]: this.error,
+                [formStyles.error]: this.errorMessage !== null,
             }
         );
 
         return (
             <Fragment>
-                <Header small={this.error}>
-                    {translate(this.error ? 'sulu_admin.reset_password_error' : 'sulu_admin.reset_password')}
+                <Header small={this.errorMessage !== null}>
+                    {translate(this.errorMessage || 'sulu_admin.reset_password')}
                 </Header>
                 <form className={formStyles.form} onSubmit={this.handleSubmit}>
                     <fieldset>
@@ -97,7 +106,7 @@ class ResetPasswordForm extends React.Component<Props> {
                                 inputRef={this.setInputRef}
                                 onChange={this.handlePassword1Change}
                                 type="password"
-                                valid={!this.error}
+                                valid={!this.errorMessage}
                                 value={this.password1}
                             />
                         </label>
@@ -110,10 +119,15 @@ class ResetPasswordForm extends React.Component<Props> {
                                 icon="su-lock"
                                 onChange={this.handlePassword2Change}
                                 type="password"
-                                valid={!this.error}
+                                valid={!this.errorMessage}
                                 value={this.password2}
                             />
                         </label>
+                        {Config.passwordInfoTranslationKey &&
+                            <label className={fieldStyles.descriptionLabel}>
+                                {translate(Config.passwordInfoTranslationKey)}
+                            </label>
+                        }
                         <div className={formStyles.buttons}>
                             <Button onClick={this.props.onChangeForm} skin="link">
                                 {translate('sulu_admin.to_login')}

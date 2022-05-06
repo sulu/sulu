@@ -140,6 +140,14 @@ fos_js_routing:
 +    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing-sf4.xml"
 ```
 
+### Changed constructor of AdminController
+
+The `AdminController` now requires the password-policy information `$passwordPattern` and `$passwordInformationKey`. 
+
+### Changed constructor of UserManager
+
+The `UserManager` now requires the password-policy information `$passwordPattern`. 
+
 ### User Provider service definition changed
 
 The user provider service now requires the `SystemStoreInterface` service

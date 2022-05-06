@@ -85,12 +85,37 @@ class UserManagerTest extends TestCase
             $this->contactManager->reveal(),
             $this->saltGenerator->reveal(),
             $this->userRepository->reveal(),
-            $this->eventCollector->reveal()
+            $this->eventCollector->reveal(),
+            null
         );
     }
 
     public function testGetFullNameByUserIdForNonExistingUser()
     {
         $this->assertNull($this->userManager->getFullNameByUserId(0));
+    }
+
+    public function testValidatePasswordNoPattern(): void
+    {
+        $this->assertTrue($this->userManager->isValidPassword('test 123'));
+        $this->assertFalse($this->userManager->isValidPassword(''));
+    }
+
+    public function testValidatePasswordWithPattern(): void
+    {
+        $userManager = new UserManager(
+            $this->objectManager->reveal(),
+            null,
+            $this->roleRepository->reveal(),
+            $this->groupRepository->reveal(),
+            $this->contactManager->reveal(),
+            $this->saltGenerator->reveal(),
+            $this->userRepository->reveal(),
+            $this->eventCollector->reveal(),
+            '.{8,}'
+        );
+
+        $this->assertTrue($userManager->isValidPassword('testtest'));
+        $this->assertFalse($userManager->isValidPassword('test'));
     }
 }
