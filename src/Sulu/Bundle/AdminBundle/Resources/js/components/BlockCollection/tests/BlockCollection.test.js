@@ -56,7 +56,7 @@ test('Should render a disabled block list', () => {
     );
 
     expect(blockCollection.find('.sortableBlockList.disabled')).toHaveLength(1);
-    expect(blockCollection.find('Button[icon="su-plus"]').prop('disabled')).toEqual(true);
+    expect(blockCollection.find('Button[icon="su-plus"]').last().prop('disabled')).toEqual(true);
 });
 
 test('Should mark the add button disabled if maxOccurs is reached', () => {
@@ -287,7 +287,7 @@ test('Should allow to reorder blocks by using drag and drop', () => {
 test('Should allow to add a new block', () => {
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
-    const blockCollection = shallow(
+    const blockCollection = mount(
         <BlockCollection
             defaultType="editor"
             onChange={changeSpy}
@@ -296,7 +296,7 @@ test('Should allow to add a new block', () => {
         />
     );
 
-    blockCollection.find('Button').simulate('click');
+    blockCollection.find('Button[icon="su-plus"]').last().simulate('click');
 
     expect(changeSpy).toBeCalledWith([...value, {type: 'editor'}]);
 });
