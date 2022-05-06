@@ -133,6 +133,7 @@ class MediaCollection extends React.Component<Props> {
                 <List
                     actions={listActions}
                     adapters={mediaListAdapters}
+                    onDeleteError={onDeleteError}
                     onItemClick={onMediaNavigate}
                     ref={mediaListRef}
                     store={mediaListStore}
