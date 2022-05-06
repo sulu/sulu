@@ -1,11 +1,12 @@
 // @flow
-import React, {Fragment, Node} from 'react';
+import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import {SortableContainer} from 'react-sortable-hoc';
 import classNames from 'classnames';
 import SortableBlock from './SortableBlock';
 import sortableBlockListStyles from './sortableBlockList.scss';
 import type {RenderBlockContentCallback} from './types';
+import type {Node} from 'react';
 
 type Props<T: string, U: {type: T}> = {|
     disabled: boolean,

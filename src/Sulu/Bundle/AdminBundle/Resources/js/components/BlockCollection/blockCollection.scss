@@ -1,4 +1,5 @@
 @import './variables.scss';
+@import '../../containers/Application/colors.scss';
 
 .addButtonContainer {
     text-align: center;
@@ -12,14 +13,17 @@
     height: 0;
 
     .addButton {
-        display: none;
+        transform: translateY(calc(-50% - $blockMarginBottom / 2));
+        box-shadow: 2px 6px 12px 0 rgba($silver, .5);
+        visibility: hidden;
     }
 
     /* display button in the middle of the container when container is hovered */
     &:hover {
         .addButton {
-            display: unset;
-            transform: translateY(calc(-50% - $blockMarginBottom / 2));
+            visibility: unset;
+            transition-property: visibility;
+            transition-delay: .1s;
         }
     }
 }

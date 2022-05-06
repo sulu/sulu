@@ -98,9 +98,9 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             this.expandedBlocks.splice(index, 0, true);
             this.generatedBlockIds.splice(index, 0, ++BlockCollection.idCounter);
 
-            // $FlowFixMe
             const elementsBefore = value.slice(0, index);
             const elementsAfter = value.slice(index);
+            // $FlowFixMe
             onChange([...elementsBefore, {type: defaultType}, ...elementsAfter]);
         }
     };
@@ -183,8 +183,9 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                     className={blockCollectionStyles.addButton}
                     disabled={disabled || this.hasMaximumReached()}
                     icon="su-plus"
-                    onClick={() => this.handleAddBlock(aboveBlockIndex + 1)}
+                    onClick={this.handleAddBlock}
                     skin="secondary"
+                    value={aboveBlockIndex + 1}
                 >
                     {addButtonText ? addButtonText : translate('sulu_admin.add_block')}
                 </Button>
