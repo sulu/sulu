@@ -284,7 +284,28 @@ test('Should allow to reorder blocks by using drag and drop', () => {
     expect(blockCollection.instance().generatedBlockIds.toJS()).toEqual([2, 3, 1]);
 });
 
-test('Should allow to add a new block', () => {
+test('Should allow to add a new block between existing blocks', () => {
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    blockCollection.find('Button[icon="su-plus"]').at(0).simulate('click');
+
+    expect(changeSpy).toBeCalledWith([
+        {content: 'Test 1', type: 'editor'},
+        {type: 'editor'},
+        {content: 'Test 2', type: 'editor'},
+    ]);
+});
+
+test('Should allow to add a new block at the end', () => {
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
     const blockCollection = mount(

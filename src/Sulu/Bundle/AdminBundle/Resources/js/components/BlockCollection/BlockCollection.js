@@ -87,7 +87,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         }
     };
 
-    @action handleAddBlock = (index: number) => {
+    @action handleAddBlock = (insertionIndex: number) => {
         const {defaultType, onChange, value} = this.props;
 
         if (this.hasMaximumReached()) {
@@ -95,11 +95,11 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         }
 
         if (value) {
-            this.expandedBlocks.splice(index, 0, true);
-            this.generatedBlockIds.splice(index, 0, ++BlockCollection.idCounter);
+            this.expandedBlocks.splice(insertionIndex, 0, true);
+            this.generatedBlockIds.splice(insertionIndex, 0, ++BlockCollection.idCounter);
 
-            const elementsBefore = value.slice(0, index);
-            const elementsAfter = value.slice(index);
+            const elementsBefore = value.slice(0, insertionIndex);
+            const elementsAfter = value.slice(insertionIndex);
             // $FlowFixMe
             onChange([...elementsBefore, {type: defaultType}, ...elementsAfter]);
         }
