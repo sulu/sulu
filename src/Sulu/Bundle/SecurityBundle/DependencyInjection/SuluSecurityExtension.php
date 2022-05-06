@@ -58,6 +58,7 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('command.xml');
+        $loader->load('2fa.xml'); // TODO
 
         if (\interface_exists(LogoutSuccessHandlerInterface::class)) {
             $loader->load('logout_success_handler.xml');

@@ -53,7 +53,7 @@ class TwoFactorForm extends React.Component<Props> {
 
         const {onSubmit} = this.props;
 
-        onSubmit({authCode: this.authCode});
+        onSubmit({_auth_code: this.authCode});
     };
 
     render() {

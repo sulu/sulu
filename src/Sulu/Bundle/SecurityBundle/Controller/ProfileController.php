@@ -139,7 +139,11 @@ class ProfileController implements ClassResourceInterface
                 $twoFactor->setMethod($twoFactorData['method']);
                 $user->setTwoFactor($twoFactor);
             } else {
-                $user->setTwoFactor(null);
+                $twoFactor = $user->getTwoFactor();
+                if ($twoFactor) {
+                    $user->setTwoFactor(null);
+                    $this->objectManager->remove($twoFactor);
+                }
             }
         }
 

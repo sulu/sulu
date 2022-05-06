@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sulu_security.two_factor_authentication_required_handler" class="Sulu\Bundle\SecurityBundle\Security\TwoFactorAuthenticationRequiredHandler"/>
+        <service id="sulu_security.two_factor_authentication_success_handler" class="Sulu\Bundle\SecurityBundle\Security\TwoFactorAuthenticationSuccessHandler"/>
+        <service id="sulu_security.two_factor_authentication_failure_handler" class="Sulu\Bundle\SecurityBundle\Security\TwoFactorAuthenticationFailureHandler"/>
+    </services>
+</container>

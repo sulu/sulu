@@ -38,7 +38,7 @@
             <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
         </one-to-one>
 
-        <one-to-one field="twoFactor" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor" mapped-by="user" orphan-removal="true">
+        <one-to-one field="twoFactor" target-entity="Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor" mapped-by="user">
             <cascade>
                 <cascade-persist/>
             </cascade>

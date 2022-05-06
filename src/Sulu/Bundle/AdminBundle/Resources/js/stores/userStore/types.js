@@ -37,5 +37,5 @@ export type LoginData = {
 };
 
 export type TwoFactorData = {
-    authCode: string,
+    _authCode: string,
 };

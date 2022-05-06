@@ -68,7 +68,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
             // if AJAX login
             $array = [
                 'url' => $url,
-                'ussername' => $token->getUserIdentifier(),
+                'username' => $token->getUserIdentifier(),
                 'completed' => $completed,
                 'twoFactorMethods' => $twoFactorMethods,
             ];

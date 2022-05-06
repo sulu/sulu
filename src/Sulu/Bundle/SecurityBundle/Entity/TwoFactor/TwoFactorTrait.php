@@ -28,11 +28,12 @@ trait TwoFactorTrait
     use TrustedDeviceTrait;
 
     /**
-     * @var UserTwoFactor
+     * @var UserTwoFactor|null
+     *
      * @Expose
      * @Groups({"profile"})
      */
-    protected $twoFactor;
+    protected $twoFactor = null;
 
     public function getTwoFactor(): ?UserTwoFactor
     {

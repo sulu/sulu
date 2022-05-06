@@ -31,7 +31,7 @@ final class EncryptArray extends TextType
         self::$key = $key ? Key::loadFromAsciiSafeString($key) : null;
     }
 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform): string
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
         if (!\is_array($value)) {
             return $value;

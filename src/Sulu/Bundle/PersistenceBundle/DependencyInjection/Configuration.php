@@ -25,7 +25,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->getRootNode();
 
         $rootNode->children()
-            ->scalarNode('encryption_key')->end();
+            ->scalarNode('encryption_key')->defaultNull()->end();
 
         return $treeBuilder;
     }

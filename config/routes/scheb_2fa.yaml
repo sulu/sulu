@@ -1,1 +1,23 @@
-# see scheb_2fa_admin.yaml
+# For Website:
+
+#2fa_login:
+#    path: /admin/2fa
+#    defaults:
+#        # "scheb_two_factor.form_controller" references the controller service provided by the bundle.
+#        # You don't HAVE to use it, but - except you have very special requirements - it is recommended.
+#        _controller: "scheb_two_factor.form_controller::form"
+#
+#2fa_login_check_admin:
+#    path: /2fa_check
+
+# For Admin:
+
+#2fa_login_admin:
+#    path: /admin/2fa
+#    defaults:
+#        # "scheb_two_factor.form_controller" references the controller service provided by the bundle.
+#        # You don't HAVE to use it, but - except you have very special requirements - it is recommended.
+#        _controller: "scheb_two_factor.form_controller:form"
+
+2fa_login_check_admin:
+    path: /admin/2fa_check
