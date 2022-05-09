@@ -1,12 +1,17 @@
 // @flow
 import React, {Fragment} from 'react';
 import classNames from 'classnames';
+import {observer} from 'mobx-react';
+import {action, observable} from 'mobx';
 import Icon from '../Icon';
 import SingleSelect from '../SingleSelect';
 import blockStyles from './block.scss';
-import type {Node} from 'react';
+import ActionPopover from './ActionPopover';
+import type {ActionConfig} from './types';
+import type {ElementRef, Node} from 'react';
 
 type Props<T: string> = {
+    actions: Array<ActionConfig>,
     activeType?: T,
     children: Node,
     dragHandle?: Node,
@@ -14,15 +19,31 @@ type Props<T: string> = {
     icons?: Array<string>,
     onCollapse?: () => void,
     onExpand?: () => void,
-    onRemove?: () => void,
     onSettingsClick?: () => void,
     onTypeChange?: (type: T) => void,
     types?: {[key: T]: string},
 };
 
-export default class Block<T: string> extends React.Component<Props<T>> {
+@observer
+class Block<T: string> extends React.Component<Props<T>> {
     static defaultProps: {
+        actions: [],
         expanded: false,
+    };
+
+    @observable actionsIconRef: ?ElementRef<'*'>;
+    @observable showActionsPopover = false;
+
+    @action setActionsIconRef = (ref: ?ElementRef<'*'>) => {
+        this.actionsIconRef = ref;
+    };
+
+    @action handleActionsIconClick = () => {
+        this.showActionsPopover = true;
+    };
+
+    @action handleActionsPopoverClose = () => {
+        this.showActionsPopover = false;
     };
 
     handleCollapse = () => {
@@ -49,13 +70,13 @@ export default class Block<T: string> extends React.Component<Props<T>> {
 
     render() {
         const {
+            actions,
             activeType,
             children,
             dragHandle,
             icons,
             onCollapse,
             onExpand,
-            onRemove,
             onSettingsClick,
             types,
         } = this.props;
@@ -98,12 +119,22 @@ export default class Block<T: string> extends React.Component<Props<T>> {
                                     </div>
                                 }
                                 <div className={blockStyles.iconButtons}>
+                                    {actions.length > 0 && <Icon
+                                        iconRef={this.setActionsIconRef}
+                                        name="su-circle"
+                                        onClick={this.handleActionsIconClick}
+                                    /> }
                                     {onSettingsClick && <Icon name="su-cog" onClick={onSettingsClick} />}
-                                    {onRemove && <Icon name="su-trash-alt" onClick={onRemove} />}
                                     {onCollapse && onExpand &&
                                         <Icon name="su-angle-up" onClick={this.handleCollapse} />
                                     }
                                 </div>
+                                <ActionPopover
+                                    actions={actions}
+                                    anchorElement={this.actionsIconRef}
+                                    onClose={this.handleActionsPopoverClose}
+                                    open={this.showActionsPopover}
+                                />
                             </Fragment>
                             : <Fragment>
                                 {icons &&
@@ -122,3 +153,5 @@ export default class Block<T: string> extends React.Component<Props<T>> {
         );
     }
 }
+
+export default Block;

@@ -4,16 +4,16 @@ import {SortableElement} from 'react-sortable-hoc';
 import Block from '../Block';
 import SortableHandle from './SortableHandle';
 import type {ComponentType} from 'react';
-import type {RenderBlockContentCallback} from './types';
+import type {BlockActionConfig, RenderBlockContentCallback} from './types';
 
 type Props<T: string, U: {type: T}> = {
+    actions: Array<BlockActionConfig>,
     activeType: T,
     expanded: boolean,
     icons?: Array<string>,
     movable?: boolean,
     onCollapse?: (index: number) => void,
     onExpand?: (index: number) => void,
-    onRemove?: (index: number) => void,
     onSettingsClick?: (index: number) => void,
     onTypeChange?: (type: T, index: number) => void,
     renderBlockContent: RenderBlockContentCallback<T, U>,
@@ -23,6 +23,10 @@ type Props<T: string, U: {type: T}> = {
 };
 
 class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>> {
+    static defaultProps: {
+        actions: [],
+    };
+
     handleCollapse = () => {
         const {sortIndex, onCollapse} = this.props;
 
@@ -36,14 +40,6 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
 
         if (onExpand) {
             onExpand(sortIndex);
-        }
-    };
-
-    handleRemove = () => {
-        const {sortIndex, onRemove} = this.props;
-
-        if (onRemove) {
-            onRemove(sortIndex);
         }
     };
 
@@ -65,13 +61,13 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
 
     render() {
         const {
+            actions,
             activeType,
             expanded,
             icons,
             movable = true,
             onCollapse,
             onExpand,
-            onRemove,
             onSettingsClick,
             renderBlockContent,
             sortIndex,
@@ -79,15 +75,20 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
             value,
         } = this.props;
 
+        const adjustedActions = actions.map((action) => ({
+            ...action,
+            onClick: () => action.onClick(sortIndex),
+        }));
+
         return (
             <Block
+                actions={adjustedActions}
                 activeType={activeType}
                 dragHandle={movable && <SortableHandle />}
                 expanded={expanded}
                 icons={icons}
                 onCollapse={onCollapse ? this.handleCollapse : undefined}
                 onExpand={onExpand ? this.handleExpand : undefined}
-                onRemove={onRemove ? this.handleRemove : undefined}
                 onSettingsClick={onSettingsClick && this.handleSettingsClick}
                 onTypeChange={this.handleTypeChange}
                 types={types}

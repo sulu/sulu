@@ -5,10 +5,11 @@ import {SortableContainer} from 'react-sortable-hoc';
 import classNames from 'classnames';
 import SortableBlock from './SortableBlock';
 import sortableBlockListStyles from './sortableBlockList.scss';
-import type {RenderBlockContentCallback} from './types';
+import type {BlockActionConfig, RenderBlockContentCallback} from './types';
 import type {Node} from 'react';
 
 type Props<T: string, U: {type: T}> = {|
+    blockActions: Array<BlockActionConfig>,
     disabled: boolean,
     expandedBlocks: Array<boolean>,
     generatedBlockIds: Array<number>,
@@ -16,7 +17,6 @@ type Props<T: string, U: {type: T}> = {|
     movable: boolean,
     onCollapse?: (index: number) => void,
     onExpand?: (index: number) => void,
-    onRemove?: (index: number) => void,
     onSettingsClick?: (index: number) => void,
     onTypeChange?: (type: T, index: number) => void,
     renderBlockContent: RenderBlockContentCallback<T, U>,
@@ -28,6 +28,7 @@ type Props<T: string, U: {type: T}> = {|
 @observer
 class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T, U>> {
     static defaultProps = {
+        blockActions: [],
         disabled: false,
         movable: true,
     };
@@ -43,14 +44,6 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
         const {onCollapse} = this.props;
         if (onCollapse) {
             onCollapse(index);
-        }
-    };
-
-    handleRemove = (index: number) => {
-        const {onRemove} = this.props;
-
-        if (onRemove) {
-            onRemove(index);
         }
     };
 
@@ -72,6 +65,7 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
 
     render() {
         const {
+            blockActions,
             disabled,
             expandedBlocks,
             generatedBlockIds,
@@ -79,7 +73,6 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
             movable,
             onCollapse,
             onExpand,
-            onRemove,
             onSettingsClick,
             renderBlockContent,
             renderDivider,
@@ -99,6 +92,7 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
                 {value && value.map((block, index) => (
                     <Fragment key={index}>
                         <SortableBlock
+                            actions={blockActions}
                             activeType={block.type}
                             expanded={!disabled && expandedBlocks[index]}
                             icons={icons && icons[index]}
@@ -107,7 +101,6 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
                             movable={movable}
                             onCollapse={onCollapse ? this.handleCollapse : undefined}
                             onExpand={onExpand ? this.handleExpand : undefined}
-                            onRemove={onRemove ? this.handleRemove : undefined}
                             onSettingsClick={onSettingsClick ? this.handleSettingsClick : undefined}
                             onTypeChange={this.handleTypeChange}
                             renderBlockContent={renderBlockContent}

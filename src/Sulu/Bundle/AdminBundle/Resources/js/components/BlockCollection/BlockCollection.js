@@ -8,10 +8,11 @@ import {translate} from '../../utils/Translator';
 import Button from '../Button';
 import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
-import type {RenderBlockContentCallback} from './types';
+import type {BlockActionConfig, RenderBlockContentCallback} from './types';
 
 type Props<T: string, U: {type: T}> = {|
     addButtonText?: ?string,
+    blockActions: Array<ActionConfig>,
     collapsable: boolean,
     defaultType: T,
     disabled: boolean,
@@ -32,6 +33,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     static idCounter = 0;
 
     static defaultProps = {
+        blockActions: [],
         collapsable: true,
         disabled: false,
         movable: true,
@@ -195,6 +197,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
     render() {
         const {
+            blockActions,
             collapsable,
             disabled,
             icons,
@@ -204,10 +207,27 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             types,
             value,
         } = this.props;
+        const adjustedBlockActions: Array<BlockActionConfig> = [...blockActions];
+
+        if (!this.hasMinimumReached()) {
+            if (adjustedBlockActions.length > 0) {
+                adjustedBlockActions.push({
+                    type: 'divider',
+                });
+            }
+
+            adjustedBlockActions.push({
+                type: 'button',
+                icon: 'su-trash-alt',
+                label: 'sulu_admin.delete',
+                onClick: this.handleRemoveBlock,
+            });
+        }
 
         return (
             <section>
                 <SortableBlockList
+                    blockActions={adjustedBlockActions}
                     disabled={disabled}
                     expandedBlocks={this.expandedBlocks}
                     generatedBlockIds={this.generatedBlockIds}
@@ -216,7 +236,6 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                     movable={movable}
                     onCollapse={collapsable ? this.handleCollapse : undefined}
                     onExpand={collapsable ? this.handleExpand : undefined}
-                    onRemove={this.hasMinimumReached() ? undefined : this.handleRemoveBlock}
                     onSettingsClick={onSettingsClick ? this.handleSettingsClick : undefined}
                     onSortEnd={this.handleSortEnd}
                     onTypeChange={this.handleTypeChange}
