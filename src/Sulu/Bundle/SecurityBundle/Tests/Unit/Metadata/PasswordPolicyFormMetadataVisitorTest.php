@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Unit\Metadata;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
@@ -21,6 +22,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PasswordPolicyFormMetadataVisitorTest extends TestCase
 {
+    use ProphecyTrait;
+
     public function createInstance(
         ?string $passwordPattern = null,
         ?string $passwordInformationTranslationKey = null
