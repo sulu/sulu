@@ -54,11 +54,54 @@ The `AuthenticationHandler` requires the following changes:
 +public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
 ```
 
+### SuluHttpCache method return types changed
+
+The sulu `SuluHttpCache` requires the following changes:
+
+```diff
+-public function fetch(Request $request, $catch = false)
++public function fetch(Request $request, $catch = false): Response
+-protected function createStore()
++protected function createStore(): StoreInterface
+```
+
+If a method was overwritten it is required to be updated to the new return types.
+
+### DocumentManager cache service definitions changed
+
+The cache services which are activated for `stage` and `prod` environment
+should be upgraded to the new `DoctrineProvider` factory.
+
+Depending on your installation change the `config/packages/sulu_document_manager.yaml`
+or for older skeleton versions `config/packages/prod/sulu_document_manager.yaml` file:
+
+```diff
+services:
+    doctrine_phpcr.meta_cache_provider:
+-        class: Symfony\Component\Cache\DoctrineProvider
++        class: Doctrine\Common\Cache\Psr6\DoctrineProvider
++        factory: ['Doctrine\Common\Cache\Psr6\DoctrineProvider', 'wrap']
+        public: false
+        arguments:
+            - '@doctrine_phpcr.meta_cache_pool'
+        tags:
+            - { name: 'kernel.reset', method: 'reset' }
+
+    doctrine_phpcr.nodes_cache_provider:
+-        class: Symfony\Component\Cache\DoctrineProvider
++        class: Doctrine\Common\Cache\Psr6\DoctrineProvider
++        factory: ['Doctrine\Common\Cache\Psr6\DoctrineProvider', 'wrap']
+        public: false
+        arguments:
+            - '@doctrine_phpcr.nodes_cache_pool'
+        tags:
+            - { name: 'kernel.reset', method: 'reset' }
+```
+
 ### WebsiteController methods removed and return types changed
 
 Symfony 6 has deprecated and removed the `get` and `has` methods to access services.
 Instead, the methods from the container should be used:
-
 
 ```diff
 -$this->has('twig');
@@ -83,7 +126,7 @@ The following service changed its definition:
  - `sulu_security.command.create_user`
  - `sulu_security.resetting_controller`
 
- They require now `sulu_security.encoder_factory` instead of `security.encoder_factory`.
+They require now `sulu_security.encoder_factory` instead of `security.encoder_factory`.
 
 ### Kernel Return Types changed
 
