@@ -5,21 +5,6 @@ sulu_admin:
     name: SULU 2.0
     email: installation.email@sulu.test
 
-security:
-    access_decision_manager:
-        strategy: affirmative
-
-    encoders:
-        Sulu\Bundle\SecurityBundle\Entity\User: plaintext
-
-    providers:
-        testprovider:
-            id: test_user_provider
-
-    firewalls:
-        test:
-            http_basic:
-
 sulu_security:
     checker:
         enabled: true
