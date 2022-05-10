@@ -24,6 +24,7 @@ use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpCache\StoreInterface;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Toflar\Psr6HttpCacheStore\Psr6Store;
@@ -80,15 +81,12 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
      *
      * {@inheritdoc}
      */
-    public function fetch(Request $request, $catch = false)
+    public function fetch(Request $request, $catch = false): Response
     {
         return parent::fetch($request, $catch);
     }
 
-    /**
-     * @return StoreInterface
-     */
-    protected function createStore()
+    protected function createStore(): StoreInterface
     {
         return new Psr6Store([
             'cache_directory' => $this->cacheDir,
