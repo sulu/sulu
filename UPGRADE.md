@@ -98,6 +98,63 @@ services:
             - { name: 'kernel.reset', method: 'reset' }
 ```
 
+### Upgrade Symfony security system
+
+Not required but recommended is to upgrade the `config/packages/security.yaml`
+to the latest changes which are required when upgrading to Symfony 6:
+
+```diff
+security:
++    enable_authenticator_manager: true
+
+    # ...
+
+-    encoders:
++    password_hashers:
+        Sulu\Bundle\SecurityBundle\Entity\User: bcrypt
+
+    # ...
+
+    access_control:
+-        - { path: ^/admin/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+-        - { path: ^/admin/security/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+-        - { path: ^/admin/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+-        - { path: ^/admin/_wdt, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+-        - { path: ^/admin/translations, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+-        - { path: ^/admin$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+-        - { path: ^/admin/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+-        - { path: ^/admin/p/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
++        - { path: ^/admin/reset, roles: PUBLIC_ACCESS }
++        - { path: ^/admin/security/reset, roles: PUBLIC_ACCESS }
++        - { path: ^/admin/login$, roles: PUBLIC_ACCESS }
++        - { path: ^/admin/_wdt, roles: PUBLIC_ACCESS }
++        - { path: ^/admin/translations, roles: PUBLIC_ACCESS }
++        - { path: ^/admin$, roles: PUBLIC_ACCESS }
++        - { path: ^/admin/$, roles: PUBLIC_ACCESS }
++        - { path: ^/admin/p/, roles: PUBLIC_ACCESS }
+        - { path: ^/admin, roles: ROLE_USER }
+
+    # ...
+
+    firewalls:
+
+        # ...
+
+        admin:
+            pattern: ^/admin(\/|$)
+-            anonymous: lazy
++            lazy: true
+            provider: sulu
+
+            # ...
+
+            logout:
+                path: sulu_admin.logout
+-                success_handler: sulu_security.logout_success_handler
+
+            # ...
+```
+
 ### WebsiteController methods removed and return types changed
 
 Symfony 6 has deprecated and removed the `get` and `has` methods to access services.
