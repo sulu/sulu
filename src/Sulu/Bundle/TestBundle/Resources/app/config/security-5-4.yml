@@ -1,0 +1,18 @@
+framework:
+    session:
+        storage_id: session.storage.mock_file
+
+security:
+    access_decision_manager:
+        strategy: affirmative
+
+    encoders:
+        Sulu\Bundle\SecurityBundle\Entity\User: plaintext
+
+    providers:
+        testprovider:
+            id: test_user_provider
+
+    firewalls:
+        test:
+            http_basic:

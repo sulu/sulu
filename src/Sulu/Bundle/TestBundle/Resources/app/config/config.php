@@ -9,16 +9,37 @@
  * with this source code in the file LICENSE.
  */
 
-$filesystem = new \Symfony\Component\Filesystem\Filesystem();
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\Kernel;
 
-$context = $container->getParameter('sulu.context');
-$path = __DIR__ . \DIRECTORY_SEPARATOR;
-if (!$filesystem->exists($path . 'parameters.yml')) {
-    $filesystem->copy($path . 'parameters.yml.dist', $path . 'parameters.yml');
-}
-$loader->import('parameters.yml');
-$loader->import('context_' . $context . '.yml');
+return static function(PhpFileLoader $loader, ContainerBuilder $container) {
+    $filesystem = new Filesystem();
 
-if (\class_exists(\Swift_Mailer::class)) {
-    $loader->import('swiftmailer.yml');
-}
+    $context = $container->getParameter('sulu.context');
+    $path = __DIR__ . \DIRECTORY_SEPARATOR;
+    if (!$filesystem->exists($path . 'parameters.yml')) {
+        $filesystem->copy($path . 'parameters.yml.dist', $path . 'parameters.yml');
+    }
+    $loader->import('parameters.yml');
+    $loader->import('context_' . $context . '.yml');
+
+    if (\class_exists(\Swift_Mailer::class)) {
+        $loader->import('swiftmailer.yml');
+    }
+
+    if ('admin' === $context) {
+        if (\version_compare(Kernel::VERSION, '6.0.0', '>=')) {
+            $loader->import('security-6.yml');
+        } else {
+            $loader->import('security-5-4.yml');
+        }
+    }
+
+    if (\version_compare(Kernel::VERSION, '6.0.0', '>=')) {
+        $loader->import('symfony-6.yml');
+    } else {
+        $loader->import('symfony-5-4.yml');
+    }
+};

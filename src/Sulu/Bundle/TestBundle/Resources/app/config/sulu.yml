@@ -2,8 +2,6 @@ framework:
     secret: secret
     router: { resource: '%kernel.project_dir%/config/routing.yml' }
     test: ~
-    session:
-        storage_id: session.storage.mock_file
     profiler:
         enabled: false
     mailer:

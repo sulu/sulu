@@ -3,7 +3,7 @@ security:
         strategy: unanimous
         allow_if_all_abstain: true
 
-    encoders:
+    password_hashers:
         Sulu\Bundle\SecurityBundle\Entity\User: bcrypt
 
     providers:
@@ -27,7 +27,6 @@ security:
             security: false
         admin:
             pattern: ^/admin(\/|$)
-            anonymous: true
             lazy: true
             provider: sulu
             entry_point: sulu_security.authentication_entry_point
@@ -37,7 +36,6 @@ security:
                 failure_handler: sulu_security.authentication_handler
             logout:
                 path: sulu_admin.logout
-                success_handler: sulu_security.logout_success_handler
 
 #        website:
 #            pattern: ^/
