@@ -1,11 +1,11 @@
 security:
-    access_control:
-        - { path: ^/admin/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/security/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin, roles: ROLE_USER }
+    enable_authenticator_manager: true
 
-    session_fixation_strategy: none # required for the CollaborationControllerTest
+    access_control:
+        - { path: ^/admin/reset, roles: PUBLIC_ACCESS }
+        - { path: ^/admin/security/reset, roles: PUBLIC_ACCESS }
+        - { path: ^/admin/login, roles: PUBLIC_ACCESS }
+        - { path: ^/admin, roles: ROLE_USER }
 
     firewalls:
         test:
