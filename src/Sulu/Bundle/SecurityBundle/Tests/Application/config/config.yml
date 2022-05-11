@@ -3,10 +3,12 @@ framework:
         enabled: true
 
 security:
+    enable_authenticator_manager: true
+
     access_control:
-        - { path: ^/admin/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/security/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/reset, roles: PUBLIC_ACCESS }
+        - { path: ^/admin/security/reset, roles: PUBLIC_ACCESS }
+        - { path: ^/admin/login, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_USER }
 
     firewalls:

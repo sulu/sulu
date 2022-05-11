@@ -115,6 +115,7 @@ class CollaborationControllerTest extends SuluTestCase
         $cache->save($cacheItem);
 
         $this->client->jsonRequest('PUT', '/admin/api/collaborations?id=4&resourceKey=page');
+        $this->client->setServerParameters([]); // see hack here: https://github.com/FriendsOfSymfony/FOSHttpCacheBundle/pull/573/files#r868071905
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
