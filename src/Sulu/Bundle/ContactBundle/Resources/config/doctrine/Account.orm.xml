@@ -58,7 +58,7 @@
 
         <many-to-one field="parent" target-entity="Sulu\Bundle\ContactBundle\Entity\AccountInterface" inversed-by="children">
             <join-columns>
-                <join-column name="idAccountsParent" referenced-column-name="id"/>
+                <join-column name="idAccountsParent" referenced-column-name="id" on-delete="SET NULL" nullable="true"/>
             </join-columns>
             <gedmo:tree-parent/>
         </many-to-one>
