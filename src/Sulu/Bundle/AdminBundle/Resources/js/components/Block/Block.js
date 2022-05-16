@@ -121,12 +121,12 @@ class Block<T: string> extends React.Component<Props<T>> {
                                 <div className={blockStyles.iconButtons}>
                                     {actions.length > 0 && <Icon
                                         iconRef={this.setActionsIconRef}
-                                        name="su-circle"
+                                        name="su-more-circle"
                                         onClick={this.handleActionsIconClick}
                                     /> }
                                     {onSettingsClick && <Icon name="su-cog" onClick={onSettingsClick} />}
                                     {onCollapse && onExpand &&
-                                        <Icon name="su-angle-up" onClick={this.handleCollapse} />
+                                        <Icon name="su-collapse-vertical" onClick={this.handleCollapse} />
                                     }
                                 </div>
                                 <ActionPopover
@@ -143,7 +143,7 @@ class Block<T: string> extends React.Component<Props<T>> {
                                     </div>
                                 }
                                 {types && activeType && <div className={blockStyles.type}>{types[activeType]}</div>}
-                                {onCollapse && onExpand && <Icon name="su-angle-down" />}
+                                {onCollapse && onExpand && <Icon name="su-expand-vertical" />}
                             </Fragment>
                         }
                     </header>

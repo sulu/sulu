@@ -2,7 +2,6 @@
 import React from 'react';
 import {Menu, Popover} from '..';
 import Icon from '../Icon';
-import suggestionStyles from '../AutoCompletePopover/suggestion.scss';
 import actionPopoverStyles from './actionPopover.scss';
 import type {ActionConfig} from './types';
 import type {ElementRef} from 'react';
@@ -41,7 +40,6 @@ export default class ActionPopover extends React.PureComponent<Props> {
 
                             return (
                                 <li key={index}>
-                                    {/* eslint-disable-next-line react/jsx-no-bind */}
                                     <button
                                         className={actionPopoverStyles.action}
                                         onClick={() => {

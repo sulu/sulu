@@ -3,8 +3,7 @@ import React from 'react';
 import {action, observable, toJS, reaction} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
-import {arrayMove} from '../../utils';
-import {translate} from '../../utils/Translator';
+import {arrayMove, translate} from '../../utils';
 import Button from '../Button';
 import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
@@ -219,7 +218,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             adjustedBlockActions.push({
                 type: 'button',
                 icon: 'su-trash-alt',
-                label: 'sulu_admin.delete',
+                label: translate('sulu_admin.delete'),
                 onClick: this.handleRemoveBlock,
             });
         }
