@@ -3,6 +3,10 @@ import React from 'react';
 import {render, shallow} from 'enzyme';
 import Block from '../Block';
 
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
+
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
@@ -92,7 +96,7 @@ test('Clicking the close icon in an expanded block should collapse it', () => {
     const collapseSpy = jest.fn();
     const block = shallow(<Block expanded={true} onCollapse={collapseSpy} onExpand={jest.fn()}>Block content</Block>);
 
-    const closeIcon = block.find('Icon[name="su-angle-up"]');
+    const closeIcon = block.find('Icon[name="su-collapse-vertical"]');
     expect(closeIcon).toHaveLength(1);
 
     closeIcon.simulate('click');

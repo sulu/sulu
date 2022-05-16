@@ -3,7 +3,12 @@ import React from 'react';
 import {mount, render, shallow} from 'enzyme';
 import SortableBlock from '../SortableBlock';
 
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
+
 jest.mock('react-sortable-hoc', () => ({
+    SortableContainer: jest.fn().mockImplementation((component) => component),
     SortableElement: jest.fn().mockImplementation((component) => component),
     SortableHandle: jest.fn().mockImplementation((component) => component),
 }));

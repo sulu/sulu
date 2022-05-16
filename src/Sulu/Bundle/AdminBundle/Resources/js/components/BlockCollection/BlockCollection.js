@@ -168,21 +168,25 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     }
 
     @computed get blockActions() {
-        const {
-            blockActions,
-        } = this.props;
+        const {blockActions} = this.props;
 
         if (!this.minOccursReached) {
-            return [
-                ...blockActions,
-                {
+            const adjustedBlockActions = [...blockActions];
+
+            if (adjustedBlockActions.length > 0) {
+                adjustedBlockActions.push({
                     type: 'divider',
-                }, {
-                    type: 'button',
-                    icon: 'su-trash-alt',
-                    label: translate('sulu_admin.delete'),
-                    onClick: this.handleRemoveBlock,
-                }];
+                });
+            }
+
+            adjustedBlockActions.push({
+                type: 'button',
+                icon: 'su-trash-alt',
+                label: translate('sulu_admin.delete'),
+                onClick: this.handleRemoveBlock,
+            });
+
+            return adjustedBlockActions;
         }
 
         return blockActions;

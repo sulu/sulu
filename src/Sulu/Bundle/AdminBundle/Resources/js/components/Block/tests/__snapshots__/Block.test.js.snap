@@ -24,8 +24,8 @@ exports[`Render a collapsed block 1`] = `
         />
       </div>
       <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
+        aria-label="su-expand-vertical"
+        class="su-expand-vertical"
       />
     </header>
     <article
@@ -144,8 +144,8 @@ exports[`Render an expanded block with a multiple types 1`] = `
           tabindex="0"
         />
         <span
-          aria-label="su-angle-up"
-          class="su-angle-up clickable"
+          aria-label="su-collapse-vertical"
+          class="su-collapse-vertical clickable"
           role="button"
           tabindex="0"
         />
