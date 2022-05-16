@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {mount, render, shallow} from 'enzyme';
+import log from 'loglevel';
 import Block from '../Block';
 
 jest.mock('loglevel', () => ({
@@ -54,14 +55,24 @@ test('Do not show type dropdown if only a single type is passed', () => {
     expect(block.find('SingleSelect')).toHaveLength(0);
 });
 
-test('Do not show remove icon if no onRemove prop has been passed', () => {
+test('Do not show action icon if no actions prop has been passed', () => {
     const block = shallow(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
             Some block content
         </Block>
     );
 
-    expect(block.find('Icon[name="su-trash-alt"]')).toHaveLength(0);
+    expect(block.find('Icon[name="su-more-circle"]')).toHaveLength(0);
+});
+
+test('Do not show action icon if an empty actions prop has been passed', () => {
+    const block = shallow(
+        <Block actions={[]} expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
+            Some block content
+        </Block>
+    );
+
+    expect(block.find('Icon[name="su-more-circle"]')).toHaveLength(0);
 });
 
 test('Do not show settings icon if no onSettingsClick prop has been passed', () => {
@@ -104,16 +115,75 @@ test('Clicking the close icon in an expanded block should collapse it', () => {
     expect(collapseSpy).toHaveBeenCalledTimes(1);
 });
 
-test('Clicking the remove icon in an expanded block should remove it', () => {
+test('Clicking the action icon should open a popover that displays the given actions', () => {
+    const actions = [
+        {
+            type: 'button',
+            icon: 'su-test-1',
+            label: 'Test Action 1',
+            onClick: jest.fn(),
+        },
+        {
+            type: 'divider',
+        },
+        {
+            type: 'button',
+            icon: 'su-test-2',
+            label: 'Test Action 2',
+            onClick: jest.fn(),
+        },
+        {
+            type: 'button',
+            icon: 'su-test-3',
+            label: 'Test Action 3',
+            onClick: jest.fn(),
+        },
+    ];
+    const block = mount(
+        <Block actions={actions} expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()}>Block content</Block>
+    );
+    expect(block.find('ActionPopover').prop('open')).toEqual(false);
+    expect(block.find('Icon[name="su-more-circle"]')).toHaveLength(1);
+    block.find('Icon[name="su-more-circle"]').simulate('click');
+
+    expect(block.find('ActionPopover').prop('open')).toEqual(true);
+    expect(block.find('ActionPopover Popover').render()).toMatchSnapshot();
+});
+
+test('Clicking an action in the action popover should fire the respective callback', () => {
+    const onActionClickSpy = jest.fn();
+    const actions = [
+        {
+            type: 'button',
+            icon: 'su-test-1',
+            label: 'Test Action 1',
+            onClick: onActionClickSpy,
+        },
+    ];
+    const block = mount(
+        <Block actions={actions} expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()}>Block content</Block>
+    );
+    block.find('Icon[name="su-more-circle"]').simulate('click');
+
+    expect(onActionClickSpy).not.toBeCalled();
+    block.find('ActionPopover Popover button').at(0).simulate('click');
+    expect(onActionClickSpy).toBeCalledWith();
+});
+
+test('Render remove action if deprecated onRemove prop is set', () => {
     const removeSpy = jest.fn();
-    const block = shallow(
+    const block = mount(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} onRemove={removeSpy}>Block content</Block>
     );
+    expect(log.warn).toBeCalledWith(
+        expect.stringContaining('The "onRemove" prop of the "Block" component is deprecated')
+    );
 
-    const removeIcon = block.find('Icon[name="su-trash-alt"]');
-    expect(removeIcon).toHaveLength(1);
+    expect(block.find('Icon[name="su-more-circle"]')).toHaveLength(1);
+    block.find('Icon[name="su-more-circle"]').simulate('click');
 
-    removeIcon.simulate('click');
+    expect(block.find('Icon[name="su-trash-alt"]')).toHaveLength(1);
+    block.find('Icon[name="su-trash-alt"]').simulate('click');
 
     expect(removeSpy).toHaveBeenCalledTimes(1);
 });
