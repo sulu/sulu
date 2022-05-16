@@ -747,6 +747,7 @@ test('Render data with pencil button and given itemActions when onItemEdit callb
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
+            /* eslint-disable-next-line react/jsx-no-bind */
             itemActionsProvider={actionsProvider}
             onItemClick={jest.fn()}
             page={1}

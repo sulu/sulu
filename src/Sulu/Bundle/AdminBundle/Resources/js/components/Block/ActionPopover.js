@@ -42,6 +42,7 @@ export default class ActionPopover extends React.PureComponent<Props> {
                                 <li key={index}>
                                     <button
                                         className={actionPopoverStyles.action}
+                                        /* eslint-disable-next-line react/jsx-no-bind */
                                         onClick={() => {
                                             action.onClick();
                                             this.props.onClose();

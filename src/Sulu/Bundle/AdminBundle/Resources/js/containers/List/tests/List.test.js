@@ -344,6 +344,7 @@ test('Render TableAdapter with itemActions', () => {
 
     const listStore = new ListStore('test', 'test', 'list_test', {page: observable.box(1)});
 
+    // eslint-disable-next-line react/jsx-no-bind
     const list = shallow(<List adapters={['table']} itemActionsProvider={actionsProvider} store={listStore} />);
 
     const tableAdapter = list.find('TableAdapter');

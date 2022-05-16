@@ -203,6 +203,7 @@
                 "indentLogicalExpressions": true
             }
         ],
+        "react/jsx-no-bind": "error",
         "react/jsx-equals-spacing": "error",
         "react/jsx-handler-names": "error",
         "react/jsx-first-prop-new-line": [
