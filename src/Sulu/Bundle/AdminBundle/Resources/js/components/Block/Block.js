@@ -2,9 +2,11 @@
 import React, {Fragment} from 'react';
 import classNames from 'classnames';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, computed, observable} from 'mobx';
+import log from 'loglevel';
 import Icon from '../Icon';
 import SingleSelect from '../SingleSelect';
+import {translate} from '../../utils';
 import blockStyles from './block.scss';
 import ActionPopover from './ActionPopover';
 import type {ActionConfig} from './types';
@@ -19,6 +21,7 @@ type Props<T: string> = {
     icons?: Array<string>,
     onCollapse?: () => void,
     onExpand?: () => void,
+    onRemove?: () => void, // @deprecated
     onSettingsClick?: () => void,
     onTypeChange?: (type: T) => void,
     types?: {[key: T]: string},
@@ -26,13 +29,37 @@ type Props<T: string> = {
 
 @observer
 class Block<T: string> extends React.Component<Props<T>> {
-    static defaultProps: {
+    static defaultProps = {
         actions: [],
         expanded: false,
     };
 
     @observable actionsIconRef: ?ElementRef<'*'>;
     @observable showActionsPopover = false;
+
+    @computed get actions(): Array<ActionConfig> {
+        const {onRemove, actions} = this.props;
+
+        // @deprecated
+        if (onRemove) {
+            log.warn(
+                'The "onRemove" prop of the "Block" component is deprecated since 2.5 and will ' +
+                'be removed. Use the "actions" prop with an appropriate callback instead.'
+            );
+
+            return [
+                ...actions,
+                {
+                    type: 'button',
+                    icon: 'su-trash-alt',
+                    label: translate('sulu_admin.delete'),
+                    onClick: onRemove,
+                },
+            ];
+        }
+
+        return actions;
+    }
 
     @action setActionsIconRef = (ref: ?ElementRef<'*'>) => {
         this.actionsIconRef = ref;
@@ -70,7 +97,6 @@ class Block<T: string> extends React.Component<Props<T>> {
 
     render() {
         const {
-            actions,
             activeType,
             children,
             dragHandle,
@@ -119,7 +145,7 @@ class Block<T: string> extends React.Component<Props<T>> {
                                     </div>
                                 }
                                 <div className={blockStyles.iconButtons}>
-                                    {actions.length > 0 && <Icon
+                                    {this.actions.length > 0 && <Icon
                                         iconRef={this.setActionsIconRef}
                                         name="su-more-circle"
                                         onClick={this.handleActionsIconClick}
@@ -130,7 +156,7 @@ class Block<T: string> extends React.Component<Props<T>> {
                                     }
                                 </div>
                                 <ActionPopover
-                                    actions={actions}
+                                    actions={this.actions}
                                     anchorElement={this.actionsIconRef}
                                     onClose={this.handleActionsPopoverClose}
                                     open={this.showActionsPopover}

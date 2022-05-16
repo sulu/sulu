@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, observable, toJS, reaction} from 'mobx';
+import {action, observable, toJS, reaction, computed} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import {arrayMove, translate} from '../../utils';
@@ -11,7 +11,7 @@ import type {BlockActionConfig, RenderBlockContentCallback} from './types';
 
 type Props<T: string, U: {type: T}> = {|
     addButtonText?: ?string,
-    blockActions: Array<ActionConfig>,
+    blockActions: Array<BlockActionConfig>,
     collapsable: boolean,
     defaultType: T,
     disabled: boolean,
@@ -91,7 +91,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     @action handleAddBlock = (insertionIndex: number) => {
         const {defaultType, onChange, value} = this.props;
 
-        if (this.hasMaximumReached()) {
+        if (this.maxOccursReached) {
             throw new Error('The maximum amount of blocks has already been reached!');
         }
 
@@ -109,7 +109,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     @action handleRemoveBlock = (index: number) => {
         const {onChange, value} = this.props;
 
-        if (this.hasMinimumReached()) {
+        if (this.minOccursReached) {
             throw new Error('The minimum amount of blocks has already been reached!');
         }
 
@@ -155,16 +155,37 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         onChange(newValue);
     };
 
-    hasMaximumReached() {
+    @computed get maxOccursReached() {
         const {maxOccurs, value} = this.props;
 
         return !!maxOccurs && value.length >= maxOccurs;
     }
 
-    hasMinimumReached() {
+    @computed get minOccursReached() {
         const {minOccurs, value} = this.props;
 
         return !!minOccurs && value.length <= minOccurs;
+    }
+
+    @computed get blockActions() {
+        const {
+            blockActions,
+        } = this.props;
+
+        if (!this.minOccursReached) {
+            return [
+                ...blockActions,
+                {
+                    type: 'divider',
+                }, {
+                    type: 'button',
+                    icon: 'su-trash-alt',
+                    label: translate('sulu_admin.delete'),
+                    onClick: this.handleRemoveBlock,
+                }];
+        }
+
+        return blockActions;
     }
 
     renderAddButton = (aboveBlockIndex: number) => {
@@ -182,7 +203,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             <div className={containerClass}>
                 <Button
                     className={blockCollectionStyles.addButton}
-                    disabled={disabled || this.hasMaximumReached()}
+                    disabled={disabled || this.maxOccursReached}
                     icon="su-plus"
                     onClick={this.handleAddBlock}
                     skin="secondary"
@@ -196,7 +217,6 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
     render() {
         const {
-            blockActions,
             collapsable,
             disabled,
             icons,
@@ -206,27 +226,11 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             types,
             value,
         } = this.props;
-        const adjustedBlockActions: Array<BlockActionConfig> = [...blockActions];
-
-        if (!this.hasMinimumReached()) {
-            if (adjustedBlockActions.length > 0) {
-                adjustedBlockActions.push({
-                    type: 'divider',
-                });
-            }
-
-            adjustedBlockActions.push({
-                type: 'button',
-                icon: 'su-trash-alt',
-                label: translate('sulu_admin.delete'),
-                onClick: this.handleRemoveBlock,
-            });
-        }
 
         return (
             <section>
                 <SortableBlockList
-                    blockActions={adjustedBlockActions}
+                    blockActions={this.blockActions}
                     disabled={disabled}
                     expandedBlocks={this.expandedBlocks}
                     generatedBlockIds={this.generatedBlockIds}

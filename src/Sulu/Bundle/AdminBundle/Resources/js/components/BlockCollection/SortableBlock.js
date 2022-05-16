@@ -1,8 +1,13 @@
 // @flow
 import React from 'react';
 import {SortableElement} from 'react-sortable-hoc';
+import log from 'loglevel';
+import {computed} from 'mobx';
+import {observer} from 'mobx-react';
 import Block from '../Block';
+import {translate} from '../../utils';
 import SortableHandle from './SortableHandle';
+import type {ActionConfig} from '../Block/types';
 import type {ComponentType} from 'react';
 import type {BlockActionConfig, RenderBlockContentCallback} from './types';
 
@@ -14,6 +19,7 @@ type Props<T: string, U: {type: T}> = {
     movable?: boolean,
     onCollapse?: (index: number) => void,
     onExpand?: (index: number) => void,
+    onRemove?: (index: number) => void, // @deprecated
     onSettingsClick?: (index: number) => void,
     onTypeChange?: (type: T, index: number) => void,
     renderBlockContent: RenderBlockContentCallback<T, U>,
@@ -22,10 +28,46 @@ type Props<T: string, U: {type: T}> = {
     value: Object,
 };
 
+@observer
 class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>> {
-    static defaultProps: {
+    static defaultProps = {
         actions: [],
     };
+
+    @computed get actions(): Array<ActionConfig> {
+        const {onRemove, actions, sortIndex} = this.props;
+
+        const wrappedActions: Array<ActionConfig> = actions.map((action) => {
+            if (action.type !== 'divider') {
+                return {
+                    ...action,
+                    onClick: () => action.onClick(sortIndex),
+                };
+            }
+
+            return action;
+        });
+
+        // @deprecated
+        if (onRemove) {
+            log.warn(
+                'The "onRemove" prop of the "SortableBlock" component is deprecated since 2.5 and will ' +
+                'be removed. Use the "actions" prop with an appropriate callback instead.'
+            );
+
+            return [
+                ...wrappedActions,
+                {
+                    type: 'button',
+                    icon: 'su-trash-alt',
+                    label: translate('sulu_admin.delete'),
+                    onClick: () => onRemove(sortIndex),
+                },
+            ];
+        }
+
+        return wrappedActions;
+    }
 
     handleCollapse = () => {
         const {sortIndex, onCollapse} = this.props;
@@ -61,7 +103,6 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
 
     render() {
         const {
-            actions,
             activeType,
             expanded,
             icons,
@@ -75,14 +116,9 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
             value,
         } = this.props;
 
-        const adjustedActions = actions.map((action) => ({
-            ...action,
-            onClick: () => action.onClick(sortIndex),
-        }));
-
         return (
             <Block
-                actions={adjustedActions}
+                actions={this.actions}
                 activeType={activeType}
                 dragHandle={movable && <SortableHandle />}
                 expanded={expanded}

@@ -15,6 +15,8 @@ jest.mock('../../../utils/Translator', () => ({
 test('Render collapsed sortable block', () => {
     expect(render(
         <SortableBlock
+            actions={[]}
+
             activeType="editor"
             expanded={false}
             icons={['su-eye', 'su-people']}
@@ -35,6 +37,8 @@ test('Render expanded sortable, non-collapsable block with types', () => {
 
     expect(render(
         <SortableBlock
+            actions={[]}
+
             activeType="type2"
             expanded={true}
             onRemove={jest.fn()}
@@ -50,6 +54,8 @@ test('Render expanded sortable, non-collapsable block with types', () => {
 test('Should not show block types if only a single block is passed', () => {
     const sortableBlock = mount(
         <SortableBlock
+            actions={[]}
+
             activeType="editor"
             expanded={true}
             onCollapse={jest.fn()}
@@ -67,6 +73,8 @@ test('Should not show block types if only a single block is passed', () => {
 test('Should not show remove icon if no onRemove callback is passed', () => {
     const sortableBlock = mount(
         <SortableBlock
+            actions={[]}
+
             activeType="editor"
             expanded={true}
             onCollapse={jest.fn()}
@@ -83,6 +91,8 @@ test('Should not show remove icon if no onRemove callback is passed', () => {
 test('Should not show the settings icon if no onSettingsClick callback is passed', () => {
     const sortableBlock = mount(
         <SortableBlock
+            actions={[]}
+
             activeType="editor"
             expanded={true}
             onCollapse={jest.fn()}
@@ -103,6 +113,8 @@ test('Should call onCollapse when the block is being collapsed', () => {
 
     const sortableBlock = shallow(
         <SortableBlock
+            actions={[]}
+
             activeType="editor"
             expanded={true}
             onCollapse={collapseSpy}
@@ -128,6 +140,8 @@ test('Should call onExpand when the block is being expanded', () => {
 
     const sortableBlock = shallow(
         <SortableBlock
+            actions={[]}
+
             activeType="editor"
             expanded={true}
             onCollapse={collapseSpy}
@@ -153,6 +167,8 @@ test('Should call onRemove when the block is being removed', () => {
 
     const sortableBlock = shallow(
         <SortableBlock
+            actions={[]}
+
             activeType="editor"
             expanded={true}
             onCollapse={collapseSpy}
@@ -178,6 +194,8 @@ test('Should call onSettingClick when the block setting icon is clicked', () => 
 
     const sortableBlock = shallow(
         <SortableBlock
+            actions={[]}
+
             activeType="editor"
             expanded={true}
             onCollapse={collapseSpy}
@@ -201,6 +219,8 @@ test('Should call onTypeChange when the block has changed its type', () => {
 
     const sortableBlock = shallow(
         <SortableBlock
+            actions={[]}
+
             activeType="editor"
             expanded={true}
             onCollapse={jest.fn()}
@@ -224,6 +244,8 @@ test('Should call renderBlockContent with the correct arguments', () => {
 
     shallow(
         <SortableBlock
+            actions={[]}
+
             activeType="editor"
             expanded={true}
             onCollapse={jest.fn()}
@@ -244,6 +266,8 @@ test('Should call renderBlockContent with the correct arguments when block is co
 
     shallow(
         <SortableBlock
+            actions={[]}
+
             activeType="editor"
             expanded={false}
             onCollapse={jest.fn()}
@@ -264,6 +288,7 @@ test('Should call renderBlockContent with the correct arguments when types are i
 
     shallow(
         <SortableBlock
+            actions={[]}
             activeType="test"
             expanded={true}
             onCollapse={jest.fn()}
