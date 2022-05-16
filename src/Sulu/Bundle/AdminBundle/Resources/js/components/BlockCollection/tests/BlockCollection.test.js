@@ -10,12 +10,7 @@ beforeEach(() => {
 });
 
 jest.mock('../../../utils/Translator', () => ({
-    translate: jest.fn().mockImplementation((key) => {
-        switch (key) {
-            case 'sulu_admin.add_block':
-                return 'Add block';
-        }
-    }),
+    translate: jest.fn((key) => key),
 }));
 
 test('Should render a fully filled block list', () => {
@@ -339,7 +334,7 @@ test('Should throw an exception if a new block is added and the maximum has alre
     expect(() => blockCollection.instance().handleAddBlock()).toThrow(/maximum amount of blocks/);
 });
 
-test('Should allow to remove an existing block', () => {
+test('Should pass remove action that allows to remove an existing block', () => {
     // observable makes calling onChange with deleting an entry from expandedBlocks
     // otherwise the value and BlockCollection.expandedBlocks variable get out of sync and emit a warning
     const value: any = observable([{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]);
@@ -356,17 +351,75 @@ test('Should allow to remove an existing block', () => {
         />
     );
 
+    const blockActions = blockCollection.find('Block').at(0).prop('actions');
+    expect(blockActions).toEqual([
+        expect.objectContaining({
+            type: 'button',
+            icon: 'su-trash-alt',
+            label: 'sulu_admin.delete',
+        }),
+    ]);
+
     blockCollection.find('Block').at(0).simulate('click');
+    blockCollection.find('Block').at(0).find('Icon[name="su-more-circle"]').simulate('click');
     blockCollection.find('Block').at(0).find('Icon[name="su-trash-alt"]').simulate('click');
 
     expect(changeSpy).toBeCalledWith([expect.objectContaining({content: 'Test 2'})]);
 });
 
-test('Should not render the remove icon if less or the exact amount of items are passed', () => {
-    const value = [{content: 'Value 1', type: 'editor'}, {content: 'Value 2', type: 'editor'}];
+test('Should pass given blockActions with additional divider and remove action to Block component', () => {
+    const value: any = observable([{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]);
+    const actions = [
+        {
+            type: 'button',
+            icon: 'su-test',
+            label: 'Test Action',
+            onClick: jest.fn(),
+        },
+    ];
 
     const blockCollection = mount(
         <BlockCollection
+            blockActions={actions}
+            defaultType="editor"
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    const blockActions = blockCollection.find('Block').at(0).prop('actions');
+    expect(blockActions).toEqual([
+        expect.objectContaining({
+            type: 'button',
+            icon: 'su-test',
+            label: 'Test Action',
+        }),
+        {
+            type: 'divider',
+        },
+        expect.objectContaining({
+            type: 'button',
+            icon: 'su-trash-alt',
+            label: 'sulu_admin.delete',
+        }),
+    ]);
+});
+
+test('Should not pass remove action to Block component if less or the exact amount of items are passed', () => {
+    const value = [{content: 'Value 1', type: 'editor'}, {content: 'Value 2', type: 'editor'}];
+    const actions = [
+        {
+            type: 'button',
+            icon: 'su-test',
+            label: 'Test Action',
+            onClick: jest.fn(),
+        },
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            blockActions={actions}
             defaultType="editor"
             minOccurs={2}
             onChange={jest.fn()}
@@ -375,9 +428,14 @@ test('Should not render the remove icon if less or the exact amount of items are
         />
     );
 
-    blockCollection.find('Block').at(0).simulate('click');
-
-    expect(blockCollection.find('Block Icon[name="su-trash-alt"]')).toHaveLength(0);
+    const blockActions = blockCollection.find('Block').at(0).prop('actions');
+    expect(blockActions).toEqual([
+        expect.objectContaining({
+            type: 'button',
+            icon: 'su-test',
+            label: 'Test Action',
+        }),
+    ]);
 });
 
 test('Should throw an exception if a block is removed and the minimum has already been reached', () => {

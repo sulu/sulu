@@ -50,7 +50,7 @@ exports[`Should render a fully filled block list 1`] = `
         <span
           class="buttonText"
         >
-          Add block
+          sulu_admin.add_block
         </span>
       </button>
     </div>
@@ -105,7 +105,7 @@ exports[`Should render a fully filled block list 1`] = `
       <span
         class="buttonText"
       >
-        Add block
+        sulu_admin.add_block
       </span>
     </button>
   </div>
@@ -157,7 +157,7 @@ exports[`Should render a non-movable block list 1`] = `
         <span
           class="buttonText"
         >
-          Add block
+          sulu_admin.add_block
         </span>
       </button>
     </div>
@@ -202,7 +202,7 @@ exports[`Should render a non-movable block list 1`] = `
       <span
         class="buttonText"
       >
-        Add block
+        sulu_admin.add_block
       </span>
     </button>
   </div>
