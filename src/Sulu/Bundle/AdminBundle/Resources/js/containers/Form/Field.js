@@ -200,6 +200,7 @@ class Field extends React.Component<Props> {
                 <div className={fieldStyles.fieldContainer}>
                     <div className={fieldStyles.field}>
                         <FieldType
+                            key={name + '_' + type}
                             data={data}
                             dataPath={dataPath}
                             defaultType={defaultType}
