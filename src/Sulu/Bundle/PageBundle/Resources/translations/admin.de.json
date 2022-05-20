@@ -22,6 +22,7 @@
     "sulu_page.linked_content": "Verlinkter Inhalt",
     "sulu_page.url": "URL",
     "sulu_page.resource_locator_assigned_to_other_page": "Die URL \"{resourceLocator}\" ist bereits einer anderen Seite zugewiesen.",
+    "sulu_page.resource_locator_was_moved": "The URL die du verwendest wurde verschoben nach \"{newResourceLocator}\". Prüfe die URL Historie dieser Seite und entferne die Weiterleitung.",
     "sulu_page.shadow_page": "Shadow Seite",
     "sulu_page.enable_shadow_page": "Shadow Seite aktivieren",
     "sulu_page.enable_shadow_page_info_text": "Diese Funktion ist deaktiviert, wenn die aktuelle Sprache bereits als Shadow Sprache verwendet wird.",

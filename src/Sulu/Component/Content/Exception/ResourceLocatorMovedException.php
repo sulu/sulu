@@ -11,7 +11,9 @@
 
 namespace Sulu\Component\Content\Exception;
 
-class ResourceLocatorMovedException extends \Exception
+use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
+
+class ResourceLocatorMovedException extends \Exception implements TranslationErrorMessageExceptionInterface
 {
     /**
      * new resource locator after move.
@@ -50,5 +52,15 @@ class ResourceLocatorMovedException extends \Exception
     public function getNewResourceLocatorUuid()
     {
         return $this->newResourceLocatorUuid;
+    }
+
+    public function getMessageTranslationKey(): string
+    {
+        return 'sulu_page.resource_locator_was_moved';
+    }
+
+    public function getMessageTranslationParameters(): array
+    {
+        return ['{newResourceLocator}' => $this->newResourceLocator];
     }
 }
