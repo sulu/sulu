@@ -40,6 +40,7 @@ export default class Action<T> extends React.PureComponent<Props<T>> {
                 className={actionStyles.action}
                 disabled={disabled}
                 onClick={this.handleButtonClick}
+                type="button"
             >
                 {icon && <Icon className={actionStyles.icon} name={icon} />}
                 {this.props.children}

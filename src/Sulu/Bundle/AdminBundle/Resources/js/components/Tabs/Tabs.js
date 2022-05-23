@@ -353,6 +353,7 @@ class Tabs extends React.Component<Props> {
                             className={tabsStyles.button}
                             onClick={this.handleDropdownToggle}
                             ref={this.setDropdownButtonRef}
+                            type="button"
                         >
                             <Icon name="su-more-horizontal" />
                         </button>

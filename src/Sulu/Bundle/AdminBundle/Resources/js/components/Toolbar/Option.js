@@ -46,6 +46,7 @@ export default class Option extends React.PureComponent<Props> {
                 <button
                     disabled={disabled}
                     onClick={this.handleOnClick}
+                    type="button"
                 >
                     {selected &&
                         <Icon className={optionStyles.selectedIcon} name={ICON_CHECKMARK} />

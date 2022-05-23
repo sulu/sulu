@@ -255,7 +255,7 @@ class Preview extends React.Component<Props> {
         }
 
         if (!this.started) {
-            return <button onClick={this.handleStartClick}>Start</button>;
+            return <button onClick={this.handleStartClick} type="button">Start</button>;
         }
 
         const containerClass = classNames(

@@ -31,6 +31,7 @@ export default class Item extends React.PureComponent<Props> {
                 className={itemStyles.item}
                 disabled={!onClick}
                 onClick={this.handleClick}
+                type="button"
             >
                 {children}
             </button>

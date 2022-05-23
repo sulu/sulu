@@ -63,6 +63,7 @@ class Tab extends React.PureComponent<Props> {
                     disabled={selected}
                     onClick={this.handleClick}
                     title={children}
+                    type="button"
                 >
                     {children}
                     {!!badges && !!badges.length &&

@@ -74,7 +74,7 @@ class Field<T: string | number> extends React.Component<Props<T>> {
         }
 
         return (
-            <button className={fieldStyles.type} onClick={this.handleArrowMenuOpen}>
+            <button className={fieldStyles.type} onClick={this.handleArrowMenuOpen} type="button">
                 <span className={fieldStyles.typeDelimiter}>•</span>
                 {selectedType.label}<Icon className={fieldStyles.typeIcon} name="su-angle-down" />
             </button>

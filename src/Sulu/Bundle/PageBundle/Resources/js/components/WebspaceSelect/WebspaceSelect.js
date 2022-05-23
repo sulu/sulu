@@ -54,6 +54,7 @@ class WebspaceSelect extends React.Component<Props> {
                 <button
                     className={webspaceSelectStyles.button}
                     onClick={this.handleButtonClick}
+                    type="button"
                 >
                     <Icon className={webspaceSelectStyles.buttonIcon} name="su-webspace" />
                     <span className={webspaceSelectStyles.buttonValue}>{this.displayValue}</span>

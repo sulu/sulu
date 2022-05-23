@@ -87,7 +87,7 @@ class Row extends React.Component<Props> {
 
     renderAllButton() {
         return (
-            <button className={rowStyles.rowButton} onClick={this.handleAllButtonClick}>
+            <button className={rowStyles.rowButton} onClick={this.handleAllButtonClick} type="button">
                 {translate(this.allItemsDeactivated ? 'sulu_admin.activate_all' : 'sulu_admin.deactivate_all')}
             </button>
         );
