@@ -91,7 +91,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     @action handleAddBlock = (insertionIndex: number) => {
         const {defaultType, onChange, value} = this.props;
 
-        if (this.maxOccursReached) {
+        if (this.hasMaximumReached) {
             throw new Error('The maximum amount of blocks has already been reached!');
         }
 
@@ -109,7 +109,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     @action handleRemoveBlock = (index: number) => {
         const {onChange, value} = this.props;
 
-        if (this.minOccursReached) {
+        if (this.hasMinimumReached) {
             throw new Error('The minimum amount of blocks has already been reached!');
         }
 
@@ -155,13 +155,13 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         onChange(newValue);
     };
 
-    @computed get maxOccursReached() {
+    @computed get hasMaximumReached() {
         const {maxOccurs, value} = this.props;
 
         return !!maxOccurs && value.length >= maxOccurs;
     }
 
-    @computed get minOccursReached() {
+    @computed get hasMinimumReached() {
         const {minOccurs, value} = this.props;
 
         return !!minOccurs && value.length <= minOccurs;
@@ -170,7 +170,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     @computed get blockActions() {
         const {blockActions} = this.props;
 
-        if (!this.minOccursReached) {
+        if (!this.hasMinimumReached) {
             const adjustedBlockActions = [...blockActions];
 
             if (adjustedBlockActions.length > 0) {
@@ -207,7 +207,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             <div className={containerClass}>
                 <Button
                     className={blockCollectionStyles.addButton}
-                    disabled={disabled || this.maxOccursReached}
+                    disabled={disabled || this.hasMaximumReached}
                     icon="su-plus"
                     onClick={this.handleAddBlock}
                     skin="secondary"
