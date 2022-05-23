@@ -95,7 +95,10 @@ $blockIconsColor: $gray;
     flex-grow: 1;
     text-align: right;
 
-    & > * {
+    & > button {
+        cursor: pointer;
+        border: none;
+        background: none;
         margin-left: 20px;
     }
 }

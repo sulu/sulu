@@ -34,7 +34,7 @@ class Block<T: string> extends React.Component<Props<T>> {
         expanded: false,
     };
 
-    @observable actionsIconRef: ?ElementRef<'*'>;
+    @observable actionsButtonRef: ?ElementRef<'*'>;
     @observable showActionsPopover = false;
 
     @computed get actions(): Array<ActionConfig> {
@@ -61,11 +61,11 @@ class Block<T: string> extends React.Component<Props<T>> {
         return actions;
     }
 
-    @action setActionsIconRef = (ref: ?ElementRef<'*'>) => {
-        this.actionsIconRef = ref;
+    @action setActionsButtonRef = (ref: ?ElementRef<'*'>) => {
+        this.actionsButtonRef = ref;
     };
 
-    @action handleActionsIconClick = () => {
+    @action handleActionsButtonClick = () => {
         this.showActionsPopover = true;
     };
 
@@ -145,19 +145,37 @@ class Block<T: string> extends React.Component<Props<T>> {
                                     </div>
                                 }
                                 <div className={blockStyles.iconButtons}>
-                                    {this.actions.length > 0 && <Icon
-                                        iconRef={this.setActionsIconRef}
-                                        name="su-more-circle"
-                                        onClick={this.handleActionsIconClick}
-                                    /> }
-                                    {onSettingsClick && <Icon name="su-cog" onClick={onSettingsClick} />}
-                                    {onCollapse && onExpand &&
-                                        <Icon name="su-collapse-vertical" onClick={this.handleCollapse} />
-                                    }
+                                    {this.actions.length > 0 && (
+                                        <button
+                                            onClick={this.handleActionsButtonClick}
+                                            ref={this.setActionsButtonRef}
+                                            type="button"
+                                        >
+                                            <Icon
+                                                name="su-more-circle"
+                                            />
+                                        </button>
+                                    ) }
+                                    {onSettingsClick && (
+                                        <button
+                                            onClick={onSettingsClick}
+                                            type="button"
+                                        >
+                                            <Icon name="su-cog" />
+                                        </button>
+                                    )}
+                                    {onCollapse && onExpand && (
+                                        <button
+                                            onClick={this.handleCollapse}
+                                            type="button"
+                                        >
+                                            <Icon name="su-collapse-vertical" />
+                                        </button>
+                                    )}
                                 </div>
                                 <ActionPopover
                                     actions={this.actions}
-                                    anchorElement={this.actionsIconRef}
+                                    anchorElement={this.actionsButtonRef}
                                     onClose={this.handleActionsPopoverClose}
                                     open={this.showActionsPopover}
                                 />
