@@ -16,6 +16,7 @@ exports[`Render ContactDetails with data 1`] = `
         sulu_contact.email
         <button
           class="type"
+          type="button"
         >
           <span
             class="typeDelimiter"
@@ -74,6 +75,7 @@ exports[`Render ContactDetails with data 1`] = `
         sulu_contact.phone
         <button
           class="type"
+          type="button"
         >
           <span
             class="typeDelimiter"
@@ -132,6 +134,7 @@ exports[`Render ContactDetails with data 1`] = `
         sulu_contact.fax
         <button
           class="type"
+          type="button"
         >
           <span
             class="typeDelimiter"
@@ -190,6 +193,7 @@ exports[`Render ContactDetails with data 1`] = `
         sulu_contact.website
         <button
           class="type"
+          type="button"
         >
           <span
             class="typeDelimiter"
@@ -281,6 +285,7 @@ exports[`Render ContactDetails with data 1`] = `
         sulu_contact.social_media
         <button
           class="type"
+          type="button"
         >
           <span
             class="typeDelimiter"
@@ -378,6 +383,7 @@ exports[`Render empty ContactDetails 1`] = `
         sulu_contact.email
         <button
           class="type"
+          type="button"
         >
           <span
             class="typeDelimiter"
@@ -434,6 +440,7 @@ exports[`Render empty ContactDetails 1`] = `
         sulu_contact.phone
         <button
           class="type"
+          type="button"
         >
           <span
             class="typeDelimiter"
@@ -531,6 +538,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
         sulu_contact.email
         <button
           class="type"
+          type="button"
         >
           <span
             class="typeDelimiter"
@@ -587,6 +595,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
         sulu_contact.phone
         <button
           class="type"
+          type="button"
         >
           <span
             class="typeDelimiter"
@@ -643,6 +652,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
         sulu_contact.fax
         <button
           class="type"
+          type="button"
         >
           <span
             class="typeDelimiter"
@@ -701,6 +711,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
         sulu_contact.website
         <button
           class="type"
+          type="button"
         >
           <span
             class="typeDelimiter"
@@ -792,6 +803,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
         sulu_contact.social_media
         <button
           class="type"
+          type="button"
         >
           <span
             class="typeDelimiter"

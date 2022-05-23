@@ -14,7 +14,9 @@ exports[`Header cells with a defined sortOrder must show a sort indicator 1`] = 
         <th
           class="headerCell clickable"
         >
-          <button>
+          <button
+            type="button"
+          >
             ColumnTitle
             <span
               aria-label="su-angle-up"
@@ -25,7 +27,9 @@ exports[`Header cells with a defined sortOrder must show a sort indicator 1`] = 
         <th
           class="headerCell clickable"
         >
-          <button>
+          <button
+            type="button"
+          >
             ColumnTitle
             <span
               aria-label="su-angle-down"
@@ -110,7 +114,9 @@ exports[`Render a table with buttons 1`] = `
           <div
             class="cellContent"
           >
-            <button>
+            <button
+              type="button"
+            >
               <span
                 aria-label="fa-pencil"
                 class="fa fa-pencil"
@@ -126,6 +132,7 @@ exports[`Render a table with buttons 1`] = `
           >
             <button
               disabled=""
+              type="button"
             >
               <span
                 aria-label="fa-lock"
@@ -221,7 +228,9 @@ exports[`Render a table with different buttons for each row 1`] = `
           <div
             class="cellContent"
           >
-            <button>
+            <button
+              type="button"
+            >
               <span
                 aria-label="fa-pencil"
                 class="fa fa-pencil"
@@ -266,7 +275,9 @@ exports[`Render a table with different buttons for each row 1`] = `
           <div
             class="cellContent"
           >
-            <button>
+            <button
+              type="button"
+            >
               <span
                 aria-label="fa-plus"
                 class="fa fa-plus"
@@ -354,7 +365,9 @@ exports[`Render a table with disabled rows 1`] = `
           <div
             class="cellContent"
           >
-            <button>
+            <button
+              type="button"
+            >
               <span
                 aria-label="fa-pencil"
                 class="fa fa-pencil"
@@ -390,7 +403,9 @@ exports[`Render a table with disabled rows 1`] = `
           <div
             class="cellContent"
           >
-            <button>
+            <button
+              type="button"
+            >
               <span
                 aria-label="fa-pencil"
                 class="fa fa-pencil"

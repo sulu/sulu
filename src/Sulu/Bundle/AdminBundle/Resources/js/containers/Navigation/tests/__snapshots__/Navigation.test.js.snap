@@ -29,6 +29,7 @@ exports[`Should render navigation 1`] = `
     >
       <button
         class="noUserImage"
+        type="button"
       >
         <span
           aria-label="fa-user"
@@ -40,9 +41,11 @@ exports[`Should render navigation 1`] = `
       >
         <button
           class="username"
+          type="button"
         />
         <button
           class="logout"
+          type="button"
         >
           <span
             aria-label="su-exit"
@@ -183,6 +186,7 @@ exports[`Should render navigation without appVersion 1`] = `
     >
       <button
         class="noUserImage"
+        type="button"
       >
         <span
           aria-label="fa-user"
@@ -194,9 +198,11 @@ exports[`Should render navigation without appVersion 1`] = `
       >
         <button
           class="username"
+          type="button"
         />
         <button
           class="logout"
+          type="button"
         >
           <span
             aria-label="su-exit"

@@ -132,6 +132,7 @@ Array [
             <button
               class="button light"
               disabled=""
+              type="button"
             >
               <span
                 aria-label="fa-trash-o"
@@ -150,6 +151,7 @@ Array [
             >
               <button
                 class="button light"
+                type="button"
               >
                 <span
                   aria-label="fa-floppy-more"
@@ -170,6 +172,7 @@ Array [
           <li>
             <button
               class="button light"
+              type="button"
             >
               <span
                 class="label"
@@ -347,6 +350,7 @@ Array [
     >
       <button
         class="button light success"
+        type="button"
       >
         <span
           aria-label="su-check"
@@ -411,6 +415,7 @@ Array [
     >
       <button
         class="button light primary success"
+        type="button"
       >
         <span
           aria-label="su-check"
@@ -419,6 +424,7 @@ Array [
       </button>
       <button
         class="button light"
+        type="button"
       >
         <span
           aria-label="su-angle-left"

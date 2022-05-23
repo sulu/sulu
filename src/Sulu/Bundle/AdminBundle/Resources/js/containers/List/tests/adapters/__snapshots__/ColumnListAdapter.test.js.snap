@@ -16,6 +16,7 @@ exports[`Render data with disabled items 1`] = `
       >
         <button
           class="item primary"
+          type="button"
         >
           <span
             aria-label="su-cog"
@@ -169,6 +170,7 @@ exports[`Render data with loading column 1`] = `
       >
         <button
           class="item primary"
+          type="button"
         >
           <span
             aria-label="su-cog"
@@ -383,6 +385,7 @@ exports[`Render data with selection 1`] = `
       >
         <button
           class="item primary"
+          type="button"
         >
           <span
             aria-label="su-cog"
@@ -480,6 +483,7 @@ exports[`Render data without edit button 1`] = `
       >
         <button
           class="item primary"
+          type="button"
         >
           <span
             aria-label="su-cog"
@@ -570,6 +574,7 @@ exports[`Render different kind of data with edit button 1`] = `
       >
         <button
           class="item primary"
+          type="button"
         >
           <span
             aria-label="su-plus-circle"
@@ -578,6 +583,7 @@ exports[`Render different kind of data with edit button 1`] = `
         </button>
         <button
           class="item primary"
+          type="button"
         >
           <span
             aria-label="su-cog"
@@ -1265,6 +1271,7 @@ exports[`Render with add button in toolbar when onItemAdd callback is given 1`] 
       >
         <button
           class="item primary"
+          type="button"
         >
           <span
             aria-label="su-plus-circle"
@@ -1273,6 +1280,7 @@ exports[`Render with add button in toolbar when onItemAdd callback is given 1`] 
         </button>
         <button
           class="item primary"
+          type="button"
         >
           <span
             aria-label="su-cog"

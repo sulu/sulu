@@ -7,6 +7,7 @@ exports[`Should highlight the part of the suggestion text which matches the quer
 >
   <button
     class="suggestion"
+    type="button"
   >
     <span
       aria-label="fa-ticket"
@@ -31,6 +32,7 @@ exports[`Suggestion should render 1`] = `
 >
   <button
     class="suggestion"
+    type="button"
   >
     <span
       aria-label="fa-ticket"
@@ -48,6 +50,7 @@ exports[`Suggestion should render if given query is not a valid regular expressi
 >
   <button
     class="suggestion"
+    type="button"
   >
     <span
       aria-label="fa-ticket"
@@ -67,6 +70,7 @@ exports[`Suggestion should render strong-tags around found chars 1`] = `
 >
   <button
     class="suggestion"
+    type="button"
   >
     <span
       aria-label="fa-ticket"

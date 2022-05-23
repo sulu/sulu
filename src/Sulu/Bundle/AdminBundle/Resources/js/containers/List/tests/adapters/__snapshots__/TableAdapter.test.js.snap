@@ -15,7 +15,9 @@ exports[`Render column with ascending sort icon 1`] = `
           <th
             class="headerCell clickable"
           >
-            <button>
+            <button
+              type="button"
+            >
               Title
               <span
                 aria-label="su-angle-up"
@@ -26,7 +28,9 @@ exports[`Render column with ascending sort icon 1`] = `
           <th
             class="headerCell clickable"
           >
-            <button>
+            <button
+              type="button"
+            >
               Description
             </button>
           </th>
@@ -173,14 +177,18 @@ exports[`Render column with descending sort icon 1`] = `
           <th
             class="headerCell clickable"
           >
-            <button>
+            <button
+              type="button"
+            >
               Title
             </button>
           </th>
           <th
             class="headerCell clickable"
           >
-            <button>
+            <button
+              type="button"
+            >
               Description
               <span
                 aria-label="su-angle-down"
@@ -331,14 +339,18 @@ exports[`Render data with all different visibility types schema 1`] = `
           <th
             class="headerCell clickable"
           >
-            <button>
+            <button
+              type="button"
+            >
               Description
             </button>
           </th>
           <th
             class="headerCell clickable"
           >
-            <button>
+            <button
+              type="button"
+            >
               Test 1
             </button>
           </th>
@@ -532,7 +544,9 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
           <th
             class="headerCell clickable"
           >
-            <button>
+            <button
+              type="button"
+            >
               Description
             </button>
           </th>
@@ -548,7 +562,9 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
             <div
               class="cellContent"
             >
-              <button>
+              <button
+                type="button"
+              >
                 <span
                   aria-label="su-pen"
                   class="su-pen"
@@ -562,7 +578,9 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
             <div
               class="cellContent"
             >
-              <button>
+              <button
+                type="button"
+              >
                 <span
                   aria-label="su-process"
                   class="su-process"
@@ -576,7 +594,9 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
             <div
               class="cellContent"
             >
-              <button>
+              <button
+                type="button"
+              >
                 <span
                   aria-label="su-trash"
                   class="su-trash"
@@ -603,7 +623,9 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
             <div
               class="cellContent"
             >
-              <button>
+              <button
+                type="button"
+              >
                 <span
                   aria-label="su-pen"
                   class="su-pen"
@@ -617,7 +639,9 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
             <div
               class="cellContent"
             >
-              <button>
+              <button
+                type="button"
+              >
                 <span
                   aria-label="su-process"
                   class="su-process"
@@ -631,7 +655,9 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
             <div
               class="cellContent"
             >
-              <button>
+              <button
+                type="button"
+              >
                 <span
                   aria-label="su-trash"
                   class="su-trash"
@@ -777,7 +803,9 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
           <th
             class="headerCell clickable"
           >
-            <button>
+            <button
+              type="button"
+            >
               Description
             </button>
           </th>
@@ -793,7 +821,9 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             <div
               class="cellContent"
             >
-              <button>
+              <button
+                type="button"
+              >
                 <span
                   aria-label="su-pen"
                   class="su-pen"
@@ -820,7 +850,9 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             <div
               class="cellContent"
             >
-              <button>
+              <button
+                type="button"
+              >
                 <span
                   aria-label="su-pen"
                   class="su-pen"
@@ -956,7 +988,9 @@ exports[`Render data with schema 1`] = `
           <th
             class="headerCell clickable"
           >
-            <button>
+            <button
+              type="button"
+            >
               Title
             </button>
           </th>
@@ -1240,7 +1274,9 @@ exports[`Render data with schema and selections 1`] = `
           <th
             class="headerCell clickable"
           >
-            <button>
+            <button
+              type="button"
+            >
               Description
             </button>
           </th>
@@ -1482,7 +1518,9 @@ exports[`Render data with schema in different order 1`] = `
           <th
             class="headerCell clickable"
           >
-            <button>
+            <button
+              type="button"
+            >
               Description
             </button>
           </th>
@@ -1755,14 +1793,18 @@ exports[`Render data with shrunken cell 1`] = `
           <th
             class="headerCell clickable shrink"
           >
-            <button>
+            <button
+              type="button"
+            >
               Title
             </button>
           </th>
           <th
             class="headerCell clickable"
           >
-            <button>
+            <button
+              type="button"
+            >
               Description
             </button>
           </th>
@@ -1974,7 +2016,9 @@ exports[`Render data with skin 1`] = `
           <th
             class="headerCell clickable"
           >
-            <button>
+            <button
+              type="button"
+            >
               Description
             </button>
           </th>

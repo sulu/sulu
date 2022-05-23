@@ -11,18 +11,22 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(-45deg);"
@@ -36,6 +40,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(0deg);"
@@ -49,6 +54,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(45deg);"
@@ -62,6 +68,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(-90deg);"
@@ -76,10 +83,12 @@ exports[`Should render ImageFocusPoint with focusing the bottom-center point 1`]
       class="imageFocusPointCell active"
       disabled=""
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(90deg);"
@@ -109,18 +118,22 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(0deg);"
@@ -134,6 +147,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(45deg);"
@@ -147,15 +161,18 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell active"
       disabled=""
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(90deg);"
@@ -169,6 +186,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-left point 1`] =
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
   </div>
   <img
@@ -189,22 +207,27 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(-45deg);"
@@ -218,6 +241,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(0deg);"
@@ -231,10 +255,12 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(-90deg);"
@@ -249,6 +275,7 @@ exports[`Should render ImageFocusPoint with focusing the bottom-right point 1`] 
       class="imageFocusPointCell active"
       disabled=""
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
   </div>
   <img
@@ -269,6 +296,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(-45deg);"
@@ -282,6 +310,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(0deg);"
@@ -295,6 +324,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(45deg);"
@@ -308,6 +338,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(-90deg);"
@@ -322,10 +353,12 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
       class="imageFocusPointCell active"
       disabled=""
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(90deg);"
@@ -339,6 +372,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(225deg);"
@@ -352,6 +386,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(180deg);"
@@ -365,6 +400,7 @@ exports[`Should render ImageFocusPoint with focusing the center-center point 1`]
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(125deg);"
@@ -394,6 +430,7 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(0deg);"
@@ -407,6 +444,7 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(45deg);"
@@ -420,15 +458,18 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell active"
       disabled=""
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(90deg);"
@@ -442,10 +483,12 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(180deg);"
@@ -459,6 +502,7 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(125deg);"
@@ -472,6 +516,7 @@ exports[`Should render ImageFocusPoint with focusing the center-left point 1`] =
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
   </div>
   <img
@@ -492,10 +537,12 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(-45deg);"
@@ -509,6 +556,7 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(0deg);"
@@ -522,10 +570,12 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(-90deg);"
@@ -540,14 +590,17 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
       class="imageFocusPointCell active"
       disabled=""
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(225deg);"
@@ -561,6 +614,7 @@ exports[`Should render ImageFocusPoint with focusing the center-right point 1`] 
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(180deg);"
@@ -590,6 +644,7 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(-90deg);"
@@ -604,10 +659,12 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
       class="imageFocusPointCell active"
       disabled=""
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(90deg);"
@@ -621,6 +678,7 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(225deg);"
@@ -634,6 +692,7 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(180deg);"
@@ -647,6 +706,7 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(125deg);"
@@ -660,14 +720,17 @@ exports[`Should render ImageFocusPoint with focusing the top-center point 1`] = 
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
   </div>
   <img
@@ -689,10 +752,12 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
       class="imageFocusPointCell active"
       disabled=""
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(90deg);"
@@ -706,10 +771,12 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(180deg);"
@@ -723,6 +790,7 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(125deg);"
@@ -736,18 +804,22 @@ exports[`Should render ImageFocusPoint with focusing the top-left point 1`] = `
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
   </div>
   <img
@@ -768,10 +840,12 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(-90deg);"
@@ -786,14 +860,17 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
       class="imageFocusPointCell active"
       disabled=""
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(225deg);"
@@ -807,6 +884,7 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     >
       <div
         style="transform: rotate(180deg);"
@@ -820,14 +898,17 @@ exports[`Should render ImageFocusPoint with focusing the top-right point 1`] = `
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
     <button
       class="imageFocusPointCell"
       style="width: 33.333333333333336%; height: 33.333333333333336%;"
+      type="button"
     />
   </div>
   <img

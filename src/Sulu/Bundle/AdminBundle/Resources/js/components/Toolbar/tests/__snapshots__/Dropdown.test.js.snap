@@ -7,6 +7,7 @@ exports[`Render disabled dropdown 1`] = `
   <button
     class="button"
     disabled=""
+    type="button"
   >
     <span
       class="label"
@@ -27,6 +28,7 @@ exports[`Render dropdown 1`] = `
 >
   <button
     class="button"
+    type="button"
   >
     <span
       class="label"
@@ -47,6 +49,7 @@ exports[`Render dropdown with a different size 1`] = `
 >
   <button
     class="button small"
+    type="button"
   >
     <span
       class="label"
@@ -67,6 +70,7 @@ exports[`Render dropdown with a prepended icon 1`] = `
 >
   <button
     class="button"
+    type="button"
   >
     <span
       aria-label="fa-floppy-o"
@@ -91,6 +95,7 @@ exports[`Render dropdown without text 1`] = `
 >
   <button
     class="button"
+    type="button"
   >
     <span
       aria-label="su-angle-down"
@@ -106,6 +111,7 @@ exports[`Render loading dropdown 1`] = `
 >
   <button
     class="button"
+    type="button"
   >
     <div
       class="spinner loader"

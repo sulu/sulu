@@ -3,6 +3,7 @@
 exports[`Should render chip as clickable 1`] = `
 <button
   class="chip secondary small clickable"
+  type="button"
 >
   Name
 </button>
@@ -11,6 +12,7 @@ exports[`Should render chip as clickable 1`] = `
 exports[`Should render chip with children 1`] = `
 <button
   class="chip secondary small"
+  type="button"
 >
   Name
 </button>
@@ -19,6 +21,7 @@ exports[`Should render chip with children 1`] = `
 exports[`Should render chip with delete icon 1`] = `
 <button
   class="chip secondary small"
+  type="button"
 >
   Name
   <span
@@ -33,6 +36,7 @@ exports[`Should render chip with delete icon 1`] = `
 exports[`Should render chip without delete icon in disabled state 1`] = `
 <button
   class="chip secondary small disabled"
+  type="button"
 >
   Name
 </button>
@@ -41,6 +45,7 @@ exports[`Should render chip without delete icon in disabled state 1`] = `
 exports[`Should render medium, primary chip with children 1`] = `
 <button
   class="chip primary medium"
+  type="button"
 >
   Name
 </button>
