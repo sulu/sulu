@@ -362,6 +362,10 @@ trait DataProviderRepositoryTrait
     protected function appendSortBy($sortBy, $sortMethod, QueryBuilder $queryBuilder, $alias, $locale)
     {
         foreach ($sortBy as $column) {
+            if (false === \strpos($column, '.')) {
+                $column = $alias . '.' . $column;
+            }
+
             if (!\in_array(\explode('.', $column)[0], $queryBuilder->getAllAliases())) {
                 $this->appendSortByJoins($queryBuilder, $alias, $locale);
             }
