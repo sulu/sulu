@@ -7,11 +7,10 @@ import {arrayMove, translate} from '../../utils';
 import Button from '../Button';
 import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
-import type {BlockActionConfig, RenderBlockContentCallback} from './types';
+import type {RenderBlockContentCallback} from './types';
 
 type Props<T: string, U: {type: T}> = {|
     addButtonText?: ?string,
-    blockActions: Array<BlockActionConfig>,
     collapsable: boolean,
     defaultType: T,
     disabled: boolean,
@@ -32,7 +31,6 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     static idCounter = 0;
 
     static defaultProps = {
-        blockActions: [],
         collapsable: true,
         disabled: false,
         movable: true,
@@ -168,25 +166,15 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     }
 
     @computed get blockActions() {
-        const {blockActions} = this.props;
+        const blockActions = [];
 
         if (!this.hasMinimumReached) {
-            const adjustedBlockActions = [...blockActions];
-
-            if (adjustedBlockActions.length > 0) {
-                adjustedBlockActions.push({
-                    type: 'divider',
-                });
-            }
-
-            adjustedBlockActions.push({
+            blockActions.push({
                 type: 'button',
                 icon: 'su-trash-alt',
                 label: translate('sulu_admin.delete'),
                 onClick: this.handleRemoveBlock,
             });
-
-            return adjustedBlockActions;
         }
 
         return blockActions;

@@ -367,59 +367,11 @@ test('Should pass remove action that allows to remove an existing block', () => 
     expect(changeSpy).toBeCalledWith([expect.objectContaining({content: 'Test 2'})]);
 });
 
-test('Should pass given blockActions with additional divider and remove action to Block component', () => {
-    const value: any = observable([{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]);
-    const actions = [
-        {
-            type: 'button',
-            icon: 'su-test',
-            label: 'Test Action',
-            onClick: jest.fn(),
-        },
-    ];
-
-    const blockCollection = mount(
-        <BlockCollection
-            blockActions={actions}
-            defaultType="editor"
-            onChange={jest.fn()}
-            renderBlockContent={jest.fn()}
-            value={value}
-        />
-    );
-
-    const blockActions = blockCollection.find('Block').at(0).prop('actions');
-    expect(blockActions).toEqual([
-        expect.objectContaining({
-            type: 'button',
-            icon: 'su-test',
-            label: 'Test Action',
-        }),
-        {
-            type: 'divider',
-        },
-        expect.objectContaining({
-            type: 'button',
-            icon: 'su-trash-alt',
-            label: 'sulu_admin.delete',
-        }),
-    ]);
-});
-
 test('Should not pass remove action to Block component if less or the exact amount of items are passed', () => {
     const value = [{content: 'Value 1', type: 'editor'}, {content: 'Value 2', type: 'editor'}];
-    const actions = [
-        {
-            type: 'button',
-            icon: 'su-test',
-            label: 'Test Action',
-            onClick: jest.fn(),
-        },
-    ];
 
     const blockCollection = mount(
         <BlockCollection
-            blockActions={actions}
             defaultType="editor"
             minOccurs={2}
             onChange={jest.fn()}
@@ -429,13 +381,7 @@ test('Should not pass remove action to Block component if less or the exact amou
     );
 
     const blockActions = blockCollection.find('Block').at(0).prop('actions');
-    expect(blockActions).toEqual([
-        expect.objectContaining({
-            type: 'button',
-            icon: 'su-test',
-            label: 'Test Action',
-        }),
-    ]);
+    expect(blockActions).toEqual([]);
 });
 
 test('Should throw an exception if a block is removed and the minimum has already been reached', () => {
