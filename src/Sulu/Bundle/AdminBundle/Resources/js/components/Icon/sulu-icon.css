@@ -1,9 +1,9 @@
 @font-face {
     font-family: 'sulu';
     src:
-        url('fonts/sulu.ttf?z4y0rg') format('truetype'),
-        url('fonts/sulu.woff?z4y0rg') format('woff'),
-        url('fonts/sulu.svg?z4y0rg#sulu') format('svg');
+        url('fonts/sulu.ttf?tj3m4m') format('truetype'),
+        url('fonts/sulu.woff?tj3m4m') format('woff'),
+        url('fonts/sulu.svg?tj3m4m#sulu') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -24,6 +24,9 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+.su-duplicate:before {
+    content: "\e9bf";
+}
 .su-collapse-vertical:before {
     content: "\e9bc";
 }
