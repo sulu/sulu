@@ -428,6 +428,7 @@ class WebspaceManager implements WebspaceManagerInterface
     public function getWebspaceCollection(): WebspaceCollection
     {
         if (null === $this->webspaceCollection) {
+            /** @var class-string<WebspaceCollection> $class */
             $class = $this->options['cache_class'];
             $cache = new ConfigCache(
                 $this->options['cache_dir'] . '/' . $class . '.php',
