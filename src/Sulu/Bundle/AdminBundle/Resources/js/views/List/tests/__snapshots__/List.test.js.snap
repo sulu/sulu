@@ -370,7 +370,9 @@ exports[`Should render the list with a title 1`] = `
                 <th
                   class="headerCell clickable"
                 >
-                  <button>
+                  <button
+                    type="button"
+                  >
                     Description
                   </button>
                 </th>
@@ -654,7 +656,9 @@ exports[`Should render the list with nodes of given ListItemActions 1`] = `
                 <th
                   class="headerCell clickable"
                 >
-                  <button>
+                  <button
+                    type="button"
+                  >
                     Description
                   </button>
                 </th>
@@ -670,7 +674,9 @@ exports[`Should render the list with nodes of given ListItemActions 1`] = `
                   <div
                     class="cellContent"
                   >
-                    <button>
+                    <button
+                      type="button"
+                    >
                       <span
                         aria-label="su-eye"
                         class="su-eye"
@@ -719,7 +725,9 @@ exports[`Should render the list with nodes of given ListItemActions 1`] = `
                   <div
                     class="cellContent"
                   >
-                    <button>
+                    <button
+                      type="button"
+                    >
                       <span
                         aria-label="su-eye"
                         class="su-eye"
@@ -959,7 +967,9 @@ exports[`Should render the list with nodes of given ToolbarActions 1`] = `
                 <th
                   class="headerCell clickable"
                 >
-                  <button>
+                  <button
+                    type="button"
+                  >
                     Description
                   </button>
                 </th>
@@ -1235,7 +1245,9 @@ exports[`Should render the list with the correct resourceKey 1`] = `
                 <th
                   class="headerCell clickable"
                 >
-                  <button>
+                  <button
+                    type="button"
+                  >
                     Description
                   </button>
                 </th>

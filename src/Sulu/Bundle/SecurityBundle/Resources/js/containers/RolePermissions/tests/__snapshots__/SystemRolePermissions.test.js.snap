@@ -71,6 +71,7 @@ exports[`Render permissions for a single system 1`] = `
           </div>
           <button
             class="rowButton"
+            type="button"
           >
             sulu_admin.deactivate_all
           </button>
@@ -116,6 +117,7 @@ exports[`Render permissions for a single system 1`] = `
           </div>
           <button
             class="rowButton"
+            type="button"
           >
             sulu_admin.deactivate_all
           </button>

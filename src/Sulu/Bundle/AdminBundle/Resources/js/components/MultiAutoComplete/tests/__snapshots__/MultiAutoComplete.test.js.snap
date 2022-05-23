@@ -21,6 +21,7 @@ Array [
       >
         <button
           class="chip secondary small"
+          type="button"
         >
           Test
           <span
@@ -54,6 +55,7 @@ Array [
       >
         <button
           class="suggestion"
+          type="button"
         >
           <span
             class="column"
@@ -68,6 +70,7 @@ Array [
       >
         <button
           class="suggestion"
+          type="button"
         >
           <span
             class="column"
@@ -82,6 +85,7 @@ Array [
       >
         <button
           class="suggestion"
+          type="button"
         >
           <span
             class="column"

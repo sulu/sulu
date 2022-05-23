@@ -3,12 +3,14 @@
 exports[`Render an active button 1`] = `
 <button
   class="button active"
+  type="button"
 />
 `;
 
 exports[`Render button 1`] = `
 <button
   class="button"
+  type="button"
 >
   <span
     class="label"
@@ -21,12 +23,14 @@ exports[`Render button 1`] = `
 exports[`Render button with a different size 1`] = `
 <button
   class="button small"
+  type="button"
 />
 `;
 
 exports[`Render button with a prepended icon 1`] = `
 <button
   class="button"
+  type="button"
 >
   <span
     aria-label="fa-trash-o"
@@ -38,6 +42,7 @@ exports[`Render button with a prepended icon 1`] = `
 exports[`Render button with dropdown indicator 1`] = `
 <button
   class="button"
+  type="button"
 >
   <span
     aria-label="su-angle-down"
@@ -49,6 +54,7 @@ exports[`Render button with dropdown indicator 1`] = `
 exports[`Render button with value 1`] = `
 <button
   class="button"
+  type="button"
 >
   <span
     class="label"
@@ -61,6 +67,7 @@ exports[`Render button with value 1`] = `
 exports[`Render button without text 1`] = `
 <button
   class="button"
+  type="button"
 />
 `;
 
@@ -68,12 +75,14 @@ exports[`Render disabled button 1`] = `
 <button
   class="button"
   disabled=""
+  type="button"
 />
 `;
 
 exports[`Render loading button 1`] = `
 <button
   class="button"
+  type="button"
 >
   <div
     class="spinner loader"
@@ -97,6 +106,7 @@ exports[`Render loading button 1`] = `
 exports[`Render primary button 1`] = `
 <button
   class="button primary"
+  type="button"
 >
   <span
     class="label"
@@ -109,6 +119,7 @@ exports[`Render primary button 1`] = `
 exports[`Render primary success button 1`] = `
 <button
   class="button primary success"
+  type="button"
 >
   <span
     class="label"
@@ -121,6 +132,7 @@ exports[`Render primary success button 1`] = `
 exports[`Render success button 1`] = `
 <button
   class="button success"
+  type="button"
 >
   <span
     class="label"

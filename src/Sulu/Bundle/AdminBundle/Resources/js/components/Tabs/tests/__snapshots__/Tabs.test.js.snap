@@ -16,6 +16,7 @@ exports[`Render a Tabs component with a selected tab and a badge 1`] = `
         <button
           disabled=""
           title="Tab 1"
+          type="button"
         >
           Tab 1
         </button>
@@ -25,6 +26,7 @@ exports[`Render a Tabs component with a selected tab and a badge 1`] = `
       >
         <button
           title="Tab 2"
+          type="button"
         >
           Tab 2
         </button>
@@ -34,6 +36,7 @@ exports[`Render a Tabs component with a selected tab and a badge 1`] = `
       >
         <button
           title="Tab 3"
+          type="button"
         >
           Tab 3
           <div
@@ -72,6 +75,7 @@ exports[`Render a Tabs component with type inline 1`] = `
       >
         <button
           title="Tab 1"
+          type="button"
         >
           Tab 1
         </button>
@@ -81,6 +85,7 @@ exports[`Render a Tabs component with type inline 1`] = `
       >
         <button
           title="Tab 2"
+          type="button"
         >
           Tab 2
         </button>
@@ -90,6 +95,7 @@ exports[`Render a Tabs component with type inline 1`] = `
       >
         <button
           title="Tab 3"
+          type="button"
         >
           Tab 3
         </button>
@@ -114,6 +120,7 @@ exports[`Render a Tabs component with type nested 1`] = `
       >
         <button
           title="Tab 1"
+          type="button"
         >
           Tab 1
         </button>
@@ -123,6 +130,7 @@ exports[`Render a Tabs component with type nested 1`] = `
       >
         <button
           title="Tab 2"
+          type="button"
         >
           Tab 2
         </button>
@@ -132,6 +140,7 @@ exports[`Render a Tabs component with type nested 1`] = `
       >
         <button
           title="Tab 3"
+          type="button"
         >
           Tab 3
         </button>
@@ -156,6 +165,7 @@ exports[`Render a Tabs component with type root 1`] = `
       >
         <button
           title="Tab 1"
+          type="button"
         >
           Tab 1
         </button>
@@ -165,6 +175,7 @@ exports[`Render a Tabs component with type root 1`] = `
       >
         <button
           title="Tab 2"
+          type="button"
         >
           Tab 2
         </button>
@@ -174,6 +185,7 @@ exports[`Render a Tabs component with type root 1`] = `
       >
         <button
           title="Tab 3"
+          type="button"
         >
           Tab 3
         </button>

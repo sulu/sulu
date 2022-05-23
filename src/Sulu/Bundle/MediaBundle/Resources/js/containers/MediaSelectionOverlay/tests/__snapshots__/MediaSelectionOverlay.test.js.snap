@@ -53,6 +53,7 @@ Array [
                         <button
                           class="item"
                           disabled=""
+                          type="button"
                         >
                           sulu_media.all_media
                         </button>
@@ -443,6 +444,7 @@ Array [
                               <div>
                                 <button
                                   class="downloadButton"
+                                  type="button"
                                 >
                                   <span
                                     aria-label="su-download"
@@ -576,6 +578,7 @@ Array [
                               <div>
                                 <button
                                   class="downloadButton"
+                                  type="button"
                                 >
                                   <span
                                     aria-label="su-download"
@@ -741,6 +744,7 @@ Array [
                         <button
                           class="item"
                           disabled=""
+                          type="button"
                         >
                           sulu_media.all_media
                         </button>
@@ -1131,6 +1135,7 @@ Array [
                               <div>
                                 <button
                                   class="downloadButton"
+                                  type="button"
                                 >
                                   <span
                                     aria-label="su-download"
@@ -1264,6 +1269,7 @@ Array [
                               <div>
                                 <button
                                   class="downloadButton"
+                                  type="button"
                                 >
                                   <span
                                     aria-label="su-download"

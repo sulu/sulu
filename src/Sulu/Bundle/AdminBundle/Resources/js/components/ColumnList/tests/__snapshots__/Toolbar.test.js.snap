@@ -6,6 +6,7 @@ exports[`Should render with active 1`] = `
 >
   <button
     class="item primary"
+    type="button"
   >
     <span
       aria-label="fa-plus"
@@ -14,6 +15,7 @@ exports[`Should render with active 1`] = `
   </button>
   <button
     class="item primary"
+    type="button"
   >
     <span
       aria-label="fa-gear"
@@ -31,6 +33,7 @@ exports[`Should render with active 2`] = `
 Array [
   <button
     class="item primary"
+    type="button"
   >
     <span
       aria-label="fa-gear"
@@ -66,12 +69,14 @@ Array [
           >
             <button
               class="action"
+              type="button"
             >
               Option1
             </button>
             <button
               class="action"
               disabled=""
+              type="button"
             >
               Option1
             </button>

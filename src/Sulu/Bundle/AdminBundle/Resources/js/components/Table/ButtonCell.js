@@ -33,7 +33,7 @@ export default class ButtonCell extends React.PureComponent<Props> {
 
         return (
             <Cell className={tableStyles.buttonCell}>
-                <button disabled={disabled} onClick={this.handleClick}>
+                <button disabled={disabled} onClick={this.handleClick} type="button">
                     <Icon name={icon} />
                 </button>
             </Cell>

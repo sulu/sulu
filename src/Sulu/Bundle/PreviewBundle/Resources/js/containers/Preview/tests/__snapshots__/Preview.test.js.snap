@@ -24,6 +24,7 @@ exports[`Dont react or update preview when data is changed during formstore is l
     >
       <button
         class="button dark"
+        type="button"
       >
         <span
           aria-label="su-arrow-right"
@@ -42,6 +43,7 @@ exports[`Dont react or update preview when data is changed during formstore is l
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-expand"
@@ -65,6 +67,7 @@ exports[`Dont react or update preview when data is changed during formstore is l
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-calendar"
@@ -88,6 +91,7 @@ exports[`Dont react or update preview when data is changed during formstore is l
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-webspace"
@@ -103,6 +107,7 @@ exports[`Dont react or update preview when data is changed during formstore is l
           <li>
             <button
               class="button dark"
+              type="button"
             >
               <span
                 aria-label="su-sync"
@@ -118,6 +123,7 @@ exports[`Dont react or update preview when data is changed during formstore is l
           <li>
             <button
               class="button dark"
+              type="button"
             >
               <span
                 aria-label="su-link"
@@ -164,6 +170,7 @@ exports[`Dont react or update preview when data is changed during preview-store 
     >
       <button
         class="button dark"
+        type="button"
       >
         <span
           aria-label="su-arrow-right"
@@ -182,6 +189,7 @@ exports[`Dont react or update preview when data is changed during preview-store 
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-expand"
@@ -205,6 +213,7 @@ exports[`Dont react or update preview when data is changed during preview-store 
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-calendar"
@@ -228,6 +237,7 @@ exports[`Dont react or update preview when data is changed during preview-store 
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-webspace"
@@ -243,6 +253,7 @@ exports[`Dont react or update preview when data is changed during preview-store 
           <li>
             <button
               class="button dark"
+              type="button"
             >
               <span
                 aria-label="su-sync"
@@ -258,6 +269,7 @@ exports[`Dont react or update preview when data is changed during preview-store 
           <li>
             <button
               class="button dark"
+              type="button"
             >
               <span
                 aria-label="su-link"
@@ -303,6 +315,7 @@ exports[`React and update preview when data is changed 1`] = `
     >
       <button
         class="button dark"
+        type="button"
       >
         <span
           aria-label="su-arrow-right"
@@ -321,6 +334,7 @@ exports[`React and update preview when data is changed 1`] = `
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-expand"
@@ -344,6 +358,7 @@ exports[`React and update preview when data is changed 1`] = `
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-calendar"
@@ -367,6 +382,7 @@ exports[`React and update preview when data is changed 1`] = `
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-webspace"
@@ -382,6 +398,7 @@ exports[`React and update preview when data is changed 1`] = `
           <li>
             <button
               class="button dark"
+              type="button"
             >
               <span
                 aria-label="su-sync"
@@ -397,6 +414,7 @@ exports[`React and update preview when data is changed 1`] = `
           <li>
             <button
               class="button dark"
+              type="button"
             >
               <span
                 aria-label="su-link"
@@ -417,7 +435,9 @@ exports[`React and update preview when data is changed 1`] = `
 `;
 
 exports[`Render button to start preview 1`] = `
-<button>
+<button
+  type="button"
+>
   Start
 </button>
 `;
@@ -446,6 +466,7 @@ exports[`Render correct preview 1`] = `
     >
       <button
         class="button dark"
+        type="button"
       >
         <span
           aria-label="su-arrow-right"
@@ -464,6 +485,7 @@ exports[`Render correct preview 1`] = `
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-expand"
@@ -487,6 +509,7 @@ exports[`Render correct preview 1`] = `
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-calendar"
@@ -510,6 +533,7 @@ exports[`Render correct preview 1`] = `
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-webspace"
@@ -528,6 +552,7 @@ exports[`Render correct preview 1`] = `
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-focus"
@@ -543,6 +568,7 @@ exports[`Render correct preview 1`] = `
           <li>
             <button
               class="button dark"
+              type="button"
             >
               <span
                 aria-label="su-sync"
@@ -558,6 +584,7 @@ exports[`Render correct preview 1`] = `
           <li>
             <button
               class="button dark"
+              type="button"
             >
               <span
                 aria-label="su-link"
@@ -601,6 +628,7 @@ exports[`Render correct preview with target groups 1`] = `
     >
       <button
         class="button dark"
+        type="button"
       >
         <span
           aria-label="su-arrow-right"
@@ -619,6 +647,7 @@ exports[`Render correct preview with target groups 1`] = `
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-expand"
@@ -642,6 +671,7 @@ exports[`Render correct preview with target groups 1`] = `
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-calendar"
@@ -665,6 +695,7 @@ exports[`Render correct preview with target groups 1`] = `
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-webspace"
@@ -683,6 +714,7 @@ exports[`Render correct preview with target groups 1`] = `
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-user"
@@ -698,6 +730,7 @@ exports[`Render correct preview with target groups 1`] = `
           <li>
             <button
               class="button dark"
+              type="button"
             >
               <span
                 aria-label="su-sync"
@@ -713,6 +746,7 @@ exports[`Render correct preview with target groups 1`] = `
           <li>
             <button
               class="button dark"
+              type="button"
             >
               <span
                 aria-label="su-link"
@@ -756,6 +790,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
     >
       <button
         class="button dark"
+        type="button"
       >
         <span
           aria-label="su-arrow-right"
@@ -774,6 +809,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-expand"
@@ -797,6 +833,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-calendar"
@@ -820,6 +857,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-webspace"
@@ -835,6 +873,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
           <li>
             <button
               class="button dark"
+              type="button"
             >
               <span
                 aria-label="su-sync"
@@ -850,6 +889,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
           <li>
             <button
               class="button dark"
+              type="button"
             >
               <span
                 aria-label="su-link"
@@ -893,6 +933,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
     >
       <button
         class="button dark"
+        type="button"
       >
         <span
           aria-label="su-arrow-right"
@@ -911,6 +952,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-expand"
@@ -934,6 +976,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-calendar"
@@ -957,6 +1000,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
             >
               <button
                 class="button dark"
+                type="button"
               >
                 <span
                   aria-label="su-webspace"
@@ -972,6 +1016,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
           <li>
             <button
               class="button dark"
+              type="button"
             >
               <span
                 aria-label="su-sync"
@@ -987,6 +1032,7 @@ exports[`Render nothing if separate window is opened and rerender if it is close
           <li>
             <button
               class="button dark"
+              type="button"
             >
               <span
                 aria-label="su-link"

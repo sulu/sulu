@@ -15,6 +15,7 @@ exports[`Render a simple MediaOverview 1`] = `
           <li>
             <button
               class="item"
+              type="button"
             >
               sulu_media.all_media
             </button>
@@ -27,6 +28,7 @@ exports[`Render a simple MediaOverview 1`] = `
             <button
               class="item"
               disabled=""
+              type="button"
             />
           </li>
         </ul>
@@ -400,6 +402,7 @@ exports[`Render a simple MediaOverview 1`] = `
                   <div>
                     <button
                       class="downloadButton"
+                      type="button"
                     >
                       <span
                         aria-label="su-download"
@@ -533,6 +536,7 @@ exports[`Render a simple MediaOverview 1`] = `
                   <div>
                     <button
                       class="downloadButton"
+                      type="button"
                     >
                       <span
                         aria-label="su-download"

@@ -64,6 +64,7 @@ export default class Button extends React.PureComponent<ButtonProps> {
                 disabled={disabled}
                 onClick={this.handleOnClick}
                 ref={this.setButtonRef}
+                type="button"
             >
                 {loading &&
                     <Loader className={buttonStyles.loader} size={LOADER_SIZE} />

@@ -44,7 +44,9 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
         <th
           class="headerCell clickable"
         >
-          <button>
+          <button
+            type="button"
+          >
             Description
           </button>
         </th>
@@ -60,7 +62,9 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
           <div
             class="cellContent"
           >
-            <button>
+            <button
+              type="button"
+            >
               <span
                 aria-label="su-pen"
                 class="su-pen"
@@ -74,7 +78,9 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
           <div
             class="cellContent"
           >
-            <button>
+            <button
+              type="button"
+            >
               <span
                 aria-label="su-process"
                 class="su-process"
@@ -88,7 +94,9 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
           <div
             class="cellContent"
           >
-            <button>
+            <button
+              type="button"
+            >
               <span
                 aria-label="su-trash"
                 class="su-trash"
@@ -133,7 +141,9 @@ exports[`Render data with plus button when onItemAdd callback is passed 1`] = `
         <th
           class="headerCell clickable"
         >
-          <button>
+          <button
+            type="button"
+          >
             Description
           </button>
         </th>
@@ -149,7 +159,9 @@ exports[`Render data with plus button when onItemAdd callback is passed 1`] = `
           <div
             class="cellContent"
           >
-            <button>
+            <button
+              type="button"
+            >
               <span
                 aria-label="su-plus-circle"
                 class="su-plus-circle"
@@ -184,7 +196,9 @@ exports[`Render data with schema 1`] = `
         <th
           class="headerCell clickable"
         >
-          <button>
+          <button
+            type="button"
+          >
             Title
           </button>
         </th>
@@ -431,7 +445,9 @@ exports[`Render data with schema and selections 1`] = `
         <th
           class="headerCell clickable"
         >
-          <button>
+          <button
+            type="button"
+          >
             Title
           </button>
         </th>
@@ -516,7 +532,9 @@ exports[`Render data with skin 1`] = `
         <th
           class="headerCell clickable"
         >
-          <button>
+          <button
+            type="button"
+          >
             Title
           </button>
         </th>
@@ -615,14 +633,18 @@ exports[`Render data with two columns 1`] = `
         <th
           class="headerCell clickable"
         >
-          <button>
+          <button
+            type="button"
+          >
             Title
           </button>
         </th>
         <th
           class="headerCell clickable"
         >
-          <button>
+          <button
+            type="button"
+          >
             Title2
           </button>
         </th>

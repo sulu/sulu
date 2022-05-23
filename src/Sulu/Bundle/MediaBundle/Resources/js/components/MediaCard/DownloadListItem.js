@@ -75,7 +75,7 @@ class DownloadListItem extends React.Component<Props> {
                     >
                         {content}
                     </ClipboardButton>
-                    : <button onClick={this.handleClick}>
+                    : <button onClick={this.handleClick} type="button">
                         {content}
                     </button>
                 }

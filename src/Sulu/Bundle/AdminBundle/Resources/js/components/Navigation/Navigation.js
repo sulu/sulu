@@ -108,7 +108,7 @@ class Navigation extends React.Component<Props> {
         }
 
         return (
-            <button className={navigationStyles.noUserImage} onClick={onProfileClick}>
+            <button className={navigationStyles.noUserImage} onClick={onProfileClick} type="button">
                 <Icon name="fa-user" />
             </button>
         );
@@ -166,10 +166,15 @@ class Navigation extends React.Component<Props> {
                     <div className={navigationStyles.userContent}>
                         {this.renderUserImage()}
                         <div className={navigationStyles.userProfile}>
-                            <button className={navigationStyles.username} onClick={onProfileClick}>{username}</button>
+                            <button
+                                className={navigationStyles.username}
+                                onClick={onProfileClick}
+                                type="button"
+                            >{username}</button>
                             <button
                                 className={navigationStyles.logout}
                                 onClick={onLogoutClick}
+                                type="button"
                             >
                                 <Icon name="su-exit" />
                                 Log out

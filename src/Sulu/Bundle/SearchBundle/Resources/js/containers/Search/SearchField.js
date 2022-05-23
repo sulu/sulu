@@ -86,7 +86,11 @@ class SearchField extends React.Component<Props> {
                 <div className={searchFieldStyles.searchField}>
                     <ArrowMenu
                         anchorElement={
-                            <button className={searchFieldStyles.indexButton} onClick={this.handleIndexClick}>
+                            <button
+                                className={searchFieldStyles.indexButton}
+                                onClick={this.handleIndexClick}
+                                type="button"
+                            >
                                 <span className={searchFieldStyles.index}>
                                     {this.index ? this.index.name : everythingTranslation}
                                 </span>

@@ -503,7 +503,9 @@ Array [
       <li
         class="item"
       >
-        <button>
+        <button
+          type="button"
+        >
           <span
             class="content"
           >

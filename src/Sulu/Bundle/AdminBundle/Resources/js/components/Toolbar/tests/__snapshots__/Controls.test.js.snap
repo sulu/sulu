@@ -12,6 +12,7 @@ exports[`Render controls with children 1`] = `
 >
   <button
     class="button light"
+    type="button"
   >
     <span
       class="label"

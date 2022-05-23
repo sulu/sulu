@@ -9,6 +9,7 @@ exports[`Render hint that nothing was found 1`] = `
   >
     <button
       class="indexButton"
+      type="button"
     >
       <span
         class="index"
@@ -85,6 +86,7 @@ exports[`Render loader while loading indexes and show SearchField afterwards 2`]
   >
     <button
       class="indexButton"
+      type="button"
     >
       <span
         class="index"
@@ -128,6 +130,7 @@ exports[`Render loader while loading search results 1`] = `
   >
     <button
       class="indexButton"
+      type="button"
     >
       <span
         class="index"
@@ -182,6 +185,7 @@ exports[`Render search results 1`] = `
   >
     <button
       class="indexButton"
+      type="button"
     >
       <span
         class="index"

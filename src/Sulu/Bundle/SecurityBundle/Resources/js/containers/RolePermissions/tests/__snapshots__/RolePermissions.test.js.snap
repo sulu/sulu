@@ -103,6 +103,7 @@ exports[`Render matrix with correct given values 2`] = `
           </div>
           <button
             class="rowButton"
+            type="button"
           >
             sulu_admin.deactivate_all
           </button>
@@ -166,6 +167,7 @@ exports[`Render matrix with correct given values 2`] = `
           </div>
           <button
             class="rowButton"
+            type="button"
           >
             sulu_admin.deactivate_all
           </button>

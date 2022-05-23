@@ -6,6 +6,7 @@ exports[`Render WebspaceSelect closed 1`] = `
 >
   <button
     class="button"
+    type="button"
   >
     <span
       aria-label="su-webspace"
