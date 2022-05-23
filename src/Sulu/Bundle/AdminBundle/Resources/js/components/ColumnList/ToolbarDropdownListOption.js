@@ -19,7 +19,12 @@ export default class ToolbarDropdownListOption extends React.Component<Props> {
         const {children, disabled} = this.props;
         return (
             <li>
-                <button className={toolbarDropdownOptionStyles.option} disabled={disabled} onClick={this.handleClick}>
+                <button
+                    className={toolbarDropdownOptionStyles.option}
+                    disabled={disabled}
+                    onClick={this.handleClick}
+                    type="button"
+                >
                     {children}
                 </button>
             </li>

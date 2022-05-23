@@ -14,6 +14,7 @@ exports[`Render ItemSection 1`] = `
   >
     <button
       class="item"
+      type="button"
     >
       <span
         class="icon"
@@ -24,6 +25,7 @@ exports[`Render ItemSection 1`] = `
     </button>
     <button
       class="item"
+      type="button"
     >
       <span
         class="icon"
@@ -34,6 +36,7 @@ exports[`Render ItemSection 1`] = `
     </button>
     <button
       class="item"
+      type="button"
     >
       <span
         class="icon"
@@ -60,6 +63,7 @@ exports[`Render ItemSection with value 1`] = `
   >
     <button
       class="item"
+      type="button"
     >
       <span
         class="icon"
@@ -70,6 +74,7 @@ exports[`Render ItemSection with value 1`] = `
     </button>
     <button
       class="item"
+      type="button"
     >
       <span
         class="icon"
@@ -80,6 +85,7 @@ exports[`Render ItemSection with value 1`] = `
     </button>
     <button
       class="item active"
+      type="button"
     >
       <span
         class="icon"

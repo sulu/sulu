@@ -71,6 +71,7 @@ export default class Suggestion extends React.PureComponent<Props> {
                 <button
                     className={suggestionStyles.suggestion}
                     onClick={this.handleClick}
+                    type="button"
                 >
                     {icon &&
                         <Icon

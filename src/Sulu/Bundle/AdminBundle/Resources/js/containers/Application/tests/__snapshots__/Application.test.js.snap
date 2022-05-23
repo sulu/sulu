@@ -168,6 +168,7 @@ Array [
             >
               <button
                 class="button light primary"
+                type="button"
               >
                 <span
                   aria-label="su-bars"
@@ -357,6 +358,7 @@ Array [
             >
               <button
                 class="button light primary"
+                type="button"
               >
                 <span
                   aria-label="su-bars"
@@ -888,6 +890,7 @@ Array [
             >
               <button
                 class="button light primary"
+                type="button"
               >
                 <span
                   aria-label="su-times"
@@ -1072,6 +1075,7 @@ Array [
             >
               <button
                 class="button light primary"
+                type="button"
               >
                 <span
                   aria-label="su-bars"

@@ -14,7 +14,7 @@ test('Render ArrowMenu closed', () => {
     const handleChangeSection1 = jest.fn();
     const handleChangeSection2 = jest.fn();
     const open = false;
-    const button = (<button>Nice button</button>);
+    const button = (<button type="button">Nice button</button>);
     const value1 = 'sulu';
     const value2 = undefined;
 
@@ -59,7 +59,7 @@ test('Render ArrowMenu closed', () => {
 test('Render ArrowMenu with non-HTML element as anchor', () => {
     class Button extends React.Component<*> {
         render() {
-            return <button ref={this.props.buttonRef} />;
+            return <button ref={this.props.buttonRef} type="button" />;
         }
     }
 
@@ -77,7 +77,7 @@ test('Render ArrowMenu open', () => {
     const handleChangeSection1 = jest.fn();
     const handleChangeSection2 = jest.fn();
     const open = true;
-    const button = (<button>Nice button</button>);
+    const button = (<button type="button">Nice button</button>);
     const value1 = 'sulu';
     const value2 = undefined;
 
@@ -126,7 +126,7 @@ test('Render ArrowMenu open with falsy values', () => {
     const handleChangeSection1 = jest.fn();
     const handleChangeSection2 = jest.fn();
     const open = true;
-    const button = (<button>Nice button</button>);
+    const button = (<button type="button">Nice button</button>);
     const value1 = 'sulu';
     const value2 = undefined;
 
@@ -176,7 +176,7 @@ test('Render ArrowMenu open with falsy values', () => {
 });
 
 test('Render the correct item active with a value of undefined', () => {
-    const button = (<button>Nice button</button>);
+    const button = (<button type="button">Nice button</button>);
 
     const arrowMenu = mount(
         <ArrowMenu anchorElement={button} onClose={jest.fn()} open={true}>
@@ -199,7 +199,7 @@ test('Events should be called correctly', () => {
     const handleChangeSection1 = jest.fn();
     const handleChangeSection2 = jest.fn();
     const open = true;
-    const button = (<button>Nice button</button>);
+    const button = (<button type="button">Nice button</button>);
     const value1 = 'sulu';
     const value2 = undefined;
     const handleActionClick1 = jest.fn();

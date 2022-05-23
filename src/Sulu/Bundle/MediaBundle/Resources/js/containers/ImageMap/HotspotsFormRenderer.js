@@ -135,6 +135,7 @@ class HotspotsFormRenderer extends React.Component<Props> {
                                         className={hotspotsFormRendererStyles.removeButton}
                                         disabled={disabled}
                                         onClick={this.handleHotspotRemove}
+                                        type="button"
                                     >
                                         <Icon name="su-trash-alt" />
                                     </button>

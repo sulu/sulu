@@ -46,6 +46,7 @@ exports[`Render Item with data as form 1`] = `
     >
       <button
         class="mediaButton"
+        type="button"
       >
         <div
           class="mimeTypeIndicator"

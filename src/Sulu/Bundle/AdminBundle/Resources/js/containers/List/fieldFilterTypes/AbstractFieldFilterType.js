@@ -30,7 +30,6 @@ export default class AbstractFieldFilterType<T> {
 
     };
 
-    // eslint-disable-next-line no-unused-vars
     getFormNode(): Node {
         return null;
     }

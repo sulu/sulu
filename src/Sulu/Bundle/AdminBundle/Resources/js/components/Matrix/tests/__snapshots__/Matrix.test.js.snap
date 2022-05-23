@@ -45,6 +45,7 @@ exports[`Render the Matrix component 1`] = `
         </div>
         <button
           class="rowButton"
+          type="button"
         >
           Activate all
         </button>
@@ -72,6 +73,7 @@ exports[`Render the Matrix component 1`] = `
         </div>
         <button
           class="rowButton"
+          type="button"
         >
           Activate all
         </button>
@@ -108,6 +110,7 @@ exports[`Render the Matrix component 1`] = `
         </div>
         <button
           class="rowButton"
+          type="button"
         >
           Activate all
         </button>
@@ -162,6 +165,7 @@ exports[`Render the Matrix component with values 1`] = `
         </div>
         <button
           class="rowButton"
+          type="button"
         >
           Deactivate all
         </button>
@@ -189,6 +193,7 @@ exports[`Render the Matrix component with values 1`] = `
         </div>
         <button
           class="rowButton"
+          type="button"
         >
           Deactivate all
         </button>
@@ -225,6 +230,7 @@ exports[`Render the Matrix component with values 1`] = `
         </div>
         <button
           class="rowButton"
+          type="button"
         >
           Deactivate all
         </button>

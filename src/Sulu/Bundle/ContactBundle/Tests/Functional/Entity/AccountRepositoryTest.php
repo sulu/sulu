@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ContactBundle\Tests\Functional\Entity;
 
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\ContactBundle\Entity\Account;
+use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountRepository;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
@@ -572,6 +573,21 @@ class AccountRepositoryTest extends SuluTestCase
         $result = $this->accountRepository->findByIds([]);
 
         $this->assertCount(0, $result);
+    }
+
+    public function testRemoveParentAccount(): void
+    {
+        $account1 = $this->createAccount('Sulu');
+        $account2 = $this->createAccount('Sensiolabs');
+        $account2->setParent($account1);
+
+        $this->em->flush();
+        $account1Id = $account1->getId();
+
+        $this->em->remove($account1);
+        $this->em->flush();
+
+        $this->assertNull($this->em->find(AccountInterface::class, $account1Id));
     }
 
     private function createTag($name)

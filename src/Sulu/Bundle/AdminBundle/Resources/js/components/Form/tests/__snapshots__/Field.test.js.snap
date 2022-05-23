@@ -120,6 +120,7 @@ exports[`Display a field with label and type 1`] = `
       Test
       <button
         class="type"
+        type="button"
       >
         <span
           class="typeDelimiter"

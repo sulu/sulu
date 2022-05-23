@@ -250,6 +250,7 @@ exports[`Render the adapter with filters 1`] = `
         >
           <button
             class="chip primary medium clickable"
+            type="button"
           >
             Title: 
             <span
@@ -265,6 +266,7 @@ exports[`Render the adapter with filters 1`] = `
         >
           <button
             class="chip primary medium clickable"
+            type="button"
           >
             Created at: 
             <span

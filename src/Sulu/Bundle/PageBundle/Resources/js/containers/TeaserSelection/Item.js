@@ -111,7 +111,11 @@ class Item extends React.Component<Props> {
                         <div className={itemStyles.form}>
                             <div className={itemStyles.mediaColumn}>
                                 {mediaUrl &&
-                                    <button className={itemStyles.mediaButton} onClick={this.handleMediaClick}>
+                                    <button
+                                        className={itemStyles.mediaButton}
+                                        onClick={this.handleMediaClick}
+                                        type="button"
+                                    >
                                         {this.mediaId
                                             ? <img src={mediaUrl.replace(':id', this.mediaId.toString())} />
                                             : <MimeTypeIndicator iconSize={16} mimeType="image" />

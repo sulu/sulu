@@ -20,6 +20,7 @@ exports[`Render items with children 1`] = `
     <li>
       <button
         class="button light"
+        type="button"
       >
         <span
           class="label"

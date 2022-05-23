@@ -80,6 +80,7 @@ export default class ImageFocusPointCell extends React.PureComponent<Props> {
                 disabled={active}
                 onClick={this.handleClick}
                 style={buttonStyle}
+                type="button"
             >
                 {!!arrowDirection && !active &&
                     <div style={iconStyle}>

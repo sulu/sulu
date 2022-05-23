@@ -20,6 +20,7 @@ exports[`Render the MediaCollection 1`] = `
             <button
               class="item"
               disabled=""
+              type="button"
             >
               sulu_media.all_media
             </button>
@@ -387,6 +388,7 @@ exports[`Render the MediaCollection 1`] = `
                   <div>
                     <button
                       class="downloadButton"
+                      type="button"
                     >
                       <span
                         aria-label="su-download"
@@ -520,6 +522,7 @@ exports[`Render the MediaCollection 1`] = `
                   <div>
                     <button
                       class="downloadButton"
+                      type="button"
                     >
                       <span
                         aria-label="su-download"
@@ -596,6 +599,7 @@ exports[`Render the MediaCollection for all media 1`] = `
             <button
               class="item"
               disabled=""
+              type="button"
             >
               sulu_media.all_media
             </button>
@@ -950,6 +954,7 @@ exports[`Render the MediaCollection for all media 1`] = `
                   <div>
                     <button
                       class="downloadButton"
+                      type="button"
                     >
                       <span
                         aria-label="su-download"
@@ -1083,6 +1088,7 @@ exports[`Render the MediaCollection for all media 1`] = `
                   <div>
                     <button
                       class="downloadButton"
+                      type="button"
                     >
                       <span
                         aria-label="su-download"

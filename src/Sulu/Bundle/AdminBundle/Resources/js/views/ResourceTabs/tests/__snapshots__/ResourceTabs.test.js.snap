@@ -15,6 +15,7 @@ exports[`Should mark the currently active child route as selected tab 1`] = `
       >
         <button
           title="Tab Titel 1"
+          type="button"
         >
           Tab Titel 1
         </button>
@@ -25,6 +26,7 @@ exports[`Should mark the currently active child route as selected tab 1`] = `
         <button
           disabled=""
           title="Tab Titel 2"
+          type="button"
         >
           Tab Titel 2
         </button>
@@ -55,6 +57,7 @@ exports[`Should render the child components after the tabs 1`] = `
       >
         <button
           title="Tab Titel 1"
+          type="button"
         >
           Tab Titel 1
         </button>
@@ -64,6 +67,7 @@ exports[`Should render the child components after the tabs 1`] = `
       >
         <button
           title="Tab Titel 2"
+          type="button"
         >
           Tab Titel 2
         </button>

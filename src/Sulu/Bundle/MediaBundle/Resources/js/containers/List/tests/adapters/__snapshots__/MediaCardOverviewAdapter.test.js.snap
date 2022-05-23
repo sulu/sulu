@@ -101,6 +101,7 @@ exports[`Render a basic Masonry view with the MediaCardOverviewAdapter 1`] = `
             <div>
               <button
                 class="downloadButton"
+                type="button"
               >
                 <span
                   aria-label="su-download"
@@ -234,6 +235,7 @@ exports[`Render a basic Masonry view with the MediaCardOverviewAdapter 1`] = `
             <div>
               <button
                 class="downloadButton"
+                type="button"
               >
                 <span
                   aria-label="su-download"

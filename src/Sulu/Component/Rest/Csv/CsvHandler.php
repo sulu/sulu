@@ -104,7 +104,6 @@ class CsvHandler
                 $exporter->export('php://output', $data);
             }
         );
-        $response->send();
 
         return $response;
     }
