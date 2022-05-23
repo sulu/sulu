@@ -70,7 +70,7 @@ class CategoryController extends AbstractRestController implements ClassResource
     private $categoryManager;
 
     /**
-     * @var string
+     * @var class-string
      */
     private $categoryClass;
 
@@ -79,6 +79,9 @@ class CategoryController extends AbstractRestController implements ClassResource
      */
     protected static $entityKey = 'categories';
 
+    /**
+     * @param class-string $categoryClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         CategoryRepositoryInterface $categoryRepository,
