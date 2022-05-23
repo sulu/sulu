@@ -110,7 +110,7 @@ class DoctrineListBuilder extends AbstractListBuilder
     private $permissionCheckWithDynamicEntityClass = false;
 
     /**
-     * @var string
+     * @var class-string
      */
     private $securedEntityName;
 
@@ -136,6 +136,9 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     private $accessControlQueryEnhancer;
 
+    /**
+     * @param class-string $entityName
+     */
     public function __construct(
         EntityManager $em,
         $entityName,
