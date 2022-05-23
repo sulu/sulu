@@ -1,5 +1,19 @@
 # Upgrade
 
+## 2.3.12
+
+### Add DELETE SET NULL to account parent relation
+
+There did exist a bug in sulu when trying to remove an account entity
+which was connected to another account entity it was not possible to
+remove it. The `DELETE SET NULL` on the parent connection will solve
+this issue. For this a database change is required:
+
+```sql
+ALTER TABLE co_accounts DROP FOREIGN KEY FK_805CD14AC9171171;
+ALTER TABLE co_accounts ADD CONSTRAINT FK_805CD14AC9171171 FOREIGN KEY (idAccountsParent) REFERENCES co_accounts (id) ON DELETE SET NULL
+```
+
 ## 2.3.7
 
 ### Add missing `kernel.reset` tag for document manager cache services
