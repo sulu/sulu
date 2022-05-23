@@ -37,6 +37,9 @@ class AccessControlQueryEnhancer
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @param class-string $entityClass
+     */
     public function enhance(
         QueryBuilder $queryBuilder,
         ?UserInterface $user,
@@ -53,6 +56,9 @@ class AccessControlQueryEnhancer
         );
     }
 
+    /**
+     * @param class-string $entityClass
+     */
     public function enhanceWithDynamicEntityClass(
         QueryBuilder $queryBuilder,
         ?UserInterface $user,
@@ -80,6 +86,8 @@ class AccessControlQueryEnhancer
      * because of restrictions.
      *
      * As long as we dont have thousands of not "accessible" ids this approach should be faster.
+     *
+     * @param class-string $entityClass
      */
     private function enhanceQueryWithAccessControl(
         QueryBuilder $queryBuilder,
@@ -127,6 +135,9 @@ class AccessControlQueryEnhancer
         }
     }
 
+    /**
+     * @param class-string $entityClass
+     */
     private function getEntityIdCondition(string $entityClass, string $entityAlias, string $entityIdField = 'id'): string
     {
         $entityIdCondition = 'accessControl.entityId = ' . $entityAlias . '.' . $entityIdField;
