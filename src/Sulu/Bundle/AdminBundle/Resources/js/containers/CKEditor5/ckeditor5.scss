@@ -78,10 +78,7 @@ $textEditorUnpublishedLinkColor: $gold;
     }
 
     .ck.ck-editor__top {
-        margin-bottom: 10px;
-
         .ck.ck-toolbar {
-            border-radius: $textEditorBorderRadius !important;
             padding: 5px 10px;
 
             &.ck-toolbar_vertical > .ck-toolbar__items > .ck {
@@ -174,7 +171,6 @@ $textEditorUnpublishedLinkColor: $gold;
         }
 
         .ck.ck-content {
-            border-radius: $textEditorBorderRadius !important;
             border-color: $textEditorBackgroundColor !important;
             line-height: 20px;
             min-height: 100px;
