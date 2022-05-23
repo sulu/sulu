@@ -67,7 +67,7 @@ class Renderer extends React.Component<Props> {
                 dataPath={itemDataPath}
                 error={error}
                 formInspector={formInspector}
-                key={schemaKey}
+                key={schemaKey + '_' + schemaField.type}
                 name={schemaKey}
                 onChange={onChange}
                 onFinish={this.handleFieldFinish}
