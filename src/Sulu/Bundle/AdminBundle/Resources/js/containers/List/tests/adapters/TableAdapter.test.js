@@ -941,7 +941,6 @@ test('Click on itemAction should execute its callback', () => {
         <TableAdapter
             {...listAdapterDefaultProps}
             data={data}
-            /* eslint-disable-next-line react/jsx-no-bind */
             itemActionsProvider={actionsProvider}
             onItemClick={jest.fn()}
             page={1}

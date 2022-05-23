@@ -134,7 +134,7 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-jest.mock('../../../containers/SingleListOverlay', () => jest.fn(() => null));
+jest.mock('../../SingleListOverlay', () => jest.fn(() => null));
 
 class LoadingStrategy {
     destroy = jest.fn();
