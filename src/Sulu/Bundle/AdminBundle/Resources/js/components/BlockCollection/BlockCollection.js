@@ -118,6 +118,24 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         }
     };
 
+    @action handleDuplicateBlock = (index: number) => {
+        const {onChange, value} = this.props;
+
+        if (this.hasMaximumReached) {
+            throw new Error('The maximum amount of blocks has already been reached!');
+        }
+
+        if (value) {
+            this.expandedBlocks.splice(index, 0, true);
+            this.generatedBlockIds.splice(index, 0, ++BlockCollection.idCounter);
+
+            const elementsBefore = value.slice(0, index);
+            const elementsAfter = value.slice(index);
+            // $FlowFixMe
+            onChange([...elementsBefore, {...value[index]}, ...elementsAfter]);
+        }
+    };
+
     @action handleSortEnd = ({newIndex, oldIndex}: {newIndex: number, oldIndex: number}) => {
         const {onChange, onSortEnd, value} = this.props;
 
@@ -168,7 +186,22 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     @computed get blockActions() {
         const blockActions = [];
 
+        if (!this.hasMaximumReached) {
+            blockActions.push({
+                type: 'button',
+                icon: 'su-duplicate',
+                label: translate('sulu_admin.duplicate'),
+                onClick: this.handleDuplicateBlock,
+            });
+        }
+
         if (!this.hasMinimumReached) {
+            if (blockActions.length > 0) {
+                blockActions.push({
+                    type: 'divider',
+                });
+            }
+
             blockActions.push({
                 type: 'button',
                 icon: 'su-trash-alt',

@@ -334,9 +334,8 @@ test('Should throw an exception if a new block is added and the maximum has alre
     expect(() => blockCollection.instance().handleAddBlock()).toThrow(/maximum amount of blocks/);
 });
 
-test('Should pass remove action that allows to remove an existing block', () => {
-    // observable makes calling onChange with deleting an entry from expandedBlocks
-    // otherwise the value and BlockCollection.expandedBlocks variable get out of sync and emit a warning
+test('Should pass duplicate action that allows to duplicate an existing block', () => {
+    // update value that is passed to the component when change callback is fired to prevent warnings
     const value: any = observable([{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]);
     const changeSpy = jest.fn().mockImplementation((newValue) => {
         value.splice(0, value.length);
@@ -352,13 +351,87 @@ test('Should pass remove action that allows to remove an existing block', () => 
     );
 
     const blockActions = blockCollection.find('Block').at(0).prop('actions');
-    expect(blockActions).toEqual([
+    expect(blockActions).toContainEqual(
+        expect.objectContaining({
+            type: 'button',
+            icon: 'su-duplicate',
+            label: 'sulu_admin.duplicate',
+        })
+    );
+
+    blockCollection.find('Block').at(0).simulate('click');
+    blockCollection.find('Block').at(0).find('Icon[name="su-more-circle"]').simulate('click');
+    blockCollection.find('Block').at(0).find('Icon[name="su-duplicate"]').simulate('click');
+
+    expect(changeSpy).toBeCalledWith([
+        {content: 'Test 1', type: 'editor'},
+        {content: 'Test 1', type: 'editor'},
+        {content: 'Test 2', type: 'editor'},
+    ]);
+});
+
+test('Should not pass duplicate action to Block component if maxOccurs limit is reached', () => {
+    const value = [{content: 'Value 1', type: 'editor'}, {content: 'Value 2', type: 'editor'}];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            maxOccurs={2}
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    const blockActions = blockCollection.find('Block').at(0).prop('actions');
+    expect(blockActions).not.toContainEqual(
+        expect.objectContaining({
+            label: 'sulu_admin.duplicate',
+        })
+    );
+});
+
+test('Should throw an exception if a block is duplicated and maxOccurs limit is reached', () => {
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
+
+    const blockCollection = shallow(
+        <BlockCollection
+            defaultType="editor"
+            maxOccurs={2}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    expect(() => blockCollection.instance().handleDuplicateBlock(0)).toThrow(/maximum amount of blocks/);
+});
+
+test('Should pass remove action that allows to remove an existing block', () => {
+    // update value that is passed to the component when change callback is fired to prevent warnings
+    const value: any = observable([{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]);
+    const changeSpy = jest.fn().mockImplementation((newValue) => {
+        value.splice(0, value.length);
+        value.push(...newValue);
+    });
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    const blockActions = blockCollection.find('Block').at(0).prop('actions');
+    expect(blockActions).toContainEqual(
         expect.objectContaining({
             type: 'button',
             icon: 'su-trash-alt',
             label: 'sulu_admin.delete',
-        }),
-    ]);
+        })
+    );
 
     blockCollection.find('Block').at(0).simulate('click');
     blockCollection.find('Block').at(0).find('Icon[name="su-more-circle"]').simulate('click');
@@ -367,7 +440,7 @@ test('Should pass remove action that allows to remove an existing block', () => 
     expect(changeSpy).toBeCalledWith([expect.objectContaining({content: 'Test 2'})]);
 });
 
-test('Should not pass remove action to Block component if less or the exact amount of items are passed', () => {
+test('Should not pass remove action to Block component if minOccurs limit is reached', () => {
     const value = [{content: 'Value 1', type: 'editor'}, {content: 'Value 2', type: 'editor'}];
 
     const blockCollection = mount(
@@ -381,10 +454,12 @@ test('Should not pass remove action to Block component if less or the exact amou
     );
 
     const blockActions = blockCollection.find('Block').at(0).prop('actions');
-    expect(blockActions).toEqual([]);
+    expect(blockActions).not.toContainEqual(expect.objectContaining({
+        label: 'sulu_admin.delete',
+    }));
 });
 
-test('Should throw an exception if a block is removed and the minimum has already been reached', () => {
+test('Should throw an exception if a block is removed and minOccurs limit is reached', () => {
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
 
@@ -398,7 +473,7 @@ test('Should throw an exception if a block is removed and the minimum has alread
         />
     );
 
-    expect(() => blockCollection.instance().handleRemoveBlock()).toThrow(/minimum amount of blocks/);
+    expect(() => blockCollection.instance().handleRemoveBlock(0)).toThrow(/minimum amount of blocks/);
 });
 
 test('Should call onSettingsClick callback when settings icon is clicked', () => {
