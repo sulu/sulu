@@ -71,6 +71,10 @@ trait DataProviderRepositoryTrait
             $this->appendSortBy($filters['sortBy'], $sortMethod, $queryBuilder, 'c', $locale);
 
             foreach ($filters['sortBy'] as $sortColumn) {
+                if (strpos($sortColumn, '.') === false) {
+                    $sortColumn = 'c.' . $sortColumn;
+                }
+
                 $queryBuilder->addSelect($sortColumn);
             }
         }
