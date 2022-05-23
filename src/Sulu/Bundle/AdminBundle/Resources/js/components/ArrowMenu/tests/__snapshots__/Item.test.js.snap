@@ -3,6 +3,7 @@
 exports[`Render active Item 1`] = `
 <button
   class="item active"
+  type="button"
 >
   <span
     class="icon"
@@ -21,6 +22,7 @@ exports[`Render active Item 1`] = `
 exports[`Render default Item 1`] = `
 <button
   class="item"
+  type="button"
 >
   <span
     class="icon"
@@ -35,6 +37,7 @@ exports[`Render disabled Item 1`] = `
 <button
   class="item active"
   disabled=""
+  type="button"
 >
   <span
     class="icon"

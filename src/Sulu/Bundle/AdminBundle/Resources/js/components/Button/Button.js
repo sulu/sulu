@@ -87,6 +87,7 @@ export default class Button<T> extends React.PureComponent<Props<T>> {
                 disabled={loading || disabled}
                 onClick={onClick ? this.handleClick : undefined}
                 ref={buttonRef}
+                /* eslint-disable-next-line react/button-has-type */
                 type={type}
             >
                 {icon &&

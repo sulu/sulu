@@ -232,6 +232,7 @@ exports[`Render with empty webspace section 4`] = `
           </div>
           <button
             class="rowButton"
+            type="button"
           >
             sulu_admin.deactivate_all
           </button>
@@ -286,6 +287,7 @@ exports[`Render with empty webspace section 4`] = `
           </div>
           <button
             class="rowButton"
+            type="button"
           >
             sulu_admin.deactivate_all
           </button>
@@ -356,6 +358,7 @@ exports[`Render with minimal 1`] = `
           </div>
           <button
             class="rowButton"
+            type="button"
           >
             sulu_admin.deactivate_all
           </button>
@@ -410,6 +413,7 @@ exports[`Render with minimal 1`] = `
           </div>
           <button
             class="rowButton"
+            type="button"
           >
             sulu_admin.deactivate_all
           </button>
@@ -553,6 +557,7 @@ exports[`Render with webspace section 3`] = `
             </div>
             <button
               class="rowButton"
+              type="button"
             >
               sulu_admin.deactivate_all
             </button>
@@ -607,6 +612,7 @@ exports[`Render with webspace section 3`] = `
             </div>
             <button
               class="rowButton"
+              type="button"
             >
               sulu_admin.activate_all
             </button>
@@ -661,6 +667,7 @@ exports[`Render with webspace section 3`] = `
             </div>
             <button
               class="rowButton"
+              type="button"
             >
               sulu_admin.activate_all
             </button>
@@ -732,6 +739,7 @@ exports[`Render with webspace section 4`] = `
           </div>
           <button
             class="rowButton"
+            type="button"
           >
             sulu_admin.deactivate_all
           </button>
@@ -786,6 +794,7 @@ exports[`Render with webspace section 4`] = `
           </div>
           <button
             class="rowButton"
+            type="button"
           >
             sulu_admin.deactivate_all
           </button>

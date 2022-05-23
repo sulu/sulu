@@ -10,6 +10,7 @@ exports[`Render with highlighted suggestions 1`] = `
   >
     <button
       class="suggestion"
+      type="button"
     >
       <span
         class="column"
@@ -29,6 +30,7 @@ exports[`Render with highlighted suggestions 1`] = `
   >
     <button
       class="suggestion"
+      type="button"
     >
       <span
         class="column"

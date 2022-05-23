@@ -52,7 +52,7 @@ export default class Chip<T> extends React.Component<Props<T>> {
         );
 
         return (
-            <button className={chipClass} onClick={this.handleClick}>
+            <button className={chipClass} onClick={this.handleClick} type="button">
                 {children}
                 {!disabled && onDelete &&
                     <Icon className={chipStyles.icon} name="su-times" onClick={this.handleDelete} />

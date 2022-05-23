@@ -80,7 +80,9 @@ Array [
                       <div
                         class="cellContent"
                       >
-                        <button>
+                        <button
+                          type="button"
+                        >
                           <span
                             aria-label="su-trash-alt"
                             class="su-trash-alt"
@@ -116,7 +118,9 @@ Array [
                       <div
                         class="cellContent"
                       >
-                        <button>
+                        <button
+                          type="button"
+                        >
                           <span
                             aria-label="su-trash-alt"
                             class="su-trash-alt"

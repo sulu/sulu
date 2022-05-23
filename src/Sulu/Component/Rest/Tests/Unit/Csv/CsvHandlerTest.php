@@ -68,6 +68,7 @@ class CsvHandlerTest extends TestCase
 
         \ob_start();
         $response = $handler->createResponse($viewHandler->reveal(), $view, $request->reveal(), $format);
+        $response->send();
         $content = \ob_get_contents();
         \ob_end_clean();
 
@@ -110,6 +111,7 @@ class CsvHandlerTest extends TestCase
 
         \ob_start();
         $response = $handler->createResponse($viewHandler->reveal(), $view, $request->reveal(), $format);
+        $response->send();
         $content = \ob_get_contents();
         \ob_end_clean();
 
@@ -152,6 +154,7 @@ class CsvHandlerTest extends TestCase
 
         \ob_start();
         $response = $handler->createResponse($viewHandler->reveal(), $view, $request->reveal(), $format);
+        $response->send();
         $content = \ob_get_contents();
         \ob_end_clean();
 
@@ -194,6 +197,7 @@ class CsvHandlerTest extends TestCase
 
         \ob_start();
         $response = $handler->createResponse($viewHandler->reveal(), $view, $request->reveal(), $format);
+        $response->send();
         $content = \ob_get_contents();
         \ob_end_clean();
 
@@ -231,6 +235,7 @@ class CsvHandlerTest extends TestCase
 
         \ob_start();
         $response = $handler->createResponse($viewHandler->reveal(), $view, $request->reveal(), $format);
+        $response->send();
         $content = \ob_get_contents();
         \ob_end_clean();
 

@@ -194,6 +194,7 @@ class MediaCard extends React.Component<Props> {
                                 className={downloadButtonClass}
                                 onClick={this.handleDownloadButtonClick}
                                 ref={this.setDownloadButtonRef}
+                                type="button"
                             >
                                 <Icon name={DOWNLOAD_ICON} />
                             </button>

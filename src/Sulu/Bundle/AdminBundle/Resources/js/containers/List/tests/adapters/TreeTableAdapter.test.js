@@ -957,7 +957,6 @@ test('Click on itemAction should execute its callback', () => {
         <TreeTableAdapter
             {...listAdapterDefaultProps}
             data={data}
-            /* eslint-disable-next-line react/jsx-no-bind */
             itemActionsProvider={actionsProvider}
             onItemAdd={jest.fn()}
             schema={schema}

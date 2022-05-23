@@ -101,7 +101,9 @@ Array [
             <div
               class="cellContent"
             >
-              <button>
+              <button
+                type="button"
+              >
                 <span
                   aria-label="su-pen"
                   class="su-pen"
@@ -168,7 +170,9 @@ Array [
             <div
               class="cellContent"
             >
-              <button>
+              <button
+                type="button"
+              >
                 <span
                   aria-label="su-pen"
                   class="su-pen"
@@ -235,7 +239,9 @@ Array [
             <div
               class="cellContent"
             >
-              <button>
+              <button
+                type="button"
+              >
                 <span
                   aria-label="su-pen"
                   class="su-pen"

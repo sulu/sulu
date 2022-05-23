@@ -3,6 +3,7 @@
 exports[`Render Action with icon 1`] = `
 <button
   class="action"
+  type="button"
 >
   <span
     aria-label="su-display-default"
@@ -15,6 +16,7 @@ exports[`Render Action with icon 1`] = `
 exports[`Render default Action 1`] = `
 <button
   class="action"
+  type="button"
 >
   My Action
 </button>
@@ -24,6 +26,7 @@ exports[`Render disabled Action 1`] = `
 <button
   class="action"
   disabled=""
+  type="button"
 >
   My Action
 </button>

@@ -28,6 +28,7 @@ export default class CollapsedTab extends React.PureComponent<Props> {
                 <button
                     onClick={this.handleClick}
                     title={children}
+                    type="button"
                 >
                     {children}
                 </button>
