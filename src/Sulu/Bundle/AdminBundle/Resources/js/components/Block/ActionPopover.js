@@ -1,8 +1,7 @@
 // @flow
 import React from 'react';
 import {Menu, Popover} from '..';
-import Icon from '../Icon';
-import actionPopoverStyles from './actionPopover.scss';
+import ActionPopoverItem from './ActionPopoverItem';
 import type {ActionConfig} from './types';
 import type {ElementRef} from 'react';
 
@@ -14,6 +13,18 @@ type Props = {
 };
 
 export default class ActionPopover extends React.PureComponent<Props> {
+    handleActionClick = (index: number) => {
+        const {actions, onClose} = this.props;
+        const action = actions[index];
+
+        if (action.type === 'divider') {
+            throw new Error('Divider actions cannot be clicked! This should not happen and is likely a bug.');
+        }
+
+        action.onClick();
+        onClose();
+    };
+
     render() {
         const {
             open,
@@ -39,22 +50,13 @@ export default class ActionPopover extends React.PureComponent<Props> {
                             }
 
                             return (
-                                <li key={index}>
-                                    <button
-                                        className={actionPopoverStyles.action}
-                                        /* eslint-disable-next-line react/jsx-no-bind */
-                                        onClick={() => {
-                                            action.onClick();
-                                            this.props.onClose();
-                                        }}
-                                    >
-                                        <Icon
-                                            className={actionPopoverStyles.icon}
-                                            name={action.icon}
-                                        />
-                                        {action.label}
-                                    </button>
-                                </li>
+                                <ActionPopoverItem
+                                    icon={action.icon}
+                                    index={index}
+                                    key={index}
+                                    label={action.label}
+                                    onClick={this.handleActionClick}
+                                />
                             );
                         })}
                     </Menu>
