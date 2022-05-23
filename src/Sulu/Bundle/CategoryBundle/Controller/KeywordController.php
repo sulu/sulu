@@ -79,12 +79,15 @@ class KeywordController extends AbstractRestController implements ClassResourceI
     private $entityManager;
 
     /**
-     * @var string
+     * @var class-string
      */
     private $keywordClass;
 
     protected static $entityKey = 'category_keywords';
 
+    /**
+     * @param class-string $keywordClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         RestHelperInterface $restHelper,

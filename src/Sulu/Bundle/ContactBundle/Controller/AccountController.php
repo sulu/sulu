@@ -144,12 +144,12 @@ class AccountController extends AbstractRestController implements ClassResourceI
     private $domainEventCollector;
 
     /**
-     * @var string
+     * @var class-string
      */
     private $accountClass;
 
     /**
-     * @var string
+     * @var class-string
      */
     private $contactClass;
 
@@ -158,6 +158,10 @@ class AccountController extends AbstractRestController implements ClassResourceI
      */
     private $trashManager;
 
+    /**
+     * @param class-string $accountClass
+     * @param class-string $contactClass
+     */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -1252,7 +1256,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
     }
 
     /**
-     * @return string
+     * @return class-string
      */
     protected function getAccountEntityName()
     {
