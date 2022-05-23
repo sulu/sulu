@@ -1,5 +1,62 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Clicking the action icon should open a popover that displays the given actions 1`] = `
+Array [
+  <div
+    class="backdrop fixed"
+    role="button"
+  />,
+  <div
+    class="container"
+  >
+    <ul
+      class="menu"
+      style="top: 10px; left: 10px; position: fixed; pointer-events: auto;"
+    >
+      <li>
+        <button
+          class="action"
+          type="button"
+        >
+          <span
+            aria-label="su-test-1"
+            class="su-test-1 icon"
+          />
+          Test Action 1
+        </button>
+      </li>
+      <li
+        class="divider"
+      />
+      <li>
+        <button
+          class="action"
+          type="button"
+        >
+          <span
+            aria-label="su-test-2"
+            class="su-test-2 icon"
+          />
+          Test Action 2
+        </button>
+      </li>
+      <li>
+        <button
+          class="action"
+          type="button"
+        >
+          <span
+            aria-label="su-test-3"
+            class="su-test-3 icon"
+          />
+          Test Action 3
+        </button>
+      </li>
+    </ul>
+  </div>,
+]
+`;
+
 exports[`Render a collapsed block 1`] = `
 <section
   class="block"
@@ -24,8 +81,8 @@ exports[`Render a collapsed block 1`] = `
         />
       </div>
       <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
+        aria-label="su-expand-vertical"
+        class="su-expand-vertical"
       />
     </header>
     <article
@@ -137,18 +194,22 @@ exports[`Render an expanded block with a multiple types 1`] = `
       <div
         class="iconButtons"
       >
-        <span
-          aria-label="su-cog"
-          class="su-cog clickable"
-          role="button"
-          tabindex="0"
-        />
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up clickable"
-          role="button"
-          tabindex="0"
-        />
+        <button
+          type="button"
+        >
+          <span
+            aria-label="su-cog"
+            class="su-cog"
+          />
+        </button>
+        <button
+          type="button"
+        >
+          <span
+            aria-label="su-collapse-vertical"
+            class="su-collapse-vertical"
+          />
+        </button>
       </div>
     </header>
     <article

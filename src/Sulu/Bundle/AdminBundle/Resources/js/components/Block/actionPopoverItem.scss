@@ -1,0 +1,24 @@
+@import 'sulu-admin-bundle/containers/Application/colors.scss';
+
+$actionTextColor: $black;
+$actionTextColorActive: $shakespeare;
+
+.icon {
+    margin-right: 15px;
+}
+
+.action {
+    min-width: 200px;
+    display: block;
+    cursor: pointer;
+    padding: 5px 20px;
+    color: $actionTextColor;
+    border: none;
+    background: transparent;
+    text-align: left;
+
+    &:hover,
+    &:focus {
+        color: $actionTextColorActive;
+    }
+}

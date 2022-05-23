@@ -6,9 +6,11 @@ import React from 'react';
 import classNames from 'classnames';
 import log from 'loglevel';
 import iconStyles from './icon.scss';
+import type {ElementRef} from 'react';
 
 type Props = {
     className?: string,
+    iconRef?: (ref: ?ElementRef<'span'>) => void,
     name: string,
     onClick?: () => void,
     style?: Object,
@@ -44,7 +46,7 @@ export default class Icon extends React.PureComponent<Props> {
     };
 
     render() {
-        const {className, name, onClick, style} = this.props;
+        const {className, name, onClick, iconRef, style} = this.props;
         let fontClass = '';
 
         if (!name || name.length <= 0) {
@@ -89,7 +91,7 @@ export default class Icon extends React.PureComponent<Props> {
             : {};
 
         return (
-            <span aria-label={name} className={iconClass} style={style} {...onClickProperties} />
+            <span aria-label={name} className={iconClass} ref={iconRef} style={style} {...onClickProperties} />
         );
     }
 }

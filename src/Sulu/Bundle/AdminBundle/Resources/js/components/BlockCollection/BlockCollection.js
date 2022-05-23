@@ -1,10 +1,9 @@
 // @flow
 import React from 'react';
-import {action, observable, toJS, reaction} from 'mobx';
+import {action, observable, toJS, reaction, computed} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
-import {arrayMove} from '../../utils';
-import {translate} from '../../utils/Translator';
+import {arrayMove, translate} from '../../utils';
 import Button from '../Button';
 import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
@@ -90,7 +89,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     @action handleAddBlock = (insertionIndex: number) => {
         const {defaultType, onChange, value} = this.props;
 
-        if (this.hasMaximumReached()) {
+        if (this.hasMaximumReached) {
             throw new Error('The maximum amount of blocks has already been reached!');
         }
 
@@ -108,7 +107,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     @action handleRemoveBlock = (index: number) => {
         const {onChange, value} = this.props;
 
-        if (this.hasMinimumReached()) {
+        if (this.hasMinimumReached) {
             throw new Error('The minimum amount of blocks has already been reached!');
         }
 
@@ -154,16 +153,31 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         onChange(newValue);
     };
 
-    hasMaximumReached() {
+    @computed get hasMaximumReached() {
         const {maxOccurs, value} = this.props;
 
         return !!maxOccurs && value.length >= maxOccurs;
     }
 
-    hasMinimumReached() {
+    @computed get hasMinimumReached() {
         const {minOccurs, value} = this.props;
 
         return !!minOccurs && value.length <= minOccurs;
+    }
+
+    @computed get blockActions() {
+        const blockActions = [];
+
+        if (!this.hasMinimumReached) {
+            blockActions.push({
+                type: 'button',
+                icon: 'su-trash-alt',
+                label: translate('sulu_admin.delete'),
+                onClick: this.handleRemoveBlock,
+            });
+        }
+
+        return blockActions;
     }
 
     renderAddButton = (aboveBlockIndex: number) => {
@@ -181,7 +195,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             <div className={containerClass}>
                 <Button
                     className={blockCollectionStyles.addButton}
-                    disabled={disabled || this.hasMaximumReached()}
+                    disabled={disabled || this.hasMaximumReached}
                     icon="su-plus"
                     onClick={this.handleAddBlock}
                     skin="secondary"
@@ -208,6 +222,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         return (
             <section>
                 <SortableBlockList
+                    blockActions={this.blockActions}
                     disabled={disabled}
                     expandedBlocks={this.expandedBlocks}
                     generatedBlockIds={this.generatedBlockIds}
@@ -216,7 +231,6 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                     movable={movable}
                     onCollapse={collapsable ? this.handleCollapse : undefined}
                     onExpand={collapsable ? this.handleExpand : undefined}
-                    onRemove={this.hasMinimumReached() ? undefined : this.handleRemoveBlock}
                     onSettingsClick={onSettingsClick ? this.handleSettingsClick : undefined}
                     onSortEnd={this.handleSortEnd}
                     onTypeChange={this.handleTypeChange}

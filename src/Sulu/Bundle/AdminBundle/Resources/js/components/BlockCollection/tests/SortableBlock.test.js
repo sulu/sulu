@@ -1,9 +1,15 @@
 // @flow
 import React from 'react';
 import {mount, render, shallow} from 'enzyme';
+import log from 'loglevel';
 import SortableBlock from '../SortableBlock';
 
+jest.mock('loglevel', () => ({
+    warn: jest.fn(),
+}));
+
 jest.mock('react-sortable-hoc', () => ({
+    SortableContainer: jest.fn().mockImplementation((component) => component),
     SortableElement: jest.fn().mockImplementation((component) => component),
     SortableHandle: jest.fn().mockImplementation((component) => component),
 }));
@@ -15,6 +21,7 @@ jest.mock('../../../utils/Translator', () => ({
 test('Render collapsed sortable block', () => {
     expect(render(
         <SortableBlock
+            actions={[]}
             activeType="editor"
             expanded={false}
             icons={['su-eye', 'su-people']}
@@ -35,6 +42,7 @@ test('Render expanded sortable, non-collapsable block with types', () => {
 
     expect(render(
         <SortableBlock
+            actions={[]}
             activeType="type2"
             expanded={true}
             onRemove={jest.fn()}
@@ -50,6 +58,7 @@ test('Render expanded sortable, non-collapsable block with types', () => {
 test('Should not show block types if only a single block is passed', () => {
     const sortableBlock = mount(
         <SortableBlock
+            actions={[]}
             activeType="editor"
             expanded={true}
             onCollapse={jest.fn()}
@@ -64,25 +73,112 @@ test('Should not show block types if only a single block is passed', () => {
     expect(sortableBlock.find('SingleSelect')).toHaveLength(0);
 });
 
-test('Should not show remove icon if no onRemove callback is passed', () => {
+test('Should apply sortIndex to given actions and pass wrapped actions to Block component', () => {
+    const onActionClickSpy = jest.fn();
+    const actions = [
+        {
+            type: 'button',
+            icon: 'su-test-1',
+            label: 'Test Action 1',
+            onClick: onActionClickSpy,
+        },
+        {
+            type: 'divider',
+        },
+        {
+            type: 'button',
+            icon: 'su-test-2',
+            label: 'Test Action 2',
+            onClick: jest.fn(),
+        },
+    ];
+
     const sortableBlock = mount(
         <SortableBlock
+            actions={actions}
             activeType="editor"
             expanded={true}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
             renderBlockContent={jest.fn()}
-            sortIndex={1}
+            sortIndex={101}
             value={{content: 'Test Content'}}
         />
     );
 
-    expect(sortableBlock.find('Icon[name="su-trash-alt"]')).toHaveLength(0);
+    const blockActions = sortableBlock.find('Block').prop('actions');
+    expect(blockActions).toEqual([
+        expect.objectContaining({
+            type: 'button',
+            icon: 'su-test-1',
+            label: 'Test Action 1',
+        }),
+        {
+            type: 'divider',
+        },
+        expect.objectContaining({
+            type: 'button',
+            icon: 'su-test-2',
+            label: 'Test Action 2',
+        }),
+    ]);
+
+    expect(onActionClickSpy).not.toBeCalled();
+    blockActions[0].onClick();
+    expect(onActionClickSpy).toBeCalledWith(101);
+});
+
+test('Should pass remove action to Block component if depracted onRemove prop is set', () => {
+    const removeSpy = jest.fn();
+    const actions = [
+        {
+            type: 'button',
+            icon: 'su-test',
+            label: 'Test Action',
+            onClick: jest.fn(),
+        },
+    ];
+
+    const sortableBlock = mount(
+        <SortableBlock
+            actions={actions}
+            activeType="editor"
+            expanded={true}
+            onCollapse={jest.fn()}
+            onExpand={jest.fn()}
+            onRemove={removeSpy}
+            renderBlockContent={jest.fn()}
+            sortIndex={101}
+            value={{content: 'Test Content'}}
+        />
+    );
+    expect(log.warn).toBeCalledWith(
+        expect.stringContaining('The "onRemove" prop of the "SortableBlock" component is deprecated')
+    );
+
+    const blockActions = sortableBlock.find('Block').prop('actions');
+    expect(blockActions).toEqual([
+        expect.objectContaining({
+            type: 'button',
+            icon: 'su-test',
+            label: 'Test Action',
+        }),
+        expect.objectContaining({
+            type: 'button',
+            icon: 'su-trash-alt',
+            label: 'sulu_admin.delete',
+        }),
+    ]);
+
+    expect(removeSpy).not.toBeCalled();
+    blockActions[1].onClick();
+    expect(removeSpy).toBeCalledWith(101);
 });
 
 test('Should not show the settings icon if no onSettingsClick callback is passed', () => {
     const sortableBlock = mount(
         <SortableBlock
+            actions={[]}
             activeType="editor"
             expanded={true}
             onCollapse={jest.fn()}
@@ -103,6 +199,7 @@ test('Should call onCollapse when the block is being collapsed', () => {
 
     const sortableBlock = shallow(
         <SortableBlock
+            actions={[]}
             activeType="editor"
             expanded={true}
             onCollapse={collapseSpy}
@@ -128,6 +225,7 @@ test('Should call onExpand when the block is being expanded', () => {
 
     const sortableBlock = shallow(
         <SortableBlock
+            actions={[]}
             activeType="editor"
             expanded={true}
             onCollapse={collapseSpy}
@@ -146,31 +244,6 @@ test('Should call onExpand when the block is being expanded', () => {
     expect(removeSpy).not.toBeCalled();
 });
 
-test('Should call onRemove when the block is being removed', () => {
-    const collapseSpy = jest.fn();
-    const expandSpy = jest.fn();
-    const removeSpy = jest.fn();
-
-    const sortableBlock = shallow(
-        <SortableBlock
-            activeType="editor"
-            expanded={true}
-            onCollapse={collapseSpy}
-            onExpand={expandSpy}
-            onRemove={removeSpy}
-            renderBlockContent={jest.fn()}
-            sortIndex={1}
-            value={{content: 'Test Content'}}
-        />
-    );
-
-    sortableBlock.find('Block').prop('onRemove')();
-
-    expect(collapseSpy).not.toBeCalled();
-    expect(expandSpy).not.toBeCalled();
-    expect(removeSpy).toBeCalledWith(1);
-});
-
 test('Should call onSettingClick when the block setting icon is clicked', () => {
     const collapseSpy = jest.fn();
     const expandSpy = jest.fn();
@@ -178,6 +251,7 @@ test('Should call onSettingClick when the block setting icon is clicked', () => 
 
     const sortableBlock = shallow(
         <SortableBlock
+            actions={[]}
             activeType="editor"
             expanded={true}
             onCollapse={collapseSpy}
@@ -201,6 +275,7 @@ test('Should call onTypeChange when the block has changed its type', () => {
 
     const sortableBlock = shallow(
         <SortableBlock
+            actions={[]}
             activeType="editor"
             expanded={true}
             onCollapse={jest.fn()}
@@ -224,6 +299,7 @@ test('Should call renderBlockContent with the correct arguments', () => {
 
     shallow(
         <SortableBlock
+            actions={[]}
             activeType="editor"
             expanded={true}
             onCollapse={jest.fn()}
@@ -244,6 +320,7 @@ test('Should call renderBlockContent with the correct arguments when block is co
 
     shallow(
         <SortableBlock
+            actions={[]}
             activeType="editor"
             expanded={false}
             onCollapse={jest.fn()}
@@ -264,6 +341,7 @@ test('Should call renderBlockContent with the correct arguments when types are i
 
     shallow(
         <SortableBlock
+            actions={[]}
             activeType="test"
             expanded={true}
             onCollapse={jest.fn()}

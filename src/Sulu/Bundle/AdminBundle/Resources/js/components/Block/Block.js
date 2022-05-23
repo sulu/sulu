@@ -1,12 +1,19 @@
 // @flow
 import React, {Fragment} from 'react';
 import classNames from 'classnames';
+import {observer} from 'mobx-react';
+import {action, computed, observable} from 'mobx';
+import log from 'loglevel';
 import Icon from '../Icon';
 import SingleSelect from '../SingleSelect';
+import {translate} from '../../utils';
 import blockStyles from './block.scss';
-import type {Node} from 'react';
+import ActionPopover from './ActionPopover';
+import type {ActionConfig} from './types';
+import type {ElementRef, Node} from 'react';
 
 type Props<T: string> = {
+    actions: Array<ActionConfig>,
     activeType?: T,
     children: Node,
     dragHandle?: Node,
@@ -14,15 +21,56 @@ type Props<T: string> = {
     icons?: Array<string>,
     onCollapse?: () => void,
     onExpand?: () => void,
-    onRemove?: () => void,
+    onRemove?: () => void, // @deprecated
     onSettingsClick?: () => void,
     onTypeChange?: (type: T) => void,
     types?: {[key: T]: string},
 };
 
-export default class Block<T: string> extends React.Component<Props<T>> {
-    static defaultProps: {
+@observer
+class Block<T: string> extends React.Component<Props<T>> {
+    static defaultProps = {
+        actions: [],
         expanded: false,
+    };
+
+    @observable actionsButtonRef: ?ElementRef<'*'>;
+    @observable showActionsPopover = false;
+
+    @computed get actions(): Array<ActionConfig> {
+        const {onRemove, actions} = this.props;
+
+        // @deprecated
+        if (onRemove) {
+            log.warn(
+                'The "onRemove" prop of the "Block" component is deprecated since 2.5 and will ' +
+                'be removed. Use the "actions" prop with an appropriate callback instead.'
+            );
+
+            return [
+                ...actions,
+                {
+                    type: 'button',
+                    icon: 'su-trash-alt',
+                    label: translate('sulu_admin.delete'),
+                    onClick: onRemove,
+                },
+            ];
+        }
+
+        return actions;
+    }
+
+    @action setActionsButtonRef = (ref: ?ElementRef<'*'>) => {
+        this.actionsButtonRef = ref;
+    };
+
+    @action handleActionsButtonClick = () => {
+        this.showActionsPopover = true;
+    };
+
+    @action handleActionsPopoverClose = () => {
+        this.showActionsPopover = false;
     };
 
     handleCollapse = () => {
@@ -55,7 +103,6 @@ export default class Block<T: string> extends React.Component<Props<T>> {
             icons,
             onCollapse,
             onExpand,
-            onRemove,
             onSettingsClick,
             types,
         } = this.props;
@@ -98,12 +145,40 @@ export default class Block<T: string> extends React.Component<Props<T>> {
                                     </div>
                                 }
                                 <div className={blockStyles.iconButtons}>
-                                    {onSettingsClick && <Icon name="su-cog" onClick={onSettingsClick} />}
-                                    {onRemove && <Icon name="su-trash-alt" onClick={onRemove} />}
-                                    {onCollapse && onExpand &&
-                                        <Icon name="su-angle-up" onClick={this.handleCollapse} />
-                                    }
+                                    {this.actions.length > 0 && (
+                                        <button
+                                            onClick={this.handleActionsButtonClick}
+                                            ref={this.setActionsButtonRef}
+                                            type="button"
+                                        >
+                                            <Icon
+                                                name="su-more-circle"
+                                            />
+                                        </button>
+                                    ) }
+                                    {onSettingsClick && (
+                                        <button
+                                            onClick={onSettingsClick}
+                                            type="button"
+                                        >
+                                            <Icon name="su-cog" />
+                                        </button>
+                                    )}
+                                    {onCollapse && onExpand && (
+                                        <button
+                                            onClick={this.handleCollapse}
+                                            type="button"
+                                        >
+                                            <Icon name="su-collapse-vertical" />
+                                        </button>
+                                    )}
                                 </div>
+                                <ActionPopover
+                                    actions={this.actions}
+                                    anchorElement={this.actionsButtonRef}
+                                    onClose={this.handleActionsPopoverClose}
+                                    open={this.showActionsPopover}
+                                />
                             </Fragment>
                             : <Fragment>
                                 {icons &&
@@ -112,7 +187,7 @@ export default class Block<T: string> extends React.Component<Props<T>> {
                                     </div>
                                 }
                                 {types && activeType && <div className={blockStyles.type}>{types[activeType]}</div>}
-                                {onCollapse && onExpand && <Icon name="su-angle-down" />}
+                                {onCollapse && onExpand && <Icon name="su-expand-vertical" />}
                             </Fragment>
                         }
                     </header>
@@ -122,3 +197,5 @@ export default class Block<T: string> extends React.Component<Props<T>> {
         );
     }
 }
+
+export default Block;

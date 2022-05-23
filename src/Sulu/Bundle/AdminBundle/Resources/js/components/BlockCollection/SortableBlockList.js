@@ -3,12 +3,16 @@ import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
 import {SortableContainer} from 'react-sortable-hoc';
 import classNames from 'classnames';
+import log from 'loglevel';
+import {computed} from 'mobx';
+import {translate} from '../../utils';
 import SortableBlock from './SortableBlock';
 import sortableBlockListStyles from './sortableBlockList.scss';
-import type {RenderBlockContentCallback} from './types';
+import type {BlockActionConfig, RenderBlockContentCallback} from './types';
 import type {Node} from 'react';
 
 type Props<T: string, U: {type: T}> = {|
+    blockActions: Array<BlockActionConfig>,
     disabled: boolean,
     expandedBlocks: Array<boolean>,
     generatedBlockIds: Array<number>,
@@ -16,7 +20,7 @@ type Props<T: string, U: {type: T}> = {|
     movable: boolean,
     onCollapse?: (index: number) => void,
     onExpand?: (index: number) => void,
-    onRemove?: (index: number) => void,
+    onRemove?: (index: number) => void, // @deprecated
     onSettingsClick?: (index: number) => void,
     onTypeChange?: (type: T, index: number) => void,
     renderBlockContent: RenderBlockContentCallback<T, U>,
@@ -28,9 +32,35 @@ type Props<T: string, U: {type: T}> = {|
 @observer
 class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T, U>> {
     static defaultProps = {
+        blockActions: [],
         disabled: false,
         movable: true,
     };
+
+    @computed get blockActions(): Array<BlockActionConfig> {
+        const {onRemove, blockActions} = this.props;
+
+        // @deprecated
+        if (onRemove) {
+            log.warn(
+                'The "onRemove" prop of the "SortableBlockList" component is deprecated since 2.5 and will ' +
+                'be removed. Use the "blockActions" prop with an appropriate callback instead.'
+            );
+
+            return [
+                ...blockActions,
+                {
+                    type: 'button',
+                    icon: 'su-trash-alt',
+                    label: translate('sulu_admin.delete'),
+                    // $FlowFixMe
+                    onClick: onRemove,
+                },
+            ];
+        }
+
+        return blockActions;
+    }
 
     handleExpand = (index: number) => {
         const {onExpand} = this.props;
@@ -43,14 +73,6 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
         const {onCollapse} = this.props;
         if (onCollapse) {
             onCollapse(index);
-        }
-    };
-
-    handleRemove = (index: number) => {
-        const {onRemove} = this.props;
-
-        if (onRemove) {
-            onRemove(index);
         }
     };
 
@@ -79,7 +101,6 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
             movable,
             onCollapse,
             onExpand,
-            onRemove,
             onSettingsClick,
             renderBlockContent,
             renderDivider,
@@ -99,6 +120,7 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
                 {value && value.map((block, index) => (
                     <Fragment key={index}>
                         <SortableBlock
+                            actions={this.blockActions}
                             activeType={block.type}
                             expanded={!disabled && expandedBlocks[index]}
                             icons={icons && icons[index]}
@@ -107,7 +129,6 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
                             movable={movable}
                             onCollapse={onCollapse ? this.handleCollapse : undefined}
                             onExpand={onExpand ? this.handleExpand : undefined}
-                            onRemove={onRemove ? this.handleRemove : undefined}
                             onSettingsClick={onSettingsClick ? this.handleSettingsClick : undefined}
                             onTypeChange={this.handleTypeChange}
                             renderBlockContent={renderBlockContent}

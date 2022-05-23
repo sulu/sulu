@@ -27,8 +27,8 @@ exports[`Should render a fully filled block list 1`] = `
             class="icons"
           />
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
+            aria-label="su-expand-vertical"
+            class="su-expand-vertical"
           />
         </header>
         <article
@@ -50,7 +50,7 @@ exports[`Should render a fully filled block list 1`] = `
         <span
           class="buttonText"
         >
-          Add block
+          sulu_admin.add_block
         </span>
       </button>
     </div>
@@ -81,8 +81,8 @@ exports[`Should render a fully filled block list 1`] = `
             />
           </div>
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
+            aria-label="su-expand-vertical"
+            class="su-expand-vertical"
           />
         </header>
         <article
@@ -105,7 +105,7 @@ exports[`Should render a fully filled block list 1`] = `
       <span
         class="buttonText"
       >
-        Add block
+        sulu_admin.add_block
       </span>
     </button>
   </div>
@@ -130,12 +130,14 @@ exports[`Should render a non-movable block list 1`] = `
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -157,7 +159,7 @@ exports[`Should render a non-movable block list 1`] = `
         <span
           class="buttonText"
         >
-          Add block
+          sulu_admin.add_block
         </span>
       </button>
     </div>
@@ -174,12 +176,14 @@ exports[`Should render a non-movable block list 1`] = `
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -202,7 +206,7 @@ exports[`Should render a non-movable block list 1`] = `
       <span
         class="buttonText"
       >
-        Add block
+        sulu_admin.add_block
       </span>
     </button>
   </div>

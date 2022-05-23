@@ -29,18 +29,22 @@ exports[`Render block with schema 1`] = `
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-angle-up"
-              class="su-angle-up clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -153,18 +157,22 @@ exports[`Render block with schema 1`] = `
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-angle-up"
-              class="su-angle-up clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -286,18 +294,22 @@ exports[`Render block with schema and error on fields already being modified 1`]
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-angle-up"
-              class="su-angle-up clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -381,18 +393,22 @@ exports[`Render block with schema and error on fields already being modified 1`]
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-angle-up"
-              class="su-angle-up clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -479,18 +495,22 @@ exports[`Render block with schema and error on fields already being modified 1`]
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-angle-up"
-              class="su-angle-up clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -583,18 +603,22 @@ exports[`Render block with schema and error on fields already being modified 2`]
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-angle-up"
-              class="su-angle-up clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -678,18 +702,22 @@ exports[`Render block with schema and error on fields already being modified 2`]
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-angle-up"
-              class="su-angle-up clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -776,18 +804,22 @@ exports[`Render block with schema and error on fields already being modified 2`]
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-trash-alt"
-              class="su-trash-alt clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-angle-up"
-              class="su-angle-up clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -891,8 +923,8 @@ exports[`Render collapsed blocks with block previews 1`] = `
             Default
           </div>
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
+            aria-label="su-expand-vertical"
+            class="su-expand-vertical"
           />
         </header>
         <article
@@ -954,8 +986,8 @@ exports[`Render collapsed blocks with block previews 1`] = `
             Default
           </div>
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
+            aria-label="su-expand-vertical"
+            class="su-expand-vertical"
           />
         </header>
         <article
@@ -1021,8 +1053,8 @@ exports[`Render collapsed blocks with block previews 2`] = `
             Default
           </div>
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
+            aria-label="su-expand-vertical"
+            class="su-expand-vertical"
           />
         </header>
         <article
@@ -1085,8 +1117,8 @@ exports[`Render collapsed blocks with block previews 2`] = `
             Default
           </div>
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
+            aria-label="su-expand-vertical"
+            class="su-expand-vertical"
           />
         </header>
         <article
@@ -1158,8 +1190,8 @@ exports[`Render collapsed blocks with block previews and sections 1`] = `
             Default
           </div>
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
+            aria-label="su-expand-vertical"
+            class="su-expand-vertical"
           />
         </header>
         <article
@@ -1219,8 +1251,8 @@ exports[`Render collapsed blocks with block previews and sections 1`] = `
             Default
           </div>
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
+            aria-label="su-expand-vertical"
+            class="su-expand-vertical"
           />
         </header>
         <article
@@ -1289,8 +1321,8 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
             Default
           </div>
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
+            aria-label="su-expand-vertical"
+            class="su-expand-vertical"
           />
         </header>
         <article
@@ -1353,8 +1385,8 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
             Default
           </div>
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
+            aria-label="su-expand-vertical"
+            class="su-expand-vertical"
           />
         </header>
         <article
@@ -1426,8 +1458,8 @@ exports[`Render collapsed blocks with block previews without tags and with secti
             Default
           </div>
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
+            aria-label="su-expand-vertical"
+            class="su-expand-vertical"
           />
         </header>
         <article
@@ -1490,8 +1522,8 @@ exports[`Render collapsed blocks with block previews without tags and with secti
             Default
           </div>
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down"
+            aria-label="su-expand-vertical"
+            class="su-expand-vertical"
           />
         </header>
         <article

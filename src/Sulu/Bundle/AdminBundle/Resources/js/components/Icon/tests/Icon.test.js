@@ -59,3 +59,10 @@ test('Icon should call the callback on when enter is pressed', () => {
     expect(onClick).toBeCalled();
     expect(stopPropagation).toBeCalled();
 });
+
+test('Should call the given iconRef callback', () => {
+    const iconRefSpy = jest.fn();
+    const icon = mount(<Icon className="test" iconRef={iconRefSpy} name="su-pen" />);
+
+    expect(iconRefSpy).toBeCalledWith(icon.find('span.su-pen').instance());
+});
