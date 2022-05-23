@@ -16,6 +16,7 @@ Array [
       <li>
         <button
           class="action"
+          type="button"
         >
           <span
             aria-label="su-test-1"
@@ -30,6 +31,7 @@ Array [
       <li>
         <button
           class="action"
+          type="button"
         >
           <span
             aria-label="su-test-2"
@@ -41,6 +43,7 @@ Array [
       <li>
         <button
           class="action"
+          type="button"
         >
           <span
             aria-label="su-test-3"
@@ -191,18 +194,22 @@ exports[`Render an expanded block with a multiple types 1`] = `
       <div
         class="iconButtons"
       >
-        <span
-          aria-label="su-cog"
-          class="su-cog clickable"
-          role="button"
-          tabindex="0"
-        />
-        <span
-          aria-label="su-collapse-vertical"
-          class="su-collapse-vertical clickable"
-          role="button"
-          tabindex="0"
-        />
+        <button
+          type="button"
+        >
+          <span
+            aria-label="su-cog"
+            class="su-cog"
+          />
+        </button>
+        <button
+          type="button"
+        >
+          <span
+            aria-label="su-collapse-vertical"
+            class="su-collapse-vertical"
+          />
+        </button>
       </div>
     </header>
     <article

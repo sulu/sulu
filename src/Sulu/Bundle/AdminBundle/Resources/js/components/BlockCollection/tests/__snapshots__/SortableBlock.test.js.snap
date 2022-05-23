@@ -108,18 +108,22 @@ exports[`Render expanded sortable, non-collapsable block with types 1`] = `
       <div
         class="iconButtons"
       >
-        <span
-          aria-label="su-more-circle"
-          class="su-more-circle clickable"
-          role="button"
-          tabindex="0"
-        />
-        <span
-          aria-label="su-cog"
-          class="su-cog clickable"
-          role="button"
-          tabindex="0"
-        />
+        <button
+          type="button"
+        >
+          <span
+            aria-label="su-more-circle"
+            class="su-more-circle"
+          />
+        </button>
+        <button
+          type="button"
+        >
+          <span
+            aria-label="su-cog"
+            class="su-cog"
+          />
+        </button>
       </div>
     </header>
     <article

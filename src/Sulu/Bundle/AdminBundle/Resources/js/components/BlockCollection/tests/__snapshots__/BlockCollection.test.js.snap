@@ -130,12 +130,14 @@ exports[`Should render a non-movable block list 1`] = `
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-more-circle"
-              class="su-more-circle clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -174,12 +176,14 @@ exports[`Should render a non-movable block list 1`] = `
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-more-circle"
-              class="su-more-circle clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
           </div>
         </header>
         <article

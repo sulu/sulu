@@ -29,18 +29,22 @@ exports[`Render block with schema 1`] = `
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-more-circle"
-              class="su-more-circle clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-collapse-vertical"
-              class="su-collapse-vertical clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -153,18 +157,22 @@ exports[`Render block with schema 1`] = `
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-more-circle"
-              class="su-more-circle clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-collapse-vertical"
-              class="su-collapse-vertical clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -286,18 +294,22 @@ exports[`Render block with schema and error on fields already being modified 1`]
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-more-circle"
-              class="su-more-circle clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-collapse-vertical"
-              class="su-collapse-vertical clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -381,18 +393,22 @@ exports[`Render block with schema and error on fields already being modified 1`]
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-more-circle"
-              class="su-more-circle clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-collapse-vertical"
-              class="su-collapse-vertical clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -479,18 +495,22 @@ exports[`Render block with schema and error on fields already being modified 1`]
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-more-circle"
-              class="su-more-circle clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-collapse-vertical"
-              class="su-collapse-vertical clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -583,18 +603,22 @@ exports[`Render block with schema and error on fields already being modified 2`]
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-more-circle"
-              class="su-more-circle clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-collapse-vertical"
-              class="su-collapse-vertical clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -678,18 +702,22 @@ exports[`Render block with schema and error on fields already being modified 2`]
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-more-circle"
-              class="su-more-circle clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-collapse-vertical"
-              class="su-collapse-vertical clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article
@@ -776,18 +804,22 @@ exports[`Render block with schema and error on fields already being modified 2`]
           <div
             class="iconButtons"
           >
-            <span
-              aria-label="su-more-circle"
-              class="su-more-circle clickable"
-              role="button"
-              tabindex="0"
-            />
-            <span
-              aria-label="su-collapse-vertical"
-              class="su-collapse-vertical clickable"
-              role="button"
-              tabindex="0"
-            />
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-more-circle"
+                class="su-more-circle"
+              />
+            </button>
+            <button
+              type="button"
+            >
+              <span
+                aria-label="su-collapse-vertical"
+                class="su-collapse-vertical"
+              />
+            </button>
           </div>
         </header>
         <article

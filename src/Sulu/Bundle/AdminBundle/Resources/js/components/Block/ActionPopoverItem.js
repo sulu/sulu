@@ -29,6 +29,7 @@ export default class ActionPopoverItem extends React.PureComponent<Props> {
                 <button
                     className={actionPopoverItemStyles.action}
                     onClick={this.handleClick}
+                    type="button"
                 >
                     <Icon
                         className={actionPopoverItemStyles.icon}
