@@ -19,6 +19,9 @@ use Symfony\Component\Config\Util\XmlUtils;
  */
 class ReplacerXmlLoader extends FileLoader
 {
+    /**
+     * @param string $resource
+     */
     public function load($resource, $type = null)
     {
         $path = $this->getLocator()->locate($resource);
