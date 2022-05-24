@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 
 /**
  * @deprecated Can be removed when Symfony 5.4 support is canceled. Is replaced by LogoutEventSubscriber.
