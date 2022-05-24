@@ -43,6 +43,15 @@ The sulu `User` entity requires the following changes:
 +public function isEqualTo(SymfonyUserInterface $user): bool;
 ```
 
+### User entity getUsername method deprecated
+
+The sulu `User` entity the `getUsername` method is deprecated and replaced with `getUserIdentifier`:
+
+```diff
+-$user->getUsername();
++$user->getUserIdentifier();
+```
+
 ### AuthenticationHandler method return types changed
 
 The `AuthenticationHandler` requires the following changes:

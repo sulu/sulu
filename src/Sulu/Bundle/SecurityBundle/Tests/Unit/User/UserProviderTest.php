@@ -92,7 +92,7 @@ class UserProviderTest extends TestCase
 
     public function testRefreshUser(): void
     {
-        $this->assertEquals($this->user->getUsername(), $this->userProvider->refreshUser($this->user)->getUsername());
+        $this->assertEquals($this->user->getUserIdentifier(), $this->userProvider->refreshUser($this->user)->getUserIdentifier());
     }
 
     public function testRefreshUserWithLockedUser(): void

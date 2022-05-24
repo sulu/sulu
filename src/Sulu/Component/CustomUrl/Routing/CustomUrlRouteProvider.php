@@ -112,6 +112,9 @@ class CustomUrlRouteProvider implements RouteProviderInterface
         return $collection;
     }
 
+    /**
+     * @param string $name
+     */
     public function getRouteByName($name): Route
     {
         throw new RouteNotFoundException();

@@ -116,6 +116,9 @@ class StructureXmlLoader extends AbstractLoader
         );
     }
 
+    /**
+     * @param string $resource
+     */
     public function load($resource, $type = null)
     {
         if (null === $type) {

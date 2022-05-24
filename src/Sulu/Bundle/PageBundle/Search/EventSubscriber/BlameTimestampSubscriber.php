@@ -130,14 +130,14 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
     private function mapCreatorAndChanger(Document $document, UserInterface $creator = null, UserInterface $changer = null)
     {
         $document->addField(
-            $this->factory->createField('changer', $changer ? $changer->getUsername() : null, 'string')
+            $this->factory->createField('changer', $changer ? $changer->getUserIdentifier() : null, 'string')
         );
         $document->addField(
             $this->factory->createField('changer_id', $changer ? $changer->getId() : null, 'string')
         );
 
         $document->addField(
-            $this->factory->createField('creator', $creator ? $creator->getUsername() : null, 'string')
+            $this->factory->createField('creator', $creator ? $creator->getUserIdentifier() : null, 'string')
         );
         $document->addField(
             $this->factory->createField('creator_id', $creator ? $creator->getId() : null, 'string')

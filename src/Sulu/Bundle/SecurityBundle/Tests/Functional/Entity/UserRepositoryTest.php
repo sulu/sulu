@@ -179,7 +179,7 @@ class UserRepositoryTest extends SuluTestCase
         $user = $userRepository->findUserByEmail('user2@test.com');
 
         $this->assertEquals('user2@test.com', $user->getEmail());
-        $this->assertEquals('test', $user->getUsername());
+        $this->assertEquals('test', $user->getUserIdentifier());
     }
 
     public function testFindUserWithSecurityByIdentifier()
@@ -193,9 +193,9 @@ class UserRepositoryTest extends SuluTestCase
         $userByUsername = $userRepository->findUserByIdentifier('test');
 
         $this->assertEquals('user2@test.com', $userByMail->getEmail());
-        $this->assertEquals('test', $userByMail->getUsername());
+        $this->assertEquals('test', $userByMail->getUserIdentifier());
         $this->assertEquals('user2@test.com', $userByUsername->getEmail());
-        $this->assertEquals('test', $userByUsername->getUsername());
+        $this->assertEquals('test', $userByUsername->getUserIdentifier());
     }
 
     public function testFindUserByToken()
@@ -208,7 +208,7 @@ class UserRepositoryTest extends SuluTestCase
         $user = $userRepository->findUserByToken('mySuperSecretToken');
 
         $this->assertEquals('user1@test.com', $user->getEmail());
-        $this->assertEquals('admin', $user->getUsername());
+        $this->assertEquals('admin', $user->getUserIdentifier());
     }
 
     public function testFindUserBySystem()

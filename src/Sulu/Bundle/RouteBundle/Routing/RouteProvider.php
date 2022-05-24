@@ -180,6 +180,9 @@ class RouteProvider implements RouteProviderInterface
         return $this->routeCache[$path];
     }
 
+    /**
+     * @param string $name
+     */
     public function getRouteByName($name): Route
     {
         if (0 !== \strpos($name, self::ROUTE_PREFIX)) {

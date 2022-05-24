@@ -73,6 +73,6 @@ class UserModifiedEvent extends DomainEvent
 
     public function getResourceTitle(): ?string
     {
-        return $this->resourceUser->getUsername();
+        return $this->resourceUser->getUserIdentifier();
     }
 }
