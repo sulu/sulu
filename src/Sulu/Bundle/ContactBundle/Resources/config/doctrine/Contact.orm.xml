@@ -180,10 +180,10 @@
         <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Tag\TagInterface">
             <join-table name="co_contact_tags">
                 <join-columns>
-                    <join-column name="idContacts" referenced-column-name="id"/>
+                    <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idTags" referenced-column-name="id"/>
+                    <join-column name="idTags" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>
