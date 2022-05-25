@@ -258,7 +258,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             return;
         }
 
-        return $user->getUsername();
+        return $user->getUserIdentifier();
     }
 
     /**

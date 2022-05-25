@@ -61,7 +61,7 @@ class TestVoter implements VoterInterface
         $user = $token->getUser();
 
         if ($user instanceof UserInterface
-            && TestUserProvider::TEST_USER_USERNAME === $user->getUsername()
+            && TestUserProvider::TEST_USER_USERNAME === $user->getUserIdentifier()
         ) {
             return VoterInterface::ACCESS_GRANTED;
         }

@@ -241,7 +241,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
             /** @var UserInterface|null $user */
             $user = $this->userRepository->findUserByContact($contact->getId());
             if ($user) {
-                $this->domainEventCollector->collect(new UserRemovedEvent($user->getId(), $user->getUsername()));
+                $this->domainEventCollector->collect(new UserRemovedEvent($user->getId(), $user->getUserIdentifier()));
             }
 
             $this->em->flush();

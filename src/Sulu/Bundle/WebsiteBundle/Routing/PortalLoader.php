@@ -49,6 +49,9 @@ class PortalLoader extends FileLoader
         $this->webspaceManager = $webspaceManager;
     }
 
+    /**
+     * @param string $resource
+     */
     public function load($resource, $type = null)
     {
         $collection = new RouteCollection();

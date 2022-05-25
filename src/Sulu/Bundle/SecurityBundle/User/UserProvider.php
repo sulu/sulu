@@ -44,6 +44,9 @@ class UserProvider implements UserProviderInterface
         $this->systemStore = $systemStore;
     }
 
+    /**
+     * @return UserInterface
+     */
     public function loadUserByUsername($username)
     {
         return $this->loadUserByIdentifier($username);

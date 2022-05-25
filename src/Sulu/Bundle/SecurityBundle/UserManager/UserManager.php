@@ -142,7 +142,7 @@ class UserManager implements UserManagerInterface
             }
 
             $this->em->remove($user);
-            $this->domainEventCollector->collect(new UserRemovedEvent($id, $user->getUsername()));
+            $this->domainEventCollector->collect(new UserRemovedEvent($id, $user->getUserIdentifier()));
 
             foreach ($user->getRoleObjects() as $role) {
                 $this->em->detach($role);
@@ -219,7 +219,7 @@ class UserManager implements UserManagerInterface
 
             // check if username is already in database and the current user is not the user with this username
             if (!$patch || null !== $username) {
-                if ($username && 0 !== \strcasecmp($username, $user->getUsername()) && !$this->isUsernameUnique($username)) {
+                if ($username && ($isNewUser || 0 !== \strcasecmp($username, $user->getUserIdentifier())) && !$this->isUsernameUnique($username)) {
                     throw new UsernameNotUniqueException($username);
                 }
                 $user->setUsername($username);
@@ -302,7 +302,7 @@ class UserManager implements UserManagerInterface
      */
     public function getUsernameByUserId($id)
     {
-        return $this->getUserById($id)->getUsername();
+        return $this->getUserById($id)->getUserIdentifier();
     }
 
     /**

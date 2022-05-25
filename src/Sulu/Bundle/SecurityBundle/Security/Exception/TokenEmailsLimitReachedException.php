@@ -51,7 +51,7 @@ class TokenEmailsLimitReachedException extends SecurityException
             'code' => $this->code,
             'message' => $this->message,
             'limit' => $this->limit,
-            'user' => $this->user->getUsername(),
+            'user' => $this->user->getUserIdentifier(),
         ];
     }
 }

@@ -32,6 +32,9 @@ class VersionRouteLoader extends Loader
         $this->enabled = $enabled;
     }
 
+    /**
+     * @param string $resource
+     */
     public function load($resource, $type = null)
     {
         if (!$this->enabled) {

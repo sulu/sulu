@@ -34,6 +34,9 @@ class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
         $this->router = $router;
     }
 
+    /**
+     * @return Response
+     */
     public function onLogoutSuccess(Request $request)
     {
         if ($request->isXmlHttpRequest()) {

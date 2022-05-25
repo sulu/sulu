@@ -42,6 +42,9 @@ abstract class AbstractLoader implements LoaderInterface
         $this->schemaNamespaceURI = $schemaNamespaceURI;
     }
 
+    /**
+     * @param string $resource
+     */
     public function load($resource, $type = null)
     {
         $schemaPath = __DIR__ . $this->schemaPath;
