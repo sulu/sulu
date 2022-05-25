@@ -14,6 +14,24 @@ ALTER TABLE co_accounts DROP FOREIGN KEY FK_805CD14AC9171171;
 ALTER TABLE co_accounts ADD CONSTRAINT FK_805CD14AC9171171 FOREIGN KEY (idAccountsParent) REFERENCES co_accounts (id) ON DELETE SET NULL
 ```
 
+### Add ON DELETE CASCADE to tag account and tag contact relation
+
+There was a bug in sulu that prevented removal of tags if the deleted
+tag was still connected to an account or contact. The `ON DELETE CASCADE`
+will clean up broken references for deleted tags, accounts or contacts.
+For this a database change is required:
+
+```sql
+ALTER TABLE co_account_tags DROP FOREIGN KEY FK_E8D920051C41CAB8;
+ALTER TABLE co_account_tags ADD CONSTRAINT `FK_E8D920051C41CAB8` FOREIGN KEY (`idTags`) REFERENCES `ta_tags` (`id`) ON DELETE CASCADE;
+ALTER TABLE co_account_tags DROP FOREIGN KEY FK_E8D92005996BB4F7;
+ALTER TABLE co_account_tags ADD CONSTRAINT `FK_E8D92005996BB4F7` FOREIGN KEY (`idAccounts`) REFERENCES `co_accounts` (`id`) ON DELETE CASCADE;
+ALTER TABLE co_contact_tags DROP FOREIGN KEY FK_4CB525501C41CAB8;
+ALTER TABLE co_contact_tags ADD CONSTRAINT `FK_4CB525501C41CAB8` FOREIGN KEY (`idTags`) REFERENCES `ta_tags` (`id`) ON DELETE CASCADE;
+ALTER TABLE co_contact_tags DROP FOREIGN KEY FK_4CB5255060E33F28;
+ALTER TABLE co_contact_tags ADD CONSTRAINT `FK_4CB5255060E33F28` FOREIGN KEY (`idContacts`) REFERENCES `co_contacts` (`id`)  ON DELETE CASCADE;
+```
+
 ## 2.3.7
 
 ### Add missing `kernel.reset` tag for document manager cache services
