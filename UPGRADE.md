@@ -32,6 +32,16 @@ ALTER TABLE co_contact_tags DROP FOREIGN KEY FK_4CB5255060E33F28;
 ALTER TABLE co_contact_tags ADD CONSTRAINT `FK_4CB5255060E33F28` FOREIGN KEY (`idContacts`) REFERENCES `co_contacts` (`id`)  ON DELETE CASCADE;
 ```
 
+Similar issues can be found in other many-to-many relations. The
+following database change will fix these references as well:
+
+```sql
+ALTER TABLE se_group_roles DROP FOREIGN KEY FK_9713F725937C91EA;
+ALTER TABLE se_group_roles ADD CONSTRAINT `FK_9713F725937C91EA` FOREIGN KEY (`idGroups`) REFERENCES `se_groups` (`id`) ON DELETE CASCADE;
+ALTER TABLE se_group_roles DROP FOREIGN KEY FK_9713F725A1FA6DDA;
+ALTER TABLE se_group_roles ADD CONSTRAINT `FK_9713F725A1FA6DDA` FOREIGN KEY (`idRoles`) REFERENCES `se_roles` (`id`) ON DELETE CASCADE;
+```
+
 ## 2.3.7
 
 ### Add missing `kernel.reset` tag for document manager cache services
