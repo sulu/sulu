@@ -45,7 +45,7 @@ The sulu `User` entity requires the following changes:
 
 ### User entity getUsername method deprecated
 
-The sulu `User` entity the `getUsername` method is deprecated and replaced with `getUserIdentifier`:
+In the sulu `User` entity the `getUsername` method is deprecated and replaced with `getUserIdentifier`:
 
 ```diff
 -$user->getUsername();
