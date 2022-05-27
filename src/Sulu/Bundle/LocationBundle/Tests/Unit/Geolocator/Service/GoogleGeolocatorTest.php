@@ -64,6 +64,7 @@ class GoogleGeolocatorTest extends TestCase
     public function testLocate($query, $expectedCount, $expectationMap)
     {
         $fixtureName = __DIR__ . '/google-responses/' . \md5($query) . '.json';
+        /** @var string $fixture */
         $fixture = \file_get_contents($fixtureName);
         $mockResponse = new MockResponse($fixture);
 
