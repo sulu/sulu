@@ -4,14 +4,14 @@ $actionTextColor: $black;
 $actionTextColorActive: $shakespeare;
 
 .icon {
-    margin-right: 15px;
+    margin-right: 10px;
 }
 
 .action {
-    min-width: 200px;
+    min-width: 150px;
     display: block;
     cursor: pointer;
-    padding: 5px 20px;
+    padding: 5px 10px;
     color: $actionTextColor;
     border: none;
     background: transparent;
