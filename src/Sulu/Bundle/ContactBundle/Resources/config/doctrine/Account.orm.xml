@@ -185,10 +185,10 @@
             </cascade>
             <join-table name="co_account_social_media_profiles">
                 <join-columns>
-                    <join-column name="idAccounts" referenced-column-name="id"/>
+                    <join-column name="idAccounts" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idSocialMediaProfiles" referenced-column-name="id"/>
+                    <join-column name="idSocialMediaProfiles" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>
