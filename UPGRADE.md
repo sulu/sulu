@@ -36,6 +36,10 @@ Similar issues can be found in other many-to-many relations. The
 following database change will fix these references as well:
 
 ```sql
+ALTER TABLE co_contact_bank_accounts DROP FOREIGN KEY `FK_76CDDA0637FCD1D8`;
+ALTER TABLE co_contact_bank_accounts ADD CONSTRAINT `FK_76CDDA0637FCD1D8` FOREIGN KEY (`idBankAccounts`) REFERENCES `co_bank_account` (`id`) ON DELETE CASCADE;
+ALTER TABLE co_contact_bank_accounts DROP FOREIGN KEY `FK_76CDDA0660E33F28`;
+ALTER TABLE co_contact_bank_accounts ADD CONSTRAINT `FK_76CDDA0660E33F28` FOREIGN KEY (`idContacts`) REFERENCES `co_contacts` (`id`) ON DELETE CASCADE;
 ALTER TABLE co_contact_emails DROP FOREIGN KEY `FK_898296312F9040C8`;
 ALTER TABLE co_contact_emails ADD CONSTRAINT `FK_898296312F9040C8` FOREIGN KEY (`idEmails`) REFERENCES `co_emails` (`id`) ON DELETE CASCADE;
 ALTER TABLE co_contact_emails DROP FOREIGN KEY `FK_8982963160E33F28`;

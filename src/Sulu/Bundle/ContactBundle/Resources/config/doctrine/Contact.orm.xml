@@ -196,10 +196,10 @@
             </cascade>
             <join-table name="co_contact_bank_accounts">
                 <join-columns>
-                    <join-column name="idContacts" referenced-column-name="id"/>
+                    <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idBankAccounts" referenced-column-name="id"/>
+                    <join-column name="idBankAccounts" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>
