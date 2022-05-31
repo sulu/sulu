@@ -94,7 +94,7 @@ abstract class SuluKernel extends Kernel
 
         // this is a bc layer that sulu_admin.yaml is only loaded when bundle is registered
         // this can be removed when there is no longer context based configuration
-        /** @var array<string, string> $bundles */
+        /** @var array<string, class-string> $bundles */
         $bundles = $container->getParameter('kernel.bundles');
         if (isset($bundles['SuluAdminBundle'])) {
             $this->load($loader, $confDir, '/{packages}/sulu_admin');
