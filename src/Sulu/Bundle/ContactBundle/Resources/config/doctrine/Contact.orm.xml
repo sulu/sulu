@@ -119,10 +119,10 @@
             </cascade>
             <join-table name="co_contact_emails">
                 <join-columns>
-                    <join-column name="idContacts" referenced-column-name="id"/>
+                    <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idEmails" referenced-column-name="id"/>
+                    <join-column name="idEmails" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>
