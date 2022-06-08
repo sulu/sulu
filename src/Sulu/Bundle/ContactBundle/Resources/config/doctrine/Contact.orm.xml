@@ -87,10 +87,10 @@
             </cascade>
             <join-table name="co_contact_urls">
                 <join-columns>
-                    <join-column name="idContacts" referenced-column-name="id"/>
+                    <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idUrls" referenced-column-name="id"/>
+                    <join-column name="idUrls" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>
@@ -103,10 +103,10 @@
             </cascade>
             <join-table name="co_contact_notes">
                 <join-columns>
-                    <join-column name="idContacts" referenced-column-name="id"/>
+                    <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idNotes" referenced-column-name="id"/>
+                    <join-column name="idNotes" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>
@@ -119,10 +119,10 @@
             </cascade>
             <join-table name="co_contact_emails">
                 <join-columns>
-                    <join-column name="idContacts" referenced-column-name="id"/>
+                    <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idEmails" referenced-column-name="id"/>
+                    <join-column name="idEmails" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>
@@ -135,10 +135,10 @@
             </cascade>
             <join-table name="co_contact_phones">
                 <join-columns>
-                    <join-column name="idContacts" referenced-column-name="id"/>
+                    <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idPhones" referenced-column-name="id"/>
+                    <join-column name="idPhones" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>
@@ -151,10 +151,10 @@
             </cascade>
             <join-table name="co_contact_faxes">
                 <join-columns>
-                    <join-column name="idContacts" referenced-column-name="id"/>
+                    <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idFaxes" referenced-column-name="id"/>
+                    <join-column name="idFaxes" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>
@@ -167,10 +167,10 @@
             </cascade>
             <join-table name="co_contact_social_media_profiles">
                 <join-columns>
-                    <join-column name="idContacts" referenced-column-name="id"/>
+                    <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idSocialMediaProfiles" referenced-column-name="id"/>
+                    <join-column name="idSocialMediaProfiles" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>
@@ -180,10 +180,10 @@
         <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Tag\TagInterface">
             <join-table name="co_contact_tags">
                 <join-columns>
-                    <join-column name="idContacts" referenced-column-name="id"/>
+                    <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idTags" referenced-column-name="id"/>
+                    <join-column name="idTags" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>
@@ -196,10 +196,10 @@
             </cascade>
             <join-table name="co_contact_bank_accounts">
                 <join-columns>
-                    <join-column name="idContacts" referenced-column-name="id"/>
+                    <join-column name="idContacts" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idBankAccounts" referenced-column-name="id"/>
+                    <join-column name="idBankAccounts" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
             <order-by>
