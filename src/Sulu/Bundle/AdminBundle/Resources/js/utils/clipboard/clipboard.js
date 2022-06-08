@@ -1,7 +1,7 @@
 // @flow
 import type {Observer} from './types';
 
-class ClipboardStore {
+class Clipboard {
     observers: {[key: string]: Array<Observer>} = {};
     storageEventListener: ?(event: StorageEvent) => void;
 
@@ -29,12 +29,6 @@ class ClipboardStore {
         }
     }
 
-    get(key: string): mixed {
-        const serializedValue = window.localStorage.getItem(key);
-
-        return serializedValue ? JSON.parse(serializedValue) : undefined;
-    }
-
     set(key: string, value: mixed) {
         if (value) {
             window.localStorage.setItem(key, JSON.stringify(value));
@@ -45,12 +39,17 @@ class ClipboardStore {
         this.notifyObservers(key, value);
     }
 
-    observe(key: string, observer: Observer) {
+    observe(key: string, observer: Observer, invokeImmediately?: boolean) {
         if (!this.observers[key]) {
             this.observers[key] = [];
         }
         this.observers[key].push(observer);
         this.updateStorageEventListener();
+
+        if (invokeImmediately) {
+            const currentValue = window.localStorage.getItem(key);
+            observer(currentValue ? JSON.parse(currentValue) : undefined);
+        }
 
         // return disposer function that allows to remove the registered observer
         return () => {
@@ -63,4 +62,4 @@ class ClipboardStore {
     }
 }
 
-export default new ClipboardStore();
+export default new Clipboard();

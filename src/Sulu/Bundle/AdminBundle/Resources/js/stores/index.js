@@ -1,6 +1,5 @@
 // @flow
 import localizationStore from './localizationStore';
-import clipboardStore from './clipboardStore';
 import MultiSelectionStore from './MultiSelectionStore';
 import ResourceListStore from './ResourceListStore';
 import ResourceStore from './ResourceStore';
@@ -14,7 +13,6 @@ export {
     ResourceStore,
     SingleSelectionStore,
     localizationStore,
-    clipboardStore,
     userStore,
 };
 

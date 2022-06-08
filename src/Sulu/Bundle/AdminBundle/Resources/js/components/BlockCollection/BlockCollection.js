@@ -3,8 +3,7 @@ import React from 'react';
 import {action, observable, toJS, reaction, computed} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
-import {arrayMove, translate} from '../../utils';
-import {clipboardStore} from '../../stores';
+import {arrayMove, translate, clipboard} from '../../utils';
 import Button from '../Button';
 import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
@@ -41,7 +40,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         value: [],
     };
 
-    @observable pasteableBlocks: Array<number> = [];
+    @observable pasteableBlocks: Array<U>= [];
     @observable generatedBlockIds: Array<number> = [];
     @observable expandedBlocks: Array<boolean> = [];
 
@@ -52,11 +51,10 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         super(props);
 
         this.fillArraysDisposer = reaction(() => this.props.value.length, this.fillArrays, {fireImmediately: true});
-        this.setPasteableBlocksDisposer = clipboardStore.observe(BLOCKS_CLIPBOARD_KEY, action((blocks) => {
-            this.pasteableBlocks = (blocks: any) || [];
-        }));
-
-        this.pasteableBlocks = (clipboardStore.get(BLOCKS_CLIPBOARD_KEY): any) || [];
+        this.fillArraysDisposer = reaction(() => this.props.value.length, this.fillArrays, {fireImmediately: true});
+        this.setPasteableBlocksDisposer = clipboard.observe(BLOCKS_CLIPBOARD_KEY, action((blocks) => {
+            this.pasteableBlocks = blocks || [];
+        }), true);
     }
 
     componentWillUnmount() {
@@ -129,8 +127,6 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         }
 
         if (value) {
-            // TODO: gracefully handle clipboard data this is incompatible with available block types
-
             this.expandedBlocks.splice(
                 insertionIndex, 0, ...this.pasteableBlocks.map(() => true)
             );
@@ -138,11 +134,20 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                 insertionIndex, 0, ...this.pasteableBlocks.map(() => ++BlockCollection.idCounter)
             );
 
+            const newElements = this.pasteableBlocks.map((block) => {
+                // paste block with default type if type of block in clipboard is not known
+                if (!this.props.types?.[block.type]) {
+                    return {...block, type: this.props.defaultType};
+                }
+
+                return block;
+            });
             const elementsBefore = value.slice(0, insertionIndex);
             const elementsAfter = value.slice(insertionIndex);
+
             // $FlowFixMe
-            onChange([...elementsBefore, ...this.pasteableBlocks, ...elementsAfter]);
-            clipboardStore.set(BLOCKS_CLIPBOARD_KEY, undefined);
+            onChange([...elementsBefore, ...newElements, ...elementsAfter]);
+            clipboard.set(BLOCKS_CLIPBOARD_KEY, undefined);
         }
     };
 
@@ -183,7 +188,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
         if (value) {
             const block = {...toJS(value[index])};
-            clipboardStore.set(BLOCKS_CLIPBOARD_KEY, [block]);
+            clipboard.set(BLOCKS_CLIPBOARD_KEY, [block]);
         }
     };
 
