@@ -25,10 +25,10 @@
             </cascade>
             <join-table name="we_analytics_domains">
                 <join-columns>
-                    <join-column name="analytics" referenced-column-name="id" />
+                    <join-column name="analytics" referenced-column-name="id" on-delete="CASCADE" />
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="domain" referenced-column-name="id" />
+                    <join-column name="domain" referenced-column-name="id" on-delete="CASCADE" />
                 </inverse-join-columns>
             </join-table>
             <order-by>
