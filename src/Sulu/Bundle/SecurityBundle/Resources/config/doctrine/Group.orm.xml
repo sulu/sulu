@@ -32,10 +32,10 @@
         <many-to-many field="roles" target-entity="Sulu\Component\Security\Authentication\RoleInterface" inversed-by="groups">
             <join-table name="se_group_roles">
                 <join-columns>
-                    <join-column name="idGroups" referenced-column-name="id"/>
+                    <join-column name="idGroups" referenced-column-name="id" on-delete="CASCADE"/>
                 </join-columns>
                 <inverse-join-columns>
-                    <join-column name="idRoles" referenced-column-name="id"/>
+                    <join-column name="idRoles" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
         </many-to-many>
