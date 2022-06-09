@@ -1,11 +1,14 @@
 // @flow
 import clipboard from '../clipboard';
 
-test('Set item to localStorage', () => {
-    const setItemSpy = jest.fn();
-    window.localStorage = {getItem: setItemSpy};
+test('Set item and observe item', () => {
+    clipboard.set('test-key', 'test-value');
 
-    const item = {key1: 'value1', key2: 1234};
-    clipboard.set('test-key', item);
-    expect(setItemSpy).toBeCalledWith(item);
+    let item = null;
+
+    clipboard.observe('test-key', (value) => {
+        item = value;
+    }, true);
+
+    expect(item).toEqual('test-value');
 });
