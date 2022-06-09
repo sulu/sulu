@@ -11,6 +11,7 @@
 
 use App\Kernel;
 use Sulu\Component\HttpKernel\SuluKernel;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -25,7 +26,9 @@ if (SULU_MAINTENANCE) {
     }
 }
 
-require \dirname(__DIR__) . '/config/bootstrap.php';
+require \dirname(__DIR__) . '/vendor/autoload.php';
+
+(new Dotenv())->bootEnv(\dirname(__DIR__) . '/.env');
 
 if ($_SERVER['APP_DEBUG']) {
     \umask(0000);
@@ -57,7 +60,7 @@ if ('dev' !== $_SERVER['APP_ENV'] && SuluKernel::CONTEXT_WEBSITE === $suluContex
 
 // When using the HttpCache, you need to call the method in your front controller
 // instead of relying on the configuration parameter
-// https://symfony.com/doc/4.3/reference/configuration/framework.html#http-method-override
+// https://symfony.com/doc/3.4/reference/configuration/framework.html#http-method-override
 Request::enableHttpMethodParameterOverride();
 $request = Request::createFromGlobals();
 $response = $kernel->handle($request);

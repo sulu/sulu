@@ -1,9 +1,11 @@
-# Learn more about services, parameters and containers at
-# http://symfony.com/doc/current/book/service_container.html
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
-    default_locale: "en"
+    default_locale: en
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
+#    App\Some\ClassName:
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]

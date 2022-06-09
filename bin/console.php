@@ -22,7 +22,7 @@ if (!isset($suluContext)) {
     $suluContext = Kernel::CONTEXT_ADMIN;
 }
 
-return function(array $context) use ($suluContext) {
+return function (array $context) use ($suluContext) {
     $kernel = new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG'], $suluContext);
 
     return new Application($kernel);

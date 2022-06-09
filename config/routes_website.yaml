@@ -1,0 +1,23 @@
+# Define your website routes here
+#controllers:
+#    resource: ../src/Controller/Website/
+#    type: attribute
+
+#static:
+#    path: /static-route
+#    controller: App\Controller\DefaultController::index
+
+# If you have a simple login on your website activate the following routes
+# If you need registration or profile edit have a look at the:
+# https://github.com/sulu/SuluCommunityBundle
+#
+#login:
+#    path: /login
+#    controller:   Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+#    defaults:
+#        # the following template need to be created:
+#        # see https://github.com/sulu/sulu/blob/2.x/templates/static/login.html.twig as example
+#        template: static/login.html.twig
+#
+#logout:
+#    path: /logout
