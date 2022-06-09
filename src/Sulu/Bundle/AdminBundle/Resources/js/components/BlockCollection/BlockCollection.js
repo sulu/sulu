@@ -51,7 +51,6 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         super(props);
 
         this.fillArraysDisposer = reaction(() => this.props.value.length, this.fillArrays, {fireImmediately: true});
-        this.fillArraysDisposer = reaction(() => this.props.value.length, this.fillArrays, {fireImmediately: true});
         this.setPasteableBlocksDisposer = clipboard.observe(BLOCKS_CLIPBOARD_KEY, action((blocks) => {
             this.pasteableBlocks = blocks || [];
         }), true);
