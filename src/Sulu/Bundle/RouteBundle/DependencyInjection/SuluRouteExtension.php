@@ -81,6 +81,7 @@ class SuluRouteExtension extends Extension implements PrependExtensionInterface
             );
         }
 
+        /** @var array<string, class-string> $bundles */
         $bundles = $container->getParameter('kernel.bundles');
 
         if ('task' === $pageRouteCascade && !\array_key_exists('SuluAutomationBundle', $bundles)) {
