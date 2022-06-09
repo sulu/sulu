@@ -3,7 +3,7 @@ import React from 'react';
 import {action, observable, toJS, reaction, computed} from 'mobx';
 import {observer} from 'mobx-react';
 import classNames from 'classnames';
-import {arrayMove, translate} from '../../utils';
+import {arrayMove, translate, clipboard} from '../../utils';
 import Button from '../Button';
 import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
@@ -21,10 +21,13 @@ type Props<T: string, U: {type: T}> = {|
     onChange: (value: Array<U>) => void,
     onSettingsClick?: (index: number) => void,
     onSortEnd?: (oldIndex: number, newIndex: number) => void,
+    pasteButtonText?: ?string,
     renderBlockContent: RenderBlockContentCallback<T, U>,
     types?: {[key: T]: string},
     value: Array<U>,
 |};
+
+const BLOCKS_CLIPBOARD_KEY = 'blocks';
 
 @observer
 class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, U>> {
@@ -37,14 +40,25 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         value: [],
     };
 
+    @observable pasteableBlocks: Array<U>= [];
     @observable generatedBlockIds: Array<number> = [];
     @observable expandedBlocks: Array<boolean> = [];
+
+    fillArraysDisposer: ?() => *;
+    setPasteableBlocksDisposer: ?() => *;
 
     constructor(props: Props<T, U>) {
         super(props);
 
-        this.fillArrays();
-        reaction(() => this.props.value.length, this.fillArrays);
+        this.fillArraysDisposer = reaction(() => this.props.value.length, this.fillArrays, {fireImmediately: true});
+        this.setPasteableBlocksDisposer = clipboard.observe(BLOCKS_CLIPBOARD_KEY, action((blocks) => {
+            this.pasteableBlocks = blocks || [];
+        }), true);
+    }
+
+    componentWillUnmount() {
+        this.fillArraysDisposer?.();
+        this.setPasteableBlocksDisposer?.();
     }
 
     fillArrays = () => {
@@ -104,6 +118,38 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         }
     };
 
+    @action handlePasteBlocks = (insertionIndex: number) => {
+        const {onChange, value} = this.props;
+
+        if (this.hasMaximumReached) {
+            throw new Error('The maximum amount of blocks has already been reached!');
+        }
+
+        if (value) {
+            this.expandedBlocks.splice(
+                insertionIndex, 0, ...this.pasteableBlocks.map(() => true)
+            );
+            this.generatedBlockIds.splice(
+                insertionIndex, 0, ...this.pasteableBlocks.map(() => ++BlockCollection.idCounter)
+            );
+
+            const newElements = this.pasteableBlocks.map((block) => {
+                // paste block with default type if type of block in clipboard is not known
+                if (!this.props.types?.[block.type]) {
+                    return {...block, type: this.props.defaultType};
+                }
+
+                return block;
+            });
+            const elementsBefore = value.slice(0, insertionIndex);
+            const elementsAfter = value.slice(insertionIndex);
+
+            // $FlowFixMe
+            onChange([...elementsBefore, ...newElements, ...elementsAfter]);
+            clipboard.set(BLOCKS_CLIPBOARD_KEY, undefined);
+        }
+    };
+
     @action handleRemoveBlock = (index: number) => {
         const {onChange, value} = this.props;
 
@@ -132,8 +178,22 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             const elementsBefore = value.slice(0, index);
             const elementsAfter = value.slice(index);
             // $FlowFixMe
-            onChange([...elementsBefore, {...value[index]}, ...elementsAfter]);
+            onChange([...elementsBefore, {...toJS(value[index])}, ...elementsAfter]);
         }
+    };
+
+    handleCopyBlock = (index: number) => {
+        const {value} = this.props;
+
+        if (value) {
+            const block = {...toJS(value[index])};
+            clipboard.set(BLOCKS_CLIPBOARD_KEY, [block]);
+        }
+    };
+
+    handleCutBlock = (index: number) => {
+        this.handleCopyBlock(index);
+        this.handleRemoveBlock(index);
     };
 
     @action handleSortEnd = ({newIndex, oldIndex}: {newIndex: number, oldIndex: number}) => {
@@ -186,6 +246,22 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     @computed get blockActions() {
         const blockActions = [];
 
+        blockActions.push({
+            type: 'button',
+            icon: 'su-copy',
+            label: translate('sulu_admin.copy'),
+            onClick: this.handleCopyBlock,
+        });
+
+        if (!this.hasMinimumReached) {
+            blockActions.push({
+                type: 'button',
+                icon: 'su-scissors',
+                label: translate('sulu_admin.cut'),
+                onClick: this.handleCutBlock,
+            });
+        }
+
         if (!this.hasMaximumReached) {
             blockActions.push({
                 type: 'button',
@@ -214,7 +290,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     }
 
     renderAddButton = (aboveBlockIndex: number) => {
-        const {addButtonText, disabled, value} = this.props;
+        const {addButtonText, pasteButtonText, disabled, value} = this.props;
         const isDividerButton = aboveBlockIndex < value.length - 1;
 
         const containerClass = classNames(
@@ -236,6 +312,21 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                 >
                     {addButtonText ? addButtonText : translate('sulu_admin.add_block')}
                 </Button>
+                {this.pasteableBlocks.length > 0 && (
+                    <Button
+                        className={blockCollectionStyles.addButton}
+                        disabled={disabled || this.hasMaximumReached}
+                        icon="su-copy"
+                        onClick={this.handlePasteBlocks}
+                        skin="secondary"
+                        value={aboveBlockIndex + 1}
+                    >
+                        {pasteButtonText
+                            ? pasteButtonText
+                            : translate('sulu_admin.paste_blocks', {count: this.pasteableBlocks.length})
+                        }
+                    </Button>
+                )}
             </div>
         );
     };

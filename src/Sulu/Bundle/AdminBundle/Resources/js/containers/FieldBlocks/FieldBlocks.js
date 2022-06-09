@@ -118,6 +118,22 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         return addButtonText;
     }
 
+    @computed get pasteButtonText() {
+        const {
+            schemaOptions: {
+                paste_button_text: {
+                    title: pasteButtonText,
+                } = {},
+            },
+        } = this.props;
+
+        if (pasteButtonText !== undefined && typeof pasteButtonText !== 'string') {
+            throw new Error('The "block" field types only accepts strings as "paste_button_text" schema option!');
+        }
+
+        return pasteButtonText;
+    }
+
     @computed get collapsable() {
         const {
             schemaOptions: {
@@ -476,6 +492,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
                     onChange={this.handleBlocksChange}
                     onSettingsClick={this.settingsFormKey ? this.handleSettingsClick : undefined}
                     onSortEnd={this.handleSortEnd}
+                    pasteButtonText={this.pasteButtonText}
                     renderBlockContent={this.renderBlockContent}
                     types={blockTypes}
                     value={value}

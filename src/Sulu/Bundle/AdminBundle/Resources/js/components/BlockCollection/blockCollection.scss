@@ -5,6 +5,10 @@
     text-align: center;
 }
 
+.addButton {
+    margin: 0 5px;
+}
+
 .addButtonDivider {
     /* replace margin of block above with container to display button if space between blocks is hovered */
     margin-top: -$blockMarginBottom;
