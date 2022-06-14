@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Rule;
 use DeviceDetector\DeviceDetector;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\OperatingSystemRule;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -22,12 +23,12 @@ class OperatingSystemRuleTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var DeviceDetector
+     * @var ObjectProphecy<DeviceDetector>
      */
     private $deviceDetector;
 
     /**
-     * @var TranslatorInterface
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 
