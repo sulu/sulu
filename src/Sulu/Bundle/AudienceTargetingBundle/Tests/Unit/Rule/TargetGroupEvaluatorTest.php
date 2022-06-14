@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Rule;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupCondition;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
@@ -27,17 +28,17 @@ use Sulu\Component\Webspace\Webspace;
 class TargetGroupEvaluatorTest extends TestCase
 {
     /**
-     * @var RuleCollectionInterface
+     * @var ObjectProphecy<RuleCollectionInterface>
      */
     private $ruleCollection;
 
     /**
-     * @var TargetGroupRepositoryInterface
+     * @var ObjectProphecy<TargetGroupRepositoryInterface>
      */
     private $targetGroupRepository;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
