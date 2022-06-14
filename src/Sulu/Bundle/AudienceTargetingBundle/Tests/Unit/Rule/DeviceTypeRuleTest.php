@@ -13,18 +13,19 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\Rule;
 
 use DeviceDetector\DeviceDetector;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AudienceTargetingBundle\Rule\DeviceTypeRule;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DeviceTypeRuleTest extends TestCase
 {
     /**
-     * @var DeviceDetector
+     * @var ObjectProphecy<DeviceDetector>
      */
     private $deviceDetector;
 
     /**
-     * @var TranslatorInterface
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 
