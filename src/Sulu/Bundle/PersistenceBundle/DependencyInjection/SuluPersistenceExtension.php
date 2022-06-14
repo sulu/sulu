@@ -43,7 +43,6 @@ class SuluPersistenceExtension extends Extension implements PrependExtensionInte
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-
         $container->setParameter('sulu_persistence.encryption_key', $config['encryption_key']);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
