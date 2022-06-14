@@ -15,7 +15,6 @@ use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Key;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\TextType;
-use Sulu\Bundle\PersistenceBundle\SuluPersistenceBundle;
 
 /**
  * @internal
@@ -64,7 +63,7 @@ final class EncryptArray extends TextType
 
     private static function getKey(): Key
     {
-        if (self::$key === null) {
+        if (null === self::$key) {
             self::$key = $key ? Key::loadFromAsciiSafeString($key) : null;
         }
 
