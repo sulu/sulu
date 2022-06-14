@@ -9,12 +9,14 @@ import linkStyles from '../Form/fields/link.scss';
 import linkTypeRegistry from './registries/linkTypeRegistry';
 import type {LinkValue} from './types';
 import type {IObservableValue} from 'mobx/lib/mobx';
+import {ResourceRequester} from "../../services";
 
 type Props = {
     disabled?: boolean,
     enableAnchor?: ?boolean,
     enableTarget?: ?boolean,
     enableTitle?: ?boolean,
+    excludedTypes: string[],
     locale: IObservableValue<string>,
     onChange: (value: LinkValue) => void,
     onFinish: () => void,
@@ -31,6 +33,7 @@ class Link extends Component<Props> {
         enableAnchor: false,
         enableTarget: false,
         enableTitle: false,
+        excludedTypes: [],
         types: [],
     };
 
@@ -39,6 +42,60 @@ class Link extends Component<Props> {
     @observable overlayTitle: ?string;
     @observable overlayTarget: ?string = DEFAULT_TARGET;
     @observable overlayAnchor: ?string;
+    @observable displayProperties: Object = {};
+    @observable displayPropertiesLoading: boolean = false;
+
+    constructor(props: Props) {
+        super(props);
+
+        this.load(this.props.value);
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        if (prevProps.value !== this.props.value) {
+            this.load(this.props.value);
+        }
+    }
+
+    @action load = (value) => {
+        if (undefined === value) {
+            this.displayProperties = {};
+        }
+
+        const options = linkTypeRegistry.getOptions(value.provider);
+        if (undefined === options) {
+            this.displayProperties = {
+                title: value.href,
+            };
+
+            return;
+        }
+
+        this.displayProperties = {};
+
+        this.displayPropertiesLoading = true;
+        ResourceRequester.get(options.resourceKey, {
+            id: value.href,
+            locale: this.props.locale,
+        }).then(action((data) => {
+            this.displayProperties = Object.keys(data)
+                .filter((key) => (options.displayProperties || []).includes(key))
+                .reduce((obj, key) => {
+                    return Object.assign(obj, {
+                        [key]: data[key],
+                    });
+                }, {});
+
+            this.displayPropertiesLoading = false;
+        })).catch(action((error) => {
+            if (error.status !== 404) {
+                return Promise.reject(error);
+            }
+
+            this.displayProperties = {};
+            this.displayPropertiesLoading = false;
+        }));
+    };
 
     @action handleRemoveClick = () => {
         this.changeValue(undefined, undefined, undefined, undefined, undefined);
@@ -87,7 +144,6 @@ class Link extends Component<Props> {
 
     @action handleOverlayHrefChange = (href: ?string | number, item: ?Object) => {
         this.overlayHref = href;
-        this.overlayTitle = item?.title ?? String(href);
     };
 
     closeOverlay = () => {
@@ -130,9 +186,10 @@ class Link extends Component<Props> {
             enableTarget,
             enableTitle,
             types,
+            excludedTypes,
             value,
         } = this.props;
-        const {href, provider, title} = value || {};
+        const {href, provider} = value || {};
 
         const itemClass = classNames(
             linkStyles.item,
@@ -143,12 +200,14 @@ class Link extends Component<Props> {
         );
 
         const allowedTypes = linkTypeRegistry.getKeys().filter((key) => {
-            if (types === undefined || types.length === 0) {
+            if (types !== undefined && types.length > 0 && types.includes(key)) {
                 return true;
             }
 
-            return types.includes(key);
+            return !excludedTypes.includes(key);
         });
+
+        const displayProperties = (linkTypeRegistry.getOptions(value.provider) || {displayProperties: ['title']}).displayProperties;
 
         return (
             <Fragment>
@@ -161,13 +220,26 @@ class Link extends Component<Props> {
                             value={provider}
                         >
                             {allowedTypes.map((key) => (
-                                <SingleSelect.Option key={key} value={key}>{key}</SingleSelect.Option>
+                                <SingleSelect.Option key={key} value={key}>{linkTypeRegistry.getTitle(key)}</SingleSelect.Option>
                             ))}
                         </SingleSelect>
                     </div>
                     <div className={linkStyles.itemContainer}>
                         <div className={itemClass} onClick={disabled || this.handleTitleClick} role="button">
-                            {title}
+                            {this.displayPropertiesLoading && '…'}
+                            {!this.displayPropertiesLoading && value && (
+                                <div className={linkStyles.columnList}>
+                                    {displayProperties.map((displayProperty) => (
+                                        <span
+                                            className={linkStyles.itemColumn}
+                                            key={displayProperty}
+                                            style={{width: 100 / displayProperties.length + '%'}}
+                                        >
+                                            {this.displayProperties[displayProperty] || null}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                         {!disabled &&
                             <button

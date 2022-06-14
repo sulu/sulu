@@ -28,6 +28,9 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
                 types: {
                     value: unvalidatedTypes,
                 } = {},
+                excluded_types: {
+                    value: unvalidatedExcludedTypes,
+                } = {},
             },
         } = this.props;
 
@@ -56,6 +59,29 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
             });
         }
 
+        let excludedProviderTypes = [];
+
+        if (unvalidatedExcludedTypes) {
+            if (!isArrayLike(unvalidatedExcludedTypes)) {
+                throw new Error('The "schemes" schema option must be an array!');
+            }
+            // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
+            const types: Array<any> | IObservableArray<any> = unvalidatedExcludedTypes;
+
+            if (types.length === 0) {
+                throw new Error('The "schemes" schema option must contain some values!');
+            }
+
+            excludedProviderTypes = types.map((type) => {
+                if (typeof type.name !== 'string') {
+                    throw new Error(
+                        'Every type in the "types" schemaOption must contain a string as name'
+                    );
+                }
+                return type.name;
+            });
+        }
+
         if (enableAnchor !== undefined && enableAnchor !== null && typeof enableAnchor !== 'boolean') {
             throw new Error('The "anchor" schema option must be a boolean if given!');
         }
@@ -74,6 +100,7 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
                 enableAnchor={enableAnchor}
                 enableTarget={enableTarget}
                 enableTitle={enableTitle}
+                excludedTypes={excludedProviderTypes}
                 locale={locale}
                 onChange={onChange}
                 onFinish={onFinish}
