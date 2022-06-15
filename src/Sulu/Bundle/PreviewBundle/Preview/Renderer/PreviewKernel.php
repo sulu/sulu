@@ -64,11 +64,11 @@ class PreviewKernel extends Kernel
             $dir = $r->getFileName();
 
             if (!\is_file($dir)) {
-                throw new \LogicException(sprintf('Cannot auto-detect project dir for kernel of class "%s".', $r->name));
+                throw new \LogicException(\sprintf('Cannot auto-detect project dir for kernel of class "%s".', $r->name));
             }
 
             $dir = $rootDir = \dirname($dir);
-            while (!\is_file($dir.'/composer.json')) {
+            while (!\is_file($dir . '/composer.json')) {
                 if ($dir === \dirname($dir)) {
                     return $this->projectDir = $rootDir;
                 }
