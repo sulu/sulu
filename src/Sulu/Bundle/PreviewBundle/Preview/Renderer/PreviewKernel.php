@@ -58,9 +58,17 @@ class PreviewKernel extends Kernel
     public function getProjectDir(): string
     {
         if (null === $this->projectDir) {
-            $reflectionClass = new \ReflectionClass(Kernel::class);
-            $dir = $rootDir = \dirname($reflectionClass->getFileName());
-            while (!\file_exists($dir . '/composer.json')) {
+            $r = new \ReflectionClass(Kernel::class); // uses App\Kernel to set dirs correctly
+
+            /** @var string $dir */
+            $dir = $r->getFileName();
+
+            if (!\is_file($dir)) {
+                throw new \LogicException(sprintf('Cannot auto-detect project dir for kernel of class "%s".', $r->name));
+            }
+
+            $dir = $rootDir = \dirname($dir);
+            while (!\is_file($dir.'/composer.json')) {
                 if ($dir === \dirname($dir)) {
                     return $this->projectDir = $rootDir;
                 }
