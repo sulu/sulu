@@ -31,8 +31,6 @@ class UserTwoFactor
     /**
      * @Expose
      * @Groups({"profile"})
-     *
-     * @var string|null
      */
     private ?string $options = null;
 
@@ -82,5 +80,4 @@ class UserTwoFactor
 
         return $this;
     }
-
 }
