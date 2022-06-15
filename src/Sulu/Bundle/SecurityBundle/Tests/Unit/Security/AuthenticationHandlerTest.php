@@ -90,6 +90,8 @@ class AuthenticationHandlerTest extends TestCase
     {
         $this->request->isXmlHttpRequest()->willReturn(true);
 
+        $this->token->getUserIdentifier()->willReturn('testuser');
+
         $response = $this->authenticationHandler->onAuthenticationSuccess(
             $this->request->reveal(),
             $this->token->reveal()
@@ -99,7 +101,12 @@ class AuthenticationHandlerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = \json_decode($response->getContent(), true);
-        $this->assertEquals('/admin/#target/path', $response['url']);
+        $this->assertEquals([
+            'url' => '/admin/#target/path',
+            'username' => 'testuser',
+            'completed' => true,
+            'twoFactorMethods' => [],
+        ], $response);
     }
 
     public function testOnAuthenticationFailure()

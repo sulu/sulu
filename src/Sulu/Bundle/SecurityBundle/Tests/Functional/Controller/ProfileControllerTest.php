@@ -56,7 +56,7 @@ class ProfileControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertEquals('test', $response->username);
-        $this->assertEquals('', $response->email);
+        $this->assertEquals('test@example.localhost', $response->email);
         $this->assertObjectNotHasAttribute('password', $response);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('Max', $response->firstName);

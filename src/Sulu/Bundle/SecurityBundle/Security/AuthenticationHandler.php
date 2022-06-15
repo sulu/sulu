@@ -59,7 +59,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
 
         if ($request->isXmlHttpRequest()) {
             $completed = true;
-            $twoFactorMethods = 'none';
+            $twoFactorMethods = [];
             if ($token instanceof TwoFactorTokenInterface) {
                 $completed = false;
                 $twoFactorMethods = $token->getTwoFactorProviders();
