@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\PersistenceBundle;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\Compiler\ActivateResolveTargetEntityResolverPass;
-use Sulu\Bundle\PersistenceBundle\Doctrine\Types\EncryptArray;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
