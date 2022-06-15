@@ -21,9 +21,9 @@ use Doctrine\DBAL\Types\TextType;
  */
 final class EncryptArray extends TextType
 {
-    private static ?Key $key;
+    private static ?Key $key = null;
 
-    private static ?string $encryptionKey;
+    private static ?string $encryptionKey = null;
 
     /**
      * Need to be set for security reasons no getter.
@@ -64,7 +64,7 @@ final class EncryptArray extends TextType
     private static function getKey(): Key
     {
         if (null === self::$key) {
-            self::$key = $key ? Key::loadFromAsciiSafeString($key) : null;
+            self::$key = Key::loadFromAsciiSafeString(self::$encryptionKey);
         }
 
         return self::$key;

@@ -2,6 +2,7 @@
 import React, {Fragment} from 'react';
 import {action, computed, observable} from 'mobx';
 import {observer} from 'mobx-react';
+import classNames from 'classnames';
 import {translate} from '../../utils/index';
 import Button from '../../components/Button/index';
 import Input from '../../components/Input/index';
@@ -11,6 +12,7 @@ import type {ElementRef} from 'react';
 import type {TwoFactorFormData} from './types';
 
 type Props = {|
+    error: boolean,
     loading: boolean,
     onChangeForm: () => void,
     onSubmit: (data: TwoFactorFormData) => void,
@@ -19,6 +21,7 @@ type Props = {|
 @observer
 class TwoFactorForm extends React.Component<Props> {
     static defaultProps = {
+        error: false,
         loading: false,
     };
 
@@ -57,15 +60,30 @@ class TwoFactorForm extends React.Component<Props> {
     };
 
     render() {
+        const {error} = this.props;
+
+        const inputFieldClass = classNames(
+            formStyles.inputField,
+            {
+                [formStyles.error]: error,
+            }
+        );
+
         return (
             <Fragment>
-                <Header>
-                    {translate('sulu_admin.two_factor_authentication')}
+                <Header small={error}>
+                    {
+                        translate(
+                            error
+                                ? 'sulu_admin.two_factor_authentication_failed'
+                                : 'sulu_admin.two_factor_authentication'
+                        )
+                    }
                 </Header>
 
                 <form className={formStyles.form} onSubmit={this.handleSubmit}>
                     <fieldset>
-                        <label className={formStyles.inputField}>
+                        <label className={inputFieldClass}>
                             <div className={formStyles.labelText}>
                                 {translate('sulu_admin.two_factor_auth_code')}
                             </div>
@@ -74,6 +92,7 @@ class TwoFactorForm extends React.Component<Props> {
                                 icon="su-lock"
                                 inputRef={this.setInputRef}
                                 onChange={this.handleAuthCodeChange}
+                                valid={!error}
                                 value={this.authCode}
                             />
                         </label>

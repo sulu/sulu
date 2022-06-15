@@ -27,7 +27,7 @@ class TwoFactorAuthenticationFailureHandler implements AuthenticationFailureHand
         // from the $exception.
         return new Response(
             '{"error": "2fa_failed", "2fa_complete": false}',
-            400
+            401
         );
     }
 }

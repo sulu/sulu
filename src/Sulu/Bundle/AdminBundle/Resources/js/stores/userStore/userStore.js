@@ -21,7 +21,9 @@ class UserStore {
     @observable loading: boolean = false;
     @observable loginError: boolean = false;
     @observable forgotPasswordSuccess: boolean = false;
+    @observable twoFactorRequired: boolean = false;
     @observable twoFactorSuccess: boolean = false;
+    @observable twoFactorError: boolean = false;
 
     @action clear() {
         this.persistentSettings = new Map();
@@ -31,7 +33,9 @@ class UserStore {
         this.contact = undefined;
         this.loginError = false;
         this.forgotPasswordSuccess = false;
+        this.twoFactorRequired = false;
         this.twoFactorSuccess = false;
+        this.twoFactorError = false;
     }
 
     @computed get systemLocale() {
@@ -56,6 +60,14 @@ class UserStore {
 
     @action setTwoFactorSuccess(twoFactorSuccess: boolean) {
         this.twoFactorSuccess = twoFactorSuccess;
+    }
+
+    @action setTwoFactorRequired(twoFactorRequired: boolean) {
+        this.twoFactorRequired = twoFactorRequired;
+    }
+
+    @action setTwoFactorError(twoFactorError: boolean) {
+        this.twoFactorError = twoFactorError;
     }
 
     @computed get contentLocale(): string {
@@ -99,10 +111,16 @@ class UserStore {
     }
 
     handleLogin = (data: Object) => {
+        this.requireTwoFactor = false;
+
         if (data.completed === false) {
             this.setLoading(false);
 
-            return data;
+            if (data.twoFactorMethods && data.twoFactorMethods.length) {
+                this.requireTwoFactor = true;
+            }
+
+            return;
         }
 
         if (this.user) {
@@ -147,11 +165,12 @@ class UserStore {
             .then((data) => this.handleLogin(data))
             .catch((error) => {
                 this.setLoading(false);
+                this.setTwoFactorSuccess(false);
+                this.setTwoFactorError(true);
+
                 if (error.status !== 401) {
                     return Promise.reject(error);
                 }
-
-                this.setTwoFactorSuccess(true);
             });
     };
 
