@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\SecurityBundle\Tests\Unit\EventListener;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\EventListener\LogoutEventSubscriber;
