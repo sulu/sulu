@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\SecurityBundle\Tests\Unit\EventListener;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\EventListener\LogoutEventSubscriber;
@@ -38,11 +37,13 @@ class LogoutEventSubscriberTest extends TestCase
     protected function setUp(): void
     {
         $this->urlGenerator = $this->prophesize(UrlGeneratorInterface::class);
+        $this->urlGenerator->generate('sulu_admin')
+            ->willReturn('/admin/');
 
         $this->subscriber = new LogoutEventSubscriber($this->urlGenerator->reveal());
     }
 
-    public function testLogoutEventWithResponse(): void
+    public function testLogoutEventWebsiteLogout(): void
     {
         $request = Request::create('/');
         $event = new LogoutEvent($request, new NullToken());
@@ -57,23 +58,19 @@ class LogoutEventSubscriberTest extends TestCase
 
     public function testLogoutEventUrlGenerator(): void
     {
-        $request = Request::create('/');
+        $request = Request::create('/admin/logout');
         $event = new LogoutEvent($request, new NullToken());
-
-        $this->urlGenerator->generate(Argument::any())
-            ->willReturn('/admin')
-            ->shouldBeCalled();
 
         $this->subscriber->onLogout($event);
 
         $response = $event->getResponse();
         $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('/admin', $response->getTargetUrl());
+        $this->assertSame('/admin/', $response->getTargetUrl());
     }
 
     public function testLogoutEventAjax(): void
     {
-        $request = Request::create('/');
+        $request = Request::create('/admin/logout');
         $request->headers->set('X-Requested-With', 'XMLHttpRequest');
         $event = new LogoutEvent($request, new NullToken());
 

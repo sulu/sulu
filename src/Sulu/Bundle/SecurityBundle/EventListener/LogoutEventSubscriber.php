@@ -36,14 +36,19 @@ final class LogoutEventSubscriber implements EventSubscriberInterface
 
     public function onLogout(LogoutEvent $logoutEvent): void
     {
-        if (null !== $logoutEvent->getResponse()) {
+        $adminUrl = $this->urlGenerator->generate('sulu_admin');
+        $request = $logoutEvent->getRequest();
+
+        if (!\str_starts_with($request->getPathInfo(), $adminUrl)) {
+            // do nothing when not in admin context
+
             return;
         }
 
-        if ($logoutEvent->getRequest()->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest()) {
             $response = new JsonResponse(null, Response::HTTP_OK);
         } else {
-            $response = new RedirectResponse($this->urlGenerator->generate('sulu_admin'));
+            $response = new RedirectResponse($adminUrl);
         }
 
         $logoutEvent->setResponse($response);
