@@ -33,6 +33,9 @@ final class EncryptArray extends TextType
         self::$encryptionKey = $encryptionKey;
     }
 
+    /**
+     * @param mixed[]|null $value
+     */
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
         if (!\is_array($value)) {
@@ -42,12 +45,17 @@ final class EncryptArray extends TextType
         $value = \json_encode($value, \JSON_THROW_ON_ERROR);
 
         if (self::$encryptionKey) {
-            $value = Crypto::encrypt($value, self::getKey());
+            $value = Crypto::encrypt($value, self::$key ??= Key::loadFromAsciiSafeString(self::$encryptionKey));
         }
 
         return $value;
     }
 
+    /**
+     * @param string|null $value
+     *
+     * @return mixed[]|null
+     */
     public function convertToPHPValue($value, $platform): ?array
     {
         if (!\is_string($value)) {
@@ -55,18 +63,10 @@ final class EncryptArray extends TextType
         }
 
         if (self::$encryptionKey) {
-            $value = Crypto::decrypt($value, self::getKey());
+            $value = Crypto::decrypt($value, self::$key ??= Key::loadFromAsciiSafeString(self::$encryptionKey));
         }
 
+        /** @var mixed[] */
         return \json_decode($value, true, \JSON_THROW_ON_ERROR);
-    }
-
-    private static function getKey(): Key
-    {
-        if (null === self::$key) {
-            self::$key = Key::loadFromAsciiSafeString(self::$encryptionKey);
-        }
-
-        return self::$key;
     }
 }

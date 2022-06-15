@@ -248,7 +248,7 @@ class AdminController
         try {
             $endpoints['twoFactorLoginCheck'] = $this->urlGenerator->generate('2fa_login_check_admin');
         } catch (RouteNotFoundException $e) {
-            // ignore if no 2fa_login_check_admin exist
+            // @ignoreException ignore if no 2fa_login_check_admin exist
         }
 
         return new Response($this->engine->render(

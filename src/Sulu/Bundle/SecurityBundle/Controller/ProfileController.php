@@ -127,6 +127,7 @@ class ProfileController implements ClassResourceInterface
         $user->setLastName($request->request->get('lastName'));
 
         if ($user instanceof TwoFactorInterface) {
+            /** @var array{method?: string|null} $twoFactorData */
             $twoFactorData = $request->request->all('twoFactor');
             $twoFactorMethod = $twoFactorData['method'] ?? null;
 
@@ -136,7 +137,7 @@ class ProfileController implements ClassResourceInterface
                     $twoFactor = new UserTwoFactor($user);
                 }
 
-                $twoFactor->setMethod($twoFactorData['method']);
+                $twoFactor->setMethod($twoFactorMethod);
                 $user->setTwoFactor($twoFactor);
             } else {
                 $twoFactor = $user->getTwoFactor();
