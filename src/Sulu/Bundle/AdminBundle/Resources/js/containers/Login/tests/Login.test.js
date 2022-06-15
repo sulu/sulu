@@ -18,7 +18,7 @@ jest.mock('../../../utils/Translator', () => ({
 
 const mockUserStoreLogin = jest.fn().mockReturnValue(Promise.resolve({}));
 const mockUserStoreClear = jest.fn();
-const mockUserStoreForgotPassword = jest.fn();
+const mockUserStoreForgotPassword = jest.fn().mockReturnValue(Promise.resolve({}));
 const mockUserStoreResetPassword = jest.fn().mockReturnValue(Promise.resolve({}));
 const mockUserStoreLoginError = jest.fn();
 const mockUserStoreSetResetSuccess = jest.fn();
