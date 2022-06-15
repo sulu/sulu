@@ -58,7 +58,7 @@ class PreviewKernel extends Kernel
     public function getProjectDir(): string
     {
         if (null === $this->projectDir) {
-            $r = new \ReflectionClass(Kernel::class); // uses App\Kernel to set dirs correctly
+            $r = new \ReflectionClass(Kernel::class); // uses App\Kernel to cache dirs and co. correctly
 
             /** @var string $dir */
             $dir = $r->getFileName();
