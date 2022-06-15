@@ -22,10 +22,6 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('sulu_persistence');
-        $rootNode = $treeBuilder->getRootNode();
-
-        $rootNode->children()
-            ->scalarNode('encryption_key')->defaultNull()->end();
 
         return $treeBuilder;
     }

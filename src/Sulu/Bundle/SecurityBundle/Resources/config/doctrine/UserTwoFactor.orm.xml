@@ -12,6 +12,6 @@
         </one-to-one>
 
         <field name="method" type="string" column="method" length="12" nullable="true"/>
-        <field name="options" type="encrypt_array" column="options" nullable="true"/>
+        <field name="options" type="text" column="options" nullable="true"/>
     </entity>
 </doctrine-mapping>

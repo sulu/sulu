@@ -19,14 +19,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class SuluPersistenceBundle extends Bundle
 {
-    public function boot(): void
-    {
-        if ($this->container->hasParameter('sulu_persistence.encryption_key')) {
-            // TODO find a better way to inject the encryption key: https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/events.html#postconnect-event
-            EncryptArray::setEncryptionKey($this->container->getParameter('sulu_persistence.encryption_key'));
-        }
-    }
-
     /**
      * @return void
      */

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Entity;
 
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\TwoFactorInterface;
 
 class UserTwoFactor
@@ -31,9 +32,9 @@ class UserTwoFactor
      * @Expose
      * @Groups({"profile"})
      *
-     * @var mixed[]|null
+     * @var string|null
      */
-    private ?array $options = null;
+    private ?string $options = null;
 
     public function __construct(TwoFactorInterface $user)
     {
@@ -56,11 +57,18 @@ class UserTwoFactor
     }
 
     /**
+     * @VirtualProperty()
+     * @Groups({"profile"})
+     *
      * @return mixed[]
      */
     public function getOptions(): ?array
     {
-        return $this->options;
+        if (null === $this->options) {
+            return null;
+        }
+
+        return \json_decode($this->options, true, \JSON_THROW_ON_ERROR);
     }
 
     /**
@@ -70,8 +78,9 @@ class UserTwoFactor
      */
     public function setOptions(?array $options)
     {
-        $this->options = $options;
+        $this->options = $options ? \json_encode($options, true, \JSON_THROW_ON_ERROR) : null;
 
         return $this;
     }
+
 }

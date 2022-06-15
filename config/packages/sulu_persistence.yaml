@@ -1,2 +1,0 @@
-sulu_persistence:
-    encryption_key: '%env(ENCRYPTION_KEY)%'
