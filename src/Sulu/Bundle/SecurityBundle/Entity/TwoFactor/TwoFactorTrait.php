@@ -50,7 +50,7 @@ trait TwoFactorTrait
     /**
      * @internal
      */
-    protected function setTwoFactorOption(string $name, string $value): void
+    protected function setTwoFactorOption(string $name, ?string $value): void
     {
         $twoFactor = $this->getTwoFactor();
 
@@ -68,19 +68,5 @@ trait TwoFactorTrait
         $options[$name] = $value;
 
         $twoFactor->setOptions($options);
-    }
-
-    /**
-     * @internal
-     */
-    protected function getTwoFactorOption(string $name): string
-    {
-        $value = $this->getTwoFactor()?->getOptions()[$name] ?? null;
-
-        if (null === $value) {
-            throw new \LogicException('The ' . $name . ' was not set');
-        }
-
-        return $value;
     }
 }

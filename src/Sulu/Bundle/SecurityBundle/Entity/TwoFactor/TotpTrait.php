@@ -36,8 +36,10 @@ if (\interface_exists(TwoFactorInterface::class)) {
 
         public function getTotpAuthenticationConfiguration(): TotpConfigurationInterface
         {
+            $topSecret = $this->getTwoFactor()?->getOptions()['totpSecret'] ?? '';
+
             // You could persist the other configuration options in the user entity to make it individual per user.
-            return new TotpConfiguration($this->totpSecret, TotpConfiguration::ALGORITHM_SHA1, 20, 8);
+            return new TotpConfiguration($topSecret, TotpConfiguration::ALGORITHM_SHA1, 20, 8);
         }
     }
 } else {

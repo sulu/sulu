@@ -24,7 +24,7 @@ if (\interface_exists(SchebTrustedDeviceInterface::class)) {
     {
         public function getTrustedTokenVersion(): int
         {
-            // TODO return $this->trustedVersion;
+            return $this->getTwoFactor()?->getOptions()['trustedVersion'] ?? 0;
         }
     }
 } else {

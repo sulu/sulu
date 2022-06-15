@@ -15,12 +15,13 @@ use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\TwoFactorInterface;
+use Sulu\Component\Security\Authentication\UserInterface;
 
 class UserTwoFactor
 {
     private int $id;
 
-    private TwoFactorInterface $user;
+    private UserInterface $user;
 
     /**
      * @Expose
@@ -36,6 +37,7 @@ class UserTwoFactor
 
     public function __construct(TwoFactorInterface $user)
     {
+        /** @var UserInterface $user */
         $this->user = $user;
     }
 
@@ -58,7 +60,15 @@ class UserTwoFactor
      * @VirtualProperty()
      * @Groups({"profile"})
      *
-     * @return mixed[]
+     * @return array{
+     *     backupCodes?: string[],
+     *     authCode?: string,
+     *     googleAuthenticatorSecret?: string,
+     *     totpSecret?: string,
+     *     trustedVersion?: int,
+     *     googleAuthenticatorUsername?: string,
+     *     googleAuthenticatorSecret?: string,
+     * }
      */
     public function getOptions(): ?array
     {
@@ -66,6 +76,17 @@ class UserTwoFactor
             return null;
         }
 
+        /**
+         * @var array{
+         *     backupCodes?: string[],
+         *     authCode?: string,
+         *     googleAuthenticatorSecret?: string,
+         *     totpSecret?: string,
+         *     trustedVersion?: int,
+         *     googleAuthenticatorUsername?: string,
+         *     googleAuthenticatorSecret?: string,
+         * }
+         */
         return \json_decode($this->options, true, \JSON_THROW_ON_ERROR);
     }
 
@@ -76,7 +97,7 @@ class UserTwoFactor
      */
     public function setOptions(?array $options)
     {
-        $this->options = $options ? \json_encode($options, true, \JSON_THROW_ON_ERROR) : null;
+        $this->options = $options ? \json_encode($options, \JSON_THROW_ON_ERROR) : null;
 
         return $this;
     }

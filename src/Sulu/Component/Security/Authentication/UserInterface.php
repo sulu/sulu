@@ -11,12 +11,13 @@
 
 namespace Sulu\Component\Security\Authentication;
 
+use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\TwoFactorInterface;
 use Symfony\Component\Security\Core\User\UserInterface as BaseUserInterface;
 
 /**
  * The UserInterface for Sulu, extends the Symfony UserInterface with an ID.
  */
-interface UserInterface extends BaseUserInterface
+interface UserInterface extends BaseUserInterface, TwoFactorInterface
 {
     public const RESOURCE_KEY = 'users';
 

@@ -29,12 +29,18 @@ if (\interface_exists(TwoFactorInterface::class)) {
 
         public function getGoogleAuthenticatorUsername(): string
         {
-            // TODO return $this->username;
+            $googleAuthenticatorUsername =  $this->getTwoFactor()?->getOptions()['googleAuthenticatorUsername'] ?? null;
+
+            if (!$googleAuthenticatorUsername) {
+                throw new \LogicException('The "googleAuthenticatorUsername" was not set on the user entity.');
+            }
+
+            return $googleAuthenticatorUsername;
         }
 
         public function getGoogleAuthenticatorSecret(): ?string
         {
-            return $this->getTwoFactorOption('googleAuthenticatorSecret');
+            return $this->getTwoFactor()?->getOptions()['googleAuthenticatorSecret'] ?? null;
         }
 
         public function setGoogleAuthenticatorSecret(?string $googleAuthenticatorSecret): void

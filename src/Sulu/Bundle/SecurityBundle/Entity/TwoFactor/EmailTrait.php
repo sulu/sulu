@@ -29,12 +29,18 @@ if (\interface_exists(TwoFactorInterface::class)) {
 
         public function getEmailAuthRecipient(): string
         {
-            return $this->getEmail();
+            return $this->getEmail() ?: '';
         }
 
         public function getEmailAuthCode(): string
         {
-            return $this->getTwoFactorOption('authCode');
+            $authCode = $this->getTwoFactor()?->getOptions()['authCode'] ?? null;
+
+            if (!$authCode) {
+                throw new \LogicException('The "authCode" was not set on the user entity.');
+            }
+
+            return $authCode;
         }
 
         public function setEmailAuthCode(string $authCode): void
