@@ -25,11 +25,6 @@ class PreviewKernel extends Kernel
     /**
      * @var string
      */
-    protected $rootDir;
-
-    /**
-     * @var string
-     */
     private $projectDir;
 
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -60,26 +55,20 @@ class PreviewKernel extends Kernel
         return $this->generateContainerClass(\get_parent_class());
     }
 
-    public function getRootDir(/* $triggerDeprecation = true */)
-    {
-        if (0 === \func_num_args() || \func_get_arg(0)) {
-            @\trigger_error(\sprintf('The "%s()" method is deprecated since Symfony 4.2, use getProjectDir() instead.', __METHOD__), \E_USER_DEPRECATED);
-        }
-
-        if (null === $this->rootDir) {
-            $reflectionClass = new \ReflectionClass(Kernel::class);
-            $this->rootDir = \dirname($reflectionClass->getFileName());
-        }
-
-        return $this->rootDir;
-    }
-
     public function getProjectDir(): string
     {
         if (null === $this->projectDir) {
-            $reflectionClass = new \ReflectionClass(Kernel::class);
-            $dir = $rootDir = \dirname($reflectionClass->getFileName());
-            while (!\file_exists($dir . '/composer.json')) {
+            $r = new \ReflectionClass(Kernel::class); // uses App\Kernel to cache dirs and co. correctly
+
+            /** @var string $dir */
+            $dir = $r->getFileName();
+
+            if (!\is_file($dir)) {
+                throw new \LogicException(\sprintf('Cannot auto-detect project dir for kernel of class "%s".', $r->name));
+            }
+
+            $dir = $rootDir = \dirname($dir);
+            while (!\is_file($dir . '/composer.json')) {
                 if ($dir === \dirname($dir)) {
                     return $this->projectDir = $rootDir;
                 }
