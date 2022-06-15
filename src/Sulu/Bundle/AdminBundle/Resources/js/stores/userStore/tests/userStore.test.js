@@ -207,7 +207,10 @@ test('Should login after the password was reset', () => {
 
 test('Should login without initializing when it`s the same user', () => {
     const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test', roles: []};
-    const loginPromise = Promise.resolve({});
+    const loginPromise = Promise.resolve({
+        username: 'test',
+        completed: true,
+    });
     Requester.post.mockReturnValue(loginPromise);
     userStore.setUser(user);
 
