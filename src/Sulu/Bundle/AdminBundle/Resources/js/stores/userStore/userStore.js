@@ -4,8 +4,7 @@ import debounce from 'debounce';
 import {Config, Requester} from '../../services';
 import initializer from '../../services/initializer';
 import localizationStore from '../localizationStore';
-import {TwoFactorData} from './types';
-import type {Contact, ForgotPasswordData, LoginData, ResetPasswordData, User} from './types';
+import type {Contact, ForgotPasswordData, LoginData, ResetPasswordData, User, TwoFactorData} from './types';
 
 const UPDATE_PERSISTENT_SETTINGS_DELAY = 2500;
 const CONTENT_LOCALE_SETTING_KEY = 'sulu_admin.content_locale';
@@ -22,7 +21,6 @@ class UserStore {
     @observable loginError: boolean = false;
     @observable forgotPasswordSuccess: boolean = false;
     @observable twoFactorRequired: boolean = false;
-    @observable twoFactorSuccess: boolean = false;
     @observable twoFactorError: boolean = false;
 
     @action clear() {
@@ -34,7 +32,6 @@ class UserStore {
         this.loginError = false;
         this.forgotPasswordSuccess = false;
         this.twoFactorRequired = false;
-        this.twoFactorSuccess = false;
         this.twoFactorError = false;
     }
 
@@ -56,10 +53,6 @@ class UserStore {
 
     @action setForgotPasswordSuccess(forgotPasswordSuccess: boolean) {
         this.forgotPasswordSuccess = forgotPasswordSuccess;
-    }
-
-    @action setTwoFactorSuccess(twoFactorSuccess: boolean) {
-        this.twoFactorSuccess = twoFactorSuccess;
     }
 
     @action setTwoFactorRequired(twoFactorRequired: boolean) {
@@ -111,13 +104,13 @@ class UserStore {
     }
 
     handleLogin = (data: Object) => {
-        this.requireTwoFactor = false;
+        this.setTwoFactorRequired(false);
 
         if (data.completed === false) {
             this.setLoading(false);
 
             if (data.twoFactorMethods && data.twoFactorMethods.length) {
-                this.requireTwoFactor = true;
+                this.setTwoFactorRequired(true);
             }
 
             return;
@@ -165,7 +158,6 @@ class UserStore {
             .then((data) => this.handleLogin(data))
             .catch((error) => {
                 this.setLoading(false);
-                this.setTwoFactorSuccess(false);
                 this.setTwoFactorError(true);
 
                 if (error.status !== 401) {

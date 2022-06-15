@@ -70,7 +70,7 @@ class Login extends React.Component<Props> {
 
     handleLoginFormSubmit = (data: LoginFormData) => {
         userStore.login(data).then(() => {
-            if (userStore.requireTwoFactor) {
+            if (userStore.twoFactorRequired) {
                 action(() => {
                     this.visibleForm = 'two-factor';
                 })();
@@ -160,7 +160,6 @@ class Login extends React.Component<Props> {
                                 loading={userStore.loading}
                                 onChangeForm={this.handleChangeToLoginForm}
                                 onSubmit={this.handleTwoFactorFormSubmit}
-                                success={userStore.twoFactorSuccess}
                             />
                         }
                     </div>

@@ -28,6 +28,7 @@ jest.mock('../../../services/Config', () => ({
         resetPassword: 'reset_password_url',
         logout: 'logout_url',
         profileSettings: 'profile_settings_url',
+        twoFactorLoginCheck: 'two_factor_login_check',
     },
     passwordPattern: '.{6,}',
 }));

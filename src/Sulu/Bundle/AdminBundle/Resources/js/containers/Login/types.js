@@ -11,7 +11,7 @@ export type ForgotPasswordFormData = {
 };
 
 export type TwoFactorFormData = {
-    authCode: string,
+    _auth_code: string,
 };
 
 export type LoginFormData = {
