@@ -4,6 +4,7 @@ import {observable} from 'mobx';
 import {mount, render, shallow} from 'enzyme';
 import BlockCollection from '../BlockCollection';
 import SortableBlockList from '../SortableBlockList';
+import clipboard from '../../../utils/clipboard/clipboard';
 
 beforeEach(() => {
     BlockCollection.idCounter = 0;
@@ -81,6 +82,43 @@ test('Should render add button with the given addButtonText', () => {
     );
 
     expect(blockCollection.find('Button[icon="su-plus"]').prop('children')).toEqual('custom-add-button-text');
+});
+
+test('Should render paste button if clipboard contains a block', () => {
+    const blockCollection = shallow(
+        <BlockCollection
+            defaultType="editor"
+            maxOccurs={2}
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
+        />
+    );
+
+    expect(blockCollection.find('Button[icon="su-copy"]').exists()).toBeFalsy();
+
+    clipboard.set('blocks', [{content: 'Test 3', type: 'editor'}]);
+
+    expect(blockCollection.find('Button[icon="su-copy"]').exists()).toBeTruthy();
+    expect(blockCollection.find('Button[icon="su-copy"]').prop('children')).toEqual('sulu_admin.paste_blocks');
+});
+
+test('Should render paste button with the given pasteButtonText', () => {
+    clipboard.set('blocks', [{content: 'Test 3', type: 'editor'}]);
+
+    const blockCollection = shallow(
+        <BlockCollection
+            defaultType="editor"
+            maxOccurs={2}
+            onChange={jest.fn()}
+            pasteButtonText="custom-paste-button-text"
+            renderBlockContent={jest.fn()}
+            value={[{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]}
+        />
+    );
+
+    expect(blockCollection.find('Button[icon="su-copy"]').exists()).toBeTruthy();
+    expect(blockCollection.find('Button[icon="su-copy"]').prop('children')).toEqual('custom-paste-button-text');
 });
 
 test('Should add at least the minOccurs amount of blocks', () => {
@@ -279,7 +317,7 @@ test('Should allow to reorder blocks by using drag and drop', () => {
     expect(blockCollection.instance().generatedBlockIds.toJS()).toEqual([2, 3, 1]);
 });
 
-test('Should allow to add a new block between existing blocks', () => {
+test('Should add a new block between existing blocks', () => {
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
     const blockCollection = mount(
@@ -300,7 +338,7 @@ test('Should allow to add a new block between existing blocks', () => {
     ]);
 });
 
-test('Should allow to add a new block at the end', () => {
+test('Should add a new block at the end', () => {
     const changeSpy = jest.fn();
     const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
     const blockCollection = mount(
@@ -332,6 +370,86 @@ test('Should throw an exception if a new block is added and the maximum has alre
     );
 
     expect(() => blockCollection.instance().handleAddBlock()).toThrow(/maximum amount of blocks/);
+});
+
+test('Should paste block between existing blocks', () => {
+    clipboard.set('blocks', [{content: 'Clipboard', type: 'editor'}]);
+
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    blockCollection.find('Button[icon="su-copy"]').at(0).simulate('click');
+
+    expect(changeSpy).toBeCalledWith([
+        {content: 'Test 1', type: 'editor'},
+        {content: 'Clipboard', type: 'editor'},
+        {content: 'Test 2', type: 'editor'},
+    ]);
+});
+
+test('Should paste block at the end', () => {
+    clipboard.set('blocks', [{content: 'Clipboard', type: 'editor'}]);
+
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    blockCollection.find('Button[icon="su-copy"]').last().simulate('click');
+
+    expect(changeSpy).toBeCalledWith([...value, {content: 'Clipboard', type: 'editor'}]);
+});
+
+test('Should paste block with default type if type of block in clipboard block is not known', () => {
+    clipboard.set('blocks', [{content: 'Clipboard', type: 'unkown-type'}]);
+
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    blockCollection.find('Button[icon="su-copy"]').last().simulate('click');
+
+    expect(changeSpy).toBeCalledWith([...value, {content: 'Clipboard', type: 'editor'}]);
+});
+
+test('Should throw an exception if a block is pasted and the maximum has already been reached', () => {
+    clipboard.set('blocks', [{content: 'Clipboard', type: 'editor'}]);
+
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
+
+    const blockCollection = shallow(
+        <BlockCollection
+            defaultType="editor"
+            maxOccurs={2}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    expect(() => blockCollection.instance().handlePasteBlocks()).toThrow(/maximum amount of blocks/);
 });
 
 test('Should pass duplicate action that allows to duplicate an existing block', () => {
@@ -474,6 +592,112 @@ test('Should throw an exception if a block is removed and minOccurs limit is rea
     );
 
     expect(() => blockCollection.instance().handleRemoveBlock(0)).toThrow(/minimum amount of blocks/);
+});
+
+test('Should pass copy action that allows to cut an existing block into the clipboard', () => {
+    const clipboardSpy = jest.fn();
+    clipboard.observe('blocks', clipboardSpy);
+
+    const value: any = observable([{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]);
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    const blockActions = blockCollection.find('Block').at(0).prop('actions');
+    expect(blockActions).toContainEqual(
+        expect.objectContaining({
+            type: 'button',
+            icon: 'su-copy',
+            label: 'sulu_admin.copy',
+        })
+    );
+
+    expect(clipboardSpy).not.toBeCalled();
+
+    blockCollection.find('Block').at(0).simulate('click');
+    blockCollection.find('Block').at(0).find('Icon[name="su-more-circle"]').simulate('click');
+    blockCollection.find('Block').at(0).find('Icon[name="su-copy"]').simulate('click');
+
+    expect(clipboardSpy).toBeCalledWith([value[0]]);
+});
+
+test('Should pass cut action that allows to cut an existing block into the clipboard', () => {
+    const clipboardSpy = jest.fn();
+    clipboard.observe('blocks', clipboardSpy);
+
+    // update value that is passed to the component when change callback is fired to prevent warnings
+    const value: any = observable([{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}]);
+    const changeSpy = jest.fn().mockImplementation((newValue) => {
+        value.splice(0, value.length);
+        value.push(...newValue);
+    });
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    const blockActions = blockCollection.find('Block').at(0).prop('actions');
+    expect(blockActions).toContainEqual(
+        expect.objectContaining({
+            type: 'button',
+            icon: 'su-scissors',
+            label: 'sulu_admin.cut',
+        })
+    );
+
+    expect(clipboardSpy).not.toBeCalled();
+
+    blockCollection.find('Block').at(0).simulate('click');
+    blockCollection.find('Block').at(0).find('Icon[name="su-more-circle"]').simulate('click');
+    blockCollection.find('Block').at(0).find('Icon[name="su-scissors"]').simulate('click');
+
+    expect(clipboardSpy).toBeCalledWith([expect.objectContaining({content: 'Test 1'})]);
+    expect(changeSpy).toBeCalledWith([expect.objectContaining({content: 'Test 2'})]);
+});
+
+test('Should not pass cut action to Block component if minOccurs limit is reached', () => {
+    const value = [{content: 'Value 1', type: 'editor'}, {content: 'Value 2', type: 'editor'}];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            minOccurs={2}
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    const blockActions = blockCollection.find('Block').at(0).prop('actions');
+    expect(blockActions).not.toContainEqual(expect.objectContaining({
+        label: 'sulu_admin.cut',
+    }));
+});
+
+test('Should throw an exception if a block is removed and minOccurs limit is reached', () => {
+    const changeSpy = jest.fn();
+    const value = [{content: 'Test 1', type: 'editor'}, {content: 'Test 2', type: 'editor'}];
+
+    const blockCollection = shallow(
+        <BlockCollection
+            defaultType="editor"
+            minOccurs={2}
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    expect(() => blockCollection.instance().handleCutBlock(0)).toThrow(/minimum amount of blocks/);
 });
 
 test('Should call onSettingsClick callback when settings icon is clicked', () => {

@@ -956,7 +956,10 @@ test('Should correctly pass props to the BlockCollection', () => {
             label="Test"
             maxOccurs={2}
             minOccurs={1}
-            schemaOptions={{add_button_text: {name: 'add_button_text', title: 'custom-add-text'}}}
+            schemaOptions={{
+                add_button_text: {name: 'add_button_text', title: 'custom-add-text'},
+                paste_button_text: {name: 'paste_button_text', title: 'custom-paste-text'}}
+            }
             types={types}
             value={value}
         />
@@ -964,6 +967,7 @@ test('Should correctly pass props to the BlockCollection', () => {
 
     expect(fieldBlocks.find('BlockCollection').props()).toEqual(expect.objectContaining({
         addButtonText: 'custom-add-text',
+        pasteButtonText: 'custom-paste-text',
         collapsable: true,
         disabled: true,
         maxOccurs: 2,
