@@ -12,6 +12,7 @@ export type ForgotPasswordFormData = {
 
 export type TwoFactorFormData = {
     _auth_code: string,
+    _trusted?: boolean,
 };
 
 export type LoginFormData = {

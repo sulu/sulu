@@ -39,5 +39,9 @@
     "sulu_activity.description.users.locked": "{userFullName} hat den Benutzer \"{resourceTitle}\" gesperrt",
     "sulu_activity.description.users.unlocked": "{userFullName} hat den Benutzer \"{resourceTitle}\" entsperrt",
     "sulu_activity.description.users.password_resetted": "{userFullName} hat das Passwort des Benutzers \"{resourceTitle}\" zurückgesetzt",
-    "sulu_security.two_factor_method": "Zwei-Faktor Authentifizierungsmethode"
+    "sulu_security.two_factor_method": "Zwei-Faktor Authentifizierungsmethode",
+    "sulu_security.two_factor_method_none": "Keine",
+    "sulu_security.two_factor_method_email": "Email",
+    "sulu_security.two_factor_method_google": "Google",
+    "sulu_security.two_factor_method_totp": "Totp"
 }

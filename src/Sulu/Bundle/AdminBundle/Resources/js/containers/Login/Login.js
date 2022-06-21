@@ -54,7 +54,7 @@ class Login extends React.Component<Props> {
         } else if (this.forgotPasswordFormVisible) {
             userStore.setForgotPasswordSuccess(false);
         } else if (this.twoFactorVisible) {
-            userStore.setTwoFactorRequired(false);
+            userStore.setTwoFactorMethods([]);
             userStore.setTwoFactorError(false);
         }
     };
@@ -70,7 +70,7 @@ class Login extends React.Component<Props> {
 
     handleLoginFormSubmit = (data: LoginFormData) => {
         userStore.login(data).then(() => {
-            if (userStore.twoFactorRequired) {
+            if (userStore.twoFactorMethods.length > 0) {
                 action(() => {
                     this.visibleForm = 'two-factor';
                 })();
@@ -158,6 +158,7 @@ class Login extends React.Component<Props> {
                             <TwoFactorForm
                                 error={userStore.twoFactorError}
                                 loading={userStore.loading}
+                                methods={userStore.twoFactorMethods}
                                 onChangeForm={this.handleChangeToLoginForm}
                                 onSubmit={this.handleTwoFactorFormSubmit}
                             />

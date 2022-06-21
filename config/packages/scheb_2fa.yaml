@@ -1,3 +1,6 @@
 scheb_two_factor:
     email:
         enabled: true
+        sender_email: "%env(SULU_ADMIN_EMAIL)%"
+    trusted_device:
+        enabled: true

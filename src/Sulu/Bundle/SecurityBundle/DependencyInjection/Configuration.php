@@ -88,6 +88,22 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('2fa')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->arrayNode('force')
+                            ->info('Force 2FA for all or only specific users.')
+                            ->canBeEnabled()
+                            ->addDefaultsIfNotSet()
+                            ->children()
+                                ->scalarNode('email_regex')
+                                    ->cannotBeEmpty()
+                                    ->defaultValue('')
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         $this->addObjectsSection($rootNode);

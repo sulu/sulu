@@ -38,4 +38,5 @@ export type LoginData = {
 
 export type TwoFactorData = {
     _auth_code: string,
+    _trusted?: boolean,
 };

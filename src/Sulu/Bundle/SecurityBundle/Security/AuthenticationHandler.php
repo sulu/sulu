@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -27,6 +26,8 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
 /**
  * Called after a user gets authenticated at the admin firewall
  * Generates the response (either JSON or a Redirect depending on if the request is a XmlHttpRequest or not).
+ *
+ * @internal This class is internal bridge to the Symfony security system and your application should not get contact with it.
  */
 class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
 {
@@ -35,9 +36,15 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
      */
     private $router;
 
-    public function __construct(RouterInterface $router)
+    /**
+     * @var string[]
+     */
+    private array $twoFactorMethods;
+
+    public function __construct(RouterInterface $router, array $twoFactorMethods)
     {
         $this->router = $router;
+        $this->twoFactorMethods = $twoFactorMethods;
     }
 
     /**
@@ -63,6 +70,10 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
             if ($token instanceof TwoFactorTokenInterface) {
                 $completed = false;
                 $twoFactorMethods = $token->getTwoFactorProviders();
+            }
+
+            if (\in_array('trusted_devices', $this->twoFactorMethods)) {
+                $twoFactorMethods[] = 'trusted_devices';
             }
 
             // if AJAX login

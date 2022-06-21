@@ -20,7 +20,7 @@ class UserStore {
     @observable loading: boolean = false;
     @observable loginError: boolean = false;
     @observable forgotPasswordSuccess: boolean = false;
-    @observable twoFactorRequired: boolean = false;
+    @observable twoFactorMethods: Array<string> = [];
     @observable twoFactorError: boolean = false;
 
     @action clear() {
@@ -31,7 +31,7 @@ class UserStore {
         this.contact = undefined;
         this.loginError = false;
         this.forgotPasswordSuccess = false;
-        this.twoFactorRequired = false;
+        this.twoFactorMethods = [];
         this.twoFactorError = false;
     }
 
@@ -55,8 +55,8 @@ class UserStore {
         this.forgotPasswordSuccess = forgotPasswordSuccess;
     }
 
-    @action setTwoFactorRequired(twoFactorRequired: boolean) {
-        this.twoFactorRequired = twoFactorRequired;
+    @action setTwoFactorMethods(twoFactorMethods: Array<string>) {
+        this.twoFactorMethods = twoFactorMethods;
     }
 
     @action setTwoFactorError(twoFactorError: boolean) {
@@ -104,13 +104,13 @@ class UserStore {
     }
 
     handleLogin = (data: Object) => {
-        this.setTwoFactorRequired(false);
+        this.setTwoFactorMethods([]);
 
         if (data.completed === false) {
             this.setLoading(false);
 
             if (data.twoFactorMethods && data.twoFactorMethods.length) {
-                this.setTwoFactorRequired(true);
+                this.setTwoFactorMethods(data.twoFactorMethods);
             }
 
             return;

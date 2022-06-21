@@ -5,6 +5,7 @@ import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import {translate} from '../../utils/index';
 import Button from '../../components/Button/index';
+import Checkbox from '../../components/Checkbox/index';
 import Input from '../../components/Input/index';
 import Header from './Header';
 import formStyles from './form.scss';
@@ -14,6 +15,7 @@ import type {TwoFactorFormData} from './types';
 type Props = {|
     error: boolean,
     loading: boolean,
+    methods: Array<string>,
     onChangeForm: () => void,
     onSubmit: (data: TwoFactorFormData) => void,
 |};
@@ -23,11 +25,14 @@ class TwoFactorForm extends React.Component<Props> {
     static defaultProps = {
         error: false,
         loading: false,
+        methods: [],
     };
 
     @observable inputRef: ?ElementRef<*>;
 
     @observable authCode: ?string;
+
+    @observable trustedDevice: boolean = false;
 
     @computed get submitButtonDisabled(): boolean {
         return !this.authCode;
@@ -47,6 +52,10 @@ class TwoFactorForm extends React.Component<Props> {
         this.authCode = authCode;
     };
 
+    @action handleTrustedDeviceChange = (trustedDevice: boolean) => {
+        this.trustedDevice = trustedDevice;
+    };
+
     handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
 
@@ -56,11 +65,14 @@ class TwoFactorForm extends React.Component<Props> {
 
         const {onSubmit} = this.props;
 
-        onSubmit({_auth_code: this.authCode});
+        onSubmit({
+            _auth_code: this.authCode,
+            _trusted: this.trustedDevice,
+        });
     };
 
     render() {
-        const {error} = this.props;
+        const {error, methods} = this.props;
 
         const inputFieldClass = classNames(
             formStyles.inputField,
@@ -96,6 +108,14 @@ class TwoFactorForm extends React.Component<Props> {
                                 value={this.authCode}
                             />
                         </label>
+                        {methods.includes('trusted_devices') &&
+                            <Checkbox
+                                checked={this.trustedDevice}
+                                onChange={this.handleTrustedDeviceChange}
+                            >
+                                {translate('sulu_admin.two_factor_trust_device')}
+                            </Checkbox>
+                        }
                         <div className={formStyles.buttons}>
                             <Button onClick={this.props.onChangeForm} skin="link">
                                 {translate('sulu_admin.to_login')}

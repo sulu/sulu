@@ -59,25 +59,25 @@
                 <param name="values" type="collection">
                     <param name="">
                         <meta>
-                            <title lang="en">None</title>
+                            <title>sulu_security.two_factor_method_none</title>
                         </meta>
                     </param>
 
                     <param name="email">
                         <meta>
-                            <title lang="en">Email</title>
+                            <title>sulu_security.two_factor_method_email</title>
                         </meta>
                     </param>
 
                     <param name="google">
                         <meta>
-                            <title lang="en">Google</title>
+                            <title>sulu_security.two_factor_method_google</title>
                         </meta>
                     </param>
 
                     <param name="totp">
                         <meta>
-                            <title lang="en">Totp</title>
+                            <title>sulu_security.two_factor_method_totp</title>
                         </meta>
                     </param>
                 </param>
