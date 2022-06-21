@@ -231,7 +231,7 @@ test('Should login with initializing when it`s not the same user', () => {
     const initializePromise = Promise.resolve({});
     userStore.setUser(user);
 
-    expect(Requester.post).not.toBeCalled();
+    Requester.post.mockReturnValue(loginPromise);
 
     userStore.login({username: 'other-user-than-test', password: 'password'});
     expect(userStore.loading).toBe(true);
