@@ -71,7 +71,7 @@ class AuthenticationHandlerTest extends TestCase
         $router->generate('sulu_admin')->willReturn('/admin');
         $router->generate('sulu_admin')->willReturn('/admin');
 
-        $this->authenticationHandler = new AuthenticationHandler($router->reveal());
+        $this->authenticationHandler = new AuthenticationHandler($router->reveal(), ['email', 'trusted_devices']);
     }
 
     public function testOnAuthenticationSuccess()
@@ -102,11 +102,11 @@ class AuthenticationHandlerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = \json_decode($response->getContent(), true);
-        $this->assertEquals([
+        $this->assertSame([
             'url' => '/admin/#target/path',
             'username' => 'testuser',
             'completed' => true,
-            'twoFactorMethods' => [],
+            'twoFactorMethods' => ['trusted_devices'],
         ], $response);
     }
 
