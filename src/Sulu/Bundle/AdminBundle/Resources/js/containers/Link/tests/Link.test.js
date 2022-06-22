@@ -275,3 +275,61 @@ test('Display providers with "types" property', () => {
 
     expect(link.find('Option').length).toEqual(2);
 });
+
+test('Display providers with "types" property', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
+    linkTypeRegistry.getOptions.mockReturnValue({
+        title: 'Pages',
+        overlayTitle: 'Test Overlay',
+        resourceKey: 'pages',
+        displayProperties: ['title'],
+    });
+    linkTypeRegistry.getKeys.mockReturnValue(['page', 'media', 'article']);
+
+    const link = shallow(
+        <Link
+            enableAnchor={true}
+            enableTarget={true}
+            enableTitle={true}
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            types={['page', 'article']}
+            value={undefined}
+        />);
+
+    const removeButton = link.find('.removeButton');
+    removeButton.simulate('click');
+    expect(link.find('Option').length).toEqual(2);
+});
+
+test('Display providers with "excluded_types" property', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
+    linkTypeRegistry.getOptions.mockReturnValue({
+        title: 'Pages',
+        overlayTitle: 'Test Overlay',
+        resourceKey: 'pages',
+        displayProperties: ['title'],
+    });
+    linkTypeRegistry.getKeys.mockReturnValue(['page', 'media', 'article']);
+
+    const link = shallow(
+        <Link
+            enableAnchor={true}
+            enableTarget={true}
+            enableTitle={true}
+            excludedTypes={['page', 'article']}
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            value={undefined}
+        />);
+
+    expect(link.find('Option').length).toEqual(1);
+});
