@@ -27,7 +27,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
  * Called after a user gets authenticated at the admin firewall
  * Generates the response (either JSON or a Redirect depending on if the request is a XmlHttpRequest or not).
  *
- * @internal This class is internal bridge to the Symfony security system and your application should not get contact with it.
+ * @internal this class is internal bridge to the Symfony security system and your application should not get contact with it
  */
 class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
 {

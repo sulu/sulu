@@ -113,12 +113,14 @@ class TwoFactorForm extends React.Component<Props> {
                                 checked={this.trustedDevice}
                                 onChange={this.handleTrustedDeviceChange}
                             >
-                                {translate('sulu_admin.two_factor_trust_device')}
+                                <span className={formStyles.labelSmallText}>
+                                    {translate('sulu_admin.two_factor_trust_device')}
+                                </span>
                             </Checkbox>
                         }
                         <div className={formStyles.buttons}>
                             <Button onClick={this.props.onChangeForm} skin="link">
-                                {translate('sulu_admin.to_login')}
+                                {translate('sulu_admin.back_to_login')}
                             </Button>
                             <Button
                                 disabled={this.submitButtonDisabled}
@@ -126,7 +128,7 @@ class TwoFactorForm extends React.Component<Props> {
                                 skin="primary"
                                 type="submit"
                             >
-                                {translate('sulu_admin.login')}
+                                {translate('sulu_admin.verify')}
                             </Button>
                         </div>
                     </fieldset>

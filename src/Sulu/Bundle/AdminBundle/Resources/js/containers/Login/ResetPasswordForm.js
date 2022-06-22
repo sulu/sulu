@@ -130,7 +130,7 @@ class ResetPasswordForm extends React.Component<Props> {
                         }
                         <div className={formStyles.buttons}>
                             <Button onClick={this.props.onChangeForm} skin="link">
-                                {translate('sulu_admin.to_login')}
+                                {translate('sulu_admin.back_to_login')}
                             </Button>
                             <Button
                                 disabled={this.submitButtonDisabled}
