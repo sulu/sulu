@@ -75,6 +75,9 @@ class ProfileControllerTest extends SuluTestCase
                 'email' => 'hans.mustermann@muster.at',
                 'password' => 'testpassword',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => 'email',
+                ],
             ]
         );
 
@@ -85,6 +88,9 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('hansi', $response->username);
         $this->assertEquals('hans.mustermann@muster.at', $response->email);
         $this->assertEquals('de', $response->locale);
+        $this->assertEquals([
+            'method' => 'email',
+        ], (array) $response->twoFactor);
     }
 
     public function testPutInvalidField()
@@ -99,6 +105,9 @@ class ProfileControllerTest extends SuluTestCase
                 'email' => 'hans.mustermann@muster.at',
                 'password' => 'testpassword',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
 
@@ -109,6 +118,7 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('hansi', $response->username);
         $this->assertEquals('hans.mustermann@muster.at', $response->email);
         $this->assertEquals('de', $response->locale);
+        $this->assertNull($response->twoFactor);
     }
 
     public function testPutEmailNotUnique()
@@ -139,6 +149,9 @@ class ProfileControllerTest extends SuluTestCase
                 'email' => 'existing@email.com',
                 'password' => 'testpassword',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
 
@@ -198,6 +211,9 @@ class ProfileControllerTest extends SuluTestCase
                 'email' => 'hans.mustermann@muster.at',
                 'password' => 'testpassword',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -220,6 +236,9 @@ class ProfileControllerTest extends SuluTestCase
                 'email' => 'hans.mustermann@muster.at',
                 'password' => 'testpassword',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
 
@@ -243,6 +262,9 @@ class ProfileControllerTest extends SuluTestCase
                 'email' => 'hans.mustermann@muster.at',
                 'password' => 'testpassword',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
 
@@ -266,6 +288,9 @@ class ProfileControllerTest extends SuluTestCase
                 'username' => 'hansi',
                 'password' => 'testpassword',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
 
@@ -289,6 +314,9 @@ class ProfileControllerTest extends SuluTestCase
                 'username' => 'hansi',
                 'password' => 'testpassword',
                 'email' => 'hans.mustermann@muster.at',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
 
@@ -312,6 +340,9 @@ class ProfileControllerTest extends SuluTestCase
                 'username' => 'hansi',
                 'email' => 'hans.mustermann@muster.at',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
 

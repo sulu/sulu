@@ -11,12 +11,15 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
+use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\TwoFactorInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
+/**
+ * @ExclusionPolicy("all")
+ */
 class UserTwoFactor
 {
     private int $id;
@@ -29,10 +32,6 @@ class UserTwoFactor
      */
     private ?string $method = null;
 
-    /**
-     * @Expose
-     * @Groups({"profile"})
-     */
     private ?string $options = null;
 
     public function __construct(TwoFactorInterface $user)
@@ -57,9 +56,6 @@ class UserTwoFactor
     }
 
     /**
-     * @VirtualProperty()
-     * @Groups({"profile"})
-     *
      * @return array{
      *     backupCodes?: string[],
      *     authCode?: string,
