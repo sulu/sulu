@@ -30,7 +30,14 @@ export default class LinkTypeOverlay extends React.Component<LinkTypeOverlayProp
             throw new Error('The LinkTypeOverlay needs some options in order to work!');
         }
 
-        const {displayProperties, emptyText, icon, listAdapter, overlayTitle, resourceKey} = options;
+        const {
+            displayProperties,
+            emptyText = '',
+            icon = '',
+            listAdapter = '',
+            overlayTitle = '',
+            resourceKey,
+        } = options;
 
         return (
             <Dialog

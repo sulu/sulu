@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render Link container 1`] = `
+exports[`Render Link container incl. loading a selected value 1`] = `
 <Fragment>
   <div
     className="link"
@@ -39,7 +39,7 @@ exports[`Render Link container 1`] = `
         >
           <span
             className="itemColumn"
-            key="title"
+            key="0"
             style={
               Object {
                 "width": "100%",
