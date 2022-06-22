@@ -21,16 +21,23 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
 class Query extends AbstractQuery
 {
+    /**
+     * @return void
+     */
     public function setFirstResult()
     {
     }
 
+    /**
+     * @return void
+     */
     public function setMaxResults()
     {
     }
 
-    public function getSQL()
+    public function getSQL(): string
     {
+        return '';
     }
 
     public function _doExecute(): int
