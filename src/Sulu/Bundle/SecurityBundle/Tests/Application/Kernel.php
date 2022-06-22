@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Application;
 
+use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -23,6 +24,7 @@ class Kernel extends SuluTestKernel
             [...parent::registerBundles()],
             [
                 new DebugBundle(),
+                new SchebTwoFactorBundle(),
             ]
         );
     }
