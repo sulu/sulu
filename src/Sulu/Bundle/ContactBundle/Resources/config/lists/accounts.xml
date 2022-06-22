@@ -324,7 +324,7 @@
                 <join>
                     <entity-name>SuluCategoryBundle:CategoryTranslation</entity-name>
                     <field-name>SuluCategoryBundle:Category.translations</field-name>
-                    <condition>SuluCategoryBundle:CategoryTranslation.locale = '%default_locale%'</condition>
+                    <condition>SuluCategoryBundle:CategoryTranslation.locale = SuluCategoryBundle:Category.defaultLocale</condition>
                 </join>
             </joins>
         </group-concat-property>

@@ -9,7 +9,6 @@ parameters:
     phpcr.password: '%env(PHPCR_PASSWORD)%'
     phpcr.workspace: '%env(PHPCR_WORKSPACE)%'
 
-    default_locale: en
 
     # Fallback values (used if environmental variables are not set)
 
