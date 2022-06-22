@@ -41,6 +41,9 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
      */
     private array $twoFactorMethods;
 
+    /**
+     * @param string[] $twoFactorMethods
+     */
     public function __construct(RouterInterface $router, array $twoFactorMethods = [])
     {
         $this->router = $router;

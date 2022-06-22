@@ -188,7 +188,7 @@ exports[`Should render the Login with forgot password view 1`] = `
               <span
                 class="buttonText"
               >
-                sulu_admin.to_login
+                sulu_admin.back_to_login
               </span>
             </button>
             <button
@@ -287,7 +287,7 @@ exports[`Should render the Login with forgot password with success 1`] = `
               <span
                 class="buttonText"
               >
-                sulu_admin.to_login
+                sulu_admin.back_to_login
               </span>
             </button>
             <button
@@ -412,7 +412,7 @@ exports[`Should render the Login with reset password view 1`] = `
               <span
                 class="buttonText"
               >
-                sulu_admin.to_login
+                sulu_admin.back_to_login
               </span>
             </button>
             <button

@@ -470,7 +470,7 @@ Array [
                 <span
                   class="buttonText"
                 >
-                  sulu_admin.to_login
+                  sulu_admin.back_to_login
                 </span>
               </button>
               <button
