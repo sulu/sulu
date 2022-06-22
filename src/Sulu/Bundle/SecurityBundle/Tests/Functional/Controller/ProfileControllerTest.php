@@ -169,7 +169,7 @@ class ProfileControllerTest extends SuluTestCase
         );
 
         /** @var array<string, mixed> $response */
-        $response = \json_decode($this->client->getResponse()->getContent(), true,\JSON_THROW_ON_ERROR);
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
         unset($response['errors']);
         $this->assertHttpStatusCode(409, $this->client->getResponse());
         $this->assertSame([
@@ -211,7 +211,7 @@ class ProfileControllerTest extends SuluTestCase
         );
 
         /** @var array<string, mixed> $response */
-        $response = \json_decode($this->client->getResponse()->getContent(), true,\JSON_THROW_ON_ERROR);
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
         unset($response['errors']);
         $this->assertHttpStatusCode(409, $this->client->getResponse());
         $this->assertSame([
@@ -239,7 +239,7 @@ class ProfileControllerTest extends SuluTestCase
         );
 
         /** @var array<string, mixed> $response */
-        $response = \json_decode($this->client->getResponse()->getContent(), true,\JSON_THROW_ON_ERROR);
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
         unset($response['errors']);
         $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertSame([
@@ -266,7 +266,7 @@ class ProfileControllerTest extends SuluTestCase
         );
 
         /** @var array<string, mixed> $response */
-        $response = \json_decode($this->client->getResponse()->getContent(), true,\JSON_THROW_ON_ERROR);
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
         unset($response['errors']);
         $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertSame([
@@ -293,7 +293,7 @@ class ProfileControllerTest extends SuluTestCase
         );
 
         /** @var array<string, mixed> $response */
-        $response = \json_decode($this->client->getResponse()->getContent(), true,\JSON_THROW_ON_ERROR);
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
         unset($response['errors']);
         $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertSame([
@@ -320,7 +320,7 @@ class ProfileControllerTest extends SuluTestCase
         );
 
         /** @var array<string, mixed> $response */
-        $response = \json_decode($this->client->getResponse()->getContent(), true,\JSON_THROW_ON_ERROR);
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
         unset($response['errors']);
         $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertSame([
@@ -347,7 +347,7 @@ class ProfileControllerTest extends SuluTestCase
         );
 
         /** @var array<string, mixed> $response */
-        $response = \json_decode($this->client->getResponse()->getContent(), true,\JSON_THROW_ON_ERROR);
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
         unset($response['errors']);
         $this->assertHttpStatusCode(400, $this->client->getResponse());
         $this->assertSame([
@@ -374,7 +374,7 @@ class ProfileControllerTest extends SuluTestCase
         );
 
         /** @var array<string, mixed> $response */
-        $response = \json_decode($this->client->getResponse()->getContent(), true,\JSON_THROW_ON_ERROR);
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
         unset($response['_hash']);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertSame([
