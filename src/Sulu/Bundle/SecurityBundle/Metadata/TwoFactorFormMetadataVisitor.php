@@ -26,6 +26,9 @@ class TwoFactorFormMetadataVisitor implements FormMetadataVisitorInterface
      */
     private array $twoFactorMethods;
 
+    /**
+     * @param string[] $twoFactorMethods
+     */
     public function __construct(array $twoFactorMethods)
     {
         $this->twoFactorMethods = $twoFactorMethods;
@@ -46,6 +49,7 @@ class TwoFactorFormMetadataVisitor implements FormMetadataVisitorInterface
             /** @var array{values: OptionMetadata} $options */
             $options = $methodMetadata->getOptions();
             $values = $options['values'];
+            /** @var OptionMetadata[] $methods */
             $methods = $values->getValue();
 
             foreach ($methods as $key => $value) {
