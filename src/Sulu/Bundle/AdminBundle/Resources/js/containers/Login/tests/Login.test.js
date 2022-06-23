@@ -17,10 +17,13 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 const mockUserStoreLogin = jest.fn().mockReturnValue(Promise.resolve({}));
+const mockUserStoreTwoFactorLogin = jest.fn().mockReturnValue(Promise.resolve({}));
 const mockUserStoreClear = jest.fn();
 const mockUserStoreForgotPassword = jest.fn().mockReturnValue(Promise.resolve({}));
 const mockUserStoreResetPassword = jest.fn().mockReturnValue(Promise.resolve({}));
 const mockUserStoreLoginError = jest.fn();
+const mockUserStoreTwoFactorMethods = jest.fn();
+const mockUserStoreTwoFactorError = jest.fn();
 const mockUserStoreSetResetSuccess = jest.fn();
 const mockUserStoreLoading = jest.fn().mockReturnValue(false);
 const mockUserStoreForgotPasswordSuccess = jest.fn().mockReturnValue(false);
@@ -35,12 +38,24 @@ jest.mock('../../../stores/userStore', () => {
             return mockUserStoreLogin(data);
         }
 
+        twoFactorLogin(data) {
+            return mockUserStoreTwoFactorLogin(data);
+        }
+
         forgotPassword(data) {
             return mockUserStoreForgotPassword(data);
         }
 
         resetPassword(data) {
             return mockUserStoreResetPassword(data);
+        }
+
+        setTwoFactorMethods(data) {
+            return mockUserStoreTwoFactorMethods(data);
+        }
+
+        setTwoFactorError(data) {
+            return mockUserStoreTwoFactorError(data);
         }
 
         setLoginError(value) {

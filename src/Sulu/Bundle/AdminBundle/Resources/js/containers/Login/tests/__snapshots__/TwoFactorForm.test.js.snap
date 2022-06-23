@@ -1,0 +1,175 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render the component 1`] = `
+Array [
+  <div
+    class="header"
+  >
+    sulu_admin.two_factor_authentication
+  </div>,
+  <form
+    class="form"
+  >
+    <fieldset>
+      <label
+        class="inputField"
+      >
+        <div
+          class="labelText"
+        >
+          sulu_admin.two_factor_auth_code
+        </div>
+        <label
+          class="input default left"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-lock"
+              class="su-lock icon default"
+            />
+          </div>
+          <input
+            autocomplete="one-time-code"
+            type="text"
+            value=""
+          />
+        </label>
+      </label>
+      <label
+        class="label"
+        tabindex="-1"
+      >
+        <span
+          class="switch checkbox dark"
+        >
+          <input
+            type="checkbox"
+          />
+          <span />
+        </span>
+        <div>
+          <span
+            class="labelSmallText"
+          >
+            sulu_admin.two_factor_trust_device
+          </span>
+        </div>
+      </label>
+      <div
+        class="buttons"
+      >
+        <button
+          class="button link hasText"
+          type="button"
+        >
+          <span
+            class="buttonText"
+          >
+            sulu_admin.back_to_login
+          </span>
+        </button>
+        <button
+          class="button primary hasText"
+          disabled=""
+          type="submit"
+        >
+          <span
+            class="buttonText"
+          >
+            sulu_admin.verify
+          </span>
+        </button>
+      </div>
+    </fieldset>
+  </form>,
+]
+`;
+
+exports[`Should render the component error 1`] = `
+Array [
+  <div
+    class="header small"
+  >
+    sulu_admin.two_factor_authentication_failed
+  </div>,
+  <form
+    class="form"
+  >
+    <fieldset>
+      <label
+        class="inputField error"
+      >
+        <div
+          class="labelText"
+        >
+          sulu_admin.two_factor_auth_code
+        </div>
+        <label
+          class="input default left error"
+        >
+          <div
+            class="prependedContainer default"
+          >
+            <span
+              aria-label="su-lock"
+              class="su-lock icon default"
+            />
+          </div>
+          <input
+            autocomplete="one-time-code"
+            type="text"
+            value=""
+          />
+        </label>
+      </label>
+      <label
+        class="label"
+        tabindex="-1"
+      >
+        <span
+          class="switch checkbox dark"
+        >
+          <input
+            type="checkbox"
+          />
+          <span />
+        </span>
+        <div>
+          <span
+            class="labelSmallText"
+          >
+            sulu_admin.two_factor_trust_device
+          </span>
+        </div>
+      </label>
+      <div
+        class="buttons"
+      >
+        <button
+          class="button link hasText"
+          type="button"
+        >
+          <span
+            class="buttonText"
+          >
+            sulu_admin.back_to_login
+          </span>
+        </button>
+        <button
+          class="button primary hasText"
+          disabled=""
+          type="submit"
+        >
+          <span
+            class="buttonText"
+          >
+            sulu_admin.verify
+          </span>
+        </button>
+      </div>
+    </fieldset>
+  </form>,
+]
+`;
