@@ -20,6 +20,7 @@ use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\CoreBundle\Entity\ApiEntity;
+use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\TwoFactorTrait;
 use Sulu\Component\Persistence\Model\AuditableInterface;
 use Sulu\Component\Persistence\Model\AuditableTrait;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -34,6 +35,7 @@ use Symfony\Component\Security\Core\User\UserInterface as SymfonyUserInterface;
 class User extends ApiEntity implements UserInterface, EquatableInterface, AuditableInterface, PasswordAuthenticatedUserInterface
 {
     use AuditableTrait;
+    use TwoFactorTrait;
 
     /**
      * @var int

@@ -9,6 +9,7 @@ security:
         - { path: ^/admin/reset, roles: PUBLIC_ACCESS }
         - { path: ^/admin/security/reset, roles: PUBLIC_ACCESS }
         - { path: ^/admin/login, roles: PUBLIC_ACCESS }
+        - { path: ^/admin/2fa, role: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_USER }
 
     firewalls:
@@ -23,6 +24,13 @@ security:
             logout:
                 path: /admin/logout
                 target: /admin/
+            two_factor:
+                prepare_on_login: true
+                prepare_on_access_denied: true
+                check_path: 2fa_login_check_admin
+                authentication_required_handler: sulu_security.two_factor_authentication_required_handler
+                success_handler: sulu_security.two_factor_authentication_success_handler
+                failure_handler: sulu_security.two_factor_authentication_failure_handler
 
 sulu_admin:
     resources:
@@ -39,3 +47,10 @@ sulu_document_manager:
             alias: "secured_document"
             phpcr_type: "mix:test"
             class: "Sulu\\Bundle\\SecurityBundle\\Tests\\Application\\SecuredDocument"
+
+scheb_two_factor:
+    email:
+        enabled: true
+        sender_email: "example@localhost"
+    trusted_device:
+        enabled: true

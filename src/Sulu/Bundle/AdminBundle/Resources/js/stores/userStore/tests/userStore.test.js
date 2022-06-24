@@ -28,6 +28,7 @@ jest.mock('../../../services/Config', () => ({
         resetPassword: 'reset_password_url',
         logout: 'logout_url',
         profileSettings: 'profile_settings_url',
+        twoFactorLoginCheck: 'two_factor_login_check',
     },
     passwordPattern: '.{6,}',
 }));
@@ -206,7 +207,10 @@ test('Should login after the password was reset', () => {
 
 test('Should login without initializing when it`s the same user', () => {
     const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test', roles: []};
-    const loginPromise = Promise.resolve({});
+    const loginPromise = Promise.resolve({
+        username: 'test',
+        completed: true,
+    });
     Requester.post.mockReturnValue(loginPromise);
     userStore.setUser(user);
 
@@ -221,13 +225,52 @@ test('Should login without initializing when it`s the same user', () => {
     });
 });
 
+test('Should set two factor methods after login when completed false', () => {
+    const loginPromise = Promise.resolve({
+        username: 'test',
+        completed: false,
+        twoFactorMethods: ['email', 'trusted_devices'],
+    });
+    Requester.post.mockReturnValue(loginPromise);
+
+    userStore.login({username: 'test', password: 'password'});
+    expect(userStore.loading).toBe(true);
+
+    return loginPromise.then(() => {
+        expect(Requester.post).toBeCalledWith('login_check_url', {username: 'test', password: 'password'});
+        expect(initializer.initialize).not.toBeCalled();
+        expect(userStore.loading).toBe(false);
+        expect(userStore.loggedIn).toBe(false);
+        expect(userStore.twoFactorMethods).toEqual(['email', 'trusted_devices']);
+    });
+});
+
+test('Should do nothing when not completed but no two factor methods provided', () => {
+    const loginPromise = Promise.resolve({
+        username: 'test',
+        completed: false,
+    });
+    Requester.post.mockReturnValue(loginPromise);
+
+    userStore.login({username: 'test', password: 'password'});
+    expect(userStore.loading).toBe(true);
+
+    return loginPromise.then(() => {
+        expect(Requester.post).toBeCalledWith('login_check_url', {username: 'test', password: 'password'});
+        expect(initializer.initialize).not.toBeCalled();
+        expect(userStore.loading).toBe(false);
+        expect(userStore.loggedIn).toBe(false);
+        expect(userStore.twoFactorMethods).toEqual([]);
+    });
+});
+
 test('Should login with initializing when it`s not the same user', () => {
     const user = {id: 1, locale: 'cool_locale', settings: {}, username: 'test', roles: []};
     const loginPromise = Promise.resolve({});
     const initializePromise = Promise.resolve({});
     userStore.setUser(user);
 
-    expect(Requester.post).not.toBeCalled();
+    Requester.post.mockReturnValue(loginPromise);
 
     userStore.login({username: 'other-user-than-test', password: 'password'});
     expect(userStore.loading).toBe(true);
@@ -265,6 +308,96 @@ test('Should show error when login is not working and error status is 401', () =
             expect(userStore.loggedIn).toBe(false);
             expect(userStore.loading).toBe(false);
         });
+});
+test('Should two factor login', () => {
+    const loginPromise = Promise.resolve({
+        username: 'test',
+        completed: true,
+    });
+    const initializePromise = Promise.resolve({});
+
+    Requester.post.mockReturnValue(loginPromise);
+    initializer.initialize.mockReturnValue(initializePromise);
+
+    userStore.twoFactorLogin({_auth_code: 'test', _trusted: false});
+    expect(userStore.loading).toBe(true);
+
+    return loginPromise.then(() => {
+        expect(Requester.post).toBeCalledWith('two_factor_login_check', {_auth_code: 'test', _trusted: false});
+        expect(initializer.initialize).toBeCalledWith(true);
+
+        return initializePromise.then(() => {
+            expect(userStore.loading).toBe(false);
+        });
+    });
+});
+
+test('Should two factor login without initializing when it`s the same user', () => {
+    const user = {id: 1, locale: 'en', settings: {}, username: 'test', roles: []};
+    const loginPromise = Promise.resolve({
+        username: 'test',
+        completed: true,
+    });
+    Requester.post.mockReturnValue(loginPromise);
+    userStore.setUser(user);
+
+    userStore.twoFactorLogin({_auth_code: 'test', _trusted: false});
+    expect(userStore.loading).toBe(true);
+
+    return loginPromise.then(() => {
+        expect(Requester.post).toBeCalledWith('two_factor_login_check', {_auth_code: 'test', _trusted: false});
+        expect(initializer.initialize).not.toBeCalled();
+        expect(userStore.loading).toBe(false);
+        expect(userStore.loggedIn).toBe(true);
+    });
+});
+
+test('Should two factor login with initializing when it`s not the same user', () => {
+    const user = {id: 1, locale: 'en', settings: {}, username: 'test', roles: []};
+    const loginPromise = Promise.resolve({
+        username: 'other-user-than-test',
+        completed: true,
+    });
+    const initializePromise = Promise.resolve({});
+    userStore.setUser(user);
+
+    Requester.post.mockReturnValue(loginPromise);
+
+    userStore.twoFactorLogin({_auth_code: 'test', _trusted: false});
+    expect(userStore.loading).toBe(true);
+
+    return loginPromise.then(() => {
+        expect(Requester.post).toBeCalledWith(
+            'two_factor_login_check',
+            {_auth_code: 'test', _trusted: false}
+        );
+        expect(initializer.initialize).toBeCalledWith(true);
+        expect(userStore.loading).toBe(true);
+        expect(userStore.loggedIn).toBe(false);
+        expect(userStore.loginError).toBe(false);
+        expect(userStore.forgotPasswordSuccess).toBe(false);
+        expect(userStore.user).toBeUndefined();
+        expect(userStore.contact).toBeUndefined();
+
+        return initializePromise.then(() => {
+            expect(userStore.loading).toBe(false);
+        });
+    });
+});
+
+test('Should show error when two factor login is not working and error status is 401', () => {
+    Requester.post.mockReturnValue(Promise.reject({status: 401}));
+
+    const loginPromise = userStore.twoFactorLogin({_auth_code: 'test', _trusted: false});
+    expect(userStore.loading).toBe(true);
+
+    return loginPromise.then(() => {
+        expect(Requester.post).toBeCalledWith('two_factor_login_check', {_auth_code: 'test', _trusted: false});
+        expect(initializer.initialize).not.toBeCalled();
+        expect(userStore.twoFactorError).toBe(true);
+        expect(userStore.loggedIn).toBe(false);
+        expect(userStore.loading).toBe(false);
+    });
 });
 
 test('Should send an email when the password is forgotten', () => {

@@ -17,7 +17,9 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
+use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\TwoFactorInterface;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
+use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
 use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
 use Sulu\Component\Rest\Exception\MissingArgumentException;
 use Sulu\Component\Rest\Exception\RestException;
@@ -101,6 +103,7 @@ class ProfileController implements ClassResourceInterface
 
         $context = new Context();
         $context->setGroups(['profile']);
+        $context->setSerializeNull(false); // required for sub entity as twoFactor/method can else not be written
 
         $view->setContext($context);
 
@@ -120,8 +123,30 @@ class ProfileController implements ClassResourceInterface
         $user = $this->tokenStorage->getToken()->getUser();
         $this->userManager->save($this->getData($request), $request->get('locale'), $user->getId(), true);
 
-        $user->setFirstName($request->get('firstName'));
-        $user->setLastName($request->get('lastName'));
+        $user->setFirstName($request->request->get('firstName'));
+        $user->setLastName($request->request->get('lastName'));
+
+        if ($user instanceof TwoFactorInterface) {
+            /** @var array{method?: string|null} $twoFactorData */
+            $twoFactorData = $request->request->all('twoFactor');
+            $twoFactorMethod = $twoFactorData['method'] ?? null;
+
+            if ($twoFactorMethod) {
+                $twoFactor = $user->getTwoFactor();
+                if (!$twoFactor) {
+                    $twoFactor = new UserTwoFactor($user);
+                }
+
+                $twoFactor->setMethod($twoFactorMethod);
+                $user->setTwoFactor($twoFactor);
+            } else {
+                $twoFactor = $user->getTwoFactor();
+                if ($twoFactor) {
+                    $user->setTwoFactor(null);
+                    $this->objectManager->remove($twoFactor);
+                }
+            }
+        }
 
         $this->objectManager->flush();
 

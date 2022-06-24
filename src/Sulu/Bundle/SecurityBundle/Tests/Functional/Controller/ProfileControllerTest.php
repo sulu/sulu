@@ -52,15 +52,18 @@ class ProfileControllerTest extends SuluTestCase
     {
         $this->client->jsonRequest('GET', '/api/profile');
 
-        $response = \json_decode($this->client->getResponse()->getContent());
-
+        /** @var array<string, mixed> $response */
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
+        unset($response['_hash']);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $this->assertEquals('test', $response->username);
-        $this->assertEquals('', $response->email);
-        $this->assertObjectNotHasAttribute('password', $response);
-        $this->assertEquals('en', $response->locale);
-        $this->assertEquals('Max', $response->firstName);
-        $this->assertEquals('Mustermann', $response->lastName);
+
+        $this->assertSame([
+            'firstName' => 'Max',
+            'lastName' => 'Mustermann',
+            'username' => 'test',
+            'email' => 'test@example.localhost',
+            'locale' => 'en',
+        ], $response);
     }
 
     public function testPut()
@@ -75,16 +78,27 @@ class ProfileControllerTest extends SuluTestCase
                 'email' => 'hans.mustermann@muster.at',
                 'password' => 'testpassword',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => 'email',
+                ],
             ]
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
+        /** @var array<string, mixed> $response */
+        $response = \json_decode($this->client->getResponse()->getContent(), true);
+        unset($response['_hash']);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $this->assertEquals('Hans', $response->firstName);
-        $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('hansi', $response->username);
-        $this->assertEquals('hans.mustermann@muster.at', $response->email);
-        $this->assertEquals('de', $response->locale);
+
+        $this->assertSame([
+            'firstName' => 'Hans',
+            'lastName' => 'Mustermann',
+            'username' => 'hansi',
+            'email' => 'hans.mustermann@muster.at',
+            'locale' => 'de',
+            'twoFactor' => [
+                'method' => 'email',
+            ],
+        ], $response);
     }
 
     public function testPutInvalidField()
@@ -99,16 +113,25 @@ class ProfileControllerTest extends SuluTestCase
                 'email' => 'hans.mustermann@muster.at',
                 'password' => 'testpassword',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
+        /** @var array<string, mixed> $response */
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        unset($response['_hash']);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $this->assertEquals('Hans', $response->firstName);
-        $this->assertEquals('Mustermann', $response->lastName);
-        $this->assertEquals('hansi', $response->username);
-        $this->assertEquals('hans.mustermann@muster.at', $response->email);
-        $this->assertEquals('de', $response->locale);
+
+        $this->assertSame([
+            'firstName' => 'Hans',
+            'lastName' => 'Mustermann',
+            'username' => 'hansi',
+            'email' => 'hans.mustermann@muster.at',
+            'locale' => 'de',
+            'twoFactor' => null,
+        ], $response);
     }
 
     public function testPutEmailNotUnique()
@@ -139,13 +162,21 @@ class ProfileControllerTest extends SuluTestCase
                 'email' => 'existing@email.com',
                 'password' => 'testpassword',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
+        /** @var array<string, mixed> $response */
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        unset($response['errors']);
         $this->assertHttpStatusCode(409, $this->client->getResponse());
-        $this->assertEquals(1004, $response->code);
-        $this->assertEquals('The email address "existing@email.com" is already assigned to another contact.', $response->detail);
+        $this->assertSame([
+            'code' => 1004,
+            'message' => 'The email "existing@email.com" is not unique!',
+            'detail' => 'The email address "existing@email.com" is already assigned to another contact.',
+        ], $response);
     }
 
     public function testPutUsernameNotUnique()
@@ -179,12 +210,15 @@ class ProfileControllerTest extends SuluTestCase
             ]
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
+        /** @var array<string, mixed> $response */
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        unset($response['errors']);
         $this->assertHttpStatusCode(409, $this->client->getResponse());
-        $this->assertEquals(
-            'a username has to be unique!',
-            $response->message
-        );
+        $this->assertSame([
+            'code' => 1001,
+            'message' => 'a username has to be unique!',
+            'detail' => 'The username "existing-username" is already assigned to another contact.',
+        ], $response);
     }
 
     public function testPutWithoutFirstName()
@@ -198,15 +232,20 @@ class ProfileControllerTest extends SuluTestCase
                 'email' => 'hans.mustermann@muster.at',
                 'password' => 'testpassword',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
-        $response = \json_decode($this->client->getResponse()->getContent());
 
+        /** @var array<string, mixed> $response */
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        unset($response['errors']);
         $this->assertHttpStatusCode(400, $this->client->getResponse());
-        $this->assertEquals(
-            'The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "firstName"-argument',
-            $response->message
-        );
+        $this->assertSame([
+            'code' => 0,
+            'message' => 'The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "firstName"-argument',
+        ], $response);
     }
 
     public function testPutWithoutLastName()
@@ -220,16 +259,20 @@ class ProfileControllerTest extends SuluTestCase
                 'email' => 'hans.mustermann@muster.at',
                 'password' => 'testpassword',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
-
+        /** @var array<string, mixed> $response */
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        unset($response['errors']);
         $this->assertHttpStatusCode(400, $this->client->getResponse());
-        $this->assertEquals(
-            'The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "lastName"-argument',
-            $response->message
-        );
+        $this->assertSame([
+            'code' => 0,
+            'message' => 'The "Sulu\Bundle\ContactBundle\Entity\Contact"-entity requires a "lastName"-argument',
+        ], $response);
     }
 
     public function testPutWithoutUsername()
@@ -243,16 +286,20 @@ class ProfileControllerTest extends SuluTestCase
                 'email' => 'hans.mustermann@muster.at',
                 'password' => 'testpassword',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
-
+        /** @var array<string, mixed> $response */
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        unset($response['errors']);
         $this->assertHttpStatusCode(400, $this->client->getResponse());
-        $this->assertEquals(
-            'The "Sulu\Bundle\SecurityBundle\Entity\User"-entity requires a "username"-argument',
-            $response->message
-        );
+        $this->assertSame([
+            'code' => 0,
+            'message' => 'The "Sulu\Bundle\SecurityBundle\Entity\User"-entity requires a "username"-argument',
+        ], $response);
     }
 
     public function testPutWithoutEmail()
@@ -266,16 +313,20 @@ class ProfileControllerTest extends SuluTestCase
                 'username' => 'hansi',
                 'password' => 'testpassword',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
-
+        /** @var array<string, mixed> $response */
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        unset($response['errors']);
         $this->assertHttpStatusCode(400, $this->client->getResponse());
-        $this->assertEquals(
-            'The "Sulu\Bundle\SecurityBundle\Entity\User"-entity requires a "email"-argument',
-            $response->message
-        );
+        $this->assertSame([
+            'code' => 0,
+            'message' => 'The "Sulu\Bundle\SecurityBundle\Entity\User"-entity requires a "email"-argument',
+        ], $response);
     }
 
     public function testPutWithoutLocale()
@@ -289,16 +340,20 @@ class ProfileControllerTest extends SuluTestCase
                 'username' => 'hansi',
                 'password' => 'testpassword',
                 'email' => 'hans.mustermann@muster.at',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
-
+        /** @var array<string, mixed> $response */
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        unset($response['errors']);
         $this->assertHttpStatusCode(400, $this->client->getResponse());
-        $this->assertEquals(
-            'The "Sulu\Bundle\SecurityBundle\Entity\User"-entity requires a "locale"-argument',
-            $response->message
-        );
+        $this->assertSame([
+            'code' => 0,
+            'message' => 'The "Sulu\Bundle\SecurityBundle\Entity\User"-entity requires a "locale"-argument',
+        ], $response);
     }
 
     public function testPutWithoutPassword()
@@ -312,12 +367,24 @@ class ProfileControllerTest extends SuluTestCase
                 'username' => 'hansi',
                 'email' => 'hans.mustermann@muster.at',
                 'locale' => 'de',
+                'twoFactor' => [
+                    'method' => null,
+                ],
             ]
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
-
+        /** @var array<string, mixed> $response */
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        unset($response['_hash']);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $this->assertSame([
+            'firstName' => 'Hans',
+            'lastName' => 'Mustermann',
+            'username' => 'hansi',
+            'email' => 'hans.mustermann@muster.at',
+            'locale' => 'de',
+            'twoFactor' => null,
+        ], $response);
     }
 
     public function testDeleteSettings()

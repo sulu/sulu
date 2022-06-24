@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\DependencyInjection;
 
+use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\SecurityBundle\Exception\RoleKeyAlreadyExistsException;
 use Sulu\Bundle\SecurityBundle\Exception\RoleNameAlreadyExistsException;
@@ -58,6 +59,13 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
         $loader->load('command.xml');
+
+        /** @var array<string, class-string> $bundles */
+        $bundles = $container->getParameter('kernel.bundles');
+
+        if (\in_array(SchebTwoFactorBundle::class, $bundles)) {
+            $loader->load('2fa.xml');
+        }
 
         if (\interface_exists(LogoutSuccessHandlerInterface::class)) {
             $loader->load('logout_success_handler.xml');

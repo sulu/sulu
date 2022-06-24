@@ -25,6 +25,9 @@ security:
         - { path: ^/admin$, roles: PUBLIC_ACCESS }
         - { path: ^/admin/$, roles: PUBLIC_ACCESS }
         - { path: ^/admin/p/, roles: PUBLIC_ACCESS }
+        - { path: ^/admin/logout, role: PUBLIC_ACCESS }
+        - { path: ^/admin/_profiler, role: PUBLIC_ACCESS }
+        - { path: ^/admin/2fa, role: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_USER }
 
     firewalls:
@@ -42,6 +45,14 @@ security:
                 failure_handler: sulu_security.authentication_handler
             logout:
                 path: sulu_admin.logout
+            # require at least scheb/2fa-bundle, scheb/2fa-email to activate 2fa
+            two_factor:
+                prepare_on_login: true
+                prepare_on_access_denied: true
+                check_path: 2fa_login_check_admin
+                authentication_required_handler: sulu_security.two_factor_authentication_required_handler
+                success_handler: sulu_security.two_factor_authentication_success_handler
+                failure_handler: sulu_security.two_factor_authentication_failure_handler
 
 #        website:
 #            pattern: ^/

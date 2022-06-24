@@ -29,6 +29,7 @@ use Sulu\Component\SmartContent\DataProviderPoolInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
@@ -243,6 +244,12 @@ class AdminController
             'generateUrl' => $this->urlGenerator->generate('sulu_page.post_resourcelocator', ['action' => 'generate']),
             'routing' => $this->urlGenerator->generate('fos_js_routing_js'),
         ];
+
+        try {
+            $endpoints['twoFactorLoginCheck'] = $this->urlGenerator->generate('2fa_login_check_admin');
+        } catch (RouteNotFoundException $e) {
+            // @ignoreException ignore if no 2fa_login_check_admin exist
+        }
 
         return new Response($this->engine->render(
             '@SuluAdmin/Admin/main.html.twig',

@@ -53,6 +53,7 @@
     "sulu_admin.logout": "Abmelden",
     "sulu_admin.login_error": "Diese Kombination von Email/Passwort ist falsch. Bitte versuchen Sie es erneut.",
     "sulu_admin.to_login": "Zum Login",
+    "sulu_admin.back_to_login": "Zurück zum Login",
     "sulu_admin.reset": "Zurücksetzen",
     "sulu_admin.reset_resend": "Erneut senden",
     "sulu_admin.forgot_password": "Passwort vergessen",
@@ -212,5 +213,9 @@
     "sulu_admin.versions": "Versionierung",
     "sulu_admin.activity_versions": "Aktivität & Versionierung",
     "sulu_admin.insufficient_descendant_permissions": "Nicht ausreichende Berechtigungen für {count} untergeordnete Elemente.",
-    "sulu_admin.unexpected_delete_server_error": "Beim Löschen ist ein unerwarteter Fehler aufgetreten."
+    "sulu_admin.unexpected_delete_server_error": "Beim Löschen ist ein unerwarteter Fehler aufgetreten.",
+    "sulu_admin.two_factor_authentication": "Zwei-Faktor Authentifizierung",
+    "sulu_admin.two_factor_auth_code": "Authentifizierungscode",
+    "sulu_admin.two_factor_trust_device": "Diesem Gerät vertrauen",
+    "sulu_admin.verify": "Verifizieren"
 }

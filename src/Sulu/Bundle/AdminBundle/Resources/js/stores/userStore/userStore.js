@@ -4,7 +4,7 @@ import debounce from 'debounce';
 import {Config, Requester} from '../../services';
 import initializer from '../../services/initializer';
 import localizationStore from '../localizationStore';
-import type {Contact, ForgotPasswordData, LoginData, ResetPasswordData, User} from './types';
+import type {Contact, ForgotPasswordData, LoginData, ResetPasswordData, User, TwoFactorData} from './types';
 
 const UPDATE_PERSISTENT_SETTINGS_DELAY = 2500;
 const CONTENT_LOCALE_SETTING_KEY = 'sulu_admin.content_locale';
@@ -20,6 +20,8 @@ class UserStore {
     @observable loading: boolean = false;
     @observable loginError: boolean = false;
     @observable forgotPasswordSuccess: boolean = false;
+    @observable twoFactorMethods: Array<string> = [];
+    @observable twoFactorError: boolean = false;
 
     @action clear() {
         this.persistentSettings = new Map();
@@ -29,6 +31,8 @@ class UserStore {
         this.contact = undefined;
         this.loginError = false;
         this.forgotPasswordSuccess = false;
+        this.twoFactorMethods = [];
+        this.twoFactorError = false;
     }
 
     @computed get systemLocale() {
@@ -49,6 +53,14 @@ class UserStore {
 
     @action setForgotPasswordSuccess(forgotPasswordSuccess: boolean) {
         this.forgotPasswordSuccess = forgotPasswordSuccess;
+    }
+
+    @action setTwoFactorMethods(twoFactorMethods: Array<string>) {
+        this.twoFactorMethods = twoFactorMethods;
+    }
+
+    @action setTwoFactorError(twoFactorError: boolean) {
+        this.twoFactorError = twoFactorError;
     }
 
     @computed get contentLocale(): string {
@@ -92,6 +104,18 @@ class UserStore {
     }
 
     handleLogin = (data: Object) => {
+        this.setTwoFactorMethods([]);
+
+        if (data.completed === false) {
+            this.setLoading(false);
+
+            if (data.twoFactorMethods && data.twoFactorMethods.length) {
+                this.setTwoFactorMethods(data.twoFactorMethods);
+            }
+
+            return;
+        }
+
         if (this.user) {
             // when the user was logged in already and comes again with the same user
             // we don't need to initialize again
@@ -116,7 +140,7 @@ class UserStore {
         this.setLoading(true);
 
         return Requester.post(Config.endpoints.loginCheck, data)
-            .then(() => this.handleLogin(data))
+            .then((data) => this.handleLogin(data))
             .catch((error) => {
                 this.setLoading(false);
                 if (error.status !== 401) {
@@ -124,6 +148,21 @@ class UserStore {
                 }
 
                 this.setLoginError(true);
+            });
+    };
+
+    twoFactorLogin = (data: TwoFactorData) => {
+        this.setLoading(true);
+
+        return Requester.post(Config.endpoints.twoFactorLoginCheck, data)
+            .then((data) => this.handleLogin(data))
+            .catch((error) => {
+                this.setLoading(false);
+                this.setTwoFactorError(true);
+
+                if (error.status !== 401) {
+                    return Promise.reject(error);
+                }
             });
     };
 

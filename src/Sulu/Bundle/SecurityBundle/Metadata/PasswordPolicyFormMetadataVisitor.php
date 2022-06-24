@@ -19,6 +19,9 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @internal
+ */
 class PasswordPolicyFormMetadataVisitor implements FormMetadataVisitorInterface
 {
     /**

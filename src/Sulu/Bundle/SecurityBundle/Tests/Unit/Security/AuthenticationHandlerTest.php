@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Security;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -33,22 +34,22 @@ class AuthenticationHandlerTest extends TestCase
     private $authenticationHandler;
 
     /**
-     * @var AuthenticationException
+     * @var ObjectProphecy<AuthenticationException>
      */
     private $exception;
 
     /**
-     * @var Request
+     * @var ObjectProphecy<Request>
      */
     private $request;
 
     /**
-     * @var TokenInterface
+     * @var ObjectProphecy<TokenInterface>
      */
     private $token;
 
     /**
-     * @var UserInterface
+     * @var ObjectProphecy<UserInterface>
      */
     private $user;
 
@@ -70,7 +71,7 @@ class AuthenticationHandlerTest extends TestCase
         $router->generate('sulu_admin')->willReturn('/admin');
         $router->generate('sulu_admin')->willReturn('/admin');
 
-        $this->authenticationHandler = new AuthenticationHandler($router->reveal());
+        $this->authenticationHandler = new AuthenticationHandler($router->reveal(), ['email', 'trusted_devices']);
     }
 
     public function testOnAuthenticationSuccess()
@@ -90,6 +91,8 @@ class AuthenticationHandlerTest extends TestCase
     {
         $this->request->isXmlHttpRequest()->willReturn(true);
 
+        $this->token->getUserIdentifier()->willReturn('testuser');
+
         $response = $this->authenticationHandler->onAuthenticationSuccess(
             $this->request->reveal(),
             $this->token->reveal()
@@ -99,7 +102,12 @@ class AuthenticationHandlerTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
 
         $response = \json_decode($response->getContent(), true);
-        $this->assertEquals('/admin/#target/path', $response['url']);
+        $this->assertSame([
+            'url' => '/admin/#target/path',
+            'username' => 'testuser',
+            'completed' => true,
+            'twoFactorMethods' => ['trusted_devices'],
+        ], $response);
     }
 
     public function testOnAuthenticationFailure()
