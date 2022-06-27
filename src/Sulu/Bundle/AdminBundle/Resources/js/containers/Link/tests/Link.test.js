@@ -1,11 +1,16 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {shallow} from 'enzyme';
 import {observable} from 'mobx';
+import {ResourceRequester} from '../../../services';
 import Link from '../Link';
 import linkTypeRegistry from '../registries/linkTypeRegistry';
 import LinkTypeOverlay from '../overlays/LinkTypeOverlay';
 import type {LinkValue} from '../types';
+
+jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
+    get: jest.fn(),
+}));
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -15,71 +20,42 @@ jest.mock('../registries/linkTypeRegistry', () => ({
     getKeys: jest.fn(),
     getOverlay: jest.fn(),
     getOptions: jest.fn(),
+    getTitle: jest.fn((key) => key.charAt(0).toUpperCase() + (key.slice(1))),
 }));
 
-test('Render Link container', () => {
+test('Render Link container incl. loading a selected value', async(resolve) => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
     linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
-    linkTypeRegistry.getOptions.mockReturnValue({title: 'Pages', overlayTitle: 'Test Overlay'});
-    linkTypeRegistry.getKeys.mockReturnValue(['page']);
-
-    const value: LinkValue = {
-        title: 'TestLink',
-        href: '123-asdf-123',
-        provider: 'page',
-        locale: 'en',
-    };
-
-    expect(
-        render(
-            <Link locale={observable.box('en')} onChange={changeSpy} onFinish={finishSpy} value={value} />
-        )
-    ).toMatchSnapshot();
-});
-
-test('Pass correct props to overlay', () => {
-    const changeSpy = jest.fn();
-    const finishSpy = jest.fn();
-
-    const options = {
+    linkTypeRegistry.getOptions.mockReturnValue({
         title: 'Pages',
         overlayTitle: 'Test Overlay',
-    };
-    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
-    linkTypeRegistry.getOptions.mockReturnValue(options);
+        resourceKey: 'pages',
+        displayProperties: ['title'],
+    });
     linkTypeRegistry.getKeys.mockReturnValue(['page']);
+
+    const getPromise = Promise.resolve({title: 'Page 1'});
+    ResourceRequester.get.mockReturnValue(getPromise);
 
     const value: LinkValue = {
         title: 'TestLink',
         href: '123-asdf-123',
         provider: 'page',
         locale: 'en',
-        anchor: 'TestAnchor',
-        target: 'TestTarget',
     };
 
     const link = shallow(
-        <Link
-            enableAnchor={true}
-            enableTarget={true}
-            enableTitle={true}
-            locale={observable.box('en')}
-            onChange={changeSpy}
-            onFinish={finishSpy}
-            value={value}
-        />);
+        <Link locale={observable.box('en')} onChange={changeSpy} onFinish={finishSpy} value={value} />
+    );
 
-    // open overlay to properly check the href
-    link.find('.item.clickable').simulate('click');
+    getPromise.finally(() => {
+        setTimeout(() => {
+            expect(link).toMatchSnapshot();
 
-    expect(link.find('LinkTypeOverlay').props()).toMatchObject({
-        href: '123-asdf-123',
-        open: true,
-        options,
-        anchor: 'TestAnchor',
-        target: 'TestTarget',
+            resolve();
+        }, 0);
     });
 });
 
@@ -87,12 +63,13 @@ test('Open overlay on input click', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const options = {
+    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
+    linkTypeRegistry.getOptions.mockReturnValue({
         title: 'Pages',
         overlayTitle: 'Test Overlay',
-    };
-    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
-    linkTypeRegistry.getOptions.mockReturnValue(options);
+        resourceKey: 'pages',
+        displayProperties: ['title'],
+    });
     linkTypeRegistry.getKeys.mockReturnValue(['page']);
 
     const value: LinkValue = {
@@ -126,12 +103,13 @@ test('Open overlay on provider change', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const options = {
+    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
+    linkTypeRegistry.getOptions.mockReturnValue({
         title: 'Pages',
         overlayTitle: 'Test Overlay',
-    };
-    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
-    linkTypeRegistry.getOptions.mockReturnValue(options);
+        resourceKey: 'pages',
+        displayProperties: ['title'],
+    });
     linkTypeRegistry.getKeys.mockReturnValue(['page', 'media']);
 
     const value: LinkValue = {
@@ -163,12 +141,13 @@ test('Update values on overlay confirm', () => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const options = {
+    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
+    linkTypeRegistry.getOptions.mockReturnValue({
         title: 'Pages',
         overlayTitle: 'Test Overlay',
-    };
-    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
-    linkTypeRegistry.getOptions.mockReturnValue(options);
+        resourceKey: 'pages',
+        displayProperties: ['title'],
+    });
     linkTypeRegistry.getKeys.mockReturnValue(['page', 'media']);
 
     const value: LinkValue = {
@@ -213,17 +192,21 @@ test('Update values on overlay confirm', () => {
     );
 });
 
-test('Invalidate values on RemoveButton click', () => {
+test('Invalidate values on RemoveButton click', async(resolve) => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
 
-    const options = {
+    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
+    linkTypeRegistry.getOptions.mockReturnValue({
         title: 'Pages',
         overlayTitle: 'Test Overlay',
-    };
-    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
-    linkTypeRegistry.getOptions.mockReturnValue(options);
+        resourceKey: 'pages',
+        displayProperties: ['title'],
+    });
     linkTypeRegistry.getKeys.mockReturnValue(['page', 'media']);
+
+    const getPromise = Promise.resolve({title: 'Page 1'});
+    ResourceRequester.get.mockReturnValue(getPromise);
 
     const value: LinkValue = {
         title: 'TestLink',
@@ -234,6 +217,50 @@ test('Invalidate values on RemoveButton click', () => {
         target: 'TestTarget',
     };
 
+    const link = shallow(<Link
+        enableAnchor={true}
+        enableTarget={true}
+        enableTitle={true}
+        locale={observable.box('en')}
+        onChange={changeSpy}
+        onFinish={finishSpy}
+        value={value}
+    />);
+
+    getPromise.finally(() => {
+        setTimeout(() => {
+            const removeButton = link.find('.removeButton');
+            removeButton.simulate('click');
+
+            expect(changeSpy).toBeCalledWith(
+                {
+                    title: undefined,
+                    href: undefined,
+                    provider: undefined,
+                    locale: 'en',
+                    anchor: undefined,
+                    target: undefined,
+                }
+            );
+
+            resolve();
+        }, 0);
+    });
+});
+
+test('Display providers with "types" property', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
+    linkTypeRegistry.getOptions.mockReturnValue({
+        title: 'Pages',
+        overlayTitle: 'Test Overlay',
+        resourceKey: 'pages',
+        displayProperties: ['title'],
+    });
+    linkTypeRegistry.getKeys.mockReturnValue(['page', 'media', 'article']);
+
     const link = shallow(
         <Link
             enableAnchor={true}
@@ -242,20 +269,9 @@ test('Invalidate values on RemoveButton click', () => {
             locale={observable.box('en')}
             onChange={changeSpy}
             onFinish={finishSpy}
-            value={value}
+            types={['page', 'article']}
+            value={undefined}
         />);
 
-    const removeButton = link.find('.removeButton');
-    removeButton.simulate('click');
-
-    expect(changeSpy).toBeCalledWith(
-        {
-            title: undefined,
-            href: undefined,
-            provider: undefined,
-            locale: 'en',
-            anchor: undefined,
-            target: undefined,
-        }
-    );
+    expect(link.find('Option').length).toEqual(2);
 });

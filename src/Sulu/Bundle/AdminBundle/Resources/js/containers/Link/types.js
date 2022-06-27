@@ -19,10 +19,10 @@ export type LinkTypeOverlayProps = {|
 
 export type LinkTypeOptions = {|
     displayProperties: Array<string>,
-    emptyText: string,
-    icon: string,
-    listAdapter: string,
-    overlayTitle: string,
+    emptyText?: string,
+    icon?: string,
+    listAdapter?: string,
+    overlayTitle?: string,
     resourceKey: string,
 |};
 

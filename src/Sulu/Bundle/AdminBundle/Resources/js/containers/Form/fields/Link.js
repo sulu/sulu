@@ -37,13 +37,13 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
 
         if (unvalidatedTypes) {
             if (!isArrayLike(unvalidatedTypes)) {
-                throw new Error('The "schemes" schema option must be an array!');
+                throw new Error('The "types" schema option must be an array!');
             }
             // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
             const types: Array<any> | IObservableArray<any> = unvalidatedTypes;
 
             if (types.length === 0) {
-                throw new Error('The "schemes" schema option must contain some values!');
+                throw new Error('The "types" schema option must contain some values!');
             }
 
             providerTypes = types.map((type) => {
