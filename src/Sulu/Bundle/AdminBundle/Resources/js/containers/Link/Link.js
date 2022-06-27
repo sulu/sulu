@@ -204,13 +204,10 @@ class Link extends Component<Props> {
             }
         );
 
-        const allowedTypes = linkTypeRegistry.getKeys().filter((key) => {
-            if (types !== undefined && types.length > 0) {
-                return types.includes(key);
-            }
-
-            return !excludedTypes.includes(key);
-        });
+        let allowedTypes = linkTypeRegistry.getKeys().filter((key) => !excludedTypes.includes(key));
+        if (types !== undefined && types.length > 0) {
+            allowedTypes = allowedTypes.filter((key) => types.length > 0 && types.includes(key));
+        }
 
         return (
             <Fragment>
