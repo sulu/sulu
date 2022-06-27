@@ -7,25 +7,25 @@ exports[`Render with completely filled placeholder 1`] = `
   <span>
     sulu.io/
   </span>
-  <label
+  <div
     class="input default left"
   >
     <input
       type="text"
       value="test1"
     />
-  </label>
+  </div>
   <span>
     /
   </span>
-  <label
+  <div
     class="input default left"
   >
     <input
       type="text"
       value="test2"
     />
-  </label>
+  </div>
 </div>
 `;
 
@@ -33,25 +33,25 @@ exports[`Render with empty placeholder 1`] = `
 <div
   class="customUrl"
 >
-  <label
+  <div
     class="input default left"
   >
     <input
       type="text"
       value=""
     />
-  </label>
+  </div>
   <span>
     .sulu.io/
   </span>
-  <label
+  <div
     class="input default left"
   >
     <input
       type="text"
       value=""
     />
-  </label>
+  </div>
 </div>
 `;
 
@@ -59,25 +59,25 @@ exports[`Render with partially filled placeholder 1`] = `
 <div
   class="customUrl"
 >
-  <label
+  <div
     class="input default left"
   >
     <input
       type="text"
       value="test"
     />
-  </label>
+  </div>
   <span>
     .
   </span>
-  <label
+  <div
     class="input default left"
   >
     <input
       type="text"
       value=""
     />
-  </label>
+  </div>
   <span>
     .sulu.io
   </span>

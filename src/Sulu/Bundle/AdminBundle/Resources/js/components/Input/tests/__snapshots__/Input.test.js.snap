@@ -1,29 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Input should render 1`] = `
-<label
+<div
   class="input default left"
 >
   <input
     type="text"
     value="My value"
   />
-</label>
+</div>
 `;
 
 exports[`Input should render append container when onClearClick callback is provided 1`] = `
-<label
+<div
   class="input default left hasAppendIcon"
 >
   <input
     type="text"
     value=""
   />
-</label>
+</div>
 `;
 
 exports[`Input should render append container with icon when onClearClick callback is provided and value is set 1`] = `
-<label
+<div
   class="input default left hasAppendIcon"
 >
   <input
@@ -40,44 +40,44 @@ exports[`Input should render append container with icon when onClearClick callba
       tabindex="0"
     />
   </div>
-</label>
+</div>
 `;
 
 exports[`Input should render as headline 1`] = `
-<label
+<div
   class="input default left headline"
 >
   <input
     type="text"
     value="My value"
   />
-</label>
+</div>
 `;
 
 exports[`Input should render collapsed 1`] = `
-<label
+<div
   class="input default left collapsed"
 >
   <input
     type="text"
     value=""
   />
-</label>
+</div>
 `;
 
 exports[`Input should render undefined value as empty string 1`] = `
-<label
+<div
   class="input default left"
 >
   <input
     type="text"
     value=""
   />
-</label>
+</div>
 `;
 
 exports[`Input should render when disabled 1`] = `
-<label
+<div
   class="input default left disabled"
 >
   <input
@@ -85,19 +85,19 @@ exports[`Input should render when disabled 1`] = `
     type="text"
     value="My value"
   />
-</label>
+</div>
 `;
 
 exports[`Input should render with a character counter 1`] = `
 Array [
-  <label
+  <div
     class="input default left"
   >
     <input
       type="text"
       value="asdf"
     />
-  </label>,
+  </div>,
   <label
     class="characterCounter exceeded"
   >
@@ -107,7 +107,7 @@ Array [
 `;
 
 exports[`Input should render with a loader 1`] = `
-<label
+<div
   class="input default left"
 >
   <div
@@ -129,19 +129,19 @@ exports[`Input should render with a loader 1`] = `
     type="text"
     value=""
   />
-</label>
+</div>
 `;
 
 exports[`Input should render with a segment counter 1`] = `
 Array [
-  <label
+  <div
     class="input default left"
   >
     <input
       type="text"
       value="keyword1, keyword2"
     />
-  </label>,
+  </div>,
   <label
     class="segmentCounter"
   >
@@ -151,7 +151,7 @@ Array [
 `;
 
 exports[`Input should render with autocomplete off 1`] = `
-<label
+<div
   class="input default left disabled"
 >
   <input
@@ -160,11 +160,11 @@ exports[`Input should render with autocomplete off 1`] = `
     type="text"
     value="My value"
   />
-</label>
+</div>
 `;
 
 exports[`Input should render with dark skin 1`] = `
-<label
+<div
   class="input dark left hasAppendIcon"
 >
   <div
@@ -179,11 +179,11 @@ exports[`Input should render with dark skin 1`] = `
     type="text"
     value=""
   />
-</label>
+</div>
 `;
 
 exports[`Input should render with icon 1`] = `
-<label
+<div
   class="input default left"
 >
   <div
@@ -198,11 +198,11 @@ exports[`Input should render with icon 1`] = `
     type="text"
     value="My value"
   />
-</label>
+</div>
 `;
 
 exports[`Input should render with inputmode 1`] = `
-<label
+<div
   class="input default left"
 >
   <input
@@ -210,22 +210,22 @@ exports[`Input should render with inputmode 1`] = `
     type="text"
     value="My value"
   />
-</label>
+</div>
 `;
 
 exports[`Input should render with invalid value 1`] = `
-<label
+<div
   class="input default left error"
 >
   <input
     type="text"
     value="My value"
   />
-</label>
+</div>
 `;
 
 exports[`Input should render with placeholder 1`] = `
-<label
+<div
   class="input default left"
 >
   <input
@@ -233,22 +233,22 @@ exports[`Input should render with placeholder 1`] = `
     type="text"
     value="My value"
   />
-</label>
+</div>
 `;
 
 exports[`Input should render with type 1`] = `
-<label
+<div
   class="input default left"
 >
   <input
     type="password"
     value="My value"
   />
-</label>
+</div>
 `;
 
 exports[`Input should render with type number with attributes 1`] = `
-<label
+<div
   class="input default left"
 >
   <input
@@ -258,16 +258,16 @@ exports[`Input should render with type number with attributes 1`] = `
     type="number"
     value="25"
   />
-</label>
+</div>
 `;
 
 exports[`Input should render with value 1`] = `
-<label
+<div
   class="input default left"
 >
   <input
     type="text"
     value="My value"
   />
-</label>
+</div>
 `;

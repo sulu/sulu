@@ -198,7 +198,7 @@ exports[`Render a simple MediaOverview 1`] = `
             <span
               class="inputContainer"
             >
-              <label
+              <div
                 class="input dark center"
               >
                 <input
@@ -206,7 +206,7 @@ exports[`Render a simple MediaOverview 1`] = `
                   type="text"
                   value="1"
                 />
-              </label>
+              </div>
             </span>
             <span
               class="display"
@@ -252,7 +252,7 @@ exports[`Render a simple MediaOverview 1`] = `
       <div
         class="toolbarLeft"
       >
-        <label
+        <div
           class="input dark left collapsed hasAppendIcon"
         >
           <div
@@ -270,7 +270,7 @@ exports[`Render a simple MediaOverview 1`] = `
             type="text"
             value=""
           />
-        </label>
+        </div>
       </div>
       <div
         class="toolbarRight"

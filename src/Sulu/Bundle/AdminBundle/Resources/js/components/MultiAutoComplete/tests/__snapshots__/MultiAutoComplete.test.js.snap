@@ -2,7 +2,7 @@
 
 exports[`Render the MultiAutoComplete with open suggestions list 1`] = `
 Array [
-  <label
+  <div
     class="multiAutoComplete"
   >
     <div
@@ -37,7 +37,7 @@ Array [
         value=""
       />
     </div>
-  </label>,
+  </div>,
   <div
     class="backdrop fixed"
     role="button"

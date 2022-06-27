@@ -2,14 +2,14 @@
 
 exports[`QRCode should render 1`] = `
 Array [
-  <label
+  <div
     class="input default left error"
   >
     <input
       type="text"
       value="My value"
     />
-  </label>,
+  </div>,
   <svg
     class="qrcode"
     height="256"

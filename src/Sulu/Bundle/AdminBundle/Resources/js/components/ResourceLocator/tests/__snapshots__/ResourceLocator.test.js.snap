@@ -9,7 +9,7 @@ exports[`ResourceLocator should render when disabled 1`] = `
   >
     /
   </span>
-  <label
+  <div
     class="input default left disabled"
   >
     <input
@@ -17,7 +17,7 @@ exports[`ResourceLocator should render when disabled 1`] = `
       type="text"
       value="parent"
     />
-  </label>
+  </div>
 </div>
 `;
 
@@ -30,14 +30,14 @@ exports[`ResourceLocator should render with type full 1`] = `
   >
     /
   </span>
-  <label
+  <div
     class="input default left"
   >
     <input
       type="text"
       value="parent"
     />
-  </label>
+  </div>
 </div>
 `;
 
@@ -50,14 +50,14 @@ exports[`ResourceLocator should render with type full and a value of undefined 1
   >
     /
   </span>
-  <label
+  <div
     class="input default left"
   >
     <input
       type="text"
       value=""
     />
-  </label>
+  </div>
 </div>
 `;
 
@@ -70,14 +70,14 @@ exports[`ResourceLocator should render with type leaf 1`] = `
   >
     /parent/
   </span>
-  <label
+  <div
     class="input default left"
   >
     <input
       type="text"
       value="child"
     />
-  </label>
+  </div>
 </div>
 `;
 
@@ -90,13 +90,13 @@ exports[`ResourceLocator should render with type leaf and a value of undefined 1
   >
     /
   </span>
-  <label
+  <div
     class="input default left"
   >
     <input
       type="text"
       value=""
     />
-  </label>
+  </div>
 </div>
 `;

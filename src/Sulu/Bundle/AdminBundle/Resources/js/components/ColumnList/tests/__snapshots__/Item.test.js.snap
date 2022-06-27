@@ -194,14 +194,14 @@ exports[`Should render item with order input 1`] = `
   <div
     class="orderInput"
   >
-    <label
+    <div
       class="input default center"
     >
       <input
         type="text"
         value="4"
       />
-    </label>
+    </div>
   </div>
   <span
     class="text"

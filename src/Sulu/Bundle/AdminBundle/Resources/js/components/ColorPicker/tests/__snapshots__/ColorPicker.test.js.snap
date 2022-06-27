@@ -2,7 +2,7 @@
 
 exports[`ColorPicker should render 1`] = `
 Array [
-  <label
+  <div
     class="input default left"
   >
     <div
@@ -21,7 +21,7 @@ Array [
       type="text"
       value="#abc"
     />
-  </label>,
+  </div>,
   <div
     class="backdrop fixed"
     role="button"

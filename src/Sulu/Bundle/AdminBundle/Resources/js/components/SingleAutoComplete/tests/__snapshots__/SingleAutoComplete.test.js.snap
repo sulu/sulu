@@ -4,7 +4,7 @@ exports[`SingleAutoComplete should render with suggestions 1`] = `
 <div
   class="singleAutoComplete"
 >
-  <label
+  <div
     class="input default left"
   >
     <div
@@ -21,7 +21,7 @@ exports[`SingleAutoComplete should render with suggestions 1`] = `
       type="text"
       value="Test"
     />
-  </label>
+  </div>
 </div>
 `;
 

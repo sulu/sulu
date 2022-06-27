@@ -225,7 +225,7 @@ Array [
                         <span
                           class="inputContainer"
                         >
-                          <label
+                          <div
                             class="input dark center"
                           >
                             <input
@@ -233,7 +233,7 @@ Array [
                               type="text"
                               value="2"
                             />
-                          </label>
+                          </div>
                         </span>
                         <span
                           class="display"
@@ -279,7 +279,7 @@ Array [
                   <div
                     class="toolbarLeft"
                   >
-                    <label
+                    <div
                       class="input dark left collapsed hasAppendIcon"
                     >
                       <div
@@ -297,7 +297,7 @@ Array [
                         type="text"
                         value=""
                       />
-                    </label>
+                    </div>
                   </div>
                   <div
                     class="toolbarRight"
@@ -916,7 +916,7 @@ Array [
                         <span
                           class="inputContainer"
                         >
-                          <label
+                          <div
                             class="input dark center"
                           >
                             <input
@@ -924,7 +924,7 @@ Array [
                               type="text"
                               value="2"
                             />
-                          </label>
+                          </div>
                         </span>
                         <span
                           class="display"
@@ -970,7 +970,7 @@ Array [
                   <div
                     class="toolbarLeft"
                   >
-                    <label
+                    <div
                       class="input dark left collapsed hasAppendIcon"
                     >
                       <div
@@ -988,7 +988,7 @@ Array [
                         type="text"
                         value=""
                       />
-                    </label>
+                    </div>
                   </div>
                   <div
                     class="toolbarRight"

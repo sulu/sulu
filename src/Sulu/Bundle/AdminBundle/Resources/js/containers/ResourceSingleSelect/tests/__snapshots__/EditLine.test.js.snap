@@ -4,14 +4,14 @@ exports[`Render an EditLine 1`] = `
 <div
   class="editLine"
 >
-  <label
+  <div
     class="input default left"
   >
     <input
       type="text"
       value="Test"
     />
-  </label>
+  </div>
   <button
     class="button icon icon"
     type="button"

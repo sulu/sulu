@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should expand the input when clicking on icon 1`] = `
-<label
+<div
   class="input dark left hasAppendIcon"
 >
   <div
@@ -19,11 +19,11 @@ exports[`The component should expand the input when clicking on icon 1`] = `
     type="text"
     value=""
   />
-</label>
+</div>
 `;
 
 exports[`The component should render collapsed 1`] = `
-<label
+<div
   class="input dark left collapsed hasAppendIcon"
 >
   <div
@@ -41,11 +41,11 @@ exports[`The component should render collapsed 1`] = `
     type="text"
     value=""
   />
-</label>
+</div>
 `;
 
 exports[`The component should render not collapsed when value is given 1`] = `
-<label
+<div
   class="input dark left hasAppendIcon"
 >
   <div
@@ -73,5 +73,5 @@ exports[`The component should render not collapsed when value is given 1`] = `
       tabindex="0"
     />
   </div>
-</label>
+</div>
 `;

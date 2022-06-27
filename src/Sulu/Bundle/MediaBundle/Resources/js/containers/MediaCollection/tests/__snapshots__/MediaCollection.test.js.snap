@@ -192,7 +192,7 @@ exports[`Render the MediaCollection 1`] = `
             <span
               class="inputContainer"
             >
-              <label
+              <div
                 class="input dark center"
               >
                 <input
@@ -200,7 +200,7 @@ exports[`Render the MediaCollection 1`] = `
                   type="text"
                   value="1"
                 />
-              </label>
+              </div>
             </span>
             <span
               class="display"
@@ -246,7 +246,7 @@ exports[`Render the MediaCollection 1`] = `
       <div
         class="toolbarLeft"
       >
-        <label
+        <div
           class="input dark left collapsed hasAppendIcon"
         >
           <div
@@ -264,7 +264,7 @@ exports[`Render the MediaCollection 1`] = `
             type="text"
             value=""
           />
-        </label>
+        </div>
       </div>
       <div
         class="toolbarRight"
@@ -758,7 +758,7 @@ exports[`Render the MediaCollection for all media 1`] = `
             <span
               class="inputContainer"
             >
-              <label
+              <div
                 class="input dark center"
               >
                 <input
@@ -766,7 +766,7 @@ exports[`Render the MediaCollection for all media 1`] = `
                   type="text"
                   value="1"
                 />
-              </label>
+              </div>
             </span>
             <span
               class="display"
@@ -812,7 +812,7 @@ exports[`Render the MediaCollection for all media 1`] = `
       <div
         class="toolbarLeft"
       >
-        <label
+        <div
           class="input dark left collapsed hasAppendIcon"
         >
           <div
@@ -830,7 +830,7 @@ exports[`Render the MediaCollection for all media 1`] = `
             type="text"
             value=""
           />
-        </label>
+        </div>
       </div>
       <div
         class="toolbarRight"

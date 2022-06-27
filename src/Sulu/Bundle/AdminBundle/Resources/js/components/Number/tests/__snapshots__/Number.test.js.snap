@@ -1,18 +1,18 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Number should render 1`] = `
-<label
+<div
   class="input default left"
 >
   <input
     type="number"
     value=""
   />
-</label>
+</div>
 `;
 
 exports[`Number should render when disabled 1`] = `
-<label
+<div
   class="input default left disabled"
 >
   <input
@@ -20,5 +20,5 @@ exports[`Number should render when disabled 1`] = `
     type="number"
     value="8"
   />
-</label>
+</div>
 `;
