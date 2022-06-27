@@ -68,7 +68,7 @@ class MultiAutoComplete extends React.Component<Props> {
     };
 
     @computed get popoverMinWidth() {
-        return this.labelRef ? this.labelRef.scrollWidth - 10 : 0;
+        return this.inputContainerRef ? this.inputContainerRef.scrollWidth - 10 : 0;
     }
 
     handleDelete = (newValue: Object) => {

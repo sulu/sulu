@@ -4,8 +4,8 @@
 
 ### Rename labelRef to inputContainerRef
 
-The `labelRef` properties of the js components `Input` was renamed
-to `inputContainerRef` as it is no longer a label tag for improving
+The `labelRef` properties of the js components `Input` and `Number` was 
+renamed to `inputContainerRef` as it is no longer a label tag for improving
 accessibility of the interface.
 
 ### User table two factory authentication column added
