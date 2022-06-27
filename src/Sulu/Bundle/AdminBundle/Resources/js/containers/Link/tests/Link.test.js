@@ -273,5 +273,64 @@ test('Display providers with "types" property', () => {
             value={undefined}
         />);
 
+    const removeButton = link.find('.removeButton');
+    removeButton.simulate('click');
+    expect(link.find('Option').length).toEqual(2);
+});
+
+test('Display providers with "excluded_types" property', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
+    linkTypeRegistry.getOptions.mockReturnValue({
+        title: 'Pages',
+        overlayTitle: 'Test Overlay',
+        resourceKey: 'pages',
+        displayProperties: ['title'],
+    });
+    linkTypeRegistry.getKeys.mockReturnValue(['page', 'media', 'article']);
+
+    const link = shallow(
+        <Link
+            enableAnchor={true}
+            enableTarget={true}
+            enableTitle={true}
+            excludedTypes={['page', 'article']}
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            value={undefined}
+        />);
+
+    expect(link.find('Option').length).toEqual(1);
+});
+
+test('Display providers with "excluded_types" and "types" property', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    linkTypeRegistry.getOverlay.mockReturnValue(LinkTypeOverlay);
+    linkTypeRegistry.getOptions.mockReturnValue({
+        title: 'Pages',
+        overlayTitle: 'Test Overlay',
+        resourceKey: 'pages',
+        displayProperties: ['title'],
+    });
+    linkTypeRegistry.getKeys.mockReturnValue(['page', 'media', 'article', 'account']);
+
+    const link = shallow(
+        <Link
+            enableAnchor={true}
+            enableTarget={true}
+            enableTitle={true}
+            excludedTypes={['page', 'article']}
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            types={['media', 'account']}
+            value={undefined}
+        />);
+
     expect(link.find('Option').length).toEqual(2);
 });

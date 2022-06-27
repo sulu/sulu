@@ -18,6 +18,7 @@ type Props = {
     enableAnchor?: ?boolean,
     enableTarget?: ?boolean,
     enableTitle?: ?boolean,
+    excludedTypes: string[],
     locale: IObservableValue<string>,
     onChange: (value: LinkValue) => void,
     onFinish: () => void,
@@ -34,6 +35,7 @@ class Link extends Component<Props> {
         enableAnchor: false,
         enableTarget: false,
         enableTitle: false,
+        excludedTypes: [],
         types: [],
     };
 
@@ -189,6 +191,7 @@ class Link extends Component<Props> {
             enableTarget,
             enableTitle,
             types,
+            excludedTypes,
             value,
         } = this.props;
         const {href, provider} = value || {};
@@ -201,13 +204,10 @@ class Link extends Component<Props> {
             }
         );
 
-        const allowedTypes = linkTypeRegistry.getKeys().filter((key) => {
-            if (types === undefined || types.length === 0) {
-                return true;
-            }
-
-            return types.includes(key);
-        });
+        let allowedTypes = linkTypeRegistry.getKeys().filter((key) => !excludedTypes.includes(key));
+        if (types !== undefined && types.length > 0) {
+            allowedTypes = allowedTypes.filter((key) => types.length > 0 && types.includes(key));
+        }
 
         return (
             <Fragment>

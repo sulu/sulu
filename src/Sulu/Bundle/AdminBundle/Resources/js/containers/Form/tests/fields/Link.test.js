@@ -67,6 +67,7 @@ test('Pass props correctly to Link component', () => {
         'enableAnchor': true,
         'enableTarget': true,
         'enableTitle': true,
+        'excludedTypes': [],
         locale,
         'onChange': changeSpy,
         'onFinish': finishSpy,
@@ -139,10 +140,84 @@ test('Pass props correctly to Link component filtered types', () => {
         'enableAnchor': true,
         'enableTarget': true,
         'enableTitle': true,
+        'excludedTypes': [],
         locale,
         'onChange': changeSpy,
         'onFinish': finishSpy,
         'types': ['external', 'page'],
+        'value': {
+            'anchor': 'anchorTest',
+            'href': '123-asdf-123',
+            'locale': 'en',
+            'provider': 'page',
+            'target': '_blank',
+            'title': 'Test',
+        },
+    });
+});
+
+test('Pass props correctly to Link component filtered excluded_types', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const locale = observable.box('en');
+    // $FlowFixMe
+    formInspector.locale = locale;
+
+    const value: LinkValue = {
+        anchor: 'anchorTest',
+        href: '123-asdf-123',
+        locale: 'en',
+        provider: 'page',
+        target: '_blank',
+        title: 'Test',
+    };
+
+    const options = {
+        enable_target: {
+            name: 'target',
+            value: true,
+        },
+        enable_anchor: {
+            name: 'anchor',
+            value: true,
+        },
+        enable_title: {
+            name: 'title',
+            value: true,
+        },
+        excluded_types: {
+            name: 'types',
+            value: [
+                {name: 'external'},
+                {name: 'page'},
+            ],
+        },
+    };
+
+    const link = shallow(
+        <Link
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaOptions={options}
+            value={value}
+        />
+    );
+
+    expect(link.find('Link').props()).toEqual({
+        'disabled': true,
+        'enableAnchor': true,
+        'enableTarget': true,
+        'enableTitle': true,
+        'excludedTypes': ['external', 'page'],
+        locale,
+        'onChange': changeSpy,
+        'onFinish': finishSpy,
+        'types': [],
         'value': {
             'anchor': 'anchorTest',
             'href': '123-asdf-123',
@@ -199,6 +274,7 @@ test('Pass props correctly to Link component disabled anchor and target', () => 
         'enableAnchor': false,
         'enableTarget': false,
         'enableTitle': false,
+        'excludedTypes': [],
         locale,
         'onChange': changeSpy,
         'onFinish': finishSpy,
