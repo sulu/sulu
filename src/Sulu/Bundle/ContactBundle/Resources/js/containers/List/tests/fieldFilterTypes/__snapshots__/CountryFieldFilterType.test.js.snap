@@ -2,7 +2,7 @@
 
 exports[`Render with value 1`] = `
 Array [
-  <label
+  <div
     class="input default left"
   >
     <div
@@ -17,7 +17,7 @@ Array [
       type="text"
       value=""
     />
-  </label>,
+  </div>,
   <div
     class="checkboxGroup"
   >

@@ -383,14 +383,14 @@ Array [
               <div
                 class="limit"
               >
-                <label
+                <div
                   class="input default left"
                 >
                   <input
                     type="number"
                     value=""
                   />
-                </label>
+                </div>
               </div>
             </section>
           </div>

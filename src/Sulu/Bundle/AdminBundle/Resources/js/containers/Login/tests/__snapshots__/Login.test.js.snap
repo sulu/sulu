@@ -35,7 +35,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
             >
               sulu_admin.username_or_email
             </div>
-            <label
+            <div
               class="input default left"
             >
               <div
@@ -51,7 +51,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
                 type="text"
                 value=""
               />
-            </label>
+            </div>
           </label>
           <label
             class="inputField"
@@ -61,7 +61,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
             >
               sulu_admin.password
             </div>
-            <label
+            <div
               class="input default left"
             >
               <div
@@ -77,7 +77,7 @@ exports[`Should render the Login component when initialized is true 1`] = `
                 type="password"
                 value=""
               />
-            </label>
+            </div>
           </label>
           <div
             class="buttons"
@@ -160,7 +160,7 @@ exports[`Should render the Login with forgot password view 1`] = `
             >
               sulu_admin.username_or_email
             </div>
-            <label
+            <div
               class="input default left"
             >
               <div
@@ -176,7 +176,7 @@ exports[`Should render the Login with forgot password view 1`] = `
                 type="text"
                 value=""
               />
-            </label>
+            </div>
           </label>
           <div
             class="buttons"
@@ -259,7 +259,7 @@ exports[`Should render the Login with forgot password with success 1`] = `
             >
               sulu_admin.username_or_email
             </div>
-            <label
+            <div
               class="input default left"
             >
               <div
@@ -275,7 +275,7 @@ exports[`Should render the Login with forgot password with success 1`] = `
                 type="text"
                 value=""
               />
-            </label>
+            </div>
           </label>
           <div
             class="buttons"
@@ -358,7 +358,7 @@ exports[`Should render the Login with reset password view 1`] = `
             >
               sulu_admin.password
             </div>
-            <label
+            <div
               class="input default left"
             >
               <div
@@ -374,7 +374,7 @@ exports[`Should render the Login with reset password view 1`] = `
                 type="password"
                 value=""
               />
-            </label>
+            </div>
           </label>
           <label
             class="inputField"
@@ -384,7 +384,7 @@ exports[`Should render the Login with reset password view 1`] = `
             >
               sulu_admin.repeat_password
             </div>
-            <label
+            <div
               class="input default left"
             >
               <div
@@ -400,7 +400,7 @@ exports[`Should render the Login with reset password view 1`] = `
                 type="password"
                 value=""
               />
-            </label>
+            </div>
           </label>
           <div
             class="buttons"
@@ -483,7 +483,7 @@ exports[`Should render the LoginForm component with error 1`] = `
             >
               sulu_admin.username_or_email
             </div>
-            <label
+            <div
               class="input default left"
             >
               <div
@@ -499,7 +499,7 @@ exports[`Should render the LoginForm component with error 1`] = `
                 type="text"
                 value=""
               />
-            </label>
+            </div>
           </label>
           <label
             class="inputField"
@@ -509,7 +509,7 @@ exports[`Should render the LoginForm component with error 1`] = `
             >
               sulu_admin.password
             </div>
-            <label
+            <div
               class="input default left"
             >
               <div
@@ -525,7 +525,7 @@ exports[`Should render the LoginForm component with error 1`] = `
                 type="password"
                 value=""
               />
-            </label>
+            </div>
           </label>
           <div
             class="buttons"

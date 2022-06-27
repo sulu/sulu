@@ -39,7 +39,7 @@ class MultiAutoComplete extends React.Component<Props> {
         loading: false,
     };
 
-    @observable labelRef: ElementRef<'label'>;
+    @observable inputContainerRef: ElementRef<*>;
     @observable inputRef: ElementRef<'input'>;
 
     @observable displaySuggestions = false;
@@ -49,9 +49,9 @@ class MultiAutoComplete extends React.Component<Props> {
         this.debouncedSearch.clear();
     }
 
-    @action setLabelRef = (labelRef: ?ElementRef<'label'>) => {
-        if (labelRef) {
-            this.labelRef = labelRef;
+    @action setInputContainerRef = (inputContainerRef: ?ElementRef<*>) => {
+        if (inputContainerRef) {
+            this.inputContainerRef = inputContainerRef;
         }
     };
 
@@ -68,7 +68,7 @@ class MultiAutoComplete extends React.Component<Props> {
     };
 
     @computed get popoverMinWidth() {
-        return this.labelRef ? this.labelRef.scrollWidth - 10 : 0;
+        return this.inputContainerRef ? this.inputContainerRef.scrollWidth - 10 : 0;
     }
 
     handleDelete = (newValue: Object) => {
@@ -196,7 +196,7 @@ class MultiAutoComplete extends React.Component<Props> {
 
         return (
             <Fragment>
-                <label className={multiAutoCompleteClass} ref={this.setLabelRef}>
+                <div className={multiAutoCompleteClass} ref={this.setInputContainerRef}>
                     <div className={multiAutoCompleteStyles.icon}>
                         {loading
                             ? <Loader size={16} />
@@ -226,9 +226,9 @@ class MultiAutoComplete extends React.Component<Props> {
                             value={this.inputValue}
                         />
                     </div>
-                </label>
+                </div>
                 <AutoCompletePopover
-                    anchorElement={this.labelRef}
+                    anchorElement={this.inputContainerRef}
                     idProperty={idProperty}
                     minWidth={this.popoverMinWidth}
                     onClose={this.handlePopoverClose}

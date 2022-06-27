@@ -4,7 +4,7 @@ exports[`Render a KeyValue RuleType 1`] = `
 <div
   class="inputs"
 >
-  <label
+  <div
     class="input default left"
   >
     <input
@@ -12,8 +12,8 @@ exports[`Render a KeyValue RuleType 1`] = `
       type="text"
       value=""
     />
-  </label>
-  <label
+  </div>
+  <div
     class="input default left"
   >
     <input
@@ -21,6 +21,6 @@ exports[`Render a KeyValue RuleType 1`] = `
       type="text"
       value=""
     />
-  </label>
+  </div>
 </div>
 `;

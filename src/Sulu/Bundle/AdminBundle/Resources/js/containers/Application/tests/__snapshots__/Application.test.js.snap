@@ -416,7 +416,7 @@ Array [
               >
                 sulu_admin.password
               </div>
-              <label
+              <div
                 class="input default left"
               >
                 <div
@@ -432,7 +432,7 @@ Array [
                   type="password"
                   value=""
                 />
-              </label>
+              </div>
             </label>
             <label
               class="inputField"
@@ -442,7 +442,7 @@ Array [
               >
                 sulu_admin.repeat_password
               </div>
-              <label
+              <div
                 class="input default left"
               >
                 <div
@@ -458,7 +458,7 @@ Array [
                   type="password"
                   value=""
                 />
-              </label>
+              </div>
             </label>
             <div
               class="buttons"
@@ -558,7 +558,7 @@ Array [
               >
                 sulu_admin.username_or_email
               </div>
-              <label
+              <div
                 class="input default left"
               >
                 <div
@@ -574,7 +574,7 @@ Array [
                   type="text"
                   value=""
                 />
-              </label>
+              </div>
             </label>
             <label
               class="inputField"
@@ -584,7 +584,7 @@ Array [
               >
                 sulu_admin.password
               </div>
-              <label
+              <div
                 class="input default left"
               >
                 <div
@@ -600,7 +600,7 @@ Array [
                   type="password"
                   value=""
                 />
-              </label>
+              </div>
             </label>
             <div
               class="buttons"

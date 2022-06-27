@@ -48,14 +48,14 @@ Array [
                   >
                     sulu_admin.title *
                   </label>
-                  <label
+                  <div
                     class="input default left"
                   >
                     <input
                       type="text"
                       value=""
                     />
-                  </label>
+                  </div>
                   <label
                     class="errorLabel"
                   />

@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render in disabled state 1`] = `
-<label
+<div
   class="multiAutoComplete disabled"
 >
   <div
@@ -41,11 +41,11 @@ exports[`Render in disabled state 1`] = `
       value=""
     />
   </div>
-</label>
+</div>
 `;
 
 exports[`Render in loading state 1`] = `
-<label
+<div
   class="multiAutoComplete"
 >
   <div
@@ -71,11 +71,11 @@ exports[`Render in loading state 1`] = `
       value=""
     />
   </div>
-</label>
+</div>
 `;
 
 exports[`Render with given value 1`] = `
-<label
+<div
   class="multiAutoComplete"
 >
   <div
@@ -126,5 +126,5 @@ exports[`Render with given value 1`] = `
       value=""
     />
   </div>
-</label>
+</div>
 `;

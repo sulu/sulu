@@ -46,7 +46,7 @@ Array [
                   <div
                     class="singleAutoComplete"
                   >
-                    <label
+                    <div
                       class="input default left"
                     >
                       <div
@@ -63,7 +63,7 @@ Array [
                         type="text"
                         value=""
                       />
-                    </label>
+                    </div>
                   </div>
                   <label
                     class="errorLabel"
@@ -204,7 +204,7 @@ Array [
                   >
                     sulu_location.latitude *
                   </label>
-                  <label
+                  <div
                     class="input default left"
                   >
                     <input
@@ -212,7 +212,7 @@ Array [
                       type="number"
                       value="22"
                     />
-                  </label>
+                  </div>
                   <label
                     class="errorLabel"
                   />
@@ -229,7 +229,7 @@ Array [
                   >
                     sulu_location.longitude *
                   </label>
-                  <label
+                  <div
                     class="input default left"
                   >
                     <input
@@ -237,7 +237,7 @@ Array [
                       type="number"
                       value="33"
                     />
-                  </label>
+                  </div>
                   <label
                     class="errorLabel"
                   />
@@ -254,7 +254,7 @@ Array [
                   >
                     sulu_location.zoom *
                   </label>
-                  <label
+                  <div
                     class="input default left"
                   >
                     <input
@@ -263,7 +263,7 @@ Array [
                       type="number"
                       value="5"
                     />
-                  </label>
+                  </div>
                   <label
                     class="errorLabel"
                   />
@@ -292,14 +292,14 @@ Array [
                     >
                       sulu_location.title
                     </label>
-                    <label
+                    <div
                       class="input default left"
                     >
                       <input
                         type="text"
                         value="title-123"
                       />
-                    </label>
+                    </div>
                     <label
                       class="errorLabel"
                     />
@@ -316,14 +316,14 @@ Array [
                     >
                       sulu_location.street
                     </label>
-                    <label
+                    <div
                       class="input default left"
                     >
                       <input
                         type="text"
                         value="street-123"
                       />
-                    </label>
+                    </div>
                     <label
                       class="errorLabel"
                     />
@@ -340,14 +340,14 @@ Array [
                     >
                       sulu_location.number
                     </label>
-                    <label
+                    <div
                       class="input default left"
                     >
                       <input
                         type="text"
                         value=""
                       />
-                    </label>
+                    </div>
                     <label
                       class="errorLabel"
                     />
@@ -364,14 +364,14 @@ Array [
                     >
                       sulu_location.code
                     </label>
-                    <label
+                    <div
                       class="input default left"
                     >
                       <input
                         type="text"
                         value="code-123"
                       />
-                    </label>
+                    </div>
                     <label
                       class="errorLabel"
                     />
@@ -388,14 +388,14 @@ Array [
                     >
                       sulu_location.town
                     </label>
-                    <label
+                    <div
                       class="input default left"
                     >
                       <input
                         type="text"
                         value="town-123"
                       />
-                    </label>
+                    </div>
                     <label
                       class="errorLabel"
                     />
@@ -412,14 +412,14 @@ Array [
                     >
                       sulu_location.country
                     </label>
-                    <label
+                    <div
                       class="input default left"
                     >
                       <input
                         type="text"
                         value=""
                       />
-                    </label>
+                    </div>
                     <label
                       class="errorLabel"
                     />
@@ -530,7 +530,7 @@ Array [
                   <div
                     class="singleAutoComplete"
                   >
-                    <label
+                    <div
                       class="input default left"
                     >
                       <div
@@ -547,7 +547,7 @@ Array [
                         type="text"
                         value=""
                       />
-                    </label>
+                    </div>
                   </div>
                   <label
                     class="errorLabel"
@@ -709,7 +709,7 @@ Array [
                   >
                     sulu_location.latitude *
                   </label>
-                  <label
+                  <div
                     class="input default left"
                   >
                     <input
@@ -717,7 +717,7 @@ Array [
                       type="number"
                       value=""
                     />
-                  </label>
+                  </div>
                   <label
                     class="errorLabel"
                   />
@@ -734,7 +734,7 @@ Array [
                   >
                     sulu_location.longitude *
                   </label>
-                  <label
+                  <div
                     class="input default left"
                   >
                     <input
@@ -742,7 +742,7 @@ Array [
                       type="number"
                       value=""
                     />
-                  </label>
+                  </div>
                   <label
                     class="errorLabel"
                   />
@@ -759,7 +759,7 @@ Array [
                   >
                     sulu_location.zoom *
                   </label>
-                  <label
+                  <div
                     class="input default left"
                   >
                     <input
@@ -768,7 +768,7 @@ Array [
                       type="number"
                       value="1"
                     />
-                  </label>
+                  </div>
                   <label
                     class="errorLabel"
                   />
@@ -797,14 +797,14 @@ Array [
                     >
                       sulu_location.title
                     </label>
-                    <label
+                    <div
                       class="input default left"
                     >
                       <input
                         type="text"
                         value=""
                       />
-                    </label>
+                    </div>
                     <label
                       class="errorLabel"
                     />
@@ -821,14 +821,14 @@ Array [
                     >
                       sulu_location.street
                     </label>
-                    <label
+                    <div
                       class="input default left"
                     >
                       <input
                         type="text"
                         value=""
                       />
-                    </label>
+                    </div>
                     <label
                       class="errorLabel"
                     />
@@ -845,14 +845,14 @@ Array [
                     >
                       sulu_location.number
                     </label>
-                    <label
+                    <div
                       class="input default left"
                     >
                       <input
                         type="text"
                         value=""
                       />
-                    </label>
+                    </div>
                     <label
                       class="errorLabel"
                     />
@@ -869,14 +869,14 @@ Array [
                     >
                       sulu_location.code
                     </label>
-                    <label
+                    <div
                       class="input default left"
                     >
                       <input
                         type="text"
                         value=""
                       />
-                    </label>
+                    </div>
                     <label
                       class="errorLabel"
                     />
@@ -893,14 +893,14 @@ Array [
                     >
                       sulu_location.town
                     </label>
-                    <label
+                    <div
                       class="input default left"
                     >
                       <input
                         type="text"
                         value=""
                       />
-                    </label>
+                    </div>
                     <label
                       class="errorLabel"
                     />
@@ -917,14 +917,14 @@ Array [
                     >
                       sulu_location.country
                     </label>
-                    <label
+                    <div
                       class="input default left"
                     >
                       <input
                         type="text"
                         value=""
                       />
-                    </label>
+                    </div>
                     <label
                       class="errorLabel"
                     />

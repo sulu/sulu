@@ -33,7 +33,7 @@ exports[`Render ContactDetails with data 1`] = `
       <div
         class="field"
       >
-        <label
+        <div
           class="input default left"
         >
           <div
@@ -50,7 +50,7 @@ exports[`Render ContactDetails with data 1`] = `
             type="email"
             value="test@example.org"
           />
-        </label>
+        </div>
         <span
           aria-label="su-trash-alt"
           class="su-trash-alt clickable removeIcon"
@@ -92,7 +92,7 @@ exports[`Render ContactDetails with data 1`] = `
       <div
         class="field"
       >
-        <label
+        <div
           class="input default left"
         >
           <div
@@ -109,7 +109,7 @@ exports[`Render ContactDetails with data 1`] = `
             type="tel"
             value="20937439"
           />
-        </label>
+        </div>
         <span
           aria-label="su-trash-alt"
           class="su-trash-alt clickable removeIcon"
@@ -151,7 +151,7 @@ exports[`Render ContactDetails with data 1`] = `
       <div
         class="field"
       >
-        <label
+        <div
           class="input default left"
         >
           <div
@@ -168,7 +168,7 @@ exports[`Render ContactDetails with data 1`] = `
             type="tel"
             value="20937439"
           />
-        </label>
+        </div>
         <span
           aria-label="su-trash-alt"
           class="su-trash-alt clickable removeIcon"
@@ -302,7 +302,7 @@ exports[`Render ContactDetails with data 1`] = `
       <div
         class="field"
       >
-        <label
+        <div
           class="input default left"
         >
           <div
@@ -317,7 +317,7 @@ exports[`Render ContactDetails with data 1`] = `
             type="text"
             value="test"
           />
-        </label>
+        </div>
         <span
           aria-label="su-trash-alt"
           class="su-trash-alt clickable removeIcon"
@@ -400,7 +400,7 @@ exports[`Render empty ContactDetails 1`] = `
       <div
         class="field"
       >
-        <label
+        <div
           class="input default left"
         >
           <div
@@ -415,7 +415,7 @@ exports[`Render empty ContactDetails 1`] = `
             type="email"
             value=""
           />
-        </label>
+        </div>
         <span
           aria-label="su-trash-alt"
           class="su-trash-alt clickable removeIcon"
@@ -457,7 +457,7 @@ exports[`Render empty ContactDetails 1`] = `
       <div
         class="field"
       >
-        <label
+        <div
           class="input default left"
         >
           <div
@@ -472,7 +472,7 @@ exports[`Render empty ContactDetails 1`] = `
             type="tel"
             value=""
           />
-        </label>
+        </div>
         <span
           aria-label="su-trash-alt"
           class="su-trash-alt clickable removeIcon"
@@ -555,7 +555,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
       <div
         class="field"
       >
-        <label
+        <div
           class="input default left"
         >
           <div
@@ -570,7 +570,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
             type="email"
             value=""
           />
-        </label>
+        </div>
         <span
           aria-label="su-trash-alt"
           class="su-trash-alt clickable removeIcon"
@@ -612,7 +612,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
       <div
         class="field"
       >
-        <label
+        <div
           class="input default left"
         >
           <div
@@ -627,7 +627,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
             type="tel"
             value=""
           />
-        </label>
+        </div>
         <span
           aria-label="su-trash-alt"
           class="su-trash-alt clickable removeIcon"
@@ -669,7 +669,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
       <div
         class="field"
       >
-        <label
+        <div
           class="input default left"
         >
           <div
@@ -686,7 +686,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
             type="tel"
             value="230985230"
           />
-        </label>
+        </div>
         <span
           aria-label="su-trash-alt"
           class="su-trash-alt clickable removeIcon"
@@ -820,7 +820,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
       <div
         class="field"
       >
-        <label
+        <div
           class="input default left"
         >
           <div
@@ -835,7 +835,7 @@ exports[`Render empty phone and email fields even if other values are set 1`] = 
             type="text"
             value="test"
           />
-        </label>
+        </div>
         <span
           aria-label="su-trash-alt"
           class="su-trash-alt clickable removeIcon"

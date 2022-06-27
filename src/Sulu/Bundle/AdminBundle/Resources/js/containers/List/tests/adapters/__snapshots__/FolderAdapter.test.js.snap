@@ -124,7 +124,7 @@ exports[`Render a basic Folder list with data 1`] = `
     <span
       class="inputContainer"
     >
-      <label
+      <div
         class="input dark center"
       >
         <input
@@ -132,7 +132,7 @@ exports[`Render a basic Folder list with data 1`] = `
           type="text"
           value="1"
         />
-      </label>
+      </div>
     </span>
     <span
       class="display"

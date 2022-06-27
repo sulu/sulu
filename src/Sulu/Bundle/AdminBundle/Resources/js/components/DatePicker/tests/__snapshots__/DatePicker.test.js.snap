@@ -5,7 +5,7 @@ exports[`DatePicker should render 1`] = `
   class="date-picker"
 >
   <div>
-    <label
+    <div
       class="input default left"
     >
       <div
@@ -23,7 +23,7 @@ exports[`DatePicker should render 1`] = `
         type="text"
         value=""
       />
-    </label>
+    </div>
   </div>
 </div>
 `;
@@ -461,7 +461,7 @@ exports[`DatePicker should render 2`] = `
 exports[`DatePicker should render date format only with month 1`] = `
 <div>
   <div>
-    <label
+    <div
       class="input default left"
     >
       <div
@@ -479,7 +479,7 @@ exports[`DatePicker should render date format only with month 1`] = `
         type="text"
         value=""
       />
-    </label>
+    </div>
   </div>
 </div>
 `;
@@ -487,7 +487,7 @@ exports[`DatePicker should render date format only with month 1`] = `
 exports[`DatePicker should render date format only with year 1`] = `
 <div>
   <div>
-    <label
+    <div
       class="input default left"
     >
       <div
@@ -505,7 +505,7 @@ exports[`DatePicker should render date format only with year 1`] = `
         type="text"
         value=""
       />
-    </label>
+    </div>
   </div>
 </div>
 `;
@@ -513,7 +513,7 @@ exports[`DatePicker should render date format only with year 1`] = `
 exports[`DatePicker should render date picker with time picker 1`] = `
 <div>
   <div>
-    <label
+    <div
       class="input default left"
     >
       <div
@@ -531,7 +531,7 @@ exports[`DatePicker should render date picker with time picker 1`] = `
         type="text"
         value=""
       />
-    </label>
+    </div>
   </div>
 </div>
 `;
@@ -979,7 +979,7 @@ exports[`DatePicker should render date picker with time picker 2`] = `
 exports[`DatePicker should render error 1`] = `
 <div>
   <div>
-    <label
+    <div
       class="input default left error"
     >
       <div
@@ -997,7 +997,7 @@ exports[`DatePicker should render error 1`] = `
         type="text"
         value=""
       />
-    </label>
+    </div>
   </div>
 </div>
 `;
@@ -1005,7 +1005,7 @@ exports[`DatePicker should render error 1`] = `
 exports[`DatePicker should render error when invalid value is set 1`] = `
 <div>
   <div>
-    <label
+    <div
       class="input default left error"
     >
       <div
@@ -1023,7 +1023,7 @@ exports[`DatePicker should render error when invalid value is set 1`] = `
         type="text"
         value="xxx"
       />
-    </label>
+    </div>
   </div>
 </div>
 `;
@@ -1031,7 +1031,7 @@ exports[`DatePicker should render error when invalid value is set 1`] = `
 exports[`DatePicker should render null value as empty string 1`] = `
 <div>
   <div>
-    <label
+    <div
       class="input default left"
     >
       <div
@@ -1049,7 +1049,7 @@ exports[`DatePicker should render null value as empty string 1`] = `
         type="text"
         value=""
       />
-    </label>
+    </div>
   </div>
 </div>
 `;

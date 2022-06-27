@@ -41,14 +41,14 @@ exports[`Render with value of "{ eq: 6 }" 1`] = `
       />
     </button>
   </div>
-  <label
+  <div
     class="input default left"
   >
     <input
       type="number"
       value="6"
     />
-  </label>
+  </div>
 </div>
 `;
 
@@ -93,14 +93,14 @@ exports[`Render with value of "{ gt: 7 }" 1`] = `
       />
     </button>
   </div>
-  <label
+  <div
     class="input default left"
   >
     <input
       type="number"
       value="7"
     />
-  </label>
+  </div>
 </div>
 `;
 
@@ -145,14 +145,14 @@ exports[`Render with value of "{ lt: 2 }" 1`] = `
       />
     </button>
   </div>
-  <label
+  <div
     class="input default left"
   >
     <input
       type="number"
       value="2"
     />
-  </label>
+  </div>
 </div>
 `;
 
@@ -199,13 +199,13 @@ exports[`Render with value of "undefined" 1`] = `
       />
     </button>
   </div>
-  <label
+  <div
     class="input default left"
   >
     <input
       type="number"
       value=""
     />
-  </label>
+  </div>
 </div>
 `;

@@ -19,7 +19,7 @@ Array [
         >
           sulu_admin.two_factor_auth_code
         </div>
-        <label
+        <div
           class="input default left"
         >
           <div
@@ -35,7 +35,7 @@ Array [
             type="text"
             value=""
           />
-        </label>
+        </div>
       </label>
       <label
         class="label"
@@ -106,7 +106,7 @@ Array [
         >
           sulu_admin.two_factor_auth_code
         </div>
-        <label
+        <div
           class="input default left error"
         >
           <div
@@ -122,7 +122,7 @@ Array [
             type="text"
             value=""
           />
-        </label>
+        </div>
       </label>
       <label
         class="label"

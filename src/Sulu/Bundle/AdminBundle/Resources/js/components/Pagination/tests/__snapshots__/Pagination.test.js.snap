@@ -63,7 +63,7 @@ exports[`Render disabled next link if current page is last page 1`] = `
     <span
       class="inputContainer"
     >
-      <label
+      <div
         class="input dark center"
       >
         <input
@@ -71,7 +71,7 @@ exports[`Render disabled next link if current page is last page 1`] = `
           type="text"
           value="1"
         />
-      </label>
+      </div>
     </span>
     <span
       class="display"
@@ -168,7 +168,7 @@ exports[`Render disabled previous link current page is first page 1`] = `
     <span
       class="inputContainer"
     >
-      <label
+      <div
         class="input dark center"
       >
         <input
@@ -176,7 +176,7 @@ exports[`Render disabled previous link current page is first page 1`] = `
           type="text"
           value="1"
         />
-      </label>
+      </div>
     </span>
     <span
       class="display"
@@ -285,7 +285,7 @@ exports[`Render pagination with loader 1`] = `
     <span
       class="inputContainer"
     >
-      <label
+      <div
         class="input dark center"
       >
         <input
@@ -293,7 +293,7 @@ exports[`Render pagination with loader 1`] = `
           type="text"
           value="1"
         />
-      </label>
+      </div>
     </span>
     <span
       class="display"
@@ -389,7 +389,7 @@ exports[`Render pagination with page numbers 1`] = `
     <span
       class="inputContainer"
     >
-      <label
+      <div
         class="input dark center"
       >
         <input
@@ -397,7 +397,7 @@ exports[`Render pagination with page numbers 1`] = `
           type="text"
           value="1"
         />
-      </label>
+      </div>
     </span>
     <span
       class="display"

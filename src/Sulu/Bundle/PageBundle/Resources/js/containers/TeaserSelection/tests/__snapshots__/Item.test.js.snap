@@ -69,14 +69,14 @@ exports[`Render Item with data as form 1`] = `
       <div
         class="titleInput"
       >
-        <label
+        <div
           class="input default left"
         >
           <input
             type="text"
             value="Title"
           />
-        </label>
+        </div>
       </div>
       <div
         class="descriptionTextArea"

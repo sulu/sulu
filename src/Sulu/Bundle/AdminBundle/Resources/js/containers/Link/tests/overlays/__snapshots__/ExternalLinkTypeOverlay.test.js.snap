@@ -137,14 +137,14 @@ exports[`Render overlay with a URL 1`] = `
       >
         sulu_admin.link_title
       </label>
-      <label
+      <div
         class="input default left"
       >
         <input
           type="text"
           value=""
         />
-      </label>
+      </div>
       <label
         class="errorLabel"
       />
@@ -290,14 +290,14 @@ exports[`Render overlay with an undefined URL 1`] = `
       >
         sulu_admin.link_title
       </label>
-      <label
+      <div
         class="input default left"
       >
         <input
           type="text"
           value=""
         />
-      </label>
+      </div>
       <label
         class="errorLabel"
       />
@@ -388,14 +388,14 @@ exports[`Render overlay with mailto URL 1`] = `
       >
         sulu_admin.mail_subject
       </label>
-      <label
+      <div
         class="input default left"
       >
         <input
           type="text"
           value="Subject"
         />
-      </label>
+      </div>
       <label
         class="errorLabel"
       />
@@ -433,14 +433,14 @@ exports[`Render overlay with mailto URL 1`] = `
       >
         sulu_admin.link_title
       </label>
-      <label
+      <div
         class="input default left"
       >
         <input
           type="text"
           value=""
         />
-      </label>
+      </div>
       <label
         class="errorLabel"
       />

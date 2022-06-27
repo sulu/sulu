@@ -10,7 +10,7 @@ exports[`Do not render Loader instead of Adapter if no page count is given 1`] =
     <div
       class="toolbarLeft"
     >
-      <label
+      <div
         class="input dark left collapsed hasAppendIcon"
       >
         <div
@@ -28,7 +28,7 @@ exports[`Do not render Loader instead of Adapter if no page count is given 1`] =
           type="text"
           value=""
         />
-      </label>
+      </div>
     </div>
     <div
       class="toolbarRight"
@@ -54,7 +54,7 @@ exports[`Render Loader instead of Adapter if nothing was loaded yet 1`] = `
     <div
       class="toolbarLeft"
     >
-      <label
+      <div
         class="input dark left collapsed hasAppendIcon"
       >
         <div
@@ -72,7 +72,7 @@ exports[`Render Loader instead of Adapter if nothing was loaded yet 1`] = `
           type="text"
           value=""
         />
-      </label>
+      </div>
     </div>
     <div
       class="toolbarRight"
@@ -125,7 +125,7 @@ exports[`Render the adapter in disabled state 1`] = `
     <div
       class="toolbarLeft"
     >
-      <label
+      <div
         class="input dark left collapsed hasAppendIcon"
       >
         <div
@@ -143,7 +143,7 @@ exports[`Render the adapter in disabled state 1`] = `
           type="text"
           value=""
         />
-      </label>
+      </div>
     </div>
     <div
       class="toolbarRight"
@@ -206,7 +206,7 @@ exports[`Render the adapter with filters 1`] = `
     <div
       class="toolbarLeft"
     >
-      <label
+      <div
         class="input dark left collapsed hasAppendIcon"
       >
         <div
@@ -224,7 +224,7 @@ exports[`Render the adapter with filters 1`] = `
           type="text"
           value=""
         />
-      </label>
+      </div>
       <div
         class="fieldFilter"
       >
@@ -306,7 +306,7 @@ exports[`Render the adapter with filters but filterable disabled 1`] = `
     <div
       class="toolbarLeft"
     >
-      <label
+      <div
         class="input dark left collapsed hasAppendIcon"
       >
         <div
@@ -324,7 +324,7 @@ exports[`Render the adapter with filters but filterable disabled 1`] = `
           type="text"
           value=""
         />
-      </label>
+      </div>
     </div>
     <div
       class="toolbarRight"
@@ -350,7 +350,7 @@ exports[`Render toolbar with with search field and actions 1`] = `
     <div
       class="toolbarLeft"
     >
-      <label
+      <div
         class="input dark left collapsed hasAppendIcon"
       >
         <div
@@ -368,7 +368,7 @@ exports[`Render toolbar with with search field and actions 1`] = `
           type="text"
           value=""
         />
-      </label>
+      </div>
     </div>
     <div
       class="toolbarRight"

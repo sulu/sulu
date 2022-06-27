@@ -40,7 +40,7 @@ class ColorPicker extends React.Component<Props> {
         this.popoverOpen = false;
     };
 
-    @action setRef = (ref: ?ElementRef<'label'>) => {
+    @action setRef = (ref: ?ElementRef<*>) => {
         this.popoverAnchorElement = ref;
     };
 
@@ -132,7 +132,7 @@ class ColorPicker extends React.Component<Props> {
                     iconClassName={colorPickerStyles.icon}
                     iconStyle={iconStyle}
                     id={id}
-                    labelRef={this.setRef}
+                    inputContainerRef={this.setRef}
                     name={name}
                     onBlur={this.handleBlur}
                     onChange={this.handleInputChange}

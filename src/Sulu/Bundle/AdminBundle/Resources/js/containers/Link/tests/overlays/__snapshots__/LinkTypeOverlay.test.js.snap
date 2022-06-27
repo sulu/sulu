@@ -61,14 +61,14 @@ exports[`Render overlay with anchor enabled 1`] = `
       >
         sulu_admin.link_anchor
       </label>
-      <label
+      <div
         class="input default left"
       >
         <input
           type="text"
           value=""
         />
-      </label>
+      </div>
       <label
         class="errorLabel"
       />
@@ -299,14 +299,14 @@ exports[`Render overlay with title enabled 1`] = `
       >
         sulu_admin.link_title
       </label>
-      <label
+      <div
         class="input default left"
       >
         <input
           type="text"
           value=""
         />
-      </label>
+      </div>
       <label
         class="errorLabel"
       />

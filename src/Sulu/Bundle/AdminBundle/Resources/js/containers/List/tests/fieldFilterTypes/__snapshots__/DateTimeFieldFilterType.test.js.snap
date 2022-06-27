@@ -11,7 +11,7 @@ exports[`Render with from and to value 1`] = `
     class="date"
   >
     <div>
-      <label
+      <div
         class="input default left"
       >
         <div
@@ -29,7 +29,7 @@ exports[`Render with from and to value 1`] = `
           type="text"
           value="01/02/2020 12:00 PM"
         />
-      </label>
+      </div>
     </div>
   </div>
   <label
@@ -41,7 +41,7 @@ exports[`Render with from and to value 1`] = `
     class="date"
   >
     <div>
-      <label
+      <div
         class="input default left"
       >
         <div
@@ -59,7 +59,7 @@ exports[`Render with from and to value 1`] = `
           type="text"
           value="01/09/2020 1:00 PM"
         />
-      </label>
+      </div>
     </div>
   </div>
 </div>
@@ -76,7 +76,7 @@ exports[`Render with from and to value 2`] = `
     class="date"
   >
     <div>
-      <label
+      <div
         class="input default left"
       >
         <div
@@ -94,7 +94,7 @@ exports[`Render with from and to value 2`] = `
           type="text"
           value="02/01/2018 12:00 AM"
         />
-      </label>
+      </div>
     </div>
   </div>
   <label
@@ -106,7 +106,7 @@ exports[`Render with from and to value 2`] = `
     class="date"
   >
     <div>
-      <label
+      <div
         class="input default left"
       >
         <div
@@ -124,7 +124,7 @@ exports[`Render with from and to value 2`] = `
           type="text"
           value="05/03/2019 12:00 AM"
         />
-      </label>
+      </div>
     </div>
   </div>
 </div>
@@ -141,7 +141,7 @@ exports[`Render with from and to value 3`] = `
     class="date"
   >
     <div>
-      <label
+      <div
         class="input default left"
       >
         <div
@@ -159,7 +159,7 @@ exports[`Render with from and to value 3`] = `
           type="text"
           value="01/02/2020"
         />
-      </label>
+      </div>
     </div>
   </div>
   <label
@@ -171,7 +171,7 @@ exports[`Render with from and to value 3`] = `
     class="date"
   >
     <div>
-      <label
+      <div
         class="input default left"
       >
         <div
@@ -189,7 +189,7 @@ exports[`Render with from and to value 3`] = `
           type="text"
           value="01/09/2020"
         />
-      </label>
+      </div>
     </div>
   </div>
 </div>
@@ -206,7 +206,7 @@ exports[`Render with from and to value 4`] = `
     class="date"
   >
     <div>
-      <label
+      <div
         class="input default left"
       >
         <div
@@ -224,7 +224,7 @@ exports[`Render with from and to value 4`] = `
           type="text"
           value="02/01/2018"
         />
-      </label>
+      </div>
     </div>
   </div>
   <label
@@ -236,7 +236,7 @@ exports[`Render with from and to value 4`] = `
     class="date"
   >
     <div>
-      <label
+      <div
         class="input default left"
       >
         <div
@@ -254,7 +254,7 @@ exports[`Render with from and to value 4`] = `
           type="text"
           value="05/03/2019"
         />
-      </label>
+      </div>
     </div>
   </div>
 </div>
@@ -271,7 +271,7 @@ exports[`Render with value of undefined 1`] = `
     class="date"
   >
     <div>
-      <label
+      <div
         class="input default left"
       >
         <div
@@ -289,7 +289,7 @@ exports[`Render with value of undefined 1`] = `
           type="text"
           value=""
         />
-      </label>
+      </div>
     </div>
   </div>
   <label
@@ -301,7 +301,7 @@ exports[`Render with value of undefined 1`] = `
     class="date"
   >
     <div>
-      <label
+      <div
         class="input default left"
       >
         <div
@@ -319,7 +319,7 @@ exports[`Render with value of undefined 1`] = `
           type="text"
           value=""
         />
-      </label>
+      </div>
     </div>
   </div>
 </div>
@@ -336,7 +336,7 @@ exports[`Render with value set by setValue 1`] = `
     class="date"
   >
     <div>
-      <label
+      <div
         class="input default left"
       >
         <div
@@ -354,7 +354,7 @@ exports[`Render with value set by setValue 1`] = `
           type="text"
           value="06/03/2017 12:00 PM"
         />
-      </label>
+      </div>
     </div>
   </div>
   <label
@@ -366,7 +366,7 @@ exports[`Render with value set by setValue 1`] = `
     class="date"
   >
     <div>
-      <label
+      <div
         class="input default left"
       >
         <div
@@ -384,7 +384,7 @@ exports[`Render with value set by setValue 1`] = `
           type="text"
           value="03/06/2018 12:00 PM"
         />
-      </label>
+      </div>
     </div>
   </div>
 </div>
@@ -401,7 +401,7 @@ exports[`Render with value set by setValue 2`] = `
     class="date"
   >
     <div>
-      <label
+      <div
         class="input default left"
       >
         <div
@@ -419,7 +419,7 @@ exports[`Render with value set by setValue 2`] = `
           type="text"
           value="06/03/2017"
         />
-      </label>
+      </div>
     </div>
   </div>
   <label
@@ -431,7 +431,7 @@ exports[`Render with value set by setValue 2`] = `
     class="date"
   >
     <div>
-      <label
+      <div
         class="input default left"
       >
         <div
@@ -449,7 +449,7 @@ exports[`Render with value set by setValue 2`] = `
           type="text"
           value="03/06/2018"
         />
-      </label>
+      </div>
     </div>
   </div>
 </div>

@@ -295,7 +295,7 @@ exports[`Should render the list with a title 1`] = `
       <div
         class="toolbarLeft"
       >
-        <label
+        <div
           class="input dark left collapsed hasAppendIcon"
         >
           <div
@@ -312,7 +312,7 @@ exports[`Should render the list with a title 1`] = `
             type="text"
             value=""
           />
-        </label>
+        </div>
       </div>
       <div
         class="toolbarRight"
@@ -510,7 +510,7 @@ exports[`Should render the list with a title 1`] = `
           <span
             class="inputContainer"
           >
-            <label
+            <div
               class="input dark center"
             >
               <input
@@ -518,7 +518,7 @@ exports[`Should render the list with a title 1`] = `
                 type="text"
                 value="1"
               />
-            </label>
+            </div>
           </span>
           <span
             class="display"
@@ -570,7 +570,7 @@ exports[`Should render the list with nodes of given ListItemActions 1`] = `
       <div
         class="toolbarLeft"
       >
-        <label
+        <div
           class="input dark left collapsed hasAppendIcon"
         >
           <div
@@ -587,7 +587,7 @@ exports[`Should render the list with nodes of given ListItemActions 1`] = `
             type="text"
             value=""
           />
-        </label>
+        </div>
       </div>
       <div
         class="toolbarRight"
@@ -828,7 +828,7 @@ exports[`Should render the list with nodes of given ListItemActions 1`] = `
           <span
             class="inputContainer"
           >
-            <label
+            <div
               class="input dark center"
             >
               <input
@@ -836,7 +836,7 @@ exports[`Should render the list with nodes of given ListItemActions 1`] = `
                 type="text"
                 value="2"
               />
-            </label>
+            </div>
           </span>
           <span
             class="display"
@@ -891,7 +891,7 @@ exports[`Should render the list with nodes of given ToolbarActions 1`] = `
       <div
         class="toolbarLeft"
       >
-        <label
+        <div
           class="input dark left collapsed hasAppendIcon"
         >
           <div
@@ -908,7 +908,7 @@ exports[`Should render the list with nodes of given ToolbarActions 1`] = `
             type="text"
             value=""
           />
-        </label>
+        </div>
       </div>
       <div
         class="toolbarRight"
@@ -1107,7 +1107,7 @@ exports[`Should render the list with nodes of given ToolbarActions 1`] = `
           <span
             class="inputContainer"
           >
-            <label
+            <div
               class="input dark center"
             >
               <input
@@ -1115,7 +1115,7 @@ exports[`Should render the list with nodes of given ToolbarActions 1`] = `
                 type="text"
                 value="2"
               />
-            </label>
+            </div>
           </span>
           <span
             class="display"
@@ -1170,7 +1170,7 @@ exports[`Should render the list with the correct resourceKey 1`] = `
       <div
         class="toolbarLeft"
       >
-        <label
+        <div
           class="input dark left collapsed hasAppendIcon"
         >
           <div
@@ -1187,7 +1187,7 @@ exports[`Should render the list with the correct resourceKey 1`] = `
             type="text"
             value=""
           />
-        </label>
+        </div>
       </div>
       <div
         class="toolbarRight"
@@ -1385,7 +1385,7 @@ exports[`Should render the list with the correct resourceKey 1`] = `
           <span
             class="inputContainer"
           >
-            <label
+            <div
               class="input dark center"
             >
               <input
@@ -1393,7 +1393,7 @@ exports[`Should render the list with the correct resourceKey 1`] = `
                 type="text"
                 value="1"
               />
-            </label>
+            </div>
           </span>
           <span
             class="display"

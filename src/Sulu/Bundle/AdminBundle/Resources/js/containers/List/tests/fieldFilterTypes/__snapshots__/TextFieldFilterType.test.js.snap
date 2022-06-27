@@ -1,34 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render with value 1`] = `
-<label
+<div
   class="input default left"
 >
   <input
     type="text"
     value="Filter"
   />
-</label>
+</div>
 `;
 
 exports[`Render with value of undefined 1`] = `
-<label
+<div
   class="input default left"
 >
   <input
     type="text"
     value=""
   />
-</label>
+</div>
 `;
 
 exports[`Render with value set by setValue 1`] = `
-<label
+<div
   class="input default left"
 >
   <input
     type="text"
     value="New value"
   />
-</label>
+</div>
 `;

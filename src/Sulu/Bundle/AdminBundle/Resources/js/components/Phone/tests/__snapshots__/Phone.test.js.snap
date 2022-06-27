@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Phone should render 1`] = `
-<label
+<div
   class="input default left"
 >
   <div
@@ -16,11 +16,11 @@ exports[`Phone should render 1`] = `
     type="tel"
     value=""
   />
-</label>
+</div>
 `;
 
 exports[`Phone should render error 1`] = `
-<label
+<div
   class="input default left error"
 >
   <div
@@ -35,11 +35,11 @@ exports[`Phone should render error 1`] = `
     type="tel"
     value=""
   />
-</label>
+</div>
 `;
 
 exports[`Phone should render null value as empty string 1`] = `
-<label
+<div
   class="input default left"
 >
   <div
@@ -54,11 +54,11 @@ exports[`Phone should render null value as empty string 1`] = `
     type="tel"
     value=""
   />
-</label>
+</div>
 `;
 
 exports[`Phone should render when disabled 1`] = `
-<label
+<div
   class="input default left error disabled"
 >
   <div
@@ -76,11 +76,11 @@ exports[`Phone should render when disabled 1`] = `
     type="tel"
     value="‚+43245"
   />
-</label>
+</div>
 `;
 
 exports[`Phone should render with placeholder 1`] = `
-<label
+<div
   class="input default left"
 >
   <div
@@ -96,11 +96,11 @@ exports[`Phone should render with placeholder 1`] = `
     type="tel"
     value=""
   />
-</label>
+</div>
 `;
 
 exports[`Phone should render with value 1`] = `
-<label
+<div
   class="input default left"
 >
   <div
@@ -117,5 +117,5 @@ exports[`Phone should render with value 1`] = `
     type="tel"
     value="test@test.com"
   />
-</label>
+</div>
 `;
