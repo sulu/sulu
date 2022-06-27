@@ -63,4 +63,16 @@ $linkSelectionInputDisabledBackgroundColor: $wildSand;
         color: $linkSelectionInputDisabledColor;
         background-color: $linkSelectionInputDisabledBackgroundColor;
     }
+
+    .column-list {
+        flex: 1 1 auto;
+    }
+
+    .item-column {
+        display: inline-block;
+    }
+
+    .loader {
+        margin: 0 10px;
+    }
 }

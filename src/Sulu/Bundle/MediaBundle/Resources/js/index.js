@@ -67,7 +67,10 @@ initializer.addUpdateConfigHook('sulu_media', (config: Object, initialized: bool
     when(
         () => !!initializer.initializedTranslationsLocale,
         (): void => {
-            linkTypeRegistry.add('media', MediaLinkTypeOverlay, translate('sulu_media.media'));
+            linkTypeRegistry.add('media', MediaLinkTypeOverlay, translate('sulu_media.media'), {
+                resourceKey: 'media',
+                displayProperties: ['title'],
+            });
         }
     );
 });

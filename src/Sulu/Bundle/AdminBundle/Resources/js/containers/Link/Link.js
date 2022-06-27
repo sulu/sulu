@@ -3,9 +3,12 @@ import React, {Component, Fragment} from 'react';
 import classNames from 'classnames';
 import {observer} from 'mobx-react';
 import {action, observable, toJS} from 'mobx';
+import equals from 'fast-deep-equal';
 import SingleSelect from '../../components/SingleSelect/SingleSelect';
 import Icon from '../../components/Icon';
+import Loader from '../../components/Loader';
 import linkStyles from '../Form/fields/link.scss';
+import {ResourceRequester} from '../../services';
 import linkTypeRegistry from './registries/linkTypeRegistry';
 import type {LinkValue} from './types';
 import type {IObservableValue} from 'mobx/lib/mobx';
@@ -39,6 +42,63 @@ class Link extends Component<Props> {
     @observable overlayTitle: ?string;
     @observable overlayTarget: ?string = DEFAULT_TARGET;
     @observable overlayAnchor: ?string;
+    @observable titleParts: Array<string | number> = [];
+    @observable titleLoading: boolean = false;
+
+    constructor(props: Props) {
+        super(props);
+
+        this.load(this.props.value);
+    }
+
+    componentDidUpdate(prevProps: Props) {
+        const prevValue = toJS(prevProps.value);
+        const newValue = toJS(this.props.value);
+
+        if (!equals(prevValue, newValue)) {
+            this.load(this.props.value);
+        }
+    }
+
+    @action load = (value: ?LinkValue) => {
+        if (!value || !value.provider) {
+            this.titleParts = [];
+
+            return;
+        }
+
+        const options = linkTypeRegistry.getOptions(value.provider);
+        if (!options) {
+            this.titleParts = [];
+
+            return;
+        }
+
+        this.titleParts = [];
+
+        this.titleLoading = true;
+        ResourceRequester.get(options.resourceKey, {
+            id: value.href,
+            locale: this.props.locale,
+        }).then(action((data) => {
+            this.titleParts = Object.keys(data)
+                .filter((key) => (options.displayProperties || []).includes(key))
+                .reduce((titleParts, key) => {
+                    titleParts.unshift(data[key]);
+
+                    return titleParts;
+                }, []);
+
+            this.titleLoading = false;
+        })).catch(action((error) => {
+            if (error.status !== 404) {
+                return Promise.reject(error);
+            }
+
+            this.titleParts = [];
+            this.titleLoading = false;
+        }));
+    };
 
     @action handleRemoveClick = () => {
         this.changeValue(undefined, undefined, undefined, undefined, undefined);
@@ -85,9 +145,8 @@ class Link extends Component<Props> {
         this.overlayTitle = title;
     };
 
-    @action handleOverlayHrefChange = (href: ?string | number, item: ?Object) => {
+    @action handleOverlayHrefChange = (href: ?string | number) => {
         this.overlayHref = href;
-        this.overlayTitle = item?.title ?? String(href);
     };
 
     closeOverlay = () => {
@@ -132,7 +191,7 @@ class Link extends Component<Props> {
             types,
             value,
         } = this.props;
-        const {href, provider, title} = value || {};
+        const {href, provider} = value || {};
 
         const itemClass = classNames(
             linkStyles.item,
@@ -161,15 +220,30 @@ class Link extends Component<Props> {
                             value={provider}
                         >
                             {allowedTypes.map((key) => (
-                                <SingleSelect.Option key={key} value={key}>{key}</SingleSelect.Option>
+                                <SingleSelect.Option key={key} value={key}>
+                                    {linkTypeRegistry.getTitle(key)}
+                                </SingleSelect.Option>
                             ))}
                         </SingleSelect>
                     </div>
                     <div className={linkStyles.itemContainer}>
                         <div className={itemClass} onClick={disabled || this.handleTitleClick} role="button">
-                            {title}
+                            {this.titleLoading && '…'}
+                            {!this.titleLoading && value && this.titleParts.length > 0 && (
+                                <div className={linkStyles.columnList}>
+                                    {this.titleParts.map((titlePart, index) => (
+                                        <span
+                                            className={linkStyles.itemColumn}
+                                            key={index}
+                                            style={{width: 100 / this.titleParts.length + '%'}}
+                                        >
+                                            {titlePart}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
                         </div>
-                        {!disabled &&
+                        {!this.titleLoading && !disabled &&
                             <button
                                 className={linkStyles.removeButton}
                                 onClick={this.handleRemoveClick}
@@ -177,6 +251,9 @@ class Link extends Component<Props> {
                             >
                                 <Icon name="su-trash-alt" />
                             </button>
+                        }
+                        {this.titleLoading &&
+                            <Loader className={linkStyles.loader} size={14} />
                         }
                     </div>
                 </div>

@@ -1,70 +1,84 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render Link container 1`] = `
-<div
-  class="link"
->
+exports[`Render Link container incl. loading a selected value 1`] = `
+<Fragment>
   <div
-    class="provider"
+    className="link"
   >
     <div
-      class="select"
-      role="none"
+      className="provider"
     >
-      <button
-        class="displayValue flat"
-        type="button"
+      <SingleSelect
+        disabled={false}
+        onChange={[Function]}
+        skin="flat"
+        value="page"
+      >
+        <Option
+          anchorWidth={0}
+          disabled={false}
+          key="page"
+          selected={false}
+          selectedVisualization="icon"
+          value="page"
+        >
+          Page
+        </Option>
+      </SingleSelect>
+    </div>
+    <div
+      className="itemContainer"
+    >
+      <div
+        className="item clickable"
+        onClick={[Function]}
+        role="button"
       >
         <div
-          aria-label="page"
-          class="croppedText"
-          title="page"
+          className="columnList"
         >
-          <div
-            aria-hidden="true"
-            class="front"
+          <span
+            className="itemColumn"
+            key="0"
+            style={
+              Object {
+                "width": "100%",
+              }
+            }
           >
-            pa
-          </div>
-          <div
-            aria-hidden="true"
-            class="back"
-          >
-            <span>
-              ge
-            </span>
-          </div>
-          <div
-            class="whole"
-          >
-            page
-          </div>
+            Page 1
+          </span>
         </div>
-        <span
-          aria-label="su-angle-down"
-          class="su-angle-down toggle"
+      </div>
+      <button
+        className="removeButton"
+        onClick={[Function]}
+        type="button"
+      >
+        <Icon
+          name="su-trash-alt"
         />
       </button>
     </div>
   </div>
-  <div
-    class="itemContainer"
-  >
-    <div
-      class="item clickable"
-      role="button"
-    >
-      TestLink
-    </div>
-    <button
-      class="removeButton"
-      type="button"
-    >
-      <span
-        aria-label="su-trash-alt"
-        class="su-trash-alt"
-      />
-    </button>
-  </div>
-</div>
+  <LinkTypeOverlay
+    key="page"
+    locale={"en"}
+    onCancel={[Function]}
+    onConfirm={[Function]}
+    onHrefChange={[Function]}
+    open={false}
+    options={
+      Object {
+        "displayProperties": Array [
+          "title",
+        ],
+        "overlayTitle": "Test Overlay",
+        "resourceKey": "pages",
+        "title": "Pages",
+      }
+    }
+    target="_self"
+  />
+</Fragment>
 `;
