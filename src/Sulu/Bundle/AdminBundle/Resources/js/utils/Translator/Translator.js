@@ -8,7 +8,16 @@ let translationMap;
 function setTranslations(translations: TranslationMap, locale: string) {
     translationMap = Object.keys(translations).reduce((messages, translationKey) => {
         // TODO add locale for correct translation of numbers, dates, ...
-        messages[translationKey] = new IntlMessageFormat(translations[translationKey], locale);
+        try {
+            messages[translationKey] = new IntlMessageFormat(translations[translationKey], locale);
+        } catch (e) {
+            log.error(
+                'The translation key ' + translationKey + ' could not be translated. ' +
+                'It is translated to "' + translations[translationKey] + '" which is an invalid IntlMessageFormat: ' +
+                e.toString()
+            );
+        }
+
         return messages;
     }, {});
 }
