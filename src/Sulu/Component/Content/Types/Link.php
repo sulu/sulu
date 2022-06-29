@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Component\Content\Types;
 
+use PHPCR\NodeInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
@@ -112,4 +113,18 @@ class Link extends SimpleContentType
 
         return $url;
     }
+    
+    public function importData(
+        NodeInterface $node,
+        PropertyInterface $property,
+        $value,
+        $userId,
+        $webspaceKey,
+        $languageCode,
+        $segmentKey = null
+    ) {
+        $property->setValue(\json_decode($value, true));
+        $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
+    }
+    
 }
