@@ -22,6 +22,7 @@ type Props = {
         verticalPosition: string,
         horizontalPosition: string,
     ) => Node,
+    horizontalCenter?: boolean,
     horizontalOffset: number,
     onClose?: () => void,
     open: boolean,
@@ -35,6 +36,7 @@ const CLOSE_KEY = 'esc';
 class Popover extends React.Component<Props> {
     static defaultProps = {
         backdrop: true,
+        horizontalCenter: false,
         horizontalOffset: 0,
         open: false,
         verticalOffset: 0,
@@ -103,6 +105,7 @@ class Popover extends React.Component<Props> {
         const {
             anchorElement,
             verticalOffset,
+            horizontalCenter,
             horizontalOffset,
             centerChildElement,
         } = this.props;
@@ -115,6 +118,8 @@ class Popover extends React.Component<Props> {
         const centerChildOffsetTop = (centerChildElement) ? centerChildElement.offsetTop : 0;
         const alignOnVerticalAnchorEdges = !centerChildElement;
 
+        const horizontalCenterValue = horizontalCenter ? (width - this.popoverWidth) / 2 : 0;
+
         return PopoverPositioner.getCroppedDimensions(
             this.popoverWidth,
             this.popoverHeight,
@@ -122,7 +127,7 @@ class Popover extends React.Component<Props> {
             left,
             width,
             height,
-            horizontalOffset,
+            horizontalCenterValue + horizontalOffset,
             verticalOffset,
             centerChildOffsetTop,
             alignOnVerticalAnchorEdges

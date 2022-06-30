@@ -1,0 +1,197 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render in focused state 1`] = `
+<Tooltip
+  label="Copy"
+>
+  <span
+    className="tooltipContainer"
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+  >
+    <Popover
+      anchorElement={
+        <span
+          class="tooltipContainer"
+        >
+          <button
+            aria-label="Copy"
+            type="button"
+          >
+            <span
+              aria-label="su-copy"
+              class="su-copy"
+            />
+          </button>
+        </span>
+      }
+      backdrop={false}
+      horizontalCenter={true}
+      horizontalOffset={0}
+      open={true}
+      verticalOffset={10}
+    >
+      <Portal>
+        <Portal
+          containerInfo={
+            <div>
+              <div
+                class="container"
+              >
+                <span
+                  aria-hidden="true"
+                  class="tooltip bottom"
+                  style="top: 10px; position: fixed; pointer-events: auto; left: 10px;"
+                >
+                  Copy
+                </span>
+              </div>
+            </div>
+          }
+        >
+          <div
+            className="container"
+          >
+            <span
+              aria-hidden={true}
+              className="tooltip bottom"
+              style={
+                Object {
+                  "left": "10px",
+                  "maxHeight": undefined,
+                  "pointerEvents": "auto",
+                  "position": "fixed",
+                  "top": "10px",
+                }
+              }
+            >
+              Copy
+            </span>
+          </div>
+        </Portal>
+      </Portal>
+    </Popover>
+    <button
+      aria-label="Copy"
+      type="button"
+    >
+      <Icon
+        name="su-copy"
+      >
+        <span
+          aria-label="su-copy"
+          className="su-copy"
+        />
+      </Icon>
+    </button>
+  </span>
+</Tooltip>
+`;
+
+exports[`The component should render in hovered state 1`] = `
+<Tooltip
+  label="Copy"
+>
+  <span
+    className="tooltipContainer"
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+  >
+    <Popover
+      anchorElement={
+        <span
+          class="tooltipContainer"
+        >
+          <button
+            aria-label="Copy"
+            type="button"
+          >
+            <span
+              aria-label="su-copy"
+              class="su-copy"
+            />
+          </button>
+        </span>
+      }
+      backdrop={false}
+      horizontalCenter={true}
+      horizontalOffset={0}
+      open={true}
+      verticalOffset={10}
+    >
+      <Portal>
+        <Portal
+          containerInfo={
+            <div>
+              <div
+                class="container"
+              >
+                <span
+                  aria-hidden="true"
+                  class="tooltip bottom"
+                  style="top: 10px; position: fixed; pointer-events: auto; left: 10px;"
+                >
+                  Copy
+                </span>
+              </div>
+            </div>
+          }
+        >
+          <div
+            className="container"
+          >
+            <span
+              aria-hidden={true}
+              className="tooltip bottom"
+              style={
+                Object {
+                  "left": "10px",
+                  "maxHeight": undefined,
+                  "pointerEvents": "auto",
+                  "position": "fixed",
+                  "top": "10px",
+                }
+              }
+            >
+              Copy
+            </span>
+          </div>
+        </Portal>
+      </Portal>
+    </Popover>
+    <button
+      aria-label="Copy"
+      type="button"
+    >
+      <Icon
+        name="su-copy"
+      >
+        <span
+          aria-label="su-copy"
+          className="su-copy"
+        />
+      </Icon>
+    </button>
+  </span>
+</Tooltip>
+`;
+
+exports[`The component should render in unfocused state 1`] = `
+<span
+  class="tooltipContainer"
+>
+  <button
+    aria-label="Copy"
+    type="button"
+  >
+    <span
+      aria-label="su-copy"
+      class="su-copy"
+    />
+  </button>
+</span>
+`;
