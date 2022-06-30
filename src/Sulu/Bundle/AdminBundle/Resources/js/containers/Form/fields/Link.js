@@ -25,6 +25,9 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
                 enable_title: {
                     value: enableTitle,
                 } = {},
+                enable_rel: {
+                    value: enableRel,
+                } = {},
                 types: {
                     value: unvalidatedTypes,
                 } = {},
@@ -36,7 +39,7 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
 
         const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
 
-        let providerTypes = undefined;
+        let providerTypes;
 
         if (unvalidatedTypes) {
             if (!isArrayLike(unvalidatedTypes)) {
@@ -55,6 +58,7 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
                         'Every type in the "types" schemaOption must contain a string as name'
                     );
                 }
+
                 return type.name;
             });
         }
@@ -83,21 +87,26 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
         }
 
         if (enableAnchor !== undefined && enableAnchor !== null && typeof enableAnchor !== 'boolean') {
-            throw new Error('The "anchor" schema option must be a boolean if given!');
+            throw new Error('The "enable_anchor" schema option must be a boolean if given!');
         }
 
         if (enableTarget !== undefined && enableTarget !== null && typeof enableTarget !== 'boolean') {
-            throw new Error('The "target" schema option must be a boolean if given!');
+            throw new Error('The "enable_target" schema option must be a boolean if given!');
         }
 
         if (enableTitle !== undefined && enableTitle !== null && typeof enableTitle !== 'boolean') {
-            throw new Error('The "title" schema option must be a boolean if given!');
+            throw new Error('The "enable_title" schema option must be a boolean if given!');
+        }
+
+        if (enableRel !== undefined && enableRel !== null && typeof enableRel !== 'boolean') {
+            throw new Error('The "enable_rel" schema option must be a boolean if given!');
         }
 
         return (
             <LinkContainer
                 disabled={!!disabled}
                 enableAnchor={enableAnchor}
+                enableRel={enableRel}
                 enableTarget={enableTarget}
                 enableTitle={enableTitle}
                 excludedTypes={excludedProviderTypes}

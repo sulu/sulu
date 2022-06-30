@@ -14,9 +14,11 @@ test('Render overlay with an undefined URL', () => {
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
             onHrefChange={jest.fn()}
+            onRelChange={jest.fn()}
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={true}
+            rel={undefined}
             target={undefined}
             title={undefined}
         />
@@ -32,9 +34,11 @@ test('Render overlay with mailto URL', () => {
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
             onHrefChange={jest.fn()}
+            onRelChange={jest.fn()}
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={true}
+            rel={undefined}
             target={undefined}
             title={undefined}
         />
@@ -50,9 +54,11 @@ test('Render overlay with a URL', () => {
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
             onHrefChange={jest.fn()}
+            onRelChange={jest.fn()}
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={true}
+            rel={undefined}
             target={undefined}
             title={undefined}
         />
@@ -71,9 +77,11 @@ test('Pass correct props to Dialog', () => {
             onCancel={cancelSpy}
             onConfirm={confirmSpy}
             onHrefChange={jest.fn()}
+            onRelChange={jest.fn()}
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={false}
+            rel={undefined}
             target={undefined}
             title={undefined}
         />
@@ -94,9 +102,11 @@ test('Do not call onHrefChange handler if input did not loose focus', () => {
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
             onHrefChange={urlChangeSpy}
+            onRelChange={jest.fn()}
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
             open={true}
+            rel={undefined}
             target="_blank"
             title={undefined}
         />
@@ -116,9 +126,11 @@ test('Fields should change immediately after protocol was changed', () => {
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
             onHrefChange={urlChangeSpy}
+            onRelChange={jest.fn()}
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
             open={true}
+            rel={undefined}
             target="_blank"
             title={undefined}
         />
@@ -146,9 +158,11 @@ test('Call onHrefChange with all mail values', () => {
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
             onHrefChange={urlChangeSpy}
+            onRelChange={jest.fn()}
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
             open={true}
+            rel={undefined}
             target="_blank"
             title={undefined}
         />
@@ -184,9 +198,11 @@ test('Reset target to self when a mailto link is entered', () => {
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
             onHrefChange={urlChangeSpy}
+            onRelChange={jest.fn()}
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
             open={true}
+            rel={undefined}
             target="_blank"
             title={undefined}
         />
@@ -208,9 +224,11 @@ test('Should not reset target to self when a non-mail URL is entered', () => {
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
             onHrefChange={urlChangeSpy}
+            onRelChange={jest.fn()}
             onTargetChange={targetChangeSpy}
             onTitleChange={jest.fn()}
             open={true}
+            rel={undefined}
             target="_blank"
             title={undefined}
         />
@@ -220,4 +238,29 @@ test('Should not reset target to self when a non-mail URL is entered', () => {
     externalLinkOverlay.find('Url').prop('onBlur')();
     expect(urlChangeSpy).toBeCalledWith('http://sulu.io');
     expect(targetChangeSpy).not.toBeCalled();
+});
+
+test('Rel values should be transformed correctly', () => {
+    const urlChangeSpy = jest.fn();
+    const relChangeSpy = jest.fn();
+
+    const externalLinkOverlay = mount(
+        <ExternalLinkTypeOverlay
+            href={undefined}
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            onHrefChange={urlChangeSpy}
+            onRelChange={relChangeSpy}
+            onTargetChange={jest.fn()}
+            onTitleChange={jest.fn()}
+            open={true}
+            rel="noopener noreferrer"
+            target={undefined}
+            title={undefined}
+        />
+    );
+
+    externalLinkOverlay.find('MultiSelect').prop('onChange')(['nofollow', 'noopener']);
+    externalLinkOverlay.update();
+    expect(relChangeSpy).toBeCalledWith('nofollow noopener');
 });

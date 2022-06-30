@@ -82,6 +82,10 @@ class Link extends SimpleContentType
             $result['title'] = $value['title'];
         }
 
+        if (isset($value['rel'])) {
+            $result['rel'] = $value['rel'];
+        }
+
         return $result;
     }
 

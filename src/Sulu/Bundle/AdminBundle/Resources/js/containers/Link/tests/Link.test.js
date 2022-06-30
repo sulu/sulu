@@ -6,6 +6,7 @@ import {ResourceRequester} from '../../../services';
 import Link from '../Link';
 import linkTypeRegistry from '../registries/linkTypeRegistry';
 import LinkTypeOverlay from '../overlays/LinkTypeOverlay';
+import ExternalLinkTypeOverlay from '../overlays/ExternalLinkTypeOverlay';
 import type {LinkValue} from '../types';
 
 jest.mock('sulu-admin-bundle/services/ResourceRequester', () => ({
@@ -79,11 +80,13 @@ test('Open overlay on input click', () => {
         locale: 'en',
         anchor: 'TestAnchor',
         target: 'TestTarget',
+        rel: 'TestRel',
     };
 
     const link = shallow(
         <Link
             enableAnchor={true}
+            enableRel={true}
             enableTarget={true}
             enableTitle={true}
             locale={observable.box('en')}
@@ -119,11 +122,13 @@ test('Open overlay on provider change', () => {
         locale: 'en',
         anchor: 'TestAnchor',
         target: 'TestTarget',
+        rel: 'TestRel',
     };
 
     const link = shallow(
         <Link
             enableAnchor={true}
+            enableRel={true}
             enableTarget={true}
             enableTitle={true}
             locale={observable.box('en')}
@@ -162,6 +167,7 @@ test('Update values on overlay confirm', () => {
     const link = shallow(
         <Link
             enableAnchor={true}
+            enableRel={true}
             enableTarget={true}
             enableTitle={true}
             locale={observable.box('en')}
@@ -192,6 +198,58 @@ test('Update values on overlay confirm', () => {
     );
 });
 
+test('Update values on overlay confirm with ExternalLinkTypeOverlay', () => {
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    linkTypeRegistry.getOverlay.mockReturnValue(ExternalLinkTypeOverlay);
+    linkTypeRegistry.getOptions.mockReturnValue(undefined);
+    linkTypeRegistry.getKeys.mockReturnValue(['media', 'external']);
+
+    const value: LinkValue = {
+        title: 'TestLink',
+        href: '10',
+        provider: 'media',
+        locale: 'en',
+        anchor: 'TestAnchor',
+        target: 'TestTarget',
+    };
+
+    const link = shallow(
+        <Link
+            enableAnchor={true}
+            enableRel={true}
+            enableTarget={true}
+            enableTitle={true}
+            locale={observable.box('en')}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            value={value}
+        />);
+
+    link.find('SingleSelect').props().onChange('external');
+
+    const overlayProps = link.find('ExternalLinkTypeOverlay').at(1).props();
+    overlayProps.onHrefChange('https://example.org');
+    overlayProps.onTargetChange('newTarget');
+    overlayProps.onTitleChange('newTitle');
+    overlayProps.onRelChange('newRel');
+
+    overlayProps.onConfirm();
+
+    expect(changeSpy).toBeCalledWith(
+        {
+            title: 'newTitle',
+            href: 'https://example.org',
+            provider: 'external',
+            locale: 'en',
+            anchor: 'TestAnchor',
+            target: 'newTarget',
+            rel: 'newRel',
+        }
+    );
+});
+
 test('Invalidate values on RemoveButton click', async(resolve) => {
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
@@ -215,10 +273,12 @@ test('Invalidate values on RemoveButton click', async(resolve) => {
         locale: 'en',
         anchor: 'TestAnchor',
         target: 'TestTarget',
+        rel: 'TestRel',
     };
 
     const link = shallow(<Link
         enableAnchor={true}
+        enableRel={true}
         enableTarget={true}
         enableTitle={true}
         locale={observable.box('en')}
@@ -240,6 +300,7 @@ test('Invalidate values on RemoveButton click', async(resolve) => {
                     locale: 'en',
                     anchor: undefined,
                     target: undefined,
+                    rel: undefined,
                 }
             );
 
@@ -264,6 +325,7 @@ test('Display providers with "types" property', () => {
     const link = shallow(
         <Link
             enableAnchor={true}
+            enableRel={true}
             enableTarget={true}
             enableTitle={true}
             locale={observable.box('en')}
@@ -294,6 +356,7 @@ test('Display providers with "excluded_types" property', () => {
     const link = shallow(
         <Link
             enableAnchor={true}
+            enableRel={true}
             enableTarget={true}
             enableTitle={true}
             excludedTypes={['page', 'article']}
@@ -322,6 +385,7 @@ test('Display providers with "excluded_types" and "types" property', () => {
     const link = shallow(
         <Link
             enableAnchor={true}
+            enableRel={true}
             enableTarget={true}
             enableTitle={true}
             excludedTypes={['page', 'article']}

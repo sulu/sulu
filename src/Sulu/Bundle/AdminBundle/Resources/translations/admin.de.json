@@ -165,6 +165,7 @@
     "sulu_admin.link_target": "Link Ziel",
     "sulu_admin.link_url": "Link URL",
     "sulu_admin.link_anchor": "Link Anker",
+    "sulu_admin.link_rel": "Link Rel",
     "sulu_admin.mail_subject": "E-Mail Betreff",
     "sulu_admin.mail_body": "E-Mail Text",
     "sulu_admin.show_history": "Verlauf anzeigen",

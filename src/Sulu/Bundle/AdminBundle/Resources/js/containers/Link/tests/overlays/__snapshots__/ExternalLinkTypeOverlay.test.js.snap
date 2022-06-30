@@ -150,6 +150,61 @@ exports[`Render overlay with a URL 1`] = `
       />
     </div>
   </div>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_admin.link_rel
+      </label>
+      <div
+        class="select"
+        role="none"
+      >
+        <button
+          class="displayValue default"
+          type="button"
+        >
+          <div
+            aria-label="sulu_admin.none_selected"
+            class="croppedText"
+            title="sulu_admin.none_selected"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              sulu_admin.n
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                one_selected
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              sulu_admin.none_selected
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down toggle"
+          />
+        </button>
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
 </div>
 `;
 
@@ -303,6 +358,61 @@ exports[`Render overlay with an undefined URL 1`] = `
       />
     </div>
   </div>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_admin.link_rel
+      </label>
+      <div
+        class="select"
+        role="none"
+      >
+        <button
+          class="displayValue default"
+          type="button"
+        >
+          <div
+            aria-label="sulu_admin.none_selected"
+            class="croppedText"
+            title="sulu_admin.none_selected"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              sulu_admin.n
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                one_selected
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              sulu_admin.none_selected
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down toggle"
+          />
+        </button>
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
 </div>
 `;
 
@@ -440,6 +550,61 @@ exports[`Render overlay with mailto URL 1`] = `
           type="text"
           value=""
         />
+      </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+      >
+        sulu_admin.link_rel
+      </label>
+      <div
+        class="select"
+        role="none"
+      >
+        <button
+          class="displayValue default"
+          type="button"
+        >
+          <div
+            aria-label="sulu_admin.none_selected"
+            class="croppedText"
+            title="sulu_admin.none_selected"
+          >
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              sulu_admin.n
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                one_selected
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              sulu_admin.none_selected
+            </div>
+          </div>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down toggle"
+          />
+        </button>
       </div>
       <label
         class="errorLabel"

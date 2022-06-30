@@ -65,6 +65,7 @@ class LinkTest extends TestCase
                 'target' => 'testTarget',
                 'title' => 'testTitle',
                 'anchor' => 'testAnchor',
+                'rel' => 'testRel',
             ]);
 
         $result = $this->link->getViewData($this->property->reveal());
@@ -74,10 +75,11 @@ class LinkTest extends TestCase
             'locale' => 'de',
             'target' => 'testTarget',
             'title' => 'testTitle',
+            'rel' => 'testRel',
         ], $result);
     }
 
-    public function testGetViewDataWithoutTarget(): void
+    public function testGetViewDataWithoutTargetAndRel(): void
     {
         $this->property->getValue()
             ->shouldBeCalled()

@@ -32,20 +32,25 @@ test('Pass props correctly to Link component', () => {
         locale: 'en',
         provider: 'page',
         target: '_blank',
+        rel: 'noopener noreferrer',
         title: 'Test',
     };
 
     const options = {
         enable_target: {
-            name: 'target',
+            name: 'enable_target',
             value: true,
         },
         enable_anchor: {
-            name: 'anchor',
+            name: 'enable_anchor',
             value: true,
         },
         enable_title: {
-            name: 'title',
+            name: 'enable_title',
+            value: true,
+        },
+        enable_rel: {
+            name: 'enable_rel',
             value: true,
         },
     };
@@ -67,6 +72,7 @@ test('Pass props correctly to Link component', () => {
         'enableAnchor': true,
         'enableTarget': true,
         'enableTitle': true,
+        'enableRel': true,
         'excludedTypes': [],
         locale,
         'onChange': changeSpy,
@@ -77,6 +83,7 @@ test('Pass props correctly to Link component', () => {
             'href': '123-asdf-123',
             'locale': 'en',
             'provider': 'page',
+            'rel': 'noopener noreferrer',
             'target': '_blank',
             'title': 'Test',
         },
@@ -97,21 +104,26 @@ test('Pass props correctly to Link component filtered types', () => {
         href: '123-asdf-123',
         locale: 'en',
         provider: 'page',
+        rel: 'noopener noreferrer',
         target: '_blank',
         title: 'Test',
     };
 
     const options = {
         enable_target: {
-            name: 'target',
+            name: 'enable_target',
             value: true,
         },
         enable_anchor: {
-            name: 'anchor',
+            name: 'enable_anchor',
             value: true,
         },
         enable_title: {
-            name: 'title',
+            name: 'enable_title',
+            value: true,
+        },
+        enable_rel: {
+            name: 'enable_rel',
             value: true,
         },
         types: {
@@ -140,6 +152,7 @@ test('Pass props correctly to Link component filtered types', () => {
         'enableAnchor': true,
         'enableTarget': true,
         'enableTitle': true,
+        'enableRel': true,
         'excludedTypes': [],
         locale,
         'onChange': changeSpy,
@@ -150,6 +163,7 @@ test('Pass props correctly to Link component filtered types', () => {
             'href': '123-asdf-123',
             'locale': 'en',
             'provider': 'page',
+            'rel': 'noopener noreferrer',
             'target': '_blank',
             'title': 'Test',
         },
@@ -170,21 +184,26 @@ test('Pass props correctly to Link component filtered excluded_types', () => {
         href: '123-asdf-123',
         locale: 'en',
         provider: 'page',
+        rel: 'noopener noreferrer',
         target: '_blank',
         title: 'Test',
     };
 
     const options = {
         enable_target: {
-            name: 'target',
+            name: 'enable_target',
             value: true,
         },
         enable_anchor: {
-            name: 'anchor',
+            name: 'enable_anchor',
             value: true,
         },
         enable_title: {
-            name: 'title',
+            name: 'enable_title',
+            value: true,
+        },
+        enable_rel: {
+            name: 'enable_rel',
             value: true,
         },
         excluded_types: {
@@ -213,6 +232,7 @@ test('Pass props correctly to Link component filtered excluded_types', () => {
         'enableAnchor': true,
         'enableTarget': true,
         'enableTitle': true,
+        'enableRel': true,
         'excludedTypes': ['external', 'page'],
         locale,
         'onChange': changeSpy,
@@ -223,13 +243,14 @@ test('Pass props correctly to Link component filtered excluded_types', () => {
             'href': '123-asdf-123',
             'locale': 'en',
             'provider': 'page',
+            'rel': 'noopener noreferrer',
             'target': '_blank',
             'title': 'Test',
         },
     });
 });
 
-test('Pass props correctly to Link component disabled anchor and target', () => {
+test('Pass props correctly to Link component disabled anchor, target and rel', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
@@ -243,6 +264,7 @@ test('Pass props correctly to Link component disabled anchor and target', () => 
         href: '123-asdf-123',
         locale: 'en',
         provider: 'page',
+        rel: 'noopener noreferrer',
         target: '_blank',
         title: 'Test',
     };
@@ -274,6 +296,7 @@ test('Pass props correctly to Link component disabled anchor and target', () => 
         'enableAnchor': false,
         'enableTarget': false,
         'enableTitle': false,
+        'enableRel': false,
         'excludedTypes': [],
         locale,
         'onChange': changeSpy,
@@ -284,6 +307,7 @@ test('Pass props correctly to Link component disabled anchor and target', () => 
             'href': '123-asdf-123',
             'locale': 'en',
             'provider': 'page',
+            'rel': 'noopener noreferrer',
             'target': '_blank',
             'title': 'Test',
         },
