@@ -7,6 +7,7 @@ import TabsComponent from '../../components/Tabs';
 import {translate} from '../../utils/Translator';
 import {Route} from '../../services/Router';
 import Badge, {type BadgeOptions} from '../../containers/Badge';
+import View from '../../components/View';
 import tabsStyles from './tabs.scss';
 import type {ViewProps} from '../../containers/ViewRenderer';
 import type {Element, Node} from 'react';
@@ -192,8 +193,19 @@ class Tabs<T> extends React.Component<Props<T>> {
                         </TabsComponent>
                     }
                 </div>
-                {header}
-                {childComponent}
+
+                {
+                    isRootView
+                        ? <View>
+                            {header}
+                            {childComponent}
+                        </View>
+                        : <>
+                            {header}
+                            {childComponent}
+                        </>
+                }
+
             </Fragment>
         );
     }

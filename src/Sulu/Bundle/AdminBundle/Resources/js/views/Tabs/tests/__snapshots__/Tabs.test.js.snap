@@ -83,9 +83,13 @@ Array [
       </div>
     </div>
   </div>,
-  <h1>
-    Child
-  </h1>,
+  <div
+    class="view"
+  >
+    <h1>
+      Child
+    </h1>
+  </div>,
 ]
 `;
 
@@ -117,9 +121,13 @@ Array [
       </div>
     </div>
   </div>,
-  <h2>
-    Value
-  </h2>,
+  <div
+    class="view"
+  >
+    <h2>
+      Value
+    </h2>
+  </div>,
 ]
 `;
 
@@ -151,11 +159,15 @@ Array [
       </div>
     </div>
   </div>,
-  <h1>
-    Header
-  </h1>,
-  <h2>
-    Child
-  </h2>,
+  <div
+    class="view"
+  >
+    <h1>
+      Header
+    </h1>
+    <h2>
+      Child
+    </h2>
+  </div>,
 ]
 `;

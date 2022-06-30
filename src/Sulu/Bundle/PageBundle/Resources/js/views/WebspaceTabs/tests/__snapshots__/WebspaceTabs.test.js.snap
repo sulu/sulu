@@ -18,31 +18,35 @@ Array [
     </div>
   </div>,
   <div
-    class="webspaceSelect"
+    class="view"
   >
     <div
       class="webspaceSelect"
     >
-      <button
-        class="button"
-        type="button"
+      <div
+        class="webspaceSelect"
       >
-        <span
-          aria-label="su-webspace"
-          class="su-webspace buttonIcon"
-        />
-        <span
-          class="buttonValue"
-        />
-        <span
-          aria-label="su-angle-down"
-          class="su-angle-down buttonIcon"
-        />
-      </button>
+        <button
+          class="button"
+          type="button"
+        >
+          <span
+            aria-label="su-webspace"
+            class="su-webspace buttonIcon"
+          />
+          <span
+            class="buttonValue"
+          />
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down buttonIcon"
+          />
+        </button>
+      </div>
     </div>
+    <h1>
+      sulu_blog
+    </h1>
   </div>,
-  <h1>
-    sulu_blog
-  </h1>,
 ]
 `;

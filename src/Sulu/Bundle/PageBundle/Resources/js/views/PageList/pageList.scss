@@ -7,7 +7,7 @@
     flex-grow: 1;
 
     /* +12px to aggravate the bottom space to 40px */
-    height: calc(100% - $webspaceTabsWebspaceSelectMargin - $tabMenuHeight + 12px);
+    height: calc(100% - $webspaceTabsWebspaceSelectMargin + 12px);
 
     /* +2px to center the toolbaractions with the webspace selection */
     margin-top: calc(0 - $webspaceTabsWebspaceSelectMargin - $tabMenuHeight + 2px);
