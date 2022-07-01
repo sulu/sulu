@@ -410,7 +410,12 @@ exports[`Should render the list with a title 1`] = `
                   <div
                     class="cellContent"
                   >
-                    Description 1
+                    <span
+                      class="textBox"
+                      title="Description 1"
+                    >
+                      Description 1
+                    </span>
                   </div>
                 </td>
               </tr>
@@ -445,7 +450,12 @@ exports[`Should render the list with a title 1`] = `
                   <div
                     class="cellContent"
                   >
-                    Description 2
+                    <span
+                      class="textBox"
+                      title="Description 2"
+                    >
+                      Description 2
+                    </span>
                   </div>
                 </td>
               </tr>
@@ -712,7 +722,12 @@ exports[`Should render the list with nodes of given ListItemActions 1`] = `
                   <div
                     class="cellContent"
                   >
-                    Description 1
+                    <span
+                      class="textBox"
+                      title="Description 1"
+                    >
+                      Description 1
+                    </span>
                   </div>
                 </td>
               </tr>
@@ -763,7 +778,12 @@ exports[`Should render the list with nodes of given ListItemActions 1`] = `
                   <div
                     class="cellContent"
                   >
-                    Description 2
+                    <span
+                      class="textBox"
+                      title="Description 2"
+                    >
+                      Description 2
+                    </span>
                   </div>
                 </td>
               </tr>
@@ -1007,7 +1027,12 @@ exports[`Should render the list with nodes of given ToolbarActions 1`] = `
                   <div
                     class="cellContent"
                   >
-                    Description 1
+                    <span
+                      class="textBox"
+                      title="Description 1"
+                    >
+                      Description 1
+                    </span>
                   </div>
                 </td>
               </tr>
@@ -1042,7 +1067,12 @@ exports[`Should render the list with nodes of given ToolbarActions 1`] = `
                   <div
                     class="cellContent"
                   >
-                    Description 2
+                    <span
+                      class="textBox"
+                      title="Description 2"
+                    >
+                      Description 2
+                    </span>
                   </div>
                 </td>
               </tr>
@@ -1285,7 +1315,12 @@ exports[`Should render the list with the correct resourceKey 1`] = `
                   <div
                     class="cellContent"
                   >
-                    Description 1
+                    <span
+                      class="textBox"
+                      title="Description 1"
+                    >
+                      Description 1
+                    </span>
                   </div>
                 </td>
               </tr>
@@ -1320,7 +1355,12 @@ exports[`Should render the list with the correct resourceKey 1`] = `
                   <div
                     class="cellContent"
                   >
-                    Description 2
+                    <span
+                      class="textBox"
+                      title="Description 2"
+                    >
+                      Description 2
+                    </span>
                   </div>
                 </td>
               </tr>
