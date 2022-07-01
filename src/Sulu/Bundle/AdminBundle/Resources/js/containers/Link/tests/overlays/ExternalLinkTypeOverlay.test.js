@@ -240,7 +240,7 @@ test('Should not reset target to self when a non-mail URL is entered', () => {
     expect(targetChangeSpy).not.toBeCalled();
 });
 
-test('Rel values should be transformed correctly', () => {
+test('Rel value should be transformed correctly', () => {
     const urlChangeSpy = jest.fn();
     const relChangeSpy = jest.fn();
 
@@ -254,13 +254,17 @@ test('Rel values should be transformed correctly', () => {
             onTargetChange={jest.fn()}
             onTitleChange={jest.fn()}
             open={true}
-            rel="noopener noreferrer"
+            rel="noopener  noreferrer "
             target={undefined}
             title={undefined}
         />
     );
 
-    externalLinkOverlay.find('MultiSelect').prop('onChange')(['nofollow', 'noopener']);
+    externalLinkOverlay.find('Toggler').prop('onChange')(true);
     externalLinkOverlay.update();
-    expect(relChangeSpy).toBeCalledWith('nofollow noopener');
+    expect(relChangeSpy).toBeCalledWith('noopener noreferrer nofollow');
+
+    externalLinkOverlay.find('Toggler').prop('onChange')(false);
+    externalLinkOverlay.update();
+    expect(relChangeSpy).toBeCalledWith('noopener noreferrer');
 });

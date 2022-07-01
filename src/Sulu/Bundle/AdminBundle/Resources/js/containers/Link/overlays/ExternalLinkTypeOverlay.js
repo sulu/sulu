@@ -6,7 +6,7 @@ import Dialog from '../../../components/Dialog';
 import Form from '../../../components/Form';
 import Input from '../../../components/Input';
 import SingleSelect from '../../../components/SingleSelect';
-import MultiSelect from '../../../components/MultiSelect';
+import Toggler from '../../../components/Toggler';
 import TextArea from '../../../components/TextArea';
 import Url from '../../../components/Url';
 import {translate} from '../../../utils';
@@ -114,28 +114,41 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
         this.mailBody = mailBody;
     };
 
-    handleRelChange = (rels: string[]) => {
+    handleRelNoFollowChange = (noFollow: boolean) => {
         const {
             onRelChange,
+            rel,
         } = this.props;
 
         if (!onRelChange) {
             return;
         }
 
-        onRelChange(rels.join(' '));
+        let rels = (rel || '').toLowerCase().trim().split(' ').map((v) => v.trim()).filter((v) => !!v);
+
+        if (noFollow && !rels.includes('nofollow')) {
+            rels = [...rels, 'nofollow'];
+        } else if (!noFollow && rels.includes('nofollow')) {
+            rels = rels.filter((v) => v !== 'nofollow');
+        }
+
+        const newRel = rels.join(' ') || undefined;
+
+        if (rel !== newRel) {
+            onRelChange(newRel);
+        }
     };
 
-    @computed get relValue(): string[] {
+    @computed get isRelNoFollow(): boolean {
         const {
             rel,
         } = this.props;
 
         if (!rel) {
-            return [];
+            return false;
         }
 
-        return rel.split(' ');
+        return rel.toLowerCase().includes('nofollow');
     }
 
     render() {
@@ -210,12 +223,10 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
                     }
 
                     {onRelChange
-                        && <Form.Field label={translate('sulu_admin.link_rel')}>
-                            <MultiSelect onChange={this.handleRelChange} values={this.relValue}>
-                                <MultiSelect.Option value="nofollow">nofollow</MultiSelect.Option>
-                                <MultiSelect.Option value="noreferrer">noreferrer</MultiSelect.Option>
-                                <MultiSelect.Option value="noopener">noopener</MultiSelect.Option>
-                            </MultiSelect>
+                        && <Form.Field>
+                            <Toggler checked={this.isRelNoFollow} onChange={this.handleRelNoFollowChange}>
+                                {translate('sulu_admin.no_follow')}
+                            </Toggler>
                         </Form.Field>
                     }
                 </Form>
