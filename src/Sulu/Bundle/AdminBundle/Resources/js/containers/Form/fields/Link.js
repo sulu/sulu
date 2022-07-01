@@ -1,9 +1,10 @@
 // @flow
 import React from 'react';
 import {isArrayLike, observable} from 'mobx';
+import log from 'loglevel';
 import userStore from '../../../stores/userStore';
 import LinkContainer from '../../Link/Link';
-import type {FieldTypeProps} from '../types';
+import type {FieldTypeProps, SchemaOption} from '../types';
 import type {LinkValue} from '../../Link/types';
 import type {IObservableArray} from 'mobx/lib/mobx';
 
@@ -17,16 +18,16 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
             value,
             schemaOptions: {
                 enable_anchor: {
-                    value: enableAnchor,
+                    value: deprecatedEnableAnchor,
                 } = {},
                 enable_target: {
-                    value: enableTarget,
+                    value: deprecatedEnableTarget,
                 } = {},
                 enable_title: {
-                    value: enableTitle,
+                    value: deprecatedEnableTitle,
                 } = {},
-                enable_rel: {
-                    value: enableRel,
+                enable_attributes: {
+                    value: enableAttributes,
                 } = {},
                 types: {
                     value: unvalidatedTypes,
@@ -36,6 +37,49 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
                 } = {},
             },
         } = this.props;
+
+        const enabledAttributes = [];
+
+        if (enableAttributes !== undefined) {
+            if (!isArrayLike(enableAttributes)) {
+                throw new Error('The "enable_attributes" schema option must be an array!');
+            }
+
+            for (const attr of ((enableAttributes: any): Iterable<SchemaOption>)) {
+                if (attr.value !== undefined && attr.value !== null) {
+                    throw new Error(`The "enable_attributes.${attr.name}" schema option must not have a value!`);
+                }
+
+                enabledAttributes.push(attr.name);
+            }
+        } else {
+            if (deprecatedEnableAnchor !== undefined) {
+                log.warn(
+                    'The "enable_anchor" schema option is deprecated since version 2.5 and will be removed. ' +
+                    'Use the "enable_attributes" option instead.'
+                );
+
+                enabledAttributes.push('anchor');
+            }
+
+            if (deprecatedEnableTarget !== undefined) {
+                log.warn(
+                    'The "enable_target" schema option is deprecated since version 2.5 and will be removed. ' +
+                    'Use the "enable_attributes" option instead.'
+                );
+
+                enabledAttributes.push('target');
+            }
+
+            if (deprecatedEnableTitle !== undefined) {
+                log.warn(
+                    'The "enable_title" schema option is deprecated since version 2.5 and will be removed. ' +
+                    'Use the "enable_attributes" option instead.'
+                );
+
+                enabledAttributes.push('title');
+            }
+        }
 
         const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
 
@@ -86,29 +130,13 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
             });
         }
 
-        if (enableAnchor !== undefined && enableAnchor !== null && typeof enableAnchor !== 'boolean') {
-            throw new Error('The "enable_anchor" schema option must be a boolean if given!');
-        }
-
-        if (enableTarget !== undefined && enableTarget !== null && typeof enableTarget !== 'boolean') {
-            throw new Error('The "enable_target" schema option must be a boolean if given!');
-        }
-
-        if (enableTitle !== undefined && enableTitle !== null && typeof enableTitle !== 'boolean') {
-            throw new Error('The "enable_title" schema option must be a boolean if given!');
-        }
-
-        if (enableRel !== undefined && enableRel !== null && typeof enableRel !== 'boolean') {
-            throw new Error('The "enable_rel" schema option must be a boolean if given!');
-        }
-
         return (
             <LinkContainer
                 disabled={!!disabled}
-                enableAnchor={enableAnchor}
-                enableRel={enableRel}
-                enableTarget={enableTarget}
-                enableTitle={enableTitle}
+                enableAnchor={enabledAttributes.includes('anchor')}
+                enableRel={enabledAttributes.includes('rel')}
+                enableTarget={enabledAttributes.includes('target')}
+                enableTitle={enabledAttributes.includes('title')}
                 excludedTypes={excludedProviderTypes}
                 locale={locale}
                 onChange={onChange}

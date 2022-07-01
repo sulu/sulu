@@ -2,6 +2,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import {observable} from 'mobx';
+import log from 'loglevel';
 import fieldTypeDefaultProps from '../../../../utils/TestHelper/fieldTypeDefaultProps';
 import ResourceStore from '../../../../stores/ResourceStore';
 import FormInspector from '../../FormInspector';
@@ -37,21 +38,14 @@ test('Pass props correctly to Link component', () => {
     };
 
     const options = {
-        enable_target: {
-            name: 'enable_target',
-            value: true,
-        },
-        enable_anchor: {
-            name: 'enable_anchor',
-            value: true,
-        },
-        enable_title: {
-            name: 'enable_title',
-            value: true,
-        },
-        enable_rel: {
-            name: 'enable_rel',
-            value: true,
+        enable_attributes: {
+            name: 'enable_attributes',
+            value: [
+                {name: 'target'},
+                {name: 'anchor'},
+                {name: 'title'},
+                {name: 'rel'},
+            ],
         },
     };
 
@@ -90,6 +84,79 @@ test('Pass props correctly to Link component', () => {
     });
 });
 
+test('Pass props correctly to Link component with deprecated options', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    const changeSpy = jest.fn();
+    const finishSpy = jest.fn();
+
+    const locale = observable.box('en');
+    // $FlowFixMe
+    formInspector.locale = locale;
+
+    const value = {
+        anchor: 'anchorTest',
+        href: '123-asdf-123',
+        locale: 'en',
+        provider: 'page',
+        target: '_blank',
+        rel: 'noopener noreferrer',
+        title: 'Test',
+    };
+
+    const options = {
+        enable_target: {
+            name: 'enable_target',
+            value: true,
+        },
+        enable_anchor: {
+            name: 'enable_anchor',
+            value: true,
+        },
+        enable_title: {
+            name: 'enable_title',
+            value: true,
+        },
+    };
+
+    const link = shallow(
+        <Link
+            {...fieldTypeDefaultProps}
+            disabled={true}
+            formInspector={formInspector}
+            onChange={changeSpy}
+            onFinish={finishSpy}
+            schemaOptions={options}
+            value={value}
+        />
+    );
+
+    expect(log.warn).toBeCalledWith(expect.stringContaining('The "enable_target" schema option is deprecated'));
+    expect(log.warn).toBeCalledWith(expect.stringContaining('The "enable_anchor" schema option is deprecated'));
+    expect(log.warn).toBeCalledWith(expect.stringContaining('The "enable_title" schema option is deprecated'));
+
+    expect(link.find('Link').props()).toEqual({
+        'disabled': true,
+        'enableAnchor': true,
+        'enableTarget': true,
+        'enableTitle': true,
+        'enableRel': false,
+        'excludedTypes': [],
+        locale,
+        'onChange': changeSpy,
+        'onFinish': finishSpy,
+        'types': [],
+        'value': {
+            'anchor': 'anchorTest',
+            'href': '123-asdf-123',
+            'locale': 'en',
+            'provider': 'page',
+            'rel': 'noopener noreferrer',
+            'target': '_blank',
+            'title': 'Test',
+        },
+    });
+});
+
 test('Pass props correctly to Link component filtered types', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
@@ -110,21 +177,14 @@ test('Pass props correctly to Link component filtered types', () => {
     };
 
     const options = {
-        enable_target: {
-            name: 'enable_target',
-            value: true,
-        },
-        enable_anchor: {
-            name: 'enable_anchor',
-            value: true,
-        },
-        enable_title: {
-            name: 'enable_title',
-            value: true,
-        },
-        enable_rel: {
-            name: 'enable_rel',
-            value: true,
+        enable_attributes: {
+            name: 'enable_attributes',
+            value: [
+                {name: 'target'},
+                {name: 'anchor'},
+                {name: 'title'},
+                {name: 'rel'},
+            ],
         },
         types: {
             name: 'types',
@@ -190,21 +250,14 @@ test('Pass props correctly to Link component filtered excluded_types', () => {
     };
 
     const options = {
-        enable_target: {
-            name: 'enable_target',
-            value: true,
-        },
-        enable_anchor: {
-            name: 'enable_anchor',
-            value: true,
-        },
-        enable_title: {
-            name: 'enable_title',
-            value: true,
-        },
-        enable_rel: {
-            name: 'enable_rel',
-            value: true,
+        enable_attributes: {
+            name: 'enable_attributes',
+            value: [
+                {name: 'target'},
+                {name: 'anchor'},
+                {name: 'title'},
+                {name: 'rel'},
+            ],
         },
         excluded_types: {
             name: 'types',
