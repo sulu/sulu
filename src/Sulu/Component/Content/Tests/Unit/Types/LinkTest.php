@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Types;
 
+use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -216,5 +217,33 @@ class LinkTest extends TestCase
         $result = $this->link->getContentData($this->property->reveal());
 
         $this->assertNull($result);
+    }
+
+    public function testImportData(): void
+    {
+        $value = [
+            'href' => '123456',
+            'provider' => 'pages',
+            'locale' => 'de',
+            'target' => 'testTarget',
+            'anchor' => 'testAnchor',
+        ];
+
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->setValue($value)->shouldBeCalled();
+        $property->getValue()->willReturn($value);
+        $property->getName()->willReturn('test-link');
+
+        $node = $this->prophesize(NodeInterface::class);
+        $node->setProperty('test-link', \json_encode($value))->shouldBeCalled();
+
+        $this->link->importData(
+            $node->reveal(),
+            $property->reveal(),
+            \json_encode($value),
+            1,
+            'sulu_io',
+            'en'
+        );
     }
 }

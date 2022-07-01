@@ -113,7 +113,7 @@ class Link extends SimpleContentType
 
         return $url;
     }
-    
+
     public function importData(
         NodeInterface $node,
         PropertyInterface $property,
@@ -122,9 +122,8 @@ class Link extends SimpleContentType
         $webspaceKey,
         $languageCode,
         $segmentKey = null
-    ) {
+    ): void {
         $property->setValue(\json_decode($value, true));
         $this->write($node, $property, $userId, $webspaceKey, $languageCode, $segmentKey);
     }
-    
 }
