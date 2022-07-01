@@ -1,0 +1,14 @@
+.sticky {
+    position: sticky;
+    top: 0;
+    z-index: 1; /* push element in front of position: relative elements */
+}
+
+.stickySentinel {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    visibility: hidden;
+    pointer-events: none;
+}

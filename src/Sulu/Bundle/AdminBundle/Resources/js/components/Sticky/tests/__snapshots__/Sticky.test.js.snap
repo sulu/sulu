@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render 1`] = `
+Array [
+  <div
+    class="stickySentinel"
+    style="top:-1px"
+  />,
+  <div
+    class="sticky"
+    style="top:0"
+  >
+    <span>
+      Unsticky
+    </span>
+  </div>,
+]
+`;
