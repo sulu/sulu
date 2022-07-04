@@ -1,0 +1,117 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a Breadcrumb 1`] = `
+<section
+  class="container static"
+>
+  <div
+    class="divide"
+  >
+    <div
+      class="selected"
+    >
+      2 selected
+    </div>
+    <div>
+      <label
+        class="label small"
+        tabindex="-1"
+      >
+        <span
+          class="switch checkbox dark"
+        >
+          <input
+            checked=""
+            type="checkbox"
+          />
+          <span>
+            <span
+              aria-label="su-check"
+              class="su-check"
+            />
+          </span>
+        </span>
+        <div>
+          Select all
+        </div>
+      </label>
+    </div>
+  </div>
+  <div
+    class="divide"
+  >
+    <div
+      class="actionList"
+    >
+      <span
+        class="tooltipContainer"
+      >
+        <button
+          aria-label="Copy"
+          class="actionButton"
+          type="button"
+        >
+          <span
+            aria-label="su-copy"
+            class="su-copy actionButtonIcon"
+          />
+        </button>
+      </span>
+      <span
+        class="tooltipContainer"
+      >
+        <button
+          aria-label="Duplicate"
+          class="actionButton"
+          type="button"
+        >
+          <span
+            aria-label="su-duplicate"
+            class="su-duplicate actionButtonIcon"
+          />
+        </button>
+      </span>
+      <span
+        class="tooltipContainer"
+      >
+        <button
+          aria-label="Cut"
+          class="actionButton"
+          type="button"
+        >
+          <span
+            aria-label="su-cut"
+            class="su-cut actionButtonIcon"
+          />
+        </button>
+      </span>
+      <span
+        class="tooltipContainer"
+      >
+        <button
+          aria-label="Delete"
+          class="actionButton"
+          type="button"
+        >
+          <span
+            aria-label="su-trash-alt"
+            class="su-trash-alt actionButtonIcon"
+          />
+        </button>
+      </span>
+    </div>
+    <div>
+      <button
+        class="cancelButton"
+        type="button"
+      >
+        <span
+          aria-label="su-cancel"
+          class="su-cancel cancelButtonIcon"
+        />
+        Cancel
+      </button>
+    </div>
+  </div>
+</section>
+`;

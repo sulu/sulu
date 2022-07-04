@@ -1,0 +1,80 @@
+@import '../../containers/Application/colors.scss';
+
+.container {
+    align-items: center;
+    background: $white;
+    border-radius: 3px;
+    display: flex;
+    padding: 10px 20px;
+    justify-content: space-between;
+}
+
+.sticky {
+    border: 1px solid $silver;
+    margin-left: -20px;
+    margin-right: -20px;
+    box-shadow: 2px 6px 12px 0 rgba($silver, .5);
+}
+
+.divide {
+    align-items: center;
+    display: flex;
+}
+
+.divide > * {
+    align-self: stretch;
+    border-right: 1px solid $silver;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+
+    &:first-child {
+        padding-left: 0;
+    }
+
+    &:last-child {
+        border-right: none;
+        padding-right: 0;
+    }
+}
+
+.selected {
+    color: $doveGray;
+    font-size: 12px;
+}
+
+.cancelButton {
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+}
+
+.cancelButtonIcon {
+    display: inline-block;
+    font-size: 18px;
+    margin-right: 7px;
+}
+
+.actionList {
+    display: flex;
+    gap: 15px;
+}
+
+.actionButton {
+    border: none;
+    cursor: pointer;
+    background: none;
+    padding: 0;
+
+    &:hover,
+    &:focus {
+        color: $shakespeare;
+        outline: none;
+    }
+}
+
+.actionButtonIcon {
+    font-size: 16px;
+}

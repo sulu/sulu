@@ -217,5 +217,10 @@
     "sulu_admin.two_factor_authentication": "Zwei-Faktor Authentifizierung",
     "sulu_admin.two_factor_auth_code": "Authentifizierungscode",
     "sulu_admin.two_factor_trust_device": "Diesem Gerät vertrauen",
-    "sulu_admin.verify": "Verifizieren"
+    "sulu_admin.verify": "Verifizieren",
+    "sulu_admin.%count%_selected": "{count} ausgewählt",
+    "sulu_admin.select_all": "Alle auswählen",
+    "sulu_admin.deselect_all": "Alle abwählen",
+    "sulu_admin.cancel": "Abbrechen",
+    "sulu_admin.select_multiple_blocks": "Mehrere blöcke auswählen"
 }
