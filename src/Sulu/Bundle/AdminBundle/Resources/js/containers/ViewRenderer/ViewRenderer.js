@@ -4,9 +4,9 @@ import {observer} from 'mobx-react';
 import {observable, reaction} from 'mobx';
 import Router, {getViewKeyFromRoute, Route} from '../../services/Router';
 import userStore from '../../stores/userStore';
+import View from '../../components/View';
 import viewRegistry from './registries/viewRegistry';
 import type {Element} from 'react';
-import type {View} from './types';
 
 type Props = {
     router: Router,
@@ -48,37 +48,36 @@ class ViewRenderer extends React.Component<Props> {
         }
     }
 
-    getView = (route: Route): View => {
-        const View = viewRegistry.get(route.type);
-
-        if (!View) {
-            throw new Error('View "' + route.type + '" has not been found');
-        }
-
-        return View;
-    };
-
     renderView(route: Route, child: Element<*> | null = null) {
         const {router} = this.props;
-        const View = this.getView(route);
+        const CurrentView = viewRegistry.get(route.type);
+        const viewConfig = viewRegistry.getConfig(route.type);
 
         let viewKey = getViewKeyFromRoute(route, router.attributes) || '';
-        if (View.remountViewOnLogin) {
+        if (CurrentView.remountViewOnLogin) {
             viewKey = viewKey + '__' + this.loginCount;
         }
 
         const element = (
-            <View
+            <CurrentView
                 isRootView={!route.parent}
                 key={viewKey}
                 route={route}
                 router={router}
             >
                 {(props) => child ? React.cloneElement(child, props) : null}
-            </View>
+            </CurrentView>
         );
 
         if (!route.parent) {
+            if (!viewConfig.disableDefaultSpacing) {
+                return (
+                    <View>
+                        {element}
+                    </View>
+                );
+            }
+
             return element;
         }
 

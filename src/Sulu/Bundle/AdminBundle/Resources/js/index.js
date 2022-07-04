@@ -187,8 +187,8 @@ function registerViews() {
     viewRegistry.add('sulu_admin.preview_form', PreviewForm);
     viewRegistry.add('sulu_admin.list', List);
     viewRegistry.add('sulu_admin.form_overlay_list', FormOverlayList);
-    viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs);
-    viewRegistry.add('sulu_admin.tabs', Tabs);
+    viewRegistry.add('sulu_admin.resource_tabs', ResourceTabs, {disableDefaultSpacing: true});
+    viewRegistry.add('sulu_admin.tabs', Tabs, {disableDefaultSpacing: true});
 }
 
 function registerListAdapters() {

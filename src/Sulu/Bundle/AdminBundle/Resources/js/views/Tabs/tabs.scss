@@ -1,7 +1,7 @@
 @import '../../containers/Application/variables.scss';
 
 .tabs-container {
-    margin: -$viewPaddingVertical -$viewPaddingHorizontal $viewPaddingVertical;
+    margin: 0;
 
     &.nested {
         margin: 0 0 $viewPaddingVertical;

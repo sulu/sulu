@@ -19,3 +19,7 @@ interface RemountViewOnLoginInterface {
 }
 
 export type View = Class<Component<ViewProps & *>> & GetDerivedRouteAttributesInterface & RemountViewOnLoginInterface;
+
+export type ViewConfig = {
+    disableDefaultSpacing?: boolean,
+};
