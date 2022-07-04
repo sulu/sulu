@@ -55,7 +55,7 @@ class Tooltip extends React.Component<Props> {
                         && <Popover
                             anchorElement={this.tooltipRef}
                             backdrop={false}
-                            horizontalCenter={true}
+                            horizontalAnchorMode="center"
                             open={this.tooltipOpen}
                             verticalOffset={10}
                         >

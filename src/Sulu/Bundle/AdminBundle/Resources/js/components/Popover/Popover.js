@@ -8,7 +8,7 @@ import {afterElementsRendered} from '../../utils/DOM';
 import Backdrop from '../Backdrop';
 import PopoverPositioner from './PopoverPositioner';
 import popoverStyles from './popover.scss';
-import type {PopoverDimensions} from './types';
+import type {HorizontalAnchorMode, PopoverDimensions} from './types';
 import type {ElementRef, Node} from 'react';
 
 type Props = {
@@ -22,7 +22,7 @@ type Props = {
         verticalPosition: string,
         horizontalPosition: string,
     ) => Node,
-    horizontalCenter?: boolean,
+    horizontalAnchorMode?: HorizontalAnchorMode,
     horizontalOffset: number,
     onClose?: () => void,
     open: boolean,
@@ -36,7 +36,7 @@ const CLOSE_KEY = 'esc';
 class Popover extends React.Component<Props> {
     static defaultProps = {
         backdrop: true,
-        horizontalCenter: false,
+        horizontalAnchorMode: 'left',
         horizontalOffset: 0,
         open: false,
         verticalOffset: 0,
@@ -105,7 +105,7 @@ class Popover extends React.Component<Props> {
         const {
             anchorElement,
             verticalOffset,
-            horizontalCenter,
+            horizontalAnchorMode,
             horizontalOffset,
             centerChildElement,
         } = this.props;
@@ -118,7 +118,7 @@ class Popover extends React.Component<Props> {
         const centerChildOffsetTop = (centerChildElement) ? centerChildElement.offsetTop : 0;
         const alignOnVerticalAnchorEdges = !centerChildElement;
 
-        const horizontalCenterValue = horizontalCenter ? (width - this.popoverWidth) / 2 : 0;
+        const horizontalOffsetValue = horizontalAnchorMode === 'center' ? (width - this.popoverWidth) / 2 : 0;
 
         return PopoverPositioner.getCroppedDimensions(
             this.popoverWidth,
@@ -127,7 +127,7 @@ class Popover extends React.Component<Props> {
             left,
             width,
             height,
-            horizontalCenterValue + horizontalOffset,
+            horizontalOffsetValue + horizontalOffset,
             verticalOffset,
             centerChildOffsetTop,
             alignOnVerticalAnchorEdges

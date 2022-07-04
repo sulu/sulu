@@ -18,3 +18,5 @@ export type VerticalCrop = {
     touchesBottomBorder: boolean,
     touchesTopBorder: boolean,
 };
+
+export type HorizontalAnchorMode = 'left' | 'center';
