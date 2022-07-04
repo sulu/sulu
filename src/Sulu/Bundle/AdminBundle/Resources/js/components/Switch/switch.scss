@@ -21,6 +21,13 @@ $marginBottom: 10px;
     }
 }
 
+.label.small {
+    & > div {
+        font-size: 12px;
+        margin-left: 8px;
+    }
+}
+
 .switch {
     display: inline-block;
     position: relative;

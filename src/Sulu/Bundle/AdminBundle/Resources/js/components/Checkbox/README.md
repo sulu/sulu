@@ -18,7 +18,7 @@ const [checked, setChecked] = React.useState(false);
 
 const onChange = (checked) => setChecked(checked);
 <div style={{background: 'black', padding: '10px'}}>
-    <Checkbox skin="light" checked={checked} onChange={onChange} />
+    <Checkbox skin="light" checked={checked} onChange={onChange}>Save the world</Checkbox>
 </div>
 ```
 
@@ -27,7 +27,20 @@ const [checked, setChecked] = React.useState(false);
 
 const onChange = (checked) => setChecked(checked);
 <div style={{background: 'black', padding: '10px'}}>
-    <Checkbox active={false} checked={checked} onChange={onChange} />
+    <Checkbox active={false} checked={checked} onChange={onChange}>Buy groceries</Checkbox>
+</div>
+```
+
+There is also a size option to render a smaller variant, effecting the label font size.
+Used when the Checkbox is part of another fields. Example in the TwoFactorForm or BlockToolbar.
+
+```javascript
+const [checked1, setChecked1] = React.useState(false);
+const [checked2, setChecked2] = React.useState(true);
+
+<div>
+    <Checkbox value="1" checked={checked1} onChange={setChecked1} size="small">Save the world</Checkbox>
+    <Checkbox value="2" checked={checked2} onChange={setChecked2} size="small">Buy groceries</Checkbox>
 </div>
 ```
 

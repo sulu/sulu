@@ -10,6 +10,7 @@ type Props<T> = {|
     className?: string,
     icon?: string,
     onChange?: (checked: boolean, value?: T) => void,
+    size: 'small' | 'default',
     tabIndex?: ?number,
     type: string,
 |};
@@ -18,6 +19,7 @@ export default class Switch<T: string | number> extends React.PureComponent<Prop
     static defaultProps = {
         checked: false,
         disabled: false,
+        size: 'default',
         type: 'checkbox',
     };
 
@@ -42,14 +44,17 @@ export default class Switch<T: string | number> extends React.PureComponent<Prop
             children,
             className,
             disabled,
+            size,
             tabIndex,
         } = this.props;
         const labelClass = classNames(
             switchStyles.label,
             {
                 [switchStyles.disabled]: disabled,
-            }
+            },
+            switchStyles[size]
         );
+
         const switchClass = classNames(
             switchStyles.switch,
             {
