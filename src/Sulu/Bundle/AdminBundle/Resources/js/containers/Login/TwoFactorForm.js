@@ -112,10 +112,9 @@ class TwoFactorForm extends React.Component<Props> {
                             <Checkbox
                                 checked={this.trustedDevice}
                                 onChange={this.handleTrustedDeviceChange}
+                                size="small"
                             >
-                                <span className={formStyles.labelSmallText}>
-                                    {translate('sulu_admin.two_factor_trust_device')}
-                                </span>
+                                {translate('sulu_admin.two_factor_trust_device')}
                             </Checkbox>
                         }
                         <div className={formStyles.buttons}>
