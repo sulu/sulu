@@ -30,9 +30,9 @@ initializer.addUpdateConfigHook('sulu_page', (config: Object, initialized: boole
         return;
     }
 
-    viewRegistry.add('sulu_page.page_tabs', PageTabs, {rootSpaceless: true});
+    viewRegistry.add('sulu_page.page_tabs', PageTabs, {disableDefaultSpacing: true});
     viewRegistry.add('sulu_page.page_list', PageList);
-    viewRegistry.add('sulu_page.webspace_tabs', WebspaceTabs, {rootSpaceless: true});
+    viewRegistry.add('sulu_page.webspace_tabs', WebspaceTabs, {disableDefaultSpacing: true});
 
     fieldRegistry.add('page_settings_navigation_select', PageSettingsNavigationSelect);
     fieldRegistry.add('page_settings_shadow_locale_select', PageSettingsShadowLocaleSelect);

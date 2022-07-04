@@ -70,7 +70,7 @@ class ViewRenderer extends React.Component<Props> {
         );
 
         if (!route.parent) {
-            if (!viewConfig.rootSpaceless) {
+            if (!viewConfig.disableDefaultSpacing) {
                 return (
                     <View>
                         {element}

@@ -21,13 +21,13 @@ test('Render view returned from ViewRegistry', () => {
     expect(viewRegistry.get).toBeCalledWith('test');
 });
 
-test('Render view returned from ViewRegistry with rootSpaceless true', () => {
+test('Render view returned from ViewRegistry with disableDefaultSpacing true', () => {
     const router = {
         addUpdateRouteHook: jest.fn(),
         route: {type: 'test'},
     };
     viewRegistry.get.mockReturnValue(() => (<h1>Test</h1>));
-    viewRegistry.getConfig.mockReturnValue({rootSpaceless: true});
+    viewRegistry.getConfig.mockReturnValue({disableDefaultSpacing: true});
     const view = mount(<ViewRenderer router={router} />);
     expect(render(view)).toMatchSnapshot();
     expect(viewRegistry.get).toBeCalledWith('test');
@@ -155,7 +155,7 @@ test('Render view with parents should nest rendered views and correctly pass chi
                 };
         }
     });
-    viewRegistry.getConfig.mockReturnValue({rootSpaceless: true});
+    viewRegistry.getConfig.mockReturnValue({disableDefaultSpacing: true});
 
     expect(render(<ViewRenderer router={router} />)).toMatchSnapshot();
 });
@@ -184,7 +184,7 @@ test('Render view with route that has no rerenderAttributes', () => {
                 };
         }
     });
-    viewRegistry.getConfig.mockReturnValue({rootSpaceless: true});
+    viewRegistry.getConfig.mockReturnValue({disableDefaultSpacing: true});
 
     const viewRenderer = shallow(<ViewRenderer router={router} />);
     expect(viewRenderer.key()).toBe('route');
@@ -217,7 +217,7 @@ test('Render view with route that has rerenderAttributes', () => {
                 };
         }
     });
-    viewRegistry.getConfig.mockReturnValue({rootSpaceless: true});
+    viewRegistry.getConfig.mockReturnValue({disableDefaultSpacing: true});
 
     const viewRenderer = shallow(<ViewRenderer router={router} />);
     expect(viewRenderer.key()).toBe('route-test');
@@ -252,7 +252,7 @@ test('Render view with route that has more than one rerenderAttributes', () => {
                 };
         }
     });
-    viewRegistry.getConfig.mockReturnValue({rootSpaceless: true});
+    viewRegistry.getConfig.mockReturnValue({disableDefaultSpacing: true});
 
     const viewRenderer = shallow(<ViewRenderer router={router} />);
     expect(viewRenderer.key()).toBe('route-test__de');

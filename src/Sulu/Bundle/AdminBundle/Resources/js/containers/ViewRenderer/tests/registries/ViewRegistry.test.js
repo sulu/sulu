@@ -36,9 +36,9 @@ test('Add view with existing key should throw', () => {
 });
 
 test('Add view to ViewRegistry with Config', () => {
-    viewRegistry.add('test1', <h1>Test1</h1>, {rootSpaceless: false});
-    viewRegistry.add('test2', <h1>Test2</h1>, {rootSpaceless: true});
+    viewRegistry.add('test1', <h1>Test1</h1>, {disableDefaultSpacing: false});
+    viewRegistry.add('test2', <h1>Test2</h1>, {disableDefaultSpacing: true});
 
-    expect(viewRegistry.getConfig('test1')?.rootSpaceless).toBe(false);
-    expect(viewRegistry.getConfig('test2')?.rootSpaceless).toBe(true);
+    expect(viewRegistry.getConfig('test1')?.disableDefaultSpacing).toBe(false);
+    expect(viewRegistry.getConfig('test2')?.disableDefaultSpacing).toBe(true);
 });
