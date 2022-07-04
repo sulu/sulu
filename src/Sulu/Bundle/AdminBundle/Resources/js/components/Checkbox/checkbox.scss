@@ -29,6 +29,10 @@ $disabledColor: $silver;
     }
 }
 
+.checkbox.small {
+    font-size: 12px;
+}
+
 .checkbox {
     width: $length;
     height: $length;

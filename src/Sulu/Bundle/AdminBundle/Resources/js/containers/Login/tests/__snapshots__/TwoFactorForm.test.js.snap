@@ -38,7 +38,7 @@ Array [
         </div>
       </label>
       <label
-        class="label"
+        class="label small"
         tabindex="-1"
       >
         <span
@@ -50,11 +50,7 @@ Array [
           <span />
         </span>
         <div>
-          <span
-            class="labelSmallText"
-          >
-            sulu_admin.two_factor_trust_device
-          </span>
+          sulu_admin.two_factor_trust_device
         </div>
       </label>
       <div
@@ -125,7 +121,7 @@ Array [
         </div>
       </label>
       <label
-        class="label"
+        class="label small"
         tabindex="-1"
       >
         <span
@@ -137,11 +133,7 @@ Array [
           <span />
         </span>
         <div>
-          <span
-            class="labelSmallText"
-          >
-            sulu_admin.two_factor_trust_device
-          </span>
+          sulu_admin.two_factor_trust_device
         </div>
       </label>
       <div

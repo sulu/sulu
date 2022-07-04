@@ -18,6 +18,11 @@ test('The component should render in disabled state', () => {
     expect(checkbox).toMatchSnapshot();
 });
 
+test('The component should render in size small', () => {
+    const checkbox = render(<Checkbox size="small" />);
+    expect(checkbox).toMatchSnapshot();
+});
+
 test('The component pass the props correctly to the generic checkbox', () => {
     const onChange = jest.fn();
     const checkbox = shallow(
