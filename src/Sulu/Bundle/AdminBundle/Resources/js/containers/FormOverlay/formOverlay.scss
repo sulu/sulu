@@ -1,6 +1,7 @@
 @import '../Application/variables.scss';
 
 .form {
-    /* this container should not have a overflow hidden as that would break position sticky for texteditor and blocks */
+    /* this container should not have a overflow hidden with position relative
+     * as that would break position sticky for texteditor and blocks */
     padding: $viewPaddingVertical $viewPaddingHorizontal;
 }
