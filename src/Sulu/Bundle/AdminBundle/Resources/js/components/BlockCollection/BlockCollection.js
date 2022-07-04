@@ -5,9 +5,12 @@ import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import {arrayMove, translate, clipboard} from '../../utils';
 import Button from '../Button';
+import BlockToolbar from '../BlockToolbar';
+import Icon from '../Icon';
+import Sticky from '../Sticky';
 import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
-import type {RenderBlockContentCallback} from './types';
+import type {RenderBlockContentCallback, BlockMode} from './types';
 
 type Props<T: string, U: {type: T}> = {|
     addButtonText?: ?string,
@@ -43,6 +46,8 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     @observable pasteableBlocks: Array<U>= [];
     @observable generatedBlockIds: Array<number> = [];
     @observable expandedBlocks: Array<boolean> = [];
+    @observable selectedBlocks: Array<boolean> = [];
+    @observable mode: BlockMode = 'sortable';
 
     fillArraysDisposer: ?() => *;
     setPasteableBlocksDisposer: ?() => *;
@@ -54,6 +59,10 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         this.setPasteableBlocksDisposer = clipboard.observe(BLOCKS_CLIPBOARD_KEY, action((blocks) => {
             this.pasteableBlocks = blocks || [];
         }), true);
+
+        if (props.movable === false) {
+            this.mode = 'static';
+        }
     }
 
     componentWillUnmount() {
@@ -63,7 +72,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
     fillArrays = () => {
         const {collapsable, defaultType, onChange, minOccurs, value} = this.props;
-        const {expandedBlocks, generatedBlockIds} = this;
+        const {expandedBlocks, generatedBlockIds, selectedBlocks} = this;
 
         if (!value) {
             return;
@@ -73,6 +82,10 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             expandedBlocks.splice(value.length);
         }
 
+        if (selectedBlocks.length > value.length) {
+            selectedBlocks.splice(value.length);
+        }
+
         if (generatedBlockIds.length > value.length) {
             generatedBlockIds.splice(value.length);
         }
@@ -80,11 +93,13 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         const collapsed = collapsable ? false : true;
 
         expandedBlocks.push(...new Array(value.length - expandedBlocks.length).fill(collapsed));
+        selectedBlocks.push(...new Array(value.length - selectedBlocks.length).fill(false));
         generatedBlockIds.push(
             ...new Array(value.length - generatedBlockIds.length).fill(false).map(() => ++BlockCollection.idCounter)
         );
         if (minOccurs && value.length < minOccurs) {
             expandedBlocks.push(...new Array(minOccurs - value.length).fill(true));
+            selectedBlocks.push(...new Array(minOccurs - value.length).fill(false));
             generatedBlockIds.push(
                 ...new Array(minOccurs - value.length).fill(false).map(() => ++BlockCollection.idCounter)
             );
@@ -109,6 +124,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
         if (value) {
             this.expandedBlocks.splice(insertionIndex, 0, true);
+            this.selectedBlocks.splice(insertionIndex, 0, false);
             this.generatedBlockIds.splice(insertionIndex, 0, ++BlockCollection.idCounter);
 
             const elementsBefore = value.slice(0, insertionIndex);
@@ -128,6 +144,9 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         if (value) {
             this.expandedBlocks.splice(
                 insertionIndex, 0, ...this.pasteableBlocks.map(() => true)
+            );
+            this.selectedBlocks.splice(
+                insertionIndex, 0, ...this.pasteableBlocks.map(() => false)
             );
             this.generatedBlockIds.splice(
                 insertionIndex, 0, ...this.pasteableBlocks.map(() => ++BlockCollection.idCounter)
@@ -159,6 +178,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
         if (value) {
             this.expandedBlocks.splice(index, 1);
+            this.selectedBlocks.splice(index, 1);
             this.generatedBlockIds.splice(index, 1);
             onChange(value.filter((element, arrayIndex) => arrayIndex != index));
         }
@@ -173,6 +193,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
         if (value) {
             this.expandedBlocks.splice(index, 0, true);
+            this.selectedBlocks.splice(index, 0, false);
             this.generatedBlockIds.splice(index, 0, ++BlockCollection.idCounter);
 
             const elementsBefore = value.slice(0, index);
@@ -200,6 +221,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         const {onChange, onSortEnd, value} = this.props;
 
         this.expandedBlocks = arrayMove(this.expandedBlocks, oldIndex, newIndex);
+        this.selectedBlocks = arrayMove(this.selectedBlocks, oldIndex, newIndex);
         this.generatedBlockIds = arrayMove(this.generatedBlockIds, oldIndex, newIndex);
         onChange(arrayMove(value, oldIndex, newIndex));
 
@@ -214,6 +236,11 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
     @action handleExpand = (index: number) => {
         this.expandedBlocks[index] = true;
+    };
+
+    @action handleSelect = (index: number, selected: boolean) => {
+        // TODO implement `handleSelect` and `handleUnselect`
+        this.selectedBlocks[index] = selected;
     };
 
     handleSettingsClick = (index: number) => {
@@ -331,12 +358,108 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         );
     };
 
+    @action handleBlockToolbarCancel = () => {
+        const {movable} = this.props;
+
+        this.mode = movable ? 'sortable' : 'static';
+
+        this.selectedBlocks.forEach((element, index) => {
+            this.selectedBlocks[index] = false;
+        });
+    };
+
+    @action handleClickSelectMultiple = () => {
+        this.mode = 'selection';
+    };
+
+    @action handleBlockToolbarSelectAll = () => {
+        this.selectedBlocks.forEach((element, index) => {
+            this.selectedBlocks[index] = true;
+        });
+    };
+
+    @action handleBlockToolbarUnselectAll = () => {
+        this.selectedBlocks.forEach((element, index) => {
+            this.selectedBlocks[index] = false;
+        });
+    };
+
+    renderBlockToolbar = (isSticky: boolean) => {
+        const {value} = this.props;
+        const selectedBlocksCount = this.selectedBlocks.filter((element) => element).length;
+
+        return (
+            <BlockToolbar
+                actions={[
+                    {
+                        label: 'Copy',
+                        icon: 'su-copy',
+                        handleClick: () => {
+                            const test = window;
+                            test.alert('copy');
+                        },
+                    },
+                    {
+                        label: 'Duplicate',
+                        icon: 'su-duplicate',
+                        handleClick: () => {
+                            const test = window;
+                            test.alert('duplicate');
+                        },
+                    },
+                    {
+                        label: 'Cut',
+                        icon: 'su-cut',
+                        handleClick: () => {
+                            const test = window;
+                            test.alert('cut');
+                        },
+                    },
+                    {
+                        label: 'Delete',
+                        icon: 'su-trash-alt',
+                        handleClick: () => {
+                            const test = window;
+                            test.alert('delete');
+                        },
+                    },
+                ]}
+                allSelected={selectedBlocksCount === value.length}
+                mode={isSticky ? 'sticky' : 'static'}
+                onCancel={this.handleBlockToolbarCancel}
+                onSelectAll={this.handleBlockToolbarSelectAll}
+                onUnselectAll={this.handleBlockToolbarUnselectAll}
+                selectedCount={selectedBlocksCount}
+            />
+        );
+    };
+
+    renderBlockToolbarButton = () => {
+        return (
+            <div className={blockCollectionStyles.selectMultipleButtonContainer}>
+                <button
+                    className={blockCollectionStyles.selectMultipleButton}
+                    onClick={this.handleClickSelectMultiple}
+                    type="button"
+                >
+                    <Icon
+                        aria-hidden={true}
+                        className={blockCollectionStyles.selectMultipleButtonIcon}
+                        name="su-check-circle"
+                    />
+                    <span className={blockCollectionStyles.selectMultipleButtonText}>
+                        {translate('sulu_admin.select_multiple_blocks')}
+                    </span>
+                </button>
+            </div>
+        );
+    };
+
     render() {
         const {
             collapsable,
             disabled,
             icons,
-            movable,
             onSettingsClick,
             renderBlockContent,
             types,
@@ -344,7 +467,17 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         } = this.props;
 
         return (
-            <section>
+            <section className={blockCollectionStyles.blocks}>
+                {
+                    this.mode === 'selection'
+                        ? <Sticky top={10}>
+                            {this.renderBlockToolbar}
+                        </Sticky>
+                        : this.renderBlockToolbarButton()
+                }
+
+                <div className={blockCollectionStyles.spacer} />
+
                 <SortableBlockList
                     blockActions={this.blockActions}
                     disabled={disabled}
@@ -352,14 +485,16 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                     generatedBlockIds={this.generatedBlockIds}
                     icons={icons}
                     lockAxis="y"
-                    movable={movable}
+                    mode={this.mode}
                     onCollapse={collapsable ? this.handleCollapse : undefined}
                     onExpand={collapsable ? this.handleExpand : undefined}
+                    onSelect={this.handleSelect}
                     onSettingsClick={onSettingsClick ? this.handleSettingsClick : undefined}
                     onSortEnd={this.handleSortEnd}
                     onTypeChange={this.handleTypeChange}
                     renderBlockContent={renderBlockContent}
                     renderDivider={this.renderAddButton}
+                    selectedBlocks={this.selectedBlocks}
                     types={types}
                     useDragHandle={true}
                     value={value}

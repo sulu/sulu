@@ -7,22 +7,26 @@ import {observer} from 'mobx-react';
 import Block from '../Block';
 import {translate} from '../../utils';
 import SortableHandle from './SortableHandle';
+import SelectionHandle from './SelectionHandle';
 import type {ActionConfig} from '../Block/types';
 import type {ComponentType} from 'react';
-import type {BlockActionConfig, RenderBlockContentCallback} from './types';
+import type {BlockActionConfig, BlockMode, RenderBlockContentCallback} from './types';
 
 type Props<T: string, U: {type: T}> = {
     actions: Array<BlockActionConfig>,
     activeType: T,
     expanded: boolean,
     icons?: Array<string>,
-    movable?: boolean,
+    mode?: BlockMode,
+    movable?: boolean, // @deprecated
     onCollapse?: (index: number) => void,
     onExpand?: (index: number) => void,
     onRemove?: (index: number) => void, // @deprecated
+    onSelect?: (index: number, selected: boolean) => void,
     onSettingsClick?: (index: number) => void,
     onTypeChange?: (type: T, index: number) => void,
     renderBlockContent: RenderBlockContentCallback<T, U>,
+    selected: boolean,
     sortIndex: number,
     types?: {[key: T]: string},
     value: Object,
@@ -32,6 +36,9 @@ type Props<T: string, U: {type: T}> = {
 class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>> {
     static defaultProps = {
         actions: [],
+        mode: 'sortable',
+        movable: true,
+        selected: false,
     };
 
     @computed get actions(): Array<ActionConfig> {
@@ -85,6 +92,14 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
         }
     };
 
+    handleSelect = () => {
+        const {sortIndex, onSelect, selected} = this.props;
+
+        if (onSelect) {
+            onSelect(sortIndex, !selected);
+        }
+    };
+
     handleSettingsClick = () => {
         const {sortIndex, onSettingsClick} = this.props;
 
@@ -101,12 +116,25 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
         }
     };
 
+    renderHandle = () => {
+        const {mode, movable, selected} = this.props;
+
+        if (mode === 'sortable' && movable !== false) {
+            return <SortableHandle />;
+        }
+
+        if (mode === 'selection') {
+            return <SelectionHandle checked={selected} onChange={this.handleSelect} />;
+        }
+
+        return null;
+    };
+
     render() {
         const {
             activeType,
             expanded,
             icons,
-            movable = true,
             onCollapse,
             onExpand,
             onSettingsClick,
@@ -120,8 +148,8 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
             <Block
                 actions={this.actions}
                 activeType={activeType}
-                dragHandle={movable && <SortableHandle />}
                 expanded={expanded}
+                handle={this.renderHandle()}
                 icons={icons}
                 onCollapse={onCollapse ? this.handleCollapse : undefined}
                 onExpand={onExpand ? this.handleExpand : undefined}

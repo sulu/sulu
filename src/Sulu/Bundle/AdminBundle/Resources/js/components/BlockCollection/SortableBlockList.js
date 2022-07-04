@@ -8,7 +8,7 @@ import {computed} from 'mobx';
 import {translate} from '../../utils';
 import SortableBlock from './SortableBlock';
 import sortableBlockListStyles from './sortableBlockList.scss';
-import type {BlockActionConfig, RenderBlockContentCallback} from './types';
+import type {BlockActionConfig, BlockMode, RenderBlockContentCallback} from './types';
 import type {Node} from 'react';
 
 type Props<T: string, U: {type: T}> = {|
@@ -17,14 +17,17 @@ type Props<T: string, U: {type: T}> = {|
     expandedBlocks: Array<boolean>,
     generatedBlockIds: Array<number>,
     icons?: Array<Array<string>>,
-    movable: boolean,
+    mode?: BlockMode,
+    movable?: boolean, // @deprecated
     onCollapse?: (index: number) => void,
     onExpand?: (index: number) => void,
     onRemove?: (index: number) => void, // @deprecated
+    onSelect?: (index: number, selected: boolean) => void,
     onSettingsClick?: (index: number) => void,
     onTypeChange?: (type: T, index: number) => void,
     renderBlockContent: RenderBlockContentCallback<T, U>,
     renderDivider?: (aboveBlockIndex: number) => Node,
+    selectedBlocks: Array<boolean>,
     types?: {[key: T]: string},
     value: Array<U>,
 |};
@@ -34,8 +37,20 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
     static defaultProps = {
         blockActions: [],
         disabled: false,
-        movable: true,
+        mode: 'sortable',
+        movable: null,
     };
+
+    constructor(props: Props<T, U>) {
+        super(props);
+
+        if (props.movable === false) {
+            log.warn(
+                'The "movable" prop of the "SortableBlockList" component is deprecated since 2.5 and will ' +
+                'be removed. Use the "blockMode" prop with "static" or "sortable" instead.'
+            );
+        }
+    }
 
     @computed get blockActions(): Array<BlockActionConfig> {
         const {onRemove, blockActions} = this.props;
@@ -69,6 +84,13 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
         }
     };
 
+    handleSelect = (index: number, selected: boolean) => {
+        const {onSelect} = this.props;
+        if (onSelect) {
+            onSelect(index, selected);
+        }
+    };
+
     handleCollapse = (index: number) => {
         const {onCollapse} = this.props;
         if (onCollapse) {
@@ -98,12 +120,15 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
             expandedBlocks,
             generatedBlockIds,
             icons,
+            mode,
             movable,
             onCollapse,
             onExpand,
+            onSelect,
             onSettingsClick,
             renderBlockContent,
             renderDivider,
+            selectedBlocks,
             types,
             value,
         } = this.props;
@@ -126,12 +151,14 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
                             icons={icons && icons[index]}
                             index={index}
                             key={generatedBlockIds[index]}
-                            movable={movable}
+                            mode={(mode === 'sortable' && movable !== false) ? 'sortable' : mode}
                             onCollapse={onCollapse ? this.handleCollapse : undefined}
                             onExpand={onExpand ? this.handleExpand : undefined}
+                            onSelect={onSelect ? this.handleSelect : undefined}
                             onSettingsClick={onSettingsClick ? this.handleSettingsClick : undefined}
                             onTypeChange={this.handleTypeChange}
                             renderBlockContent={renderBlockContent}
+                            selected={selectedBlocks[index]}
                             sortIndex={index}
                             types={types}
                             value={block}

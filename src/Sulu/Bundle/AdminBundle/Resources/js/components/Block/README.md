@@ -1,7 +1,7 @@
 A block allows to group certain content in a collapsable container. Any children being passed to this component will be
 displayed in it. The component takes an `onCollapse` and an `onExpand` callback, which will be called when the user
 wants to trigger the corresponding action. In case you want to show a special handle, e.g. for drag and drop, then you
-can use the `dragHandle` property to pass JSX.
+can use the `handle` property to pass JSX.
 
 ```javascript
 const Icon = require('../Icon').default;
@@ -11,7 +11,7 @@ const [expanded, setExpanded] = React.useState(true);
 const onCollapse = () => setExpanded(false);
 const onExpand = () => setExpanded(true);
 
-<Block expanded={expanded} onCollapse={onCollapse} onExpand={onExpand} dragHandle={<Icon name="su-more" />}>
+<Block expanded={expanded} onCollapse={onCollapse} onExpand={onExpand} handle={<Icon name="su-more" />}>
     That is the content of the block!
 </Block>
 ```

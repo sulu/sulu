@@ -16,8 +16,8 @@ type Props<T: string> = {
     actions: Array<ActionConfig>,
     activeType?: T,
     children: Node,
-    dragHandle?: Node,
     expanded: boolean,
+    handle?: Node,
     icons?: Array<string>,
     onCollapse?: () => void,
     onExpand?: () => void,
@@ -99,7 +99,7 @@ class Block<T: string> extends React.Component<Props<T>> {
         const {
             activeType,
             children,
-            dragHandle,
+            handle,
             icons,
             onCollapse,
             onExpand,
@@ -118,9 +118,9 @@ class Block<T: string> extends React.Component<Props<T>> {
 
         return (
             <section className={blockClass} onClick={this.handleExpand} role="switch">
-                {dragHandle &&
+                {handle &&
                     <div className={blockStyles.handle}>
-                        {dragHandle}
+                        {handle}
                     </div>
                 }
                 <div className={blockStyles.content}>
