@@ -1,4 +1,4 @@
-This component provide the Tooltip:
+This component displays a tooltip if its content is hovered or focused:
 
 ```javascript
 import Icon from '../Icon';
