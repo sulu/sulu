@@ -52,7 +52,7 @@ export default class Switch<T: string | number> extends React.PureComponent<Prop
             {
                 [switchStyles.disabled]: disabled,
             },
-            switchStyles[size]
+            size !== 'default' ? switchStyles[size] : null
         );
 
         const switchClass = classNames(
