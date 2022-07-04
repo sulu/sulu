@@ -5,10 +5,10 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Popover from '../Popover';
 import tooltipStyles from './tooltip.scss';
-import type {ChildrenArray, Element, ElementRef} from 'react';
+import type {Node, ElementRef} from 'react';
 
 type Props = {|
-    children: ChildrenArray<Element<*> | false>,
+    children: Node,
     label: string,
 |};
 
