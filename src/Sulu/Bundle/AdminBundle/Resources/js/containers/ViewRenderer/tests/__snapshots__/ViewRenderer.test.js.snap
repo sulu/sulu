@@ -10,6 +10,12 @@ exports[`Render view returned from ViewRegistry 1`] = `
 </div>
 `;
 
+exports[`Render view returned from ViewRegistry with disableDefaultSpacing true 1`] = `
+<h1>
+  Test
+</h1>
+`;
+
 exports[`Render view returned from ViewRegistry with passed router 1`] = `
 <div
   class="view"
@@ -18,12 +24,6 @@ exports[`Render view returned from ViewRegistry with passed router 1`] = `
     Test attribute
   </h1>
 </div>
-`;
-
-exports[`Render view returned from ViewRegistry with rootSpaceless true 1`] = `
-<h1>
-  Test
-</h1>
 `;
 
 exports[`Render view with parents should nest rendered views 1`] = `
