@@ -5,7 +5,7 @@ import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import Popover from '../Popover';
 import tooltipStyles from './tooltip.scss';
-import type {Node, ElementRef} from 'react';
+import type {ElementRef, Node} from 'react';
 
 type Props = {|
     children: Node,
