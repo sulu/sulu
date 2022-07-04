@@ -89,13 +89,17 @@ jobs:
               with:
                   useLockFile: false
 
-            - name: Lint JavaScript and CSS code
-              if: ${{ matrix.lint }}
-              run: |
-                  npm run lint:js
-                  npm run lint:scss
-                  npm run flow -- check
-                  npm run depcruise
+            - name: Lint JavaScript
+              run: npm run lint:js
+
+            - name: Lint SCSS
+              run: npm run lint:scss
+
+            - name: Flow
+              run: npm run flow -- check
+
+            - name: Depcruise
+              run: npm run depcruise
 
     php:
         name: "PHP ${{ matrix.php-version }} (${{ matrix.database }}, ${{ matrix.phpcr-transport }}, ${{ matrix.dependency-versions }})"
