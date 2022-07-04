@@ -28,7 +28,7 @@ exports[`The component should render in focused state 1`] = `
         </span>
       }
       backdrop={false}
-      horizontalCenter={true}
+      horizontalAnchorMode="center"
       horizontalOffset={0}
       open={true}
       verticalOffset={10}
@@ -118,7 +118,7 @@ exports[`The component should render in hovered state 1`] = `
         </span>
       }
       backdrop={false}
-      horizontalCenter={true}
+      horizontalAnchorMode="center"
       horizontalOffset={0}
       open={true}
       verticalOffset={10}
