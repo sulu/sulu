@@ -24,6 +24,7 @@ type Props<T: string> = {
     onRemove?: () => void, // @deprecated
     onSettingsClick?: () => void,
     onTypeChange?: (type: T) => void,
+    selected: boolean,
     types?: {[key: T]: string},
 };
 
@@ -32,6 +33,7 @@ class Block<T: string> extends React.Component<Props<T>> {
     static defaultProps = {
         actions: [],
         expanded: false,
+        selected: false,
     };
 
     @observable actionsButtonRef: ?ElementRef<'*'>;
@@ -104,6 +106,7 @@ class Block<T: string> extends React.Component<Props<T>> {
             onCollapse,
             onExpand,
             onSettingsClick,
+            selected,
             types,
         } = this.props;
 
@@ -113,6 +116,7 @@ class Block<T: string> extends React.Component<Props<T>> {
             blockStyles.block,
             {
                 [blockStyles.expanded]: expanded,
+                [blockStyles.selected]: selected,
             }
         );
 

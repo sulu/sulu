@@ -1,0 +1,14 @@
+@import '../../containers/Application/colors.scss';
+
+.container {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 30px;
+}
+
+.container input + span {
+    background: $white;
+}

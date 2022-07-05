@@ -139,6 +139,7 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
             onExpand,
             onSettingsClick,
             renderBlockContent,
+            selected,
             sortIndex,
             types,
             value,
@@ -155,6 +156,7 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
                 onExpand={onExpand ? this.handleExpand : undefined}
                 onSettingsClick={onSettingsClick && this.handleSettingsClick}
                 onTypeChange={this.handleTypeChange}
+                selected={selected}
                 types={types}
             >
                 {renderBlockContent(value, activeType, sortIndex, expanded)}

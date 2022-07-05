@@ -5,8 +5,8 @@ $blockBorderColor: $silver;
 $blockHandleColor: $black;
 $blockHandleBackgroundColor: $silver;
 $blockCollapsedColor: $gray;
-$blockHandleWidth: 20px;
 $blockIconsColor: $gray;
+$blockSelectedColor: $blueZodiac;
 
 .block {
     display: flex;
@@ -42,19 +42,29 @@ $blockIconsColor: $gray;
             line-height: 30px;
         }
     }
+
+    &.selected {
+        border-color: $blockSelectedColor;
+
+        .handle {
+            background: $blockSelectedColor;
+        }
+    }
 }
 
 .handle {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-grow: 0;
+    flex-shrink: 1;
     color: $blockHandleColor;
     background-color: $blockHandleBackgroundColor;
-    width: $blockHandleWidth;
+    overflow: hidden;
 }
 
 .content {
-    width: calc(100% - $blockHandleWidth);
+    flex-grow: 1;
     font-size: 12px;
     line-height: 18px;
 }

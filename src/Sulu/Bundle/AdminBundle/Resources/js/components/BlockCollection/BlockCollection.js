@@ -529,11 +529,13 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         return (
             <section className={blockCollectionStyles.blocks}>
                 {
-                    this.mode === 'selection'
-                        ? <Sticky top={10}>
-                            {this.renderBlockToolbar}
-                        </Sticky>
-                        : this.renderBlockToolbarButton()
+                    value.length > 1 ? (
+                        this.mode === 'selection'
+                            ? <Sticky top={10}>
+                                {this.renderBlockToolbar}
+                            </Sticky>
+                            : this.renderBlockToolbarButton()
+                    ) : null
                 }
 
                 <div className={blockCollectionStyles.spacer} />
