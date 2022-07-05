@@ -115,6 +115,18 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         }
     };
 
+    @computed get selectedBlockIndexes(): number {
+        const indexes = [];
+
+        this.selectedBlocks.forEach((selected, index) => {
+            if (selected) {
+                indexes.push(index);
+            }
+        });
+
+        return indexes;
+    }
+
     @action handleAddBlock = (insertionIndex: number) => {
         const {defaultType, onChange, value} = this.props;
 
@@ -169,52 +181,112 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         }
     };
 
-    @action handleRemoveBlock = (index: number) => {
-        const {onChange, value} = this.props;
-
-        if (this.hasMinimumReached) {
-            throw new Error('The minimum amount of blocks has already been reached!');
-        }
-
-        if (value) {
-            this.expandedBlocks.splice(index, 1);
-            this.selectedBlocks.splice(index, 1);
-            this.generatedBlockIds.splice(index, 1);
-            onChange(value.filter((element, arrayIndex) => arrayIndex != index));
-        }
+    handleRemoveBlock = (index: number) => {
+        this.removeBlocks([index]);
     };
 
-    @action handleDuplicateBlock = (index: number) => {
+    handleRemoveSelectedBlocks = () => {
+        this.removeBlocks(this.selectedBlockIndexes);
+    };
+
+    @action removeBlocks = (indexes: Array<number>) => {
         const {onChange, value} = this.props;
 
-        if (this.hasMaximumReached) {
-            throw new Error('The maximum amount of blocks has already been reached!');
+        if (!value) {
+            return;
         }
 
-        if (value) {
-            this.expandedBlocks.splice(index, 0, true);
-            this.selectedBlocks.splice(index, 0, false);
-            this.generatedBlockIds.splice(index, 0, ++BlockCollection.idCounter);
+        indexes.forEach(( index, count) => {
+            // TODO throw snackbar message or maybe its not required as fillArrays already refill the array
+            // if (this.hasMinimumReached) {
+            //    throw new Error('The minimum amount of blocks has already been reached!');
+            //}
 
-            const elementsBefore = value.slice(0, index);
-            const elementsAfter = value.slice(index);
-            // $FlowFixMe
-            onChange([...elementsBefore, {...toJS(value[index])}, ...elementsAfter]);
+            const currentRemoveIndex = index - count;
+
+            this.expandedBlocks.splice(currentRemoveIndex, 1);
+            this.selectedBlocks.splice(currentRemoveIndex, 1);
+            this.generatedBlockIds.splice(currentRemoveIndex, 1);
+        });
+
+        onChange(value.filter((block, index) => indexes.indexOf(index) === -1));
+    };
+
+    handleDuplicateSelectedBlocks = () => {
+        const {value} = this.props;
+
+        this.duplicateBlocks(this.selectedBlockIndexes, value.length);
+    };
+
+    handleDuplicateBlock = (index: number) => {
+        this.duplicateBlocks([index], index);
+    };
+
+    @action duplicateBlocks = (indexes: Array<number>, insertAfterIndex: number) => {
+        const {onChange, value} = this.props;
+
+        if (!value) {
+            return;
         }
+
+        let newValue = [...value];
+
+        indexes.forEach(( index, count) => {
+            // if (this.hasMaximumReached) {
+            // TODO throw snackbar message or maybe its not required as fillArrays already refill the array
+            //     throw new Error('The maximum amount of blocks has already been reached!');
+            // }
+
+            const currentInsertAfterIndex = insertAfterIndex + count;
+
+            this.expandedBlocks.splice(currentInsertAfterIndex, 0, true);
+            this.selectedBlocks.splice(currentInsertAfterIndex, 0, false);
+            this.generatedBlockIds.splice(currentInsertAfterIndex, 0, ++BlockCollection.idCounter);
+
+            const elementsBefore = newValue.slice(0, currentInsertAfterIndex);
+            const elementsAfter = newValue.slice(currentInsertAfterIndex);
+
+            newValue = [...elementsBefore, {...toJS(newValue[index])}, ...elementsAfter];
+        });
+
+        onChange(newValue);
+    };
+
+    handleCopySelectedBlocks = () => {
+        this.copyBlocks(this.selectedBlockIndexes);
     };
 
     handleCopyBlock = (index: number) => {
+        this.copyBlocks([index]);
+    };
+
+    copyBlocks = (indexes: Array<number>) => {
         const {value} = this.props;
 
-        if (value) {
-            const block = {...toJS(value[index])};
-            clipboard.set(BLOCKS_CLIPBOARD_KEY, [block]);
+        if (!value) {
+            return;
         }
+
+        const blocks = [];
+
+        indexes.forEach(( index) => {
+            blocks.push({...toJS(value[index])});
+        });
+
+        clipboard.set(BLOCKS_CLIPBOARD_KEY, blocks);
+    };
+
+    handleCutSelectedBlocks = () => {
+        this.cutBlocks(this.selectedBlockIndexes);
     };
 
     handleCutBlock = (index: number) => {
-        this.handleCopyBlock(index);
-        this.handleRemoveBlock(index);
+        this.cutBlocks([index]);
+    };
+
+    cutBlocks = (indexes: Array<number>) => {
+        this.copyBlocks(indexes);
+        this.removeBlocks(indexes);
     };
 
     @action handleSortEnd = ({newIndex, oldIndex}: {newIndex: number, oldIndex: number}) => {
@@ -394,34 +466,22 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                     {
                         label: 'Copy',
                         icon: 'su-copy',
-                        handleClick: () => {
-                            const test = window;
-                            test.alert('copy');
-                        },
+                        handleClick: this.handleCopySelectedBlocks,
                     },
                     {
                         label: 'Duplicate',
                         icon: 'su-duplicate',
-                        handleClick: () => {
-                            const test = window;
-                            test.alert('duplicate');
-                        },
+                        handleClick: this.handleDuplicateSelectedBlocks,
                     },
                     {
                         label: 'Cut',
                         icon: 'su-cut',
-                        handleClick: () => {
-                            const test = window;
-                            test.alert('cut');
-                        },
+                        handleClick: this.handleCutSelectedBlocks,
                     },
                     {
                         label: 'Delete',
                         icon: 'su-trash-alt',
-                        handleClick: () => {
-                            const test = window;
-                            test.alert('delete');
-                        },
+                        handleClick: this.handleRemoveSelectedBlocks,
                     },
                 ]}
                 allSelected={selectedBlocksCount === value.length}
