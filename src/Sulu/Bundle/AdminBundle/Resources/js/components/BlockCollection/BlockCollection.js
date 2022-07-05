@@ -71,7 +71,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     }
 
     fillArrays = () => {
-        const {collapsable, defaultType, onChange, minOccurs, value} = this.props;
+        const {collapsable, defaultType, onChange, minOccurs, movable, value} = this.props;
         const {expandedBlocks, generatedBlockIds, selectedBlocks} = this;
 
         if (!value) {
@@ -190,7 +190,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     };
 
     @action removeBlocks = (indexes: Array<number>) => {
-        const {onChange, value} = this.props;
+        const {onChange, movable, value} = this.props;
 
         if (!value) {
             return;
@@ -208,6 +208,10 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             this.selectedBlocks.splice(currentRemoveIndex, 1);
             this.generatedBlockIds.splice(currentRemoveIndex, 1);
         });
+
+        if (this.generatedBlockIds.length < 2 && this.mode === 'selection') {
+            this.mode = movable ? 'sortable' : 'static';
+        }
 
         onChange(value.filter((block, index) => indexes.indexOf(index) === -1));
     };
