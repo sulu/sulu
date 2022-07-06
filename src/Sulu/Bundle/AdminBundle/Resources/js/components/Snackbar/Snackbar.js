@@ -96,7 +96,7 @@ class Snackbar extends React.Component<Props> {
                     {
                         behaviour === 'static'
                             ? <>
-                                <strong>{translate('sulu_admin.' + this.type)}</strong> -
+                                <strong>{translate('sulu_admin.' + this.type)}</strong>{' - '}
                             </>
                             : null
                     }
