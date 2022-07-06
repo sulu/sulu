@@ -45,7 +45,7 @@ class StructureXmlLoaderTest extends TestCase
         'en' => 'en',
         'de' => 'de',
         'fr' => 'fr',
-        'nl' => 'nl'
+        'nl' => 'nl',
     ];
 
     /**
