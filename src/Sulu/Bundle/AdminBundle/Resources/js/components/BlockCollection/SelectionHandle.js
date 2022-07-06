@@ -17,7 +17,7 @@ class SelectionHandle extends React.Component<Props> {
         }
     };
 
-    handleContainerClick = (event) => {
+    handleContainerClick = (event: Event) => {
         event.stopPropagation();
 
         this.handleChange();

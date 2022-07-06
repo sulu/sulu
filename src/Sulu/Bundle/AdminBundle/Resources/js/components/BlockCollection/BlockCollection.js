@@ -115,7 +115,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         }
     };
 
-    @computed get selectedBlockIndexes(): number {
+    @computed get selectedBlockIndexes(): Array<number> {
         const indexes = [];
 
         this.selectedBlocks.forEach((selected, index) => {
