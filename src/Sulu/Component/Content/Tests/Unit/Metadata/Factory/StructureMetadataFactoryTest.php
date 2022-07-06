@@ -190,6 +190,8 @@ class StructureMetadataFactoryTest extends TestCase
             $propertiesXmlLoader,
             $schemaXmlLoader,
             $contentTypeManager->reveal(),
+            $this->translator->reveal(),
+            [],
             [],
             []
         );

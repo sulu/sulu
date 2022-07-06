@@ -41,6 +41,13 @@ class StructureXmlLoaderTest extends TestCase
         'snippet' => ['title'],
     ];
 
+    private $locales = [
+        'en' => 'en',
+        'de' => 'de',
+        'fr' => 'fr',
+        'nl' => 'nl'
+    ];
+
     /**
      * @var TranslatorInterface|ObjectProphecy
      */
@@ -66,7 +73,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->translator = $this->prophesize(TranslatorInterface::class);
         $propertiesXmlParser = new PropertiesXmlParser(
             $this->translator->reveal(),
-            ['en' => 'en', 'de' => 'de', 'fr' => 'fr', 'nl' => 'nl']
+            $this->locales
         );
         $this->contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
         $this->cacheLifetimeResolver = $this->prophesize(CacheLifetimeResolverInterface::class);
@@ -78,8 +85,10 @@ class StructureXmlLoaderTest extends TestCase
             $propertiesXmlParser,
             $schemaXmlParser,
             $this->contentTypeManager->reveal(),
+            $this->translator->reveal(),
             $this->requiredPropertyNames,
-            $this->requiredTagNames
+            $this->requiredTagNames,
+            $this->locales
         );
     }
 
@@ -98,6 +107,32 @@ class StructureXmlLoaderTest extends TestCase
 
         $this->assertFalse($result->isInternal());
         $this->assertNull($result->getSchema());
+    }
+
+    public function testLoadTemplateWithLocalization()
+    {
+        $this->contentTypeManager->has('text_line')->willReturn(true);
+        $this->contentTypeManager->has('resource_locator')->willReturn(true);
+
+        $this->cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
+            ->willReturn(true);
+
+        $this->translator->trans('template_title', [], 'admin', 'en')->willReturn('en_template_title');
+        $this->translator->trans('template_title', [], 'admin', 'de')->willReturn('de_template_title');
+        $this->translator->trans('template_title', [], 'admin', 'fr')->willReturn('fr_template_title');
+        $this->translator->trans('template_title', [], 'admin', 'nl')->willReturn('nl_template_title');
+
+        $this->translator->trans('property_title', [], 'admin', 'en')->willReturn('en_property_title');
+        $this->translator->trans('property_title', [], 'admin', 'de')->willReturn('de_property_title');
+        $this->translator->trans('property_title', [], 'admin', 'fr')->willReturn('fr_property_title');
+        $this->translator->trans('property_title', [], 'admin', 'nl')->willReturn('nl_property_title');
+
+        $result = $this->load('template_with_localizations.xml');
+
+        $this->assertEquals('en_template_title', $result->getTitle('en'));
+        $this->assertEquals('Template Titel', $result->getTitle('de'));
+        $this->assertEquals('fr_template_title', $result->getTitle('fr'));
+        $this->assertEquals('nl_template_title', $result->getTitle('nl'));
     }
 
     public function testLoadTemplateWithSchema()
