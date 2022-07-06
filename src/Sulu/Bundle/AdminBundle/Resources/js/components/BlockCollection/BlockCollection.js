@@ -197,10 +197,10 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         }
 
         indexes.forEach(( index, count) => {
-            // TODO throw snackbar message or maybe its not required as fillArrays already refill the array
-            // if (this.hasMinimumReached) {
-            //    throw new Error('The minimum amount of blocks has already been reached!');
-            //}
+            if (this.hasMinimumReached) {
+                // TODO throw snackbar message or maybe its not required as fillArrays already refill the array
+                throw new Error('The minimum amount of blocks has already been reached!');
+            }
 
             const currentRemoveIndex = index - count;
 
@@ -236,10 +236,10 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         let newValue = [...value];
 
         indexes.forEach(( index, count) => {
-            // if (this.hasMaximumReached) {
-            // TODO throw snackbar message or maybe its not required as fillArrays already refill the array
-            //     throw new Error('The maximum amount of blocks has already been reached!');
-            // }
+            if (this.hasMaximumReached) {
+                // TODO throw snackbar message or maybe its not required as fillArrays already refill the array
+                throw new Error('The maximum amount of blocks has already been reached!');
+            }
 
             const currentInsertAfterIndex = insertAfterIndex + count;
 
