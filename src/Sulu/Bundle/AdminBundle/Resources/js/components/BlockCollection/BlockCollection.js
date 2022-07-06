@@ -468,22 +468,22 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             <BlockToolbar
                 actions={[
                     {
-                        label: 'Copy',
+                        label: translate('sulu_admin.copy'),
                         icon: 'su-copy',
                         handleClick: this.handleCopySelectedBlocks,
                     },
                     {
-                        label: 'Duplicate',
+                        label: translate('sulu_admin.duplicate'),
                         icon: 'su-duplicate',
                         handleClick: this.handleDuplicateSelectedBlocks,
                     },
                     {
-                        label: 'Cut',
+                        label: translate('sulu_admin.cut'),
                         icon: 'su-cut',
                         handleClick: this.handleCutSelectedBlocks,
                     },
                     {
-                        label: 'Delete',
+                        label: translate('sulu_admin.delete'),
                         icon: 'su-trash-alt',
                         handleClick: this.handleRemoveSelectedBlocks,
                     },

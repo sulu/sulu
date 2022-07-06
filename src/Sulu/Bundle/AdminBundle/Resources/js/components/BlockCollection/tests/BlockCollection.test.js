@@ -949,3 +949,397 @@ test('Updating value with same length should not adjust expandedBlocks and gener
     expect(blockCollection.instance().generatedBlockIds.length).toBe(3);
     expect(blockCollection.instance().expandedBlocks[0]).toBe(true);
 });
+
+test('Should not show BlockToolbarButton when have no blocks', () => {
+    const value = [];
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            value={value}
+        />
+    );
+
+    expect(blockCollection.find('button.selectMultipleButton').length).toBe(0);
+    expect(blockCollection.find('BlockToolbar').length).toBe(0);
+});
+
+test('Should not show BlockToolbarButton when have only one block', () => {
+    const types = {
+        type1: 'Type 1',
+    };
+
+    const value = [
+        {
+            type: 'type1',
+            content: 'Test 1',
+        },
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(blockCollection.find('button.selectMultipleButton').length).toBe(0);
+    expect(blockCollection.find('BlockToolbar').length).toBe(0);
+});
+
+test('Should show BlockToolbarButton when have two or more blocks', () => {
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+    };
+
+    const value = [
+        {
+            type: 'type1',
+            content: 'Test 1',
+        },
+        {
+            type: 'type2',
+            content: 'Test 2',
+        },
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(blockCollection.find('button.selectMultipleButton').length).toBe(1);
+    expect(blockCollection.find('BlockToolbar').length).toBe(0);
+});
+
+test('Show BlockToolbar when select multiple button is clicked', () => {
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+    };
+
+    const value = [
+        {
+            type: 'type1',
+            content: 'Test 1',
+        },
+        {
+            type: 'type2',
+            content: 'Test 2',
+        },
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
+
+    selectMultipleButton.simulate('click');
+
+    expect(blockCollection.find('button.selectMultipleButton').length).toBe(0);
+    expect(blockCollection.find('BlockToolbar').length).toBe(1);
+});
+
+test('Hide BlockToolbar when cancel of BlockToolbar is clicked', () => {
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+    };
+
+    const value = [
+        {
+            type: 'type1',
+            content: 'Test 1',
+        },
+        {
+            type: 'type2',
+            content: 'Test 2',
+        },
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
+    selectMultipleButton.simulate('click');
+    const blockToolbar = blockCollection.find('BlockToolbar');
+
+    blockToolbar.find('button').last().simulate('click');
+
+    expect(blockCollection.find('button.selectMultipleButton').length).toBe(1);
+});
+
+test('Show selection handle when BlockToolbar is open', () => {
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+    };
+
+    const value = [
+        {
+            type: 'type1',
+            content: 'Test 1',
+        },
+        {
+            type: 'type2',
+            content: 'Test 2',
+        },
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    expect(blockCollection.find('SelectionHandle').length).toBe(0);
+
+    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
+    selectMultipleButton.simulate('click');
+
+    expect(blockCollection.find('SelectionHandle').length).toBe(2);
+});
+
+test('Count selected blocks in BlockToolbar', () => {
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+    };
+
+    const value = [
+        {
+            type: 'type1',
+            content: 'Test 1',
+        },
+        {
+            type: 'type2',
+            content: 'Test 2',
+        },
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={jest.fn()}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
+    selectMultipleButton.simulate('click');
+
+    expect(blockCollection.find('BlockToolbar').props().selectedCount).toBe(0);
+
+    const selectionHandles = blockCollection.find('SelectionHandle');
+
+    selectionHandles.first().simulate('click');
+    selectionHandles.last().simulate('click');
+
+    expect(blockCollection.find('BlockToolbar').props().selectedCount).toBe(2);
+});
+
+test('Copy selected blocks via the BlockToolbar', () => {
+    const changeSpy = jest.fn();
+    const clipboardSpy = jest.fn();
+    clipboard.observe('blocks', clipboardSpy);
+
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+    };
+
+    const value = [
+        {
+            type: 'type1',
+            content: 'Test 1',
+        },
+        {
+            type: 'type2',
+            content: 'Test 2',
+        },
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
+    selectMultipleButton.simulate('click');
+    const blockToolbar = blockCollection.find('BlockToolbar');
+    const selectionHandles = blockCollection.find('SelectionHandle');
+    selectionHandles.first().simulate('click');
+    selectionHandles.last().simulate('click');
+
+    blockToolbar.find('button[aria-label="sulu_admin.copy"]').simulate('click');
+
+    expect(clipboardSpy).toBeCalledWith(value);
+    expect(changeSpy).not.toBeCalled();
+});
+
+test('Duplicate selected blocks via the BlockToolbar', () => {
+    const changeSpy = jest.fn();
+    const clipboardSpy = jest.fn();
+    clipboard.observe('blocks', clipboardSpy);
+
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+    };
+
+    const value = [
+        {
+            type: 'type1',
+            content: 'Test 1',
+        },
+        {
+            type: 'type2',
+            content: 'Test 2',
+        },
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
+    selectMultipleButton.simulate('click');
+    const blockToolbar = blockCollection.find('BlockToolbar');
+    const selectionHandles = blockCollection.find('SelectionHandle');
+    selectionHandles.first().simulate('click');
+    selectionHandles.last().simulate('click');
+
+    blockToolbar.find('button[aria-label="sulu_admin.duplicate"]').simulate('click');
+
+    expect(clipboardSpy).not.toBeCalled();
+    expect(changeSpy).toBeCalledWith([...value, ...value]);
+});
+
+test('Cut selected blocks via the BlockToolbar', () => {
+    const changeSpy = jest.fn();
+    const clipboardSpy = jest.fn();
+    clipboard.observe('blocks', clipboardSpy);
+
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+    };
+
+    const value = [
+        {
+            type: 'type1',
+            content: 'Test 1',
+        },
+        {
+            type: 'type2',
+            content: 'Test 2',
+        },
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
+    selectMultipleButton.simulate('click');
+    const blockToolbar = blockCollection.find('BlockToolbar');
+    const selectionHandles = blockCollection.find('SelectionHandle');
+    selectionHandles.first().simulate('click');
+    selectionHandles.last().simulate('click');
+
+    blockToolbar.find('button[aria-label="sulu_admin.cut"]').simulate('click');
+
+    expect(clipboardSpy).toBeCalledWith(value);
+    expect(changeSpy).toBeCalledWith([]);
+});
+
+test('Remove selected blocks via the BlockToolbar', () => {
+    const changeSpy = jest.fn();
+    const clipboardSpy = jest.fn();
+    clipboard.observe('blocks', clipboardSpy);
+
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+    };
+
+    const value = [
+        {
+            type: 'type1',
+            content: 'Test 1',
+        },
+        {
+            type: 'type2',
+            content: 'Test 2',
+        },
+    ];
+
+    const blockCollection = mount(
+        <BlockCollection
+            defaultType="editor"
+            onChange={changeSpy}
+            renderBlockContent={jest.fn()}
+            types={types}
+            value={value}
+        />
+    );
+
+    const selectMultipleButton = blockCollection.find('button.selectMultipleButton');
+    selectMultipleButton.simulate('click');
+    const blockToolbar = blockCollection.find('BlockToolbar');
+    const selectionHandles = blockCollection.find('SelectionHandle');
+    selectionHandles.first().simulate('click');
+    selectionHandles.last().simulate('click');
+
+    blockToolbar.find('button[aria-label="sulu_admin.delete"]').simulate('click');
+
+    expect(clipboardSpy).not.toBeCalled();
+    expect(changeSpy).toBeCalledWith([]);
+});
