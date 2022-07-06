@@ -1,7 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render a fully filled block list 1`] = `
-<section>
+<section
+  class="blocks"
+>
+  <div
+    class="selectMultipleButtonContainer"
+  >
+    <button
+      class="selectMultipleButton"
+      type="button"
+    >
+      <span
+        aria-label="su-check-circle"
+        class="su-check-circle selectMultipleButtonIcon"
+      />
+      <span
+        class="selectMultipleButtonText"
+      >
+        sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+  </div>
+  <div
+    class="spacer"
+  />
   <div
     class="sortableBlockList"
   >
@@ -113,7 +136,30 @@ exports[`Should render a fully filled block list 1`] = `
 `;
 
 exports[`Should render a non-movable block list 1`] = `
-<section>
+<section
+  class="blocks"
+>
+  <div
+    class="selectMultipleButtonContainer"
+  >
+    <button
+      class="selectMultipleButton"
+      type="button"
+    >
+      <span
+        aria-label="su-check-circle"
+        class="su-check-circle selectMultipleButtonIcon"
+      />
+      <span
+        class="selectMultipleButtonText"
+      >
+        sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+  </div>
+  <div
+    class="spacer"
+  />
   <div
     class="sortableBlockList"
   >
