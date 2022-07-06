@@ -57,6 +57,50 @@ test('Render expanded sortable, non-collapsable block with types', () => {
     )).toMatchSnapshot();
 });
 
+test('Render selectable unselected block type', () => {
+    const renderBlockContent = jest.fn().mockImplementation(
+        (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
+    );
+
+    expect(render(
+        <SortableBlock
+            actions={[]}
+            activeType="type2"
+            expanded={true}
+            mode="selectable"
+            onRemove={jest.fn()}
+            onSettingsClick={jest.fn()}
+            renderBlockContent={renderBlockContent}
+            selected={false}
+            sortIndex={1}
+            types={{type1: 'Type 1', type2: 'Type 2'}}
+            value={{content: 'Test Content'}}
+        />
+    )).toMatchSnapshot();
+});
+
+test('Render selectable selected block type', () => {
+    const renderBlockContent = jest.fn().mockImplementation(
+        (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
+    );
+
+    expect(render(
+        <SortableBlock
+            actions={[]}
+            activeType="type2"
+            expanded={true}
+            mode="selectable"
+            onRemove={jest.fn()}
+            onSettingsClick={jest.fn()}
+            renderBlockContent={renderBlockContent}
+            selected={true}
+            sortIndex={1}
+            types={{type1: 'Type 1', type2: 'Type 2'}}
+            value={{content: 'Test Content'}}
+        />
+    )).toMatchSnapshot();
+});
+
 test('Should not show block types if only a single block is passed', () => {
     const sortableBlock = mount(
         <SortableBlock
