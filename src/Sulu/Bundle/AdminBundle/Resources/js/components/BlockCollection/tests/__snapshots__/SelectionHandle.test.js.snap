@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render selection handle checked 1`] = `
+<div
+  class="container"
+>
+  <label
+    class="label"
+    tabindex="-1"
+  >
+    <span
+      class="switch checkbox light"
+    >
+      <input
+        checked=""
+        type="checkbox"
+      />
+      <span>
+        <span
+          aria-label="su-check"
+          class="su-check"
+        />
+      </span>
+    </span>
+  </label>
+</div>
+`;
+
+exports[`Render selection handle unchecked 1`] = `
+<div
+  class="container"
+>
+  <label
+    class="label"
+    tabindex="-1"
+  >
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        type="checkbox"
+      />
+      <span />
+    </span>
+  </label>
+</div>
+`;
