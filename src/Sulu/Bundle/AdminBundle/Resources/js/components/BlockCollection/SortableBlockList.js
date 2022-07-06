@@ -22,9 +22,10 @@ type Props<T: string, U: {type: T}> = {|
     onCollapse?: (index: number) => void,
     onExpand?: (index: number) => void,
     onRemove?: (index: number) => void, // @deprecated
-    onSelect?: (index: number, selected: boolean) => void,
+    onSelect?: (index: number) => void,
     onSettingsClick?: (index: number) => void,
     onTypeChange?: (type: T, index: number) => void,
+    onUnselect?: (index: number) => void,
     renderBlockContent: RenderBlockContentCallback<T, U>,
     renderDivider?: (aboveBlockIndex: number) => Node,
     selectedBlocks: Array<boolean>,
@@ -84,10 +85,17 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
         }
     };
 
-    handleSelect = (index: number, selected: boolean) => {
+    handleSelect = (index: number) => {
         const {onSelect} = this.props;
         if (onSelect) {
-            onSelect(index, selected);
+            onSelect(index);
+        }
+    };
+
+    handleUnselect = (index: number) => {
+        const {onUnselect} = this.props;
+        if (onUnselect) {
+            onUnselect(index);
         }
     };
 
@@ -126,6 +134,7 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
             onExpand,
             onSelect,
             onSettingsClick,
+            onUnselect,
             renderBlockContent,
             renderDivider,
             selectedBlocks,
@@ -157,6 +166,7 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
                             onSelect={onSelect ? this.handleSelect : undefined}
                             onSettingsClick={onSettingsClick ? this.handleSettingsClick : undefined}
                             onTypeChange={this.handleTypeChange}
+                            onUnselect={onUnselect ? this.handleUnselect : undefined}
                             renderBlockContent={renderBlockContent}
                             selected={selectedBlocks[index]}
                             sortIndex={index}

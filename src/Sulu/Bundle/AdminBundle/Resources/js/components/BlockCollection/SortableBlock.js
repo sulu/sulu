@@ -22,9 +22,10 @@ type Props<T: string, U: {type: T}> = {
     onCollapse?: (index: number) => void,
     onExpand?: (index: number) => void,
     onRemove?: (index: number) => void, // @deprecated
-    onSelect?: (index: number, selected: boolean) => void,
+    onSelect?: (index: number) => void,
     onSettingsClick?: (index: number) => void,
     onTypeChange?: (type: T, index: number) => void,
+    onUnselect?: (index: number) => void,
     renderBlockContent: RenderBlockContentCallback<T, U>,
     selected: boolean,
     sortIndex: number,
@@ -103,11 +104,15 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
         }
     };
 
-    handleSelect = () => {
-        const {sortIndex, onSelect, selected} = this.props;
+    handleSelectionChanged = () => {
+        const {sortIndex, onSelect, onUnselect, selected} = this.props;
 
-        if (onSelect) {
-            onSelect(sortIndex, !selected);
+        if (selected && onUnselect) {
+            onUnselect(sortIndex);
+        }
+
+        if (!selected && onSelect) {
+            onSelect(sortIndex);
         }
     };
 
@@ -135,7 +140,7 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
         }
 
         if (mode === 'selection') {
-            return <SelectionHandle checked={selected} onChange={this.handleSelect} />;
+            return <SelectionHandle checked={selected} onChange={this.handleSelectionChanged} />;
         }
 
         return null;

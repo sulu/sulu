@@ -57,7 +57,7 @@ test('Render expanded sortable, non-collapsable block with types', () => {
     )).toMatchSnapshot();
 });
 
-test('Render selectable unselected block type', () => {
+test('Render block in selection mode unselected', () => {
     const renderBlockContent = jest.fn().mockImplementation(
         (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
     );
@@ -67,7 +67,7 @@ test('Render selectable unselected block type', () => {
             actions={[]}
             activeType="type2"
             expanded={true}
-            mode="selectable"
+            mode="selection"
             onRemove={jest.fn()}
             onSettingsClick={jest.fn()}
             renderBlockContent={renderBlockContent}
@@ -79,7 +79,7 @@ test('Render selectable unselected block type', () => {
     )).toMatchSnapshot();
 });
 
-test('Render selectable selected block type', () => {
+test('Render block in selection mode selected', () => {
     const renderBlockContent = jest.fn().mockImplementation(
         (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
     );
@@ -89,7 +89,7 @@ test('Render selectable selected block type', () => {
             actions={[]}
             activeType="type2"
             expanded={true}
-            mode="selectable"
+            mode="selection"
             onRemove={jest.fn()}
             onSettingsClick={jest.fn()}
             renderBlockContent={renderBlockContent}

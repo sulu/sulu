@@ -314,9 +314,12 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         this.expandedBlocks[index] = true;
     };
 
-    @action handleSelect = (index: number, selected: boolean) => {
-        // TODO implement `handleSelect` and `handleUnselect`
-        this.selectedBlocks[index] = selected;
+    @action handleSelect = (index: number) => {
+        this.selectedBlocks[index] = true;
+    };
+
+    @action handleUnselect = (index: number) => {
+        this.selectedBlocks[index] = false;
     };
 
     handleSettingsClick = (index: number) => {
@@ -558,6 +561,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                     onSettingsClick={onSettingsClick ? this.handleSettingsClick : undefined}
                     onSortEnd={this.handleSortEnd}
                     onTypeChange={this.handleTypeChange}
+                    onUnselect={this.handleUnselect}
                     renderBlockContent={renderBlockContent}
                     renderDivider={this.renderAddButton}
                     selectedBlocks={this.selectedBlocks}
