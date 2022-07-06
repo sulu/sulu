@@ -16,8 +16,8 @@ test('Render an expanded block with a multiple types', () => {
     expect(render(
         <Block
             activeType="type1"
-            dragHandle={<span>Test</span>}
             expanded={true}
+            handle={<span>Test</span>}
             icons={['su-eye', 'su-people']}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
@@ -29,9 +29,17 @@ test('Render an expanded block with a multiple types', () => {
     )).toMatchSnapshot();
 });
 
-test('Render an block without dragHandle or collapse or expand button', () => {
+test('Render an block without handle or collapse or expand button', () => {
     expect(render(
         <Block expanded={true}>
+            Some block content
+        </Block>
+    )).toMatchSnapshot();
+});
+
+test('Render a selected block', () => {
+    expect(render(
+        <Block expanded={false} selected={true}>
             Some block content
         </Block>
     )).toMatchSnapshot();
