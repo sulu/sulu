@@ -71,7 +71,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     }
 
     fillArrays = () => {
-        const {collapsable, defaultType, onChange, minOccurs, movable, value} = this.props;
+        const {collapsable, defaultType, onChange, minOccurs, value} = this.props;
         const {expandedBlocks, generatedBlockIds, selectedBlocks} = this;
 
         if (!value) {
