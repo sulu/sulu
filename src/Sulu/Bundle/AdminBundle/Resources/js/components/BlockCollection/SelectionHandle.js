@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import Checkbox from '../Checkbox';
-import selectionHandleStyles from './selectionhandle.scss';
+import selectionHandleStyles from './selectionHandle.scss';
 
 type Props= {|
     checked: boolean,
