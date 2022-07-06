@@ -16,6 +16,9 @@ import Sidebar, {sidebarStore} from '../Sidebar';
 import Toolbar from '../Toolbar';
 import ViewRenderer from '../ViewRenderer';
 import './global.scss';
+import SnackbarContainer from '../../components/SnackbarContainer';
+import snackbarStore from '../../stores/snackbarStore';
+import Snackbar from '../../components/Snackbar';
 import applicationStyles from './application.scss';
 
 const NAVIGATION_PINNED_SETTING_KEY = 'sulu_admin.application.navigation_pinned';
@@ -115,6 +118,7 @@ class Application extends React.Component<Props>{
             }
         });
     };
+
     handleProfileOverlayClose = () => {
         this.closeProfileFormOverlay();
     };
@@ -208,6 +212,23 @@ class Application extends React.Component<Props>{
                             onClose={this.handleProfileOverlayClose}
                             open={this.openedProfileFormOverlay}
                         />
+                        {
+                            snackbarStore.messages.length
+                                ? <SnackbarContainer>
+                                    {snackbarStore.messages.map((message, index) => {
+                                        return (
+                                            <Snackbar
+                                                behaviour="floating"
+                                                icon={message.icon}
+                                                key={index}
+                                                message={message.text}
+                                                type={message.type}
+                                            />
+                                        );
+                                    })}
+                                </SnackbarContainer>
+                                : null
+                        }
                     </Fragment>
                     : <div className={applicationStyles.loader}>
                         <Loader />

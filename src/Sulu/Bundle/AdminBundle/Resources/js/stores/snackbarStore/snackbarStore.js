@@ -1,13 +1,13 @@
 // @flow
-import {observable} from 'mobx';
+import {action, observable} from 'mobx';
 import type {Message} from './types';
 
 class SnackbarStore {
     @observable.shallow messages: Array<Message> = [];
 
-    timeouts: Array<number> = [];
+    timeouts: Array<TimeoutID | null> = [];
 
-    add(message: Message, milliseconds: number = null) {
+    @action add(message: Message, milliseconds: ?number = null) {
         this.messages.push(message);
         this.timeouts.push(null);
 
@@ -18,7 +18,7 @@ class SnackbarStore {
         }
     }
 
-    remove(message: Message) {
+    @action remove(message: Message) {
         const messageIndex = this.messages.indexOf(message);
 
         if (messageIndex !== -1) {
@@ -31,7 +31,7 @@ class SnackbarStore {
         }
     }
 
-    clear() {
+    @action clear() {
         this.messages = [];
         this.timeouts.forEach((timeoutId) => {
             clearTimeout(timeoutId);

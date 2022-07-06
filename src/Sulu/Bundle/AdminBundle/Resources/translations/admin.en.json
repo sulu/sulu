@@ -225,5 +225,10 @@
     "sulu_admin.select_all": "Select all",
     "sulu_admin.deselect_all": "Deselect all",
     "sulu_admin.cancel": "Cancel",
-    "sulu_admin.select_multiple_blocks": "Select multiple blocks"
+    "sulu_admin.select_multiple_blocks": "Select multiple blocks",
+    "sulu_admin.%count%_blocks_copied": "{count, plural, =1 {One block} other {{count} blocks}} copied to clipboard.",
+    "sulu_admin.%count%_blocks_duplicated": "{count, plural, =1 {One block} other {{count} blocks}} duplicated.",
+    "sulu_admin.%count%_blocks_removed": "{count, plural, =1 {One block} other {{count} blocks}} removed.",
+    "sulu_admin.%count%_blocks_cut": "{count, plural, =1 {One block} other {{count} blocks}} cut to clipboard.",
+    "sulu_admin.%count%_blocks_pasted": "{count, plural, =1 {One block} other {{count} blocks}} pasted."
 }

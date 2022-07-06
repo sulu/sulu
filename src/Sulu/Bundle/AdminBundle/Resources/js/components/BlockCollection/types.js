@@ -10,3 +10,9 @@ export type RenderBlockContentCallback<T: string, U: {type: T}>
     = (value: U, type: T, index: number, expanded: boolean) => Node;
 
 export type BlockMode = 'static' | 'sortable' | 'selectable';
+
+export type Message = {
+    icon?: string,
+    text: string,
+    type: 'success' | 'error' | 'warning' | 'info',
+};

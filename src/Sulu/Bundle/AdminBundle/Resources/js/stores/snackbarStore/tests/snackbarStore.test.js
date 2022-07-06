@@ -9,7 +9,7 @@ test('Add should increase the messages', () => {
     expect(snackbarStore.messages.length).toBe(0);
 
     snackbarStore.add({
-        message: 'Test message',
+        text: 'Test message',
         type: 'success',
     });
 
@@ -18,7 +18,7 @@ test('Add should increase the messages', () => {
 
 test('Remove should decrease the messages', () => {
     const message = {
-        message: 'Test message',
+        text: 'Test message',
         type: 'success',
     };
 
@@ -30,7 +30,7 @@ test('Remove should decrease the messages', () => {
 
 test('Clear should remove all messages', () => {
     const message = {
-        message: 'Test message',
+        text: 'Test message',
         type: 'success',
     };
 
@@ -41,10 +41,11 @@ test('Clear should remove all messages', () => {
 });
 
 test('Add with message should create a setTimeout', () => {
+    // eslint-disable-next-line no-undef
     const timeoutSpy = jest.spyOn(global, 'setTimeout');
 
     const message = {
-        message: 'Test message',
+        text: 'Test message',
         type: 'success',
     };
 
