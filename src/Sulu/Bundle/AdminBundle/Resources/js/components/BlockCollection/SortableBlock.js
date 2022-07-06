@@ -41,6 +41,17 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
         selected: false,
     };
 
+    constructor(props: Props<T, U>) {
+        super(props);
+
+        if (props.movable === false) {
+            log.warn(
+                'The "movable" prop of the "SortableBlock" component is deprecated since 2.5 and will ' +
+                'be removed. Use the "mode" prop with "static" or "sortable" instead.'
+            );
+        }
+    }
+
     @computed get actions(): Array<ActionConfig> {
         const {onRemove, actions, sortIndex} = this.props;
 
