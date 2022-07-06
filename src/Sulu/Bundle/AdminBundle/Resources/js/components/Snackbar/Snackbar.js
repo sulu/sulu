@@ -7,9 +7,11 @@ import {translate} from '../../utils/Translator';
 import Icon from '../Icon';
 import snackbarStyles from './snackbar.scss';
 
-export type SnackbarType = 'error' | 'warning';
+export type SnackbarType = 'error' | 'warning' | 'info' | 'success';
 
 type Props = {|
+    behaviour: 'static' | 'floating',
+    icon?: string,
     message: string,
     onClick?: () => void,
     onCloseClick?: () => void,
@@ -20,6 +22,8 @@ type Props = {|
 const ICONS = {
     error: 'su-exclamation-triangle',
     warning: 'su-bell',
+    info: 'su-exclamation-circle',
+    success: 'su-check-circle',
 };
 
 const DEFAULT_SNACKBAR_TYPE: SnackbarType = 'error';
@@ -27,6 +31,7 @@ const DEFAULT_SNACKBAR_TYPE: SnackbarType = 'error';
 @observer
 class Snackbar extends React.Component<Props> {
     static defaultProps = {
+        behaviour: 'static',
         visible: true,
     };
 
@@ -72,22 +77,30 @@ class Snackbar extends React.Component<Props> {
     };
 
     render() {
-        const {onCloseClick, onClick, visible} = this.props;
+        const {icon, behaviour, onCloseClick, onClick, visible} = this.props;
 
         const snackbarClass = classNames(
             snackbarStyles.snackbar,
             snackbarStyles[this.type],
             {
                 [snackbarStyles.clickable]: onClick,
+                [snackbarStyles.floating]: behaviour === 'floating',
                 [snackbarStyles.visible]: visible,
             }
         );
 
         return (
             <div className={snackbarClass} onClick={onClick} onTransitionEnd={this.handleTransitionEnd} role="button">
-                <Icon className={snackbarStyles.icon} name={ICONS[this.type]} />
+                <Icon className={snackbarStyles.icon} name={icon || ICONS[this.type]} />
                 <div className={snackbarStyles.text}>
-                    <strong>{translate('sulu_admin.' + this.type)}</strong> - {this.message}
+                    {
+                        behaviour === 'static'
+                            ? <>
+                                <strong>{translate('sulu_admin.' + this.type)}</strong> -
+                            </>
+                            : null
+                    }
+                    {this.message}
                 </div>
                 {onCloseClick &&
                     <Icon className={snackbarStyles.closeIcon} name="su-times" onClick={onCloseClick} />
