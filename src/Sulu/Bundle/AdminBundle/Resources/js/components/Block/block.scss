@@ -57,7 +57,7 @@ $blockSelectedColor: $blueZodiac;
     align-items: center;
     justify-content: center;
     flex-grow: 0;
-    flex-shrink: 1;
+    flex-shrink: 0;
     color: $blockHandleColor;
     background-color: $blockHandleBackgroundColor;
     overflow: hidden;
@@ -67,7 +67,6 @@ $blockSelectedColor: $blueZodiac;
     flex-grow: 1;
     font-size: 12px;
     line-height: 18px;
-    overflow: auto; /* avoid overflowing of text editor on small screens - avoid hidden for absolute elements */
 }
 
 .children {
