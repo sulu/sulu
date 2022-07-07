@@ -78,6 +78,10 @@ $textEditorUnpublishedLinkColor: $gold;
     }
 
     .ck.ck-editor__top {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+
         .ck.ck-toolbar {
             padding: 5px 10px;
 
@@ -174,7 +178,6 @@ $textEditorUnpublishedLinkColor: $gold;
             border-color: $textEditorBackgroundColor !important;
             line-height: 20px;
             min-height: 100px;
-            max-height: calc(100vh - $toolbarHeight - $snackbarHeight - $tabMenuHeight - $viewPaddingVertical - 8px);
         }
 
         .ck-widget.table {

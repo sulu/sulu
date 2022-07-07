@@ -1,7 +1,8 @@
 @import '../Application/variables.scss';
 
 .form {
-    margin: $viewPaddingVertical $viewPaddingHorizontal;
-    overflow: hidden;
-    position: relative;
+    /* this container should not have a overflow hidden with position relative
+     * as that would break position sticky for texteditor and blocks
+     * see also: https://github.com/sulu/sulu/pull/5129/files#r913270661 */
+    padding: $viewPaddingVertical $viewPaddingHorizontal;
 }
