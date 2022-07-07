@@ -29,6 +29,7 @@ test('Render collapsed sortable block', () => {
             onExpand={jest.fn()}
             onRemove={jest.fn()}
             renderBlockContent={jest.fn()}
+            selected={false}
             sortIndex={1}
             value={{content: 'Test Content'}}
         />
@@ -48,6 +49,51 @@ test('Render expanded sortable, non-collapsable block with types', () => {
             onRemove={jest.fn()}
             onSettingsClick={jest.fn()}
             renderBlockContent={renderBlockContent}
+            selected={false}
+            sortIndex={1}
+            types={{type1: 'Type 1', type2: 'Type 2'}}
+            value={{content: 'Test Content'}}
+        />
+    )).toMatchSnapshot();
+});
+
+test('Render block in selection mode unselected', () => {
+    const renderBlockContent = jest.fn().mockImplementation(
+        (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
+    );
+
+    expect(render(
+        <SortableBlock
+            actions={[]}
+            activeType="type2"
+            expanded={true}
+            mode="selectable"
+            onRemove={jest.fn()}
+            onSettingsClick={jest.fn()}
+            renderBlockContent={renderBlockContent}
+            selected={false}
+            sortIndex={1}
+            types={{type1: 'Type 1', type2: 'Type 2'}}
+            value={{content: 'Test Content'}}
+        />
+    )).toMatchSnapshot();
+});
+
+test('Render block in selection mode selected', () => {
+    const renderBlockContent = jest.fn().mockImplementation(
+        (value, type) => 'Test for ' + value.content + (type ? ' and type ' + type : '')
+    );
+
+    expect(render(
+        <SortableBlock
+            actions={[]}
+            activeType="type2"
+            expanded={true}
+            mode="selectable"
+            onRemove={jest.fn()}
+            onSettingsClick={jest.fn()}
+            renderBlockContent={renderBlockContent}
+            selected={true}
             sortIndex={1}
             types={{type1: 'Type 1', type2: 'Type 2'}}
             value={{content: 'Test Content'}}
@@ -65,6 +111,7 @@ test('Should not show block types if only a single block is passed', () => {
             onExpand={jest.fn()}
             onRemove={jest.fn()}
             renderBlockContent={jest.fn()}
+            selected={false}
             sortIndex={1}
             value={{content: 'Test Content'}}
         />
@@ -101,6 +148,7 @@ test('Should apply sortIndex to given actions and pass wrapped actions to Block 
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
             renderBlockContent={jest.fn()}
+            selected={false}
             sortIndex={101}
             value={{content: 'Test Content'}}
         />
@@ -148,6 +196,7 @@ test('Should pass remove action to Block component if depracted onRemove prop is
             onExpand={jest.fn()}
             onRemove={removeSpy}
             renderBlockContent={jest.fn()}
+            selected={false}
             sortIndex={101}
             value={{content: 'Test Content'}}
         />
@@ -184,6 +233,7 @@ test('Should not show the settings icon if no onSettingsClick callback is passed
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
             renderBlockContent={jest.fn()}
+            selected={false}
             sortIndex={1}
             value={{content: 'Test Content'}}
         />
@@ -206,6 +256,7 @@ test('Should call onCollapse when the block is being collapsed', () => {
             onExpand={expandSpy}
             onRemove={removeSpy}
             renderBlockContent={jest.fn()}
+            selected={false}
             sortIndex={1}
             value={{content: 'Test Content'}}
         />
@@ -232,6 +283,7 @@ test('Should call onExpand when the block is being expanded', () => {
             onExpand={expandSpy}
             onRemove={removeSpy}
             renderBlockContent={jest.fn()}
+            selected={false}
             sortIndex={1}
             value={{content: 'Test Content'}}
         />
@@ -258,6 +310,7 @@ test('Should call onSettingClick when the block setting icon is clicked', () => 
             onExpand={expandSpy}
             onSettingsClick={settingsClickSpy}
             renderBlockContent={jest.fn()}
+            selected={false}
             sortIndex={1}
             value={{content: 'Test Content'}}
         />
@@ -283,6 +336,7 @@ test('Should call onTypeChange when the block has changed its type', () => {
             onRemove={jest.fn()}
             onTypeChange={typeChangeSpy}
             renderBlockContent={jest.fn()}
+            selected={false}
             sortIndex={1}
             value={{content: 'Test Content'}}
         />
@@ -306,6 +360,7 @@ test('Should call renderBlockContent with the correct arguments', () => {
             onExpand={jest.fn()}
             onRemove={jest.fn()}
             renderBlockContent={renderBlockContentSpy}
+            selected={false}
             sortIndex={7}
             value={value}
         />
@@ -327,6 +382,7 @@ test('Should call renderBlockContent with the correct arguments when block is co
             onExpand={jest.fn()}
             onRemove={jest.fn()}
             renderBlockContent={renderBlockContentSpy}
+            selected={false}
             sortIndex={7}
             value={value}
         />
@@ -348,6 +404,7 @@ test('Should call renderBlockContent with the correct arguments when types are i
             onExpand={jest.fn()}
             onRemove={jest.fn()}
             renderBlockContent={renderBlockContentSpy}
+            selected={false}
             sortIndex={7}
             value={value}
         />

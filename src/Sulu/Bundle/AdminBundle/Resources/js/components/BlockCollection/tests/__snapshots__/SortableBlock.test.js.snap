@@ -1,5 +1,221 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render block in selection mode selected 1`] = `
+<section
+  class="block expanded selected"
+  role="switch"
+>
+  <div
+    class="handle"
+  >
+    <div
+      class="container"
+    >
+      <label
+        class="label"
+        tabindex="-1"
+      >
+        <span
+          class="switch checkbox light"
+        >
+          <input
+            checked=""
+            type="checkbox"
+          />
+          <span>
+            <span
+              aria-label="su-check"
+              class="su-check"
+            />
+          </span>
+        </span>
+      </label>
+    </div>
+  </div>
+  <div
+    class="content"
+  >
+    <header
+      class="header"
+    >
+      <div
+        class="types"
+      >
+        <div
+          class="select"
+          role="none"
+        >
+          <button
+            class="displayValue default"
+            type="button"
+          >
+            <div
+              aria-label="Type 2"
+              class="croppedText"
+              title="Type 2"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Typ
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  e 2
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Type 2
+              </div>
+            </div>
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down toggle"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        class="iconButtons"
+      >
+        <button
+          type="button"
+        >
+          <span
+            aria-label="su-more-circle"
+            class="su-more-circle"
+          />
+        </button>
+        <button
+          type="button"
+        >
+          <span
+            aria-label="su-cog"
+            class="su-cog"
+          />
+        </button>
+      </div>
+    </header>
+    <article
+      class="children"
+    >
+      Test for Test Content and type type2
+    </article>
+  </div>
+</section>
+`;
+
+exports[`Render block in selection mode unselected 1`] = `
+<section
+  class="block expanded"
+  role="switch"
+>
+  <div
+    class="handle"
+  >
+    <div
+      class="container"
+    >
+      <label
+        class="label"
+        tabindex="-1"
+      >
+        <span
+          class="switch checkbox dark"
+        >
+          <input
+            type="checkbox"
+          />
+          <span />
+        </span>
+      </label>
+    </div>
+  </div>
+  <div
+    class="content"
+  >
+    <header
+      class="header"
+    >
+      <div
+        class="types"
+      >
+        <div
+          class="select"
+          role="none"
+        >
+          <button
+            class="displayValue default"
+            type="button"
+          >
+            <div
+              aria-label="Type 2"
+              class="croppedText"
+              title="Type 2"
+            >
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                Typ
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  e 2
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                Type 2
+              </div>
+            </div>
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down toggle"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        class="iconButtons"
+      >
+        <button
+          type="button"
+        >
+          <span
+            aria-label="su-more-circle"
+            class="su-more-circle"
+          />
+        </button>
+        <button
+          type="button"
+        >
+          <span
+            aria-label="su-cog"
+            class="su-cog"
+          />
+        </button>
+      </div>
+    </header>
+    <article
+      class="children"
+    >
+      Test for Test Content and type type2
+    </article>
+  </div>
+</section>
+`;
+
 exports[`Render collapsed sortable block 1`] = `
 <section
   class="block"

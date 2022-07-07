@@ -48,6 +48,15 @@ The Symfony 4.4 compatibility service
 `Sulu\Bundle\WebsiteBundle\Controller\ExceptionController` / `sulu_website.exception_controller`
 was removed. See also [UPGRADE 2.1.0-RC1](#210-rc1).
 
+### Block component dragHandle property was renamed
+
+The `dragHandle` property of the `Block.js` component was changed to `handle`:
+
+```diff
+-<Block dragHandle={handleComponent} />
++<Block handle={handleComponent} />
+```
+
 ### User entity method return types changed
 
 The sulu `User` entity requires the following changes:

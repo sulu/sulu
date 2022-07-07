@@ -5,9 +5,12 @@ import {observer} from 'mobx-react';
 import classNames from 'classnames';
 import {arrayMove, translate, clipboard} from '../../utils';
 import Button from '../Button';
+import BlockToolbar from '../BlockToolbar';
+import Icon from '../Icon';
+import Sticky from '../Sticky';
 import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
-import type {RenderBlockContentCallback} from './types';
+import type {RenderBlockContentCallback, BlockMode} from './types';
 
 type Props<T: string, U: {type: T}> = {|
     addButtonText?: ?string,
@@ -43,6 +46,8 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     @observable pasteableBlocks: Array<U>= [];
     @observable generatedBlockIds: Array<number> = [];
     @observable expandedBlocks: Array<boolean> = [];
+    @observable selectedBlocks: Array<boolean> = [];
+    @observable mode: BlockMode = 'sortable';
 
     fillArraysDisposer: ?() => *;
     setPasteableBlocksDisposer: ?() => *;
@@ -54,6 +59,10 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         this.setPasteableBlocksDisposer = clipboard.observe(BLOCKS_CLIPBOARD_KEY, action((blocks) => {
             this.pasteableBlocks = blocks || [];
         }), true);
+
+        if (props.movable === false) {
+            this.mode = 'static';
+        }
     }
 
     componentWillUnmount() {
@@ -63,7 +72,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
     fillArrays = () => {
         const {collapsable, defaultType, onChange, minOccurs, value} = this.props;
-        const {expandedBlocks, generatedBlockIds} = this;
+        const {expandedBlocks, generatedBlockIds, selectedBlocks} = this;
 
         if (!value) {
             return;
@@ -73,6 +82,10 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             expandedBlocks.splice(value.length);
         }
 
+        if (selectedBlocks.length > value.length) {
+            selectedBlocks.splice(value.length);
+        }
+
         if (generatedBlockIds.length > value.length) {
             generatedBlockIds.splice(value.length);
         }
@@ -80,11 +93,13 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         const collapsed = collapsable ? false : true;
 
         expandedBlocks.push(...new Array(value.length - expandedBlocks.length).fill(collapsed));
+        selectedBlocks.push(...new Array(value.length - selectedBlocks.length).fill(false));
         generatedBlockIds.push(
             ...new Array(value.length - generatedBlockIds.length).fill(false).map(() => ++BlockCollection.idCounter)
         );
         if (minOccurs && value.length < minOccurs) {
             expandedBlocks.push(...new Array(minOccurs - value.length).fill(true));
+            selectedBlocks.push(...new Array(minOccurs - value.length).fill(false));
             generatedBlockIds.push(
                 ...new Array(minOccurs - value.length).fill(false).map(() => ++BlockCollection.idCounter)
             );
@@ -100,6 +115,18 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         }
     };
 
+    @computed get selectedBlockIndexes(): Array<number> {
+        const indexes = [];
+
+        this.selectedBlocks.forEach((selected, index) => {
+            if (selected) {
+                indexes.push(index);
+            }
+        });
+
+        return indexes;
+    }
+
     @action handleAddBlock = (insertionIndex: number) => {
         const {defaultType, onChange, value} = this.props;
 
@@ -109,6 +136,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
         if (value) {
             this.expandedBlocks.splice(insertionIndex, 0, true);
+            this.selectedBlocks.splice(insertionIndex, 0, false);
             this.generatedBlockIds.splice(insertionIndex, 0, ++BlockCollection.idCounter);
 
             const elementsBefore = value.slice(0, insertionIndex);
@@ -128,6 +156,9 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         if (value) {
             this.expandedBlocks.splice(
                 insertionIndex, 0, ...this.pasteableBlocks.map(() => true)
+            );
+            this.selectedBlocks.splice(
+                insertionIndex, 0, ...this.pasteableBlocks.map(() => false)
             );
             this.generatedBlockIds.splice(
                 insertionIndex, 0, ...this.pasteableBlocks.map(() => ++BlockCollection.idCounter)
@@ -150,56 +181,123 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         }
     };
 
-    @action handleRemoveBlock = (index: number) => {
-        const {onChange, value} = this.props;
-
-        if (this.hasMinimumReached) {
-            throw new Error('The minimum amount of blocks has already been reached!');
-        }
-
-        if (value) {
-            this.expandedBlocks.splice(index, 1);
-            this.generatedBlockIds.splice(index, 1);
-            onChange(value.filter((element, arrayIndex) => arrayIndex != index));
-        }
+    handleRemoveBlock = (index: number) => {
+        this.removeBlocks([index]);
     };
 
-    @action handleDuplicateBlock = (index: number) => {
+    handleRemoveSelectedBlocks = () => {
+        this.removeBlocks(this.selectedBlockIndexes);
+    };
+
+    @action removeBlocks = (indexes: Array<number>) => {
+        const {onChange, movable, value} = this.props;
+
+        if (!value) {
+            return;
+        }
+
+        indexes.forEach(( index, count) => {
+            if (this.hasMinimumReached) {
+                // TODO throw snackbar message or maybe its not required as fillArrays already refill the array
+                throw new Error('The minimum amount of blocks has already been reached!');
+            }
+
+            const currentRemoveIndex = index - count;
+
+            this.expandedBlocks.splice(currentRemoveIndex, 1);
+            this.selectedBlocks.splice(currentRemoveIndex, 1);
+            this.generatedBlockIds.splice(currentRemoveIndex, 1);
+        });
+
+        if (this.generatedBlockIds.length < 2 && this.mode === 'selectable') {
+            this.mode = movable ? 'sortable' : 'static';
+        }
+
+        onChange(value.filter((block, index) => indexes.indexOf(index) === -1));
+    };
+
+    handleDuplicateSelectedBlocks = () => {
+        const {value} = this.props;
+
+        this.duplicateBlocks(this.selectedBlockIndexes, value.length);
+    };
+
+    handleDuplicateBlock = (index: number) => {
+        this.duplicateBlocks([index], index);
+    };
+
+    @action duplicateBlocks = (indexes: Array<number>, insertAfterIndex: number) => {
         const {onChange, value} = this.props;
 
-        if (this.hasMaximumReached) {
-            throw new Error('The maximum amount of blocks has already been reached!');
+        if (!value) {
+            return;
         }
 
-        if (value) {
-            this.expandedBlocks.splice(index, 0, true);
-            this.generatedBlockIds.splice(index, 0, ++BlockCollection.idCounter);
+        let newValue = [...value];
 
-            const elementsBefore = value.slice(0, index);
-            const elementsAfter = value.slice(index);
-            // $FlowFixMe
-            onChange([...elementsBefore, {...toJS(value[index])}, ...elementsAfter]);
-        }
+        indexes.forEach(( index, count) => {
+            if (this.hasMaximumReached) {
+                // TODO throw snackbar message or maybe its not required as fillArrays already refill the array
+                throw new Error('The maximum amount of blocks has already been reached!');
+            }
+
+            const currentInsertAfterIndex = insertAfterIndex + count;
+
+            this.expandedBlocks.splice(currentInsertAfterIndex, 0, true);
+            this.selectedBlocks.splice(currentInsertAfterIndex, 0, false);
+            this.generatedBlockIds.splice(currentInsertAfterIndex, 0, ++BlockCollection.idCounter);
+
+            const elementsBefore = newValue.slice(0, currentInsertAfterIndex);
+            const elementsAfter = newValue.slice(currentInsertAfterIndex);
+
+            newValue = [...elementsBefore, {...toJS(newValue[index])}, ...elementsAfter];
+        });
+
+        onChange(newValue);
+    };
+
+    handleCopySelectedBlocks = () => {
+        this.copyBlocks(this.selectedBlockIndexes);
     };
 
     handleCopyBlock = (index: number) => {
+        this.copyBlocks([index]);
+    };
+
+    copyBlocks = (indexes: Array<number>) => {
         const {value} = this.props;
 
-        if (value) {
-            const block = {...toJS(value[index])};
-            clipboard.set(BLOCKS_CLIPBOARD_KEY, [block]);
+        if (!value) {
+            return;
         }
+
+        const blocks = [];
+
+        indexes.forEach(( index) => {
+            blocks.push({...toJS(value[index])});
+        });
+
+        clipboard.set(BLOCKS_CLIPBOARD_KEY, blocks);
+    };
+
+    handleCutSelectedBlocks = () => {
+        this.cutBlocks(this.selectedBlockIndexes);
     };
 
     handleCutBlock = (index: number) => {
-        this.handleCopyBlock(index);
-        this.handleRemoveBlock(index);
+        this.cutBlocks([index]);
+    };
+
+    cutBlocks = (indexes: Array<number>) => {
+        this.copyBlocks(indexes);
+        this.removeBlocks(indexes);
     };
 
     @action handleSortEnd = ({newIndex, oldIndex}: {newIndex: number, oldIndex: number}) => {
         const {onChange, onSortEnd, value} = this.props;
 
         this.expandedBlocks = arrayMove(this.expandedBlocks, oldIndex, newIndex);
+        this.selectedBlocks = arrayMove(this.selectedBlocks, oldIndex, newIndex);
         this.generatedBlockIds = arrayMove(this.generatedBlockIds, oldIndex, newIndex);
         onChange(arrayMove(value, oldIndex, newIndex));
 
@@ -214,6 +312,14 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
     @action handleExpand = (index: number) => {
         this.expandedBlocks[index] = true;
+    };
+
+    @action handleSelect = (index: number) => {
+        this.selectedBlocks[index] = true;
+    };
+
+    @action handleUnselect = (index: number) => {
+        this.selectedBlocks[index] = false;
     };
 
     handleSettingsClick = (index: number) => {
@@ -331,12 +437,96 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         );
     };
 
+    @action handleBlockToolbarCancel = () => {
+        const {movable} = this.props;
+
+        this.mode = movable ? 'sortable' : 'static';
+
+        this.selectedBlocks.forEach((element, index) => {
+            this.selectedBlocks[index] = false;
+        });
+    };
+
+    @action handleClickSelectMultiple = () => {
+        this.mode = 'selectable';
+    };
+
+    @action handleBlockToolbarSelectAll = () => {
+        this.selectedBlocks.forEach((element, index) => {
+            this.selectedBlocks[index] = true;
+        });
+    };
+
+    @action handleBlockToolbarUnselectAll = () => {
+        this.selectedBlocks.forEach((element, index) => {
+            this.selectedBlocks[index] = false;
+        });
+    };
+
+    renderBlockToolbar = (isSticky: boolean) => {
+        const {value} = this.props;
+        const selectedBlocksCount = this.selectedBlocks.filter((element) => element).length;
+
+        return (
+            <BlockToolbar
+                actions={[
+                    {
+                        label: translate('sulu_admin.copy'),
+                        icon: 'su-copy',
+                        handleClick: this.handleCopySelectedBlocks,
+                    },
+                    {
+                        label: translate('sulu_admin.duplicate'),
+                        icon: 'su-duplicate',
+                        handleClick: this.handleDuplicateSelectedBlocks,
+                    },
+                    {
+                        label: translate('sulu_admin.cut'),
+                        icon: 'su-cut',
+                        handleClick: this.handleCutSelectedBlocks,
+                    },
+                    {
+                        label: translate('sulu_admin.delete'),
+                        icon: 'su-trash-alt',
+                        handleClick: this.handleRemoveSelectedBlocks,
+                    },
+                ]}
+                allSelected={selectedBlocksCount === value.length}
+                mode={isSticky ? 'sticky' : 'static'}
+                onCancel={this.handleBlockToolbarCancel}
+                onSelectAll={this.handleBlockToolbarSelectAll}
+                onUnselectAll={this.handleBlockToolbarUnselectAll}
+                selectedCount={selectedBlocksCount}
+            />
+        );
+    };
+
+    renderBlockToolbarButton = () => {
+        return (
+            <div className={blockCollectionStyles.selectMultipleButtonContainer}>
+                <button
+                    className={blockCollectionStyles.selectMultipleButton}
+                    onClick={this.handleClickSelectMultiple}
+                    type="button"
+                >
+                    <Icon
+                        aria-hidden={true}
+                        className={blockCollectionStyles.selectMultipleButtonIcon}
+                        name="su-check-circle"
+                    />
+                    <span className={blockCollectionStyles.selectMultipleButtonText}>
+                        {translate('sulu_admin.select_multiple_blocks')}
+                    </span>
+                </button>
+            </div>
+        );
+    };
+
     render() {
         const {
             collapsable,
             disabled,
             icons,
-            movable,
             onSettingsClick,
             renderBlockContent,
             types,
@@ -344,7 +534,19 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         } = this.props;
 
         return (
-            <section>
+            <section className={blockCollectionStyles.blocks}>
+                {
+                    value.length > 1 ? (
+                        this.mode === 'selectable'
+                            ? <Sticky top={10}>
+                                {this.renderBlockToolbar}
+                            </Sticky>
+                            : this.renderBlockToolbarButton()
+                    ) : null
+                }
+
+                <div className={blockCollectionStyles.spacer} />
+
                 <SortableBlockList
                     blockActions={this.blockActions}
                     disabled={disabled}
@@ -352,14 +554,17 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
                     generatedBlockIds={this.generatedBlockIds}
                     icons={icons}
                     lockAxis="y"
-                    movable={movable}
+                    mode={this.mode}
                     onCollapse={collapsable ? this.handleCollapse : undefined}
                     onExpand={collapsable ? this.handleExpand : undefined}
+                    onSelect={this.handleSelect}
                     onSettingsClick={onSettingsClick ? this.handleSettingsClick : undefined}
                     onSortEnd={this.handleSortEnd}
                     onTypeChange={this.handleTypeChange}
+                    onUnselect={this.handleUnselect}
                     renderBlockContent={renderBlockContent}
                     renderDivider={this.renderAddButton}
+                    selectedBlocks={this.selectedBlocks}
                     types={types}
                     useDragHandle={true}
                     value={value}

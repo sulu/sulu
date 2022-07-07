@@ -1,6 +1,14 @@
 @import './variables.scss';
 @import '../../containers/Application/colors.scss';
 
+.blocks {
+    position: relative;
+}
+
+.spacer {
+    height: 10px;
+}
+
 .addButtonContainer {
     text-align: center;
 }
@@ -30,4 +38,27 @@
             transition-delay: .1s;
         }
     }
+}
+
+.selectMultipleButtonContainer {
+    display: flex;
+    justify-content: end;
+}
+
+.selectMultipleButton {
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+}
+
+.selectMultipleButtonIcon {
+    display: inline-block;
+    font-size: 18px;
+    margin-right: 7px;
+}
+
+.selectMultipleButtonText {
+    text-decoration: underline;
 }

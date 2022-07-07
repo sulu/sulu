@@ -1,7 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render block with schema 1`] = `
-<section>
+<section
+  class="blocks"
+>
+  <div
+    class="selectMultipleButtonContainer"
+  >
+    <button
+      class="selectMultipleButton"
+      type="button"
+    >
+      <span
+        aria-label="su-check-circle"
+        class="su-check-circle selectMultipleButtonIcon"
+      />
+      <span
+        class="selectMultipleButtonText"
+      >
+        sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+  </div>
+  <div
+    class="spacer"
+  />
   <div
     class="sortableBlockList"
   >
@@ -266,7 +289,30 @@ exports[`Render block with schema 1`] = `
 `;
 
 exports[`Render block with schema and error on fields already being modified 1`] = `
-<section>
+<section
+  class="blocks"
+>
+  <div
+    class="selectMultipleButtonContainer"
+  >
+    <button
+      class="selectMultipleButton"
+      type="button"
+    >
+      <span
+        aria-label="su-check-circle"
+        class="su-check-circle selectMultipleButtonIcon"
+      />
+      <span
+        class="selectMultipleButtonText"
+      >
+        sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+  </div>
+  <div
+    class="spacer"
+  />
   <div
     class="sortableBlockList"
   >
@@ -575,7 +621,30 @@ exports[`Render block with schema and error on fields already being modified 1`]
 `;
 
 exports[`Render block with schema and error on fields already being modified 2`] = `
-<section>
+<section
+  class="blocks"
+>
+  <div
+    class="selectMultipleButtonContainer"
+  >
+    <button
+      class="selectMultipleButton"
+      type="button"
+    >
+      <span
+        aria-label="su-check-circle"
+        class="su-check-circle selectMultipleButtonIcon"
+      />
+      <span
+        class="selectMultipleButtonText"
+      >
+        sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+  </div>
+  <div
+    class="spacer"
+  />
   <div
     class="sortableBlockList"
   >
@@ -887,7 +956,30 @@ exports[`Render block with schema and error on fields already being modified 2`]
 `;
 
 exports[`Render collapsed blocks with block previews 1`] = `
-<section>
+<section
+  class="blocks"
+>
+  <div
+    class="selectMultipleButtonContainer"
+  >
+    <button
+      class="selectMultipleButton"
+      type="button"
+    >
+      <span
+        aria-label="su-check-circle"
+        class="su-check-circle selectMultipleButtonIcon"
+      />
+      <span
+        class="selectMultipleButtonText"
+      >
+        sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+  </div>
+  <div
+    class="spacer"
+  />
   <div
     class="sortableBlockList"
   >
@@ -1022,7 +1114,30 @@ exports[`Render collapsed blocks with block previews 1`] = `
 `;
 
 exports[`Render collapsed blocks with block previews 2`] = `
-<section>
+<section
+  class="blocks"
+>
+  <div
+    class="selectMultipleButtonContainer"
+  >
+    <button
+      class="selectMultipleButton"
+      type="button"
+    >
+      <span
+        aria-label="su-check-circle"
+        class="su-check-circle selectMultipleButtonIcon"
+      />
+      <span
+        class="selectMultipleButtonText"
+      >
+        sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+  </div>
+  <div
+    class="spacer"
+  />
   <div
     class="sortableBlockList"
   >
@@ -1159,7 +1274,30 @@ exports[`Render collapsed blocks with block previews 2`] = `
 `;
 
 exports[`Render collapsed blocks with block previews and sections 1`] = `
-<section>
+<section
+  class="blocks"
+>
+  <div
+    class="selectMultipleButtonContainer"
+  >
+    <button
+      class="selectMultipleButton"
+      type="button"
+    >
+      <span
+        aria-label="su-check-circle"
+        class="su-check-circle selectMultipleButtonIcon"
+      />
+      <span
+        class="selectMultipleButtonText"
+      >
+        sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+  </div>
+  <div
+    class="spacer"
+  />
   <div
     class="sortableBlockList"
   >
@@ -1290,7 +1428,30 @@ exports[`Render collapsed blocks with block previews and sections 1`] = `
 `;
 
 exports[`Render collapsed blocks with block previews without tags 1`] = `
-<section>
+<section
+  class="blocks"
+>
+  <div
+    class="selectMultipleButtonContainer"
+  >
+    <button
+      class="selectMultipleButton"
+      type="button"
+    >
+      <span
+        aria-label="su-check-circle"
+        class="su-check-circle selectMultipleButtonIcon"
+      />
+      <span
+        class="selectMultipleButtonText"
+      >
+        sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+  </div>
+  <div
+    class="spacer"
+  />
   <div
     class="sortableBlockList"
   >
@@ -1427,7 +1588,30 @@ exports[`Render collapsed blocks with block previews without tags 1`] = `
 `;
 
 exports[`Render collapsed blocks with block previews without tags and with sections 1`] = `
-<section>
+<section
+  class="blocks"
+>
+  <div
+    class="selectMultipleButtonContainer"
+  >
+    <button
+      class="selectMultipleButton"
+      type="button"
+    >
+      <span
+        aria-label="su-check-circle"
+        class="su-check-circle selectMultipleButtonIcon"
+      />
+      <span
+        class="selectMultipleButtonText"
+      >
+        sulu_admin.select_multiple_blocks
+      </span>
+    </button>
+  </div>
+  <div
+    class="spacer"
+  />
   <div
     class="sortableBlockList"
   >

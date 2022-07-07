@@ -16,14 +16,15 @@ type Props<T: string> = {
     actions: Array<ActionConfig>,
     activeType?: T,
     children: Node,
-    dragHandle?: Node,
     expanded: boolean,
+    handle?: Node,
     icons?: Array<string>,
     onCollapse?: () => void,
     onExpand?: () => void,
     onRemove?: () => void, // @deprecated
     onSettingsClick?: () => void,
     onTypeChange?: (type: T) => void,
+    selected: boolean,
     types?: {[key: T]: string},
 };
 
@@ -32,6 +33,7 @@ class Block<T: string> extends React.Component<Props<T>> {
     static defaultProps = {
         actions: [],
         expanded: false,
+        selected: false,
     };
 
     @observable actionsButtonRef: ?ElementRef<'*'>;
@@ -99,11 +101,12 @@ class Block<T: string> extends React.Component<Props<T>> {
         const {
             activeType,
             children,
-            dragHandle,
+            handle,
             icons,
             onCollapse,
             onExpand,
             onSettingsClick,
+            selected,
             types,
         } = this.props;
 
@@ -113,14 +116,15 @@ class Block<T: string> extends React.Component<Props<T>> {
             blockStyles.block,
             {
                 [blockStyles.expanded]: expanded,
+                [blockStyles.selected]: selected,
             }
         );
 
         return (
             <section className={blockClass} onClick={this.handleExpand} role="switch">
-                {dragHandle &&
+                {handle &&
                     <div className={blockStyles.handle}>
-                        {dragHandle}
+                        {handle}
                     </div>
                 }
                 <div className={blockStyles.content}>
