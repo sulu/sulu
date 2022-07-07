@@ -139,7 +139,7 @@ class SortableBlock<T: string, U: {type: T}> extends React.Component<Props<T, U>
             return <SortableHandle />;
         }
 
-        if (mode === 'selection') {
+        if (mode === 'selectable') {
             return <SelectionHandle checked={selected} onChange={this.handleSelectionChanged} />;
         }
 

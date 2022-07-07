@@ -9,4 +9,4 @@ export type BlockActionConfig = BlockButtonActionConfig | DividerActionConfig ;
 export type RenderBlockContentCallback<T: string, U: {type: T}>
     = (value: U, type: T, index: number, expanded: boolean) => Node;
 
-export type BlockMode = 'static' | 'sortable' | 'selection';
+export type BlockMode = 'static' | 'sortable' | 'selectable';

@@ -209,7 +209,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             this.generatedBlockIds.splice(currentRemoveIndex, 1);
         });
 
-        if (this.generatedBlockIds.length < 2 && this.mode === 'selection') {
+        if (this.generatedBlockIds.length < 2 && this.mode === 'selectable') {
             this.mode = movable ? 'sortable' : 'static';
         }
 
@@ -448,7 +448,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     };
 
     @action handleClickSelectMultiple = () => {
-        this.mode = 'selection';
+        this.mode = 'selectable';
     };
 
     @action handleBlockToolbarSelectAll = () => {
@@ -537,7 +537,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
             <section className={blockCollectionStyles.blocks}>
                 {
                     value.length > 1 ? (
-                        this.mode === 'selection'
+                        this.mode === 'selectable'
                             ? <Sticky top={10}>
                                 {this.renderBlockToolbar}
                             </Sticky>
