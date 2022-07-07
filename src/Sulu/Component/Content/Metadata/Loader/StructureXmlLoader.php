@@ -389,6 +389,7 @@ class StructureXmlLoader extends AbstractLoader
 
     /**
      * @param array<string, string> $metaValues
+     *
      * @return array<string, string>
      */
     private function loadMetaValues(array $metaValues): array

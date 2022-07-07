@@ -179,8 +179,10 @@ class StructureMetadataFactoryTest extends TestCase
         $cacheLifeTimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, Argument::any())
             ->willReturn(true);
 
+        $translatorDouble = $this->translator->reveal();
+
         $propertiesXmlLoader = new PropertiesXmlParser(
-            $this->translator->reveal(),
+            $translatorDouble,
             []
         );
         $schemaXmlLoader = new SchemaXmlParser();
@@ -190,7 +192,7 @@ class StructureMetadataFactoryTest extends TestCase
             $propertiesXmlLoader,
             $schemaXmlLoader,
             $contentTypeManager->reveal(),
-            $this->translator->reveal(),
+            $translatorDouble,
             [],
             [],
             []
