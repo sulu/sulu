@@ -41,6 +41,9 @@ class StructureXmlLoaderTest extends TestCase
         'snippet' => ['title'],
     ];
 
+    /**
+     * @var string[]
+     */
     private $locales = [
         'en' => 'en',
         'de' => 'de',
@@ -109,7 +112,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->assertNull($result->getSchema());
     }
 
-    public function testLoadTemplateWithLocalization()
+    public function testLoadTemplateWithLocalization(): void
     {
         $this->contentTypeManager->has('text_line')->willReturn(true);
         $this->contentTypeManager->has('resource_locator')->willReturn(true);

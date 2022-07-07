@@ -77,7 +77,7 @@ class StructureXmlLoader extends AbstractLoader
     private $requiredPropertyNames = [];
 
     /**
-     * @var string[]
+     * @var array<int, string>
      */
     private $locales;
 
@@ -106,6 +106,9 @@ class StructureXmlLoader extends AbstractLoader
      */
     private $translator;
 
+    /**
+     * @param array<string, string> $locales
+     */
     public function __construct(
         CacheLifetimeResolverInterface $cacheLifetimeResolver,
         PropertiesXmlParser $propertiesXmlParser,
@@ -384,6 +387,10 @@ class StructureXmlLoader extends AbstractLoader
         );
     }
 
+    /**
+     * @param array<string, string> $metaValues
+     * @return array<string, string>
+     */
     private function loadMetaValues(array $metaValues): array
     {
         $result = [];
