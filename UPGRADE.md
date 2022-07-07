@@ -48,12 +48,12 @@ The Symfony 4.4 compatibility service
 `Sulu\Bundle\WebsiteBundle\Controller\ExceptionController` / `sulu_website.exception_controller`
 was removed. See also [UPGRADE 2.1.0-RC1](#210-rc1).
 
-### Block component draftHandle property was renamed
+### Block component dragHandle property was renamed
 
-The `draftHandle` property of the `Block.js` component was changed to `handle`:
+The `dragHandle` property of the `Block.js` component was changed to `handle`:
 
 ```diff
--<Block draftHandle={handleComponent} />
+-<Block dragHandle={handleComponent} />
 +<Block handle={handleComponent} />
 ```
 
