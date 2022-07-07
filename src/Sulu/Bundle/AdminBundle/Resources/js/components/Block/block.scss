@@ -67,6 +67,7 @@ $blockSelectedColor: $blueZodiac;
     flex-grow: 1;
     font-size: 12px;
     line-height: 18px;
+    overflow: auto; /* avoid overflowing text editor on small screens not using hidden to allow overflow of absolute elements */
 }
 
 .children {
