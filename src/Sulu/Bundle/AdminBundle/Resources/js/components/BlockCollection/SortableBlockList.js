@@ -47,7 +47,7 @@ class SortableBlockList<T: string, U: {type: T}> extends React.Component<Props<T
 
         if (props.movable === false) {
             log.warn(
-                'The "mode" prop of the "SortableBlockList" component is deprecated since 2.5 and will ' +
+                'The "movable" prop of the "SortableBlockList" component is deprecated since 2.5 and will ' +
                 'be removed. Use the "mode" prop with "static" or "sortable" instead.'
             );
         }
