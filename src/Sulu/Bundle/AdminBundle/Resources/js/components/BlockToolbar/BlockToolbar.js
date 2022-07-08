@@ -7,8 +7,6 @@ import Icon from '../Icon';
 import Tooltip from '../Tooltip';
 import blockToolbarStyles from './blockToolbar.scss';
 import type {BlockToolbarMode} from './types';
-import applicationStyles from "../../containers/Application/application.scss";
-import {sidebarStore} from "../../containers";
 
 type Props = {|
     actions: Array<{|
