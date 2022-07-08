@@ -97,11 +97,11 @@
         left: $navigationWidth;
 
         &.small {
-            right: calc((100% - $navigationWidth) * 0.3);
+            right: calc((100% - $navigationWidth) * .3);
         }
 
         &.medium {
-            right: calc((100% - $navigationWidth) * 0.5);
+            right: calc((100% - $navigationWidth) * .5);
         }
 
         &.large {
