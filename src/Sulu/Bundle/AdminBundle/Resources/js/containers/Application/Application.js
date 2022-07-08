@@ -147,6 +147,15 @@ class Application extends React.Component<Props>{
             }
         );
 
+        const snackbarClass = classNames(
+            applicationStyles.snackbar,
+            {
+                [applicationStyles.isNavigationVisible]: this.navigationVisible,
+                [applicationStyles.isNavigationPinned]: this.navigationPinned,
+                [applicationStyles[sidebarStore.size]]: sidebarStore.size,
+            }
+        );
+
         const contentClass = classNames(
             applicationStyles.content,
             {
@@ -214,7 +223,7 @@ class Application extends React.Component<Props>{
                         />
                         {
                             snackbarStore.messages.length
-                                ? <SnackbarContainer>
+                                ? <SnackbarContainer className={snackbarClass}>
                                     {snackbarStore.messages.map((message, index) => {
                                         return (
                                             <Snackbar
