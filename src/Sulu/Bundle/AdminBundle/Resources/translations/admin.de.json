@@ -61,6 +61,8 @@
     "sulu_admin.list_search_placeholder": "Suche…",
     "sulu_admin.error": "Fehler",
     "sulu_admin.warning": "Warnung",
+    "sulu_admin.info": "Info",
+    "sulu_admin.success": "Erfolg",
     "sulu_admin.close": "Schließen",
     "sulu_admin.id": "ID",
     "sulu_admin.key": "Schlüssel",
