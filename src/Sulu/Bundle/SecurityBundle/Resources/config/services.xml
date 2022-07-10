@@ -381,7 +381,7 @@
         >
             <argument>%sulu_security.two_factor_methods%</argument>
             <argument>%sulu_security.two_factor_force_pattern%</argument>
-            <argument type="service" id="security.helper"/>
+            <argument type="service" id="security.helper" on-invalid="null"/>
 
             <tag name="sulu_admin.form_metadata_visitor" />
         </service>

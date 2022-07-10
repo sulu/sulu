@@ -30,7 +30,7 @@ class TwoFactorFormMetadataVisitor implements FormMetadataVisitorInterface
 
     private ?string $twoFactorForcePattern;
 
-    private Security $security;
+    private ?Security $security;
 
     /**
      * @param string[] $twoFactorMethods
@@ -38,7 +38,7 @@ class TwoFactorFormMetadataVisitor implements FormMetadataVisitorInterface
     public function __construct(
         array $twoFactorMethods,
         ?string $twoFactorForcePattern,
-        Security $security
+        ?Security $security
     ) {
         $this->twoFactorMethods = $twoFactorMethods;
         $this->twoFactorForcePattern = $twoFactorForcePattern;
@@ -70,10 +70,10 @@ class TwoFactorFormMetadataVisitor implements FormMetadataVisitorInterface
                 }
 
                 if (!$name && null !== $this->twoFactorForcePattern) {
-                    /** @var User $user */
-                    $user = $this->security->getUser();
+                    /** @var User|null $user */
+                    $user = $this->security?->getUser();
 
-                    if (\preg_match($this->twoFactorForcePattern, $user->getEmail() ?: '')) {
+                    if (\preg_match($this->twoFactorForcePattern, $user?->getEmail() ?: '')) {
                         unset($methods[$key]);
                     }
                 }
