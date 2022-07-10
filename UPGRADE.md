@@ -4,14 +4,21 @@
 
 ### JS Dependencies update
 
-Sulu requires now new versions of the following JS packages:
+Sulu requires now the following new versions JS packages for admin build:
 
-- `@ckeditor/ckeditor5-dev-utils`: `^30.3.2`
-- `@ckeditor/ckeditor5-theme-lark`: `34.2.0`
-- `@ckeditor/ckeditor5-*`: `34.2.0`
+ - `@ckeditor/ckeditor5-dev-utils`: `^30.3.2`
+ - `@ckeditor/ckeditor5-theme-lark`: `^34.2.0`
+ - `@ckeditor/ckeditor5-*`: `34.2.0`
+ - `postcss`: `^8.4.14`
+ - `postcss-calc`: `^8.2.4`
+ - `postcss-hexrgba`: `^2.0.0`
+ - `postcss-import`: `^14.1.0`
+ - `postcss-loader`: `^4.0.0`
+ - `postcss-nested`: `^5.0.6`
+ - `postcss-simple-vars`: `^6.0.3`
 
 If you created custom admin components you need to upgrade also
-upgrade your components. The core js will automatically be update
+your components. The core js will automatically be update
 via the [update build](https://docs.sulu.io/en/latest/upgrades/upgrade-2.x.html) command.
 
 ### Rename labelRef to inputContainerRef
