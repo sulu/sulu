@@ -201,8 +201,6 @@ export default class CKEditor5 extends React.Component<Props> {
                 if (disabled) {
                     this.editorInstance.enableReadOnlyMode('disabled');
                     this.editorInstance.ui.element.classList.add('disabled');
-                } else {
-                    this.editorInstance.disableReadOnlyMode('disabled');
                 }
 
                 if (onBlur) {
