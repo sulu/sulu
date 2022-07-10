@@ -49,6 +49,13 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
         $container->setParameter('sulu_security.password_policy_pattern', $passwordPolicyEnabled ? $config['password_policy']['pattern'] : null);
         $container->setParameter('sulu_security.password_policy_info_translation_key', $passwordPolicyEnabled ? $config['password_policy']['info_translation_key'] : null);
 
+        $twoFactorForcePattern = null;
+        $twoFactorForceEnabled = $config['two_factor']['force']['enabled'];
+        if ($twoFactorForceEnabled) {
+            $twoFactorForcePattern = $config['two_factor']['force']['pattern'];
+        }
+        $container->setParameter('sulu_security.two_factor_force_pattern', $twoFactorForcePattern);
+
         foreach ($config['reset_password']['mail'] as $option => $value) {
             $container->setParameter('sulu_security.reset_password.mail.' . $option, $value);
         }
@@ -73,6 +80,10 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
 
         if ($config['checker']['enabled']) {
             $loader->load('checker.xml');
+        }
+
+        if ($twoFactorForcePattern) {
+            $loader->load('2fa_force.xml');
         }
 
         $this->configurePersistence($config['objects'], $container);

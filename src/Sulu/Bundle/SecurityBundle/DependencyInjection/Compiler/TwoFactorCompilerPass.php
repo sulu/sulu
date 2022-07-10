@@ -31,5 +31,10 @@ class TwoFactorCompilerPass implements CompilerPassInterface
         }
 
         $container->setParameter('sulu_security.two_factor_methods', $methods);
+
+        if (0 === \count($methods)) {
+            $container->setParameter('sulu_security.two_factor_force_pattern', null);
+            $container->removeDefinition('sulu_security.force_two_factor_listener');
+        }
     }
 }

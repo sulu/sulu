@@ -380,6 +380,8 @@
             class="Sulu\Bundle\SecurityBundle\Metadata\TwoFactorFormMetadataVisitor"
         >
             <argument>%sulu_security.two_factor_methods%</argument>
+            <argument>%sulu_security.two_factor_force_pattern%</argument>
+            <argument type="service" id="security.helper"/>
 
             <tag name="sulu_admin.form_metadata_visitor" />
         </service>

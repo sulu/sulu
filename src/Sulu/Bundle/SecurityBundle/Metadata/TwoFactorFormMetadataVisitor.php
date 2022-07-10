@@ -15,6 +15,8 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataVisitorInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
+use Sulu\Bundle\SecurityBundle\Entity\User;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @internal
@@ -26,12 +28,21 @@ class TwoFactorFormMetadataVisitor implements FormMetadataVisitorInterface
      */
     private array $twoFactorMethods;
 
+    private ?string $twoFactorForcePattern;
+
+    private Security $security;
+
     /**
      * @param string[] $twoFactorMethods
      */
-    public function __construct(array $twoFactorMethods)
-    {
+    public function __construct(
+        array $twoFactorMethods,
+        ?string $twoFactorForcePattern,
+        Security $security
+    ) {
         $this->twoFactorMethods = $twoFactorMethods;
+        $this->twoFactorForcePattern = $twoFactorForcePattern;
+        $this->security = $security;
     }
 
     public function visitFormMetadata(FormMetadata $formMetadata, string $locale, array $metadataOptions = []): void
@@ -57,9 +68,18 @@ class TwoFactorFormMetadataVisitor implements FormMetadataVisitorInterface
                 if ($name && !\in_array($name, $this->twoFactorMethods)) {
                     unset($methods[$key]);
                 }
+
+                if (!$name && null !== $this->twoFactorForcePattern) {
+                    /** @var User $user */
+                    $user = $this->security->getUser();
+
+                    if (\preg_match($this->twoFactorForcePattern, $user->getEmail() ?: '')) {
+                        unset($methods[$key]);
+                    }
+                }
             }
 
-            $values->setValue($methods);
+            $values->setValue(\array_values($methods));
         }
 
         $formMetadata->setItems($items);
