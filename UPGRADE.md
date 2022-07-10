@@ -16,6 +16,7 @@ Sulu requires now the following new versions JS packages for admin build:
  - `postcss-loader`: `^4.0.0`
  - `postcss-nested`: `^5.0.6`
  - `postcss-simple-vars`: `^6.0.3`
+ - `autoprefixer`: `^10.4.7`
 
 If you created custom admin components you need to upgrade also
 your components. The core js will automatically be update
