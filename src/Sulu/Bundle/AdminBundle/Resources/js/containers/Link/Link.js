@@ -66,25 +66,22 @@ class Link extends Component<Props> {
     }
 
     @action load = (value: ?LinkValue) => {
-        if (!value || !value.provider) {
+        if (!value) {
             this.titleParts = [];
 
             return;
         }
 
-        if (value.provider === 'external') {
-            const {href} = value;
+        const {href, provider} = value;
+        if (!provider) {
+            this.titleParts = href ? [href] : [];
 
-            if (href) {
-                this.titleParts = [href];
-
-                return;
-            }
+            return;
         }
 
-        const options = linkTypeRegistry.getOptions(value.provider);
-        if (!options) {
-            this.titleParts = [];
+        const options = linkTypeRegistry.getOptions(provider);
+        if (!options?.displayProperties?.length) {
+            this.titleParts = href ? [href] : [];
 
             return;
         }
