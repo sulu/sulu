@@ -58,14 +58,17 @@ function collectTagPathsWithPriority(
         ) {
             for (const childKey of data[key].keys()) {
                 const childData = data[key][childKey];
-                pathsWithPriority.push(
-                    ...collectTagPathsWithPriority(
-                        tagName,
-                        childData,
-                        types[childData.type].form,
-                        parentPath.concat([key, childKey])
-                    )
-                );
+
+                if (childData.type in types) {
+                    pathsWithPriority.push(
+                        ...collectTagPathsWithPriority(
+                            tagName,
+                            childData,
+                            types[childData.type].form,
+                            parentPath.concat([key, childKey])
+                        )
+                    );
+                }
             }
             continue;
         }
