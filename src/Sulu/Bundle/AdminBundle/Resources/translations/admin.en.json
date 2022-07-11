@@ -61,6 +61,8 @@
     "sulu_admin.list_search_placeholder": "Search…",
     "sulu_admin.error": "Error",
     "sulu_admin.warning": "Warning",
+    "sulu_admin.info": "Info",
+    "sulu_admin.success": "Success",
     "sulu_admin.close": "Close",
     "sulu_admin.id": "ID",
     "sulu_admin.key": "Key",
@@ -223,5 +225,10 @@
     "sulu_admin.select_all": "Select all",
     "sulu_admin.deselect_all": "Deselect all",
     "sulu_admin.cancel": "Cancel",
-    "sulu_admin.select_multiple_blocks": "Select multiple blocks"
+    "sulu_admin.select_multiple_blocks": "Select multiple blocks",
+    "sulu_admin.%count%_blocks_copied": "{count} {count, plural, =1 {block} other {blocks}} copied to clipboard.",
+    "sulu_admin.%count%_blocks_duplicated": "{count} {count, plural, =1 {block} other {blocks}} duplicated.",
+    "sulu_admin.%count%_blocks_removed": "{count} {count, plural, =1 {block} other {blocks}} removed.",
+    "sulu_admin.%count%_blocks_cut": "{count} {count, plural, =1 {block} other {blocks}} cut to clipboard.",
+    "sulu_admin.%count%_blocks_pasted": "{count} {count, plural, =1 {block} other {blocks}} pasted."
 }

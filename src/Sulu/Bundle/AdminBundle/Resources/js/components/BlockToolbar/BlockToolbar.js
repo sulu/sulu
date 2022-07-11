@@ -84,7 +84,10 @@ class BlockToolbar extends React.Component<Props> {
                             <Tooltip key={action.label} label={action.label}>
                                 <button
                                     aria-label={action.label}
-                                    className={blockToolbarStyles.actionButton}
+                                    className={classNames(blockToolbarStyles.actionButton, {
+                                        [blockToolbarStyles.actionButtonDisabled]: selectedCount === 0,
+                                    })}
+                                    disabled={selectedCount === 0}
                                     onClick={action.handleClick}
                                     type="button"
                                 >

@@ -77,6 +77,55 @@
     }
 }
 
+.snackbar {
+    max-width: $viewMaxWidth;
+    transition: $navigationMoveAnimationDuration;
+
+    &.small {
+        right: 30%;
+    }
+
+    &.medium {
+        right: 50%;
+    }
+
+    &.large {
+        right: $sidebarMaxWidth;
+    }
+
+    &.isNavigationPinned {
+        left: $navigationWidth;
+
+        &.small {
+            right: calc((100% - $navigationWidth) * .3);
+        }
+
+        &.medium {
+            right: calc((100% - $navigationWidth) * .5);
+        }
+
+        &.large {
+            right: calc(100% - $navigationWidth - $sidebarMaxWidth);
+        }
+    }
+
+    &.isNavigationVisible {
+        left: $navigationWidth;
+
+        &.small {
+            right: calc(30% - $navigationWidth);
+        }
+
+        &.medium {
+            right: calc(50% - $navigationWidth);
+        }
+
+        &.large {
+            right: calc(100% + $navigationWidth - $sidebarMaxWidth);
+        }
+    }
+}
+
 .navigation {
     overflow-x: hidden;
     overflow-y: auto;

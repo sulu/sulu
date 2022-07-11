@@ -26,6 +26,36 @@ test('Render a warning snackbar', () => {
     expect(snackbar.render()).toMatchSnapshot();
 });
 
+test('Render a info snackbar', () => {
+    const snackbar = mount(
+        <Snackbar message="Something unimportant went wrong" onCloseClick={jest.fn()} type="info" />
+    );
+
+    expect(snackbar.render()).toMatchSnapshot();
+});
+
+test('Render a success snackbar', () => {
+    const snackbar = mount(
+        <Snackbar message="Something unimportant went wrong" onCloseClick={jest.fn()} type="success" />
+    );
+
+    expect(snackbar.render()).toMatchSnapshot();
+});
+
+test('Render a floating snackbar', () => {
+    const snackbar = mount(
+        <Snackbar
+            icon="su-copy"
+            message="3 blocks copied to clipboard"
+            onCloseClick={jest.fn()}
+            skin="floating"
+            type="info"
+        />
+    );
+
+    expect(snackbar.render()).toMatchSnapshot();
+});
+
 test('Render an error snackbar without close button', () => {
     const snackbar = mount(<Snackbar message="Something went wrong" type="error" />);
     expect(snackbar.render()).toMatchSnapshot();

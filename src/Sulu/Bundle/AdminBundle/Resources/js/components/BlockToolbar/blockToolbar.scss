@@ -70,9 +70,16 @@
 
     &:hover,
     &:focus {
-        color: $shakespeare;
-        outline: none;
+        &:not(.actionButtonDisabled) {
+            color: $shakespeare;
+            outline: none;
+        }
     }
+}
+
+.actionButtonDisabled {
+    color: $silver;
+    cursor: default;
 }
 
 .actionButtonIcon {

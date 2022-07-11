@@ -61,12 +61,14 @@ $blockSelectedColor: $blueZodiac;
     color: $blockHandleColor;
     background-color: $blockHandleBackgroundColor;
     overflow: hidden;
+    width: fit-content;
 }
 
 .content {
     flex-grow: 1;
     font-size: 12px;
     line-height: 18px;
+    width: 0; /* avoid overflowing text editor - display flex on parent pushes it still to 100% */
 }
 
 .children {

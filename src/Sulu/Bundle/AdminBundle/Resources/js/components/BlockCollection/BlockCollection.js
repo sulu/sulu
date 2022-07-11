@@ -10,7 +10,7 @@ import Icon from '../Icon';
 import Sticky from '../Sticky';
 import SortableBlockList from './SortableBlockList';
 import blockCollectionStyles from './blockCollection.scss';
-import type {RenderBlockContentCallback, BlockMode} from './types';
+import type {RenderBlockContentCallback, BlockMode, Message} from './types';
 
 type Props<T: string, U: {type: T}> = {|
     addButtonText?: ?string,
@@ -22,6 +22,7 @@ type Props<T: string, U: {type: T}> = {|
     minOccurs?: ?number,
     movable: boolean,
     onChange: (value: Array<U>) => void,
+    onDisplaySnackbar?: (message: Message) => void,
     onSettingsClick?: (index: number) => void,
     onSortEnd?: (oldIndex: number, newIndex: number) => void,
     pasteButtonText?: ?string,
@@ -147,37 +148,47 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     };
 
     @action handlePasteBlocks = (insertionIndex: number) => {
-        const {onChange, value} = this.props;
+        const {onChange, onDisplaySnackbar, value} = this.props;
 
         if (this.hasMaximumReached) {
             throw new Error('The maximum amount of blocks has already been reached!');
         }
 
-        if (value) {
-            this.expandedBlocks.splice(
-                insertionIndex, 0, ...this.pasteableBlocks.map(() => true)
-            );
-            this.selectedBlocks.splice(
-                insertionIndex, 0, ...this.pasteableBlocks.map(() => false)
-            );
-            this.generatedBlockIds.splice(
-                insertionIndex, 0, ...this.pasteableBlocks.map(() => ++BlockCollection.idCounter)
-            );
+        if (!value) {
+            return;
+        }
 
-            const newElements = this.pasteableBlocks.map((block) => {
-                // paste block with default type if type of block in clipboard is not known
-                if (!this.props.types?.[block.type]) {
-                    return {...block, type: this.props.defaultType};
-                }
+        this.expandedBlocks.splice(
+            insertionIndex, 0, ...this.pasteableBlocks.map(() => true)
+        );
+        this.selectedBlocks.splice(
+            insertionIndex, 0, ...this.pasteableBlocks.map(() => false)
+        );
+        this.generatedBlockIds.splice(
+            insertionIndex, 0, ...this.pasteableBlocks.map(() => ++BlockCollection.idCounter)
+        );
 
-                return block;
+        const newElements = this.pasteableBlocks.map((block) => {
+            // paste block with default type if type of block in clipboard is not known
+            if (!this.props.types?.[block.type]) {
+                return {...block, type: this.props.defaultType};
+            }
+
+            return block;
+        });
+        const elementsBefore = value.slice(0, insertionIndex);
+        const elementsAfter = value.slice(insertionIndex);
+
+        // $FlowFixMe
+        onChange([...elementsBefore, ...newElements, ...elementsAfter]);
+        clipboard.set(BLOCKS_CLIPBOARD_KEY, undefined);
+
+        if (onDisplaySnackbar) {
+            onDisplaySnackbar({
+                type: 'info',
+                text: translate('sulu_admin.%count%_blocks_pasted', {count: newElements.length}),
+                icon: 'su-copy',
             });
-            const elementsBefore = value.slice(0, insertionIndex);
-            const elementsAfter = value.slice(insertionIndex);
-
-            // $FlowFixMe
-            onChange([...elementsBefore, ...newElements, ...elementsAfter]);
-            clipboard.set(BLOCKS_CLIPBOARD_KEY, undefined);
         }
     };
 
@@ -189,8 +200,8 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         this.removeBlocks(this.selectedBlockIndexes);
     };
 
-    @action removeBlocks = (indexes: Array<number>) => {
-        const {onChange, movable, value} = this.props;
+    @action removeBlocks = (indexes: Array<number>, shouldDisplaySnackbar: boolean = true) => {
+        const {onChange, onDisplaySnackbar, movable, value} = this.props;
 
         if (!value) {
             return;
@@ -214,6 +225,14 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         }
 
         onChange(value.filter((block, index) => indexes.indexOf(index) === -1));
+
+        if (shouldDisplaySnackbar && onDisplaySnackbar) {
+            onDisplaySnackbar({
+                type: 'info',
+                text: translate('sulu_admin.%count%_blocks_removed', {count: indexes.length}),
+                icon: 'su-trash-alt',
+            });
+        }
     };
 
     handleDuplicateSelectedBlocks = () => {
@@ -227,7 +246,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     };
 
     @action duplicateBlocks = (indexes: Array<number>, insertAfterIndex: number) => {
-        const {onChange, value} = this.props;
+        const {onChange, onDisplaySnackbar, value} = this.props;
 
         if (!value) {
             return;
@@ -254,6 +273,14 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         });
 
         onChange(newValue);
+
+        if (onDisplaySnackbar) {
+            onDisplaySnackbar({
+                type: 'info',
+                text: translate('sulu_admin.%count%_blocks_duplicated', {count: indexes.length}),
+                icon: 'su-duplicate',
+            });
+        }
     };
 
     handleCopySelectedBlocks = () => {
@@ -264,8 +291,8 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         this.copyBlocks([index]);
     };
 
-    copyBlocks = (indexes: Array<number>) => {
-        const {value} = this.props;
+    copyBlocks = (indexes: Array<number>, shouldDisplaySnackbar: boolean = true) => {
+        const {onDisplaySnackbar, value} = this.props;
 
         if (!value) {
             return;
@@ -278,6 +305,14 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         });
 
         clipboard.set(BLOCKS_CLIPBOARD_KEY, blocks);
+
+        if (shouldDisplaySnackbar && onDisplaySnackbar) {
+            onDisplaySnackbar({
+                type: 'info',
+                text: translate('sulu_admin.%count%_blocks_copied', {count: indexes.length}),
+                icon: 'su-copy',
+            });
+        }
     };
 
     handleCutSelectedBlocks = () => {
@@ -289,8 +324,18 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     };
 
     cutBlocks = (indexes: Array<number>) => {
-        this.copyBlocks(indexes);
-        this.removeBlocks(indexes);
+        const {onDisplaySnackbar} = this.props;
+
+        this.copyBlocks(indexes, false);
+        this.removeBlocks(indexes, false);
+
+        if (onDisplaySnackbar) {
+            onDisplaySnackbar({
+                type: 'info',
+                text: translate('sulu_admin.%count%_blocks_cut', {count: indexes.length}),
+                icon: 'su-cut',
+            });
+        }
     };
 
     @action handleSortEnd = ({newIndex, oldIndex}: {newIndex: number, oldIndex: number}) => {

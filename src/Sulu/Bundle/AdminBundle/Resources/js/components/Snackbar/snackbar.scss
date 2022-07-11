@@ -6,6 +6,10 @@ $snackbarErrorColor: $white;
 $snackbarErrorBackgroundColor: $persianRed;
 $snackbarWarningColor: $blueZodiac;
 $snackbarWarningBackgroundColor: $gold;
+$snackbarInfoColor: $white;
+$snackbarInfoBackgroundColor: $blueZodiac;
+$snackbarSuccessColor: $white;
+$snackbarSuccessBackgroundColor: $mantis;
 
 .snackbar {
     height: $snackbarHeight;
@@ -20,6 +24,18 @@ $snackbarWarningBackgroundColor: $gold;
         transition: margin-top .15s, visibility 0s .15s;
         visibility: hidden;
         margin-top: -$snackbarHeight;
+    }
+}
+
+.floating {
+    box-shadow: 2px 6px 12px 0 rgba($black, .5);
+    border-radius: 3px;
+    padding: 6px 7px;
+    height: 32px;
+    width: fit-content;
+
+    .icon {
+        font-size: 17px;
     }
 }
 
@@ -64,5 +80,25 @@ $snackbarWarningBackgroundColor: $gold;
     .close-button {
         background-color: $snackbarWarningColor;
         color: $snackbarWarningColor;
+    }
+}
+
+.info {
+    background-color: $snackbarInfoBackgroundColor;
+    color: $snackbarInfoColor;
+
+    .close-button {
+        background-color: $snackbarInfoColor;
+        color: $snackbarInfoColor;
+    }
+}
+
+.success {
+    background-color: $snackbarSuccessBackgroundColor;
+    color: $snackbarSuccessColor;
+
+    .close-button {
+        background-color: $snackbarSuccessColor;
+        color: $snackbarSuccessColor;
     }
 }

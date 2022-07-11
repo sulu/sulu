@@ -1,5 +1,80 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Render a floating snackbar 1`] = `
+<div
+  class="snackbar info floating visible"
+  role="button"
+>
+  <span
+    aria-label="su-copy"
+    class="su-copy icon"
+  />
+  <div
+    class="text"
+  >
+    3 blocks copied to clipboard
+  </div>
+  <span
+    aria-label="su-times"
+    class="su-times clickable closeIcon"
+    role="button"
+    tabindex="0"
+  />
+</div>
+`;
+
+exports[`Render a info snackbar 1`] = `
+<div
+  class="snackbar info visible"
+  role="button"
+>
+  <span
+    aria-label="su-exclamation-circle"
+    class="su-exclamation-circle icon"
+  />
+  <div
+    class="text"
+  >
+    <strong>
+      sulu_admin.info
+    </strong>
+     - Something unimportant went wrong
+  </div>
+  <span
+    aria-label="su-times"
+    class="su-times clickable closeIcon"
+    role="button"
+    tabindex="0"
+  />
+</div>
+`;
+
+exports[`Render a success snackbar 1`] = `
+<div
+  class="snackbar success visible"
+  role="button"
+>
+  <span
+    aria-label="su-check-circle"
+    class="su-check-circle icon"
+  />
+  <div
+    class="text"
+  >
+    <strong>
+      sulu_admin.success
+    </strong>
+     - Something unimportant went wrong
+  </div>
+  <span
+    aria-label="su-times"
+    class="su-times clickable closeIcon"
+    role="button"
+    tabindex="0"
+  />
+</div>
+`;
+
 exports[`Render a warning snackbar 1`] = `
 <div
   class="snackbar warning visible"

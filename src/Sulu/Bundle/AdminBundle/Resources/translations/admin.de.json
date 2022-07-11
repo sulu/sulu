@@ -1,7 +1,7 @@
 {
     "sulu_admin.add": "Hinzufügen",
     "sulu_admin.add_block": "Block hinzufügen",
-    "sulu_admin.paste_blocks": "{count} {count, plural, =1 {Block} other {Blocks}} einfügen",
+    "sulu_admin.paste_blocks": "{count} {count, plural, =1 {Block} other {Blöcke}} einfügen",
     "sulu_admin.delete": "Löschen",
     "sulu_admin.delete_selected": "Ausgewählte löschen",
     "sulu_admin.delete_locale": "Aktuelle Sprache löschen",
@@ -61,6 +61,8 @@
     "sulu_admin.list_search_placeholder": "Suche…",
     "sulu_admin.error": "Fehler",
     "sulu_admin.warning": "Warnung",
+    "sulu_admin.info": "Info",
+    "sulu_admin.success": "Erfolg",
     "sulu_admin.close": "Schließen",
     "sulu_admin.id": "ID",
     "sulu_admin.key": "Schlüssel",
@@ -222,5 +224,10 @@
     "sulu_admin.select_all": "Alle auswählen",
     "sulu_admin.deselect_all": "Alle abwählen",
     "sulu_admin.cancel": "Abbrechen",
-    "sulu_admin.select_multiple_blocks": "Mehrere blöcke auswählen"
+    "sulu_admin.select_multiple_blocks": "Mehrere Blöcke auswählen",
+    "sulu_admin.%count%_blocks_copied": "{count} {count, plural, =1 {Block} other {Blöcke}} zur Zwischenablage kopiert.",
+    "sulu_admin.%count%_blocks_duplicated": "{count} {count, plural, =1 {Block} other {Blöcke}} dupliziert.",
+    "sulu_admin.%count%_blocks_removed": "{count} {count, plural, =1 {Block} other {Blöcke}} gelöscht.",
+    "sulu_admin.%count%_blocks_cut": "{count} {count, plural, =1 {Block} other {Blöcke}} zur Zwischenablage ausgeschnitten.",
+    "sulu_admin.%count%_blocks_pasted": "{count} {count, plural, =1 {Block} other {Blöcke}} eingefügt."
 }

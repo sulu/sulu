@@ -8,10 +8,12 @@ import BlockCollection from '../../components/BlockCollection';
 import {translate} from '../../utils/Translator';
 import {memoryFormStoreFactory} from '../Form';
 import FormOverlay from '../FormOverlay';
+import snackbarStore from '../../stores/snackbarStore';
 import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
 import type {BlockError, FieldTypeProps, FormStoreInterface} from '../Form/types';
 import type {BlockEntry} from './types';
+import type {Message} from '../../components/BlockCollection/types';
 
 const MISSING_BLOCK_ERROR_MESSAGE = 'The "block" field type needs at least one type to be configured!';
 const BLOCK_PREVIEW_TAG = 'sulu.block_preview';
@@ -418,6 +420,10 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         this.closeSettingsOverlay();
     };
 
+    handleDisplaySnackbar = (message: Message) => {
+        snackbarStore.add(message, 2500);
+    };
+
     @action closeSettingsOverlay = () => {
         this.openedBlockSettingsIndex = undefined;
     };
@@ -490,6 +496,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
                     minOccurs={minOccurs}
                     movable={this.movable}
                     onChange={this.handleBlocksChange}
+                    onDisplaySnackbar={this.handleDisplaySnackbar}
                     onSettingsClick={this.settingsFormKey ? this.handleSettingsClick : undefined}
                     onSortEnd={this.handleSortEnd}
                     pasteButtonText={this.pasteButtonText}
