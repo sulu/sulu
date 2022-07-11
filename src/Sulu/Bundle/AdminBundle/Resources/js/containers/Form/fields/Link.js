@@ -4,7 +4,7 @@ import {isArrayLike, observable} from 'mobx';
 import log from 'loglevel';
 import userStore from '../../../stores/userStore';
 import LinkContainer from '../../Link/Link';
-import type {FieldTypeProps, SchemaOption} from '../types';
+import type {FieldTypeProps} from '../types';
 import type {LinkValue} from '../../Link/types';
 import type {IObservableArray} from 'mobx/lib/mobx';
 
@@ -18,7 +18,7 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
             value,
             schemaOptions: {
                 enable_anchor: {
-                    value: deprecatedEnableAnchor,
+                    value: enableAnchor,
                 } = {},
                 enable_target: {
                     value: deprecatedEnableTarget,
@@ -38,46 +38,47 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
             },
         } = this.props;
 
-        const enabledAttributes = [];
+        if (enableAnchor !== undefined && enableAnchor !== null && typeof enableAnchor !== 'boolean') {
+            throw new Error('The "enable_anchor" schema option must be a boolean if given!');
+        }
 
-        if (enableAttributes !== undefined) {
-            if (!isArrayLike(enableAttributes)) {
-                throw new Error('The "enable_attributes" schema option must be an array!');
+        let enableTarget = false,
+            enableTitle = false,
+            enableRel = false;
+
+        if (enableAttributes !== undefined && enableAnchor !== null) {
+            if (typeof enableAttributes !== 'boolean') {
+                throw new Error('The "enable_attributes" schema option must be a boolean!');
             }
 
-            for (const attr of ((enableAttributes: any): Iterable<SchemaOption>)) {
-                if (attr.value !== undefined && attr.value !== null) {
-                    throw new Error(`The "enable_attributes.${attr.name}" schema option must not have a value!`);
-                }
-
-                enabledAttributes.push(attr.name);
-            }
+            enableTarget = enableAttributes;
+            enableTitle = enableAttributes;
+            enableRel = enableAttributes;
         } else {
-            if (deprecatedEnableAnchor !== undefined) {
-                log.warn(
-                    'The "enable_anchor" schema option is deprecated since version 2.5 and will be removed. ' +
-                    'Use the "enable_attributes" option instead.'
-                );
-
-                enabledAttributes.push('anchor');
-            }
-
-            if (deprecatedEnableTarget !== undefined) {
+            if (deprecatedEnableTarget !== undefined && deprecatedEnableTarget !== null) {
                 log.warn(
                     'The "enable_target" schema option is deprecated since version 2.5 and will be removed. ' +
                     'Use the "enable_attributes" option instead.'
                 );
 
-                enabledAttributes.push('target');
+                if (typeof deprecatedEnableTarget !== 'boolean') {
+                    throw new Error('The "enable_target" schema option must be a boolean!');
+                }
+
+                enableTarget = deprecatedEnableTarget;
             }
 
-            if (deprecatedEnableTitle !== undefined) {
+            if (deprecatedEnableTitle !== undefined && deprecatedEnableTitle !== null) {
                 log.warn(
                     'The "enable_title" schema option is deprecated since version 2.5 and will be removed. ' +
                     'Use the "enable_attributes" option instead.'
                 );
 
-                enabledAttributes.push('title');
+                if (typeof deprecatedEnableTitle !== 'boolean') {
+                    throw new Error('The "enable_title" schema option must be a boolean!');
+                }
+
+                enableTitle = deprecatedEnableTitle;
             }
         }
 
@@ -133,10 +134,10 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
         return (
             <LinkContainer
                 disabled={!!disabled}
-                enableAnchor={enabledAttributes.includes('anchor')}
-                enableRel={enabledAttributes.includes('rel')}
-                enableTarget={enabledAttributes.includes('target')}
-                enableTitle={enabledAttributes.includes('title')}
+                enableAnchor={enableAnchor}
+                enableRel={enableRel}
+                enableTarget={enableTarget}
+                enableTitle={enableTitle}
                 excludedTypes={excludedProviderTypes}
                 locale={locale}
                 onChange={onChange}

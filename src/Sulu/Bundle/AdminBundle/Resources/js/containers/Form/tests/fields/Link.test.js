@@ -40,12 +40,11 @@ test('Pass props correctly to Link component', () => {
     const options = {
         enable_attributes: {
             name: 'enable_attributes',
-            value: [
-                {name: 'target'},
-                {name: 'anchor'},
-                {name: 'title'},
-                {name: 'rel'},
-            ],
+            value: true,
+        },
+        enable_anchor: {
+            name: 'enable_anchor',
+            value: true,
         },
     };
 
@@ -131,7 +130,6 @@ test('Pass props correctly to Link component with deprecated options', () => {
     );
 
     expect(log.warn).toBeCalledWith(expect.stringContaining('The "enable_target" schema option is deprecated'));
-    expect(log.warn).toBeCalledWith(expect.stringContaining('The "enable_anchor" schema option is deprecated'));
     expect(log.warn).toBeCalledWith(expect.stringContaining('The "enable_title" schema option is deprecated'));
 
     expect(link.find('Link').props()).toEqual({
@@ -179,12 +177,11 @@ test('Pass props correctly to Link component filtered types', () => {
     const options = {
         enable_attributes: {
             name: 'enable_attributes',
-            value: [
-                {name: 'target'},
-                {name: 'anchor'},
-                {name: 'title'},
-                {name: 'rel'},
-            ],
+            value: true,
+        },
+        enable_anchor: {
+            name: 'enable_anchor',
+            value: true,
         },
         types: {
             name: 'types',
@@ -252,12 +249,11 @@ test('Pass props correctly to Link component filtered excluded_types', () => {
     const options = {
         enable_attributes: {
             name: 'enable_attributes',
-            value: [
-                {name: 'target'},
-                {name: 'anchor'},
-                {name: 'title'},
-                {name: 'rel'},
-            ],
+            value: true,
+        },
+        enable_anchor: {
+            name: 'enable_anchor',
+            value: true,
         },
         excluded_types: {
             name: 'types',

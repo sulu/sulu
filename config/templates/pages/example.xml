@@ -277,11 +277,23 @@
             </meta>
         </property>
 
-        <property name="link" type="url">
+        <property name="url" type="url">
             <meta>
                 <title lang="en">URL</title>
                 <title lang="de">URL</title>
             </meta>
+        </property>
+
+        <property name="link" type="link">
+            <meta>
+                <title lang="en">Link</title>
+                <title lang="de">Link</title>
+            </meta>
+
+            <params>
+                <param name="enable_anchor" value="true"/>
+                <param name="enable_attributes" value="true"/>
+            </params>
         </property>
 
         <property name="single_page_selection" type="single_page_selection">
