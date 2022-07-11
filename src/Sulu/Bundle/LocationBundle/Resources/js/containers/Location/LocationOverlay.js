@@ -226,7 +226,7 @@ class LocationOverlay extends React.Component<Props> {
                                 attributionControl={false}
                                 center={[this.lat || 0, this.long || 0]}
                                 className={locationOverlayStyles.map}
-                                whenCreated={this.setLeafletMap}
+                                ref={this.setLeafletMap}
                                 zoom={this.zoom}
                             >
                                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
