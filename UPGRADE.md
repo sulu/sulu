@@ -2,9 +2,9 @@
 
 ## 2.5.0
 
-### JS Dependencies update
+### Updated JavaScript dependencies
 
-Sulu requires now the following new versions JS packages for admin build:
+The JavaScript dependencies of the Sulu administration interface were updated to the following versions:
 
  - `@ckeditor/ckeditor5-dev-utils`: `^30.3.2`
  - `@ckeditor/ckeditor5-theme-lark`: `^34.2.0`
@@ -18,9 +18,10 @@ Sulu requires now the following new versions JS packages for admin build:
  - `postcss-simple-vars`: `^6.0.3`
  - `autoprefixer`: `^10.4.7`
 
-If you created custom admin components you need to upgrade also
-your components. The core js will automatically be update
-via the [update build](https://docs.sulu.io/en/latest/upgrades/upgrade-2.x.html) command.
+If you have integrated custom JavaScript components into the administration interface,
+you might need to adjust your components to be compatible with the updated dependencies.
+If you have not integrated custom JavaScript code, you project is adjusted automatically by the
+[update build](https://docs.sulu.io/en/latest/upgrades/upgrade-2.x.html) command.
 
 ### Rename labelRef to inputContainerRef
 
