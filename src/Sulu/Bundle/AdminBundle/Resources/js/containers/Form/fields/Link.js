@@ -46,7 +46,7 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
             enableTitle = false,
             enableRel = false;
 
-        if (enableAttributes !== undefined && enableAnchor !== null) {
+        if (enableAttributes !== undefined && enableAttributes !== null) {
             if (typeof enableAttributes !== 'boolean') {
                 throw new Error('The "enable_attributes" schema option must be a boolean!');
             }
