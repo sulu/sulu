@@ -22,8 +22,10 @@ jobs:
             matrix:
                 include:
                     - node-version: '14'
+                      styleguide: false
                     - node-version: '16'
                       npm-version: '6'
+                      styleguide: true
 
         env:
             COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -49,18 +51,8 @@ jobs:
               with:
                   useLockFile: false
 
-            - name: Lint JavaScript and CSS code
-              run: |
-                  npm run lint:js
-                  npm run lint:scss
-                  npm run flow -- check
-                  npm run depcruise
-
             - name: Test JavaScript code
               run: npm test -- --maxWorkers=4
-
-            - name: Test Styleguidist build
-              run: npm run styleguide:build
 
             - name: Install and configure PHP
               uses: shivammathur/setup-php@v2
@@ -75,6 +67,46 @@ jobs:
 
             - name: Test application build
               run: npm run build
+
+            - name: Test Styleguidist build
+              if: ${{ matrix.styleguide }}
+              run: npm run styleguide:build
+
+    js-lint:
+        name: "Node Lint"
+        runs-on: ubuntu-latest
+
+        env:
+            COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        steps:
+            - name: Checkout project
+              uses: actions/checkout@v2
+
+            - name: Install and configure Node
+              uses: actions/setup-node@v2-beta
+              with:
+                  node-version: '14'
+
+            - name: Assert error when using yarn
+              run: tests/js/check-yarn-warning.sh
+
+            - name: Install npm dependencies
+              uses: bahmutov/npm-install@v1
+              with:
+                  useLockFile: false
+
+            - name: Lint JavaScript
+              run: npm run lint:js
+
+            - name: Lint SCSS
+              run: npm run lint:scss
+
+            - name: Flow
+              run: npm run flow -- check
+
+            - name: Depcruise
+              run: npm run depcruise
 
     php:
         name: "PHP ${{ matrix.php-version }} (${{ matrix.database }}, ${{ matrix.phpcr-transport }}, ${{ matrix.dependency-versions }})"

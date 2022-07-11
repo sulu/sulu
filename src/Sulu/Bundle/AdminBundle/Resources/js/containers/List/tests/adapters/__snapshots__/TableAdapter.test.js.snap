@@ -46,7 +46,12 @@ exports[`Render column with ascending sort icon 1`] = `
             <div
               class="cellContent"
             >
-              Title 1
+              <span
+                class="textBox"
+                title="Title 1"
+              >
+                Title 1
+              </span>
             </div>
           </td>
           <td
@@ -55,7 +60,12 @@ exports[`Render column with ascending sort icon 1`] = `
             <div
               class="cellContent"
             >
-              Description 1
+              <span
+                class="textBox"
+                title="Description 1"
+              >
+                Description 1
+              </span>
             </div>
           </td>
         </tr>
@@ -208,7 +218,12 @@ exports[`Render column with descending sort icon 1`] = `
             <div
               class="cellContent"
             >
-              Title 1
+              <span
+                class="textBox"
+                title="Title 1"
+              >
+                Title 1
+              </span>
             </div>
           </td>
           <td
@@ -217,7 +232,12 @@ exports[`Render column with descending sort icon 1`] = `
             <div
               class="cellContent"
             >
-              Description 1
+              <span
+                class="textBox"
+                title="Description 1"
+              >
+                Description 1
+              </span>
             </div>
           </td>
         </tr>
@@ -366,7 +386,12 @@ exports[`Render data with all different visibility types schema 1`] = `
             <div
               class="cellContent"
             >
-              Description 1
+              <span
+                class="textBox"
+                title="Description 1"
+              >
+                Description 1
+              </span>
             </div>
           </td>
           <td
@@ -386,7 +411,12 @@ exports[`Render data with all different visibility types schema 1`] = `
             <div
               class="cellContent"
             >
-              Description 2
+              <span
+                class="textBox"
+                title="Description 2"
+              >
+                Description 2
+              </span>
             </div>
           </td>
           <td
@@ -610,7 +640,12 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
             <div
               class="cellContent"
             >
-              Description 1
+              <span
+                class="textBox"
+                title="Description 1"
+              >
+                Description 1
+              </span>
             </div>
           </td>
         </tr>
@@ -671,7 +706,12 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
             <div
               class="cellContent"
             >
-              Description 2
+              <span
+                class="textBox"
+                title="Description 2"
+              >
+                Description 2
+              </span>
             </div>
           </td>
         </tr>
@@ -837,7 +877,12 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             <div
               class="cellContent"
             >
-              Description 1
+              <span
+                class="textBox"
+                title="Description 1"
+              >
+                Description 1
+              </span>
             </div>
           </td>
         </tr>
@@ -866,7 +911,12 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
             <div
               class="cellContent"
             >
-              Description 2
+              <span
+                class="textBox"
+                title="Description 2"
+              >
+                Description 2
+              </span>
             </div>
           </td>
         </tr>
@@ -1006,7 +1056,12 @@ exports[`Render data with schema 1`] = `
             <div
               class="cellContent"
             >
-              Page 1
+              <span
+                class="textBox"
+                title="Page 1"
+              >
+                Page 1
+              </span>
             </div>
           </td>
         </tr>
@@ -1019,7 +1074,12 @@ exports[`Render data with schema 1`] = `
             <div
               class="cellContent"
             >
-              Page 2
+              <span
+                class="textBox"
+                title="Page 2"
+              >
+                Page 2
+              </span>
             </div>
           </td>
         </tr>
@@ -1042,7 +1102,12 @@ exports[`Render data with schema 1`] = `
                   class="draft"
                 />
               </div>
-              Page 3
+              <span
+                class="textBox"
+                title="Page 3"
+              >
+                Page 3
+              </span>
             </div>
           </td>
         </tr>
@@ -1062,7 +1127,12 @@ exports[`Render data with schema 1`] = `
                   class="draft"
                 />
               </div>
-              Page 4
+              <span
+                class="textBox"
+                title="Page 4"
+              >
+                Page 4
+              </span>
             </div>
           </td>
         </tr>
@@ -1080,7 +1150,12 @@ exports[`Render data with schema 1`] = `
               >
                 de
               </span>
-              Page 5
+              <span
+                class="textBox"
+                title="Page 5"
+              >
+                Page 5
+              </span>
             </div>
           </td>
         </tr>
@@ -1098,7 +1173,12 @@ exports[`Render data with schema 1`] = `
               >
                 de
               </span>
-              Page 6
+              <span
+                class="textBox"
+                title="Page 6"
+              >
+                Page 6
+              </span>
             </div>
           </td>
         </tr>
@@ -1116,7 +1196,12 @@ exports[`Render data with schema 1`] = `
               >
                 de
               </span>
-              Page 7
+              <span
+                class="textBox"
+                title="Page 7"
+              >
+                Page 7
+              </span>
             </div>
           </td>
         </tr>
@@ -1134,7 +1219,12 @@ exports[`Render data with schema 1`] = `
               >
                 de
               </span>
-              Page 8
+              <span
+                class="textBox"
+                title="Page 8"
+              >
+                Page 8
+              </span>
             </div>
           </td>
         </tr>
@@ -1320,7 +1410,12 @@ exports[`Render data with schema and selections 1`] = `
             <div
               class="cellContent"
             >
-              Description 1
+              <span
+                class="textBox"
+                title="Description 1"
+              >
+                Description 1
+              </span>
             </div>
           </td>
         </tr>
@@ -1355,7 +1450,12 @@ exports[`Render data with schema and selections 1`] = `
             <div
               class="cellContent"
             >
-              Description 2
+              <span
+                class="textBox"
+                title="Description 2"
+              >
+                Description 2
+              </span>
             </div>
           </td>
         </tr>
@@ -1396,7 +1496,12 @@ exports[`Render data with schema and selections 1`] = `
             <div
               class="cellContent"
             >
-              Description 3
+              <span
+                class="textBox"
+                title="Description 3"
+              >
+                Description 3
+              </span>
             </div>
           </td>
         </tr>
@@ -1536,7 +1641,12 @@ exports[`Render data with schema in different order 1`] = `
             <div
               class="cellContent"
             >
-              Description 1
+              <span
+                class="textBox"
+                title="Description 1"
+              >
+                Description 1
+              </span>
             </div>
           </td>
         </tr>
@@ -1549,7 +1659,12 @@ exports[`Render data with schema in different order 1`] = `
             <div
               class="cellContent"
             >
-              Description 2
+              <span
+                class="textBox"
+                title="Description 2"
+              >
+                Description 2
+              </span>
             </div>
           </td>
         </tr>
@@ -1820,7 +1935,12 @@ exports[`Render data with shrunken cell 1`] = `
             <div
               class="cellContent"
             >
-              1
+              <span
+                class="textBox"
+                title="1"
+              >
+                1
+              </span>
             </div>
           </td>
           <td
@@ -1829,7 +1949,12 @@ exports[`Render data with shrunken cell 1`] = `
             <div
               class="cellContent"
             >
-              planned
+              <span
+                class="textBox"
+                title="planned"
+              >
+                planned
+              </span>
             </div>
           </td>
         </tr>
@@ -1842,7 +1967,12 @@ exports[`Render data with shrunken cell 1`] = `
             <div
               class="cellContent"
             >
-              2
+              <span
+                class="textBox"
+                title="2"
+              >
+                2
+              </span>
             </div>
           </td>
           <td
@@ -1851,7 +1981,12 @@ exports[`Render data with shrunken cell 1`] = `
             <div
               class="cellContent"
             >
-              running
+              <span
+                class="textBox"
+                title="running"
+              >
+                running
+              </span>
             </div>
           </td>
         </tr>
@@ -1864,7 +1999,12 @@ exports[`Render data with shrunken cell 1`] = `
             <div
               class="cellContent"
             >
-              3
+              <span
+                class="textBox"
+                title="3"
+              >
+                3
+              </span>
             </div>
           </td>
           <td
@@ -1873,7 +2013,12 @@ exports[`Render data with shrunken cell 1`] = `
             <div
               class="cellContent"
             >
-              succeeded
+              <span
+                class="textBox"
+                title="succeeded"
+              >
+                succeeded
+              </span>
             </div>
           </td>
         </tr>
@@ -1886,7 +2031,12 @@ exports[`Render data with shrunken cell 1`] = `
             <div
               class="cellContent"
             >
-              4
+              <span
+                class="textBox"
+                title="4"
+              >
+                4
+              </span>
             </div>
           </td>
           <td
@@ -1895,7 +2045,12 @@ exports[`Render data with shrunken cell 1`] = `
             <div
               class="cellContent"
             >
-              failed
+              <span
+                class="textBox"
+                title="failed"
+              >
+                failed
+              </span>
             </div>
           </td>
         </tr>
