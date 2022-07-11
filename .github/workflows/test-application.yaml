@@ -39,7 +39,7 @@ jobs:
 
             - name: Install npm
               if: ${{ matrix.npm-version }}
-              run: npm install -g npm@${{ matrix.npm-version }}
+              run: npm install --global npm@${{ matrix.npm-version }}
 
             - name: Assert error when using yarn
               run: tests/js/check-yarn-warning.sh
