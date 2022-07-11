@@ -70,7 +70,7 @@ class Login extends React.Component<Props> {
 
     handleLoginFormSubmit = (data: LoginFormData) => {
         userStore.login(data).then(() => {
-            if (userStore.twoFactorMethods.length > 0) {
+            if (userStore.twoFactorMethods && userStore.twoFactorMethods.length > 0) {
                 action(() => {
                     this.visibleForm = 'two-factor';
                 })();

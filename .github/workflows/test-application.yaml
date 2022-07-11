@@ -21,8 +21,9 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                    - node-version: '12'
                     - node-version: '14'
+                    - node-version: '16'
+                      npm-version: '6'
 
         env:
             COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -35,6 +36,10 @@ jobs:
               uses: actions/setup-node@v2-beta
               with:
                   node-version: ${{ matrix.node-version }}
+
+            - name: Install npm
+              if: ${{ matrix.npm-version }}
+              run: npm install --global npm@${{ matrix.npm-version }}
 
             - name: Assert error when using yarn
               run: tests/js/check-yarn-warning.sh
