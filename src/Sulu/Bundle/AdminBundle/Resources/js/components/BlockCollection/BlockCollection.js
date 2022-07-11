@@ -22,9 +22,9 @@ type Props<T: string, U: {type: T}> = {|
     minOccurs?: ?number,
     movable: boolean,
     onChange: (value: Array<U>) => void,
+    onDisplaySnackbar?: (message: Message) => void,
     onSettingsClick?: (index: number) => void,
     onSortEnd?: (oldIndex: number, newIndex: number) => void,
-    onTriggerMessage?: (message: Message) => void,
     pasteButtonText?: ?string,
     renderBlockContent: RenderBlockContentCallback<T, U>,
     types?: {[key: T]: string},
@@ -148,7 +148,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     };
 
     @action handlePasteBlocks = (insertionIndex: number) => {
-        const {onChange, onTriggerMessage, value} = this.props;
+        const {onChange, onDisplaySnackbar, value} = this.props;
 
         if (this.hasMaximumReached) {
             throw new Error('The maximum amount of blocks has already been reached!');
@@ -183,8 +183,8 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         onChange([...elementsBefore, ...newElements, ...elementsAfter]);
         clipboard.set(BLOCKS_CLIPBOARD_KEY, undefined);
 
-        if (onTriggerMessage) {
-            onTriggerMessage({
+        if (onDisplaySnackbar) {
+            onDisplaySnackbar({
                 type: 'info',
                 text: translate('sulu_admin.%count%_blocks_pasted', {count: newElements.length}),
                 icon: 'su-copy',
@@ -200,8 +200,8 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         this.removeBlocks(this.selectedBlockIndexes);
     };
 
-    @action removeBlocks = (indexes: Array<number>, triggerMessage: boolean = true) => {
-        const {onChange, onTriggerMessage, movable, value} = this.props;
+    @action removeBlocks = (indexes: Array<number>, shouldDisplaySnackbar: boolean = true) => {
+        const {onChange, onDisplaySnackbar, movable, value} = this.props;
 
         if (!value) {
             return;
@@ -226,8 +226,8 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
         onChange(value.filter((block, index) => indexes.indexOf(index) === -1));
 
-        if (triggerMessage && onTriggerMessage) {
-            onTriggerMessage({
+        if (shouldDisplaySnackbar && onDisplaySnackbar) {
+            onDisplaySnackbar({
                 type: 'info',
                 text: translate('sulu_admin.%count%_blocks_removed', {count: indexes.length}),
                 icon: 'su-trash-alt',
@@ -246,7 +246,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     };
 
     @action duplicateBlocks = (indexes: Array<number>, insertAfterIndex: number) => {
-        const {onChange, onTriggerMessage, value} = this.props;
+        const {onChange, onDisplaySnackbar, value} = this.props;
 
         if (!value) {
             return;
@@ -274,8 +274,8 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
         onChange(newValue);
 
-        if (onTriggerMessage) {
-            onTriggerMessage({
+        if (onDisplaySnackbar) {
+            onDisplaySnackbar({
                 type: 'info',
                 text: translate('sulu_admin.%count%_blocks_duplicated', {count: indexes.length}),
                 icon: 'su-duplicate',
@@ -291,8 +291,8 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         this.copyBlocks([index]);
     };
 
-    copyBlocks = (indexes: Array<number>, triggerMessage: boolean = true) => {
-        const {onTriggerMessage, value} = this.props;
+    copyBlocks = (indexes: Array<number>, shouldDisplaySnackbar: boolean = true) => {
+        const {onDisplaySnackbar, value} = this.props;
 
         if (!value) {
             return;
@@ -306,8 +306,8 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
 
         clipboard.set(BLOCKS_CLIPBOARD_KEY, blocks);
 
-        if (triggerMessage && onTriggerMessage) {
-            onTriggerMessage({
+        if (shouldDisplaySnackbar && onDisplaySnackbar) {
+            onDisplaySnackbar({
                 type: 'info',
                 text: translate('sulu_admin.%count%_blocks_copied', {count: indexes.length}),
                 icon: 'su-copy',
@@ -324,13 +324,13 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
     };
 
     cutBlocks = (indexes: Array<number>) => {
-        const {onTriggerMessage} = this.props;
+        const {onDisplaySnackbar} = this.props;
 
         this.copyBlocks(indexes, false);
         this.removeBlocks(indexes, false);
 
-        if (onTriggerMessage) {
-            onTriggerMessage({
+        if (onDisplaySnackbar) {
+            onDisplaySnackbar({
                 type: 'info',
                 text: translate('sulu_admin.%count%_blocks_cut', {count: indexes.length}),
                 icon: 'su-cut',

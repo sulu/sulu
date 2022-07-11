@@ -420,7 +420,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         this.closeSettingsOverlay();
     };
 
-    handleTriggerMessage = (message: Message) => {
+    handleDisplaySnackbar = (message: Message) => {
         snackbarStore.add(message, 2500);
     };
 
@@ -496,9 +496,9 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
                     minOccurs={minOccurs}
                     movable={this.movable}
                     onChange={this.handleBlocksChange}
+                    onDisplaySnackbar={this.handleDisplaySnackbar}
                     onSettingsClick={this.settingsFormKey ? this.handleSettingsClick : undefined}
                     onSortEnd={this.handleSortEnd}
-                    onTriggerMessage={this.handleTriggerMessage}
                     pasteButtonText={this.pasteButtonText}
                     renderBlockContent={this.renderBlockContent}
                     types={blockTypes}
