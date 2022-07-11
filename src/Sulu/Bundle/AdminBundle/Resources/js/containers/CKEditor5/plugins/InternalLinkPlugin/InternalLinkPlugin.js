@@ -52,21 +52,20 @@ export default class InternalLinkPlugin extends Plugin {
 
     @computed get href(): ?string | number {
         const {id, query, anchor} = this;
-        let append = '';
 
         if (!id) {
             return null;
         }
 
+        let suffix = '';
         if (query) {
-            append += '?' + query.replace(/^\?+/g, '');
+            suffix += '?' + query.replace(/^\?+/g, '');
         }
-
         if (anchor) {
-            append += '#' + anchor.replace(/^#+/g, '');
+            suffix += '#' + anchor.replace(/^#+/g, '');
         }
 
-        return id + append;
+        return id + suffix;
     }
 
     init() {

@@ -35,6 +35,7 @@ export type LinkValue = {|
     href: ?string | ?number,
     locale: string,
     provider: ?string,
+    query?: ?string,
     rel?: ?string,
     target?: ?string,
     title: ?string,

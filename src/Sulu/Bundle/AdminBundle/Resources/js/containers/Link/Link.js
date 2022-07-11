@@ -16,6 +16,7 @@ import type {IObservableValue} from 'mobx/lib/mobx';
 type Props = {
     disabled?: boolean,
     enableAnchor?: ?boolean,
+    enableQuery?: ?boolean,
     enableRel?: ?boolean,
     enableTarget?: ?boolean,
     enableTitle?: ?boolean,
@@ -34,6 +35,7 @@ class Link extends Component<Props> {
     static defaultProps = {
         disabled: false,
         enableAnchor: false,
+        enableQuery: false,
         enableRel: false,
         enableTarget: false,
         enableTitle: false,
@@ -47,6 +49,7 @@ class Link extends Component<Props> {
     @observable overlayRel: ?string;
     @observable overlayTarget: ?string = DEFAULT_TARGET;
     @observable overlayAnchor: ?string;
+    @observable overlayQuery: ?string;
     @observable titleParts: Array<string | number> = [];
     @observable titleLoading: boolean = false;
 
@@ -113,7 +116,7 @@ class Link extends Component<Props> {
     };
 
     @action handleRemoveClick = () => {
-        this.changeValue(undefined, undefined, undefined, undefined, undefined);
+        this.changeValue(undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     };
 
     @action handleTitleClick = () => {
@@ -137,6 +140,7 @@ class Link extends Component<Props> {
             this.overlayTitle,
             this.overlayTarget,
             this.overlayAnchor,
+            this.overlayQuery,
             this.overlayRel
         );
         this.closeOverlay();
@@ -152,6 +156,10 @@ class Link extends Component<Props> {
 
     @action handleOverlayAnchorChange = (anchor: ?string) => {
         this.overlayAnchor = anchor;
+    };
+
+    @action handleOverlayQueryChange = (query: ?string) => {
+        this.overlayQuery = query;
     };
 
     @action handleOverlayTargetChange = (target: ?string) => {
@@ -179,23 +187,30 @@ class Link extends Component<Props> {
             value,
         } = this.props;
         const {
-            provider: currentProvider, title, href, target = DEFAULT_TARGET, anchor, rel,
+            provider: currentProvider, title, href, target = DEFAULT_TARGET, anchor, query, rel,
         } = value || {};
 
         this.overlayHref = currentProvider === provider ? href : undefined;
         this.overlayTarget = target;
         this.overlayTitle = title;
         this.overlayAnchor = anchor;
+        this.overlayQuery = query;
         this.overlayRel = rel;
 
         this.openedOverlayProvider = provider;
     };
 
     changeValue = (
-        provider: ?string, href: ?string | number, title: ?string, target: ?string, anchor: ?string, rel: ?string
+        provider: ?string,
+        href: ?string | number,
+        title: ?string,
+        target: ?string,
+        anchor: ?string,
+        query: ?string,
+        rel: ?string
     ) => {
         const {
-            onChange, onFinish, enableTarget, enableTitle, enableAnchor, enableRel, locale,
+            onChange, onFinish, enableTarget, enableTitle, enableAnchor, enableQuery, enableRel, locale,
         } = this.props;
 
         onChange(
@@ -203,6 +218,7 @@ class Link extends Component<Props> {
                 provider,
                 target: enableTarget ? target : undefined,
                 anchor: enableAnchor ? anchor : undefined,
+                query: enableQuery ? query : undefined,
                 href,
                 title: enableTitle ? title : undefined,
                 rel: enableRel ? rel : undefined,
@@ -217,6 +233,7 @@ class Link extends Component<Props> {
             disabled,
             locale,
             enableAnchor,
+            enableQuery,
             enableTarget,
             enableTitle,
             enableRel,
@@ -304,11 +321,13 @@ class Link extends Component<Props> {
                             onCancel={this.handleOverlayClose}
                             onConfirm={this.handleOverlayConfirm}
                             onHrefChange={this.handleOverlayHrefChange}
+                            onQueryChange={enableQuery ? this.handleOverlayQueryChange : undefined}
                             onRelChange={enableRel ? this.handleOverlayRelChange : undefined}
                             onTargetChange={enableTarget ? this.handleOverlayTargetChange : undefined}
                             onTitleChange={enableTitle ? this.handleOverlayTitleChange : undefined}
                             open={this.openedOverlayProvider === key}
                             options={linkTypeRegistry.getOptions(key)}
+                            query={this.overlayQuery}
                             rel={this.overlayRel}
                             target={this.overlayTarget}
                             title={this.overlayTitle}
