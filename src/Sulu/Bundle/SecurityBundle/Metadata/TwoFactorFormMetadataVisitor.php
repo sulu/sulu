@@ -83,5 +83,6 @@ class TwoFactorFormMetadataVisitor implements FormMetadataVisitorInterface
         }
 
         $formMetadata->setItems($items);
+        $formMetadata->setCacheable(false);
     }
 }
