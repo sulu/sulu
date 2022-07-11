@@ -2,6 +2,27 @@
 
 ## 2.5.0
 
+### Updated JavaScript dependencies
+
+The JavaScript dependencies of the Sulu administration interface were updated to the following versions:
+
+ - `@ckeditor/ckeditor5-dev-utils`: `^30.3.2`
+ - `@ckeditor/ckeditor5-theme-lark`: `^34.2.0`
+ - `@ckeditor/ckeditor5-*`: `34.2.0`
+ - `postcss`: `^8.4.14`
+ - `postcss-calc`: `^8.2.4`
+ - `postcss-hexrgba`: `^2.0.0`
+ - `postcss-import`: `^14.1.0`
+ - `postcss-loader`: `^4.0.0`
+ - `postcss-nested`: `^5.0.6`
+ - `postcss-simple-vars`: `^6.0.3`
+ - `autoprefixer`: `^10.4.7`
+
+If you have integrated custom JavaScript components into the administration interface,
+you might need to adjust your components to be compatible with the updated dependencies.
+If you have not integrated custom JavaScript code, you project is adjusted automatically by the
+[update build](https://docs.sulu.io/en/latest/upgrades/upgrade-2.x.html) command.
+
 ### Rename labelRef to inputContainerRef
 
 The `labelRef` properties of the js components `Input` and `Number` was 

@@ -23,21 +23,39 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('Create a CKEditor5 instance', () => {
-    const editor = {
-        editing: {
-            view: {
-                document: {
-                    on: jest.fn(),
-                },
-            },
-        },
-        model: {
+const defaultEditor = {
+    editing: {
+        view: {
             document: {
                 on: jest.fn(),
             },
         },
-        setData: jest.fn(),
+    },
+    model: {
+        document: {
+            on: jest.fn(),
+        },
+    },
+    ui: {
+        element: {
+            classList: {
+                add: jest.fn(),
+                remove: jest.fn(),
+            },
+        },
+    },
+    getData: jest.fn(),
+    setData: jest.fn(),
+    isReadOnly: false,
+    enableReadOnlyMode: () => {
+    },
+    disableReadOnlyMode: () => {
+    },
+};
+
+test('Create a CKEditor5 instance', () => {
+    const editor = {
+        ...defaultEditor,
     };
     ClassicEditor.create.mockReturnValue(Promise.resolve(editor));
 
@@ -101,19 +119,7 @@ test('Create a CKEditor5 instance with an additional plugin', () => {
     configRegistry.configs = [config];
 
     const editor = {
-        editing: {
-            view: {
-                document: {
-                    on: jest.fn(),
-                },
-            },
-        },
-        model: {
-            document: {
-                on: jest.fn(),
-            },
-        },
-        setData: jest.fn(),
+        ...defaultEditor,
     };
     ClassicEditor.create.mockReturnValue(Promise.resolve(editor));
 
@@ -127,19 +133,7 @@ test('Create a CKEditor5 instance with an additional plugin', () => {
 
 test('Create a CKEditor5 instance with given formats', () => {
     const editor = {
-        editing: {
-            view: {
-                document: {
-                    on: jest.fn(),
-                },
-            },
-        },
-        model: {
-            document: {
-                on: jest.fn(),
-            },
-        },
-        setData: jest.fn(),
+        ...defaultEditor,
     };
     ClassicEditor.create.mockReturnValue(Promise.resolve(editor));
 
@@ -181,28 +175,7 @@ test('Create a CKEditor5 instance with given formats', () => {
 
 test('Set data on editor when value is updated', () => {
     const editor = {
-        editing: {
-            view: {
-                document: {
-                    on: jest.fn(),
-                },
-            },
-        },
-        model: {
-            document: {
-                on: jest.fn(),
-            },
-        },
-        ui: {
-            element: {
-                classList: {
-                    add: jest.fn(),
-                    remove: jest.fn(),
-                },
-            },
-        },
-        getData: jest.fn(),
-        setData: jest.fn(),
+        ...defaultEditor,
     };
 
     const editorPromise = Promise.resolve(editor);
@@ -219,28 +192,8 @@ test('Set data on editor when value is updated', () => {
 
 test('Do not set data on editor when value is not changed when props change', () => {
     const editor = {
-        editing: {
-            view: {
-                document: {
-                    on: jest.fn(),
-                },
-            },
-        },
-        model: {
-            document: {
-                on: jest.fn(),
-            },
-        },
-        ui: {
-            element: {
-                classList: {
-                    add: jest.fn(),
-                    remove: jest.fn(),
-                },
-            },
-        },
+        ...defaultEditor,
         getData: jest.fn().mockReturnValue('<p>Test</p>'),
-        setData: jest.fn(),
     };
 
     const editorPromise = Promise.resolve(editor);
@@ -258,28 +211,8 @@ test('Do not set data on editor when value is not changed when props change', ()
 
 test('Do not set data on editor when value and editorData is undefined', () => {
     const editor = {
-        editing: {
-            view: {
-                document: {
-                    on: jest.fn(),
-                },
-            },
-        },
-        model: {
-            document: {
-                on: jest.fn(),
-            },
-        },
-        ui: {
-            element: {
-                classList: {
-                    add: jest.fn(),
-                    remove: jest.fn(),
-                },
-            },
-        },
+        ...defaultEditor,
         getData: jest.fn().mockReturnValue(),
-        setData: jest.fn(),
     };
 
     const editorPromise = Promise.resolve(editor);
@@ -297,27 +230,14 @@ test('Do not set data on editor when value and editorData is undefined', () => {
 
 test('Set disabled class and isReadOnly property to CKEditor5', () => {
     const editor = {
-        editing: {
-            view: {
-                document: {
-                    on: jest.fn(),
-                },
-            },
-        },
-        model: {
-            document: {
-                on: jest.fn(),
-            },
-        },
-        ui: {
-            element: {
-                classList: {
-                    add: jest.fn(),
-                },
-            },
-        },
+        ...defaultEditor,
         isReadOnly: false,
-        setData: jest.fn(),
+        enableReadOnlyMode: () => {
+            editor.isReadOnly = true;
+        },
+        disableReadOnlyMode: () => {
+            editor.isReadOnly = false;
+        },
     };
 
     const editorPromise = Promise.resolve(editor);
@@ -335,13 +255,7 @@ test('Set disabled class and isReadOnly property to CKEditor5', () => {
 test('Call onChange prop when something changed', () => {
     const changeSpy = jest.fn();
     const editor = {
-        editing: {
-            view: {
-                document: {
-                    on: jest.fn(),
-                },
-            },
-        },
+        ...defaultEditor,
         getData: jest.fn().mockReturnValue('test'),
         model: {
             document: {
@@ -351,7 +265,6 @@ test('Call onChange prop when something changed', () => {
                 },
             },
         },
-        setData: jest.fn(),
     };
 
     const editorPromise = Promise.resolve(editor);
@@ -368,13 +281,7 @@ test('Call onChange prop when something changed', () => {
 test('Call onChange prop with undefined if editor is empty', () => {
     const changeSpy = jest.fn();
     const editor = {
-        editing: {
-            view: {
-                document: {
-                    on: jest.fn(),
-                },
-            },
-        },
+        ...defaultEditor,
         getData: jest.fn().mockReturnValue(''),
         model: {
             document: {
@@ -384,7 +291,6 @@ test('Call onChange prop with undefined if editor is empty', () => {
                 },
             },
         },
-        setData: jest.fn(),
     };
 
     const editorPromise = Promise.resolve(editor);
@@ -401,13 +307,7 @@ test('Call onChange prop with undefined if editor is empty', () => {
 test('Do not call onChange prop when nothing changed', () => {
     const changeSpy = jest.fn();
     const editor = {
-        editing: {
-            view: {
-                document: {
-                    on: jest.fn(),
-                },
-            },
-        },
+        ...defaultEditor,
         getData: jest.fn().mockReturnValue('test'),
         model: {
             document: {
@@ -417,7 +317,6 @@ test('Do not call onChange prop when nothing changed', () => {
                 },
             },
         },
-        setData: jest.fn(),
     };
 
     const editorPromise = Promise.resolve(editor);
@@ -434,13 +333,7 @@ test('Do not call onChange prop when nothing changed', () => {
 test('Call onBlur prop when CKEditor5 fires its blur event', () => {
     const blurSpy = jest.fn();
     const editor = {
-        editing: {
-            view: {
-                document: {
-                    on: jest.fn(),
-                },
-            },
-        },
+        ...defaultEditor,
         getData: jest.fn().mockReturnValue('test'),
         model: {
             document: {
@@ -450,7 +343,6 @@ test('Call onBlur prop when CKEditor5 fires its blur event', () => {
                 },
             },
         },
-        setData: jest.fn(),
     };
 
     const editorPromise = Promise.resolve(editor);
