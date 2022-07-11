@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {render, unmountComponentAtNode} from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import {action, computed, observable} from 'mobx';
 import {Observer} from 'mobx-react';
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
@@ -93,7 +93,8 @@ export default class InternalLinkPlugin extends Plugin {
 
         const locale = this.editor.config.get('sulu.locale');
 
-        render(
+        this.internalLinkElementRoot = createRoot(this.internalLinkElement);
+        this.internalLinkElementRoot.render(
             (
                 <Observer>
                     {() => (
@@ -123,8 +124,7 @@ export default class InternalLinkPlugin extends Plugin {
                         </Fragment>
                     )}
                 </Observer>
-            ),
-            this.internalLinkElement
+            )
         );
 
         this.editor.commands.add(
@@ -272,8 +272,9 @@ export default class InternalLinkPlugin extends Plugin {
     };
 
     destroy() {
-        unmountComponentAtNode(this.internalLinkElement);
+        this.internalLinkElementRoot.unmount();
         this.internalLinkElement.remove();
         this.internalLinkElement = undefined;
+        this.internalLinkElementRoot = undefined;
     }
 }
