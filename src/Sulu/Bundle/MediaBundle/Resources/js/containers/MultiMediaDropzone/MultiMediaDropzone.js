@@ -178,7 +178,7 @@ class MultiMediaDropzone extends React.Component<Props> {
                 <SingleListOverlay
                     adapter="column_list"
                     clearSelectionOnClose={true}
-                    itemDisabledCondition="!!locked"
+                    itemDisabledCondition="!!locked || (_permissions && !_permissions.add)"
                     listKey={COLLECTIONS_RESOURCE_KEY}
                     locale={locale}
                     onClose={this.handleSelectCollectionOverlayClose}

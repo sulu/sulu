@@ -145,6 +145,7 @@
         "doctrine/lexer": "1.0.0",
         "doctrine/orm": "2.10.0",
         "doctrine/doctrine-cache-bundle": "<1.3.1",
+        "friendsofphp/php-cs-fixer": "3.9.1",
         "jackalope/jackalope": "< 1.3.4",
         "jackalope/jackalope-doctrine-dbal": "< 1.3.0",
         "jackalope/jackalope-jackrabbit": "< 1.3.0",
