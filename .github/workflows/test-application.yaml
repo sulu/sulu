@@ -21,8 +21,8 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                    - node-version: '12'
                     - node-version: '14'
+                    - node-version: '16'
 
         env:
             COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
