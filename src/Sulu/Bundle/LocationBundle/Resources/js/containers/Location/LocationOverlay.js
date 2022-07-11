@@ -69,8 +69,11 @@ class LocationOverlay extends React.Component<Props> {
     }
 
     setLeafletMap = (map: typeof Map) => {
-        map.on('zoomanim', this.handleMapZoom);
         this.map = map;
+
+        if (map) {
+            map.on('zoomanim', this.handleMapZoom);
+        }
     };
 
     updateMapToData = () => {
