@@ -80,13 +80,11 @@ class SuluSecurityListenerTest extends TestCase
         $controller->getSecurityContext()->willReturn('security.context');
         $controller->getLocale(Argument::any())->willReturn(null);
 
-        $request = $this->prophesize(Request::class);
-        $request->getMethod()->willReturn('GET');
-        $request->get('id')->willReturn('1');
+        $request = Request::create('/', 'GET', ['id' => '1']);
 
         $controllerEvent = $this->createControllerEvent(
             [$controller->reveal(), 'someFunction'],
-            $request->reveal()
+            $request
         );
 
         $this->securityChecker->checkPermission(
@@ -107,13 +105,11 @@ class SuluSecurityListenerTest extends TestCase
         $controller->getSecuredObjectId(Argument::any())->willReturn('1');
         $controller->getLocale(Argument::any())->willReturn(null);
 
-        $request = $this->prophesize(Request::class);
-        $request->getMethod()->willReturn('GET');
-        $request->get('id')->willReturn('1');
+        $request = Request::create('/', 'GET', ['id' => '1']);
 
         $controllerEvent = $this->createControllerEvent(
             [$controller->reveal(), 'someFunction'],
-            $request->reveal()
+            $request
         );
 
         $this->securityChecker->checkPermission(
@@ -131,13 +127,11 @@ class SuluSecurityListenerTest extends TestCase
         $controller->getSecurityContext()->willReturn('security.context');
         $controller->getLocale(Argument::any())->willReturn('de');
 
-        $request = $this->prophesize(Request::class);
-        $request->getMethod()->willReturn('GET');
-        $request->get('id')->willReturn('1');
+        $request = Request::create('/', 'GET', ['id' => '1']);
 
         $controllerEvent = $this->createControllerEvent(
             [$controller->reveal(), 'someFunction'],
-            $request->reveal()
+            $request
         );
 
         $this->securityListener->onKernelController($controllerEvent);
@@ -151,11 +145,11 @@ class SuluSecurityListenerTest extends TestCase
 
         $controller = $this->prophesize(AbstractController::class);
 
-        $request = $this->prophesize(Request::class);
+        $request = Request::create('/');
 
         $controllerEvent = $this->createControllerEvent(
             [$controller->reveal(), 'someFunction'],
-            $request->reveal()
+            $request
         );
 
         $this->securityListener->onKernelController($controllerEvent);
@@ -167,13 +161,11 @@ class SuluSecurityListenerTest extends TestCase
         $controller->getSecurityContext()->willReturn('sulu.media.collection')->shouldBeCalled();
         $controller->getLocale(Argument::any())->willReturn(null);
 
-        $request = $this->prophesize(Request::class);
-        $request->getMethod()->willReturn('GET');
-        $request->get('id')->willReturn('1');
+        $request = Request::create('/', 'GET', ['id' => '1']);
 
         $controllerEvent = $this->createControllerEvent(
             [$controller->reveal(), 'getAction'],
-            $request->reveal()
+            $request
         );
         $this->securityListener->onKernelController($controllerEvent);
 
@@ -185,9 +177,7 @@ class SuluSecurityListenerTest extends TestCase
      */
     public function testMethodPermissionMapping($method, $action, $permission)
     {
-        $request = $this->prophesize(Request::class);
-        $request->getMethod()->willReturn($method);
-        $request->get('id')->willReturn('1');
+        $request = Request::create('/', $method, ['id' => '1']);
 
         $controller = $this->prophesize(SecuredControllerInterface::class);
         $controller->getSecurityContext()->willReturn('security.context');
@@ -195,7 +185,7 @@ class SuluSecurityListenerTest extends TestCase
 
         $controllerEvent = $this->createControllerEvent(
             [$controller->reveal(), $action],
-            $request->reveal()
+            $request
         );
 
         $this->securityListener->onKernelController($controllerEvent);
@@ -209,12 +199,10 @@ class SuluSecurityListenerTest extends TestCase
      */
     public function testCallableControllerPermission($method, $permission)
     {
-        $request = $this->prophesize(Request::class);
-        $request->getMethod()->willReturn($method);
-        $request->get('id')->willReturn('1');
+        $request = Request::create('/', $method, ['id' => '1']);
 
         $controller = new TestCallableClass();
-        $controllerEvent = $this->createControllerEvent($controller, $request->reveal());
+        $controllerEvent = $this->createControllerEvent($controller, $request);
 
         $this->securityListener->onKernelController($controllerEvent);
 
@@ -224,9 +212,7 @@ class SuluSecurityListenerTest extends TestCase
 
     public function testLocale()
     {
-        $request = $this->prophesize(Request::class);
-        $request->getMethod()->willReturn('GET');
-        $request->get('id')->willReturn('1');
+        $request = Request::create('/', 'GET', ['id' => '1']);
 
         $controller = $this->prophesize(SecuredControllerInterface::class);
         $controller->getSecurityContext()->willReturn('security.context');
@@ -234,7 +220,7 @@ class SuluSecurityListenerTest extends TestCase
 
         $controllerEvent = $this->createControllerEvent(
             [$controller->reveal(), 'getAction'],
-            $request->reveal()
+            $request
         );
 
         $this->securityListener->onKernelController($controllerEvent);
@@ -244,9 +230,7 @@ class SuluSecurityListenerTest extends TestCase
 
     public function testNullSecurityContext()
     {
-        $request = $this->prophesize(Request::class);
-        $request->getMethod()->willReturn('GET');
-        $request->get('id')->willReturn('1');
+        $request = Request::create('/', 'GET', ['id' => '1']);
 
         $controller = $this->prophesize(SecuredControllerInterface::class);
         $controller->getSecurityContext()->willReturn(null);
@@ -254,7 +238,7 @@ class SuluSecurityListenerTest extends TestCase
 
         $controllerEvent = $this->createControllerEvent(
             [$controller->reveal(), 'getAction'],
-            $request->reveal()
+            $request
         );
 
         $this->securityListener->onKernelController($controllerEvent);
