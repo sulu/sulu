@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import Checkbox from '../Checkbox';
 import {translate} from '../../utils';
 import Icon from '../Icon';
@@ -61,7 +61,7 @@ class BlockToolbar extends React.Component<Props> {
         } = this.props;
 
         return (
-            <section className={classnames(blockToolbarStyles.container, blockToolbarStyles[mode])}>
+            <section className={classNames(blockToolbarStyles.container, blockToolbarStyles[mode])}>
                 <div className={blockToolbarStyles.divide}>
                     <div className={blockToolbarStyles.selected}>
                         {translate('sulu_admin.%count%_selected', {count: selectedCount})}
@@ -84,7 +84,7 @@ class BlockToolbar extends React.Component<Props> {
                             <Tooltip key={action.label} label={action.label}>
                                 <button
                                     aria-label={action.label}
-                                    className={classnames(blockToolbarStyles.actionButton, {
+                                    className={classNames(blockToolbarStyles.actionButton, {
                                         [blockToolbarStyles.actionButtonDisabled]: selectedCount === 0,
                                     })}
                                     disabled={selectedCount === 0}

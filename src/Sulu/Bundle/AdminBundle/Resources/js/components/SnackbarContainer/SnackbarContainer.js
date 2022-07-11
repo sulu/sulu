@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import classnames from 'classnames';
+import classNames from 'classnames';
 import {observer} from 'mobx-react';
 import {Portal} from 'react-portal';
 import snackbarContainerStyles from './snackbarContainer.scss';
@@ -18,7 +18,7 @@ class SnackbarContainer extends React.Component<Props> {
 
         return (
             <Portal>
-                <div className={classnames(snackbarContainerStyles.container, className)}>
+                <div className={classNames(snackbarContainerStyles.container, className)}>
                     {children}
                 </div>
             </Portal>
