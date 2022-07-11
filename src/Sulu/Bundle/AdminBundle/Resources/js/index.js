@@ -384,8 +384,7 @@ function startAdmin() {
     const root = createRoot(applicationElement);
 
     root.render(
-        <Application appVersion={Config.appVersion} router={router} suluVersion={Config.suluVersion} />,
-        applicationElement
+        <Application appVersion={Config.appVersion} router={router} suluVersion={Config.suluVersion} />
     );
 }
 
