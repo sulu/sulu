@@ -22,24 +22,24 @@ There is also a behaviour `floating` option used for floating snackbar:
 
 <div style={{height: '130px', position: 'relative'}}>
     <div style={{position: 'absolute', bottom: '0', left: '0', right: '0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', marginLeft: 'auto', marginRight: 'auto', width: 'fit-content'}}>
-        <Snackbar behaviour="floating" message="Some error is shown here" type="error" />
+        <Snackbar skin="floating" message="Some error is shown here" type="error" />
         
-        <Snackbar behaviour="floating" message="Some warning is shown here" type="warning" />
+        <Snackbar skin="floating" message="Some warning is shown here" type="warning" />
         
-        <Snackbar behaviour="floating" message="Some information is shown here" type="info" />
+        <Snackbar skin="floating" message="Some information is shown here" type="info" />
         
-        <Snackbar behaviour="floating" message="Some not so bad went wrong" type="success" />
+        <Snackbar skin="floating" message="Some not so bad went wrong" type="success" />
     </div>
 </div>
 ```
 
-There is also a behaviour `floating` option used for floating snackbar:
+This is used as example for block snackbar messages like the following:
 
 ```javascript
 
 <div style={{height: '32px', position: 'relative'}}>
     <div style={{position: 'absolute', bottom: '0', left: '0', right: '0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', marginLeft: 'auto', marginRight: 'auto', width: 'fit-content'}}>
-        <Snackbar behaviour="floating" icon="su-copy" message="3 blocks copied to clipboard" type="info" />
+        <Snackbar skin="floating" icon="su-copy" message="3 blocks copied to clipboard" type="info" />
     </div>
 </div>
 ```

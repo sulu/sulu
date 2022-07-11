@@ -227,10 +227,10 @@ class Application extends React.Component<Props>{
                                     {snackbarStore.messages.map((message, index) => {
                                         return (
                                             <Snackbar
-                                                behaviour="floating"
                                                 icon={message.icon}
                                                 key={index}
                                                 message={message.text}
+                                                skin="floating"
                                                 type={message.type}
                                             />
                                         );

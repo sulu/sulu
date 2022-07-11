@@ -45,10 +45,10 @@ test('Render a success snackbar', () => {
 test('Render a floating snackbar', () => {
     const snackbar = mount(
         <Snackbar
-            behaviour="floating"
             icon="su-copy"
             message="3 blocks copied to clipboard"
             onCloseClick={jest.fn()}
+            skin="floating"
             type="info"
         />
     );

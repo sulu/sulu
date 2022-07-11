@@ -10,11 +10,11 @@ import snackbarStyles from './snackbar.scss';
 export type SnackbarType = 'error' | 'warning' | 'info' | 'success';
 
 type Props = {|
-    behaviour: 'static' | 'floating',
     icon?: string,
     message: string,
     onClick?: () => void,
     onCloseClick?: () => void,
+    skin: 'static' | 'floating',
     type: SnackbarType,
     visible: boolean,
 |};
@@ -31,7 +31,7 @@ const DEFAULT_SNACKBAR_TYPE: SnackbarType = 'error';
 @observer
 class Snackbar extends React.Component<Props> {
     static defaultProps = {
-        behaviour: 'static',
+        skin: 'static',
         visible: true,
     };
 
@@ -77,14 +77,14 @@ class Snackbar extends React.Component<Props> {
     };
 
     render() {
-        const {icon, behaviour, onCloseClick, onClick, visible} = this.props;
+        const {icon, onCloseClick, onClick, skin, visible} = this.props;
 
         const snackbarClass = classNames(
             snackbarStyles.snackbar,
             snackbarStyles[this.type],
             {
                 [snackbarStyles.clickable]: onClick,
-                [snackbarStyles.floating]: behaviour === 'floating',
+                [snackbarStyles.floating]: skin === 'floating',
                 [snackbarStyles.visible]: visible,
             }
         );
@@ -94,7 +94,7 @@ class Snackbar extends React.Component<Props> {
                 <Icon className={snackbarStyles.icon} name={icon || ICONS[this.type]} />
                 <div className={snackbarStyles.text}>
                     {
-                        behaviour === 'static'
+                        skin === 'static'
                             ? <>
                                 <strong>{translate('sulu_admin.' + this.type)}</strong>{' - '}
                             </>
