@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {isArrayLike, observable} from 'mobx';
+import log from 'loglevel';
 import userStore from '../../../stores/userStore';
 import LinkContainer from '../../Link/Link';
 import type {FieldTypeProps} from '../types';
@@ -20,10 +21,13 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
                     value: enableAnchor,
                 } = {},
                 enable_target: {
-                    value: enableTarget,
+                    value: deprecatedEnableTarget,
                 } = {},
                 enable_title: {
-                    value: enableTitle,
+                    value: deprecatedEnableTitle,
+                } = {},
+                enable_attributes: {
+                    value: enableAttributes,
                 } = {},
                 types: {
                     value: unvalidatedTypes,
@@ -34,9 +38,53 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
             },
         } = this.props;
 
+        if (enableAnchor !== undefined && enableAnchor !== null && typeof enableAnchor !== 'boolean') {
+            throw new Error('The "enable_anchor" schema option must be a boolean if given!');
+        }
+
+        let enableTarget = false,
+            enableTitle = false,
+            enableRel = false;
+
+        if (enableAttributes !== undefined && enableAttributes !== null) {
+            if (typeof enableAttributes !== 'boolean') {
+                throw new Error('The "enable_attributes" schema option must be a boolean!');
+            }
+
+            enableTarget = enableAttributes;
+            enableTitle = enableAttributes;
+            enableRel = enableAttributes;
+        } else {
+            if (deprecatedEnableTarget !== undefined && deprecatedEnableTarget !== null) {
+                log.warn(
+                    'The "enable_target" schema option is deprecated since version 2.5 and will be removed. ' +
+                    'Use the "enable_attributes" option instead.'
+                );
+
+                if (typeof deprecatedEnableTarget !== 'boolean') {
+                    throw new Error('The "enable_target" schema option must be a boolean!');
+                }
+
+                enableTarget = deprecatedEnableTarget;
+            }
+
+            if (deprecatedEnableTitle !== undefined && deprecatedEnableTitle !== null) {
+                log.warn(
+                    'The "enable_title" schema option is deprecated since version 2.5 and will be removed. ' +
+                    'Use the "enable_attributes" option instead.'
+                );
+
+                if (typeof deprecatedEnableTitle !== 'boolean') {
+                    throw new Error('The "enable_title" schema option must be a boolean!');
+                }
+
+                enableTitle = deprecatedEnableTitle;
+            }
+        }
+
         const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
 
-        let providerTypes = undefined;
+        let providerTypes;
 
         if (unvalidatedTypes) {
             if (!isArrayLike(unvalidatedTypes)) {
@@ -55,6 +103,7 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
                         'Every type in the "types" schemaOption must contain a string as name'
                     );
                 }
+
                 return type.name;
             });
         }
@@ -82,22 +131,11 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
             });
         }
 
-        if (enableAnchor !== undefined && enableAnchor !== null && typeof enableAnchor !== 'boolean') {
-            throw new Error('The "anchor" schema option must be a boolean if given!');
-        }
-
-        if (enableTarget !== undefined && enableTarget !== null && typeof enableTarget !== 'boolean') {
-            throw new Error('The "target" schema option must be a boolean if given!');
-        }
-
-        if (enableTitle !== undefined && enableTitle !== null && typeof enableTitle !== 'boolean') {
-            throw new Error('The "title" schema option must be a boolean if given!');
-        }
-
         return (
             <LinkContainer
                 disabled={!!disabled}
                 enableAnchor={enableAnchor}
+                enableRel={enableRel}
                 enableTarget={enableTarget}
                 enableTitle={enableTitle}
                 excludedTypes={excludedProviderTypes}

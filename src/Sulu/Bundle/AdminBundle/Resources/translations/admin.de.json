@@ -173,6 +173,7 @@
     "sulu_admin.has_changed_warning_dialog_title": "Inhalte werden überschrieben!",
     "sulu_admin.has_changed_warning_dialog_text": "Dieser Inhalt wurde zwischenzeitlich von einem anderen Benutzer geändert. Wenn der Inhalt gespeichert wird, gehen diese Daten verloren.",
     "sulu_admin.edit_profile": "Profil bearbeiten",
+    "sulu_admin.no_follow": "no-follow",
     "sulu_admin.no_permissions": "Keine Berechtigung",
     "sulu_admin.no_options_available": "Keine Optionen verfügbar",
     "sulu_admin.form_contains_invalid_values": "Das Formular beinhaltet ungültige Werte",

@@ -9,10 +9,12 @@ export type LinkTypeOverlayProps = {|
     onCancel: () => void,
     onConfirm: () => void,
     onHrefChange: (id: ?string | number, item: ?Object) => void,
+    onRelChange?: ?(rel: ?string) => void,
     onTargetChange?: ?(target: string) => void,
     onTitleChange?: ?(title: ?string) => void,
     open: boolean,
     options?: ?LinkTypeOptions,
+    rel?: ?string,
     target?: ?string,
     title?: ?string,
 |};
@@ -31,6 +33,7 @@ export type LinkValue = {|
     href: ?string | ?number,
     locale: string,
     provider: ?string,
+    rel?: ?string,
     target?: ?string,
     title: ?string,
 |};

@@ -1,11 +1,12 @@
 // @flow
 import React, {Fragment} from 'react';
 import {observer} from 'mobx-react';
-import {action, observable} from 'mobx';
+import {action, observable, computed} from 'mobx';
 import Dialog from '../../../components/Dialog';
 import Form from '../../../components/Form';
 import Input from '../../../components/Input';
 import SingleSelect from '../../../components/SingleSelect';
+import Toggler from '../../../components/Toggler';
 import TextArea from '../../../components/TextArea';
 import Url from '../../../components/Url';
 import {translate} from '../../../utils';
@@ -31,10 +32,13 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
     }
 
     updateUrl() {
-        const {href} = this.props;
+        const {
+            href,
+        } = this.props;
 
         if (!href) {
             this.href = undefined;
+
             return;
         }
 
@@ -51,11 +55,16 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
     }
 
     callUrlChange = () => {
-        const {onTargetChange, onHrefChange} = this.props;
-        const {mailBody, mailSubject, href} = this;
+        const {
+            onTargetChange, onHrefChange,
+        } = this.props;
+        const {
+            mailBody, mailSubject, href,
+        } = this;
 
         if (!href) {
             onHrefChange(undefined);
+
             return;
         }
 
@@ -105,12 +114,50 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
         this.mailBody = mailBody;
     };
 
+    handleRelNoFollowChange = (noFollow: boolean) => {
+        const {
+            onRelChange,
+            rel,
+        } = this.props;
+
+        if (!onRelChange) {
+            return;
+        }
+
+        let rels = (rel || '').toLowerCase().trim().split(' ').map((v) => v.trim()).filter((v) => !!v);
+
+        if (noFollow && !rels.includes('nofollow')) {
+            rels = [...rels, 'nofollow'];
+        } else if (!noFollow && rels.includes('nofollow')) {
+            rels = rels.filter((v) => v !== 'nofollow');
+        }
+
+        const newRel = rels.join(' ') || undefined;
+
+        if (rel !== newRel) {
+            onRelChange(newRel);
+        }
+    };
+
+    @computed get isRelNoFollow(): boolean {
+        const {
+            rel,
+        } = this.props;
+
+        if (!rel) {
+            return false;
+        }
+
+        return rel.toLowerCase().includes('nofollow');
+    }
+
     render() {
         const {
             onCancel,
             onConfirm,
             onTargetChange,
             onTitleChange,
+            onRelChange,
             open,
             target,
             title,
@@ -139,8 +186,8 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
                         />
                     </Form.Field>
 
-                    {this.protocol && this.protocol !== 'mailto:' && onTargetChange &&
-                        <Form.Field label={translate('sulu_admin.link_target')} required={true}>
+                    {this.protocol && this.protocol !== 'mailto:' && onTargetChange
+                        && <Form.Field label={translate('sulu_admin.link_target')} required={true}>
                             <SingleSelect onChange={onTargetChange} value={target}>
                                 <SingleSelect.Option value="_blank">_blank</SingleSelect.Option>
                                 <SingleSelect.Option value="_self">_self</SingleSelect.Option>
@@ -150,8 +197,8 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
                         </Form.Field>
                     }
 
-                    {this.protocol && this.protocol === 'mailto:' &&
-                        <Fragment>
+                    {this.protocol && this.protocol === 'mailto:'
+                        && <Fragment>
                             <Form.Field label={translate('sulu_admin.mail_subject')}>
                                 <Input
                                     onBlur={this.handleMailSubjectBlur}
@@ -169,9 +216,17 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
                         </Fragment>
                     }
 
-                    {onTitleChange &&
-                        <Form.Field label={translate('sulu_admin.link_title')}>
+                    {onTitleChange
+                        && <Form.Field label={translate('sulu_admin.link_title')}>
                             <Input onChange={onTitleChange} value={title} />
+                        </Form.Field>
+                    }
+
+                    {onRelChange
+                        && <Form.Field>
+                            <Toggler checked={this.isRelNoFollow} onChange={this.handleRelNoFollowChange}>
+                                {translate('sulu_admin.no_follow')}
+                            </Toggler>
                         </Form.Field>
                     }
                 </Form>

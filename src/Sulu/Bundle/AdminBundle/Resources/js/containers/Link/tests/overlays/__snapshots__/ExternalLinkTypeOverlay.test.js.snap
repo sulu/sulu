@@ -150,6 +150,34 @@ exports[`Render overlay with a URL 1`] = `
       />
     </div>
   </div>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+        tabindex="-1"
+      >
+        <span
+          class="switch toggler"
+        >
+          <input
+            type="checkbox"
+            value=""
+          />
+          <span />
+        </span>
+        <div>
+          sulu_admin.no_follow
+        </div>
+      </label>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
 </div>
 `;
 
@@ -303,6 +331,34 @@ exports[`Render overlay with an undefined URL 1`] = `
       />
     </div>
   </div>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+        tabindex="-1"
+      >
+        <span
+          class="switch toggler"
+        >
+          <input
+            type="checkbox"
+            value=""
+          />
+          <span />
+        </span>
+        <div>
+          sulu_admin.no_follow
+        </div>
+      </label>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
 </div>
 `;
 
@@ -441,6 +497,34 @@ exports[`Render overlay with mailto URL 1`] = `
           value=""
         />
       </div>
+      <label
+        class="errorLabel"
+      />
+    </div>
+  </div>
+  <div
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+  >
+    <div
+      class="field"
+    >
+      <label
+        class="label"
+        tabindex="-1"
+      >
+        <span
+          class="switch toggler"
+        >
+          <input
+            type="checkbox"
+            value=""
+          />
+          <span />
+        </span>
+        <div>
+          sulu_admin.no_follow
+        </div>
+      </label>
       <label
         class="errorLabel"
       />

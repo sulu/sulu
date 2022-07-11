@@ -21,10 +21,12 @@ const DEFAULT_TARGET = '_self';
 const LINK_EVENT_TARGET = 'target';
 const LINK_EVENT_TITLE = 'title';
 const LINK_EVENT_URL = 'url';
+const LINK_EVENT_REL = 'rel';
 
 const LINK_HREF_ATTRIBUTE = 'externalLinkHref';
 const LINK_TARGET_ATTRIBUTE = 'externalLinkTarget';
 const LINK_TITLE_ATTRIBUTE = 'externalLinkTitle';
+const LINK_REL_ATTRIBUTE = 'externalLinkRel';
 
 const LINK_TAG = 'a';
 
@@ -32,6 +34,7 @@ export default class ExternalLinkPlugin extends Plugin {
     @observable open: boolean = false;
     @observable target: ?string = DEFAULT_TARGET;
     @observable title: ?string;
+    @observable rel: ?string;
     @observable url: ?string;
     balloon: typeof ContextualBalloon;
 
@@ -54,6 +57,7 @@ export default class ExternalLinkPlugin extends Plugin {
             this.target = node.getAttribute(LINK_TARGET_ATTRIBUTE);
             this.title = node.getAttribute(LINK_TITLE_ATTRIBUTE);
             this.url = node.getAttribute(LINK_HREF_ATTRIBUTE);
+            this.rel = node.getAttribute(LINK_REL_ATTRIBUTE);
             this.open = true;
 
             this.hideBalloon();
@@ -71,10 +75,12 @@ export default class ExternalLinkPlugin extends Plugin {
                             onCancel={this.handleOverlayClose}
                             onConfirm={this.handleOverlayConfirm}
                             onHrefChange={this.handleHrefChange}
+                            onRelChange={this.handleRelChange}
                             onTargetChange={this.handleTargetChange}
                             onTitleChange={this.handleTitleChange}
                             open={this.open}
                             options={undefined}
+                            rel={this.rel}
                             target={this.target}
                             title={this.title}
                         />
@@ -92,13 +98,17 @@ export default class ExternalLinkPlugin extends Plugin {
                     [LINK_HREF_ATTRIBUTE]: LINK_EVENT_URL,
                     [LINK_TARGET_ATTRIBUTE]: LINK_EVENT_TARGET,
                     [LINK_TITLE_ATTRIBUTE]: LINK_EVENT_TITLE,
+                    [LINK_REL_ATTRIBUTE]: LINK_EVENT_REL,
                 },
                 LINK_EVENT_URL
             )
         );
         this.editor.commands.add(
             'externalUnlink',
-            new UnlinkCommand(this.editor, [LINK_HREF_ATTRIBUTE, LINK_TARGET_ATTRIBUTE, LINK_TITLE_ATTRIBUTE])
+            new UnlinkCommand(
+                this.editor,
+                [LINK_HREF_ATTRIBUTE, LINK_TARGET_ATTRIBUTE, LINK_TITLE_ATTRIBUTE, LINK_REL_ATTRIBUTE]
+            )
         );
 
         this.editor.ui.componentFactory.add('externalLink', (locale) => {
@@ -124,6 +134,7 @@ export default class ExternalLinkPlugin extends Plugin {
                 this.target = DEFAULT_TARGET;
                 this.title = undefined;
                 this.url = undefined;
+                this.rel = undefined;
             }));
 
             return button;
@@ -132,6 +143,7 @@ export default class ExternalLinkPlugin extends Plugin {
         addLinkConversion(this.editor, LINK_TAG, LINK_TARGET_ATTRIBUTE, 'target');
         addLinkConversion(this.editor, LINK_TAG, LINK_HREF_ATTRIBUTE, 'href');
         addLinkConversion(this.editor, LINK_TAG, LINK_TITLE_ATTRIBUTE, 'title');
+        addLinkConversion(this.editor, LINK_TAG, LINK_REL_ATTRIBUTE, 'rel');
 
         const view = this.editor.editing.view;
         view.addObserver(ClickObserver);
@@ -144,7 +156,9 @@ export default class ExternalLinkPlugin extends Plugin {
             if (externalLink) {
                 this.set('href', externalLink.getAttribute('href'));
                 this.balloon.add({
-                    position: {target: view.domConverter.mapViewToDom(externalLink)},
+                    position: {
+                        target: view.domConverter.mapViewToDom(externalLink),
+                    },
                     view: this.balloonView,
                 });
             }
@@ -169,6 +183,7 @@ export default class ExternalLinkPlugin extends Plugin {
                 [LINK_EVENT_TARGET]: this.target,
                 [LINK_EVENT_TITLE]: this.title,
                 [LINK_EVENT_URL]: this.url,
+                [LINK_EVENT_REL]: this.rel,
             }
         );
         this.open = false;
@@ -184,6 +199,10 @@ export default class ExternalLinkPlugin extends Plugin {
 
     @action handleTitleChange = (title: ?string) => {
         this.title = title;
+    };
+
+    @action handleRelChange = (rel: ?string) => {
+        this.rel = rel;
     };
 
     @action handleHrefChange = (href: ?string | number) => {
