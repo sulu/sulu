@@ -108,7 +108,37 @@ class LinkTest extends TestCase
         $this->assertSame([], $result);
     }
 
-    public function testGetContentData(): void
+    public function testGetContentDataWithQuery(): void
+    {
+        $this->property->getValue()
+            ->shouldBeCalled()
+            ->willReturn([
+                'href' => '123456',
+                'provider' => 'pages',
+                'locale' => 'de',
+                'target' => 'testTarget',
+                'query' => 'testQuery',
+            ]);
+
+        $this->providerPool->getProvider(Argument::type('string'))
+            ->shouldBeCalled()
+            ->willReturn($this->provider->reveal());
+
+        $linkItem = $this->prophesize(LinkItem::class);
+        $linkItem->getUrl()
+            ->shouldBeCalled()
+            ->willReturn('/test');
+
+        $this->provider->preload(['123456'], 'de', true)
+            ->shouldBeCalled()
+            ->willReturn([$linkItem]);
+
+        $result = $this->link->getContentData($this->property->reveal());
+
+        $this->assertSame('/test?testQuery', $result);
+    }
+
+    public function testGetContentDataWithAnchor(): void
     {
         $this->property->getValue()
             ->shouldBeCalled()
@@ -138,7 +168,38 @@ class LinkTest extends TestCase
         $this->assertSame('/test#testAnchor', $result);
     }
 
-    public function testGetContentDataWithoutAnchor(): void
+    public function testGetContentDataWithQueryAndAnchor(): void
+    {
+        $this->property->getValue()
+            ->shouldBeCalled()
+            ->willReturn([
+                'href' => '123456',
+                'provider' => 'pages',
+                'locale' => 'de',
+                'target' => 'testTarget',
+                'query' => 'testQuery',
+                'anchor' => 'testAnchor',
+            ]);
+
+        $this->providerPool->getProvider(Argument::type('string'))
+            ->shouldBeCalled()
+            ->willReturn($this->provider->reveal());
+
+        $linkItem = $this->prophesize(LinkItem::class);
+        $linkItem->getUrl()
+            ->shouldBeCalled()
+            ->willReturn('/test');
+
+        $this->provider->preload(['123456'], 'de', true)
+            ->shouldBeCalled()
+            ->willReturn([$linkItem]);
+
+        $result = $this->link->getContentData($this->property->reveal());
+
+        $this->assertSame('/test?testQuery#testAnchor', $result);
+    }
+
+    public function testGetContentData(): void
     {
         $this->property->getValue()
             ->shouldBeCalled()

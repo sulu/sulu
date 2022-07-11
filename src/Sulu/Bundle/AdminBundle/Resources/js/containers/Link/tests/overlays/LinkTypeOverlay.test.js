@@ -48,6 +48,31 @@ test('Render overlay without options', () => {
     )).toThrow('The LinkTypeOverlay needs some options in order to work!');
 });
 
+test('Render overlay with query enabled', () => {
+    const linkOverlay = mount(
+        <LinkTypeOverlay
+            href={undefined}
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            onHrefChange={jest.fn()}
+            onQueryChange={jest.fn()}
+            open={true}
+            options={
+                {
+                    displayProperties: ['title'],
+                    emptyText: 'No page selected',
+                    icon: 'su-document',
+                    listAdapter: 'column_list',
+                    overlayTitle: 'Choose page',
+                    resourceKey: 'pages',
+                }
+            }
+        />
+    );
+
+    expect(linkOverlay.find('Form').render()).toMatchSnapshot();
+});
+
 test('Render overlay with anchor enabled', () => {
     const linkOverlay = mount(
         <LinkTypeOverlay

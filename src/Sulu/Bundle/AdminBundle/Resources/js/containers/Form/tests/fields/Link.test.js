@@ -29,6 +29,7 @@ test('Pass props correctly to Link component', () => {
 
     const value = {
         anchor: 'anchorTest',
+        query: 'queryTest',
         href: '123-asdf-123',
         locale: 'en',
         provider: 'page',
@@ -44,6 +45,10 @@ test('Pass props correctly to Link component', () => {
         },
         enable_anchor: {
             name: 'enable_anchor',
+            value: true,
+        },
+        enable_query: {
+            name: 'enable_query',
             value: true,
         },
     };
@@ -63,6 +68,7 @@ test('Pass props correctly to Link component', () => {
     expect(link.find('Link').props()).toEqual({
         'disabled': true,
         'enableAnchor': true,
+        'enableQuery': true,
         'enableTarget': true,
         'enableTitle': true,
         'enableRel': true,
@@ -73,6 +79,7 @@ test('Pass props correctly to Link component', () => {
         'types': [],
         'value': {
             'anchor': 'anchorTest',
+            'query': 'queryTest',
             'href': '123-asdf-123',
             'locale': 'en',
             'provider': 'page',
@@ -135,6 +142,7 @@ test('Pass props correctly to Link component with deprecated options', () => {
     expect(link.find('Link').props()).toEqual({
         'disabled': true,
         'enableAnchor': true,
+        'enableQuery': false,
         'enableTarget': true,
         'enableTitle': true,
         'enableRel': false,
@@ -207,6 +215,7 @@ test('Pass props correctly to Link component filtered types', () => {
     expect(link.find('Link').props()).toEqual({
         'disabled': true,
         'enableAnchor': true,
+        'enableQuery': false,
         'enableTarget': true,
         'enableTitle': true,
         'enableRel': true,
@@ -279,6 +288,7 @@ test('Pass props correctly to Link component filtered excluded_types', () => {
     expect(link.find('Link').props()).toEqual({
         'disabled': true,
         'enableAnchor': true,
+        'enableQuery': false,
         'enableTarget': true,
         'enableTitle': true,
         'enableRel': true,
@@ -299,7 +309,7 @@ test('Pass props correctly to Link component filtered excluded_types', () => {
     });
 });
 
-test('Pass props correctly to Link component disabled anchor, target and rel', () => {
+test('Pass props correctly to Link component disabled anchor, query, target and rel', () => {
     const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
     const changeSpy = jest.fn();
     const finishSpy = jest.fn();
@@ -310,6 +320,7 @@ test('Pass props correctly to Link component disabled anchor, target and rel', (
 
     const value: LinkValue = {
         anchor: 'anchorTest',
+        query: 'queryTest',
         href: '123-asdf-123',
         locale: 'en',
         provider: 'page',
@@ -343,6 +354,7 @@ test('Pass props correctly to Link component disabled anchor, target and rel', (
     expect(link.find('Link').props()).toEqual({
         'disabled': true,
         'enableAnchor': false,
+        'enableQuery': false,
         'enableTarget': false,
         'enableTitle': false,
         'enableRel': false,
@@ -353,6 +365,7 @@ test('Pass props correctly to Link component disabled anchor, target and rel', (
         'types': ['external', 'page'],
         'value': {
             'anchor': 'anchorTest',
+            'query': 'queryTest',
             'href': '123-asdf-123',
             'locale': 'en',
             'provider': 'page',

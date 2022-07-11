@@ -142,7 +142,7 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
             <LinkContainer
                 disabled={!!disabled}
                 enableAnchor={enableAnchor}
-                enableQuery={enableAnchor}
+                enableQuery={enableQuery}
                 enableRel={enableRel}
                 enableTarget={enableTarget}
                 enableTitle={enableTitle}

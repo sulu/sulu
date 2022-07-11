@@ -160,6 +160,7 @@ test('Update values on overlay confirm', () => {
         href: '123-asdf-123',
         provider: 'page',
         locale: 'en',
+        query: 'TestQuery',
         anchor: 'TestAnchor',
         target: 'TestTarget',
     };
@@ -167,6 +168,7 @@ test('Update values on overlay confirm', () => {
     const link = shallow(
         <Link
             enableAnchor={true}
+            enableQuery={true}
             enableRel={true}
             enableTarget={true}
             enableTitle={true}
@@ -180,6 +182,7 @@ test('Update values on overlay confirm', () => {
 
     const overlayProps = link.find('LinkTypeOverlay').at(1).props();
     overlayProps.onHrefChange('10');
+    overlayProps.onQueryChange('newQuery');
     overlayProps.onAnchorChange('newAnchor');
     overlayProps.onTargetChange('newTarget');
     overlayProps.onTitleChange('newTitle');
@@ -192,6 +195,7 @@ test('Update values on overlay confirm', () => {
             href: '10',
             provider: 'media',
             locale: 'en',
+            query: 'newQuery',
             anchor: 'newAnchor',
             target: 'newTarget',
         }
@@ -211,13 +215,11 @@ test('Update values on overlay confirm with ExternalLinkTypeOverlay', () => {
         href: '10',
         provider: 'media',
         locale: 'en',
-        anchor: 'TestAnchor',
         target: 'TestTarget',
     };
 
     const link = shallow(
         <Link
-            enableAnchor={true}
             enableRel={true}
             enableTarget={true}
             enableTitle={true}
@@ -243,7 +245,6 @@ test('Update values on overlay confirm with ExternalLinkTypeOverlay', () => {
             href: 'https://example.org',
             provider: 'external',
             locale: 'en',
-            anchor: 'TestAnchor',
             target: 'newTarget',
             rel: 'newRel',
         }
@@ -298,6 +299,7 @@ test('Invalidate values on RemoveButton click', async(resolve) => {
                     href: undefined,
                     provider: undefined,
                     locale: 'en',
+                    query: undefined,
                     anchor: undefined,
                     target: undefined,
                     rel: undefined,
