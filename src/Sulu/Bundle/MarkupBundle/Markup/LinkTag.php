@@ -102,13 +102,13 @@ class LinkTag implements TagInterface
             }
 
             $htmlAttributes = \array_map(
-                function($value, $name) {
+                function($value, $name) use ($attributes) {
                     if (\in_array($name, ['content', 'sulu-validation-state']) || empty($value)) {
                         return null;
                     }
-                    
+
                     if ('provider' === $name) {
-                        return \sprintf('data-%s="%s"', $name, $value);
+                        return !\array_key_exists('data-provider', $attributes) ? \sprintf('data-%s="%s"', $name, $value) : null;
                     }
 
                     return \sprintf('%s="%s"', $name, $value);
