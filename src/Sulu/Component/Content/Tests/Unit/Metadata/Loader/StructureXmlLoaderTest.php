@@ -88,10 +88,10 @@ class StructureXmlLoaderTest extends TestCase
             $propertiesXmlParser,
             $schemaXmlParser,
             $this->contentTypeManager->reveal(),
-            $this->translator->reveal(),
             $this->requiredPropertyNames,
             $this->requiredTagNames,
-            $this->locales
+            $this->locales,
+            $this->translator->reveal()
         );
     }
 
