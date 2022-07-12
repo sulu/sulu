@@ -277,7 +277,7 @@
             </meta>
         </property>
 
-        <property name="url" type="url">
+        <property name="external_url" type="url">
             <meta>
                 <title lang="en">URL</title>
                 <title lang="de">URL</title>
@@ -292,6 +292,7 @@
 
             <params>
                 <param name="enable_anchor" value="true"/>
+                <param name="enable_query" value="true"/>
                 <param name="enable_attributes" value="true"/>
             </params>
         </property>
