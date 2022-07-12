@@ -32,15 +32,9 @@ if (\interface_exists(TwoFactorInterface::class)) {
             return $this->getEmail() ?: '';
         }
 
-        public function getEmailAuthCode(): string
+        public function getEmailAuthCode(): ?string
         {
-            $authCode = $this->getTwoFactor()?->getOptions()['authCode'] ?? null;
-
-            if (!$authCode) {
-                throw new \LogicException('The "authCode" was not set on the user entity.');
-            }
-
-            return $authCode;
+            return $this->getTwoFactor()?->getOptions()['authCode'] ?? null;
         }
 
         public function setEmailAuthCode(string $authCode): void

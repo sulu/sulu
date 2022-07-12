@@ -17,12 +17,10 @@ use Scheb\TwoFactorBundle\Model\BackupCodeInterface as SchebBackupCodeInterface;
  * Bridge interface to the scheb/2fa-backup-code TwoFactorInterface.
  */
 if (\interface_exists(SchebBackupCodeInterface::class)) {
-    /**
+    /*
      * @internal
      */
-    interface BackupCodeInterface extends SchebBackupCodeInterface
-    {
-    }
+    \class_alias(SchebBackupCodeInterface::class, BackupCodeInterface::class);
 } else {
     /**
      * @internal

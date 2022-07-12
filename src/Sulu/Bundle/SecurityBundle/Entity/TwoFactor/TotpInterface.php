@@ -17,12 +17,10 @@ use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface;
  * Bridge interface to the scheb/2fa-totp TwoFactorInterface.
  */
 if (\interface_exists(TwoFactorInterface::class)) {
-    /**
+    /*
      * @internal
      */
-    interface TotpInterface extends TwoFactorInterface
-    {
-    }
+    \class_alias(TwoFactorInterface::class, TotpInterface::class);
 } else {
     /**
      * @internal
