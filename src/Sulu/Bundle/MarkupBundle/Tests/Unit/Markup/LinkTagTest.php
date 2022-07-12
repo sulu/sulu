@@ -188,6 +188,18 @@ class LinkTagTest extends TestCase
                 [new LinkItem('123-123-123', 'Page-Title', 'de/test', true)],
                 '<a href="http://sulu.lo/de/test#anchor?not=query" title="Test-Title">Test-Content</a>',
             ],
+            [
+                '<sulu-link href="123-123-123" title="Test-Title" provider="article" data-provider="dummy">Test-Content</sulu-link>',
+                [
+                    'href' => '123-123-123',
+                    'title' => 'Test-Title',
+                    'content' => 'Test-Content',
+                    'provider' => 'article',
+                    'data-provider' => 'dummy',
+                ],
+                [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
+                '<a href="http://sulu.lo/de/test" title="Test-Title" data-provider="dummy">Test-Content</a>',
+            ],
         ];
     }
 
@@ -498,6 +510,31 @@ class LinkTagTest extends TestCase
                 $tag3 => 'Test-Content',
                 $tag4 => 'Test-Content',
             ],
+            $result
+        );
+    }
+
+    public function testParseAllWithProviderAttribute()
+    {
+        $this->linkTag = new LinkTag($this->providerPool->reveal(), true, $this->urlHelper, 'data-provider');
+
+        $tag = '<sulu-link href="123-123-123" title="Test-Title" provider="article"/>';
+
+        $this->providers['article']->preload(['123-123-123'], 'de', true)
+            ->willReturn([new LinkItem('123-123-123', 'Page-Title', '/de/test', true)]);
+
+        $result = $this->linkTag->parseAll(
+            [$tag => [
+                'href' => '123-123-123',
+                'title' => 'Test-Title',
+                'provider' => 'article',
+                ],
+            ],
+            'de'
+        );
+
+        $this->assertEquals(
+            [$tag => '<a href="http://sulu.lo/de/test" title="Test-Title" data-provider="article">Page-Title</a>'],
             $result
         );
     }

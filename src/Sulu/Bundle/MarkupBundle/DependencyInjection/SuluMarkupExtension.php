@@ -23,6 +23,10 @@ class SuluMarkupExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
+        $config = $this->processConfiguration(new Configuration(), $configs);
+
+        $container->setParameter('sulu_markup.link_tag.provider_attribute', $config['link_tag']['provider_attribute']);
+
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 

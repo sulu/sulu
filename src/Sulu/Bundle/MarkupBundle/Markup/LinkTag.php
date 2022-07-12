@@ -39,14 +39,21 @@ class LinkTag implements TagInterface
      */
     private $urlHelper;
 
+    /**
+     * @var ?string
+     */
+    private $providerAttribute;
+
     public function __construct(
         LinkProviderPoolInterface $linkProviderPool,
         bool $isPreview = false,
-        UrlHelper $urlHelper = null
+        UrlHelper $urlHelper = null,
+        ?string $providerAttribute = null
     ) {
         $this->linkProviderPool = $linkProviderPool;
         $this->isPreview = $isPreview;
         $this->urlHelper = $urlHelper;
+        $this->providerAttribute = $providerAttribute;
 
         if (null === $this->urlHelper) {
             @\trigger_error(
@@ -102,9 +109,17 @@ class LinkTag implements TagInterface
             }
 
             $htmlAttributes = \array_map(
-                function($value, $name) {
-                    if (\in_array($name, ['provider', 'content', 'sulu-validation-state']) || empty($value)) {
+                function($value, $name) use ($attributes) {
+                    if (empty($value) || \in_array($name, ['content', 'sulu-validation-state'])) {
                         return null;
+                    }
+
+                    if ('provider' === $name) {
+                        if (null === $this->providerAttribute || \array_key_exists($this->providerAttribute, $attributes)) {
+                            return null;
+                        }
+
+                        return \sprintf('%s="%s"', $this->providerAttribute, $value);
                     }
 
                     return \sprintf('%s="%s"', $name, $value);
