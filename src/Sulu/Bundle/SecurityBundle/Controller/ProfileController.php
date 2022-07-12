@@ -18,6 +18,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\TwoFactorInterface;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserSetting;
 use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
 use Sulu\Bundle\SecurityBundle\UserManager\UserManager;
@@ -98,6 +99,7 @@ class ProfileController implements ClassResourceInterface
      */
     public function getAction()
     {
+        /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $view = View::create($user);
 
@@ -120,6 +122,7 @@ class ProfileController implements ClassResourceInterface
     public function putAction(Request $request)
     {
         $this->checkArguments($request);
+        /** @var User $user */
         $user = $this->tokenStorage->getToken()->getUser();
         $this->userManager->save($this->getData($request), $request->get('locale'), $user->getId(), true);
 
@@ -170,6 +173,7 @@ class ProfileController implements ClassResourceInterface
         $settings = $request->request->all();
 
         try {
+            /** @var User $user */
             $user = $this->tokenStorage->getToken()->getUser();
 
             foreach ($settings as $settingKey => $settingValue) {
@@ -213,6 +217,7 @@ class ProfileController implements ClassResourceInterface
                 throw new MissingArgumentException(static::$entityNameUserSetting, 'key');
             }
 
+            /** @var User $user */
             $user = $this->tokenStorage->getToken()->getUser();
 
             // get setting

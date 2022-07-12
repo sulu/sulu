@@ -85,6 +85,9 @@ sulu_security:
         enabled: true
     password_policy:
         enabled: true
+    two_factor:
+        force:
+            pattern: '/@sulu\.io$/'
 
 # Sulu uses the simple password_policy pattern ".{8,}" by default
 # You can change it to a more complex pattern with the following lines:
@@ -116,3 +119,8 @@ when@test:
 
     sulu_test:
         enable_test_user_provider: true
+
+    sulu_security:
+        two_factor:
+            force:
+                enabled: false
