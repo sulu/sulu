@@ -114,19 +114,19 @@ class StructureXmlLoader extends AbstractLoader
         PropertiesXmlParser $propertiesXmlParser,
         SchemaXmlParser $schemaXmlParser,
         ContentTypeManagerInterface $contentTypeManager,
-        TranslatorInterface $translator,
         array $requiredPropertyNames,
         array $requiredTagNames,
-        array $locales
+        array $locales,
+        ?TranslatorInterface $translator = null
     ) {
         $this->cacheLifetimeResolver = $cacheLifetimeResolver;
         $this->propertiesXmlParser = $propertiesXmlParser;
         $this->schemaXmlParser = $schemaXmlParser;
         $this->contentTypeManager = $contentTypeManager;
-        $this->translator = $translator;
         $this->requiredPropertyNames = $requiredPropertyNames;
         $this->requiredTagNames = $requiredTagNames;
         $this->locales = \array_keys($locales);
+        $this->translator = $translator;
 
         parent::__construct(
             self::SCHEME_PATH,
@@ -394,6 +394,10 @@ class StructureXmlLoader extends AbstractLoader
      */
     private function loadMetaValues(array $metaValues): array
     {
+        if (!$this->translator) {
+            return $metaValues;
+        }
+
         $result = [];
 
         $translationKey = null;
