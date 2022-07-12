@@ -165,6 +165,7 @@
     "sulu_admin.link_title": "Alternative title",
     "sulu_admin.link_target": "Link Target",
     "sulu_admin.link_url": "Link URL",
+    "sulu_admin.link_query": "Query String",
     "sulu_admin.link_anchor": "Link Anchor",
     "sulu_admin.mail_subject": "E-Mail Subject",
     "sulu_admin.mail_body": "E-Mail Text",

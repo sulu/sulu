@@ -111,6 +111,9 @@ class Link extends SimpleContentType
         }
 
         $url = \reset($linkItems)->getUrl();
+        if (isset($value['query'])) {
+            $url = \sprintf('%s?%s', $url, $value['query']);
+        }
         if (isset($value['anchor'])) {
             $url = \sprintf('%s#%s', $url, $value['anchor']);
         }

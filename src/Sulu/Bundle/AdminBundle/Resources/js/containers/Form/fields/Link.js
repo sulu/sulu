@@ -20,6 +20,9 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
                 enable_anchor: {
                     value: enableAnchor,
                 } = {},
+                enable_query: {
+                    value: enableQuery,
+                } = {},
                 enable_target: {
                     value: deprecatedEnableTarget,
                 } = {},
@@ -40,6 +43,10 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
 
         if (enableAnchor !== undefined && enableAnchor !== null && typeof enableAnchor !== 'boolean') {
             throw new Error('The "enable_anchor" schema option must be a boolean if given!');
+        }
+
+        if (enableQuery !== undefined && enableQuery !== null && typeof enableQuery !== 'boolean') {
+            throw new Error('The "enable_query" schema option must be a boolean if given!');
         }
 
         let enableTarget = false,
@@ -135,6 +142,7 @@ export default class Link extends React.Component<FieldTypeProps<LinkValue>> {
             <LinkContainer
                 disabled={!!disabled}
                 enableAnchor={enableAnchor}
+                enableQuery={enableQuery}
                 enableRel={enableRel}
                 enableTarget={enableTarget}
                 enableTitle={enableTitle}
