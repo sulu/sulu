@@ -116,7 +116,7 @@ class StructureXmlLoader extends AbstractLoader
         ContentTypeManagerInterface $contentTypeManager,
         array $requiredPropertyNames,
         array $requiredTagNames,
-        array $locales,
+        array $locales = [],
         ?TranslatorInterface $translator = null
     ) {
         $this->cacheLifetimeResolver = $cacheLifetimeResolver;
