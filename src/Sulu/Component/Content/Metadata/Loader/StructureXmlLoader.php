@@ -23,6 +23,7 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Content\Metadata\XmlParserTrait;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Reads a template xml and returns a StructureMetadata.
@@ -76,6 +77,11 @@ class StructureXmlLoader extends AbstractLoader
     private $requiredPropertyNames = [];
 
     /**
+     * @var array<int, string>
+     */
+    private $locales;
+
+    /**
      * @var CacheLifetimeResolverInterface
      */
     private $cacheLifetimeResolver;
@@ -95,13 +101,23 @@ class StructureXmlLoader extends AbstractLoader
      */
     private $contentTypeManager;
 
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @param array<string, string> $locales
+     */
     public function __construct(
         CacheLifetimeResolverInterface $cacheLifetimeResolver,
         PropertiesXmlParser $propertiesXmlParser,
         SchemaXmlParser $schemaXmlParser,
         ContentTypeManagerInterface $contentTypeManager,
         array $requiredPropertyNames,
-        array $requiredTagNames
+        array $requiredTagNames,
+        array $locales = [],
+        ?TranslatorInterface $translator = null
     ) {
         $this->cacheLifetimeResolver = $cacheLifetimeResolver;
         $this->propertiesXmlParser = $propertiesXmlParser;
@@ -109,6 +125,8 @@ class StructureXmlLoader extends AbstractLoader
         $this->contentTypeManager = $contentTypeManager;
         $this->requiredPropertyNames = $requiredPropertyNames;
         $this->requiredTagNames = $requiredTagNames;
+        $this->locales = \array_keys($locales);
+        $this->translator = $translator;
 
         parent::__construct(
             self::SCHEME_PATH,
@@ -361,8 +379,49 @@ class StructureXmlLoader extends AbstractLoader
 
     private function mapMeta(StructureMetadata $structure, $meta)
     {
-        $structure->setTitles($meta['title']);
-        $structure->setDescriptions($meta['info_text']);
+        $structure->setTitles(
+            $this->loadMetaValues($meta['title'])
+        );
+        $structure->setDescriptions(
+            $this->loadMetaValues($meta['info_text'])
+        );
+    }
+
+    /**
+     * @param array<string, string> $metaValues
+     *
+     * @return array<string, string>
+     */
+    private function loadMetaValues(array $metaValues): array
+    {
+        if (!$this->translator) {
+            return $metaValues;
+        }
+
+        $result = [];
+
+        $translationKey = null;
+
+        foreach ($metaValues as $lang => $metaValue) {
+            if (!$lang) {
+                $translationKey = $metaValue;
+
+                continue;
+            }
+
+            $result[$lang] = $metaValue;
+        }
+
+        if (!$translationKey) {
+            return $result;
+        }
+
+        $missingLocales = \array_diff($this->locales, \array_keys($result));
+        foreach ($missingLocales as $missingLocale) {
+            $result[$missingLocale] = $this->translator->trans($translationKey, [], 'admin', $missingLocale);
+        }
+
+        return $result;
     }
 
     private function findMissingRequiredProperties(string $type, array $propertyData): ?string

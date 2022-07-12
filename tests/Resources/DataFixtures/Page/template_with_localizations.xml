@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<template xmlns="http://schemas.sulu.io/template/template"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://schemas.sulu.io/template/template http://schemas.sulu.io/template/template-1.0.xsd">
+
+    <key>template_with_localizations</key>
+
+    <view>page.html.twig</view>
+    <controller>SuluPageBundle:Default:index</controller>
+    <cacheLifetime>2400</cacheLifetime>
+    <index name="foo_index" />
+
+    <meta>
+        <title>template_title</title>
+        <title lang="de">Template Titel</title>
+    </meta>
+
+    <tag name="some.random.structure.tag" foo="bar" bar="foo"/>
+
+    <properties>
+        <property name="title" type="text_line" mandatory="true">
+            <meta>
+                <title>property_title</title>
+            </meta>
+
+            <indexField />
+
+            <tag name="sulu.node.title" priority="10"/>
+
+            <tag name="some.random.tag" one="1" two="2" three="three" />
+        </property>
+
+        <property name="url" type="resource_locator" mandatory="true">
+            <tag name="sulu.rlp" priority="1"/>
+        </property>
+    </properties>
+</template>

@@ -191,7 +191,9 @@ class StructureMetadataFactoryTest extends TestCase
             $schemaXmlLoader,
             $contentTypeManager->reveal(),
             [],
-            []
+            [],
+            [],
+            $this->translator->reveal(),
         );
 
         $loadResult = $xmlLoader->load($this->apostropheMappingFile, 'page');
