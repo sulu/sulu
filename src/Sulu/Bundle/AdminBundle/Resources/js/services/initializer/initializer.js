@@ -107,7 +107,7 @@ class Initializer {
         const routePromise = this.initializeSymfonyRouting();
 
         return Promise.all([configPromise, routePromise])
-            .then(([config]) => {
+            .then(action(([config]) => {
                 this.config = config;
 
                 if (!this.initialized) {
@@ -122,7 +122,7 @@ class Initializer {
 
                 this.setInitialized();
                 return this.initializeTranslations();
-            })
+            }))
             .catch((error) => {
                 if (error.status !== 401) {
                     return Promise.reject(error);
