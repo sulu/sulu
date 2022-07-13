@@ -7,6 +7,11 @@
     display: flex;
     padding: 10px 20px;
     justify-content: space-between;
+
+    /* current workaround over global as compose import does not work here to get the .block class */
+    :global([class^="sortableBlockList-"] [class^="block-"]) & {
+        border: 1px solid $silver;
+    }
 }
 
 .sticky {
