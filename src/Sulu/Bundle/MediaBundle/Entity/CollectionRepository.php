@@ -92,7 +92,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             foreach ($sortBy as $column => $order) {
                 $queryBuilder->addOrderBy(
                     'collectionMeta.' . $column,
-                    ('asc' === \strtolower($order) ? 'ASC' : 'DESC')
+                    'asc' === \strtolower($order) ? 'ASC' : 'DESC'
                 );
             }
         }
@@ -354,7 +354,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             foreach ($sortBy as $column => $order) {
                 $queryBuilder->addOrderBy(
                     'collectionMeta.' . $column,
-                    ('asc' === \strtolower($order) ? 'ASC' : 'DESC')
+                    'asc' === \strtolower($order) ? 'ASC' : 'DESC'
                 );
             }
         }

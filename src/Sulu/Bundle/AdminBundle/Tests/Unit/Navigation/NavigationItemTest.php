@@ -130,7 +130,7 @@ class NavigationItemTest extends TestCase
     public function testFindChildren()
     {
         $this->assertEquals('Portals', $this->item1->findChildren(new NavigationItem('Portals'))->getName());
-        $this->assertNull($this->navigationItem->findChildren(new NavigationItem(('Nothing'))));
+        $this->assertNull($this->navigationItem->findChildren(new NavigationItem('Nothing')));
     }
 
     public function testCopyChildless()

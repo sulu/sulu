@@ -60,7 +60,7 @@ WARNING: Initializers SHOULD be idempotent and it SHOULD be safe to run this
          registered and what they do this cannot be guaranteed, so use at your own
          discretion on a system that has sensitive data.
 EOT
-        );
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

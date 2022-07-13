@@ -190,10 +190,10 @@ class UpdateBuildCommand extends Command
                         $ui->writeln($mergedJson);
 
                         if ('y' === \strtolower(
-                                $ui->ask(
-                                    \sprintf('Merge "%s" together like above?', $file),
-                                    'y'
-                                )
+                            $ui->ask(
+                                \sprintf('Merge "%s" together like above?', $file),
+                                'y'
+                            )
                             )
                         ) {
                             $ui->writeln(\sprintf('Write new "%s" version.', $file));

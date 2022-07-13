@@ -72,7 +72,7 @@ can use the <info>--append</info> option:
 This command will also execute any registered Initializer classes after
 purging.
 EOT
-        );
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -109,9 +109,9 @@ EOT
             if ($input->getOption('verbose')) {
                 $output->writeln(\sprintf(
                     'Found fixtures: <comment>"</comment>%s<comment>"</comment>',
-                        \implode('<comment>", "</comment>', \array_map(function($fixture) {
-                            return \get_class($fixture);
-                        }, \iterator_to_array($this->fixtures)))
+                    \implode('<comment>", "</comment>', \array_map(function($fixture) {
+                        return \get_class($fixture);
+                    }, \iterator_to_array($this->fixtures)))
                 ));
             }
 

@@ -213,7 +213,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
                 if (false !== $resourceLocator) {
                     // add resourceLocator
                     $result[] = new ResourceLocatorInformation(
-                    //backward compability
+                        //backward compability
                         $resourceLocator,
                         $node->getPropertyValueWithDefault('sulu:created', new \DateTime()),
                         $node->getIdentifier()

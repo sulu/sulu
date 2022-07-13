@@ -136,9 +136,9 @@ class ResettingControllerTest extends SuluTestCase
 
         // asserting user properties
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
-                'SuluSecurityBundle:User',
-                $this->users[0]->getId()
-            );
+            'SuluSecurityBundle:User',
+            $this->users[0]->getId()
+        );
         $this->assertTrue(\is_string($user->getPasswordResetToken()));
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
         $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
@@ -175,9 +175,9 @@ class ResettingControllerTest extends SuluTestCase
 
         // asserting user properties
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
-                'SuluSecurityBundle:User',
-                $this->users[1]->getId()
-            );
+            'SuluSecurityBundle:User',
+            $this->users[1]->getId()
+        );
         $this->assertTrue(\is_string($user->getPasswordResetToken()));
         $this->assertGreaterThan(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
         $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
@@ -224,9 +224,9 @@ class ResettingControllerTest extends SuluTestCase
         $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
         $response = \json_decode($this->client->getResponse()->getContent());
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
-                'SuluSecurityBundle:User',
-                $this->users[2]->getId()
-            );
+            'SuluSecurityBundle:User',
+            $this->users[2]->getId()
+        );
 
         $this->assertHttpStatusCode(204, $this->client->getResponse());
         $this->assertEquals(null, $response);
@@ -308,9 +308,9 @@ class ResettingControllerTest extends SuluTestCase
         ]);
 
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
-                'SuluSecurityBundle:User',
-                $this->users[2]->getId()
-            );
+            'SuluSecurityBundle:User',
+            $this->users[2]->getId()
+        );
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
