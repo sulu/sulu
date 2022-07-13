@@ -1,0 +1,4 @@
+# see also: https://docs.sulu.io/en/2.4/bundles/markup/index.html
+sulu_markup:
+    link_tag:
+        provider_attribute: 'data-provider'
