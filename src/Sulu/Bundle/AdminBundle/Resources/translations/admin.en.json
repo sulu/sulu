@@ -222,6 +222,7 @@
     "sulu_admin.two_factor_authentication": "Two-Factor authentication",
     "sulu_admin.two_factor_verification_code": "Verification code",
     "sulu_admin.two_factor_trust_device": "Trust this device",
+    "sulu_admin.two_factor_email_subject": "Verification code",
     "sulu_admin.two_factor_email_text": "Enter this %codeLength% digit code on the verification page to confirm your identity:",
     "sulu_admin.verify": "Verify",
     "sulu_admin.%count%_selected": "{count} selected",

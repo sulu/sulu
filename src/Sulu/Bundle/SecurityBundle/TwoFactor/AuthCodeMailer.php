@@ -29,6 +29,7 @@ class AuthCodeMailer implements AuthCodeMailerInterface
     public function __construct(
         private MailerInterface $mailer,
         private Environment $twig,
+        private TranslatorInterface $translator,
         private string $templateName,
         ?string $senderEmail,
         ?string $senderName,
@@ -50,7 +51,7 @@ class AuthCodeMailer implements AuthCodeMailerInterface
         $message = new TemplatedEmail();
         $message
             ->to($user->getEmailAuthRecipient())
-            ->subject('Authentication Code')
+            ->subject($this->translator->trans('sulu_admin', [], 'admin'))
             ->context([
                 'auth_code' => $authCode,
                 'user' => $user,

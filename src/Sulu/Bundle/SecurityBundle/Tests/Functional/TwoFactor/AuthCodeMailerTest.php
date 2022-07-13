@@ -45,13 +45,13 @@ class AuthCodeMailerTest extends SuluTestCase
         $this->assertCount(1, $messages);
         $message = $messages[0];
         $this->assertInstanceOf(TemplatedEmail::class, $message);
-        $this->assertSame('Authentication Code', $message->getSubject());
+        $this->assertSame('Verification code', $message->getSubject());
         /** @var string $textBody */
         $textBody = $message->getTextBody();
-        $this->assertStringContainsString('Auth Code: ', $textBody);
+        $this->assertStringContainsString('Enter this 4 digit code on the verification page to confirm your identity:', $textBody);
         /** @var string $htmlBody */
         $htmlBody = $message->getHtmlBody();
-        $this->assertStringContainsString('Auth Code: ', $htmlBody);
+        $this->assertStringContainsString('Enter this 4 digit code on the verification page to confirm your identity:', $htmlBody);
     }
 
     public static function tearDownAfterClass(): void

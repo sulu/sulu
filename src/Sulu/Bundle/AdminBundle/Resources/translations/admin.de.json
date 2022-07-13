@@ -221,6 +221,7 @@
     "sulu_admin.two_factor_authentication": "Zwei-Faktor Authentifizierung",
     "sulu_admin.two_factor_verification_code": "Verifizierungscode",
     "sulu_admin.two_factor_trust_device": "Diesem Gerät vertrauen",
+    "sulu_admin.two_factor_email_subject": "Verifizierungscode",
     "sulu_admin.two_factor_email_text": "Geben Sie diesen %codeLength%-stelligen Code auf der Verifizierungsseite ein, um Ihre Identität zu bestätigen:",
     "sulu_admin.verify": "Verifizieren",
     "sulu_admin.%count%_selected": "{count} ausgewählt",
