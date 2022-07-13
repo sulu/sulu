@@ -126,8 +126,8 @@ class PreviewLinkManagerTest extends TestCase
         $link = 'http://loclhost/admin/p/123';
 
         $this->previewObjectProvider->getSecurityContext($resourceId, $locale)->willReturn(
-                PageAdmin::getPageSecurityContext('example')
-            );
+            PageAdmin::getPageSecurityContext('example')
+        );
 
         $previewLink = $this->prophesize(PreviewLinkInterface::class);
         $previewLink->getToken()->willReturn('123');

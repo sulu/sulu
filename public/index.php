@@ -21,7 +21,7 @@ if (SULU_MAINTENANCE) {
     $maintenanceFilePath = __DIR__ . '/maintenance.php';
     // show maintenance mode and exit if no allowed IP is met
     if (require $maintenanceFilePath) {
-        exit();
+        exit;
     }
 }
 
