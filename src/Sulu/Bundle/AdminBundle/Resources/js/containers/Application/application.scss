@@ -93,22 +93,6 @@
         right: $sidebarMaxWidth;
     }
 
-    &.isNavigationPinned {
-        left: $navigationWidth;
-
-        &.small {
-            right: calc((100% - $navigationWidth) * .3);
-        }
-
-        &.medium {
-            right: calc((100% - $navigationWidth) * .5);
-        }
-
-        &.large {
-            right: calc(100% - $navigationWidth - $sidebarMaxWidth);
-        }
-    }
-
     &.isNavigationVisible {
         left: $navigationWidth;
 
@@ -122,6 +106,22 @@
 
         &.large {
             right: calc(100% + $navigationWidth - $sidebarMaxWidth);
+        }
+    }
+
+    &.isNavigationPinned {
+        left: $navigationWidth;
+
+        &.small {
+            right: calc((100% - $navigationWidth) * .3);
+        }
+
+        &.medium {
+            right: calc((100% - $navigationWidth) * .5);
+        }
+
+        &.large {
+            right: calc(100% - $navigationWidth - $sidebarMaxWidth);
         }
     }
 }
