@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sulu_security.two_factor_mailer" class="Sulu\Bundle\SecurityBundle\TwoFactor\AuthCodeMailer">
+            <argument type="service" id="mailer.mailer"/>
+            <argument type="service" id="twig"/>
+            <argument type="service" id="translator"/>
+            <argument>%sulu_security.two_factor_email_template%</argument>
+            <argument>%scheb_two_factor.email.sender_email%</argument>
+            <argument>%scheb_two_factor.email.sender_name%</argument>
+        </service>
+    </services>
+</container>

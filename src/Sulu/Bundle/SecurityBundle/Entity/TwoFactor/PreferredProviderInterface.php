@@ -17,12 +17,10 @@ use Scheb\TwoFactorBundle\Model\PreferredProviderInterface as SchebPreferredProv
  * Bridge interface to the scheb/2fa-bundle PreferredProviderInterface.
  */
 if (\interface_exists(SchebPreferredProviderInterface::class)) {
-    /**
+    /*
      * @internal
      */
-    interface PreferredProviderInterface extends SchebPreferredProviderInterface
-    {
-    }
+    \class_alias(SchebPreferredProviderInterface::class, PreferredProviderInterface::class);
 } else {
     /**
      * @internal

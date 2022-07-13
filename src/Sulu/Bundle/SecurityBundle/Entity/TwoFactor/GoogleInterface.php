@@ -17,12 +17,10 @@ use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface;
  * Bridge interface to the scheb/2fa-google-authenticator TwoFactorInterface.
  */
 if (\interface_exists(TwoFactorInterface::class)) {
-    /**
+    /*
      * @internal
      */
-    interface GoogleInterface extends TwoFactorInterface
-    {
-    }
+    \class_alias(TwoFactorInterface::class, GoogleInterface::class);
 } else {
     /**
      * @internal

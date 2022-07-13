@@ -17,12 +17,10 @@ use Scheb\TwoFactorBundle\Model\TrustedDeviceInterface as SchebTrustedDeviceInte
  * Bridge interface to the scheb/2fa-trusted-device TwoFactorInterface.
  */
 if (\interface_exists(SchebTrustedDeviceInterface::class)) {
-    /**
+    /*
      * @internal
      */
-    interface TrustedDeviceInterface extends SchebTrustedDeviceInterface
-    {
-    }
+    \class_alias(SchebTrustedDeviceInterface::class, TrustedDeviceInterface::class);
 } else {
     /**
      * @internal

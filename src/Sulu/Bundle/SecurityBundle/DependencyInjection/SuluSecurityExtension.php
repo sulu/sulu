@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SecurityBundle\DependencyInjection;
 
+use Scheb\TwoFactorBundle\Mailer\AuthCodeMailerInterface;
 use Scheb\TwoFactorBundle\SchebTwoFactorBundle;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
 use Sulu\Bundle\SecurityBundle\Exception\RoleKeyAlreadyExistsException;
@@ -49,6 +50,8 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
         $container->setParameter('sulu_security.password_policy_pattern', $passwordPolicyEnabled ? $config['password_policy']['pattern'] : null);
         $container->setParameter('sulu_security.password_policy_info_translation_key', $passwordPolicyEnabled ? $config['password_policy']['info_translation_key'] : null);
 
+        $container->setParameter('sulu_security.two_factor_email_template', $config['two_factor']['email']['template']);
+
         $twoFactorForcePattern = null;
         $twoFactorForceEnabled = $config['two_factor']['force']['enabled'];
         if ($twoFactorForceEnabled) {
@@ -72,6 +75,10 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
 
         if (\in_array(SchebTwoFactorBundle::class, $bundles)) {
             $loader->load('2fa.xml');
+
+            if (\interface_exists(AuthCodeMailerInterface::class)) {
+                $loader->load('2fa_email.xml');
+            }
         }
 
         if (\interface_exists(LogoutSuccessHandlerInterface::class)) {
@@ -99,6 +106,18 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
 
     public function prepend(ContainerBuilder $container)
     {
+        if ($container->hasExtension('scheb_two_factor') && \interface_exists(AuthCodeMailerInterface::class)) {
+            $container->prependExtensionConfig(
+                'scheb_two_factor',
+                [
+                    'email' => [
+                        'enabled' => false,
+                        'mailer' => 'sulu_security.two_factor_mailer',
+                    ],
+                ]
+            );
+        }
+
         if ($container->hasExtension('fos_rest')) {
             $container->prependExtensionConfig(
                 'fos_rest',

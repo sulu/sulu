@@ -17,12 +17,10 @@ use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
  * Bridge interface to the scheb/2fa-email TwoFactorInterface.
  */
 if (\interface_exists(TwoFactorInterface::class)) {
-    /**
+    /*
      * @internal
      */
-    interface EmailInterface extends TwoFactorInterface
-    {
-    }
+    \class_alias(TwoFactorInterface::class, EmailInterface::class);
 } else {
     /**
      * @internal
