@@ -220,6 +220,7 @@
     "sulu_admin.insufficient_descendant_permissions": "Insufficient permissions for {count} descendant elements.",
     "sulu_admin.unexpected_delete_server_error": "An unexpected error occurred while deleting.",
     "sulu_admin.two_factor_authentication": "Two-Factor authentication",
+    "sulu_admin.two_factor_authentication_failed": "Verification code is invalid. Please try again.",
     "sulu_admin.two_factor_verification_code": "Verification code",
     "sulu_admin.two_factor_trust_device": "Trust this device",
     "sulu_admin.two_factor_email_subject": "Verification code",
