@@ -15,6 +15,7 @@ use Sulu\Bundle\SecurityBundle\Entity\TwoFactor\EmailInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 /**
@@ -51,7 +52,7 @@ class AuthCodeMailer implements AuthCodeMailerInterface
         $message = new TemplatedEmail();
         $message
             ->to($user->getEmailAuthRecipient())
-            ->subject($this->translator->trans('sulu_admin', [], 'admin'))
+            ->subject($this->translator->trans('sulu_admin.two_factor_email_subject', [], 'admin'))
             ->context([
                 'auth_code' => $authCode,
                 'user' => $user,
