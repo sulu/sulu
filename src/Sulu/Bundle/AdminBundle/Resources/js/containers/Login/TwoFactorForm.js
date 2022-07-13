@@ -97,7 +97,7 @@ class TwoFactorForm extends React.Component<Props> {
                     <fieldset>
                         <label className={inputFieldClass}>
                             <div className={formStyles.labelText}>
-                                {translate('sulu_admin.two_factor_auth_code')}
+                                {translate('sulu_admin.two_factor_verification_code')}
                             </div>
                             <Input
                                 autocomplete="one-time-code"
