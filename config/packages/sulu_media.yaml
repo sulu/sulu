@@ -1,0 +1,7 @@
+sulu_media:
+    format_manager:
+        default_imagine_options:
+            # a value between 95 and 75 is recommended
+            # see also: https://docs.sulu.io/en/2.5/book/image-formats.html
+            jpeg_quality: 90
+            webp_quality: 90
