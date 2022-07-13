@@ -88,7 +88,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->em->clear();
     }
 
-    public function testSendEmailAction()
+    public function testSendEmailAction(): void
     {
         $this->client->enableProfiler();
 
@@ -133,7 +133,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals($expectedEmailData['body'], $htmlBody);
     }
 
-    public function testSendEmailActionWithUsername()
+    public function testSendEmailActionWithUsername(): void
     {
         $this->client->enableProfiler();
 
@@ -179,7 +179,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals($expectedEmailData['body'], $htmlBody);
     }
 
-    public function testSendEmailActionWithUserWithoutEmail()
+    public function testSendEmailActionWithUserWithoutEmail(): void
     {
         $this->client->enableProfiler();
 
@@ -199,11 +199,7 @@ class ResettingControllerTest extends SuluTestCase
         // asserting user properties
         /** @var User $user */
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
-<<<<<<< HEAD
             User::class,
-=======
-            'SuluSecurityBundle:User',
->>>>>>> 2417feddd786067791a22b857ffe861106aaa1e5
             $this->users[1]->getId()
         );
         $this->assertTrue(\is_string($user->getPasswordResetToken()));
@@ -229,7 +225,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals($expectedEmailData['body'], $htmlBody);
     }
 
-    public function testResendEmailActionTooMuch()
+    public function testResendEmailActionTooMuch(): void
     {
         $this->client->enableProfiler();
 
@@ -260,11 +256,7 @@ class ResettingControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         /** @var User $user */
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
-<<<<<<< HEAD
             User::class,
-=======
-            'SuluSecurityBundle:User',
->>>>>>> 2417feddd786067791a22b857ffe861106aaa1e5
             $this->users[2]->getId()
         );
 
@@ -274,7 +266,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals($counter, $user->getPasswordResetTokenEmailsSent());
     }
 
-    public function testSendEmailActionWithMissingUser()
+    public function testSendEmailActionWithMissingUser(): void
     {
         $this->client->enableProfiler();
 
@@ -290,7 +282,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertCount(0, $mailCollector->getEvents()->getMessages());
     }
 
-    public function testSendEmailActionWithNotExistingUser()
+    public function testSendEmailActionWithNotExistingUser(): void
     {
         $this->client->enableProfiler();
 
@@ -308,7 +300,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertCount(0, $mailCollector->getEvents()->getMessages());
     }
 
-    public function testSendEmailActionMultipleTimes()
+    public function testSendEmailActionMultipleTimes(): void
     {
         $this->client->enableProfiler();
 
@@ -334,7 +326,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertCount(1, $mailCollector->getEvents()->getMessages());
     }
 
-    public function testResetAction()
+    public function testResetAction(): void
     {
         $newPassword = 'anewpasswordishouldremeber';
 
@@ -358,11 +350,7 @@ class ResettingControllerTest extends SuluTestCase
 
         /** @var User $user */
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
-<<<<<<< HEAD
             User::class,
-=======
-            'SuluSecurityBundle:User',
->>>>>>> 2417feddd786067791a22b857ffe861106aaa1e5
             $this->users[2]->getId()
         );
 
@@ -386,7 +374,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertNull($user->getPasswordResetTokenExpiresAt());
     }
 
-    public function testResetActionWithoutToken()
+    public function testResetActionWithoutToken(): void
     {
         $passwordBefore = $this->users[2]->getPassword();
 
@@ -402,7 +390,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals($passwordBefore, $user->getPassword());
     }
 
-    public function testResetActionWithInvalidToken()
+    public function testResetActionWithInvalidToken(): void
     {
         $passwordBefore = $this->users[2]->getPassword();
 
@@ -419,7 +407,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals($passwordBefore, $user->getPassword());
     }
 
-    public function testResetActionNoRole()
+    public function testResetActionNoRole(): void
     {
         $user = $this->createUser(4);
         $this->em->persist($user);
@@ -435,7 +423,7 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals(null, $response);
     }
 
-    public function testResetActionDifferentSystem()
+    public function testResetActionDifferentSystem(): void
     {
         $role = $this->createRole('Website');
         $this->em->persist($role);
@@ -458,7 +446,10 @@ class ResettingControllerTest extends SuluTestCase
         $this->assertEquals(null, $response);
     }
 
-    protected function getExpectedEmailData($client, User $user, string $token)
+    /**
+     * @return array{subject: string, body: string, sender: string}
+     */
+    protected function getExpectedEmailData($client, User $user, string $token): array
     {
         $sender = $this->getContainer()->getParameter('sulu_security.reset_password.mail.sender');
         $template = $this->getContainer()->getParameter('sulu_security.reset_password.mail.template');
@@ -480,7 +471,7 @@ class ResettingControllerTest extends SuluTestCase
         ];
     }
 
-    protected function createRole($system)
+    protected function createRole($system): Role
     {
         $role = new Role();
         $role->setName($system);
@@ -489,7 +480,7 @@ class ResettingControllerTest extends SuluTestCase
         return $role;
     }
 
-    protected function createUser($index, $email = null)
+    protected function createUser($index, $email = null): User
     {
         $user = new User();
         $user->setUsername('user' . $index);
@@ -507,7 +498,7 @@ class ResettingControllerTest extends SuluTestCase
         return $user;
     }
 
-    protected function createUserRole(User $user, Role $role)
+    protected function createUserRole(User $user, Role $role): UserRole
     {
         $userRole = new UserRole();
         $userRole->setLocale(\json_encode(['de']));

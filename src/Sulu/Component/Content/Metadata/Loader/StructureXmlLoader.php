@@ -102,7 +102,7 @@ class StructureXmlLoader extends AbstractLoader
     private $contentTypeManager;
 
     /**
-     * @var TranslatorInterface
+     * @var TranslatorInterface|null
      */
     private $translator;
 
