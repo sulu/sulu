@@ -570,7 +570,7 @@ class ResourceSegmentSubscriberTest extends TestCase
 
         $this->documentInspector->getStructureMetadata(
             $document->reveal())->willReturn($this->structureMetadata->reveal()
-        );
+            );
 
         return $document;
     }

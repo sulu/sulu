@@ -27,7 +27,7 @@ class TagRemovedEventTest extends TestCase
     {
         $event = $this->createTagRemovedEvent(
             1234,
-         'tag-name-123',
+            'tag-name-123',
             [
                 'wasMerged' => true,
                 'destinationTagId' => 5566,

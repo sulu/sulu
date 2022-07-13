@@ -339,8 +339,8 @@ class DoctrineListBuilderTest extends TestCase
             new DoctrineFieldDescriptor(
                 'desc', 'desc_alias', self::$translationEntityName, 'translation', [
                     self::$translationEntityName => new DoctrineJoinDescriptor(
-                            self::$translationEntityName, self::$entityNameAlias . '.translations'
-                        ),
+                        self::$translationEntityName, self::$entityNameAlias . '.translations'
+                    ),
                 ]
             )
         );
@@ -395,8 +395,8 @@ class DoctrineListBuilderTest extends TestCase
             new DoctrineFieldDescriptor(
                 'name', 'name', self::$translationEntityName, 'translation', [
                     self::$translationEntityName => new DoctrineJoinDescriptor(
-                            self::$translationEntityName, self::$entityNameAlias . '.translations'
-                        ),
+                        self::$translationEntityName, self::$entityNameAlias . '.translations'
+                    ),
                 ]
             )
         );
@@ -907,23 +907,23 @@ class DoctrineListBuilderTest extends TestCase
     {
         $fieldDescriptors = [
             'id1' => new DoctrineFieldDescriptor(
-                    '',
-                    '',
-                    '',
-                    '',
-                    [
-                        'a' => new DoctrineJoinDescriptor('a', 'a.test', '', DoctrineJoinDescriptor::JOIN_METHOD_LEFT),
-                    ]
-                ),
+                '',
+                '',
+                '',
+                '',
+                [
+                    'a' => new DoctrineJoinDescriptor('a', 'a.test', '', DoctrineJoinDescriptor::JOIN_METHOD_LEFT),
+                ]
+            ),
             'id2' => new DoctrineFieldDescriptor(
-                    '',
-                    '',
-                    '',
-                    '',
-                    [
-                        'b' => new DoctrineJoinDescriptor('b', 'b.test', '', DoctrineJoinDescriptor::JOIN_METHOD_INNER),
-                    ]
-                ),
+                '',
+                '',
+                '',
+                '',
+                [
+                    'b' => new DoctrineJoinDescriptor('b', 'b.test', '', DoctrineJoinDescriptor::JOIN_METHOD_INNER),
+                ]
+            ),
         ];
 
         $this->doctrineListBuilder->setSelectFields($fieldDescriptors);

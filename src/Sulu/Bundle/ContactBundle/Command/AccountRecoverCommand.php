@@ -47,11 +47,11 @@ class AccountRecoverCommand extends Command
     protected function configure()
     {
         $this->addOption(
-                'force',
-                'f',
-                InputOption::VALUE_NONE,
-                'Force recovery of tree. Without it, an analysis of the tree is performed'
-            )
+            'force',
+            'f',
+            InputOption::VALUE_NONE,
+            'Force recovery of tree. Without it, an analysis of the tree is performed'
+        )
             ->addOption(
                 'fix-depth',
                 'd',

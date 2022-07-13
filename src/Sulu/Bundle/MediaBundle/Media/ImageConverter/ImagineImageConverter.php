@@ -359,7 +359,7 @@ class ImagineImageConverter implements ImageConverterInterface
                 $parameters['width'],
                 $parameters['height'],
                 $format
-            )
+                )
             ) {
                 return $parameters;
             }

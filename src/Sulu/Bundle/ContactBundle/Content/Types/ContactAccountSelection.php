@@ -113,7 +113,7 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
         $segmentKey
     ) {
         $value = $property->getValue();
-        $node->setProperty($property->getName(), (null === $value ? [] : $value));
+        $node->setProperty($property->getName(), null === $value ? [] : $value);
     }
 
     public function remove(

@@ -73,8 +73,8 @@ class PageDataProviderTest extends TestCase
             Argument::type(ContentQueryBuilderInterface::class),
             true,
             -1,
-            ($limit > -1 ? $limit + 1 : null),
-            ($limit > -1 ? $limit * ($page - 1) : null),
+            $limit > -1 ? $limit + 1 : null,
+            $limit > -1 ? $limit * ($page - 1) : null,
             false,
             $permission
         )->willReturn($result);

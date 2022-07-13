@@ -29,7 +29,7 @@ abstract class BaseTestCase extends KernelTestCase
 [mix:mapping5] > mix:referenceable mix
 [mix:mapping10] > mix:referenceable mix
 EOT
-            , true);
+                , true);
         }
 
         $namespaceRegistry = $workspace->getNamespaceRegistry();

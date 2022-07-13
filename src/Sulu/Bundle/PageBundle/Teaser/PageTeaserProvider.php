@@ -123,11 +123,11 @@ class PageTeaserProvider implements TeaserProviderInterface
                 $item->getId(),
                 'pages',
                 $locale,
-                ('' !== $excerptTitle ? $excerptTitle : $title),
-                ('' !== $excerptDescription ? $excerptDescription : $teaserDescription),
+                '' !== $excerptTitle ? $excerptTitle : $title,
+                '' !== $excerptDescription ? $excerptDescription : $teaserDescription,
                 $document->getField('excerptMore')->getValue(),
                 $document->getField('__url')->getValue(),
-                (null !== $excerptMedia ? $excerptMedia : $teaserMedia),
+                null !== $excerptMedia ? $excerptMedia : $teaserMedia,
                 $this->getAttributes($document)
             );
         }

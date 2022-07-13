@@ -84,11 +84,11 @@ class FormXmlLoaderTest extends TestCase
         $this->assertSame(0, $formMetadata->getItems()['formOfAddress']->getOptions()['default_value']->getValue());
         $this->assertSame(
             0,
-            ($formMetadata->getItems()['formOfAddress']->getOptions()['values']->getValue()[0]->getName())
+            $formMetadata->getItems()['formOfAddress']->getOptions()['values']->getValue()[0]->getName()
         );
         $this->assertSame(
             1,
-            ($formMetadata->getItems()['formOfAddress']->getOptions()['values']->getValue()[1]->getName())
+            $formMetadata->getItems()['formOfAddress']->getOptions()['values']->getValue()[1]->getName()
         );
         $this->assertEquals('firstName', $formMetadata->getItems()['firstName']->getName());
         $this->assertEquals('lastName', $formMetadata->getItems()['lastName']->getName());

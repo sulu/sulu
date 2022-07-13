@@ -72,7 +72,7 @@ class PathCleanup implements PathCleanupInterface
         if (null !== $languageCode) {
             $replacers = \array_merge(
                 $replacers,
-                (isset($this->replacers[$languageCode]) ? $this->replacers[$languageCode] : [])
+                isset($this->replacers[$languageCode]) ? $this->replacers[$languageCode] : []
             );
         }
 

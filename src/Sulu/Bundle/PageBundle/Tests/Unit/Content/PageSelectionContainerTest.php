@@ -142,7 +142,7 @@ class PageSelectionContainerTest extends TestCase
         $this->executor
              ->execute('default', ['en'], $this->builder, true, -1, null, null, false, $user->reveal())
              ->willReturn([['id' => 1], ['id' => 2], ['id' => 3]]
-        );
+             );
 
         $this->container->getData();
     }

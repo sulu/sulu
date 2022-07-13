@@ -205,8 +205,8 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
         }
 
         $event->getAccessor()->set(
-          'resourceSegment',
-          $shadowLocator
+            'resourceSegment',
+            $shadowLocator
         );
     }
 

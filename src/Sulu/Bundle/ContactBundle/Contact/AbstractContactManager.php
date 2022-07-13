@@ -1630,7 +1630,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
             $entity->setBic($data['bic']);
         }
         $entity->setIban($data['iban']);
-        $entity->setPublic($this->getBooleanValue((\array_key_exists('public', $data) ? $data['public'] : false)));
+        $entity->setPublic($this->getBooleanValue(\array_key_exists('public', $data) ? $data['public'] : false));
         if (isset($data['bankName'])) {
             $entity->setBankName($data['bankName']);
         }
@@ -1657,7 +1657,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
             $entity->setBic($data['bic']);
         }
         $entity->setIban($data['iban']);
-        $entity->setPublic($this->getBooleanValue((\array_key_exists('public', $data) ? $data['public'] : false)));
+        $entity->setPublic($this->getBooleanValue(\array_key_exists('public', $data) ? $data['public'] : false));
         if (isset($data['bankName'])) {
             $entity->setBankName($data['bankName']);
         }

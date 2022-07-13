@@ -947,16 +947,16 @@ class MediaManager implements MediaManagerInterface
     private function generateUrl(string $path, $id, string $fileName, $version): string
     {
         return \str_replace(
-                [
-                    '{id}',
-                    '{slug}',
-                ],
-                [
-                    $id,
-                    \rawurlencode($fileName),
-                ],
-                $path
-            ) . '?v=' . $version;
+            [
+                '{id}',
+                '{slug}',
+            ],
+            [
+                $id,
+                \rawurlencode($fileName),
+            ],
+            $path
+        ) . '?v=' . $version;
     }
 
     public function getUrl($id, $fileName, $version)
