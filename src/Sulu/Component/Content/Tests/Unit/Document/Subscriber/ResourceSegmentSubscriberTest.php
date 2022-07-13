@@ -572,8 +572,8 @@ class ResourceSegmentSubscriberTest extends TestCase
             ->willImplement(StructureBehavior::class);
 
         $this->documentInspector->getStructureMetadata(
-            $document->reveal())->willReturn($this->structureMetadata->reveal()
-        );
+            $document->reveal()
+        )->willReturn($this->structureMetadata->reveal());
 
         return $document;
     }

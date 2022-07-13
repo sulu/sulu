@@ -70,7 +70,7 @@ class SettingsManagerTest extends TestCase
         $this->sessionManager->setNodeProperty(
             '/cmf/' . $webspaceKey,
             'settings:' . $key,
-            (!($data instanceof NodeInterface) ? \json_encode($data) : $data)
+            !($data instanceof NodeInterface) ? \json_encode($data) : $data
         )->shouldBeCalled();
 
         $this->sessionManager->flush()->shouldBeCalled();
@@ -110,7 +110,7 @@ class SettingsManagerTest extends TestCase
 
         $node->getPropertyValueWithDefault('settings:' . $key, \json_encode(null))
             ->shouldBeCalledTimes(1)
-            ->willReturn((!($data instanceof NodeInterface) ? \json_encode($data) : $data));
+            ->willReturn(!($data instanceof NodeInterface) ? \json_encode($data) : $data);
 
         $result = $this->settingsManager->load($webspaceKey, $key);
 

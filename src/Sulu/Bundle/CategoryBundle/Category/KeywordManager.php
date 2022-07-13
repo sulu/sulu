@@ -53,7 +53,7 @@ class KeywordManager implements KeywordManagerInterface
         KeywordRepositoryInterface $keywordRepository,
         CategoryTranslationRepositoryInterface $categoryTranslationRepository,
         EntityManagerInterface $entityManager,
-                DomainEventCollectorInterface $domainEventCollector
+        DomainEventCollectorInterface $domainEventCollector
     ) {
         $this->keywordRepository = $keywordRepository;
         $this->categoryTranslationRepository = $categoryTranslationRepository;

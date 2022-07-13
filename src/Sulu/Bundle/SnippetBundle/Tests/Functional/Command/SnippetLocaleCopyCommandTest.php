@@ -43,11 +43,11 @@ class SnippetLocaleCopyCommandTest extends SuluTestCase
         $this->documentRegistry = $this->getContainer()->get('sulu_document_manager_test.document_registry');
 
         $command = new SnippetLocaleCopyCommand(
-             $this->getContainer()->get('sulu_snippet.repository'),
-             $this->getContainer()->get('sulu.content.mapper'),
-             $this->getContainer()->get('doctrine_phpcr.session'),
-             $this->getContainer()->get('sulu_document_manager.document_manager'),
-             $this->getContainer()->getParameter('sulu.content.language.namespace')
+            $this->getContainer()->get('sulu_snippet.repository'),
+            $this->getContainer()->get('sulu.content.mapper'),
+            $this->getContainer()->get('doctrine_phpcr.session'),
+            $this->getContainer()->get('sulu_document_manager.document_manager'),
+            $this->getContainer()->getParameter('sulu.content.language.namespace')
         );
         $command->setApplication($application);
         $this->tester = new CommandTester($command);

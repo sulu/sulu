@@ -199,7 +199,11 @@ class ResettingControllerTest extends SuluTestCase
         // asserting user properties
         /** @var User $user */
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
+<<<<<<< HEAD
             User::class,
+=======
+            'SuluSecurityBundle:User',
+>>>>>>> 2417feddd786067791a22b857ffe861106aaa1e5
             $this->users[1]->getId()
         );
         $this->assertTrue(\is_string($user->getPasswordResetToken()));
@@ -256,7 +260,11 @@ class ResettingControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         /** @var User $user */
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
+<<<<<<< HEAD
             User::class,
+=======
+            'SuluSecurityBundle:User',
+>>>>>>> 2417feddd786067791a22b857ffe861106aaa1e5
             $this->users[2]->getId()
         );
 
@@ -350,7 +358,11 @@ class ResettingControllerTest extends SuluTestCase
 
         /** @var User $user */
         $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
+<<<<<<< HEAD
             User::class,
+=======
+            'SuluSecurityBundle:User',
+>>>>>>> 2417feddd786067791a22b857ffe861106aaa1e5
             $this->users[2]->getId()
         );
 

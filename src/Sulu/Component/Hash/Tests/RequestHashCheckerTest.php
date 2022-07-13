@@ -56,7 +56,7 @@ class RequestHashCheckerTest extends TestCase
      */
     public function testCheckHash($force, $givenHash, $realHash, $valid)
     {
-        $request = new Request(['force' => $force], ($givenHash ? ['_hash' => $givenHash] : []));
+        $request = new Request(['force' => $force], $givenHash ? ['_hash' => $givenHash] : []);
         $object = new \stdClass();
 
         $this->hasher->hash($object)->willReturn($realHash);

@@ -178,7 +178,7 @@ class LocalFormatCache implements FormatCacheInterface
      */
     protected function getSegment($id)
     {
-        return \sprintf('%0' . \strlen($this->segments) . 'd', ($id % $this->segments));
+        return \sprintf('%0' . \strlen($this->segments) . 'd', $id % $this->segments);
     }
 
     /**

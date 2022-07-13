@@ -80,7 +80,7 @@ class EnvironmentTest extends TestCase
         $this->assertEquals($expectedMainUrl, $environment->getMainUrl());
 
         foreach ($environment->getUrls() as $url) {
-            $this->assertEquals(($url === $environment->getMainUrl()), $url->isMain());
+            $this->assertEquals($url === $environment->getMainUrl(), $url->isMain());
         }
     }
 

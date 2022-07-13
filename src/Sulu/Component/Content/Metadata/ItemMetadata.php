@@ -169,7 +169,7 @@ abstract class ItemMetadata
         if (!isset($this->children[$name])) {
             throw new \InvalidArgumentException(\sprintf(
                 'Unknown child "%s" in structure "%s". Children: "%s"',
-                 $name, $this->name, \implode('", "', \array_keys($this->children))
+                $name, $this->name, \implode('", "', \array_keys($this->children))
             ));
         }
 

@@ -483,28 +483,28 @@ class Urlizer
             if (0 == $mState) {
                 // When mState is zero we expect either a US-ASCII character or a
                 // multi-octet sequence.
-                if (0 == (0x80 & ($in))) {
+                if (0 == (0x80 & $in)) {
                     // US-ASCII, pass straight through.
                     $mBytes = 1;
-                } elseif (0xC0 == (0xE0 & ($in))) {
+                } elseif (0xC0 == (0xE0 & $in)) {
                     // First octet of 2 octet sequence
-                    $mUcs4 = ($in);
+                    $mUcs4 = $in;
                     $mUcs4 = ($mUcs4 & 0x1F) << 6;
                     $mState = 1;
                     $mBytes = 2;
-                } elseif (0xE0 == (0xF0 & ($in))) {
+                } elseif (0xE0 == (0xF0 & $in)) {
                     // First octet of 3 octet sequence
-                    $mUcs4 = ($in);
+                    $mUcs4 = $in;
                     $mUcs4 = ($mUcs4 & 0x0F) << 12;
                     $mState = 2;
                     $mBytes = 3;
-                } elseif (0xF0 == (0xF8 & ($in))) {
+                } elseif (0xF0 == (0xF8 & $in)) {
                     // First octet of 4 octet sequence
-                    $mUcs4 = ($in);
+                    $mUcs4 = $in;
                     $mUcs4 = ($mUcs4 & 0x07) << 18;
                     $mState = 3;
                     $mBytes = 4;
-                } elseif (0xF8 == (0xFC & ($in))) {
+                } elseif (0xF8 == (0xFC & $in)) {
                     /* First octet of 5 octet sequence.
                     *
                     * This is illegal because the encoded codepoint must be either
@@ -513,13 +513,13 @@ class Urlizer
                     * Rather than trying to resynchronize, we will carry on until the end
                     * of the sequence and let the later error handling code catch it.
                     */
-                    $mUcs4 = ($in);
+                    $mUcs4 = $in;
                     $mUcs4 = ($mUcs4 & 0x03) << 24;
                     $mState = 4;
                     $mBytes = 5;
-                } elseif (0xFC == (0xFE & ($in))) {
+                } elseif (0xFC == (0xFE & $in)) {
                     // First octet of 6 octet sequence, see comments for 5 octet sequence.
-                    $mUcs4 = ($in);
+                    $mUcs4 = $in;
                     $mUcs4 = ($mUcs4 & 1) << 30;
                     $mState = 5;
                     $mBytes = 6;
@@ -532,7 +532,7 @@ class Urlizer
             } else {
                 // When mState is non-zero, we expect a continuation of the multi-octet
                 // sequence
-                if (0x80 == (0xC0 & ($in))) {
+                if (0x80 == (0xC0 & $in)) {
                     // Legal continuation.
                     $shift = ($mState - 1) * 6;
                     $tmp = $in;

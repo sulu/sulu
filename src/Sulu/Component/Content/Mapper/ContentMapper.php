@@ -848,13 +848,13 @@ class ContentMapper implements ContentMapperInterface
                 $target[$field['name']] = '';
             }
             if (null !== ($data = $this->getFieldData(
-                    $field,
-                    $row,
-                    $node,
-                    $document,
-                    $templateKey,
-                    $webspaceKey,
-                    $locale
+                $field,
+                $row,
+                $node,
+                $document,
+                $templateKey,
+                $webspaceKey,
+                $locale
                 ))
             ) {
                 $target[$field['name']] = $data;

@@ -46,7 +46,8 @@ class RecoverCommand extends Command
 
     protected function configure()
     {
-        $this->addOption(
+        $this
+            ->addOption(
                 'force',
                 'f',
                 InputOption::VALUE_NONE,
