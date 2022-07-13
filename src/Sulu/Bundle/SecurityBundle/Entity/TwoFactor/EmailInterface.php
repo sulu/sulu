@@ -24,6 +24,11 @@ if (\interface_exists(TwoFactorInterface::class)) {
 } else {
     /**
      * @internal
+     *
+     * @method bool isEmailAuthEnabled()
+     * @method string getEmailAuthRecipient()
+     * @method ?string getEmailAuthCode()
+     * @method void setEmailAuthCode(string $authCode)
      */
     interface EmailInterface
     {
