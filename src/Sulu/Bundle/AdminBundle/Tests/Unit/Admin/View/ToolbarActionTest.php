@@ -18,14 +18,14 @@ class ToolbarActionTest extends TestCase
 {
     public function testGetType()
     {
-        $toolbarAction = new ToolbarAction('sulu_admin.delete', ['allow_conflict_deletion' => false]);
+        $toolbarAction = ToolbarAction::DELETE(['allow_conflict_deletion' => false]);
 
         $this->assertSame('sulu_admin.delete', $toolbarAction->getType());
     }
 
     public function testGetOptions()
     {
-        $toolbarAction = new ToolbarAction('sulu_admin.delete', ['allow_conflict_deletion' => false]);
+        $toolbarAction = ToolbarAction::DELETE(['allow_conflict_deletion' => false]);
 
         $this->assertSame(['allow_conflict_deletion' => false], $toolbarAction->getOptions());
     }

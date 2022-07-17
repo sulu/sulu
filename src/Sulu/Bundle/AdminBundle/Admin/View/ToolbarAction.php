@@ -42,4 +42,34 @@ class ToolbarAction
     {
         return $this->options;
     }
+
+    public static function ADD(array $options = []): self
+    {
+        return new self('sulu_admin.add', $options);
+    }
+
+    public static function SAVE(array $options = []): self
+    {
+        return new self('sulu_admin.save', $options);
+    }
+
+    public static function DELETE(array $options = []): self
+    {
+        return new self('sulu_admin.delete', $options);
+    }
+
+    public static function EXPORT(array $options = []): self
+    {
+        return new self('sulu_admin.export', $options);
+    }
+
+    public static function TYPES(array $options = []): self
+    {
+        return new self('sulu_admin.types', $options);
+    }
+
+    public static function DOWNLOAD(array $options = []): self
+    {
+        return new self('sulu_admin.download', $options);
+    }
 }

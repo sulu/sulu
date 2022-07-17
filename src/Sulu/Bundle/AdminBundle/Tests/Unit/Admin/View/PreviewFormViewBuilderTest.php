@@ -173,9 +173,9 @@ class PreviewFormViewBuilderTest extends TestCase
 
     public function testBuildFormWithToolbarActions()
     {
-        $saveToolbarAction = new ToolbarAction('sulu_admin.save');
-        $typesToolbarAction = new ToolbarAction('sulu_admin.types');
-        $deleteToolbarAction = new ToolbarAction('sulu_admin.delete');
+        $saveToolbarAction = ToolbarAction::SAVE();
+        $typesToolbarAction = ToolbarAction::TYPES();
+        $deleteToolbarAction = ToolbarAction::DELETE();
 
         $view = (new PreviewFormViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)

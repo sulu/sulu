@@ -103,22 +103,22 @@ class ContactAdmin extends Admin
             $contactDocumentsItemActions = [];
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::ADD)) {
-                $contactListToolbarActions[] = new ToolbarAction('sulu_admin.add');
+                $contactListToolbarActions[] = ToolbarAction::ADD();
             }
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-                $contactFormToolbarActions[] = new ToolbarAction('sulu_admin.save');
+                $contactFormToolbarActions[] = ToolbarAction::SAVE();
                 $contactDocumentsToolbarActions[] = new ToolbarAction('sulu_contact.add_media');
                 $contactDocumentsToolbarActions[] = new ToolbarAction('sulu_contact.delete_media');
             }
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-                $contactFormToolbarActions[] = new ToolbarAction('sulu_admin.delete');
-                $contactListToolbarActions[] = new ToolbarAction('sulu_admin.delete');
+                $contactFormToolbarActions[] = ToolbarAction::DELETE();
+                $contactListToolbarActions[] = ToolbarAction::DELETE();
             }
 
             if ($this->securityChecker->hasPermission(static::CONTACT_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
-                $contactListToolbarActions[] = new ToolbarAction('sulu_admin.export');
+                $contactListToolbarActions[] = ToolbarAction::EXPORT();
                 $contactDocumentsItemActions[] = new ListItemAction(
                     'link',
                     ['icon' => 'su-download', 'link_property' => 'url']
@@ -191,28 +191,22 @@ class ContactAdmin extends Admin
             $accountDocumentsItemActions = [];
 
             if ($this->securityChecker->hasPermission(static::ACCOUNT_SECURITY_CONTEXT, PermissionTypes::ADD)) {
-                $accountListToolbarActions[] = new ToolbarAction('sulu_admin.add');
+                $accountListToolbarActions[] = ToolbarAction::ADD();
             }
 
             if ($this->securityChecker->hasPermission(static::ACCOUNT_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-                $accountFormToolbarActions[] = new ToolbarAction('sulu_admin.save');
+                $accountFormToolbarActions[] = ToolbarAction::SAVE();
                 $accountDocumentsToolbarActions[] = new ToolbarAction('sulu_contact.add_media');
                 $accountDocumentsToolbarActions[] = new ToolbarAction('sulu_contact.delete_media');
             }
 
             if ($this->securityChecker->hasPermission(static::ACCOUNT_SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-                $accountFormToolbarActions[] = new ToolbarAction(
-                    'sulu_admin.delete',
-                    ['allow_conflict_deletion' => false]
-                );
-                $accountListToolbarActions[] = new ToolbarAction(
-                    'sulu_admin.delete',
-                    ['allow_conflict_deletion' => false]
-                );
+                $accountFormToolbarActions[] = ToolbarAction::DELETE(['allow_conflict_deletion' => false]);
+                $accountListToolbarActions[] = ToolbarAction::DELETE(['allow_conflict_deletion' => false]);
             }
 
             if ($this->securityChecker->hasPermission(static::ACCOUNT_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
-                $accountListToolbarActions[] = new ToolbarAction('sulu_admin.export');
+                $accountListToolbarActions[] = ToolbarAction::EXPORT();
                 $accountDocumentsItemActions[] = new ListItemAction(
                     'link',
                     ['icon' => 'su-download', 'link_property' => 'url']
@@ -274,7 +268,7 @@ class ContactAdmin extends Admin
                     ->addRouterAttributesToListRequest(['id'])
                     ->addToolbarActions([
                         new ToolbarAction('sulu_contact.add_contact'),
-                        new ToolbarAction('sulu_admin.delete'),
+                        ToolbarAction::DELETE(),
                     ])
                     ->addRouterAttributesToListRequest(['id' => 'accountId'])
                     ->setTabOrder(2048)

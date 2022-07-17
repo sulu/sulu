@@ -454,9 +454,9 @@ class FormOverlayListViewBuilderTest extends TestCase
 
     public function testBuildAddToolbarActions()
     {
-        $saveToolbarAction = new ToolbarAction('sulu_admin.save');
-        $typesToolbarAction = new ToolbarAction('sulu_admin.types');
-        $deleteToolbarAction = new ToolbarAction('sulu_admin.delete');
+        $saveToolbarAction = ToolbarAction::SAVE();
+        $typesToolbarAction = ToolbarAction::TYPES();
+        $deleteToolbarAction = ToolbarAction::DELETE();
 
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -476,8 +476,8 @@ class FormOverlayListViewBuilderTest extends TestCase
     public function testBuildAddItemActions()
     {
         $linkItemAction = new ToolbarAction('sulu_admin.link');
-        $exportItemAction = new ToolbarAction('sulu_admin.export');
-        $downloadItemAction = new ToolbarAction('sulu_admin.download');
+        $exportItemAction = ToolbarAction::EXPORT();
+        $downloadItemAction = ToolbarAction::DOWNLOAD();
 
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)

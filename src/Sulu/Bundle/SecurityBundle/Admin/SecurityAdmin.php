@@ -138,20 +138,20 @@ class SecurityAdmin extends Admin
         $listToolbarActions = [];
 
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::ADD)) {
-            $listToolbarActions[] = new ToolbarAction('sulu_admin.add');
+            $listToolbarActions[] = ToolbarAction::ADD();
         }
 
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $formToolbarActions[] = new ToolbarAction('sulu_admin.save');
+            $formToolbarActions[] = ToolbarAction::SAVE();
         }
 
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-            $formToolbarActions[] = new ToolbarAction('sulu_admin.delete');
-            $listToolbarActions[] = new ToolbarAction('sulu_admin.delete');
+            $formToolbarActions[] = ToolbarAction::DELETE();
+            $listToolbarActions[] = ToolbarAction::DELETE();
         }
 
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::VIEW)) {
-            $listToolbarActions[] = new ToolbarAction('sulu_admin.export');
+            $listToolbarActions[] = ToolbarAction::EXPORT();
         }
 
         if ($this->securityChecker->hasPermission(static::ROLE_SECURITY_CONTEXT, PermissionTypes::EDIT)) {
@@ -207,7 +207,7 @@ class SecurityAdmin extends Admin
                     ->setFormKey('user_details')
                     ->setTabTitle('sulu_security.permissions')
                     ->addToolbarActions([
-                        new ToolbarAction('sulu_admin.save'),
+                        ToolbarAction::SAVE(),
                         new ToolbarAction('sulu_security.enable_user'),
                         new TogglerToolbarAction(
                             'sulu_security.user_locked',

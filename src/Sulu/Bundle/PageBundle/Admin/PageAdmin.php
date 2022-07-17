@@ -131,22 +131,16 @@ class PageAdmin extends Admin
             'sulu_admin.save',
             'su-save',
             [
-                new ToolbarAction(
-                    'sulu_admin.save',
-                    [
-                        'label' => 'sulu_admin.save_draft',
-                        'options' => ['action' => 'draft'],
-                        'visible_condition' => $saveVisibleCondition,
-                    ]
-                ),
-                new ToolbarAction(
-                    'sulu_admin.save',
-                    [
-                        'label' => 'sulu_admin.save_publish',
-                        'options' => ['action' => 'publish'],
-                        'visible_condition' => '(' . $saveVisibleCondition . ') && (' . $publishVisibleCondition . ')',
-                    ]
-                ),
+                ToolbarAction::SAVE([
+                    'label' => 'sulu_admin.save_draft',
+                    'options' => ['action' => 'draft'],
+                    'visible_condition' => $saveVisibleCondition,
+                ]),
+                ToolbarAction::SAVE([
+                    'label' => 'sulu_admin.save_publish',
+                    'options' => ['action' => 'publish'],
+                    'visible_condition' => '(' . $saveVisibleCondition . ') && (' . $publishVisibleCondition . ')',
+                ]),
                 new ToolbarAction(
                     'sulu_admin.publish',
                     [
@@ -169,21 +163,15 @@ class PageAdmin extends Admin
                 'sulu_admin.delete',
                 'su-trash-alt',
                 [
-                    new ToolbarAction(
-                        'sulu_admin.delete',
-                        [
-                            'visible_condition' => '(!_permissions || _permissions.delete) && url != "/"',
-                            'router_attributes_to_back_view' => ['webspace'],
-                        ]
-                    ),
-                    new ToolbarAction(
-                        'sulu_admin.delete',
-                        [
-                            'visible_condition' => '(!_permissions || _permissions.delete) && url != "/"',
-                            'router_attributes_to_back_view' => ['webspace'],
-                            'delete_locale' => true,
-                        ]
-                    ),
+                    ToolbarAction::DELETE([
+                        'visible_condition' => '(!_permissions || _permissions.delete) && url != "/"',
+                        'router_attributes_to_back_view' => ['webspace'],
+                    ]),
+                    ToolbarAction::DELETE([
+                        'visible_condition' => '(!_permissions || _permissions.delete) && url != "/"',
+                        'router_attributes_to_back_view' => ['webspace'],
+                        'delete_locale' => true,
+                    ]),
                 ]
             ),
             new DropdownToolbarAction(
