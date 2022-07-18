@@ -15,7 +15,9 @@ use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
-\defined('SULU_MAINTENANCE') || \define('SULU_MAINTENANCE', \getenv('SULU_MAINTENANCE') ?: false);
+if (!\defined('SULU_MAINTENANCE')) {
+    \define('SULU_MAINTENANCE', \getenv('SULU_MAINTENANCE'));
+}
 
 // maintenance mode
 if (SULU_MAINTENANCE) {
