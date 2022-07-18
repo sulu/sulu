@@ -8,6 +8,7 @@ exports[`Component should render 1`] = `
 Array [
   <div
     class="backdrop visible fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div

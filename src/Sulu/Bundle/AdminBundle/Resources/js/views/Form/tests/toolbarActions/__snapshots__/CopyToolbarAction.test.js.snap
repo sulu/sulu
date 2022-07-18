@@ -4,6 +4,7 @@ exports[`Display confirmation dialog when button is clicked 1`] = `
 Array [
   <div
     class="backdrop visible fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div

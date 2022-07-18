@@ -906,6 +906,7 @@ Array [
       </main>
       <div
         class="backdrop"
+        data-testid="backdrop"
         role="button"
       />
     </div>

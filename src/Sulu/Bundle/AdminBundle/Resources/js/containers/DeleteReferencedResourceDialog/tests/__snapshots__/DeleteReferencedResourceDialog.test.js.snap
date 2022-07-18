@@ -4,6 +4,7 @@ exports[`The component should render 1`] = `
 Array [
   <div
     class="backdrop visible fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div
@@ -92,6 +93,7 @@ exports[`The component should render with loading state and deletion not allowed
 Array [
   <div
     class="backdrop visible fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div

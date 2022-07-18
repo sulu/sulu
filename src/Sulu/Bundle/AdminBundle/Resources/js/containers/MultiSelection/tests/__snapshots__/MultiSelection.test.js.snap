@@ -342,6 +342,7 @@ Array [
   </div>,
   <div
     class="backdrop visible fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div

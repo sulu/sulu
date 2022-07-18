@@ -4,6 +4,7 @@ exports[`The popover should render in body when open 1`] = `
 Array [
   <div
     class="backdrop fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div
