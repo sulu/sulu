@@ -18,7 +18,7 @@ test('Render ArrowMenu closed', () => {
                 icon="su-webspace"
                 onChange={handleChangeSection1}
                 title="Webspaces"
-                value={'sulu'}
+                value="sulu"
             >
                 <ArrowMenu.Item value="sulu">Sulu</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>
@@ -55,7 +55,7 @@ test('Render ArrowMenu with non-HTML element as anchor', () => {
         }
     }
 
-    const {container} = render(
+    render(
         <ArrowMenu anchorElement={<Button />} open={true} refProp="buttonRef">
             <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
         </ArrowMenu>
@@ -78,7 +78,7 @@ test('Render ArrowMenu open', () => {
                 icon="su-webspace"
                 onChange={handleChangeSection1}
                 title="Webspaces"
-                value={'sulu'}
+                value="sulu"
             >
                 <ArrowMenu.Item value="sulu">Sulu</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>
@@ -125,7 +125,7 @@ test('Render ArrowMenu open with falsy values', () => {
                 icon="su-webspace"
                 onChange={handleChangeSection1}
                 title="Webspaces"
-                value={'sulu'}
+                value="sulu"
             >
                 <ArrowMenu.Item value="sulu">Sulu</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>
@@ -161,7 +161,7 @@ test('Render ArrowMenu open with falsy values', () => {
     expect(document.body).toMatchSnapshot();
 });
 
-test('Events should be called correctly', async () => {
+test('Events should be called correctly', async() => {
     const handleClose = jest.fn();
     const handleChangeSection1 = jest.fn();
     const handleChangeSection2 = jest.fn();
@@ -178,7 +178,7 @@ test('Events should be called correctly', async () => {
                 icon="su-webspace"
                 onChange={handleChangeSection1}
                 title="Webspaces"
-                value={'sulu'}
+                value="sulu"
             >
                 <ArrowMenu.Item value="sulu">Sulu</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>

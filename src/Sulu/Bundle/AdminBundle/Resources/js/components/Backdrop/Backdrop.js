@@ -34,6 +34,6 @@ export default class Backdrop extends React.PureComponent<Props> {
             }
         );
 
-        return <div data-testid="backdrop" className={backdropClass} onClick={this.handleClick} role="button" />;
+        return <div className={backdropClass} data-testid="backdrop" onClick={this.handleClick} role="button" />;
     }
 }

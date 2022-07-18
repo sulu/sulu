@@ -39,7 +39,7 @@ test('Render ItemSection with value', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('Handle Item click', async () => {
+test('Handle Item click', async() => {
     const handleChange = jest.fn();
     render(
         <SingleItemSection
