@@ -1,25 +1,16 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ArrowMenu from '../ArrowMenu';
-
-afterEach(() => {
-    if (document.body) {
-        document.body.innerHTML = '';
-    }
-});
 
 test('Render ArrowMenu closed', () => {
     const handleClose = jest.fn();
     const handleChangeSection1 = jest.fn();
     const handleChangeSection2 = jest.fn();
-    const open = false;
-    const button = (<button type="button">Nice button</button>);
-    const value1 = 'sulu';
-    const value2 = undefined;
 
-    const arrowMenu = mount(
-        <ArrowMenu anchorElement={button} onClose={handleClose} open={open}>
+    render(
+        <ArrowMenu anchorElement={<button type="button">Nice button</button>} onClose={handleClose} open={false}>
             <ArrowMenu.Section title="Search Section">
                 <input type="text" />
             </ArrowMenu.Section>
@@ -27,7 +18,7 @@ test('Render ArrowMenu closed', () => {
                 icon="su-webspace"
                 onChange={handleChangeSection1}
                 title="Webspaces"
-                value={value1}
+                value={'sulu'}
             >
                 <ArrowMenu.Item value="sulu">Sulu</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>
@@ -37,7 +28,7 @@ test('Render ArrowMenu closed', () => {
                 icon="su-check"
                 onChange={handleChangeSection2}
                 title="Columns"
-                value={value2}
+                value={undefined}
             >
                 <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
                 <ArrowMenu.Item value="description">Description</ArrowMenu.Item>
@@ -50,10 +41,11 @@ test('Render ArrowMenu closed', () => {
         </ArrowMenu>
     );
 
-    expect(arrowMenu.children()).toHaveLength(2);
-    expect(arrowMenu.find('ArrowMenu > button').text()).toEqual('Nice button');
+    const anchorButton = screen.getByText('Nice button');
+    expect(anchorButton).toBeInTheDocument();
 
-    expect(arrowMenu.find('Popover').prop('open')).toEqual(false);
+    const menuSection = screen.queryByText('Webspaces');
+    expect(menuSection).not.toBeInTheDocument();
 });
 
 test('Render ArrowMenu with non-HTML element as anchor', () => {
@@ -63,26 +55,22 @@ test('Render ArrowMenu with non-HTML element as anchor', () => {
         }
     }
 
-    const arrowMenu = mount(
+    const {container} = render(
         <ArrowMenu anchorElement={<Button />} open={true} refProp="buttonRef">
             <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
         </ArrowMenu>
     );
 
-    expect(arrowMenu.render()).toMatchSnapshot();
+    expect(document.body).toMatchSnapshot();
 });
 
 test('Render ArrowMenu open', () => {
     const handleClose = jest.fn();
     const handleChangeSection1 = jest.fn();
     const handleChangeSection2 = jest.fn();
-    const open = true;
-    const button = (<button type="button">Nice button</button>);
-    const value1 = 'sulu';
-    const value2 = undefined;
 
-    const arrowMenu = mount(
-        <ArrowMenu anchorElement={button} onClose={handleClose} open={open}>
+    render(
+        <ArrowMenu anchorElement={<button type="button">Nice button</button>} onClose={handleClose} open={true}>
             <ArrowMenu.Section title="Search Section">
                 <input type="text" />
             </ArrowMenu.Section>
@@ -90,7 +78,7 @@ test('Render ArrowMenu open', () => {
                 icon="su-webspace"
                 onChange={handleChangeSection1}
                 title="Webspaces"
-                value={value1}
+                value={'sulu'}
             >
                 <ArrowMenu.Item value="sulu">Sulu</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>
@@ -100,7 +88,7 @@ test('Render ArrowMenu open', () => {
                 icon="su-check"
                 onChange={handleChangeSection2}
                 title="Columns"
-                value={value2}
+                value={undefined}
             >
                 <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
                 <ArrowMenu.Item value="description">Description</ArrowMenu.Item>
@@ -113,25 +101,22 @@ test('Render ArrowMenu open', () => {
         </ArrowMenu>
     );
 
-    expect(arrowMenu.children()).toHaveLength(2);
-    expect(arrowMenu.find('ArrowMenu > button').text()).toEqual('Nice button');
+    const anchorButton = screen.getByText('Nice button');
+    expect(anchorButton).toBeInTheDocument();
 
-    expect(arrowMenu.find('Popover').children()).toHaveLength(1);
-    expect(arrowMenu.find('Popover Backdrop')).toHaveLength(1);
-    expect(arrowMenu.render()).toMatchSnapshot();
+    const menuSection = screen.queryByText('Webspaces');
+    expect(menuSection).toBeInTheDocument();
+
+    expect(document.body).toMatchSnapshot();
 });
 
 test('Render ArrowMenu open with falsy values', () => {
     const handleClose = jest.fn();
     const handleChangeSection1 = jest.fn();
     const handleChangeSection2 = jest.fn();
-    const open = true;
-    const button = (<button type="button">Nice button</button>);
-    const value1 = 'sulu';
-    const value2 = undefined;
 
-    const arrowMenu = mount(
-        <ArrowMenu anchorElement={button} onClose={handleClose} open={open}>
+    render(
+        <ArrowMenu anchorElement={<button type="button">Nice button</button>} onClose={handleClose} open={true}>
             <ArrowMenu.Section title="Search Section">
                 <input type="text" />
                 {false}
@@ -140,7 +125,7 @@ test('Render ArrowMenu open with falsy values', () => {
                 icon="su-webspace"
                 onChange={handleChangeSection1}
                 title="Webspaces"
-                value={value1}
+                value={'sulu'}
             >
                 <ArrowMenu.Item value="sulu">Sulu</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>
@@ -151,7 +136,7 @@ test('Render ArrowMenu open with falsy values', () => {
                 icon="su-check"
                 onChange={handleChangeSection2}
                 title="Columns"
-                value={value2}
+                value={undefined}
             >
                 <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
                 <ArrowMenu.Item value="description">Description</ArrowMenu.Item>
@@ -167,47 +152,25 @@ test('Render ArrowMenu open with falsy values', () => {
         </ArrowMenu>
     );
 
-    expect(arrowMenu.children()).toHaveLength(2);
-    expect(arrowMenu.find('ArrowMenu > button').text()).toEqual('Nice button');
+    const anchorButton = screen.getByText('Nice button');
+    expect(anchorButton).toBeInTheDocument();
 
-    expect(arrowMenu.find('Popover').children()).toHaveLength(1);
-    expect(arrowMenu.find('Popover Backdrop')).toHaveLength(1);
-    expect(arrowMenu.render()).toMatchSnapshot();
+    const menuSection = screen.queryByText('Webspaces');
+    expect(menuSection).toBeInTheDocument();
+
+    expect(document.body).toMatchSnapshot();
 });
 
-test('Render the correct item active with a value of undefined', () => {
-    const button = (<button type="button">Nice button</button>);
-
-    const arrowMenu = mount(
-        <ArrowMenu anchorElement={button} onClose={jest.fn()} open={true}>
-            <ArrowMenu.SingleItemSection
-                icon="su-webspace"
-                onChange={jest.fn()}
-                title="Webspaces"
-                value={undefined}
-            >
-                <ArrowMenu.Item value={undefined}>Everything</ArrowMenu.Item>
-            </ArrowMenu.SingleItemSection>
-        </ArrowMenu>
-    );
-
-    expect(arrowMenu.find('Item').at(0).prop('active')).toEqual(true);
-});
-
-test('Events should be called correctly', () => {
+test('Events should be called correctly', async () => {
     const handleClose = jest.fn();
     const handleChangeSection1 = jest.fn();
     const handleChangeSection2 = jest.fn();
-    const open = true;
-    const button = (<button type="button">Nice button</button>);
-    const value1 = 'sulu';
-    const value2 = undefined;
     const handleActionClick1 = jest.fn();
     const handleActionClick2 = jest.fn();
     const handleActionClick3 = jest.fn();
 
-    const arrowMenu = mount(
-        <ArrowMenu anchorElement={button} onClose={handleClose} open={open}>
+    render(
+        <ArrowMenu anchorElement={<button type="button">Nice button</button>} onClose={handleClose} open={true}>
             <ArrowMenu.Section title="Search Section">
                 <input type="text" />
             </ArrowMenu.Section>
@@ -215,7 +178,7 @@ test('Events should be called correctly', () => {
                 icon="su-webspace"
                 onChange={handleChangeSection1}
                 title="Webspaces"
-                value={value1}
+                value={'sulu'}
             >
                 <ArrowMenu.Item value="sulu">Sulu</ArrowMenu.Item>
                 <ArrowMenu.Item value="sulu_blog">Sulu Blog</ArrowMenu.Item>
@@ -225,7 +188,7 @@ test('Events should be called correctly', () => {
                 icon="check"
                 onChange={handleChangeSection2}
                 title="Columns"
-                value={value2}
+                value={undefined}
             >
                 <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
                 <ArrowMenu.Item value="description">Description</ArrowMenu.Item>
@@ -238,16 +201,17 @@ test('Events should be called correctly', () => {
         </ArrowMenu>
     );
 
-    arrowMenu.find('SingleItemSection').at(0).find('Item').at(1).simulate('click');
+    const user = userEvent.setup();
+    await user.click(screen.getByText('Sulu Blog'));
     expect(handleChangeSection1).toBeCalledWith('sulu_blog');
 
-    arrowMenu.find('Action').at(1).simulate('click');
+    await user.click(screen.getByText('Test Action 2'));
     expect(handleActionClick2).toBeCalled();
-    expect(handleClose).toBeCalled();
+    expect(handleClose).toBeCalledTimes(1);
 
-    arrowMenu.find('SingleItemSection').at(1).find('Item').at(0).simulate('click');
+    await user.click(screen.getByText('Title'));
     expect(handleChangeSection2).toBeCalledWith('title');
 
-    arrowMenu.find('Backdrop').simulate('click');
-    expect(handleClose).toBeCalled();
+    await user.click(screen.getByTestId('backdrop'));
+    expect(handleClose).toBeCalledTimes(2);
 });

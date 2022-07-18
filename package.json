@@ -42,7 +42,7 @@
         "@ckeditor/ckeditor5-dev-utils": "^26.1.0",
         "@ckeditor/ckeditor5-theme-lark": "^31.0.0",
         "@testing-library/jest-dom": "^5.16.4",
-        "@testing-library/react": "^13.3.0",
+        "@testing-library/react": "^12.1.4",
         "@testing-library/user-event": "^14.2.5",
         "@wojtekmaj/enzyme-adapter-react-17": "^0.6.1",
         "autoprefixer": "^9.8.6",

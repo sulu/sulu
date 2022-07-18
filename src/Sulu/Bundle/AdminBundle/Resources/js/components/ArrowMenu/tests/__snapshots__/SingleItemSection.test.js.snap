@@ -1,104 +1,108 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render ItemSection 1`] = `
-<div
-  class="section"
->
+<div>
   <div
-    class="title"
+    class="section"
   >
-    Select your house
-  </div>
-  <div
-    class="children"
-  >
-    <button
-      class="item"
-      type="button"
+    <div
+      class="title"
     >
-      <span
-        class="icon"
-      />
-      <span>
-        Villa
-      </span>
-    </button>
-    <button
-      class="item"
-      type="button"
+      Select your house
+    </div>
+    <div
+      class="children"
     >
-      <span
-        class="icon"
-      />
-      <span>
-        White House
-      </span>
-    </button>
-    <button
-      class="item"
-      type="button"
-    >
-      <span
-        class="icon"
-      />
-      <span>
-        Flat
-      </span>
-    </button>
+      <button
+        class="item"
+        type="button"
+      >
+        <span
+          class="icon"
+        />
+        <span>
+          Villa
+        </span>
+      </button>
+      <button
+        class="item"
+        type="button"
+      >
+        <span
+          class="icon"
+        />
+        <span>
+          White House
+        </span>
+      </button>
+      <button
+        class="item"
+        type="button"
+      >
+        <span
+          class="icon"
+        />
+        <span>
+          Flat
+        </span>
+      </button>
+    </div>
   </div>
 </div>
 `;
 
 exports[`Render ItemSection with value 1`] = `
-<div
-  class="section"
->
+<div>
   <div
-    class="title"
+    class="section"
   >
-    Select your house
-  </div>
-  <div
-    class="children"
-  >
-    <button
-      class="item"
-      type="button"
+    <div
+      class="title"
     >
-      <span
-        class="icon"
-      />
-      <span>
-        Villa
-      </span>
-    </button>
-    <button
-      class="item"
-      type="button"
+      Select your house
+    </div>
+    <div
+      class="children"
     >
-      <span
-        class="icon"
-      />
-      <span>
-        White House
-      </span>
-    </button>
-    <button
-      class="item active"
-      type="button"
-    >
-      <span
-        class="icon"
+      <button
+        class="item"
+        type="button"
       >
         <span
-          aria-label="fa-home"
-          class="fa fa-home icon"
+          class="icon"
         />
-      </span>
-      <span>
-        Flat
-      </span>
-    </button>
+        <span>
+          Villa
+        </span>
+      </button>
+      <button
+        class="item"
+        type="button"
+      >
+        <span
+          class="icon"
+        />
+        <span>
+          White House
+        </span>
+      </button>
+      <button
+        class="item active"
+        type="button"
+      >
+        <span
+          class="icon"
+        >
+          <span
+            aria-label="fa-home"
+            class="fa fa-home icon"
+          />
+        </span>
+        <span>
+          Flat
+        </span>
+      </button>
+    </div>
   </div>
 </div>
 `;
