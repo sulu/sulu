@@ -1429,7 +1429,7 @@ test('Should show warning when form is submitted but already changed on the serv
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         form.find('Form').at(1).instance().submit({action: 'publish'});
         expect(resourceStore.destroy).not.toBeCalled();
         expect(ResourceRequester.put).toBeCalledWith(
@@ -1500,7 +1500,7 @@ test('Should show warning when form is submitted but already changed on the serv
     resourceStore.loading = false;
     resourceStore.destroy = jest.fn();
 
-    return Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
+    Promise.all([schemaTypesPromise, schemaPromise, jsonSchemaPromise]).then(() => {
         form.find('Form').at(1).instance().submit({action: 'publish'});
         expect(resourceStore.destroy).not.toBeCalled();
         expect(ResourceRequester.put).toBeCalledWith(

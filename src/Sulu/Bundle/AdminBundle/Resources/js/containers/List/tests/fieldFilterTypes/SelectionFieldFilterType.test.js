@@ -169,7 +169,7 @@ test('Return value node without a value', () => {
     });
 });
 
-test('Return value node with a value', (done) => {
+test('Return value node with a value', () => {
     const selectionFieldFilterType = new SelectionFieldFilterType(
         jest.fn(),
         {displayProperty: 'name', resourceKey: 'accounts'},
@@ -195,6 +195,5 @@ test('Return value node with a value', (done) => {
     return valueNodePromise.then((valueNode) => {
         expect(selectionFieldFilterType.selectionStore.loadItems).not.toBeCalled();
         expect(valueNode).toEqual('Max, Erika, John');
-        done();
     });
 });

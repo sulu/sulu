@@ -144,7 +144,7 @@ test('Return schema for given resourceKey and type', () => {
     });
 });
 
-test('Throw if a type is requested, but the given resourceKey does not have type support', (done) => {
+test('Throw if a type is requested, but the given resourceKey does not have type support', () => {
     const snippetMetadata = {
         form: {
             title: {},
@@ -161,11 +161,10 @@ test('Throw if a type is requested, but the given resourceKey does not have type
         expect(generalMetadataStore.loadMetadata).toBeCalledWith('form', 'snippets', undefined);
         expect(error.toString()).toEqual(expect.stringContaining('does not support types'));
         expect(error.toString()).toEqual(expect.stringContaining('"snippets"'));
-        done();
     });
 });
 
-test('Throw if a schema for a type is requested, but the given resourceKey does not have type support', (done) => {
+test('Throw if a schema for a type is requested, but the given resourceKey does not have type support', () => {
     const snippetMetadata = {
         form: {
             title: {},
@@ -182,11 +181,10 @@ test('Throw if a schema for a type is requested, but the given resourceKey does 
         expect(generalMetadataStore.loadMetadata).toBeCalledWith('form', 'snippets', undefined);
         expect(error.toString()).toEqual(expect.stringContaining('does not support types'));
         expect(error.toString()).toEqual(expect.stringContaining('"snippets"'));
-        done();
     });
 });
 
-test('Throw if a type is omitted, but the given reosurceKey has type support', (done) => {
+test('Throw if a type is omitted, but the given reosurceKey has type support', () => {
     const snippetMetadata = {
         types: {
             sidebar: {
@@ -207,11 +205,10 @@ test('Throw if a type is omitted, but the given reosurceKey has type support', (
         expect(generalMetadataStore.loadMetadata).toBeCalledWith('form', 'snippets', undefined);
         expect(error.toString()).toEqual(expect.stringContaining('requires a type'));
         expect(error.toString()).toEqual(expect.stringContaining('"snippets"'));
-        done();
     });
 });
 
-test('Throw if a type is omitted when loading the JSON Schema, but the given reosurceKey has type support', (done) => {
+test('Throw if a type is omitted when loading the JSON Schema, but the given reosurceKey has type support', () => {
     const snippetMetadata = {
         types: {
             sidebar: {
@@ -232,7 +229,6 @@ test('Throw if a type is omitted when loading the JSON Schema, but the given reo
         expect(generalMetadataStore.loadMetadata).toBeCalledWith('form', 'snippets', undefined);
         expect(error.toString()).toEqual(expect.stringContaining('requires a type'));
         expect(error.toString()).toEqual(expect.stringContaining('"snippets"'));
-        done();
     });
 });
 
