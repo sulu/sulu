@@ -44,7 +44,7 @@ class BlockCollection<T: string, U: {type: T}> extends React.Component<Props<T, 
         value: [],
     };
 
-    @observable pasteableBlocks: Array<U>= [];
+    @observable pasteableBlocks: Array<U> = [];
     @observable generatedBlockIds: Array<number> = [];
     @observable expandedBlocks: Array<boolean> = [];
     @observable selectedBlocks: Array<boolean> = [];
