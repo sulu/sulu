@@ -61,7 +61,7 @@
         "eslint-plugin-react": "^7.19.0",
         "file-loader": "^6.0.0",
         "flow-bin": "^0.142.0",
-        "glob": "^7.1.2",
+        "glob": "^8.0.3",
         "identity-obj-proxy": "^3.0.0",
         "jest": "^26.4.2",
         "jest-canvas-mock": "^2.1.1",
