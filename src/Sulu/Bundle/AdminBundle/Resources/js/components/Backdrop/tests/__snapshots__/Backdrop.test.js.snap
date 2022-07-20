@@ -3,6 +3,7 @@
 exports[`The component should render 1`] = `
 <div
   class="backdrop visible fixed"
+  data-testid="backdrop"
   role="button"
 />
 `;

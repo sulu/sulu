@@ -4,6 +4,7 @@ exports[`Component should render with a given initial-value 1`] = `
 Array [
   <div
     class="backdrop visible fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div
@@ -488,6 +489,7 @@ exports[`Component should render without a given initial-value 1`] = `
 Array [
   <div
     class="backdrop visible fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div

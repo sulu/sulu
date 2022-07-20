@@ -1,33 +1,39 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render Action with icon 1`] = `
-<button
-  class="action"
-  type="button"
->
-  <span
-    aria-label="su-display-default"
-    class="su-display-default icon"
-  />
-  My Action
-</button>
+<div>
+  <button
+    class="action"
+    type="button"
+  >
+    <span
+      aria-label="su-display-default"
+      class="su-display-default icon"
+    />
+    My Action
+  </button>
+</div>
 `;
 
 exports[`Render default Action 1`] = `
-<button
-  class="action"
-  type="button"
->
-  My Action
-</button>
+<div>
+  <button
+    class="action"
+    type="button"
+  >
+    My Action
+  </button>
+</div>
 `;
 
 exports[`Render disabled Action 1`] = `
-<button
-  class="action"
-  disabled=""
-  type="button"
->
-  My Action
-</button>
+<div>
+  <button
+    class="action"
+    disabled=""
+    type="button"
+  >
+    My Action
+  </button>
+</div>
 `;

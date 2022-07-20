@@ -6,7 +6,10 @@
     "devDependencies": {
         "enzyme": "^3.3.0",
         "sulu-admin-bundle": "file:../../../AdminBundle/Resources/js",
-        "sulu-page-bundle": "file:../../../PageBundle/Resources/js"
+        "sulu-page-bundle": "file:../../../PageBundle/Resources/js",
+        "@testing-library/jest-dom": "^5.16.4",
+        "@testing-library/react": "^12.1.4",
+        "@testing-library/user-event": "^14.2.5"
     },
     "peerDependencies": {
         "mobx": "^4.0.0",

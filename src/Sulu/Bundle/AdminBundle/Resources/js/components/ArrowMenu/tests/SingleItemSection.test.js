@@ -1,16 +1,15 @@
 // @flow
 import React from 'react';
-import {render, mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import SingleItemSection from '../SingleItemSection';
 import Item from '../Item';
 
 test('Render ItemSection', () => {
-    const handleChange = jest.fn();
-
-    expect(render(
+    const {container} = render(
         <SingleItemSection
             icon="fa-home"
-            onChange={handleChange}
+            onChange={jest.fn()}
             title="Select your house"
             value={undefined}
         >
@@ -18,16 +17,16 @@ test('Render ItemSection', () => {
             <Item value="white_house">White House</Item>
             <Item value="flat">Flat</Item>
         </SingleItemSection>
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render ItemSection with value', () => {
-    const handleChange = jest.fn();
-
-    expect(render(
+    const {container} = render(
         <SingleItemSection
             icon="fa-home"
-            onChange={handleChange}
+            onChange={jest.fn()}
             title="Select your house"
             value="flat"
         >
@@ -35,13 +34,14 @@ test('Render ItemSection with value', () => {
             <Item value="white_house">White House</Item>
             <Item value="flat">Flat</Item>
         </SingleItemSection>
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
-test('Handle Item click', () => {
+test('Handle Item click', async() => {
     const handleChange = jest.fn();
-
-    const itemSection = mount(
+    render(
         <SingleItemSection
             icon="fa-home"
             onChange={handleChange}
@@ -54,6 +54,8 @@ test('Handle Item click', () => {
         </SingleItemSection>
     );
 
-    itemSection.find('Item').at(1).simulate('click');
+    const user = userEvent.setup();
+    await user.click(screen.getByText('White House'));
+
     expect(handleChange).toBeCalledWith('white_house');
 });

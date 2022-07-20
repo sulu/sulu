@@ -4,6 +4,7 @@ exports[`Render with all fields 1`] = `
 Array [
   <div
     class="backdrop visible fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div
@@ -454,6 +455,7 @@ exports[`Render with no fields 1`] = `
 Array [
   <div
     class="backdrop visible fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div
