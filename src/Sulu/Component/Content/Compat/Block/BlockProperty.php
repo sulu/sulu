@@ -73,6 +73,8 @@ class BlockProperty extends Property implements BlockPropertyInterface
      * that the "real" property is updated.
      *
      * TODO: This is very tedious code. It is important to factor this out.
+     *
+     * @param array|PropertyValue|null $value
      */
     public function doSetValue($value)
     {
@@ -83,6 +85,17 @@ class BlockProperty extends Property implements BlockPropertyInterface
 
         if (null == $items) {
             return;
+        }
+
+        if (!is_array($items)) {
+            if (is_object($items)) {
+                $itemsString = 'object of class ' . get_class($items);
+            } else {
+                $itemsString = sprintf('"%s"', var_export($items, true));
+            }
+            throw new \InvalidArgumentException(
+                sprintf('Expected block configuration but got %s at property: %s', $itemsString, $this->getName())
+            );
         }
 
         // check value for single value
