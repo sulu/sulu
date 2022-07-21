@@ -139,7 +139,7 @@ class CacheClass extends BaseClass
 
 ';
 
-        $this->assertEquals($expected, $string);
+        $this->assertSame($expected, $string);
     }
 
     public function testGenerateWithSpecialData(): void
@@ -208,6 +208,6 @@ class CacheClass extends BaseClass
 
 ';
 
-        $this->assertEquals($expected, $string);
+        $this->assertSame($expected, $string);
     }
 }
