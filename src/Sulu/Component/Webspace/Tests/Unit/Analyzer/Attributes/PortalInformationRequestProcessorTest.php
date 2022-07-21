@@ -74,7 +74,7 @@ class PortalInformationRequestProcessorTest extends TestCase
             new RequestAttributes(['portalInformation' => $portalInformation, 'path' => $config['path_info']])
         );
 
-        $this->assertEquals($localization->getLocale(), $request->getLocale());
+        $this->assertEquals($localization->getLocale(Localization::LCID), $request->getLocale());
 
         $this->assertEquals('de_at', $attributes->getAttribute('localization'));
         $this->assertEquals('sulu', $attributes->getAttribute('webspace')->getKey());
@@ -129,7 +129,7 @@ class PortalInformationRequestProcessorTest extends TestCase
             new RequestAttributes(['portalInformation' => $portalInformation, 'path' => $config['path_info']])
         );
 
-        $this->assertEquals('it_ch', $request->getLocale());
+        $this->assertEquals('it_CH', $request->getLocale());
 
         $this->assertEquals('it_ch', $attributes->getAttribute('localization'));
         $this->assertEquals('sulu', $attributes->getAttribute('webspace')->getKey());
@@ -181,7 +181,7 @@ class PortalInformationRequestProcessorTest extends TestCase
             new RequestAttributes(['portalInformation' => $portalInformation, 'path' => $config['path_info']])
         );
 
-        $this->assertEquals($localization->getLocale(), $request->getLocale());
+        $this->assertEquals($localization->getLocale(Localization::LCID), $request->getLocale());
         if ($expected['format']) {
             $this->assertEquals($expected['format'], $request->getRequestFormat());
         }

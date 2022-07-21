@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Webspace\Analyzer\Attributes;
 
+use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\PortalInformation;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +53,7 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
         if ($attributes['localization']) {
             $localization = $attributes['localization'];
             $attributes['locale'] = $localization->getLocale();
-            $request->setLocale($localization->getLocale());
+            $request->setLocale($localization->getLocale(Localization::LCID));
         }
 
         list($resourceLocator, $format) = $this->getResourceLocatorFromRequest(
