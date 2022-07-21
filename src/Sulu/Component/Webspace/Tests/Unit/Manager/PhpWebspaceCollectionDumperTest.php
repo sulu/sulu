@@ -5,18 +5,21 @@ declare(strict_types=1);
 namespace Sulu\Component\Webspace\Tests\Unit\Manager;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
+use Prophecy\Prophecy\ObjectProphecy;
 
 class PhpWebspaceCollectionDumperTest extends TestCase
 {
-    use ProphecyTrait;
-
-    /** @var WebspaceCollection|MockObject */
+    /**
+     * @var ObjectProphecy<WebspaceCollection>
+     */
     private $webspaceCollection;
 
-    private PhpWebspaceCollectionDumper $webspaceDumper;
+    /**
+     * @var PhpWebspaceCollectionDumper
+     */
+    private $webspaceDumper;
 
     public function setUp(): void
     {
