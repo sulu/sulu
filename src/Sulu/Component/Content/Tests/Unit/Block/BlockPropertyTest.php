@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Block;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
@@ -75,19 +74,18 @@ class BlockPropertyTest extends TestCase
      */
     public function testSetInvalidValue($value, string $message): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage($message);
 
         $blockProperty = new BlockProperty('block', [], 'test');
         $blockProperty->doSetValue($value);
     }
 
-    public function provideSetInvalidValue(): array {
+    public function provideSetInvalidValue(): array
+    {
         return [
-            'invalid int' => [10, 'Expected block configuration but got "10" at property: block'],
-            'invalid object' => [new Webspace(), 'Expected block configuration but got object of class Sulu\Component\Webspace\Webspace at property: block']
+            'invalid int' => [10, 'Expected block configuration but got "int" at property: "block"'],
+            'invalid object' => [new Webspace(), 'Expected block configuration but got "Sulu\Component\Webspace\Webspace" at property: "block"'],
         ];
     }
-
-
 }

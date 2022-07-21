@@ -87,14 +87,9 @@ class BlockProperty extends Property implements BlockPropertyInterface
             return;
         }
 
-        if (!is_array($items)) {
-            if (is_object($items)) {
-                $itemsString = 'object of class ' . get_class($items);
-            } else {
-                $itemsString = sprintf('"%s"', var_export($items, true));
-            }
+        if (!\is_array($items)) {
             throw new \InvalidArgumentException(
-                sprintf('Expected block configuration but got %s at property: %s', $itemsString, $this->getName())
+                \sprintf('Expected block configuration but got "%s" at property: "%s"', \get_debug_type($items), $this->getName())
             );
         }
 
