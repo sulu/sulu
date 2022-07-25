@@ -1,9 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render a badge 1`] = `
-<div
-  class="badge"
->
-  Hello world
+<div>
+  <div
+    class="badge"
+  >
+    Hello world
+  </div>
 </div>
 `;
