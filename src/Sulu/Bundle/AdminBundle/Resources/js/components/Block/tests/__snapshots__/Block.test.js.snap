@@ -1,161 +1,102 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render a collapsed block 1`] = `
-<section
-  class="block"
-  role="switch"
->
-  <div
-    class="content"
+exports[`Render an expanded block with multiple types 1`] = `
+<div>
+  <section
+    class="block expanded"
+    role="switch"
   >
-    <header
-      class="header"
+    <div
+      class="handle"
     >
-      <div
-        class="icons"
-      >
-        <span
-          aria-label="su-eye"
-          class="su-eye"
-        />
-        <span
-          aria-label="su-people"
-          class="su-people"
-        />
-      </div>
-      <span
-        aria-label="su-angle-down"
-        class="su-angle-down"
-      />
-    </header>
-    <article
-      class="children"
+      <span>
+        Test
+      </span>
+    </div>
+    <div
+      class="content"
     >
-      Some block content
-    </article>
-  </div>
-</section>
-`;
-
-exports[`Render an block without dragHandle or collapse or expand button 1`] = `
-<section
-  class="block expanded"
-  role="switch"
->
-  <div
-    class="content"
-  >
-    <header
-      class="header"
-    >
-      <div
-        class="iconButtons"
-      />
-    </header>
-    <article
-      class="children"
-    >
-      Some block content
-    </article>
-  </div>
-</section>
-`;
-
-exports[`Render an expanded block with a multiple types 1`] = `
-<section
-  class="block expanded"
-  role="switch"
->
-  <div
-    class="handle"
-  >
-    <span>
-      Test
-    </span>
-  </div>
-  <div
-    class="content"
-  >
-    <header
-      class="header"
-    >
-      <div
-        class="types"
+      <header
+        class="header"
       >
         <div
-          class="select"
-          role="none"
+          class="types"
         >
-          <button
-            class="displayValue default"
-            type="button"
+          <div
+            class="select"
+            role="none"
           >
-            <div
-              aria-label="Type1"
-              class="croppedText"
-              title="Type1"
+            <button
+              class="displayValue default"
+              type="button"
             >
               <div
-                aria-hidden="true"
-                class="front"
+                aria-label="Type1"
+                class="croppedText"
+                title="Type1"
               >
-                Typ
+                <div
+                  aria-hidden="true"
+                  class="front"
+                >
+                  Typ
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="back"
+                >
+                  <span>
+                    e1
+                  </span>
+                </div>
+                <div
+                  class="whole"
+                >
+                  Type1
+                </div>
               </div>
-              <div
-                aria-hidden="true"
-                class="back"
-              >
-                <span>
-                  e1
-                </span>
-              </div>
-              <div
-                class="whole"
-              >
-                Type1
-              </div>
-            </div>
-            <span
-              aria-label="su-angle-down"
-              class="su-angle-down toggle"
-            />
-          </button>
+              <span
+                aria-label="su-angle-down"
+                class="su-angle-down toggle"
+              />
+            </button>
+          </div>
         </div>
-      </div>
-      <div
-        class="icons"
+        <div
+          class="icons"
+        >
+          <span
+            aria-label="su-eye"
+            class="su-eye"
+          />
+          <span
+            aria-label="su-people"
+            class="su-people"
+          />
+        </div>
+        <div
+          class="iconButtons"
+        >
+          <span
+            aria-label="su-cog"
+            class="su-cog clickable"
+            role="button"
+            tabindex="0"
+          />
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up clickable"
+            role="button"
+            tabindex="0"
+          />
+        </div>
+      </header>
+      <article
+        class="children"
       >
-        <span
-          aria-label="su-eye"
-          class="su-eye"
-        />
-        <span
-          aria-label="su-people"
-          class="su-people"
-        />
-      </div>
-      <div
-        class="iconButtons"
-      >
-        <span
-          aria-label="su-cog"
-          class="su-cog clickable"
-          role="button"
-          tabindex="0"
-        />
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up clickable"
-          role="button"
-          tabindex="0"
-        />
-      </div>
-    </header>
-    <article
-      class="children"
-    >
-      Some block content
-    </article>
-  </div>
-</section>
+        Some block content
+      </article>
+    </div>
+  </section>
+</div>
 `;
