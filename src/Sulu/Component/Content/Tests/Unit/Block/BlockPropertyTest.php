@@ -17,6 +17,7 @@ use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
+use Sulu\Component\Webspace\Webspace;
 
 class BlockPropertyTest extends TestCase
 {
@@ -66,5 +67,25 @@ class BlockPropertyTest extends TestCase
         $blockProperty = new BlockProperty('block', [], 'test', false, false, $maxOccurs, $minOccurs);
 
         $this->assertEquals($result, $blockProperty->getIsMultiple());
+    }
+
+    /**
+     * @dataProvider provideSetInvalidValue
+     */
+    public function testSetInvalidValue($value, string $message): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage($message);
+
+        $blockProperty = new BlockProperty('block', [], 'test');
+        $blockProperty->doSetValue($value);
+    }
+
+    public function provideSetInvalidValue(): array
+    {
+        return [
+            'invalid int' => [10, 'Expected block configuration but got "int" at property: "block"'],
+            'invalid object' => [new Webspace(), 'Expected block configuration but got "Sulu\Component\Webspace\Webspace" at property: "block"'],
+        ];
     }
 }
