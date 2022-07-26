@@ -44,13 +44,13 @@ test('Render a collapsed block', () => {
 });
 
 test('Do not show type dropdown if only a single type is passed', () => {
-    const {container} = render(
+    render(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
             Some block content
         </Block>
     );
 
-    const element = container.querySelector('.select');
+    const element = screen.queryByLabelText('select');
     expect(element).not.toBeInTheDocument();
 });
 

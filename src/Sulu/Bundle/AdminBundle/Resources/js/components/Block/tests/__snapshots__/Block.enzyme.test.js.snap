@@ -83,6 +83,7 @@ exports[`Render an expanded block with a multiple types 1`] = `
         class="types"
       >
         <div
+          aria-label="select"
           class="select"
           role="none"
         >
