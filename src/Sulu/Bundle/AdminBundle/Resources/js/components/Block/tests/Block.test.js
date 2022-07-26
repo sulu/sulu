@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import Block from '../Block';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -62,4 +62,23 @@ test('Do not show remove icon if no onRemove prop has been passed', () => {
     );
 
     expect(screen.queryByLabelText('su-trash-alt')).not.toBeInTheDocument();
+});
+
+test('Do not show settings icon if no onSettingsClick prop has been passed', () => {
+    render(
+        <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
+            Some block content
+        </Block>
+    );
+
+    expect(screen.queryByLabelText('su-cog')).not.toBeInTheDocument();
+});
+
+test('Clicking on a collapsed block should call the onExpand callback', () => {
+    const expandSpy = jest.fn();
+    render(<Block onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
+
+    screen.queryByRole('switch').click();
+
+    expect(expandSpy).toHaveBeenCalledTimes(1);
 });
