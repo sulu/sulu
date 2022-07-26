@@ -89,5 +89,5 @@ test('Clicking on a expanded block should not call the onExpand callback', () =>
 
     screen.queryByRole('switch').click();
 
-    expect(expandSpy).toHaveBeenCalledTimes(1);
+    expect(expandSpy).not.toBeCalled();
 });
