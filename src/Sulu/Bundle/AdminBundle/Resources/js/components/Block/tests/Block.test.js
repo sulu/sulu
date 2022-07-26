@@ -103,3 +103,17 @@ test('Clicking the close icon in an expanded block should collapse it', () => {
 
     expect(collapseSpy).toHaveBeenCalledTimes(1);
 });
+
+test('Clicking the remove icon in an expanded block should remove it', () => {
+    const removeSpy = jest.fn();
+    render(
+        <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} onRemove={removeSpy}>Block content</Block>
+    );
+
+    const removeIcon = screen.queryByLabelText('su-trash-alt');
+    expect(removeIcon).toBeInTheDocument();
+
+    removeIcon.click();
+
+    expect(removeSpy).toHaveBeenCalledTimes(1);
+});
