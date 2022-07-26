@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import Block from '../Block';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -78,7 +78,7 @@ test('Clicking on a collapsed block should call the onExpand callback', () => {
     const expandSpy = jest.fn();
     render(<Block onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
 
-    screen.queryByRole('switch').click();
+    fireEvent.click(screen.queryByRole('switch'));
 
     expect(expandSpy).toHaveBeenCalledTimes(1);
 });
@@ -87,7 +87,7 @@ test('Clicking on a expanded block should not call the onExpand callback', () =>
     const expandSpy = jest.fn();
     render(<Block expanded={true} onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
 
-    screen.queryByRole('switch').click();
+    fireEvent.click(screen.queryByRole('switch'));
 
     expect(expandSpy).not.toBeCalled();
 });
@@ -99,7 +99,7 @@ test('Clicking the close icon in an expanded block should collapse it', () => {
     const closeIcon = screen.queryByLabelText('su-angle-up');
     expect(closeIcon).toBeInTheDocument();
 
-    closeIcon.click();
+    fireEvent.click(closeIcon);
 
     expect(collapseSpy).toHaveBeenCalledTimes(1);
 });
@@ -113,7 +113,7 @@ test('Clicking the remove icon in an expanded block should remove it', () => {
     const removeIcon = screen.queryByLabelText('su-trash-alt');
     expect(removeIcon).toBeInTheDocument();
 
-    removeIcon.click();
+    fireEvent.click(removeIcon);
 
     expect(removeSpy).toHaveBeenCalledTimes(1);
 });
