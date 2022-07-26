@@ -51,6 +51,7 @@ export default class DisplayValue extends React.PureComponent<Props> {
 
         return (
             <button
+                aria-label="button"
                 className={displayValueClass}
                 disabled={disabled}
                 onClick={!disabled ? this.handleClick : undefined}

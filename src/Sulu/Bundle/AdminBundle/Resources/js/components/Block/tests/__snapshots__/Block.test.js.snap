@@ -92,6 +92,7 @@ exports[`Render an expanded block with multiple types 1`] = `
             role="none"
           >
             <button
+              aria-label="button"
               class="displayValue default"
               type="button"
             >

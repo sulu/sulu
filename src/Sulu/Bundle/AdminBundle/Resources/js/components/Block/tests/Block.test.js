@@ -117,3 +117,33 @@ test('Clicking the remove icon in an expanded block should remove it', () => {
 
     expect(removeSpy).toHaveBeenCalledTimes(1);
 });
+
+test('Changing the type should call the onTypeChange callback', () => {
+    const typeChangeSpy = jest.fn();
+    const types = {
+        type1: 'Type 1',
+        type2: 'Type 2',
+    };
+
+    render(
+        <Block
+            activeType="type1"
+            expanded={true}
+            onCollapse={jest.fn()}
+            onExpand={jest.fn()}
+            onTypeChange={typeChangeSpy}
+            types={types}
+        >
+            Block content
+        </Block>
+    );
+
+    const selectButton = screen.queryByLabelText('button');
+    fireEvent.click(selectButton);
+
+    const typeButton = screen.queryByText('Type 2');
+    fireEvent.click(typeButton);
+
+    expect(typeChangeSpy).toBeCalledWith('type2');
+    expect(typeChangeSpy).toHaveBeenCalledTimes(1);
+});

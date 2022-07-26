@@ -70,6 +70,7 @@ exports[`Render expanded sortable, non-collapsable block with types 1`] = `
           role="none"
         >
           <button
+            aria-label="button"
             class="displayValue default"
             type="button"
           >
