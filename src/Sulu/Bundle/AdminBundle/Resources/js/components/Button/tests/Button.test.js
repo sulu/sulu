@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {shallow, mount} from 'enzyme';
+import {render} from '@testing-library/react';
 import Button from '../Button';
 
 test('Should render the button with icon', () => {

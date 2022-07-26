@@ -1,0 +1,129 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Should render the button with icon 1`] = `
+<button
+  class="button secondary hasText"
+  type="button"
+>
+  <span
+    aria-label="su-plus"
+    class="su-plus buttonIcon"
+  />
+  <span
+    class="buttonText"
+  >
+    Add something
+  </span>
+</button>
+`;
+
+exports[`Should render with skin icon 1`] = `
+<button
+  class="button icon"
+  type="button"
+/>
+`;
+
+exports[`Should render with skin icon and active 1`] = `
+<button
+  class="button icon active"
+  type="button"
+/>
+`;
+
+exports[`Should render with skin icon and dropdown icon 1`] = `
+<button
+  class="button icon"
+  type="button"
+>
+  <span
+    aria-label="su-angle-down"
+    class="su-angle-down dropdownIcon"
+  />
+</button>
+`;
+
+exports[`Should render with skin icon and text 1`] = `
+<button
+  class="button icon hasText"
+  type="button"
+>
+  <span
+    class="buttonText"
+  >
+    Icon Text
+  </span>
+</button>
+`;
+
+exports[`Should render with skin link 1`] = `
+<button
+  class="button link"
+  type="button"
+/>
+`;
+
+exports[`Should render with skin link and dropdown icon 1`] = `
+<button
+  class="button link"
+  type="button"
+>
+  <span
+    aria-label="su-angle-down"
+    class="su-angle-down dropdownIcon"
+  />
+</button>
+`;
+
+exports[`Should render with skin primary 1`] = `
+<button
+  class="button primary"
+  type="button"
+/>
+`;
+
+exports[`Should render with skin primary and dropdown icon 1`] = `
+<button
+  class="button primary"
+  type="button"
+>
+  <span
+    aria-label="su-angle-down"
+    class="su-angle-down dropdownIcon"
+  />
+</button>
+`;
+
+exports[`Should render with skin secondary 1`] = `
+<button
+  class="button secondary"
+  type="button"
+/>
+`;
+
+exports[`Should render with skin secondary and dropdown icon 1`] = `
+<button
+  class="button secondary"
+  type="button"
+>
+  <span
+    aria-label="su-angle-down"
+    class="su-angle-down dropdownIcon"
+  />
+</button>
+`;
+
+exports[`Should render with skin text 1`] = `
+<button
+  class="button text"
+  type="button"
+/>
+`;
+
+exports[`should render disabled with skin secondary 1`] = `
+<button
+  class="button secondary"
+  disabled=""
+  type="button"
+/>
+`;
