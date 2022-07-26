@@ -91,3 +91,15 @@ test('Clicking on a expanded block should not call the onExpand callback', () =>
 
     expect(expandSpy).not.toBeCalled();
 });
+
+test('Clicking the close icon in an expanded block should collapse it', () => {
+    const collapseSpy = jest.fn();
+    render(<Block expanded={true} onCollapse={collapseSpy} onExpand={jest.fn()}>Block content</Block>);
+
+    const closeIcon = screen.queryByLabelText('su-angle-up');
+    expect(closeIcon).toBeInTheDocument();
+
+    closeIcon.click();
+
+    expect(collapseSpy).toHaveBeenCalledTimes(1);
+});
