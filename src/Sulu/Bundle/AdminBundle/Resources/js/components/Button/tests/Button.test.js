@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
-import {shallow, mount} from 'enzyme';
-import {render} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Button from '../Button';
 
 test('Should render the button with icon', () => {
@@ -59,15 +59,11 @@ test('Should render with skin link and dropdown icon', () => {
 test('Should call the callback on click', () => {
     const preventDefaultSpy = jest.fn();
     const onClick = jest.fn();
-    const button = shallow(<Button onClick={onClick} skin="primary" />);
-    button.find('button').simulate('click', {preventDefault: preventDefaultSpy});
+    render(<Button onClick={onClick} skin="primary" />);
+
+    const button = screen.queryByRole('button');
+    userEvent.click(button, {preventDefault: preventDefaultSpy});
+
     expect(preventDefaultSpy).toBeCalled();
     expect(onClick).toBeCalled();
-});
-
-test('Should call the buttonRef callback correctly', () => {
-    const buttonRefSpy = jest.fn();
-    const button = mount(<Button buttonRef={buttonRefSpy} />);
-
-    expect(buttonRefSpy).toBeCalledWith(button.find('button').instance());
 });
