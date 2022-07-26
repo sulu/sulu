@@ -82,3 +82,12 @@ test('Clicking on a collapsed block should call the onExpand callback', () => {
 
     expect(expandSpy).toHaveBeenCalledTimes(1);
 });
+
+test('Clicking on a expanded block should not call the onExpand callback', () => {
+    const expandSpy = jest.fn();
+    render(<Block expanded={true} onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
+
+    screen.queryByRole('switch').click();
+
+    expect(expandSpy).toHaveBeenCalledTimes(1);
+});
