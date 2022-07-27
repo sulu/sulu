@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
-import {render, screen} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import {createEvent, fireEvent, render, screen} from '@testing-library/react';
 import Button from '../Button';
 
 test('Should render the button with icon', () => {
@@ -57,13 +56,14 @@ test('Should render with skin link and dropdown icon', () => {
 });
 
 test('Should call the callback on click', () => {
-    const preventDefaultSpy = jest.fn();
     const onClick = jest.fn();
     render(<Button onClick={onClick} skin="primary" />);
 
     const button = screen.queryByRole('button');
-    userEvent.click(button, {preventDefault: preventDefaultSpy});
+    const onClickPreventDefault = createEvent.click(button);
 
-    expect(preventDefaultSpy).toBeCalled();
+    fireEvent(button, onClickPreventDefault);
+
+    expect(onClickPreventDefault.defaultPrevented).toBe(true);
     expect(onClick).toBeCalled();
 });
