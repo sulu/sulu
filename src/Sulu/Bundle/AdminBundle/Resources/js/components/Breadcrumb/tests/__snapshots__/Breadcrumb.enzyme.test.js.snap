@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a Breadcrumb 1`] = `
+<ul
+  class="breadcrumb"
+>
+  <li>
+    <button
+      class="item"
+      type="button"
+    >
+      Crumb 1
+    </button>
+    <span
+      aria-label="su-angle-right"
+      class="su-angle-right arrow"
+    />
+  </li>
+  <li>
+    <button
+      class="item"
+      type="button"
+    >
+      Crumb 2
+    </button>
+    <span
+      aria-label="su-angle-right"
+      class="su-angle-right arrow"
+    />
+  </li>
+  <li>
+    <button
+      class="item"
+      disabled=""
+      type="button"
+    >
+      Crumb 3
+    </button>
+  </li>
+</ul>
+`;
