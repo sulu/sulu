@@ -24,7 +24,7 @@ test('Render a Breadcrumb', () => {
 test('Clicking on a clickable breadcrumb part should call a handler', () => {
     const clickSpy = jest.fn();
     const testValue = 2;
-    const {debug} = render(
+    render(
         <Breadcrumb onItemClick={clickSpy}>
             <Breadcrumb.Item>
                 Crumb 1
@@ -37,8 +37,6 @@ test('Clicking on a clickable breadcrumb part should call a handler', () => {
             </Breadcrumb.Item>
         </Breadcrumb>
     );
-
-    debug();
 
     const item = screen.queryByText('Crumb 2');
     fireEvent.click(item);
