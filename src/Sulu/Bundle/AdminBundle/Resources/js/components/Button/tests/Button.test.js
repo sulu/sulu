@@ -4,51 +4,63 @@ import {createEvent, fireEvent, render, screen} from '@testing-library/react';
 import Button from '../Button';
 
 test('Should render the button with icon', () => {
-    expect(render(<Button icon="su-plus">Add something</Button>)).toMatchSnapshot();
+    const {container} = render(<Button icon="su-plus">Add something</Button>);
+    expect(container).toMatchSnapshot();
 });
 
 test('Should render with skin primary', () => {
-    expect(render(<Button skin="primary" />)).toMatchSnapshot();
+    const {container} = render(<Button skin="primary" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Should render with skin secondary', () => {
-    expect(render(<Button skin="secondary" />)).toMatchSnapshot();
+    const {container} = render(<Button skin="secondary" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('should render disabled with skin secondary', () => {
-    expect(render(<Button disabled={true} skin="secondary" />)).toMatchSnapshot();
+    const {container} = render(<Button disabled={true} skin="secondary" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Should render with skin link', () => {
-    expect(render(<Button skin="link" />)).toMatchSnapshot();
+    const {container} = render(<Button skin="link" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Should render with skin text', () => {
-    expect(render(<Button skin="text" />)).toMatchSnapshot();
+    const {container} = render(<Button skin="text" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Should render with skin icon', () => {
-    expect(render(<Button skin="icon" />)).toMatchSnapshot();
+    const {container} = render(<Button skin="icon" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Should render with skin icon and text', () => {
-    expect(render(<Button skin="icon">Icon Text</Button>)).toMatchSnapshot();
+    const {container} = render(<Button skin="icon">Icon Text</Button>);
+    expect(container).toMatchSnapshot();
 });
 
 test('Should render with skin icon and active', () => {
-    expect(render(<Button active={true} skin="icon" />)).toMatchSnapshot();
+    const {container} = render(<Button active={true} skin="icon" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Should render with skin icon and dropdown icon', () => {
-    expect(render(<Button showDropdownIcon={true} skin="icon" />)).toMatchSnapshot();
+    const {container} = render(<Button showDropdownIcon={true} skin="icon" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Should render with skin primary and dropdown icon', () => {
-    expect(render(<Button showDropdownIcon={true} skin="primary" />)).toMatchSnapshot();
+    const {container} = render( <Button showDropdownIcon={true} skin="primary" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Should render with skin secondary and dropdown icon', () => {
-    expect(render(<Button showDropdownIcon={true} skin="secondary" />)).toMatchSnapshot();
+    const {container} = render(<Button showDropdownIcon={true} skin="secondary" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Should render with skin link and dropdown icon', () => {
