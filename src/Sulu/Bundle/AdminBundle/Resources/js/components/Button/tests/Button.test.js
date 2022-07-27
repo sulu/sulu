@@ -67,3 +67,12 @@ test('Should call the callback on click', () => {
     expect(onClickPreventDefault.defaultPrevented).toBe(true);
     expect(onClick).toBeCalled();
 });
+
+test('Should call the buttonRef callback correctly', () => {
+    const buttonRefSpy = jest.fn();
+    render(<Button buttonRef={buttonRefSpy} />);
+
+    const button = screen.queryByRole('button');
+
+    expect(buttonRefSpy).toBeCalledWith(button);
+});
