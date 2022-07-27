@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {fireEvent, render, screen} from '@testing-library/react';
 import CardCollection from '../CardCollection';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -8,11 +8,12 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 test('Render empty CardCollection', () => {
-    expect(render(<CardCollection />)).toMatchSnapshot();
+    const {container} = render(<CardCollection />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render passed card components', () => {
-    expect(render(
+    const {container} = render(
         <CardCollection>
             <CardCollection.Card>
                 <h1>Content 1</h1>
@@ -21,23 +22,26 @@ test('Render passed card components', () => {
                 <h2>Content 2</h2>
             </CardCollection.Card>
         </CardCollection>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Call onAdd callback when add button is clicked', () => {
     const addSpy = jest.fn();
 
-    const cardCollection = shallow(<CardCollection onAdd={addSpy} />);
+    render(<CardCollection onAdd={addSpy} />);
 
-    cardCollection.find('Button[icon="su-plus"]').simulate('click');
+    const icon = screen.queryByLabelText('su-plus');
 
-    expect(addSpy).toBeCalledWith();
+    fireEvent.click(icon);
+
+    expect(addSpy).toBeCalled();
 });
 
 test('Call onEdit callback when edit icon is clicked', () => {
     const editSpy = jest.fn();
 
-    const cardCollection = shallow(
+    render(
         <CardCollection onEdit={editSpy}>
             <CardCollection.Card>
                 <h1>Content 1</h1>
@@ -48,7 +52,9 @@ test('Call onEdit callback when edit icon is clicked', () => {
         </CardCollection>
     );
 
-    cardCollection.find('Card').at(1).simulate('edit', 1);
+    const icon = screen.queryAllByLabelText('su-pen')[1];
+
+    fireEvent.click(icon);
 
     expect(editSpy).toBeCalledWith(1);
 });
@@ -56,7 +62,7 @@ test('Call onEdit callback when edit icon is clicked', () => {
 test('Call onRemove callback when remove icon is clicked', () => {
     const removeSpy = jest.fn();
 
-    const cardCollection = shallow(
+    render(
         <CardCollection onRemove={removeSpy}>
             <CardCollection.Card>
                 <h1>Content 1</h1>
@@ -67,7 +73,9 @@ test('Call onRemove callback when remove icon is clicked', () => {
         </CardCollection>
     );
 
-    cardCollection.find('Card').at(1).simulate('remove', 1);
+    const icon = screen.queryAllByLabelText('su-trash-alt')[1];
+
+    fireEvent.click(icon);
 
     expect(removeSpy).toBeCalledWith(1);
 });
