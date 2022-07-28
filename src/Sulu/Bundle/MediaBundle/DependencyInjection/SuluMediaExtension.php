@@ -105,6 +105,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
                         'sulu_media.put_media_format',
                         'sulu_media.delete_media_version',
                         'sulu_media.post_media_preview',
+                        'sulu_media.redirect',
                     ],
                 ]
             );
