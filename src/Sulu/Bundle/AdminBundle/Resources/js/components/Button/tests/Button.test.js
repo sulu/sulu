@@ -64,7 +64,8 @@ test('Should render with skin secondary and dropdown icon', () => {
 });
 
 test('Should render with skin link and dropdown icon', () => {
-    expect(render(<Button showDropdownIcon={true} skin="link" />)).toMatchSnapshot();
+    const {container} = render(<Button showDropdownIcon={true} skin="link" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Should call the callback on click', () => {
