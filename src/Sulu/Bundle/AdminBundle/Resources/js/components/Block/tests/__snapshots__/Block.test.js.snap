@@ -88,12 +88,10 @@ exports[`Render an expanded block with multiple types 1`] = `
           class="types"
         >
           <div
-            aria-label="select"
             class="select"
             role="none"
           >
             <button
-              aria-label="button"
               class="displayValue default"
               type="button"
             >

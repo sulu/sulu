@@ -44,14 +44,16 @@ test('Render a collapsed block', () => {
 });
 
 test('Do not show type dropdown if only a single type is passed', () => {
-    render(
+    const {container} = render(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
             Some block content
         </Block>
     );
 
-    const element = screen.queryByLabelText('select');
-    expect(element).not.toBeInTheDocument();
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+    const elements = container.getElementsByClassName('select');
+
+    expect(elements).toHaveLength(0);
 });
 
 test('Do not show remove icon if no onRemove prop has been passed', () => {
@@ -127,7 +129,7 @@ test('Changing the type should call the onTypeChange callback', () => {
 
     render(
         <Block
-            activeType="type1"
+            activeType={Object.keys(types)[0]}
             expanded={true}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
@@ -138,12 +140,12 @@ test('Changing the type should call the onTypeChange callback', () => {
         </Block>
     );
 
-    const selectButton = screen.queryByLabelText('button');
+    const selectButton = screen.queryByText(types.type1);
     fireEvent.click(selectButton);
 
-    const typeButton = screen.queryByText('Type 2');
+    const typeButton = screen.queryByText(types.type2);
     fireEvent.click(typeButton);
 
-    expect(typeChangeSpy).toBeCalledWith('type2');
+    expect(typeChangeSpy).toBeCalledWith(Object.keys(types)[1]);
     expect(typeChangeSpy).toHaveBeenCalledTimes(1);
 });

@@ -66,12 +66,10 @@ exports[`Render expanded sortable, non-collapsable block with types 1`] = `
         class="types"
       >
         <div
-          aria-label="select"
           class="select"
           role="none"
         >
           <button
-            aria-label="button"
             class="displayValue default"
             type="button"
           >
