@@ -4,11 +4,11 @@ import {action, observable, toJS, computed} from 'mobx';
 import {observer} from 'mobx-react';
 import debounce from 'debounce';
 import {CircleSelection, RectangleSelection} from 'sulu-admin-bundle/components';
+import symfonyRouting from 'fos-jsrouting/router';
 import imageRendererStyles from './imageRenderer.scss';
 import type {Hotspot, Value} from './types';
 import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ElementRef} from 'react';
-import symfonyRouting from 'fos-jsrouting/router';
 
 type Props = {
     disabled: boolean,
@@ -50,7 +50,7 @@ class ImageRenderer extends React.Component<Props> {
             return undefined;
         }
 
-        return symfonyRouting.generate('sulu_media.redirect', {id: imageId}) + '?locale=' + locale.get();
+        return symfonyRouting.generate('sulu_media.redirect', {id: imageId, locale: locale.get()});
     }
 
     @action setImageWrapperSize = () => {
