@@ -5,9 +5,7 @@ exports[`Should show a negative count 1`] = `
   <label
     class="characterCounter exceeded"
   >
-    -8
-     
-    sulu_admin.characters_left
+    -8 sulu_admin.characters_left
   </label>
 </div>
 `;
@@ -17,9 +15,7 @@ exports[`Should show a negative count with numbers 1`] = `
   <label
     class="characterCounter exceeded"
   >
-    -1
-     
-    sulu_admin.characters_left
+    -1 sulu_admin.characters_left
   </label>
 </div>
 `;
@@ -29,9 +25,7 @@ exports[`Should show a positive count 1`] = `
   <label
     class="characterCounter"
   >
-    7
-     
-    sulu_admin.characters_left
+    7 sulu_admin.characters_left
   </label>
 </div>
 `;
@@ -41,9 +35,7 @@ exports[`Should show a positive count if nothing is passed 1`] = `
   <label
     class="characterCounter"
   >
-    20
-     
-    sulu_admin.characters_left
+    20 sulu_admin.characters_left
   </label>
 </div>
 `;
@@ -53,9 +45,7 @@ exports[`Should show a positive count with numbers 1`] = `
   <label
     class="characterCounter"
   >
-    2
-     
-    sulu_admin.characters_left
+    2 sulu_admin.characters_left
   </label>
 </div>
 `;
