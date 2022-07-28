@@ -8,6 +8,7 @@ import imageRendererStyles from './imageRenderer.scss';
 import type {Hotspot, Value} from './types';
 import type {IObservableValue} from 'mobx/lib/mobx';
 import type {ElementRef} from 'react';
+import symfonyRouting from 'fos-jsrouting/router';
 
 type Props = {
     disabled: boolean,
@@ -49,7 +50,7 @@ class ImageRenderer extends React.Component<Props> {
             return undefined;
         }
 
-        return '/admin/media/redirect/media/' + imageId + '?locale=' + locale.get();
+        return symfonyRouting.generate('sulu_media.redirect', {id: imageId}) + '?locale=' + locale.get();
     }
 
     @action setImageWrapperSize = () => {
