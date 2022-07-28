@@ -283,7 +283,6 @@ class Select<T> extends React.Component<Props<T>> {
 
         return (
             <div
-                aria-label="select"
                 className={selectStyles.select}
                 onKeyDown={this.handleKeyDown}
                 onKeyPress={this.handleKeyPress}
