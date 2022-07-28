@@ -1,129 +1,155 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render the button with icon 1`] = `
-<button
-  class="button secondary hasText"
-  type="button"
->
-  <span
-    aria-label="su-plus"
-    class="su-plus buttonIcon"
-  />
-  <span
-    class="buttonText"
+<div>
+  <button
+    class="button secondary hasText"
+    type="button"
   >
-    Add something
-  </span>
-</button>
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+    <span
+      class="buttonText"
+    >
+      Add something
+    </span>
+  </button>
+</div>
 `;
 
 exports[`Should render with skin icon 1`] = `
-<button
-  class="button icon"
-  type="button"
-/>
+<div>
+  <button
+    class="button icon"
+    type="button"
+  />
+</div>
 `;
 
 exports[`Should render with skin icon and active 1`] = `
-<button
-  class="button icon active"
-  type="button"
-/>
+<div>
+  <button
+    class="button icon active"
+    type="button"
+  />
+</div>
 `;
 
 exports[`Should render with skin icon and dropdown icon 1`] = `
-<button
-  class="button icon"
-  type="button"
->
-  <span
-    aria-label="su-angle-down"
-    class="su-angle-down dropdownIcon"
-  />
-</button>
+<div>
+  <button
+    class="button icon"
+    type="button"
+  >
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down dropdownIcon"
+    />
+  </button>
+</div>
 `;
 
 exports[`Should render with skin icon and text 1`] = `
-<button
-  class="button icon hasText"
-  type="button"
->
-  <span
-    class="buttonText"
+<div>
+  <button
+    class="button icon hasText"
+    type="button"
   >
-    Icon Text
-  </span>
-</button>
+    <span
+      class="buttonText"
+    >
+      Icon Text
+    </span>
+  </button>
+</div>
 `;
 
 exports[`Should render with skin link 1`] = `
-<button
-  class="button link"
-  type="button"
-/>
+<div>
+  <button
+    class="button link"
+    type="button"
+  />
+</div>
 `;
 
 exports[`Should render with skin link and dropdown icon 1`] = `
-<button
-  class="button link"
-  type="button"
->
-  <span
-    aria-label="su-angle-down"
-    class="su-angle-down dropdownIcon"
-  />
-</button>
+<div>
+  <button
+    class="button link"
+    type="button"
+  >
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down dropdownIcon"
+    />
+  </button>
+</div>
 `;
 
 exports[`Should render with skin primary 1`] = `
-<button
-  class="button primary"
-  type="button"
-/>
+<div>
+  <button
+    class="button primary"
+    type="button"
+  />
+</div>
 `;
 
 exports[`Should render with skin primary and dropdown icon 1`] = `
-<button
-  class="button primary"
-  type="button"
->
-  <span
-    aria-label="su-angle-down"
-    class="su-angle-down dropdownIcon"
-  />
-</button>
+<div>
+  <button
+    class="button primary"
+    type="button"
+  >
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down dropdownIcon"
+    />
+  </button>
+</div>
 `;
 
 exports[`Should render with skin secondary 1`] = `
-<button
-  class="button secondary"
-  type="button"
-/>
+<div>
+  <button
+    class="button secondary"
+    type="button"
+  />
+</div>
 `;
 
 exports[`Should render with skin secondary and dropdown icon 1`] = `
-<button
-  class="button secondary"
-  type="button"
->
-  <span
-    aria-label="su-angle-down"
-    class="su-angle-down dropdownIcon"
-  />
-</button>
+<div>
+  <button
+    class="button secondary"
+    type="button"
+  >
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down dropdownIcon"
+    />
+  </button>
+</div>
 `;
 
 exports[`Should render with skin text 1`] = `
-<button
-  class="button text"
-  type="button"
-/>
+<div>
+  <button
+    class="button text"
+    type="button"
+  />
+</div>
 `;
 
 exports[`should render disabled with skin secondary 1`] = `
-<button
-  class="button secondary"
-  disabled=""
-  type="button"
-/>
+<div>
+  <button
+    class="button secondary"
+    disabled=""
+    type="button"
+  />
+</div>
 `;
