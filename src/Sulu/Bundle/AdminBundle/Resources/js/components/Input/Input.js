@@ -128,6 +128,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
                     {!loading && icon &&
                         <div className={prependContainerClass}>
                             <Icon
+                                // maybe add an aria-label here?
                                 className={iconClass}
                                 name={icon}
                                 onClick={onIconClick ? onIconClick : undefined}
