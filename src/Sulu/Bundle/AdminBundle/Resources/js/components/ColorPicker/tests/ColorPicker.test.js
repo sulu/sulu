@@ -37,17 +37,19 @@ test('ColorPicker should render error', () => {
 
 test('ColorPicker should show error when invalid value is set', () => {
     const onChange = jest.fn();
-    const colorPicker = mount(<ColorPicker onChange={onChange} value={null} />);
+    render(<ColorPicker onChange={onChange} value="#abc" />);
 
-    colorPicker.find('Input').instance().props.onChange('xxx', {target: {value: 'xxx'}});
-    colorPicker.find('Input').instance().props.onBlur();
-    colorPicker.update();
-    expect(colorPicker.find('Input').prop('valid')).toEqual(false);
+    const input = screen.queryByDisplayValue('#abc');
 
-    colorPicker.find('Input').instance().props.onChange('#ccc', {target: {value: '#ccc'}});
-    colorPicker.find('Input').instance().props.onBlur();
-    colorPicker.update();
-    expect(colorPicker.find('Input').prop('valid')).toBe(true);
+    fireEvent.change(input, {target: {value: 'ccc'}});
+    fireEvent.blur(input);
+
+    expect(input).toBeInvalid();
+
+    fireEvent.change(input, {target: {value: '#ccc'}});
+    fireEvent.blur(input);
+
+    expect(input).toBeValid();
 });
 
 test('ColorPicker should trigger callbacks correctly', () => {
