@@ -1,22 +1,28 @@
 // @flow
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import React from 'react';
 import CircularProgressbar from '../CircularProgressbar';
 
 test('Render a CircularProgressbar', () => {
-    expect(render(
+    const {container} = render(
         <CircularProgressbar percentage={60} />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a CircularProgressbar without the progress info in the center', () => {
-    expect(render(
+    const {container} = render(
         <CircularProgressbar hidePercentageText={true} percentage={60} />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a CircularProgressbar in a different size', () => {
-    expect(render(
+    const {container} = render(
         <CircularProgressbar percentage={60} size={200} />
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
