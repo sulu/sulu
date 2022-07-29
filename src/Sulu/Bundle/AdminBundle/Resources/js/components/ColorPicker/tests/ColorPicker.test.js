@@ -31,8 +31,8 @@ test('ColorPicker should disable Input when disabled', () => {
 });
 
 test('ColorPicker should render error', () => {
-    const colorPicker = mount(<ColorPicker onChange={jest.fn()} valid={false} value={null} />);
-    expect(colorPicker.find('Input').prop('valid')).toEqual(false);
+    render(<ColorPicker onChange={jest.fn()} valid={false} value="#abc" />);
+    expect(screen.queryByDisplayValue('#abc')).toBeValid();
 });
 
 test('ColorPicker should show error when invalid value is set', () => {
