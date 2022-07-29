@@ -1,52 +1,62 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should render chip as clickable 1`] = `
-<button
-  class="chip secondary small clickable"
-  type="button"
->
-  Name
-</button>
+<div>
+  <button
+    class="chip secondary small clickable"
+    type="button"
+  >
+    Name
+  </button>
+</div>
 `;
 
 exports[`Should render chip with children 1`] = `
-<button
-  class="chip secondary small"
-  type="button"
->
-  Name
-</button>
+<div>
+  <button
+    class="chip secondary small"
+    type="button"
+  >
+    Name
+  </button>
+</div>
 `;
 
 exports[`Should render chip with delete icon 1`] = `
-<button
-  class="chip secondary small"
-  type="button"
->
-  Name
-  <span
-    aria-label="su-times"
-    class="su-times clickable icon"
-    role="button"
-    tabindex="0"
-  />
-</button>
+<div>
+  <button
+    class="chip secondary small"
+    type="button"
+  >
+    Name
+    <span
+      aria-label="su-times"
+      class="su-times clickable icon"
+      role="button"
+      tabindex="0"
+    />
+  </button>
+</div>
 `;
 
 exports[`Should render chip without delete icon in disabled state 1`] = `
-<button
-  class="chip secondary small disabled"
-  type="button"
->
-  Name
-</button>
+<div>
+  <button
+    class="chip secondary small disabled"
+    type="button"
+  >
+    Name
+  </button>
+</div>
 `;
 
 exports[`Should render medium, primary chip with children 1`] = `
-<button
-  class="chip primary medium"
-  type="button"
->
-  Name
-</button>
+<div>
+  <button
+    class="chip primary medium"
+    type="button"
+  >
+    Name
+  </button>
+</div>
 `;
