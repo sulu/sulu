@@ -14,10 +14,20 @@ test('ColorPicker should render', () => {
 });
 
 test('ColorPicker should disable Input when disabled', () => {
-    const colorPicker = mount(<ColorPicker disabled={true} onChange={jest.fn()} value={undefined} />);
+    const onIconClickSpy = jest.fn();
+    render(<ColorPicker
+        disabled={true}
+        onChange={jest.fn()}
+        onIconClick={onIconClickSpy}
+        value="#abc"
+    />);
 
-    expect(colorPicker.find('Input').prop('onIconClick')).toEqual(undefined);
-    expect(colorPicker.find('Input').prop('disabled')).toEqual(true);
+    const input = screen.queryByDisplayValue('#abc');
+    const icon = screen.queryByLabelText('su-square');
+    fireEvent.click(icon);
+
+    expect(input).toBeDisabled();
+    expect(onIconClickSpy).not.toHaveBeenCalled();
 });
 
 test('ColorPicker should render error', () => {
