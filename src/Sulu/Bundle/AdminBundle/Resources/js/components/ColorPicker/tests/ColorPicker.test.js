@@ -1,12 +1,16 @@
 // @flow
 import React from 'react';
 import {mount} from 'enzyme';
+import {fireEvent, render, screen} from '@testing-library/react';
 import ColorPicker from '../ColorPicker';
 
 test('ColorPicker should render', () => {
-    const colorPicker = mount(<ColorPicker onChange={jest.fn()} placeholder="My placeholder" value="#abc" />);
-    colorPicker.find('Icon').simulate('click');
-    expect(colorPicker.render()).toMatchSnapshot();
+    const {container} = render(<ColorPicker onChange={jest.fn()} placeholder="My placeholder" value="#abc" />);
+
+    const icon = screen.queryByLabelText('su-square');
+
+    fireEvent.click(icon);
+    expect(container).toMatchSnapshot();
 });
 
 test('ColorPicker should disable Input when disabled', () => {
