@@ -22,6 +22,23 @@ exports[`Should render chip with children 1`] = `
 </div>
 `;
 
+exports[`Should render chip with delete icon 1`] = `
+<div>
+  <button
+    class="chip secondary small"
+    type="button"
+  >
+    Name
+    <span
+      aria-label="su-times"
+      class="su-times clickable icon"
+      role="button"
+      tabindex="0"
+    />
+  </button>
+</div>
+`;
+
 exports[`Should render chip without delete icon in disabled state 1`] = `
 <div>
   <button

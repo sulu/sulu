@@ -13,6 +13,11 @@ test('Should render medium, primary chip with children', () => {
     expect(container).toMatchSnapshot();
 });
 
+test('Should render chip with delete icon', () => {
+    const {container} = render(<Chip onDelete={jest.fn()} value={{}}>Name</Chip>);
+    expect(container).toMatchSnapshot();
+});
+
 test('Should render chip without delete icon in disabled state', () => {
     const {container} = render(<Chip disabled={true} onDelete={jest.fn()} value={{}}>Name</Chip>);
     expect(container).toMatchSnapshot();
