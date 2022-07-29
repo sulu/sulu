@@ -59,3 +59,20 @@ test('Email should not set onIconClick when value is invalid', () => {
 
     expect(onIconClickSpy).not.toBeCalled();
 });
+
+test('Email should set onIconClick when value is valid and window should be opened', () => {
+    delete window.location;
+    window.location = {assign: jest.fn()};
+
+    const onChange = jest.fn();
+    const onBlur = jest.fn();
+    const onIconClickSpy = jest.fn();
+
+    render(<Email onBlur={onBlur} onChange={onChange} onIconClick={onIconClickSpy} valid={true} value="abc@abc.abc" />);
+
+    const icon = screen.queryByLabelText('su-envelope');
+    fireEvent.click(icon);
+
+    expect(onIconClickSpy).toBeCalled();
+    expect(window.location.assign).toBeCalledWith('mailto:abc@abc.abc');
+});
