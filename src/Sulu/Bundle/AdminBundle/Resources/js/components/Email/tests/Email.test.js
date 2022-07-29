@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import Email from '../Email';
 
 test('Email should render', () => {
@@ -54,5 +54,8 @@ test('Email should not set onIconClick when value is invalid', () => {
 
     render(<Email onBlur={onBlur} onChange={onChange} onIconClick={onIconClickSpy} valid={false} value={null} />);
 
-    // const icon = screen.queryBy...
+    const icon = screen.queryByLabelText('su-envelope');
+    fireEvent.click(icon);
+
+    expect(onIconClickSpy).not.toBeCalled();
 });
