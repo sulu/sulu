@@ -1,5 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Render a Divider with text 1`] = `undefined`;
+exports[`Render a Divider with text 1`] = `
+<div>
+  <div
+    class="divider"
+  >
+    Test
+  </div>
+</div>
+`;
 
-exports[`Render an empty Divider 1`] = `undefined`;
+exports[`Render an empty Divider 1`] = `
+<div>
+  <div
+    class="divider"
+  />
+</div>
+`;
