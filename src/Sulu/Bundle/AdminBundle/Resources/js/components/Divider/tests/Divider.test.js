@@ -4,11 +4,11 @@ import React from 'react';
 import Divider from '../Divider';
 
 test('Render an empty Divider', () => {
-    const divider = render(<Divider />);
-    expect(divider).toMatchSnapshot();
+    const {container} = render(<Divider />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a Divider with text', () => {
-    const divider = render(<Divider>Test</Divider>);
-    expect(divider).toMatchSnapshot();
+    const {container} = render(<Divider>Test</Divider>);
+    expect(container).toMatchSnapshot();
 });
