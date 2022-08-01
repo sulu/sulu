@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Icon should not render with empty string 1`] = `null`;
+
+exports[`Icon should not render with invalid icon 1`] = `null`;
+
+exports[`Icon should render 1`] = `
+<span
+  aria-label="su-save"
+  class="su-save"
+/>
+`;
+
+exports[`Icon should render with class names 1`] = `
+<span
+  aria-label="su-pen"
+  class="su-pen test"
+/>
+`;
+
+exports[`Icon should render with onClick handler, role and tabindex 1`] = `
+<span
+  aria-label="su-save"
+  class="su-save clickable test"
+  role="button"
+  tabindex="0"
+/>
+`;
