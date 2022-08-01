@@ -1,104 +1,108 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render a FolderList with Folder components inside 1`] = `
-<ul
-  class="folderList"
->
-  <li>
-    <div
-      class="folder"
-      role="button"
-      tabindex="0"
-    >
+<div>
+  <ul
+    class="folderList"
+  >
+    <li>
       <div
-        class="iconContainer"
+        class="folder"
+        role="button"
+        tabindex="0"
       >
-        <span
-          aria-label="su-folder"
-          class="su-folder"
-        />
-      </div>
-      <div
-        class="description"
-      >
-        <h5
-          class="title"
-        >
-          This is a folder
-        </h5>
         <div
-          class="info"
+          class="iconContainer"
         >
-          3 Objects
+          <span
+            aria-label="su-folder"
+            class="su-folder"
+          />
+        </div>
+        <div
+          class="description"
+        >
+          <h5
+            class="title"
+          >
+            This is a folder
+          </h5>
+          <div
+            class="info"
+          >
+            3 Objects
+          </div>
         </div>
       </div>
-    </div>
-  </li>
-  <li>
-    <div
-      class="folder"
-      role="button"
-      tabindex="0"
-    >
+    </li>
+    <li>
       <div
-        class="iconContainer"
+        class="folder"
+        role="button"
+        tabindex="0"
       >
-        <span
-          aria-label="su-folder"
-          class="su-folder"
-        />
-      </div>
-      <div
-        class="description"
-      >
-        <h5
-          class="title"
-        >
-          This is a folder
-        </h5>
         <div
-          class="info"
+          class="iconContainer"
         >
-          2 Objects
+          <span
+            aria-label="su-folder"
+            class="su-folder"
+          />
+        </div>
+        <div
+          class="description"
+        >
+          <h5
+            class="title"
+          >
+            This is a folder
+          </h5>
+          <div
+            class="info"
+          >
+            2 Objects
+          </div>
         </div>
       </div>
-    </div>
-  </li>
-  <li>
-    <div
-      class="folder"
-      role="button"
-      tabindex="0"
-    >
+    </li>
+    <li>
       <div
-        class="iconContainer"
+        class="folder"
+        role="button"
+        tabindex="0"
       >
-        <span
-          aria-label="su-folder"
-          class="su-folder"
-        />
-      </div>
-      <div
-        class="description"
-      >
-        <h5
-          class="title"
-        >
-          This is a folder
-        </h5>
         <div
-          class="info"
+          class="iconContainer"
         >
-          0 Objects
+          <span
+            aria-label="su-folder"
+            class="su-folder"
+          />
+        </div>
+        <div
+          class="description"
+        >
+          <h5
+            class="title"
+          >
+            This is a folder
+          </h5>
+          <div
+            class="info"
+          >
+            0 Objects
+          </div>
         </div>
       </div>
-    </div>
-  </li>
-</ul>
+    </li>
+  </ul>
+</div>
 `;
 
 exports[`Render an empty FolderList 1`] = `
-<ul
-  class="folderList"
-/>
+<div>
+  <ul
+    class="folderList"
+  />
+</div>
 `;
