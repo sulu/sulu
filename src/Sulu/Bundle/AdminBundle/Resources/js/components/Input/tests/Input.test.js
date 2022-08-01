@@ -15,80 +15,85 @@ test('Input should render', () => {
 
 test('Input should render with autocomplete off', () => {
     const onChange = jest.fn();
+    const {container} = render(<Input autocomplete="off" disabled={true} onChange={onChange} value="My value" />);
+    expect(container).toMatchSnapshot();
+});
+
+test('Input should render as headline', () => {
+    const {container} = render(<Input headline={true} onChange={jest.fn()} value="My value" />);
+    expect(container).toMatchSnapshot();
+});
+
+test('Input should render with invalid value', () => {
+    const onChange = jest.fn();
+    const {container} = render(<Input onBlur={jest.fn()} onChange={onChange} valid={false} value="My value" />);
+    expect(container).toMatchSnapshot();
+});
+
+test('Input should render when disabled', () => {
+    const onChange = jest.fn();
+    const {container} = render(<Input disabled={true} onChange={onChange} value="My value" />);
+    expect(container).toMatchSnapshot();
+});
+
+test('Input should render with icon', () => {
+    const onChange = jest.fn();
+    const {container} = render(<Input icon="su-pen" onBlur={jest.fn()} onChange={onChange} value="My value" />);
+    expect(container).toMatchSnapshot();
+});
+
+test('Input should render with inputmode', () => {
+    const onChange = jest.fn();
+    const {container} = render(<Input inputMode="numeric" onBlur={jest.fn()} onChange={onChange} value="My value" />);
+    expect(container).toMatchSnapshot();
+});
+
+test('Input should render with type', () => {
+    const onChange = jest.fn();
+    const {container} = render(<Input onBlur={jest.fn()} onChange={onChange} type="password" value="My value" />);
+    expect(container).toMatchSnapshot();
+});
+
+test('Input should render with placeholder', () => {
+    const onChange = jest.fn();
     const {container} = render(<Input
-        autocomplete="off"
-        disabled={true}
+        onBlur={jest.fn()}
         onChange={onChange}
+        placeholder="My placeholder"
         value="My value"
     />);
     expect(container).toMatchSnapshot();
 });
 
-// test('Input should render as headline', () => {
-//     expect(render(<Input headline={true} onChange={jest.fn()} value="My value" />)).toMatchSnapshot();
-// });
+test('Input should render with value', () => {
+    const onChange = jest.fn();
+    const {container} = render(<Input onBlur={jest.fn()} onChange={onChange} value="My value" />);
+    expect(container).toMatchSnapshot();
+});
 
-// test('Input should render with invalid value', () => {
-//     const onChange = jest.fn();
-//     expect(render(<Input onBlur={jest.fn()} onChange={onChange} valid={false} value="My value" />)).toMatchSnapshot();
-// });
+test('Input should render undefined value as empty string', () => {
+    const onChange = jest.fn();
+    const {container} = render(<Input onBlur={jest.fn()} onChange={onChange} value={undefined} />);
+    expect(container).toMatchSnapshot();
+});
 
-// test('Input should render when disabled', () => {
-//     const onChange = jest.fn();
-//     expect(render(<Input disabled={true} onChange={onChange} value="My value" />)).toMatchSnapshot();
-// });
+test('Input should render with a character counter', () => {
+    const {container} = render(<Input maxCharacters={2} onBlur={jest.fn()} onChange={jest.fn()} value="asdf" />);
+    expect(container).toMatchSnapshot();
+});
 
-// test('Input should render with icon', () => {
-//     const onChange = jest.fn();
-//     expect(render(<Input icon="su-pen" onBlur={jest.fn()} onChange={onChange} value="My value" />)).toMatchSnapshot();
-// });
-
-// test('Input should render with inputmode', () => {
-//     const onChange = jest.fn();
-//     expect(render(
-//         <Input inputMode="numeric" onBlur={jest.fn()} onChange={onChange} value="My value" />
-//     )).toMatchSnapshot();
-// });
-
-// test('Input should render with type', () => {
-//     const onChange = jest.fn();
-//     expect(render(
-//         <Input onBlur={jest.fn()} onChange={onChange} type="password" value="My value" />
-//     )).toMatchSnapshot();
-// });
-
-// test('Input should render with placeholder', () => {
-//     const onChange = jest.fn();
-//     expect(render(
-//         <Input onBlur={jest.fn()} onChange={onChange} placeholder="My placeholder" value="My value" />
-//     )).toMatchSnapshot();
-// });
-
-// test('Input should render with value', () => {
-//     const onChange = jest.fn();
-//     expect(render(<Input onBlur={jest.fn()} onChange={onChange} value="My value" />)).toMatchSnapshot();
-// });
-
-// test('Input should render undefined value as empty string', () => {
-//     const onChange = jest.fn();
-//     expect(render(<Input onBlur={jest.fn()} onChange={onChange} value={undefined} />)).toMatchSnapshot();
-// });
-
-// test('Input should render with a character counter', () => {
-//     expect(render(<Input maxCharacters={2} onBlur={jest.fn()} onChange={jest.fn()} value="asdf" />)).toMatchSnapshot();
-// });
-
-// test('Input should render with a segment counter', () => {
-//     expect(render(
-//         <Input
-//             maxSegments={3}
-//             onBlur={jest.fn()}
-//             onChange={jest.fn()}
-//             segmentDelimiter=","
-//             value="keyword1, keyword2"
-//         />
-//     )).toMatchSnapshot();
-// });
+test('Input should render with a segment counter', () => {
+    const {container} = render(
+        <Input
+            maxSegments={3}
+            onBlur={jest.fn()}
+            onChange={jest.fn()}
+            segmentDelimiter=","
+            value="keyword1, keyword2"
+        />
+    );
+    expect(container).toMatchSnapshot();
+});
 
 // test('Input should call the callback when the input changes', () => {
 //     const onChange = jest.fn();
