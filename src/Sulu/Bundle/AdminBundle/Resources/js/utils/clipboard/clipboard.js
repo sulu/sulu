@@ -11,8 +11,8 @@ class Clipboard {
         // listen for "storage" events to notify observers if something is copied in another browser window
         if (activeObservers > 0 && !this.storageEventListener) {
             this.storageEventListener = (event: StorageEvent) => {
-                if (event.key) {
-                    this.notifyObservers(event.key, event.newValue ? JSON.parse(event.newValue) : undefined);
+                if (event.key && this.observers[event.key]) {
+                    this.notifyObservers(event.key, this.parseValue(event.newValue));
                 }
             };
             window.addEventListener('storage', this.storageEventListener);
@@ -47,8 +47,8 @@ class Clipboard {
         this.updateStorageEventListener();
 
         if (invokeImmediately) {
-            const currentValue = window.localStorage.getItem(key);
-            observer(currentValue ? JSON.parse(currentValue) : undefined);
+            const storageValue = window.localStorage.getItem(key);
+            observer(this.parseValue(storageValue));
         }
 
         // return disposer function that allows to remove the registered observer
@@ -59,6 +59,15 @@ class Clipboard {
             }
             this.updateStorageEventListener();
         };
+    }
+
+    parseValue(storageValue: ?string): mixed {
+        try {
+            return storageValue ? JSON.parse(storageValue) : undefined;
+        } catch (e) {
+            // if value in storage is not a valid json string, it was set by external code and is not a clipboard item
+            return undefined;
+        }
     }
 }
 
