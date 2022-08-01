@@ -1,31 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render a Folder component 1`] = `
-<div
-  class="folder"
-  role="button"
-  tabindex="0"
->
+<div>
   <div
-    class="iconContainer"
+    class="folder"
+    role="button"
+    tabindex="0"
   >
-    <span
-      aria-label="su-folder"
-      class="su-folder"
-    />
-  </div>
-  <div
-    class="description"
-  >
-    <h5
-      class="title"
-    >
-      This is a folder
-    </h5>
     <div
-      class="info"
+      class="iconContainer"
     >
-      3 Objects
+      <span
+        aria-label="su-folder"
+        class="su-folder"
+      />
+    </div>
+    <div
+      class="description"
+    >
+      <h5
+        class="title"
+      >
+        This is a folder
+      </h5>
+      <div
+        class="info"
+      >
+        3 Objects
+      </div>
     </div>
   </div>
 </div>
