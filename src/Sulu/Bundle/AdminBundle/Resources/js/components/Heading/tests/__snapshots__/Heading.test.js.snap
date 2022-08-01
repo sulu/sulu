@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render heading 1`] = `
-Array [
+<div>
   <div
     class="line"
   >
@@ -15,11 +15,11 @@ Array [
       Hide a block
     </div>
     Hello World!
-  </div>,
+  </div>
   <div
     class="description"
   >
     Hides a block when activated
-  </div>,
-]
+  </div>
+</div>
 `;
