@@ -1,81 +1,87 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render a FileUploadButton 1`] = `
-<div
-  role="button"
-  tabindex="0"
->
-  <button
-    class="button secondary hasText"
-    type="button"
+<div>
+  <div
+    role="button"
+    tabindex="0"
   >
-    <span
-      class="buttonText"
+    <button
+      class="button secondary hasText"
+      type="button"
     >
-      Upload something!
-    </span>
-  </button>
-  <input
-    autocomplete="off"
-    multiple=""
-    style="display:none"
-    tabindex="-1"
-    type="file"
-  />
+      <span
+        class="buttonText"
+      >
+        Upload something!
+      </span>
+    </button>
+    <input
+      autocomplete="off"
+      multiple=""
+      style="display: none;"
+      tabindex="-1"
+      type="file"
+    />
+  </div>
 </div>
 `;
 
 exports[`Render a FileUploadButton with other skin and icon 1`] = `
-<div
-  role="button"
-  tabindex="0"
->
-  <button
-    class="button link hasText"
-    type="button"
+<div>
+  <div
+    role="button"
+    tabindex="0"
   >
-    <span
-      aria-label="su-image"
-      class="su-image buttonIcon"
-    />
-    <span
-      class="buttonText"
+    <button
+      class="button link hasText"
+      type="button"
     >
-      Upload something!
-    </span>
-  </button>
-  <input
-    autocomplete="off"
-    multiple=""
-    style="display:none"
-    tabindex="-1"
-    type="file"
-  />
+      <span
+        aria-label="su-image"
+        class="su-image buttonIcon"
+      />
+      <span
+        class="buttonText"
+      >
+        Upload something!
+      </span>
+    </button>
+    <input
+      autocomplete="off"
+      multiple=""
+      style="display: none;"
+      tabindex="-1"
+      type="file"
+    />
+  </div>
 </div>
 `;
 
 exports[`Render a disabled FileUploadButton 1`] = `
-<div
-  role="button"
-  tabindex="0"
->
-  <button
-    class="button secondary hasText"
-    disabled=""
-    type="button"
+<div>
+  <div
+    role="button"
+    tabindex="0"
   >
-    <span
-      class="buttonText"
+    <button
+      class="button secondary hasText"
+      disabled=""
+      type="button"
     >
-      Upload something!
-    </span>
-  </button>
-  <input
-    autocomplete="off"
-    multiple=""
-    style="display:none"
-    tabindex="-1"
-    type="file"
-  />
+      <span
+        class="buttonText"
+      >
+        Upload something!
+      </span>
+    </button>
+    <input
+      autocomplete="off"
+      multiple=""
+      style="display: none;"
+      tabindex="-1"
+      type="file"
+    />
+  </div>
 </div>
 `;
