@@ -1,16 +1,19 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import Loader from '../Loader';
 
 test('Render loader', () => {
-    expect(render(<Loader />)).toMatchSnapshot();
+    const {container} = render(<Loader />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render loader with additional classname', () => {
-    expect(render(<Loader className="test" />)).toMatchSnapshot();
+    const {container} = render(<Loader className="test" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render loader with other dimensions', () => {
-    expect(render(<Loader size={50} />)).toMatchSnapshot();
+    const {container} = render(<Loader size={50} />);
+    expect(container).toMatchSnapshot();
 });
