@@ -69,3 +69,23 @@ test('Observer should be called when observed key is changed n another tab', () 
     window.dispatchEvent(new StorageEvent('storage', {key: 'test-key', newValue: JSON.stringify({key1: 'value4'})}));
     expect(observerSpy).toBeCalledTimes(2);
 });
+
+test('Should not crash if external code writes invalid JSON string to localStorage', () => {
+    window.localStorage.setItem('test-key', 'invalid-json-string-1');
+
+    const observerSpy = jest.fn();
+    clipboard.observe('test-key', observerSpy, true);
+
+    expect(observerSpy).toBeCalledTimes(1);
+    expect(observerSpy).toHaveBeenLastCalledWith(undefined);
+
+    window.dispatchEvent(new StorageEvent('storage', {key: 'test-key', newValue: 'invalid-json-string-2'}));
+
+    expect(observerSpy).toBeCalledTimes(2);
+    expect(observerSpy).toHaveBeenLastCalledWith(undefined);
+
+    window.dispatchEvent(new StorageEvent('storage', {key: 'test-key', newValue: '"valid-json-string"'}));
+
+    expect(observerSpy).toBeCalledTimes(3);
+    expect(observerSpy).toHaveBeenLastCalledWith('valid-json-string');
+});
