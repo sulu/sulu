@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import Grid from '../Grid';
 
 test('Render a Grid with Items in all sizes', () => {
