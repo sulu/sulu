@@ -317,8 +317,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $this->initFields($config['fields_defaults'], $container);
         }
 
-        $this->initListBuilder($container, $loader);
-
+        $loader->load('list_builder.xml');
         $loader->load('expression_language.xml');
         $loader->load('phpcr.xml');
         $loader->load('rest.xml');
@@ -407,15 +406,5 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('sulu_core.cache.memoize.default_lifetime', $cache['memoize']['default_lifetime']);
 
         $loader->load('cache.xml');
-    }
-
-    /**
-     * Initializes list builder.
-     */
-    private function initListBuilder(ContainerBuilder $container, XmlFileLoader $loader)
-    {
-        if (SuluKernel::CONTEXT_ADMIN === $container->getParameter('sulu.context')) {
-            $loader->load('list_builder.xml');
-        }
     }
 }
