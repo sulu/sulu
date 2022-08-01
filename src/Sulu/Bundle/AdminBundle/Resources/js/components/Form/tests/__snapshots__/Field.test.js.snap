@@ -1,162 +1,177 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Display a field with a required label 1`] = `
-<div
-  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
->
+<div>
   <div
-    class="field"
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
   >
-    <label
-      class="label"
+    <div
+      class="field"
     >
-      Testlabel *
-    </label>
-    <div>
-      Test
+      <label
+        class="label"
+      >
+        Testlabel
+         *
+      </label>
+      <div>
+        Test
+      </div>
+      <label
+        class="errorLabel"
+      />
     </div>
-    <label
-      class="errorLabel"
-    />
   </div>
 </div>
 `;
 
 exports[`Display a field with an error 1`] = `
-<div
-  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
->
+<div>
   <div
-    class="field error"
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
   >
-    <label
-      class="label"
+    <div
+      class="field error"
     >
-      Testlabel
-    </label>
-    <div>
-      Test
+      <label
+        class="label"
+      >
+        Testlabel
+      </label>
+      <div>
+        Test
+      </div>
+      <label
+        class="errorLabel"
+      >
+        Error! Help!
+      </label>
     </div>
-    <label
-      class="errorLabel"
-    >
-      Error! Help!
-    </label>
   </div>
 </div>
 `;
 
 exports[`Display a field with colSpan and after space 1`] = `
-<div
-  class="item gridItem colSpan colSpan-7 space-before-0 space-after-5"
->
+<div>
   <div
-    class="field"
+    class="item gridItem colSpan colSpan-7 space-before-0 space-after-5"
   >
-    <div>
-      Test
+    <div
+      class="field"
+    >
+      <div>
+        Test
+      </div>
+      <label
+        class="errorLabel"
+      />
     </div>
-    <label
-      class="errorLabel"
-    />
   </div>
 </div>
 `;
 
 exports[`Display a field with description 1`] = `
-<div
-  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
->
+<div>
   <div
-    class="field"
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
   >
-    <div>
-      Test
-    </div>
-    <label
-      class="descriptionLabel"
+    <div
+      class="field"
     >
-      Testdescription
-    </label>
-    <label
-      class="errorLabel"
-    />
+      <div>
+        Test
+      </div>
+      <label
+        class="descriptionLabel"
+      >
+        Testdescription
+      </label>
+      <label
+        class="errorLabel"
+      />
+    </div>
   </div>
 </div>
 `;
 
 exports[`Display a field with label 1`] = `
-<div
-  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
->
+<div>
   <div
-    class="field dark"
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
   >
-    <label
-      class="label"
+    <div
+      class="field dark"
     >
-      Test
-    </label>
-    <p>
-      Test
-    </p>
-    <label
-      class="errorLabel"
-    />
+      <label
+        class="label"
+      >
+        Test
+      </label>
+      <p>
+        Test
+      </p>
+      <label
+        class="errorLabel"
+      />
+    </div>
   </div>
 </div>
 `;
 
 exports[`Display a field with label and type 1`] = `
-<div
-  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
->
+<div>
   <div
-    class="field"
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
   >
-    <label
-      class="label"
+    <div
+      class="field"
     >
-      Test
-      <button
-        class="type"
-        type="button"
+      <label
+        class="label"
       >
-        <span
-          class="typeDelimiter"
+        Test
+        <button
+          class="type"
+          type="button"
         >
-          •
-        </span>
-        Work
-        <span
-          aria-label="su-angle-down"
-          class="su-angle-down typeIcon"
-        />
-      </button>
-    </label>
-    <p>
-      Test
-    </p>
-    <label
-      class="errorLabel"
-    />
+          <span
+            class="typeDelimiter"
+          >
+            •
+          </span>
+          Work
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down typeIcon"
+          />
+        </button>
+      </label>
+      <p>
+        Test
+      </p>
+      <label
+        class="errorLabel"
+      />
+    </div>
   </div>
 </div>
 `;
 
 exports[`Display a field without label 1`] = `
-<div
-  class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
->
+<div>
   <div
-    class="field"
+    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
   >
-    <p>
-      Test
-    </p>
-    <label
-      class="errorLabel"
-    />
+    <div
+      class="field"
+    >
+      <p>
+        Test
+      </p>
+      <label
+        class="errorLabel"
+      />
+    </div>
   </div>
 </div>
 `;
