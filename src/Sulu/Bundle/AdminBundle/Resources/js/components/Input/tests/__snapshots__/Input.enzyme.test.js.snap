@@ -1,0 +1,273 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Input should render 1`] = `
+<label
+  class="input default left"
+>
+  <input
+    type="text"
+    value="My value"
+  />
+</label>
+`;
+
+exports[`Input should render append container when onClearClick callback is provided 1`] = `
+<label
+  class="input default left hasAppendIcon"
+>
+  <input
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Input should render append container with icon when onClearClick callback is provided and value is set 1`] = `
+<label
+  class="input default left hasAppendIcon"
+>
+  <input
+    type="text"
+    value="test"
+  />
+  <div
+    class="appendContainer"
+  >
+    <span
+      aria-label="su-times"
+      class="su-times clickable icon default"
+      role="button"
+      tabindex="0"
+    />
+  </div>
+</label>
+`;
+
+exports[`Input should render as headline 1`] = `
+<label
+  class="input default left headline"
+>
+  <input
+    type="text"
+    value="My value"
+  />
+</label>
+`;
+
+exports[`Input should render collapsed 1`] = `
+<label
+  class="input default left collapsed"
+>
+  <input
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Input should render undefined value as empty string 1`] = `
+<label
+  class="input default left"
+>
+  <input
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Input should render when disabled 1`] = `
+<label
+  class="input default left disabled"
+>
+  <input
+    disabled=""
+    type="text"
+    value="My value"
+  />
+</label>
+`;
+
+exports[`Input should render with a character counter 1`] = `
+Array [
+  <label
+    class="input default left"
+  >
+    <input
+      type="text"
+      value="asdf"
+    />
+  </label>,
+  <label
+    class="characterCounter exceeded"
+  >
+    -2 sulu_admin.characters_left
+  </label>,
+]
+`;
+
+exports[`Input should render with a loader 1`] = `
+<label
+  class="input default left"
+>
+  <div
+    class="prependedContainer default"
+  >
+    <div
+      class="spinner"
+      style="width:20px;height:20px"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
+  </div>
+  <input
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Input should render with a segment counter 1`] = `
+Array [
+  <label
+    class="input default left"
+  >
+    <input
+      type="text"
+      value="keyword1, keyword2"
+    />
+  </label>,
+  <label
+    class="segmentCounter"
+  >
+    1 sulu_admin.segments_left
+  </label>,
+]
+`;
+
+exports[`Input should render with autocomplete off 1`] = `
+<label
+  class="input default left disabled"
+>
+  <input
+    autocomplete="off"
+    disabled=""
+    type="text"
+    value="My value"
+  />
+</label>
+`;
+
+exports[`Input should render with dark skin 1`] = `
+<label
+  class="input dark left hasAppendIcon"
+>
+  <div
+    class="prependedContainer dark"
+  >
+    <span
+      aria-label="su-pen"
+      class="su-pen icon dark"
+    />
+  </div>
+  <input
+    type="text"
+    value=""
+  />
+</label>
+`;
+
+exports[`Input should render with icon 1`] = `
+<label
+  class="input default left"
+>
+  <div
+    class="prependedContainer default"
+  >
+    <span
+      aria-label="su-pen"
+      class="su-pen icon default"
+    />
+  </div>
+  <input
+    type="text"
+    value="My value"
+  />
+</label>
+`;
+
+exports[`Input should render with inputmode 1`] = `
+<label
+  class="input default left"
+>
+  <input
+    inputmode="numeric"
+    type="text"
+    value="My value"
+  />
+</label>
+`;
+
+exports[`Input should render with invalid value 1`] = `
+<label
+  class="input default left error"
+>
+  <input
+    type="text"
+    value="My value"
+  />
+</label>
+`;
+
+exports[`Input should render with placeholder 1`] = `
+<label
+  class="input default left"
+>
+  <input
+    placeholder="My placeholder"
+    type="text"
+    value="My value"
+  />
+</label>
+`;
+
+exports[`Input should render with type 1`] = `
+<label
+  class="input default left"
+>
+  <input
+    type="password"
+    value="My value"
+  />
+</label>
+`;
+
+exports[`Input should render with type number with attributes 1`] = `
+<label
+  class="input default left"
+>
+  <input
+    max="50"
+    min="10"
+    step="5"
+    type="number"
+    value="25"
+  />
+</label>
+`;
+
+exports[`Input should render with value 1`] = `
+<label
+  class="input default left"
+>
+  <input
+    type="text"
+    value="My value"
+  />
+</label>
+`;
