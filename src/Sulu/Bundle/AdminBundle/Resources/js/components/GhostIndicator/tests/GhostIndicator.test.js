@@ -1,12 +1,14 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import GhostIndicator from '../GhostIndicator';
 
 test('Should render with given locale', () => {
-    expect(render(<GhostIndicator locale="de-at" />)).toMatchSnapshot();
+    const {container} = render(<GhostIndicator locale="de-at" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Should render with given locale and className', () => {
-    expect(render(<GhostIndicator className="test" locale="de-at" />)).toMatchSnapshot();
+    const {container} = render(<GhostIndicator className="test" locale="de-at" />);
+    expect(container).toMatchSnapshot();
 });
