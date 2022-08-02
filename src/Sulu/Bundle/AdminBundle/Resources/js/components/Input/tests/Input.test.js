@@ -97,15 +97,15 @@ test('Input should render with a segment counter', () => {
 });
 
 test('Input should call the callback when the input changes', () => {
-    const event = {target: {value: 'my-value'}};
+    const event = {target: {value: 'test'}};
     const {debug} = render(<Input onBlur={jest.fn()} onChange={jest.fn()} value="My value" />);
     debug();
 
-    const input = screen.queryByRole('textbox');
-    userEvent.type(input, event.target.value);
+    const input = screen.queryByDisplayValue('My value');
+    fireEvent.change(input, event);
     console.log(input.value);
 
-    expect(input).toHaveValue(event.target.value);
+    expect(input.value).toBe('test');
 });
 
 // test('Input should call the callback with undefined if the input value is removed', () => {
