@@ -128,22 +128,21 @@ test('The component should render in body with loader instead of confirm button'
     expect(loader).toHaveClass('loader');
 });
 
-// test('The component should not render in body when closed', () => {
-//     const view = mount(
-//         <Dialog
-//             cancelText="Cancel"
-//             confirmText="Confirm"
-//             onCancel={jest.fn()}
-//             onConfirm={jest.fn()}
-//             open={false}
-//             title="My dialog title"
-//         >
-//             My dialog content
-//         </Dialog>
-//     );
-
-//     expect(view.find('Dialog > Portal')).toHaveLength(0);
-// });
+test('The component should not render in body when closed', () => {
+    render(
+        <Dialog
+            cancelText="Cancel"
+            confirmText="Confirm"
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            open={false}
+            title="My dialog title"
+        >
+            My dialog content
+        </Dialog>
+    );
+    expect(screen.queryByText('My dialog content')).not.toBeInTheDocument();
+});
 
 // test('The component should call the callback when the confirm button is clicked', () => {
 //     const onCancel = jest.fn();
