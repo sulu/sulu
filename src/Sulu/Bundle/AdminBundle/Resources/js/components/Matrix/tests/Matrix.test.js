@@ -81,40 +81,42 @@ test('Render the Matrix component with values', () => {
     expect(container).toMatchSnapshot();
 });
 
-// test('Render the Matrix component with values in disabled state', () => {
-//     const handleChange = jest.fn();
-//     const values = {
-//         'global.articles': {
-//             'view': true,
-//             'edit': true,
-//             'delete': false,
-//         },
-//         'global.redirects': {
-//             'view': true,
-//         },
-//         'global.settings': {
-//             'view': true,
-//             'edit': false,
-//         },
-//     };
+test('Render the Matrix component with values in disabled state', () => {
+    const handleChange = jest.fn();
+    const values = {
+        'global.articles': {
+            'view': true,
+            'edit': true,
+            'delete': false,
+        },
+        'global.redirects': {
+            'view': true,
+        },
+        'global.settings': {
+            'view': true,
+            'edit': false,
+        },
+    };
 
-//     expect(render(
-//         <Matrix disabled={true} onChange={handleChange} values={values}>
-//             <Row name="global.articles" title="articles">
-//                 <Item icon="su-pen" name="view" />
-//                 <Item icon="su-plus" name="edit" />
-//                 <Item icon="su-trash-alt" name="delete" />
-//             </Row>
-//             <Row name="global.redirects" title="redirects">
-//                 <Item icon="su-pen" name="view" />
-//             </Row>
-//             <Row name="global.settings" title="settings">
-//                 <Item icon="su-pen" name="view" />
-//                 <Item icon="su-plus" name="edit" />
-//             </Row>
-//         </Matrix>
-//     )).toMatchSnapshot();
-// });
+    const {container} = render(
+        <Matrix disabled={true} onChange={handleChange} values={values}>
+            <Row name="global.articles" title="articles">
+                <Item icon="su-pen" name="view" />
+                <Item icon="su-plus" name="edit" />
+                <Item icon="su-trash-alt" name="delete" />
+            </Row>
+            <Row name="global.redirects" title="redirects">
+                <Item icon="su-pen" name="view" />
+            </Row>
+            <Row name="global.settings" title="settings">
+                <Item icon="su-pen" name="view" />
+                <Item icon="su-plus" name="edit" />
+            </Row>
+        </Matrix>
+    );
+
+    expect(container).toMatchSnapshot();
+});
 
 // test('Changing a value should call onChange ', () => {
 //     const handleChange = jest.fn();

@@ -243,3 +243,107 @@ exports[`Render the Matrix component with values 1`] = `
   </table>
 </div>
 `;
+
+exports[`Render the Matrix component with values in disabled state 1`] = `
+<div>
+  <table
+    class="matrix disabled"
+  >
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
+        >
+          articles
+        </td>
+        <td
+          class="items"
+        >
+          <div
+            class="item selected disabled"
+            title="View"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <div
+            class="item selected disabled"
+            title="Edit"
+          >
+            <span
+              aria-label="su-plus"
+              class="su-plus"
+            />
+          </div>
+          <div
+            class="item disabled"
+            title="Delete"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
+        >
+          redirects
+        </td>
+        <td
+          class="items"
+        >
+          <div
+            class="item selected disabled"
+            title="View"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
+        >
+          settings
+        </td>
+        <td
+          class="items"
+        >
+          <div
+            class="item selected disabled"
+            title="View"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <div
+            class="item disabled"
+            title="Edit"
+          >
+            <span
+              aria-label="su-plus"
+              class="su-plus"
+            />
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
