@@ -106,25 +106,27 @@ test('The component should render in body with a large class', () => {
     expect(largeDiv).toHaveClass('large');
 });
 
-// test('The component should render in body with loader instead of confirm button', () => {
-//     const onCancel = jest.fn();
-//     const onConfirm = jest.fn();
-//     const view = mount(
-//         <Dialog
-//             cancelText="Cancel"
-//             confirmLoading={true}
-//             confirmText="Confirm"
-//             onCancel={onCancel}
-//             onConfirm={onConfirm}
-//             open={true}
-//             title="My dialog title"
-//         >
-//             <div>My dialog content</div>
-//         </Dialog>
-//     );
+test('The component should render in body with loader instead of confirm button', () => {
+    const onCancel = jest.fn();
+    const onConfirm = jest.fn();
+    const {debug} = render(
+        <Dialog
+            cancelText="Cancel"
+            confirmLoading={true}
+            confirmText="Confirm"
+            onCancel={onCancel}
+            onConfirm={onConfirm}
+            open={true}
+            title="My dialog title"
+        >
+            <div>My dialog content</div>
+        </Dialog>
+    );
 
-//     expect(view.find('Button[children="Confirm"]').prop('loading')).toEqual(true);
-// });
+    const loader = screen.queryByText('Confirm').nextElementSibling;
+    expect(loader).toBeInTheDocument();
+    expect(loader).toHaveClass('loader');
+});
 
 // test('The component should not render in body when closed', () => {
 //     const view = mount(
