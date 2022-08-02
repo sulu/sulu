@@ -166,26 +166,27 @@ test('The component should call the callback when the confirm button is clicked'
     expect(onConfirm).toBeCalled();
 });
 
-// test('The component should call the callback when the cancel button is clicked', () => {
-//     const onConfirm = jest.fn();
-//     const onCancel = jest.fn();
-//     const view = shallow(
-//         <Dialog
-//             cancelText="Cancel"
-//             confirmText="Confirm"
-//             onCancel={onCancel}
-//             onConfirm={onConfirm}
-//             open={true}
-//             title="My dialog title"
-//         >
-//             My dialog content
-//         </Dialog>
-//     );
+test('The component should call the callback when the cancel button is clicked', () => {
+    const onConfirm = jest.fn();
+    const onCancel = jest.fn();
+    render(
+        <Dialog
+            cancelText="Cancel"
+            confirmText="Confirm"
+            onCancel={onCancel}
+            onConfirm={onConfirm}
+            open={true}
+            title="My dialog title"
+        >
+            My dialog content
+        </Dialog>
+    );
+    const button = screen.queryByText('Cancel');
 
-//     expect(onCancel).not.toBeCalled();
-//     view.find('Button[skin="secondary"]').simulate('click');
-//     expect(onCancel).toBeCalled();
-// });
+    expect(onCancel).not.toBeCalled();
+    fireEvent.click(button);
+    expect(onCancel).toBeCalled();
+});
 
 // test('The component should render with a warning', () => {
 //     const onConfirm = jest.fn();
