@@ -1,4 +1,4 @@
-/* eslint-disable testing-library/no-node-access */
+/* eslint-disable testing-library/no-node-access, testing-library/no-container */
 // @flow
 import {render, screen} from '@testing-library/react';
 import React from 'react';
@@ -81,23 +81,30 @@ test('The component should render in body with disabled confirm button', () => {
     expect(button).toBeDisabled();
 });
 
-// test('The component should render in body with a large class', () => {
-//     const view = mount(
-//         <Dialog
-//             cancelText="Cancel"
-//             confirmText="Confirm"
-//             onCancel={jest.fn()}
-//             onConfirm={jest.fn()}
-//             open={true}
-//             size="large"
-//             title="My dialog title"
-//         >
-//             <div>My dialog content</div>
-//         </Dialog>
-//     );
+test('The component should render in body with a large class', () => {
+    render(
+        <Dialog
+            cancelText="Cancel"
+            confirmText="Confirm"
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            open={true}
+            size="large"
+            title="My dialog title"
+        >
+            <div>My dialog content</div>
+        </Dialog>
+    );
 
-//     expect(view.find('Dialog > Portal div.large')).toHaveLength(1);
-// });
+    const largeDiv = screen.queryByLabelText('su-exclamation-triangle')
+        .parentElement
+        .parentElement
+        .parentElement
+        .parentElement;
+
+    expect(largeDiv).toBeInTheDocument();
+    expect(largeDiv).toHaveClass('large');
+});
 
 // test('The component should render in body with loader instead of confirm button', () => {
 //     const onCancel = jest.fn();
