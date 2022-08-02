@@ -1,0 +1,99 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a warning snackbar 1`] = `
+<div
+  class="snackbar warning visible"
+  role="button"
+>
+  <span
+    aria-label="su-bell"
+    class="su-bell icon"
+  />
+  <div
+    class="text"
+  >
+    <strong>
+      sulu_admin.warning
+    </strong>
+     - Something unimportant went wrong
+  </div>
+  <span
+    aria-label="su-times"
+    class="su-times clickable closeIcon"
+    role="button"
+    tabindex="0"
+  />
+</div>
+`;
+
+exports[`Render an error snackbar 1`] = `
+<div
+  class="snackbar error visible"
+  role="button"
+>
+  <span
+    aria-label="su-exclamation-triangle"
+    class="su-exclamation-triangle icon"
+  />
+  <div
+    class="text"
+  >
+    <strong>
+      sulu_admin.error
+    </strong>
+     - Something went wrong
+  </div>
+  <span
+    aria-label="su-times"
+    class="su-times clickable closeIcon"
+    role="button"
+    tabindex="0"
+  />
+</div>
+`;
+
+exports[`Render an error snackbar without close button 1`] = `
+<div
+  class="snackbar error visible"
+  role="button"
+>
+  <span
+    aria-label="su-exclamation-triangle"
+    class="su-exclamation-triangle icon"
+  />
+  <div
+    class="text"
+  >
+    <strong>
+      sulu_admin.error
+    </strong>
+     - Something went wrong
+  </div>
+</div>
+`;
+
+exports[`Render an updated error snackbar 1`] = `
+<div
+  class="snackbar error visible"
+  role="button"
+>
+  <span
+    aria-label="su-exclamation-triangle"
+    class="su-exclamation-triangle icon"
+  />
+  <div
+    class="text"
+  >
+    <strong>
+      sulu_admin.error
+    </strong>
+     - Something went wrong again
+  </div>
+  <span
+    aria-label="su-times"
+    class="su-times clickable closeIcon"
+    role="button"
+    tabindex="0"
+  />
+</div>
+`;
