@@ -42,22 +42,22 @@ test('The component should render aligned to the left', () => {
     expect(screen.queryByText('My dialog content').parentElement).toHaveClass('left');
 });
 
-// test('The component should render in body without cancel button', () => {
-//     const onConfirm = jest.fn();
-//     const view = mount(
-//         <Dialog
-//             confirmText="Confirm"
-//             onConfirm={onConfirm}
-//             open={true}
-//             title="My dialog title"
-//         >
-//             <div>My dialog content</div>
-//         </Dialog>
-//     );
+test('The component should render in body without cancel button', () => {
+    const onConfirm = jest.fn();
+    render(
+        <Dialog
+            confirmText="Confirm"
+            onConfirm={onConfirm}
+            open={true}
+            title="My dialog title"
+        >
+            <div>My dialog content</div>
+        </Dialog>
+    );
 
-//     expect(view.find('Button')).toHaveLength(1);
-//     expect(view.find('Button[children="Confirm"]')).toHaveLength(1);
-// });
+    expect(screen.queryByText('Cancel')).not.toBeInTheDocument();
+    expect(screen.getByText('Confirm')).toBeInTheDocument();
+});
 
 // test('The component should render in body with disabled confirm button', () => {
 //     const onCancel = jest.fn();
