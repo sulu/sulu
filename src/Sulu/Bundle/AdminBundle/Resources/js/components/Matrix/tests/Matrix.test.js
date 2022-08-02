@@ -1,5 +1,5 @@
 // @flow
-import {render} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import React from 'react';
 import Matrix from '../Matrix';
 import Row from '../Row';
@@ -118,58 +118,60 @@ test('Render the Matrix component with values in disabled state', () => {
     expect(container).toMatchSnapshot();
 });
 
-// test('Changing a value should call onChange ', () => {
-//     const handleChange = jest.fn();
-//     const values = {
-//         'global.articles': {
-//             'view': true,
-//             'edit': true,
-//             'delete': false,
-//         },
-//         'global.redirects': {
-//             'view': true,
-//         },
-//         'global.settings': {
-//             'view': true,
-//             'edit': false,
-//         },
-//     };
+test('Changing a value should call onChange ', () => {
+    const handleChange = jest.fn();
+    const values = {
+        'global.articles': {
+            'view': true,
+            'edit': true,
+            'delete': false,
+        },
+        'global.redirects': {
+            'view': true,
+        },
+        'global.settings': {
+            'view': true,
+            'edit': false,
+        },
+    };
 
-//     const matrix = mount(
-//         <Matrix onChange={handleChange} values={values}>
-//             <Row name="global.articles" title="articles">
-//                 <Item icon="su-pen" name="view" />
-//                 <Item icon="su-plus" name="edit" />
-//                 <Item icon="su-trash-alt" name="delete" />
-//             </Row>
-//             <Row name="global.redirects" title="redirects">
-//                 <Item icon="su-pen" name="view" />
-//             </Row>
-//             <Row name="global.settings" title="settings">
-//                 <Item icon="su-pen" name="view" />
-//                 <Item icon="su-plus" name="edit" />
-//             </Row>
-//         </Matrix>
-//     );
+    render(
+        <Matrix onChange={handleChange} values={values}>
+            <Row name="global.articles" title="articles">
+                <Item icon="su-pen" name="view" />
+                <Item icon="su-plus" name="edit" />
+                <Item icon="su-trash-alt" name="delete" />
+            </Row>
+            <Row name="global.redirects" title="redirects">
+                <Item icon="su-pen" name="view" />
+            </Row>
+            <Row name="global.settings" title="settings">
+                <Item icon="su-pen" name="view" />
+                <Item icon="su-plus" name="edit" />
+            </Row>
+        </Matrix>
+    );
 
-//     const expectedValues = {
-//         'global.articles': {
-//             'view': true,
-//             'edit': true,
-//             'delete': false,
-//         },
-//         'global.redirects': {
-//             'view': false,
-//         },
-//         'global.settings': {
-//             'view': true,
-//             'edit': false,
-//         },
-//     };
+    const expectedValues = {
+        'global.articles': {
+            'view': true,
+            'edit': true,
+            'delete': false,
+        },
+        'global.redirects': {
+            'view': false,
+        },
+        'global.settings': {
+            'view': true,
+            'edit': false,
+        },
+    };
 
-//     matrix.find(Item).at(3).simulate('click');
-//     expect(handleChange).toHaveBeenCalledWith(expectedValues);
-// });
+    // eslint-disable-next-line testing-library/no-node-access
+    const item = screen.queryAllByLabelText('su-pen')[1].parentElement;
+    fireEvent.click(item);
+    expect(handleChange).toHaveBeenCalledWith(expectedValues);
+});
 
 // test('Deactivate all button should call onChange', () => {
 //     const handleChange = jest.fn();
