@@ -109,7 +109,7 @@ test('The component should render in body with a large class', () => {
 test('The component should render in body with loader instead of confirm button', () => {
     const onCancel = jest.fn();
     const onConfirm = jest.fn();
-    const {debug} = render(
+    render(
         <Dialog
             cancelText="Cancel"
             confirmLoading={true}
