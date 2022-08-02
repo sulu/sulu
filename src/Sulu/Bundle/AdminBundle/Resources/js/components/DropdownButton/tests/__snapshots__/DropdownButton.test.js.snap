@@ -1,22 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render dropdown button 1`] = `
-<button
-  class="button secondary hasText"
-  type="button"
->
-  <span
-    aria-label="su-plus"
-    class="su-plus buttonIcon"
-  />
-  <span
-    class="buttonText"
+<div>
+  <button
+    class="button secondary hasText"
+    type="button"
   >
-    Add
-  </span>
-  <span
-    aria-label="su-angle-down"
-    class="su-angle-down dropdownIcon"
-  />
-</button>
+    <span
+      aria-label="su-plus"
+      class="su-plus buttonIcon"
+    />
+    <span
+      class="buttonText"
+    >
+      Add
+    </span>
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down dropdownIcon"
+    />
+  </button>
+</div>
 `;
