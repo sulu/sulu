@@ -1,21 +1,22 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {fireEvent, render, screen} from '@testing-library/react';
 import Folder from '../Folder';
 
 test('Render a Folder component', () => {
-    expect(render(
+    const {container} = render(
         <Folder
             hasPermissions={false}
             id="1"
             info="3 Objects"
             title="This is a folder"
         />
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Use permission icon if hasPermissions flag is set', () => {
-    const folder = shallow(
+    render(
         <Folder
             hasPermissions={true}
             id="1"
@@ -24,13 +25,14 @@ test('Use permission icon if hasPermissions flag is set', () => {
         />
     );
 
-    expect(folder.find('Icon').prop('name')).toEqual('su-folder-permission');
+    const icon = screen.queryByLabelText('su-folder-permission');
+    expect(icon).toBeInTheDocument();
 });
 
 test('Call clickhandler when clicking on the folder', () => {
     const clickSpy = jest.fn();
     const folderId = 1;
-    const folder = shallow(
+    render(
         <Folder
             hasPermissions={false}
             id={folderId}
@@ -40,6 +42,8 @@ test('Call clickhandler when clicking on the folder', () => {
         />
     );
 
-    folder.simulate('click');
+    const folder = screen.queryByText('This is a folder');
+    fireEvent.click(folder);
+
     expect(clickSpy).toHaveBeenCalledWith(folderId);
 });
