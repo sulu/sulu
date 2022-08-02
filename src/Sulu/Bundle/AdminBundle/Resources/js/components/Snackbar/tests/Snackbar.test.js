@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {fireEvent, render, screen} from '@testing-library/react';
 import Snackbar from '../Snackbar';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -8,43 +8,49 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 test('Render an error snackbar', () => {
-    const snackbar = mount(<Snackbar message="Something went wrong" onCloseClick={jest.fn()} type="error" />);
-    expect(snackbar.render()).toMatchSnapshot();
+    const {container} = render(<Snackbar message="Something went wrong" onCloseClick={jest.fn()} type="error" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render an updated error snackbar', () => {
-    const snackbar = mount(<Snackbar message="Something went wrong" onCloseClick={jest.fn()} type="error" />);
-    snackbar.setProps({message: 'Something went wrong again'});
-    expect(snackbar.render()).toMatchSnapshot();
+    const {container, rerender} = render(<Snackbar
+        message="Something went wrong"
+        onCloseClick={jest.fn()}
+        type="error"
+    />);
+    rerender(<Snackbar message="Something went wrong again" onCloseClick={jest.fn()} type="error" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a warning snackbar', () => {
-    const snackbar = mount(
+    const {container} = render(
         <Snackbar message="Something unimportant went wrong" onCloseClick={jest.fn()} type="warning" />
     );
 
-    expect(snackbar.render()).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('Render an error snackbar without close button', () => {
-    const snackbar = mount(<Snackbar message="Something went wrong" type="error" />);
-    expect(snackbar.render()).toMatchSnapshot();
+    const {container} = render(<Snackbar message="Something went wrong" type="error" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Click the snackbar should call the onClick callback', () => {
     const clickSpy = jest.fn();
-    const snackbar = shallow(<Snackbar message="Something went wrong" onClick={clickSpy} type="error" />);
+    render(<Snackbar message="Something went wrong" onClick={clickSpy} type="error" />);
 
-    snackbar.simulate('click');
+    const snackbar = screen.queryByText('- Something went wrong');
+    fireEvent.click(snackbar);
 
-    expect(clickSpy).toBeCalledWith();
+    expect(clickSpy).toBeCalled();
 });
 
 test('Call onCloseClick callback when close button is clicked', () => {
     const closeClickSpy = jest.fn();
-    const snackbar = shallow(<Snackbar message="Something went wrong" onCloseClick={closeClickSpy} type="error" />);
+    render(<Snackbar message="Something went wrong" onCloseClick={closeClickSpy} type="error" />);
 
-    snackbar.find('Icon[name="su-times"]').prop('onClick')();
+    const icon = screen.queryByLabelText('su-times');
+    fireEvent.click(icon);
 
     expect(closeClickSpy).toBeCalledWith();
 });
