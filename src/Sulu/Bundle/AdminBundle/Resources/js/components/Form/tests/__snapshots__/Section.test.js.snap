@@ -1,47 +1,53 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render section with given colSpan 1`] = `
-<div
-  class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
->
+<div>
   <div
-    class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
+    class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
-      class="divider"
+      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
     >
-      Test
+      <div
+        class="divider"
+      >
+        Test
+      </div>
     </div>
+    <p>
+      Test
+    </p>
   </div>
-  <p>
-    Test
-  </p>
 </div>
 `;
 
 exports[`Render section without label 1`] = `
-<div
-  class="section gridSection colSpan colSpan-8 space-before-0 space-after-0"
->
-  <div>
-    Test
+<div>
+  <div
+    class="section gridSection colSpan colSpan-8 space-before-0 space-after-0"
+  >
+    <div>
+      Test
+    </div>
   </div>
 </div>
 `;
 
 exports[`Render section without label but with divider 1`] = `
-<div
-  class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
->
+<div>
   <div
-    class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
+    class="section gridSection colSpan colSpan-12 space-before-0 space-after-0"
   >
     <div
-      class="divider"
-    />
+      class="item dividerContainer colSpan colSpan-12 space-before-0 space-after-0"
+    >
+      <div
+        class="divider"
+      />
+    </div>
+    <p>
+      Test
+    </p>
   </div>
-  <p>
-    Test
-  </p>
 </div>
 `;

@@ -1,28 +1,31 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import Section from '../Section';
 
 test('Render section with given colSpan', () => {
-    expect(render(
+    const {container} = render(
         <Section label="Test">
             <p>Test</p>
         </Section>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render section without label', () => {
-    expect(render(
+    const {container} = render(
         <Section colSpan={8}>
             <div>Test</div>
         </Section>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render section without label but with divider', () => {
-    expect(render(
+    const {container} = render(
         <Section>
             <p>Test</p>
         </Section>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
