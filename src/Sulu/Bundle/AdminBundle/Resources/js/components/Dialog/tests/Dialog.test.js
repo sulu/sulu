@@ -188,25 +188,29 @@ test('The component should call the callback when the cancel button is clicked',
     expect(onCancel).toBeCalled();
 });
 
-// test('The component should render with a warning', () => {
-//     const onConfirm = jest.fn();
-//     const view = mount(
-//         <Dialog
-//             confirmText="Confirm"
-//             onConfirm={onConfirm}
-//             open={true}
-//             snackbarMessage="Something really strange happened"
-//             snackbarType="warning"
-//             title="My dialog title"
-//         >
-//             <div>My dialog content</div>
-//         </Dialog>
-//     );
+test('The component should render with a warning', () => {
+    const onConfirm = jest.fn();
+    render(
+        <Dialog
+            confirmText="Confirm"
+            onConfirm={onConfirm}
+            open={true}
+            snackbarMessage="Something really strange happened"
+            snackbarType="warning"
+            title="My dialog title"
+        >
+            <div>My dialog content</div>
+        </Dialog>
+    );
 
-//     expect(view.find('.snackbar.warning')).toHaveLength(1);
-//     expect(view.find('.snackbar.warning').text()).toBe('sulu_admin.warning - Something really strange happened');
-//     expect(view.find('.snackbar.error')).toHaveLength(0);
-// });
+    const snackbar = screen.queryByLabelText('su-bell').parentElement;
+
+    expect(snackbar).toBeInTheDocument();
+    expect(snackbar).toHaveClass('snackbar');
+    expect(snackbar).toHaveClass('warning');
+    expect(snackbar).not.toHaveClass('error');
+    expect(snackbar.children[1]).toHaveTextContent('sulu_admin.warning - Something really strange happened');
+});
 
 // test('The component should render with an error', () => {
 //     const onConfirm = jest.fn();
