@@ -256,44 +256,51 @@ test('The component should render with an error if the type is unknown', () => {
     expect(snackbar.children[1]).toHaveTextContent('sulu_admin.error - Money transfer unsuccessful');
 });
 
-// test('The component should call the callback when the snackbar close button is clicked', () => {
-//     const onSnackbarCloseClick = jest.fn();
-//     const view = mount(
-//         <Dialog
-//             confirmText="Confirm"
-//             onConfirm={jest.fn()}
-//             onSnackbarCloseClick={onSnackbarCloseClick}
-//             open={true}
-//             snackbarMessage="Money transfer unsuccessful"
-//             snackbarType="error"
-//             title="My dialog title"
-//         >
-//             My dialog content
-//         </Dialog>
-//     );
+test('The component should call the callback when the snackbar close button is clicked', () => {
+    const onSnackbarCloseClick = jest.fn();
+    render(
+        <Dialog
+            confirmText="Confirm"
+            onConfirm={jest.fn()}
+            onSnackbarCloseClick={onSnackbarCloseClick}
+            open={true}
+            snackbarMessage="Money transfer unsuccessful"
+            snackbarType="error"
+            title="My dialog title"
+        >
+            My dialog content
+        </Dialog>
+    );
 
-//     expect(onSnackbarCloseClick).not.toBeCalled();
-//     view.find('.snackbar.error .su-times').simulate('click');
-//     expect(onSnackbarCloseClick).toBeCalled();
-// });
+    const snackbar = screen.queryByText('- Money transfer unsuccessful').parentElement;
+    const closeIcon = screen.queryByLabelText('su-times');
 
-// test('The component should call the callback when the snackbar is clicked', () => {
-//     const onSnackbarClick = jest.fn();
-//     const view = mount(
-//         <Dialog
-//             confirmText="Confirm"
-//             onConfirm={jest.fn()}
-//             onSnackbarClick={onSnackbarClick}
-//             open={true}
-//             snackbarMessage="Something really strange happened"
-//             snackbarType="warning"
-//             title="My dialog title"
-//         >
-//             My dialog content
-//         </Dialog>
-//     );
+    expect(snackbar).toBeInTheDocument();
+    expect(onSnackbarCloseClick).not.toBeCalled();
+    fireEvent.click(closeIcon);
+    expect(onSnackbarCloseClick).toBeCalled();
+});
 
-//     expect(onSnackbarClick).not.toBeCalled();
-//     view.find('.snackbar.warning').simulate('click');
-//     expect(onSnackbarClick).toBeCalled();
-// });
+test('The component should call the callback when the snackbar is clicked', () => {
+    const onSnackbarClick = jest.fn();
+    render(
+        <Dialog
+            confirmText="Confirm"
+            onConfirm={jest.fn()}
+            onSnackbarClick={onSnackbarClick}
+            open={true}
+            snackbarMessage="Something really strange happened"
+            snackbarType="warning"
+            title="My dialog title"
+        >
+            My dialog content
+        </Dialog>
+    );
+
+    const snackbar = screen.queryByText('- Something really strange happened').parentElement;
+
+    expect(snackbar).toBeInTheDocument();
+    expect(onSnackbarClick).not.toBeCalled();
+    fireEvent.click(snackbar);
+    expect(onSnackbarClick).toBeCalled();
+});
