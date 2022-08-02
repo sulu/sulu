@@ -203,53 +203,58 @@ test('The component should render with a warning', () => {
         </Dialog>
     );
 
-    const snackbar = screen.queryByLabelText('su-bell').parentElement;
+    const snackbar = screen.queryByText('- Something really strange happened').parentElement;
 
     expect(snackbar).toBeInTheDocument();
-    expect(snackbar).toHaveClass('snackbar');
-    expect(snackbar).toHaveClass('warning');
+    expect(snackbar).toHaveClass('snackbar', 'warning');
     expect(snackbar).not.toHaveClass('error');
     expect(snackbar.children[1]).toHaveTextContent('sulu_admin.warning - Something really strange happened');
 });
 
-// test('The component should render with an error', () => {
-//     const onConfirm = jest.fn();
-//     const view = mount(
-//         <Dialog
-//             confirmText="Confirm"
-//             onConfirm={onConfirm}
-//             open={true}
-//             snackbarMessage="Money transfer unsuccessful"
-//             snackbarType="error"
-//             title="My dialog title"
-//         >
-//             <div>My dialog content</div>
-//         </Dialog>
-//     );
+test('The component should render with an error', () => {
+    const onConfirm = jest.fn();
+    render(
+        <Dialog
+            confirmText="Confirm"
+            onConfirm={onConfirm}
+            open={true}
+            snackbarMessage="Money transfer unsuccessful"
+            snackbarType="error"
+            title="My dialog title"
+        >
+            <div>My dialog content</div>
+        </Dialog>
+    );
 
-//     expect(view.find('.snackbar.error')).toHaveLength(1);
-//     expect(view.find('.snackbar.error').text()).toBe('sulu_admin.error - Money transfer unsuccessful');
-//     expect(view.find('.snackbar.warning')).toHaveLength(0);
-// });
+    const snackbar = screen.queryByText('- Money transfer unsuccessful').parentElement;
 
-// test('The component should render with an error if the type is unknown', () => {
-//     const onConfirm = jest.fn();
-//     const view = mount(
-//         <Dialog
-//             confirmText="Confirm"
-//             onConfirm={onConfirm}
-//             open={true}
-//             snackbarMessage="Money transfer unsuccessful"
-//             title="My dialog title"
-//         >
-//             <div>My dialog content</div>
-//         </Dialog>
-//     );
+    expect(snackbar).toBeInTheDocument();
+    expect(snackbar).toHaveClass('snackbar', 'error');
+    expect(snackbar).not.toHaveClass('warning');
+    expect(snackbar.children[1]).toHaveTextContent('sulu_admin.error - Money transfer unsuccessful');
+});
 
-//     expect(view.find('.snackbar.error')).toHaveLength(1);
-//     expect(view.find('.snackbar.error').text()).toBe('sulu_admin.error - Money transfer unsuccessful');
-//     expect(view.find('.snackbar.warning')).toHaveLength(0);
-// });
+test('The component should render with an error if the type is unknown', () => {
+    const onConfirm = jest.fn();
+    render(
+        <Dialog
+            confirmText="Confirm"
+            onConfirm={onConfirm}
+            open={true}
+            snackbarMessage="Money transfer unsuccessful"
+            title="My dialog title"
+        >
+            <div>My dialog content</div>
+        </Dialog>
+    );
+
+    const snackbar = screen.queryByText('- Money transfer unsuccessful').parentElement;
+
+    expect(snackbar).toBeInTheDocument();
+    expect(snackbar).toHaveClass('snackbar', 'error');
+    expect(snackbar).not.toHaveClass('warning');
+    expect(snackbar.children[1]).toHaveTextContent('sulu_admin.error - Money transfer unsuccessful');
+});
 
 // test('The component should call the callback when the snackbar close button is clicked', () => {
 //     const onSnackbarCloseClick = jest.fn();
