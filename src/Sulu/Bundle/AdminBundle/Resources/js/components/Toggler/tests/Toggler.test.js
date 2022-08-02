@@ -1,10 +1,10 @@
 // @flow
-import {render, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
 import React from 'react';
 import Toggler from '../Toggler';
 
 test('The component should render in the default state', () => {
-    const toggler = render(
+    const {container} = render(
         <Toggler
             checked={true}
             name="my-name"
@@ -14,11 +14,11 @@ test('The component should render in the default state', () => {
             Label
         </Toggler>);
 
-    expect(toggler).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('The component should render in disabled state', () => {
-    const toggler = render(
+    const {container} = render(
         <Toggler
             checked={true}
             disabled={true}
@@ -29,12 +29,12 @@ test('The component should render in disabled state', () => {
             Label
         </Toggler>);
 
-    expect(toggler).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('The component pass the props correctly to the generic checkbox', () => {
     const onChange = jest.fn();
-    const toggler = shallow(
+    render(
         <Toggler
             checked={true}
             disabled={true}
@@ -45,10 +45,11 @@ test('The component pass the props correctly to the generic checkbox', () => {
             My label
         </Toggler>
     );
-    const switchComponent = toggler.find('Switch');
-    expect(switchComponent.props().value).toBe('my-value');
-    expect(switchComponent.props().name).toBe('my-name');
-    expect(switchComponent.props().checked).toBe(true);
-    expect(switchComponent.props().disabled).toBe(true);
-    expect(switchComponent.props().children).toBe('My label');
+
+    const togglerInput = screen.queryByDisplayValue('my-value');
+    expect(togglerInput.value).toBe('my-value');
+    expect(togglerInput.name).toBe('my-name');
+    expect(togglerInput.checked).toBe(true);
+    expect(togglerInput.disabled).toBe(true);
+    expect(screen.getByText('My label')).toBeInTheDocument();
 });
