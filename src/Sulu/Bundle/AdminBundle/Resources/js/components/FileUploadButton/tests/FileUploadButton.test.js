@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {fireEvent, render, screen, waitFor, act} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Dropzone from 'react-dropzone';
 import FileUploadButton from '../FileUploadButton';
 
@@ -23,16 +24,23 @@ test('Render a FileUploadButton with other skin and icon', () => {
     expect(container).toMatchSnapshot();
 });
 
-// test('Call onUpload callback when a file is uploaded', () => {
-//     const uploadSpy = jest.fn();
-//     const testFile = new File([{name: 'test-file'}], 'test-file');
+test('Call onUpload callback when a file is uploaded', async() => {
+    const uploadSpy = jest.fn();
+    const testFile = new File(['test-file'], 'test-file', {type: 'image/png'});
 
-//     const {container, debug} = render(<FileUploadButton onUpload={uploadSpy}>Upload something!</FileUploadButton>);
-//     debug();
-//     const dropzone = screen.queryByText('Upload something!');
+    const {container, debug} = render(<FileUploadButton onUpload={uploadSpy}>Upload something!</FileUploadButton>);
+    debug();
+    const dropzone = screen.queryByText('Upload something!');
+    const input = container.querySelector('input');
 
-//     fireEvent.drop(dropzone, testFile);
+    await act(async() => {
+        await waitFor(() => {
+            userEvent.upload(input, testFile);
+        });
+    });
 
-//     expect(uploadSpy).toBeCalledTimes(1);
-//     expect(uploadSpy).toBeCalledWith(testFile);
-// });
+    // fireEvent.drop(dropzone, testFile);
+
+    expect(uploadSpy).toBeCalledTimes(1);
+    expect(uploadSpy).toBeCalledWith(testFile);
+});
