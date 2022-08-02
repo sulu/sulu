@@ -1,9 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render 1`] = `
-<div
-  class="backdrop visible fixed"
-  data-testid="backdrop"
-  role="button"
-/>
+<div>
+  <div
+    class="backdrop visible fixed"
+    data-testid="backdrop"
+    role="button"
+  />
+</div>
 `;
