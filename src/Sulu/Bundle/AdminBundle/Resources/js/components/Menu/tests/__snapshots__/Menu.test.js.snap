@@ -1,17 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render a menu list 1`] = `
-<ul
-  class="menu"
->
-  <li>
-    Item 1
-  </li>
-  <li>
-    Item 2
-  </li>
-  <li>
-    Item 3
-  </li>
-</ul>
+<div>
+  <ul
+    class="menu"
+  >
+    <li>
+      Item 1
+    </li>
+    <li>
+      Item 2
+    </li>
+    <li>
+      Item 3
+    </li>
+  </ul>
+</div>
 `;
