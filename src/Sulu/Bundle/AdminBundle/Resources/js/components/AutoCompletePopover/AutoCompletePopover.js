@@ -64,6 +64,13 @@ export default class AutoCompletePopover extends React.Component<Props> {
         }
     };
 
+    componentDidMount() {
+        if (this.props.open === true) {
+            Mousetrap.bind('up', this.handleUp);
+            Mousetrap.bind('down', this.handleDown);
+        }
+    }
+
     componentDidUpdate(prevProps: Props) {
         if (this.props.open === true && prevProps.open === false) {
             Mousetrap.bind('up', this.handleUp);

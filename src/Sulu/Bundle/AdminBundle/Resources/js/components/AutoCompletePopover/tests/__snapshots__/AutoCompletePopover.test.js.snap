@@ -1,48 +1,68 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render with highlighted suggestions 1`] = `
-<ul
-  class="menu"
->
-  <li
-    class="suggestionItem"
-    style="min-width:0px"
-  >
-    <button
-      class="suggestion"
-      type="button"
+<body>
+  <div>
+    <div>
+      Anchor Element
+    </div>
+  </div>
+  <div />
+  <div>
+    <div
+      class="backdrop fixed"
+      data-testid="backdrop"
+      role="button"
+    />
+    <div
+      class="container"
     >
-      <span
-        class="column"
+      <ul
+        class="menu"
+        style="top: 10px; left: 10px; position: fixed; pointer-events: auto;"
       >
-        <span>
-          <strong>
-            Test
-          </strong>
-           1
-        </span>
-      </span>
-    </button>
-  </li>
-  <li
-    class="suggestionItem"
-    style="min-width:0px"
-  >
-    <button
-      class="suggestion"
-      type="button"
-    >
-      <span
-        class="column"
-      >
-        <span>
-          <strong>
-            Test
-          </strong>
-           2
-        </span>
-      </span>
-    </button>
-  </li>
-</ul>
+        <li
+          class="suggestionItem"
+          style="min-width: 0px;"
+        >
+          <button
+            class="suggestion"
+            type="button"
+          >
+            <span
+              class="column"
+            >
+              <span>
+                <strong>
+                  Test
+                </strong>
+                 1 (selector-1)
+              </span>
+            </span>
+          </button>
+        </li>
+        <li
+          class="suggestionItem"
+          style="min-width: 0px;"
+        >
+          <button
+            class="suggestion"
+            type="button"
+          >
+            <span
+              class="column"
+            >
+              <span>
+                <strong>
+                  Test
+                </strong>
+                 2 (selector-2)
+              </span>
+            </span>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</body>
 `;

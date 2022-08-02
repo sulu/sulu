@@ -1,74 +1,96 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Mousetrap from 'mousetrap';
 import AutoCompletePopover from '../AutoCompletePopover';
-import Popover from '../../Popover';
-
-jest.mock('../../Popover', () => ({children}) => children(jest.fn(), {}));
 
 beforeEach(() => {
     Mousetrap.reset();
 });
 
 test('Popover should be hidden when open is set to false', () => {
-    const autoCompletePopover = shallow(
+    render(
+        <div>Anchor Element</div>
+    );
+
+    const suggestions = [
+        {id: 1, name: 'Test 1 (selector-1)'},
+        {id: 2, name: 'Test 2 (selector-2)'},
+    ];
+    render(
         <AutoCompletePopover
-            anchorElement={jest.fn()}
+            anchorElement={screen.getByText('Anchor Element')}
             onSelect={jest.fn()}
             open={false}
-            query=""
-            searchProperties={[]}
-            suggestions={[]}
+            query="Test"
+            searchProperties={['name']}
+            suggestions={suggestions}
         />
     );
 
-    expect(autoCompletePopover.find(Popover).prop('open')).toEqual(false);
+    expect(screen.queryByText(/selector-1/)).not.toBeInTheDocument();
 });
 
 test('Popover should be shown when open is set to true', () => {
-    const autoCompletePopover = shallow(
-        <AutoCompletePopover
-            anchorElement={jest.fn()}
-            onSelect={jest.fn()}
-            open={true}
-            query=""
-            searchProperties={[]}
-            suggestions={[]}
-        />
+    render(
+        <div>Anchor Element</div>
     );
 
-    expect(autoCompletePopover.find(Popover).prop('open')).toEqual(true);
-});
-
-test('Render with highlighted suggestions', () => {
     const suggestions = [
-        {id: 1, name: 'Test 1'},
-        {id: 2, name: 'Test 2'},
+        {id: 1, name: 'Test 1 (selector-1)'},
+        {id: 2, name: 'Test 2 (selector-2)'},
     ];
-
-    expect(render(
+    render(
         <AutoCompletePopover
-            anchorElement={jest.fn()}
+            anchorElement={screen.getByText('Anchor Element')}
             onSelect={jest.fn()}
             open={true}
             query="Test"
             searchProperties={['name']}
             suggestions={suggestions}
         />
-    )).toMatchSnapshot();
+    );
+
+    expect(screen.getByText(/selector-1/)).toBeInTheDocument();
 });
 
-test('Call onClose when Popover is closed', () => {
-    const suggestions = [
-        {id: 1, name: 'Test 1'},
-        {id: 2, name: 'Test 2'},
-    ];
+test('Render with highlighted suggestions', () => {
+    render(
+        <div>Anchor Element</div>
+    );
 
-    const closeSpy = jest.fn();
-    const autoCompletePopover = shallow(
+    const suggestions = [
+        {id: 1, name: 'Test 1 (selector-1)'},
+        {id: 2, name: 'Test 2 (selector-2)'},
+    ];
+    render(
         <AutoCompletePopover
-            anchorElement={jest.fn()}
+            anchorElement={screen.getByText('Anchor Element')}
+            onSelect={jest.fn()}
+            open={true}
+            query="Test"
+            searchProperties={['name']}
+            suggestions={suggestions}
+        />
+    );
+
+    expect(document.body).toMatchSnapshot();
+});
+
+test('Call onClose when Popover is closed', async() => {
+    render(
+        <div>Anchor Element</div>
+    );
+
+    const suggestions = [
+        {id: 1, name: 'Test 1 (selector-1)'},
+        {id: 2, name: 'Test 2 (selector-2)'},
+    ];
+    const closeSpy = jest.fn();
+    render(
+        <AutoCompletePopover
+            anchorElement={screen.getByText('Anchor Element')}
             onClose={closeSpy()}
             onSelect={jest.fn()}
             open={true}
@@ -78,20 +100,24 @@ test('Call onClose when Popover is closed', () => {
         />
     );
 
-    autoCompletePopover.find(Popover).prop('onClose')();
+    const user = userEvent.setup();
+    await user.click(screen.getByTestId('backdrop'));
     expect(closeSpy).toBeCalledWith();
 });
 
-test('Call onSelect with clicked suggestion', () => {
-    const suggestions = [
-        {id: 1, name: 'Test 1'},
-        {id: 2, name: 'Test 2'},
-    ];
+test('Call onSelect with clicked suggestion', async() => {
+    render(
+        <div>Anchor Element</div>
+    );
 
+    const suggestions = [
+        {id: 1, name: 'Test 1 (selector-1)'},
+        {id: 2, name: 'Test 2 (selector-2)'},
+    ];
     const selectSpy = jest.fn();
-    const autoCompletePopover = mount(
+    render(
         <AutoCompletePopover
-            anchorElement={jest.fn()}
+            anchorElement={screen.getByText('Anchor Element')}
             onSelect={selectSpy}
             open={true}
             query="Test"
@@ -100,80 +126,44 @@ test('Call onSelect with clicked suggestion', () => {
         />
     );
 
-    expect(autoCompletePopover.find('Suggestion').at(1).prop('value')).toBe(suggestions[1]);
-    autoCompletePopover.find('Suggestion').at(1).prop('onSelect')(suggestions[1]);
+    const user = userEvent.setup();
+    await user.click(screen.getByText(/selector-2/));
     expect(selectSpy).toBeCalledWith(suggestions[1]);
 });
 
-test('Pressing down should select next item', () => {
-    const suggestions = [
-        {id: 1, name: 'Test 1'},
-        {id: 2, name: 'Test 2'},
-    ];
+test('Should focus suggestions when pressing up and down key', async() => {
+    render(
+        <div>Anchor Element</div>
+    );
 
-    const autoCompletePopover = mount(
+    const suggestions = [
+        {id: 1, name: 'Test 1 (selector-1)'},
+        {id: 2, name: 'Test 2 (selector-2)'},
+    ];
+    render(
         <AutoCompletePopover
-            anchorElement={jest.fn()}
+            anchorElement={screen.getByText('Anchor Element')}
             onSelect={jest.fn()}
-            open={false}
+            open={true}
             query="Test"
             searchProperties={['name']}
             suggestions={suggestions}
         />
     );
+    const suggestionElements = screen.getAllByRole('button').slice(1); // first button is the popover backdrop
 
-    const suggestionElement1 = {focus: jest.fn()};
-    const suggestionElement2 = {focus: jest.fn()};
-
-    autoCompletePopover.instance().suggestionsRef = {
-        getElementsByTagName: jest.fn().mockReturnValue([
-            suggestionElement1,
-            suggestionElement2,
-        ]),
-    };
-    autoCompletePopover.setProps({open: true});
-    autoCompletePopover.update();
+    expect(suggestionElements[0]).not.toHaveFocus();
+    expect(suggestionElements[1]).not.toHaveFocus();
 
     Mousetrap.trigger('down');
-    expect(suggestionElement1.focus).toBeCalledWith();
-    expect(suggestionElement2.focus).not.toBeCalledWith();
-});
+    expect(suggestionElements[0]).toHaveFocus();
+    expect(suggestionElements[1]).not.toHaveFocus();
 
-test('Pressing up should select previous item', () => {
-    const suggestions = [
-        {id: 1, name: 'Test 1'},
-        {id: 2, name: 'Test 2'},
-    ];
-
-    const autoCompletePopover = mount(
-        <AutoCompletePopover
-            anchorElement={jest.fn()}
-            onSelect={jest.fn()}
-            open={false}
-            query="Test"
-            searchProperties={['name']}
-            suggestions={suggestions}
-        />
-    );
-
-    const suggestionElement1 = {focus: jest.fn()};
-    const suggestionElement2 = {focus: jest.fn()};
-
-    Object.defineProperty(document, 'activeElement', {
-        // $FlowFixMe
-        value: suggestionElement2,
-    });
-
-    autoCompletePopover.instance().suggestionsRef = {
-        getElementsByTagName: jest.fn().mockReturnValue([
-            suggestionElement1,
-            suggestionElement2,
-        ]),
-    };
-    autoCompletePopover.setProps({open: true});
-    autoCompletePopover.update();
+    Mousetrap.trigger('down');
+    expect(suggestionElements[0]).not.toHaveFocus();
+    expect(suggestionElements[1]).toHaveFocus();
 
     Mousetrap.trigger('up');
-    expect(suggestionElement1.focus).toBeCalledWith();
-    expect(suggestionElement2.focus).not.toBeCalledWith();
+    expect(suggestionElements[0]).toHaveFocus();
+    expect(suggestionElements[1]).not.toHaveFocus();
 });
