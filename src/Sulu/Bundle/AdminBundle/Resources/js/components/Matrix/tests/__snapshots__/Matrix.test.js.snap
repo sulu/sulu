@@ -121,3 +121,125 @@ exports[`Render the Matrix component 1`] = `
   </table>
 </div>
 `;
+
+exports[`Render the Matrix component with values 1`] = `
+<div>
+  <table
+    class="matrix"
+  >
+    <tbody>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
+        >
+          articles
+        </td>
+        <td
+          class="items"
+        >
+          <div
+            class="item selected"
+            title="View"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <div
+            class="item selected"
+            title="Edit"
+          >
+            <span
+              aria-label="su-plus"
+              class="su-plus"
+            />
+          </div>
+          <div
+            class="item"
+            title="Delete"
+          >
+            <span
+              aria-label="su-trash-alt"
+              class="su-trash-alt"
+            />
+          </div>
+          <button
+            class="rowButton"
+            type="button"
+          >
+            Deactivate all
+          </button>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
+        >
+          redirects
+        </td>
+        <td
+          class="items"
+        >
+          <div
+            class="item selected"
+            title="View"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <button
+            class="rowButton"
+            type="button"
+          >
+            Deactivate all
+          </button>
+        </td>
+      </tr>
+      <tr
+        class="row"
+      >
+        <td
+          class="name"
+        >
+          settings
+        </td>
+        <td
+          class="items"
+        >
+          <div
+            class="item selected"
+            title="View"
+          >
+            <span
+              aria-label="su-pen"
+              class="su-pen"
+            />
+          </div>
+          <div
+            class="item"
+            title="Edit"
+          >
+            <span
+              aria-label="su-plus"
+              class="su-plus"
+            />
+          </div>
+          <button
+            class="rowButton"
+            type="button"
+          >
+            Deactivate all
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
