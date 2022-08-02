@@ -41,7 +41,8 @@ test('ColorPicker should show error when invalid value is set', () => {
 
     const input = screen.queryByDisplayValue('#abc');
 
-    fireEvent.change(input, {target: {value: 'ccc'}});
+    fireEvent.change(input, {target: {value: 'xxx'}});
+    input.value = 'xxx';
     fireEvent.blur(input);
 
     expect(input).toBeInvalid();
