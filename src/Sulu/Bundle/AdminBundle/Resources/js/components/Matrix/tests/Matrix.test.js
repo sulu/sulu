@@ -227,58 +227,59 @@ test('Deactivate all button should call onChange', () => {
     expect(handleChange).toHaveBeenCalledWith(expectedValues);
 });
 
-// test('Activate all button should call onChange', () => {
-//     const handleChange = jest.fn();
-//     const values = {
-//         'global.articles': {
-//             'view': false,
-//             'edit': false,
-//             'delete': false,
-//         },
-//         'global.redirects': {
-//             'view': true,
-//         },
-//         'global.settings': {
-//             'view': true,
-//             'edit': false,
-//         },
-//     };
+test('Activate all button should call onChange', () => {
+    const handleChange = jest.fn();
+    const values = {
+        'global.articles': {
+            'view': false,
+            'edit': false,
+            'delete': false,
+        },
+        'global.redirects': {
+            'view': true,
+        },
+        'global.settings': {
+            'view': true,
+            'edit': false,
+        },
+    };
 
-//     const matrix = mount(
-//         <Matrix onChange={handleChange} values={values}>
-//             <Row name="global.articles" title="articles">
-//                 <Item icon="su-pen" name="view" />
-//                 <Item icon="su-plus" name="edit" />
-//                 <Item icon="su-trash-alt" name="delete" />
-//             </Row>
-//             <Row name="global.redirects" title="redirects">
-//                 <Item icon="su-pen" name="view" />
-//             </Row>
-//             <Row name="global.settings" title="settings">
-//                 <Item icon="su-pen" name="view" />
-//                 <Item icon="su-plus" name="edit" />
-//             </Row>
-//         </Matrix>
-//     );
+    render(
+        <Matrix onChange={handleChange} values={values}>
+            <Row name="global.articles" title="articles">
+                <Item icon="su-pen" name="view" />
+                <Item icon="su-plus" name="edit" />
+                <Item icon="su-trash-alt" name="delete" />
+            </Row>
+            <Row name="global.redirects" title="redirects">
+                <Item icon="su-pen" name="view" />
+            </Row>
+            <Row name="global.settings" title="settings">
+                <Item icon="su-pen" name="view" />
+                <Item icon="su-plus" name="edit" />
+            </Row>
+        </Matrix>
+    );
 
-//     const expectedValues = {
-//         'global.articles': {
-//             'view': true,
-//             'edit': true,
-//             'delete': true,
-//         },
-//         'global.redirects': {
-//             'view': true,
-//         },
-//         'global.settings': {
-//             'view': true,
-//             'edit': false,
-//         },
-//     };
+    const expectedValues = {
+        'global.articles': {
+            'view': true,
+            'edit': true,
+            'delete': true,
+        },
+        'global.redirects': {
+            'view': true,
+        },
+        'global.settings': {
+            'view': true,
+            'edit': false,
+        },
+    };
 
-//     matrix.find('.rowButton').at(0).simulate('click');
-//     expect(handleChange).toHaveBeenCalledWith(expectedValues);
-// });
+    const activateRowButton = screen.queryAllByText('Activate all')[0];
+    fireEvent.click(activateRowButton);
+    expect(handleChange).toHaveBeenCalledWith(expectedValues);
+});
 
 // test('Activate all button should call onChange with all values, even when the value does not exists', () => {
 //     const handleChange = jest.fn();
