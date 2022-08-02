@@ -59,25 +59,27 @@ test('The component should render in body without cancel button', () => {
     expect(screen.getByText('Confirm')).toBeInTheDocument();
 });
 
-// test('The component should render in body with disabled confirm button', () => {
-//     const onCancel = jest.fn();
-//     const onConfirm = jest.fn();
-//     const view = mount(
-//         <Dialog
-//             cancelText="Cancel"
-//             confirmDisabled={true}
-//             confirmText="Confirm"
-//             onCancel={onCancel}
-//             onConfirm={onConfirm}
-//             open={true}
-//             title="My dialog title"
-//         >
-//             <div>My dialog content</div>
-//         </Dialog>
-//     );
+test('The component should render in body with disabled confirm button', () => {
+    const onCancel = jest.fn();
+    const onConfirm = jest.fn();
+    render(
+        <Dialog
+            cancelText="Cancel"
+            confirmDisabled={true}
+            confirmText="Confirm"
+            onCancel={onCancel}
+            onConfirm={onConfirm}
+            open={true}
+            title="My dialog title"
+        >
+            <div>My dialog content</div>
+        </Dialog>
+    );
 
-//     expect(view.find('Button[children="Confirm"]').prop('disabled')).toEqual(true);
-// });
+    const button = screen.queryByText('Confirm').parentElement;
+
+    expect(button).toBeDisabled();
+});
 
 // test('The component should render in body with a large class', () => {
 //     const view = mount(
