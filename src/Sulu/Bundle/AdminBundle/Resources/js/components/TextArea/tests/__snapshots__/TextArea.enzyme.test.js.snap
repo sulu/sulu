@@ -1,76 +1,64 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TextArea should render 1`] = `
-<div>
-  <textarea
-    class="textArea"
-  >
-    My value
-  </textarea>
-</div>
+<textarea
+  class="textArea"
+>
+  My value
+</textarea>
 `;
 
 exports[`TextArea should render null value as empty string 1`] = `
-<div>
-  <textarea
-    class="textArea"
-  />
-</div>
+<textarea
+  class="textArea"
+/>
 `;
 
 exports[`TextArea should render when disabled 1`] = `
-<div>
-  <textarea
-    class="textArea disabled"
-    disabled=""
-  >
-    My value
-  </textarea>
-</div>
+<textarea
+  class="textArea disabled"
+  disabled=""
+>
+  My value
+</textarea>
 `;
 
 exports[`TextArea should render with error 1`] = `
-<div>
-  <textarea
-    class="textArea error"
-  >
-    My value
-  </textarea>
-</div>
+<textarea
+  class="textArea error"
+>
+  My value
+</textarea>
 `;
 
 exports[`TextArea should render with placeholder 1`] = `
-<div>
-  <textarea
-    class="textArea"
-    placeholder="My placeholder"
-  >
-    My value
-  </textarea>
-</div>
+<textarea
+  class="textArea"
+  placeholder="My placeholder"
+>
+  My value
+</textarea>
 `;
 
 exports[`TextArea should render with value 1`] = `
-<div>
-  <textarea
-    class="textArea"
-  >
-    My value
-  </textarea>
-</div>
+<textarea
+  class="textArea"
+>
+  My value
+</textarea>
 `;
 
 exports[`TextArea should render with value and character counter 1`] = `
-<div>
+Array [
   <textarea
     class="textArea"
   >
     My value
-  </textarea>
+  </textarea>,
   <label
     class="characterCounter"
   >
     2 sulu_admin.characters_left
-  </label>
-</div>
+  </label>,
+]
 `;
