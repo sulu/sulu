@@ -1,70 +1,84 @@
 // @flow
-import {mount, render, shallow} from 'enzyme';
+import {fireEvent, render, screen} from '@testing-library/react';
 import React from 'react';
 import Button from '../Button';
 
 test('Render button', () => {
-    expect(render(<Button onClick={jest.fn()}>Click</Button>)).toMatchSnapshot();
+    const {container} = render(<Button onClick={jest.fn()}>Click</Button>);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render success button', () => {
-    expect(render(<Button onClick={jest.fn()} success={true}>Click</Button>)).toMatchSnapshot();
+    const {container} = render(<Button onClick={jest.fn()} success={true}>Click</Button>);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render primary button', () => {
-    expect(render(<Button onClick={jest.fn()} primary={true}>Click</Button>)).toMatchSnapshot();
+    const {container} = render(<Button onClick={jest.fn()} primary={true}>Click</Button>);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render primary success button', () => {
-    expect(render(<Button onClick={jest.fn()} primary={true} success={true}>Click</Button>)).toMatchSnapshot();
+    const {container} = render(<Button onClick={jest.fn()} primary={true} success={true}>Click</Button>);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render loading button', () => {
-    expect(render(<Button loading={true} onClick={jest.fn()}>Click</Button>)).toMatchSnapshot();
+    const {container} = render(<Button loading={true} onClick={jest.fn()}>Click</Button>);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render button with value', () => {
-    expect(render(<Button label="Click" onClick={jest.fn()} />)).toMatchSnapshot();
+    const {container} = render(<Button label="Click" onClick={jest.fn()} />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render button without text', () => {
-    expect(render(<Button onClick={jest.fn()} showText={false} />)).toMatchSnapshot();
+    const {container} = render(<Button onClick={jest.fn()} showText={false} />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render disabled button', () => {
-    expect(render(<Button disabled={true} onClick={jest.fn()} />)).toMatchSnapshot();
+    const {container} = render(<Button disabled={true} onClick={jest.fn()} />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Click on button fires onClick callback', () => {
     const clickSpy = jest.fn();
-    const button = shallow(<Button onClick={clickSpy} />);
+    render(<Button onClick={clickSpy} />);
+    const button = screen.queryByRole('button');
 
-    button.simulate('click');
+    fireEvent.click(button);
 
     expect(clickSpy).toBeCalled();
 });
 
 test('Render button with dropdown indicator', () => {
-    expect(render(<Button hasOptions={true} onClick={jest.fn()} />)).toMatchSnapshot();
+    const {container} = render(<Button hasOptions={true} onClick={jest.fn()} />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render button with a different size', () => {
-    expect(render(<Button onClick={jest.fn()} size="small" />)).toMatchSnapshot();
+    const {container} = render(<Button onClick={jest.fn()} size="small" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render button with a prepended icon', () => {
-    expect(render(<Button icon="fa-trash-o" onClick={jest.fn()} />)).toMatchSnapshot();
+    const {container} = render(<Button icon="fa-trash-o" onClick={jest.fn()} />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render an active button', () => {
-    expect(render(<Button active={true} onClick={jest.fn()} />)).toMatchSnapshot();
+    const {container} = render(<Button active={true} onClick={jest.fn()} />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Click on button does not fire onClick callback if button is disabled', () => {
     const clickSpy = jest.fn();
-    const button = mount(<Button disabled={true} onClick={clickSpy} />);
+    render(<Button disabled={true} onClick={clickSpy} />);
 
-    button.simulate('click');
+    const button = screen.queryByRole('button');
+    fireEvent.click(button);
 
     expect(clickSpy).toHaveBeenCalledTimes(0);
 });

@@ -1,71 +1,75 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render controls 1`] = `
-<nav
-  class="toolbar light"
->
-  <div
-    class="controls light"
+<div>
+  <nav
+    class="toolbar light"
   >
-    <button
-      class="button light"
-      type="button"
+    <div
+      class="controls light"
     >
-      <span
-        class="label"
+      <button
+        class="button light"
+        type="button"
       >
-        Test
-      </span>
-    </button>
-  </div>
-  <div
-    class="controls light"
-  >
-    <button
-      class="button light"
-      type="button"
+        <span
+          class="label"
+        >
+          Test
+        </span>
+      </button>
+    </div>
+    <div
+      class="controls light"
     >
-      <span
-        class="label"
+      <button
+        class="button light"
+        type="button"
       >
-        Test
-      </span>
-    </button>
-  </div>
-</nav>
+        <span
+          class="label"
+        >
+          Test
+        </span>
+      </button>
+    </div>
+  </nav>
+</div>
 `;
 
 exports[`Render dark theme 1`] = `
-<nav
-  class="toolbar dark"
->
-  <div
-    class="controls dark"
+<div>
+  <nav
+    class="toolbar dark"
   >
-    <button
-      class="button dark"
-      type="button"
+    <div
+      class="controls dark"
     >
-      <span
-        class="label"
+      <button
+        class="button dark"
+        type="button"
       >
-        Test
-      </span>
-    </button>
-  </div>
-  <div
-    class="controls dark"
-  >
-    <button
-      class="button dark"
-      type="button"
+        <span
+          class="label"
+        >
+          Test
+        </span>
+      </button>
+    </div>
+    <div
+      class="controls dark"
     >
-      <span
-        class="label"
+      <button
+        class="button dark"
+        type="button"
       >
-        Test
-      </span>
-    </button>
-  </div>
-</nav>
+        <span
+          class="label"
+        >
+          Test
+        </span>
+      </button>
+    </div>
+  </nav>
+</div>
 `;
