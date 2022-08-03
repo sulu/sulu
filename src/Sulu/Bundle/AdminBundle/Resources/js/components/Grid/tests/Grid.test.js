@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import Grid from '../Grid';
 
 test('Render a Grid with Items in all sizes', () => {
-    expect(render(
+    const {container} = render(
         <Grid>
             <Grid.Item colSpan={1} />
             <Grid.Item colSpan={2} />
@@ -19,11 +19,12 @@ test('Render a Grid with Items in all sizes', () => {
             <Grid.Item colSpan={11} />
             <Grid.Item colSpan={12} />
         </Grid>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a Grid with Sections', () => {
-    expect(render(
+    const {container} = render(
         <Grid>
             <Grid.Section colSpan={4}>
                 <Grid.Item colSpan={1} />
@@ -42,24 +43,27 @@ test('Render a Grid with Sections', () => {
                 <Grid.Item colSpan={12} />
             </Grid.Section>
         </Grid>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a Grid with Items having spaces between them', () => {
-    expect(render(
+    const {container} = render(
         <Grid>
             <Grid.Item colSpan={4} spaceAfter={8} />
             <Grid.Item colSpan={2} spaceBefore={10} />
         </Grid>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a Grid with class names attached', () => {
-    expect(render(
+    const {container} = render(
         <Grid className="test-grid">
             <Grid.Section className="test-section">
                 <Grid.Item className="test-item" />
             </Grid.Section>
         </Grid>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
