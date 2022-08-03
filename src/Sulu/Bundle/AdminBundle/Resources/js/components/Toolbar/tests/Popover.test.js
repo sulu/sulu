@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import Popover from '../Popover';
 
 test('Render a Popover', () => {
@@ -23,18 +23,18 @@ test('Show a loader if the Popover is loading', () => {
     expect(container.querySelector('.loader')).toBeInTheDocument();
 });
 
-// test('Open popover on click', () => {
-//     const dropdown = mount(<Popover label="Set time">{() => <h1>Test</h1>}</Popover>);
+test('Open popover on click', () => {
+    render(<Popover label="Set time">{() => <h1>Test</h1>}</Popover>);
 
-//     expect(dropdown.find('h1').length).toBe(0);
-//     dropdown.find('button').simulate('click');
-//     expect(dropdown.find('h1').length).toBe(1);
-// });
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+    fireEvent.click(screen.queryByRole('button'));
+    expect(screen.getByRole('heading')).toBeInTheDocument();
+});
 
-// test('Disabled popover does not open on click', () => {
-//     const dropdown = mount(<Popover disabled={true} label="Set time">{() => <h1>Test</h1>}</Popover>);
+test('Disabled popover does not open on click', () => {
+    render(<Popover disabled={true} label="Set time">{() => <h1>Test</h1>}</Popover>);
 
-//     expect(dropdown.find('h1').length).toBe(0);
-//     dropdown.find('button').simulate('click');
-//     expect(dropdown.find('h1').length).toBe(0);
-// });
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+    fireEvent.click(screen.queryByRole('button'));
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+});
