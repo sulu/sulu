@@ -1,7 +1,6 @@
 // @flow
 import {fireEvent, render, screen} from '@testing-library/react';
 import React from 'react';
-import Items from '../Items';
 import Select from '../Select';
 
 const selectPropsMock = {
@@ -76,87 +75,89 @@ test('Open select on click', () => {
     expect(screen.getByText('An option')).toBeInTheDocument();
 });
 
-// test('Disabled select will not open', () => {
-//     const select = mount(
-//         <Select
-//             {...selectPropsMock}
-//             disabled={true}
-//         />
-//     );
+test('Disabled select will not open', () => {
+    render(
+        <Select
+            {...selectPropsMock}
+            disabled={true}
+        />
+    );
 
-//     expect(select.find('.optionList').length).toBe(0);
-//     select.find('button').simulate('click');
-//     expect(select.find('.optionList').length).toBe(0);
-// });
+    const button = screen.queryByText('Choose an option');
 
-// test('Click on disabled option will not fire onChange', () => {
-//     const clickSpy = jest.fn();
-//     const propsMock = {
-//         label: 'Click to open',
-//         onChange: clickSpy,
-//         options: [
-//             {
-//                 value: 1,
-//                 label: 'An option',
-//                 disabled: true,
-//             },
-//         ],
-//         value: undefined,
-//     };
+    expect(screen.queryByText('An option')).not.toBeInTheDocument();
+    fireEvent.click(button);
+    expect(screen.queryByText('An option')).not.toBeInTheDocument();
+});
 
-//     const select = mount(<Select {...propsMock} />);
+test('Click on disabled option will not fire onChange', () => {
+    const clickSpy = jest.fn();
+    const propsMock = {
+        label: 'Click to open',
+        onChange: clickSpy,
+        options: [
+            {
+                value: 1,
+                label: 'An option',
+                disabled: true,
+            },
+        ],
+        value: undefined,
+    };
 
-//     select.find('button').simulate('click');
-//     select.find('.option > button').first().simulate('click');
+    render(<Select {...propsMock} />);
 
-//     expect(clickSpy).toHaveBeenCalledTimes(0);
-// });
+    fireEvent.click(screen.queryByText('Click to open'));
+    fireEvent.click(screen.queryByText('An option'));
 
-// test('Click on option fires onChange with the selected value as the first argument', () => {
-//     const clickSpy = jest.fn();
-//     const propsMock = {
-//         label: 'Click to open',
-//         onChange: clickSpy,
-//         options: [
-//             {
-//                 value: 1,
-//                 label: 'An option',
-//             },
-//             {
-//                 value: 2,
-//                 label: 'Another option',
-//             },
-//         ],
-//         value: undefined,
-//     };
+    expect(clickSpy).toHaveBeenCalledTimes(0);
+});
 
-//     const select = mount(<Select {...propsMock} />);
+test('Click on option fires onChange with the selected value as the first argument', () => {
+    const clickSpy = jest.fn();
+    const propsMock = {
+        label: 'Click to open',
+        onChange: clickSpy,
+        options: [
+            {
+                value: 1,
+                label: 'An option',
+            },
+            {
+                value: 2,
+                label: 'Another option',
+            },
+        ],
+        value: undefined,
+    };
 
-//     select.find('button').simulate('click');
-//     select.find('.option > button').first().simulate('click');
+    render(<Select {...propsMock} />);
 
-//     expect(clickSpy.mock.calls[0][0]).toBe(1);
-// });
+    fireEvent.click(screen.queryByText('Click to open'));
+    fireEvent.click(screen.queryByText('An option'));
 
-// test('The label of the option is written in the toggle-button if you set the options value', () => {
-//     const clickSpy = jest.fn();
-//     const propsMock = {
-//         value: 2,
-//         label: 'Click to open',
-//         onChange: clickSpy,
-//         options: [
-//             {
-//                 value: 1,
-//                 label: 'An option',
-//             },
-//             {
-//                 value: 2,
-//                 label: 'Another option',
-//             },
-//         ],
-//     };
+    expect(clickSpy.mock.calls[0][0]).toBe(1);
+});
 
-//     const select = mount(<Select {...propsMock} />);
+test('The label of the option is written in the toggle-button if you set the options value', () => {
+    const clickSpy = jest.fn();
+    const propsMock = {
+        value: 2,
+        label: 'Click to open',
+        onChange: clickSpy,
+        options: [
+            {
+                value: 1,
+                label: 'An option',
+            },
+            {
+                value: 2,
+                label: 'Another option',
+            },
+        ],
+    };
 
-//     expect(select.find('button').text()).toBe('Another option');
-// });
+    render(<Select {...propsMock} />);
+
+    expect(screen.queryByRole('button')).toHaveTextContent('Another option');
+});
