@@ -414,7 +414,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
      */
     private function initListBuilder(ContainerBuilder $container, XmlFileLoader $loader)
     {
-        if (SuluKernel::CONTEXT_ADMIN === $container->getParameter('sulu.context')) {
+        $bundles = $container->getParameter('kernel.bundles');
+        if (\array_key_exists('SuluAdminBundle', $bundles)) {
             $loader->load('list_builder.xml');
         }
     }
