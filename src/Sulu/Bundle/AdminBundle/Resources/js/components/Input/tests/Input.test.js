@@ -96,72 +96,86 @@ test('Input should render with a segment counter', () => {
 });
 
 test('Input should call the callback when the input changes', () => {
-    render(<Input onBlur={jest.fn()} onChange={jest.fn()} value="My value" />);
+    const onChange = jest.fn();
+    render(<Input onBlur={jest.fn()} onChange={onChange} value="My value" />);
 
     const input = screen.queryByDisplayValue('My value');
-    fireEvent.keyDown(input, {target: {value: 'test'}});
+    fireEvent.change(input, {target: {value: 'my-value'}});
 
-    expect(input).toHaveValue('test');
+    expect(onChange).toHaveBeenCalledWith('my-value', expect.anything());
 });
 
-// test('Input should call the callback with undefined if the input value is removed', () => {
-//     const onChange = jest.fn();
-//     const input = shallow(<Input onBlur={jest.fn()} onChange={onChange} value="My value" />);
-//     const event = {currentTarget: {value: ''}};
-//     input.find('input').simulate('change', event);
-//     expect(onChange).toHaveBeenCalledWith(undefined, event);
-// });
+test('Input should call the callback with undefined if the input value is removed', () => {
+    const onChange = jest.fn();
+    render(<Input onBlur={jest.fn()} onChange={onChange} value="My value" />);
 
-// test('Input should call the callback when icon was clicked', () => {
-//     const onChange = jest.fn();
-//     const handleIconClick = jest.fn();
-//     const input = mount(<Input icon="su-pen" onChange={onChange} onIconClick={handleIconClick} value="My value" />);
-//     input.find('Icon').simulate('click');
-//     expect(handleIconClick).toHaveBeenCalled();
-// });
+    const input = screen.queryByDisplayValue('My value');
+    fireEvent.change(input, {target: {value: ''}});
 
-// test('Input should call the given focus callback', () => {
-//     const onFocusSpy = jest.fn();
+    expect(onChange).toHaveBeenCalledWith(undefined, expect.anything());
+});
 
-//     const input = mount(<Input icon="su-pen" onChange={jest.fn()} onFocus={onFocusSpy} value="My value" />);
+test('Input should call the callback when icon was clicked', () => {
+    const onChange = jest.fn();
+    const handleIconClick = jest.fn();
+    render(<Input icon="su-pen" onChange={onChange} onIconClick={handleIconClick} value="My value" />);
 
-//     expect(onFocusSpy).not.toHaveBeenCalled();
-//     input.find('input').simulate('focus');
-//     expect(onFocusSpy).toHaveBeenCalled();
-// });
+    const icon = screen.queryByLabelText('su-pen');
+    fireEvent.click(icon);
 
-// test('Input should render with a loader', () => {
-//     const onChange = jest.fn();
-//     expect(render(<Input loading={true} onBlur={jest.fn()} onChange={onChange} value={undefined} />)).toMatchSnapshot();
-// });
+    expect(handleIconClick).toHaveBeenCalled();
+});
 
-// test('Input should render collapsed', () => {
-//     expect(render(<Input collapsed={true} onChange={jest.fn()} value={undefined} />)).toMatchSnapshot();
-// });
+test('Input should call the given focus callback', () => {
+    const onFocusSpy = jest.fn();
 
-// test('Input should render append container when onClearClick callback is provided', () => {
-//     expect(render(<Input onChange={jest.fn()} onClearClick={jest.fn()} value={undefined} />)).toMatchSnapshot();
-// });
+    render(<Input icon="su-pen" onChange={jest.fn()} onFocus={onFocusSpy} value="My value" />);
 
-// test('Input should render append container with icon when onClearClick callback is provided and value is set', () => {
-//     expect(render(<Input onChange={jest.fn()} onClearClick={jest.fn()} value="test" />)).toMatchSnapshot();
-// });
+    const input = screen.queryByDisplayValue('My value');
 
-// test('Input should should call the callback when clear icon was clicked', () => {
-//     const onClearClick = jest.fn();
-//     const input = mount(<Input onChange={jest.fn()} onClearClick={onClearClick} value="My value" />);
-//     input.find('Icon').simulate('click');
-//     expect(onClearClick).toHaveBeenCalled();
-// });
+    expect(onFocusSpy).not.toHaveBeenCalled();
+    fireEvent.focus(input);
+    expect(onFocusSpy).toHaveBeenCalled();
+});
 
-// test('Input should render with dark skin', () => {
-//     expect(
-//         render(<Input icon="su-pen" onChange={jest.fn()} onClearClick={jest.fn()} skin="dark" value={undefined} />)
-//     ).toMatchSnapshot();
-// });
+test('Input should render with a loader', () => {
+    const onChange = jest.fn();
+    const {container} = render(<Input loading={true} onBlur={jest.fn()} onChange={onChange} value={undefined} />);
+    expect(container).toMatchSnapshot();
+});
 
-// test('Input should render with type number with attributes', () => {
-//     expect(render(
-//         <Input max={50} min={10} onBlur={jest.fn()} onChange={jest.fn()} step={5} type="number" value={25} />)
-//     ).toMatchSnapshot();
-// });
+test('Input should render collapsed', () => {
+    const {container} = render(<Input collapsed={true} onChange={jest.fn()} value={undefined} />);
+    expect(container).toMatchSnapshot();
+});
+
+test('Input should render append container when onClearClick callback is provided', () => {
+    const {container} = render(<Input onChange={jest.fn()} onClearClick={jest.fn()} value={undefined} />);
+    expect(container).toMatchSnapshot();
+});
+
+test('Input should render append container with icon when onClearClick callback is provided and value is set', () => {
+    const {container} = render(<Input onChange={jest.fn()} onClearClick={jest.fn()} value="test" />);
+    expect(container).toMatchSnapshot();
+});
+
+test('Input should should call the callback when clear icon was clicked', () => {
+    const onClearClick = jest.fn();
+    render(<Input onChange={jest.fn()} onClearClick={onClearClick} value="My value" />);
+
+    const icon = screen.queryByLabelText('su-times');
+    fireEvent.click(icon);
+    expect(onClearClick).toHaveBeenCalled();
+});
+
+test('Input should render with dark skin', () => {
+    const {container} =
+        render(<Input icon="su-pen" onChange={jest.fn()} onClearClick={jest.fn()} skin="dark" value={undefined} />);
+    expect(container).toMatchSnapshot();
+});
+
+test('Input should render with type number with attributes', () => {
+    const {container} =
+        render(<Input max={50} min={10} onBlur={jest.fn()} onChange={jest.fn()} step={5} type="number" value={25} />);
+    expect(container).toMatchSnapshot();
+});
