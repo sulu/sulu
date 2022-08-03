@@ -19,22 +19,24 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class IndexConfigurationProvider implements IndexConfigurationProviderInterface
 {
     /**
-     * @var string
+     * @var array|null
      */
-    private $indexConfigurations = [];
+    private $indexConfigurations = null;
 
-    public function __construct(TranslatorInterface $translator, array $indexConfigurations)
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * @var array
+     */
+    private $configuration;
+
+    public function __construct(TranslatorInterface $translator, array $configuration)
     {
-        foreach ($indexConfigurations as $indexName => $indexConfiguration) {
-            $this->indexConfigurations[$indexName] = new IndexConfiguration(
-                $indexName,
-                $indexConfiguration['icon'],
-                $translator->trans($indexConfiguration['name'], [], 'admin'),
-                new Route($indexConfiguration['view']['name'], $indexConfiguration['view']['result_to_view']),
-                isset($indexConfiguration['security_context']) ? $indexConfiguration['security_context'] : null,
-                isset($indexConfiguration['contexts']) ? $indexConfiguration['contexts'] : []
-            );
-        }
+        $this->translator = $translator;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -44,6 +46,19 @@ class IndexConfigurationProvider implements IndexConfigurationProviderInterface
      */
     public function getIndexConfigurations()
     {
+        if (null === $this->indexConfigurations) {
+            foreach ($this->configuration as $indexName => $indexConfiguration) {
+                $this->indexConfigurations[$indexName] = new IndexConfiguration(
+                    $indexName,
+                    $indexConfiguration['icon'],
+                    $this->translator->trans($indexConfiguration['name'], [], 'admin'),
+                    new Route($indexConfiguration['view']['name'], $indexConfiguration['view']['result_to_view']),
+                    isset($indexConfiguration['security_context']) ? $indexConfiguration['security_context'] : null,
+                    isset($indexConfiguration['contexts']) ? $indexConfiguration['contexts'] : []
+                );
+            }
+        }
+
         return $this->indexConfigurations;
     }
 
