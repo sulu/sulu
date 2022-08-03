@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import Input from '../Input';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -97,15 +96,12 @@ test('Input should render with a segment counter', () => {
 });
 
 test('Input should call the callback when the input changes', () => {
-    const event = {target: {value: 'test'}};
-    const {debug} = render(<Input onBlur={jest.fn()} onChange={jest.fn()} value="My value" />);
-    debug();
+    render(<Input onBlur={jest.fn()} onChange={jest.fn()} value="My value" />);
 
     const input = screen.queryByDisplayValue('My value');
-    fireEvent.change(input, event);
-    console.log(input.value);
+    fireEvent.keyDown(input, {target: {value: 'test'}});
 
-    expect(input.value).toBe('test');
+    expect(input).toHaveValue('test');
 });
 
 // test('Input should call the callback with undefined if the input value is removed', () => {
