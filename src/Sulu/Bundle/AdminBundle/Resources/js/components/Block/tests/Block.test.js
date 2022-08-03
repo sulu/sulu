@@ -1,14 +1,14 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {fireEvent, render, screen} from '@testing-library/react';
 import Block from '../Block';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-test('Render an expanded block with a multiple types', () => {
-    expect(render(
+test('Render an expanded block with multiple types', () => {
+    const {container} = render(
         <Block
             activeType="type1"
             dragHandle={<span>Test</span>}
@@ -20,96 +20,102 @@ test('Render an expanded block with a multiple types', () => {
             types={{'type1': 'Type1', 'type2': 'Type2'}}
         >
             Some block content
-        </Block>
-    )).toMatchSnapshot();
+        </Block>);
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render an block without dragHandle or collapse or expand button', () => {
-    expect(render(
+    const {container} = render(
         <Block expanded={true}>
             Some block content
         </Block>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a collapsed block', () => {
-    expect(render(
+    const {container} = render(
         <Block expanded={false} icons={['su-eye', 'su-people']} onCollapse={jest.fn()} onExpand={jest.fn()}>
             Some block content
         </Block>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Do not show type dropdown if only a single type is passed', () => {
-    const block = shallow(
+    const {container} = render(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
             Some block content
         </Block>
     );
 
-    expect(block.find('SingleSelect')).toHaveLength(0);
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+    const elements = container.getElementsByClassName('select');
+
+    expect(elements).toHaveLength(0);
 });
 
 test('Do not show remove icon if no onRemove prop has been passed', () => {
-    const block = shallow(
+    render(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
             Some block content
         </Block>
     );
 
-    expect(block.find('Icon[name="su-trash-alt"]')).toHaveLength(0);
+    expect(screen.queryByLabelText('su-trash-alt')).not.toBeInTheDocument();
 });
 
 test('Do not show settings icon if no onSettingsClick prop has been passed', () => {
-    const block = shallow(
+    render(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
             Some block content
         </Block>
     );
 
-    expect(block.find('Icon[name="su-cog"]')).toHaveLength(0);
+    expect(screen.queryByLabelText('su-cog')).not.toBeInTheDocument();
 });
 
 test('Clicking on a collapsed block should call the onExpand callback', () => {
     const expandSpy = jest.fn();
-    const block = shallow(<Block onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
+    render(<Block onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
 
-    block.find('section').simulate('click');
+    fireEvent.click(screen.queryByRole('switch'));
 
     expect(expandSpy).toHaveBeenCalledTimes(1);
 });
 
 test('Clicking on a expanded block should not call the onExpand callback', () => {
     const expandSpy = jest.fn();
-    const block = shallow(<Block expanded={true} onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
+    render(<Block expanded={true} onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
 
-    block.find('section').simulate('click');
+    fireEvent.click(screen.queryByRole('switch'));
 
     expect(expandSpy).not.toBeCalled();
 });
 
 test('Clicking the close icon in an expanded block should collapse it', () => {
     const collapseSpy = jest.fn();
-    const block = shallow(<Block expanded={true} onCollapse={collapseSpy} onExpand={jest.fn()}>Block content</Block>);
+    render(<Block expanded={true} onCollapse={collapseSpy} onExpand={jest.fn()}>Block content</Block>);
 
-    const closeIcon = block.find('Icon[name="su-angle-up"]');
-    expect(closeIcon).toHaveLength(1);
+    const closeIcon = screen.queryByLabelText('su-angle-up');
+    expect(closeIcon).toBeInTheDocument();
 
-    closeIcon.simulate('click');
+    fireEvent.click(closeIcon);
 
     expect(collapseSpy).toHaveBeenCalledTimes(1);
 });
 
 test('Clicking the remove icon in an expanded block should remove it', () => {
     const removeSpy = jest.fn();
-    const block = shallow(
+    render(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} onRemove={removeSpy}>Block content</Block>
     );
 
-    const removeIcon = block.find('Icon[name="su-trash-alt"]');
-    expect(removeIcon).toHaveLength(1);
+    const removeIcon = screen.queryByLabelText('su-trash-alt');
+    expect(removeIcon).toBeInTheDocument();
 
-    removeIcon.simulate('click');
+    fireEvent.click(removeIcon);
 
     expect(removeSpy).toHaveBeenCalledTimes(1);
 });
@@ -120,7 +126,8 @@ test('Changing the type should call the onTypeChange callback', () => {
         type1: 'Type 1',
         type2: 'Type 2',
     };
-    const block = shallow(
+
+    render(
         <Block
             activeType="type1"
             expanded={true}
@@ -133,7 +140,12 @@ test('Changing the type should call the onTypeChange callback', () => {
         </Block>
     );
 
-    block.find('SingleSelect').simulate('change', 'type2');
+    const selectButton = screen.queryByText('Type 1');
+    fireEvent.click(selectButton);
+
+    const typeButton = screen.queryByText('Type 2');
+    fireEvent.click(typeButton);
 
     expect(typeChangeSpy).toBeCalledWith('type2');
+    expect(typeChangeSpy).toHaveBeenCalledTimes(1);
 });
