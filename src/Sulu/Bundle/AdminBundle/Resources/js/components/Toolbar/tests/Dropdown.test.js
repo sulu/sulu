@@ -108,55 +108,56 @@ test('Click on option fires onClick', () => {
     expect(clickSpy).toBeCalled();
 });
 
-// test('Click on disabled option will not fire onClick', () => {
-//     const clickSpy = jest.fn();
-//     const propsMock = {
-//         label: 'Click to open',
-//         options: [
-//             {
-//                 label: 'An option',
-//                 onClick: clickSpy,
-//                 disabled: true,
-//             },
-//             {
-//                 label: 'Another option',
-//                 onClick: jest.fn(),
-//                 disabled: false,
-//             },
-//         ],
-//     };
+test('Click on disabled option will not fire onClick', () => {
+    const clickSpy = jest.fn();
+    const propsMock = {
+        label: 'Click to open',
+        options: [
+            {
+                label: 'An option',
+                onClick: clickSpy,
+                disabled: true,
+            },
+            {
+                label: 'Another option',
+                onClick: jest.fn(),
+                disabled: false,
+            },
+        ],
+    };
 
-//     const dropdown = mount(<Dropdown {...propsMock} />);
+    render(<Dropdown {...propsMock} />);
 
-//     dropdown.find('button').simulate('click');
-//     dropdown.find('.option > button').first().simulate('click');
+    fireEvent.click(screen.queryByText('Click to open'));
+    fireEvent.click(screen.queryByText('An option'));
 
-//     expect(clickSpy).toHaveBeenCalledTimes(0);
-// });
+    expect(clickSpy).not.toBeCalled();
+});
 
-// test('No active options should disable dropdown', () => {
-//     const propsMock = {
-//         label: 'Click to open',
-//         options: [
-//             {
-//                 label: 'An option',
-//                 onClick: jest.fn(),
-//                 disabled: true,
-//             },
-//             {
-//                 label: 'Another option',
-//                 onClick: jest.fn(),
-//                 disabled: true,
-//             },
-//         ],
-//     };
+test('No active options should disable dropdown', () => {
+    const propsMock = {
+        label: 'Click to open',
+        options: [
+            {
+                label: 'An option',
+                onClick: jest.fn(),
+                disabled: true,
+            },
+            {
+                label: 'Another option',
+                onClick: jest.fn(),
+                disabled: true,
+            },
+        ],
+    };
 
-//     const dropdown = mount(<Dropdown {...propsMock} />);
+    render(<Dropdown {...propsMock} />);
+    const button = screen.queryByRole('button');
 
-//     expect(dropdown.find('button').instance().disabled).toBe(true);
-//     expect(dropdown.find('OptionList')).toHaveLength(0);
+    expect(button).toBeDisabled();
+    expect(screen.queryByText('An option')).not.toBeInTheDocument();
 
-//     // click on button shouldn't open the options
-//     dropdown.find('button').simulate('click');
-//     expect(dropdown.find('OptionList')).toHaveLength(0);
-// });
+    // click on button shouldn't open the options
+    fireEvent.click(button);
+    expect(screen.queryByText('An option')).not.toBeInTheDocument();
+});
