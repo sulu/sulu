@@ -9,7 +9,7 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 test('The component should render in body when open', () => {
-    render(<Dialog
+    const {baseElement} = render(<Dialog
         cancelText="Cancel"
         confirmText="Confirm"
         onCancel={jest.fn()}
@@ -21,6 +21,7 @@ test('The component should render in body when open', () => {
     </Dialog>
     );
 
+    expect(baseElement).toMatchSnapshot();
     expect(screen.getByText('My dialog content')).toBeInTheDocument();
 });
 
@@ -203,7 +204,7 @@ test('The component should render with a warning', () => {
         </Dialog>
     );
 
-    const snackbar = screen.queryByText('- Something really strange happened').parentElement;
+    const snackbar = screen.queryByText(/Something really strange happened/).parentElement;
 
     expect(snackbar).toBeInTheDocument();
     expect(snackbar).toHaveClass('snackbar', 'warning');
@@ -226,7 +227,7 @@ test('The component should render with an error', () => {
         </Dialog>
     );
 
-    const snackbar = screen.queryByText('- Money transfer unsuccessful').parentElement;
+    const snackbar = screen.queryByText(/Money transfer unsuccessful/).parentElement;
 
     expect(snackbar).toBeInTheDocument();
     expect(snackbar).toHaveClass('snackbar', 'error');
@@ -248,7 +249,7 @@ test('The component should render with an error if the type is unknown', () => {
         </Dialog>
     );
 
-    const snackbar = screen.queryByText('- Money transfer unsuccessful').parentElement;
+    const snackbar = screen.queryByText(/Money transfer unsuccessful/).parentElement;
 
     expect(snackbar).toBeInTheDocument();
     expect(snackbar).toHaveClass('snackbar', 'error');
@@ -272,7 +273,7 @@ test('The component should call the callback when the snackbar close button is c
         </Dialog>
     );
 
-    const snackbar = screen.queryByText('- Money transfer unsuccessful').parentElement;
+    const snackbar = screen.queryByText(/Money transfer unsuccessful/).parentElement;
     const closeIcon = screen.queryByLabelText('su-times');
 
     expect(snackbar).toBeInTheDocument();
@@ -297,7 +298,7 @@ test('The component should call the callback when the snackbar is clicked', () =
         </Dialog>
     );
 
-    const snackbar = screen.queryByText('- Something really strange happened').parentElement;
+    const snackbar = screen.queryByText(/Something really strange happened/).parentElement;
 
     expect(snackbar).toBeInTheDocument();
     expect(onSnackbarClick).not.toBeCalled();
