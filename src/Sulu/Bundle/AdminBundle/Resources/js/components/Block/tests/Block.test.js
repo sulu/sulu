@@ -129,7 +129,7 @@ test('Changing the type should call the onTypeChange callback', () => {
 
     render(
         <Block
-            activeType={Object.keys(types)[0]}
+            activeType="type1"
             expanded={true}
             onCollapse={jest.fn()}
             onExpand={jest.fn()}
@@ -140,12 +140,12 @@ test('Changing the type should call the onTypeChange callback', () => {
         </Block>
     );
 
-    const selectButton = screen.queryByText(types.type1);
+    const selectButton = screen.queryByText('Type 1');
     fireEvent.click(selectButton);
 
-    const typeButton = screen.queryByText(types.type2);
+    const typeButton = screen.queryByText('Type 2');
     fireEvent.click(typeButton);
 
-    expect(typeChangeSpy).toBeCalledWith(Object.keys(types)[1]);
+    expect(typeChangeSpy).toBeCalledWith('type2');
     expect(typeChangeSpy).toHaveBeenCalledTimes(1);
 });
