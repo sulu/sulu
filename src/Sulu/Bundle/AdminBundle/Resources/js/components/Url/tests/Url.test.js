@@ -29,35 +29,35 @@ test('Render the component with an error', () => {
 });
 
 test('Set the correct values for protocol and path when initializing', () => {
-    const {debug} = render(<Url onChange={jest.fn()} value="http://www.sulu.io" />);
-    debug();
+    render(<Url onChange={jest.fn()} value="http://www.sulu.io" />);
 
-    const input = screen.queryByRole('textbox');
     // eslint-disable-next-line testing-library/no-node-access
     const protocol = screen.queryByTitle('http://').lastChild;
+    const input = screen.queryByRole('textbox');
 
     expect(input).toHaveValue('www.sulu.io');
     expect(protocol).toHaveTextContent('http://');
 });
 
-// test('Set the correct values for protocol and path when updating', () => {
-//     const url = shallow(<Url onChange={jest.fn()} value="https://www.sulu.io" />);
+test('Set the correct values for protocol and path when updating', () => {
+    render(<Url onChange={jest.fn()} value="https://www.sulu.io" />);
 
-//     expect(url.find('SingleSelect').prop('value')).toEqual('https://');
-//     expect(url.find('input').prop('value')).toEqual('www.sulu.io');
+    // eslint-disable-next-line testing-library/no-node-access
+    const protocol = screen.queryByTitle('https://').lastChild;
+    const input = screen.queryByRole('textbox');
 
-//     url.setProps({value: 'http://sulu.at'});
+    expect(input).toHaveValue('www.sulu.io');
+    expect(protocol).toHaveTextContent('https://');
+});
 
-//     expect(url.find('SingleSelect').prop('value')).toEqual('http://');
-//     expect(url.find('input').prop('value')).toEqual('sulu.at');
-// });
+test('Should log a warning if a not available protocol has been given', () => {
+    render(<Url onChange={jest.fn()} protocols={['http://']} value="https://www.sulu.io" />);
 
-// test('Should log a warning if a not available protocol has been given', () => {
-//     const url = shallow(<Url onChange={jest.fn()} protocols={['http://']} value="https://www.sulu.io" />);
+    const input = screen.queryByRole('textbox');
 
-//     expect(url.find('input').prop('value')).toEqual('https://www.sulu.io');
-//     expect(log.warn).toBeCalled();
-// });
+    expect(input).toHaveValue('https://www.sulu.io');
+    expect(log.warn).toBeCalled();
+});
 
 // test('Show error when invalid email was passed via updated prop', () => {
 //     const url = shallow(<Url onChange={jest.fn()} value={undefined} />);
