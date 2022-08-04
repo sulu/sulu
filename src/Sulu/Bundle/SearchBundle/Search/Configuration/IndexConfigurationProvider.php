@@ -31,12 +31,12 @@ class IndexConfigurationProvider implements IndexConfigurationProviderInterface
     /**
      * @var array
      */
-    private $configuration;
+    private $searchIndexes;
 
-    public function __construct(TranslatorInterface $translator, array $configuration)
+    public function __construct(TranslatorInterface $translator, array $searchIndexes)
     {
         $this->translator = $translator;
-        $this->configuration = $configuration;
+        $this->searchIndexes = $searchIndexes;
     }
 
     /**
@@ -47,7 +47,7 @@ class IndexConfigurationProvider implements IndexConfigurationProviderInterface
     public function getIndexConfigurations()
     {
         if (null === $this->indexConfigurations) {
-            foreach ($this->configuration as $indexName => $indexConfiguration) {
+            foreach ($this->searchIndexes as $indexName => $indexConfiguration) {
                 $this->indexConfigurations[$indexName] = new IndexConfiguration(
                     $indexName,
                     $indexConfiguration['icon'],
@@ -71,6 +71,8 @@ class IndexConfigurationProvider implements IndexConfigurationProviderInterface
      */
     public function getIndexConfiguration($name)
     {
+        $this->indexConfigurations = $this->getIndexConfigurations();
+
         if (!\array_key_exists($name, $this->indexConfigurations)) {
             return;
         }
