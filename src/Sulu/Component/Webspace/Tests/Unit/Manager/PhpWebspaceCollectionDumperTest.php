@@ -2,12 +2,21 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Webspace\Tests\Unit\Manager;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
-use Prophecy\Prophecy\ObjectProphecy;
 
 class PhpWebspaceCollectionDumperTest extends TestCase
 {
@@ -29,7 +38,7 @@ class PhpWebspaceCollectionDumperTest extends TestCase
 
     public function testGenerate(): void
     {
-        $this->webspaceCollection ->toArray() ->shouldBeCalled() ->willReturn([]);
+        $this->webspaceCollection->toArray()->shouldBeCalled()->willReturn([]);
 
         $string = $this->webspaceDumper->dump(['cache_class' => 'CacheClass', 'base_class' => 'BaseClass']);
 
@@ -82,7 +91,7 @@ class CacheClass extends BaseClass
                ->toArray()
                ->shouldBeCalled()
                ->willReturn(['webspaces' => [['key' => 'some_webspace', 'name' => 'Somewebspace']]])
-           ;
+        ;
         $string = $this->webspaceDumper->dump(['cache_class' => 'CacheClass', 'base_class' => 'BaseClass']);
 
         $expected = '<?php
@@ -151,7 +160,7 @@ class CacheClass extends BaseClass
                ->toArray()
                ->shouldBeCalled()
                ->willReturn(['webspaces' => [['key' => 'some_webspace', 'name' => 'Joe\'s webspace']]])
-           ;
+        ;
         $string = $this->webspaceDumper->dump(['cache_class' => 'CacheClass', 'base_class' => 'BaseClass']);
 
         $expected = '<?php
