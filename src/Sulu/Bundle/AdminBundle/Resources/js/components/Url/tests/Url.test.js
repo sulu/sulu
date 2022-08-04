@@ -28,12 +28,17 @@ test('Render the component with an error', () => {
     expect(container).toMatchSnapshot();
 });
 
-// test('Set the correct values for protocol and path when initializing', () => {
-//     const url = shallow(<Url onChange={jest.fn()} value="https://www.sulu.io" />);
+test('Set the correct values for protocol and path when initializing', () => {
+    const {debug} = render(<Url onChange={jest.fn()} value="http://www.sulu.io" />);
+    debug();
 
-//     expect(url.find('SingleSelect').prop('value')).toEqual('https://');
-//     expect(url.find('input').prop('value')).toEqual('www.sulu.io');
-// });
+    const input = screen.queryByRole('textbox');
+    // eslint-disable-next-line testing-library/no-node-access
+    const protocol = screen.queryByTitle('http://').lastChild;
+
+    expect(input).toHaveValue('www.sulu.io');
+    expect(protocol).toHaveTextContent('http://');
+});
 
 // test('Set the correct values for protocol and path when updating', () => {
 //     const url = shallow(<Url onChange={jest.fn()} value="https://www.sulu.io" />);
