@@ -98,26 +98,26 @@ test('Remove error when valid email was changed using the text field', () => {
     expect(container.querySelector('.error')).not.toBeInTheDocument();
 });
 
-// test('Call onChange callback with the first protocol if none was selected', () => {
-//     const changeSpy = jest.fn();
-//     const url = shallow(<Url onChange={changeSpy} value={undefined} />);
-//     url.find('input').prop('onChange')({
-//         currentTarget: {
-//             value: 'sulu.at',
-//         },
-//     });
-//     url.find('input').prop('onBlur')();
+test('Call onChange callback with the first protocol if none was selected', () => {
+    const changeSpy = jest.fn();
+    render(<Url onChange={changeSpy} value={undefined} />);
 
-//     expect(changeSpy).toBeCalledWith('http://sulu.at');
-// });
+    const input = screen.queryByRole('textbox');
+    fireEvent.change(input, {target: {value: 'sulu.at'}});
+    fireEvent.blur(input);
 
-// test('Call onChange callback when protocol was changed', () => {
-//     const changeSpy = jest.fn();
-//     const url = shallow(<Url onChange={changeSpy} value="https://www.sulu.io" />);
-//     url.find('SingleSelect').prop('onChange')('http://');
+    expect(changeSpy).toBeCalledWith('http://sulu.at');
+});
 
-//     expect(changeSpy).toBeCalledWith('http://www.sulu.io');
-// });
+test('Call onChange callback when protocol was changed', () => {
+    const changeSpy = jest.fn();
+    render(<Url onChange={changeSpy} value="https://www.sulu.io" />);
+
+    fireEvent.click(screen.queryByLabelText('su-angle-down'));
+    fireEvent.click(screen.queryByText('http://'));
+
+    expect(changeSpy).toBeCalledWith('http://www.sulu.io');
+});
 
 // test('Call onChange callback when path was changed', () => {
 //     const changeSpy = jest.fn();
