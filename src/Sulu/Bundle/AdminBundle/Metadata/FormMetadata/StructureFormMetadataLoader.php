@@ -110,6 +110,8 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
             foreach ($webspace->getExcludedTemplates() as $excludedTemplate) {
                 $form->removeForm($excludedTemplate);
             }
+        } elseif (isset($metadataOptions['defaultType'])) {
+            $form->setDefaultType($metadataOptions['defaultType']);
         } elseif (isset($this->defaultTypes[$key])) {
             $form->setDefaultType($this->defaultTypes[$key]);
         }

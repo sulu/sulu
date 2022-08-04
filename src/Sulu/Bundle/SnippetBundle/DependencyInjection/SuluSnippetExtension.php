@@ -197,6 +197,10 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
             'sulu_snippet.twig.snippet.cache_lifetime',
             $config['twig']['snippet']['cache_lifetime']
         );
+        $container->setParameter(
+            'sulu_snippet.admin_view',
+            $config['admin_view']
+        );
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('content.xml');
