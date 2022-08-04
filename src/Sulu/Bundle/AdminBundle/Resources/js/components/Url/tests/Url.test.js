@@ -86,19 +86,17 @@ test('Remove error when valid email was passed via updated prop', () => {
     expect(container.querySelector('.error')).not.toBeInTheDocument();
 });
 
-// test('Remove error when valid email was changed using the text field', () => {
-//     const url = shallow(<Url onChange={jest.fn()} value="mailto:invalid-email" />);
-//     expect(url.find('.error')).toHaveLength(1);
+test('Remove error when valid email was changed using the text field', () => {
+    const {container} = render(<Url onChange={jest.fn()} value="mailto:invalid-email" />);
 
-//     url.find('input').prop('onChange')({
-//         currentTarget: {
-//             value: 'hello@sulu.io',
-//         },
-//     });
-//     url.find('input').prop('onBlur')();
+    expect(container.querySelector('.error')).toBeInTheDocument();
 
-//     expect(url.find('.error')).toHaveLength(0);
-// });
+    const input = screen.queryByRole('textbox');
+    fireEvent.change(input, {target: {value: 'hello@sulu.io'}});
+    fireEvent.blur(input);
+
+    expect(container.querySelector('.error')).not.toBeInTheDocument();
+});
 
 // test('Call onChange callback with the first protocol if none was selected', () => {
 //     const changeSpy = jest.fn();
