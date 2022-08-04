@@ -65,7 +65,6 @@ test('Phone should not set onIconClick when value is not set', () => {
     const onBlur = jest.fn();
     render(<Phone onBlur={onBlur} onChange={onChange} value={null} />);
 
-    const input = screen.queryByRole('textbox');
     const icon = screen.queryByLabelText('su-phone');
 
     fireEvent.click(icon);
@@ -73,13 +72,21 @@ test('Phone should not set onIconClick when value is not set', () => {
     expect(redirectSpy).not.toHaveBeenCalled();
 });
 
-// test('Phone should set onIconClick when value is set', () => {
-//     const onChange = jest.fn();
-//     const onBlur = jest.fn();
-//     const phone = mount(<Phone onBlur={onBlur} onChange={onChange} value="+123" />);
+test('Phone should set onIconClick when value is set', () => {
+    const redirectSpy = jest.fn();
+    delete window.location;
+    window.location = {assign: redirectSpy};
 
-//     expect(phone.find('Input').prop('onIconClick')).toBeInstanceOf(Function);
-// });
+    const onChange = jest.fn();
+    const onBlur = jest.fn();
+    render(<Phone onBlur={onBlur} onChange={onChange} value="+123" />);
+
+    const icon = screen.queryByLabelText('su-phone');
+
+    fireEvent.click(icon);
+
+    expect(redirectSpy).toHaveBeenCalled();
+});
 
 // test('Phone should set onIconClick when value is valid and window should be opened', () => {
 //     delete window.location;
