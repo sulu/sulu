@@ -78,14 +78,13 @@ test('Should not reset value of protocol select when undefined value is passed',
     expect(screen.queryByRole('textbox')).toHaveValue('');
 });
 
-// test('Remove error when valid email was passed via updated prop', () => {
-//     const url = shallow(<Url onChange={jest.fn()} value="mailto:invalid-email" />);
-//     expect(url.find('.error')).toHaveLength(1);
+test('Remove error when valid email was passed via updated prop', () => {
+    const {container, rerender} = render(<Url onChange={jest.fn()} value="mailto:invalid-email" />);
 
-//     url.setProps({value: 'mailto:hello@sulu.io'});
-
-//     expect(url.find('.error')).toHaveLength(0);
-// });
+    expect(container.querySelector('.error')).toBeInTheDocument();
+    rerender(<Url onChange={jest.fn()} value="mailto:hello@sulu.io" />);
+    expect(container.querySelector('.error')).not.toBeInTheDocument();
+});
 
 // test('Remove error when valid email was changed using the text field', () => {
 //     const url = shallow(<Url onChange={jest.fn()} value="mailto:invalid-email" />);
