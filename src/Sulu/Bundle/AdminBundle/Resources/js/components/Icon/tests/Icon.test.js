@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {createEvent, fireEvent, render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import log from 'loglevel';
 import Icon from '../Icon';
 
@@ -38,32 +38,30 @@ test('Icon should render with onClick handler, role and tabindex', () => {
 
 test('Icon should call the callback on click', () => {
     const onClick = jest.fn();
-    const stopPropagation = jest.fn();
     render(<Icon className="test" name="su-pen" onClick={onClick} />);
-    const icon = screen.queryByLabelText('su-pen');
 
-    const clickEvent = createEvent.click(icon, {stopPropagation});
-    clickEvent.stopPropagation = stopPropagation;
-    fireEvent(icon, clickEvent);
-    console.log(clickEvent);
-    expect(clickEvent.stopPropagation).toBeCalled();
+    const icon = screen.queryByLabelText('su-pen');
+    fireEvent.click(icon);
+
     expect(onClick).toBeCalled();
 });
 
-// test('Icon should call the callback on when space is pressed', () => {
-//     const onClick = jest.fn();
-//     const stopPropagation = jest.fn();
-//     const icon = shallow(<Icon className="test" name="su-pen" onClick={onClick} />);
-//     icon.simulate('keypress', {key: ' ', stopPropagation});
-//     expect(onClick).toBeCalled();
-//     expect(stopPropagation).toBeCalled();
-// });
+test('Icon should call the callback on when space is pressed', () => {
+    const onClick = jest.fn();
+    render(<Icon className="test" name="su-pen" onClick={onClick} />);
 
-// test('Icon should call the callback on when enter is pressed', () => {
-//     const onClick = jest.fn();
-//     const stopPropagation = jest.fn();
-//     const icon = shallow(<Icon className="test" name="su-pen" onClick={onClick} />);
-//     icon.simulate('keypress', {key: 'Enter', stopPropagation});
-//     expect(onClick).toBeCalled();
-//     expect(stopPropagation).toBeCalled();
-// });
+    const icon = screen.queryByLabelText('su-pen');
+    fireEvent.keyPress(icon, {key: ' ', charCode: 32, code: 'Space'});
+
+    expect(onClick).toBeCalled();
+});
+
+test('Icon should call the callback on when enter is pressed', () => {
+    const onClick = jest.fn();
+    render(<Icon className="test" name="su-pen" onClick={onClick} />);
+
+    const icon = screen.queryByLabelText('su-pen');
+    fireEvent.keyPress(icon, {key: 'Enter', charCode: 13, code: 'Enter'});
+
+    expect(onClick).toBeCalled();
+});
