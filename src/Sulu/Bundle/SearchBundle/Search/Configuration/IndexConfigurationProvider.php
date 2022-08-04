@@ -71,12 +71,12 @@ class IndexConfigurationProvider implements IndexConfigurationProviderInterface
      */
     public function getIndexConfiguration($name)
     {
-        $this->indexConfigurations = $this->getIndexConfigurations();
+        $indexConfigurations = $this->getIndexConfigurations();
 
-        if (!\array_key_exists($name, $this->indexConfigurations)) {
+        if (!\array_key_exists($name, $indexConfigurations)) {
             return;
         }
 
-        return $this->indexConfigurations[$name];
+        return $indexConfigurations[$name];
     }
 }
