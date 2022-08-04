@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import Phone from '../Phone';
 
 test('Phone should render', () => {
@@ -40,28 +40,38 @@ test('Phone should render when disabled', () => {
     expect(container).toMatchSnapshot();
 });
 
-// test('Phone should trigger callbacks correctly', () => {
-//     const onChange = jest.fn();
-//     const onBlur = jest.fn();
-//     const phone = mount(<Phone onBlur={onBlur} onChange={onChange} value={null} />);
+test('Phone should trigger callbacks correctly', () => {
+    const onChange = jest.fn();
+    const onBlur = jest.fn();
+    render(<Phone onBlur={onBlur} onChange={onChange} value={null} />);
 
-//     phone.find('Input').instance().props.onChange('+123', {target: {value: '+123'}});
-//     phone.find('Input').instance().props.onBlur();
-//     phone.update();
-//     expect(onChange).toBeCalledWith('+123', {target: {value: '+123'}});
-//     expect(onBlur).toBeCalled();
+    const input = screen.queryByRole('textbox');
 
-//     expect(onBlur).toHaveBeenCalledTimes(1);
-//     expect(onChange).toHaveBeenCalledTimes(1);
-// });
+    fireEvent.change(input, {target: {value: '+123'}});
+    fireEvent.blur(input);
 
-// test('Phone should not set onIconClick when value is not set', () => {
-//     const onChange = jest.fn();
-//     const onBlur = jest.fn();
-//     const phone = mount(<Phone onBlur={onBlur} onChange={onChange} value={null} />);
+    expect(onChange).toBeCalledWith('+123', expect.anything());
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onBlur).toBeCalled();
+    expect(onBlur).toHaveBeenCalledTimes(1);
+});
 
-//     expect(phone.find('Input').prop('onIconClick')).toBeUndefined();
-// });
+test('Phone should not set onIconClick when value is not set', () => {
+    const redirectSpy = jest.fn();
+    delete window.location;
+    window.location = {assign: redirectSpy};
+
+    const onChange = jest.fn();
+    const onBlur = jest.fn();
+    render(<Phone onBlur={onBlur} onChange={onChange} value={null} />);
+
+    const input = screen.queryByRole('textbox');
+    const icon = screen.queryByLabelText('su-phone');
+
+    fireEvent.click(icon);
+
+    expect(redirectSpy).not.toHaveBeenCalled();
+});
 
 // test('Phone should set onIconClick when value is set', () => {
 //     const onChange = jest.fn();
