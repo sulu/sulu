@@ -1,6 +1,7 @@
+/* eslint-disable testing-library/no-container, testing-library/no-node-access */
 // @flow
 import React from 'react';
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import log from 'loglevel';
 import Url from '../Url';
 
@@ -59,14 +60,15 @@ test('Should log a warning if a not available protocol has been given', () => {
     expect(log.warn).toBeCalled();
 });
 
-// test('Show error when invalid email was passed via updated prop', () => {
-//     const url = shallow(<Url onChange={jest.fn()} value={undefined} />);
-//     expect(url.find('.error')).toHaveLength(0);
+test('Show error when invalid email was passed via updated prop', () => {
+    const {container, rerender} = render(<Url onChange={jest.fn()} value={undefined} />);
 
-//     url.setProps({value: 'mailto:invalid-url'});
+    expect(container.querySelector('.error')).not.toBeInTheDocument();
 
-//     expect(url.find('.error')).toHaveLength(1);
-// });
+    rerender(<Url onChange={jest.fn()} value="mailto:invalid-email" />);
+
+    expect(container.querySelector('.error')).toBeInTheDocument();
+});
 
 // test('Should not reset value of protocol select when undefined value is passed', () => {
 //     const url = shallow(<Url onChange={jest.fn()} value="https://" />);
