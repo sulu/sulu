@@ -35,9 +35,9 @@ test('Number should call onChange with undefined when value isn`t a float', () =
 
 test('Number should call onChange with undefined when value is undefined', () => {
     const onChange = jest.fn();
-    render(<Number onChange={onChange} value={2} />);
+    render(<Number onChange={onChange} value={0.5} />);
 
-    const input = screen.queryByDisplayValue(2);
+    const input = screen.queryByDisplayValue(0.5);
     fireEvent.change(input, {target: {value: undefined}});
 
     expect(onChange).toBeCalledWith(undefined, expect.anything());
