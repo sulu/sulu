@@ -119,18 +119,16 @@ test('Call onChange callback when protocol was changed', () => {
     expect(changeSpy).toBeCalledWith('http://www.sulu.io');
 });
 
-// test('Call onChange callback when path was changed', () => {
-//     const changeSpy = jest.fn();
-//     const url = shallow(<Url onChange={changeSpy} value="https://www.sulu.io" />);
-//     url.find('input').prop('onChange')({
-//         currentTarget: {
-//             value: 'sulu.at',
-//         },
-//     });
-//     url.find('input').prop('onBlur')();
+test('Call onChange callback when path was changed', () => {
+    const changeSpy = jest.fn();
+    render(<Url onChange={changeSpy} value="https://www.sulu.io" />);
 
-//     expect(changeSpy).toBeCalledWith('https://sulu.at');
-// });
+    const input = screen.queryByRole('textbox');
+    fireEvent.change(input, {target: {value: 'sulu.at'}});
+    fireEvent.blur(input);
+
+    expect(changeSpy).toBeCalledWith('https://sulu.at');
+});
 
 // test('Call onChange callback when path was changed but not blurred', () => {
 //     const changeSpy = jest.fn();
