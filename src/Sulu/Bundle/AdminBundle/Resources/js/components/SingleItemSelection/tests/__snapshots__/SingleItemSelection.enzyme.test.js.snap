@@ -1,0 +1,369 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render in disabled state 1`] = `
+<div
+  class="singleItemSelection disabled"
+>
+  <button
+    class="button left"
+    disabled=""
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+      role="button"
+    >
+      Test Item
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render in invalid state 1`] = `
+<div
+  class="singleItemSelection error"
+>
+  <button
+    class="button left"
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+      role="button"
+    >
+      Test Item
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render in item-disabled state with remove button 1`] = `
+<div
+  class="singleItemSelection disabled"
+>
+  <button
+    class="button left"
+    disabled=""
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+      role="button"
+    >
+      Test Item
+    </div>
+    <button
+      class="removeButton"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Render in item-disabled state without remove button 1`] = `
+<div
+  class="singleItemSelection disabled"
+>
+  <button
+    class="button left"
+    disabled=""
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+      role="button"
+    >
+      Test Item
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render in loading state 1`] = `
+<div
+  class="singleItemSelection"
+>
+  <button
+    class="button left"
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+      role="button"
+    >
+      Test Item
+    </div>
+    <div
+      class="spinner loader"
+      style="width:14px;height:14px"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render in loading state with no children 1`] = `
+<div
+  class="singleItemSelection"
+>
+  <button
+    class="button left"
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+      role="button"
+    >
+      <div
+        class="empty"
+      >
+        …
+      </div>
+    </div>
+    <div
+      class="spinner loader"
+      style="width:14px;height:14px"
+    >
+      <div
+        class="doubleBounce1"
+      />
+      <div
+        class="doubleBounce2"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render with emptyText if no children have been passed 1`] = `
+<div
+  class="singleItemSelection"
+>
+  <button
+    class="button left"
+    type="button"
+  >
+    <span
+      aria-label="su-page"
+      class="su-page icon"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+      role="button"
+    >
+      <div
+        class="empty"
+      >
+        Nothing!
+      </div>
+    </div>
+    <button
+      class="removeButton"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Render with given children prop and with custom className 1`] = `
+<div
+  class="singleItemSelection test"
+>
+  <button
+    class="button left"
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+      role="button"
+    >
+      Test Item
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render with given onRemove prop 1`] = `
+<div
+  class="singleItemSelection"
+>
+  <button
+    class="button left"
+    type="button"
+  >
+    <span
+      aria-label="su-page"
+      class="su-page icon"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+      role="button"
+    >
+      Test Item
+    </div>
+    <button
+      class="removeButton"
+      type="button"
+    >
+      <span
+        aria-label="su-trash-alt"
+        class="su-trash-alt"
+      />
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Render with right button 1`] = `
+<div
+  class="singleItemSelection"
+>
+  <button
+    class="button left"
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+      role="button"
+    >
+      Test Item
+    </div>
+  </div>
+  <button
+    class="button right"
+    type="button"
+  >
+    <span
+      aria-label="su-display-default"
+      class="su-display-default icon"
+    />
+  </button>
+</div>
+`;
+
+exports[`Render with right button with options 1`] = `
+<div
+  class="singleItemSelection"
+>
+  <button
+    class="button left"
+    type="button"
+  >
+    <span
+      aria-label="su-document"
+      class="su-document icon"
+    />
+  </button>
+  <div
+    class="itemContainer"
+  >
+    <div
+      class="item"
+      role="button"
+    >
+      Test Item
+    </div>
+  </div>
+  <button
+    class="button right hasOptions"
+    type="button"
+  >
+    <span
+      aria-label="su-display-default"
+      class="su-display-default icon"
+    />
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down"
+    />
+  </button>
+</div>
+`;
