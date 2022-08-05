@@ -1,7 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {render, screen} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import React from 'react';
-import debounce from 'debounce';
 import Badge from '../../Badge/Badge';
 import Tabs from '../Tabs.js';
 
@@ -72,21 +71,23 @@ test('Render a Tabs component with a selected tab and a badge', () => {
     expect(container).toMatchSnapshot();
 });
 
-// test('Clicking on a Tab should call the onSelect handler', () => {
-//     const changeSpy = jest.fn();
-//     const selectedTabIndex = 0;
+test('Clicking on a Tab should call the onSelect handler', () => {
+    const changeSpy = jest.fn();
+    const selectedTabIndex = 0;
 
-//     const tabs = mount(
-//         <Tabs onSelect={changeSpy} selectedIndex={null}>
-//             <Tabs.Tab>Tab 1</Tabs.Tab>
-//             <Tabs.Tab>Tab 2</Tabs.Tab>
-//             <Tabs.Tab>Tab 3</Tabs.Tab>
-//         </Tabs>
-//     );
+    render(
+        <Tabs onSelect={changeSpy} selectedIndex={null}>
+            <Tabs.Tab>Tab 1</Tabs.Tab>
+            <Tabs.Tab>Tab 2</Tabs.Tab>
+            <Tabs.Tab>Tab 3</Tabs.Tab>
+        </Tabs>
+    );
 
-//     tabs.find('.tab button').at(0).simulate('click');
-//     expect(changeSpy).toHaveBeenCalledWith(selectedTabIndex);
-// });
+    const tab1 = screen.queryByText('Tab 1');
+    fireEvent.click(tab1);
+
+    expect(changeSpy).toHaveBeenCalledWith(selectedTabIndex);
+});
 
 // test('Clicking on several non- and collapsed tabs', () => {
 //     const resizeFunction = jest.fn();
@@ -183,25 +184,25 @@ test('Render a Tabs component with a selected tab and a badge', () => {
 //     expect(tabs.instance().collapsedTabIndices).toEqual([4, 5, 6, 7, 9]);
 // });
 
-// test('ResizeObserver.disconnect should be called before component unmount', () => {
-//     const changeSpy = jest.fn();
-//     const selectedTabIndex = 0;
+test('ResizeObserver.disconnect should be called before component unmount', () => {
+    const changeSpy = jest.fn();
+    const selectedTabIndex = 0;
 
-//     const tabs = shallow(
-//         <Tabs onSelect={changeSpy} selectedIndex={selectedTabIndex}>
-//             <Tabs.Tab>Tab 1</Tabs.Tab>
-//             <Tabs.Tab>Tab 2</Tabs.Tab>
-//             <Tabs.Tab>Tab 3</Tabs.Tab>
-//             <Tabs.Tab>Tab 4</Tabs.Tab>
-//             <Tabs.Tab>Tab 5</Tabs.Tab>
-//             <Tabs.Tab>Tab 6</Tabs.Tab>
-//             <Tabs.Tab>Tab 7</Tabs.Tab>
-//             <Tabs.Tab>Tab 8</Tabs.Tab>
-//             <Tabs.Tab>Tab 9</Tabs.Tab>
-//             <Tabs.Tab>Tab 10</Tabs.Tab>
-//         </Tabs>
-//     );
+    const {unmount} = render(
+        <Tabs onSelect={changeSpy} selectedIndex={selectedTabIndex}>
+            <Tabs.Tab>Tab 1</Tabs.Tab>
+            <Tabs.Tab>Tab 2</Tabs.Tab>
+            <Tabs.Tab>Tab 3</Tabs.Tab>
+            <Tabs.Tab>Tab 4</Tabs.Tab>
+            <Tabs.Tab>Tab 5</Tabs.Tab>
+            <Tabs.Tab>Tab 6</Tabs.Tab>
+            <Tabs.Tab>Tab 7</Tabs.Tab>
+            <Tabs.Tab>Tab 8</Tabs.Tab>
+            <Tabs.Tab>Tab 9</Tabs.Tab>
+            <Tabs.Tab>Tab 10</Tabs.Tab>
+        </Tabs>
+    );
+    unmount();
 
-//     tabs.instance().componentWillUnmount();
-//     expect(ResizeObserver.mock.instances[0].disconnect).toBeCalled();
-// });
+    expect(ResizeObserver.mock.instances[0].disconnect).toBeCalled();
+});
