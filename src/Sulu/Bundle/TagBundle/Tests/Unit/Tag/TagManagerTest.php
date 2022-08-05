@@ -118,7 +118,7 @@ class TagManagerTest extends TestCase
                 ['Tag2', (new Tag())->setId(2)],
                 ['Tag3', (new Tag())->setId(3)],
             ]
-            )
+        )
         );
 
         $this->tagRepository->expects($this->any())->method('findTagById')->will($this->returnValueMap(
@@ -127,7 +127,7 @@ class TagManagerTest extends TestCase
                 [2, (new Tag())->setName('Tag2')],
                 [3, (new Tag())->setName('Tag3')],
             ]
-            )
+        )
         );
 
         $this->tagManager = new TagManager(
