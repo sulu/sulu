@@ -165,21 +165,20 @@ test('Call onChange callback if url is not valid but leave the current value', (
     expect(container.querySelector('.error')).not.toBeInTheDocument();
 });
 
-// test('Call onChange callback with undefined if email is not valid but leave the current value', () => {
-//     const changeSpy = jest.fn();
-//     const url = shallow(<Url onChange={changeSpy} value="mailto:hello@sulu.io" />);
-//     url.find('input').prop('onChange')({
-//         currentTarget: {
-//             value: 'invalid-email',
-//         },
-//     });
-//     url.find('input').prop('onBlur')();
+test('Call onChange callback with undefined if email is not valid but leave the current value', () => {
+    const changeSpy = jest.fn();
+    const {container} = render(<Url onChange={changeSpy} value="mailto:hello@sulu.io" />);
 
-//     expect(changeSpy).toBeCalledWith(undefined);
-//     expect(url.find('SingleSelect').prop('value')).toEqual('mailto:');
-//     expect(url.find('input').prop('value')).toEqual('invalid-email');
-//     expect(url.find('.error')).toHaveLength(1);
-// });
+    const input = screen.queryByRole('textbox');
+    const protocol = screen.queryByTitle('mailto:').lastChild;
+    fireEvent.change(input, {target: {value: 'invalid-email'}});
+    fireEvent.blur(input);
+
+    expect(changeSpy).toBeCalledWith(undefined);
+    expect(protocol).toHaveTextContent('mailto:');
+    expect(input).toHaveValue('invalid-email');
+    expect(container.querySelector('.error')).toBeInTheDocument();
+});
 
 // test('Call onChange callback with correct mail address', () => {
 //     const changeSpy = jest.fn();
