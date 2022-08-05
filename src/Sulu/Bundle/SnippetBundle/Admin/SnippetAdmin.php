@@ -131,7 +131,7 @@ class SnippetAdmin extends Admin
         $parentSnippet = $snippet;
         foreach ($this->getTypes() as $typeConfig) {
             $snippet = new NavigationItem($typeConfig['title']);
-            $snippet->setView(static::LIST_VIEW.'_'.$typeConfig['type']);
+            $snippet->setView(static::LIST_VIEW . '_' . $typeConfig['type']);
             $parentSnippet->addChild($snippet);
         }
     }
@@ -190,11 +190,7 @@ class SnippetAdmin extends Admin
 
         $viewCollection->add(
             $this->viewBuilderFactory
-                ->createViewBuilder(
-                    'sulu_snippet.snippet_areas',
-                    '/snippet-areas',
-                    'sulu_snippet.snippet_areas'
-                )
+                ->createViewBuilder('sulu_snippet.snippet_areas', '/snippet-areas', 'sulu_snippet.snippet_areas')
                 ->setOption('snippetEditView', static::EDIT_FORM_VIEW)
                 ->setOption('tabTitle', 'sulu_snippet.default_snippets')
                 ->setOption('tabOrder', 3072)
@@ -278,8 +274,8 @@ class SnippetAdmin extends Admin
             if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
                 $viewCollection->add(
                     $this->viewBuilderFactory->createListViewBuilder(
-                        static::LIST_VIEW.'_'.$typeKey,
-                        '/:locale/'.$typeKey
+                        static::LIST_VIEW . '_' . $typeKey,
+                        '/:locale/' . $typeKey
                     )
                         ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                         ->setListKey(SnippetDocument::LIST_KEY)
@@ -288,46 +284,46 @@ class SnippetAdmin extends Admin
                         ->addLocales($snippetLocales)
                         ->addRequestParameters(['types' => $typeKey])
                         ->setDefaultLocale($snippetLocales[0])
-                        ->setAddView(static::ADD_FORM_VIEW.'_'.$typeKey)
-                        ->setEditView(static::EDIT_FORM_VIEW.'_'.$typeKey)
+                        ->setAddView(static::ADD_FORM_VIEW . '_' . $typeKey)
+                        ->setEditView(static::EDIT_FORM_VIEW . '_' . $typeKey)
                         ->addToolbarActions($listToolbarActions)
                 );
                 $viewCollection->add(
                     $this->viewBuilderFactory->createResourceTabViewBuilder(
-                        static::ADD_FORM_VIEW.'_'.$typeKey,
-                        '/snippets/:locale/'.$typeKey.'/add'
+                        static::ADD_FORM_VIEW . '_' . $typeKey,
+                        '/snippets/:locale/' . $typeKey . '/add'
                     )
                         ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                         ->addLocales($snippetLocales)
-                        ->setBackView(static::LIST_VIEW.'_'.$typeKey)
+                        ->setBackView(static::LIST_VIEW . '_' . $typeKey)
                 );
                 $viewCollection->add(
                     $this->viewBuilderFactory->createFormViewBuilder(
-                        static::ADD_FORM_VIEW_DETAILS.'_'.$typeKey,
+                        static::ADD_FORM_VIEW_DETAILS . '_' . $typeKey,
                         '/details'
                     )
                         ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                         ->addMetadataRequestParameters(['defaultType' => $typeKey])
                         ->setFormKey('snippet')
                         ->setTabTitle('sulu_admin.details')
-                        ->setEditView(static::EDIT_FORM_VIEW.'_'.$typeKey)
+                        ->setEditView(static::EDIT_FORM_VIEW . '_' . $typeKey)
                         ->addToolbarActions($formToolbarActionsWithType)
-                        ->setParent(static::ADD_FORM_VIEW.'_'.$typeKey)
+                        ->setParent(static::ADD_FORM_VIEW . '_' . $typeKey)
                 );
                 $viewCollection->add(
                     $this->viewBuilderFactory
                         ->createResourceTabViewBuilder(
-                            static::EDIT_FORM_VIEW.'_'.$typeKey,
-                            '/snippets/:locale/'.$typeKey.'/:id'
+                            static::EDIT_FORM_VIEW . '_' . $typeKey,
+                            '/snippets/:locale/' . $typeKey . '/:id'
                         )
                         ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                         ->addLocales($snippetLocales)
-                        ->setBackView(static::LIST_VIEW.'_'.$typeKey)
+                        ->setBackView(static::LIST_VIEW . '_' . $typeKey)
                         ->setTitleProperty('title')
                 );
                 $viewCollection->add(
                     $this->viewBuilderFactory->createFormViewBuilder(
-                        static::EDIT_FORM_VIEW_DETAILS.'_'.$typeKey,
+                        static::EDIT_FORM_VIEW_DETAILS . '_' . $typeKey,
                         '/details'
                     )
                         ->setResourceKey(SnippetDocument::RESOURCE_KEY)
@@ -335,17 +331,17 @@ class SnippetAdmin extends Admin
                         ->setFormKey('snippet')
                         ->setTabTitle('sulu_admin.details')
                         ->addToolbarActions($formToolbarActionsWithType)
-                        ->setParent(static::EDIT_FORM_VIEW.'_'.$typeKey)
+                        ->setParent(static::EDIT_FORM_VIEW . '_' . $typeKey)
                 );
                 $viewCollection->add(
                     $this->viewBuilderFactory
-                        ->createFormViewBuilder(self::EDIT_FORM_VIEW_TAXONOMIES.'_'.$typeKey, '/taxonomies')
+                        ->createFormViewBuilder(self::EDIT_FORM_VIEW_TAXONOMIES . '_' . $typeKey, '/taxonomies')
                         ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                         ->setFormKey('snippet_taxonomies')
                         ->setTabTitle('sulu_snippet.taxonomies')
                         ->addToolbarActions($formToolbarActionsWithoutType)
                         ->setTitleVisible(true)
-                        ->setParent(static::EDIT_FORM_VIEW.'_'.$typeKey)
+                        ->setParent(static::EDIT_FORM_VIEW . '_' . $typeKey)
                 );
             }
         }
