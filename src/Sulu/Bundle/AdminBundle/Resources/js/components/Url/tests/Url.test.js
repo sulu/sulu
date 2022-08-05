@@ -260,13 +260,15 @@ test('Call onBlur callback when protocol was changed', () => {
     expect(blurSpy).toBeCalledWith();
 });
 
-// test('Call onBlur callback when path was changed', () => {
-//     const blurSpy = jest.fn();
-//     const url = shallow(<Url onBlur={blurSpy} onChange={jest.fn()} value="https://www.sulu.io" />);
-//     url.find('input').prop('onBlur')();
+test('Call onBlur callback when path was changed', () => {
+    const blurSpy = jest.fn();
+    render(<Url onBlur={blurSpy} onChange={jest.fn()} value="https://www.sulu.io" />);
 
-//     expect(blurSpy).toBeCalledWith();
-// });
+    const input = screen.queryByRole('textbox');
+    fireEvent.blur(input);
+
+    expect(blurSpy).toBeCalledWith();
+});
 
 // test('Should call onProtocolChange with default protocol', () => {
 //     const protocolChangeSpy = jest.fn();
