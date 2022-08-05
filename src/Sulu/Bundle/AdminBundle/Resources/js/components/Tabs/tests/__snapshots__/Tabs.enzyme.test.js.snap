@@ -1,0 +1,196 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render a Tabs component with a selected tab and a badge 1`] = `
+<div
+  class="tabs root"
+>
+  <div
+    class="tabsContainerWrapper"
+  >
+    <ul
+      class="tabsContainer"
+    >
+      <li
+        class="tab root selected"
+      >
+        <button
+          disabled=""
+          title="Tab 1"
+          type="button"
+        >
+          Tab 1
+        </button>
+      </li>
+      <li
+        class="tab root"
+      >
+        <button
+          title="Tab 2"
+          type="button"
+        >
+          Tab 2
+        </button>
+      </li>
+      <li
+        class="tab root"
+      >
+        <button
+          title="Tab 3"
+          type="button"
+        >
+          Tab 3
+          <div
+            class="badges"
+          >
+            <div
+              class="badge"
+            >
+              1
+            </div>
+            <div
+              class="badge"
+            >
+              2
+            </div>
+          </div>
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Render a Tabs component with type inline 1`] = `
+<div
+  class="tabs inline"
+>
+  <div
+    class="tabsContainerWrapper"
+  >
+    <ul
+      class="tabsContainer"
+    >
+      <li
+        class="tab inline"
+      >
+        <button
+          title="Tab 1"
+          type="button"
+        >
+          Tab 1
+        </button>
+      </li>
+      <li
+        class="tab inline"
+      >
+        <button
+          title="Tab 2"
+          type="button"
+        >
+          Tab 2
+        </button>
+      </li>
+      <li
+        class="tab inline"
+      >
+        <button
+          title="Tab 3"
+          type="button"
+        >
+          Tab 3
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Render a Tabs component with type nested 1`] = `
+<div
+  class="tabs nested"
+>
+  <div
+    class="tabsContainerWrapper"
+  >
+    <ul
+      class="tabsContainer"
+    >
+      <li
+        class="tab nested"
+      >
+        <button
+          title="Tab 1"
+          type="button"
+        >
+          Tab 1
+        </button>
+      </li>
+      <li
+        class="tab nested"
+      >
+        <button
+          title="Tab 2"
+          type="button"
+        >
+          Tab 2
+        </button>
+      </li>
+      <li
+        class="tab nested"
+      >
+        <button
+          title="Tab 3"
+          type="button"
+        >
+          Tab 3
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
+
+exports[`Render a Tabs component with type root 1`] = `
+<div
+  class="tabs root"
+>
+  <div
+    class="tabsContainerWrapper"
+  >
+    <ul
+      class="tabsContainer"
+    >
+      <li
+        class="tab root"
+      >
+        <button
+          title="Tab 1"
+          type="button"
+        >
+          Tab 1
+        </button>
+      </li>
+      <li
+        class="tab root"
+      >
+        <button
+          title="Tab 2"
+          type="button"
+        >
+          Tab 2
+        </button>
+      </li>
+      <li
+        class="tab root"
+      >
+        <button
+          title="Tab 3"
+          type="button"
+        >
+          Tab 3
+        </button>
+      </li>
+    </ul>
+  </div>
+</div>
+`;
