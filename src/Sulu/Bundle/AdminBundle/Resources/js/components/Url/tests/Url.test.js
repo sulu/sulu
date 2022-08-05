@@ -130,45 +130,40 @@ test('Call onChange callback when path was changed', () => {
     expect(changeSpy).toBeCalledWith('https://sulu.at');
 });
 
-// test('Call onChange callback when path was changed but not blurred', () => {
-//     const changeSpy = jest.fn();
-//     const url = shallow(<Url onChange={changeSpy} value="https://www.sulu.io" />);
-//     url.find('input').prop('onChange')({
-//         currentTarget: {
-//             value: 'sulu.at',
-//         },
-//     });
+test('Call onChange callback when path was changed but not blurred', () => {
+    const changeSpy = jest.fn();
+    render(<Url onChange={changeSpy} value="https://www.sulu.io" />);
 
-//     expect(changeSpy).toBeCalledWith('https://sulu.at');
-// });
+    const input = screen.queryByRole('textbox');
+    fireEvent.change(input, {target: {value: 'sulu.at'}});
 
-// test('Call onChange callback when path was changed to invalid url but not blurred', () => {
-//     const changeSpy = jest.fn();
-//     const url = shallow(<Url onChange={changeSpy} value="https://www.sulu.io" />);
-//     url.find('input').prop('onChange')({
-//         currentTarget: {
-//             value: 'sulu.a',
-//         },
-//     });
+    expect(changeSpy).toBeCalledWith('https://sulu.at');
+});
 
-//     expect(changeSpy).toBeCalledWith('https://sulu.a');
-// });
+test('Call onChange callback when path was changed to invalid url but not blurred', () => {
+    const changeSpy = jest.fn();
+    render(<Url onChange={changeSpy} value="https://www.sulu.io" />);
 
-// test('Call onChange callback if url is not valid but leave the current value', () => {
-//     const changeSpy = jest.fn();
-//     const url = shallow(<Url onChange={changeSpy} value="https://www.sulu.io" />);
-//     url.find('input').prop('onChange')({
-//         currentTarget: {
-//             value: 'su lu.at',
-//         },
-//     });
-//     url.find('input').prop('onBlur')();
+    const input = screen.queryByRole('textbox');
+    fireEvent.change(input, {target: {value: 'sulu.a'}});
 
-//     expect(changeSpy).toBeCalledWith('https://su lu.at');
-//     expect(url.find('SingleSelect').prop('value')).toEqual('https://');
-//     expect(url.find('input').prop('value')).toEqual('su lu.at');
-//     expect(url.find('.error')).toHaveLength(0);
-// });
+    expect(changeSpy).toBeCalledWith('https://sulu.a');
+});
+
+test('Call onChange callback if url is not valid but leave the current value', () => {
+    const changeSpy = jest.fn();
+    const {container} = render(<Url onChange={changeSpy} value="https://www.sulu.io" />);
+
+    const input = screen.queryByRole('textbox');
+    const protocol = screen.queryByTitle('https://').lastChild;
+    fireEvent.change(input, {target: {value: 'su lu.at'}});
+    fireEvent.blur(input);
+
+    expect(changeSpy).toBeCalledWith('https://su lu.at');
+    expect(protocol).toHaveTextContent('https://');
+    expect(input).toHaveValue('su lu.at');
+    expect(container.querySelector('.error')).not.toBeInTheDocument();
+});
 
 // test('Call onChange callback with undefined if email is not valid but leave the current value', () => {
 //     const changeSpy = jest.fn();
