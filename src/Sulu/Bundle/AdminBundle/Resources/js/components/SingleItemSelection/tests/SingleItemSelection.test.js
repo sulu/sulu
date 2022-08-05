@@ -1,6 +1,7 @@
+/* eslint-disable testing-library/no-container, testing-library/no-node-access */
 // @flow
 import React from 'react';
-import {render} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import SingleItemSelection from '../SingleItemSelection';
 
 test('Render with given children prop and with custom className', () => {
@@ -164,104 +165,111 @@ test('Render with emptyText if no children have been passed', () => {
     expect(container).toMatchSnapshot();
 });
 
-// test('Call onClick callback if left button is clicked', () => {
-//     const leftButton = {
-//         icon: 'su-document',
-//         onClick: jest.fn(),
-//     };
+test('Call onClick callback if left button is clicked', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
 
-//     const singleItemSelection = shallow(<SingleItemSelection leftButton={leftButton} />);
+    const {container} = render(<SingleItemSelection leftButton={leftButton} />);
 
-//     singleItemSelection.find('Button').prop('onClick')();
+    const button = container.querySelector('button');
+    fireEvent.click(button);
 
-//     expect(leftButton.onClick).toBeCalledWith();
-// });
+    expect(leftButton.onClick).toBeCalledWith();
+});
 
-// test('Call onClick callback with option value', () => {
-//     const leftButton = {
-//         icon: 'su-document',
-//         onClick: jest.fn(),
-//     };
+test('Call onClick callback with option value', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
 
-//     const rightButton = {
-//         icon: 'su-display-default',
-//         onClick: jest.fn(),
-//         options: [
-//             {
-//                 label: 'Test1',
-//                 value: 'test1',
-//             },
-//         ],
-//     };
+    const rightButton = {
+        icon: 'su-display-default',
+        onClick: jest.fn(),
+        options: [
+            {
+                label: 'Test1',
+                value: 'test1',
+            },
+        ],
+    };
 
-//     const singleItemSelection = mount(<SingleItemSelection leftButton={leftButton} rightButton={rightButton} />);
+    render(<SingleItemSelection leftButton={leftButton} rightButton={rightButton} />);
 
-//     singleItemSelection.find('Button[icon="su-display-default"]').simulate('click');
-//     singleItemSelection.find('Action[value="test1"]').simulate('click');
+    const icon = screen.queryByLabelText('su-display-default');
+    fireEvent.click(icon);
+    const action = screen.queryByText(/Test1/);
+    fireEvent.click(action);
 
-//     expect(rightButton.onClick).toBeCalledWith('test1');
-// });
+    expect(rightButton.onClick).toBeCalledWith('test1');
+});
 
-// test('Call onClick callback if right button is clicked', () => {
-//     const leftButton = {
-//         icon: 'su-document',
-//         onClick: jest.fn(),
-//     };
+test('Call onClick callback if right button is clicked', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
 
-//     const rightButton = {
-//         icon: 'su-display-default',
-//         onClick: jest.fn(),
-//     };
+    const rightButton = {
+        icon: 'su-display-default',
+        onClick: jest.fn(),
+    };
 
-//     const singleItemSelection = shallow(<SingleItemSelection leftButton={leftButton} rightButton={rightButton} />);
+    render(<SingleItemSelection leftButton={leftButton} rightButton={rightButton} />);
 
-//     singleItemSelection.find('Button[icon="su-display-default"]').prop('onClick')();
+    const icon = screen.queryByLabelText('su-display-default');
+    fireEvent.click(icon);
 
-//     expect(rightButton.onClick).toBeCalledWith();
-// });
+    expect(rightButton.onClick).toBeCalledWith();
+});
 
-// test('Call onItemClick callback should not be called if item is clicked but no id is given', () => {
-//     const leftButton = {
-//         icon: 'su-document',
-//         onClick: jest.fn(),
-//     };
+test('Call onItemClick callback should not be called if item is clicked but no id is given', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
 
-//     const itemClickSpy = jest.fn();
-//     const singleItemSelection = shallow(<SingleItemSelection leftButton={leftButton} onItemClick={itemClickSpy} />);
+    const itemClickSpy = jest.fn();
+    const {container} = render(<SingleItemSelection leftButton={leftButton} onItemClick={itemClickSpy} />);
 
-//     singleItemSelection.find('.item').prop('onClick')();
+    const item = container.querySelector('.item');
+    fireEvent.click(item);
 
-//     expect(itemClickSpy).not.toBeCalled();
-// });
+    expect(itemClickSpy).not.toBeCalled();
+});
 
-// test('Call onItemClick callback should not be called if item is clicked', () => {
-//     const leftButton = {
-//         icon: 'su-document',
-//         onClick: jest.fn(),
-//     };
+test('Call onItemClick callback should not be called if item is clicked', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
 
-//     const value = {id: 5};
+    const value = {id: 5};
 
-//     const itemClickSpy = jest.fn();
-//     const singleItemSelection = shallow(
-//         <SingleItemSelection id={5} leftButton={leftButton} onItemClick={itemClickSpy} value={value} />
-//     );
+    const itemClickSpy = jest.fn();
+    const {container} = render(
+        <SingleItemSelection id={5} leftButton={leftButton} onItemClick={itemClickSpy} value={value} />
+    );
 
-//     singleItemSelection.find('.item').prop('onClick')();
+    const item = container.querySelector('.item');
+    fireEvent.click(item);
 
-//     expect(itemClickSpy).toBeCalledWith(5, value);
-// });
+    expect(itemClickSpy).toBeCalledWith(5, value);
+});
 
-// test('Call onRemove callback if remove button is clicked', () => {
-//     const leftButton = {
-//         icon: 'su-document',
-//         onClick: jest.fn(),
-//     };
+test('Call onRemove callback if remove button is clicked', () => {
+    const leftButton = {
+        icon: 'su-document',
+        onClick: jest.fn(),
+    };
 
-//     const removeSpy = jest.fn();
-//     const singleItemSelection = shallow(<SingleItemSelection leftButton={leftButton} onRemove={removeSpy} />);
+    const removeSpy = jest.fn();
+    render(<SingleItemSelection leftButton={leftButton} onRemove={removeSpy} />);
 
-//     singleItemSelection.find('.removeButton').prop('onClick')();
+    const icon = screen.queryByLabelText('su-trash-alt');
+    fireEvent.click(icon);
 
-//     expect(removeSpy).toBeCalledWith();
-// });
+    expect(removeSpy).toBeCalled();
+});
