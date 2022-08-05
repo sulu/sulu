@@ -1,117 +1,138 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render in checked state 1`] = `
-<label
-  class="label"
-  tabindex="-1"
->
-  <span
-    class="switch"
+<div>
+  <label
+    class="label"
+    tabindex="-1"
   >
-    <input
-      checked=""
-      type="checkbox"
-    />
-    <span />
-  </span>
-</label>
+    <span
+      class="switch"
+    >
+      <input
+        checked=""
+        type="checkbox"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</div>
 `;
 
 exports[`The component should render in disabled state 1`] = `
-<label
-  class="label disabled"
-  tabindex="-1"
->
-  <span
-    class="switch disabled"
+<div>
+  <label
+    class="label disabled"
+    tabindex="-1"
   >
-    <input
-      disabled=""
-      type="checkbox"
-    />
-    <span />
-  </span>
-</label>
+    <span
+      class="switch disabled"
+    >
+      <input
+        disabled=""
+        type="checkbox"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</div>
 `;
 
 exports[`The component should render in unchecked state 1`] = `
-<label
-  class="label"
-  tabindex="-1"
->
-  <span
-    class="switch"
+<div>
+  <label
+    class="label"
+    tabindex="-1"
   >
-    <input
-      type="checkbox"
-    />
-    <span />
-  </span>
-</label>
+    <span
+      class="switch"
+    >
+      <input
+        type="checkbox"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</div>
 `;
 
 exports[`The component should render with class 1`] = `
-<label
-  class="label"
-  tabindex="-1"
->
-  <span
-    class="switch my-class"
+<div>
+  <label
+    class="label"
+    tabindex="-1"
   >
-    <input
-      type="checkbox"
-    />
-    <span />
-  </span>
-</label>
+    <span
+      class="switch my-class"
+    >
+      <input
+        type="checkbox"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</div>
 `;
 
 exports[`The component should render with name 1`] = `
-<label
-  class="label"
-  tabindex="-1"
->
-  <span
-    class="switch"
+<div>
+  <label
+    class="label"
+    tabindex="-1"
   >
-    <input
-      name="my-name"
-      type="checkbox"
-    />
-    <span />
-  </span>
-</label>
+    <span
+      class="switch"
+    >
+      <input
+        name="my-name"
+        type="checkbox"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</div>
 `;
 
 exports[`The component should render with radio type 1`] = `
-<label
-  class="label"
-  tabindex="-1"
->
-  <span
-    class="switch my-class"
+<div>
+  <label
+    class="label"
+    tabindex="-1"
   >
-    <input
-      type="radio"
-    />
-    <span />
-  </span>
-</label>
+    <span
+      class="switch my-class"
+    >
+      <input
+        type="radio"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</div>
 `;
 
 exports[`The component should render without a label container 1`] = `
-<label
-  class="label"
-  tabindex="-1"
->
-  <span
-    class="switch"
+<div>
+  <label
+    class="label"
+    tabindex="-1"
   >
-    <input
-      name="my-name"
-      type="checkbox"
-    />
-    <span />
-  </span>
-</label>
+    <span
+      class="switch"
+    >
+      <input
+        name="my-name"
+        type="checkbox"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</div>
 `;
