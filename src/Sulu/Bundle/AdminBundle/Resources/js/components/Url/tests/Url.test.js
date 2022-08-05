@@ -180,21 +180,20 @@ test('Call onChange callback with undefined if email is not valid but leave the 
     expect(container.querySelector('.error')).toBeInTheDocument();
 });
 
-// test('Call onChange callback with correct mail address', () => {
-//     const changeSpy = jest.fn();
-//     const url = shallow(<Url onChange={changeSpy} protocols={['mailto:']} value={undefined} />);
-//     url.find('input').prop('onChange')({
-//         currentTarget: {
-//             value: 'test@example.com',
-//         },
-//     });
-//     url.find('input').prop('onBlur')();
+test('Call onChange callback with correct mail address', () => {
+    const changeSpy = jest.fn();
+    const {container} = render(<Url onChange={changeSpy} protocols={['mailto:']} value={undefined} />);
 
-//     expect(changeSpy).toBeCalledWith('mailto:test@example.com');
-//     expect(url.find('SingleSelect').prop('value')).toEqual('mailto:');
-//     expect(url.find('input').prop('value')).toEqual('test@example.com');
-//     expect(url.find('.error')).toHaveLength(0);
-// });
+    const input = screen.queryByRole('textbox');
+    const protocol = screen.queryByTitle('mailto:').lastChild;
+    fireEvent.change(input, {target: {value: 'test@example.com'}});
+    fireEvent.blur(input);
+
+    expect(changeSpy).toBeCalledWith('mailto:test@example.com');
+    expect(protocol).toHaveTextContent('mailto:');
+    expect(input).toHaveValue('test@example.com');
+    expect(container.querySelector('.error')).not.toBeInTheDocument();
+});
 
 // test('Call onChange callback with correct value with custom protocol', () => {
 //     const changeSpy = jest.fn();
