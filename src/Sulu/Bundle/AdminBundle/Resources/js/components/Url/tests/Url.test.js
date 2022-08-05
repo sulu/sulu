@@ -195,63 +195,60 @@ test('Call onChange callback with correct mail address', () => {
     expect(container.querySelector('.error')).not.toBeInTheDocument();
 });
 
-// test('Call onChange callback with correct value with custom protocol', () => {
-//     const changeSpy = jest.fn();
-//     const url = shallow(<Url onChange={changeSpy} protocols={['custom-protocol:']} value={undefined} />);
-//     url.find('input').prop('onChange')({
-//         currentTarget: {
-//             value: '012345ABC',
-//         },
-//     });
-//     url.find('input').prop('onBlur')();
+test('Call onChange callback with correct value with custom protocol', () => {
+    const changeSpy = jest.fn();
+    const {container} = render(<Url onChange={changeSpy} protocols={['custom-protocol:']} value={undefined} />);
 
-//     expect(changeSpy).toBeCalledWith('custom-protocol:012345ABC');
-//     expect(url.find('SingleSelect').prop('value')).toEqual('custom-protocol:');
-//     expect(url.find('input').prop('value')).toEqual('012345ABC');
-//     expect(url.find('.error')).toHaveLength(0);
-// });
+    const input = screen.queryByRole('textbox');
+    const protocol = screen.queryByTitle('custom-protocol:').lastChild;
+    fireEvent.change(input, {target: {value: '012345ABC'}});
+    fireEvent.blur(input);
 
-// test('Call onChange callback with undefined if incorrect mail address is entered', () => {
-//     const changeSpy = jest.fn();
-//     const url = shallow(<Url onChange={changeSpy} protocols={['mailto:']} value={undefined} />);
-//     url.find('input').prop('onChange')({
-//         currentTarget: {
-//             value: 'example.com',
-//         },
-//     });
-//     url.find('input').prop('onBlur')();
+    expect(changeSpy).toBeCalledWith('custom-protocol:012345ABC');
+    expect(protocol).toHaveTextContent('custom-protocol:');
+    expect(input).toHaveValue('012345ABC');
+    expect(container.querySelector('.error')).not.toBeInTheDocument();
+});
 
-//     expect(changeSpy).toBeCalledWith(undefined);
-//     expect(url.find('SingleSelect').prop('value')).toEqual('mailto:');
-//     expect(url.find('input').prop('value')).toEqual('example.com');
-//     expect(url.find('.error')).toHaveLength(1);
-// });
+test('Call onChange callback with undefined if incorrect mail address is entered', () => {
+    const changeSpy = jest.fn();
+    const {container} = render(<Url onChange={changeSpy} protocols={['mailto:']} value={undefined} />);
 
-// test('Should remove the protocol from path and set it on the protocol select', () => {
-//     const changeSpy = jest.fn();
-//     const url = shallow(<Url onChange={changeSpy} value={undefined} />);
-//     url.find('input').prop('onChange')({
-//         currentTarget: {
-//             value: 'http://www.sulu.at',
-//         },
-//     });
+    const input = screen.queryByRole('textbox');
+    const protocol = screen.queryByTitle('mailto:').lastChild;
+    fireEvent.change(input, {target: {value: 'example.com'}});
+    fireEvent.blur(input);
 
-//     expect(url.find('SingleSelect').prop('value')).toEqual('http://');
-//     expect(url.find('input').prop('value')).toEqual('www.sulu.at');
-// });
+    expect(protocol).toHaveTextContent('mailto');
+    expect(input).toHaveValue('example.com');
+    expect(container.querySelector('.error')).toBeInTheDocument();
+});
 
-// test('Should remove the protocol from path and set it on the protocol select if protocol is already selected', () => {
-//     const changeSpy = jest.fn();
-//     const url = shallow(<Url onChange={changeSpy} value="http://www.sulu.at" />);
-//     url.find('input').prop('onChange')({
-//         currentTarget: {
-//             value: 'https://www.sulu.io',
-//         },
-//     });
+test('Should remove the protocol from path and set it on the protocol select', () => {
+    const changeSpy = jest.fn();
+    render(<Url onChange={changeSpy} value={undefined} />);
 
-//     expect(url.find('SingleSelect').prop('value')).toEqual('https://');
-//     expect(url.find('input').prop('value')).toEqual('www.sulu.io');
-// });
+    const input = screen.queryByRole('textbox');
+    const protocol = screen.queryByTitle('http://').lastChild;
+    fireEvent.change(input, {target: {value: 'http://www.sulu.at'}});
+    fireEvent.blur(input);
+
+    expect(protocol).toHaveTextContent('http://');
+    expect(input).toHaveValue('www.sulu.at');
+});
+
+test('Should remove the protocol from path and set it on the protocol select if protocol is already selected', () => {
+    const changeSpy = jest.fn();
+    render(<Url onChange={changeSpy} value="http://www.sulu.at" />);
+
+    const input = screen.queryByRole('textbox');
+    const protocol = screen.queryByTitle('http://').lastChild;
+    fireEvent.change(input, {target: {value: 'https://www.sulu.io'}});
+    fireEvent.blur(input);
+
+    expect(protocol).toHaveTextContent('https://');
+    expect(input).toHaveValue('www.sulu.io');
+});
 
 // test('Call onBlur callback when protocol was changed', () => {
 //     const blurSpy = jest.fn();
