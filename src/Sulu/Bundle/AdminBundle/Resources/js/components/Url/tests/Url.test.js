@@ -250,13 +250,15 @@ test('Should remove the protocol from path and set it on the protocol select if 
     expect(input).toHaveValue('www.sulu.io');
 });
 
-// test('Call onBlur callback when protocol was changed', () => {
-//     const blurSpy = jest.fn();
-//     const url = shallow(<Url onBlur={blurSpy} onChange={jest.fn()} value="https://www.sulu.io" />);
-//     url.find('SingleSelect').prop('onChange')('http://');
+test('Call onBlur callback when protocol was changed', () => {
+    const blurSpy = jest.fn();
+    render(<Url onBlur={blurSpy} onChange={jest.fn()} value="https://www.sulu.io" />);
 
-//     expect(blurSpy).toBeCalledWith();
-// });
+    fireEvent.click(screen.queryByLabelText('su-angle-down'));
+    fireEvent.click(screen.queryByText('http://'));
+
+    expect(blurSpy).toBeCalledWith();
+});
 
 // test('Call onBlur callback when path was changed', () => {
 //     const blurSpy = jest.fn();
