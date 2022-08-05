@@ -270,28 +270,29 @@ test('Call onBlur callback when path was changed', () => {
     expect(blurSpy).toBeCalledWith();
 });
 
-// test('Should call onProtocolChange with default protocol', () => {
-//     const protocolChangeSpy = jest.fn();
-//     shallow(
-//         <Url defaultProtocol="http://" onChange={jest.fn()} onProtocolChange={protocolChangeSpy} value={undefined} />
-//     );
+test('Should call onProtocolChange with default protocol', () => {
+    const protocolChangeSpy = jest.fn();
+    render(
+        <Url defaultProtocol="http://" onChange={jest.fn()} onProtocolChange={protocolChangeSpy} value={undefined} />
+    );
 
-//     expect(protocolChangeSpy).toBeCalledWith('http://');
-// });
+    expect(protocolChangeSpy).toBeCalledWith('http://');
+});
 
-// test('Should call onProtocolChange with initial value', () => {
-//     const protocolChangeSpy = jest.fn();
-//     shallow(<Url onChange={jest.fn()} onProtocolChange={protocolChangeSpy} value="http://www.google.at" />);
+test('Should call onProtocolChange with initial value', () => {
+    const protocolChangeSpy = jest.fn();
+    render(<Url onChange={jest.fn()} onProtocolChange={protocolChangeSpy} value="http://www.google.at" />);
 
-//     expect(protocolChangeSpy).toBeCalledWith('http://');
-// });
+    expect(protocolChangeSpy).toBeCalledWith('http://');
+});
 
-// test('Should call onProtocolChange when protocol is changed', () => {
-//     const changeSpy = jest.fn();
-//     const protocolChangeSpy = jest.fn();
-//     const url = shallow(<Url onChange={changeSpy} onProtocolChange={protocolChangeSpy} value={undefined} />);
+test('Should call onProtocolChange when protocol is changed', () => {
+    const changeSpy = jest.fn();
+    const protocolChangeSpy = jest.fn();
+    render(<Url onChange={changeSpy} onProtocolChange={protocolChangeSpy} value={undefined} />);
 
-//     url.find('SingleSelect').prop('onChange')('https://');
+    fireEvent.click(screen.queryByLabelText('su-angle-down'));
+    fireEvent.click(screen.queryByText('https://'));
 
-//     expect(protocolChangeSpy).toHaveBeenLastCalledWith('https://');
-// });
+    expect(protocolChangeSpy).toHaveBeenLastCalledWith('https://');
+});
