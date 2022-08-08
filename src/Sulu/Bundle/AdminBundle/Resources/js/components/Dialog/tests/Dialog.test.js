@@ -1,5 +1,6 @@
+/* eslint-disable testing-library/no-node-access, testing-library/no-container */
 // @flow
-import {mount, shallow} from 'enzyme';
+import {fireEvent, render, screen} from '@testing-library/react';
 import React from 'react';
 import Dialog from '../Dialog';
 
@@ -8,24 +9,24 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 test('The component should render in body when open', () => {
-    const view = mount(
-        <Dialog
-            cancelText="Cancel"
-            confirmText="Confirm"
-            onCancel={jest.fn()}
-            onConfirm={jest.fn()}
-            open={true}
-            title="My dialog title"
-        >
-            <div>My dialog content</div>
-        </Dialog>
+    const {baseElement} = render(<Dialog
+        cancelText="Cancel"
+        confirmText="Confirm"
+        onCancel={jest.fn()}
+        onConfirm={jest.fn()}
+        open={true}
+        title="My dialog title"
+    >
+        <div>My dialog content</div>
+    </Dialog>
     );
 
-    expect(view.find('Dialog > Portal').at(0).render()).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
+    expect(screen.getByText('My dialog content')).toBeInTheDocument();
 });
 
 test('The component should render aligned to the left', () => {
-    const view = shallow(
+    render(
         <Dialog
             align="left"
             cancelText="Cancel"
@@ -39,12 +40,12 @@ test('The component should render aligned to the left', () => {
         </Dialog>
     );
 
-    expect(view.find('.article').hasClass('left')).toEqual(true);
+    expect(screen.queryByText('My dialog content').parentElement).toHaveClass('left');
 });
 
 test('The component should render in body without cancel button', () => {
     const onConfirm = jest.fn();
-    const view = mount(
+    render(
         <Dialog
             confirmText="Confirm"
             onConfirm={onConfirm}
@@ -55,14 +56,14 @@ test('The component should render in body without cancel button', () => {
         </Dialog>
     );
 
-    expect(view.find('Button')).toHaveLength(1);
-    expect(view.find('Button[children="Confirm"]')).toHaveLength(1);
+    expect(screen.queryByText('Cancel')).not.toBeInTheDocument();
+    expect(screen.getByText('Confirm')).toBeInTheDocument();
 });
 
 test('The component should render in body with disabled confirm button', () => {
     const onCancel = jest.fn();
     const onConfirm = jest.fn();
-    const view = mount(
+    render(
         <Dialog
             cancelText="Cancel"
             confirmDisabled={true}
@@ -76,11 +77,13 @@ test('The component should render in body with disabled confirm button', () => {
         </Dialog>
     );
 
-    expect(view.find('Button[children="Confirm"]').prop('disabled')).toEqual(true);
+    const button = screen.queryByText('Confirm').parentElement;
+
+    expect(button).toBeDisabled();
 });
 
 test('The component should render in body with a large class', () => {
-    const view = mount(
+    render(
         <Dialog
             cancelText="Cancel"
             confirmText="Confirm"
@@ -94,13 +97,20 @@ test('The component should render in body with a large class', () => {
         </Dialog>
     );
 
-    expect(view.find('Dialog > Portal div.large')).toHaveLength(1);
+    const largeDiv = screen.queryByLabelText('su-exclamation-triangle')
+        .parentElement
+        .parentElement
+        .parentElement
+        .parentElement;
+
+    expect(largeDiv).toBeInTheDocument();
+    expect(largeDiv).toHaveClass('large');
 });
 
 test('The component should render in body with loader instead of confirm button', () => {
     const onCancel = jest.fn();
     const onConfirm = jest.fn();
-    const view = mount(
+    render(
         <Dialog
             cancelText="Cancel"
             confirmLoading={true}
@@ -114,11 +124,13 @@ test('The component should render in body with loader instead of confirm button'
         </Dialog>
     );
 
-    expect(view.find('Button[children="Confirm"]').prop('loading')).toEqual(true);
+    const loader = screen.queryByText('Confirm').nextElementSibling;
+    expect(loader).toBeInTheDocument();
+    expect(loader).toHaveClass('loader');
 });
 
 test('The component should not render in body when closed', () => {
-    const view = mount(
+    render(
         <Dialog
             cancelText="Cancel"
             confirmText="Confirm"
@@ -130,14 +142,13 @@ test('The component should not render in body when closed', () => {
             My dialog content
         </Dialog>
     );
-
-    expect(view.find('Dialog > Portal')).toHaveLength(0);
+    expect(screen.queryByText('My dialog content')).not.toBeInTheDocument();
 });
 
 test('The component should call the callback when the confirm button is clicked', () => {
     const onCancel = jest.fn();
     const onConfirm = jest.fn();
-    const view = shallow(
+    render(
         <Dialog
             cancelText="Cancel"
             confirmText="Confirm"
@@ -149,16 +160,17 @@ test('The component should call the callback when the confirm button is clicked'
             My dialog content
         </Dialog>
     );
+    const button = screen.queryByText('Confirm');
 
     expect(onConfirm).not.toBeCalled();
-    view.find('Button[skin="primary"]').simulate('click');
+    fireEvent.click(button);
     expect(onConfirm).toBeCalled();
 });
 
 test('The component should call the callback when the cancel button is clicked', () => {
     const onConfirm = jest.fn();
     const onCancel = jest.fn();
-    const view = shallow(
+    render(
         <Dialog
             cancelText="Cancel"
             confirmText="Confirm"
@@ -170,15 +182,16 @@ test('The component should call the callback when the cancel button is clicked',
             My dialog content
         </Dialog>
     );
+    const button = screen.queryByText('Cancel');
 
     expect(onCancel).not.toBeCalled();
-    view.find('Button[skin="secondary"]').simulate('click');
+    fireEvent.click(button);
     expect(onCancel).toBeCalled();
 });
 
 test('The component should render with a warning', () => {
     const onConfirm = jest.fn();
-    const view = mount(
+    render(
         <Dialog
             confirmText="Confirm"
             onConfirm={onConfirm}
@@ -191,14 +204,17 @@ test('The component should render with a warning', () => {
         </Dialog>
     );
 
-    expect(view.find('.snackbar.warning')).toHaveLength(1);
-    expect(view.find('.snackbar.warning').text()).toBe('sulu_admin.warning - Something really strange happened');
-    expect(view.find('.snackbar.error')).toHaveLength(0);
+    const snackbar = screen.queryByText(/Something really strange happened/).parentElement;
+
+    expect(snackbar).toBeInTheDocument();
+    expect(snackbar).toHaveClass('snackbar', 'warning');
+    expect(snackbar).not.toHaveClass('error');
+    expect(snackbar.children[1]).toHaveTextContent('sulu_admin.warning - Something really strange happened');
 });
 
 test('The component should render with an error', () => {
     const onConfirm = jest.fn();
-    const view = mount(
+    render(
         <Dialog
             confirmText="Confirm"
             onConfirm={onConfirm}
@@ -211,14 +227,17 @@ test('The component should render with an error', () => {
         </Dialog>
     );
 
-    expect(view.find('.snackbar.error')).toHaveLength(1);
-    expect(view.find('.snackbar.error').text()).toBe('sulu_admin.error - Money transfer unsuccessful');
-    expect(view.find('.snackbar.warning')).toHaveLength(0);
+    const snackbar = screen.queryByText(/Money transfer unsuccessful/).parentElement;
+
+    expect(snackbar).toBeInTheDocument();
+    expect(snackbar).toHaveClass('snackbar', 'error');
+    expect(snackbar).not.toHaveClass('warning');
+    expect(snackbar.children[1]).toHaveTextContent('sulu_admin.error - Money transfer unsuccessful');
 });
 
 test('The component should render with an error if the type is unknown', () => {
     const onConfirm = jest.fn();
-    const view = mount(
+    render(
         <Dialog
             confirmText="Confirm"
             onConfirm={onConfirm}
@@ -230,14 +249,17 @@ test('The component should render with an error if the type is unknown', () => {
         </Dialog>
     );
 
-    expect(view.find('.snackbar.error')).toHaveLength(1);
-    expect(view.find('.snackbar.error').text()).toBe('sulu_admin.error - Money transfer unsuccessful');
-    expect(view.find('.snackbar.warning')).toHaveLength(0);
+    const snackbar = screen.queryByText(/Money transfer unsuccessful/).parentElement;
+
+    expect(snackbar).toBeInTheDocument();
+    expect(snackbar).toHaveClass('snackbar', 'error');
+    expect(snackbar).not.toHaveClass('warning');
+    expect(snackbar.children[1]).toHaveTextContent('sulu_admin.error - Money transfer unsuccessful');
 });
 
 test('The component should call the callback when the snackbar close button is clicked', () => {
     const onSnackbarCloseClick = jest.fn();
-    const view = mount(
+    render(
         <Dialog
             confirmText="Confirm"
             onConfirm={jest.fn()}
@@ -251,14 +273,18 @@ test('The component should call the callback when the snackbar close button is c
         </Dialog>
     );
 
+    const snackbar = screen.queryByText(/Money transfer unsuccessful/).parentElement;
+    const closeIcon = screen.queryByLabelText('su-times');
+
+    expect(snackbar).toBeInTheDocument();
     expect(onSnackbarCloseClick).not.toBeCalled();
-    view.find('.snackbar.error .su-times').simulate('click');
+    fireEvent.click(closeIcon);
     expect(onSnackbarCloseClick).toBeCalled();
 });
 
 test('The component should call the callback when the snackbar is clicked', () => {
     const onSnackbarClick = jest.fn();
-    const view = mount(
+    render(
         <Dialog
             confirmText="Confirm"
             onConfirm={jest.fn()}
@@ -272,7 +298,10 @@ test('The component should call the callback when the snackbar is clicked', () =
         </Dialog>
     );
 
+    const snackbar = screen.queryByText(/Something really strange happened/).parentElement;
+
+    expect(snackbar).toBeInTheDocument();
     expect(onSnackbarClick).not.toBeCalled();
-    view.find('.snackbar.warning').simulate('click');
+    fireEvent.click(snackbar);
     expect(onSnackbarClick).toBeCalled();
 });
