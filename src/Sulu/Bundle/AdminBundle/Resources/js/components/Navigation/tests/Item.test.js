@@ -107,6 +107,6 @@ test('The component should handle clicks correctly', () => {
     fireEvent.click(screen.queryByText('Settings'));
     expect(handleItemClick).toBeCalledWith('settings');
 
-    fireEvent.click(screen.queryByText('Settings 2'));
+    fireEvent.click(screen.queryByText(/Settings 2/));
     expect(handleSubItemClick).toBeCalledWith('settings_2');
 });

@@ -24,9 +24,9 @@ test('The component should render with all available props and handle clicks cor
 
     expect(container).toMatchSnapshot();
 
-    fireEvent.click(screen.queryByText('sulu_admin.edit_profile'));
+    fireEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
     expect(handleProfileClick).toBeCalled();
 
-    fireEvent.click(screen.queryByText('sulu_admin.logout'));
+    fireEvent.click(screen.queryByText(/sulu_admin.logout/));
     expect(handleLogoutClick).toBeCalled();
 });
