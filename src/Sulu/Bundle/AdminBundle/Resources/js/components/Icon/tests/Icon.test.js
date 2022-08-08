@@ -52,7 +52,7 @@ test('Icon should call the callback on when space is pressed', async() => {
     render(<Icon className="test" name="su-pen" onClick={onClick} />);
 
     const icon = screen.queryByLabelText('su-pen');
-    await userEvent.keyPress(icon, {key: ' ', charCode: 32, code: 'Space'});
+    await userEvent.type(icon, '[Space]');
 
     expect(onClick).toBeCalled();
 });
@@ -62,7 +62,7 @@ test('Icon should call the callback on when enter is pressed', async() => {
     render(<Icon className="test" name="su-pen" onClick={onClick} />);
 
     const icon = screen.queryByLabelText('su-pen');
-    await userEvent.keyPress(icon, {key: 'Enter', charCode: 13, code: 'Enter'});
+    await userEvent.type(icon, '[Enter]');
 
     expect(onClick).toBeCalled();
 });

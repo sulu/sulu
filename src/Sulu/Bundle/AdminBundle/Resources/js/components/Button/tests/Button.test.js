@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {createEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Button from '../Button';
 
@@ -74,11 +74,7 @@ test('Should call the callback on click', async() => {
     render(<Button onClick={onClick} skin="primary" />);
 
     const button = screen.queryByRole('button');
-    const onClickPreventDefault = createEvent.click(button);
-
-    await userEvent(button, onClickPreventDefault);
-
-    expect(onClickPreventDefault.defaultPrevented).toBe(true);
+    await userEvent.click(button);
     expect(onClick).toBeCalled();
 });
 

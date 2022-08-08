@@ -48,11 +48,11 @@ test('Phone should trigger callbacks correctly', async() => {
 
     const input = screen.queryByRole('textbox');
 
-    await userEvent.change(input, {target: {value: '+123'}});
-    await userEvent.blur(input);
-
-    expect(onChange).toBeCalledWith('+123', expect.anything());
+    await userEvent.type(input, '1');
+    expect(onChange).toBeCalledWith('1', expect.anything());
     expect(onChange).toHaveBeenCalledTimes(1);
+
+    await userEvent.tab();
     expect(onBlur).toBeCalled();
     expect(onBlur).toHaveBeenCalledTimes(1);
 });

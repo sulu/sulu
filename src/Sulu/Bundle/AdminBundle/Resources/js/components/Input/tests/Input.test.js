@@ -101,9 +101,9 @@ test('Input should call the callback when the input changes', async() => {
     render(<Input onBlur={jest.fn()} onChange={onChange} value="My value" />);
 
     const input = screen.queryByDisplayValue('My value');
-    await userEvent.change(input, {target: {value: 'my-value'}});
+    await userEvent.type(input, '!');
 
-    expect(onChange).toHaveBeenCalledWith('my-value', expect.anything());
+    expect(onChange).toHaveBeenCalledWith('My value!', expect.anything());
 });
 
 test('Input should call the callback with undefined if the input value is removed', async() => {
@@ -111,7 +111,7 @@ test('Input should call the callback with undefined if the input value is remove
     render(<Input onBlur={jest.fn()} onChange={onChange} value="My value" />);
 
     const input = screen.queryByDisplayValue('My value');
-    await userEvent.change(input, {target: {value: ''}});
+    await userEvent.clear(input);
 
     expect(onChange).toHaveBeenCalledWith(undefined, expect.anything());
 });
@@ -135,7 +135,7 @@ test('Input should call the given focus callback', async() => {
     const input = screen.queryByDisplayValue('My value');
 
     expect(onFocusSpy).not.toHaveBeenCalled();
-    await userEvent.focus(input);
+    await userEvent.click(input);
     expect(onFocusSpy).toHaveBeenCalled();
 });
 

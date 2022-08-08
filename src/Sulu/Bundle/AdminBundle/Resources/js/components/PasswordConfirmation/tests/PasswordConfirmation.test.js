@@ -27,13 +27,13 @@ test('Should only call onChange when both values match after the debounced time'
 
     expect(changeSpy).not.toBeCalled();
 
-    await userEvent.change(inputs[0], {target: {value: 'asdf'}});
-    await userEvent.change(inputs[1], {target: {value: 'jklö'}});
+    await userEvent.type(inputs[0], 'asdf');
+    await userEvent.type(inputs[1], 'jklö');
 
     expect(changeSpy).not.toBeCalled();
 
-    await userEvent.change(inputs[1], {target: {value: 'asdf'}});
-    await userEvent.blur(inputs[1]);
+    await userEvent.clear(inputs[1]);
+    await userEvent.type(inputs[1], 'asdf');
 
     expect(changeSpy).toBeCalledWith('asdf');
 });
@@ -46,15 +46,16 @@ test('Should mark the input fields as invalid if they do not match', async() => 
 
     expect(changeSpy).not.toBeCalled();
 
-    await userEvent.change(inputs[0], {target: {value: 'asdf'}});
-    await userEvent.change(inputs[1], {target: {value: 'jklö'}});
-    await userEvent.blur(inputs[1]);
+    await userEvent.type(inputs[0], 'asdf');
+    await userEvent.type(inputs[1], 'jklö');
+    await userEvent.tab(); // tab away from input
+    //await userEvent.blur(inputs[1]);
 
     // eslint-disable-next-line testing-library/no-container
     expect(container.querySelector('.error')).toBeInTheDocument();
 
-    await userEvent.change(inputs[1], {target: {value: 'asdf'}});
-    await userEvent.blur(inputs[1]);
+    await userEvent.clear(inputs[1]);
+    await userEvent.type(inputs[1], 'asdf');
 
     // eslint-disable-next-line testing-library/no-container
     expect(container.querySelector('.error')).not.toBeInTheDocument();

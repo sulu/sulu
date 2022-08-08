@@ -48,8 +48,11 @@ test('TextArea should call onBlur when it loses focus', async() => {
     render(<TextArea onBlur={blurSpy} onChange={jest.fn()} value="" />);
 
     const textarea = screen.queryByRole('textbox');
-    await userEvent.blur(textarea);
 
+    await userEvent.click(textarea);
+    expect(blurSpy).not.toBeCalledWith();
+
+    await userEvent.tab();
     expect(blurSpy).toBeCalledWith();
 });
 
@@ -58,9 +61,9 @@ test('TextArea should call onChange when the TextArea changes', async() => {
     render(<TextArea onChange={changeSpy} value="My value" />);
 
     const textarea = screen.queryByDisplayValue('My value');
-    await userEvent.change(textarea, {target: {value: 'my-value'}});
+    await userEvent.type(textarea, '!');
 
-    expect(changeSpy).toHaveBeenCalledWith('my-value');
+    expect(changeSpy).toHaveBeenCalledWith('My value!');
 });
 
 test('TextArea should call onChange with undefined when the TextArea changes to empty', async() => {
@@ -68,7 +71,7 @@ test('TextArea should call onChange with undefined when the TextArea changes to 
     render(<TextArea onChange={changeSpy} value="My value" />);
 
     const textarea = screen.queryByDisplayValue('My value');
-    await userEvent.change(textarea, {target: {value: ''}});
+    await userEvent.clear(textarea);
 
     expect(changeSpy).toHaveBeenCalledWith(undefined);
 });
