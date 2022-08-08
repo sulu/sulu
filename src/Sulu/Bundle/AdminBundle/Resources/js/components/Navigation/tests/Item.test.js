@@ -1,11 +1,11 @@
 //@flow
-import {render, mount} from 'enzyme';
+import {fireEvent, render, screen} from '@testing-library/react';
 import React from 'react';
 import Item from '../Item';
 
 test('The component should render', () => {
     const handleClick = jest.fn();
-    const item = render(
+    const {container} = render(
         <Item
             icon="su-search"
             onClick={handleClick}
@@ -13,12 +13,12 @@ test('The component should render', () => {
             value="test_1"
         />
     );
-    expect(item).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('The component should render active', () => {
     const handleClick = jest.fn();
-    const item = render(
+    const {container} = render(
         <Item
             active={true}
             icon="su-search"
@@ -27,12 +27,12 @@ test('The component should render active', () => {
             value="test_1"
         />
     );
-    expect(item).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('The component should render with children', () => {
     const handleClick = jest.fn();
-    const item = render(
+    const {container} = render(
         <Item
             icon="su-cog"
             title="Settings"
@@ -50,12 +50,12 @@ test('The component should render with children', () => {
             />
         </Item>
     );
-    expect(item).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('The component should render with children an active child and expanded', () => {
     const handleClick = jest.fn();
-    const item = render(
+    const {container} = render(
         <Item
             expanded={true}
             icon="su-cog"
@@ -75,14 +75,14 @@ test('The component should render with children an active child and expanded', (
             />
         </Item>
     );
-    expect(item).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('The component should handle clicks correctly', () => {
     const handleItemClick = jest.fn();
     const handleSubItemClick = jest.fn();
 
-    const item = mount(
+    render(
         <Item
             expanded={true}
             icon="su-cog"
@@ -104,9 +104,9 @@ test('The component should handle clicks correctly', () => {
         </Item>
     );
 
-    item.find('.title').at(0).simulate('click');
+    fireEvent.click(screen.queryByText('Settings'));
     expect(handleItemClick).toBeCalledWith('settings');
 
-    item.find('.title').at(2).simulate('click');
+    fireEvent.click(screen.queryByText('Settings 2'));
     expect(handleSubItemClick).toBeCalledWith('settings_2');
 });

@@ -1,122 +1,130 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render 1`] = `
-<div
-  class="item"
->
-  <button
-    class="title"
-    type="button"
+<div>
+  <div
+    class="item"
   >
-    <span
-      aria-label="su-search"
-      class="su-search icon"
-    />
-    <span
-      class="text"
+    <button
+      class="title"
+      type="button"
     >
-      Test
-    </span>
-  </button>
+      <span
+        aria-label="su-search"
+        class="su-search icon"
+      />
+      <span
+        class="text"
+      >
+        Test
+      </span>
+    </button>
+  </div>
 </div>
 `;
 
 exports[`The component should render active 1`] = `
-<div
-  class="item active"
->
-  <button
-    class="title"
-    type="button"
+<div>
+  <div
+    class="item active"
   >
-    <span
-      aria-label="su-search"
-      class="su-search icon"
-    />
-    <span
-      class="text"
+    <button
+      class="title"
+      type="button"
     >
-      Test
-    </span>
-  </button>
+      <span
+        aria-label="su-search"
+        class="su-search icon"
+      />
+      <span
+        class="text"
+      >
+        Test
+      </span>
+    </button>
+  </div>
 </div>
 `;
 
 exports[`The component should render with children 1`] = `
-<div
-  class="item"
->
-  <button
-    class="title"
-    type="button"
+<div>
+  <div
+    class="item"
   >
-    <span
-      aria-label="su-cog"
-      class="su-cog icon"
-    />
-    <span
-      class="text"
+    <button
+      class="title"
+      type="button"
     >
-      Settings
-    </span>
-    <span
-      aria-label="su-angle-right"
-      class="su-angle-right childrenIndicator"
-    />
-  </button>
+      <span
+        aria-label="su-cog"
+        class="su-cog icon"
+      />
+      <span
+        class="text"
+      >
+        Settings
+      </span>
+      <span
+        aria-label="su-angle-right"
+        class="su-angle-right childrenIndicator"
+      />
+    </button>
+  </div>
 </div>
 `;
 
 exports[`The component should render with children an active child and expanded 1`] = `
-<div
-  class="item active"
->
-  <button
-    class="title"
-    type="button"
+<div>
+  <div
+    class="item active"
   >
-    <span
-      aria-label="su-cog"
-      class="su-cog icon"
-    />
-    <span
-      class="text"
+    <button
+      class="title"
+      type="button"
     >
-      Settings
-    </span>
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down childrenIndicator"
-    />
-  </button>
-  <div>
-    <div
-      class="item"
-    >
-      <button
-        class="title"
-        type="button"
+      <span
+        aria-label="su-cog"
+        class="su-cog icon"
+      />
+      <span
+        class="text"
       >
-        <span
-          class="text"
-        >
-          Settings 1
-        </span>
-      </button>
-    </div>
-    <div
-      class="item active"
-    >
-      <button
-        class="title"
-        type="button"
+        Settings
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down childrenIndicator"
+      />
+    </button>
+    <div>
+      <div
+        class="item"
       >
-        <span
-          class="text"
+        <button
+          class="title"
+          type="button"
         >
-          Settings 2
-        </span>
-      </button>
+          <span
+            class="text"
+          >
+            Settings 1
+          </span>
+        </button>
+      </div>
+      <div
+        class="item active"
+      >
+        <button
+          class="title"
+          type="button"
+        >
+          <span
+            class="text"
+          >
+            Settings 2
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
