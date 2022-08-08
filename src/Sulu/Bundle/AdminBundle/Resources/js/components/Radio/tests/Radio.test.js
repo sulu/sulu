@@ -1,5 +1,5 @@
 // @flow
-import {render} from '@testing-library/react';
+import {fireEvent, render, screen} from '@testing-library/react';
 import React from 'react';
 import Radio from '../Radio';
 
@@ -40,12 +40,12 @@ test('The component should render in disabled state', () => {
 //     expect(screen.getByText('My label')).toBeInTheDocument();
 // });
 
-// test('The component pass the the value to the change callback', () => {
-//     const onChange = jest.fn();
-//     const checkbox = shallow(
-//         <Radio onChange={onChange} value="my-value">My label</Radio>
-//     );
-//     const switchComponent = checkbox.find('Switch');
-//     switchComponent.props().onChange(true, 'my-value');
-//     expect(onChange).toHaveBeenCalledWith('my-value');
-// });
+test('The component pass the the value to the change callback', () => {
+    const onChange = jest.fn();
+    render(<Radio onChange={onChange} value="my-value">My label</Radio>);
+
+    const input = screen.queryByDisplayValue('my-value');
+    fireEvent.click(input);
+
+    expect(onChange).toHaveBeenCalledWith('my-value');
+});
