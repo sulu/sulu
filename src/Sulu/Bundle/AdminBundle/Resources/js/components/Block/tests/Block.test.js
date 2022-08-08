@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Block from '../Block';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -76,37 +77,37 @@ test('Do not show settings icon if no onSettingsClick prop has been passed', () 
     expect(screen.queryByLabelText('su-cog')).not.toBeInTheDocument();
 });
 
-test('Clicking on a collapsed block should call the onExpand callback', () => {
+test('Clicking on a collapsed block should call the onExpand callback', async() => {
     const expandSpy = jest.fn();
     render(<Block onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
 
-    fireEvent.click(screen.queryByRole('switch'));
+    await userEvent.click(screen.queryByRole('switch'));
 
     expect(expandSpy).toHaveBeenCalledTimes(1);
 });
 
-test('Clicking on a expanded block should not call the onExpand callback', () => {
+test('Clicking on a expanded block should not call the onExpand callback', async() => {
     const expandSpy = jest.fn();
     render(<Block expanded={true} onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
 
-    fireEvent.click(screen.queryByRole('switch'));
+    await userEvent.click(screen.queryByRole('switch'));
 
     expect(expandSpy).not.toBeCalled();
 });
 
-test('Clicking the close icon in an expanded block should collapse it', () => {
+test('Clicking the close icon in an expanded block should collapse it', async() => {
     const collapseSpy = jest.fn();
     render(<Block expanded={true} onCollapse={collapseSpy} onExpand={jest.fn()}>Block content</Block>);
 
     const closeIcon = screen.queryByLabelText('su-angle-up');
     expect(closeIcon).toBeInTheDocument();
 
-    fireEvent.click(closeIcon);
+    await userEvent.click(closeIcon);
 
     expect(collapseSpy).toHaveBeenCalledTimes(1);
 });
 
-test('Clicking the remove icon in an expanded block should remove it', () => {
+test('Clicking the remove icon in an expanded block should remove it', async() => {
     const removeSpy = jest.fn();
     render(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} onRemove={removeSpy}>Block content</Block>
@@ -115,12 +116,12 @@ test('Clicking the remove icon in an expanded block should remove it', () => {
     const removeIcon = screen.queryByLabelText('su-trash-alt');
     expect(removeIcon).toBeInTheDocument();
 
-    fireEvent.click(removeIcon);
+    await userEvent.click(removeIcon);
 
     expect(removeSpy).toHaveBeenCalledTimes(1);
 });
 
-test('Changing the type should call the onTypeChange callback', () => {
+test('Changing the type should call the onTypeChange callback', async() => {
     const typeChangeSpy = jest.fn();
     const types = {
         type1: 'Type 1',
@@ -141,10 +142,10 @@ test('Changing the type should call the onTypeChange callback', () => {
     );
 
     const selectButton = screen.queryByText('Type 1');
-    fireEvent.click(selectButton);
+    await userEvent.click(selectButton);
 
     const typeButton = screen.queryByText('Type 2');
-    fireEvent.click(typeButton);
+    await userEvent.click(typeButton);
 
     expect(typeChangeSpy).toBeCalledWith('type2');
     expect(typeChangeSpy).toHaveBeenCalledTimes(1);

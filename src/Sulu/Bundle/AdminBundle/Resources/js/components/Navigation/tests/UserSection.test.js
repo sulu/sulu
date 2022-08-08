@@ -1,5 +1,6 @@
 //@flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import UserSection from '../UserSection';
 
@@ -7,7 +8,7 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('The component should render with all available props and handle clicks correctly', () => {
+test('The component should render with all available props and handle clicks correctly', async() => {
     const handleLogoutClick = jest.fn();
     const handleProfileClick = jest.fn();
 
@@ -24,9 +25,9 @@ test('The component should render with all available props and handle clicks cor
 
     expect(container).toMatchSnapshot();
 
-    fireEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
+    await userEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
     expect(handleProfileClick).toBeCalled();
 
-    fireEvent.click(screen.queryByText(/sulu_admin.logout/));
+    await userEvent.click(screen.queryByText(/sulu_admin.logout/));
     expect(handleLogoutClick).toBeCalled();
 });

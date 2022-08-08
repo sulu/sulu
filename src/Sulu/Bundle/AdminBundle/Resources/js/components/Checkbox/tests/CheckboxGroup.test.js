@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import CheckboxGroup from '../CheckboxGroup';
 import Checkbox from '../Checkbox';
 
@@ -28,7 +29,7 @@ test('The component should render disabled', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('The component should call onChange handler when checkboxes are clicked', () => {
+test('The component should call onChange handler when checkboxes are clicked', async() => {
     const changeSpy = jest.fn();
 
     render(
@@ -44,9 +45,9 @@ test('The component should call onChange handler when checkboxes are clicked', (
     const checkbox1 = screen.getByDisplayValue('value-1');
     const checkbox3 = screen.getByDisplayValue('value-3');
 
-    fireEvent.click(checkbox1);
+    await userEvent.click(checkbox1);
     expect(changeSpy).toHaveBeenLastCalledWith(['value-2', 'value-3', 'value-1']);
 
-    fireEvent.click(checkbox3);
+    await userEvent.click(checkbox3);
     expect(changeSpy).toHaveBeenLastCalledWith(['value-2']);
 });

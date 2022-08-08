@@ -1,5 +1,6 @@
 //@flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Item from '../Item';
 
@@ -78,7 +79,7 @@ test('The component should render with children an active child and expanded', (
     expect(container).toMatchSnapshot();
 });
 
-test('The component should handle clicks correctly', () => {
+test('The component should handle clicks correctly', async() => {
     const handleItemClick = jest.fn();
     const handleSubItemClick = jest.fn();
 
@@ -104,9 +105,9 @@ test('The component should handle clicks correctly', () => {
         </Item>
     );
 
-    fireEvent.click(screen.queryByText('Settings'));
+    await userEvent.click(screen.queryByText('Settings'));
     expect(handleItemClick).toBeCalledWith('settings');
 
-    fireEvent.click(screen.queryByText(/Settings 2/));
+    await userEvent.click(screen.queryByText(/Settings 2/));
     expect(handleSubItemClick).toBeCalledWith('settings_2');
 });

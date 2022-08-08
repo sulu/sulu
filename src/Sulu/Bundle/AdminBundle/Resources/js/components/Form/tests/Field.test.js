@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Field from '../Field';
 
 test('Display a field with label', () => {
@@ -72,7 +73,7 @@ test('Display a field with an error', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('Change type of field', () => {
+test('Change type of field', async() => {
     const typeChangeSpy = jest.fn();
 
     const types = [
@@ -88,11 +89,11 @@ test('Change type of field', () => {
 
     const field = screen.queryByText('Work');
     expect(screen.queryByTestId('backdrop')).not.toBeInTheDocument();
-    fireEvent.click(field);
+    await userEvent.click(field);
     expect(screen.getByTestId('backdrop')).toBeInTheDocument();
 
     const changeItem = screen.queryByText('Private');
-    fireEvent.click(changeItem);
+    await userEvent.click(changeItem);
     expect(typeChangeSpy).toBeCalledWith(2);
     expect(screen.queryByTestId('backdrop')).not.toBeInTheDocument();
 });

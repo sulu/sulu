@@ -1,5 +1,6 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Dialog from '../Dialog';
 
@@ -144,7 +145,7 @@ test('The component should not render in body when closed', () => {
     expect(screen.queryByText('My dialog content')).not.toBeInTheDocument();
 });
 
-test('The component should call the callback when the confirm button is clicked', () => {
+test('The component should call the callback when the confirm button is clicked', async() => {
     const onCancel = jest.fn();
     const onConfirm = jest.fn();
     render(
@@ -162,11 +163,11 @@ test('The component should call the callback when the confirm button is clicked'
     const button = screen.queryByText('Confirm');
 
     expect(onConfirm).not.toBeCalled();
-    fireEvent.click(button);
+    await userEvent.click(button);
     expect(onConfirm).toBeCalled();
 });
 
-test('The component should call the callback when the cancel button is clicked', () => {
+test('The component should call the callback when the cancel button is clicked', async() => {
     const onConfirm = jest.fn();
     const onCancel = jest.fn();
     render(
@@ -184,7 +185,7 @@ test('The component should call the callback when the cancel button is clicked',
     const button = screen.queryByText('Cancel');
 
     expect(onCancel).not.toBeCalled();
-    fireEvent.click(button);
+    await userEvent.click(button);
     expect(onCancel).toBeCalled();
 });
 
@@ -256,7 +257,7 @@ test('The component should render with an error if the type is unknown', () => {
     expect(snackbar.children[1]).toHaveTextContent('sulu_admin.error - Money transfer unsuccessful');
 });
 
-test('The component should call the callback when the snackbar close button is clicked', () => {
+test('The component should call the callback when the snackbar close button is clicked', async() => {
     const onSnackbarCloseClick = jest.fn();
     render(
         <Dialog
@@ -277,11 +278,11 @@ test('The component should call the callback when the snackbar close button is c
 
     expect(snackbar).toBeInTheDocument();
     expect(onSnackbarCloseClick).not.toBeCalled();
-    fireEvent.click(closeIcon);
+    await userEvent.click(closeIcon);
     expect(onSnackbarCloseClick).toBeCalled();
 });
 
-test('The component should call the callback when the snackbar is clicked', () => {
+test('The component should call the callback when the snackbar is clicked', async() => {
     const onSnackbarClick = jest.fn();
     render(
         <Dialog
@@ -301,6 +302,6 @@ test('The component should call the callback when the snackbar is clicked', () =
 
     expect(snackbar).toBeInTheDocument();
     expect(onSnackbarClick).not.toBeCalled();
-    fireEvent.click(snackbar);
+    await userEvent.click(snackbar);
     expect(onSnackbarClick).toBeCalled();
 });

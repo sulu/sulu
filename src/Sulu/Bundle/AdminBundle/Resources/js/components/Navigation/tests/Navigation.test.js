@@ -1,5 +1,6 @@
 //@flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Navigation from '../Navigation';
 
@@ -7,7 +8,7 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('The component should render and handle clicks correctly', () => {
+test('The component should render and handle clicks correctly', async() => {
     const handleNavigationClick = jest.fn();
     const handleLogoutClick = jest.fn();
     const handleProfileClick = jest.fn();
@@ -28,13 +29,13 @@ test('The component should render and handle clicks correctly', () => {
     );
 
     expect(container).toMatchSnapshot();
-    fireEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
+    await userEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
     expect(handleProfileClick).toBeCalled();
-    fireEvent.click(screen.queryByText(/sulu_admin.logout/));
+    await userEvent.click(screen.queryByText(/sulu_admin.logout/));
     expect(handleLogoutClick).toBeCalled();
 });
 
-test('The component should render with all available props and handle clicks correctly', () => {
+test('The component should render with all available props and handle clicks correctly', async() => {
     const handleNavigationClick = jest.fn();
     const handleLogoutClick = jest.fn();
     const handlePinClick = jest.fn();
@@ -79,17 +80,17 @@ test('The component should render with all available props and handle clicks cor
 
     expect(container).toMatchSnapshot();
 
-    fireEvent.click(screen.queryByLabelText('su-stick-right'));
+    await userEvent.click(screen.queryByLabelText('su-stick-right'));
     expect(handlePinClick).toBeCalled();
 
-    fireEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
+    await userEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
     expect(handleProfileClick).toBeCalled();
 
-    fireEvent.click(screen.queryByText(/sulu_admin.logout/));
+    await userEvent.click(screen.queryByText(/sulu_admin.logout/));
     expect(handleLogoutClick).toBeCalled();
 });
 
-test('The expanded prop should be set correct automatically', () => {
+test('The expanded prop should be set correct automatically', async() => {
     const handleNavigationClick = jest.fn();
     const handleLogoutClick = jest.fn();
     const handleProfileClick = jest.fn();
@@ -123,7 +124,7 @@ test('The expanded prop should be set correct automatically', () => {
     expect(screen.getByText(/Contact 1/)).toBeInTheDocument();
     expect(screen.queryByText(/Setting 1/)).not.toBeInTheDocument();
 
-    fireEvent.click(screen.queryByText(/Settings/));
+    await userEvent.click(screen.queryByText(/Settings/));
     expect(screen.queryByText(/Contact 1/)).not.toBeInTheDocument();
     expect(screen.getByText(/Setting 1/)).toBeInTheDocument();
 });

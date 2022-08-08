@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import SingleItemSelection from '../SingleItemSelection';
 
 test('Render with given children prop and with custom className', () => {
@@ -164,7 +165,7 @@ test('Render with emptyText if no children have been passed', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('Call onClick callback if left button is clicked', () => {
+test('Call onClick callback if left button is clicked', async() => {
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
@@ -173,12 +174,12 @@ test('Call onClick callback if left button is clicked', () => {
     render(<SingleItemSelection leftButton={leftButton} />);
 
     const button = screen.queryByLabelText('su-document');
-    fireEvent.click(button);
+    await userEvent.click(button);
 
     expect(leftButton.onClick).toBeCalledWith();
 });
 
-test('Call onClick callback with option value', () => {
+test('Call onClick callback with option value', async() => {
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
@@ -198,14 +199,14 @@ test('Call onClick callback with option value', () => {
     render(<SingleItemSelection leftButton={leftButton} rightButton={rightButton} />);
 
     const icon = screen.queryByLabelText('su-display-default');
-    fireEvent.click(icon);
+    await userEvent.click(icon);
     const action = screen.queryByText(/Test1/);
-    fireEvent.click(action);
+    await userEvent.click(action);
 
     expect(rightButton.onClick).toBeCalledWith('test1');
 });
 
-test('Call onClick callback if right button is clicked', () => {
+test('Call onClick callback if right button is clicked', async() => {
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
@@ -219,12 +220,12 @@ test('Call onClick callback if right button is clicked', () => {
     render(<SingleItemSelection leftButton={leftButton} rightButton={rightButton} />);
 
     const icon = screen.queryByLabelText('su-display-default');
-    fireEvent.click(icon);
+    await userEvent.click(icon);
 
     expect(rightButton.onClick).toBeCalledWith();
 });
 
-test('Call onItemClick callback should not be called if item is clicked but no id is given', () => {
+test('Call onItemClick callback should not be called if item is clicked but no id is given', async() => {
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
@@ -234,12 +235,12 @@ test('Call onItemClick callback should not be called if item is clicked but no i
     render(<SingleItemSelection leftButton={leftButton} onItemClick={itemClickSpy}>item title</SingleItemSelection>);
 
     const item = screen.queryByText('item title');
-    fireEvent.click(item);
+    await userEvent.click(item);
 
     expect(itemClickSpy).not.toBeCalled();
 });
 
-test('Call onItemClick callback should be called if item is clicked', () => {
+test('Call onItemClick callback should be called if item is clicked', async() => {
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
@@ -255,12 +256,12 @@ test('Call onItemClick callback should be called if item is clicked', () => {
     );
 
     const item = screen.queryByText('item title');
-    fireEvent.click(item);
+    await userEvent.click(item);
 
     expect(itemClickSpy).toBeCalledWith(5, value);
 });
 
-test('Call onRemove callback if remove button is clicked', () => {
+test('Call onRemove callback if remove button is clicked', async() => {
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
@@ -270,7 +271,7 @@ test('Call onRemove callback if remove button is clicked', () => {
     render(<SingleItemSelection leftButton={leftButton} onRemove={removeSpy} />);
 
     const icon = screen.queryByLabelText('su-trash-alt');
-    fireEvent.click(icon);
+    await userEvent.click(icon);
 
     expect(removeSpy).toBeCalled();
 });
