@@ -1,4 +1,3 @@
-/* eslint-disable testing-library/no-container, testing-library/no-node-access */
 // @flow
 import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
@@ -32,7 +31,6 @@ test('Render the component with an error', () => {
 test('Set the correct values for protocol and path when initializing', () => {
     render(<Url onChange={jest.fn()} value="http://www.sulu.io" />);
 
-    // eslint-disable-next-line testing-library/no-node-access
     const protocol = screen.queryByTitle('http://').lastChild;
     const input = screen.queryByRole('textbox');
 
@@ -43,7 +41,6 @@ test('Set the correct values for protocol and path when initializing', () => {
 test('Set the correct values for protocol and path when updating', () => {
     render(<Url onChange={jest.fn()} value="https://www.sulu.io" />);
 
-    // eslint-disable-next-line testing-library/no-node-access
     const protocol = screen.queryByTitle('https://').lastChild;
     const input = screen.queryByRole('textbox');
 
@@ -63,9 +60,9 @@ test('Should log a warning if a not available protocol has been given', () => {
 test('Show error when invalid email was passed via updated prop', () => {
     const {container, rerender} = render(<Url onChange={jest.fn()} value={undefined} />);
 
-    expect(container.querySelector('.error')).not.toBeInTheDocument();
+    expect(container.children[0]).not.toHaveClass('error');
     rerender(<Url onChange={jest.fn()} value="mailto:invalid-email" />);
-    expect(container.querySelector('.error')).toBeInTheDocument();
+    expect(container.children[0]).toHaveClass('error');
 });
 
 test('Should not reset value of protocol select when undefined value is passed', () => {
@@ -81,21 +78,21 @@ test('Should not reset value of protocol select when undefined value is passed',
 test('Remove error when valid email was passed via updated prop', () => {
     const {container, rerender} = render(<Url onChange={jest.fn()} value="mailto:invalid-email" />);
 
-    expect(container.querySelector('.error')).toBeInTheDocument();
+    expect(container.children[0]).toHaveClass('error');
     rerender(<Url onChange={jest.fn()} value="mailto:hello@sulu.io" />);
-    expect(container.querySelector('.error')).not.toBeInTheDocument();
+    expect(container.children[0]).not.toHaveClass('error');
 });
 
 test('Remove error when valid email was changed using the text field', () => {
     const {container} = render(<Url onChange={jest.fn()} value="mailto:invalid-email" />);
 
-    expect(container.querySelector('.error')).toBeInTheDocument();
+    expect(container.children[0]).toHaveClass('error');
 
     const input = screen.queryByRole('textbox');
     fireEvent.change(input, {target: {value: 'hello@sulu.io'}});
     fireEvent.blur(input);
 
-    expect(container.querySelector('.error')).not.toBeInTheDocument();
+    expect(container.children[0]).not.toHaveClass('error');
 });
 
 test('Call onChange callback with the first protocol if none was selected', () => {
@@ -162,7 +159,7 @@ test('Call onChange callback if url is not valid but leave the current value', (
     expect(changeSpy).toBeCalledWith('https://su lu.at');
     expect(protocol).toHaveTextContent('https://');
     expect(input).toHaveValue('su lu.at');
-    expect(container.querySelector('.error')).not.toBeInTheDocument();
+    expect(container.children[0]).not.toHaveClass('error');
 });
 
 test('Call onChange callback with undefined if email is not valid but leave the current value', () => {
@@ -177,7 +174,7 @@ test('Call onChange callback with undefined if email is not valid but leave the 
     expect(changeSpy).toBeCalledWith(undefined);
     expect(protocol).toHaveTextContent('mailto:');
     expect(input).toHaveValue('invalid-email');
-    expect(container.querySelector('.error')).toBeInTheDocument();
+    expect(container.children[0]).toHaveClass('error');
 });
 
 test('Call onChange callback with correct mail address', () => {
@@ -192,7 +189,7 @@ test('Call onChange callback with correct mail address', () => {
     expect(changeSpy).toBeCalledWith('mailto:test@example.com');
     expect(protocol).toHaveTextContent('mailto:');
     expect(input).toHaveValue('test@example.com');
-    expect(container.querySelector('.error')).not.toBeInTheDocument();
+    expect(container.children[0]).not.toHaveClass('error');
 });
 
 test('Call onChange callback with correct value with custom protocol', () => {
@@ -207,7 +204,7 @@ test('Call onChange callback with correct value with custom protocol', () => {
     expect(changeSpy).toBeCalledWith('custom-protocol:012345ABC');
     expect(protocol).toHaveTextContent('custom-protocol:');
     expect(input).toHaveValue('012345ABC');
-    expect(container.querySelector('.error')).not.toBeInTheDocument();
+    expect(container.children[0]).not.toHaveClass('error');
 });
 
 test('Call onChange callback with undefined if incorrect mail address is entered', () => {
@@ -221,7 +218,7 @@ test('Call onChange callback with undefined if incorrect mail address is entered
 
     expect(protocol).toHaveTextContent('mailto');
     expect(input).toHaveValue('example.com');
-    expect(container.querySelector('.error')).toBeInTheDocument();
+    expect(container.children[0]).toHaveClass('error');
 });
 
 test('Should remove the protocol from path and set it on the protocol select', () => {

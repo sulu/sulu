@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
 import FolderList from '../FolderList';

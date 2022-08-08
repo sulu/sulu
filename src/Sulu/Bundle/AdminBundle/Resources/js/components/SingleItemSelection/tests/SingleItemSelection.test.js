@@ -1,4 +1,3 @@
-/* eslint-disable testing-library/no-container, testing-library/no-node-access */
 // @flow
 import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
@@ -171,9 +170,9 @@ test('Call onClick callback if left button is clicked', () => {
         onClick: jest.fn(),
     };
 
-    const {container} = render(<SingleItemSelection leftButton={leftButton} />);
+    render(<SingleItemSelection leftButton={leftButton} />);
 
-    const button = container.querySelector('button');
+    const button = screen.queryByLabelText('su-document');
     fireEvent.click(button);
 
     expect(leftButton.onClick).toBeCalledWith();
@@ -232,15 +231,15 @@ test('Call onItemClick callback should not be called if item is clicked but no i
     };
 
     const itemClickSpy = jest.fn();
-    const {container} = render(<SingleItemSelection leftButton={leftButton} onItemClick={itemClickSpy} />);
+    render(<SingleItemSelection leftButton={leftButton} onItemClick={itemClickSpy}>item title</SingleItemSelection>);
 
-    const item = container.querySelector('.item');
+    const item = screen.queryByText('item title');
     fireEvent.click(item);
 
     expect(itemClickSpy).not.toBeCalled();
 });
 
-test('Call onItemClick callback should not be called if item is clicked', () => {
+test('Call onItemClick callback should be called if item is clicked', () => {
     const leftButton = {
         icon: 'su-document',
         onClick: jest.fn(),
@@ -249,11 +248,13 @@ test('Call onItemClick callback should not be called if item is clicked', () => 
     const value = {id: 5};
 
     const itemClickSpy = jest.fn();
-    const {container} = render(
-        <SingleItemSelection id={5} leftButton={leftButton} onItemClick={itemClickSpy} value={value} />
+    render(
+        <SingleItemSelection id={5} leftButton={leftButton} onItemClick={itemClickSpy} value={value}>
+            item title
+        </SingleItemSelection>
     );
 
-    const item = container.querySelector('.item');
+    const item = screen.queryByText('item title');
     fireEvent.click(item);
 
     expect(itemClickSpy).toBeCalledWith(5, value);

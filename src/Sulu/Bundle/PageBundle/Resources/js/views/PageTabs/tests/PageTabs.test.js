@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {mount} from 'enzyme';
 import {ResourceTabs} from 'sulu-admin-bundle/views';

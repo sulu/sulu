@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import ToolbarStore from '../../stores/ToolbarStore';
 import toolbarStorePool from '../../stores/toolbarStorePool';
 

@@ -49,13 +49,13 @@ test('Should mark the input fields as invalid if they do not match', () => {
     fireEvent.change(inputs[1], {target: {value: 'jklö'}});
     fireEvent.blur(inputs[1]);
 
-    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+    // eslint-disable-next-line testing-library/no-container
     expect(container.querySelector('.error')).toBeInTheDocument();
 
     fireEvent.change(inputs[1], {target: {value: 'asdf'}});
     fireEvent.blur(inputs[1]);
 
-    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+    // eslint-disable-next-line testing-library/no-container
     expect(container.querySelector('.error')).not.toBeInTheDocument();
 });
 
@@ -63,6 +63,6 @@ test('Should mark the input fields as invalid if the valid prop is false', () =>
     const changeSpy = jest.fn();
     const {container} = render(<PasswordConfirmation onChange={changeSpy} valid={false} />);
 
-    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+    // eslint-disable-next-line testing-library/no-container
     expect(container.querySelector('.error')).toBeInTheDocument();
 });

@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React, {default as mockReact} from 'react';
 import {extendObservable as mockExtendObservable} from 'mobx';
 import {mount, render} from 'enzyme';

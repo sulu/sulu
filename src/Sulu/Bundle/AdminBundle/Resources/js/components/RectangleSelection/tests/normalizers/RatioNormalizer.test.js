@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import RatioNormalizer from '../../normalizers/RatioNormalizer';
 
 test('The RatioNormalizer should only make the values smaller, never bigger', () => {

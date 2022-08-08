@@ -167,7 +167,6 @@ test('Changing a value should call onChange ', () => {
         },
     };
 
-    // eslint-disable-next-line testing-library/no-node-access
     const item = screen.queryAllByLabelText('su-pen')[1].parentElement;
     fireEvent.click(item);
     expect(handleChange).toHaveBeenCalledWith(expectedValues);

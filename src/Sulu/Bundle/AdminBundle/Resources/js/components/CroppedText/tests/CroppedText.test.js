@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
 import {render} from '@testing-library/react';
 import CroppedText from '../CroppedText';
