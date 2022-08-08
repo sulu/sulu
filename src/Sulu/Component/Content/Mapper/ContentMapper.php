@@ -855,7 +855,7 @@ class ContentMapper implements ContentMapperInterface
                 $templateKey,
                 $webspaceKey,
                 $locale
-                ))
+            ))
             ) {
                 $target[$field['name']] = $data;
             }
