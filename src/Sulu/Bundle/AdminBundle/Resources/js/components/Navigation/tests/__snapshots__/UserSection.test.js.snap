@@ -1,65 +1,67 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render with all available props and handle clicks correctly 1`] = `
-<div
-  class="userSection"
->
-  <button
-    class="button"
-    type="button"
-  >
-    <div
-      class="userImage"
-    >
-      <img
-        alt="John Travolta"
-        class="image"
-        src="http://lorempixel.com/200/200"
-        title="John Travolta"
-      />
-    </div>
-    <span
-      class="username"
-    >
-      John Travolta
-    </span>
-    <span
-      aria-label="su-angle-up"
-      class="su-angle-up"
-    />
-  </button>
+<div>
   <div
-    class="menu"
-    hidden=""
+    class="userSection"
   >
     <button
-      class="button text hasText menuButton"
+      class="button"
       type="button"
     >
-      <span
-        aria-label="su-user"
-        class="su-user buttonIcon"
-      />
-      <span
-        class="buttonText"
+      <div
+        class="userImage"
       >
-        sulu_admin.edit_profile
+        <img
+          alt="John Travolta"
+          class="image"
+          src="http://lorempixel.com/200/200"
+          title="John Travolta"
+        />
+      </div>
+      <span
+        class="username"
+      >
+        John Travolta
       </span>
+      <span
+        aria-label="su-angle-up"
+        class="su-angle-up"
+      />
     </button>
-    <button
-      class="button text hasText menuButton"
-      type="button"
+    <div
+      class="menu"
+      hidden=""
     >
-      <span
-        aria-label="su-sign-out-alt"
-        class="su-sign-out-alt buttonIcon"
-      />
-      <span
-        class="buttonText"
+      <button
+        class="button text hasText menuButton"
+        type="button"
       >
-        sulu_admin.logout
-      </span>
-    </button>
+        <span
+          aria-label="su-user"
+          class="su-user buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.edit_profile
+        </span>
+      </button>
+      <button
+        class="button text hasText menuButton"
+        type="button"
+      >
+        <span
+          aria-label="su-sign-out-alt"
+          class="su-sign-out-alt buttonIcon"
+        />
+        <span
+          class="buttonText"
+        >
+          sulu_admin.logout
+        </span>
+      </button>
+    </div>
   </div>
 </div>
 `;

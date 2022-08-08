@@ -1,5 +1,5 @@
 //@flow
-import {mount} from 'enzyme';
+import {fireEvent, render, screen} from '@testing-library/react';
 import React from 'react';
 import Navigation from '../Navigation';
 
@@ -12,7 +12,7 @@ test('The component should render and handle clicks correctly', () => {
     const handleLogoutClick = jest.fn();
     const handleProfileClick = jest.fn();
 
-    const navigation = mount(
+    const {container} = render(
         <Navigation
             onItemClick={jest.fn()}
             onLogoutClick={handleLogoutClick}
@@ -26,12 +26,11 @@ test('The component should render and handle clicks correctly', () => {
             <Navigation.Item icon="fa-bullseye" onClick={handleNavigationClick} title="Webspaces" value="webspaces" />
         </Navigation>
     );
-    expect(navigation.render()).toMatchSnapshot();
 
-    navigation.find('button.menuButton').at(0).simulate('click');
+    expect(container).toMatchSnapshot();
+    fireEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
     expect(handleProfileClick).toBeCalled();
-
-    navigation.find('button.menuButton').at(1).simulate('click');
+    fireEvent.click(screen.queryByText(/sulu_admin.logout/));
     expect(handleLogoutClick).toBeCalled();
 });
 
@@ -41,7 +40,7 @@ test('The component should render with all available props and handle clicks cor
     const handlePinClick = jest.fn();
     const handleProfileClick = jest.fn();
 
-    const navigation = mount(
+    const {container} = render(
         <Navigation
             appVersion="1.0.0"
             appVersionLink="http://link.com"
@@ -77,15 +76,16 @@ test('The component should render with all available props and handle clicks cor
             </Navigation.Item>
         </Navigation>
     );
-    expect(navigation.render()).toMatchSnapshot();
 
-    navigation.find('.pin').simulate('click');
+    expect(container).toMatchSnapshot();
+
+    fireEvent.click(screen.queryByLabelText('su-stick-right'));
     expect(handlePinClick).toBeCalled();
 
-    navigation.find('button.menuButton').at(0).simulate('click');
+    fireEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
     expect(handleProfileClick).toBeCalled();
 
-    navigation.find('button.menuButton').at(1).simulate('click');
+    fireEvent.click(screen.queryByText(/sulu_admin.logout/));
     expect(handleLogoutClick).toBeCalled();
 });
 
@@ -94,7 +94,7 @@ test('The expanded prop should be set correct automatically', () => {
     const handleLogoutClick = jest.fn();
     const handleProfileClick = jest.fn();
 
-    const navigation = mount(
+    render(
         <Navigation
             appVersion="1.0.0"
             appVersionLink="http://link.com"
@@ -120,12 +120,12 @@ test('The expanded prop should be set correct automatically', () => {
         </Navigation>
     );
 
-    expect(navigation.find('Item[value="contact"]').instance().props.expanded).toBe(true);
-    expect(navigation.find('Item[value="settings"]').instance().props.expanded).toBe(false);
+    expect(screen.getByText(/Contact 1/)).toBeInTheDocument();
+    expect(screen.queryByText(/Setting 1/)).not.toBeInTheDocument();
 
-    navigation.find('Item[value="settings"] .title').simulate('click');
-    expect(navigation.find('Item[value="contact"]').instance().props.expanded).toBe(false);
-    expect(navigation.find('Item[value="settings"]').instance().props.expanded).toBe(true);
+    fireEvent.click(screen.queryByText(/Settings/));
+    expect(screen.queryByText(/Contact 1/)).not.toBeInTheDocument();
+    expect(screen.getByText(/Setting 1/)).toBeInTheDocument();
 });
 
 test('The expanded prop should be set correct automatically when children change', () => {
@@ -133,7 +133,7 @@ test('The expanded prop should be set correct automatically when children change
     const handleLogoutClick = jest.fn();
     const handleProfileClick = jest.fn();
 
-    const navigation = mount(
+    const {rerender} = render(
         <Navigation
             appVersion="1.0.0"
             appVersionLink="http://link.com"
@@ -159,24 +159,35 @@ test('The expanded prop should be set correct automatically when children change
         </Navigation>
     );
 
-    expect(navigation.find('Item[value="contact"]').instance().props.expanded).toBe(true);
-    expect(navigation.find('Item[value="settings"]').instance().props.expanded).toBe(false);
+    expect(screen.getByText(/Contact 1/)).toBeInTheDocument();
+    expect(screen.queryByText(/Setting 1/)).not.toBeInTheDocument();
 
-    navigation.setProps({
-        children: [
-            <Navigation.Item icon="su-user-1" key="1" title="Contact" value="contact">
+    rerender(
+        <Navigation
+            appVersion="1.0.0"
+            appVersionLink="http://link.com"
+            onItemClick={handleNavigationClick}
+            onLogoutClick={handleLogoutClick}
+            onProfileClick={handleProfileClick}
+            suluVersion="2.0.0-RC1"
+            suluVersionLink="http://link.com"
+            title="sulu.io"
+            userImage="http://lorempixel.com/200/200"
+            username="John Travolta"
+        >
+            <Navigation.Item icon="su-user-1" title="Contact" value="contact">
                 <Navigation.Item title="Contact 1" value="contact_1" />
                 <Navigation.Item title="Contact 2" value="contact_2" />
                 <Navigation.Item title="Contact 3" value="contact_3" />
-            </Navigation.Item>,
-            <Navigation.Item icon="fa-gear" key="2" title="Settings" value="settings">
+            </Navigation.Item>
+            <Navigation.Item icon="fa-gear" title="Settings" value="settings">
                 <Navigation.Item title="Setting 1" value="setting_1" />
                 <Navigation.Item active={true} title="Setting 2" value="setting_2" />
                 <Navigation.Item title="Setting 3" value="setting_3" />
-            </Navigation.Item>,
-        ],
-    });
+            </Navigation.Item>
+        </Navigation>
+    );
 
-    expect(navigation.find('Item[value="contact"]').instance().props.expanded).toBe(false);
-    expect(navigation.find('Item[value="settings"]').instance().props.expanded).toBe(true);
+    expect(screen.queryByText(/Contact 1/)).not.toBeInTheDocument();
+    expect(screen.getByText(/Setting 1/)).toBeInTheDocument();
 });
