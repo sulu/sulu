@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Phone from '../Phone';
 
 test('Phone should render', () => {
@@ -40,15 +41,15 @@ test('Phone should render when disabled', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('Phone should trigger callbacks correctly', () => {
+test('Phone should trigger callbacks correctly', async() => {
     const onChange = jest.fn();
     const onBlur = jest.fn();
     render(<Phone onBlur={onBlur} onChange={onChange} value={null} />);
 
     const input = screen.queryByRole('textbox');
 
-    fireEvent.change(input, {target: {value: '+123'}});
-    fireEvent.blur(input);
+    await userEvent.change(input, {target: {value: '+123'}});
+    await userEvent.blur(input);
 
     expect(onChange).toBeCalledWith('+123', expect.anything());
     expect(onChange).toHaveBeenCalledTimes(1);
@@ -56,7 +57,7 @@ test('Phone should trigger callbacks correctly', () => {
     expect(onBlur).toHaveBeenCalledTimes(1);
 });
 
-test('Phone should not set onIconClick when value is not set', () => {
+test('Phone should not set onIconClick when value is not set', async() => {
     const redirectSpy = jest.fn();
     delete window.location;
     window.location = {assign: redirectSpy};
@@ -66,12 +67,12 @@ test('Phone should not set onIconClick when value is not set', () => {
     render(<Phone onBlur={onBlur} onChange={onChange} value={null} />);
 
     const icon = screen.queryByLabelText('su-phone');
-    fireEvent.click(icon);
+    await userEvent.click(icon);
 
     expect(redirectSpy).not.toHaveBeenCalled();
 });
 
-test('Phone should set onIconClick when value is set', () => {
+test('Phone should set onIconClick when value is set', async() => {
     const redirectSpy = jest.fn();
     delete window.location;
     window.location = {assign: redirectSpy};
@@ -81,12 +82,12 @@ test('Phone should set onIconClick when value is set', () => {
     render(<Phone onBlur={onBlur} onChange={onChange} value="+123" />);
 
     const icon = screen.queryByLabelText('su-phone');
-    fireEvent.click(icon);
+    await userEvent.click(icon);
 
     expect(redirectSpy).toHaveBeenCalled();
 });
 
-test('Phone should set onIconClick when value is valid and window should be opened', () => {
+test('Phone should set onIconClick when value is valid and window should be opened', async() => {
     const redirectSpy = jest.fn();
     delete window.location;
     window.location = {assign: redirectSpy};
@@ -96,7 +97,7 @@ test('Phone should set onIconClick when value is valid and window should be open
     render(<Phone onBlur={onBlur} onChange={onChange} value="+123" />);
 
     const icon = screen.queryByLabelText('su-phone');
-    fireEvent.click(icon);
+    await userEvent.click(icon);
 
     expect(redirectSpy).toHaveBeenLastCalledWith('tel:+123');
 });

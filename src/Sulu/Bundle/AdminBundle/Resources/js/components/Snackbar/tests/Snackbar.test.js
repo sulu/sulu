@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Snackbar from '../Snackbar';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -35,22 +36,22 @@ test('Render an error snackbar without close button', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('Click the snackbar should call the onClick callback', () => {
+test('Click the snackbar should call the onClick callback', async() => {
     const clickSpy = jest.fn();
     render(<Snackbar message="Something went wrong" onClick={clickSpy} type="error" />);
 
     const snackbar = screen.queryByText('- Something went wrong');
-    fireEvent.click(snackbar);
+    await userEvent.click(snackbar);
 
     expect(clickSpy).toBeCalled();
 });
 
-test('Call onCloseClick callback when close button is clicked', () => {
+test('Call onCloseClick callback when close button is clicked', async() => {
     const closeClickSpy = jest.fn();
     render(<Snackbar message="Something went wrong" onCloseClick={closeClickSpy} type="error" />);
 
     const icon = screen.queryByLabelText('su-times');
-    fireEvent.click(icon);
+    await userEvent.click(icon);
 
     expect(closeClickSpy).toBeCalledWith();
 });

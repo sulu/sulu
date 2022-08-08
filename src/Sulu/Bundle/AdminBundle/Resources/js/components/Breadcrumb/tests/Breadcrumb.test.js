@@ -1,5 +1,6 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Breadcrumb from '../Breadcrumb';
 
@@ -21,7 +22,7 @@ test('Render a Breadcrumb', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('Clicking on a clickable breadcrumb part should call a handler', () => {
+test('Clicking on a clickable breadcrumb part should call a handler', async() => {
     const clickSpy = jest.fn();
     const testValue = 2;
     render(
@@ -39,7 +40,7 @@ test('Clicking on a clickable breadcrumb part should call a handler', () => {
     );
 
     const item = screen.queryByText('Crumb 2');
-    fireEvent.click(item);
+    await userEvent.click(item);
 
     expect(clickSpy).toHaveBeenCalledWith(testValue);
 });

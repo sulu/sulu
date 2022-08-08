@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Folder from '../Folder';
 
 test('Render a Folder component', () => {
@@ -29,7 +30,7 @@ test('Use permission icon if hasPermissions flag is set', () => {
     expect(icon).toBeInTheDocument();
 });
 
-test('Call clickhandler when clicking on the folder', () => {
+test('Call clickhandler when clicking on the folder', async() => {
     const clickSpy = jest.fn();
     const folderId = 1;
     render(
@@ -43,7 +44,7 @@ test('Call clickhandler when clicking on the folder', () => {
     );
 
     const folder = screen.queryByText('This is a folder');
-    fireEvent.click(folder);
+    await userEvent.click(folder);
 
     expect(clickSpy).toHaveBeenCalledWith(folderId);
 });

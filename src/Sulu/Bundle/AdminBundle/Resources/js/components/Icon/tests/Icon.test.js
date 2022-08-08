@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import log from 'loglevel';
 import Icon from '../Icon';
 
@@ -36,32 +37,32 @@ test('Icon should render with onClick handler, role and tabindex', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('Icon should call the callback on click', () => {
+test('Icon should call the callback on click', async() => {
     const onClick = jest.fn();
     render(<Icon className="test" name="su-pen" onClick={onClick} />);
 
     const icon = screen.queryByLabelText('su-pen');
-    fireEvent.click(icon);
+    await userEvent.click(icon);
 
     expect(onClick).toBeCalled();
 });
 
-test('Icon should call the callback on when space is pressed', () => {
+test('Icon should call the callback on when space is pressed', async() => {
     const onClick = jest.fn();
     render(<Icon className="test" name="su-pen" onClick={onClick} />);
 
     const icon = screen.queryByLabelText('su-pen');
-    fireEvent.keyPress(icon, {key: ' ', charCode: 32, code: 'Space'});
+    await userEvent.keyPress(icon, {key: ' ', charCode: 32, code: 'Space'});
 
     expect(onClick).toBeCalled();
 });
 
-test('Icon should call the callback on when enter is pressed', () => {
+test('Icon should call the callback on when enter is pressed', async() => {
     const onClick = jest.fn();
     render(<Icon className="test" name="su-pen" onClick={onClick} />);
 
     const icon = screen.queryByLabelText('su-pen');
-    fireEvent.keyPress(icon, {key: 'Enter', charCode: 13, code: 'Enter'});
+    await userEvent.keyPress(icon, {key: 'Enter', charCode: 13, code: 'Enter'});
 
     expect(onClick).toBeCalled();
 });

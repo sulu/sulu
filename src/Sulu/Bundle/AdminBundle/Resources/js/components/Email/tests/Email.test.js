@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Email from '../Email';
 
 test('Email should render', () => {
@@ -47,7 +48,7 @@ test('Email should render error', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('Email should not set onIconClick when value is invalid', () => {
+test('Email should not set onIconClick when value is invalid', async() => {
     delete window.location;
     window.location = {assign: jest.fn()};
 
@@ -57,12 +58,12 @@ test('Email should not set onIconClick when value is invalid', () => {
     render(<Email onBlur={onBlur} onChange={onChange} valid={false} value={null} />);
 
     const icon = screen.queryByLabelText('su-envelope');
-    fireEvent.click(icon);
+    await userEvent.click(icon);
 
     expect(window.location.assign).not.toBeCalled();
 });
 
-test('Email should set onIconClick when value is valid and window should be opened', () => {
+test('Email should set onIconClick when value is valid and window should be opened', async() => {
     delete window.location;
     window.location = {assign: jest.fn()};
 
@@ -72,7 +73,7 @@ test('Email should set onIconClick when value is valid and window should be open
     render(<Email onBlur={onBlur} onChange={onChange} valid={true} value="abc@abc.abc" />);
 
     const icon = screen.queryByLabelText('su-envelope');
-    fireEvent.click(icon);
+    await userEvent.click(icon);
 
     expect(window.location.assign).toBeCalledWith('mailto:abc@abc.abc');
 });

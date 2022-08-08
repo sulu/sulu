@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Chip from '../Chip';
 
 test('Should render chip with children', () => {
@@ -28,22 +29,22 @@ test('Should render chip as clickable', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('Should call onClick callback when the button is clicked', () => {
+test('Should call onClick callback when the button is clicked', async() => {
     const clickSpy = jest.fn();
     const value = {name: 'Test'};
     render(<Chip onClick={clickSpy} onDelete={jest.fn()} value={value}>Test</Chip>);
 
-    fireEvent.click(screen.queryByText('Test'));
+    await userEvent.click(screen.queryByText('Test'));
 
     expect(clickSpy).toBeCalledWith(value);
 });
 
-test('Should call onDelete callback when the times icon is clicked', () => {
+test('Should call onDelete callback when the times icon is clicked', async() => {
     const deleteSpy = jest.fn();
     const value = {name: 'Test'};
     render(<Chip onDelete={deleteSpy} value={value}>Test</Chip>);
 
-    fireEvent.click(screen.queryByLabelText('su-times'));
+    await userEvent.click(screen.queryByLabelText('su-times'));
 
     expect(deleteSpy).toBeCalledWith(value);
 });

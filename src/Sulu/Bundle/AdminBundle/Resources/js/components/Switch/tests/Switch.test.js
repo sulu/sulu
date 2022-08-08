@@ -1,5 +1,6 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Switch from '../Switch';
 
@@ -38,28 +39,28 @@ test('The component should render with radio type', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('A click on the checkbox should trigger the change callback', () => {
+test('A click on the checkbox should trigger the change callback', async() => {
     const onChangeSpy = jest.fn();
     const {rerender} = render(<Switch checked={false} onChange={onChangeSpy} />);
 
-    fireEvent.click(screen.queryByRole('checkbox'));
+    await userEvent.click(screen.queryByRole('checkbox'));
     expect(onChangeSpy).toBeCalledWith(true, undefined);
 
     rerender(<Switch checked={true} onChange={onChangeSpy} />);
 
-    fireEvent.click(screen.queryByRole('checkbox'));
+    await userEvent.click(screen.queryByRole('checkbox'));
     expect(onChangeSpy).toBeCalledWith(false, undefined);
 });
 
-test('A click on the checkbox should trigger the change callback with the value', () => {
+test('A click on the checkbox should trigger the change callback with the value', async() => {
     const onChangeSpy = jest.fn();
     const {rerender} = render(<Switch checked={false} onChange={onChangeSpy} value="my-value" />);
 
-    fireEvent.click(screen.queryByRole('checkbox'));
+    await userEvent.click(screen.queryByRole('checkbox'));
     expect(onChangeSpy).toHaveBeenCalledWith(true, 'my-value');
 
     rerender(<Switch checked={true} onChange={onChangeSpy} value="my-value" />);
 
-    fireEvent.click(screen.queryByRole('checkbox'));
+    await userEvent.click(screen.queryByRole('checkbox'));
     expect(onChangeSpy).toHaveBeenCalledWith(false, 'my-value');
 });

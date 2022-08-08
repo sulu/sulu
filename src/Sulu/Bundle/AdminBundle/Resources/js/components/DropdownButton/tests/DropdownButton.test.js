@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import DropdownButton from '../DropdownButton';
 
 test('Render dropdown button', () => {
@@ -13,7 +14,7 @@ test('Render dropdown button', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('Clicking dropdown items should call the corresponding callback', () => {
+test('Clicking dropdown items should call the corresponding callback', async() => {
     const option1ClickSpy = jest.fn();
     const option2ClickSpy = jest.fn();
 
@@ -25,10 +26,10 @@ test('Clicking dropdown items should call the corresponding callback', () => {
     );
 
     const dropdownButton = screen.queryByText('Add');
-    fireEvent.click(dropdownButton);
+    await userEvent.click(dropdownButton);
 
     const option1 = screen.queryByText('Option 1');
-    fireEvent.click(option1);
+    await userEvent.click(option1);
 
     expect(option1ClickSpy).toBeCalled();
     expect(option2ClickSpy).not.toBeCalled();
@@ -36,9 +37,9 @@ test('Clicking dropdown items should call the corresponding callback', () => {
     option1ClickSpy.mockReset();
     option2ClickSpy.mockReset();
 
-    fireEvent.click(dropdownButton);
+    await userEvent.click(dropdownButton);
     const option2 = screen.queryByText('Option 2');
-    fireEvent.click(option2);
+    await userEvent.click(option2);
 
     expect(option1ClickSpy).not.toBeCalled();
     expect(option2ClickSpy).toBeCalled();

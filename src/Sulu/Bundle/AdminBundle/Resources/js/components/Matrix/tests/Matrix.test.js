@@ -1,5 +1,6 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Matrix from '../Matrix';
 import Row from '../Row';
@@ -118,7 +119,7 @@ test('Render the Matrix component with values in disabled state', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('Changing a value should call onChange ', () => {
+test('Changing a value should call onChange ', async() => {
     const handleChange = jest.fn();
     const values = {
         'global.articles': {
@@ -168,11 +169,11 @@ test('Changing a value should call onChange ', () => {
     };
 
     const item = screen.queryAllByLabelText('su-pen')[1].parentElement;
-    fireEvent.click(item);
+    await userEvent.click(item);
     expect(handleChange).toHaveBeenCalledWith(expectedValues);
 });
 
-test('Deactivate all button should call onChange', () => {
+test('Deactivate all button should call onChange', async() => {
     const handleChange = jest.fn();
     const values = {
         'global.articles': {
@@ -222,11 +223,11 @@ test('Deactivate all button should call onChange', () => {
     };
 
     const disableRowButton = screen.queryAllByText('Deactivate all')[0];
-    fireEvent.click(disableRowButton);
+    await userEvent.click(disableRowButton);
     expect(handleChange).toHaveBeenCalledWith(expectedValues);
 });
 
-test('Activate all button should call onChange', () => {
+test('Activate all button should call onChange', async() => {
     const handleChange = jest.fn();
     const values = {
         'global.articles': {
@@ -276,11 +277,11 @@ test('Activate all button should call onChange', () => {
     };
 
     const activateRowButton = screen.queryAllByText('Activate all')[0];
-    fireEvent.click(activateRowButton);
+    await userEvent.click(activateRowButton);
     expect(handleChange).toHaveBeenCalledWith(expectedValues);
 });
 
-test('Activate all button should call onChange with all values, even when the value does not exists', () => {
+test('Activate all button should call onChange with all values, even when the value does not exists', async() => {
     const handleChange = jest.fn();
     const values = {
         'global.articles': {
@@ -326,6 +327,6 @@ test('Activate all button should call onChange with all values, even when the va
     };
 
     const activateRowButton = screen.queryAllByText('Activate all')[1];
-    fireEvent.click(activateRowButton);
+    await userEvent.click(activateRowButton);
     expect(handleChange).toHaveBeenCalledWith(expectedValues);
 });
