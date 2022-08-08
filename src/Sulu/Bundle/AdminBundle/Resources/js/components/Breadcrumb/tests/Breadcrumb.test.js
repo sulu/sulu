@@ -1,11 +1,12 @@
 // @flow
-import {mount, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Breadcrumb from '../Breadcrumb';
 
 test('Render a Breadcrumb', () => {
     const clickSpy = jest.fn();
-    const breadcrumb = render(
+    const {container} = render(
         <Breadcrumb onItemClick={clickSpy}>
             <Breadcrumb.Item>
                 Crumb 1
@@ -18,13 +19,13 @@ test('Render a Breadcrumb', () => {
             </Breadcrumb.Item>
         </Breadcrumb>
     );
-    expect(breadcrumb).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
-test('Clicking on a clickable breadcrumb part should call a handler', () => {
+test('Clicking on a clickable breadcrumb part should call a handler', async() => {
     const clickSpy = jest.fn();
     const testValue = 2;
-    const breadcrumb = mount(
+    render(
         <Breadcrumb onItemClick={clickSpy}>
             <Breadcrumb.Item>
                 Crumb 1
@@ -38,6 +39,8 @@ test('Clicking on a clickable breadcrumb part should call a handler', () => {
         </Breadcrumb>
     );
 
-    breadcrumb.find('Item').at(1).simulate('click');
+    const item = screen.queryByText('Crumb 2');
+    await userEvent.click(item);
+
     expect(clickSpy).toHaveBeenCalledWith(testValue);
 });

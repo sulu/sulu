@@ -1,83 +1,88 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render in body when open 1`] = `
-Array [
-  <div
-    class="backdrop visible fixed"
-    role="button"
-  />,
-  <div
-    class="dialogContainer open"
-  >
+<body>
+  <div />
+  <div>
     <div
-      class="dialog"
+      class="backdrop visible fixed"
+      data-testid="backdrop"
+      role="button"
+    />
+    <div
+      class="dialogContainer open"
     >
-      <section
-        class="content"
+      <div
+        class="dialog"
       >
-        <div
-          class="snackbar"
+        <section
+          class="content"
         >
           <div
-            class="snackbar error"
-            role="button"
+            class="snackbar"
           >
-            <span
-              aria-label="su-exclamation-triangle"
-              class="su-exclamation-triangle icon"
-            />
             <div
-              class="text"
+              class="snackbar error"
+              role="button"
             >
-              <strong>
-                sulu_admin.error
-              </strong>
-               - 
+              <span
+                aria-label="su-exclamation-triangle"
+                class="su-exclamation-triangle icon"
+              />
+              <div
+                class="text"
+              >
+                <strong>
+                  sulu_admin.error
+                </strong>
+                 - 
+                
+              </div>
             </div>
           </div>
-        </div>
-        <header
-          class="header"
-        >
-          <span
-            class="headerItem"
-          >
-            My dialog title
-          </span>
-        </header>
-        <article
-          class="article center"
-        >
-          <div>
-            My dialog content
-          </div>
-        </article>
-        <footer
-          class="footer"
-        >
-          <button
-            class="button primary hasText"
-            type="button"
+          <header
+            class="header"
           >
             <span
-              class="buttonText"
+              class="headerItem"
             >
-              Confirm
+              My dialog title
             </span>
-          </button>
-          <button
-            class="button secondary hasText"
-            type="button"
+          </header>
+          <article
+            class="article center"
           >
-            <span
-              class="buttonText"
+            <div>
+              My dialog content
+            </div>
+          </article>
+          <footer
+            class="footer"
+          >
+            <button
+              class="button primary hasText"
+              type="button"
             >
-              Cancel
-            </span>
-          </button>
-        </footer>
-      </section>
+              <span
+                class="buttonText"
+              >
+                Confirm
+              </span>
+            </button>
+            <button
+              class="button secondary hasText"
+              type="button"
+            >
+              <span
+                class="buttonText"
+              >
+                Cancel
+              </span>
+            </button>
+          </footer>
+        </section>
+      </div>
     </div>
-  </div>,
-]
+  </div>
+</body>
 `;

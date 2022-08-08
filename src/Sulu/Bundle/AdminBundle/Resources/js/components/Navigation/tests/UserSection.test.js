@@ -1,5 +1,6 @@
 //@flow
-import {mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import UserSection from '../UserSection';
 
@@ -7,11 +8,11 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
-test('The component should render with all available props and handle clicks correctly', () => {
+test('The component should render with all available props and handle clicks correctly', async() => {
     const handleLogoutClick = jest.fn();
     const handleProfileClick = jest.fn();
 
-    const navigation = mount(
+    const {container} = render(
         <UserSection
             onLogoutClick={handleLogoutClick}
             onProfileClick={handleProfileClick}
@@ -21,11 +22,12 @@ test('The component should render with all available props and handle clicks cor
             username="John Travolta"
         />
     );
-    expect(navigation.render()).toMatchSnapshot();
 
-    navigation.find('button.menuButton').at(0).simulate('click');
+    expect(container).toMatchSnapshot();
+
+    await userEvent.click(screen.queryByText(/sulu_admin.edit_profile/));
     expect(handleProfileClick).toBeCalled();
 
-    navigation.find('button.menuButton').at(1).simulate('click');
+    await userEvent.click(screen.queryByText(/sulu_admin.logout/));
     expect(handleLogoutClick).toBeCalled();
 });

@@ -1,87 +1,95 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Should highlight the part of the suggestion text which matches the query prop 1`] = `
-<li
-  class="suggestionItem"
-  style="min-width:0px"
->
-  <button
-    class="suggestion"
-    type="button"
+<div>
+  <li
+    class="suggestionItem"
+    style="min-width: 0px;"
   >
-    <span
-      aria-label="fa-ticket"
-      class="fa fa-ticket icon"
-    />
-    <div>
+    <button
+      class="suggestion"
+      type="button"
+    >
+      <span
+        aria-label="fa-ticket"
+        class="fa fa-ticket icon"
+      />
+      <div>
+        <span>
+          <strong>
+            Sug
+          </strong>
+          gestion 3
+        </span>
+      </div>
+    </button>
+  </li>
+</div>
+`;
+
+exports[`Suggestion should render 1`] = `
+<div>
+  <li
+    class="suggestionItem"
+    style="min-width: 0px;"
+  >
+    <button
+      class="suggestion"
+      type="button"
+    >
+      <span
+        aria-label="fa-ticket"
+        class="fa fa-ticket icon"
+      />
+      Suggestion 1
+    </button>
+  </li>
+</div>
+`;
+
+exports[`Suggestion should render if given query is not a valid regular expression 1`] = `
+<div>
+  <li
+    class="suggestionItem"
+    style="min-width: 0px;"
+  >
+    <button
+      class="suggestion"
+      type="button"
+    >
+      <span
+        aria-label="fa-ticket"
+        class="fa fa-ticket icon"
+      />
+      <span>
+        Suggestion 2
+      </span>
+    </button>
+  </li>
+</div>
+`;
+
+exports[`Suggestion should render strong-tags around found chars 1`] = `
+<div>
+  <li
+    class="suggestionItem"
+    style="min-width: 0px;"
+  >
+    <button
+      class="suggestion"
+      type="button"
+    >
+      <span
+        aria-label="fa-ticket"
+        class="fa fa-ticket icon"
+      />
       <span>
         <strong>
           Sug
         </strong>
-        gestion 3
+        gestion 2
       </span>
-    </div>
-  </button>
-</li>
-`;
-
-exports[`Suggestion should render 1`] = `
-<li
-  class="suggestionItem"
-  style="min-width:0px"
->
-  <button
-    class="suggestion"
-    type="button"
-  >
-    <span
-      aria-label="fa-ticket"
-      class="fa fa-ticket icon"
-    />
-    Suggestion 1
-  </button>
-</li>
-`;
-
-exports[`Suggestion should render if given query is not a valid regular expression 1`] = `
-<li
-  class="suggestionItem"
-  style="min-width:0px"
->
-  <button
-    class="suggestion"
-    type="button"
-  >
-    <span
-      aria-label="fa-ticket"
-      class="fa fa-ticket icon"
-    />
-    <span>
-      Suggestion 2
-    </span>
-  </button>
-</li>
-`;
-
-exports[`Suggestion should render strong-tags around found chars 1`] = `
-<li
-  class="suggestionItem"
-  style="min-width:0px"
->
-  <button
-    class="suggestion"
-    type="button"
-  >
-    <span
-      aria-label="fa-ticket"
-      class="fa fa-ticket icon"
-    />
-    <span>
-      <strong>
-        Sug
-      </strong>
-      gestion 2
-    </span>
-  </button>
-</li>
+    </button>
+  </li>
+</div>
 `;

@@ -11,7 +11,9 @@
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:flowtype/recommended"
+        "plugin:flowtype/recommended",
+        "plugin:testing-library/react",
+        "plugin:jest-dom/recommended"
     ],
     "parser": "@babel/eslint-parser",
     "parserOptions": {
@@ -32,7 +34,8 @@
         "react": {
             "version": "detect",
             "flowVersion": "0.142.0"
-        }
+        },
+        "testing-library/utils-module": "off"
     },
     "rules": {
         "indent": [
@@ -234,7 +237,10 @@
         "flowtype/sort-keys": "error",
         "babel/semi": "error",
         "jsx-a11y/no-static-element-interactions": "error",
-        "react/button-has-type": "error"
+        "react/button-has-type": "error",
+        "testing-library/no-node-access": "off",
+        "testing-library/prefer-explicit-assert": "error",
+        "testing-library/prefer-user-event": "error"
     },
     "reportUnusedDisableDirectives": true
 }

@@ -1,17 +1,20 @@
 // @flow
-import {render, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Backdrop from '../Backdrop';
 
 test('The component should render', () => {
-    expect(render(<Backdrop />)).toMatchSnapshot();
+    const {container} = render(<Backdrop />);
+    expect(container).toMatchSnapshot();
 });
 
-test('The component should call a function when clicked', () => {
+test('The component should call a function when clicked', async() => {
     const onClickSpy = jest.fn();
-    const view = shallow(<Backdrop onClick={onClickSpy} />);
+    render(<Backdrop onClick={onClickSpy} />);
+    const backdrop = screen.queryByTestId('backdrop');
 
     expect(onClickSpy).toHaveBeenCalledTimes(0);
-    view.find('.backdrop').simulate('click');
+    await userEvent.click(backdrop);
     expect(onClickSpy).toHaveBeenCalledTimes(1);
 });

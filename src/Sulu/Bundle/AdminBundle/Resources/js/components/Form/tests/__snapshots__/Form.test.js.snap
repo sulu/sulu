@@ -1,41 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render a form 1`] = `
-<div
-  class="grid grid"
->
+<div>
   <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
+    class="grid grid"
   >
     <div
-      class="field dark"
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
     >
-      <label
-        class="label"
+      <div
+        class="field dark"
       >
-        Test1
-      </label>
-      Test 1
-      <label
-        class="errorLabel"
-      />
+        <label
+          class="label"
+        >
+          Test1
+        </label>
+        Test 1
+        <label
+          class="errorLabel"
+        />
+      </div>
     </div>
-  </div>
-  <div
-    class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
-  >
     <div
-      class="field dark"
+      class="item gridItem colSpan colSpan-12 space-before-0 space-after-0"
     >
-      <label
-        class="label"
+      <div
+        class="field dark"
       >
-        Test1
-      </label>
-      Test 2
-      <label
-        class="errorLabel"
-      />
+        <label
+          class="label"
+        >
+          Test1
+        </label>
+        Test 2
+        <label
+          class="errorLabel"
+        />
+      </div>
     </div>
   </div>
 </div>

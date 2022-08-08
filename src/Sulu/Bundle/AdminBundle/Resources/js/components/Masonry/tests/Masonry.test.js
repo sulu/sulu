@@ -1,14 +1,15 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import React from 'react';
 import Masonry from '../Masonry';
 
 test('Render an empty Masonry container', () => {
-    expect(render(<Masonry />)).toMatchSnapshot();
+    const {container} = render(<Masonry />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a Masonry container with items', () => {
-    expect(render(
+    const {container} = render(
         <Masonry>
             <div>
                 <img src="http://lorempixel.com/300/200" />
@@ -20,5 +21,6 @@ test('Render a Masonry container with items', () => {
                 <img src="http://lorempixel.com/300/200" />
             </div>
         </Masonry>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });

@@ -1,14 +1,14 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
-import {render} from 'enzyme';
+// @flow
+import {render} from '@testing-library/react';
 import React from 'react';
 import Divider from '../Divider';
 
 test('Render an empty Divider', () => {
-    const divider = render(<Divider />);
-    expect(divider).toMatchSnapshot();
+    const {container} = render(<Divider />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a Divider with text', () => {
-    const divider = render(<Divider>Test</Divider>);
-    expect(divider).toMatchSnapshot();
+    const {container} = render(<Divider>Test</Divider>);
+    expect(container).toMatchSnapshot();
 });

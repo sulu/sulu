@@ -29,6 +29,7 @@ exports[`SingleAutoComplete should render with suggestions 2`] = `
 Array [
   <div
     class="backdrop fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div

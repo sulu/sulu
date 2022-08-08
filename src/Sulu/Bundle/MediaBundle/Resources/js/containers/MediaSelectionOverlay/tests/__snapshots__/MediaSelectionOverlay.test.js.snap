@@ -4,6 +4,7 @@ exports[`Render an open MediaSelectionOverlay 1`] = `
 Array [
   <div
     class="backdrop visible fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div
@@ -695,6 +696,7 @@ exports[`Render an open MediaSelectionOverlay with selected items 1`] = `
 Array [
   <div
     class="backdrop visible fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div

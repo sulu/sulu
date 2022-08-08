@@ -1,8 +1,9 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import CroppedText from '../CroppedText';
 
 test('CroppedText should render', () => {
-    expect(render(<CroppedText>This is a text which will get cropped.</CroppedText>)).toMatchSnapshot();
+    const {container} = render(<CroppedText>This is a text which will get cropped.</CroppedText>);
+    expect(container).toMatchSnapshot();
 });

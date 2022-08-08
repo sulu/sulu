@@ -194,7 +194,7 @@ class UpdateBuildCommand extends Command
                                 \sprintf('Merge "%s" together like above?', $file),
                                 'y'
                             )
-                            )
+                        )
                         ) {
                             $ui->writeln(\sprintf('Write new "%s" version.', $file));
                             $this->writeFile($filePath, $mergedJson . "\n");

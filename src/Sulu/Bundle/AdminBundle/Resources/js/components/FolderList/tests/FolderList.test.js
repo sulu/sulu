@@ -1,14 +1,16 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
-import {render, mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import FolderList from '../FolderList';
 
 test('Render an empty FolderList', () => {
-    expect(render(<FolderList />)).toMatchSnapshot();
+    const {container} = render(<FolderList />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a FolderList with Folder components inside', () => {
-    expect(render(
+    const {container} = render(
         <FolderList>
             <FolderList.Folder
                 id="1"
@@ -26,13 +28,14 @@ test('Render a FolderList with Folder components inside', () => {
                 title="This is a folder"
             />
         </FolderList>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
-test('Clicking on a folder should call the click handler with the right id as argument', () => {
+test('Clicking on a folder should call the click handler with the right id as argument', async() => {
     const clickSpy = jest.fn();
     const clickedFolderId = 3;
-    const folderList = mount(
+    render(
         <FolderList onFolderClick={clickSpy}>
             <FolderList.Folder
                 id="1"
@@ -52,6 +55,8 @@ test('Clicking on a folder should call the click handler with the right id as ar
         </FolderList>
     );
 
-    folderList.find('.folder').at(2).simulate('click');
+    const folderList = screen.queryByText('0 Objects');
+    await userEvent.click(folderList);
+
     expect(clickSpy).toHaveBeenCalledWith(clickedFolderId);
 });

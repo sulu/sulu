@@ -1,13 +1,14 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import Form from '../Form';
 
 test('Render a form', () => {
-    expect(render(
+    const {container} = render(
         <Form skin="dark">
             <Form.Field label="Test1">Test 1</Form.Field>
             <Form.Field label="Test1">Test 2</Form.Field>
         </Form>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });

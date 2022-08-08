@@ -4,6 +4,7 @@ exports[`Should render a Dialog 1`] = `
 Array [
   <div
     class="backdrop visible fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div

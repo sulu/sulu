@@ -46,6 +46,7 @@ Array [
   </button>,
   <div
     class="backdrop fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div

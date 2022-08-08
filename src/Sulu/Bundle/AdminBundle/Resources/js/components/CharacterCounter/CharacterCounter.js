@@ -23,7 +23,7 @@ export default class CharacterCounter extends React.Component<Props> {
 
         return (
             <label className={charactersLeftLabelClass}>
-                {charactersLeft} {translate('sulu_admin.characters_left')}
+                {charactersLeft + ' ' + translate('sulu_admin.characters_left')}
             </label>
         );
     }

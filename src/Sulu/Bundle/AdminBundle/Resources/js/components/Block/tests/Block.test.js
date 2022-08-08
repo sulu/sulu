@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import log from 'loglevel';
 import Block from '../Block';
 
@@ -12,8 +13,8 @@ jest.mock('../../../utils/Translator', () => ({
     translate: (key) => key,
 }));
 
-test('Render an expanded block with a multiple types', () => {
-    expect(render(
+test('Render an expanded block with multiple types', () => {
+    const {container} = render(
         <Block
             activeType="type1"
             expanded={true}
@@ -25,16 +26,18 @@ test('Render an expanded block with a multiple types', () => {
             types={{'type1': 'Type1', 'type2': 'Type2'}}
         >
             Some block content
-        </Block>
-    )).toMatchSnapshot();
+        </Block>);
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render an block without handle or collapse or expand button', () => {
-    expect(render(
+    const {container} = render(
         <Block expanded={true}>
             Some block content
         </Block>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a selected block', () => {
@@ -46,79 +49,83 @@ test('Render a selected block', () => {
 });
 
 test('Render a collapsed block', () => {
-    expect(render(
+    const {container} = render(
         <Block expanded={false} icons={['su-eye', 'su-people']} onCollapse={jest.fn()} onExpand={jest.fn()}>
             Some block content
         </Block>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Do not show type dropdown if only a single type is passed', () => {
-    const block = shallow(
+    const {container} = render(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
             Some block content
         </Block>
     );
 
-    expect(block.find('SingleSelect')).toHaveLength(0);
+    // eslint-disable-next-line testing-library/no-container
+    const elements = container.getElementsByClassName('select');
+
+    expect(elements).toHaveLength(0);
 });
 
 test('Do not show action icon if no actions prop has been passed', () => {
-    const block = shallow(
+    render(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
             Some block content
         </Block>
     );
 
-    expect(block.find('Icon[name="su-more-circle"]')).toHaveLength(0);
+    expect(screen.queryByLabelText('su-more-circle')).not.toBeInTheDocument();
 });
 
 test('Do not show action icon if an empty actions prop has been passed', () => {
-    const block = shallow(
+    render(
         <Block actions={[]} expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
             Some block content
         </Block>
     );
 
-    expect(block.find('Icon[name="su-more-circle"]')).toHaveLength(0);
+    expect(screen.queryByLabelText('su-more-circle')).not.toBeInTheDocument();
 });
 
 test('Do not show settings icon if no onSettingsClick prop has been passed', () => {
-    const block = shallow(
+    render(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} types={{'type': 'Type'}}>
             Some block content
         </Block>
     );
 
-    expect(block.find('Icon[name="su-cog"]')).toHaveLength(0);
+    expect(screen.queryByLabelText('su-cog')).not.toBeInTheDocument();
 });
 
-test('Clicking on a collapsed block should call the onExpand callback', () => {
+test('Clicking on a collapsed block should call the onExpand callback', async() => {
     const expandSpy = jest.fn();
-    const block = shallow(<Block onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
+    render(<Block onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
 
-    block.find('section').simulate('click');
+    await userEvent.click(screen.queryByRole('switch'));
 
     expect(expandSpy).toHaveBeenCalledTimes(1);
 });
 
-test('Clicking on a expanded block should not call the onExpand callback', () => {
+test('Clicking on a expanded block should not call the onExpand callback', async() => {
     const expandSpy = jest.fn();
-    const block = shallow(<Block expanded={true} onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
+    render(<Block expanded={true} onCollapse={jest.fn()} onExpand={expandSpy}>Block content</Block>);
 
-    block.find('section').simulate('click');
+    await userEvent.click(screen.queryByRole('switch'));
 
     expect(expandSpy).not.toBeCalled();
 });
 
-test('Clicking the close icon in an expanded block should collapse it', () => {
+test('Clicking the close icon in an expanded block should collapse it', async() => {
     const collapseSpy = jest.fn();
-    const block = mount(<Block expanded={true} onCollapse={collapseSpy} onExpand={jest.fn()}>Block content</Block>);
+    render(<Block expanded={true} onCollapse={collapseSpy} onExpand={jest.fn()}>Block content</Block>);
 
-    const closeIcon = block.find('Icon[name="su-collapse-vertical"]');
-    expect(closeIcon).toHaveLength(1);
+    const closeIcon = screen.queryByLabelText('su-collapse-vertical');
+    expect(closeIcon).toBeInTheDocument();
 
-    closeIcon.simulate('click');
+    await userEvent.click(closeIcon);
 
     expect(collapseSpy).toHaveBeenCalledTimes(1);
 });
@@ -147,7 +154,7 @@ test('Clicking the action icon should open a popover that displays the given act
             onClick: jest.fn(),
         },
     ];
-    const block = mount(
+    render(
         <Block actions={actions} expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()}>Block content</Block>
     );
     expect(block.find('ActionPopover').prop('open')).toEqual(false);
@@ -168,7 +175,7 @@ test('Clicking an action in the action popover should fire the respective callba
             onClick: onActionClickSpy,
         },
     ];
-    const block = mount(
+    render(
         <Block actions={actions} expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()}>Block content</Block>
     );
     block.find('Icon[name="su-more-circle"]').simulate('click');
@@ -178,31 +185,34 @@ test('Clicking an action in the action popover should fire the respective callba
     expect(onActionClickSpy).toBeCalledWith();
 });
 
-test('Render remove action if deprecated onRemove prop is set', () => {
+test('Render remove action if deprecated onRemove prop is set', async() => {
     const removeSpy = jest.fn();
-    const block = mount(
+    render(
         <Block expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()} onRemove={removeSpy}>Block content</Block>
     );
     expect(log.warn).toBeCalledWith(
         expect.stringContaining('The "onRemove" prop of the "Block" component is deprecated')
     );
 
-    expect(block.find('Icon[name="su-more-circle"]')).toHaveLength(1);
-    block.find('Icon[name="su-more-circle"]').simulate('click');
+    const actionIcon = screen.queryByLabelText('su-more-circle');
+    expect(actionIcon).toBeInTheDocument();
+    await userEvent.click(actionIcon);
 
-    expect(block.find('Icon[name="su-trash-alt"]')).toHaveLength(1);
-    block.find('Icon[name="su-trash-alt"]').simulate('click');
+    const removeIcon = screen.queryByLabelText('su-trash-alt');
+    expect(removeIcon).toBeInTheDocument();
+    await userEvent.click(removeIcon);
 
     expect(removeSpy).toHaveBeenCalledTimes(1);
 });
 
-test('Changing the type should call the onTypeChange callback', () => {
+test('Changing the type should call the onTypeChange callback', async() => {
     const typeChangeSpy = jest.fn();
     const types = {
         type1: 'Type 1',
         type2: 'Type 2',
     };
-    const block = shallow(
+
+    render(
         <Block
             activeType="type1"
             expanded={true}
@@ -215,7 +225,12 @@ test('Changing the type should call the onTypeChange callback', () => {
         </Block>
     );
 
-    block.find('SingleSelect').simulate('change', 'type2');
+    const selectButton = screen.queryByText('Type 1');
+    await userEvent.click(selectButton);
+
+    const typeButton = screen.queryByText('Type 2');
+    await userEvent.click(typeButton);
 
     expect(typeChangeSpy).toBeCalledWith('type2');
+    expect(typeChangeSpy).toHaveBeenCalledTimes(1);
 });

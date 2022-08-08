@@ -1,54 +1,60 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render active Item 1`] = `
-<button
-  class="item active"
-  type="button"
->
-  <span
-    class="icon"
+<div>
+  <button
+    class="item active"
+    type="button"
   >
     <span
-      aria-label="fa-home"
-      class="fa fa-home icon"
-    />
-  </span>
-  <span>
-    My House
-  </span>
-</button>
+      class="icon"
+    >
+      <span
+        aria-label="fa-home"
+        class="fa fa-home icon"
+      />
+    </span>
+    <span>
+      My House
+    </span>
+  </button>
+</div>
 `;
 
 exports[`Render default Item 1`] = `
-<button
-  class="item"
-  type="button"
->
-  <span
-    class="icon"
-  />
-  <span>
-    Test Item
-  </span>
-</button>
+<div>
+  <button
+    class="item"
+    type="button"
+  >
+    <span
+      class="icon"
+    />
+    <span>
+      Test Item
+    </span>
+  </button>
+</div>
 `;
 
 exports[`Render disabled Item 1`] = `
-<button
-  class="item active"
-  disabled=""
-  type="button"
->
-  <span
-    class="icon"
+<div>
+  <button
+    class="item active"
+    disabled=""
+    type="button"
   >
     <span
-      aria-label="fa-home"
-      class="fa fa-home icon"
-    />
-  </span>
-  <span>
-    My Item
-  </span>
-</button>
+      class="icon"
+    >
+      <span
+        aria-label="fa-home"
+        class="fa fa-home icon"
+      />
+    </span>
+    <span>
+      My Item
+    </span>
+  </button>
+</div>
 `;

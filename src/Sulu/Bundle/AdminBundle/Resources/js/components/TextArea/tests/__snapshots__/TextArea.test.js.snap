@@ -1,64 +1,76 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TextArea should render 1`] = `
-<textarea
-  class="textArea"
->
-  My value
-</textarea>
-`;
-
-exports[`TextArea should render null value as empty string 1`] = `
-<textarea
-  class="textArea"
-/>
-`;
-
-exports[`TextArea should render when disabled 1`] = `
-<textarea
-  class="textArea disabled"
-  disabled=""
->
-  My value
-</textarea>
-`;
-
-exports[`TextArea should render with error 1`] = `
-<textarea
-  class="textArea error"
->
-  My value
-</textarea>
-`;
-
-exports[`TextArea should render with placeholder 1`] = `
-<textarea
-  class="textArea"
-  placeholder="My placeholder"
->
-  My value
-</textarea>
-`;
-
-exports[`TextArea should render with value 1`] = `
-<textarea
-  class="textArea"
->
-  My value
-</textarea>
-`;
-
-exports[`TextArea should render with value and character counter 1`] = `
-Array [
+<div>
   <textarea
     class="textArea"
   >
     My value
-  </textarea>,
+  </textarea>
+</div>
+`;
+
+exports[`TextArea should render null value as empty string 1`] = `
+<div>
+  <textarea
+    class="textArea"
+  />
+</div>
+`;
+
+exports[`TextArea should render when disabled 1`] = `
+<div>
+  <textarea
+    class="textArea disabled"
+    disabled=""
+  >
+    My value
+  </textarea>
+</div>
+`;
+
+exports[`TextArea should render with error 1`] = `
+<div>
+  <textarea
+    class="textArea error"
+  >
+    My value
+  </textarea>
+</div>
+`;
+
+exports[`TextArea should render with placeholder 1`] = `
+<div>
+  <textarea
+    class="textArea"
+    placeholder="My placeholder"
+  >
+    My value
+  </textarea>
+</div>
+`;
+
+exports[`TextArea should render with value 1`] = `
+<div>
+  <textarea
+    class="textArea"
+  >
+    My value
+  </textarea>
+</div>
+`;
+
+exports[`TextArea should render with value and character counter 1`] = `
+<div>
+  <textarea
+    class="textArea"
+  >
+    My value
+  </textarea>
   <label
     class="characterCounter"
   >
     2 sulu_admin.characters_left
-  </label>,
-]
+  </label>
+</div>
 `;

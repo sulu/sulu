@@ -1,52 +1,61 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render in dark skin 1`] = `
-<label
-  class="label"
-  tabindex="-1"
->
-  <span
-    class="switch checkbox dark"
+<div>
+  <label
+    class="label"
+    tabindex="-1"
   >
-    <input
-      type="checkbox"
-    />
-    <span />
-  </span>
-</label>
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        type="checkbox"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</div>
 `;
 
 exports[`The component should render in disabled state 1`] = `
-<label
-  class="label disabled"
-  tabindex="-1"
->
-  <span
-    class="switch disabled checkbox dark"
+<div>
+  <label
+    class="label disabled"
+    tabindex="-1"
   >
-    <input
-      disabled=""
-      type="checkbox"
-    />
-    <span />
-  </span>
-</label>
+    <span
+      class="switch disabled checkbox dark"
+    >
+      <input
+        disabled=""
+        type="checkbox"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</div>
 `;
 
 exports[`The component should render in light skin 1`] = `
-<label
-  class="label"
-  tabindex="-1"
->
-  <span
-    class="switch checkbox light"
+<div>
+  <label
+    class="label"
+    tabindex="-1"
   >
-    <input
-      type="checkbox"
-    />
-    <span />
-  </span>
-</label>
+    <span
+      class="switch checkbox light"
+    >
+      <input
+        type="checkbox"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</div>
 `;
 
 exports[`The component should render in size small 1`] = `

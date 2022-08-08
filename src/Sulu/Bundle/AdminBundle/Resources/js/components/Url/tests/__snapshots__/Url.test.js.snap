@@ -1,111 +1,115 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render the component as disabled 1`] = `
-<div
-  class="url"
->
+<div>
   <div
-    class="protocols"
+    class="url"
   >
     <div
-      class="select"
-      role="none"
+      class="protocols"
     >
-      <button
-        class="displayValue flat"
-        disabled=""
-        type="button"
+      <div
+        class="select"
+        role="none"
       >
-        <div
-          aria-label="http://"
-          class="croppedText"
-          title="http://"
+        <button
+          class="displayValue flat"
+          disabled=""
+          type="button"
         >
           <div
-            aria-hidden="true"
-            class="front"
+            aria-label="http://"
+            class="croppedText"
+            title="http://"
           >
-            http
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              http
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                ://
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              http://
+            </div>
           </div>
-          <div
-            aria-hidden="true"
-            class="back"
-          >
-            <span>
-              ://
-            </span>
-          </div>
-          <div
-            class="whole"
-          >
-            http://
-          </div>
-        </div>
-        <span
-          aria-label="su-angle-down"
-          class="su-angle-down toggle"
-        />
-      </button>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down toggle"
+          />
+        </button>
+      </div>
     </div>
+    <input
+      disabled=""
+      type="text"
+      value=""
+    />
   </div>
-  <input
-    disabled=""
-    type="text"
-    value=""
-  />
 </div>
 `;
 
 exports[`Render the component with an error 1`] = `
-<div
-  class="url error"
->
+<div>
   <div
-    class="protocols"
+    class="url error"
   >
     <div
-      class="select"
-      role="none"
+      class="protocols"
     >
-      <button
-        class="displayValue flat"
-        type="button"
+      <div
+        class="select"
+        role="none"
       >
-        <div
-          aria-label="http://"
-          class="croppedText"
-          title="http://"
+        <button
+          class="displayValue flat"
+          type="button"
         >
           <div
-            aria-hidden="true"
-            class="front"
+            aria-label="http://"
+            class="croppedText"
+            title="http://"
           >
-            http
+            <div
+              aria-hidden="true"
+              class="front"
+            >
+              http
+            </div>
+            <div
+              aria-hidden="true"
+              class="back"
+            >
+              <span>
+                ://
+              </span>
+            </div>
+            <div
+              class="whole"
+            >
+              http://
+            </div>
           </div>
-          <div
-            aria-hidden="true"
-            class="back"
-          >
-            <span>
-              ://
-            </span>
-          </div>
-          <div
-            class="whole"
-          >
-            http://
-          </div>
-        </div>
-        <span
-          aria-label="su-angle-down"
-          class="su-angle-down toggle"
-        />
-      </button>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down toggle"
+          />
+        </button>
+      </div>
     </div>
+    <input
+      type="text"
+      value=""
+    />
   </div>
-  <input
-    type="text"
-    value=""
-  />
 </div>
 `;

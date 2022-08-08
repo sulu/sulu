@@ -1,14 +1,16 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Field from '../Field';
 
 test('Display a field with label', () => {
-    expect(render(
+    const {container} = render(
         <Field label="Test" skin="dark">
             <p>Test</p>
         </Field>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Display a field with label and type', () => {
@@ -17,54 +19,61 @@ test('Display a field with label and type', () => {
         {label: 'Private', value: 2},
     ];
 
-    expect(render(
+    const {container} = render(
         <Field label="Test" type={1} types={types}>
             <p>Test</p>
         </Field>
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Display a field without label', () => {
-    expect(render(
+    const {container} = render(
         <Field>
             <p>Test</p>
         </Field>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Display a field with colSpan and after space', () => {
-    expect(render(
+    const {container} = render(
         <Field colSpan={7} spaceAfter={5}>
             <div>Test</div>
         </Field>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Display a field with description', () => {
-    expect(render(
+    const {container} = render(
         <Field description="Testdescription">
             <div>Test</div>
         </Field>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Display a field with a required label', () => {
-    expect(render(
+    const {container} = render(
         <Field label="Testlabel" required={true}>
             <div>Test</div>
         </Field>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Display a field with an error', () => {
-    expect(render(
+    const {container} = render(
         <Field error="Error! Help!" label="Testlabel">
             <div>Test</div>
         </Field>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
-test('Change type of field', () => {
+test('Change type of field', async() => {
     const typeChangeSpy = jest.fn();
 
     const types = [
@@ -72,17 +81,19 @@ test('Change type of field', () => {
         {label: 'Private', value: 2},
     ];
 
-    const field = mount(
+    render(
         <Field label="Test" onTypeChange={typeChangeSpy} type={1} types={types}>
             <p>Test</p>
         </Field>
     );
 
-    expect(field.find('ArrowMenu').prop('open')).toEqual(false);
-    field.find('button').simulate('click');
-    expect(field.find('ArrowMenu').prop('open')).toEqual(true);
+    const field = screen.queryByText('Work');
+    expect(screen.queryByTestId('backdrop')).not.toBeInTheDocument();
+    await userEvent.click(field);
+    expect(screen.getByTestId('backdrop')).toBeInTheDocument();
 
-    field.find('ArrowMenu Item').at(1).simulate('click');
+    const changeItem = screen.queryByText('Private');
+    await userEvent.click(changeItem);
     expect(typeChangeSpy).toBeCalledWith(2);
-    expect(field.find('ArrowMenu').prop('open')).toEqual(false);
+    expect(screen.queryByTestId('backdrop')).not.toBeInTheDocument();
 });

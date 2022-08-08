@@ -1,5 +1,5 @@
-// flow-typed signature: e5bfb35b37d41e4c5cf768a457706b14
-// flow-typed version: fa3a988c34/jest_v24.x.x/flow_>=v0.39.x <=v0.103.x
+// flow-typed signature: ec1949e99980c0b12113832818d455c9
+// flow-typed version: 644a595e77/jest_v26.x.x/flow_>=v0.134.x
 
 type JestMockFn<TArguments: $ReadOnlyArray<*>, TReturn> = {
   (...args: TArguments): TReturn,
@@ -22,7 +22,12 @@ type JestMockFn<TArguments: $ReadOnlyArray<*>, TReturn> = {
      * An array that contains all the object results that have been
      * returned by this mock function call
      */
-    results: Array<{ isThrow: boolean, value: TReturn }>,
+    results: Array<{
+      isThrow: boolean,
+      value: TReturn,
+      ...
+    }>,
+    ...
   },
   /**
    * Resets all information stored in the mockFn.mock.calls and
@@ -95,6 +100,7 @@ type JestMockFn<TArguments: $ReadOnlyArray<*>, TReturn> = {
    * Sugar for jest.fn().mockImplementationOnce(() => Promise.reject(value))
    */
   mockRejectedValueOnce(value: TReturn): JestMockFn<TArguments, Promise<any>>,
+  ...
 };
 
 type JestAsymmetricEqualityType = {
@@ -102,6 +108,7 @@ type JestAsymmetricEqualityType = {
    * A custom Jasmine equality tester
    */
   asymmetricMatch(value: mixed): boolean,
+  ...
 };
 
 type JestCallsType = {
@@ -112,6 +119,7 @@ type JestCallsType = {
   first(): mixed,
   mostRecent(): mixed,
   reset(): void,
+  ...
 };
 
 type JestClockType = {
@@ -119,11 +127,13 @@ type JestClockType = {
   mockDate(date: Date): void,
   tick(milliseconds?: number): void,
   uninstall(): void,
+  ...
 };
 
 type JestMatcherResult = {
   message?: string | (() => string),
   pass: boolean,
+  ...
 };
 
 type JestMatcher = (
@@ -142,6 +152,7 @@ type JestPromiseType = {
    * matcher can be chained. If the promise is rejected the assertion fails.
    */
   resolves: JestExpectType,
+  ...
 };
 
 /**
@@ -150,8 +161,53 @@ type JestPromiseType = {
  */
 type JestTestName = string | Function;
 
+// DOM testing library extensions (jest-dom)
+// https://github.com/testing-library/jest-dom
+type DomTestingLibraryType = {
+  /**
+   * @deprecated
+   */
+  toBeInTheDOM(container?: HTMLElement): void,
+
+  // 4.x
+  toBeInTheDocument(): void,
+  toBeVisible(): void,
+  toBeEmpty(): void,
+  toBeDisabled(): void,
+  toBeEnabled(): void,
+  toBeInvalid(): void,
+  toBeRequired(): void,
+  toBeValid(): void,
+  toContainElement(element: HTMLElement | null): void,
+  toContainHTML(htmlText: string): void,
+  toHaveAttribute(attr: string, value?: any): void,
+  toHaveClass(...classNames: string[]): void,
+  toHaveFocus(): void,
+  toHaveFormValues(expectedValues: { [name: string]: any, ... }): void,
+  toHaveStyle(css: string | { [name: string]: any, ... }): void,
+  toHaveTextContent(
+    text: string | RegExp,
+    options?: {| normalizeWhitespace: boolean |}
+  ): void,
+  toHaveValue(value?: string | string[] | number): void,
+
+  // 5.x
+  toHaveDisplayValue(value: string | string[]): void,
+  toBeChecked(): void,
+  toBeEmptyDOMElement(): void,
+  toBePartiallyChecked(): void,
+  toHaveDescription(text: string | RegExp): void,
+  ...
+};
+
 interface JestExpectType {
-  not: JestExpectType;
+  not: JestExpectType &
+    EnzymeMatchersType &
+    DomTestingLibraryType &
+    JestJQueryMatchersType &
+    JestStyledComponentsMatchersType &
+    JestExtendedMatchersType &
+    SnapshotDiffType;
   /**
    * If you have a mock function, you can use .lastCalledWith to test what
    * arguments it was last called with.
@@ -379,6 +435,14 @@ type JestObjectType = {
    */
   getTimerCount(): number,
   /**
+   * Set the current system time used by fake timers.
+   * Simulates a user changing the system clock while your program is running.
+   * It affects the current time but it does not in itself cause
+   * e.g. timers to fire; they will fire exactly as they would have done
+   * without the call to jest.setSystemTime().
+   */
+  setSystemTime(now?: number | Date): void,
+  /**
    * The same as `mock` but not moved to the top of the expectation by
    * babel-jest.
    */
@@ -400,10 +464,14 @@ type JestObjectType = {
    */
   isMockFunction(fn: Function): boolean,
   /**
+   * Alias of `createMockFromModule`.
+   */
+  genMockFromModule(moduleName: string): any,
+  /**
    * Given the name of a module, use the automatic mocking system to generate a
    * mocked version of the module for you.
    */
-  genMockFromModule(moduleName: string): any,
+  createMockFromModule(moduleName: string): any,
   /**
    * Mocks a module with an auto-mocked version when it is being required.
    *
@@ -422,7 +490,7 @@ type JestObjectType = {
    * Returns the actual module instead of a mock, bypassing all checks on
    * whether the module should receive a mock implementation or not.
    */
-  requireActual(moduleName: string): any,
+  requireActual<T>(m: $Flow$ModuleRef<T> | string): T,
   /**
    * Returns a mock module instead of the actual module, bypassing all checks
    * on whether the module should be required normally or not.
@@ -433,14 +501,12 @@ type JestObjectType = {
    * useful to isolate modules where local state might conflict between tests.
    */
   resetModules(): JestObjectType,
-
   /**
    * Creates a sandbox registry for the modules that are loaded inside the
    * callback function. This is useful to isolate specific modules for every
    * test so that local module state doesn't conflict between tests.
    */
   isolateModules(fn: () => void): JestObjectType,
-
   /**
    * Exhausts the micro-task queue (usually interfaced in node via
    * process.nextTick).
@@ -490,7 +556,7 @@ type JestObjectType = {
    * (setTimeout, setInterval, clearTimeout, clearInterval, nextTick,
    * setImmediate and clearImmediate).
    */
-  useFakeTimers(): JestObjectType,
+  useFakeTimers(mode?: 'modern' | 'legacy'): JestObjectType,
   /**
    * Instructs Jest to use the real versions of the standard timer functions.
    */
@@ -509,14 +575,13 @@ type JestObjectType = {
    * Note: The default timeout interval is 5 seconds if this method is not called.
    */
   setTimeout(timeout: number): JestObjectType,
+  ...
 };
 
-type JestSpyType = {
-  calls: JestCallsType,
-};
+type JestSpyType = { calls: JestCallsType, ... };
 
 type JestDoneFn = {|
-  (): void,
+  (error?: Error): void,
   fail: (error: Error) => void,
 |};
 
@@ -547,17 +612,14 @@ declare var describe: {
    * Creates a block that groups together several related tests in one "test suite"
    */
   (name: JestTestName, fn: () => void): void,
-
   /**
    * Only run this describe block
    */
   only(name: JestTestName, fn: () => void): void,
-
   /**
    * Skip running this describe block
    */
   skip(name: JestTestName, fn: () => void): void,
-
   /**
    * each runs this test against array of argument arrays per each run
    *
@@ -570,6 +632,7 @@ declare var describe: {
     fn?: (...args: Array<any>) => ?Promise<mixed>,
     timeout?: number
   ) => void,
+  ...
 };
 
 /** An individual test unit */
@@ -586,7 +649,6 @@ declare var it: {
     fn?: (done: JestDoneFn) => ?Promise<mixed>,
     timeout?: number
   ): void,
-
   /**
    * Only run this test
    *
@@ -606,9 +668,8 @@ declare var it: {
       name: JestTestName,
       fn?: (...args: Array<any>) => ?Promise<mixed>,
       timeout?: number
-    ) => void
+    ) => void,
   |},
-
   /**
    * Skip running this test
    *
@@ -616,19 +677,26 @@ declare var it: {
    * @param {Function} Test
    * @param {number} Timeout for the test, in milliseconds.
    */
-  skip(
-    name: JestTestName,
-    fn?: (done: JestDoneFn) => ?Promise<mixed>,
-    timeout?: number
-  ): void,
-
+  skip: {|
+    (
+      name: JestTestName,
+      fn?: (done: JestDoneFn) => ?Promise<mixed>,
+      timeout?: number
+    ): void,
+    each(
+      ...table: Array<Array<mixed> | mixed> | [Array<string>, string]
+    ): (
+      name: JestTestName,
+      fn?: (...args: Array<any>) => ?Promise<mixed>,
+      timeout?: number
+    ) => void,
+  |},
   /**
    * Highlight planned tests in the summary output
    *
    * @param {String} Name of Test to do
    */
   todo(name: string): void,
-
   /**
    * Run the test concurrently
    *
@@ -641,7 +709,6 @@ declare var it: {
     fn?: (done: JestDoneFn) => ?Promise<mixed>,
     timeout?: number
   ): void,
-
   /**
    * each runs this test against array of argument arrays per each run
    *
@@ -654,6 +721,7 @@ declare var it: {
     fn?: (...args: Array<any>) => ?Promise<mixed>,
     timeout?: number
   ) => void,
+  ...
 };
 
 declare function fit(
@@ -673,16 +741,37 @@ declare var xit: typeof it;
 declare var xtest: typeof it;
 
 type JestPrettyFormatColors = {
-  comment: { close: string, open: string },
-  content: { close: string, open: string },
-  prop: { close: string, open: string },
-  tag: { close: string, open: string },
-  value: { close: string, open: string },
+  comment: {
+    close: string,
+    open: string,
+    ...
+  },
+  content: {
+    close: string,
+    open: string,
+    ...
+  },
+  prop: {
+    close: string,
+    open: string,
+    ...
+  },
+  tag: {
+    close: string,
+    open: string,
+    ...
+  },
+  value: {
+    close: string,
+    open: string,
+    ...
+  },
+  ...
 };
 
-type JestPrettyFormatIndent = string => string;
+type JestPrettyFormatIndent = (string) => string;
 type JestPrettyFormatRefs = Array<any>;
-type JestPrettyFormatPrint = any => string;
+type JestPrettyFormatPrint = (any) => string;
 type JestPrettyFormatStringOrNull = string | null;
 
 type JestPrettyFormatOptions = {|
@@ -713,7 +802,8 @@ type JestPrettyFormatPlugin = {
     opts: JestPrettyFormatOptions,
     colors: JestPrettyFormatColors
   ) => string,
-  test: any => boolean,
+  test: (any) => boolean,
+  ...
 };
 
 type JestPrettyFormatPlugins = Array<JestPrettyFormatPlugin>;
@@ -724,10 +814,15 @@ declare var expect: {
   (
     value: any
   ): JestExpectType &
-    JestPromiseType,
-
+    JestPromiseType &
+    EnzymeMatchersType &
+    DomTestingLibraryType &
+    JestJQueryMatchersType &
+    JestStyledComponentsMatchersType &
+    JestExtendedMatchersType &
+    SnapshotDiffType,
   /** Add additional Jasmine matchers to Jest's roster */
-  extend(matchers: { [name: string]: JestMatcher }): void,
+  extend(matchers: { [name: string]: JestMatcher, ... }): void,
   /** Add a module that formats application-specific data structures. */
   addSnapshotSerializer(pluginModule: JestPrettyFormatPlugin): void,
   assertions(expectedAssertions: number): void,
@@ -741,10 +836,12 @@ declare var expect: {
   stringMatching(value: string | RegExp): string,
   not: {
     arrayContaining: (value: $ReadOnlyArray<mixed>) => Array<mixed>,
-    objectContaining: (value: {}) => Object,
+    objectContaining: (value: { ... }) => Object,
     stringContaining: (value: string) => string,
     stringMatching: (value: string | RegExp) => string,
+    ...
   },
+  ...
 };
 
 // TODO handle return type
@@ -768,7 +865,8 @@ declare var jasmine: {
   createSpyObj(
     baseName: string,
     methodNames: Array<string>
-  ): { [methodName: string]: JestSpyType },
+  ): { [methodName: string]: JestSpyType, ... },
   objectContaining(value: Object): Object,
   stringMatching(value: string): string,
+  ...
 };

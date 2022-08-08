@@ -1,9 +1,9 @@
 // @flow
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import React from 'react';
 import Divider from '../Divider';
 
 test('The component should render', () => {
-    const view = render(<Divider />);
-    expect(view).toMatchSnapshot();
+    const {container} = render(<Divider />);
+    expect(container).toMatchSnapshot();
 });

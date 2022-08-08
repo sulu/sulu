@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render empty CardCollection 1`] = `
-Array [
+<div>
   <section
     class="cards"
-  />,
+  />
   <div
     class="addButtonContainer"
   >
@@ -22,12 +22,12 @@ Array [
         sulu_admin.add
       </span>
     </button>
-  </div>,
-]
+  </div>
+</div>
 `;
 
 exports[`Render passed card components 1`] = `
-Array [
+<div>
   <section
     class="cards"
   >
@@ -59,7 +59,7 @@ Array [
         </h2>
       </section>
     </div>
-  </section>,
+  </section>
   <div
     class="addButtonContainer"
   >
@@ -77,6 +77,6 @@ Array [
         sulu_admin.add
       </span>
     </button>
-  </div>,
-]
+  </div>
+</div>
 `;

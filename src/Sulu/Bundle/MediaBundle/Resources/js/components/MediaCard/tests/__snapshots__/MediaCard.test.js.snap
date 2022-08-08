@@ -491,6 +491,7 @@ exports[`Render a MediaCard with download list 1`] = `
 Array [
   <div
     class="backdrop fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div

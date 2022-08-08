@@ -1,10 +1,11 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Suggestion from '../Suggestion';
 
 test('Suggestion should render', () => {
-    expect(render(
+    const {container} = render(
         <Suggestion
             icon="fa-ticket"
             onSelect={jest.fn()}
@@ -12,11 +13,13 @@ test('Suggestion should render', () => {
         >
             Suggestion 1
         </Suggestion>
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Suggestion should render strong-tags around found chars', () => {
-    expect(render(
+    const {container} = render(
         <Suggestion
             icon="fa-ticket"
             onSelect={jest.fn()}
@@ -25,11 +28,13 @@ test('Suggestion should render strong-tags around found chars', () => {
         >
             Suggestion 2
         </Suggestion>
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Suggestion should render if given query is not a valid regular expression', () => {
-    expect(render(
+    const {container} = render(
         <Suggestion
             icon="fa-ticket"
             onSelect={jest.fn()}
@@ -38,12 +43,14 @@ test('Suggestion should render if given query is not a valid regular expression'
         >
             Suggestion 2
         </Suggestion>
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
-test('Clicking on a suggestion should call the onClick handler', () => {
+test('Clicking on a suggestion should call the onClick handler', async() => {
     const selectSpy = jest.fn();
-    const suggestion = shallow(
+    render(
         <Suggestion
             icon="fa-ticket"
             onSelect={selectSpy}
@@ -56,12 +63,14 @@ test('Clicking on a suggestion should call the onClick handler', () => {
         </Suggestion>
     );
 
-    suggestion.find('button').simulate('click');
+    const user = userEvent.setup();
+    await user.click(screen.getByText('Suggestion 3'));
+
     expect(selectSpy).toHaveBeenCalledTimes(1);
 });
 
 test('Should highlight the part of the suggestion text which matches the query prop', () => {
-    const suggestion = shallow(
+    const {container} = render(
         <Suggestion
             icon="fa-ticket"
             onSelect={jest.fn()}
@@ -74,5 +83,5 @@ test('Should highlight the part of the suggestion text which matches the query p
         </Suggestion>
     );
 
-    expect(suggestion.render()).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });

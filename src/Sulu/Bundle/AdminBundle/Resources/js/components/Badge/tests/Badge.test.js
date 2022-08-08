@@ -1,8 +1,10 @@
 // @flow
 import React from 'react';
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import Badge from '../Badge';
 
 test('Render a badge', () => {
-    expect(render(<Badge>Hello world</Badge>)).toMatchSnapshot();
+    const {container} = render(<Badge>Hello world</Badge>);
+
+    expect(container).toMatchSnapshot();
 });

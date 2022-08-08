@@ -4,6 +4,7 @@ exports[`Render RuleOverlay without value 1`] = `
 Array [
   <div
     class="backdrop visible fixed"
+    data-testid="backdrop"
     role="button"
   />,
   <div

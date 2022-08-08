@@ -1,5 +1,6 @@
 // @flow
-import {render, mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Matrix from '../Matrix';
 import Row from '../Row';
@@ -24,8 +25,7 @@ jest.mock('../../../utils/Translator', () => ({
 
 test('Render the Matrix component', () => {
     const handleChange = jest.fn();
-
-    expect(render(
+    const {container} = render(
         <Matrix className="test" onChange={handleChange}>
             <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
@@ -40,7 +40,9 @@ test('Render the Matrix component', () => {
                 <Item icon="su-plus" name="edit" />
             </Row>
         </Matrix>
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render the Matrix component with values', () => {
@@ -60,7 +62,7 @@ test('Render the Matrix component with values', () => {
         },
     };
 
-    expect(render(
+    const {container} = render(
         <Matrix onChange={handleChange} values={values}>
             <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
@@ -75,7 +77,9 @@ test('Render the Matrix component with values', () => {
                 <Item icon="su-plus" name="edit" />
             </Row>
         </Matrix>
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
 test('Render the Matrix component with values in disabled state', () => {
@@ -95,7 +99,7 @@ test('Render the Matrix component with values in disabled state', () => {
         },
     };
 
-    expect(render(
+    const {container} = render(
         <Matrix disabled={true} onChange={handleChange} values={values}>
             <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
@@ -110,10 +114,12 @@ test('Render the Matrix component with values in disabled state', () => {
                 <Item icon="su-plus" name="edit" />
             </Row>
         </Matrix>
-    )).toMatchSnapshot();
+    );
+
+    expect(container).toMatchSnapshot();
 });
 
-test('Changing a value should call onChange ', () => {
+test('Changing a value should call onChange ', async() => {
     const handleChange = jest.fn();
     const values = {
         'global.articles': {
@@ -130,7 +136,7 @@ test('Changing a value should call onChange ', () => {
         },
     };
 
-    const matrix = mount(
+    render(
         <Matrix onChange={handleChange} values={values}>
             <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
@@ -162,11 +168,12 @@ test('Changing a value should call onChange ', () => {
         },
     };
 
-    matrix.find(Item).at(3).simulate('click');
+    const item = screen.queryAllByLabelText('su-pen')[1].parentElement;
+    await userEvent.click(item);
     expect(handleChange).toHaveBeenCalledWith(expectedValues);
 });
 
-test('Deactivate all button should call onChange', () => {
+test('Deactivate all button should call onChange', async() => {
     const handleChange = jest.fn();
     const values = {
         'global.articles': {
@@ -183,7 +190,7 @@ test('Deactivate all button should call onChange', () => {
         },
     };
 
-    const matrix = mount(
+    render(
         <Matrix onChange={handleChange} values={values}>
             <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
@@ -215,11 +222,12 @@ test('Deactivate all button should call onChange', () => {
         },
     };
 
-    matrix.find('.rowButton').at(0).simulate('click');
+    const disableRowButton = screen.queryAllByText('Deactivate all')[0];
+    await userEvent.click(disableRowButton);
     expect(handleChange).toHaveBeenCalledWith(expectedValues);
 });
 
-test('Activate all button should call onChange', () => {
+test('Activate all button should call onChange', async() => {
     const handleChange = jest.fn();
     const values = {
         'global.articles': {
@@ -236,7 +244,7 @@ test('Activate all button should call onChange', () => {
         },
     };
 
-    const matrix = mount(
+    render(
         <Matrix onChange={handleChange} values={values}>
             <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
@@ -268,11 +276,12 @@ test('Activate all button should call onChange', () => {
         },
     };
 
-    matrix.find('.rowButton').at(0).simulate('click');
+    const activateRowButton = screen.queryAllByText('Activate all')[0];
+    await userEvent.click(activateRowButton);
     expect(handleChange).toHaveBeenCalledWith(expectedValues);
 });
 
-test('Activate all button should call onChange with all values, even when the value does not exists', () => {
+test('Activate all button should call onChange with all values, even when the value does not exists', async() => {
     const handleChange = jest.fn();
     const values = {
         'global.articles': {
@@ -285,7 +294,7 @@ test('Activate all button should call onChange with all values, even when the va
         },
     };
 
-    const matrix = mount(
+    render(
         <Matrix onChange={handleChange} values={values}>
             <Row name="global.articles" title="articles">
                 <Item icon="su-pen" name="view" />
@@ -317,6 +326,7 @@ test('Activate all button should call onChange with all values, even when the va
         },
     };
 
-    matrix.find('.rowButton').at(2).simulate('click');
+    const activateRowButton = screen.queryAllByText('Activate all')[1];
+    await userEvent.click(activateRowButton);
     expect(handleChange).toHaveBeenCalledWith(expectedValues);
 });

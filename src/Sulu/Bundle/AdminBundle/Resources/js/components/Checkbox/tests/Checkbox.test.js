@@ -1,31 +1,32 @@
 // @flow
-import {shallow, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
 import React from 'react';
 import Checkbox from '../Checkbox';
 
 test('The component should render in light skin', () => {
-    const checkbox = render(<Checkbox skin="light" />);
-    expect(checkbox).toMatchSnapshot();
+    const {container} = render(<Checkbox skin="light" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('The component should render in dark skin', () => {
-    const checkbox = render(<Checkbox skin="dark" />);
-    expect(checkbox).toMatchSnapshot();
+    const {container} = render(<Checkbox skin="dark" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('The component should render in disabled state', () => {
-    const checkbox = render(<Checkbox disabled={true} />);
-    expect(checkbox).toMatchSnapshot();
+    const {container} = render(<Checkbox disabled={true} />);
+    expect(container).toMatchSnapshot();
 });
 
 test('The component should render in size small', () => {
-    const checkbox = render(<Checkbox size="small" />);
-    expect(checkbox).toMatchSnapshot();
+    const {container} = render(<Checkbox size="small" />);
+    expect(container).toMatchSnapshot();
 });
 
-test('The component pass the props correctly to the generic checkbox', () => {
+test('The component passes the props correctly to the generic checkbox', () => {
     const onChange = jest.fn();
-    const checkbox = shallow(
+
+    render(
         <Checkbox
             checked={true}
             disabled={true}
@@ -36,10 +37,12 @@ test('The component pass the props correctly to the generic checkbox', () => {
             My label
         </Checkbox>
     );
-    const switchComponent = checkbox.find('Switch');
-    expect(switchComponent.props().value).toBe('my-value');
-    expect(switchComponent.props().disabled).toBe(true);
-    expect(switchComponent.props().name).toBe('my-name');
-    expect(switchComponent.props().checked).toBe(true);
-    expect(switchComponent.props().children).toBe('My label');
+
+    const input = screen.getByDisplayValue('my-value');
+
+    expect(input).toBeInTheDocument();
+    expect(input).toBeDisabled();
+    expect(input.name).toEqual('my-name');
+    expect(input).toBeChecked();
+    expect(screen.getByText('My label')).toBeInTheDocument();
 });

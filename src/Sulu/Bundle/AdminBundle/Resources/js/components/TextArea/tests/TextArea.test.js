@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {render, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import TextArea from '../TextArea';
 
 jest.mock('../../../utils/Translator', () => ({
@@ -8,53 +9,69 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 test('TextArea should render', () => {
-    expect(render(<TextArea onChange={jest.fn()} value="My value" />)).toMatchSnapshot();
+    const {container} = render(<TextArea onChange={jest.fn()} value="My value" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('TextArea should render with error', () => {
-    expect(render(<TextArea onChange={jest.fn()} valid={false} value="My value" />))
-        .toMatchSnapshot();
+    const {container} = render(<TextArea onChange={jest.fn()} valid={false} value="My value" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('TextArea should render with placeholder', () => {
-    expect(render(<TextArea onChange={jest.fn()} placeholder="My placeholder" value="My value" />))
-        .toMatchSnapshot();
+    const {container} = render(<TextArea onChange={jest.fn()} placeholder="My placeholder" value="My value" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('TextArea should render with value', () => {
-    expect(render(<TextArea onChange={jest.fn()} value="My value" />)).toMatchSnapshot();
+    const {container} = render(<TextArea onChange={jest.fn()} value="My value" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('TextArea should render when disabled', () => {
-    expect(render(<TextArea disabled={true} onChange={jest.fn()} value="My value" />)).toMatchSnapshot();
+    const {container} = render(<TextArea disabled={true} onChange={jest.fn()} value="My value" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('TextArea should render null value as empty string', () => {
-    expect(render(<TextArea onChange={jest.fn()} value={null} />)).toMatchSnapshot();
+    const {container} = render(<TextArea onChange={jest.fn()} value={null} />);
+    expect(container).toMatchSnapshot();
 });
 
 test('TextArea should render with value and character counter', () => {
-    expect(render(<TextArea maxCharacters={10} onChange={jest.fn()} value="My value" />)).toMatchSnapshot();
+    const {container} = render(<TextArea maxCharacters={10} onChange={jest.fn()} value="My value" />);
+    expect(container).toMatchSnapshot();
 });
 
-test('TextArea should call onBlur when it loses focus', () => {
+test('TextArea should call onBlur when it loses focus', async() => {
     const blurSpy = jest.fn();
-    const textArea = shallow(<TextArea onBlur={blurSpy} onChange={jest.fn()} value="" />);
+    render(<TextArea onBlur={blurSpy} onChange={jest.fn()} value="" />);
 
-    textArea.find('textarea').simulate('blur');
+    const textarea = screen.queryByRole('textbox');
+
+    await userEvent.click(textarea);
+    expect(blurSpy).not.toBeCalledWith();
+
+    await userEvent.tab();
     expect(blurSpy).toBeCalledWith();
 });
 
-test('TextArea should call onChange when the TextArea changes', () => {
+test('TextArea should call onChange when the TextArea changes', async() => {
     const changeSpy = jest.fn();
-    const textArea = shallow(<TextArea onChange={changeSpy} value="My value" />);
-    textArea.find('textarea').simulate('change', {currentTarget: {value: 'my-value'}});
-    expect(changeSpy).toHaveBeenCalledWith('my-value');
+    render(<TextArea onChange={changeSpy} value="My value" />);
+
+    const textarea = screen.queryByDisplayValue('My value');
+    await userEvent.type(textarea, '!');
+
+    expect(changeSpy).toHaveBeenCalledWith('My value!');
 });
 
-test('TextArea should call onChange with undefined when the TextArea changes to empty', () => {
+test('TextArea should call onChange with undefined when the TextArea changes to empty', async() => {
     const changeSpy = jest.fn();
-    const textArea = shallow(<TextArea onChange={changeSpy} value="My value" />);
-    textArea.find('textarea').simulate('change', {currentTarget: {value: ''}});
+    render(<TextArea onChange={changeSpy} value="My value" />);
+
+    const textarea = screen.queryByDisplayValue('My value');
+    await userEvent.clear(textarea);
+
     expect(changeSpy).toHaveBeenCalledWith(undefined);
 });
