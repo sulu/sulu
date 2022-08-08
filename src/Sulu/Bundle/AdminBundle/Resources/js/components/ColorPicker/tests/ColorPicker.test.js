@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import ColorPicker from '../ColorPicker';
 
 test('ColorPicker should render', () => {
@@ -84,7 +83,7 @@ test('ColorPicker should trigger callbacks correctly', () => {
 test('ColorPicker should call the correct callbacks when value from overlay was selected', () => {
     const onChange = jest.fn();
     const onBlur = jest.fn();
-    const {debug, baseElement} = render(<ColorPicker onBlur={onBlur} onChange={onChange} value="#abc" />);
+    const {baseElement} = render(<ColorPicker onBlur={onBlur} onChange={onChange} value="#abc" />);
 
     const icon = screen.queryByLabelText('su-square');
     fireEvent.click(icon);
@@ -92,14 +91,10 @@ test('ColorPicker should call the correct callbacks when value from overlay was 
     expect(baseElement).toMatchSnapshot();
 
     const sketchInput = screen.queryByDisplayValue('AABBCC');
-    userEvent.type(sketchInput, 'cccccc');
+    fireEvent.change(sketchInput, {target: {value: 'cccccc'}});
     fireEvent.blur(sketchInput);
 
-    // colorPicker.find('Icon').simulate('click');
-    // colorPicker.find('ColorPicker').at(1).prop('onChangeComplete')({hex: '#123123'});
-
-    console.log(sketchInput.class);
-    expect(sketchInput).toHaveValue('CCCCCC');
-    expect(onChange).toBeCalledWith('cccccc');
     expect(onBlur).toBeCalled();
+    expect(onChange).toBeCalledWith('cccccc');
+    expect(sketchInput).toHaveValue('CCCCCC');
 });
