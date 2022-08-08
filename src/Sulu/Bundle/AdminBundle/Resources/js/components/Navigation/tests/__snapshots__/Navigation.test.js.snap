@@ -1,122 +1,124 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render and handle clicks correctly 1`] = `
-<div
-  class="navigation"
->
+<div>
   <div
-    class="header"
+    class="navigation"
   >
-    <span
-      class="logo"
-      title="2.0.0-RC1"
+    <div
+      class="header"
     >
       <span
-        aria-label="su-sulu-logo"
-        class="su-sulu-logo"
-      />
-    </span>
-  </div>
-  <div
-    class="items"
-  >
-    <div
-      class="item"
-    >
-      <button
-        class="title"
-        type="button"
+        class="logo"
+        title="2.0.0-RC1"
       >
         <span
-          aria-label="su-search"
-          class="su-search icon"
+          aria-label="su-sulu-logo"
+          class="su-sulu-logo"
         />
-        <span
-          class="text"
-        >
-          Search
-        </span>
-      </button>
+      </span>
     </div>
     <div
-      class="item"
+      class="items"
     >
-      <button
-        class="title"
-        type="button"
-      >
-        <span
-          aria-label="fa-bullseye"
-          class="fa fa-bullseye icon"
-        />
-        <span
-          class="text"
-        >
-          Webspaces
-        </span>
-      </button>
-    </div>
-  </div>
-  <div
-    class="footer"
-  >
-    <div
-      class="userSection"
-    >
-      <button
-        class="button"
-        type="button"
-      >
-        <div
-          class="userImage"
-        >
-          <span
-            aria-label="su-user"
-            class="su-user placeholder"
-          />
-        </div>
-        <span
-          class="username"
-        >
-          John Terence Maximilian Travolta
-        </span>
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </button>
       <div
-        class="menu"
-        hidden=""
+        class="item"
       >
         <button
-          class="button text hasText menuButton"
+          class="title"
           type="button"
         >
           <span
-            aria-label="su-user"
-            class="su-user buttonIcon"
+            aria-label="su-search"
+            class="su-search icon"
           />
           <span
-            class="buttonText"
+            class="text"
           >
-            sulu_admin.edit_profile
+            Search
           </span>
         </button>
+      </div>
+      <div
+        class="item"
+      >
         <button
-          class="button text hasText menuButton"
+          class="title"
           type="button"
         >
           <span
-            aria-label="su-sign-out-alt"
-            class="su-sign-out-alt buttonIcon"
+            aria-label="fa-bullseye"
+            class="fa fa-bullseye icon"
           />
           <span
-            class="buttonText"
+            class="text"
           >
-            sulu_admin.logout
+            Webspaces
           </span>
         </button>
+      </div>
+    </div>
+    <div
+      class="footer"
+    >
+      <div
+        class="userSection"
+      >
+        <button
+          class="button"
+          type="button"
+        >
+          <div
+            class="userImage"
+          >
+            <span
+              aria-label="su-user"
+              class="su-user placeholder"
+            />
+          </div>
+          <span
+            class="username"
+          >
+            John Terence Maximilian Travolta
+          </span>
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
+        </button>
+        <div
+          class="menu"
+          hidden=""
+        >
+          <button
+            class="button text hasText menuButton"
+            type="button"
+          >
+            <span
+              aria-label="su-user"
+              class="su-user buttonIcon"
+            />
+            <span
+              class="buttonText"
+            >
+              sulu_admin.edit_profile
+            </span>
+          </button>
+          <button
+            class="button text hasText menuButton"
+            type="button"
+          >
+            <span
+              aria-label="su-sign-out-alt"
+              class="su-sign-out-alt buttonIcon"
+            />
+            <span
+              class="buttonText"
+            >
+              sulu_admin.logout
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -124,275 +126,277 @@ exports[`The component should render and handle clicks correctly 1`] = `
 `;
 
 exports[`The component should render with all available props and handle clicks correctly 1`] = `
-<div
-  class="navigation"
->
+<div>
   <div
-    class="header"
-  >
-    <span
-      class="logo"
-      title="2.0.0-RC1"
-    >
-      <span
-        aria-label="su-sulu-logo"
-        class="su-sulu-logo"
-      />
-    </span>
-    <button
-      class="pin"
-      type="button"
-    >
-      <span
-        aria-label="su-stick-right"
-        class="su-stick-right pinIcon"
-      />
-    </button>
-  </div>
-  <div
-    class="items"
+    class="navigation"
   >
     <div
-      class="item"
+      class="header"
     >
+      <span
+        class="logo"
+        title="2.0.0-RC1"
+      >
+        <span
+          aria-label="su-sulu-logo"
+          class="su-sulu-logo"
+        />
+      </span>
       <button
-        class="title"
+        class="pin"
         type="button"
       >
         <span
-          aria-label="su-search"
-          class="su-search icon"
+          aria-label="su-stick-right"
+          class="su-stick-right pinIcon"
         />
-        <span
-          class="text"
-        >
-          Search
-        </span>
       </button>
     </div>
     <div
-      class="item"
+      class="items"
     >
-      <button
-        class="title"
-        type="button"
+      <div
+        class="item"
       >
-        <span
-          aria-label="su-webspace"
-          class="su-webspace icon"
-        />
-        <span
-          class="text"
+        <button
+          class="title"
+          type="button"
         >
-          Webspaces
-        </span>
-      </button>
-    </div>
-    <div
-      class="item"
-    >
-      <button
-        class="title"
-        type="button"
-      >
-        <span
-          aria-label="fa-image"
-          class="fa fa-image icon"
-        />
-        <span
-          class="text"
-        >
-          Media
-        </span>
-      </button>
-    </div>
-    <div
-      class="item"
-    >
-      <button
-        class="title"
-        type="button"
-      >
-        <span
-          aria-label="fa-newspaper-o"
-          class="fa fa-newspaper-o icon"
-        />
-        <span
-          class="text"
-        >
-          Article
-        </span>
-      </button>
-    </div>
-    <div
-      class="item"
-    >
-      <button
-        class="title"
-        type="button"
-      >
-        <span
-          aria-label="fa-sticky-note-o"
-          class="fa fa-sticky-note-o icon"
-        />
-        <span
-          class="text"
-        >
-          Snippets
-        </span>
-      </button>
-    </div>
-    <div
-      class="item active"
-    >
-      <button
-        class="title"
-        type="button"
-      >
-        <span
-          aria-label="su-user-1"
-          class="su-user-1 icon"
-        />
-        <span
-          class="text"
-        >
-          Contact
-        </span>
-        <span
-          aria-label="su-angle-down"
-          class="su-angle-down childrenIndicator"
-        />
-      </button>
-      <div>
-        <div
-          class="item"
-        >
-          <button
-            class="title"
-            type="button"
+          <span
+            aria-label="su-search"
+            class="su-search icon"
+          />
+          <span
+            class="text"
           >
-            <span
-              class="text"
-            >
-              Contact 1
-            </span>
-          </button>
-        </div>
-        <div
-          class="item active"
+            Search
+          </span>
+        </button>
+      </div>
+      <div
+        class="item"
+      >
+        <button
+          class="title"
+          type="button"
         >
-          <button
-            class="title"
-            type="button"
+          <span
+            aria-label="su-webspace"
+            class="su-webspace icon"
+          />
+          <span
+            class="text"
           >
-            <span
-              class="text"
-            >
-              Contact 2
-            </span>
-          </button>
-        </div>
-        <div
-          class="item"
+            Webspaces
+          </span>
+        </button>
+      </div>
+      <div
+        class="item"
+      >
+        <button
+          class="title"
+          type="button"
         >
-          <button
-            class="title"
-            type="button"
+          <span
+            aria-label="fa-image"
+            class="fa fa-image icon"
+          />
+          <span
+            class="text"
           >
-            <span
-              class="text"
+            Media
+          </span>
+        </button>
+      </div>
+      <div
+        class="item"
+      >
+        <button
+          class="title"
+          type="button"
+        >
+          <span
+            aria-label="fa-newspaper-o"
+            class="fa fa-newspaper-o icon"
+          />
+          <span
+            class="text"
+          >
+            Article
+          </span>
+        </button>
+      </div>
+      <div
+        class="item"
+      >
+        <button
+          class="title"
+          type="button"
+        >
+          <span
+            aria-label="fa-sticky-note-o"
+            class="fa fa-sticky-note-o icon"
+          />
+          <span
+            class="text"
+          >
+            Snippets
+          </span>
+        </button>
+      </div>
+      <div
+        class="item active"
+      >
+        <button
+          class="title"
+          type="button"
+        >
+          <span
+            aria-label="su-user-1"
+            class="su-user-1 icon"
+          />
+          <span
+            class="text"
+          >
+            Contact
+          </span>
+          <span
+            aria-label="su-angle-down"
+            class="su-angle-down childrenIndicator"
+          />
+        </button>
+        <div>
+          <div
+            class="item"
+          >
+            <button
+              class="title"
+              type="button"
             >
-              Contact 3
-            </span>
-          </button>
+              <span
+                class="text"
+              >
+                Contact 1
+              </span>
+            </button>
+          </div>
+          <div
+            class="item active"
+          >
+            <button
+              class="title"
+              type="button"
+            >
+              <span
+                class="text"
+              >
+                Contact 2
+              </span>
+            </button>
+          </div>
+          <div
+            class="item"
+          >
+            <button
+              class="title"
+              type="button"
+            >
+              <span
+                class="text"
+              >
+                Contact 3
+              </span>
+            </button>
+          </div>
         </div>
+      </div>
+      <div
+        class="item"
+      >
+        <button
+          class="title"
+          type="button"
+        >
+          <span
+            aria-label="fa-gear"
+            class="fa fa-gear icon"
+          />
+          <span
+            class="text"
+          >
+            Settings
+          </span>
+          <span
+            aria-label="su-angle-right"
+            class="su-angle-right childrenIndicator"
+          />
+        </button>
       </div>
     </div>
     <div
-      class="item"
+      class="footer"
     >
-      <button
-        class="title"
-        type="button"
-      >
-        <span
-          aria-label="fa-gear"
-          class="fa fa-gear icon"
-        />
-        <span
-          class="text"
-        >
-          Settings
-        </span>
-        <span
-          aria-label="su-angle-right"
-          class="su-angle-right childrenIndicator"
-        />
-      </button>
-    </div>
-  </div>
-  <div
-    class="footer"
-  >
-    <div
-      class="userSection"
-    >
-      <button
-        class="button"
-        type="button"
-      >
-        <div
-          class="userImage"
-        >
-          <img
-            alt="John Travolta"
-            class="image"
-            src="http://lorempixel.com/200/200"
-            title="John Travolta"
-          />
-        </div>
-        <span
-          class="username"
-        >
-          John Travolta
-        </span>
-        <span
-          aria-label="su-angle-up"
-          class="su-angle-up"
-        />
-      </button>
       <div
-        class="menu"
-        hidden=""
+        class="userSection"
       >
         <button
-          class="button text hasText menuButton"
+          class="button"
           type="button"
         >
-          <span
-            aria-label="su-user"
-            class="su-user buttonIcon"
-          />
-          <span
-            class="buttonText"
+          <div
+            class="userImage"
           >
-            sulu_admin.edit_profile
+            <img
+              alt="John Travolta"
+              class="image"
+              src="http://lorempixel.com/200/200"
+              title="John Travolta"
+            />
+          </div>
+          <span
+            class="username"
+          >
+            John Travolta
           </span>
+          <span
+            aria-label="su-angle-up"
+            class="su-angle-up"
+          />
         </button>
-        <button
-          class="button text hasText menuButton"
-          type="button"
+        <div
+          class="menu"
+          hidden=""
         >
-          <span
-            aria-label="su-sign-out-alt"
-            class="su-sign-out-alt buttonIcon"
-          />
-          <span
-            class="buttonText"
+          <button
+            class="button text hasText menuButton"
+            type="button"
           >
-            sulu_admin.logout
-          </span>
-        </button>
+            <span
+              aria-label="su-user"
+              class="su-user buttonIcon"
+            />
+            <span
+              class="buttonText"
+            >
+              sulu_admin.edit_profile
+            </span>
+          </button>
+          <button
+            class="button text hasText menuButton"
+            type="button"
+          >
+            <span
+              aria-label="su-sign-out-alt"
+              class="su-sign-out-alt buttonIcon"
+            />
+            <span
+              class="buttonText"
+            >
+              sulu_admin.logout
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
