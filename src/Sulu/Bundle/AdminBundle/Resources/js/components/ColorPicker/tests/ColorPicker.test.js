@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ColorPicker from '../ColorPicker';
 
 test('ColorPicker should render', () => {
@@ -30,8 +31,9 @@ test('ColorPicker should disable Input when disabled', () => {
 });
 
 test('ColorPicker should render error', () => {
-    render(<ColorPicker onChange={jest.fn()} valid={false} value="#abc" />);
-    expect(screen.queryByDisplayValue('#abc')).toBeInvalid();
+    const {container} = render(<ColorPicker onChange={jest.fn()} valid={false} value="#abc" />);
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+    expect(container.querySelector('.error')).toBeInTheDocument();
 });
 
 test('ColorPicker should show error when invalid value is set', () => {
@@ -40,7 +42,7 @@ test('ColorPicker should show error when invalid value is set', () => {
 
     const input = screen.queryByDisplayValue('#abc');
 
-    fireEvent.keyDown(input, {target: {value: 'ccc'}});
+    fireEvent.change(input, {target: {value: null}});
     fireEvent.blur(input);
 
     expect(onChange).toHaveBeenCalledWith(undefined);
@@ -51,43 +53,53 @@ test('ColorPicker should show error when invalid value is set', () => {
     expect(input).toBeValid();
 });
 
-// test('ColorPicker should trigger callbacks correctly', () => {
-//     const onChange = jest.fn();
-//     const onBlur = jest.fn();
-//     const colorPicker = mount(<ColorPicker onBlur={onBlur} onChange={onChange} value={null} />);
+test('ColorPicker should trigger callbacks correctly', () => {
+    const onChange = jest.fn();
+    const onBlur = jest.fn();
+    render(<ColorPicker onBlur={onBlur} onChange={onChange} value="#abc" />);
 
-//     // provide invalid value
-//     colorPicker.find('Input').instance().props.onChange('xxx', {target: {value: 'xxx'}});
-//     colorPicker.find('Input').instance().props.onBlur();
-//     colorPicker.update();
-//     expect(onChange).toBeCalledWith(undefined);
-//     expect(onBlur).toBeCalled();
+    const input = screen.queryByDisplayValue('#abc');
 
-//     // provide one more invalid value
-//     colorPicker.find('Input').instance().props.onChange('abc', {target: {value: 'abc'}});
-//     colorPicker.find('Input').instance().props.onBlur();
-//     colorPicker.update();
-//     expect(onChange).toBeCalledWith(undefined);
-//     expect(onBlur).toBeCalled();
+    // provide invalid value
+    fireEvent.change(input, {target: {value: null}});
+    fireEvent.blur(input);
+    expect(onChange).toBeCalledWith(undefined);
+    expect(onBlur).toBeCalled();
 
-//     // now add a valid value
-//     colorPicker.find('Input').instance().props.onChange('#abcabc', {target: {value: '#abcabc'}});
-//     colorPicker.find('Input').instance().props.onBlur();
-//     colorPicker.update();
-//     expect(onChange).toBeCalledWith('#abcabc');
-//     expect(onBlur).toBeCalled();
+    // provide one more invalid value
+    fireEvent.change(input, {target: {value: 'abc'}});
+    fireEvent.blur(input);
+    expect(onChange).toBeCalledWith(undefined);
+    expect(onBlur).toBeCalled();
 
-//     expect(onBlur).toHaveBeenCalledTimes(3);
-// });
+    // now add a valid value
+    fireEvent.change(input, {target: {value: '#abcabc'}});
+    fireEvent.blur(input);
+    expect(onChange).toBeCalledWith('#abcabc');
+    expect(onBlur).toBeCalled();
 
-// test('ColorPicker should call the correct callbacks when value from overlay was selected', () => {
-//     const onChange = jest.fn();
-//     const onBlur = jest.fn();
-//     const colorPicker = mount(<ColorPicker onBlur={onBlur} onChange={onChange} value={null} />);
+    expect(onBlur).toHaveBeenCalledTimes(3);
+});
 
-//     colorPicker.find('Icon').simulate('click');
-//     colorPicker.find('ColorPicker').at(1).prop('onChangeComplete')({hex: '#123123'});
+test('ColorPicker should call the correct callbacks when value from overlay was selected', () => {
+    const onChange = jest.fn();
+    const onBlur = jest.fn();
+    const {debug, baseElement} = render(<ColorPicker onBlur={onBlur} onChange={onChange} value="#abc" />);
 
-//     expect(onChange).toBeCalledWith('#123123');
-//     expect(onBlur).toBeCalled();
-// });
+    const icon = screen.queryByLabelText('su-square');
+    fireEvent.click(icon);
+
+    expect(baseElement).toMatchSnapshot();
+
+    const sketchInput = screen.queryByDisplayValue('AABBCC');
+    userEvent.type(sketchInput, 'cccccc');
+    fireEvent.blur(sketchInput);
+
+    // colorPicker.find('Icon').simulate('click');
+    // colorPicker.find('ColorPicker').at(1).prop('onChangeComplete')({hex: '#123123'});
+
+    console.log(sketchInput.class);
+    expect(sketchInput).toHaveValue('CCCCCC');
+    expect(onChange).toBeCalledWith('cccccc');
+    expect(onBlur).toBeCalled();
+});
