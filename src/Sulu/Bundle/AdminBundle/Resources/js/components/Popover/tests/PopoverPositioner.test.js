@@ -1,5 +1,4 @@
-
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 import PopoverPositioner from '../PopoverPositioner';
 
 const HORIZONTAL_OFFSET = -20;

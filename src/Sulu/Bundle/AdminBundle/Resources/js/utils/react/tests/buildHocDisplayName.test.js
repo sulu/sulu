@@ -1,4 +1,4 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 import buildHocDisplayName from '../buildHocDisplayName';
 
 test('Build HOC display name with displayName property if it exists', () => {

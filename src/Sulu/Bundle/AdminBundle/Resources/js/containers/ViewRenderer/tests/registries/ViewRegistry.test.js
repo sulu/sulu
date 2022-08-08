@@ -1,4 +1,4 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 import React from 'react';
 import viewRegistry from '../../registries/viewRegistry';
 

@@ -1,4 +1,4 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 import {mount, shallow} from 'enzyme';
 import React from 'react';
 import Mousetrap from 'mousetrap';

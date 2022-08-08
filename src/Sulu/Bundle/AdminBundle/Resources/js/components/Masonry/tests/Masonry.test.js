@@ -1,4 +1,4 @@
-// @flow
+/* eslint-disable flowtype/require-valid-file-annotation */
 import {render} from '@testing-library/react';
 import React from 'react';
 import Masonry from '../Masonry';

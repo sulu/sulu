@@ -20,7 +20,7 @@ test('Assign the passed class to the container', () => {
 });
 
 test('Pass the size of the container to the component via props', () => {
-    class Component extends React.PureComponent {
+    class Component extends React.PureComponent<{}> {
         render = () => <h1>Component</h1>;
     }
     const WithSizeComponent = withContainerSize(Component);
@@ -37,7 +37,7 @@ test('Pass the size of the container to the component via props', () => {
 test('The method containerDidMount should get called', () => {
     const funMock = jest.fn();
 
-    class Component extends React.PureComponent {
+    class Component extends React.PureComponent<{}> {
         componentDidMount() {
             // container mounts after children
             expect(funMock).toHaveBeenCalledTimes(0);
