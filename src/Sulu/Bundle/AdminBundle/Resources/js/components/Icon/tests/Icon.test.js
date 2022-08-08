@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
+import {fireEvent, render, screen} from '@testing-library/react';
 import log from 'loglevel';
 import Icon from '../Icon';
 
@@ -9,53 +9,59 @@ jest.mock('loglevel', () => ({
 }));
 
 test('Icon should render', () => {
-    expect(render(<Icon name="su-save" />)).toMatchSnapshot();
+    const {container} = render(<Icon name="su-save" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Icon should not render with invalid icon', () => {
-    const icon = mount(<Icon name="xxx" />);
-    expect(icon.render()).toMatchSnapshot();
+    const {container} = render(<Icon name="xxx" />);
+    expect(container).toMatchSnapshot();
     expect(log.warn).toHaveBeenCalled();
 });
 
 test('Icon should not render with empty string', () => {
-    const icon = mount(<Icon name="" />);
-    expect(icon.render()).toMatchSnapshot();
+    const {container} = render(<Icon name="" />);
+    expect(container).toMatchSnapshot();
     expect(log.warn).toHaveBeenCalled();
 });
 
 test('Icon should render with class names', () => {
-    expect(render(<Icon className="test" name="su-pen" />)).toMatchSnapshot();
+    const {container} = render(<Icon className="test" name="su-pen" />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Icon should render with onClick handler, role and tabindex', () => {
     const onClickSpy = jest.fn();
-    expect(render(<Icon className="test" name="su-save" onClick={onClickSpy} />)).toMatchSnapshot();
+    const {container} = render(<Icon className="test" name="su-save" onClick={onClickSpy} />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Icon should call the callback on click', () => {
     const onClick = jest.fn();
-    const stopPropagation = jest.fn();
-    const icon = shallow(<Icon className="test" name="su-pen" onClick={onClick} />);
-    icon.simulate('click', {stopPropagation});
+    render(<Icon className="test" name="su-pen" onClick={onClick} />);
+
+    const icon = screen.queryByLabelText('su-pen');
+    fireEvent.click(icon);
+
     expect(onClick).toBeCalled();
-    expect(stopPropagation).toBeCalled();
 });
 
 test('Icon should call the callback on when space is pressed', () => {
     const onClick = jest.fn();
-    const stopPropagation = jest.fn();
-    const icon = shallow(<Icon className="test" name="su-pen" onClick={onClick} />);
-    icon.simulate('keypress', {key: ' ', stopPropagation});
+    render(<Icon className="test" name="su-pen" onClick={onClick} />);
+
+    const icon = screen.queryByLabelText('su-pen');
+    fireEvent.keyPress(icon, {key: ' ', charCode: 32, code: 'Space'});
+
     expect(onClick).toBeCalled();
-    expect(stopPropagation).toBeCalled();
 });
 
 test('Icon should call the callback on when enter is pressed', () => {
     const onClick = jest.fn();
-    const stopPropagation = jest.fn();
-    const icon = shallow(<Icon className="test" name="su-pen" onClick={onClick} />);
-    icon.simulate('keypress', {key: 'Enter', stopPropagation});
+    render(<Icon className="test" name="su-pen" onClick={onClick} />);
+
+    const icon = screen.queryByLabelText('su-pen');
+    fireEvent.keyPress(icon, {key: 'Enter', charCode: 13, code: 'Enter'});
+
     expect(onClick).toBeCalled();
-    expect(stopPropagation).toBeCalled();
 });
