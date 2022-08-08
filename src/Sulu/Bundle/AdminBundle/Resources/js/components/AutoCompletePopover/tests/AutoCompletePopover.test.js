@@ -64,7 +64,7 @@ test('Render with highlighted suggestions', () => {
         {id: 1, name: 'Test 1 (selector-1)'},
         {id: 2, name: 'Test 2 (selector-2)'},
     ];
-    render(
+    const {baseElement} = render(
         <AutoCompletePopover
             anchorElement={screen.getByText('Anchor Element')}
             onSelect={jest.fn()}
@@ -75,7 +75,7 @@ test('Render with highlighted suggestions', () => {
         />
     );
 
-    expect(document.body).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
 });
 
 test('Call onClose when Popover is closed', async() => {

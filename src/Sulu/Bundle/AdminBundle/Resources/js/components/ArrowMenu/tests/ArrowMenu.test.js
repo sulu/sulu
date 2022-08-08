@@ -55,13 +55,13 @@ test('Render ArrowMenu with non-HTML element as anchor', () => {
         }
     }
 
-    render(
+    const {baseElement} = render(
         <ArrowMenu anchorElement={<Button />} open={true} refProp="buttonRef">
             <ArrowMenu.Item value="title">Title</ArrowMenu.Item>
         </ArrowMenu>
     );
 
-    expect(document.body).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
 });
 
 test('Render ArrowMenu open', () => {
@@ -69,7 +69,7 @@ test('Render ArrowMenu open', () => {
     const handleChangeSection1 = jest.fn();
     const handleChangeSection2 = jest.fn();
 
-    render(
+    const {baseElement} = render(
         <ArrowMenu anchorElement={<button type="button">Nice button</button>} onClose={handleClose} open={true}>
             <ArrowMenu.Section title="Search Section">
                 <input type="text" />
@@ -107,7 +107,7 @@ test('Render ArrowMenu open', () => {
     const menuSection = screen.queryByText('Webspaces');
     expect(menuSection).toBeInTheDocument();
 
-    expect(document.body).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
 });
 
 test('Render ArrowMenu open with falsy values', () => {
@@ -115,7 +115,7 @@ test('Render ArrowMenu open with falsy values', () => {
     const handleChangeSection1 = jest.fn();
     const handleChangeSection2 = jest.fn();
 
-    render(
+    const {baseElement} = render(
         <ArrowMenu anchorElement={<button type="button">Nice button</button>} onClose={handleClose} open={true}>
             <ArrowMenu.Section title="Search Section">
                 <input type="text" />
@@ -158,7 +158,7 @@ test('Render ArrowMenu open with falsy values', () => {
     const menuSection = screen.queryByText('Webspaces');
     expect(menuSection).toBeInTheDocument();
 
-    expect(document.body).toMatchSnapshot();
+    expect(baseElement).toMatchSnapshot();
 });
 
 test('Events should be called correctly', async() => {

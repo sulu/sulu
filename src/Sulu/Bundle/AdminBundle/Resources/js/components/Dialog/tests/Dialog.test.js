@@ -1,4 +1,3 @@
-/* eslint-disable testing-library/no-node-access, testing-library/no-container */
 // @flow
 import {fireEvent, render, screen} from '@testing-library/react';
 import React from 'react';

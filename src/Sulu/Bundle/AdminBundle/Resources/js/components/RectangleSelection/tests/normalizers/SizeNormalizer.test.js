@@ -1,4 +1,4 @@
-/* eslint-disable flowtype/require-valid-file-annotation */
+// @flow
 import SizeNormalizer from '../../normalizers/SizeNormalizer';
 
 test('The SizeNormalizer should correctly constrain the selection downwards', () => {

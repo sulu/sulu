@@ -50,7 +50,7 @@ test('Do not show type dropdown if only a single type is passed', () => {
         </Block>
     );
 
-    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+    // eslint-disable-next-line testing-library/no-container
     const elements = container.getElementsByClassName('select');
 
     expect(elements).toHaveLength(0);
