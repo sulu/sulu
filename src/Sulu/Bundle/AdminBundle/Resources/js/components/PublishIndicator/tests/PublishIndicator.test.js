@@ -1,24 +1,25 @@
+/* eslint-disable testing-library/no-container, testing-library/no-node-access */
 // @flow
 import React from 'react';
-import {shallow} from 'enzyme';
+import {render} from '@testing-library/react';
 import PublishIndicator from '../PublishIndicator';
 
 test('Show only the publish icon', () => {
-    const publishIndicator = shallow(<PublishIndicator published={true} />);
+    const {container} = render(<PublishIndicator published={true} />);
 
-    expect(publishIndicator.find('.published')).toHaveLength(1);
-    expect(publishIndicator.find('.draft')).toHaveLength(0);
+    expect(container.querySelector('.published')).toBeInTheDocument();
+    expect(container.querySelector('.draft')).not.toBeInTheDocument();
 });
 
 test('Show only the draft icon', () => {
-    const publishIndicator = shallow(<PublishIndicator draft={true} />);
+    const {container} = render(<PublishIndicator draft={true} />);
 
-    expect(publishIndicator.find('.draft')).toHaveLength(1);
+    expect(container.querySelector('.draft')).toBeInTheDocument();
 });
 
 test('Show the draft and published icon', () => {
-    const publishIndicator = shallow(<PublishIndicator draft={true} published={true} />);
+    const {container} = render(<PublishIndicator draft={true} published={true} />);
 
-    expect(publishIndicator.find('.draft')).toHaveLength(1);
-    expect(publishIndicator.find('.published')).toHaveLength(1);
+    expect(container.querySelector('.published')).toBeInTheDocument();
+    expect(container.querySelector('.draft')).toBeInTheDocument();
 });
