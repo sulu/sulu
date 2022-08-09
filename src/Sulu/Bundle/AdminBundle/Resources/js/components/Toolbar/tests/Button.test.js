@@ -1,5 +1,6 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Button from '../Button';
 
@@ -43,12 +44,12 @@ test('Render disabled button', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('Click on button fires onClick callback', () => {
+test('Click on button fires onClick callback', async() => {
     const clickSpy = jest.fn();
     render(<Button onClick={clickSpy} />);
     const button = screen.queryByRole('button');
 
-    fireEvent.click(button);
+    await userEvent.click(button);
 
     expect(clickSpy).toBeCalled();
 });
@@ -78,7 +79,7 @@ test('Click on button does not fire onClick callback if button is disabled', () 
     render(<Button disabled={true} onClick={clickSpy} />);
 
     const button = screen.queryByRole('button');
-    fireEvent.click(button);
+    userEvent.click(button);
 
     expect(clickSpy).toHaveBeenCalledTimes(0);
 });

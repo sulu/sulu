@@ -1,5 +1,6 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Dropdown from '../Dropdown';
 
@@ -63,17 +64,17 @@ test('Render dropdown with a different size', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('Open dropdown on click', () => {
+test('Open dropdown on click', async() => {
     render(<Dropdown {...dropdownPropsMock} />);
 
     const button = screen.queryByText('Click to open');
 
     expect(screen.queryByText('An option')).not.toBeInTheDocument();
-    fireEvent.click(button);
+    await userEvent.click(button);
     expect(screen.getByText('An option')).toBeInTheDocument();
 });
 
-test('Disabled dropdown will not open', () => {
+test('Disabled dropdown will not open', async() => {
     render(
         <Dropdown
             {...dropdownPropsMock}
@@ -84,11 +85,11 @@ test('Disabled dropdown will not open', () => {
     const button = screen.queryByText('Click to open');
 
     expect(screen.queryByText('An option')).not.toBeInTheDocument();
-    fireEvent.click(button);
+    await userEvent.click(button);
     expect(screen.queryByText('An option')).not.toBeInTheDocument();
 });
 
-test('Click on option fires onClick', () => {
+test('Click on option fires onClick', async() => {
     const clickSpy = jest.fn();
     const propsMock = {
         label: 'Click to open',
@@ -102,13 +103,13 @@ test('Click on option fires onClick', () => {
 
     render(<Dropdown {...propsMock} />);
 
-    fireEvent.click(screen.queryByText('Click to open'));
-    fireEvent.click(screen.queryByText('An option'));
+    await userEvent.click(screen.queryByText('Click to open'));
+    await userEvent.click(screen.queryByText('An option'));
 
     expect(clickSpy).toBeCalled();
 });
 
-test('Click on disabled option will not fire onClick', () => {
+test('Click on disabled option will not fire onClick', async() => {
     const clickSpy = jest.fn();
     const propsMock = {
         label: 'Click to open',
@@ -128,13 +129,13 @@ test('Click on disabled option will not fire onClick', () => {
 
     render(<Dropdown {...propsMock} />);
 
-    fireEvent.click(screen.queryByText('Click to open'));
-    fireEvent.click(screen.queryByText('An option'));
+    await userEvent.click(screen.queryByText('Click to open'));
+    await userEvent.click(screen.queryByText('An option'));
 
     expect(clickSpy).not.toBeCalled();
 });
 
-test('No active options should disable dropdown', () => {
+test('No active options should disable dropdown', async() => {
     const propsMock = {
         label: 'Click to open',
         options: [
@@ -158,6 +159,6 @@ test('No active options should disable dropdown', () => {
     expect(screen.queryByText('An option')).not.toBeInTheDocument();
 
     // click on button shouldn't open the options
-    fireEvent.click(button);
+    await userEvent.click(button);
     expect(screen.queryByText('An option')).not.toBeInTheDocument();
 });
