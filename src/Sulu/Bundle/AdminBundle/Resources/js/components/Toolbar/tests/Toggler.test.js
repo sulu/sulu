@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Toggler from '../Toggler';
 
 test('Render disabled toggler', () => {
@@ -31,20 +32,20 @@ test('Render with active toggler', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('Call onClick handler when item was clicked', () => {
+test('Call onClick handler when item was clicked', async() => {
     const clickSpy = jest.fn();
     render(<Toggler label="Click Toggler" onClick={clickSpy} value={false} />);
 
-    fireEvent.click(screen.queryByRole('button'));
+    await userEvent.click(screen.queryByRole('button'));
 
     expect(clickSpy).toBeCalled();
 });
 
-test('Call onClick handler when toggler was changed', () => {
+test('Call onClick handler when toggler was changed', async() => {
     const clickSpy = jest.fn();
     render(<Toggler label="Click Toggler" onClick={clickSpy} value={false} />);
 
-    fireEvent.click(screen.queryByRole('checkbox'));
+    await userEvent.click(screen.queryByRole('checkbox'));
 
     expect(clickSpy).toBeCalled();
 });
