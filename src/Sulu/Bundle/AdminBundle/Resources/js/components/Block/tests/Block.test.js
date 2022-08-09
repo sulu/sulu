@@ -26,7 +26,8 @@ test('Render an expanded block with multiple types', () => {
             types={{'type1': 'Type1', 'type2': 'Type2'}}
         >
             Some block content
-        </Block>);
+        </Block>
+    );
 
     expect(container).toMatchSnapshot();
 });
@@ -41,11 +42,12 @@ test('Render an block without handle or collapse or expand button', () => {
 });
 
 test('Render a selected block', () => {
-    expect(render(
+    const {container} = render(
         <Block expanded={false} selected={true}>
             Some block content
         </Block>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a collapsed block', () => {
