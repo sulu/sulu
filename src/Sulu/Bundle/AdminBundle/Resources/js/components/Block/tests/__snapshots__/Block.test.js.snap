@@ -1,60 +1,46 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Clicking the action icon should open a popover that displays the given actions 1`] = `
-Array [
-  <div
-    class="backdrop fixed"
-    role="button"
-  />,
-  <div
-    class="container"
+<div>
+  <section
+    class="block expanded"
+    role="switch"
   >
-    <ul
-      class="menu"
-      style="top: 10px; left: 10px; position: fixed; pointer-events: auto;"
+    <div
+      class="content"
     >
-      <li>
-        <button
-          class="action"
-          type="button"
+      <header
+        class="header"
+      >
+        <div
+          class="iconButtons"
         >
-          <span
-            aria-label="su-test-1"
-            class="su-test-1 icon"
-          />
-          Test Action 1
-        </button>
-      </li>
-      <li
-        class="divider"
-      />
-      <li>
-        <button
-          class="action"
-          type="button"
-        >
-          <span
-            aria-label="su-test-2"
-            class="su-test-2 icon"
-          />
-          Test Action 2
-        </button>
-      </li>
-      <li>
-        <button
-          class="action"
-          type="button"
-        >
-          <span
-            aria-label="su-test-3"
-            class="su-test-3 icon"
-          />
-          Test Action 3
-        </button>
-      </li>
-    </ul>
-  </div>,
-]
+          <button
+            type="button"
+          >
+            <span
+              aria-label="su-more-circle"
+              class="su-more-circle"
+            />
+          </button>
+          <button
+            type="button"
+          >
+            <span
+              aria-label="su-collapse-vertical"
+              class="su-collapse-vertical"
+            />
+          </button>
+        </div>
+      </header>
+      <article
+        class="children"
+      >
+        Block content
+      </article>
+    </div>
+  </section>
+</div>
 `;
 
 exports[`Render a collapsed block 1`] = `

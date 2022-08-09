@@ -132,7 +132,7 @@ test('Clicking the close icon in an expanded block should collapse it', async() 
     expect(collapseSpy).toHaveBeenCalledTimes(1);
 });
 
-test('Clicking the action icon should open a popover that displays the given actions', () => {
+test('Clicking the action icon should open a popover that displays the given actions', async() => {
     const actions = [
         {
             type: 'button',
@@ -156,18 +156,21 @@ test('Clicking the action icon should open a popover that displays the given act
             onClick: jest.fn(),
         },
     ];
-    render(
+    const {container} = render(
         <Block actions={actions} expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()}>Block content</Block>
     );
-    expect(block.find('ActionPopover').prop('open')).toEqual(false);
-    expect(block.find('Icon[name="su-more-circle"]')).toHaveLength(1);
-    block.find('Icon[name="su-more-circle"]').simulate('click');
+    const icon = screen.queryByLabelText('su-more-circle');
 
-    expect(block.find('ActionPopover').prop('open')).toEqual(true);
-    expect(block.find('ActionPopover Popover').render()).toMatchSnapshot();
+    expect(screen.queryByText(/Test Action 1/)).not.toBeInTheDocument();
+    expect(icon).toBeInTheDocument();
+
+    await userEvent.click(icon);
+
+    expect(screen.getByText(/Test Action 1/)).toBeInTheDocument();
+    expect(container).toMatchSnapshot();
 });
 
-test('Clicking an action in the action popover should fire the respective callback', () => {
+test('Clicking an action in the action popover should fire the respective callback', async() => {
     const onActionClickSpy = jest.fn();
     const actions = [
         {
@@ -180,10 +183,13 @@ test('Clicking an action in the action popover should fire the respective callba
     render(
         <Block actions={actions} expanded={true} onCollapse={jest.fn()} onExpand={jest.fn()}>Block content</Block>
     );
-    block.find('Icon[name="su-more-circle"]').simulate('click');
 
+    const icon = screen.queryByLabelText('su-more-circle');
+
+    await userEvent.click(icon);
     expect(onActionClickSpy).not.toBeCalled();
-    block.find('ActionPopover Popover button').at(0).simulate('click');
+
+    await userEvent.click(screen.queryByText('Test Action 1'));
     expect(onActionClickSpy).toBeCalledWith();
 });
 
