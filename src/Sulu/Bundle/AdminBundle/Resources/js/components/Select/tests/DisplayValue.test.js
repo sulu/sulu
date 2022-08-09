@@ -1,5 +1,5 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {createEvent, fireEvent, render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import CroppedText from '../../CroppedText';
@@ -35,18 +35,19 @@ test('The component should render when disabled', () => {
     expect(container).toMatchSnapshot();
 });
 
-// test('A click on the component should fire the callback and prevent the default', () => {
-//     const clickSpy = jest.fn();
-//     const preventDefaultSpy = jest.fn();
+test('A click on the component should fire the callback and prevent the default', () => {
+    const clickSpy = jest.fn();
 
-//     render(<DisplayValue onClick={clickSpy}>My value</DisplayValue>);
-//     const display = screen.queryByRole('button');
+    render(<DisplayValue onClick={clickSpy}>My value</DisplayValue>);
+    const display = screen.queryByRole('button');
+    const event = createEvent.click(display);
 
-//     userEvent.click(display);
+    // eslint-disable-next-line testing-library/prefer-user-event
+    fireEvent(display, event);
 
-//     expect(clickSpy).toBeCalled();
-//     expect(preventDefaultSpy).toBeCalledWith();
-// });
+    expect(clickSpy).toBeCalled();
+    expect(event.defaultPrevented).toBe(true);
+});
 
 // test('A click on the component should not fire the callback when disabled', () => {
 //     const clickSpy = jest.fn();
