@@ -1,5 +1,6 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import SingleSelect from '../../SingleSelect';
 
@@ -162,7 +163,7 @@ test('The component should also select the option with the value 0', () => {
     expect(screen.queryByText(/Option 3/)).not.toBeInTheDocument();
 });
 
-test('The component should trigger the change callback on select', () => {
+test('The component should trigger the change callback on select', async() => {
     const onChangeSpy = jest.fn();
     render(
         <SingleSelect onChange={onChangeSpy} value="option-2">
@@ -173,7 +174,7 @@ test('The component should trigger the change callback on select', () => {
         </SingleSelect>
     );
 
-    fireEvent.click(screen.queryByLabelText('su-angle-down'));
-    fireEvent.click(screen.queryByText('Option 3'));
+    await userEvent.click(screen.queryByLabelText('su-angle-down'));
+    await userEvent.click(screen.queryByText('Option 3'));
     expect(onChangeSpy).toHaveBeenCalledWith('option-3');
 });
