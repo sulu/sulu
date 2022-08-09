@@ -1,121 +1,133 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Email should render 1`] = `
-<div
-  class="input default left"
->
+<div>
   <div
-    class="prependedContainer default"
+    class="input default left"
   >
-    <span
-      aria-label="su-envelope"
-      class="su-envelope icon default"
+    <div
+      class="prependedContainer default"
+    >
+      <span
+        aria-label="su-envelope"
+        class="su-envelope icon default"
+      />
+    </div>
+    <input
+      type="email"
+      value=""
     />
   </div>
-  <input
-    type="email"
-    value=""
-  />
 </div>
 `;
 
 exports[`Email should render error 1`] = `
-<div
-  class="input default left error"
->
+<div>
   <div
-    class="prependedContainer default"
+    class="input default left error"
   >
-    <span
-      aria-label="su-envelope"
-      class="su-envelope icon default"
+    <div
+      class="prependedContainer default"
+    >
+      <span
+        aria-label="su-envelope"
+        class="su-envelope icon default"
+      />
+    </div>
+    <input
+      type="email"
+      value=""
     />
   </div>
-  <input
-    type="email"
-    value=""
-  />
 </div>
 `;
 
 exports[`Email should render null value as empty string 1`] = `
-<div
-  class="input default left"
->
+<div>
   <div
-    class="prependedContainer default"
+    class="input default left"
   >
-    <span
-      aria-label="su-envelope"
-      class="su-envelope icon default"
+    <div
+      class="prependedContainer default"
+    >
+      <span
+        aria-label="su-envelope"
+        class="su-envelope icon default"
+      />
+    </div>
+    <input
+      type="email"
+      value=""
     />
   </div>
-  <input
-    type="email"
-    value=""
-  />
 </div>
 `;
 
 exports[`Email should render when disabled 1`] = `
-<div
-  class="input default left disabled"
->
+<div>
   <div
-    class="prependedContainer default"
+    class="input default left disabled"
   >
-    <span
-      aria-label="su-envelope"
-      class="su-envelope clickable icon default iconClickable"
-      role="button"
-      tabindex="0"
+    <div
+      class="prependedContainer default"
+    >
+      <span
+        aria-label="su-envelope"
+        class="su-envelope clickable icon default iconClickable"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+    <input
+      disabled=""
+      type="email"
+      value="test@test.com"
     />
   </div>
-  <input
-    disabled=""
-    type="email"
-    value="test@test.com"
-  />
 </div>
 `;
 
 exports[`Email should render with placeholder 1`] = `
-<div
-  class="input default left"
->
+<div>
   <div
-    class="prependedContainer default"
+    class="input default left"
   >
-    <span
-      aria-label="su-envelope"
-      class="su-envelope icon default"
+    <div
+      class="prependedContainer default"
+    >
+      <span
+        aria-label="su-envelope"
+        class="su-envelope icon default"
+      />
+    </div>
+    <input
+      placeholder="My placeholder"
+      type="email"
+      value=""
     />
   </div>
-  <input
-    placeholder="My placeholder"
-    type="email"
-    value=""
-  />
 </div>
 `;
 
 exports[`Email should render with value 1`] = `
-<div
-  class="input default left"
->
+<div>
   <div
-    class="prependedContainer default"
+    class="input default left"
   >
-    <span
-      aria-label="su-envelope"
-      class="su-envelope clickable icon default iconClickable"
-      role="button"
-      tabindex="0"
+    <div
+      class="prependedContainer default"
+    >
+      <span
+        aria-label="su-envelope"
+        class="su-envelope clickable icon default iconClickable"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+    <input
+      type="email"
+      value="test@test.com"
     />
   </div>
-  <input
-    type="email"
-    value="test@test.com"
-  />
 </div>
 `;
