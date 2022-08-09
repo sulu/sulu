@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Popover from '../Popover';
 
 test('Render a Popover', () => {
@@ -23,18 +24,18 @@ test('Show a loader if the Popover is loading', () => {
     expect(container.querySelector('.loader')).toBeInTheDocument();
 });
 
-test('Open popover on click', () => {
+test('Open popover on click', async() => {
     render(<Popover label="Set time">{() => <h1>Test</h1>}</Popover>);
 
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
-    fireEvent.click(screen.queryByRole('button'));
+    await userEvent.click(screen.queryByRole('button'));
     expect(screen.getByRole('heading')).toBeInTheDocument();
 });
 
-test('Disabled popover does not open on click', () => {
+test('Disabled popover does not open on click', async() => {
     render(<Popover disabled={true} label="Set time">{() => <h1>Test</h1>}</Popover>);
 
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
-    fireEvent.click(screen.queryByRole('button'));
+    await userEvent.click(screen.queryByRole('button'));
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
 });
