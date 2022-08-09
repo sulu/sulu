@@ -1,208 +1,220 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should directly render given children if value of children prop contains another component 1`] = `
-<button
-  class="displayValue default"
-  type="button"
->
-  Some 
-  <b>
-    bold
-  </b>
-   text
-  <span
-    aria-label="su-angle-down"
-    class="su-angle-down toggle"
-  />
-</button>
+<div>
+  <button
+    class="displayValue default"
+    type="button"
+  >
+    Some 
+    <b>
+      bold
+    </b>
+     text
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down toggle"
+    />
+  </button>
+</div>
 `;
 
 exports[`The component should render a CroppedText if value of children prop is a string 1`] = `
-<button
-  class="displayValue default"
-  type="button"
->
-  <div
-    aria-label="My value"
-    class="croppedText"
-    title="My value"
+<div>
+  <button
+    class="displayValue default"
+    type="button"
   >
     <div
-      aria-hidden="true"
-      class="front"
+      aria-label="My value"
+      class="croppedText"
+      title="My value"
     >
-      My v
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        My v
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          alue
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        My value
+      </div>
     </div>
-    <div
-      aria-hidden="true"
-      class="back"
-    >
-      <span>
-        alue
-      </span>
-    </div>
-    <div
-      class="whole"
-    >
-      My value
-    </div>
-  </div>
-  <span
-    aria-label="su-angle-down"
-    class="su-angle-down toggle"
-  />
-</button>
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down toggle"
+    />
+  </button>
+</div>
 `;
 
 exports[`The component should render when disabled 1`] = `
-<button
-  class="displayValue default"
-  disabled=""
-  type="button"
->
-  <div
-    aria-label="My value"
-    class="croppedText"
-    title="My value"
+<div>
+  <button
+    class="displayValue default"
+    disabled=""
+    type="button"
   >
     <div
-      aria-hidden="true"
-      class="front"
+      aria-label="My value"
+      class="croppedText"
+      title="My value"
     >
-      My v
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        My v
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          alue
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        My value
+      </div>
     </div>
-    <div
-      aria-hidden="true"
-      class="back"
-    >
-      <span>
-        alue
-      </span>
-    </div>
-    <div
-      class="whole"
-    >
-      My value
-    </div>
-  </div>
-  <span
-    aria-label="su-angle-down"
-    class="su-angle-down toggle"
-  />
-</button>
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down toggle"
+    />
+  </button>
+</div>
 `;
 
 exports[`The component should render with an icon 1`] = `
-<button
-  class="displayValue default hasIcon"
-  type="button"
->
-  <span
-    aria-label="su-plus"
-    class="su-plus frontIcon"
-  />
-  <div
-    aria-label="My value"
-    class="croppedText"
-    title="My value"
+<div>
+  <button
+    class="displayValue default hasIcon"
+    type="button"
   >
+    <span
+      aria-label="su-plus"
+      class="su-plus frontIcon"
+    />
     <div
-      aria-hidden="true"
-      class="front"
+      aria-label="My value"
+      class="croppedText"
+      title="My value"
     >
-      My v
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        My v
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          alue
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        My value
+      </div>
     </div>
-    <div
-      aria-hidden="true"
-      class="back"
-    >
-      <span>
-        alue
-      </span>
-    </div>
-    <div
-      class="whole"
-    >
-      My value
-    </div>
-  </div>
-  <span
-    aria-label="su-angle-down"
-    class="su-angle-down toggle"
-  />
-</button>
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down toggle"
+    />
+  </button>
+</div>
 `;
 
 exports[`The component should render with the dark skin 1`] = `
-<button
-  class="displayValue dark"
-  type="button"
->
-  <div
-    aria-label="My value"
-    class="croppedText"
-    title="My value"
+<div>
+  <button
+    class="displayValue dark"
+    type="button"
   >
     <div
-      aria-hidden="true"
-      class="front"
+      aria-label="My value"
+      class="croppedText"
+      title="My value"
     >
-      My v
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        My v
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          alue
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        My value
+      </div>
     </div>
-    <div
-      aria-hidden="true"
-      class="back"
-    >
-      <span>
-        alue
-      </span>
-    </div>
-    <div
-      class="whole"
-    >
-      My value
-    </div>
-  </div>
-  <span
-    aria-label="su-angle-down"
-    class="su-angle-down toggle"
-  />
-</button>
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down toggle"
+    />
+  </button>
+</div>
 `;
 
 exports[`The component should render with the flat skin 1`] = `
-<button
-  class="displayValue flat"
-  type="button"
->
-  <div
-    aria-label="My value"
-    class="croppedText"
-    title="My value"
+<div>
+  <button
+    class="displayValue flat"
+    type="button"
   >
     <div
-      aria-hidden="true"
-      class="front"
+      aria-label="My value"
+      class="croppedText"
+      title="My value"
     >
-      My v
+      <div
+        aria-hidden="true"
+        class="front"
+      >
+        My v
+      </div>
+      <div
+        aria-hidden="true"
+        class="back"
+      >
+        <span>
+          alue
+        </span>
+      </div>
+      <div
+        class="whole"
+      >
+        My value
+      </div>
     </div>
-    <div
-      aria-hidden="true"
-      class="back"
-    >
-      <span>
-        alue
-      </span>
-    </div>
-    <div
-      class="whole"
-    >
-      My value
-    </div>
-  </div>
-  <span
-    aria-label="su-angle-down"
-    class="su-angle-down toggle"
-  />
-</button>
+    <span
+      aria-label="su-angle-down"
+      class="su-angle-down toggle"
+    />
+  </button>
+</div>
 `;
