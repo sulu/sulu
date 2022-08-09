@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The component should render in dark skin 1`] = `
+<div>
+  <label
+    class="label"
+    tabindex="-1"
+  >
+    <span
+      class="switch radio dark"
+    >
+      <input
+        type="radio"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</div>
+`;
+
+exports[`The component should render in disabled state 1`] = `
+<div>
+  <label
+    class="label disabled"
+    tabindex="-1"
+  >
+    <span
+      class="switch disabled radio dark disabled"
+    >
+      <input
+        disabled=""
+        type="radio"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</div>
+`;
+
+exports[`The component should render in light skin 1`] = `
+<div>
+  <label
+    class="label"
+    tabindex="-1"
+  >
+    <span
+      class="switch radio light"
+    >
+      <input
+        type="radio"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</div>
+`;

@@ -1,5 +1,6 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Radio from '../Radio';
 
@@ -39,12 +40,12 @@ test('The component pass the props correctly to the generic checkbox', () => {
     expect(checkbox).toBeDisabled();
 });
 
-test('The component pass the the value to the change callback', () => {
+test('The component pass the the value to the change callback', async() => {
     const onChange = jest.fn();
     render(<Radio onChange={onChange} value="my-value">My label</Radio>);
 
     const checkbox = screen.queryByDisplayValue('my-value');
-    fireEvent.click(checkbox);
+    await userEvent.click(checkbox);
 
     expect(onChange).toHaveBeenCalledWith('my-value');
 });
