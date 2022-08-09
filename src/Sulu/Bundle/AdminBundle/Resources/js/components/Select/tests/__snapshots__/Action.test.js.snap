@@ -1,12 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render 1`] = `
-<li>
-  <button
-    class="action"
-    type="button"
-  >
-    My action
-  </button>
-</li>
+<div>
+  <li>
+    <button
+      class="action"
+      type="button"
+    >
+      My action
+    </button>
+  </li>
+</div>
 `;
