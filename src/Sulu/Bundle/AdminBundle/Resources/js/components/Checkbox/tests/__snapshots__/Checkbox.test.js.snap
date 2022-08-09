@@ -59,17 +59,20 @@ exports[`The component should render in light skin 1`] = `
 `;
 
 exports[`The component should render in size small 1`] = `
-<label
-  class="label small"
-  tabindex="-1"
->
-  <span
-    class="switch checkbox dark"
+<div>
+  <label
+    class="label small"
+    tabindex="-1"
   >
-    <input
-      type="checkbox"
-    />
-    <span />
-  </span>
-</label>
+    <span
+      class="switch checkbox dark"
+    >
+      <input
+        type="checkbox"
+        value=""
+      />
+      <span />
+    </span>
+  </label>
+</div>
 `;
