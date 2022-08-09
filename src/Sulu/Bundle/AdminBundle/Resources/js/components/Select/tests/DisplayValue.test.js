@@ -2,7 +2,6 @@
 import {createEvent, fireEvent, render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
-import CroppedText from '../../CroppedText';
 import DisplayValue from '../DisplayValue';
 
 test('The component should render a CroppedText if value of children prop is a string', () => {
@@ -49,18 +48,22 @@ test('A click on the component should fire the callback and prevent the default'
     expect(event.defaultPrevented).toBe(true);
 });
 
-// test('A click on the component should not fire the callback when disabled', () => {
-//     const clickSpy = jest.fn();
+test('A click on the component should not fire the callback when disabled', () => {
+    const clickSpy = jest.fn();
 
-//     const displayValue = shallow(<DisplayValue disabled={true} onClick={clickSpy}>My value</DisplayValue>);
-//     displayValue.simulate('click', {preventDefault: jest.fn()});
+    render(<DisplayValue disabled={true} onClick={clickSpy}>My value</DisplayValue>);
+    const display = screen.queryByRole('button');
 
-//     expect(clickSpy).not.toBeCalled();
-// });
+    userEvent.click(display);
 
-// test('The component should use the CroppedText component to cut long texts', () => {
-//     const displayValue = shallow(
-//         <DisplayValue onClick={jest.fn()}>This value should be wrapped in a CroppedText component</DisplayValue>
-//     );
-//     expect(displayValue.find(CroppedText)).toHaveLength(1);
-// });
+    expect(clickSpy).not.toBeCalled();
+});
+
+test('The component should use the CroppedText component to cut long texts', () => {
+    const {container} = render(
+        <DisplayValue onClick={jest.fn()}>This value should be wrapped in a CroppedText component</DisplayValue>
+    );
+
+    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+    expect(container.querySelector('.croppedText')).toBeInTheDocument();
+});
