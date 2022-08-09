@@ -1,7 +1,6 @@
 // @flow
 import React from 'react';
-import {render, screen} from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import {fireEvent, render, screen} from '@testing-library/react';
 import Number from '../Number';
 
 test('Number should render', () => {
@@ -19,7 +18,7 @@ test('Number should call onChange with parsed value', async() => {
     render(<Number onChange={onChange} value={2} />);
 
     const input = screen.queryByDisplayValue(2);
-    await userEvent.type(input, '10.2');
+    fireEvent.keyDown(input, {target: {value: '10.2'}});
 
     expect(input).toHaveValue(10.2);
 });
