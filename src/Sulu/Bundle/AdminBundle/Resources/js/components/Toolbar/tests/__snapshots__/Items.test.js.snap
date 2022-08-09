@@ -1,38 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render items 1`] = `
-<div>
-  <div
-    class="itemsContainer"
-  >
-    <ul
-      class="items light"
-    />
-  </div>
+<div
+  class="itemsContainer"
+>
+  <ul
+    class="items light"
+  />
 </div>
 `;
 
 exports[`Render items with children 1`] = `
-<div>
-  <div
-    class="itemsContainer"
+<div
+  class="itemsContainer"
+>
+  <ul
+    class="items light"
   >
-    <ul
-      class="items light"
-    >
-      <li>
-        <button
-          class="button light"
-          type="button"
+    <li>
+      <button
+        class="button light"
+        type="button"
+      >
+        <span
+          class="label"
         >
-          <span
-            class="label"
-          >
-            Test
-          </span>
-        </button>
-      </li>
-    </ul>
-  </div>
+          Test
+        </span>
+      </button>
+    </li>
+  </ul>
 </div>
 `;

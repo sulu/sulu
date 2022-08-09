@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {render} from '@testing-library/react';
+import {render, mount} from 'enzyme';
 import React from 'react';
 import debounce from 'debounce';
 import Items from '../Items';
@@ -15,40 +15,50 @@ window.ResizeObserver = jest.fn(function() {
 });
 
 test('Render items', () => {
-    const {container} = render(<Items />);
-    expect(container).toMatchSnapshot();
+    expect(render(<Items />)).toMatchSnapshot();
 });
 
 test('Render items with children', () => {
-    const {container} = render(<Items><Button onClick={clickSpy}>Test</Button></Items>);
-    expect(container).toMatchSnapshot();
+    expect(render(<Items><Button onClick={clickSpy}>Test</Button></Items>)).toMatchSnapshot();
 });
 
 test('Resize div should call callback', () => {
     const resizeFunction = jest.fn();
     debounce.mockReturnValue(resizeFunction);
 
-    const {container} = render(
+    const items = mount(
         <Items>
             <Button>Test</Button>
         </Items>
     );
 
-    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
-    const items = container.querySelector('.itemsContainer');
-
     expect(ResizeObserver).toBeCalledWith(resizeFunction);
-    expect(ResizeObserver.mock.instances[0].observe).toBeCalledWith(items);
-    expect(items).toHaveTextContent('Test');
+    expect(ResizeObserver.mock.instances[0].observe).toBeCalledWith(items.instance().parentRef);
+
+    expect(items.instance().showText).toEqual(true);
+
+    items.instance().childRef = {
+        offsetWidth: 50,
+    };
+
+    items.instance().parentRef = {
+        offsetWidth: 40,
+    };
+
+    debounce.mock.calls[0][0]();
+
+    expect(items.instance().expandedWidth).toEqual(50);
+    expect(items.instance().parentWidth).toEqual(40);
+    expect(items.instance().showText).toEqual(false);
 });
 
 test('ResizeObserver.disconnect should be called before component unmount', () => {
-    const {unmount} = render(
+    const items = mount(
         <Items>
             <Button>Test</Button>
         </Items>
     );
-    unmount();
 
+    items.instance().componentWillUnmount();
     expect(ResizeObserver.mock.instances[0].disconnect).toBeCalled();
 });
