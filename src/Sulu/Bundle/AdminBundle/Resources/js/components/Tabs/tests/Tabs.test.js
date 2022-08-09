@@ -1,5 +1,6 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Badge from '../../Badge/Badge';
 import Tabs from '../Tabs.js';
@@ -71,7 +72,7 @@ test('Render a Tabs component with a selected tab and a badge', () => {
     expect(container).toMatchSnapshot();
 });
 
-test('Clicking on a Tab should call the onSelect handler', () => {
+test('Clicking on a Tab should call the onSelect handler', async() => {
     const changeSpy = jest.fn();
     const selectedTabIndex = 0;
 
@@ -84,7 +85,7 @@ test('Clicking on a Tab should call the onSelect handler', () => {
     );
 
     const tab1 = screen.queryByText('Tab 1');
-    fireEvent.click(tab1);
+    await userEvent.click(tab1);
 
     expect(changeSpy).toHaveBeenCalledWith(selectedTabIndex);
 });
