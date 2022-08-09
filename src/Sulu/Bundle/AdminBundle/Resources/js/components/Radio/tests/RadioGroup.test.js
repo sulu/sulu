@@ -1,5 +1,6 @@
 // @flow
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import RadioGroup from '../RadioGroup';
 import Radio from '../Radio';
@@ -55,7 +56,7 @@ test('The component should pass the disabled state to the radios', () => {
     expect(radioGroup[2]).toBeDisabled();
 });
 
-test('The component should pass the change callback to the radios', () => {
+test('The component should pass the change callback to the radios', async() => {
     const onChange = jest.fn();
     render(
         <RadioGroup onChange={onChange}>
@@ -71,9 +72,9 @@ test('The component should pass the change callback to the radios', () => {
         screen.queryByDisplayValue('3'),
     ];
 
-    fireEvent.click(radioGroup[0]);
-    fireEvent.click(radioGroup[1]);
-    fireEvent.click(radioGroup[2]);
+    await userEvent.click(radioGroup[0]);
+    await userEvent.click(radioGroup[1]);
+    await userEvent.click(radioGroup[2]);
 
     expect(onChange).toHaveBeenCalledTimes(3);
 });
