@@ -39,7 +39,7 @@ test('Number should call onChange with undefined when value is undefined', async
     render(<Number onChange={onChange} value={0.5} />);
 
     const input = screen.queryByDisplayValue(0.5);
-    fireEvent.change(input, {target: {value: null}});
+    await userEvent.clear(input);
 
     expect(onChange).toBeCalledWith(undefined, expect.anything());
 });
