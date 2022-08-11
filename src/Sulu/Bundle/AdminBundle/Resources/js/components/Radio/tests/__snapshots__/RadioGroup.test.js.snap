@@ -1,17 +1,53 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render 1`] = `
-<div
-  class="my-group"
->
-  <p>
-    My radio mock
-  </p>
-  <p>
-    My radio mock
-  </p>
-  <p>
-    My radio mock
-  </p>
+<div>
+  <div
+    class="my-group"
+  >
+    <label
+      class="label"
+      tabindex="-1"
+    >
+      <span
+        class="switch radio dark"
+      >
+        <input
+          checked=""
+          type="radio"
+          value="1"
+        />
+        <span />
+      </span>
+    </label>
+    <label
+      class="label"
+      tabindex="-1"
+    >
+      <span
+        class="switch radio dark"
+      >
+        <input
+          type="radio"
+          value="2"
+        />
+        <span />
+      </span>
+    </label>
+    <label
+      class="label"
+      tabindex="-1"
+    >
+      <span
+        class="switch radio dark"
+      >
+        <input
+          type="radio"
+          value="3"
+        />
+        <span />
+      </span>
+    </label>
+  </div>
 </div>
 `;
