@@ -15,7 +15,6 @@ use Gedmo\Exception;
 use Oro\ORM\Query\AST\Functions\Cast;
 use Oro\ORM\Query\AST\Functions\String\GroupConcat;
 use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
-use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
 use Sulu\Component\Rest\Exception\InsufficientDescendantPermissionsException;
 use Sulu\Component\Rest\Exception\InvalidHashException;
