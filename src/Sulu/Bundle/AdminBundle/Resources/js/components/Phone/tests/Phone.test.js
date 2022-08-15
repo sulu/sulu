@@ -3,6 +3,7 @@ import React from 'react';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Phone from '../Phone';
+import bindValueToOnChange from '../../../utils/TestHelper/bindValueToOnChange';
 
 test('Phone should render', () => {
     const onChange = jest.fn();
@@ -44,13 +45,12 @@ test('Phone should render when disabled', () => {
 test('Phone should trigger callbacks correctly', async() => {
     const onChange = jest.fn();
     const onBlur = jest.fn();
-    render(<Phone onBlur={onBlur} onChange={onChange} value={null} />);
+    render(bindValueToOnChange(<Phone onBlur={onBlur} onChange={onChange} value={null} />));
 
     const input = screen.queryByRole('textbox');
 
-    await userEvent.type(input, '1');
-    expect(onChange).toBeCalledWith('1', expect.anything());
-    expect(onChange).toHaveBeenCalledTimes(1);
+    await userEvent.type(input, '+123');
+    expect(onChange).toHaveBeenLastCalledWith('+123', expect.anything());
 
     await userEvent.tab();
     expect(onBlur).toBeCalled();

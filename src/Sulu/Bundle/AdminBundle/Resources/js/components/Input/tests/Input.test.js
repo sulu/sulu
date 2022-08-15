@@ -3,6 +3,7 @@ import React from 'react';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Input from '../Input';
+import bindValueToOnChange from '../../../utils/TestHelper/bindValueToOnChange';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -98,12 +99,12 @@ test('Input should render with a segment counter', () => {
 
 test('Input should call the callback when the input changes', async() => {
     const onChange = jest.fn();
-    render(<Input onBlur={jest.fn()} onChange={onChange} value="My value" />);
+    render(bindValueToOnChange(<Input onBlur={jest.fn()} onChange={onChange} value="My value" />));
 
     const input = screen.queryByDisplayValue('My value');
-    await userEvent.type(input, '!');
+    await userEvent.type(input, ' - changed');
 
-    expect(onChange).toHaveBeenCalledWith('My value!', expect.anything());
+    expect(onChange).toHaveBeenLastCalledWith('My value - changed', expect.anything());
 });
 
 test('Input should call the callback with undefined if the input value is removed', async() => {
