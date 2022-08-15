@@ -59,7 +59,7 @@ test('The component should pass the disabled state to the radios', () => {
 test('The component should pass the change callback to the radios', async() => {
     const onChange = jest.fn();
     render(
-        <RadioGroup onChange={onChange} value="1">
+        <RadioGroup onChange={onChange} value="0">
             <Radio value="1" />
             <Radio value="2" />
             <Radio value="3" />
