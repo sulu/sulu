@@ -1,46 +1,51 @@
 // @flow
 import React from 'react';
-import {shallow, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Toggler from '../Toggler';
 
 test('Render disabled toggler', () => {
-    expect(render(
+    const {container} = render(
         <Toggler disabled={true} label="Disabled Toggler" onClick={jest.fn()} value={false} />
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render loading toggler', () => {
-    expect(render(
+    const {container} = render(
         <Toggler label="Disabled Toggler" loading={true} onClick={jest.fn()} value={false} />
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render toggler with skin', () => {
-    expect(render(
+    const {container} = render(
         <Toggler label="Dark Toggler" onClick={jest.fn()} skin="dark" value={false} />
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render with active toggler', () => {
-    expect(render(
+    const {container} = render(
         <Toggler label="Active Toggler" onClick={jest.fn()} value={true} />
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
-test('Call onClick handler when item was clicked', () => {
+test('Call onClick handler when item was clicked', async() => {
     const clickSpy = jest.fn();
-    const toggler = shallow(<Toggler label="Click Toggler" onClick={clickSpy} value={false} />);
+    render(<Toggler label="Click Toggler" onClick={clickSpy} value={false} />);
 
-    toggler.find('Button').simulate('click');
+    await userEvent.click(screen.queryByRole('button'));
 
-    expect(clickSpy).toBeCalledWith();
+    expect(clickSpy).toBeCalled();
 });
 
-test('Call onClick handler when toggler was changed', () => {
+test('Call onClick handler when toggler was changed', async() => {
     const clickSpy = jest.fn();
-    const toggler = shallow(<Toggler label="Click Toggler" onClick={clickSpy} value={false} />);
+    render(<Toggler label="Click Toggler" onClick={clickSpy} value={false} />);
 
-    toggler.find('Toggler').simulate('change');
+    await userEvent.click(screen.queryByRole('checkbox'));
 
-    expect(clickSpy).toBeCalledWith();
+    expect(clickSpy).toBeCalled();
 });

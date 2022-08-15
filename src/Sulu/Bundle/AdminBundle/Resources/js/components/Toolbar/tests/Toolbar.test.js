@@ -1,5 +1,5 @@
 // @flow
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import React from 'react';
 import Button from '../Button';
 import Controls from '../Controls';
@@ -10,7 +10,7 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 test('Render controls', () => {
-    expect(render(
+    const {container} = render(
         <Toolbar>
             <Controls>
                 <Button onClick={jest.fn()}>Test</Button>
@@ -19,11 +19,12 @@ test('Render controls', () => {
                 <Button onClick={jest.fn()}>Test</Button>
             </Controls>
         </Toolbar>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render dark theme', () => {
-    expect(render(
+    const {container} = render(
         <Toolbar skin="dark">
             <Controls>
                 <Button onClick={jest.fn()}>Test</Button>
@@ -32,5 +33,6 @@ test('Render dark theme', () => {
                 <Button onClick={jest.fn()}>Test</Button>
             </Controls>
         </Toolbar>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
