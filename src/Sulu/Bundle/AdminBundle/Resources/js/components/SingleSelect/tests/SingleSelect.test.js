@@ -1,7 +1,7 @@
 // @flow
-import {mount, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
-import Select from '../../Select';
 import SingleSelect from '../../SingleSelect';
 
 const Option = SingleSelect.Option;
@@ -12,7 +12,7 @@ jest.mock('../../../utils/Translator', () => ({
 }));
 
 test('The component should render a generic select', () => {
-    const select = shallow(
+    const {container} = render(
         <SingleSelect value={undefined}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -20,11 +20,12 @@ test('The component should render a generic select', () => {
             <Option value="option-3">Option 3</Option>
         </SingleSelect>
     );
-    expect(select.getElement().type).toBe(Select);
+
+    expect(container).toMatchSnapshot();
 });
 
 test('The component should render a select with dark skin', () => {
-    const select = mount(
+    const {container} = render(
         <SingleSelect skin="dark" value={undefined}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -33,11 +34,11 @@ test('The component should render a select with dark skin', () => {
         </SingleSelect>
     );
 
-    expect(select.render()).toMatchSnapshot();
+    expect(container).toMatchSnapshot();
 });
 
 test('The component should show a disabled select that is disabled', () => {
-    const select = shallow(
+    render(
         <SingleSelect disabled={true} skin="dark" value={undefined}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -46,11 +47,12 @@ test('The component should show a disabled select that is disabled', () => {
         </SingleSelect>
     );
 
-    expect(select.find('Select').prop('disabled')).toEqual(true);
+    const input = screen.queryByRole('button');
+    expect(input).toBeDisabled();
 });
 
 test('The component should return the default displayValue if no valueless option is present', () => {
-    const select = shallow(
+    render(
         <SingleSelect value={undefined}>
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -58,12 +60,12 @@ test('The component should return the default displayValue if no valueless optio
             <Option value="option-3">Option 3</Option>
         </SingleSelect>
     );
-    const displayValue = select.find(Select).props().displayValue;
-    expect(displayValue).toBe('sulu_admin.please_choose');
+
+    expect(screen.getByText(/sulu_admin.please_choose/)).toBeInTheDocument();
 });
 
 test('The component should return the content of the last valueless option as default displayValue', () => {
-    const select = shallow(
+    render(
         <SingleSelect value={undefined}>
             <Option value="option-1">Option 1</Option>
             <Option>Option without value 1</Option>
@@ -73,12 +75,12 @@ test('The component should return the content of the last valueless option as de
             <Option value="option-3">Option 3</Option>
         </SingleSelect>
     );
-    const displayValue = select.find(Select).props().displayValue;
-    expect(displayValue).toBe('Option without value 2');
+
+    expect(screen.getByText(/Option without value 2/)).toBeInTheDocument();
 });
 
 test('The component should return undefined as value if a valueless option is selected', () => {
-    const select = shallow(
+    render(
         <SingleSelect value={undefined}>
             <Option value="option-1">Option 1</Option>
             <Option>Option without value 1</Option>
@@ -87,12 +89,13 @@ test('The component should return undefined as value if a valueless option is se
             <Option value="option-3">Option 3</Option>
         </SingleSelect>
     );
-    const value = select.find(Select).props().value;
-    expect(value).toBe(undefined);
+
+    const input = screen.queryByRole('button');
+    expect(input).toHaveValue('');
 });
 
 test('The component should return the correct displayValue', () => {
-    const select = shallow(
+    render(
         <SingleSelect value="option-2">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -100,12 +103,12 @@ test('The component should return the correct displayValue', () => {
             <Option value="option-3">Option 3</Option>
         </SingleSelect>
     );
-    const displayValue = select.find(Select).props().displayValue;
-    expect(displayValue).toBe('Option 2');
+
+    expect(screen.getByText(/Option 2/)).toBeInTheDocument();
 });
 
 test('The component should return the correct displayValue and do not care if string or number', () => {
-    const select = shallow(
+    render(
         <SingleSelect value={2}>
             <Option value="1">Option 1</Option>
             <Option value="2">Option 2</Option>
@@ -113,12 +116,12 @@ test('The component should return the correct displayValue and do not care if st
             <Option value="3">Option 3</Option>
         </SingleSelect>
     );
-    const displayValue = select.find(Select).props().displayValue;
-    expect(displayValue).toBe('Option 2');
+
+    expect(screen.getByText(/Option 2/)).toBeInTheDocument();
 });
 
 test('The component should select the correct option', () => {
-    const select = shallow(
+    render(
         <SingleSelect value="option-2">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -126,27 +129,27 @@ test('The component should select the correct option', () => {
             <Option value="option-3">Option 3</Option>
         </SingleSelect>
     );
-    const isOptionSelected = select.find(Select).props().isOptionSelected;
-    expect(isOptionSelected({props: {value: 'option-1', disabled: false}})).toBe(false);
-    expect(isOptionSelected({props: {value: 'option-2', disabled: false}})).toBe(true);
-    expect(isOptionSelected({props: {value: 'option-3', disabled: false}})).toBe(false);
+
+    expect(screen.queryByText(/Option 1/)).not.toBeInTheDocument();
+    expect(screen.getByText(/Option 2/)).toBeInTheDocument();
+    expect(screen.queryByText(/Option 3/)).not.toBeInTheDocument();
 });
 
 test('The component should select the correct option if value is undefined', () => {
-    const select = shallow(
+    render(
         <SingleSelect value={undefined}>
             <Option value={undefined}>undefined</Option>
             <Divider />
             <Option value="value">Value</Option>
         </SingleSelect>
     );
-    const isOptionSelected = select.find(Select).props().isOptionSelected;
-    expect(isOptionSelected({props: {value: undefined, disabled: false}})).toBe(true);
-    expect(isOptionSelected({props: {value: 'value', disabled: false}})).toBe(false);
+
+    expect(screen.getByText(/undefined/)).toBeInTheDocument();
+    expect(screen.queryByText(/Value/)).not.toBeInTheDocument();
 });
 
 test('The component should also select the option with the value 0', () => {
-    const select = shallow(
+    render(
         <SingleSelect value={0}>
             <Option value={0}>Option 1</Option>
             <Option value={1}>Option 2</Option>
@@ -154,15 +157,15 @@ test('The component should also select the option with the value 0', () => {
             <Option value={2}>Option 3</Option>
         </SingleSelect>
     );
-    const isOptionSelected = select.find(Select).props().isOptionSelected;
-    expect(isOptionSelected({props: {value: 0}})).toBe(true);
-    expect(isOptionSelected({props: {value: 1}})).toBe(false);
-    expect(isOptionSelected({props: {value: 2}})).toBe(false);
+
+    expect(screen.getByText(/Option 1/)).toBeInTheDocument();
+    expect(screen.queryByText(/Option 2/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Option 3/)).not.toBeInTheDocument();
 });
 
-test('The component should trigger the change callback on select', () => {
+test('The component should trigger the change callback on select', async() => {
     const onChangeSpy = jest.fn();
-    const select = shallow(
+    render(
         <SingleSelect onChange={onChangeSpy} value="option-2">
             <Option value="option-1">Option 1</Option>
             <Option value="option-2">Option 2</Option>
@@ -170,6 +173,8 @@ test('The component should trigger the change callback on select', () => {
             <Option value="option-3">Option 3</Option>
         </SingleSelect>
     );
-    select.find(Select).props().onSelect('option-3');
+
+    await userEvent.click(screen.queryByLabelText('su-angle-down'));
+    await userEvent.click(screen.queryByText('Option 3'));
     expect(onChangeSpy).toHaveBeenCalledWith('option-3');
 });
