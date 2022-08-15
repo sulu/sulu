@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {fireEvent, render, screen} from '@testing-library/react';
+import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Number from '../Number';
 
@@ -19,9 +19,10 @@ test('Number should call onChange with parsed value', async() => {
     render(<Number onChange={onChange} value={2} />);
 
     const input = screen.queryByDisplayValue(2);
-    fireEvent.keyDown(input, {target: {value: '10.2'}});
+    await userEvent.click(input);
+    await userEvent.paste('1.25');
 
-    expect(input).toHaveValue(10.2);
+    expect(onChange).toHaveBeenCalledWith(21.25, expect.anything());
 });
 
 test('Number should call onChange with undefined when value isn`t a float', async() => {
