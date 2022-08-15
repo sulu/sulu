@@ -20,7 +20,7 @@ test('Disable the Button if the Popover is disabled', () => {
 test('Show a loader if the Popover is loading', () => {
     const {container} = render(<Popover icon="su-calendar" label="Set time" loading={true}>{() => 'Child'}</Popover>);
 
-    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+    // eslint-disable-next-line testing-library/no-container
     expect(container.querySelector('.loader')).toBeInTheDocument();
 });
 
