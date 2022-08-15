@@ -64,6 +64,6 @@ test('The component should use the CroppedText component to cut long texts', () 
         <DisplayValue onClick={jest.fn()}>This value should be wrapped in a CroppedText component</DisplayValue>
     );
 
-    // eslint-disable-next-line testing-library/no-container, testing-library/no-node-access
+    // eslint-disable-next-line testing-library/no-container
     expect(container.querySelector('.croppedText')).toBeInTheDocument();
 });
