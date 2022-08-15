@@ -4,23 +4,23 @@
 
     <joins name="changer">
         <join>
-            <entity-name>%sulu.model.user.class%</entity-name>
+            <entity-name>changerUser</entity-name>
             <field-name>%sulu.model.tag.class%.changer</field-name>
         </join>
         <join>
-            <entity-name>%sulu.model.contact.class%</entity-name>
-            <field-name>%sulu.model.user.class%.contact</field-name>
+            <entity-name>changerContact</entity-name>
+            <field-name>changerUser.contact</field-name>
         </join>
     </joins>
 
     <joins name="creator">
         <join>
-            <entity-name>%sulu.model.user.class%</entity-name>
+            <entity-name>creatorUser</entity-name>
             <field-name>%sulu.model.tag.class%.creator</field-name>
         </join>
         <join>
-            <entity-name>%sulu.model.contact.class%</entity-name>
-            <field-name>%sulu.model.user.class%.contact</field-name>
+            <entity-name>creatorContact</entity-name>
+            <field-name>creatorUser.contact</field-name>
         </join>
     </joins>
 
@@ -48,13 +48,13 @@
         <concatenation-property name="changer" translation="sulu_admin.changer" visibility="no">
             <field>
                 <field-name>firstName</field-name>
-                <entity-name>%sulu.model.contact.class%</entity-name>
+                <entity-name>changerContact</entity-name>
 
                 <joins ref="changer"/>
             </field>
             <field>
                 <field-name>lastName</field-name>
-                <entity-name>%sulu.model.contact.class%</entity-name>
+                <entity-name>changerContact</entity-name>
 
                 <joins ref="changer"/>
             </field>
@@ -81,13 +81,13 @@
         <concatenation-property name="creator" translation="sulu_admin.creator" visibility="no">
             <field>
                 <field-name>firstName</field-name>
-                <entity-name>%sulu.model.contact.class%</entity-name>
+                <entity-name>creatorContact</entity-name>
 
                 <joins ref="creator"/>
             </field>
             <field>
                 <field-name>lastName</field-name>
-                <entity-name>%sulu.model.contact.class%</entity-name>
+                <entity-name>creatorContact</entity-name>
 
                 <joins ref="creator"/>
             </field>
