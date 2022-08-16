@@ -49,7 +49,6 @@ test('Should mark the input fields as invalid if they do not match', async() => 
     await userEvent.type(inputs[0], 'asdf');
     await userEvent.type(inputs[1], 'jklö');
     await userEvent.tab(); // tab away from input
-    //await userEvent.blur(inputs[1]);
 
     // eslint-disable-next-line testing-library/no-container
     expect(container.querySelector('.error')).toBeInTheDocument();

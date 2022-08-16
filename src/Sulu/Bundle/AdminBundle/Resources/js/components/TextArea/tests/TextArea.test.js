@@ -3,6 +3,7 @@ import React from 'react';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import TextArea from '../TextArea';
+import bindValueToOnChange from '../../../utils/TestHelper/bindValueToOnChange';
 
 jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -58,12 +59,12 @@ test('TextArea should call onBlur when it loses focus', async() => {
 
 test('TextArea should call onChange when the TextArea changes', async() => {
     const changeSpy = jest.fn();
-    render(<TextArea onChange={changeSpy} value="My value" />);
+    render(bindValueToOnChange(<TextArea onChange={changeSpy} value="My value" />));
 
     const textarea = screen.queryByDisplayValue('My value');
-    await userEvent.type(textarea, '!');
+    await userEvent.type(textarea, ' - changed');
 
-    expect(changeSpy).toHaveBeenCalledWith('My value!');
+    expect(changeSpy).toHaveBeenLastCalledWith('My value - changed');
 });
 
 test('TextArea should call onChange with undefined when the TextArea changes to empty', async() => {
