@@ -1,68 +1,77 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should render 1`] = `
-<li>
-  <button
-    class="option icon"
-    style="min-width:10px"
-    type="button"
-  >
-    My option
-  </button>
-</li>
+<div>
+  <li>
+    <button
+      class="option icon"
+      style="min-width: 10px;"
+      type="button"
+    >
+      My option
+    </button>
+  </li>
+</div>
 `;
 
 exports[`The component should render in disabled state 1`] = `
-<li>
-  <button
-    class="option icon"
-    disabled=""
-    style="min-width:10px"
-    type="button"
-  >
-    My option
-  </button>
-</li>
+<div>
+  <li>
+    <button
+      class="option icon"
+      disabled=""
+      style="min-width: 10px;"
+      type="button"
+    >
+      My option
+    </button>
+  </li>
+</div>
 `;
 
 exports[`The component should render in selected state 1`] = `
-<li>
-  <button
-    class="option icon selected"
-    style="min-width:10px"
-    type="button"
-  >
-    <span
-      aria-label="su-check"
-      class="su-check icon"
-    />
-    My option
-  </button>
-</li>
+<div>
+  <li>
+    <button
+      class="option icon selected"
+      style="min-width: 10px;"
+      type="button"
+    >
+      <span
+        aria-label="su-check"
+        class="su-check icon"
+      />
+      My option
+    </button>
+  </li>
+</div>
 `;
 
 exports[`The component should render with checkbox 1`] = `
-<li>
-  <button
-    class="option checkbox"
-    style="min-width:10px"
-    type="button"
-  >
-    <label
-      class="label"
-      tabindex="-1"
+<div>
+  <li>
+    <button
+      class="option checkbox"
+      style="min-width: 10px;"
+      type="button"
     >
-      <span
-        class="switch checkbox dark input"
+      <label
+        class="label"
+        tabindex="-1"
       >
-        <input
-          tabindex="-1"
-          type="checkbox"
-        />
-        <span />
-      </span>
-    </label>
-    My option
-  </button>
-</li>
+        <span
+          class="switch checkbox dark input"
+        >
+          <input
+            tabindex="-1"
+            type="checkbox"
+            value=""
+          />
+          <span />
+        </span>
+      </label>
+      My option
+    </button>
+  </li>
+</div>
 `;

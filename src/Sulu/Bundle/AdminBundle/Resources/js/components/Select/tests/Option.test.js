@@ -1,40 +1,47 @@
 // @flow
-import {render, shallow} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Option from '../Option';
 
 jest.mock('../../../utils/DOM/afterElementsRendered');
 
 test('The component should render', () => {
-    const option = render(<Option value="my-option">My option</Option>);
-    expect(option).toMatchSnapshot();
+    const {container} = render(<Option value="my-option">My option</Option>);
+    expect(container).toMatchSnapshot();
 });
 
 test('The component should render in selected state', () => {
-    const option = render(<Option selected={true} value="my-option">My option</Option>);
-    expect(option).toMatchSnapshot();
+    const {container} = render(<Option selected={true} value="my-option">My option</Option>);
+    expect(container).toMatchSnapshot();
 });
 
 test('The component should render with checkbox', () => {
-    const option = render(<Option selectedVisualization="checkbox" value="my-option">My option</Option>);
-    expect(option).toMatchSnapshot();
+    const {container} = render(<Option selectedVisualization="checkbox" value="my-option">My option</Option>);
+    expect(container).toMatchSnapshot();
 });
 
 test('The component should render in disabled state', () => {
-    const option = render(<Option disabled={true} value="my-option">My option</Option>);
-    expect(option).toMatchSnapshot();
+    const {container} = render(<Option disabled={true} value="my-option">My option</Option>);
+    expect(container).toMatchSnapshot();
 });
 
-test('A click on the component should fire the callback', () => {
+test('A click on the component should fire the callback', async() => {
     const clickSpy = jest.fn();
-    const option = shallow(<Option onClick={clickSpy}>My option</Option>);
-    option.find('button').simulate('click');
+    render(<Option onClick={clickSpy}>My option</Option>);
+
+    const button = screen.queryByText('My option');
+    await userEvent.click(button);
+
     expect(clickSpy).toBeCalled();
 });
 
-test('A hover on the component should fire the callback', () => {
+test('A hover on the component should fire the callback', async() => {
     const requestFocusSpy = jest.fn();
-    const option = shallow(<Option requestFocus={requestFocusSpy}>My option</Option>);
-    option.find('li').simulate('mousemove');
+    render(<Option requestFocus={requestFocusSpy}>My option</Option>);
+
+    const item = screen.queryByRole('listitem');
+    await userEvent.hover(item);
+
     expect(requestFocusSpy).toBeCalled();
 });

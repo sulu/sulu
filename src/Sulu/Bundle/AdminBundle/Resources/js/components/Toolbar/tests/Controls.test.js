@@ -1,5 +1,5 @@
 /* eslint-disable flowtype/require-valid-file-annotation */
-import {render} from 'enzyme';
+import {render} from '@testing-library/react';
 import React from 'react';
 import Controls from '../Controls';
 import Button from '../Button';
@@ -7,13 +7,16 @@ import Button from '../Button';
 const clickSpy = jest.fn();
 
 test('Render controls', () => {
-    expect(render(<Controls />)).toMatchSnapshot();
+    const {container} = render(<Controls />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render controls with children', () => {
-    expect(render(<Controls><Button onClick={clickSpy}>Test</Button></Controls>)).toMatchSnapshot();
+    const {container} = render(<Controls><Button onClick={clickSpy}>Test</Button></Controls>);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render growing controls', () => {
-    expect(render(<Controls grow={true}></Controls>)).toMatchSnapshot();
+    const {container} = render(<Controls grow={true}></Controls>);
+    expect(container).toMatchSnapshot();
 });

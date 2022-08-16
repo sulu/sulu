@@ -1,38 +1,41 @@
 // @flow
 import React from 'react';
-import {mount, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Popover from '../Popover';
 
 test('Render a Popover', () => {
-    expect(render(
+    const {container} = render(
         <Popover icon="su-calendar" label="Set time" size="small" skin="light">{() => 'Child'}</Popover>
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Disable the Button if the Popover is disabled', () => {
-    const popover = mount(<Popover disabled={true} icon="su-calendar" label="Set time">{() => 'Child'}</Popover>);
+    render(<Popover disabled={true} icon="su-calendar" label="Set time">{() => 'Child'}</Popover>);
 
-    expect(popover.find('button').prop('disabled')).toEqual(true);
+    expect(screen.queryByRole('button')).toBeDisabled();
 });
 
 test('Show a loader if the Popover is loading', () => {
-    const popover = mount(<Popover icon="su-calendar" label="Set time" loading={true}>{() => 'Child'}</Popover>);
+    const {container} = render(<Popover icon="su-calendar" label="Set time" loading={true}>{() => 'Child'}</Popover>);
 
-    expect(popover.find('Loader')).toHaveLength(1);
+    // eslint-disable-next-line testing-library/no-container
+    expect(container.querySelector('.loader')).toBeInTheDocument();
 });
 
-test('Open popover on click', () => {
-    const dropdown = mount(<Popover label="Set time">{() => <h1>Test</h1>}</Popover>);
+test('Open popover on click', async() => {
+    render(<Popover label="Set time">{() => <h1>Test</h1>}</Popover>);
 
-    expect(dropdown.find('h1').length).toBe(0);
-    dropdown.find('button').simulate('click');
-    expect(dropdown.find('h1').length).toBe(1);
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+    await userEvent.click(screen.queryByRole('button'));
+    expect(screen.getByRole('heading')).toBeInTheDocument();
 });
 
-test('Disabled popover does not open on click', () => {
-    const dropdown = mount(<Popover disabled={true} label="Set time">{() => <h1>Test</h1>}</Popover>);
+test('Disabled popover does not open on click', async() => {
+    render(<Popover disabled={true} label="Set time">{() => <h1>Test</h1>}</Popover>);
 
-    expect(dropdown.find('h1').length).toBe(0);
-    dropdown.find('button').simulate('click');
-    expect(dropdown.find('h1').length).toBe(0);
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+    await userEvent.click(screen.queryByRole('button'));
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
 });

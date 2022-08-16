@@ -1,138 +1,150 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render disabled select 1`] = `
-<div
-  class="popover"
->
-  <button
-    class="button"
-    disabled=""
-    type="button"
+<div>
+  <div
+    class="popover"
   >
-    <span
-      class="label"
+    <button
+      class="button"
+      disabled=""
+      type="button"
     >
-      Chose an option
-    </span>
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down dropdownIcon"
-    />
-  </button>
+      <span
+        class="label"
+      >
+        Choose an option
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down dropdownIcon"
+      />
+    </button>
+  </div>
 </div>
 `;
 
 exports[`Render loading select 1`] = `
-<div
-  class="popover"
->
-  <button
-    class="button"
-    type="button"
+<div>
+  <div
+    class="popover"
   >
-    <div
-      class="spinner loader"
-      style="width:20px;height:20px"
+    <button
+      class="button"
+      type="button"
     >
       <div
-        class="doubleBounce1"
+        class="spinner loader"
+        style="width: 20px; height: 20px;"
+      >
+        <div
+          class="doubleBounce1"
+        />
+        <div
+          class="doubleBounce2"
+        />
+      </div>
+      <span
+        class="label"
+      >
+        Choose an option
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down dropdownIcon"
       />
-      <div
-        class="doubleBounce2"
-      />
-    </div>
-    <span
-      class="label"
-    >
-      Chose an option
-    </span>
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down dropdownIcon"
-    />
-  </button>
+    </button>
+  </div>
 </div>
 `;
 
 exports[`Render select 1`] = `
-<div
-  class="popover"
->
-  <button
-    class="button"
-    type="button"
+<div>
+  <div
+    class="popover"
   >
-    <span
-      class="label"
+    <button
+      class="button"
+      type="button"
     >
-      Chose an option
-    </span>
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down dropdownIcon"
-    />
-  </button>
+      <span
+        class="label"
+      >
+        Choose an option
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down dropdownIcon"
+      />
+    </button>
+  </div>
 </div>
 `;
 
 exports[`Render select with a different size 1`] = `
-<div
-  class="popover small"
->
-  <button
-    class="button small"
-    type="button"
+<div>
+  <div
+    class="popover small"
   >
-    <span
-      class="label"
+    <button
+      class="button small"
+      type="button"
     >
-      Chose an option
-    </span>
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down dropdownIcon"
-    />
-  </button>
+      <span
+        class="label"
+      >
+        Choose an option
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down dropdownIcon"
+      />
+    </button>
+  </div>
 </div>
 `;
 
 exports[`Render select with a prepended icon 1`] = `
-<div
-  class="popover"
->
-  <button
-    class="button"
-    type="button"
+<div>
+  <div
+    class="popover"
   >
-    <span
-      aria-label="fa-floppy-o"
-      class="fa fa-floppy-o icon"
-    />
-    <span
-      class="label"
+    <button
+      class="button"
+      type="button"
     >
-      Chose an option
-    </span>
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down dropdownIcon"
-    />
-  </button>
+      <span
+        aria-label="fa-floppy-o"
+        class="fa fa-floppy-o icon"
+      />
+      <span
+        class="label"
+      >
+        Choose an option
+      </span>
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down dropdownIcon"
+      />
+    </button>
+  </div>
 </div>
 `;
 
 exports[`Render select without text 1`] = `
-<div
-  class="popover"
->
-  <button
-    class="button"
-    type="button"
+<div>
+  <div
+    class="popover"
   >
-    <span
-      aria-label="su-angle-down"
-      class="su-angle-down dropdownIcon"
-    />
-  </button>
+    <button
+      class="button"
+      type="button"
+    >
+      <span
+        aria-label="su-angle-down"
+        class="su-angle-down dropdownIcon"
+      />
+    </button>
+  </div>
 </div>
 `;

@@ -1,10 +1,11 @@
 // @flow
-import {mount, render} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import Select from '../Select';
 
 const selectPropsMock = {
-    label: 'Chose an option',
+    label: 'Choose an option',
     onChange: () => {},
     options: [
         {
@@ -16,71 +17,81 @@ const selectPropsMock = {
 };
 
 test('Render select', () => {
-    expect(render(<Select {...selectPropsMock} />)).toMatchSnapshot();
+    const {container} = render(<Select {...selectPropsMock} />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render loading select', () => {
-    expect(render(<Select {...selectPropsMock} loading={true} />)).toMatchSnapshot();
+    const {container} = render(<Select {...selectPropsMock} loading={true} />);
+    expect(container).toMatchSnapshot();
 });
 
 test('Render disabled select', () => {
-    expect(render(
+    const {container} = render(
         <Select
             {...selectPropsMock}
             disabled={true}
         />
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render select with a prepended icon', () => {
-    expect(render(
+    const {container} = render(
         <Select
             {...selectPropsMock}
             icon="fa-floppy-o"
         />
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render select without text', () => {
-    expect(render(
+    const {container} = render(
         <Select
             {...selectPropsMock}
             showText={false}
         />
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render select with a different size', () => {
-    expect(render(
+    const {container} = render(
         <Select
             {...selectPropsMock}
             size="small"
         />
-    )).toMatchSnapshot();
+    );
+    expect(container).toMatchSnapshot();
 });
 
-test('Open select on click', () => {
-    const select = mount(<Select {...selectPropsMock} />);
+test('Open select on click', async() => {
+    render(<Select {...selectPropsMock} />);
 
-    expect(select.find('.optionList').length).toBe(0);
-    select.find('.button').simulate('click');
-    expect(select.find('.optionList').length).toBe(1);
+    const button = screen.queryByText('Choose an option');
+
+    expect(screen.queryByText('An option')).not.toBeInTheDocument();
+    await userEvent.click(button);
+    expect(screen.getByText('An option')).toBeInTheDocument();
 });
 
-test('Disabled select will not open', () => {
-    const select = mount(
+test('Disabled select will not open', async() => {
+    render(
         <Select
             {...selectPropsMock}
             disabled={true}
         />
     );
 
-    expect(select.find('.optionList').length).toBe(0);
-    select.find('button').simulate('click');
-    expect(select.find('.optionList').length).toBe(0);
+    const button = screen.queryByText('Choose an option');
+
+    expect(screen.queryByText('An option')).not.toBeInTheDocument();
+    await userEvent.click(button);
+    expect(screen.queryByText('An option')).not.toBeInTheDocument();
 });
 
-test('Click on disabled option will not fire onChange', () => {
+test('Click on disabled option will not fire onChange', async() => {
     const clickSpy = jest.fn();
     const propsMock = {
         label: 'Click to open',
@@ -95,15 +106,15 @@ test('Click on disabled option will not fire onChange', () => {
         value: undefined,
     };
 
-    const select = mount(<Select {...propsMock} />);
+    render(<Select {...propsMock} />);
 
-    select.find('button').simulate('click');
-    select.find('.option > button').first().simulate('click');
+    await userEvent.click(screen.queryByText('Click to open'));
+    await userEvent.click(screen.queryByText('An option'));
 
     expect(clickSpy).toHaveBeenCalledTimes(0);
 });
 
-test('Click on option fires onChange with the selected value as the first argument', () => {
+test('Click on option fires onChange with the selected value as the first argument', async() => {
     const clickSpy = jest.fn();
     const propsMock = {
         label: 'Click to open',
@@ -121,10 +132,10 @@ test('Click on option fires onChange with the selected value as the first argume
         value: undefined,
     };
 
-    const select = mount(<Select {...propsMock} />);
+    render(<Select {...propsMock} />);
 
-    select.find('button').simulate('click');
-    select.find('.option > button').first().simulate('click');
+    await userEvent.click(screen.queryByText('Click to open'));
+    await userEvent.click(screen.queryByText('An option'));
 
     expect(clickSpy.mock.calls[0][0]).toBe(1);
 });
@@ -147,7 +158,7 @@ test('The label of the option is written in the toggle-button if you set the opt
         ],
     };
 
-    const select = mount(<Select {...propsMock} />);
+    render(<Select {...propsMock} />);
 
-    expect(select.find('button').text()).toBe('Another option');
+    expect(screen.queryByRole('button')).toHaveTextContent('Another option');
 });
