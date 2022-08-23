@@ -1,43 +1,75 @@
 // @flow
 import React from 'react';
-import {mount, render, shallow} from 'enzyme';
-import Dropzone from 'react-dropzone';
+import {render} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import FileUploadButton from '../FileUploadButton';
 
 test('Render a FileUploadButton', () => {
-    expect(render(<FileUploadButton onUpload={jest.fn()}>Upload something!</FileUploadButton>)).toMatchSnapshot();
+    const {container} = render(
+        <FileUploadButton onUpload={jest.fn()}>
+            Upload something!
+        </FileUploadButton>
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a disabled FileUploadButton', () => {
-    expect(render(
-        <FileUploadButton disabled={true} onUpload={jest.fn()}>Upload something!</FileUploadButton>
-    )).toMatchSnapshot();
+    const {container} = render(
+        <FileUploadButton disabled={true} onUpload={jest.fn()}>
+            Upload something!
+        </FileUploadButton>
+    );
+    expect(container).toMatchSnapshot();
 });
 
 test('Render a FileUploadButton with other skin and icon', () => {
-    expect(render(
-        <FileUploadButton icon="su-image" onUpload={jest.fn()} skin="link">Upload something!</FileUploadButton>
-    )).toMatchSnapshot();
+    const {container} = render(
+        <FileUploadButton
+            icon="su-image"
+            onUpload={jest.fn()}
+            skin="link"
+        >
+            Upload something!
+        </FileUploadButton>
+    );
+    expect(container).toMatchSnapshot();
 });
 
-test('Call onUpload callback when a file is uploaded', () => {
+test('Call onUpload callback when a file is uploaded', async() => {
     const uploadSpy = jest.fn();
+    const file = new File(['hello'], 'hello.png', {type: 'image/png'});
 
-    const fileUploadButton = mount(<FileUploadButton onUpload={uploadSpy}>Upload something!</FileUploadButton>);
-
-    const testFileData = {name: 'test-file'};
-    fileUploadButton.find(Dropzone).prop('onDrop')([testFileData]);
-
-    expect(uploadSpy).toBeCalledTimes(1);
-    expect(uploadSpy).toBeCalledWith(testFileData);
-});
-
-test('Pass correct props to Dropzone component', () => {
-    const fileUploadButton = shallow(
-        <FileUploadButton accept="application/json" onUpload={jest.fn()}>Upload something!</FileUploadButton>
+    const {container} = render(
+        <FileUploadButton onUpload={uploadSpy}>
+            Upload something!
+        </FileUploadButton>
     );
 
-    expect(fileUploadButton.find('Dropzone').props()).toEqual(expect.objectContaining({
-        accept: 'application/json',
-    }));
+    // eslint-disable-next-line testing-library/no-container
+    const input = container.querySelector('input');
+    await userEvent.upload(input, file);
+
+    expect(uploadSpy).toBeCalledTimes(1);
+    expect(uploadSpy).toBeCalledWith(file);
+});
+
+test('Filter dropped files by accept prop', async() => {
+    const uploadSpy = jest.fn();
+    const rejectedFile = new File(['hello'], 'hello.png', {type: 'image/png'});
+    const acceptedFile = new File(['hello'], 'data.json', {type: 'application/json'});
+
+    const {container} = render(
+        <FileUploadButton accept="application/json" onUpload={uploadSpy}>
+            Upload something!
+        </FileUploadButton>
+    );
+
+    // eslint-disable-next-line testing-library/no-container
+    const input = container.querySelector('input');
+    await userEvent.upload(input, rejectedFile);
+    expect(uploadSpy).toBeCalledTimes(0);
+
+    await userEvent.upload(input, acceptedFile);
+    expect(uploadSpy).toBeCalledWith(acceptedFile);
+    expect(uploadSpy).toBeCalledTimes(1);
 });
