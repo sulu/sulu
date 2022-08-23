@@ -1,78 +1,95 @@
 // @flow
 import React from 'react';
-import {mount} from 'enzyme';
+import {render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import ColorPicker from '../ColorPicker';
+import bindValueToOnChange from '../../../utils/TestHelper/bindValueToOnChange';
 
-test('ColorPicker should render', () => {
-    const colorPicker = mount(<ColorPicker onChange={jest.fn()} placeholder="My placeholder" value="#abc" />);
-    colorPicker.find('Icon').simulate('click');
-    expect(colorPicker.render()).toMatchSnapshot();
+test('ColorPicker should render', async() => {
+    const {baseElement} = render(<ColorPicker onChange={jest.fn()} placeholder="My placeholder" value="#abc" />);
+
+    const icon = screen.queryByLabelText('su-square');
+
+    await userEvent.click(icon);
+    expect(baseElement).toMatchSnapshot();
 });
 
-test('ColorPicker should disable Input when disabled', () => {
-    const colorPicker = mount(<ColorPicker disabled={true} onChange={jest.fn()} value={undefined} />);
+test('ColorPicker should disable Input when disabled', async() => {
+    render(<ColorPicker
+        disabled={true}
+        onChange={jest.fn()}
+        value="#abc"
+    />);
 
-    expect(colorPicker.find('Input').prop('onIconClick')).toEqual(undefined);
-    expect(colorPicker.find('Input').prop('disabled')).toEqual(true);
+    const input = screen.queryByDisplayValue('#abc');
+    const icon = screen.queryByLabelText('su-square');
+    await userEvent.click(icon);
+
+    expect(input).toBeDisabled();
 });
 
 test('ColorPicker should render error', () => {
-    const colorPicker = mount(<ColorPicker onChange={jest.fn()} valid={false} value={null} />);
-    expect(colorPicker.find('Input').prop('valid')).toEqual(false);
+    const {container} = render(<ColorPicker onChange={jest.fn()} valid={false} value="#abc" />);
+    // eslint-disable-next-line testing-library/no-container
+    expect(container.querySelector('.error')).toBeInTheDocument();
 });
 
-test('ColorPicker should show error when invalid value is set', () => {
+test('ColorPicker should show error when invalid value is set', async() => {
     const onChange = jest.fn();
-    const colorPicker = mount(<ColorPicker onChange={onChange} value={null} />);
+    render(<ColorPicker onChange={onChange} value="#abc" />);
 
-    colorPicker.find('Input').instance().props.onChange('xxx', {target: {value: 'xxx'}});
-    colorPicker.find('Input').instance().props.onBlur();
-    colorPicker.update();
-    expect(colorPicker.find('Input').prop('valid')).toEqual(false);
+    const input = screen.queryByDisplayValue('#abc');
 
-    colorPicker.find('Input').instance().props.onChange('#ccc', {target: {value: '#ccc'}});
-    colorPicker.find('Input').instance().props.onBlur();
-    colorPicker.update();
-    expect(colorPicker.find('Input').prop('valid')).toBe(true);
+    await userEvent.type(input, 'xxx');
+
+    expect(onChange).toHaveBeenCalledWith(undefined);
+
+    await userEvent.type(input, '#ccc');
+
+    expect(input).toBeValid();
 });
 
-test('ColorPicker should trigger callbacks correctly', () => {
+test('ColorPicker should trigger callbacks correctly', async() => {
     const onChange = jest.fn();
     const onBlur = jest.fn();
-    const colorPicker = mount(<ColorPicker onBlur={onBlur} onChange={onChange} value={null} />);
+    render(bindValueToOnChange(<ColorPicker onBlur={onBlur} onChange={onChange} value="#abc" />));
+
+    const input = screen.queryByDisplayValue('#abc');
 
     // provide invalid value
-    colorPicker.find('Input').instance().props.onChange('xxx', {target: {value: 'xxx'}});
-    colorPicker.find('Input').instance().props.onBlur();
-    colorPicker.update();
+    await userEvent.clear(input);
+    await userEvent.type(input, 'xxx');
     expect(onChange).toBeCalledWith(undefined);
-    expect(onBlur).toBeCalled();
 
     // provide one more invalid value
-    colorPicker.find('Input').instance().props.onChange('abc', {target: {value: 'abc'}});
-    colorPicker.find('Input').instance().props.onBlur();
-    colorPicker.update();
+    await userEvent.clear(input);
+    await userEvent.type(input, 'abc');
     expect(onChange).toBeCalledWith(undefined);
-    expect(onBlur).toBeCalled();
 
     // now add a valid value
-    colorPicker.find('Input').instance().props.onChange('#abcabc', {target: {value: '#abcabc'}});
-    colorPicker.find('Input').instance().props.onBlur();
-    colorPicker.update();
-    expect(onChange).toBeCalledWith('#abcabc');
-    expect(onBlur).toBeCalled();
+    await userEvent.clear(input);
+    await userEvent.type(input, '#abc');
+    expect(onChange).toBeCalledWith('#abc');
 
-    expect(onBlur).toHaveBeenCalledTimes(3);
+    await userEvent.tab(); // tab away from input
+    expect(onBlur).toBeCalled();
 });
 
-test('ColorPicker should call the correct callbacks when value from overlay was selected', () => {
+test('ColorPicker should call the correct callbacks when value from overlay was selected', async() => {
     const onChange = jest.fn();
     const onBlur = jest.fn();
-    const colorPicker = mount(<ColorPicker onBlur={onBlur} onChange={onChange} value={null} />);
+    render((<ColorPicker onBlur={onBlur} onChange={onChange} value="#abc" />));
 
-    colorPicker.find('Icon').simulate('click');
-    colorPicker.find('ColorPicker').at(1).prop('onChangeComplete')({hex: '#123123'});
+    const icon = screen.queryByLabelText('su-square');
+    await userEvent.click(icon);
 
-    expect(onChange).toBeCalledWith('#123123');
-    expect(onBlur).toBeCalled();
+    const overlayInput = screen.queryByDisplayValue('AABBCC');
+    await userEvent.clear(overlayInput);
+    await userEvent.type(overlayInput, 'cccccc');
+
+    // wait for "react-color" component to fire callback: https://github.com/casesandberg/react-color/issues/516
+    await new Promise((resolve) => setTimeout(resolve, 100));
+
+    expect(overlayInput).toHaveValue('cccccc');
+    expect(onChange).toBeCalledWith('#cccccc');
 });
