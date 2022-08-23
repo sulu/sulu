@@ -1,196 +1,204 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render a Tabs component with a selected tab and a badge 1`] = `
-<div
-  class="tabs root"
->
+<div>
   <div
-    class="tabsContainerWrapper"
+    class="tabs root"
   >
-    <ul
-      class="tabsContainer"
+    <div
+      class="tabsContainerWrapper"
     >
-      <li
-        class="tab root selected"
+      <ul
+        class="tabsContainer"
       >
-        <button
-          disabled=""
-          title="Tab 1"
-          type="button"
+        <li
+          class="tab root selected"
         >
-          Tab 1
-        </button>
-      </li>
-      <li
-        class="tab root"
-      >
-        <button
-          title="Tab 2"
-          type="button"
-        >
-          Tab 2
-        </button>
-      </li>
-      <li
-        class="tab root"
-      >
-        <button
-          title="Tab 3"
-          type="button"
-        >
-          Tab 3
-          <div
-            class="badges"
+          <button
+            disabled=""
+            title="Tab 1"
+            type="button"
           >
+            Tab 1
+          </button>
+        </li>
+        <li
+          class="tab root"
+        >
+          <button
+            title="Tab 2"
+            type="button"
+          >
+            Tab 2
+          </button>
+        </li>
+        <li
+          class="tab root"
+        >
+          <button
+            title="Tab 3"
+            type="button"
+          >
+            Tab 3
             <div
-              class="badge"
+              class="badges"
             >
-              1
+              <div
+                class="badge"
+              >
+                1
+              </div>
+              <div
+                class="badge"
+              >
+                2
+              </div>
             </div>
-            <div
-              class="badge"
-            >
-              2
-            </div>
-          </div>
-        </button>
-      </li>
-    </ul>
+          </button>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 `;
 
 exports[`Render a Tabs component with type inline 1`] = `
-<div
-  class="tabs inline"
->
+<div>
   <div
-    class="tabsContainerWrapper"
+    class="tabs inline"
   >
-    <ul
-      class="tabsContainer"
+    <div
+      class="tabsContainerWrapper"
     >
-      <li
-        class="tab inline"
+      <ul
+        class="tabsContainer"
       >
-        <button
-          title="Tab 1"
-          type="button"
+        <li
+          class="tab inline"
         >
-          Tab 1
-        </button>
-      </li>
-      <li
-        class="tab inline"
-      >
-        <button
-          title="Tab 2"
-          type="button"
+          <button
+            title="Tab 1"
+            type="button"
+          >
+            Tab 1
+          </button>
+        </li>
+        <li
+          class="tab inline"
         >
-          Tab 2
-        </button>
-      </li>
-      <li
-        class="tab inline"
-      >
-        <button
-          title="Tab 3"
-          type="button"
+          <button
+            title="Tab 2"
+            type="button"
+          >
+            Tab 2
+          </button>
+        </li>
+        <li
+          class="tab inline"
         >
-          Tab 3
-        </button>
-      </li>
-    </ul>
+          <button
+            title="Tab 3"
+            type="button"
+          >
+            Tab 3
+          </button>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 `;
 
 exports[`Render a Tabs component with type nested 1`] = `
-<div
-  class="tabs nested"
->
+<div>
   <div
-    class="tabsContainerWrapper"
+    class="tabs nested"
   >
-    <ul
-      class="tabsContainer"
+    <div
+      class="tabsContainerWrapper"
     >
-      <li
-        class="tab nested"
+      <ul
+        class="tabsContainer"
       >
-        <button
-          title="Tab 1"
-          type="button"
+        <li
+          class="tab nested"
         >
-          Tab 1
-        </button>
-      </li>
-      <li
-        class="tab nested"
-      >
-        <button
-          title="Tab 2"
-          type="button"
+          <button
+            title="Tab 1"
+            type="button"
+          >
+            Tab 1
+          </button>
+        </li>
+        <li
+          class="tab nested"
         >
-          Tab 2
-        </button>
-      </li>
-      <li
-        class="tab nested"
-      >
-        <button
-          title="Tab 3"
-          type="button"
+          <button
+            title="Tab 2"
+            type="button"
+          >
+            Tab 2
+          </button>
+        </li>
+        <li
+          class="tab nested"
         >
-          Tab 3
-        </button>
-      </li>
-    </ul>
+          <button
+            title="Tab 3"
+            type="button"
+          >
+            Tab 3
+          </button>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 `;
 
 exports[`Render a Tabs component with type root 1`] = `
-<div
-  class="tabs root"
->
+<div>
   <div
-    class="tabsContainerWrapper"
+    class="tabs root"
   >
-    <ul
-      class="tabsContainer"
+    <div
+      class="tabsContainerWrapper"
     >
-      <li
-        class="tab root"
+      <ul
+        class="tabsContainer"
       >
-        <button
-          title="Tab 1"
-          type="button"
+        <li
+          class="tab root"
         >
-          Tab 1
-        </button>
-      </li>
-      <li
-        class="tab root"
-      >
-        <button
-          title="Tab 2"
-          type="button"
+          <button
+            title="Tab 1"
+            type="button"
+          >
+            Tab 1
+          </button>
+        </li>
+        <li
+          class="tab root"
         >
-          Tab 2
-        </button>
-      </li>
-      <li
-        class="tab root"
-      >
-        <button
-          title="Tab 3"
-          type="button"
+          <button
+            title="Tab 2"
+            type="button"
+          >
+            Tab 2
+          </button>
+        </li>
+        <li
+          class="tab root"
         >
-          Tab 3
-        </button>
-      </li>
-    </ul>
+          <button
+            title="Tab 3"
+            type="button"
+          >
+            Tab 3
+          </button>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 `;
