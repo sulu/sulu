@@ -1,431 +1,455 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render disabled next link if current page is last page 1`] = `
-<section>
-  <p>
-    Test
-  </p>
-  <nav
-    class="pagination"
-  >
-    <span
-      class="display"
+<div>
+  <section>
+    <p>
+      Test
+    </p>
+    <nav
+      class="pagination"
     >
-      Items per page:
-    </span>
-    <span>
-      <div
-        class="select"
-        role="none"
+      <span
+        class="display"
       >
-        <button
-          class="displayValue dark"
-          type="button"
+        Items per page
+        :
+      </span>
+      <span>
+        <div
+          class="select"
+          role="none"
         >
-          <div
-            aria-label="10"
-            class="croppedText"
-            title="10"
+          <button
+            class="displayValue dark"
+            type="button"
           >
             <div
-              aria-hidden="true"
-              class="front"
+              aria-label="10"
+              class="croppedText"
+              title="10"
             >
-              1
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                1
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  0
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                10
+              </div>
             </div>
-            <div
-              aria-hidden="true"
-              class="back"
-            >
-              <span>
-                0
-              </span>
-            </div>
-            <div
-              class="whole"
-            >
-              10
-            </div>
-          </div>
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down toggle"
+            />
+          </button>
+        </div>
+      </span>
+      <div
+        class="loader"
+      />
+      <span>
+        Page
+        :
+      </span>
+      <span
+        class="inputContainer"
+      >
+        <label
+          class="input dark center"
+        >
+          <input
+            inputmode="numeric"
+            type="text"
+            value="5"
+          />
+        </label>
+      </span>
+      <span
+        class="display"
+      >
+        of
+         
+        5
+      </span>
+      <div
+        class="buttonGroup"
+      >
+        <button
+          class="button icon button"
+          type="button"
+        >
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down toggle"
+            aria-label="su-angle-left"
+            class="su-angle-left buttonIcon"
+          />
+        </button>
+        <button
+          class="button icon button"
+          disabled=""
+          type="button"
+        >
+          <span
+            aria-label="su-angle-right"
+            class="su-angle-right buttonIcon"
           />
         </button>
       </div>
-    </span>
-    <div
-      class="loader"
-    />
-    <span>
-      Page:
-    </span>
-    <span
-      class="inputContainer"
-    >
-      <label
-        class="input dark center"
-      >
-        <input
-          inputmode="numeric"
-          type="text"
-          value="1"
-        />
-      </label>
-    </span>
-    <span
-      class="display"
-    >
-      of 5
-    </span>
-    <div
-      class="buttonGroup"
-    >
-      <button
-        class="button icon button"
-        type="button"
-      >
-        <span
-          aria-label="su-angle-left"
-          class="su-angle-left buttonIcon"
-        />
-      </button>
-      <button
-        class="button icon button"
-        disabled=""
-        type="button"
-      >
-        <span
-          aria-label="su-angle-right"
-          class="su-angle-right buttonIcon"
-        />
-      </button>
-    </div>
-  </nav>
-</section>
+    </nav>
+  </section>
+</div>
 `;
 
 exports[`Render disabled previous link current page is first page 1`] = `
-<section>
-  <p>
-    Test
-  </p>
-  <nav
-    class="pagination"
-  >
-    <span
-      class="display"
+<div>
+  <section>
+    <p>
+      Test
+    </p>
+    <nav
+      class="pagination"
     >
-      Items per page:
-    </span>
-    <span>
-      <div
-        class="select"
-        role="none"
+      <span
+        class="display"
       >
-        <button
-          class="displayValue dark"
-          type="button"
+        Items per page
+        :
+      </span>
+      <span>
+        <div
+          class="select"
+          role="none"
         >
-          <div
-            aria-label="10"
-            class="croppedText"
-            title="10"
+          <button
+            class="displayValue dark"
+            type="button"
           >
             <div
-              aria-hidden="true"
-              class="front"
+              aria-label="10"
+              class="croppedText"
+              title="10"
             >
-              1
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                1
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  0
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                10
+              </div>
             </div>
-            <div
-              aria-hidden="true"
-              class="back"
-            >
-              <span>
-                0
-              </span>
-            </div>
-            <div
-              class="whole"
-            >
-              10
-            </div>
-          </div>
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down toggle"
+            />
+          </button>
+        </div>
+      </span>
+      <div
+        class="loader"
+      />
+      <span>
+        Page
+        :
+      </span>
+      <span
+        class="inputContainer"
+      >
+        <label
+          class="input dark center"
+        >
+          <input
+            inputmode="numeric"
+            type="text"
+            value="1"
+          />
+        </label>
+      </span>
+      <span
+        class="display"
+      >
+        of
+         
+        5
+      </span>
+      <div
+        class="buttonGroup"
+      >
+        <button
+          class="button icon button"
+          disabled=""
+          type="button"
+        >
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down toggle"
+            aria-label="su-angle-left"
+            class="su-angle-left buttonIcon"
+          />
+        </button>
+        <button
+          class="button icon button"
+          type="button"
+        >
+          <span
+            aria-label="su-angle-right"
+            class="su-angle-right buttonIcon"
           />
         </button>
       </div>
-    </span>
-    <div
-      class="loader"
-    />
-    <span>
-      Page:
-    </span>
-    <span
-      class="inputContainer"
-    >
-      <label
-        class="input dark center"
-      >
-        <input
-          inputmode="numeric"
-          type="text"
-          value="1"
-        />
-      </label>
-    </span>
-    <span
-      class="display"
-    >
-      of 5
-    </span>
-    <div
-      class="buttonGroup"
-    >
-      <button
-        class="button icon button"
-        disabled=""
-        type="button"
-      >
-        <span
-          aria-label="su-angle-left"
-          class="su-angle-left buttonIcon"
-        />
-      </button>
-      <button
-        class="button icon button"
-        type="button"
-      >
-        <span
-          aria-label="su-angle-right"
-          class="su-angle-right buttonIcon"
-        />
-      </button>
-    </div>
-  </nav>
-</section>
+    </nav>
+  </section>
+</div>
 `;
 
 exports[`Render pagination with loader 1`] = `
-<section>
-  <p>
-    Test
-  </p>
-  <nav
-    class="pagination"
-  >
-    <span
-      class="display"
+<div>
+  <section>
+    <p>
+      Test
+    </p>
+    <nav
+      class="pagination"
     >
-      Items per page:
-    </span>
-    <span>
-      <div
-        class="select"
-        role="none"
+      <span
+        class="display"
       >
-        <button
-          class="displayValue dark"
-          type="button"
+        Items per page
+        :
+      </span>
+      <span>
+        <div
+          class="select"
+          role="none"
         >
-          <div
-            aria-label="10"
-            class="croppedText"
-            title="10"
+          <button
+            class="displayValue dark"
+            type="button"
           >
             <div
-              aria-hidden="true"
-              class="front"
+              aria-label="10"
+              class="croppedText"
+              title="10"
             >
-              1
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                1
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  0
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                10
+              </div>
             </div>
-            <div
-              aria-hidden="true"
-              class="back"
-            >
-              <span>
-                0
-              </span>
-            </div>
-            <div
-              class="whole"
-            >
-              10
-            </div>
-          </div>
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down toggle"
+            />
+          </button>
+        </div>
+      </span>
+      <div
+        class="loader"
+      >
+        <div
+          class="spinner"
+          style="width: 24px; height: 24px;"
+        >
+          <div
+            class="doubleBounce1"
+          />
+          <div
+            class="doubleBounce2"
+          />
+        </div>
+      </div>
+      <span>
+        Page
+        :
+      </span>
+      <span
+        class="inputContainer"
+      >
+        <label
+          class="input dark center"
+        >
+          <input
+            inputmode="numeric"
+            type="text"
+            value="5"
+          />
+        </label>
+      </span>
+      <span
+        class="display"
+      >
+        of
+         
+        10
+      </span>
+      <div
+        class="buttonGroup"
+      >
+        <button
+          class="button icon button"
+          type="button"
+        >
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down toggle"
+            aria-label="su-angle-left"
+            class="su-angle-left buttonIcon"
+          />
+        </button>
+        <button
+          class="button icon button"
+          type="button"
+        >
+          <span
+            aria-label="su-angle-right"
+            class="su-angle-right buttonIcon"
           />
         </button>
       </div>
-    </span>
-    <div
-      class="loader"
-    >
-      <div
-        class="spinner"
-        style="width:24px;height:24px"
-      >
-        <div
-          class="doubleBounce1"
-        />
-        <div
-          class="doubleBounce2"
-        />
-      </div>
-    </div>
-    <span>
-      Page:
-    </span>
-    <span
-      class="inputContainer"
-    >
-      <label
-        class="input dark center"
-      >
-        <input
-          inputmode="numeric"
-          type="text"
-          value="1"
-        />
-      </label>
-    </span>
-    <span
-      class="display"
-    >
-      of 10
-    </span>
-    <div
-      class="buttonGroup"
-    >
-      <button
-        class="button icon button"
-        type="button"
-      >
-        <span
-          aria-label="su-angle-left"
-          class="su-angle-left buttonIcon"
-        />
-      </button>
-      <button
-        class="button icon button"
-        type="button"
-      >
-        <span
-          aria-label="su-angle-right"
-          class="su-angle-right buttonIcon"
-        />
-      </button>
-    </div>
-  </nav>
-</section>
+    </nav>
+  </section>
+</div>
 `;
 
 exports[`Render pagination with page numbers 1`] = `
-<section>
-  <p>
-    Test
-  </p>
-  <nav
-    class="pagination"
-  >
-    <span
-      class="display"
+<div>
+  <section>
+    <p>
+      Test
+    </p>
+    <nav
+      class="pagination"
     >
-      Items per page:
-    </span>
-    <span>
-      <div
-        class="select"
-        role="none"
+      <span
+        class="display"
       >
-        <button
-          class="displayValue dark"
-          type="button"
+        Items per page
+        :
+      </span>
+      <span>
+        <div
+          class="select"
+          role="none"
         >
-          <div
-            aria-label="10"
-            class="croppedText"
-            title="10"
+          <button
+            class="displayValue dark"
+            type="button"
           >
             <div
-              aria-hidden="true"
-              class="front"
+              aria-label="10"
+              class="croppedText"
+              title="10"
             >
-              1
+              <div
+                aria-hidden="true"
+                class="front"
+              >
+                1
+              </div>
+              <div
+                aria-hidden="true"
+                class="back"
+              >
+                <span>
+                  0
+                </span>
+              </div>
+              <div
+                class="whole"
+              >
+                10
+              </div>
             </div>
-            <div
-              aria-hidden="true"
-              class="back"
-            >
-              <span>
-                0
-              </span>
-            </div>
-            <div
-              class="whole"
-            >
-              10
-            </div>
-          </div>
+            <span
+              aria-label="su-angle-down"
+              class="su-angle-down toggle"
+            />
+          </button>
+        </div>
+      </span>
+      <div
+        class="loader"
+      />
+      <span>
+        Page
+        :
+      </span>
+      <span
+        class="inputContainer"
+      >
+        <label
+          class="input dark center"
+        >
+          <input
+            inputmode="numeric"
+            type="text"
+            value="5"
+          />
+        </label>
+      </span>
+      <span
+        class="display"
+      >
+        of
+         
+        10
+      </span>
+      <div
+        class="buttonGroup"
+      >
+        <button
+          class="button icon button"
+          type="button"
+        >
           <span
-            aria-label="su-angle-down"
-            class="su-angle-down toggle"
+            aria-label="su-angle-left"
+            class="su-angle-left buttonIcon"
+          />
+        </button>
+        <button
+          class="button icon button"
+          type="button"
+        >
+          <span
+            aria-label="su-angle-right"
+            class="su-angle-right buttonIcon"
           />
         </button>
       </div>
-    </span>
-    <div
-      class="loader"
-    />
-    <span>
-      Page:
-    </span>
-    <span
-      class="inputContainer"
-    >
-      <label
-        class="input dark center"
-      >
-        <input
-          inputmode="numeric"
-          type="text"
-          value="1"
-        />
-      </label>
-    </span>
-    <span
-      class="display"
-    >
-      of 10
-    </span>
-    <div
-      class="buttonGroup"
-    >
-      <button
-        class="button icon button"
-        type="button"
-      >
-        <span
-          aria-label="su-angle-left"
-          class="su-angle-left buttonIcon"
-        />
-      </button>
-      <button
-        class="button icon button"
-        type="button"
-      >
-        <span
-          aria-label="su-angle-right"
-          class="su-angle-right buttonIcon"
-        />
-      </button>
-    </div>
-  </nav>
-</section>
+    </nav>
+  </section>
+</div>
 `;
