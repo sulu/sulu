@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ColorPicker should call the correct callbacks when value from overlay was selected 1`] = `
+exports[`ColorPicker should render 1`] = `
 <body>
   <div>
     <label
@@ -18,6 +18,7 @@ exports[`ColorPicker should call the correct callbacks when value from overlay w
         />
       </div>
       <input
+        placeholder="My placeholder"
         type="text"
         value="#abc"
       />
@@ -172,13 +173,13 @@ exports[`ColorPicker should call the correct callbacks when value from overlay w
                 style="position: relative;"
               >
                 <input
-                  id="rc-editable-input-6"
+                  id="rc-editable-input-1"
                   spellcheck="false"
                   style="width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;"
                   value="AABBCC"
                 />
                 <label
-                  for="rc-editable-input-6"
+                  for="rc-editable-input-1"
                   style="display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize;"
                 >
                   hex
@@ -192,13 +193,13 @@ exports[`ColorPicker should call the correct callbacks when value from overlay w
                 style="position: relative;"
               >
                 <input
-                  id="rc-editable-input-7"
+                  id="rc-editable-input-2"
                   spellcheck="false"
                   style="width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;"
                   value="170"
                 />
                 <label
-                  for="rc-editable-input-7"
+                  for="rc-editable-input-2"
                   style="display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;"
                 >
                   r
@@ -212,13 +213,13 @@ exports[`ColorPicker should call the correct callbacks when value from overlay w
                 style="position: relative;"
               >
                 <input
-                  id="rc-editable-input-8"
+                  id="rc-editable-input-3"
                   spellcheck="false"
                   style="width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;"
                   value="187"
                 />
                 <label
-                  for="rc-editable-input-8"
+                  for="rc-editable-input-3"
                   style="display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;"
                 >
                   g
@@ -232,13 +233,13 @@ exports[`ColorPicker should call the correct callbacks when value from overlay w
                 style="position: relative;"
               >
                 <input
-                  id="rc-editable-input-9"
+                  id="rc-editable-input-4"
                   spellcheck="false"
                   style="width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;"
                   value="204"
                 />
                 <label
-                  for="rc-editable-input-9"
+                  for="rc-editable-input-4"
                   style="display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;"
                 >
                   b
@@ -252,13 +253,13 @@ exports[`ColorPicker should call the correct callbacks when value from overlay w
                 style="position: relative;"
               >
                 <input
-                  id="rc-editable-input-10"
+                  id="rc-editable-input-5"
                   spellcheck="false"
                   style="width: 80%; padding: 4px 10% 3px; box-shadow: inset 0 0 0 1px #ccc; font-size: 11px;"
                   value="100"
                 />
                 <label
-                  for="rc-editable-input-10"
+                  for="rc-editable-input-5"
                   style="display: block; text-align: center; font-size: 11px; color: rgb(34, 34, 34); padding-top: 3px; padding-bottom: 4px; text-transform: capitalize; cursor: ew-resize;"
                 >
                   a
@@ -275,29 +276,4 @@ exports[`ColorPicker should call the correct callbacks when value from overlay w
     </div>
   </div>
 </body>
-`;
-
-exports[`ColorPicker should render 1`] = `
-<div>
-  <label
-    class="input default left"
-  >
-    <div
-      class="prependedContainer default"
-    >
-      <span
-        aria-label="su-square"
-        class="su-square clickable icon default icon iconClickable"
-        role="button"
-        style="color: rgb(170, 187, 204);"
-        tabindex="0"
-      />
-    </div>
-    <input
-      placeholder="My placeholder"
-      type="text"
-      value="#abc"
-    />
-  </label>
-</div>
 `;
