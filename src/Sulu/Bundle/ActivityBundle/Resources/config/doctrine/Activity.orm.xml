@@ -31,6 +31,9 @@
             <index name="timestamp_idx" columns="timestamp"/>
             <index name="resourceKey_idx" columns="resourceKey"/>
             <index name="resourceId_idx" columns="resourceId"/>
+            <index name="resourceSecurityContext_idx" columns="resourceSecurityContext"/>
+            <index name="resourceSecurityObjectType_idx" columns="resourceSecurityObjectType"/>
+            <index name="resourceSecurityObjectId_idx" columns="resourceSecurityObjectId"/>
         </indexes>
     </mapped-superclass>
 </doctrine-mapping>
