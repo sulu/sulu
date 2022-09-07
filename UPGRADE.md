@@ -2,6 +2,8 @@
 
 ## 2.4.4
 
+### Add indexes to activities table
+
 Improve performance of the `Activities` table with additional indexes for the database:
 
 ```sql
