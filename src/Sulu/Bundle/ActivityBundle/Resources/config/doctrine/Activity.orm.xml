@@ -26,5 +26,14 @@
         <field name="resourceSecurityContext" column="resourceSecurityContext" type="string" nullable="true" length="191"/>
         <field name="resourceSecurityObjectType" column="resourceSecurityObjectType" type="string" nullable="true" length="191"/>
         <field name="resourceSecurityObjectId" column="resourceSecurityObjectId" type="string" nullable="true" length="191"/>
+
+        <indexes>
+            <index name="timestamp_idx" columns="timestamp"/>
+            <index name="resourceKey_idx" columns="resourceKey"/>
+            <index name="resourceId_idx" columns="resourceId"/>
+            <index name="resourceSecurityContext_idx" columns="resourceSecurityContext"/>
+            <index name="resourceSecurityObjectType_idx" columns="resourceSecurityObjectType"/>
+            <index name="resourceSecurityObjectId_idx" columns="resourceSecurityObjectId"/>
+        </indexes>
     </mapped-superclass>
 </doctrine-mapping>
