@@ -10,8 +10,12 @@ jest.mock('../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
 }));
 
+const ExampleList = function ExampleList(props) {
+    return <div className={props.adapter ? props.className : null} />;
+};
+
 jest.mock('../../../containers/ListOverlay', () => jest.fn(function ListOverlay(props) {
-    return <div adapter={props.adapter} className="list" />;
+    return <ExampleList adapter={props.adapter} className="list" />;
 }));
 
 jest.mock('../../../containers/List/stores/ListStore', () => jest.fn(
