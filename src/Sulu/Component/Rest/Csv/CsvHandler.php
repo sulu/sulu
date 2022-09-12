@@ -133,6 +133,12 @@ class CsvHandler
             }
         }
 
+        foreach ($row as $key => $value) {
+            if (\is_string($value) && false !== \strpos($value, \PHP_EOL)) {
+                $row[$key] = \str_replace(\PHP_EOL, '\n', $value);
+            }
+        }
+
         return $row;
     }
 

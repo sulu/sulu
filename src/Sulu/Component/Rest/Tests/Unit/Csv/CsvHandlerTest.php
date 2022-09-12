@@ -125,6 +125,48 @@ class CsvHandlerTest extends TestCase
         );
     }
 
+    public function testListRepresentationWithNewline()
+    {
+        $listRepresentation = $this->prophesize(ListRepresentation::class);
+        $listRepresentation->getRel()->willReturn('contacts');
+        $listRepresentation->getData()->willReturn(
+            [
+                ['id' => 1, 'fullName' => "Max\nMustermann", 'birthday' => new \DateTime('1976-02-01T00:00:00+01:00'), 'enabled' => true],
+            ]
+        );
+
+        $viewHandler = $this->prophesize(ViewHandlerInterface::class);
+        $view = new View($listRepresentation->reveal());
+        $request = $this->prophesize(Request::class);
+        $serializer = $this->prophesize(ArraySerializerInterface::class);
+        $format = 'csv';
+
+        $request->get('delimiter', ';')->willReturn(';');
+        $request->get('enclosure', '"')->willReturn('"');
+        $request->get('escape', '\\')->willReturn('\\');
+        $request->get('newLine', '\\n')->willReturn('\\n');
+
+        $handler = new CsvHandler($serializer->reveal());
+
+        \ob_start();
+        $response = $handler->createResponse($viewHandler->reveal(), $view, $request->reveal(), $format);
+        $response->send();
+        $content = \ob_get_contents();
+        \ob_end_clean();
+
+        $this->assertInstanceOf(StreamedResponse::class, $response);
+        $this->assertEquals($response->headers->get('Content-Type'), 'text/csv');
+        $this->assertEquals(
+            \str_replace('"', '', $response->headers->get('Content-Disposition')),
+            'attachment; filename=contacts.csv'
+        );
+
+        $this->assertEquals(
+            "id;fullName;birthday;enabled\n1;\"Max\\nMustermann\";1976-02-01T00:00:00+01:00;1\n",
+            $content
+        );
+    }
+
     public function testListRepresentationDifferentConfig()
     {
         $listRepresentation = $this->prophesize(ListRepresentation::class);
