@@ -14,7 +14,7 @@ namespace Sulu\Component\Content\Compat;
 /**
  * Structure for template.
  */
-interface PageInterface extends StructureInterface, CacheLifetimeBehaviourInterface
+interface PageInterface extends StructureInterface
 {
     /**
      * twig template of template definition.
@@ -29,6 +29,13 @@ interface PageInterface extends StructureInterface, CacheLifetimeBehaviourInterf
      * @return string
      */
     public function getController();
+
+    /**
+     * cacheLifeTime of template definition.
+     *
+     * @return array
+     */
+    public function getCacheLifeTime();
 
     /**
      * @return string
