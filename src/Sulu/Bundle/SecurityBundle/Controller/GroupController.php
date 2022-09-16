@@ -148,9 +148,9 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     /**
      * Creates a new group with the given data.
      *
-     * @throws EntityNotFoundException
-     *
      * @return Response
+     *
+     * @throws EntityNotFoundException
      */
     public function postAction(Request $request)
     {

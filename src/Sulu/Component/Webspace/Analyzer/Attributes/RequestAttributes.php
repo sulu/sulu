@@ -44,8 +44,6 @@ class RequestAttributes
     /**
      * Merges this and the given attributes and returns a new instance.
      *
-     * @param RequestAttributes $requestAttributes
-     *
      * @return RequestAttributes
      */
     public function merge(self $requestAttributes)

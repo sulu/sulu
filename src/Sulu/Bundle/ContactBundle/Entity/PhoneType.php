@@ -23,18 +23,21 @@ class PhoneType implements \JsonSerializable
 {
     /**
      * @var string
+     *
      * @Groups({"fullAccount", "fullContact", "frontend"})
      */
     private $name;
 
     /**
      * @var int
+     *
      * @Groups({"fullAccount", "fullContact", "frontend"})
      */
     private $id;
 
     /**
      * @var Collection
+     *
      * @Exclude
      */
     private $phones;

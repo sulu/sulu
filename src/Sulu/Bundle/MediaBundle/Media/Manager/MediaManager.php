@@ -348,10 +348,10 @@ class MediaManager implements MediaManagerInterface
      * @param array $data
      * @param UserInterface $user
      *
+     * @return Media
+     *
      * @throws FileVersionNotFoundException
      * @throws InvalidMediaTypeException
-     *
-     * @return Media
      */
     private function modifyMedia($uploadedFile, $data, $user)
     {

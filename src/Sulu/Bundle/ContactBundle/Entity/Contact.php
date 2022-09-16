@@ -30,7 +30,9 @@ class Contact extends ApiEntity implements ContactInterface
 {
     /**
      * @var int
+     *
      * @Expose
+     *
      * @Groups({"frontend", "partialContact", "fullContact"})
      */
     protected $id;
@@ -77,12 +79,14 @@ class Contact extends ApiEntity implements ContactInterface
 
     /**
      * @var UserInterface|null
+     *
      * @Groups({"fullContact"})
      */
     protected $changer;
 
     /**
      * @var UserInterface|null
+     *
      * @Groups({"fullContact"})
      */
     protected $creator;
@@ -94,6 +98,7 @@ class Contact extends ApiEntity implements ContactInterface
 
     /**
      * @var Collection<int, Note>
+     *
      * @Groups({"fullContact"})
      *
      * @deprecated
@@ -102,24 +107,28 @@ class Contact extends ApiEntity implements ContactInterface
 
     /**
      * @var Collection<int, Email>
+     *
      * @Groups({"fullContact", "partialContact"})
      */
     protected $emails;
 
     /**
      * @var Collection<int, Phone>
+     *
      * @Groups({"fullContact"})
      */
     protected $phones;
 
     /**
      * @var Collection<int, Fax>
+     *
      * @Groups({"fullContact"})
      */
     protected $faxes;
 
     /**
      * @var Collection<int, SocialMediaProfile>
+     *
      * @Groups({"fullContact"})
      */
     protected $socialMediaProfiles;
@@ -136,6 +145,7 @@ class Contact extends ApiEntity implements ContactInterface
 
     /**
      * @var Collection<int, TagInterface>
+     *
      * @Accessor(getter="getTagNameArray")
      * @Groups({"fullContact"})
      * @Type("array")
@@ -146,6 +156,7 @@ class Contact extends ApiEntity implements ContactInterface
      * main account.
      *
      * @var string
+     *
      * @Accessor(getter="getMainAccount")
      * @Groups({"fullContact"})
      */
@@ -155,6 +166,7 @@ class Contact extends ApiEntity implements ContactInterface
      * main account.
      *
      * @var string
+     *
      * @Accessor(getter="getAddresses")
      * @Groups({"fullContact"})
      */
@@ -162,6 +174,7 @@ class Contact extends ApiEntity implements ContactInterface
 
     /**
      * @var Collection<int, AccountContact>
+     *
      * @Exclude
      */
     protected $accountContacts;
@@ -198,30 +211,35 @@ class Contact extends ApiEntity implements ContactInterface
 
     /**
      * @var Collection<int, ContactAddress>
+     *
      * @Exclude
      */
     protected $contactAddresses;
 
     /**
      * @var Collection<int, MediaInterface>
+     *
      * @Groups({"fullContact"})
      */
     protected $medias;
 
     /**
      * @var Collection<int, CategoryInterface>
+     *
      * @Groups({"fullContact"})
      */
     protected $categories;
 
     /**
      * @var Collection<int, Url>
+     *
      * @Groups({"fullContact"})
      */
     protected $urls;
 
     /**
      * @var Collection<int, BankAccount>
+     *
      * @Groups({"fullContact"})
      */
     protected $bankAccounts;
@@ -300,6 +318,7 @@ class Contact extends ApiEntity implements ContactInterface
 
     /**
      * @VirtualProperty
+     *
      * @SerializedName("fullName")
      *
      * @return string
@@ -333,6 +352,7 @@ class Contact extends ApiEntity implements ContactInterface
 
     /**
      * @VirtualProperty
+     *
      * @Groups({"fullContact"})
      */
     public function getPosition()

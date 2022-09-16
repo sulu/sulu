@@ -58,6 +58,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * The language of the localization.
      *
      * @var string
+     *
      * @Groups({"frontend", "Default"})
      */
     private $language;
@@ -66,6 +67,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * The country of the localization.
      *
      * @var string
+     *
      * @Groups({"frontend", "Default"})
      */
     private $country;
@@ -74,6 +76,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * Defines how the generation of shadow pages should be handled.
      *
      * @var string
+     *
      * @Groups({"frontend", "Default"})
      */
     private $shadow;
@@ -82,6 +85,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * The sub localizations of this one.
      *
      * @var Localization[]
+     *
      * @Groups({"frontend", "Default"})
      */
     private $children;
@@ -90,6 +94,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * The parent localization.
      *
      * @var Localization
+     *
      * @Groups({"frontend", "Default"})
      */
     private $parent;
@@ -98,6 +103,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * Defines whether this localization is the default one or not.
      *
      * @var bool
+     *
      * @Groups({"frontend", "Default"})
      */
     private $default;
@@ -107,6 +113,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * This will be used to determine the default hreflang tag.
      *
      * @var bool
+     *
      * @Groups({"frontend", "Default"})
      *
      * @deprecated use $default instead
@@ -181,8 +188,6 @@ class Localization implements \JsonSerializable, ArrayableInterface
 
     /**
      * Adds a new child localization.
-     *
-     * @param Localization $child
      */
     public function addChild(self $child)
     {
@@ -215,7 +220,9 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * @param string $delimiter between language and country
      *
      * @return string
+     *
      * @VirtualProperty
+     *
      * @Groups({"frontend", "Default"})
      *
      * @deprecated use getLocale instead
@@ -238,7 +245,9 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * @param string $format requested localization format
      *
      * @return string
+     *
      * @VirtualProperty
+     *
      * @Groups({"frontend", "Default"})
      */
     public function getLocale($format = self::UNDERSCORE)
@@ -270,8 +279,6 @@ class Localization implements \JsonSerializable, ArrayableInterface
 
     /**
      * Sets the parent of this localization.
-     *
-     * @param Localization $parent
      */
     public function setParent(self $parent)
     {

@@ -33,7 +33,9 @@ class ContactLocale extends ApiWrapper
      * Returns the id of the product.
      *
      * @return int
+     *
      * @VirtualProperty
+     *
      * @SerializedName("id")
      */
     public function getId()
@@ -59,7 +61,9 @@ class ContactLocale extends ApiWrapper
      * Get locale.
      *
      * @return string
+     *
      * @VirtualProperty
+     *
      * @SerializedName("locale")
      */
     public function getLocale()

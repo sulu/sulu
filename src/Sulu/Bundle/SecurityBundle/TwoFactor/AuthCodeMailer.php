@@ -21,6 +21,7 @@ use Twig\Environment;
 /**
  * @internal This is an internal class which should not be used by a project. Instead create an own service based on
  *           AuthCodeMailerInterface and configure that one in scheb/2fa bundle.
+ *
  * @final
  */
 class AuthCodeMailer implements AuthCodeMailerInterface

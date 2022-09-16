@@ -300,9 +300,9 @@ class PositionController extends AbstractRestController implements ClassResource
      *
      * @param mixed[] $item
      *
-     * @throws EntityNotFoundException
-     *
      * @return Position added or updated entity
+     *
+     * @throws EntityNotFoundException
      */
     private function addAndUpdatePositions($item)
     {

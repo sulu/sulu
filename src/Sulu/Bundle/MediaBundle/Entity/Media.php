@@ -35,6 +35,7 @@ class Media implements MediaInterface
 
     /**
      * @var CollectionInterface
+     *
      * @Exclude
      */
     protected $collection;

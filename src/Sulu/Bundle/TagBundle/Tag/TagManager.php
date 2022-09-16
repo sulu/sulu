@@ -187,9 +187,9 @@ class TagManager implements TagManagerInterface
      * @param number $srcTagIds The source tags, which will be removed afterwards
      * @param number $destTagId The destination tag, which will replace the source tag
      *
-     * @throws Exception\TagNotFoundException
-     *
      * @return TagInterface The new Tag, which is valid for all given tags
+     *
+     * @throws Exception\TagNotFoundException
      */
     public function merge($srcTagIds, $destTagId)
     {

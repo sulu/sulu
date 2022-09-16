@@ -25,9 +25,9 @@ interface CustomUrlManagerInterface
      *
      * @param string $webspaceKey
      *
-     * @throws TitleAlreadyExistsException
-     *
      * @return CustomUrlDocument
+     *
+     * @throws TitleAlreadyExistsException
      */
     public function create($webspaceKey, array $data);
 
@@ -110,9 +110,9 @@ interface CustomUrlManagerInterface
      * @param string $uuid
      * @param string $webspaceKey
      *
-     * @throws RouteNotRemovableException
-     *
      * @return CustomUrlDocument
+     *
+     * @throws RouteNotRemovableException
      */
     public function deleteRoute($webspaceKey, $uuid);
 

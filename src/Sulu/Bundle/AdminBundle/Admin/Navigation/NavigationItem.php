@@ -192,8 +192,6 @@ class NavigationItem implements \Iterator
 
     /**
      * Adds a child to the navigation item.
-     *
-     * @param NavigationItem $child
      */
     public function addChild(self $child)
     {

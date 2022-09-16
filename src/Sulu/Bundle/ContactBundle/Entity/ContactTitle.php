@@ -22,12 +22,14 @@ class ContactTitle implements \JsonSerializable
 
     /**
      * @var string
+     *
      * @Groups({"fullContact", "partialContact"})
      */
     private $title;
 
     /**
      * @var int
+     *
      * @Groups({"fullContact", "partialContact"})
      */
     private $id;

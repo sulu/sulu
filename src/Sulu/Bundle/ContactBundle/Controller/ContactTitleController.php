@@ -293,9 +293,9 @@ class ContactTitleController extends AbstractRestController implements ClassReso
      *
      * @param mixed[] $item
      *
-     * @throws EntityNotFoundException
-     *
      * @return ContactTitle added or updated entity
+     *
+     * @throws EntityNotFoundException
      */
     private function addAndUpdateTitles($item)
     {

@@ -76,9 +76,9 @@ class MultipleTranslatedProperties
      *
      * @param string $key
      *
-     * @throws NoSuchPropertyException
-     *
      * @return string
+     *
+     * @throws NoSuchPropertyException
      */
     public function getName($key)
     {

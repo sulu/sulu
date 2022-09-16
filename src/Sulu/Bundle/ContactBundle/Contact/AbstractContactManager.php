@@ -964,10 +964,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * @param DoctrineEntity $contact
      * @param array $phoneData
      *
+     * @return bool True if there was no error, otherwise false
+     *
      * @throws EntityNotFoundException
      * @throws EntityIdAlreadySetException
-     *
-     * @return bool True if there was no error, otherwise false
      */
     protected function addPhone($contact, $phoneData)
     {
@@ -998,9 +998,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * @param Phone $phone The phone object to update
      * @param array $entry The entry with the new data
      *
-     * @throws EntityNotFoundException
-     *
      * @return bool True if successful, otherwise false
+     *
+     * @throws EntityNotFoundException
      */
     protected function updatePhone(Phone $phone, $entry)
     {
@@ -1100,9 +1100,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * @param array<string, string> $entry
      *
-     * @throws EntityNotFoundException
-     *
      * @return bool
+     *
+     * @throws EntityNotFoundException
      */
     protected function updateFax(Fax $fax, $entry)
     {
@@ -1202,9 +1202,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
     /**
      * @param array $entry
      *
-     * @throws EntityNotFoundException
-     *
      * @return bool
+     *
+     * @throws EntityNotFoundException
      */
     protected function updateSocialMediaProfile(SocialMediaProfile $socialMediaProfile, $entry)
     {
@@ -1231,10 +1231,10 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * @param array $addressData
      * @param bool $isMain returns if address is main address
      *
+     * @return Address
+     *
      * @throws EntityIdAlreadySetException
      * @throws EntityNotFoundException
-     *
-     * @return Address
      */
     protected function createAddress($addressData, &$isMain = null)
     {
@@ -1321,9 +1321,9 @@ abstract class AbstractContactManager implements ContactManagerInterface
      * @param mixed $entry The entry with the new data
      * @param bool $isMain returns if address should be set to main
      *
-     * @throws EntityNotFoundException
-     *
      * @return bool True if successful, otherwise false
+     *
+     * @throws EntityNotFoundException
      */
     protected function updateAddress(Address $address, $entry, &$isMain = null)
     {

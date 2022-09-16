@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @deprecated Deprecated since Sulu 2.2, use data from Sulu\Bundle\AdminBundle\Controller\AdminController::configAction
+ *
  * @RouteResource("security-contexts")
  */
 class ContextsController extends AbstractRestController implements ClassResourceInterface

@@ -23,24 +23,28 @@ class Note
 {
     /**
      * @var string
+     *
      * @Groups({"fullAccount", "fullContact"})
      */
     private $value;
 
     /**
      * @var int
+     *
      * @Groups({"fullAccount", "fullContact"})
      */
     private $id;
 
     /**
      * @var Collection<int, ContactInterface>
+     *
      * @Exclude
      */
     private $contacts;
 
     /**
      * @var Collection<int, AccountInterface>
+     *
      * @Exclude
      */
     private $accounts;

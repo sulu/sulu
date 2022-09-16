@@ -39,21 +39,27 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @var int
+     *
      * @Expose
+     *
      * @Groups({"frontend", "fullUser"})
      */
     protected $id;
 
     /**
      * @var string
+     *
      * @Expose
+     *
      * @Groups({"fullUser", "profile"})
      */
     protected $username;
 
     /**
      * @var string|null
+     *
      * @Expose
+     *
      * @Groups({"fullUser", "profile"})
      */
     protected $email;
@@ -65,7 +71,9 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @var string
+     *
      * @Expose
+     *
      * @Groups({"frontend", "fullUser", "profile"})
      */
     protected $locale;
@@ -77,6 +85,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @var string|null
+     *
      * @Expose
      */
     protected $privateKey;
@@ -88,12 +97,14 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @var bool
+     *
      * @Expose
      */
     protected $locked = false;
 
     /**
      * @var bool
+     *
      * @Expose
      */
     protected $enabled = true;
@@ -125,13 +136,16 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @var ContactInterface
+     *
      * @Expose
+     *
      * @Groups({"frontend", "fullUser"})
      */
     protected $contact;
 
     /**
      * @var Collection|UserRole[]
+     *
      * @Expose
      */
     protected $userRoles;
@@ -140,6 +154,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
      * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
      *
      * @var Collection|UserGroup[]
+     *
      * @Expose
      */
     protected $userGroups;
@@ -561,6 +576,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @VirtualProperty
+     *
      * @Groups({"frontend"})
      */
     public function getRoles(): array
@@ -653,6 +669,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @VirtualProperty
+     *
      * @Groups({"frontend"})
      */
     public function getSettings()
@@ -691,6 +708,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @VirtualProperty
+     *
      * @SerializedName("fullName")
      * @Groups({"frontend", "fullUser"})
      *
@@ -704,6 +722,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @VirtualProperty
+     *
      * @Groups({"profile"})
      *
      * @return string
@@ -729,6 +748,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @VirtualProperty
+     *
      * @Groups({"profile"})
      *
      * @return string

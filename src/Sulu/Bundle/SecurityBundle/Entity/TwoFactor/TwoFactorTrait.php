@@ -31,6 +31,7 @@ trait TwoFactorTrait
      * @var UserTwoFactor|null
      *
      * @Expose
+     *
      * @Groups({"profile"})
      */
     protected $twoFactor = null;

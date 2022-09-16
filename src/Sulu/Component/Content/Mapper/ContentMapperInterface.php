@@ -197,10 +197,10 @@ interface ContentMapperInterface
      * @param string $webspaceKey
      * @param string $languageCode
      *
+     * @return StructureInterface
+     *
      * @throws InvalidOrderPositionException
      *                                       thrown if position is out of range
-     *
-     * @return StructureInterface
      */
     public function orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);
 

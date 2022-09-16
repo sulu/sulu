@@ -39,9 +39,9 @@ class PathSegmentRegistry
      *
      * @param string $name Name of path segment
      *
-     * @throws \InvalidArgumentException
-     *
      * @return string The path segment
+     *
+     * @throws \InvalidArgumentException
      */
     public function getPathSegment($name)
     {

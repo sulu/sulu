@@ -35,6 +35,7 @@ class ContactAddress
 
     /**
      * @var ContactInterface
+     *
      * @Exclude
      */
     private $contact;

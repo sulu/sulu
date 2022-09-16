@@ -18,12 +18,14 @@ class PropertyType
 {
     /**
      * @var string
+     *
      * @Type("string")
      */
     private $name;
 
     /**
      * @var Metadata
+     *
      * @Type("Sulu\Component\Content\Compat\Metadata")
      */
     private $metadata;
@@ -32,6 +34,7 @@ class PropertyType
      * properties managed by this block.
      *
      * @var PropertyInterface[]
+     *
      * @Type("array<Sulu\Component\Content\Compat\Property>")
      */
     private $childProperties = [];
@@ -96,9 +99,9 @@ class PropertyType
      *
      * @param string $name of property
      *
-     * @throws NoSuchPropertyException
-     *
      * @return PropertyInterface
+     *
+     * @throws NoSuchPropertyException
      */
     public function getChild($name)
     {

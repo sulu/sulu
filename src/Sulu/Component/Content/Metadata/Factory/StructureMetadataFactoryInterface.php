@@ -21,10 +21,10 @@ interface StructureMetadataFactoryInterface
      * @param mixed $type The primary system type, e.g. page, snippet
      * @param mixed $structureType The secondary user type
      *
+     * @return StructureMetadata|null
+     *
      * @throws Exception\StructureTypeNotFoundException If the structure was not found
      * @throws Exception\DocumentTypeNotFoundException If the document type was not mapped
-     *
-     * @return StructureMetadata|null
      */
     public function getStructureMetadata($type, $structureType);
 

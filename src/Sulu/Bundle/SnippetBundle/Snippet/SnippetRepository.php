@@ -113,9 +113,9 @@ class SnippetRepository
      * @param string $sortBy
      * @param string $sortOrder
      *
-     * @throws \InvalidArgumentException
-     *
      * @return SnippetDocument[]
+     *
+     * @throws \InvalidArgumentException
      */
     public function getSnippets(
         $locale,
@@ -145,9 +145,9 @@ class SnippetRepository
      * @param string $sortBy
      * @param string $sortOrder
      *
-     * @throws \InvalidArgumentException
-     *
      * @return SnippetBridge[]
+     *
+     * @throws \InvalidArgumentException
      */
     public function getSnippetsAmount(
         $locale,

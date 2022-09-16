@@ -37,6 +37,7 @@ class MediaType
 
     /**
      * @var DoctrineCollection<int, MediaInterface>
+     *
      * @Exclude
      */
     private $media;

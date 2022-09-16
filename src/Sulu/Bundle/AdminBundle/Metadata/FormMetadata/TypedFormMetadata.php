@@ -18,6 +18,7 @@ class TypedFormMetadata extends AbstractMetadata
 {
     /**
      * @var FormMetadata[]
+     *
      * @SerializedName("types")
      */
     private $forms = [];
