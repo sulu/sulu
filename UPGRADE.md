@@ -330,6 +330,21 @@ framework:
 It should also be considered to remove the **SwiftMailer** and **SwiftMailerBundle**
 from your application and replace it with [**Symfony Mailer**](https://symfony.com/doc/6.1/mailer.html).
 
+## 2.4.4
+
+### Add indexes to activities table
+
+Improve performance of the `Activities` table with additional indexes for the database:
+
+```sql
+CREATE INDEX timestamp_idx ON ac_activities (timestamp);
+CREATE INDEX resourceKey_idx ON ac_activities (resourceKey);
+CREATE INDEX resourceId_idx ON ac_activities (resourceId);
+CREATE INDEX resourceSecurityContext_idx ON ac_activities (resourceSecurityContext);
+CREATE INDEX resourceSecurityObjectType_idx ON ac_activities (resourceSecurityObjectType);
+CREATE INDEX resourceSecurityObjectId_idx ON ac_activities (resourceSecurityObjectId);
+```
+
 ## 2.4.3
 
 ### Add DELETE SET NULL to account parent relation

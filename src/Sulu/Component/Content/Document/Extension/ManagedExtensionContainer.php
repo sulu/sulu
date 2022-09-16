@@ -93,6 +93,7 @@ class ManagedExtensionContainer extends ExtensionContainer
      *
      * @param string $extensionName
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($extensionName)
     {
         if (isset($this->data[$extensionName])) {

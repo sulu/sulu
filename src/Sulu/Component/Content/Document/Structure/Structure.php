@@ -70,6 +70,7 @@ class Structure implements StructureInterface
         return isset($this->properties[$offset]);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->getProperty($offset);
