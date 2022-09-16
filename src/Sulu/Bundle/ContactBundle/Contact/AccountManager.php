@@ -89,9 +89,9 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * @param AddressEntity $address The address to be added
      * @param bool $isMain Defines if the address is the main Address of the contact
      *
-     * @throws \Exception
-     *
      * @return AccountAddressEntity
+     *
+     * @throws \Exception
      */
     public function addAddress($account, AddressEntity $address, $isMain = false)
     {
@@ -119,9 +119,9 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * @param AccountInterface $account
      * @param AccountAddressEntity $accountAddress
      *
-     * @throws \Exception
-     *
      * @return mixed|void
+     *
+     * @throws \Exception
      */
     public function removeAddressRelation($account, $accountAddress)
     {
@@ -215,9 +215,9 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * @param string $locale
      * @param array $includes
      *
-     * @throws EntityNotFoundException
-     *
      * @return AccountApi
+     *
+     * @throws EntityNotFoundException
      */
     public function getByIdAndInclude($id, $locale, $includes)
     {

@@ -75,9 +75,9 @@ interface TagManagerInterface
      * @param array $srcTagIds The source tags, which will be removed afterwards
      * @param number $destTagId The destination tag, which will replace the source tag
      *
-     * @throws Exception\TagNotFoundException
-     *
      * @return TagInterface The new Tag, which is valid for both given tags
+     *
+     * @throws Exception\TagNotFoundException
      */
     public function merge($srcTagIds, $destTagId);
 

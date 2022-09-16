@@ -291,9 +291,9 @@ class AccountController extends AbstractRestController implements ClassResourceI
      * @param int $accountId
      * @param int $contactId
      *
-     * @throws \Exception
-     *
      * @return Response
+     *
+     * @throws \Exception
      */
     public function putContactsAction($accountId, $contactId, Request $request)
     {
@@ -375,9 +375,9 @@ class AccountController extends AbstractRestController implements ClassResourceI
      *
      * @param int $accountId
      *
-     * @throws \Exception
-     *
      * @return Response
+     *
+     * @throws \Exception
      */
     public function deleteContactsAction($accountId, $id)
     {
@@ -544,9 +544,9 @@ class AccountController extends AbstractRestController implements ClassResourceI
     /**
      * Maps data from request to a new account.
      *
-     * @throws EntityNotFoundException
-     *
      * @return AccountInterface
+     *
+     * @throws EntityNotFoundException
      */
     protected function doPost(Request $request)
     {

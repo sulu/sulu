@@ -35,6 +35,7 @@ class Category extends ApiEntityWrapper
      * Returns the id of the category.
      *
      * @VirtualProperty
+     *
      * @SerializedName("id")
      * @Groups({"fullCategory","partialCategory"})
      *
@@ -49,6 +50,7 @@ class Category extends ApiEntityWrapper
      * Returns the key of the category.
      *
      * @VirtualProperty
+     *
      * @SerializedName("key")
      * @Groups({"fullCategory","partialCategory"})
      *
@@ -63,6 +65,7 @@ class Category extends ApiEntityWrapper
      * Returns the default locale of the category.
      *
      * @VirtualProperty
+     *
      * @SerializedName("defaultLocale")
      * @Groups({"fullCategory","partialCategory"})
      *
@@ -77,6 +80,7 @@ class Category extends ApiEntityWrapper
      * Returns the name of the Category dependent on the locale.
      *
      * @VirtualProperty
+     *
      * @SerializedName("name")
      * @Groups({"fullCategory","partialCategory"})
      *
@@ -95,6 +99,7 @@ class Category extends ApiEntityWrapper
      * Returns the description of the Category dependent on the locale.
      *
      * @VirtualProperty
+     *
      * @SerializedName("description")
      * @Groups({"fullCategory","partialCategory"})
      *
@@ -113,6 +118,7 @@ class Category extends ApiEntityWrapper
      * Returns the medias of the Category dependent on the locale.
      *
      * @VirtualProperty
+     *
      * @SerializedName("medias")
      * @Groups({"fullCategory","partialCategory"})
      *
@@ -155,6 +161,7 @@ class Category extends ApiEntityWrapper
      * Returns the locale of the Category dependent on the existing translations and default locale.
      *
      * @VirtualProperty
+     *
      * @SerializedName("locale")
      * @Groups({"fullCategory","partialCategory"})
      *
@@ -173,6 +180,7 @@ class Category extends ApiEntityWrapper
      * Returns the locale of the Category dependent on the existing translations and default locale.
      *
      * @VirtualProperty
+     *
      * @SerializedName("ghostLocale")
      * @Groups({"fullCategory","partialCategory"})
      *
@@ -191,6 +199,7 @@ class Category extends ApiEntityWrapper
      * Returns the name of the Category dependent on the locale.
      *
      * @VirtualProperty
+     *
      * @SerializedName("meta")
      * @Groups({"fullCategory","partialCategory"})
      *
@@ -223,6 +232,7 @@ class Category extends ApiEntityWrapper
      * Returns the creator of the category.
      *
      * @VirtualProperty
+     *
      * @SerializedName("creator")
      * @Groups({"fullCategory"})
      *
@@ -243,6 +253,7 @@ class Category extends ApiEntityWrapper
      * Returns the changer of the category.
      *
      * @VirtualProperty
+     *
      * @SerializedName("changer")
      * @Groups({"fullCategory"})
      *
@@ -263,6 +274,7 @@ class Category extends ApiEntityWrapper
      * Returns the created date for the category.
      *
      * @VirtualProperty
+     *
      * @SerializedName("created")
      * @Groups({"fullCategory"})
      *
@@ -277,6 +289,7 @@ class Category extends ApiEntityWrapper
      * Returns the created date for the category.
      *
      * @VirtualProperty
+     *
      * @SerializedName("changed")
      * @Groups({"fullCategory"})
      *
@@ -291,6 +304,7 @@ class Category extends ApiEntityWrapper
      * Returns the children of a category.
      *
      * @VirtualProperty
+     *
      * @SerializedName("children")
      * @Groups({"fullCategory"})
      *
@@ -378,6 +392,7 @@ class Category extends ApiEntityWrapper
      * This method is used to serialize the parent-id.
      *
      * @VirtualProperty
+     *
      * @Groups({"fullCategory","partialCategory"})
      *
      * @return null|Category

@@ -28,6 +28,7 @@ class Email extends ApiWrapper
 
     /**
      * @VirtualProperty
+     *
      * @SerializedName("id")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -45,6 +46,7 @@ class Email extends ApiWrapper
 
     /**
      * @VirtualProperty
+     *
      * @SerializedName("email")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -62,6 +64,7 @@ class Email extends ApiWrapper
 
     /**
      * @VirtualProperty
+     *
      * @SerializedName("emailType")
      * @Groups({"fullContact", "fullAccount"})
      */

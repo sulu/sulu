@@ -28,11 +28,11 @@ interface FormatOptionsManagerInterface
      * @param int $mediaId
      * @param string $formatKey
      *
+     * @return array
+     *
      * @throws MediaNotFoundException
      * @throws FormatNotFoundException
      * @throws FileVersionNotFoundException
-     *
-     * @return array
      */
     public function get($mediaId, $formatKey);
 
@@ -52,12 +52,12 @@ interface FormatOptionsManagerInterface
      * @param int $mediaId
      * @param string $formatKey
      *
+     * @return FormatOptions
+     *
      * @throws MediaNotFoundException
      * @throws FormatNotFoundException
      * @throws FileVersionNotFoundException
      * @throws FormatOptionsMissingParameterException
-     *
-     * @return FormatOptions
      */
     public function save($mediaId, $formatKey, array $data);
 

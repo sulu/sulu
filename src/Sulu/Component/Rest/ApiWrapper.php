@@ -22,6 +22,7 @@ class ApiWrapper
      * the entity which is wrapped by this class.
      *
      * @var object
+     *
      * @Exclude
      */
     protected $entity;
@@ -30,6 +31,7 @@ class ApiWrapper
      * the locale in which the wrapped entity should be expressed.
      *
      * @var string
+     *
      * @Exclude
      */
     protected $locale;

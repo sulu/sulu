@@ -28,6 +28,7 @@ class Phone extends ApiWrapper
 
     /**
      * @VirtualProperty
+     *
      * @SerializedName("id")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -45,6 +46,7 @@ class Phone extends ApiWrapper
 
     /**
      * @VirtualProperty
+     *
      * @SerializedName("phone")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -62,6 +64,7 @@ class Phone extends ApiWrapper
 
     /**
      * @VirtualProperty
+     *
      * @SerializedName("phoneType")
      * @Groups({"fullContact", "fullAccount"})
      */

@@ -24,6 +24,7 @@ class SectionProperty extends Property implements SectionPropertyInterface
      * properties managed by this block.
      *
      * @var PropertyInterface[]
+     *
      * @Type("array<Sulu\Component\Content\Compat\Property>")
      */
     private $childProperties = [];

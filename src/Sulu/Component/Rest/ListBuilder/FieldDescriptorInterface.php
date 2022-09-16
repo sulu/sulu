@@ -94,8 +94,6 @@ interface FieldDescriptorInterface
     /**
      * Compares current instance of FieldDescriptor with another instance.
      *
-     * @param FieldDescriptorInterface $other
-     *
      * @return bool
      */
     public function compare(self $other);

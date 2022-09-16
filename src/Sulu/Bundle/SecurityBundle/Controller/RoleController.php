@@ -205,10 +205,10 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     /**
      * Creates a new role with the given data.
      *
+     * @return Response
+     *
      * @throws EntityIdAlreadySetException
      * @throws EntityNotFoundException
-     *
-     * @return Response
      */
     public function postAction(Request $request)
     {

@@ -191,8 +191,6 @@ abstract class ItemMetadata
 
     /**
      * Adds a child item.
-     *
-     * @param ItemMetadata $child
      */
     public function addChild(self $child)
     {
@@ -293,9 +291,9 @@ abstract class ItemMetadata
      *
      * @param string $tagName
      *
-     * @throws \InvalidArgumentException
-     *
      * @return array
+     *
+     * @throws \InvalidArgumentException
      */
     public function getTag($tagName)
     {

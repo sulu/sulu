@@ -17,12 +17,14 @@ class ToolbarAction
 {
     /**
      * @var string
+     *
      * @Groups({"frontend"})
      */
     private $type;
 
     /**
      * @var array
+     *
      * @Groups({"frontend"})
      */
     private $options;

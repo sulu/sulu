@@ -23,30 +23,35 @@ class Url
 {
     /**
      * @var string
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $url;
 
     /**
      * @var int
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $id;
 
     /**
      * @var UrlType
+     *
      * @Groups({"fullAccount", "fullContact"})
      */
     private $urlType;
 
     /**
      * @var Collection<int, AccountInterface>
+     *
      * @Exclude
      */
     private $accounts;
 
     /**
      * @var Collection<int, ContactInterface>
+     *
      * @Exclude
      */
     private $contacts;

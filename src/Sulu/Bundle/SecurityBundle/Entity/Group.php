@@ -208,8 +208,6 @@ class Group extends ApiEntity implements AuditableInterface
     /**
      * Add children.
      *
-     * @param Group $children
-     *
      * @return Group
      */
     public function addChildren(self $children)
@@ -221,8 +219,6 @@ class Group extends ApiEntity implements AuditableInterface
 
     /**
      * Remove children.
-     *
-     * @param Group $children
      *
      * @return void
      */
@@ -275,8 +271,6 @@ class Group extends ApiEntity implements AuditableInterface
 
     /**
      * Set parent.
-     *
-     * @param Group|null $parent
      *
      * @return Group
      */

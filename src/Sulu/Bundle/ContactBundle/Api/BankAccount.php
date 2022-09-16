@@ -34,7 +34,9 @@ class BankAccount extends ApiWrapper
      * Returns the id of the product.
      *
      * @return int
+     *
      * @VirtualProperty
+     *
      * @SerializedName("id")
      * @Groups({"fullAccount","fullContact"})
      */
@@ -61,7 +63,9 @@ class BankAccount extends ApiWrapper
      * Get bic.
      *
      * @return string
+     *
      * @VirtualProperty
+     *
      * @SerializedName("bic")
      * @Groups({"fullAccount","fullContact"})
      */
@@ -88,7 +92,9 @@ class BankAccount extends ApiWrapper
      * Get iban.
      *
      * @return string
+     *
      * @VirtualProperty
+     *
      * @SerializedName("iban")
      * @Groups({"fullAccount","fullContact"})
      */
@@ -115,7 +121,9 @@ class BankAccount extends ApiWrapper
      * Get public.
      *
      * @return bool
+     *
      * @VirtualProperty
+     *
      * @SerializedName("public")
      * @Groups({"fullAccount","fullContact"})
      */
@@ -142,7 +150,9 @@ class BankAccount extends ApiWrapper
      * Get bankName.
      *
      * @return string
+     *
      * @VirtualProperty
+     *
      * @SerializedName("bankName")
      * @Groups({"fullAccount","fullContact"})
      */

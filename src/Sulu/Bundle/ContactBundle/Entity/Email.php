@@ -23,30 +23,35 @@ class Email
 {
     /**
      * @var string
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $email;
 
     /**
      * @var int
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $id;
 
     /**
      * @var EmailType
+     *
      * @Groups({"fullAccount", "fullContact"})
      */
     private $emailType;
 
     /**
      * @var Collection<int, ContactInterface>
+     *
      * @Exclude
      */
     private $contacts;
 
     /**
      * @var Collection<int, AccountInterface>
+     *
      * @Exclude
      */
     private $accounts;

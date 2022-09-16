@@ -53,6 +53,7 @@ abstract class Structure implements StructureInterface
      * webspaceKey of node.
      *
      * @var string
+     *
      * @Type("string")
      */
     private $webspaceKey;
@@ -61,6 +62,7 @@ abstract class Structure implements StructureInterface
      * languageCode of node.
      *
      * @var string
+     *
      * @Type("string")
      */
     private $languageCode;
@@ -69,6 +71,7 @@ abstract class Structure implements StructureInterface
      * unique key of template.
      *
      * @var string
+     *
      * @Type("string")
      */
     private $key;
@@ -77,6 +80,7 @@ abstract class Structure implements StructureInterface
      * array of properties.
      *
      * @var array
+     *
      * @Type("array<string,Sulu\Component\Content\Compat\Property>")
      */
     private $properties = [];
@@ -85,6 +89,7 @@ abstract class Structure implements StructureInterface
      * has structure sub structures.
      *
      * @var bool
+     *
      * @Type("boolean")
      */
     private $hasChildren = false;
@@ -93,6 +98,7 @@ abstract class Structure implements StructureInterface
      * children of node.
      *
      * @var StructureInterface[]
+     *
      * @Exclude
      */
     private $children = null;
@@ -101,6 +107,7 @@ abstract class Structure implements StructureInterface
      * uuid of node in CR.
      *
      * @var string
+     *
      * @Type("string")
      */
     private $uuid;
@@ -109,6 +116,7 @@ abstract class Structure implements StructureInterface
      * user id of creator.
      *
      * @var int
+     *
      * @Type("integer")
      */
     private $creator;
@@ -117,6 +125,7 @@ abstract class Structure implements StructureInterface
      * user id of changer.
      *
      * @var int
+     *
      * @Type("integer")
      */
     private $changer;
@@ -125,6 +134,7 @@ abstract class Structure implements StructureInterface
      * datetime of creation.
      *
      * @var \DateTime
+     *
      * @Type("DateTime")
      */
     private $created;
@@ -133,6 +143,7 @@ abstract class Structure implements StructureInterface
      * datetime of last changed.
      *
      * @var \DateTime
+     *
      * @Type("DateTime")
      */
     private $changed;
@@ -141,6 +152,7 @@ abstract class Structure implements StructureInterface
      * first published.
      *
      * @var \DateTime
+     *
      * @Type("DateTime")
      */
     private $published;
@@ -149,18 +161,21 @@ abstract class Structure implements StructureInterface
      * structure translation is valid.
      *
      * @var bool
+     *
      * @Type("boolean")
      */
     private $hasTranslation;
 
     /**
      * @var StructureType
+     *
      * @Type("Sulu\Component\Content\Compat\StructureType")
      */
     private $type;
 
     /**
      * @var array
+     *
      * @Type("array")
      */
     private $tags = [];
@@ -169,6 +184,7 @@ abstract class Structure implements StructureInterface
      * type of node.
      *
      * @var int
+     *
      * @Type("integer")
      */
     private $nodeType;
@@ -177,6 +193,7 @@ abstract class Structure implements StructureInterface
      * indicates internal structure.
      *
      * @var bool
+     *
      * @Type("boolean")
      */
     private $internal;
@@ -185,6 +202,7 @@ abstract class Structure implements StructureInterface
      * content node is a shadow for another content.
      *
      * @var bool
+     *
      * @Type("boolean")
      */
     private $isShadow;
@@ -194,6 +212,7 @@ abstract class Structure implements StructureInterface
      * this language.
      *
      * @var string
+     *
      * @Type("string")
      */
     private $shadowBaseLanguage = '';
@@ -203,24 +222,28 @@ abstract class Structure implements StructureInterface
      * not stored in the phpcr node, it is determined by the content mapper.
      *
      * @var array
+     *
      * @Type("array")
      */
     private $shadowLocales = [];
 
     /**
      * @var array
+     *
      * @Type("array")
      */
     private $contentLocales = [];
 
     /**
      * @var Metadata
+     *
      * @Type("Sulu\Component\Content\Compat\Metadata")
      */
     private $metaData;
 
     /**
      * @var StructureTag[]
+     *
      * @Type("array")
      */
     private $structureTags;
@@ -229,6 +252,7 @@ abstract class Structure implements StructureInterface
      * path of node.
      *
      * @var string
+     *
      * @Type("string")
      */
     private $path;

@@ -17,42 +17,49 @@ class TeaserConfiguration
 {
     /**
      * @var string
+     *
      * @Groups({"frontend"})
      */
     private $title;
 
     /**
      * @var string
+     *
      * @Groups({"frontend"})
      */
     private $resourceKey;
 
     /**
      * @var string
+     *
      * @Groups({"frontend"})
      */
     private $listAdapter;
 
     /**
      * @var string[]
+     *
      * @Groups({"frontend"})
      */
     private $displayProperties;
 
     /**
      * @var string
+     *
      * @Groups({"frontend"})
      */
     private $overlayTitle;
 
     /**
      * @var string|null
+     *
      * @Groups({"frontend"})
      */
     private $view;
 
     /**
      * @var array<string, string>|null
+     *
      * @Groups({"frontend"})
      */
     private $resultToView;

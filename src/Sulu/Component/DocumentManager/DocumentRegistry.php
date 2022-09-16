@@ -150,9 +150,9 @@ class DocumentRegistry
      *
      * @param object $document
      *
-     * @throws \RuntimeException If the node is not managed
-     *
      * @return NodeInterface
+     *
+     * @throws \RuntimeException If the node is not managed
      */
     public function getNodeForDocument($document)
     {
