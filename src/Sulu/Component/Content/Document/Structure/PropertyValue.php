@@ -56,6 +56,7 @@ class PropertyValue implements \ArrayAccess
         return \is_array($this->value) && isset($this->value[$offset]);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (!\is_array($this->value)) {

@@ -100,6 +100,7 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess, \JsonSeria
         return $this->exists($offset);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);

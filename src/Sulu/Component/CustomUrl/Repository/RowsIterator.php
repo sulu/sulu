@@ -59,6 +59,7 @@ class RowsIterator extends \IteratorIterator
         }
     }
 
+    #[\ReturnTypeWillChange]
     public function current()
     {
         $row = parent::current();

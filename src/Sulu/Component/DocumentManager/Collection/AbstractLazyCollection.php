@@ -29,8 +29,10 @@ abstract class AbstractLazyCollection implements \Iterator, \Countable
         return $this->documents->count();
     }
 
+    #[\ReturnTypeWillChange]
     abstract public function current();
 
+    #[\ReturnTypeWillChange]
     public function key()
     {
         $this->initialize();
