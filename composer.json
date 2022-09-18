@@ -150,7 +150,7 @@
         "jackalope/jackalope": "< 1.3.4",
         "jackalope/jackalope-doctrine-dbal": "< 1.3.0",
         "jackalope/jackalope-jackrabbit": "< 1.3.0",
-        "jms/serializer-bundle": "3.9.0",
+        "jms/serializer-bundle": "3.9.0 || 4.1.0",
         "php-http/discovery": "< 1.8.0",
         "phpcr/phpcr-utils": "1.2.0 - 1.2.10 || 1.3.0 - 1.3.2 || 1.6.0",
         "phpdocumentor/reflection-docblock": "5.0.0",
