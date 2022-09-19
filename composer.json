@@ -159,7 +159,7 @@
         "jackalope/jackalope": "< 1.4.5",
         "jackalope/jackalope-doctrine-dbal": "< 1.6.0",
         "jackalope/jackalope-jackrabbit": "< 1.4.4",
-        "jms/serializer-bundle": "3.9.0",
+        "jms/serializer-bundle": "3.9.0 || 4.1.0",
         "php-http/discovery": "< 1.8.0",
         "rokka/imagine-vips": "<0.9.2",
         "scheb/2fa-backup-code": "< 6.0, >= 7.0",
