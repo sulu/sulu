@@ -11,7 +11,7 @@
 
 namespace Sulu\Component\Content\Compat;
 
-interface CacheLifetimeBehaviourInterface
+interface CacheLifetimeStructureInterface
 {
     /**
      * cacheLifeTime of template definition.

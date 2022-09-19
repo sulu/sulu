@@ -14,7 +14,7 @@ namespace Sulu\Component\Content\Compat;
 /**
  * Structure for template.
  */
-interface PageInterface extends StructureInterface, CacheLifetimeBehaviourInterface
+interface PageInterface extends StructureInterface, CacheLifetimeStructureInterface
 {
     /**
      * twig template of template definition.
