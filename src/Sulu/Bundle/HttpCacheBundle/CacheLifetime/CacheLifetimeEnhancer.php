@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\HttpCacheBundle\CacheLifetime;
 
 use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
-use Sulu\Component\Content\Compat\CacheLifetimeStructureInterface;
+use Sulu\Component\Content\Compat\RoutableStructureInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -52,7 +52,7 @@ class CacheLifetimeEnhancer implements CacheLifetimeEnhancerInterface
 
     public function enhance(Response $response, StructureInterface $structure)
     {
-        if (!$structure instanceof CacheLifetimeStructureInterface) {
+        if (!$structure instanceof RoutableStructureInterface) {
             return;
         }
 

@@ -11,8 +11,22 @@
 
 namespace Sulu\Component\Content\Compat;
 
-interface CacheLifetimeStructureInterface
+interface RoutableStructureInterface
 {
+    /**
+     * twig template of template definition.
+     *
+     * @return string
+     */
+    public function getView();
+
+    /**
+     * controller which renders the twig template.
+     *
+     * @return string
+     */
+    public function getController();
+
     /**
      * cacheLifeTime of template definition.
      *
