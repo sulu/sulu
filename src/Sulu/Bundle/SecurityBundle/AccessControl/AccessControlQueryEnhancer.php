@@ -115,12 +115,12 @@ class AccessControlQueryEnhancer
             'WITH',
             $accessClassCondition . ' AND ' . $this->getEntityIdCondition($entityClass, 'entity', $entityIdField)
         );
-        $subQueryBuilder->leftJoin('accessControl.role', 'role', 'WITH', 'role.system = :system');
+        $subQueryBuilder->leftJoin('accessControl.role', 'role');
         $subQueryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) <> :permission AND accessControl.permissions IS NOT NULL'
         );
 
-        $subQueryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL');
+        $subQueryBuilder->andWhere('role.id IN(:roleIds) AND role.system = :system');
 
         $subQueryBuilder->setParameter('roleIds', $this->getUserRoleIds($user));
         $subQueryBuilder->setParameter('system', $this->systemStore->getSystem());
