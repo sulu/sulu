@@ -122,7 +122,6 @@ class AccessControlQueryEnhancer
         $subQueryBuilder->andWhere('role.id IN(:roleIds)');
 
         $subQueryBuilder->setParameter('roleIds', $this->getUserRoleIds($user));
-        $subQueryBuilder->setParameter('system', $this->systemStore->getSystem());
         $subQueryBuilder->setParameter('permission', $permission);
 
         $result = $subQueryBuilder->getQuery()->getScalarResult();

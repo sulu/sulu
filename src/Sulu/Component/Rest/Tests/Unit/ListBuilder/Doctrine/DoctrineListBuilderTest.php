@@ -1204,7 +1204,6 @@ class DoctrineListBuilderTest extends TestCase
         $accessQueryBuilder->andWhere('role.id IN(:roleIds)')->shouldBeCalled();
 
         $accessQueryBuilder->setParameter('roleIds', [1])->shouldBeCalled();
-        $accessQueryBuilder->setParameter('system', 'Sulu')->shouldBeCalled();
         $accessQueryBuilder->setParameter('permission', 64)->shouldBeCalled();
 
         $accessQuery = $this->prophesize(AbstractQuery::class);
@@ -1266,7 +1265,6 @@ class DoctrineListBuilderTest extends TestCase
         $accessQueryBuilder->andWhere('role.id IN(:roleIds)')->shouldBeCalled();
 
         $accessQueryBuilder->setParameter('roleIds', [1])->shouldBeCalled();
-        $accessQueryBuilder->setParameter('system', 'Sulu')->shouldBeCalled();
         $accessQueryBuilder->setParameter('permission', 64)->shouldBeCalled();
 
         $accessQuery = $this->prophesize(AbstractQuery::class);
@@ -1335,7 +1333,6 @@ class DoctrineListBuilderTest extends TestCase
         $accessQueryBuilder->andWhere('role.id IN(:roleIds)')->shouldBeCalled();
 
         $accessQueryBuilder->setParameter('roleIds', [1])->shouldBeCalled();
-        $accessQueryBuilder->setParameter('system', 'Sulu')->shouldBeCalled();
         $accessQueryBuilder->setParameter('permission', 64)->shouldBeCalled();
 
         $accessQuery = $this->prophesize(AbstractQuery::class);
@@ -1405,7 +1402,6 @@ class DoctrineListBuilderTest extends TestCase
         $accessQueryBuilder->andWhere('role.id IN(:roleIds)')->shouldBeCalled();
 
         $accessQueryBuilder->setParameter('roleIds', [1])->shouldBeCalled();
-        $accessQueryBuilder->setParameter('system', 'Sulu')->shouldBeCalled();
         $accessQueryBuilder->setParameter('permission', 64)->shouldBeCalled();
 
         $accessQuery = $this->prophesize(AbstractQuery::class);
