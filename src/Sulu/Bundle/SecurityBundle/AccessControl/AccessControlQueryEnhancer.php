@@ -119,7 +119,7 @@ class AccessControlQueryEnhancer
             'BIT_AND(accessControl.permissions, :permission) <> :permission AND accessControl.permissions IS NOT NULL'
         );
 
-        $subQueryBuilder->andWhere('role.id IN(:roleIds) AND role.system = :system');
+        $subQueryBuilder->andWhere('role.id IN(:roleIds)');
 
         $subQueryBuilder->setParameter('roleIds', $this->getUserRoleIds($user));
         $subQueryBuilder->setParameter('system', $this->systemStore->getSystem());

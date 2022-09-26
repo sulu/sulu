@@ -610,7 +610,7 @@ class MediaRepositoryTest extends SuluTestCase
         $this->assertEquals($media4->getId(), $result[1]->getId());
     }
 
-    public function testFindMediaWithRestricedViewPermissionsInOtherSystem()
+    public function testFindMediaWithRestrictedViewPermissionsInOtherSystem(): void
     {
         // regression test for https://github.com/sulu/sulu/discussions/6804
 
