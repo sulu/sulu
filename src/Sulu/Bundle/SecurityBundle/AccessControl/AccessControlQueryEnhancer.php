@@ -16,7 +16,6 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\Mapping\MappingException;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
-use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 class AccessControlQueryEnhancer
@@ -159,9 +158,15 @@ class AccessControlQueryEnhancer
     private function getUserRoleIds(?UserInterface $user): array
     {
         if ($user) {
-            return \array_map(function(RoleInterface $role) {
-                return $role->getId();
-            }, $user->getRoleObjects());
+            $roleIds = [];
+
+            foreach ($user->getRoleObjects() as $role) {
+                if ($role->getSystem() === $this->systemStore->getSystem()) {
+                    $roleIds[] = $role->getId();
+                }
+            }
+
+            return $roleIds;
         }
 
         $anonymousRole = $this->systemStore->getAnonymousRole();
