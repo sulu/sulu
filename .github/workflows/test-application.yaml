@@ -206,7 +206,7 @@ jobs:
               if: ${{ matrix.phpcr-transport == 'jackrabbit' }}
               run: |
                   composer remove jackalope/jackalope-doctrine-dbal --dev --no-interaction --no-update
-                  composer require jackalope/jackalope-jackrabbit:^1.4  --no-interaction --no-update
+                  composer require jackalope/jackalope-jackrabbit:"^2.0@dev"  --no-interaction --no-update
 
             - name: Install additional lowest dependencies
               if: ${{ matrix.dependency-versions == 'lowest' }}

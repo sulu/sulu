@@ -12,7 +12,6 @@
 namespace Sulu\Component\Content\Tests\Unit\Mapper\Translation;
 
 use Jackalope\Node;
-use Jackalope\Property;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
@@ -83,13 +82,13 @@ class SuluNodeHelperTest extends TestCase
         $this->node = $this->getMockBuilder(Node::class)->disableOriginalConstructor()->getMock();
         $this->structureMetadataFactory = $this->getMockBuilder(StructureMetadataFactoryInterface::class)
             ->disableOriginalConstructor()->getMock();
-        $this->property1 = $this->getMockBuilder(Property::class)->disableOriginalConstructor()->getMock();
-        $this->property2 = $this->getMockBuilder(Property::class)->disableOriginalConstructor()->getMock();
-        $this->property3 = $this->getMockBuilder(Property::class)->disableOriginalConstructor()->getMock();
-        $this->property4 = $this->getMockBuilder(Property::class)->disableOriginalConstructor()->getMock();
-        $this->property5 = $this->getMockBuilder(Property::class)->disableOriginalConstructor()->getMock();
-        $this->property6 = $this->getMockBuilder(Property::class)->disableOriginalConstructor()->getMock();
-        $this->property7 = $this->getMockBuilder(Property::class)->disableOriginalConstructor()->getMock();
+        $this->property1 = $this->getMockBuilder(PropertyInterface::class)->disableOriginalConstructor()->getMock();
+        $this->property2 = $this->getMockBuilder(PropertyInterface::class)->disableOriginalConstructor()->getMock();
+        $this->property3 = $this->getMockBuilder(PropertyInterface::class)->disableOriginalConstructor()->getMock();
+        $this->property4 = $this->getMockBuilder(PropertyInterface::class)->disableOriginalConstructor()->getMock();
+        $this->property5 = $this->getMockBuilder(PropertyInterface::class)->disableOriginalConstructor()->getMock();
+        $this->property6 = $this->getMockBuilder(PropertyInterface::class)->disableOriginalConstructor()->getMock();
+        $this->property7 = $this->getMockBuilder(PropertyInterface::class)->disableOriginalConstructor()->getMock();
 
         $propertyIndex = 1;
         foreach ([

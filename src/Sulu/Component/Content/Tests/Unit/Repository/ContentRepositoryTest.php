@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Repository;
 
-use Jackalope\Query\Row;
 use PHPCR\Query\QOM\ChildNodeInterface;
 use PHPCR\Query\QOM\ColumnInterface;
 use PHPCR\Query\QOM\ComparisonInterface;
@@ -23,6 +22,7 @@ use PHPCR\Query\QOM\StaticOperandInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryManagerInterface;
 use PHPCR\Query\QueryResultInterface;
+use PHPCR\Query\RowInterface;
 use PHPCR\SessionInterface;
 use PHPCR\WorkspaceInterface;
 use PHPUnit\Framework\TestCase;
@@ -176,7 +176,7 @@ class ContentRepositoryTest extends TestCase
         $queryResult = $this->prophesize(QueryResultInterface::class);
         $this->query->execute()->willReturn($queryResult->reveal());
 
-        $row = $this->prophesize(Row::class);
+        $row = $this->prophesize(RowInterface::class);
         $rowIterator = new \ArrayIterator([$row->reveal()]);
         $queryResult->getRows()->willReturn($rowIterator);
 
