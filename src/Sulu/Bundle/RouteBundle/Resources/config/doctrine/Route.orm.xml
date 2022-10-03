@@ -13,6 +13,8 @@
         <indexes>
             <index columns="path"/>
             <index columns="locale"/>
+            <index name="idx_resource" fields="entityId,entityClass"/>
+            <index name="idx_history" fields="history"/>
         </indexes>
 
         <unique-constraints>
