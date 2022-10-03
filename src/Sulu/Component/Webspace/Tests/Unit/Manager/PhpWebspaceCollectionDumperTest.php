@@ -14,12 +14,15 @@ declare(strict_types=1);
 namespace Sulu\Component\Webspace\Tests\Unit\Manager;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 
 class PhpWebspaceCollectionDumperTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy<WebspaceCollection>
      */

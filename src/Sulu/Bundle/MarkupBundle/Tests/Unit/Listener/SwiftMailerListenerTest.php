@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Listener;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Listener\SwiftMailerListener;
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
@@ -20,6 +21,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class SwiftMailerListenerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var MarkupParserInterface
      */
