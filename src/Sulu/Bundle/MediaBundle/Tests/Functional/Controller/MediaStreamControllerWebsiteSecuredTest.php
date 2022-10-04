@@ -12,9 +12,12 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\ContactBundle\Entity\Contact;
+use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
 use Sulu\Bundle\MediaBundle\Tests\Application\SecuredKernel;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
@@ -117,12 +120,15 @@ class MediaStreamControllerWebsiteSecuredTest extends WebsiteTestCase
         $this->assertHttpStatusCode(200, $authenticatedResponse);
     }
 
-    private function createUploadedFile($path)
+    private function createUploadedFile(string $path): UploadedFile
     {
-        return new UploadedFile($path, \basename($path), \mime_content_type($path));
+        /** @var string $mimeType */
+        $mimeType = \mime_content_type($path);
+
+        return new UploadedFile($path, \basename($path), $mimeType);
     }
 
-    private function createCollection($title = 'Test')
+    private function createCollection(string $title = 'Test'): int
     {
         $collection = $this->getCollectionManager()->save(
             [
@@ -136,7 +142,7 @@ class MediaStreamControllerWebsiteSecuredTest extends WebsiteTestCase
         return $collection->getId();
     }
 
-    private function createMedia($path, $title)
+    private function createMedia(string $path, string $title): Media
     {
         return $this->getMediaManager()->save(
             $this->createUploadedFile($path),
@@ -149,31 +155,17 @@ class MediaStreamControllerWebsiteSecuredTest extends WebsiteTestCase
         );
     }
 
-    private function createMediaVersion($id, $path, $title)
-    {
-        return $this->getMediaManager()->save(
-            $this->createUploadedFile($path),
-            [
-                'id' => $id,
-                'title' => $title,
-                'collection' => $this->createCollection(),
-                'locale' => 'en',
-            ],
-            null
-        );
-    }
-
-    private function getMediaManager()
+    private function getMediaManager(): MediaManager
     {
         return $this->getContainer()->get('sulu_media.media_manager');
     }
 
-    private function getCollectionManager()
+    private function getCollectionManager(): CollectionManager
     {
         return $this->getContainer()->get('sulu_media.collection_manager');
     }
 
-    private function createMediaFile(string $name, string $fileName = 'photo.jpeg')
+    private function createMediaFile(string $name, string $fileName = 'photo.jpeg'): string
     {
         $filePath = \sys_get_temp_dir() . '/' . $name;
         \copy(__DIR__ . '/../../Fixtures/files/' . $fileName, $filePath);
