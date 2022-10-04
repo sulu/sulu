@@ -13,7 +13,6 @@ security:
 
     firewalls:
         test:
-            lazy: true
             http_basic:
 
 sulu_test:
