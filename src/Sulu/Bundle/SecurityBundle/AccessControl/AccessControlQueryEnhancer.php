@@ -16,7 +16,6 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\Mapping\MappingException;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
-use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 class AccessControlQueryEnhancer
@@ -109,21 +108,20 @@ class AccessControlQueryEnhancer
             $subQueryBuilder->setParameter('entityClass', $entityClass);
         }
 
-        $subQueryBuilder->leftJoin(
+        $subQueryBuilder->innerJoin(
             AccessControl::class,
             'accessControl',
             'WITH',
             $accessClassCondition . ' AND ' . $this->getEntityIdCondition($entityClass, 'entity', $entityIdField)
         );
-        $subQueryBuilder->leftJoin('accessControl.role', 'role', 'WITH', 'role.system = :system');
+        $subQueryBuilder->innerJoin('accessControl.role', 'role');
         $subQueryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) <> :permission AND accessControl.permissions IS NOT NULL'
         );
 
-        $subQueryBuilder->andWhere('role.id IN(:roleIds) OR role.id IS NULL');
+        $subQueryBuilder->andWhere('role.id IN(:roleIds)');
 
         $subQueryBuilder->setParameter('roleIds', $this->getUserRoleIds($user));
-        $subQueryBuilder->setParameter('system', $this->systemStore->getSystem());
         $subQueryBuilder->setParameter('permission', $permission);
 
         $result = $subQueryBuilder->getQuery()->getScalarResult();
@@ -159,9 +157,15 @@ class AccessControlQueryEnhancer
     private function getUserRoleIds(?UserInterface $user): array
     {
         if ($user) {
-            return \array_map(function(RoleInterface $role) {
-                return $role->getId();
-            }, $user->getRoleObjects());
+            $roleIds = [];
+
+            foreach ($user->getRoleObjects() as $role) {
+                if ($role->getSystem() === $this->systemStore->getSystem()) {
+                    $roleIds[] = $role->getId();
+                }
+            }
+
+            return $roleIds;
         }
 
         $anonymousRole = $this->systemStore->getAnonymousRole();
