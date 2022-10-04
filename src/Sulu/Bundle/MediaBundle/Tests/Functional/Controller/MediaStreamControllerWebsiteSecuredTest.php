@@ -22,6 +22,9 @@ use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+/**
+ * @runTestsInSeparateProcesses else we get a conflict with the WebspaceCollectionClass already exists error.
+ */
 class MediaStreamControllerWebsiteSecuredTest extends WebsiteTestCase
 {
     /**
@@ -45,6 +48,9 @@ class MediaStreamControllerWebsiteSecuredTest extends WebsiteTestCase
         $mediaTypes->load($this->getEntityManager());
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testDownloadWithCollectionPermissions(): void
     {
         $filePath = $this->createMediaFile('test.jpg');
