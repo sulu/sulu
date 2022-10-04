@@ -15,22 +15,10 @@ namespace Sulu\Bundle\MediaBundle\Tests\Application;
 
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Sulu\Component\HttpKernel\SuluKernel;
-use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 class Kernel extends SuluTestKernel
 {
-    public function registerBundles(): iterable
-    {
-        $bundles = parent::registerBundles();
-
-        if (SuluTestKernel::CONTEXT_WEBSITE === $this->getContext()) {
-            $bundles[] = new SecurityBundle();
-        }
-
-        return $bundles;
-    }
-
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         parent::registerContainerConfiguration($loader);
