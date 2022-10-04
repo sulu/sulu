@@ -11,8 +11,12 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
+use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -104,6 +108,72 @@ class MediaStreamControllerTest extends WebsiteTestCase
                 'attachment; filename=fitness-seasons.jpeg; filename*=utf-8\'\'fitness-seasons.agency--C-%26-C--Rodach%2C-Johannes',
             ]
         );
+    }
+
+    public function testDownloadWithCollectionPermissions(): void
+    {
+        $filePath = $this->createMediaFile('test.jpg');
+        $media = $this->createMedia($filePath, 'file-without-extension');
+
+        $anonymousRole = $this->getContainer()->get('sulu.repository.role')->createNew();
+        $this->getContainer()->get('doctrine.orm.entity_manager')->persist($anonymousRole);
+        $anonymousRole->setName('Anonymous');
+        $anonymousRole->setAnonymous(true);
+        $anonymousRole->setSystem('sulu_io');
+
+        $allowedContact = new Contact();
+        $this->getContainer()->get('doctrine.orm.entity_manager')->persist($allowedContact);
+        $allowedContact->setFirstName('Allowed');
+        $allowedContact->setLastName('Contact');
+
+        $allowedUser = new User();
+        $this->getEntityManager()->persist($allowedUser);
+        $allowedUser->setUsername('allowed-user');
+        $allowedUser->setContact($allowedContact);
+        $allowedUser->setSalt('');
+
+        $encoder = self::$container->get('security.encoder_factory')->getEncoder($allowedUser);
+        $allowedUser->setPassword($encoder->encodePassword('allowed-user', $allowedUser->getSalt()));
+        $allowedUser->setLocale('en');
+
+        $allowedRole = $this->getContainer()->get('sulu.repository.role')->createNew();
+        $this->getContainer()->get('doctrine.orm.entity_manager')->persist($allowedRole);
+        $allowedRole->setName('Allowed Role');
+        $allowedRole->setAnonymous(false);
+        $allowedRole->setSystem('sulu_io');
+
+        $allowedUserRole = new UserRole();
+        $this->getContainer()->get('doctrine.orm.entity_manager')->persist($allowedUserRole);
+        $allowedUserRole->setRole($allowedRole);
+        $allowedUserRole->setUser($allowedUser);
+        $allowedUserRole->setLocale(\json_encode(['de', 'en']) ?: '');
+        $allowedUser->addUserRole($allowedUserRole);
+
+        $this->getContainer()->get('doctrine.orm.entity_manager')->flush();
+
+        $this->getContainer()->get('sulu_security.access_control_manager')->setPermissions(
+            Collection::class,
+            (string) $media->getCollection(),
+            [
+                $anonymousRole->getId() => [
+                    'view' => false,
+                ],
+                $allowedRole->getId() => [
+                    'view' => true,
+                ],
+            ]
+        );
+
+        $this->client->jsonRequest('GET', 'http://sulu.lo' . $media->getUrl());
+        $unauthenticatedResponse = $this->client->getResponse();
+        $this->assertHttpStatusCode(401, $unauthenticatedResponse);
+
+        $this->client->jsonRequest('GET', 'http://sulu.lo' . $media->getUrl(), [], [
+            'PHP_AUTH_USER' => 'allowed-user',
+            'PHP_AUTH_PW' => 'allowed-user',
+        ]);
+        $authenticatedResponse = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $authenticatedResponse);
     }
 
     public function testGetImageActionForNonExistingMedia()

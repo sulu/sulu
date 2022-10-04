@@ -5,3 +5,26 @@ framework:
 fos_rest:
     zone:
         - { path: ^/admin/* }
+
+security:
+    access_decision_manager:
+        strategy: affirmative
+
+    encoders:
+        Sulu\Bundle\SecurityBundle\Entity\User: plaintext
+
+    providers:
+        testprovider:
+            id: test_user_provider
+
+    firewalls:
+        test:
+            anonymous: lazy
+            http_basic:
+
+sulu_test:
+    enable_test_user_provider: true
+
+sulu_security:
+    checker:
+        enabled: true
