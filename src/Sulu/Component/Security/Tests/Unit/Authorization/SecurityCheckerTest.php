@@ -17,6 +17,7 @@ use Sulu\Component\Security\Authorization\SecurityChecker;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SecurityCheckerTest extends TestCase
 {
@@ -87,7 +88,7 @@ class SecurityCheckerTest extends TestCase
     public function testIsGrantedFail()
     {
         $this->expectException(
-            'Symfony\Component\Security\Core\Exception\AccessDeniedException',
+            AccessDeniedException::class,
             'Permission "view" in security context "sulu.media.collection" not granted'
         );
 
@@ -101,9 +102,22 @@ class SecurityCheckerTest extends TestCase
 
     public function testIsGrantedWithoutToken()
     {
+        $this->expectException(
+            AccessDeniedException::class,
+            'Permission "view" in security context "sulu.media.collection" not granted'
+        );
+
         $this->tokenStorage->getToken()->willReturn(null);
         $this->authorizationChecker->isGranted(Argument::any(), Argument::any())->willReturn(false);
 
         $this->assertFalse($this->securityChecker->checkPermission('sulu.media.collection', 'view'));
+    }
+
+    public function testIsGrantedWithoutTokenAllowed()
+    {
+        $this->tokenStorage->getToken()->willReturn(null);
+        $this->authorizationChecker->isGranted(Argument::any(), Argument::any())->willReturn(true);
+
+        $this->assertTrue($this->securityChecker->checkPermission('sulu.media.collection', 'view'));
     }
 }
