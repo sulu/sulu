@@ -104,6 +104,6 @@ class SecurityCheckerTest extends TestCase
         $this->tokenStorage->getToken()->willReturn(null);
         $this->authorizationChecker->isGranted(Argument::any(), Argument::any())->willReturn(false);
 
-        $this->assertTrue($this->securityChecker->checkPermission('sulu.media.collection', 'view'));
+        $this->assertFalse($this->securityChecker->checkPermission('sulu.media.collection', 'view'));
     }
 }
