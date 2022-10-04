@@ -1188,14 +1188,14 @@ class DoctrineListBuilderTest extends TestCase
 
         $accessQueryBuilder->setParameter('entityClass', self::$entityName)->shouldBeCalled();
 
-        $accessQueryBuilder->leftJoin(
+        $accessQueryBuilder->innerJoin(
             AccessControl::class,
             'accessControl',
             'WITH',
             'accessControl.entityClass = :entityClass AND accessControl.entityId = entity.id'
         )->shouldBeCalled();
 
-        $accessQueryBuilder->leftJoin('accessControl.role', 'role')->shouldBeCalled();
+        $accessQueryBuilder->innerJoin('accessControl.role', 'role')->shouldBeCalled();
 
         $accessQueryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) <> :permission AND accessControl.permissions IS NOT NULL'
@@ -1249,14 +1249,14 @@ class DoctrineListBuilderTest extends TestCase
 
         $accessQueryBuilder->setParameter('entityClass', self::$entityName)->shouldBeCalled();
 
-        $accessQueryBuilder->leftJoin(
+        $accessQueryBuilder->innerJoin(
             AccessControl::class,
             'accessControl',
             'WITH',
             'accessControl.entityClass = :entityClass AND accessControl.entityIdInteger = entity.id'
         )->shouldBeCalled();
 
-        $accessQueryBuilder->leftJoin('accessControl.role', 'role')->shouldBeCalled();
+        $accessQueryBuilder->innerJoin('accessControl.role', 'role')->shouldBeCalled();
 
         $accessQueryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) <> :permission AND accessControl.permissions IS NOT NULL'
@@ -1317,14 +1317,14 @@ class DoctrineListBuilderTest extends TestCase
 
         $accessQueryBuilder->setParameter('entityClass', \stdClass::class)->shouldBeCalled();
 
-        $accessQueryBuilder->leftJoin(
+        $accessQueryBuilder->innerJoin(
             AccessControl::class,
             'accessControl',
             'WITH',
             'accessControl.entityClass = :entityClass AND accessControl.entityId = entity.id'
         )->shouldBeCalled();
 
-        $accessQueryBuilder->leftJoin('accessControl.role', 'role')->shouldBeCalled();
+        $accessQueryBuilder->innerJoin('accessControl.role', 'role')->shouldBeCalled();
 
         $accessQueryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) <> :permission AND accessControl.permissions IS NOT NULL'
@@ -1386,14 +1386,14 @@ class DoctrineListBuilderTest extends TestCase
 
         $accessQueryBuilder->setParameter('entityClass', \stdClass::class)->shouldBeCalled();
 
-        $accessQueryBuilder->leftJoin(
+        $accessQueryBuilder->innerJoin(
             AccessControl::class,
             'accessControl',
             'WITH',
             'accessControl.entityClass = :entityClass AND accessControl.entityId = entity.id'
         )->shouldBeCalled();
 
-        $accessQueryBuilder->leftJoin('accessControl.role', 'role')->shouldBeCalled();
+        $accessQueryBuilder->innerJoin('accessControl.role', 'role')->shouldBeCalled();
 
         $accessQueryBuilder->andWhere(
             'BIT_AND(accessControl.permissions, :permission) <> :permission AND accessControl.permissions IS NOT NULL'
