@@ -42,6 +42,10 @@ class MediaStreamControllerWebsiteSecuredTest extends WebsiteTestCase
 
     public function setUp(): void
     {
+        if (\version_compare(SecuredKernel::VERSION, '5.4', '<')) { // @phpstan-ignore-line
+            $this->markTestSkipped('Test is written for Symfony 5.4 or newer.');
+        }
+
         $this->client = $this->createWebsiteClient();
         $this->purgeDatabase();
 
