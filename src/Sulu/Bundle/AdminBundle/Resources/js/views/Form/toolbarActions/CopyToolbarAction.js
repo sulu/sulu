@@ -39,6 +39,7 @@ export default class CopyToolbarAction extends AbstractFormToolbarAction {
         if (visibleConditionFulfilled) {
             return {
                 disabled: !id,
+                icon: 'su-copy',
                 label: translate('sulu_admin.create_copy'),
                 onClick: action(() => {
                     this.showCopyDialog = true;
