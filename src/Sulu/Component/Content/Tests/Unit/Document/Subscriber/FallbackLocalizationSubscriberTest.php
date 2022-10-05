@@ -97,14 +97,14 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     /**
      * It should return early if not implementing StructureBehavior.
      */
-    public function testReturnEarly()
+    public function testReturnEarly(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->notImplementing)->shouldBeCalled();
         $this->hydrateEvent->setLocale(Argument::any())->shouldNotBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
-    public function testAvailableLocale()
+    public function testAvailableLocale(): void
     {
         $this->inspector->getLocales($this->document)->willReturn(['de', 'en']);
         $this->hydrateEvent->setLocale('en')->shouldBeCalled();
@@ -115,7 +115,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     /**
      * If no webspace is available, then return the first available localization for the document.
      */
-    public function testNoWebspace()
+    public function testNoWebspace(): void
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
         $this->inspector->getLocales($this->document)->willReturn(['de', 'fr']);
@@ -127,7 +127,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     /**
      * It should reset the original locale if the load_ghost_content option is false.
      */
-    public function testNoWebspaceDoNotLoadGhostContent()
+    public function testNoWebspaceDoNotLoadGhostContent(): void
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(null);
         $this->inspector->getLocales($this->document)->willReturn(['de', 'fr']);
@@ -140,7 +140,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     /**
      * It should return webspace parent localization.
      */
-    public function testWebspaceParentLocalization()
+    public function testWebspaceParentLocalization(): void
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(self::FIX_WEBSPACE);
         $this->inspector->getLocales($this->document->reveal())->willReturn(['de']);
@@ -157,7 +157,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     /**
      * It should return children localizations.
      */
-    public function testWebspaceChildrenLocalization()
+    public function testWebspaceChildrenLocalization(): void
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(self::FIX_WEBSPACE);
         $this->inspector->getLocales($this->document->reveal())->willReturn(['de']);
@@ -179,7 +179,7 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     /**
      * It should return any localizations if neither parent nor children.
      */
-    public function testWebspaceAnyLocalization()
+    public function testWebspaceAnyLocalization(): void
     {
         $this->inspector->getWebspace($this->document->reveal())->willReturn(self::FIX_WEBSPACE);
         $this->inspector->getLocales($this->document->reveal())->willReturn(['de']);

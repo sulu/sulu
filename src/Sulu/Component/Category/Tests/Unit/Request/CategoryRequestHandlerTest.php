@@ -34,7 +34,7 @@ class CategoryRequestHandlerTest extends TestCase
     /**
      * @dataProvider getProvider
      */
-    public function testGet($parameter, $queryString, $expected)
+    public function testGet($parameter, $queryString, $expected): void
     {
         $requestStack = $this->prophesize(RequestStack::class);
         $request = $this->prophesize(Request::class);
@@ -67,7 +67,7 @@ class CategoryRequestHandlerTest extends TestCase
     /**
      * @dataProvider appendProvider
      */
-    public function testAppendToUrl($parameter, $url, $queryString, $expected)
+    public function testAppendToUrl($parameter, $url, $queryString, $expected): void
     {
         $category = ['id' => 3, 'name' => 'test'];
 
@@ -103,7 +103,7 @@ class CategoryRequestHandlerTest extends TestCase
     /**
      * @dataProvider removeSingleProvider
      */
-    public function testRemoveSingleFromUrl($parameter, $url, $queryString, $expected)
+    public function testRemoveSingleFromUrl($parameter, $url, $queryString, $expected): void
     {
         $category = ['id' => 3, 'name' => 'test'];
 
@@ -139,7 +139,7 @@ class CategoryRequestHandlerTest extends TestCase
     /**
      * @dataProvider toggleProvider
      */
-    public function testToggleToUrl($parameter, $url, $queryString, $expected)
+    public function testToggleToUrl($parameter, $url, $queryString, $expected): void
     {
         $category = ['id' => 3, 'name' => 'test'];
 
@@ -175,7 +175,7 @@ class CategoryRequestHandlerTest extends TestCase
     /**
      * @dataProvider setProvider
      */
-    public function testSetToUrl($parameter, $url, $queryString, $expected)
+    public function testSetToUrl($parameter, $url, $queryString, $expected): void
     {
         $category = ['id' => 3, 'name' => 'test'];
 
@@ -210,7 +210,7 @@ class CategoryRequestHandlerTest extends TestCase
     /**
      * @dataProvider removeProvider
      */
-    public function testRemoveFromUrl($parameter, $url, $queryString)
+    public function testRemoveFromUrl($parameter, $url, $queryString): void
     {
         $requestStack = $this->prophesize(RequestStack::class);
         $request = $this->prophesize(Request::class);

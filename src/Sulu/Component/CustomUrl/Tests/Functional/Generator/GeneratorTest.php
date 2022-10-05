@@ -138,7 +138,7 @@ class GeneratorTest extends TestCase
     /**
      * @dataProvider provideGenerateData
      */
-    public function testGenerate($baseDomain, $domainParts, $locales, $expected, $exception = null)
+    public function testGenerate($baseDomain, $domainParts, $locales, $expected, $exception = null): void
     {
         if ($exception) {
             self::expectException($exception);

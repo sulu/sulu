@@ -34,7 +34,7 @@ class TextUtilsTest extends TestCase
     /**
      * @dataProvider provideTruncate
      */
-    public function testTruncate($text, $length, $suffix, $expected)
+    public function testTruncate($text, $length, $suffix, $expected): void
     {
         $res = TextUtils::truncate($text, $length, $suffix);
         $this->assertEquals($expected, $res);

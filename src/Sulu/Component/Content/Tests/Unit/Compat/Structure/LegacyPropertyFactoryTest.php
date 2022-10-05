@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Compat\Structure;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Compat\Property;
@@ -88,6 +89,8 @@ class LegacyPropertyFactoryTest extends TestCase
 
     /**
      * It should create standard properties from "new" properties.
+     *
+     * @return ObjectProphecy<PropertyMetadata>
      */
     public function testCreateProperty()
     {
@@ -156,7 +159,7 @@ class LegacyPropertyFactoryTest extends TestCase
      *
      * @depends testCreateProperty
      */
-    public function testCreateTranslated()
+    public function testCreateTranslated(): void
     {
         $this->setUpProperty($this->property1);
         $this->namespaceRegistry->getPrefix('content_localized')->willReturn('i18n');
@@ -170,7 +173,7 @@ class LegacyPropertyFactoryTest extends TestCase
      *
      * @depends testCreateProperty
      */
-    public function testCreateSection($property)
+    public function testCreateSection($property): void
     {
         $name = 'foo';
         $parameters = ['foo', 'bar'];
@@ -202,7 +205,7 @@ class LegacyPropertyFactoryTest extends TestCase
      *
      * @depends testCreateProperty
      */
-    public function testCreateBlock($property)
+    public function testCreateBlock($property): void
     {
         $this->setUpProperty($this->block);
 
@@ -241,7 +244,7 @@ class LegacyPropertyFactoryTest extends TestCase
      *
      * @depends testCreateProperty
      */
-    public function testCreatePropertyWithTypes($child)
+    public function testCreatePropertyWithTypes($child): void
     {
         $this->setUpProperty($this->property2);
 

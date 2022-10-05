@@ -36,7 +36,7 @@ class PortalInformationRequestProcessorTest extends TestCase
     /**
      * @dataProvider provideProcess
      */
-    public function testProcess($config, $expected = [])
+    public function testProcess($config, $expected = []): void
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu');
@@ -90,7 +90,7 @@ class PortalInformationRequestProcessorTest extends TestCase
     /**
      * @dataProvider provideProcess
      */
-    public function testProcessWithoutLocaliziation($config, $expected = [])
+    public function testProcessWithoutLocaliziation($config, $expected = []): void
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu');
@@ -145,7 +145,7 @@ class PortalInformationRequestProcessorTest extends TestCase
     /**
      * @dataProvider provideProcessWithFormat
      */
-    public function testProcessWithFormat($config, $expected = [])
+    public function testProcessWithFormat($config, $expected = []): void
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu');
@@ -197,7 +197,7 @@ class PortalInformationRequestProcessorTest extends TestCase
         $this->assertEquals($expected['format'], $attributes->getAttribute('format'));
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $this->assertTrue($this->portalInformationRequestProcessor->validate(new RequestAttributes()));
     }

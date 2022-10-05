@@ -58,7 +58,7 @@ class ArrayUtilsTest extends TestCase
     /**
      * @dataProvider provideData
      */
-    public function testFilter($collection, $expression, $expected, $context = [])
+    public function testFilter($collection, $expression, $expected, $context = []): void
     {
         $this->assertEquals($expected, ArrayUtils::filter($collection, $expression, $context));
     }

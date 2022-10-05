@@ -124,7 +124,7 @@ class WebspaceCollectionTest extends TestCase
         $this->webspaceCollection->setPortalInformations($portalInformations);
     }
 
-    public function testGetPortalInformations()
+    public function testGetPortalInformations(): void
     {
         $this->assertCount(1, $this->webspaceCollection->getPortalInformations('dev'));
         $this->assertCount(
@@ -137,7 +137,7 @@ class WebspaceCollectionTest extends TestCase
         );
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $collectionArray = $this->webspaceCollection->toArray();
 
@@ -211,7 +211,7 @@ class WebspaceCollectionTest extends TestCase
         $this->assertEquals('portal1.lo', $portalInformation['url']);
     }
 
-    public function testGetPortalInformationsUnknown()
+    public function testGetPortalInformationsUnknown(): void
     {
         $this->expectExceptionMessage('Unknown portal environment "unknown"');
         $this->expectException(\InvalidArgumentException::class);

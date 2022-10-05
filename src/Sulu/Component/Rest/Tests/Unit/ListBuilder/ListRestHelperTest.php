@@ -144,7 +144,7 @@ class ListRestHelperTest extends TestCase
     /**
      * @dataProvider dataFieldsProvider
      */
-    public function testGetFields($request, $expected)
+    public function testGetFields($request, $expected): void
     {
         $this->requestStack->getCurrentRequest()->willReturn($request);
         $helper = new ListRestHelper($this->requestStack->reveal());

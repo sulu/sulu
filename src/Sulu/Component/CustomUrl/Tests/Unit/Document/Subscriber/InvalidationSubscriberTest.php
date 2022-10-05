@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class InvalidationSubscriberTest extends TestCase
 {
-    public function testInvalidateDocumentBeforePublishing()
+    public function testInvalidateDocumentBeforePublishing(): void
     {
         $customUrlManager = $this->prophesize(CustomUrlManagerInterface::class);
         $documentInspector = $this->prophesize(DocumentInspector::class);
@@ -62,7 +62,7 @@ class InvalidationSubscriberTest extends TestCase
         $subscriber->invalidateDocumentBeforePublishing($event->reveal());
     }
 
-    public function testInvalidateDocumentBeforePublishingOfOtherDocument()
+    public function testInvalidateDocumentBeforePublishingOfOtherDocument(): void
     {
         $customUrlManager = $this->prophesize(CustomUrlManagerInterface::class);
         $documentInspector = $this->prophesize(DocumentInspector::class);

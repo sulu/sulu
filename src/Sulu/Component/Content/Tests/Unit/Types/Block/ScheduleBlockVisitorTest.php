@@ -45,7 +45,7 @@ class ScheduleBlockVisitorTest extends TestCase
         );
     }
 
-    public function testShouldNotSkipWithObjectAsSettings()
+    public function testShouldNotSkipWithObjectAsSettings(): void
     {
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(new \stdClass());
@@ -53,7 +53,7 @@ class ScheduleBlockVisitorTest extends TestCase
         $this->assertEquals($blockPropertyType, $this->scheduleBlockVisitor->visit($blockPropertyType));
     }
 
-    public function testShouldNotSkipWithEmptyArrayAsSettings()
+    public function testShouldNotSkipWithEmptyArrayAsSettings(): void
     {
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings([]);
@@ -414,7 +414,7 @@ class ScheduleBlockVisitorTest extends TestCase
 
     /** @dataProvider provideVisit
      */
-    public function testVisit($settings, $now, $skip, $requestCacheLifetimes)
+    public function testVisit($settings, $now, $skip, $requestCacheLifetimes): void
     {
         $nowDateTime = new \DateTime($now);
         $this->requestAnalyzer->getDateTime()->willReturn($nowDateTime);

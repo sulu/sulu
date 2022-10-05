@@ -23,7 +23,7 @@ use Twig\Loader\FilesystemLoader;
 
 class WebspaceStructureProviderTest extends TestCase
 {
-    public function testGetStructures()
+    public function testGetStructures(): void
     {
         $cache = new ArrayCache();
 
@@ -62,7 +62,7 @@ class WebspaceStructureProviderTest extends TestCase
         $this->assertEquals(['t2'], $cache->fetch('sulu_io'));
     }
 
-    public function testGetStructuresCached()
+    public function testGetStructuresCached(): void
     {
         $cache = new ArrayCache();
         $cache->save('sulu_io', ['t1', 't3']);

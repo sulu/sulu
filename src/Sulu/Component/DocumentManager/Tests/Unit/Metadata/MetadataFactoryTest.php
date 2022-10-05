@@ -36,7 +36,7 @@ class MetadataFactoryTest extends TestCase
         $this->metadataFactory = new MetadataFactory($this->baseMetadataFactory->reveal());
     }
 
-    public function testGetForPhpcrNodeWithoutMixins()
+    public function testGetForPhpcrNodeWithoutMixins(): void
     {
         $node = $this->prophesize(NodeInterface::class);
         $node->hasProperty('jcr:mixinTypes')->willReturn(false);
@@ -45,7 +45,7 @@ class MetadataFactoryTest extends TestCase
         $this->assertEquals(UnknownDocument::class, $metadata->getClass());
     }
 
-    public function testGetForPhpcrNode()
+    public function testGetForPhpcrNode(): void
     {
         $metadata = $this->prophesize(Metadata::class);
         $node = $this->prophesize(NodeInterface::class);
@@ -59,7 +59,7 @@ class MetadataFactoryTest extends TestCase
         $this->assertSame($metadata->reveal(), $this->metadataFactory->getMetadataForPhpcrNode($node->reveal()));
     }
 
-    public function testGetForPhpcrNodeNoManaged()
+    public function testGetForPhpcrNodeNoManaged(): void
     {
         $node = $this->prophesize(NodeInterface::class);
         $node->hasProperty('jcr:mixinTypes')->willReturn(true);

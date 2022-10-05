@@ -44,7 +44,7 @@ class RemoveSubscriberTest extends TestCase
     /**
      * It should remove nodes from the PHPCR session.
      */
-    public function testHandleRemove()
+    public function testHandleRemove(): void
     {
         $this->removeEvent->getDocument()->willReturn($this->document);
         $this->node->remove()->shouldBeCalled();

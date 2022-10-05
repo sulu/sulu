@@ -75,7 +75,7 @@ class MemoizeTwigExtensionTraitTest extends TestCase
         $this->lifeTimeProperty->setValue($this->trait, $this->lifeTime);
     }
 
-    public function testGetFunctions()
+    public function testGetFunctions(): void
     {
         $before = [
             new TwigFunction(

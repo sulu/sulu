@@ -64,7 +64,7 @@ class NodeNameSubscriberTest extends TestCase
     /**
      * It should return early when not implementing.
      */
-    public function testHydrateNotImplementing()
+    public function testHydrateNotImplementing(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->notImplementing)->shouldBeCalled();
         $this->subscriber->setFinalNodeName($this->hydrateEvent->reveal());
@@ -73,7 +73,7 @@ class NodeNameSubscriberTest extends TestCase
     /**
      * It should set the node name on the document.
      */
-    public function testHydrate()
+    public function testHydrate(): void
     {
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
         $this->hydrateEvent->getDocument()->willReturn($this->document);

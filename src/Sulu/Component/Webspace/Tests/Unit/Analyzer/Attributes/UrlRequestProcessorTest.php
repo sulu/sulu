@@ -31,7 +31,7 @@ class UrlRequestProcessorTest extends TestCase
     /**
      * @dataProvider provideProcess
      */
-    public function testProcess($url, $host, $port, $path)
+    public function testProcess($url, $host, $port, $path): void
     {
         $request = Request::create($url);
         $requestAttributes = $this->urlRequestProcessor->process($request, new RequestAttributes());

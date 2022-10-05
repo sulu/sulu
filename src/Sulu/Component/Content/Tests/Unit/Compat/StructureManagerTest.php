@@ -78,7 +78,7 @@ class StructureManagerTest extends TestCase
     /**
      * It should get a legacy structure bridge.
      */
-    public function testGetStructure()
+    public function testGetStructure(): void
     {
         $structureType = 'content';
         $documentType = 'page';

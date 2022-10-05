@@ -132,7 +132,7 @@ class SortUtilsTest extends TestCase
     /**
      * @dataProvider provideSortObjects
      */
-    public function testSortObjects($data, $methodName, $direction, $checkField, $expectedOrder)
+    public function testSortObjects($data, $methodName, $direction, $checkField, $expectedOrder): void
     {
         $accessor = PropertyAccess::createPropertyAccessor();
 
@@ -144,7 +144,7 @@ class SortUtilsTest extends TestCase
         }
     }
 
-    public function testSortArrayObject()
+    public function testSortArrayObject(): void
     {
         $collection = new \ArrayObject([
             new FoobarTestClass('value2', 'value2'),
@@ -157,7 +157,7 @@ class SortUtilsTest extends TestCase
         $this->assertEquals('value2', $res[0]->field2);
     }
 
-    public function testSortMissingField()
+    public function testSortMissingField(): void
     {
         $this->expectException(NoSuchPropertyException::class);
         $collection = new \ArrayObject([

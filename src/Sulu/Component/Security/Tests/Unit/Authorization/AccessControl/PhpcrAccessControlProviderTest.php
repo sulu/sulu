@@ -48,7 +48,7 @@ class PhpcrAccessControlProviderTest extends TestCase
         );
     }
 
-    public function testSetPermissions()
+    public function testSetPermissions(): void
     {
         $document = $this->prophesize(WebspaceBehavior::class);
         $document->willImplement(SecurityBehavior::class);
@@ -65,7 +65,7 @@ class PhpcrAccessControlProviderTest extends TestCase
         );
     }
 
-    public function testGetPermissions()
+    public function testGetPermissions(): void
     {
         $document = $this->prophesize(WebspaceBehavior::class);
         $document->willImplement(SecurityBehavior::class);
@@ -80,7 +80,7 @@ class PhpcrAccessControlProviderTest extends TestCase
         ], $this->phpcrAccessControlProvider->getPermissions(\get_class($document), '1'));
     }
 
-    public function testGetEmptyPermissions()
+    public function testGetEmptyPermissions(): void
     {
         $document = $this->prophesize(WebspaceBehavior::class);
         $document->willImplement(SecurityBehavior::class);
@@ -93,7 +93,7 @@ class PhpcrAccessControlProviderTest extends TestCase
         $this->assertEquals([], $this->phpcrAccessControlProvider->getPermissions(\get_class($document), '1'));
     }
 
-    public function testGetPermissionsForSystem()
+    public function testGetPermissionsForSystem(): void
     {
         $document = $this->prophesize(WebspaceBehavior::class);
         $document->willImplement(SecurityBehavior::class);
@@ -124,14 +124,14 @@ class PhpcrAccessControlProviderTest extends TestCase
         );
     }
 
-    public function testGetPermissionsForNotExistingDocument()
+    public function testGetPermissionsForNotExistingDocument(): void
     {
         $this->documentManager->find('1', null, ['rehydrate' => false])->willThrow(DocumentNotFoundException::class);
 
         $this->assertEquals([], $this->phpcrAccessControlProvider->getPermissions('Acme\Document', '1'));
     }
 
-    public function testGetPermissionsForUnsecuredDocument()
+    public function testGetPermissionsForUnsecuredDocument(): void
     {
         $document = $this->prophesize(WebspaceBehavior::class);
 
@@ -143,7 +143,7 @@ class PhpcrAccessControlProviderTest extends TestCase
     /**
      * @dataProvider provideSupport
      */
-    public function testSupport($type, $supported)
+    public function testSupport($type, $supported): void
     {
         $this->assertEquals($this->phpcrAccessControlProvider->supports($type), $supported);
     }

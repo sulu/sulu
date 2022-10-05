@@ -121,7 +121,7 @@ class PageDataProviderTest extends TestCase
         return $mock->reveal();
     }
 
-    public function testGetConfiguration()
+    public function testGetConfiguration(): void
     {
         $provider = new PageDataProvider(
             $this->getContentQueryBuilder(),
@@ -139,7 +139,7 @@ class PageDataProviderTest extends TestCase
         $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
     }
 
-    public function testEnabledAudienceTargeting()
+    public function testEnabledAudienceTargeting(): void
     {
         $provider = new PageDataProvider(
             $this->getContentQueryBuilder(),
@@ -158,7 +158,7 @@ class PageDataProviderTest extends TestCase
         $this->assertTrue($configuration->hasAudienceTargeting());
     }
 
-    public function testDisabledAudienceTargeting()
+    public function testDisabledAudienceTargeting(): void
     {
         $provider = new PageDataProvider(
             $this->getContentQueryBuilder(),
@@ -176,7 +176,7 @@ class PageDataProviderTest extends TestCase
         $this->assertFalse($configuration->hasAudienceTargeting());
     }
 
-    public function testGetTypesConfiguration()
+    public function testGetTypesConfiguration(): void
     {
         /** @var TokenStorageInterface|ObjectProphecy $tokenStorage */
         $tokenStorage = $this->prophesize(TokenStorageInterface::class);
@@ -239,7 +239,7 @@ class PageDataProviderTest extends TestCase
         $this->assertSame('translated-template-2', $configuration->getTypes()[1]->getName());
     }
 
-    public function testGetDefaultParameter()
+    public function testGetDefaultParameter(): void
     {
         $provider = new PageDataProvider(
             $this->getContentQueryBuilder(),
@@ -261,7 +261,7 @@ class PageDataProviderTest extends TestCase
         $this->assertArrayHasKey('properties', $parameter);
     }
 
-    public function testResolveDataItemsNoDataSource()
+    public function testResolveDataItemsNoDataSource(): void
     {
         $provider = new PageDataProvider(
             $this->getContentQueryBuilder(),
@@ -287,7 +287,7 @@ class PageDataProviderTest extends TestCase
         $this->assertEquals([], $result->getItems());
     }
 
-    public function testResolveDataItemsNoResult()
+    public function testResolveDataItemsNoResult(): void
     {
         $provider = new PageDataProvider(
             $this->getContentQueryBuilder(
@@ -321,7 +321,7 @@ class PageDataProviderTest extends TestCase
         $this->assertFalse($result->getHasNextPage());
     }
 
-    public function testResolveDataItemsHasNextPage()
+    public function testResolveDataItemsHasNextPage(): void
     {
         $data = [
             ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
@@ -370,7 +370,7 @@ class PageDataProviderTest extends TestCase
         $this->assertTrue($result->getHasNextPage());
     }
 
-    public function testResolveDataItemsOnlyPublished()
+    public function testResolveDataItemsOnlyPublished(): void
     {
         $data = [
             ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
@@ -419,7 +419,7 @@ class PageDataProviderTest extends TestCase
         $this->assertTrue($result->getHasNextPage());
     }
 
-    public function testResolveResourceItems()
+    public function testResolveResourceItems(): void
     {
         $data = [
             ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
@@ -475,7 +475,7 @@ class PageDataProviderTest extends TestCase
         $this->assertEquals(['123-123-123', '123-123-456'], $referenceStore->getAll());
     }
 
-    public function testResolveResourceItemsWithoutPathParameter()
+    public function testResolveResourceItemsWithoutPathParameter(): void
     {
         $data = [
             ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
@@ -531,7 +531,7 @@ class PageDataProviderTest extends TestCase
         $this->assertEquals(['123-123-123', '123-123-456'], $referenceStore->getAll());
     }
 
-    public function testResolveDataItemsNoPagination()
+    public function testResolveDataItemsNoPagination(): void
     {
         $data = [
             ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
@@ -584,7 +584,7 @@ class PageDataProviderTest extends TestCase
         $this->assertFalse($result->getHasNextPage());
     }
 
-    public function testResolveDataItemsWithDeletedDataSource()
+    public function testResolveDataItemsWithDeletedDataSource(): void
     {
         $provider = new PageDataProvider(
             $this->getContentQueryBuilder(),
@@ -608,7 +608,7 @@ class PageDataProviderTest extends TestCase
         $this->assertCount(0, $result->getItems());
     }
 
-    public function testResolveDatasource()
+    public function testResolveDatasource(): void
     {
         $data = ['id' => '123-123-123', 'title' => 'My-Page', 'url' => '/my-page'];
 
@@ -638,7 +638,7 @@ class PageDataProviderTest extends TestCase
         $this->assertNull($result->getImage());
     }
 
-    public function testContentDataItem()
+    public function testContentDataItem(): void
     {
         $data = ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'];
         $resource = new \stdClass();
@@ -651,7 +651,7 @@ class PageDataProviderTest extends TestCase
         $this->assertNull($item->getImage());
     }
 
-    public function testResolveResourceItemsExcluded()
+    public function testResolveResourceItemsExcluded(): void
     {
         $data = [
             ['id' => '123-123-123', 'title' => 'My-Page', 'path' => '/my-page'],
@@ -711,7 +711,7 @@ class PageDataProviderTest extends TestCase
         $this->assertEquals(['123-456-789', '123-123-123', '123-123-456'], $referenceStore->getAll());
     }
 
-    public function testResolveResourceItemsNullDataSource()
+    public function testResolveResourceItemsNullDataSource(): void
     {
         $referenceStore = new ReferenceStore();
         $provider = new PageDataProvider(

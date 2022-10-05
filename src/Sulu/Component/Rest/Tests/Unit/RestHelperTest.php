@@ -61,7 +61,7 @@ class RestHelperTest extends TestCase
         $this->restHelper = new RestHelper($this->listRestHelper->reveal());
     }
 
-    public function testInitializeListBuilderLimit()
+    public function testInitializeListBuilderLimit(): void
     {
         $this->listRestHelper->getLimit()->willReturn(10);
         $this->listBuilder->limit(10)->shouldBeCalled();
@@ -70,7 +70,7 @@ class RestHelperTest extends TestCase
         $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), []);
     }
 
-    public function testInitializeListBuilderPage()
+    public function testInitializeListBuilderPage(): void
     {
         $this->listRestHelper->getPage()->willReturn(2);
         $this->listBuilder->setCurrentPage(2)->shouldBeCalled();
@@ -78,7 +78,7 @@ class RestHelperTest extends TestCase
         $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), []);
     }
 
-    public function testInitializeListBuilderIds()
+    public function testInitializeListBuilderIds(): void
     {
         $this->listRestHelper->getIds()->willReturn([2, 4, 6]);
         $this->listBuilder->setIds([2, 4, 6])->shouldBeCalled();
@@ -86,7 +86,7 @@ class RestHelperTest extends TestCase
         $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), []);
     }
 
-    public function testInitializeListBuilderExcludedIds()
+    public function testInitializeListBuilderExcludedIds(): void
     {
         $this->listRestHelper->getExcludedIds()->willReturn([11, 22]);
         $this->listBuilder->setExcludedIds([11, 22])->shouldBeCalled();
@@ -94,7 +94,7 @@ class RestHelperTest extends TestCase
         $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), []);
     }
 
-    public function testInitializeListBuilderAddFields()
+    public function testInitializeListBuilderAddFields(): void
     {
         $field1 = $this->prophesize(FieldDescriptor::class);
         $field2 = $this->prophesize(FieldDescriptor::class);
@@ -109,7 +109,7 @@ class RestHelperTest extends TestCase
         );
     }
 
-    public function testInitializeListBuilderSetFields()
+    public function testInitializeListBuilderSetFields(): void
     {
         $field1 = $this->prophesize(FieldDescriptor::class);
         $field2 = $this->prophesize(FieldDescriptor::class);
@@ -120,7 +120,7 @@ class RestHelperTest extends TestCase
         $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), $fields);
     }
 
-    public function testInitializeListBuilderAddSearch()
+    public function testInitializeListBuilderAddSearch(): void
     {
         $field1 = $this->prophesize(FieldDescriptor::class);
         $field2 = $this->prophesize(FieldDescriptor::class);
@@ -137,7 +137,7 @@ class RestHelperTest extends TestCase
         );
     }
 
-    public function testInitializeListBuilderAddSearchWithNonExistingSearchField()
+    public function testInitializeListBuilderAddSearchWithNonExistingSearchField(): void
     {
         $this->expectException(SearchFieldNotFoundException::class);
 
@@ -154,7 +154,7 @@ class RestHelperTest extends TestCase
         );
     }
 
-    public function testInitializeListBuilderAddSearchWithoutSearchFields()
+    public function testInitializeListBuilderAddSearchWithoutSearchFields(): void
     {
         $field1 = $this->prophesize(FieldDescriptor::class);
         $field2 = $this->prophesize(FieldDescriptor::class);
@@ -181,7 +181,7 @@ class RestHelperTest extends TestCase
         );
     }
 
-    public function testInitializeListBuilderAddFilter()
+    public function testInitializeListBuilderAddFilter(): void
     {
         $this->listRestHelper->getFilter()->willReturn(['name' => 'Max Mustermann']);
         $this->listBuilder->filter(['name' => 'Max Mustermann'])->shouldBeCalled();
@@ -189,7 +189,7 @@ class RestHelperTest extends TestCase
         $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), []);
     }
 
-    public function testInitializeListBuilderSort()
+    public function testInitializeListBuilderSort(): void
     {
         $field = $this->prophesize(FieldDescriptor::class);
 
@@ -200,7 +200,7 @@ class RestHelperTest extends TestCase
         $this->restHelper->initializeListBuilder($this->listBuilder->reveal(), ['name' => $field->reveal()]);
     }
 
-    public function testprocessSubEntitiesEmpty()
+    public function testprocessSubEntitiesEmpty(): void
     {
         $mock = $this->getMockBuilder('Mock')->setMethods(['delete', 'update', 'add', 'get'])->getMock();
         $mock->expects($this->never())->method('delete');
@@ -227,7 +227,7 @@ class RestHelperTest extends TestCase
         $this->restHelper->processSubEntities([], [], $get, $add, $update, $delete);
     }
 
-    public function testprocessSubEntitiesWithDelete()
+    public function testprocessSubEntitiesWithDelete(): void
     {
         $mockedObject = $this->getMockBuilder('Mock')->setMethods(['getId'])->getMock();
         $mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));
@@ -266,7 +266,7 @@ class RestHelperTest extends TestCase
         );
     }
 
-    public function testprocessSubEntitiesWithUpdate()
+    public function testprocessSubEntitiesWithUpdate(): void
     {
         $mockedObject = $this->getMockBuilder('Mock')->setMethods(['getId'])->getMock();
         $mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));
@@ -309,7 +309,7 @@ class RestHelperTest extends TestCase
         );
     }
 
-    public function testprocessSubEntitiesWithAdd()
+    public function testprocessSubEntitiesWithAdd(): void
     {
         $mock = $this->getMockBuilder('Mock')->setMethods(['delete', 'update', 'add', 'get'])->getMock();
         $mock->expects($this->never())->method('delete');
@@ -347,7 +347,7 @@ class RestHelperTest extends TestCase
         );
     }
 
-    public function testCompareEntitiesWithData()
+    public function testCompareEntitiesWithData(): void
     {
         $mockedObject = $this->getMockBuilder('Mock')->setMethods(['getId', 'getValue'])->getMock();
         $mockedObject->expects($this->any())->method('getId')->will($this->returnValue(1));

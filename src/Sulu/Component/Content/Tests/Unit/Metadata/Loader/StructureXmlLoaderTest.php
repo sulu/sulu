@@ -80,7 +80,7 @@ class StructureXmlLoaderTest extends TestCase
         );
     }
 
-    public function testLoadTemplate()
+    public function testLoadTemplate(): void
     {
         $this->contentTypeManager->has('text_line')->willReturn(true);
         $this->contentTypeManager->has('resource_locator')->willReturn(true);
@@ -97,7 +97,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->assertNull($result->getSchema());
     }
 
-    public function testLoadTemplateWithSchema()
+    public function testLoadTemplateWithSchema(): void
     {
         $this->contentTypeManager->has('text_line')->willReturn(true);
         $this->contentTypeManager->has('resource_locator')->willReturn(true);
@@ -143,7 +143,7 @@ class StructureXmlLoaderTest extends TestCase
         );
     }
 
-    public function testLoadInternalTemplate()
+    public function testLoadInternalTemplate(): void
     {
         $this->contentTypeManager->has('text_line')->willReturn(true);
         $this->contentTypeManager->has('resource_locator')->willReturn(true);
@@ -159,7 +159,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->assertTrue($result->isInternal());
     }
 
-    public function testLoadBlockMetaTitles()
+    public function testLoadBlockMetaTitles(): void
     {
         $this->contentTypeManager->has('text_line')->willReturn(true);
         $this->contentTypeManager->has('text_editor')->willReturn(true);
@@ -182,7 +182,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->assertEquals('Info Block1 EN', $blockTypes[1]->getDescription('en'));
     }
 
-    public function testLoadBlockTypeWithoutMeta()
+    public function testLoadBlockTypeWithoutMeta(): void
     {
         $this->contentTypeManager->has('text_line')->willReturn(true);
         $this->contentTypeManager->has('resource_locator')->willReturn(true);
@@ -197,14 +197,14 @@ class StructureXmlLoaderTest extends TestCase
         $this->assertCount(1, $result->getProperty('block1')->getComponents());
     }
 
-    public function testLoadNestedSections()
+    public function testLoadNestedSections(): void
     {
         $result = $this->load('template_with_nested_sections.xml');
 
         $this->assertEquals(['title', 'test21', 'test221'], \array_keys($result->getProperties()));
     }
 
-    public function testLoadBlockWithSections()
+    public function testLoadBlockWithSections(): void
     {
         $this->contentTypeManager->has('text_line')->willReturn(true);
         $this->contentTypeManager->has('resource_locator')->willReturn(true);
@@ -217,7 +217,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->assertEquals(['title1.1', 'title1.2'], \array_keys($result->getProperties()['block1']->getComponents()[0]->getChildren()));
     }
 
-    public function testLoadNestedBlocks()
+    public function testLoadNestedBlocks(): void
     {
         $this->contentTypeManager->has('text_line')->willReturn(true);
         $this->contentTypeManager->has('resource_locator')->willReturn(true);
@@ -251,7 +251,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->assertEquals('headline2', $type122Children['headline2']->getName());
     }
 
-    public function testLoadInvalidIgnore()
+    public function testLoadInvalidIgnore(): void
     {
         $this->contentTypeManager->has('text_line')->willReturn(true);
         $this->contentTypeManager->has('resource_locator')->willReturn(true);
@@ -265,7 +265,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->assertEquals('url', $properties['url']->getName());
     }
 
-    public function testLoadInvalidWithoutIgnore()
+    public function testLoadInvalidWithoutIgnore(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -276,7 +276,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->load('template_without_invalid_ignore.xml');
     }
 
-    public function testLoadRequiredProperty()
+    public function testLoadRequiredProperty(): void
     {
         $this->expectException(RequiredPropertyNameNotFoundException::class);
 
@@ -286,7 +286,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->load('template_without_title.xml');
     }
 
-    public function testLoadRequiredTag()
+    public function testLoadRequiredTag(): void
     {
         $this->expectException(RequiredTagNotFoundException::class);
 
@@ -296,7 +296,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->load('template_without_sulu_rlp.xml');
     }
 
-    public function testLoadRequiredPropertyOtherType()
+    public function testLoadRequiredPropertyOtherType(): void
     {
         $this->contentTypeManager->has('text_line')->willReturn(true);
         $this->contentTypeManager->has('resource_locator')->willReturn(true);
@@ -308,7 +308,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->assertCount(2, $properties);
     }
 
-    public function testLoadRequiredTagOtherType()
+    public function testLoadRequiredTagOtherType(): void
     {
         $this->contentTypeManager->has('text_line')->willReturn(true);
         $this->contentTypeManager->has('resource_locator')->willReturn(true);
@@ -320,7 +320,7 @@ class StructureXmlLoaderTest extends TestCase
         $this->assertCount(2, $properties);
     }
 
-    public function testLoadFormWithInvalidBlockDefaultType()
+    public function testLoadFormWithInvalidBlockDefaultType(): void
     {
         $this->expectException(InvalidDefaultTypeException::class);
         $this->expectExceptionMessage('Property "blocks" has invalid default-type "test". Available types are "editor", "images"');

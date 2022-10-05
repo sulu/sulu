@@ -64,7 +64,7 @@ class DoctrineAccessControlProviderTest extends TestCase
         );
     }
 
-    public function testSetPermissions()
+    public function testSetPermissions(): void
     {
         $role1 = $this->prophesize(Role::class);
         $role2 = $this->prophesize(Role::class);
@@ -103,7 +103,7 @@ class DoctrineAccessControlProviderTest extends TestCase
         );
     }
 
-    public function testSetPermissionsWithRemovedRoles()
+    public function testSetPermissionsWithRemovedRoles(): void
     {
         $role1 = $this->prophesize(Role::class);
         $role1->getId()->willReturn(1);
@@ -179,7 +179,7 @@ class DoctrineAccessControlProviderTest extends TestCase
         );
     }
 
-    public function testSetPermissionsWithExistingAccessControl()
+    public function testSetPermissionsWithExistingAccessControl(): void
     {
         $role1 = $this->prophesize(Role::class);
         $role1->getId()->willReturn(1);
@@ -215,7 +215,7 @@ class DoctrineAccessControlProviderTest extends TestCase
         );
     }
 
-    public function testGetPermissions()
+    public function testGetPermissions(): void
     {
         $roleIdReflection = new \ReflectionProperty(Role::class, 'id');
         $roleIdReflection->setAccessible(true);
@@ -252,7 +252,7 @@ class DoctrineAccessControlProviderTest extends TestCase
         );
     }
 
-    public function testGetPermissionsWithSystem()
+    public function testGetPermissionsWithSystem(): void
     {
         $roleIdReflection = new \ReflectionProperty(Role::class, 'id');
         $roleIdReflection->setAccessible(true);
@@ -293,7 +293,7 @@ class DoctrineAccessControlProviderTest extends TestCase
         );
     }
 
-    public function testGetPermissionsForNotExistingAccessControl()
+    public function testGetPermissionsForNotExistingAccessControl(): void
     {
         $this->accessControlRepository->findByTypeAndId('AcmeBundle\Example', 1, null)->willReturn([]);
 
@@ -306,7 +306,7 @@ class DoctrineAccessControlProviderTest extends TestCase
     /**
      * @dataProvider provideSupport
      */
-    public function testSupport($type, $supported)
+    public function testSupport($type, $supported): void
     {
         $this->assertSame($supported, $this->doctrineAccessControlProvider->supports($type));
     }

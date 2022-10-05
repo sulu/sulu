@@ -16,7 +16,7 @@ use Sulu\Component\Rest\Listing\ListQueryBuilder;
 
 class ListQueryBuilderTest extends TestCase
 {
-    public function testFind()
+    public function testFind(): void
     {
         $builder = new ListQueryBuilder(
             [],
@@ -33,7 +33,7 @@ class ListQueryBuilderTest extends TestCase
         $this->assertEquals('SELECT u FROM SuluCoreBundle:Example u', $dql);
     }
 
-    public function testFindWithFields()
+    public function testFindWithFields(): void
     {
         $builder = new ListQueryBuilder(
             [],
@@ -50,7 +50,7 @@ class ListQueryBuilderTest extends TestCase
         $this->assertEquals('SELECT u.field1, u.field2, u.field3 FROM SuluCoreBundle:Example u', $dql);
     }
 
-    public function testFindWithSorting()
+    public function testFindWithSorting(): void
     {
         $builder = new ListQueryBuilder(
             [],
@@ -67,7 +67,7 @@ class ListQueryBuilderTest extends TestCase
         $this->assertEquals('SELECT u FROM SuluCoreBundle:Example u ORDER BY u.sortField ASC', $dql);
     }
 
-    public function testFindWithWhere()
+    public function testFindWithWhere(): void
     {
         $builder = new ListQueryBuilder(
             [],
@@ -84,7 +84,7 @@ class ListQueryBuilderTest extends TestCase
         $this->assertEquals('SELECT u FROM SuluCoreBundle:Example u WHERE u.field1 = 1 AND u.field2 = 2', $dql);
     }
 
-    public function testFindWithSearch()
+    public function testFindWithSearch(): void
     {
         $builder = new ListQueryBuilder(
             [],
@@ -101,7 +101,7 @@ class ListQueryBuilderTest extends TestCase
         $this->assertEquals('SELECT u FROM SuluCoreBundle:Example u WHERE (u.field LIKE :search)', $dql);
     }
 
-    public function testFindWithWhereAndSearch()
+    public function testFindWithWhereAndSearch(): void
     {
         $builder = new ListQueryBuilder(
             [],
@@ -121,7 +121,7 @@ class ListQueryBuilderTest extends TestCase
         );
     }
 
-    public function testFindWithWhereAndNumericSearch()
+    public function testFindWithWhereAndNumericSearch(): void
     {
         $builder = new ListQueryBuilder(
             [],
@@ -142,7 +142,7 @@ class ListQueryBuilderTest extends TestCase
         );
     }
 
-    public function testFindWithJoins()
+    public function testFindWithJoins(): void
     {
         $builder = new ListQueryBuilder(
             ['object', 'otherobject'],
@@ -163,7 +163,7 @@ class ListQueryBuilderTest extends TestCase
         );
     }
 
-    public function testCounting()
+    public function testCounting(): void
     {
         $builder = new ListQueryBuilder(
             [],

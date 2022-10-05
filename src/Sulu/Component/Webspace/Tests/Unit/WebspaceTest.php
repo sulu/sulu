@@ -23,7 +23,7 @@ use Sulu\Component\Webspace\Webspace;
 
 class WebspaceTest extends TestCase
 {
-    public function testToArray()
+    public function testToArray(): void
     {
         $metadata = new Metadata([]);
 
@@ -120,7 +120,7 @@ class WebspaceTest extends TestCase
         return $locale;
     }
 
-    public function testFindLocalization()
+    public function testFindLocalization(): void
     {
         $webspace = new Webspace();
 
@@ -152,7 +152,7 @@ class WebspaceTest extends TestCase
         $this->assertEquals(null, $result);
     }
 
-    public function testHasDomain()
+    public function testHasDomain(): void
     {
         $webspace = new Webspace();
 
@@ -170,7 +170,7 @@ class WebspaceTest extends TestCase
         $this->assertFalse($webspace->hasDomain('1.sulu.lo', 'prod'));
     }
 
-    public function testHasDomainWildcard()
+    public function testHasDomainWildcard(): void
     {
         $webspace = new Webspace();
 
@@ -188,7 +188,7 @@ class WebspaceTest extends TestCase
         $this->assertTrue($webspace->hasDomain('1.sulu.lo', 'prod'));
     }
 
-    public function testHasDomainWithLocalization()
+    public function testHasDomainWithLocalization(): void
     {
         $webspace = new Webspace();
 
@@ -209,7 +209,7 @@ class WebspaceTest extends TestCase
         $this->assertFalse($webspace->hasDomain('sulu.lo', 'prod', 'en'));
     }
 
-    public function testHasDomainWithLocalizationWithCountry()
+    public function testHasDomainWithLocalizationWithCountry(): void
     {
         $webspace = new Webspace();
 
@@ -230,7 +230,7 @@ class WebspaceTest extends TestCase
         $this->assertFalse($webspace->hasDomain('sulu.lo', 'prod', 'de'));
     }
 
-    public function testHasDomainWithLocationAndCountry()
+    public function testHasDomainWithLocationAndCountry(): void
     {
         $webspace = new Webspace();
 
@@ -259,7 +259,7 @@ class WebspaceTest extends TestCase
         $this->assertTrue($webspace->hasDomain('sulu.at', 'prod', 'de_at'));
     }
 
-    public function testAddTemplate()
+    public function testAddTemplate(): void
     {
         $templates = ['error-404' => 'template404'];
         $webspace = new Webspace();
@@ -271,7 +271,7 @@ class WebspaceTest extends TestCase
         $this->assertEquals($templates, $data['templates']);
     }
 
-    public function testAddTemplateDefault()
+    public function testAddTemplateDefault(): void
     {
         $templates = ['error-404' => 'template404', 'error' => 'template'];
 
@@ -286,7 +286,7 @@ class WebspaceTest extends TestCase
         $this->assertEquals($templates, $data['templates']);
     }
 
-    public function testAddDefaultTemplate()
+    public function testAddDefaultTemplate(): void
     {
         $defaultTemplates = ['page' => 'default', 'homepage' => 'overview'];
 
@@ -301,7 +301,7 @@ class WebspaceTest extends TestCase
         $this->assertEquals($defaultTemplates, $data['defaultTemplates']);
     }
 
-    public function testGetTemplateFormat()
+    public function testGetTemplateFormat(): void
     {
         $templates = ['error' => 'template'];
 
@@ -314,13 +314,13 @@ class WebspaceTest extends TestCase
         $this->assertEquals($templates, $data['templates']);
     }
 
-    public function testHasWebsiteSecurityWithoutSecurity()
+    public function testHasWebsiteSecurityWithoutSecurity(): void
     {
         $webspace = new Webspace();
         $this->assertFalse($webspace->hasWebsiteSecurity());
     }
 
-    public function testHasWebsiteSecurityWithoutSystem()
+    public function testHasWebsiteSecurityWithoutSystem(): void
     {
         $webspace = new Webspace();
         $security = new Security();
@@ -329,7 +329,7 @@ class WebspaceTest extends TestCase
         $this->assertFalse($webspace->hasWebsiteSecurity());
     }
 
-    public function testHasWebsiteSecurityWithSystem()
+    public function testHasWebsiteSecurityWithSystem(): void
     {
         $webspace = new Webspace();
         $security = new Security();
@@ -339,7 +339,7 @@ class WebspaceTest extends TestCase
         $this->assertTrue($webspace->hasWebsiteSecurity());
     }
 
-    public function testHasWebsiteSecurityWithoutPermissionCheck()
+    public function testHasWebsiteSecurityWithoutPermissionCheck(): void
     {
         $webspace = new Webspace();
         $security = new Security();

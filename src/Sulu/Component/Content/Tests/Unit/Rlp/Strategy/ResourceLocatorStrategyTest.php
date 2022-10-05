@@ -97,7 +97,7 @@ class ResourceLocatorStrategyTest extends TestCase
         );
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $document = $this->prophesize(ParentBehavior::class);
 
@@ -119,7 +119,7 @@ class ResourceLocatorStrategyTest extends TestCase
         );
     }
 
-    public function testGenerateWithParentDocument()
+    public function testGenerateWithParentDocument(): void
     {
         $document = $this->prophesize(ParentBehavior::class);
         $parentDocument = $this->prophesize(ParentBehavior::class);
@@ -148,7 +148,7 @@ class ResourceLocatorStrategyTest extends TestCase
         );
     }
 
-    public function testGenerateWithParent()
+    public function testGenerateWithParent(): void
     {
         $this->resourceLocatorGenerator->generate('test', null)->willReturn('/test');
         $this->cleaner->cleanup('/test', 'de')->willReturn('/test');

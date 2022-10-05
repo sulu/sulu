@@ -96,7 +96,7 @@ class DocumentManagerTest extends TestCase
     /**
      * It should issue a persist event for the passed document.
      */
-    public function testPersist()
+    public function testPersist(): void
     {
         $subscriber = $this->addSubscriber();
         $this->documentManager->persist(new \stdClass(), 'fr');
@@ -106,7 +106,7 @@ class DocumentManagerTest extends TestCase
     /**
      * It should issue a remove event.
      */
-    public function testRemove()
+    public function testRemove(): void
     {
         $subscriber = $this->addSubscriber();
         $this->documentManager->remove(new \stdClass());
@@ -116,7 +116,7 @@ class DocumentManagerTest extends TestCase
     /**
      * It should issue a removeLocale event.
      */
-    public function testRemoveLocale()
+    public function testRemoveLocale(): void
     {
         $subscriber = $this->addSubscriber();
         $this->documentManager->removeLocale(new \stdClass(), 'en');
@@ -126,7 +126,7 @@ class DocumentManagerTest extends TestCase
     /**
      * It should issue a move event.
      */
-    public function testMove()
+    public function testMove(): void
     {
         $subscriber = $this->addSubscriber();
         $this->documentManager->move(new \stdClass(), '/path/to');
@@ -136,7 +136,7 @@ class DocumentManagerTest extends TestCase
     /**
      * It should issue a copy event.
      */
-    public function testCopy()
+    public function testCopy(): void
     {
         $subscriber = $this->addSubscriber();
         $this->documentManager->copy(new \stdClass(), '/path/to');
@@ -146,35 +146,35 @@ class DocumentManagerTest extends TestCase
     /**
      * It should issue a create event.
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $subscriber = $this->addSubscriber();
         $this->documentManager->create('foo');
         $this->assertTrue($subscriber->create);
     }
 
-    public function testPublish()
+    public function testPublish(): void
     {
         $subscriber = $this->addSubscriber();
         $this->documentManager->publish(new \stdClass(), 'de');
         $this->assertTrue($subscriber->publish);
     }
 
-    public function testUnpublish()
+    public function testUnpublish(): void
     {
         $subscriber = $this->addSubscriber();
         $this->documentManager->unpublish(new \stdClass(), 'de');
         $this->assertTrue($subscriber->unpublish);
     }
 
-    public function testRemoveDraft()
+    public function testRemoveDraft(): void
     {
         $subscriber = $this->addSubscriber();
         $this->documentManager->removeDraft(new \stdClass(), 'de');
         $this->assertTrue($subscriber->removeDraft);
     }
 
-    public function testRestore()
+    public function testRestore(): void
     {
         $subscriber = $this->addSubscriber();
         $this->documentManager->restore(new \stdClass(), 'de', '123-456-789');
@@ -184,7 +184,7 @@ class DocumentManagerTest extends TestCase
     /**
      * It should issue a refresh event.
      */
-    public function testRefresh()
+    public function testRefresh(): void
     {
         $subscriber = $this->addSubscriber();
         $this->documentManager->refresh($this->document);
@@ -194,7 +194,7 @@ class DocumentManagerTest extends TestCase
     /**
      * It should issue a clear event.
      */
-    public function testClear()
+    public function testClear(): void
     {
         $subscriber = $this->addSubscriber();
         $this->documentManager->clear();
@@ -204,7 +204,7 @@ class DocumentManagerTest extends TestCase
     /**
      * It should issue a flush event.
      */
-    public function testFlush()
+    public function testFlush(): void
     {
         $subscriber = $this->addSubscriber();
         $this->documentManager->flush();
@@ -214,7 +214,7 @@ class DocumentManagerTest extends TestCase
     /**
      * It should issue a find event.
      */
-    public function testFind()
+    public function testFind(): void
     {
         $subscriber = $this->addSubscriber();
         $this->documentManager->find('foo', 'fr');
@@ -224,7 +224,7 @@ class DocumentManagerTest extends TestCase
     /**
      * It should throw an exception with invalid options.
      */
-    public function testFindWithInvalidOptions()
+    public function testFindWithInvalidOptions(): void
     {
         $this->expectException(UndefinedOptionsException::class);
         $subscriber = $this->addSubscriber();
@@ -234,7 +234,7 @@ class DocumentManagerTest extends TestCase
     /**
      * It should pass options.
      */
-    public function testFindWithOptions()
+    public function testFindWithOptions(): void
     {
         $subscriber = $this->addSubscriber();
         $this->assertNotNull($this->documentManager->find('foo', 'bar', ['test.foo' => 'bar']));
@@ -243,7 +243,7 @@ class DocumentManagerTest extends TestCase
     /**
      * It should issue a query create event.
      */
-    public function testQueryCreate()
+    public function testQueryCreate(): void
     {
         $subscriber = $this->addSubscriber();
         $query = $this->documentManager->createQuery('SELECT foo FROM [foo:bar]', 'fr');
@@ -256,7 +256,7 @@ class DocumentManagerTest extends TestCase
      *
      * NOT SUPPORTED
      */
-    public function testQueryCreateBuilder()
+    public function testQueryCreateBuilder(): void
     {
         $this->markTestSkipped('Not supported yet');
     }

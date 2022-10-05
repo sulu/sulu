@@ -89,7 +89,7 @@ class WebspaceInitializerTest extends TestCase
         );
     }
 
-    public function testInitialize()
+    public function testInitialize(): void
     {
         /** @var Webspace $webspace1 */
         $webspace1 = new Webspace();

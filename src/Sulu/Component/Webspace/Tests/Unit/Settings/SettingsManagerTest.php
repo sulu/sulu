@@ -60,7 +60,7 @@ class SettingsManagerTest extends TestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testSave($webspaceKey, $key, $data)
+    public function testSave($webspaceKey, $key, $data): void
     {
         $this->deprecatedSessionManager->getWebspacePath($webspaceKey)->willReturn('/cmf/' . $webspaceKey);
 
@@ -85,7 +85,7 @@ class SettingsManagerTest extends TestCase
     /**
      * @dataProvider removeDataProvider
      */
-    public function testRemove($webspaceKey, $key)
+    public function testRemove($webspaceKey, $key): void
     {
         $this->deprecatedSessionManager->getWebspacePath($webspaceKey)->willReturn('/cmf/' . $webspaceKey);
 
@@ -99,7 +99,7 @@ class SettingsManagerTest extends TestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testLoad($webspaceKey, $key, $data)
+    public function testLoad($webspaceKey, $key, $data): void
     {
         $node = $this->prophesize(NodeInterface::class);
 
@@ -125,7 +125,7 @@ class SettingsManagerTest extends TestCase
     /**
      * @dataProvider loadStringDataProvider
      */
-    public function testLoadString($webspaceKey, $key, $data, $exists)
+    public function testLoadString($webspaceKey, $key, $data, $exists): void
     {
         $node = $this->prophesize(NodeInterface::class);
         $property = $this->prophesize(PropertyInterface::class);
@@ -144,7 +144,7 @@ class SettingsManagerTest extends TestCase
         $this->assertEquals($exists ? $data : null, $result);
     }
 
-    public function testLoadByWildcard()
+    public function testLoadByWildcard(): void
     {
         $referencedNode = $this->prophesize(NodeInterface::class);
 

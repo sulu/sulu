@@ -112,7 +112,7 @@ class MappingSubscriberTest extends TestCase
     /**
      * It should map fields to the PHPCR node.
      */
-    public function testPersist()
+    public function testPersist(): void
     {
         $this->metadata->getFieldMappings()->willReturn(
             [
@@ -137,7 +137,7 @@ class MappingSubscriberTest extends TestCase
     /**
      * It should not map non-mapped fields to the PHPCR node.
      */
-    public function testPersistNonMapped()
+    public function testPersistNonMapped(): void
     {
         $this->metadata->getFieldMappings()->willReturn(
             [
@@ -161,7 +161,7 @@ class MappingSubscriberTest extends TestCase
     /**
      * It should throw an exception when mapped non-array values to non-multiple fields.
      */
-    public function testPersistNonArray()
+    public function testPersistNonArray(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->metadata->getFieldMappings()->willReturn(
@@ -186,7 +186,7 @@ class MappingSubscriberTest extends TestCase
     /**
      * It should map fields from the PHPCR node.
      */
-    public function testHydrate()
+    public function testHydrate(): void
     {
         $this->metadata->getFieldMappings()->willReturn(
             [
@@ -213,7 +213,7 @@ class MappingSubscriberTest extends TestCase
     /**
      * It should not map non-mapped fields.
      */
-    public function testHydrateNonMapped()
+    public function testHydrateNonMapped(): void
     {
         $this->metadata->getFieldMappings()->willReturn(
             [
@@ -238,7 +238,7 @@ class MappingSubscriberTest extends TestCase
     /**
      * It should use a default value.
      */
-    public function testHydrateDefault()
+    public function testHydrateDefault(): void
     {
         $this->metadata->getFieldMappings()->willReturn(
             [
@@ -265,7 +265,7 @@ class MappingSubscriberTest extends TestCase
     /**
      * It should json_encode the data.
      */
-    public function testPersistJsonArray()
+    public function testPersistJsonArray(): void
     {
         $this->metadata->getFieldMappings()->willReturn(
             [
@@ -290,7 +290,7 @@ class MappingSubscriberTest extends TestCase
     /**
      * It should json_decode the data.
      */
-    public function testHydrateJsonArray()
+    public function testHydrateJsonArray(): void
     {
         $this->metadata->getFieldMappings()->willReturn(
             [

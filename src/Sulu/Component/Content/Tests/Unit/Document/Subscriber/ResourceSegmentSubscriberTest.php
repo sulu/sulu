@@ -129,7 +129,7 @@ class ResourceSegmentSubscriberTest extends TestCase
         );
     }
 
-    public function testHydrate()
+    public function testHydrate(): void
     {
         $segment = '/test';
 
@@ -150,7 +150,7 @@ class ResourceSegmentSubscriberTest extends TestCase
         $this->resourceSegmentSubscriber->handleHydrate($event->reveal());
     }
 
-    public function testPersistDocument()
+    public function testPersistDocument(): void
     {
         $segment = '/test';
 
@@ -173,7 +173,7 @@ class ResourceSegmentSubscriberTest extends TestCase
         $this->resourceSegmentSubscriber->handlePersistDocument($event->reveal());
     }
 
-    public function testPersistRouteWithoutLocale()
+    public function testPersistRouteWithoutLocale(): void
     {
         $event = $this->prophesize(PublishEvent::class);
         $document = $this->prophesize(ResourceSegmentBehavior::class);
@@ -186,7 +186,7 @@ class ResourceSegmentSubscriberTest extends TestCase
         $this->resourceSegmentSubscriber->handlePersistRoute($event->reveal());
     }
 
-    public function testPersistRoute()
+    public function testPersistRoute(): void
     {
         $event = $this->prophesize(PublishEvent::class);
         $event->getLocale()->willReturn('de');
@@ -200,7 +200,7 @@ class ResourceSegmentSubscriberTest extends TestCase
         $this->resourceSegmentSubscriber->handlePersistRoute($event->reveal());
     }
 
-    public function testPersistRouteForRedirect()
+    public function testPersistRouteForRedirect(): void
     {
         $event = $this->prophesize(PublishEvent::class);
         $event->getLocale()->willReturn('de');
@@ -214,7 +214,7 @@ class ResourceSegmentSubscriberTest extends TestCase
         $this->resourceSegmentSubscriber->handlePersistRoute($event->reveal());
     }
 
-    public function testUpdateMovedDocument()
+    public function testUpdateMovedDocument(): void
     {
         $parentDocument = $this->prophesize(ResourceSegmentBehavior::class);
 
@@ -268,7 +268,7 @@ class ResourceSegmentSubscriberTest extends TestCase
         $this->resourceSegmentSubscriber->updateMovedDocument($event->reveal());
     }
 
-    public function testUpdateMovedDocumentWithRedirects()
+    public function testUpdateMovedDocumentWithRedirects(): void
     {
         $parentDocument = $this->prophesize(ResourceSegmentBehavior::class);
 
@@ -318,7 +318,7 @@ class ResourceSegmentSubscriberTest extends TestCase
         $this->resourceSegmentSubscriber->updateMovedDocument($event->reveal());
     }
 
-    public function testUpdateMovedDocumentForWrongDocument()
+    public function testUpdateMovedDocumentForWrongDocument(): void
     {
         $event = $this->prophesize(MoveEvent::class);
         $event->getDocument()->willReturn(new \stdClass());
@@ -328,7 +328,7 @@ class ResourceSegmentSubscriberTest extends TestCase
         $this->resourceSegmentSubscriber->updateMovedDocument($event->reveal());
     }
 
-    public function testUpdateMovedDocumentWithGhostParent()
+    public function testUpdateMovedDocumentWithGhostParent(): void
     {
         $parentDocument = $this->prophesize(ResourceSegmentBehavior::class);
 
@@ -368,7 +368,7 @@ class ResourceSegmentSubscriberTest extends TestCase
         $this->resourceSegmentSubscriber->updateMovedDocument($event->reveal());
     }
 
-    public function testUpdateMovedDocumentOnlyDraft()
+    public function testUpdateMovedDocumentOnlyDraft(): void
     {
         $parentDocument = $this->prophesize(ResourceSegmentBehavior::class);
 
@@ -403,7 +403,7 @@ class ResourceSegmentSubscriberTest extends TestCase
         $this->resourceSegmentSubscriber->updateMovedDocument($event->reveal());
     }
 
-    public function testUpdateCopiedDocument()
+    public function testUpdateCopiedDocument(): void
     {
         $parentDocument = $this->prophesize(ResourceSegmentBehavior::class);
         $copiedDocument = $this->prophesize(ResourceSegmentBehavior::class);
@@ -456,7 +456,7 @@ class ResourceSegmentSubscriberTest extends TestCase
         $this->resourceSegmentSubscriber->updateCopiedDocument($event->reveal());
     }
 
-    public function testUpdateCopiedDocumentWithRedirects()
+    public function testUpdateCopiedDocumentWithRedirects(): void
     {
         $parentDocument = $this->prophesize(ResourceSegmentBehavior::class);
         $copiedDocument = $this->prophesize(ResourceSegmentBehavior::class);
@@ -506,7 +506,7 @@ class ResourceSegmentSubscriberTest extends TestCase
         $this->resourceSegmentSubscriber->updateCopiedDocument($event->reveal());
     }
 
-    public function testUpdateCopiedDocumentForWrongDocument()
+    public function testUpdateCopiedDocumentForWrongDocument(): void
     {
         $document = new \stdClass();
 
@@ -520,7 +520,7 @@ class ResourceSegmentSubscriberTest extends TestCase
         $this->resourceSegmentSubscriber->updateCopiedDocument($event->reveal());
     }
 
-    public function testUpdateCopiedDocumentWithGhostParent()
+    public function testUpdateCopiedDocumentWithGhostParent(): void
     {
         $parentDocument = $this->prophesize(ResourceSegmentBehavior::class);
         $copiedDocument = $this->prophesize(ResourceSegmentBehavior::class);

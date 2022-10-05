@@ -26,7 +26,7 @@ class DocumentAccessorTest extends TestCase
     /**
      * It should be able to set private properties.
      */
-    public function testAccessObject()
+    public function testAccessObject(): void
     {
         $this->accessor->set('privateProperty', 'Hai');
         $this->assertEquals('Hai', $this->object->getPrivateProperty());
@@ -35,7 +35,7 @@ class DocumentAccessorTest extends TestCase
     /**
      * It should throw an exception if the property does not exist.
      */
-    public function testAccessObjectNotExist()
+    public function testAccessObjectNotExist(): void
     {
         $this->expectException(DocumentManagerException::class);
         $this->accessor->set('asdf', 'asd');

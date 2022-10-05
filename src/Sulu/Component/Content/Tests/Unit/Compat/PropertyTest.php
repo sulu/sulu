@@ -33,7 +33,7 @@ class PropertyTest extends TestCase
     /**
      * @dataProvider provideIsMultipleTest
      */
-    public function testIsMultipleTest($minOccurs, $maxOccurs, $result)
+    public function testIsMultipleTest($minOccurs, $maxOccurs, $result): void
     {
         $property = new Property('test', [], 'text_line', false, true, $maxOccurs, $minOccurs);
 

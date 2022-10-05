@@ -46,7 +46,7 @@ class DoctrineBetweenExpressionTest extends TestCase
         $this->queryBuilder->expects($this->any())->method('setParameter')->willReturnSelf();
     }
 
-    public function testGetStatement()
+    public function testGetStatement(): void
     {
         $fieldDescriptor = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
         $start = 1;

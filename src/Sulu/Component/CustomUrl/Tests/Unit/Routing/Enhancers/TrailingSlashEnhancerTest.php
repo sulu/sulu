@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class TrailingSlashEnhancerTest extends TestCase
 {
-    public function testEnhance()
+    public function testEnhance(): void
     {
         $customUrl = $this->prophesize(CustomUrlDocument::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -47,7 +47,7 @@ class TrailingSlashEnhancerTest extends TestCase
         );
     }
 
-    public function testEnhanceWithoutSlash()
+    public function testEnhanceWithoutSlash(): void
     {
         $customUrl = $this->prophesize(CustomUrlDocument::class);
         $webspace = $this->prophesize(Webspace::class);

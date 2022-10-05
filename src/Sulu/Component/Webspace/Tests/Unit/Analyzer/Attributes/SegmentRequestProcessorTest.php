@@ -32,7 +32,7 @@ class SegmentRequestProcessorTest extends TestCase
         $this->segmentRequestProcessor = new SegmentRequestProcessor('_ss');
     }
 
-    public function testProcessWithoutSegmentValue()
+    public function testProcessWithoutSegmentValue(): void
     {
         $request = new Request();
 
@@ -50,7 +50,7 @@ class SegmentRequestProcessorTest extends TestCase
         $this->assertNull($attributes->getAttribute('segment'));
     }
 
-    public function testProcessWithoutWebspace()
+    public function testProcessWithoutWebspace(): void
     {
         $request = new Request();
 
@@ -68,7 +68,7 @@ class SegmentRequestProcessorTest extends TestCase
         $this->assertNull($attributes->getAttribute('segment'));
     }
 
-    public function testProcessWithoutPortalInformation()
+    public function testProcessWithoutPortalInformation(): void
     {
         $request = new Request();
 
@@ -93,7 +93,7 @@ class SegmentRequestProcessorTest extends TestCase
     /**
      * @dataProvider provideProcessWithDefaultSegmentValue
      */
-    public function testProcessWithDefaultSegmentValue($cookieSegmentKey, $defaultSegmentKey, $expectedSegmentKey)
+    public function testProcessWithDefaultSegmentValue($cookieSegmentKey, $defaultSegmentKey, $expectedSegmentKey): void
     {
         $request = new Request();
         $webspace = new Webspace();

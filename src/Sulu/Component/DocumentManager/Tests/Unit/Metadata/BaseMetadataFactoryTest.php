@@ -49,7 +49,7 @@ class BaseMetadataFactoryTest extends TestCase
     /**
      * It should retrieve metadata for a fully qualified class name.
      */
-    public function testGetForClass()
+    public function testGetForClass(): void
     {
         $metadata = $this->factory->getMetadataForClass('Class\Page');
         $this->assertInstanceOf(Metadata::class, $metadata);
@@ -61,7 +61,7 @@ class BaseMetadataFactoryTest extends TestCase
     /**
      * It should throw an exception if there is no mapping for the class name.
      */
-    public function testGetForClassNotFound()
+    public function testGetForClassNotFound(): void
     {
         $this->expectException(MetadataNotFoundException::class);
         $this->factory->getMetadataForClass('Class\Page\NotFound');
@@ -70,7 +70,7 @@ class BaseMetadataFactoryTest extends TestCase
     /**
      * It should retrieve metadata for a given alias.
      */
-    public function testGetForAlias()
+    public function testGetForAlias(): void
     {
         $metadata = $this->factory->getMetadataForAlias('snippet');
         $this->assertInstanceOf(Metadata::class, $metadata);
@@ -82,7 +82,7 @@ class BaseMetadataFactoryTest extends TestCase
     /**
      * It should throw an exception if there is no mapping for given alias.
      */
-    public function testGetForAliasNotFound()
+    public function testGetForAliasNotFound(): void
     {
         $this->expectException(MetadataNotFoundException::class);
         $this->factory->getMetadataForAlias('yak');
@@ -91,7 +91,7 @@ class BaseMetadataFactoryTest extends TestCase
     /**
      * It should retrieve metadata for a given phpcrType.
      */
-    public function testGetForPhpcrType()
+    public function testGetForPhpcrType(): void
     {
         $metadata = $this->factory->getMetadataForPhpcrType('sulu:snippet');
         $this->assertInstanceOf(Metadata::class, $metadata);
@@ -100,7 +100,7 @@ class BaseMetadataFactoryTest extends TestCase
         $this->assertEquals('sulu:snippet', $metadata->getPhpcrType());
     }
 
-    public function testHasPhpcrType()
+    public function testHasPhpcrType(): void
     {
         $res = $this->factory->hasMetadataForPhpcrType('sulu:snippet');
         $this->assertTrue($res);
@@ -112,7 +112,7 @@ class BaseMetadataFactoryTest extends TestCase
     /**
      * It should say if it has metadata for a class.
      */
-    public function testHasMetadataForClass()
+    public function testHasMetadataForClass(): void
     {
         $this->assertTrue($this->factory->hasMetadataForClass('Class\Snippet'));
     }
@@ -120,7 +120,7 @@ class BaseMetadataFactoryTest extends TestCase
     /**
      * It should say if it has metadata for a class.
      */
-    public function testHasMetadataForProxyClass()
+    public function testHasMetadataForProxyClass(): void
     {
         $this->assertTrue($this->factory->hasMetadataForClass('ProxyManagerGeneratedProxy\__PM__\Class\Snippet\Generateda84aebfffbf882fd8bddc950faa89e05'));
     }
@@ -128,7 +128,7 @@ class BaseMetadataFactoryTest extends TestCase
     /**
      * It should throw an exception if there is no mapping for given phpcrType.
      */
-    public function testGetForPhpcrTypeNotFound()
+    public function testGetForPhpcrTypeNotFound(): void
     {
         $this->expectException(MetadataNotFoundException::class);
         $this->factory->getMetadataForPhpcrType('yak');
@@ -137,7 +137,7 @@ class BaseMetadataFactoryTest extends TestCase
     /**
      * It has a method to determine if an alias exists.
      */
-    public function testHasAlias()
+    public function testHasAlias(): void
     {
         $this->assertTrue($this->factory->hasAlias('page'));
         $this->assertFalse($this->factory->hasAlias('fooabarbardg'));
@@ -146,7 +146,7 @@ class BaseMetadataFactoryTest extends TestCase
     /**
      * It should return metadata for all mapped documents.
      */
-    public function testAllMetadata()
+    public function testAllMetadata(): void
     {
         $metadatas = $this->factory->getAllMetadata();
         $this->assertCount(2, $metadatas);

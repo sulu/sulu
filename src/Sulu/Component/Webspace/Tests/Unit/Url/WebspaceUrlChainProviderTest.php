@@ -19,7 +19,7 @@ use Sulu\Component\Webspace\Webspace;
 
 class WebspaceUrlChainProviderTest extends TestCase
 {
-    public function testGetUrls()
+    public function testGetUrls(): void
     {
         $webspace = $this->prophesize(Webspace::class);
 
@@ -36,7 +36,7 @@ class WebspaceUrlChainProviderTest extends TestCase
         );
     }
 
-    public function testGetUrlsEmptyChain()
+    public function testGetUrlsEmptyChain(): void
     {
         $webspace = $this->prophesize(Webspace::class);
 

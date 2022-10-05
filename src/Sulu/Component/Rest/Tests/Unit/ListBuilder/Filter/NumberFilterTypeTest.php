@@ -47,7 +47,7 @@ class NumberFilterTypeTest extends TestCase
     /**
      * @dataProvider provideFilter
      */
-    public function testFilter($fieldName, $value, $expectedOperator, $expectedValue)
+    public function testFilter($fieldName, $value, $expectedOperator, $expectedValue): void
     {
         $fieldDescriptor = $this->prophesize(FieldDescriptor::class);
         $this->numberFilterType->filter($this->listBuilder->reveal(), $fieldDescriptor->reveal(), $value);
@@ -67,7 +67,7 @@ class NumberFilterTypeTest extends TestCase
     /**
      * @dataProvider provideFilterWithInvalidOptions
      */
-    public function testFilterWithInvalidOptions($options)
+    public function testFilterWithInvalidOptions($options): void
     {
         $this->expectException(InvalidFilterTypeOptionsException::class);
 

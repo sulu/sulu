@@ -18,7 +18,7 @@ use Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry;
 
 class FilterTypeRegistryTest extends TestCase
 {
-    public function testGetFieldType()
+    public function testGetFieldType(): void
     {
         $textFilterType = $this->prophesize(FilterTypeInterface::class);
         $numberFilterType = $this->prophesize(FilterTypeInterface::class);
@@ -30,7 +30,7 @@ class FilterTypeRegistryTest extends TestCase
         $this->assertEquals($numberFilterType->reveal(), $filterTypeRegistry->getFilterType('number'));
     }
 
-    public function testGetNonExistingFieldType()
+    public function testGetNonExistingFieldType(): void
     {
         $this->expectException(FilterTypeNotFoundException::class);
 

@@ -25,7 +25,7 @@ class ListRestHelperTest extends TestCase
         $this->em = $this->prophesize(ObjectManager::class);
     }
 
-    public function testGetFields()
+    public function testGetFields(): void
     {
         $request = new Request([
             'fields' => 'field1,field2,field3',

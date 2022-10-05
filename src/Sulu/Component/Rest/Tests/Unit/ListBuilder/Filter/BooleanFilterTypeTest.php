@@ -46,7 +46,7 @@ class BooleanFilterTypeTest extends TestCase
     /**
      * @dataProvider provideFilter
      */
-    public function testFilter($fieldName, $value, $expected)
+    public function testFilter($fieldName, $value, $expected): void
     {
         $fieldDescriptor = $this->prophesize(FieldDescriptor::class);
         $this->booleanFilterType->filter($this->listBuilder->reveal(), $fieldDescriptor->reveal(), $value);
@@ -54,7 +54,7 @@ class BooleanFilterTypeTest extends TestCase
         $this->listBuilder->where($fieldDescriptor->reveal(), $expected)->shouldBeCalled();
     }
 
-    public function testFilterWithInvalidOptions()
+    public function testFilterWithInvalidOptions(): void
     {
         $this->expectException(InvalidFilterTypeOptionsException::class);
 

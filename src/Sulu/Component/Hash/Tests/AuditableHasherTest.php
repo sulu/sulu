@@ -29,13 +29,13 @@ class AuditableHasherTest extends TestCase
         $this->hasher = new AuditableHasher();
     }
 
-    public function testHashWrongObject()
+    public function testHashWrongObject(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->hasher->hash(new \stdClass());
     }
 
-    public function testHashSameObject()
+    public function testHashSameObject(): void
     {
         /** @var AuditableInterface $object */
         $object = $this->prophesize(AuditableInterface::class);
@@ -60,7 +60,7 @@ class AuditableHasherTest extends TestCase
     /**
      * @dataProvider provideDifferentObjects
      */
-    public function testHashDifferentObject($changer1, $changer2, $changed1, $changed2)
+    public function testHashDifferentObject($changer1, $changer2, $changed1, $changed2): void
     {
         /** @var AuditableInterface $object1 */
         $object1 = $this->prophesize(AuditableInterface::class);
@@ -81,7 +81,7 @@ class AuditableHasherTest extends TestCase
         $this->assertNotSame($this->hasher->hash($object1->reveal()), $this->hasher->hash($object2->reveal()));
     }
 
-    public function testHashWithoutChanger()
+    public function testHashWithoutChanger(): void
     {
         /** @var AuditableInterface $object */
         $object = $this->prophesize(AuditableInterface::class);
@@ -91,7 +91,7 @@ class AuditableHasherTest extends TestCase
         $this->assertIsString($this->hasher->hash($object->reveal()));
     }
 
-    public function testHashWithoutDate()
+    public function testHashWithoutDate(): void
     {
         $user = $this->prophesize(UserInterface::class);
         $user->getId()->willReturn(1);
@@ -103,7 +103,7 @@ class AuditableHasherTest extends TestCase
         $this->assertIsString($this->hasher->hash($object->reveal()));
     }
 
-    public function testHashAuditableBehavior()
+    public function testHashAuditableBehavior(): void
     {
         $object = $this->prophesize(LocalizedAuditableBehavior::class);
         $object->getChanger()->willReturn(1);
@@ -112,7 +112,7 @@ class AuditableHasherTest extends TestCase
         $this->assertIsString($this->hasher->hash($object->reveal()));
     }
 
-    public function testHashAuditableBehaviorWithoutDate()
+    public function testHashAuditableBehaviorWithoutDate(): void
     {
         $object = $this->prophesize(LocalizedAuditableBehavior::class);
         $object->getChanger()->willReturn(1);

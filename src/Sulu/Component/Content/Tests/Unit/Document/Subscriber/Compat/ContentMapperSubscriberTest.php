@@ -79,7 +79,7 @@ class ContentMapperSubscriberTest extends TestCase
         );
     }
 
-    public function testHandlePreRemove()
+    public function testHandlePreRemove(): void
     {
         $document = $this->prophesize(StructureBehavior::class);
         $node = $this->prophesize(NodeInterface::class);
@@ -97,7 +97,7 @@ class ContentMapperSubscriberTest extends TestCase
         $this->contentMapperSubscriber->handlePostRemove(new RemoveEvent($document->reveal()));
     }
 
-    public function testPersistAndFlush()
+    public function testPersistAndFlush(): void
     {
         $document1 = $this->prophesize(StructureBehavior::class);
         $node1 = $this->prophesize(NodeInterface::class);
