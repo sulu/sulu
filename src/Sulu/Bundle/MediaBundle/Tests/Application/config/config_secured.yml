@@ -1,0 +1,22 @@
+security:
+    enable_authenticator_manager: true
+
+    access_decision_manager:
+        strategy: affirmative
+    password_hashers:
+        Sulu\Bundle\SecurityBundle\Entity\User: plaintext
+
+    providers:
+        testprovider:
+            id: test_user_provider
+
+    firewalls:
+        test:
+            http_basic:
+
+sulu_test:
+    enable_test_user_provider: true
+
+sulu_security:
+    checker:
+        enabled: true

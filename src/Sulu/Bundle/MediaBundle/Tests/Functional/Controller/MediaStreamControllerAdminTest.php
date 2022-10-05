@@ -16,9 +16,12 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
+use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -34,7 +37,7 @@ class MediaStreamControllerAdminTest extends SuluTestCase
 {
     use ProphecyTrait;
 
-    public function testDownloadActionCheckPermissionCalled()
+    public function testDownloadActionCheckPermissionCalled(): void
     {
         $this->initDatabase();
 
@@ -64,7 +67,7 @@ class MediaStreamControllerAdminTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
     }
 
-    public function testDownloadActionCheckPermissionDenied()
+    public function testDownloadActionCheckPermissionDenied(): void
     {
         $client = $this->createAuthenticatedClient([], [
             'PHP_AUTH_USER' => 'secured_user',
@@ -85,7 +88,7 @@ class MediaStreamControllerAdminTest extends SuluTestCase
         $this->assertHttpStatusCode(403, $response);
     }
 
-    public function testDownloadActionCheckPermissionAllowed()
+    public function testDownloadActionCheckPermissionAllowed(): void
     {
         $client = $this->createAuthenticatedClient([], [
             'PHP_AUTH_USER' => 'secured_user',
@@ -106,7 +109,7 @@ class MediaStreamControllerAdminTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
     }
 
-    private function createTestUser(string $username, bool $hasPermission)
+    private function createTestUser(string $username, bool $hasPermission): void
     {
         $contact = new Contact();
         $this->getEntityManager()->persist($contact);
@@ -165,12 +168,15 @@ class MediaStreamControllerAdminTest extends SuluTestCase
         $mediaTypes->load($this->getEntityManager());
     }
 
-    private function createUploadedFile($path)
+    private function createUploadedFile(string $path): UploadedFile
     {
-        return new UploadedFile($path, \basename($path), \mime_content_type($path));
+        /** @var string $mimeType */
+        $mimeType = \mime_content_type($path);
+
+        return new UploadedFile($path, \basename($path), $mimeType);
     }
 
-    private function createCollection($title = 'Test')
+    private function createCollection(string $title = 'Test'): int
     {
         $collection = $this->getCollectionManager()->save(
             [
@@ -184,7 +190,7 @@ class MediaStreamControllerAdminTest extends SuluTestCase
         return $collection->getId();
     }
 
-    private function createMedia($path, $title)
+    private function createMedia(string $path, string $title): Media
     {
         return $this->getMediaManager()->save(
             $this->createUploadedFile($path),
@@ -197,31 +203,17 @@ class MediaStreamControllerAdminTest extends SuluTestCase
         );
     }
 
-    private function createMediaVersion($id, $path, $title)
-    {
-        return $this->getMediaManager()->save(
-            $this->createUploadedFile($path),
-            [
-                'id' => $id,
-                'title' => $title,
-                'collection' => $this->createCollection(),
-                'locale' => 'en',
-            ],
-            null
-        );
-    }
-
-    private function getMediaManager()
+    private function getMediaManager(): MediaManager
     {
         return $this->getContainer()->get('sulu_media.media_manager');
     }
 
-    private function getCollectionManager()
+    private function getCollectionManager(): CollectionManager
     {
         return $this->getContainer()->get('sulu_media.collection_manager');
     }
 
-    private function createMediaFile(string $name, string $fileName = 'photo.jpeg')
+    private function createMediaFile(string $name, string $fileName = 'photo.jpeg'): string
     {
         $filePath = \sys_get_temp_dir() . '/' . $name;
         \copy(__DIR__ . '/../../Fixtures/files/' . $fileName, $filePath);
