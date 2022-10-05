@@ -130,6 +130,8 @@ class CsvHandler
                 $row[$key] = true === $value ? 1 : 0;
             } elseif (\is_array($value) || \is_object($value)) {
                 $row[$key] = \json_encode($value);
+            } elseif (\is_string($value) && false !== \strpos($value, \PHP_EOL)) {
+                $row[$key] = \str_replace(\PHP_EOL, '\n', $value);
             }
         }
 
