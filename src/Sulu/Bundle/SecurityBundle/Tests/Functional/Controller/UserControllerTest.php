@@ -887,11 +887,23 @@ class UserControllerTest extends SuluTestCase
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
+        $users = $response->_embedded->users;
 
-        $this->assertEquals(4, \count($response->_embedded->users));
-        $this->assertEquals('admin', $response->_embedded->users[0]->username);
-        $this->assertObjectNotHasAttribute('password', $response->_embedded->users[0]);
-        $this->assertEquals('de', $response->_embedded->users[0]->locale);
+        $this->assertEquals(4, \count($users));
+
+        $adminUser = null;
+        foreach ($users as $user) {
+            if ('admin' === $user->username) {
+                $adminUser = $user;
+
+                break;
+            }
+        }
+
+        $this->assertNotNull($adminUser);
+        $this->assertEquals('admin', $adminUser->username);
+        $this->assertObjectNotHasAttribute('password', $adminUser);
+        $this->assertEquals('de', $adminUser->locale);
     }
 
     public function testCGetProperties(): void
