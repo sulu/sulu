@@ -42,11 +42,11 @@ class SeoStructureExtensionTest extends TestCase
         parent::tearDown();
     }
 
-    public function testSave()
+    public function testSave(): void
     {
         $content = [];
         $this->node->setProperty(Argument::any(), Argument::any())->will(
-            function($arguments) use (&$content) {
+            function($arguments) use (&$content): void {
                 $content[$arguments[0]] = $arguments[1];
             }
         );
@@ -77,11 +77,11 @@ class SeoStructureExtensionTest extends TestCase
         );
     }
 
-    public function testSaveWithoutData()
+    public function testSaveWithoutData(): void
     {
         $content = [];
         $this->node->setProperty(Argument::any(), Argument::any())->will(
-            function($arguments) use (&$content) {
+            function($arguments) use (&$content): void {
                 $content[$arguments[0]] = $arguments[1];
             }
         );
@@ -104,7 +104,7 @@ class SeoStructureExtensionTest extends TestCase
         );
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         $data = [
             'title' => 'Title',
@@ -153,7 +153,7 @@ class SeoStructureExtensionTest extends TestCase
         );
     }
 
-    public function testLoadWithoutData()
+    public function testLoadWithoutData(): void
     {
         $content = [];
 

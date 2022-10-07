@@ -97,7 +97,7 @@ class MediaWebsiteControllerTest extends WebsiteTestCase
         }
     }
 
-    public function recursiveRemoveDirectory($directory, $counter = 0)
+    public function recursiveRemoveDirectory($directory, $counter = 0): void
     {
         foreach (\glob($directory . '/*') as $file) {
             if (\is_dir($file)) {
@@ -226,7 +226,7 @@ class MediaWebsiteControllerTest extends WebsiteTestCase
     /**
      * Test Media DownloadCounter.
      */
-    public function testResponseHeader()
+    public function testResponseHeader(): void
     {
         $media = $this->createMedia('photo');
         $date = new \DateTime();

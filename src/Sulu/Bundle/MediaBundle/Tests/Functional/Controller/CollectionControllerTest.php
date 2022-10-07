@@ -223,7 +223,7 @@ class CollectionControllerTest extends SuluTestCase
         return $collection;
     }
 
-    private function addMedia(Collection $collection, $numberOfMedia)
+    private function addMedia(Collection $collection, $numberOfMedia): void
     {
         for ($i = 0; $i < $numberOfMedia; ++$i) {
             $media = new Media();
@@ -307,7 +307,7 @@ class CollectionControllerTest extends SuluTestCase
         return \array_values($result);
     }
 
-    public function testGetById()
+    public function testGetById(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -509,7 +509,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals(5, $response->_embedded->collections[0]->mediaCount);
     }
 
-    public function testcGetPaginatedWithRoot()
+    public function testcGetPaginatedWithRoot(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -555,7 +555,7 @@ class CollectionControllerTest extends SuluTestCase
         $this->assertEquals('Test Collection', $response->_embedded->collections[0]->title);
     }
 
-    public function testcGetPaginatedWithChildren()
+    public function testcGetPaginatedWithChildren(): void
     {
         $parent = $this->createCollection(
             $this->collectionType1,

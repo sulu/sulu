@@ -15,7 +15,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
-    public function testContactsConfig()
+    public function testContactsConfig(): void
     {
         $client = $this->createAuthenticatedClient();
         $client->jsonRequest('GET', '/admin/config');
@@ -28,7 +28,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('/redirect/media/:id', $mediaConfig->endpoints->image_format);
     }
 
-    public function testCollectionMetadataAction()
+    public function testCollectionMetadataAction(): void
     {
         $client = $this->createAuthenticatedClient();
 
@@ -47,7 +47,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals(['title'], $schema->required);
     }
 
-    public function testMediaMetadataAction()
+    public function testMediaMetadataAction(): void
     {
         $client = $this->createAuthenticatedClient();
 
@@ -89,7 +89,7 @@ class AdminControllerTest extends SuluTestCase
         ];
     }
 
-    public function testImagesFormMetadataAction()
+    public function testImagesFormMetadataAction(): void
     {
         $client = $this->createAuthenticatedClient();
 

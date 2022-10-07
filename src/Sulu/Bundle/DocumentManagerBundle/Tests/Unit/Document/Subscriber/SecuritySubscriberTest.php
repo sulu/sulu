@@ -38,7 +38,7 @@ class SecuritySubscriberTest extends TestCase
         $this->securitySubscriber = new SecuritySubscriber($this->tokenStorage->reveal());
     }
 
-    public function testSetDefaultUser()
+    public function testSetDefaultUser(): void
     {
         $event = $this->prophesize(ConfigureOptionsEvent::class);
 
@@ -58,7 +58,7 @@ class SecuritySubscriberTest extends TestCase
         $this->securitySubscriber->setDefaultUser($event->reveal());
     }
 
-    public function testSetDefaultUserWithNullToken()
+    public function testSetDefaultUserWithNullToken(): void
     {
         $event = $this->prophesize(ConfigureOptionsEvent::class);
 
@@ -72,7 +72,7 @@ class SecuritySubscriberTest extends TestCase
         $this->securitySubscriber->setDefaultUser($event->reveal());
     }
 
-    public function testSetDefaultUserWithAnonymousToken()
+    public function testSetDefaultUserWithAnonymousToken(): void
     {
         $event = $this->prophesize(ConfigureOptionsEvent::class);
 
@@ -87,7 +87,7 @@ class SecuritySubscriberTest extends TestCase
         $this->securitySubscriber->setDefaultUser($event->reveal());
     }
 
-    public function testSetDefaultUserWithNonSuluUser()
+    public function testSetDefaultUserWithNonSuluUser(): void
     {
         $event = $this->prophesize(ConfigureOptionsEvent::class);
 

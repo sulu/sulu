@@ -68,7 +68,7 @@ class PageTeaserProviderTest extends TestCase
         );
     }
 
-    public function testConfiguration()
+    public function testConfiguration(): void
     {
         $configuration = $this->pageTeaserProvider->getConfiguration();
 
@@ -85,7 +85,7 @@ class PageTeaserProviderTest extends TestCase
         );
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         $data = [
             '123-123-123' => [
@@ -137,7 +137,7 @@ class PageTeaserProviderTest extends TestCase
         $this->assertTeaser($ids[1], $data[$ids[1]], $result[1]);
     }
 
-    public function testFindShowDrafts()
+    public function testFindShowDrafts(): void
     {
         $pageTeaserProvider = new PageTeaserProvider(
             $this->searchManager->reveal(),
@@ -234,7 +234,7 @@ class PageTeaserProviderTest extends TestCase
         return $queryHit->reveal();
     }
 
-    private function assertTeaser($id, array $expected, Teaser $teaser)
+    private function assertTeaser($id, array $expected, Teaser $teaser): void
     {
         $this->assertEquals($id, $teaser->getId());
         $this->assertEquals('pages', $teaser->getType());

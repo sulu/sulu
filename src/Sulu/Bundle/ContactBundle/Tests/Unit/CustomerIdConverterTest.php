@@ -32,7 +32,7 @@ class CustomerIdConverterTest extends TestCase
     /**
      * @dataProvider convertIdsToGroupedIdsProvider
      */
-    public function testConvertIdsToGroupedIds($ids, $default, $expected)
+    public function testConvertIdsToGroupedIds($ids, $default, $expected): void
     {
         $converter = new CustomerIdConverter();
         $result = $converter->convertIdsToGroupedIds($ids, $default);
@@ -56,7 +56,7 @@ class CustomerIdConverterTest extends TestCase
     /**
      * @dataProvider convertGroupedIdsToIdsProvider
      */
-    public function testConvertGroupedIdsToIds($groupedIds, $expected)
+    public function testConvertGroupedIdsToIds($groupedIds, $expected): void
     {
         $converter = new CustomerIdConverter();
         $result = $converter->convertGroupedIdsToIds($groupedIds);

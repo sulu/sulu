@@ -59,7 +59,7 @@ class StructureResolverTest extends TestCase
         );
     }
 
-    public function testResolve()
+    public function testResolve(): void
     {
         $this->contentTypeManager->get('content_type')->willReturn($this->contentType);
         $this->contentType->getViewData(Argument::any())->willReturn('view');
@@ -131,7 +131,7 @@ class StructureResolverTest extends TestCase
         $this->assertEquals($expected, $this->structureResolver->resolve($structure->reveal()));
     }
 
-    public function testResolveWithoutPathParameter()
+    public function testResolveWithoutPathParameter(): void
     {
         $this->contentTypeManager->get('content_type')->willReturn($this->contentType);
 
@@ -202,7 +202,7 @@ class StructureResolverTest extends TestCase
         $this->assertEquals($expected, $structureResolver->resolve($structure->reveal()));
     }
 
-    public function testResolveWithoutExtensions()
+    public function testResolveWithoutExtensions(): void
     {
         $this->contentTypeManager->get('content_type')->willReturn($this->contentType);
 
@@ -266,7 +266,7 @@ class StructureResolverTest extends TestCase
         $this->assertEquals($expected, $this->structureResolver->resolve($structure->reveal(), false));
     }
 
-    public function testResolveWithIncludedProperties()
+    public function testResolveWithIncludedProperties(): void
     {
         $this->contentTypeManager->get('content_type')->willReturn($this->contentType);
         $this->contentType->getViewData(Argument::any())->willReturn('view');

@@ -32,7 +32,7 @@ class ScalerTest extends SuluTestCase
         $this->scaler = new Scaler();
     }
 
-    public function testScale()
+    public function testScale(): void
     {
         $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
@@ -44,7 +44,7 @@ class ScalerTest extends SuluTestCase
         $this->assertEquals(200, $image->getSize()->getHeight());
     }
 
-    public function testScaleInset()
+    public function testScaleInset(): void
     {
         $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
@@ -56,7 +56,7 @@ class ScalerTest extends SuluTestCase
         $this->assertEquals(100, $image->getSize()->getHeight());
     }
 
-    public function testScaleForceRatio()
+    public function testScaleForceRatio(): void
     {
         $imagine = $this->createImagine();
         $imageBox = new Box(100, 50);
@@ -77,7 +77,7 @@ class ScalerTest extends SuluTestCase
         $this->assertEquals(50, $image->getSize()->getHeight());
     }
 
-    public function testScaleRetina()
+    public function testScaleRetina(): void
     {
         $imagine = $this->createImagine();
         $imageBox = new Box(3000, 2000);
@@ -89,7 +89,7 @@ class ScalerTest extends SuluTestCase
         $this->assertEquals(400, $image->getSize()->getHeight());
     }
 
-    public function testScaleWithFloatWidth()
+    public function testScaleWithFloatWidth(): void
     {
         $imagine = $this->createImagine();
         $imageBox = new Box(220, 442);

@@ -80,7 +80,7 @@ class GroupControllerTest extends SuluTestCase
         $this->em->clear();
     }
 
-    public function testList()
+    public function testList(): void
     {
         $this->client->jsonRequest('GET', '/api/groups?flat=true');
 
@@ -91,7 +91,7 @@ class GroupControllerTest extends SuluTestCase
         $this->assertEquals('Group2', $response->_embedded->groups[1]->name);
     }
 
-    public function testGetById()
+    public function testGetById(): void
     {
         $this->client->jsonRequest('GET', '/api/groups/' . $this->group1->getId());
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -102,7 +102,7 @@ class GroupControllerTest extends SuluTestCase
         $this->assertEquals('Sulu Manager', $response->roles[1]->name);
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -143,7 +143,7 @@ class GroupControllerTest extends SuluTestCase
         $this->assertEquals('Sulu Manager', $response->roles[1]->name);
     }
 
-    public function testPut()
+    public function testPut(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -174,7 +174,7 @@ class GroupControllerTest extends SuluTestCase
         $this->assertEquals('Sulu Administrator', $response->roles[0]->name);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $this->client->jsonRequest(
             'GET',

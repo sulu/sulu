@@ -99,7 +99,7 @@ class MaintainResourceLocatorCommandTest extends TestCase
         $this->output = $this->prophesize(OutputInterface::class);
     }
 
-    public function testExecute()
+    public function testExecute(): void
     {
         $webspace1 = new Webspace();
         $webspace1->setKey('sulu_io');

@@ -19,7 +19,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 
 class SegmentSelectTest extends TestCase
 {
-    public function testRead()
+    public function testRead(): void
     {
         $node = $this->prophesize(NodeInterface::class);
 
@@ -43,7 +43,7 @@ class SegmentSelectTest extends TestCase
         $segmentSelect->read($node->reveal(), $property->reveal(), 'sulu_io', 'de', null);
     }
 
-    public function testReadPropertyNotExists()
+    public function testReadPropertyNotExists(): void
     {
         $node = $this->prophesize(NodeInterface::class);
         $node->getProperties('test-*')->willReturn([]);
@@ -57,7 +57,7 @@ class SegmentSelectTest extends TestCase
         $segmentSelect->read($node->reveal(), $property->reveal(), 'sulu_io', 'de', null);
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $node = $this->prophesize(NodeInterface::class);
         $node->setProperty('test-sulu_io', 'w')->shouldBeCalled();
@@ -79,7 +79,7 @@ class SegmentSelectTest extends TestCase
         $segmentSelect->write($node->reveal(), $property->reveal(), 1, 'sulu_io', 'de', null);
     }
 
-    public function testWriteWithRemovals()
+    public function testWriteWithRemovals(): void
     {
         $node = $this->prophesize(NodeInterface::class);
         $node->setProperty('test-other', 'a')->shouldBeCalled();
@@ -109,7 +109,7 @@ class SegmentSelectTest extends TestCase
         $segmentSelect->write($node->reveal(), $property->reveal(), 1, 'sulu_io', 'de', null);
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $node = $this->prophesize(NodeInterface::class);
         $phpcrProperty1 = $this->prophesize(PhpcrPropertyInterface::class);

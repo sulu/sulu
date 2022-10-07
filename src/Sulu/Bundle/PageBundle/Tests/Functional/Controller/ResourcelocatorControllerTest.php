@@ -29,7 +29,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $this->client->jsonRequest('POST', '/api/resourcelocators?action=generate', [
             'parts' => ['title' => 'test1', 'discription' => 'test2'],
@@ -41,7 +41,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
         $this->assertEquals('/test1-test2', $response->resourcelocator);
     }
 
-    public function testGenerateWithParent()
+    public function testGenerateWithParent(): void
     {
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
@@ -67,7 +67,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
         $this->assertEquals('/products/test1-test2', $response->resourcelocator);
     }
 
-    public function testGenerateWithConflict()
+    public function testGenerateWithConflict(): void
     {
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 

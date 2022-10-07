@@ -19,7 +19,7 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 
 class FormOverlayListViewBuilderTest extends TestCase
 {
-    public function testBuildFormOverlayListViewWithClone()
+    public function testBuildFormOverlayListViewWithClone(): void
     {
         $routeBuilder = (new FormOverlayListViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -30,7 +30,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertNotSame($routeBuilder->getView(), $routeBuilder->getView());
     }
 
-    public function testBuildFormOverlayListViewWithoutResourceKey()
+    public function testBuildFormOverlayListViewWithoutResourceKey(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('/"setResourceKey"/');
@@ -39,7 +39,7 @@ class FormOverlayListViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildFormOverlayListViewWithoutListAdapters()
+    public function testBuildFormOverlayListViewWithoutListAdapters(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('/"addListAdapters"/');
@@ -98,7 +98,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         string $editOverlayTitle,
         string $overlaySize,
         array $requestParameters
-    ) {
+    ): void {
         $route = (new FormOverlayListViewBuilder($name, $path))
             ->setResourceKey($resourceKey)
             ->setListKey($listKey)
@@ -125,7 +125,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertEquals('sulu_admin.form_overlay_list', $route->getType());
     }
 
-    public function testBuildFormOverlayListViewAddingAdaptersTwice()
+    public function testBuildFormOverlayListViewAddingAdaptersTwice(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -138,7 +138,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertEquals(['table', 'column_list', 'tree'], $route->getOption('adapters'));
     }
 
-    public function testBuildListWithLocales()
+    public function testBuildListWithLocales(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles/:locale'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -154,7 +154,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertEquals('de', $route->getAttributeDefault('locale'));
     }
 
-    public function testBuildListWithLocalesWithoutLocalePlaceholder()
+    public function testBuildListWithLocalesWithoutLocalePlaceholder(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');
@@ -170,7 +170,7 @@ class FormOverlayListViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildListWithoutLocalesWithLocalePlaceholder()
+    public function testBuildListWithoutLocalesWithLocalePlaceholder(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');
@@ -183,7 +183,7 @@ class FormOverlayListViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildListWithoutListKey()
+    public function testBuildListWithoutListKey(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('"listKey"');
@@ -194,7 +194,7 @@ class FormOverlayListViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildListWithoutFormKey()
+    public function testBuildListWithoutFormKey(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('"formKey"');
@@ -206,7 +206,7 @@ class FormOverlayListViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildFormOverlayListViewWithSearch()
+    public function testBuildFormOverlayListViewWithSearch(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -220,7 +220,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertTrue($route->getOption('searchable'));
     }
 
-    public function testBuildFormOverlayListViewWithoutSearch()
+    public function testBuildFormOverlayListViewWithoutSearch(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -234,7 +234,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertFalse($route->getOption('searchable'));
     }
 
-    public function testBuildFormOverlayListViewWithSelection()
+    public function testBuildFormOverlayListViewWithSelection(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -248,7 +248,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertTrue($route->getOption('selectable'));
     }
 
-    public function testBuildFormOverlayListViewWithoutSelection()
+    public function testBuildFormOverlayListViewWithoutSelection(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -262,7 +262,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertFalse($route->getOption('selectable'));
     }
 
-    public function testBuildListWithRouterAttributesToListRequest()
+    public function testBuildListWithRouterAttributesToListRequest(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -279,7 +279,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildFormWithRouterAttributesToFormRequest()
+    public function testBuildFormWithRouterAttributesToFormRequest(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -313,7 +313,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildWithResourceStorePropertiesToListRequest()
+    public function testBuildWithResourceStorePropertiesToListRequest(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -330,7 +330,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildWithResourceStorePropertiesToFormRequest()
+    public function testBuildWithResourceStorePropertiesToFormRequest(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -347,7 +347,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildListSetParent()
+    public function testBuildListSetParent(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -360,7 +360,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertEquals('sulu_role.parent_view', $route->getParent());
     }
 
-    public function testBuildListSetOption()
+    public function testBuildListSetOption(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -374,7 +374,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertEquals('overridden_roles', $route->getOption('listKey'));
     }
 
-    public function testBuildListSetTabTitle()
+    public function testBuildListSetTabTitle(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -387,7 +387,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertEquals('sulu_role.title', $route->getOption('tabTitle'));
     }
 
-    public function testBuildListSetTabOrder()
+    public function testBuildListSetTabOrder(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -400,7 +400,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertEquals(5, $route->getOption('tabOrder'));
     }
 
-    public function testBuildListSetTabPriority()
+    public function testBuildListSetTabPriority(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -413,7 +413,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertEquals(5, $route->getOption('tabPriority'));
     }
 
-    public function testBuildListSetTabCondition()
+    public function testBuildListSetTabCondition(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -426,7 +426,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertEquals('state == 1', $route->getOption('tabCondition'));
     }
 
-    public function testBuildListSetBackView()
+    public function testBuildListSetBackView(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -439,7 +439,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertEquals('sulu_category.edit_form', $route->getOption('backView'));
     }
 
-    public function testBuildListSetItemDisabledCondition()
+    public function testBuildListSetItemDisabledCondition(): void
     {
         $route = (new FormOverlayListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -452,7 +452,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         $this->assertSame('(_permissions && !_permissions.delete)', $route->getOption('itemDisabledCondition'));
     }
 
-    public function testBuildAddToolbarActions()
+    public function testBuildAddToolbarActions(): void
     {
         $saveToolbarAction = new ToolbarAction('sulu_admin.save');
         $typesToolbarAction = new ToolbarAction('sulu_admin.types');
@@ -473,7 +473,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildAddItemActions()
+    public function testBuildAddItemActions(): void
     {
         $linkItemAction = new ToolbarAction('sulu_admin.link');
         $exportItemAction = new ToolbarAction('sulu_admin.export');
@@ -494,7 +494,7 @@ class FormOverlayListViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildAddTabBadge()
+    public function testBuildAddTabBadge(): void
     {
         $fooBadge = new Badge('sulu_foo.get_foo_badge');
         $barBadge = new Badge('sulu_bar.get_bar_badge');

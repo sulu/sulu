@@ -68,7 +68,7 @@ class SuluSecurityListenerTest extends TestCase
         $this->securityListener = new SuluSecurityListener($this->securityChecker->reveal());
     }
 
-    public function testObjectRestController()
+    public function testObjectRestController(): void
     {
         $controller = $this->prophesize(SecuredObjectControllerInterface::class);
         $controller->willImplement(SecuredControllerInterface::class);
@@ -95,7 +95,7 @@ class SuluSecurityListenerTest extends TestCase
         $this->securityListener->onKernelController($controllerEvent);
     }
 
-    public function testObjectRestControllerWithContext()
+    public function testObjectRestControllerWithContext(): void
     {
         $controller = $this->prophesize(SecuredControllerInterface::class);
         $controller->willImplement(SecuredObjectControllerInterface::class);
@@ -122,7 +122,7 @@ class SuluSecurityListenerTest extends TestCase
         $this->securityListener->onKernelController($controllerEvent);
     }
 
-    public function testRestController()
+    public function testRestController(): void
     {
         $controller = $this->prophesize(SecuredControllerInterface::class);
         $controller->getSecurityContext()->willReturn('security.context');
@@ -142,7 +142,7 @@ class SuluSecurityListenerTest extends TestCase
         $this->securityChecker->checkPermission(Argument::cetera())->shouldHaveBeenCalled();
     }
 
-    public function testNonRestControllerAbstain()
+    public function testNonRestControllerAbstain(): void
     {
         $this->securityChecker->checkPermission(Argument::cetera())->shouldNotHaveBeenCalled();
 
@@ -158,7 +158,7 @@ class SuluSecurityListenerTest extends TestCase
         $this->securityListener->onKernelController($controllerEvent);
     }
 
-    public function testSubject()
+    public function testSubject(): void
     {
         $controller = $this->prophesize(SecuredControllerInterface::class);
         $controller->getSecurityContext()->willReturn('sulu.media.collection')->shouldBeCalled();
@@ -180,7 +180,7 @@ class SuluSecurityListenerTest extends TestCase
     /**
      * @dataProvider provideMethodActionMapping
      */
-    public function testMethodPermissionMapping($method, $action, $permission)
+    public function testMethodPermissionMapping($method, $action, $permission): void
     {
         $request = $this->prophesize(Request::class);
         $request->getMethod()->willReturn($method);
@@ -204,7 +204,7 @@ class SuluSecurityListenerTest extends TestCase
     /**
      * @dataProvider provideInvokeMethodActionMapping
      */
-    public function testCallableControllerPermission($method, $permission)
+    public function testCallableControllerPermission($method, $permission): void
     {
         $request = $this->prophesize(Request::class);
         $request->getMethod()->willReturn($method);
@@ -219,7 +219,7 @@ class SuluSecurityListenerTest extends TestCase
             ->shouldHaveBeenCalled();
     }
 
-    public function testLocale()
+    public function testLocale(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getMethod()->willReturn(null);
@@ -239,7 +239,7 @@ class SuluSecurityListenerTest extends TestCase
         $this->securityChecker->checkPermission(Argument::any(), Argument::any())->shouldHaveBeenCalled();
     }
 
-    public function testNullSecurityContext()
+    public function testNullSecurityContext(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getMethod()->willReturn(null);

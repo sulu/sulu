@@ -186,7 +186,7 @@ class SitemapGeneratorTest extends SuluTestCase
      *
      * @return StructureInterface[]
      */
-    private function prepareTestData($locale)
+    private function prepareTestData($locale): void
     {
         // TODO set published state?
         /** @var PageDocument $newsDocument */
@@ -285,7 +285,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->documentManager->flush();
     }
 
-    public function testGenerateAllFlat()
+    public function testGenerateAllFlat(): void
     {
         $result = $this->sitemapGenerator->generateAllLocals('test_io', true)->getSitemap();
 
@@ -311,7 +311,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->assertContains(['Products-3 en_us', '/news', 2], $result);
     }
 
-    public function testGenerateFlat()
+    public function testGenerateFlat(): void
     {
         $result = $this->sitemapGenerator->generate('test_io', 'en', true)->getSitemap();
 
@@ -338,7 +338,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->assertEquals(2, $result[5]['nodeType']);
     }
 
-    public function testGenerateTree()
+    public function testGenerateTree(): void
     {
         $result = $this->sitemapGenerator->generate('test_io', 'en')->getSitemap();
 
@@ -420,7 +420,7 @@ class ExcerptStructureExtension extends AbstractExtension
         $this->structureManager = $structureManager;
     }
 
-    public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
+    public function save(NodeInterface $node, $data, $webspaceKey, $languageCode): void
     {
         foreach ($this->excerptStructure->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
@@ -465,7 +465,7 @@ class ExcerptStructureExtension extends AbstractExtension
         return $data;
     }
 
-    public function setLanguageCode($languageCode, $languageNamespace, $namespace)
+    public function setLanguageCode($languageCode, $languageNamespace, $namespace): void
     {
         // lazy load excerpt structure to avoid redeclaration of classes
         // should be done before parent::setLanguageCode because it uses the $thi<->properties

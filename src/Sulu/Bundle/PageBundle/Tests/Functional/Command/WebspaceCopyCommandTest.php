@@ -57,7 +57,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
         $this->setupPages();
     }
 
-    public function testRunAborted()
+    public function testRunAborted(): void
     {
         /** @var HomeDocument $baseDocument */
         $homeDocumentDestination = $this->documentManager->find('/cmf/destination_io/contents');
@@ -86,7 +86,7 @@ class WebspaceCopyCommandTest extends SuluTestCase
         $this->assertStringContainsString('Aborted', $output);
     }
 
-    public function testRun()
+    public function testRun(): void
     {
         /** @var HomeDocument $baseDocument */
         $homeDocumentDestination = $this->documentManager->find('/cmf/destination_io/contents');

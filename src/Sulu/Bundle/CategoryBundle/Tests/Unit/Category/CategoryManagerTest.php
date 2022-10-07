@@ -104,7 +104,7 @@ class CategoryManagerTest extends TestCase
         );
     }
 
-    public function testGetApiObject()
+    public function testGetApiObject(): void
     {
         $entity = $this->prophesize(CategoryInterface::class);
         $wrapper = $this->categoryManager->getApiObject($entity->reveal(), 'en');
@@ -117,7 +117,7 @@ class CategoryManagerTest extends TestCase
         $this->assertEquals(null, $wrapper);
     }
 
-    public function testGetApiObjects()
+    public function testGetApiObjects(): void
     {
         $wrapperEntity = $this->prophesize(Category::class);
         $wrapperEntity->getEntity()->willReturn($this->prophesize(CategoryInterface::class)->reveal());
@@ -222,7 +222,7 @@ class CategoryManagerTest extends TestCase
         $this->categoryManager->delete($id, true);
     }
 
-    public function testMove($id = 1, $parentId = 2)
+    public function testMove($id = 1, $parentId = 2): void
     {
         $category = $this->prophesize(CategoryInterface::class);
         $newParentCategory = $this->prophesize(CategoryInterface::class);
@@ -239,7 +239,7 @@ class CategoryManagerTest extends TestCase
         $this->assertEquals($category->reveal(), $result);
     }
 
-    public function testMoveToRoot($id = 1, $parentId = null)
+    public function testMoveToRoot($id = 1, $parentId = null): void
     {
         $category = $this->prophesize(CategoryInterface::class);
         $previousParentCategory = $this->prophesize(CategoryInterface::class);

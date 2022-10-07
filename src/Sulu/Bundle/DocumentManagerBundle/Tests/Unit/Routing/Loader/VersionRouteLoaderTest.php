@@ -18,14 +18,14 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 
 class VersionRouteLoaderTest extends TestCase
 {
-    public function testLoadWithDisabledVersioning()
+    public function testLoadWithDisabledVersioning(): void
     {
         $versionRouteLoader = new VersionRouteLoader(false);
 
         $this->assertCount(0, $versionRouteLoader->load('routing.yml'));
     }
 
-    public function testLoadWithActivatedVersioning()
+    public function testLoadWithActivatedVersioning(): void
     {
         $versionRouteLoader = new VersionRouteLoader(true);
         $resolver = $this->prophesize(LoaderResolverInterface::class);

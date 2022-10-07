@@ -68,7 +68,7 @@ class PageRuleTest extends TestCase
         $uuidRule,
         $urlExists,
         $result
-    ) {
+    ): void {
         $pageRule = new PageRule(
             $this->requestStack->reveal(),
             $this->requestAnalyzer->reveal(),

@@ -141,7 +141,7 @@ class ImageMapContentTypeTest extends TestCase
             $webspaceKey,
             $languageCode,
             $segmentKey
-        )->will(function($arguments) use ($value) {
+        )->will(function($arguments) use ($value): void {
             [$node, $property] = $arguments;
             $property->setValue($value['imageId']);
         })->shouldBeCalled();
@@ -157,7 +157,7 @@ class ImageMapContentTypeTest extends TestCase
             $webspaceKey,
             $languageCode,
             $segmentKey
-        )->will(function($arguments) use ($value) {
+        )->will(function($arguments) use ($value): void {
             [$node, $property] = $arguments;
             $property->setValue(\count($value['hotspots']));
         })->shouldBeCalled();
@@ -173,7 +173,7 @@ class ImageMapContentTypeTest extends TestCase
             $webspaceKey,
             $languageCode,
             $segmentKey
-        )->will(function($arguments) use ($value) {
+        )->will(function($arguments) use ($value): void {
             [$node, $property] = $arguments;
             $property->setValue($value['hotspots'][0]['type']);
         })->shouldBeCalled();
@@ -189,7 +189,7 @@ class ImageMapContentTypeTest extends TestCase
             $webspaceKey,
             $languageCode,
             $segmentKey
-        )->will(function($arguments) use ($value) {
+        )->will(function($arguments) use ($value): void {
             [$node, $property] = $arguments;
             $property->setValue(\json_encode($value['hotspots'][0]['hotspot']));
         })->shouldBeCalled();
@@ -207,7 +207,7 @@ class ImageMapContentTypeTest extends TestCase
                 $webspaceKey,
                 $languageCode,
                 $segmentKey
-            )->will(function($arguments) use ($value, $childName) {
+            )->will(function($arguments) use ($value, $childName): void {
                 [$node, $property] = $arguments;
                 $property->setValue($value['hotspots'][0][$childName]);
             })->shouldBeCalled();
@@ -224,7 +224,7 @@ class ImageMapContentTypeTest extends TestCase
             $webspaceKey,
             $languageCode,
             $segmentKey
-        )->will(function($arguments) use ($value) {
+        )->will(function($arguments) use ($value): void {
             [$node, $property] = $arguments;
             $property->setValue($value['hotspots'][1]['type']);
         })->shouldBeCalled();
@@ -240,7 +240,7 @@ class ImageMapContentTypeTest extends TestCase
             $webspaceKey,
             $languageCode,
             $segmentKey
-        )->will(function($arguments) use ($value) {
+        )->will(function($arguments) use ($value): void {
             [$node, $property] = $arguments;
             $property->setValue(\json_encode($value['hotspots'][1]['hotspot']));
         })->shouldBeCalled();
@@ -258,7 +258,7 @@ class ImageMapContentTypeTest extends TestCase
                 $webspaceKey,
                 $languageCode,
                 $segmentKey
-            )->will(function($arguments) use ($value, $childName) {
+            )->will(function($arguments) use ($value, $childName): void {
                 [$node, $property] = $arguments;
                 $property->setValue($value['hotspots'][1][$childName]);
             })->shouldBeCalled();

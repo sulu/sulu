@@ -16,7 +16,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class SaveWithFormDialogToolbarActionTest extends SuluTestCase
 {
-    public function testSerializer()
+    public function testSerializer(): void
     {
         $saveWithFormDialogToolbarAction = new SaveWithFormDialogToolbarAction('sulu_admin.save', 'form');
 
@@ -26,7 +26,7 @@ class SaveWithFormDialogToolbarActionTest extends SuluTestCase
         );
     }
 
-    public function testSerializerWithCondition()
+    public function testSerializerWithCondition(): void
     {
         $saveWithFormDialogToolbarAction = new SaveWithFormDialogToolbarAction('sulu_admin.save', 'form', 'flag');
 

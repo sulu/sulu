@@ -29,7 +29,7 @@ class ProfileControllerTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testPatchSettings()
+    public function testPatchSettings(): void
     {
         $this->client->jsonRequest(
             'PATCH',
@@ -48,7 +48,7 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('setting-value', \json_decode($userSetting->getValue()));
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $this->client->jsonRequest('GET', '/api/profile');
 
@@ -63,7 +63,7 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('Mustermann', $response->lastName);
     }
 
-    public function testPut()
+    public function testPut(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -87,7 +87,7 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('de', $response->locale);
     }
 
-    public function testPutInvalidField()
+    public function testPutInvalidField(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -111,7 +111,7 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('de', $response->locale);
     }
 
-    public function testPutEmailNotUnique()
+    public function testPutEmailNotUnique(): void
     {
         $existingContact = new Contact();
         $existingContact->setFirstName('Max');
@@ -148,7 +148,7 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertEquals('The email address "existing@email.com" is already assigned to another contact.', $response->detail);
     }
 
-    public function testPutUsernameNotUnique()
+    public function testPutUsernameNotUnique(): void
     {
         $existingContact = new Contact();
         $existingContact->setFirstName('Max');
@@ -187,7 +187,7 @@ class ProfileControllerTest extends SuluTestCase
         );
     }
 
-    public function testPutWithoutFirstName()
+    public function testPutWithoutFirstName(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -209,7 +209,7 @@ class ProfileControllerTest extends SuluTestCase
         );
     }
 
-    public function testPutWithoutLastName()
+    public function testPutWithoutLastName(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -232,7 +232,7 @@ class ProfileControllerTest extends SuluTestCase
         );
     }
 
-    public function testPutWithoutUsername()
+    public function testPutWithoutUsername(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -255,7 +255,7 @@ class ProfileControllerTest extends SuluTestCase
         );
     }
 
-    public function testPutWithoutEmail()
+    public function testPutWithoutEmail(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -278,7 +278,7 @@ class ProfileControllerTest extends SuluTestCase
         );
     }
 
-    public function testPutWithoutLocale()
+    public function testPutWithoutLocale(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -301,7 +301,7 @@ class ProfileControllerTest extends SuluTestCase
         );
     }
 
-    public function testPutWithoutPassword()
+    public function testPutWithoutPassword(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -320,7 +320,7 @@ class ProfileControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
     }
 
-    public function testDeleteSettings()
+    public function testDeleteSettings(): void
     {
         $this->client->jsonRequest(
             'PATCH',

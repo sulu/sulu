@@ -38,7 +38,7 @@ class HtmlTagExtractorTest extends TestCase
     /**
      * @dataProvider provideTags
      */
-    public function testExtract($tag, $tagName, array $attributes)
+    public function testExtract($tag, $tagName, array $attributes): void
     {
         $html = '<html><body>' . $tag . '</body></html>';
 
@@ -77,7 +77,7 @@ class HtmlTagExtractorTest extends TestCase
     /**
      * @dataProvider provideMultipleTags
      */
-    public function testExtractAll($html, array $counts)
+    public function testExtractAll($html, array $counts): void
     {
         $extractor = new HtmlTagExtractor('sulu');
         $result = $extractor->extract($html);
@@ -91,7 +91,7 @@ class HtmlTagExtractorTest extends TestCase
     /**
      * @dataProvider provideMultipleTags
      */
-    public function testCount($html, array $counts, $count)
+    public function testCount($html, array $counts, $count): void
     {
         $extractor = new HtmlTagExtractor('sulu');
 

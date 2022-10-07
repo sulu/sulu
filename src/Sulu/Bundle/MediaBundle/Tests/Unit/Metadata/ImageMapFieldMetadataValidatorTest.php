@@ -78,7 +78,7 @@ class ImageMapFieldMetadataValidatorTest extends TestCase
         return $sectionMetadata;
     }
 
-    private function expectReservedPropertyNameException(string $formKey, string $imageMapName, string $propertyName)
+    private function expectReservedPropertyNameException(string $formKey, string $imageMapName, string $propertyName): void
     {
         $this->expectException(ReservedPropertyNameException::class);
         $this->expectExceptionMessageMatches('"' . $formKey . '"');
@@ -86,7 +86,7 @@ class ImageMapFieldMetadataValidatorTest extends TestCase
         $this->expectExceptionMessageMatches('"' . $propertyName . '"');
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $item = $this->createFieldMetadata('valid_name', 'text_line');
         $type = $this->createFormMetadata('some_image_map_type', [$item]);
@@ -97,7 +97,7 @@ class ImageMapFieldMetadataValidatorTest extends TestCase
         $this->imageMapFieldMetadataValidator->validate($imageMap, 'some_form_key');
     }
 
-    public function testValidatePropertyNameHotspot()
+    public function testValidatePropertyNameHotspot(): void
     {
         $item = $this->createFieldMetadata('hotspot', 'text_line');
         $type = $this->createFormMetadata('some_image_map_type', [$item]);
@@ -108,7 +108,7 @@ class ImageMapFieldMetadataValidatorTest extends TestCase
         $this->imageMapFieldMetadataValidator->validate($imageMap, 'some_form_key');
     }
 
-    public function testValidateImageMapWithSectionWithHotspotProperty()
+    public function testValidateImageMapWithSectionWithHotspotProperty(): void
     {
         $item = $this->createFieldMetadata('hotspot', 'text_line');
         $section = $this->createSectionMetadata('some_section', [$item]);
@@ -120,7 +120,7 @@ class ImageMapFieldMetadataValidatorTest extends TestCase
         $this->imageMapFieldMetadataValidator->validate($imageMap, 'some_form_key');
     }
 
-    public function testValidateImageMapWithSectionWithValidProperties()
+    public function testValidateImageMapWithSectionWithValidProperties(): void
     {
         $sectionItem = $this->createFieldMetadata('other_valid_name', 'text_line');
         $section = $this->createSectionMetadata('some_section', [$sectionItem]);
@@ -133,7 +133,7 @@ class ImageMapFieldMetadataValidatorTest extends TestCase
         $this->imageMapFieldMetadataValidator->validate($imageMap, 'some_form_key');
     }
 
-    public function testValidateNotImageMap()
+    public function testValidateNotImageMap(): void
     {
         $property = $this->createFieldMetadata('some_property', 'text_line');
 

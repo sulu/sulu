@@ -88,7 +88,7 @@ class ExceptionControllerTest extends TestCase
     /**
      * @dataProvider provideShowAction
      */
-    public function testShowActionFormat($retrievedFormat, $templateAvailable, $expectExceptionFormat)
+    public function testShowActionFormat($retrievedFormat, $templateAvailable, $expectExceptionFormat): void
     {
         $request = new Request();
         $request->setRequestFormat($retrievedFormat);
@@ -147,7 +147,7 @@ class ExceptionControllerTest extends TestCase
     /**
      * @dataProvider provideShowActionErrorTemplate
      */
-    public function testShowActionErrorTemplate($templates, $errorCode, $expectedTemplate)
+    public function testShowActionErrorTemplate($templates, $errorCode, $expectedTemplate): void
     {
         $request = new Request();
         $exception = $this->createFlattenException(new \Exception(), $errorCode);

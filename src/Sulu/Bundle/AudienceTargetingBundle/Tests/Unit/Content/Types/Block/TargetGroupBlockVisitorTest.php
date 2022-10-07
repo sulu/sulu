@@ -35,7 +35,7 @@ class TargetGroupBlockVisitorTest extends TestCase
         $this->targetGroupBlockVisitor = new TargetGroupBlockVisitor($this->targetGroupStore->reveal());
     }
 
-    public function testShouldNotSkipWithObjectAsSettings()
+    public function testShouldNotSkipWithObjectAsSettings(): void
     {
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(new \stdClass());
@@ -43,7 +43,7 @@ class TargetGroupBlockVisitorTest extends TestCase
         $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
-    public function testShouldNotSkipWithEmptyArrayAsSettings()
+    public function testShouldNotSkipWithEmptyArrayAsSettings(): void
     {
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings([]);
@@ -51,7 +51,7 @@ class TargetGroupBlockVisitorTest extends TestCase
         $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
-    public function testShouldSkipWithOtherTargetGroup()
+    public function testShouldSkipWithOtherTargetGroup(): void
     {
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(['target_groups_enabled' => true, 'target_groups' => [1, 2]]);
@@ -61,7 +61,7 @@ class TargetGroupBlockVisitorTest extends TestCase
         $this->assertNull($this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
-    public function testShouldNotSkipWithSameTargetGroup()
+    public function testShouldNotSkipWithSameTargetGroup(): void
     {
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(['target_groups_enabled' => true, 'target_groups' => [1, 2, 3]]);
@@ -71,7 +71,7 @@ class TargetGroupBlockVisitorTest extends TestCase
         $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
-    public function testShouldNotSkipWithoutTargetGroups()
+    public function testShouldNotSkipWithoutTargetGroups(): void
     {
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(['target_groups_enabled' => true]);
@@ -81,7 +81,7 @@ class TargetGroupBlockVisitorTest extends TestCase
         $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
-    public function testShouldNotSkipWithDisabledTargetGroups()
+    public function testShouldNotSkipWithDisabledTargetGroups(): void
     {
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(['target_groups_enabled' => false, 'target_groups' => [1, 2]]);
@@ -91,7 +91,7 @@ class TargetGroupBlockVisitorTest extends TestCase
         $this->assertEquals($blockPropertyType, $this->targetGroupBlockVisitor->visit($blockPropertyType));
     }
 
-    public function testShouldNotSkipWithoutTargetGroupsFlag()
+    public function testShouldNotSkipWithoutTargetGroupsFlag(): void
     {
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(['target_groups' => [1, 2]]);

@@ -19,7 +19,7 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 
 class PreviewFormViewBuilderTest extends TestCase
 {
-    public function testBuildPreviewFormViewWithClone()
+    public function testBuildPreviewFormViewWithClone(): void
     {
         $viewBuilder = (new PreviewFormViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -28,7 +28,7 @@ class PreviewFormViewBuilderTest extends TestCase
         $this->assertNotSame($viewBuilder->getView(), $viewBuilder->getView());
     }
 
-    public function testBuildPreviewFormViewWithoutResourceKey()
+    public function testBuildPreviewFormViewWithoutResourceKey(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('/"setResourceKey"/');
@@ -96,7 +96,7 @@ class PreviewFormViewBuilderTest extends TestCase
         ?array $requestParameters,
         ?bool $disablePreviewWebspaceChooser,
         ?array $routerAttributesToFormMetadata
-    ) {
+    ): void {
         $viewBuilder = (new PreviewFormViewBuilder($name, $path))
             ->setResourceKey($resourceKey)
             ->setFormKey($formKey);
@@ -171,7 +171,7 @@ class PreviewFormViewBuilderTest extends TestCase
         }
     }
 
-    public function testBuildFormWithToolbarActions()
+    public function testBuildFormWithToolbarActions(): void
     {
         $saveToolbarAction = new ToolbarAction('sulu_admin.save');
         $typesToolbarAction = new ToolbarAction('sulu_admin.types');
@@ -190,7 +190,7 @@ class PreviewFormViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildFormWithRouterAttributesToFormRequest()
+    public function testBuildFormWithRouterAttributesToFormRequest(): void
     {
         $view = (new PreviewFormViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -205,7 +205,7 @@ class PreviewFormViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildFormWithRouterAttributesToEditView()
+    public function testBuildFormWithRouterAttributesToEditView(): void
     {
         $view = (new PreviewFormViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -220,7 +220,7 @@ class PreviewFormViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildFormWithIdQueryParameter()
+    public function testBuildFormWithIdQueryParameter(): void
     {
         $view = (new PreviewFormViewBuilder('sulu_security.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -234,7 +234,7 @@ class PreviewFormViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildFormWithPreviewCondition()
+    public function testBuildFormWithPreviewCondition(): void
     {
         $view = (new PreviewFormViewBuilder('sulu_page.page_edit_form.details', '/pages/:id/details'))
             ->setResourceKey('pages')
@@ -245,7 +245,7 @@ class PreviewFormViewBuilderTest extends TestCase
         $this->assertSame('nodeType == 1', $view->getOption('previewCondition'));
     }
 
-    public function testBuildFormWithParent()
+    public function testBuildFormWithParent(): void
     {
         $view = (new PreviewFormViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -256,7 +256,7 @@ class PreviewFormViewBuilderTest extends TestCase
         $this->assertSame('sulu_admin.test', $view->getParent());
     }
 
-    public function testBuildFormWithOption()
+    public function testBuildFormWithOption(): void
     {
         $view = (new PreviewFormViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -267,7 +267,7 @@ class PreviewFormViewBuilderTest extends TestCase
         $this->assertSame('test', $view->getOption('resourceKey'));
     }
 
-    public function testBuildFormWithLocales()
+    public function testBuildFormWithLocales(): void
     {
         $view = (new PreviewFormViewBuilder('sulu_role.add_form', '/roles/:locale'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -279,7 +279,7 @@ class PreviewFormViewBuilderTest extends TestCase
         $this->assertSame(['de', 'en', 'nl', 'fr'], $view->getOption('locales'));
     }
 
-    public function testBuildFormWithLocalesWithoutLocalePlaceholder()
+    public function testBuildFormWithLocalesWithoutLocalePlaceholder(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');
@@ -292,7 +292,7 @@ class PreviewFormViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildFormWithoutLocalesWithLocalePlaceholder()
+    public function testBuildFormWithoutLocalesWithLocalePlaceholder(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');
@@ -303,7 +303,7 @@ class PreviewFormViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildFormWithRedirectToItself()
+    public function testBuildFormWithRedirectToItself(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('"editView"');
@@ -315,7 +315,7 @@ class PreviewFormViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildAddTabBadge()
+    public function testBuildAddTabBadge(): void
     {
         $fooBadge = new Badge('sulu_foo.get_foo_badge');
         $barBadge = new Badge('sulu_bar.get_bar_badge');

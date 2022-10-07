@@ -21,7 +21,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RouteGeneratorCompilerPassTest extends TestCase
 {
-    public function testProcess()
+    public function testProcess(): void
     {
         $generatorAlias = 'schema';
         $serviceId = 'sulu_route.route_generator';
@@ -68,7 +68,7 @@ class RouteGeneratorCompilerPassTest extends TestCase
         $compilerPass->process($container->reveal());
     }
 
-    public function testProcessNoService()
+    public function testProcessNoService(): void
     {
         $serviceId = 'sulu_route.generator.route_generator';
 
@@ -81,7 +81,7 @@ class RouteGeneratorCompilerPassTest extends TestCase
         $compilerPass->process($container->reveal());
     }
 
-    public function testProcessNoParameter()
+    public function testProcessNoParameter(): void
     {
         $serviceId = 'sulu_route.generator.route_generator';
 
@@ -95,7 +95,7 @@ class RouteGeneratorCompilerPassTest extends TestCase
         $compilerPass->process($container->reveal());
     }
 
-    public function testProcessEmptyConfig()
+    public function testProcessEmptyConfig(): void
     {
         $generatorAlias = 'schema';
         $serviceId = 'sulu_route.generator.route_generator';

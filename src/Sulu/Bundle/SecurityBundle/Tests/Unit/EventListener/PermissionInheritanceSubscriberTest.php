@@ -54,7 +54,7 @@ class PermissionInheritanceSubscriberTest extends TestCase
     /**
      * @dataProvider providePostPersist
      */
-    public function testPostPersist($id, $parentId, $permissions)
+    public function testPostPersist($id, $parentId, $permissions): void
     {
         $entity = $this->prophesize(PermissionInheritanceInterface::class);
         $entity->getId()->willReturn($id);
@@ -69,7 +69,7 @@ class PermissionInheritanceSubscriberTest extends TestCase
         $this->permissionInheritanceSubscriber->postPersist($event);
     }
 
-    public function testPostPersistForOtherEntities()
+    public function testPostPersistForOtherEntities(): void
     {
         $entity = new \stdClass();
         $event = $this->createPostPersistEvent($entity);
@@ -79,7 +79,7 @@ class PermissionInheritanceSubscriberTest extends TestCase
         $this->permissionInheritanceSubscriber->postPersist($event);
     }
 
-    public function testPostPersistWithoutParent()
+    public function testPostPersistWithoutParent(): void
     {
         $entity = $this->prophesize(PermissionInheritanceInterface::class);
         $event = $this->createPostPersistEvent($entity->reveal());

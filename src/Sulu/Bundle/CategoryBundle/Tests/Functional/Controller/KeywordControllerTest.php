@@ -47,7 +47,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->initOrm();
     }
 
-    public function initOrm()
+    public function initOrm(): void
     {
         $this->purgeDatabase();
 
@@ -77,7 +77,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->entityManager->clear();
     }
 
-    public function testCget()
+    public function testCget(): void
     {
         $this->testPost('keyword1', 'de', $this->category1->getId());
         $this->testPost('keyword2', 'de', $this->category1->getId());
@@ -100,7 +100,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertEquals('keyword2', $response->_embedded->category_keywords[1]->keyword);
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $keyword = $this->testPost('keyword1', 'de', $this->category1->getId());
 
@@ -116,7 +116,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertEquals('keyword1', $response->keyword);
     }
 
-    public function testGetNotExisting()
+    public function testGetNotExisting(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -144,7 +144,7 @@ class KeywordControllerTest extends SuluTestCase
         return $result;
     }
 
-    public function testPostExisting($keyword = 'Test', $locale = 'de')
+    public function testPostExisting($keyword = 'Test', $locale = 'de'): void
     {
         $first = $this->testPost($keyword, $locale);
 
@@ -162,7 +162,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertEquals($first['id'], $result['id']);
     }
 
-    public function testPostWithNotExistingCategoryTranslation()
+    public function testPostWithNotExistingCategoryTranslation(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -198,7 +198,7 @@ class KeywordControllerTest extends SuluTestCase
         return $result;
     }
 
-    public function testPostExistingOtherkeyword($keyword = 'Test-1', $locale = 'de')
+    public function testPostExistingOtherkeyword($keyword = 'Test-1', $locale = 'de'): void
     {
         $first = $this->testPost('Test', $locale);
 
@@ -217,7 +217,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertNotNull($result['id']);
     }
 
-    public function testPut($keyword = 'Test-1', $locale = 'de')
+    public function testPut($keyword = 'Test-1', $locale = 'de'): void
     {
         $first = $this->testPost('Test', $locale);
 
@@ -235,7 +235,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertEquals($first['id'], $result['id']);
     }
 
-    public function testPutForceOverwrite($keyword = 'Test-1', $locale = 'de')
+    public function testPutForceOverwrite($keyword = 'Test-1', $locale = 'de'): void
     {
         $first = $this->testPost('Test', $locale);
 
@@ -253,7 +253,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertEquals($first['id'], $result['id']);
     }
 
-    public function testPutForceDetach($keyword = 'Test-1', $locale = 'de')
+    public function testPutForceDetach($keyword = 'Test-1', $locale = 'de'): void
     {
         $first = $this->testPost('Test', $locale);
 
@@ -276,7 +276,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertNull($entity);
     }
 
-    public function testPutMultipleCategories($keyword = 'Test-1', $locale = 'de')
+    public function testPutMultipleCategories($keyword = 'Test-1', $locale = 'de'): void
     {
         $first = $this->testPostExistingOtherCategory('Test', $locale);
 
@@ -291,7 +291,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertEquals(2002, $result['code']);
     }
 
-    public function testPutMultipleCategoriesForceOverwrite($keyword = 'Test-1', $locale = 'de')
+    public function testPutMultipleCategoriesForceOverwrite($keyword = 'Test-1', $locale = 'de'): void
     {
         $first = $this->testPostExistingOtherCategory('Test', $locale);
 
@@ -309,7 +309,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertEquals($first['id'], $result['id']);
     }
 
-    public function testPutMultipleCategoriesForceDetach($keyword = 'Test-1', $locale = 'de')
+    public function testPutMultipleCategoriesForceDetach($keyword = 'Test-1', $locale = 'de'): void
     {
         $first = $this->testPostExistingOtherCategory('Test', $locale);
 
@@ -331,7 +331,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertEquals($first['keyword'], $entity->getKeyword());
     }
 
-    public function testPutSamekeyword($keyword1 = 'Test-1', $keyword2 = 'Test-2', $locale = 'de')
+    public function testPutSamekeyword($keyword1 = 'Test-1', $keyword2 = 'Test-2', $locale = 'de'): void
     {
         $data1 = $this->testPost($keyword1, $locale, $this->category1->getId());
         $data2 = $this->testPost($keyword2, $locale, $this->category2->getId());
@@ -347,7 +347,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertEquals(2001, $result['code']);
     }
 
-    public function testPutSamekeywordMerge($keyword1 = 'Test-1', $keyword2 = 'Test-2', $locale = 'de')
+    public function testPutSamekeywordMerge($keyword1 = 'Test-1', $keyword2 = 'Test-2', $locale = 'de'): void
     {
         $data1 = $this->testPost($keyword1, $locale, $this->category1->getId());
         $data2 = $this->testPost($keyword2, $locale, $this->category2->getId());
@@ -366,7 +366,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertEquals($data1['id'], $result['id']);
     }
 
-    public function testDelete($keyword = 'Test', $locale = 'de')
+    public function testDelete($keyword = 'Test', $locale = 'de'): void
     {
         $first = $this->testPost($keyword, $locale);
 
@@ -379,7 +379,7 @@ class KeywordControllerTest extends SuluTestCase
         $this->assertNull($this->entityManager->find(KeywordInterface::class, $first['id']));
     }
 
-    public function testDeleteMultipleCategories($keyword = 'Test', $locale = 'de')
+    public function testDeleteMultipleCategories($keyword = 'Test', $locale = 'de'): void
     {
         $first = $this->testPostExistingOtherCategory($keyword, $locale);
 

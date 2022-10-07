@@ -102,7 +102,7 @@ class FormatManagerTest extends TestCase
         );
     }
 
-    public function testReturnImage()
+    public function testReturnImage(): void
     {
         $media = new Media();
         $reflection = new \ReflectionClass(\get_class($media));
@@ -138,7 +138,7 @@ class FormatManagerTest extends TestCase
         $this->assertEquals(200, $result->getStatusCode());
     }
 
-    public function testReturnImageWithVideo()
+    public function testReturnImageWithVideo(): void
     {
         $media = new Media();
         $reflection = new \ReflectionClass(\get_class($media));
@@ -174,7 +174,7 @@ class FormatManagerTest extends TestCase
         $this->assertEquals(200, $result->getStatusCode());
     }
 
-    public function testGetFormats()
+    public function testGetFormats(): void
     {
         $this->formatCache->getMediaUrl(1, 'dummy.gif', '50x50', 1, 2)->willReturn('/50x50/my-url.gif');
         $this->formatCache->getMediaUrl(1, 'dummy.jpg', '50x50', 1, 2)->willReturn('/50x50/my-url.jpg');
@@ -203,7 +203,7 @@ class FormatManagerTest extends TestCase
         );
     }
 
-    public function testGetFormatsNotSupportedMimeType()
+    public function testGetFormatsNotSupportedMimeType(): void
     {
         $this->formatCache->getMediaUrl(1, 'dummy.mp3', '640x480', 1, 2)->shouldNotBeCalled();
 
@@ -219,7 +219,7 @@ class FormatManagerTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    public function testGetFormatsWithMultipleDotsInFilename()
+    public function testGetFormatsWithMultipleDotsInFilename(): void
     {
         $this->formatCache->getMediaUrl(1, 'dummy.bak.jpg', '640x480', 1, 2)->shouldBeCalled();
         $this->formatCache->getMediaUrl(1, 'dummy.bak.jpg', '50x50', 1, 2)->shouldBeCalled();
@@ -235,7 +235,7 @@ class FormatManagerTest extends TestCase
         );
     }
 
-    public function testGetFormatDefinition()
+    public function testGetFormatDefinition(): void
     {
         $format = $this->formatManager->getFormatDefinition('640x480', 'en', ['my-option' => 'my-value']);
 
@@ -245,19 +245,19 @@ class FormatManagerTest extends TestCase
         $this->assertEquals(['x' => 640, 'y' => 480, 'mode' => 'outbound'], $format['scale']);
     }
 
-    public function testGetFormatDefinitionNotExistingTitle()
+    public function testGetFormatDefinitionNotExistingTitle(): void
     {
         $format = $this->formatManager->getFormatDefinition('50x50', 'en');
         $this->assertEquals('50x50', $format['title']);
     }
 
-    public function testGetFormatDefinitionNotExistingLocale()
+    public function testGetFormatDefinitionNotExistingLocale(): void
     {
         $format = $this->formatManager->getFormatDefinition('640x480', 'it');
         $this->assertEquals('My image format for testing', $format['title']);
     }
 
-    public function testGetFormatDefinitions()
+    public function testGetFormatDefinitions(): void
     {
         $formats = $this->formatManager->getFormatDefinitions('de');
 
@@ -290,7 +290,7 @@ class FormatManagerTest extends TestCase
         );
     }
 
-    public function testPurge()
+    public function testPurge(): void
     {
         $this->formatCache->purge(1, 'test.jpg', '640x480')->shouldBeCalled();
         $this->formatCache->purge(1, 'test.jpg', '50x50')->shouldBeCalled();
@@ -299,7 +299,7 @@ class FormatManagerTest extends TestCase
         $this->formatManager->purge(1, 'test.jpg', 'image/jpeg', null);
     }
 
-    public function testPurgeUppercaseExtension()
+    public function testPurgeUppercaseExtension(): void
     {
         $this->formatCache->purge(1, 'test.jpg', '640x480')->shouldBeCalled();
         $this->formatCache->purge(1, 'test.jpg', '50x50')->shouldBeCalled();

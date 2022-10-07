@@ -17,7 +17,7 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 
 class ResourceTabViewBuilderTest extends TestCase
 {
-    public function testBuildResourceTabViewWithClone()
+    public function testBuildResourceTabViewWithClone(): void
     {
         $viewBuilder = (new ResourceTabViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY);
@@ -25,7 +25,7 @@ class ResourceTabViewBuilderTest extends TestCase
         $this->assertNotSame($viewBuilder->getView(), $viewBuilder->getView());
     }
 
-    public function testBuildResourceTabViewWithoutResourceKey()
+    public function testBuildResourceTabViewWithoutResourceKey(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('/"setResourceKey"/');
@@ -92,7 +92,7 @@ class ResourceTabViewBuilderTest extends TestCase
         ?array $routerAttributesToBlacklist1,
         ?array $routerAttributesToBlacklist2,
         ?string $titleProperty
-    ) {
+    ): void {
         $viewBuilder = (new ResourceTabViewBuilder($name, $path))
             ->setResourceKey($resourceKey);
 
@@ -135,7 +135,7 @@ class ResourceTabViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildFormWithParent()
+    public function testBuildFormWithParent(): void
     {
         $view = (new ResourceTabViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -145,7 +145,7 @@ class ResourceTabViewBuilderTest extends TestCase
         $this->assertSame('sulu_admin.test', $view->getParent());
     }
 
-    public function testBuildFormWithOption()
+    public function testBuildFormWithOption(): void
     {
         $view = (new ResourceTabViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -155,7 +155,7 @@ class ResourceTabViewBuilderTest extends TestCase
         $this->assertSame('test', $view->getOption('resourceKey'));
     }
 
-    public function testBuildResourceTabWithLocales()
+    public function testBuildResourceTabWithLocales(): void
     {
         $view = (new ResourceTabViewBuilder('sulu_role.add_form', '/roles/:locale'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -166,7 +166,7 @@ class ResourceTabViewBuilderTest extends TestCase
         $this->assertSame(['de', 'en', 'nl', 'fr'], $view->getOption('locales'));
     }
 
-    public function testBuildResourceTabWithLocalesWithoutLocalePlaceholder()
+    public function testBuildResourceTabWithLocalesWithoutLocalePlaceholder(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');
@@ -178,7 +178,7 @@ class ResourceTabViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildResourceTabWithoutLocalesWithLocalePlaceholder()
+    public function testBuildResourceTabWithoutLocalesWithLocalePlaceholder(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');

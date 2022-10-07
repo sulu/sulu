@@ -21,7 +21,7 @@ class MappingTest extends BaseTestCase
         $this->initPhpcr();
     }
 
-    public function testMapping()
+    public function testMapping(): void
     {
         $document = $this->getDocumentManager()->create('full');
         $document->setTitle('Hallo');
@@ -45,7 +45,7 @@ class MappingTest extends BaseTestCase
         }
     }
 
-    public function testMappingReference()
+    public function testMappingReference(): void
     {
         $manager = $this->getDocumentManager();
 

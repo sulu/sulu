@@ -92,7 +92,7 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         ];
     }
 
-    public function testDefaultConfig()
+    public function testDefaultConfig(): void
     {
         $this->load();
         $this->compile();
@@ -104,7 +104,7 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasParameter('sulu_http_cache.cache.max_age', 240);
     }
 
-    public function testConfig()
+    public function testConfig(): void
     {
         $config = [
             'cache' => [

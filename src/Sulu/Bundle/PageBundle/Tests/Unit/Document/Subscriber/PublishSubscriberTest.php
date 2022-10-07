@@ -82,7 +82,7 @@ class PublishSubscriberTest extends TestCase
         $this->node = $this->prophesize(NodeInterface::class);
     }
 
-    public function testCreateNodeInPublicWorkspaceWithNewNode()
+    public function testCreateNodeInPublicWorkspaceWithNewNode(): void
     {
         $event = $this->prophesize(PersistEvent::class);
         $event->getNode()->willReturn($this->node->reveal());
@@ -122,7 +122,7 @@ class PublishSubscriberTest extends TestCase
         $this->publishSubscriber->createNodeInPublicWorkspace($event->reveal());
     }
 
-    public function testCreateNodeInPublicWorkspaceWithOldNodeAndDifferentName()
+    public function testCreateNodeInPublicWorkspaceWithOldNodeAndDifferentName(): void
     {
         $liveNode = $this->prophesize(NodeInterface::class);
         $liveNode->getName()->willReturn('cmf');
@@ -145,7 +145,7 @@ class PublishSubscriberTest extends TestCase
         $this->publishSubscriber->createNodeInPublicWorkspace($event->reveal());
     }
 
-    public function testCreateNodeInPublicWorkspaceWithOldNodeAndSameName()
+    public function testCreateNodeInPublicWorkspaceWithOldNodeAndSameName(): void
     {
         $liveNode = $this->prophesize(NodeInterface::class);
         $liveNode->getName()->willReturn('cmf');
@@ -168,7 +168,7 @@ class PublishSubscriberTest extends TestCase
         $this->publishSubscriber->createNodeInPublicWorkspace($event->reveal());
     }
 
-    public function testCreateNodeInPublicWorkspaceWithExistingNode()
+    public function testCreateNodeInPublicWorkspaceWithExistingNode(): void
     {
         $event = $this->prophesize(PersistEvent::class);
         $event->getNode()->willReturn($this->node->reveal());
@@ -182,7 +182,7 @@ class PublishSubscriberTest extends TestCase
         $this->publishSubscriber->createNodeInPublicWorkspace($event->reveal());
     }
 
-    public function testRemoveNodeFromPublicWorkspace()
+    public function testRemoveNodeFromPublicWorkspace(): void
     {
         $metadata = $this->prophesize(Metadata::class);
         $metadata->getSyncRemoveLive()->willReturn(true);
@@ -202,7 +202,7 @@ class PublishSubscriberTest extends TestCase
         $this->publishSubscriber->removeNodeFromPublicWorkspace($event->reveal());
     }
 
-    public function testRemoveNodeFromPublicWorkspaceMetadata()
+    public function testRemoveNodeFromPublicWorkspaceMetadata(): void
     {
         $metadata = $this->prophesize(Metadata::class);
         $metadata->getSyncRemoveLive()->willReturn(false);
@@ -219,7 +219,7 @@ class PublishSubscriberTest extends TestCase
         $this->publishSubscriber->removeNodeFromPublicWorkspace($event->reveal());
     }
 
-    public function testRemoveLocalePropertiesFromPublicWorkspace()
+    public function testRemoveLocalePropertiesFromPublicWorkspace(): void
     {
         /** @var ObjectProphecy|PathBehavior $document */
         $document = $this->prophesize(PathBehavior::class);
@@ -272,7 +272,7 @@ class PublishSubscriberTest extends TestCase
         $this->publishSubscriber->removeLocalePropertiesFromPublicWorkspace($event->reveal());
     }
 
-    public function testMoveNodeInPublicWorkspace()
+    public function testMoveNodeInPublicWorkspace(): void
     {
         $document = $this->prophesize(PathBehavior::class);
         $document->getPath()->willReturn('/cmf/sulu');
@@ -289,7 +289,7 @@ class PublishSubscriberTest extends TestCase
         $this->publishSubscriber->moveNodeInPublicWorkspace($event->reveal());
     }
 
-    public function testCopyNodeInPublicWorkspace()
+    public function testCopyNodeInPublicWorkspace(): void
     {
         $this->node->getPath()->willReturn('/cmf/sulu');
 
@@ -344,7 +344,7 @@ class PublishSubscriberTest extends TestCase
         $this->publishSubscriber->copyNodeInPublicWorkspace($event->reveal());
     }
 
-    public function testReorderInPublicWorkspace()
+    public function testReorderInPublicWorkspace(): void
     {
         $document = $this->prophesize(PathBehavior::class);
         $document->getPath()->willReturn('/cmf/sulu_io/contents/page');
@@ -371,7 +371,7 @@ class PublishSubscriberTest extends TestCase
         $this->publishSubscriber->reorderNodeInPublicWorkspace($event->reveal());
     }
 
-    public function testSetNodeFromPublicWorkspaceForPublishing()
+    public function testSetNodeFromPublicWorkspaceForPublishing(): void
     {
         $document = $this->prophesize(PathBehavior::class);
         $document->getPath()->willReturn('/cmf/sulu');
@@ -386,7 +386,7 @@ class PublishSubscriberTest extends TestCase
         $this->publishSubscriber->setNodeFromPublicWorkspaceForPublishing($event->reveal());
     }
 
-    public function testSetNodeFromPublicWorkspaceForUnpublishing()
+    public function testSetNodeFromPublicWorkspaceForUnpublishing(): void
     {
         $document = $this->prophesize(PathBehavior::class);
         $document->getPath()->willReturn('/cmf/sulu');
@@ -401,7 +401,7 @@ class PublishSubscriberTest extends TestCase
         $this->publishSubscriber->setNodeFromPublicWorkspaceForUnpublishing($event->reveal());
     }
 
-    public function testFlushPublicWorkspace()
+    public function testFlushPublicWorkspace(): void
     {
         $this->liveSession->save()->shouldBeCalled();
 

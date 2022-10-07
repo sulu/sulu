@@ -22,7 +22,7 @@ use Sulu\Component\Content\Compat\StructureInterface;
 
 class CategorySelectionTest extends TestCase
 {
-    public function testGetContentData()
+    public function testGetContentData(): void
     {
         $entity1 = $this->prophesize(CategoryInterface::class);
         $entity2 = $this->prophesize(CategoryInterface::class);
@@ -51,7 +51,7 @@ class CategorySelectionTest extends TestCase
         $this->assertEquals(['someArrayData', 'someOtherArrayData'], $result);
     }
 
-    public function testGetContentDataNullPropertyValue()
+    public function testGetContentDataNullPropertyValue(): void
     {
         $property = $this->prophesize(Property::class);
         $property->getValue()->willReturn(null);

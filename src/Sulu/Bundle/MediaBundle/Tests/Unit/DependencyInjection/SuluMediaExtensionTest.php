@@ -36,7 +36,7 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         ];
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         $this->executableFinder->find(Argument::any())->willReturn(true);
         $this->container->setParameter('kernel.bundles', []);
@@ -90,7 +90,7 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         ]);
     }
 
-    public function testConfigureFileValidator()
+    public function testConfigureFileValidator(): void
     {
         $this->container->setParameter('kernel.bundles', []);
         $this->load([
@@ -115,7 +115,7 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    public function testConfigureFileValidatorWithDeprecatedOptions()
+    public function testConfigureFileValidatorWithDeprecatedOptions(): void
     {
         $this->container->setParameter('kernel.bundles', []);
         $this->load([
@@ -134,7 +134,7 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    public function testConfigureFileValidatorWithDeprecatedAndCorrectOptions()
+    public function testConfigureFileValidatorWithDeprecatedAndCorrectOptions(): void
     {
         $this->container->setParameter('kernel.bundles', []);
         $this->load([

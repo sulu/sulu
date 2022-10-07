@@ -21,7 +21,7 @@ use Sulu\Bundle\MediaBundle\Twig\MediaTwigExtension;
 
 class MediaTwigExtensionTest extends TestCase
 {
-    public function testResolveMedia()
+    public function testResolveMedia(): void
     {
         $entity = $this->prophesize(Media::class);
         $entity->getId()->willReturn(1);
@@ -40,7 +40,7 @@ class MediaTwigExtensionTest extends TestCase
         $this->assertInstanceOf(MediaApi::class, $result);
     }
 
-    public function testResolveApiMedia()
+    public function testResolveApiMedia(): void
     {
         $apiEntity = $this->prophesize(MediaApi::class);
 
@@ -59,7 +59,7 @@ class MediaTwigExtensionTest extends TestCase
         $this->assertEquals($apiEntity->reveal(), $result);
     }
 
-    public function testResolveMediaById()
+    public function testResolveMediaById(): void
     {
         $mediaManager = $this->prophesize(MediaManagerInterface::class);
         $mediaManager->getById(1, 'de')->shouldBeCalled();
@@ -68,7 +68,7 @@ class MediaTwigExtensionTest extends TestCase
         $extension->resolveMediaFunction(1, 'de');
     }
 
-    public function testResolveMedias()
+    public function testResolveMedias(): void
     {
         $entities = [$this->prophesize(Media::class), $this->prophesize(Media::class)];
         $entities[0]->getId()->willReturn(1);
@@ -90,7 +90,7 @@ class MediaTwigExtensionTest extends TestCase
         $this->assertInstanceOf(MediaApi::class, $result[1]);
     }
 
-    public function testResolveApiMedias()
+    public function testResolveApiMedias(): void
     {
         $apiEntities = [$this->prophesize(MediaApi::class), $this->prophesize(MediaApi::class)];
 
@@ -112,7 +112,7 @@ class MediaTwigExtensionTest extends TestCase
         $this->assertEquals($apiEntities[1]->reveal(), $result[1]);
     }
 
-    public function testResolveMediasById()
+    public function testResolveMediasById(): void
     {
         $entities = [$this->prophesize(Media::class), $this->prophesize(Media::class)];
         $entities[0]->getId()->willReturn(1);
@@ -128,7 +128,7 @@ class MediaTwigExtensionTest extends TestCase
         $extension->resolveMediasFunction([1, 2], 'de');
     }
 
-    public function testResolveMediasMixed()
+    public function testResolveMediasMixed(): void
     {
         $entities = [
             $this->prophesize(Media::class),
@@ -159,7 +159,7 @@ class MediaTwigExtensionTest extends TestCase
         $this->assertEquals(2, $result[2]->getId());
     }
 
-    public function testResolveNullMedia()
+    public function testResolveNullMedia(): void
     {
         $mediaManager = $this->prophesize(MediaManagerInterface::class);
         $extension = new MediaTwigExtension($mediaManager->reveal());

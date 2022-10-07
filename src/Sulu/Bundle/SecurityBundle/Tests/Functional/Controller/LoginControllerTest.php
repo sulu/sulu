@@ -15,7 +15,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class LoginControllerTest extends SuluTestCase
 {
-    public function testFalseLoginRedirect()
+    public function testFalseLoginRedirect(): void
     {
         $client = $this->createClient();
         $client->request('POST', '/admin/login', [

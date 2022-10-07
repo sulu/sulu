@@ -19,7 +19,7 @@ class SaveDocumentTest extends BaseTestCase
     /**
      * Check that the automatic indexing works.
      */
-    public function testSaveDocument()
+    public function testSaveDocument(): void
     {
         $this->indexDocument('About Us', '/about-us');
 
@@ -34,7 +34,7 @@ class SaveDocumentTest extends BaseTestCase
         $this->assertEquals(null, $document->getDescription());
     }
 
-    public function testSaveDocumentWithBlocks()
+    public function testSaveDocumentWithBlocks(): void
     {
         $document = new PageDocument();
         $document->setTitle('Places');

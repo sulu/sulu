@@ -42,7 +42,7 @@ class RoleRepositoryTest extends SuluTestCase
         $this->roleRepository = $this->client->getContainer()->get('sulu.repository.role');
     }
 
-    public function testFindRoleIdsBySystem()
+    public function testFindRoleIdsBySystem(): void
     {
         $role1 = $this->createRole('Role 1', 'Sulu');
         $role2 = $this->createRole('Role 2', 'Website');

@@ -29,7 +29,7 @@ class PropertyMetadataTest extends TestCase
     /**
      * @dataProvider provideGetter
      */
-    public function testGetter($name, $mandatory)
+    public function testGetter($name, $mandatory): void
     {
         $property = new PropertyMetadata($name, $mandatory);
         $this->assertEquals($name, $property->getName());
@@ -50,7 +50,7 @@ class PropertyMetadataTest extends TestCase
     /**
      * @dataProvider provideToJsonSchema
      */
-    public function testToJsonSchema($name, $mandatory, $schemaMetadata, $expectedSchema)
+    public function testToJsonSchema($name, $mandatory, $schemaMetadata, $expectedSchema): void
     {
         $property = new PropertyMetadata($name, $mandatory, $schemaMetadata);
         $jsonSchema = $property->toJsonSchema();

@@ -87,7 +87,7 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->em->flush();
     }
 
-    public function testGetList()
+    public function testGetList(): void
     {
         $media1 = $this->createMedia('photo.jpeg');
         $this->account->addMedia($media1);
@@ -104,7 +104,7 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->assertTrue(\is_string($response->_embedded->account_media[0]->thumbnails->{'sulu-100x100'}));
     }
 
-    public function testAccountMediaPost()
+    public function testAccountMediaPost(): void
     {
         $media1 = $this->createMedia('photo.jpeg');
         $this->account->addMedia($media1);
@@ -147,7 +147,7 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->assertIsInt($response->medias[1]);
     }
 
-    public function testAccountMediaPostNotExistingMedia()
+    public function testAccountMediaPostNotExistingMedia(): void
     {
         $media1 = $this->createMedia('photo.jpeg');
         $this->account->addMedia($media1);
@@ -181,7 +181,7 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->assertCount(1, $response->medias);
     }
 
-    public function testAccountMediaDelete()
+    public function testAccountMediaDelete(): void
     {
         $media1 = $this->createMedia('photo.jpeg');
         $this->account->addMedia($media1);
@@ -208,7 +208,7 @@ class AccountMediaControllerTest extends SuluTestCase
         $this->assertEquals(0, \count($response->medias));
     }
 
-    public function testAccountMediaDeleteNotExistingRelation()
+    public function testAccountMediaDeleteNotExistingRelation(): void
     {
         $media1 = $this->createMedia('photo.jpeg');
         $this->account->addMedia($media1);

@@ -29,7 +29,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->structureFormMetadataLoader = $this->getContainer()->get('sulu_admin_test.structure_form_metadata_loader');
     }
 
-    public function testGetMetadataWithoutLanguage()
+    public function testGetMetadataWithoutLanguage(): void
     {
         $typedForm = $this->structureFormMetadataLoader->getMetadata('page');
         $expectedTypedForm = $this->structureFormMetadataLoader->getMetadata('page', 'de');
@@ -37,7 +37,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertEquals($typedForm, $expectedTypedForm);
     }
 
-    public function testGetMetadataEnglish()
+    public function testGetMetadataEnglish(): void
     {
         $typedForm = $this->structureFormMetadataLoader->getMetadata('page', 'en');
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
@@ -72,7 +72,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertCount(2, $defaultFormSchema['allOf']);
     }
 
-    public function testGetMetadataGerman()
+    public function testGetMetadataGerman(): void
     {
         $typedForm = $this->structureFormMetadataLoader->getMetadata('page', 'de');
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
@@ -97,7 +97,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertInstanceOf(SchemaMetadata::class, $defaultForm->getSchema());
     }
 
-    public function testGetBlockMetadata()
+    public function testGetBlockMetadata(): void
     {
         $typedForm = $this->structureFormMetadataLoader->getMetadata('page', 'de');
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
@@ -114,7 +114,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         );
     }
 
-    public function testGetMetadataWhichDoesNotExist()
+    public function testGetMetadataWhichDoesNotExist(): void
     {
         $typedForm = $this->structureFormMetadataLoader->getMetadata('does_not_exist', 'en');
         $this->assertNull($typedForm);
@@ -122,7 +122,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertNull($typedForm);
     }
 
-    public function testGetMetadataForWebspace()
+    public function testGetMetadataForWebspace(): void
     {
         $typedForm = $this->structureFormMetadataLoader->getMetadata('page', 'de', ['webspace' => 'sulu_io']);
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);
@@ -140,7 +140,7 @@ class StructureFormMetadataLoaderTest extends KernelTestCase
         $this->assertEquals('default', $typedForm->getDefaultType());
     }
 
-    public function testGetMetadataForSnippets()
+    public function testGetMetadataForSnippets(): void
     {
         $typedForm = $this->structureFormMetadataLoader->getMetadata('snippet', 'de');
         $this->assertInstanceOf(TypedFormMetadata::class, $typedForm);

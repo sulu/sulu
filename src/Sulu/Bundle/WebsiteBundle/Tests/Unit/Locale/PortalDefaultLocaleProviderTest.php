@@ -19,7 +19,7 @@ use Sulu\Component\Webspace\Portal;
 
 class PortalDefaultLocaleProviderTest extends TestCase
 {
-    public function testGetDefaultLocale()
+    public function testGetDefaultLocale(): void
     {
         $portal = $this->prophesize(Portal::class);
         $portal->getDefaultLocalization()->willReturn(new Localization('de', 'at'));

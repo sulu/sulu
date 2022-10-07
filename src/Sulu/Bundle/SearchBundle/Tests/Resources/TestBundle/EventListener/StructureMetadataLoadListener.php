@@ -19,7 +19,7 @@ class StructureMetadataLoadListener
 
     public $indexMetadata;
 
-    public function handleStructureLoadMetadata(StructureMetadataLoadEvent $event)
+    public function handleStructureLoadMetadata(StructureMetadataLoadEvent $event): void
     {
         $this->structure = $event->getStructure();
         $this->indexMetadata = $event->getIndexMetadata();

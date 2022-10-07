@@ -42,7 +42,7 @@ class SnippetResolverTest extends TestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testResolve($uuids, $webspaceKey = 'sulu_io', $locale = 'de')
+    public function testResolve($uuids, $webspaceKey = 'sulu_io', $locale = 'de'): void
     {
         $contentMapper = $this->prophesize(ContentMapperInterface::class);
         $structureResolver = $this->prophesize(StructureResolverInterface::class);
@@ -116,7 +116,7 @@ class SnippetResolverTest extends TestCase
         );
     }
 
-    public function testResolveWithShadowLocale()
+    public function testResolveWithShadowLocale(): void
     {
         $contentMapper = $this->prophesize(ContentMapperInterface::class);
         $structureResolver = $this->prophesize(StructureResolverInterface::class);
@@ -144,7 +144,7 @@ class SnippetResolverTest extends TestCase
         $resolver->resolve(['123-123-123'], 'sulu_io', 'de', 'en');
     }
 
-    public function testResolveWithExtensions()
+    public function testResolveWithExtensions(): void
     {
         $contentMapper = $this->prophesize(ContentMapperInterface::class);
         $structureResolver = $this->prophesize(StructureResolverInterface::class);

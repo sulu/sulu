@@ -53,7 +53,7 @@ class MediaFormatControllerTest extends SuluTestCase
         $this->setUpData();
     }
 
-    private function setUpData()
+    private function setUpData(): void
     {
         $collection = new Collection();
 
@@ -112,7 +112,7 @@ class MediaFormatControllerTest extends SuluTestCase
         $this->em->flush();
     }
 
-    public function testCGet()
+    public function testCGet(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -135,7 +135,7 @@ class MediaFormatControllerTest extends SuluTestCase
         $this->assertObjectNotHasAttribute('one-side', $response);
     }
 
-    public function testPatch()
+    public function testPatch(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -187,7 +187,7 @@ class MediaFormatControllerTest extends SuluTestCase
         $this->assertObjectNotHasAttribute('one-side', $response);
     }
 
-    public function testPutWithFormatOptions()
+    public function testPutWithFormatOptions(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -225,7 +225,7 @@ class MediaFormatControllerTest extends SuluTestCase
         $this->assertEquals(100, $response->{'small-inset'}->cropHeight);
     }
 
-    public function testPutWithEmptyFormatOptions()
+    public function testPutWithEmptyFormatOptions(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -252,7 +252,7 @@ class MediaFormatControllerTest extends SuluTestCase
         $this->assertObjectNotHasAttribute('big-squared', $response);
     }
 
-    public function testPutNotExistingFormat()
+    public function testPutNotExistingFormat(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -266,7 +266,7 @@ class MediaFormatControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testPutNotExistingMedia()
+    public function testPutNotExistingMedia(): void
     {
         $this->client->jsonRequest(
             'PUT',

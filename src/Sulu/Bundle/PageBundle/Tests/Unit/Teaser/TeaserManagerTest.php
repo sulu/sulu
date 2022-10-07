@@ -37,7 +37,7 @@ class TeaserManagerTest extends TestCase
         $this->teaserManager = new TeaserManager($this->providerPool->reveal());
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         $items = [
             ['type' => 'content', 'id' => '123-123-123'],
@@ -57,7 +57,7 @@ class TeaserManagerTest extends TestCase
         $this->assertEquals($teasers, $this->teaserManager->find($items, 'de'));
     }
 
-    public function testFindAndMerge()
+    public function testFindAndMerge(): void
     {
         $teaser = new Teaser(
             '123-123-123',

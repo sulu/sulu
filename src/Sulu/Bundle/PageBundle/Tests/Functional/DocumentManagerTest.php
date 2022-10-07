@@ -50,7 +50,7 @@ class DocumentManagerTest extends SuluTestCase
         $this->homeDocument = $this->documentManager->find('/cmf/sulu_io/contents', 'en');
     }
 
-    public function testMoveWithDraftAndPublished()
+    public function testMoveWithDraftAndPublished(): void
     {
         $parentPage = $this->createSimplePage('Parent', '/parent');
         $this->documentManager->publish($parentPage, 'en');
@@ -81,7 +81,7 @@ class DocumentManagerTest extends SuluTestCase
         $this->assertFalse($this->liveSession->nodeExists('/cmf/sulu_io/routes/en/parent-child'));
     }
 
-    public function testMoveWithDraftParent()
+    public function testMoveWithDraftParent(): void
     {
         $parentPage = $this->createSimplePage('Parent', '/parent');
         $this->documentManager->publish($parentPage, 'en');
@@ -109,7 +109,7 @@ class DocumentManagerTest extends SuluTestCase
         $this->assertFalse($this->liveSession->nodeExists('/cmf/sulu_io/routes/en/new-parent-child'));
     }
 
-    public function testMoveWithOnlyDraft()
+    public function testMoveWithOnlyDraft(): void
     {
         $parentPage = $this->createSimplePage('Parent', '/parent');
         $childPage = $this->createSimplePage('Child', '/child');

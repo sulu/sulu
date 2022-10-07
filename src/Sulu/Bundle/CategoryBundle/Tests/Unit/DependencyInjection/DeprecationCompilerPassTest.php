@@ -26,7 +26,7 @@ class DeprecationCompilerPassTest extends AbstractCompilerPassTestCase
         $container->addCompilerPass(new DeprecationCompilerPass());
     }
 
-    public function testDeprecatedEntityParameters()
+    public function testDeprecatedEntityParameters(): void
     {
         $this->setParameter('sulu.model.category.class', 'path-to-category-entity');
         $this->setParameter('sulu.model.keyword.class', 'path-to-keyword-entity');
@@ -37,7 +37,7 @@ class DeprecationCompilerPassTest extends AbstractCompilerPassTestCase
         $this->assertContainerBuilderHasParameter('sulu_category.entity.keyword', 'path-to-keyword-entity');
     }
 
-    public function testDeprecatedRepositoryServices()
+    public function testDeprecatedRepositoryServices(): void
     {
         $categoryRepositoryDefinition = new Definition();
         $this->setDefinition('sulu.repository.category', $categoryRepositoryDefinition);

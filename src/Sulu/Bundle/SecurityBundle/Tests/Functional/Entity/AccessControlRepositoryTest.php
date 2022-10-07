@@ -43,7 +43,7 @@ class AccessControlRepositoryTest extends SuluTestCase
         $this->accessControlRepository = $this->client->getContainer()->get('sulu.repository.access_control');
     }
 
-    public function testFindByTypeAndId()
+    public function testFindByTypeAndId(): void
     {
         $role1 = $this->createRole('Role 1', 'Sulu');
         $accessControl1 = $this->createAccessControl(1, 'Some\\Class', $role1);

@@ -50,7 +50,7 @@ class SnippetTest extends SuluTestCase
         $this->snippetExporter = $this->getContainer()->get('sulu_snippet.export.snippet');
     }
 
-    public function test12Xliff()
+    public function test12Xliff(): void
     {
         $snippets = $this->prepareData();
         $exportData = $this->snippetExporter->getExportData();

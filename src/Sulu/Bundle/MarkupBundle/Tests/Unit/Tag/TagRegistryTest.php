@@ -18,7 +18,7 @@ use Sulu\Bundle\MarkupBundle\Tag\TagRegistry;
 
 class TagRegistryTest extends TestCase
 {
-    public function testGetTag()
+    public function testGetTag(): void
     {
         $tag = $this->prophesize(TagInterface::class)->reveal();
         $registry = new TagRegistry(['html' => ['sulu' => ['test' => $tag]]]);
@@ -26,7 +26,7 @@ class TagRegistryTest extends TestCase
         $this->assertEquals($tag, $registry->getTag('test', 'html'));
     }
 
-    public function testGetTagNotFound()
+    public function testGetTagNotFound(): void
     {
         $this->expectException(TagNotFoundException::class);
 
@@ -34,7 +34,7 @@ class TagRegistryTest extends TestCase
         $registry->getTag('test-2', 'html');
     }
 
-    public function testGetTypeNotFound()
+    public function testGetTypeNotFound(): void
     {
         $this->expectException(TagNotFoundException::class);
 
@@ -43,7 +43,7 @@ class TagRegistryTest extends TestCase
         $registry->getTag('test-2', 'xml');
     }
 
-    public function testGetTagNoTag()
+    public function testGetTagNoTag(): void
     {
         $this->expectException(TagNotFoundException::class);
 

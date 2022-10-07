@@ -265,7 +265,7 @@ class CustomUrlControllerTest extends SuluTestCase
     /**
      * @dataProvider postMultipleProvider
      */
-    public function testPostMultiple($before, $data, $beforeUrl, $url, $statusCode = 200, $restErrorCode = null)
+    public function testPostMultiple($before, $data, $beforeUrl, $url, $statusCode = 200, $restErrorCode = null): void
     {
         $this->testPost($before, $beforeUrl);
         $this->testPost($data, $url, $statusCode, $restErrorCode);
@@ -582,7 +582,7 @@ class CustomUrlControllerTest extends SuluTestCase
     /**
      * @dataProvider getProvider
      */
-    public function testGet($data, $url)
+    public function testGet($data, $url): void
     {
         // content document is not there in provider
         if (\array_key_exists('targetDocument', $data)) {
@@ -657,7 +657,7 @@ class CustomUrlControllerTest extends SuluTestCase
     /**
      * @dataProvider cgetProvider
      */
-    public function testCGet($items)
+    public function testCGet($items): void
     {
         foreach ($items as $url => $data) {
             $items[$url]['id'] = $this->testPost($data, $url);
@@ -696,7 +696,7 @@ class CustomUrlControllerTest extends SuluTestCase
     /**
      * @dataProvider getProvider
      */
-    public function testDelete($data, $url)
+    public function testDelete($data, $url): void
     {
         $uuid = $this->testPost($data, $url);
 
@@ -718,7 +718,7 @@ class CustomUrlControllerTest extends SuluTestCase
     /**
      * @dataProvider cgetProvider
      */
-    public function testCDelete($items)
+    public function testCDelete($items): void
     {
         $uuid = $this->testPost(
             [

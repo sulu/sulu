@@ -42,7 +42,7 @@ class SegmentCacheListenerTests extends TestCase
     /**
      * @dataProvider providePreHandleCookieValue
      */
-    public function testPreHandleCookieValue($cookieValue)
+    public function testPreHandleCookieValue($cookieValue): void
     {
         $request = new Request([], [], [], ['_ss' => $cookieValue]);
         $response = new Response();
@@ -64,7 +64,7 @@ class SegmentCacheListenerTests extends TestCase
     /**
      * @dataProvider providePostHandleVary
      */
-    public function testPostHandleWithVary($header, $maxAge, $sharedMaxAge, $expectedMaxAge)
+    public function testPostHandleWithVary($header, $maxAge, $sharedMaxAge, $expectedMaxAge): void
     {
         $request = new Request();
         $response = new Response();

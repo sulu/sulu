@@ -26,21 +26,21 @@ class TargetGroupStoreTest extends TestCase
         $this->targetGroupStore = new TargetGroupStore();
     }
 
-    public function testSetTargetGroupId()
+    public function testSetTargetGroupId(): void
     {
         $this->targetGroupStore->setTargetGroupId('2');
         $this->assertEquals('2', $this->targetGroupStore->getTargetGroupId());
         $this->assertEquals(true, $this->targetGroupStore->hasInfluencedContent());
     }
 
-    public function testGetTargetGroupIdInternal()
+    public function testGetTargetGroupIdInternal(): void
     {
         $this->targetGroupStore->setTargetGroupId('2');
         $this->assertEquals('2', $this->targetGroupStore->getTargetGroupId(true));
         $this->assertEquals(false, $this->targetGroupStore->hasInfluencedContent());
     }
 
-    public function testUpdateTargetGroupId()
+    public function testUpdateTargetGroupId(): void
     {
         $this->targetGroupStore->setTargetGroupId('2');
         $this->assertEquals('2', $this->targetGroupStore->getTargetGroupId());
@@ -51,7 +51,7 @@ class TargetGroupStoreTest extends TestCase
         $this->assertTrue($this->targetGroupStore->hasChangedTargetGroup());
     }
 
-    public function testChangeTargetGroupIdToSame()
+    public function testChangeTargetGroupIdToSame(): void
     {
         $this->targetGroupStore->setTargetGroupId('2');
         $this->targetGroupStore->updateTargetGroupId('2');
@@ -59,7 +59,7 @@ class TargetGroupStoreTest extends TestCase
         $this->assertFalse($this->targetGroupStore->hasChangedTargetGroup());
     }
 
-    public function testChangeTargetGroupIdToSameDifferentType()
+    public function testChangeTargetGroupIdToSameDifferentType(): void
     {
         $this->targetGroupStore->setTargetGroupId('2');
         $this->targetGroupStore->updateTargetGroupId(2);

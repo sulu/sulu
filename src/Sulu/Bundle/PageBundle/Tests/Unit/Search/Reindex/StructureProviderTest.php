@@ -97,7 +97,7 @@ class StructureProviderTest extends TestCase
     /**
      * It should provide a batch of documents.
      */
-    public function testDocumentBatch()
+    public function testDocumentBatch(): void
     {
         $maxResults = 10;
         $offset = 5;
@@ -121,7 +121,7 @@ class StructureProviderTest extends TestCase
     /**
      * It should provide all the class FQNs.
      */
-    public function testClassFqns()
+    public function testClassFqns(): void
     {
         $alias = 'a';
         $class = 'Foo';
@@ -141,7 +141,7 @@ class StructureProviderTest extends TestCase
     /**
      * It should NOT return class FQNs that are not mapped to a Structure.
      */
-    public function testClassFqnsNoStructure()
+    public function testClassFqnsNoStructure(): void
     {
         $alias = 'a';
 
@@ -159,7 +159,7 @@ class StructureProviderTest extends TestCase
     /**
      * It should return the total count for a given class FQN.
      */
-    public function testCount()
+    public function testCount(): void
     {
         $class = 'Foo';
         $objects = [new \stdClass(), new \stdClass()];
@@ -180,7 +180,7 @@ class StructureProviderTest extends TestCase
     /**
      * It should get the locales for a given document.
      */
-    public function testGetLocales()
+    public function testGetLocales(): void
     {
         $locales = ['de', 'fr'];
         $this->inspector->getLocales($this->structure->reveal())->willReturn($locales);
@@ -192,7 +192,7 @@ class StructureProviderTest extends TestCase
     /**
      * It should translate a given object.
      */
-    public function testTranslate()
+    public function testTranslate(): void
     {
         $locale = 'de';
         $uuid = '1234';
@@ -207,7 +207,7 @@ class StructureProviderTest extends TestCase
     /**
      * It should not index secure documents which have permissions.
      */
-    public function testSecureDocuments()
+    public function testSecureDocuments(): void
     {
         $classFqn = 'Foo';
         $offset = 0;
@@ -236,7 +236,7 @@ class StructureProviderTest extends TestCase
         ], $results);
     }
 
-    public function testCleanup()
+    public function testCleanup(): void
     {
         $classFqn = 'Foo';
         $this->provider->cleanUp($classFqn);

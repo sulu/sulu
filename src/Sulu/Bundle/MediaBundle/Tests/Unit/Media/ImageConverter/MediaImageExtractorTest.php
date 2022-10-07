@@ -47,7 +47,7 @@ class MediaImageExtractorTest extends TestCase
         );
     }
 
-    public function testExtractUnseekableResource()
+    public function testExtractUnseekableResource(): void
     {
         $resource = $this->createUnseekableResource();
 
@@ -65,7 +65,7 @@ class MediaImageExtractorTest extends TestCase
         $this->mediaImageExtractor->extract($resource);
     }
 
-    public function testExtractUnseekableResourceMimeTypeGiven()
+    public function testExtractUnseekableResourceMimeTypeGiven(): void
     {
         $resource = $this->createUnseekableResource();
 
@@ -75,7 +75,7 @@ class MediaImageExtractorTest extends TestCase
         );
     }
 
-    public function testPsdConvertWithoutMimeType()
+    public function testPsdConvertWithoutMimeType(): void
     {
         $resource = \fopen(\dirname(\dirname(\dirname(__DIR__))) . '/Fixtures/files/1x1.psd', 'r');
 

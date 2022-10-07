@@ -47,7 +47,7 @@ class CacheLifetimeRequestStoreTest extends TestCase
     /**
      * @dataProvider provideSetCacheLifetime
      */
-    public function testSetCacheLifetime($previousCacheLifetime, $newCacheLifetime, $expectedCacheLifetime)
+    public function testSetCacheLifetime($previousCacheLifetime, $newCacheLifetime, $expectedCacheLifetime): void
     {
         $request = new Request([], [], $previousCacheLifetime ? ['_cacheLifetime' => $previousCacheLifetime] : []);
         $this->requestStack->getCurrentRequest()->willReturn($request);
@@ -57,7 +57,7 @@ class CacheLifetimeRequestStoreTest extends TestCase
         $this->assertEquals($expectedCacheLifetime, $this->cacheLifetimeRequestStore->getCacheLifetime());
     }
 
-    public function testGetCacheLifetimeWithoutRequest()
+    public function testGetCacheLifetimeWithoutRequest(): void
     {
         $this->assertNull($this->cacheLifetimeRequestStore->getCacheLifetime());
     }

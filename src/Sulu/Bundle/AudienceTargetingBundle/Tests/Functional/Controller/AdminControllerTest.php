@@ -29,7 +29,7 @@ class AdminControllerTest extends SuluTestCase
         $this->initPhpcr();
     }
 
-    public function testRulesConfig()
+    public function testRulesConfig(): void
     {
         $this->client->jsonRequest('GET', '/admin/config');
 
@@ -44,7 +44,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('locale', $audienceTargetingConfig->targetGroupRules->locale->type->options->name);
     }
 
-    public function testTargetGroupsListMetadataAction()
+    public function testTargetGroupsListMetadataAction(): void
     {
         $this->client->jsonRequest('GET', '/admin/metadata/list/target_groups');
 
@@ -58,7 +58,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('string', $response->id->type);
     }
 
-    public function testTargetGroupsFormMetadataAction()
+    public function testTargetGroupsFormMetadataAction(): void
     {
         $this->client->jsonRequest('GET', '/admin/metadata/form/target_group_details');
 

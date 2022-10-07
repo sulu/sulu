@@ -50,7 +50,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->activityRepository = $this->em->getRepository(ActivityInterface::class);
     }
 
-    public function testGetById()
+    public function testGetById(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -76,7 +76,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('Description of Category', $response->meta[0]->value);
     }
 
-    public function testGetByIdChild()
+    public function testGetByIdChild(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -100,7 +100,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals($category1->getId(), $response->parentId);
     }
 
-    public function testGetByIdWithNoLocale()
+    public function testGetByIdWithNoLocale(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -116,7 +116,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testGetByIdNotExisting()
+    public function testGetByIdNotExisting(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -126,7 +126,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testGetByIdLocaleFallback()
+    public function testGetByIdLocaleFallback(): void
     {
         $category = $this->getContainer()->get('sulu.repository.category')->createNew();
         $category->setDefaultLocale('en');
@@ -170,7 +170,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('EN-US', $response->name);
     }
 
-    public function testCGet()
+    public function testCGet(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -221,7 +221,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('de', $categories[2]->ghostLocale);
     }
 
-    public function testCGetByIds()
+    public function testCGetByIds(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -280,7 +280,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertCount(0, $categories);
     }
 
-    public function testCGetFlat()
+    public function testCGetFlat(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -333,7 +333,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('de', $categories[2]->ghostLocale);
     }
 
-    public function testCGetFlatWithSelectedIds()
+    public function testCGetFlatWithSelectedIds(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -386,7 +386,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertObjectNotHasAttribute('_embedded', $category3);
     }
 
-    public function testCGetFlatWithExpandedIds()
+    public function testCGetFlatWithExpandedIds(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -442,7 +442,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertFalse($category4->hasChildren);
     }
 
-    public function testCGetFlatWithExpandIdsSameLevel()
+    public function testCGetFlatWithExpandIdsSameLevel(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -489,7 +489,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertFalse($categories[1]->hasChildren);
     }
 
-    public function testCGetFlatWithSearch()
+    public function testCGetFlatWithSearch(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -518,7 +518,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertTrue($categories[0]->hasChildren);
     }
 
-    public function testCGetWithNoLocale()
+    public function testCGetWithNoLocale(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -528,7 +528,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testCGetFlatWithNoLocale()
+    public function testCGetFlatWithNoLocale(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -538,7 +538,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testCGetWithRoot()
+    public function testCGetWithRoot(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -574,7 +574,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals($category4->getId(), $categories[0]->children[0]->id);
     }
 
-    public function testCGetFlatWithRoot()
+    public function testCGetFlatWithRoot(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -610,7 +610,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertTrue($categories[0]->hasChildren);
     }
 
-    public function testCGetFlatWithRootAndSearch()
+    public function testCGetFlatWithRootAndSearch(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -681,7 +681,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals(0, \count($categories));
     }
 
-    public function testCGetFlatWithRootAndExpandIds()
+    public function testCGetFlatWithRootAndExpandIds(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -722,7 +722,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertFalse($categories[0]->_embedded->categories[0]->hasChildren);
     }
 
-    public function testCGetFlatWithRootAndWrongExpandIds()
+    public function testCGetFlatWithRootAndWrongExpandIds(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'de', 'Erste Kategorie');
@@ -759,7 +759,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertTrue($categories[0]->hasChildren);
     }
 
-    public function testCGetWithNotExistingRoot()
+    public function testCGetWithNotExistingRoot(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -769,7 +769,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testCGetFlatWithNotExistingRoot()
+    public function testCGetFlatWithNotExistingRoot(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -779,7 +779,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testCGetFlatWithParent()
+    public function testCGetFlatWithParent(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'de', 'Erste Kategorie');
@@ -813,7 +813,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertTrue($categories[0]->hasChildren);
     }
 
-    public function testCGetFlatWithSorting()
+    public function testCGetFlatWithSorting(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'de', 'Erste Kategorie');
@@ -868,7 +868,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('C', $categories[2]->name);
     }
 
-    public function testCGetLocaleFallback()
+    public function testCGetLocaleFallback(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -920,7 +920,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('Third Category', $response->_embedded->categories[0]->name);
     }
 
-    public function testCGetFlatLocaleFallback()
+    public function testCGetFlatLocaleFallback(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -972,7 +972,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('Third Category', $response->_embedded->categories[0]->name);
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         $collection = $this->createCollection();
         $type = $this->createImageType();
@@ -1047,7 +1047,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('myValue', $response->meta[0]->value);
     }
 
-    public function testPostWithoutMedia()
+    public function testPostWithoutMedia(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -1065,7 +1065,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals(['ids' => []], (array) $response->medias);
     }
 
-    public function testPostWithNoLocale()
+    public function testPostWithNoLocale(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -1079,7 +1079,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testPostWithExistingKey()
+    public function testPostWithExistingKey(): void
     {
         $this->createCategory('first-category-key', 'en');
         $this->em->flush();
@@ -1097,7 +1097,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(409, $this->client->getResponse());
     }
 
-    public function testPostWithoutName()
+    public function testPostWithoutName(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -1110,7 +1110,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testPostWithParent()
+    public function testPostWithParent(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -1156,7 +1156,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertCount(2, $response->children);
     }
 
-    public function testPut()
+    public function testPut(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -1231,7 +1231,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertTrue('This meta got added' === $response->meta[1]->value);
     }
 
-    public function testSortingOfMedia()
+    public function testSortingOfMedia(): void
     {
         $collection = $this->createCollection();
         $type = $this->createImageType();
@@ -1298,7 +1298,7 @@ class CategoryControllerTest extends SuluTestCase
         ], $response['medias']);
     }
 
-    public function testPutWithNoLocale()
+    public function testPutWithNoLocale(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -1318,7 +1318,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testPutWithDifferentLocale()
+    public function testPutWithDifferentLocale(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -1357,7 +1357,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('First Category', $response->name);
     }
 
-    public function testPutWithoutName()
+    public function testPutWithoutName(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -1381,7 +1381,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testPutWithExistingKey()
+    public function testPutWithExistingKey(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -1403,7 +1403,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(409, $this->client->getResponse());
     }
 
-    public function testPutNotExisting()
+    public function testPutNotExisting(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -1422,7 +1422,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testPatch()
+    public function testPatch(): void
     {
         $category = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category, 'en', 'First Category');
@@ -1456,7 +1456,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('first-category-key', $response->key);
     }
 
-    public function testPatchWithExistingKey()
+    public function testPatchWithExistingKey(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -1477,7 +1477,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(409, $this->client->getResponse());
     }
 
-    public function testPatchNotExisting()
+    public function testPatchNotExisting(): void
     {
         $this->client->jsonRequest(
             'PATCH',
@@ -1490,7 +1490,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $category = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category, 'en', 'First Category');
@@ -1519,7 +1519,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testDeleteNotExisting()
+    public function testDeleteNotExisting(): void
     {
         $this->client->jsonRequest(
             'DELETE',
@@ -1529,7 +1529,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testDeleteWithChildren()
+    public function testDeleteWithChildren(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -1595,7 +1595,7 @@ class CategoryControllerTest extends SuluTestCase
         ], $content);
     }
 
-    public function testMove()
+    public function testMove(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');
@@ -1626,7 +1626,7 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals($category3->getId(), $response['parentId']);
     }
 
-    public function testMoveRoot()
+    public function testMoveRoot(): void
     {
         $category1 = $this->createCategory('first-category-key', 'en');
         $this->createCategoryTranslation($category1, 'en', 'First Category');

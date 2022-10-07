@@ -33,7 +33,7 @@ class ListBuilderMetadataProviderCompilerPassTest extends TestCase
     /**
      * @dataProvider dataProcessProvider
      */
-    public function testProcess($hasDefinition, $taggedServices = [])
+    public function testProcess($hasDefinition, $taggedServices = []): void
     {
         $definition = $this->prophesize(Definition::class);
 

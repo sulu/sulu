@@ -75,7 +75,7 @@ class RootPathPurgeInitializerTest extends TestCase
     /**
      * It should purge the root path of all sessions.
      */
-    public function testPurgeRootNodes()
+    public function testPurgeRootNodes(): void
     {
         $this->connectionRegistry->getConnections()->willReturn([
             $this->session1->reveal(),
@@ -100,7 +100,7 @@ class RootPathPurgeInitializerTest extends TestCase
     /**
      * It should skip purging if the workspace does not exist.
      */
-    public function testDoNotPurgeWorkspaceNotFound()
+    public function testDoNotPurgeWorkspaceNotFound(): void
     {
         $this->connectionRegistry->getConnections()->willReturn([
             $this->session1->reveal(),
@@ -123,7 +123,7 @@ class RootPathPurgeInitializerTest extends TestCase
         $this->rootPathPurgeInitializer->initialize($this->output->reveal(), true);
     }
 
-    public function testInitializeWithFalsePurgeFlag()
+    public function testInitializeWithFalsePurgeFlag(): void
     {
         $this->connectionRegistry->getConnections()->shouldNotBeCalled();
         $this->rootPathPurgeInitializer->initialize($this->output->reveal(), false);

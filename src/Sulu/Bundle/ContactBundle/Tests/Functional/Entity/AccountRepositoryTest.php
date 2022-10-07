@@ -36,7 +36,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testFindByNoPagination()
+    public function testFindByNoPagination(): void
     {
         $account1 = $this->createAccount('Sulu');
         $account2 = $this->createAccount('Sensiolabs');
@@ -48,7 +48,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account2], $result);
     }
 
-    public function testFindByPage1NoLimit()
+    public function testFindByPage1NoLimit(): void
     {
         $account1 = $this->createAccount('Sulu');
         $account2 = $this->createAccount('Sensiolabs');
@@ -63,7 +63,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account2, $account3], $result);
     }
 
-    public function testFindByPage2NoLimit()
+    public function testFindByPage2NoLimit(): void
     {
         $account1 = $this->createAccount('Sulu');
         $account2 = $this->createAccount('Sensiolabs');
@@ -77,7 +77,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account3, $account4], $result);
     }
 
-    public function testFindByLimit3()
+    public function testFindByLimit3(): void
     {
         $account1 = $this->createAccount('Sulu');
         $account2 = $this->createAccount('Sensiolabs');
@@ -91,7 +91,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account2, $account3], $result);
     }
 
-    public function testFindByPage1Limit5()
+    public function testFindByPage1Limit5(): void
     {
         $account1 = $this->createAccount('Sulu');
         $account2 = $this->createAccount('Sensiolabs');
@@ -106,7 +106,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account2, $account3, $account4], $result);
     }
 
-    public function testFindByPage2Limit5()
+    public function testFindByPage2Limit5(): void
     {
         $account1 = $this->createAccount('Sulu');
         $account2 = $this->createAccount('Sensiolabs');
@@ -121,7 +121,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account4, $account5], $result);
     }
 
-    public function testFindByTagOr()
+    public function testFindByTagOr(): void
     {
         $tag1 = $this->createTag('Tag 1');
         $tag2 = $this->createTag('Tag 2');
@@ -144,7 +144,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account4], $result);
     }
 
-    public function testFindByTagAnd()
+    public function testFindByTagAnd(): void
     {
         $tag1 = $this->createTag('Tag 1');
         $tag2 = $this->createTag('Tag 2');
@@ -167,7 +167,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account4], $result);
     }
 
-    public function testFindByPage1TagOr()
+    public function testFindByPage1TagOr(): void
     {
         $tag1 = $this->createTag('Tag 1');
         $account1 = $this->createAccount('Sulu', [$tag1]);
@@ -189,7 +189,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account2, $account3], $result);
     }
 
-    public function testFindByWebsiteTagOr()
+    public function testFindByWebsiteTagOr(): void
     {
         $tag1 = $this->createTag('Tag 1');
         $tag2 = $this->createTag('Tag 2');
@@ -212,7 +212,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account4], $result);
     }
 
-    public function testFindByWebsiteTagAnd()
+    public function testFindByWebsiteTagAnd(): void
     {
         $tag1 = $this->createTag('Tag 1');
         $tag2 = $this->createTag('Tag 2');
@@ -235,7 +235,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account4], $result);
     }
 
-    public function testFindByTagAndWebsiteTag()
+    public function testFindByTagAndWebsiteTag(): void
     {
         $tag1 = $this->createTag('Tag 1');
         $tag2 = $this->createTag('Tag 2');
@@ -258,7 +258,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account4], $result);
     }
 
-    public function testFindByTagAnd2WebsiteTag()
+    public function testFindByTagAnd2WebsiteTag(): void
     {
         $tag1 = $this->createTag('Tag 1');
         $tag2 = $this->createTag('Tag 2');
@@ -282,7 +282,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1], $result);
     }
 
-    public function testFindBy2TagAndWebsiteTag()
+    public function testFindBy2TagAndWebsiteTag(): void
     {
         $tag1 = $this->createTag('Tag 1');
         $tag2 = $this->createTag('Tag 2');
@@ -306,7 +306,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account4, $account5], $result);
     }
 
-    public function testFindByCategoryOr()
+    public function testFindByCategoryOr(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -329,7 +329,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account4], $result);
     }
 
-    public function testFindByCategoryAnd()
+    public function testFindByCategoryAnd(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -352,7 +352,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account4], $result);
     }
 
-    public function testFindByPage1CategoryOr()
+    public function testFindByPage1CategoryOr(): void
     {
         $category1 = $this->createCategory('Category 1');
         $account1 = $this->createAccount('Sulu', [], [$category1]);
@@ -374,7 +374,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account2, $account3], $result);
     }
 
-    public function testFindByWebsiteCategoryOr()
+    public function testFindByWebsiteCategoryOr(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -397,7 +397,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account4], $result);
     }
 
-    public function testFindByWebsiteCategoryAnd()
+    public function testFindByWebsiteCategoryAnd(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -420,7 +420,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account4], $result);
     }
 
-    public function testFindByCategoryAndWebsiteCategory()
+    public function testFindByCategoryAndWebsiteCategory(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -443,7 +443,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account4], $result);
     }
 
-    public function testFindByCategoryAnd2WebsiteCategory()
+    public function testFindByCategoryAnd2WebsiteCategory(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -467,7 +467,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1], $result);
     }
 
-    public function testFindBy2CategoryAndWebsiteCategory()
+    public function testFindBy2CategoryAndWebsiteCategory(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -491,7 +491,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account4, $account5], $result);
     }
 
-    public function testFindByCategoryAndTag()
+    public function testFindByCategoryAndTag(): void
     {
         $category1 = $this->createCategory('Category 1');
         $tag1 = $this->createTag('Tag 1');
@@ -513,7 +513,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account4], $result);
     }
 
-    public function testFindByWebsiteCategoryAndWebsiteTag()
+    public function testFindByWebsiteCategoryAndWebsiteTag(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -547,7 +547,7 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals([$account1, $account5], $result);
     }
 
-    public function testFindByIds()
+    public function testFindByIds(): void
     {
         $account1 = $this->createAccount('Sulu');
         $account2 = $this->createAccount('Sensiolabs');
@@ -561,14 +561,14 @@ class AccountRepositoryTest extends SuluTestCase
         $this->assertEquals('Sensiolabs', $result[1]->getName());
     }
 
-    public function testFindByNotExistingIds()
+    public function testFindByNotExistingIds(): void
     {
         $result = $this->accountRepository->findByIds([15, 99]);
 
         $this->assertCount(0, $result);
     }
 
-    public function testFindByIdsEmpty()
+    public function testFindByIdsEmpty(): void
     {
         $result = $this->accountRepository->findByIds([]);
 

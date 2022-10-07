@@ -96,7 +96,7 @@ class FullDocument implements
         return $this->parent;
     }
 
-    public function setParent($parent)
+    public function setParent($parent): void
     {
         $this->parent = $parent;
     }
@@ -111,7 +111,7 @@ class FullDocument implements
         return $this->locale;
     }
 
-    public function setLocale($locale)
+    public function setLocale($locale): void
     {
         $this->locale = $locale;
     }
@@ -131,7 +131,7 @@ class FullDocument implements
         return $this->title;
     }
 
-    public function setTitle($title)
+    public function setTitle($title): void
     {
         $this->title = $title;
     }
@@ -141,7 +141,7 @@ class FullDocument implements
         return $this->body;
     }
 
-    public function setBody($body)
+    public function setBody($body): void
     {
         $this->body = $body;
     }
@@ -151,7 +151,7 @@ class FullDocument implements
         return $this->status;
     }
 
-    public function setStatus($status)
+    public function setStatus($status): void
     {
         $this->status = $status;
     }
@@ -161,7 +161,7 @@ class FullDocument implements
         return $this->reference;
     }
 
-    public function setReference($reference)
+    public function setReference($reference): void
     {
         $this->reference = $reference;
     }
@@ -171,7 +171,7 @@ class FullDocument implements
         return $this->originalLocale;
     }
 
-    public function setOriginalLocale($originalLocale)
+    public function setOriginalLocale($originalLocale): void
     {
         $this->originalLocale = $originalLocale;
     }

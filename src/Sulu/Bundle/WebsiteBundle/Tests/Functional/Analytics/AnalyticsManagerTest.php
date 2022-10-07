@@ -32,7 +32,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->initEntities();
     }
 
-    public function initEntities()
+    public function initEntities(): void
     {
         $this->entities[] = $this->create(
             'sulu_io',
@@ -92,7 +92,7 @@ class AnalyticsManagerTest extends BaseFunctional
         );
     }
 
-    public function testFindAll()
+    public function testFindAll(): void
     {
         $result = $this->analyticsManager->findAll('sulu_io');
         $this->assertCount(4, $result);
@@ -109,7 +109,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->assertEmpty($result);
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         $id = $this->entities[0]->getId();
         $this->assertNotNull($id);
@@ -171,7 +171,7 @@ class AnalyticsManagerTest extends BaseFunctional
     /**
      * @dataProvider dataProvider
      */
-    public function testCreate($webspaceKey, array $data)
+    public function testCreate($webspaceKey, array $data): void
     {
         $result = $this->analyticsManager->create($webspaceKey, $data);
         $this->getEntityManager()->flush();
@@ -214,7 +214,7 @@ class AnalyticsManagerTest extends BaseFunctional
     /**
      * @dataProvider dataProvider
      */
-    public function testUpdate($webspaceKey, array $data)
+    public function testUpdate($webspaceKey, array $data): void
     {
         $id = $this->entities[0]->getId();
         $this->assertNotNull($id);
@@ -258,7 +258,7 @@ class AnalyticsManagerTest extends BaseFunctional
         );
     }
 
-    public function testCreateWithExistingUrl()
+    public function testCreateWithExistingUrl(): void
     {
         $this->analyticsManager->create(
             'sulu_io',
@@ -281,7 +281,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->assertCount(1, $this->domainRepository->findBy(['url' => 'www.sulu.io/{localization}']));
     }
 
-    public function testUpdateWithExistingUrl()
+    public function testUpdateWithExistingUrl(): void
     {
         $id = $this->entities[0]->getId();
         $this->assertNotNull($id);
@@ -304,7 +304,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->assertCount(1, $this->domainRepository->findBy(['url' => 'www.sulu.io/{localization}']));
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $id = $this->entities[0]->getId();
         $this->assertNotNull($id);
@@ -339,7 +339,7 @@ class AnalyticsManagerTest extends BaseFunctional
         );
     }
 
-    public function testRemoveMultiple()
+    public function testRemoveMultiple(): void
     {
         $id1 = $this->entities[0]->getId();
         $this->assertNotNull($id1);

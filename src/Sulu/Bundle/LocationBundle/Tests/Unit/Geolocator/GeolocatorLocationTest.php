@@ -26,7 +26,7 @@ class GeolocatorLocationTest extends TestCase
         $this->location = new GeolocatorLocation();
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $data = [
             'id' => '123-123-123',

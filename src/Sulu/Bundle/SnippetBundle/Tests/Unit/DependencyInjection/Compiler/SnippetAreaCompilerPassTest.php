@@ -29,7 +29,7 @@ class SnippetAreaCompilerPassTest extends TestCase
      */
     protected $structureFactory;
 
-    public function testWithoutAreas()
+    public function testWithoutAreas(): void
     {
         $compiler = new SnippetAreaCompilerPass();
 
@@ -73,7 +73,7 @@ class SnippetAreaCompilerPassTest extends TestCase
         $compiler->process($this->container->reveal());
     }
 
-    public function testWithAreas()
+    public function testWithAreas(): void
     {
         $compiler = new SnippetAreaCompilerPass();
 

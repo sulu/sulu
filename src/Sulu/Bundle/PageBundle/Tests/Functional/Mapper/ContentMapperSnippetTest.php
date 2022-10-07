@@ -73,7 +73,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         $this->parent = $this->documentManager->find('/cmf/sulu_io/contents');
     }
 
-    public function loadFixtures()
+    public function loadFixtures(): void
     {
         $this->snippet1 = $this->createSnippetDocument();
         $this->snippet1->setStructureType('animal');
@@ -109,7 +109,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         $this->documentManager->flush();
     }
 
-    public function testChangeSnippetTemplate()
+    public function testChangeSnippetTemplate(): void
     {
         /** @var SnippetDocument $document */
         $document = $this->documentManager->find($this->snippet1->getUuid());
@@ -128,7 +128,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         $node->getPropertyValue('template');
     }
 
-    public function testRemoveSnippet()
+    public function testRemoveSnippet(): void
     {
         $this->contentMapper->delete($this->snippet1->getUuid(), 'sulu_io');
 
@@ -140,7 +140,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         }
     }
 
-    public function testRemoveSnippetWithReferences()
+    public function testRemoveSnippetWithReferences(): void
     {
         $document = $this->documentManager->create('page');
         $document->setTitle('Hello');
@@ -174,7 +174,7 @@ class ContentMapperSnippetTest extends SuluTestCase
     /**
      * @dataProvider provideRemoveSnippetWithReferencesDereference
      */
-    public function testRemoveSnippetWithReferencesDereference($multiple = false)
+    public function testRemoveSnippetWithReferencesDereference($multiple = false): void
     {
         $document = $this->documentManager->create('page');
         $document->setTitle('test');
@@ -218,7 +218,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         }
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         $node = $this->session->getNode($this->snippet1OriginalPath);
         $snippet = $this->contentMapper->loadByNode(
@@ -233,7 +233,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         $this->assertEquals('animal', $templateKey);
     }
 
-    public function testLoadShallowStructureByNode()
+    public function testLoadShallowStructureByNode(): void
     {
         $node = $this->session->getNode($this->snippet1OriginalPath);
         $snippet = $this->contentMapper->loadShallowStructureByNode(

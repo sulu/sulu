@@ -19,7 +19,7 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 
 class FormViewBuilderTest extends TestCase
 {
-    public function testBuildFormViewWithClone()
+    public function testBuildFormViewWithClone(): void
     {
         $viewBuilder = (new FormViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -28,7 +28,7 @@ class FormViewBuilderTest extends TestCase
         $this->assertNotSame($viewBuilder->getView(), $viewBuilder->getView());
     }
 
-    public function testBuildFormViewWithoutResourceKey()
+    public function testBuildFormViewWithoutResourceKey(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('/"setResourceKey"/');
@@ -125,7 +125,7 @@ class FormViewBuilderTest extends TestCase
         ?array $routerAttributesToFormMetadata,
         ?bool $titleVisible,
         ?array $requestParameters
-    ) {
+    ): void {
         $viewBuilder = (new FormViewBuilder($name, $path))
             ->setResourceKey($resourceKey)
             ->setFormKey($formKey);
@@ -190,7 +190,7 @@ class FormViewBuilderTest extends TestCase
         $this->assertSame('sulu_admin.form', $view->getType());
     }
 
-    public function testBuildFormWithToolbarActions()
+    public function testBuildFormWithToolbarActions(): void
     {
         $saveToolbarAction = new ToolbarAction('sulu_admin.save');
         $typesToolbarAction = new ToolbarAction('sulu_admin.types');
@@ -209,7 +209,7 @@ class FormViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildFormWithRouterAttributesToFormRequest()
+    public function testBuildFormWithRouterAttributesToFormRequest(): void
     {
         $view = (new FormViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -224,7 +224,7 @@ class FormViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildFormWithRouterAttributesToEditView()
+    public function testBuildFormWithRouterAttributesToEditView(): void
     {
         $view = (new FormViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -239,7 +239,7 @@ class FormViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildFormWithIdQueryParameter()
+    public function testBuildFormWithIdQueryParameter(): void
     {
         $view = (new FormViewBuilder('sulu_security.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -253,7 +253,7 @@ class FormViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildFormWithParent()
+    public function testBuildFormWithParent(): void
     {
         $view = (new FormViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -264,7 +264,7 @@ class FormViewBuilderTest extends TestCase
         $this->assertSame('sulu_admin.test', $view->getParent());
     }
 
-    public function testBuildFormWithOption()
+    public function testBuildFormWithOption(): void
     {
         $view = (new FormViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -275,7 +275,7 @@ class FormViewBuilderTest extends TestCase
         $this->assertSame('test', $view->getOption('resourceKey'));
     }
 
-    public function testBuildFormWithLocales()
+    public function testBuildFormWithLocales(): void
     {
         $view = (new FormViewBuilder('sulu_role.add_form', '/roles/:locale'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -287,7 +287,7 @@ class FormViewBuilderTest extends TestCase
         $this->assertSame(['de', 'en', 'nl', 'fr'], $view->getOption('locales'));
     }
 
-    public function testBuildFormWithLocalesWithoutLocalePlaceholder()
+    public function testBuildFormWithLocalesWithoutLocalePlaceholder(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');
@@ -300,7 +300,7 @@ class FormViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildFormWithoutLocalesWithLocalePlaceholder()
+    public function testBuildFormWithoutLocalesWithLocalePlaceholder(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');
@@ -311,7 +311,7 @@ class FormViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildFormWithRedirectToItself()
+    public function testBuildFormWithRedirectToItself(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('"editView"');
@@ -323,7 +323,7 @@ class FormViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildAddTabBadge()
+    public function testBuildAddTabBadge(): void
     {
         $fooBadge = new Badge('sulu_foo.get_foo_badge');
         $barBadge = new Badge('sulu_bar.get_bar_badge');

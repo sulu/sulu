@@ -64,7 +64,7 @@ class RouteManagerTest extends TestCase
         );
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $route = $this->prophesize(RouteInterface::class);
 
@@ -77,7 +77,7 @@ class RouteManagerTest extends TestCase
         $this->assertEquals($route->reveal(), $this->manager->create($this->entity->reveal()));
     }
 
-    public function testCreateInheritMapping()
+    public function testCreateInheritMapping(): void
     {
         $entity = new TestRoutableProxy();
 
@@ -89,7 +89,7 @@ class RouteManagerTest extends TestCase
         $this->assertEquals($route->reveal(), $entity->getRoute());
     }
 
-    public function testCreateWithRoutePath()
+    public function testCreateWithRoutePath(): void
     {
         $route = $this->prophesize(RouteInterface::class);
 
@@ -102,7 +102,7 @@ class RouteManagerTest extends TestCase
         $this->assertEquals($route->reveal(), $this->manager->create($this->entity->reveal(), '/test'));
     }
 
-    public function testCreateWithRoutePathAndResolveConflictFalse()
+    public function testCreateWithRoutePathAndResolveConflictFalse(): void
     {
         $route = $this->prophesize(RouteInterface::class);
 
@@ -115,7 +115,7 @@ class RouteManagerTest extends TestCase
         $this->assertEquals($route->reveal(), $this->manager->create($this->entity->reveal(), '/test', false));
     }
 
-    public function testCreateWithRoutePathAndResolveConflictFalseNotUnique()
+    public function testCreateWithRoutePathAndResolveConflictFalseNotUnique(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getId()->willReturn(1);
@@ -138,7 +138,7 @@ class RouteManagerTest extends TestCase
         $this->manager->create($this->entity->reveal(), '/test', false);
     }
 
-    public function testCreateAlreadyExists()
+    public function testCreateAlreadyExists(): void
     {
         $this->expectException(RouteAlreadyCreatedException::class);
 
@@ -149,7 +149,7 @@ class RouteManagerTest extends TestCase
         $this->manager->create($this->entity->reveal());
     }
 
-    public function testCreateWithConflict()
+    public function testCreateWithConflict(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $conflict = $this->prophesize(RouteInterface::class);
@@ -160,7 +160,7 @@ class RouteManagerTest extends TestCase
         $this->assertEquals($conflict->reveal(), $this->manager->create($this->entity->reveal()));
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');
@@ -185,7 +185,7 @@ class RouteManagerTest extends TestCase
         $this->assertEquals($newRoute->reveal(), $this->manager->update($this->entity->reveal(), '/test-2'));
     }
 
-    public function testUpdateInheritMapping()
+    public function testUpdateInheritMapping(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');
@@ -207,7 +207,7 @@ class RouteManagerTest extends TestCase
         $this->assertEquals($newRoute->reveal(), $entity->getRoute());
     }
 
-    public function testUpdateWithConflict()
+    public function testUpdateWithConflict(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');
@@ -235,7 +235,7 @@ class RouteManagerTest extends TestCase
         $this->assertEquals($conflict->reveal(), $this->manager->update($this->entity->reveal()));
     }
 
-    public function testUpdateMultipleHistory()
+    public function testUpdateMultipleHistory(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');
@@ -270,7 +270,7 @@ class RouteManagerTest extends TestCase
         $this->assertEquals($newRoute->reveal(), $this->manager->update($this->entity->reveal()));
     }
 
-    public function testUpdateRestore()
+    public function testUpdateRestore(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');
@@ -300,7 +300,7 @@ class RouteManagerTest extends TestCase
         $this->manager->update($this->entity->reveal());
     }
 
-    public function testUpdateNoChange()
+    public function testUpdateNoChange(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');
@@ -313,7 +313,7 @@ class RouteManagerTest extends TestCase
         $this->assertEquals($route->reveal(), $this->manager->update($this->entity->reveal()));
     }
 
-    public function testUpdateNoRoute()
+    public function testUpdateNoRoute(): void
     {
         $this->expectException(RouteNotCreatedException::class);
 
@@ -325,7 +325,7 @@ class RouteManagerTest extends TestCase
         $this->manager->update($this->entity->reveal());
     }
 
-    public function testUpdateWithPathAndResolveConflictFalse()
+    public function testUpdateWithPathAndResolveConflictFalse(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');
@@ -352,7 +352,7 @@ class RouteManagerTest extends TestCase
         $this->assertEquals($newRoute->reveal(), $this->manager->update($this->entity->reveal(), '/test-2', false));
     }
 
-    public function testUpdateWithPathAndResolveConflictFalseNotUnique()
+    public function testUpdateWithPathAndResolveConflictFalseNotUnique(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');
@@ -387,7 +387,7 @@ class RouteManagerTest extends TestCase
         $this->assertEquals($newRoute->reveal(), $this->manager->update($this->entity->reveal(), '/test-2', false));
     }
 
-    public function testUpdateWithPathAndResolveConflictRestore()
+    public function testUpdateWithPathAndResolveConflictRestore(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');
@@ -613,7 +613,7 @@ class TestRoutable implements RoutableInterface
         return $this->route;
     }
 
-    public function setRoute(RouteInterface $route)
+    public function setRoute(RouteInterface $route): void
     {
         $this->route = $route;
     }

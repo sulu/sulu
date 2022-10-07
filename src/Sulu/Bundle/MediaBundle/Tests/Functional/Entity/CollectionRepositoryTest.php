@@ -134,7 +134,7 @@ class CollectionRepositoryTest extends SuluTestCase
         return $collection;
     }
 
-    private function addMedia(Collection $collection, $numberMedia)
+    private function addMedia(Collection $collection, $numberMedia): void
     {
         for ($i = 0; $i < $numberMedia; ++$i) {
             $media = new Media();
@@ -162,7 +162,7 @@ class CollectionRepositoryTest extends SuluTestCase
     /**
      * @dataProvider provideTreeData
      */
-    public function testTree($index, $expectedIndexes)
+    public function testTree($index, $expectedIndexes): void
     {
         $expected = [];
         $id = $this->collections[$index]->getId();
@@ -175,37 +175,37 @@ class CollectionRepositoryTest extends SuluTestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testFindCollectionSet()
+    public function testFindCollectionSet(): void
     {
         $this->assertCount(21, $this->collectionRepository->findCollectionSet(5));
     }
 
-    public function testFindCollectionSetWithoutSystemCollections()
+    public function testFindCollectionSetWithoutSystemCollections(): void
     {
         $this->assertCount(16, $this->collectionRepository->findCollectionSet(5, ['systemCollections' => false]));
     }
 
-    public function testCount()
+    public function testCount(): void
     {
         $this->assertEquals(16, $this->collectionRepository->countCollections(5, ['systemCollections' => false]));
     }
 
-    public function testCountMedia()
+    public function testCountMedia(): void
     {
         $this->assertEquals(4, $this->collectionRepository->countMedia($this->collections[3]));
     }
 
-    public function testCountMediaWithEmptyCollection()
+    public function testCountMediaWithEmptyCollection(): void
     {
         $this->assertEquals(0, $this->collectionRepository->countMedia($this->collections[0]));
     }
 
-    public function testCountWithoutFilters()
+    public function testCountWithoutFilters(): void
     {
         $this->assertEquals(21, $this->collectionRepository->countCollections(5));
     }
 
-    public function testGetDescendantIdsById()
+    public function testGetDescendantIdsById(): void
     {
         $ids = $this->collectionRepository->findDescendantIdsById($this->collections[1]->getId());
 

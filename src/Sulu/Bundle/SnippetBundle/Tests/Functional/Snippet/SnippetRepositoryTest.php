@@ -74,7 +74,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
     /**
      * @dataProvider provideGetSnippets
      */
-    public function testGetSnippets($type, $offset, $limit, $search, $expectedCount)
+    public function testGetSnippets($type, $offset, $limit, $search, $expectedCount): void
     {
         $snippets = $this->snippetRepository->getSnippets('de', $type, $offset, $limit, $search);
         $this->assertCount($expectedCount, $snippets);
@@ -104,7 +104,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
     /**
      * @dataProvider provideGetSnippetsByUuids
      */
-    public function testGetSnippetsByUuids($snippets, $languageCode, $expectedCount)
+    public function testGetSnippetsByUuids($snippets, $languageCode, $expectedCount): void
     {
         $uuids = [];
         foreach ($snippets as $snippetVarName) {
@@ -123,7 +123,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
         $this->assertCount($expectedCount, $snippets);
     }
 
-    public function testOrder()
+    public function testOrder(): void
     {
         $snippets = $this->snippetRepository->getSnippets('de', 'car');
         $this->assertNotNull($snippets);
@@ -141,7 +141,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
         $this->assertEquals('C car', $third->getTitle());
     }
 
-    public function testGetReferences()
+    public function testGetReferences(): void
     {
         $res = $this->snippetRepository->getReferences($this->hotel1->getUuid());
         $this->assertCount(1, $res);
