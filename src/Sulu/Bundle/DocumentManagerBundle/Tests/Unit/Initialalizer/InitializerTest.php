@@ -65,18 +65,18 @@ class InitializerTest extends TestCase
         $this->container->get('service3')->willReturn($this->initializer3->reveal());
     }
 
-    public function testInitialize()
+    public function testInitialize(): void
     {
         $calls = [];
         $output = new NullOutput();
 
-        $this->initializer1->initialize($output, false)->will(function() use (&$calls) {
+        $this->initializer1->initialize($output, false)->will(function() use (&$calls): void {
             $calls[] = 'service1';
         });
-        $this->initializer2->initialize($output, false)->will(function() use (&$calls) {
+        $this->initializer2->initialize($output, false)->will(function() use (&$calls): void {
             $calls[] = 'service2';
         });
-        $this->initializer3->initialize($output, false)->will(function() use (&$calls) {
+        $this->initializer3->initialize($output, false)->will(function() use (&$calls): void {
             $calls[] = 'service3';
         });
 
@@ -87,18 +87,18 @@ class InitializerTest extends TestCase
         ], $calls);
     }
 
-    public function testInitializeWithPurge()
+    public function testInitializeWithPurge(): void
     {
         $calls = [];
         $output = new NullOutput();
 
-        $this->initializer1->initialize($output, true)->will(function() use (&$calls) {
+        $this->initializer1->initialize($output, true)->will(function() use (&$calls): void {
             $calls[] = 'service1';
         });
-        $this->initializer2->initialize($output, true)->will(function() use (&$calls) {
+        $this->initializer2->initialize($output, true)->will(function() use (&$calls): void {
             $calls[] = 'service2';
         });
-        $this->initializer3->initialize($output, true)->will(function() use (&$calls) {
+        $this->initializer3->initialize($output, true)->will(function() use (&$calls): void {
             $calls[] = 'service3';
         });
 

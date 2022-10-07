@@ -60,7 +60,7 @@ class OrderSubscriberTest extends SubscriberTestCase
      * It should set the sulu order on sibling documents of the persisted documents according to their natural order upon REORDER.
      * It should not take non-implementing documents into account when recalculating the orders.
      */
-    public function testReorder()
+    public function testReorder(): void
     {
         $document = $this->prophesize(OrderBehavior::class);
         $parentDocument = $this->prophesize(OrderBehavior::class);
@@ -105,7 +105,7 @@ class OrderSubscriberTest extends SubscriberTestCase
     /**
      * It should return early on REORDER if the document is not an instance of OrderBehavior.
      */
-    public function testReorderNotImplementing()
+    public function testReorderNotImplementing(): void
     {
         $document = new \stdClass();
 
@@ -119,7 +119,7 @@ class OrderSubscriberTest extends SubscriberTestCase
     /**
      * It should return early on REORDER if the document has no parent (i.e. if the document is the root document and this shoouldn't really happen).
      */
-    public function testReorderNoParent()
+    public function testReorderNoParent(): void
     {
         $document = $this->prophesize(OrderBehavior::class);
 
@@ -131,7 +131,7 @@ class OrderSubscriberTest extends SubscriberTestCase
         $this->documentInspector->getChildren(Argument::any())->shouldNotHaveBeenCalled();
     }
 
-    public function testPersistOrder()
+    public function testPersistOrder(): void
     {
         $this->node->getParent()->willReturn($this->parentNode->reveal());
         $this->parentNode->getNodes()->willReturn([
@@ -142,7 +142,7 @@ class OrderSubscriberTest extends SubscriberTestCase
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
-    public function testPersistOrderWithExistingOrder()
+    public function testPersistOrderWithExistingOrder(): void
     {
         $this->node->getParent()->willReturn($this->parentNode->reveal());
         $this->parentNode->getNodes()->willReturn([

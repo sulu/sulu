@@ -227,7 +227,7 @@ class AdminControllerTest extends TestCase
         );
     }
 
-    public function testConfigAction()
+    public function testConfigAction(): void
     {
         $views = [
             new SuluView('sulu_snippet.list', '/snippets', 'sulu_admin.list'),
@@ -302,7 +302,7 @@ class AdminControllerTest extends TestCase
         $this->adminController->configAction();
     }
 
-    public function testMetadataAction()
+    public function testMetadataAction(): void
     {
         $form = new FormMetadata();
 
@@ -319,7 +319,7 @@ class AdminControllerTest extends TestCase
         $this->adminController->metadataAction('form', 'pages', new Request());
     }
 
-    public function testMetadataActionWithOptions()
+    public function testMetadataActionWithOptions(): void
     {
         $form = new FormMetadata();
 
@@ -371,7 +371,7 @@ class AdminControllerTest extends TestCase
     /**
      * @dataProvider provideTranslationsAction
      */
-    public function testTranslationsAction($locale, $translations, $fallbackTranslations, $resultTranslations)
+    public function testTranslationsAction($locale, $translations, $fallbackTranslations, $resultTranslations): void
     {
         $request = new Request(['locale' => $locale]);
 
@@ -392,7 +392,7 @@ class AdminControllerTest extends TestCase
         $this->assertEquals($resultTranslations, $response->getContent());
     }
 
-    public function testTranslationActionWithoutFallback()
+    public function testTranslationActionWithoutFallback(): void
     {
         $request = new Request(['locale' => 'en']);
 

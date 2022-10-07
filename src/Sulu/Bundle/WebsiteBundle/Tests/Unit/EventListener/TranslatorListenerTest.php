@@ -32,7 +32,7 @@ class TranslatorListenerTest extends TestCase
         $this->kernel = $this->prophesize(HttpKernelInterface::class);
     }
 
-    public function testOnKernelRequest()
+    public function testOnKernelRequest(): void
     {
         $translator = $this->prophesize(Translator::class);
         $request = new Request();

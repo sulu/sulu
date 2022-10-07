@@ -43,7 +43,7 @@ class PermissionControllerTest extends SuluTestCase
         $this->initPhpcr();
     }
 
-    public function testCputWithDoctrine()
+    public function testCputWithDoctrine(): void
     {
         $role1 = $this->createRole('Role 1');
         $role2 = $this->createRole('Role 2');
@@ -127,7 +127,7 @@ class PermissionControllerTest extends SuluTestCase
         );
     }
 
-    public function testCputWithPhpcr()
+    public function testCputWithPhpcr(): void
     {
         $role1 = $this->createRole('Role 1');
         $role2 = $this->createRole('Role 2');

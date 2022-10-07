@@ -53,7 +53,7 @@ class CacheInvalidationListenerTest extends TestCase
     /**
      * @dataProvider provideData
      */
-    public function testPostPersist($class, $alias)
+    public function testPostPersist($class, $alias): void
     {
         $entity = $this->prophesize($class);
 
@@ -76,7 +76,7 @@ class CacheInvalidationListenerTest extends TestCase
     /**
      * @dataProvider provideData
      */
-    public function testPostUpdate($class, $alias)
+    public function testPostUpdate($class, $alias): void
     {
         $entity = $this->prophesize($class);
 
@@ -99,7 +99,7 @@ class CacheInvalidationListenerTest extends TestCase
     /**
      * @dataProvider provideData
      */
-    public function testPreRemove($class, $alias)
+    public function testPreRemove($class, $alias): void
     {
         $entity = $this->prophesize($class);
 
@@ -130,7 +130,7 @@ class CacheInvalidationListenerTest extends TestCase
     /**
      * @dataProvider provideDataWithTagsAndCategories
      */
-    public function testPersistUpdateWithTagsAndCategories($class, $alias)
+    public function testPersistUpdateWithTagsAndCategories($class, $alias): void
     {
         $entity = $this->prophesize($class);
         $entity->getId()->willReturn(1);
@@ -160,7 +160,7 @@ class CacheInvalidationListenerTest extends TestCase
     /**
      * @dataProvider provideDataWithTagsAndCategories
      */
-    public function testPostUpdateWithTagsAndCategories($class, $alias)
+    public function testPostUpdateWithTagsAndCategories($class, $alias): void
     {
         $entity = $this->prophesize($class);
         $entity->getId()->willReturn(1);
@@ -190,7 +190,7 @@ class CacheInvalidationListenerTest extends TestCase
     /**
      * @dataProvider provideDataWithTagsAndCategories
      */
-    public function testPreRemoveUpdateWithTagsAndCategories($class, $alias)
+    public function testPreRemoveUpdateWithTagsAndCategories($class, $alias): void
     {
         $entity = $this->prophesize($class);
         $entity->getId()->willReturn(1);

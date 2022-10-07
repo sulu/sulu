@@ -73,7 +73,7 @@ class RedirectControllerTest extends TestCase
     /**
      * @dataProvider provideRedirectAction
      */
-    public function testRedirectAction($requestUri, $portalUrl, $redirectUrl, $expectedTargetUrl, $prefix = '')
+    public function testRedirectAction($requestUri, $portalUrl, $redirectUrl, $expectedTargetUrl, $prefix = ''): void
     {
         $request = $this->getRequestMock($requestUri, $portalUrl, $redirectUrl, $prefix);
 
@@ -96,7 +96,7 @@ class RedirectControllerTest extends TestCase
     /**
      * @dataProvider provideRedirectWebspaceAction
      */
-    public function testRedirectWebspaceAction($uri, $redirectUri, $expectedTargetUrl)
+    public function testRedirectWebspaceAction($uri, $redirectUri, $expectedTargetUrl): void
     {
         $request = $this->getRequestMock($redirectUri, null, $uri);
 
@@ -130,7 +130,7 @@ class RedirectControllerTest extends TestCase
         $permanent = true,
         $attributesData = [],
         $queryData = []
-    ) {
+    ): void {
         if ($statusCode >= 400) {
             $this->expectException(HttpException::class);
         }

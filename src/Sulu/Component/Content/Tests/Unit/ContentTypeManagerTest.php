@@ -27,7 +27,7 @@ class ContentTypeManagerTest extends TestCase
         $this->manager->mapAliasToServiceId('content_2.alias', 'content_2.service.id');
     }
 
-    public function testGetContentType()
+    public function testGetContentType(): void
     {
         $this->container->expects($this->once())
             ->method('get')
@@ -36,7 +36,7 @@ class ContentTypeManagerTest extends TestCase
         $this->manager->get('content_1.alias');
     }
 
-    public function testGetContentTypeNotRegistered()
+    public function testGetContentTypeNotRegistered(): void
     {
         $this->expectExceptionMessage('has not been registered');
         $this->expectException(\InvalidArgumentException::class);
@@ -54,13 +54,13 @@ class ContentTypeManagerTest extends TestCase
     /**
      * @dataProvider provideHas
      */
-    public function testHas($alias, $expected)
+    public function testHas($alias, $expected): void
     {
         $res = $this->manager->has($alias);
         $this->assertEquals($expected, $res);
     }
 
-    public function testAll()
+    public function testAll(): void
     {
         $this->assertEquals(
             [

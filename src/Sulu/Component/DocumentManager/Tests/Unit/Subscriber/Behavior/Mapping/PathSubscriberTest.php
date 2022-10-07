@@ -78,14 +78,14 @@ class PathSubscriberTest extends TestCase
         );
     }
 
-    public function testSetInitialPathNotImplementing()
+    public function testSetInitialPathNotImplementing(): void
     {
         $this->abstractMappingEvent->getDocument()->willReturn(\stdClass::class);
         $this->accessor->set(Argument::cetera())->shouldNotBeCalled();
         $this->pathSubscriber->setInitialPath($this->abstractMappingEvent->reveal());
     }
 
-    public function testSetInitialPath()
+    public function testSetInitialPath(): void
     {
         $this->abstractMappingEvent->getDocument()->willReturn($this->document->reveal());
 
@@ -95,14 +95,14 @@ class PathSubscriberTest extends TestCase
         $this->pathSubscriber->setInitialPath($this->abstractMappingEvent->reveal());
     }
 
-    public function testSetFinalPathNotImplementing()
+    public function testSetFinalPathNotImplementing(): void
     {
         $this->abstractMappingEvent->getDocument()->willReturn(\stdClass::class);
         $this->accessor->set(Argument::cetera())->shouldNotBeCalled();
         $this->pathSubscriber->setFinalPath($this->abstractMappingEvent->reveal());
     }
 
-    public function testSetFinalPath()
+    public function testSetFinalPath(): void
     {
         $this->abstractMappingEvent->getDocument()->willReturn($this->document->reveal());
 

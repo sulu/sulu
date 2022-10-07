@@ -136,7 +136,7 @@ class CachingTest extends SuluTestCase
     /**
      * @depends testRequestWithoutSessionCookieTriggersNoRules
      */
-    public function testRequestWithoutSessionCookieTriggersARule($arguments)
+    public function testRequestWithoutSessionCookieTriggersARule($arguments): void
     {
         /** @var KernelBrowser $client */
         /** @var CookieJar $cookieJar */

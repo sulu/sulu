@@ -68,7 +68,7 @@ class DefaultControllerTest extends TestCase
         $this->defaultController->setContainer($this->container->reveal());
     }
 
-    public function testInvalidTemplate()
+    public function testInvalidTemplate(): void
     {
         $this->expectException(HttpException::class);
 
@@ -77,7 +77,7 @@ class DefaultControllerTest extends TestCase
         $this->defaultController->indexAction($this->structure->reveal(), false, false);
     }
 
-    public function testValidTemplate()
+    public function testValidTemplate(): void
     {
         $this->request->getRequestFormat()->willReturn('html')->shouldBeCalled();
         $this->request->getMimeType('html')->willReturn('text/html')->shouldBeCalled();

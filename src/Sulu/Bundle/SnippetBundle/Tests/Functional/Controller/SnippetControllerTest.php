@@ -82,7 +82,7 @@ class SnippetControllerTest extends SuluTestCase
     /**
      * @dataProvider provideGet
      */
-    public function testGet($locale, $expected)
+    public function testGet($locale, $expected): void
     {
         $this->client->jsonRequest('GET', '/api/snippets/' . $this->hotel1->getUuid() . '?locale=' . $locale);
         $response = $this->client->getResponse();
@@ -122,7 +122,7 @@ class SnippetControllerTest extends SuluTestCase
         ];
     }
 
-    public function testGetMany()
+    public function testGetMany(): void
     {
         $this->client->jsonRequest('GET', \sprintf(
             '/api/snippets?ids=%s,%s%s',
@@ -143,7 +143,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals('Hotel', $result['localizedTemplate']);
     }
 
-    public function testGetManyWithGhosts()
+    public function testGetManyWithGhosts(): void
     {
         $this->client->jsonRequest('GET', \sprintf(
             '/api/snippets?ids=%s,%s&locale=en',
@@ -165,7 +165,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals('de', $results[1]['ghostLocale']);
     }
 
-    public function testGetManyLocalizedTemplate()
+    public function testGetManyLocalizedTemplate(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -183,7 +183,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals('Hotel', $result['localizedTemplate']);
     }
 
-    public function testGetMultipleWithNotExistingIds()
+    public function testGetMultipleWithNotExistingIds(): void
     {
         $this->client->jsonRequest('GET', \sprintf(
             '/api/snippets?ids=%s,%s,%s%s',
@@ -267,7 +267,7 @@ class SnippetControllerTest extends SuluTestCase
     /**
      * @dataProvider provideIndex
      */
-    public function testIndex($params, $expectedResultCount)
+    public function testIndex($params, $expectedResultCount): void
     {
         $params = \array_merge([
             'locale' => 'de',
@@ -313,7 +313,7 @@ class SnippetControllerTest extends SuluTestCase
     /**
      * @dataProvider providePost
      */
-    public function testPost($params, $data)
+    public function testPost($params, $data): void
     {
         $params = \array_merge([
             'locale' => 'de',
@@ -351,7 +351,7 @@ class SnippetControllerTest extends SuluTestCase
     /**
      * @dataProvider providePost
      */
-    public function testPostPublished($params, $data)
+    public function testPostPublished($params, $data): void
     {
         $params = \array_merge([
             'locale' => 'de',
@@ -374,7 +374,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
     }
 
-    public function testPut()
+    public function testPut(): void
     {
         $data = [
             'template' => 'hotel',
@@ -410,7 +410,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertSame((string) $this->hotel1->getUuid(), $activity->getResourceId());
     }
 
-    public function testPutPublished()
+    public function testPutPublished(): void
     {
         $data = [];
         $params = [
@@ -433,7 +433,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals(StructureInterface::STATE_PUBLISHED, $result['nodeState']);
     }
 
-    public function testPutWithValidHash()
+    public function testPutWithValidHash(): void
     {
         $data = [
             'template' => 'car',
@@ -456,7 +456,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
     }
 
-    public function testPutWithInvalidHash()
+    public function testPutWithInvalidHash(): void
     {
         $data = [
             'template' => 'car',
@@ -479,7 +479,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(409, $this->client->getResponse());
     }
 
-    public function testPutWithExcerpt()
+    public function testPutWithExcerpt(): void
     {
         $data = [
             'template' => 'hotel',
@@ -512,7 +512,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals($data['description'], $document->getStructure()->getProperty('description')->getValue());
     }
 
-    public function testDeleteReferenced()
+    public function testDeleteReferenced(): void
     {
         $page = $this->documentManager->create('page');
         $page->setStructureType('hotel_page');
@@ -574,7 +574,7 @@ class SnippetControllerTest extends SuluTestCase
         static::assertSame(SnippetDocument::RESOURCE_KEY, $trashItems[0]->getResourceKey());
     }
 
-    public function testCopyLocale()
+    public function testCopyLocale(): void
     {
         $snippet = $this->documentManager->create('snippet');
         $snippet->setStructureType('hotel');
@@ -610,7 +610,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertSame((string) $snippet->getUuid(), $activity->getResourceId());
     }
 
-    public function testCopyLocaleWithSource()
+    public function testCopyLocaleWithSource(): void
     {
         $snippet = $this->documentManager->create('snippet');
         $snippet->setStructureType('hotel');
@@ -643,7 +643,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals('Hotel description DE', $newPage->getStructure()->getProperty('description')->getValue());
     }
 
-    private function loadFixtures()
+    private function loadFixtures(): void
     {
         // HOTELS
         $this->hotel1 = $this->documentManager->create('snippet');

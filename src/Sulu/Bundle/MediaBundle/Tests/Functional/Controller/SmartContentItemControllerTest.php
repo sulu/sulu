@@ -43,7 +43,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testGetItems()
+    public function testGetItems(): void
     {
         $collection = $this->createCollection('Test');
         $type = $this->createType('image');
@@ -74,7 +74,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         $this->assertEquals($media3->getId(), $result['_embedded']['items'][3]['id']);
     }
 
-    public function testGetItemsSorted()
+    public function testGetItemsSorted(): void
     {
         $collection = $this->createCollection('Test');
         $type = $this->createType('image');

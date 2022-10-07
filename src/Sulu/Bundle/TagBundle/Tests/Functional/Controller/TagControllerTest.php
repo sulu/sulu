@@ -55,7 +55,7 @@ class TagControllerTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testGetById()
+    public function testGetById(): void
     {
         $tag = $this->createTag('tag1');
         $this->em->flush();
@@ -74,7 +74,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertNotContains('changer', \array_keys($response));
     }
 
-    public function testList()
+    public function testList(): void
     {
         $this->createTag('tag1');
         $this->createTag('tag2');
@@ -94,7 +94,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('tag2', $response->_embedded->tags[1]->name);
     }
 
-    public function testListFilteredByExcludedIds()
+    public function testListFilteredByExcludedIds(): void
     {
         $tag1 = $this->createTag('tag1');
         $tag2 = $this->createTag('tag2');
@@ -114,7 +114,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('tag3', $response->_embedded->tags[0]->name);
     }
 
-    public function testListFilteredByNames()
+    public function testListFilteredByNames(): void
     {
         $this->createTag('tag1');
         $this->createTag('tag2');
@@ -134,7 +134,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('tag1', $response->_embedded->tags[0]->name);
     }
 
-    public function testListFilteredByMultipleNames()
+    public function testListFilteredByMultipleNames(): void
     {
         $this->createTag('t1');
         $this->createTag('t2');
@@ -164,7 +164,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals(1, $response->pages);
     }
 
-    public function testListSearch()
+    public function testListSearch(): void
     {
         $this->createTag('tag1');
         $this->createTag('tag2');
@@ -183,7 +183,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('tag2', $response->_embedded->tags[0]->name);
     }
 
-    public function testGetByIdNotExisting()
+    public function testGetByIdNotExisting(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -197,7 +197,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -223,7 +223,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertNotContains('changer', \array_keys($response));
     }
 
-    public function testPostExistingName()
+    public function testPostExistingName(): void
     {
         $this->createTag('tag1');
         $this->em->flush();
@@ -242,7 +242,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('name', $response->field);
     }
 
-    public function testPut()
+    public function testPut(): void
     {
         $tag = $this->createTag('tag1');
         $this->em->flush();
@@ -271,7 +271,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertNotContains('changer', \array_keys($response));
     }
 
-    public function testPutExistingName()
+    public function testPutExistingName(): void
     {
         $tag1 = $this->createTag('tag1');
         $tag2 = $this->createTag('tag2');
@@ -291,7 +291,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('name', $response->field);
     }
 
-    public function testPutNotExisting()
+    public function testPutNotExisting(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -302,7 +302,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testDeleteById()
+    public function testDeleteById(): void
     {
         $tag1 = $this->createTag('tag1');
         $this->em->flush();
@@ -331,7 +331,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testDeleteByNotExistingId()
+    public function testDeleteByNotExistingId(): void
     {
         $this->client->jsonRequest(
             'DELETE',
@@ -340,7 +340,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testMerge()
+    public function testMerge(): void
     {
         $tag1 = $this->createTag('tag1');
         $tag2 = $this->createTag('tag2');
@@ -397,7 +397,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testMergeNotExisting()
+    public function testMergeNotExisting(): void
     {
         $tag1 = $this->createTag('tag1');
         $this->em->flush();
@@ -416,7 +416,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('Entity with the type "SuluTagBundle:Tag" and the id "1233" not found.', $response->message);
     }
 
-    public function testPatch()
+    public function testPatch(): void
     {
         $this->createTag('tag1');
         $this->createTag('tag2');
@@ -466,7 +466,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('tag6', $response->_embedded->tags[5]->name);
     }
 
-    public function testPatchExistingAsNew()
+    public function testPatchExistingAsNew(): void
     {
         $this->createTag('tag1');
         $this->createTag('tag2');
@@ -493,7 +493,7 @@ class TagControllerTest extends SuluTestCase
         $this->assertEquals('name', $response->field);
     }
 
-    public function testPatchExistingChange()
+    public function testPatchExistingChange(): void
     {
         $tag1 = $this->createTag('tag1');
         $this->createTag('tag2');

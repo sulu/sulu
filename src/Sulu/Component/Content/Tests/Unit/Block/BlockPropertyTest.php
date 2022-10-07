@@ -19,7 +19,7 @@ use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 class BlockPropertyTest extends TestCase
 {
-    public function testSetValue()
+    public function testSetValue(): void
     {
         $data = [['type' => 'test', 'title' => 'my title', 'description' => 'my description']];
 
@@ -58,7 +58,7 @@ class BlockPropertyTest extends TestCase
     /**
      * @dataProvider provideIsMultiple
      */
-    public function testGetIsMultiple($minOccurs, $maxOccurs, $result)
+    public function testGetIsMultiple($minOccurs, $maxOccurs, $result): void
     {
         $blockProperty = new BlockProperty('block', [], 'test', false, false, $maxOccurs, $minOccurs);
 

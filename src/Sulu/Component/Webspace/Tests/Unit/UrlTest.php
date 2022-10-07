@@ -32,7 +32,7 @@ class UrlTest extends TestCase
     /**
      * @dataProvider provideIsValidLocale
      */
-    public function testIsValidLocale($urlLanguage, $urlCountry, $testLanguage, $testCountry, $result)
+    public function testIsValidLocale($urlLanguage, $urlCountry, $testLanguage, $testCountry, $result): void
     {
         $url = new Url();
         $url->setLanguage($urlLanguage);
@@ -41,7 +41,7 @@ class UrlTest extends TestCase
         $this->assertEquals($result, $url->isValidLocale($testLanguage, $testCountry));
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $url = new Url();
 

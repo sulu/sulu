@@ -201,7 +201,7 @@ class SearchControllerTest extends SuluTestCase
     /**
      * @dataProvider provideSearch
      */
-    public function testSearch($params, $expectedResult)
+    public function testSearch($params, $expectedResult): void
     {
         foreach ($expectedResult['_embedded']['result'] as &$hitResult) {
             $hitResult['document']['creatorId'] = $this->user->getId();
@@ -217,7 +217,7 @@ class SearchControllerTest extends SuluTestCase
         $this->assertEquals($expectedResult, $result);
     }
 
-    public function testGetIndexes()
+    public function testGetIndexes(): void
     {
         $this->client->jsonRequest('GET', '/search/indexes');
 
@@ -229,7 +229,7 @@ class SearchControllerTest extends SuluTestCase
         $this->assertEquals([], $result['_embedded']['search_indexes'][0]['contexts']);
     }
 
-    private function createUser()
+    private function createUser(): void
     {
         $user = new User();
         $user->setUsername('dantleech');
@@ -247,7 +247,7 @@ class SearchControllerTest extends SuluTestCase
         $this->user = $user;
     }
 
-    private function indexProducts()
+    private function indexProducts(): void
     {
         $product = new Product();
         $product->id = 6;

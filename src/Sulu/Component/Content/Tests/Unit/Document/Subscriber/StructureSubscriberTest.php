@@ -124,7 +124,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         );
     }
 
-    public function testPersistStructureType()
+    public function testPersistStructureType(): void
     {
         $this->document->getStructure()->willReturn($this->structure->reveal());
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
@@ -133,7 +133,7 @@ class StructureSubscriberTest extends SubscriberTestCase
         $this->subscriber->handlePersistStructureType($this->persistEvent->reveal());
     }
 
-    public function testPersistStagedProperties()
+    public function testPersistStagedProperties(): void
     {
         $this->document->getStructure()->willReturn($this->structure->reveal());
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
@@ -145,7 +145,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     /**
      * It should return early if the document is not implementing the behavior.
      */
-    public function testPersistNotImplementing()
+    public function testPersistNotImplementing(): void
     {
         $this->persistEvent->getDocument()->willReturn($this->notImplementing);
         $this->persistEvent->getNode()->shouldNotBeCalled();
@@ -155,7 +155,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     /**
      * It should return early if the structure type is empty.
      */
-    public function testPersistNoStructureType()
+    public function testPersistNoStructureType(): void
     {
         $this->document->getStructureType()->willReturn(null);
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
@@ -166,7 +166,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     /**
      * It should return early if the locale is null.
      */
-    public function testPersistNoLocale()
+    public function testPersistNoLocale(): void
     {
         $this->persistEvent->getLocale()->willReturn(null);
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
@@ -180,7 +180,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     /**
      * It should set the structure type and map the content to thethe node.
      */
-    public function testPersist()
+    public function testPersist(): void
     {
         $this->document->getStructure()->willReturn($this->structure->reveal());
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
@@ -208,7 +208,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     /**
      * It should throw an exception if the property is required but the value is null.
      */
-    public function testThrowExceptionPropertyRequired()
+    public function testThrowExceptionPropertyRequired(): void
     {
         $this->expectException(MandatoryPropertyException::class);
         $this->document->getStructure()->willReturn($this->structure->reveal());
@@ -241,7 +241,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     /**
      * It should ignore required properties if the `ignore_required` option is given.
      */
-    public function testIgnoreRequiredProperties()
+    public function testIgnoreRequiredProperties(): void
     {
         $this->document->getStructure()->willReturn($this->structure->reveal());
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
@@ -273,7 +273,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     /**
      * It should return early when not implementing.
      */
-    public function testHydrateNotImplementing()
+    public function testHydrateNotImplementing(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->notImplementing);
         $this->hydrateEvent->getOption(Argument::any())->shouldNotBeCalled();
@@ -284,7 +284,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     /**
      * It should create a ManagedStructure when the structure property is set in the node.
      */
-    public function testHydrate()
+    public function testHydrate(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
@@ -307,7 +307,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     /**
      * It should create a new default Structure when there is no structure property.
      */
-    public function testHydrateNewStructure()
+    public function testHydrateNewStructure(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
@@ -331,7 +331,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     /**
      * It should load data the correct structure when template is given.
      */
-    public function testHydrateOtherTemplate()
+    public function testHydrateOtherTemplate(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
@@ -354,7 +354,7 @@ class StructureSubscriberTest extends SubscriberTestCase
     /**
      * It should create a new default Structure when there is no structure property.
      */
-    public function testHydrateNewStructureDefaultArray()
+    public function testHydrateNewStructureDefaultArray(): void
     {
         $metadata = $this->prophesize(Metadata::class);
         $metadata->getAlias()->willReturn('article');
@@ -385,7 +385,7 @@ class StructureSubscriberTest extends SubscriberTestCase
      * If the document already has a structure and there is no structure on the node (i.e.
      * it is a new document) then use the Structure which is already set.
      */
-    public function testHydrateNewStructureNoRehydrate()
+    public function testHydrateNewStructureNoRehydrate(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
@@ -410,7 +410,7 @@ class StructureSubscriberTest extends SubscriberTestCase
      * If the document already has a structure and there is no structure on the node (i.e.
      * it is a new document) then use the Structure which is already set.
      */
-    public function testHydrateNewStructureRehydrate()
+    public function testHydrateNewStructureRehydrate(): void
     {
         $metadata = $this->prophesize(Metadata::class);
         $metadata->getAlias()->willReturn('page');

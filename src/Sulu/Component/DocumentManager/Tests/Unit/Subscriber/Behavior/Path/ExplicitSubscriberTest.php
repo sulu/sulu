@@ -76,7 +76,7 @@ class ExplicitSubscriberTest extends TestCase
     /**
      * It should throw an exception if both path name and node_name options are given.
      */
-    public function testExceptionNodeNameAndPath()
+    public function testExceptionNodeNameAndPath(): void
     {
         $this->expectException(InvalidOptionsException::class);
         $options = $this->resolveOptions([
@@ -90,7 +90,7 @@ class ExplicitSubscriberTest extends TestCase
     /**
      * It should throw an exception if both path name and parent_path options are given.
      */
-    public function testExceptionParentPathAndPath()
+    public function testExceptionParentPathAndPath(): void
     {
         $this->expectException(InvalidOptionsException::class);
         $options = $this->resolveOptions([
@@ -104,7 +104,7 @@ class ExplicitSubscriberTest extends TestCase
     /**
      * It should set the parent node and create a new node when given a full path.
      */
-    public function testNewNodeFromPath()
+    public function testNewNodeFromPath(): void
     {
         $options = $this->resolveOptions(['path' => '/path/to/nodename']);
         $this->nodeManager->find('/path/to')->willReturn($this->parentNode->reveal());
@@ -125,7 +125,7 @@ class ExplicitSubscriberTest extends TestCase
     /**
      * It should use a new node when override flag is true.
      */
-    public function testNewNodeFromPathOverwrite()
+    public function testNewNodeFromPathOverwrite(): void
     {
         $options = $this->resolveOptions(['path' => '/path/to/nodename', 'override' => true]);
         $this->nodeManager->find('/path/to')->willReturn($this->parentNode->reveal());
@@ -147,7 +147,7 @@ class ExplicitSubscriberTest extends TestCase
     /**
      * It should throw exception when override flag is false.
      */
-    public function testNewNodeFromPathNoOverwrite()
+    public function testNewNodeFromPathNoOverwrite(): void
     {
         $this->expectException(
             ItemExistsException::class,
@@ -175,7 +175,7 @@ class ExplicitSubscriberTest extends TestCase
     /**
      * It should just set the parent if only the "parent_path" is specified.
      */
-    public function testSetParentNode()
+    public function testSetParentNode(): void
     {
         $options = $this->resolveOptions([
             'parent_path' => '/path/to',
@@ -193,7 +193,7 @@ class ExplicitSubscriberTest extends TestCase
     /**
      * It should automatically create the parent path if auto_create is specified.
      */
-    public function testAutoCreateParent()
+    public function testAutoCreateParent(): void
     {
         $options = $this->resolveOptions([
             'parent_path' => '/path/to',
@@ -212,7 +212,7 @@ class ExplicitSubscriberTest extends TestCase
     /**
      * It should throw an exception if node_name is specified but no parent node is available.
      */
-    public function testNodeNameButNotParentNode()
+    public function testNodeNameButNotParentNode(): void
     {
         $this->expectException(DocumentManagerException::class);
         $options = $this->resolveOptions([
@@ -232,7 +232,7 @@ class ExplicitSubscriberTest extends TestCase
      * It should rename the node if the node is already set in the Persist event and
      * the node name is different.
      */
-    public function testRename()
+    public function testRename(): void
     {
         $options = $this->resolveOptions([
             'parent_path' => '/path/to',
@@ -256,7 +256,7 @@ class ExplicitSubscriberTest extends TestCase
     /**
      * It should do nothing if none of the options are specified.
      */
-    public function testDoNothing()
+    public function testDoNothing(): void
     {
         $options = $this->resolveOptions([]);
 

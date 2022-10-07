@@ -78,7 +78,7 @@ class TypesPropertyFieldMetadataValidatorTest extends TestCase
         return $sectionMetadata;
     }
 
-    private function expectReservedPropertyNameException(string $formKey, string $propertyName, string $subPropertyName)
+    private function expectReservedPropertyNameException(string $formKey, string $propertyName, string $subPropertyName): void
     {
         $this->expectException(ReservedPropertyNameException::class);
         $this->expectExceptionMessageMatches('"' . $formKey . '"');
@@ -86,7 +86,7 @@ class TypesPropertyFieldMetadataValidatorTest extends TestCase
         $this->expectExceptionMessageMatches('"' . $subPropertyName . '"');
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $item = $this->createFieldMetadata('valid_name', 'text_line');
         $type = $this->createFormMetadata('some_property_type', [$item]);
@@ -97,7 +97,7 @@ class TypesPropertyFieldMetadataValidatorTest extends TestCase
         $this->propertyFieldMetadataValidator->validate($property, 'some_form_key');
     }
 
-    public function testValidatePropertyNameType()
+    public function testValidatePropertyNameType(): void
     {
         $item = $this->createFieldMetadata('type', 'text_line');
         $type = $this->createFormMetadata('some_property_type', [$item]);
@@ -108,7 +108,7 @@ class TypesPropertyFieldMetadataValidatorTest extends TestCase
         $this->propertyFieldMetadataValidator->validate($property, 'some_form_key');
     }
 
-    public function testValidateTypesPropertyWithSectionWithTypeProperty()
+    public function testValidateTypesPropertyWithSectionWithTypeProperty(): void
     {
         $item = $this->createFieldMetadata('type', 'text_line');
         $section = $this->createSectionMetadata('some_section', [$item]);
@@ -120,7 +120,7 @@ class TypesPropertyFieldMetadataValidatorTest extends TestCase
         $this->propertyFieldMetadataValidator->validate($property, 'some_form_key');
     }
 
-    public function testValidateTypesPropertyWithSectionWithValidProperties()
+    public function testValidateTypesPropertyWithSectionWithValidProperties(): void
     {
         $sectionItem = $this->createFieldMetadata('other_valid_name', 'text_line');
         $section = $this->createSectionMetadata('some_section', [$sectionItem]);

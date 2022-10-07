@@ -81,7 +81,7 @@ class SearchControllerTest extends TestCase
         );
     }
 
-    public function testIndexesAction()
+    public function testIndexesAction(): void
     {
         $this->searchManager->getIndexNames()->willReturn(['index1', 'index2']);
 
@@ -101,7 +101,7 @@ class SearchControllerTest extends TestCase
         $this->searchController->indexesAction();
     }
 
-    public function testIndexesActionWithSecurity()
+    public function testIndexesActionWithSecurity(): void
     {
         $this->searchManager->getIndexNames()->willReturn(['index1', 'index2']);
 
@@ -133,7 +133,7 @@ class SearchControllerTest extends TestCase
         $this->searchController->indexesAction();
     }
 
-    public function testIndexesActionWithContexts()
+    public function testIndexesActionWithContexts(): void
     {
         $this->searchManager->getIndexNames()->willReturn(['index1', 'index2']);
 

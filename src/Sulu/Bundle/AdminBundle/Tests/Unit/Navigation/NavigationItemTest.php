@@ -51,7 +51,7 @@ class NavigationItemTest extends TestCase
         $this->item2->addChild($globalItem2);
     }
 
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $this->assertEquals('NavigationItem', $this->navigationItem->getName());
 
@@ -60,80 +60,80 @@ class NavigationItemTest extends TestCase
         $this->assertEquals($item, $this->navigationItem->getChildren()[0]);
     }
 
-    public function testId()
+    public function testId(): void
     {
         $this->navigationItem->setId('test');
         $this->assertEquals('test', $this->navigationItem->getId());
     }
 
-    public function testName()
+    public function testName(): void
     {
         $this->navigationItem->setName('OtherNavigationItem');
         $this->assertEquals('OtherNavigationItem', $this->navigationItem->getName());
     }
 
-    public function testLabel()
+    public function testLabel(): void
     {
         $this->navigationItem->setLabel('label');
         $this->assertEquals('label', $this->navigationItem->getLabel());
     }
 
-    public function testIcon()
+    public function testIcon(): void
     {
         $this->navigationItem->setIcon('icon');
         $this->assertEquals('icon', $this->navigationItem->getIcon());
     }
 
-    public function testView()
+    public function testView(): void
     {
         $this->navigationItem->setView('view');
         $this->assertEquals('view', $this->navigationItem->getView());
     }
 
-    public function testPosition()
+    public function testPosition(): void
     {
         $this->navigationItem->setPosition(110);
         $this->assertEquals(110, $this->navigationItem->getPosition());
     }
 
-    public function testDisabled()
+    public function testDisabled(): void
     {
         $this->navigationItem->setDisabled(true);
         $this->assertEquals(true, $this->navigationItem->getDisabled());
     }
 
-    public function testVisible()
+    public function testVisible(): void
     {
         $this->navigationItem->setVisible(false);
         $this->assertEquals(false, $this->navigationItem->getVisible());
     }
 
-    public function testChildren()
+    public function testChildren(): void
     {
         $child = new NavigationItem('Child');
         $this->navigationItem->addChild($child);
         $this->assertEquals($child, $this->navigationItem->getChildren()[0]);
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         $this->assertEquals('Globals', $this->item2->find(new NavigationItem('Globals'))->getName());
         $this->assertNull($this->item1->find(new NavigationItem('Nothing')));
     }
 
-    public function testHasChildren()
+    public function testHasChildren(): void
     {
         $this->assertTrue($this->item1->hasChildren());
         $this->assertFalse($this->navigationItem->hasChildren());
     }
 
-    public function testFindChildren()
+    public function testFindChildren(): void
     {
         $this->assertEquals('Portals', $this->item1->findChildren(new NavigationItem('Portals'))->getName());
         $this->assertNull($this->navigationItem->findChildren(new NavigationItem('Nothing')));
     }
 
-    public function testCopyChildless()
+    public function testCopyChildless(): void
     {
         $copy = $this->item1->copyChildless();
 
@@ -141,7 +141,7 @@ class NavigationItemTest extends TestCase
         $this->assertEquals($this->item1->getId(), $copy->getId());
     }
 
-    public function testIterator()
+    public function testIterator(): void
     {
         $array = [];
         foreach ($this->item2 as $key => $value) {
@@ -153,7 +153,7 @@ class NavigationItemTest extends TestCase
         $this->assertEquals('Globals', $array[2]->getName());
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $array = $this->item1->toArray();
 
@@ -168,7 +168,7 @@ class NavigationItemTest extends TestCase
         $this->assertNotContains('header', \array_keys($array));
     }
 
-    public function testToArrayWithoutChildre()
+    public function testToArrayWithoutChildre(): void
     {
         $item = new NavigationItem('Navigation Item');
         $item->setId('test-id');
@@ -187,7 +187,7 @@ class NavigationItemTest extends TestCase
         ], $item->toArray());
     }
 
-    public function testToArrayWithPosition()
+    public function testToArrayWithPosition(): void
     {
         $rootNavigationItem = new NavigationItem('Root');
         $navigationItem2 = new NavigationItem('Item 2');

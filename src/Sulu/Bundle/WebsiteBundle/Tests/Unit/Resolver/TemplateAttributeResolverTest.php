@@ -143,7 +143,7 @@ class TemplateAttributeResolverTest extends TestCase
         );
     }
 
-    public function testResolve()
+    public function testResolve(): void
     {
         $templateAttributeResolver = $this->createTemplateAttributeResolver();
 
@@ -188,7 +188,7 @@ class TemplateAttributeResolverTest extends TestCase
         ], $resolved);
     }
 
-    public function testResolveStaticRoute()
+    public function testResolveStaticRoute(): void
     {
         $templateAttributeResolver = $this->createTemplateAttributeResolver();
 
@@ -241,7 +241,7 @@ class TemplateAttributeResolverTest extends TestCase
         ], $resolved);
     }
 
-    public function testResolveStaticRouteWithoutUrls()
+    public function testResolveStaticRouteWithoutUrls(): void
     {
         $this->request->get('_route')->willReturn('test_static')->shouldBeCalled();
         $this->request->get('_route_params')->willReturn(['host' => 'sulu.io', '_locale' => 'de']);

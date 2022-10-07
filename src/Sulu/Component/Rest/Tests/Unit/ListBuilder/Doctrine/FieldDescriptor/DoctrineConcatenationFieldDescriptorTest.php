@@ -17,7 +17,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescri
 
 class DoctrineConcatenationFieldDescriptorTest extends TestCase
 {
-    public function testSelect()
+    public function testSelect(): void
     {
         $doctrineConcatenationFieldDescriptor = new DoctrineConcatenationFieldDescriptor(
             [
@@ -34,7 +34,7 @@ class DoctrineConcatenationFieldDescriptorTest extends TestCase
         );
     }
 
-    public function testSelectWithGlue()
+    public function testSelectWithGlue(): void
     {
         $doctrineConcatenationFieldDescriptor = new DoctrineConcatenationFieldDescriptor(
             [

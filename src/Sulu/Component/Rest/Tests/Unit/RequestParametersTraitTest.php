@@ -53,7 +53,7 @@ class RequestParametersTraitTest extends TestCase
         return $getBooleanRequestParameterReflection;
     }
 
-    public function testGetRequestParameter()
+    public function testGetRequestParameter(): void
     {
         $request = new Request(['test' => 'data']);
 
@@ -81,7 +81,7 @@ class RequestParametersTraitTest extends TestCase
         );
     }
 
-    public function testGetRequestParameterFail()
+    public function testGetRequestParameterFail(): void
     {
         $this->expectException(MissingParameterException::class);
 
@@ -91,7 +91,7 @@ class RequestParametersTraitTest extends TestCase
         $getRequestParameterReflection->invoke($this->requestParametersTrait, $request, 'test', true);
     }
 
-    public function testGetBooleanRequestParameter()
+    public function testGetBooleanRequestParameter(): void
     {
         $request = new Request(['test1' => 'true', 'test2' => 'false']);
 
@@ -143,7 +143,7 @@ class RequestParametersTraitTest extends TestCase
         );
     }
 
-    public function testGetBooleanRequestParameterFail()
+    public function testGetBooleanRequestParameterFail(): void
     {
         $this->expectException(MissingParameterException::class);
 
@@ -153,7 +153,7 @@ class RequestParametersTraitTest extends TestCase
         $getRequestParameterReflection->invoke($this->requestParametersTrait, $request->reveal(), 'test', true);
     }
 
-    public function testGetBooleanRequestWrongParameter()
+    public function testGetBooleanRequestWrongParameter(): void
     {
         $this->expectException(ParameterDataTypeException::class);
 

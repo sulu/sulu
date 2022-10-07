@@ -80,7 +80,7 @@ class SecuredEntitySubscriberTest extends TestCase
         $this->objectEvent->getVisitor()->willReturn($this->visitor);
     }
 
-    public function testOnPostSerialize()
+    public function testOnPostSerialize(): void
     {
         $entity = $this->prophesize(SecuredEntityInterface::class);
         $entity->getId()->willReturn(7);
@@ -105,7 +105,7 @@ class SecuredEntitySubscriberTest extends TestCase
         $this->securedEntitySubscriber->onPostSerialize($this->objectEvent->reveal());
     }
 
-    public function testOnPostSerializeWithApiWrapper()
+    public function testOnPostSerializeWithApiWrapper(): void
     {
         $apiWrapper = $this->prophesize(ApiWrapper::class);
         $entity = $this->prophesize(SecuredEntityInterface::class);

@@ -25,7 +25,7 @@ class SegmentTest extends TestCase
         $this->segment = new Segment();
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $expected = [
             'key' => 'foo',

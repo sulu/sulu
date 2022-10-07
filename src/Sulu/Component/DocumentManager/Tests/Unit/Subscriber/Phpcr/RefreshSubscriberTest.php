@@ -50,7 +50,7 @@ class RefreshSubscriberTest extends TestCase
         );
     }
 
-    public function testRefreshDocument()
+    public function testRefreshDocument(): void
     {
         $document = new \stdClass();
         $node = $this->prophesize(NodeInterface::class);
@@ -70,7 +70,7 @@ class RefreshSubscriberTest extends TestCase
         $this->refreshSubscriber->refreshDocument($refreshEvent->reveal());
     }
 
-    public function testRefreshDocumentForDeleteDraft()
+    public function testRefreshDocumentForDeleteDraft(): void
     {
         $document = new \stdClass();
         $node = $this->prophesize(NodeInterface::class);

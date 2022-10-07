@@ -36,7 +36,7 @@ class TimestampableSubscriberTest extends TestCase
         $this->subscriber = new TimestampableSubscriber();
     }
 
-    public function testLoadClassMetadata()
+    public function testLoadClassMetadata(): void
     {
         $this->loadClassMetadataEvent->getClassMetadata()->willReturn($this->classMetadata->reveal());
         $this->classMetadata->getReflectionClass()->willReturn($this->refl->reveal());
@@ -60,7 +60,7 @@ class TimestampableSubscriberTest extends TestCase
     /**
      * @dataProvider provideOnPreUpdate
      */
-    public function testOnPreUpdate($created)
+    public function testOnPreUpdate($created): void
     {
         $entity = $this->timestampableObject->reveal();
         $this->lifecycleEvent->getObject()->willReturn($this->timestampableObject->reveal());

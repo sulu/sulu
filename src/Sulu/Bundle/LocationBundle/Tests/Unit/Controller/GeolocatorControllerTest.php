@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class GeolocatorControllerTest extends TestCase
 {
-    public function testQuery()
+    public function testQuery(): void
     {
         $geolocatorResponse = $this->prophesize(GeolocatorResponse::class);
         $geolocatorResponse->toArray()->willReturn(['test']);

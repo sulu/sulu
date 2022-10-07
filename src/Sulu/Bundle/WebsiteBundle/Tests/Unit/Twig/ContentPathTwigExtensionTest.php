@@ -80,7 +80,7 @@ class ContentPathTwigExtensionTest extends TestCase
         );
     }
 
-    public function testGetContentPath()
+    public function testGetContentPath(): void
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.sulu.io');
         $this->webspaceManager->findUrlByResourceLocator(
@@ -95,7 +95,7 @@ class ContentPathTwigExtensionTest extends TestCase
         $this->assertEquals('www.sulu.io/de/test', $this->extension->getContentPath('/test'));
     }
 
-    public function testGetContentPathWithHttps()
+    public function testGetContentPathWithHttps(): void
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.sulu.io');
         $this->requestAnalyzer->getAttribute('scheme')->willReturn('https');
@@ -111,7 +111,7 @@ class ContentPathTwigExtensionTest extends TestCase
         $this->assertEquals('www.sulu.io/de/test', $this->extension->getContentPath('/test'));
     }
 
-    public function testGetContentPathWithLocaleForDifferentDomain()
+    public function testGetContentPathWithLocaleForDifferentDomain(): void
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('en.sulu.io');
         $this->webspaceManager->findUrlByResourceLocator(
@@ -126,7 +126,7 @@ class ContentPathTwigExtensionTest extends TestCase
         $this->assertEquals('de.sulu.io/test', $this->extension->getContentPath('/test', null, 'de'));
     }
 
-    public function testGetContentPathWithWebspaceKey()
+    public function testGetContentPathWithWebspaceKey(): void
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.test.io');
         $this->webspaceManager->findUrlByResourceLocator(
@@ -141,7 +141,7 @@ class ContentPathTwigExtensionTest extends TestCase
         $this->assertEquals('www.sulu.io/de/test', $this->extension->getContentPath('/test', 'test_io'));
     }
 
-    public function testGetContentPathWithWebspaceKeyNotFoundForDomain()
+    public function testGetContentPathWithWebspaceKeyNotFoundForDomain(): void
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.test.io');
 
@@ -161,7 +161,7 @@ class ContentPathTwigExtensionTest extends TestCase
         $this->assertEquals('www.test.io/de/test', $this->extension->getContentPath('/test', 'test_io'));
     }
 
-    public function testGetContentPathWithWebspaceKeyHostNotWebspace()
+    public function testGetContentPathWithWebspaceKeyHostNotWebspace(): void
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.xy.io');
         $this->testWebspace->hasDomain('www.xy.io', $this->environment, 'de')->willReturn(false);
@@ -177,7 +177,7 @@ class ContentPathTwigExtensionTest extends TestCase
         $this->assertEquals('www.test.io/de/test', $this->extension->getContentPath('/test', 'test_io'));
     }
 
-    public function testGetContentPathWithWebspaceKeyAndDomain()
+    public function testGetContentPathWithWebspaceKeyAndDomain(): void
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.sulu.io');
         $this->webspaceManager->findUrlByResourceLocator(
@@ -195,7 +195,7 @@ class ContentPathTwigExtensionTest extends TestCase
         );
     }
 
-    public function testGetContentPathExternalUrl()
+    public function testGetContentPathExternalUrl(): void
     {
         $this->requestAnalyzer->getAttribute('host')->willReturn('www.sulu.io');
         $this->webspaceManager->findUrlByResourceLocator(

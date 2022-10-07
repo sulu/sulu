@@ -86,7 +86,7 @@ class UserManagerTest extends TestCase
         );
     }
 
-    public function testGetFullNameByUserIdForNonExistingUser()
+    public function testGetFullNameByUserIdForNonExistingUser(): void
     {
         $this->assertNull($this->userManager->getFullNameByUserId(0));
     }

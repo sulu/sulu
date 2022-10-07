@@ -83,7 +83,7 @@ class RequestAnalyzerResolverTest extends TestCase
         }
     }
 
-    public function testResolve()
+    public function testResolve(): void
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');

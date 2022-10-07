@@ -36,7 +36,7 @@ class IndexComparatorTest extends TestCase
     /**
      * @dataProvider usortProvider
      */
-    public function testUsortCallback($array, $ids, $startsWith, $contains)
+    public function testUsortCallback($array, $ids, $startsWith, $contains): void
     {
         $comparator = new IndexComparator();
         // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688

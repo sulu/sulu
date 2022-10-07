@@ -45,7 +45,7 @@ class ChainFieldMetadataValidatorTest extends TestCase
         ]);
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $fieldMetadata = new FieldMetadata('some_field');
 

@@ -27,7 +27,7 @@ class FormatCacheClearerCompilerPassTest extends AbstractCompilerPassTestCase
         $container->addCompilerPass(new FormatCacheClearerCompilerPass());
     }
 
-    public function testFormatCacheTag()
+    public function testFormatCacheTag(): void
     {
         $formatCacheClearer = new Definition();
         $this->setDefinition('sulu_media.format_cache_clearer', $formatCacheClearer);

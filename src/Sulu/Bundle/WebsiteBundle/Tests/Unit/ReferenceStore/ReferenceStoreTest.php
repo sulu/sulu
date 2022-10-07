@@ -16,7 +16,7 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 
 class ReferenceStoreTest extends TestCase
 {
-    public function testAdd()
+    public function testAdd(): void
     {
         $store = new ReferenceStore();
 
@@ -25,7 +25,7 @@ class ReferenceStoreTest extends TestCase
         $this->assertEquals(['123-123-123'], $store->getAll());
     }
 
-    public function testAddSame()
+    public function testAddSame(): void
     {
         $store = new ReferenceStore();
 
@@ -35,7 +35,7 @@ class ReferenceStoreTest extends TestCase
         $this->assertEquals(['123-123-123'], $store->getAll());
     }
 
-    public function testAddDifferent()
+    public function testAddDifferent(): void
     {
         $store = new ReferenceStore();
 
@@ -45,7 +45,7 @@ class ReferenceStoreTest extends TestCase
         $this->assertEquals(['123-123-123', '321-321-321'], $store->getAll());
     }
 
-    public function testGetAll()
+    public function testGetAll(): void
     {
         $store = new ReferenceStore();
 

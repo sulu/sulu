@@ -41,7 +41,7 @@ class SessionManagerTest extends TestCase
         $this->sessionManager = new SessionManager($this->defaultSession->reveal(), $this->liveSession->reveal());
     }
 
-    public function testSetNodeProperty()
+    public function testSetNodeProperty(): void
     {
         $defaultNode = $this->prophesize(NodeInterface::class);
         $defaultNode->setProperty('settings:setting', 'data')->shouldBeCalled();
@@ -54,7 +54,7 @@ class SessionManagerTest extends TestCase
         $this->sessionManager->setNodeProperty('/cmf/sulu_io', 'settings:setting', 'data');
     }
 
-    public function testFlush()
+    public function testFlush(): void
     {
         $this->defaultSession->save()->shouldBeCalled();
         $this->liveSession->save()->shouldBeCalled();

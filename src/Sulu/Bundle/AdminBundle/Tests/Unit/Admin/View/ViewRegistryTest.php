@@ -56,7 +56,7 @@ class ViewRegistryTest extends TestCase
         $this->viewRegistry = new ViewRegistry($this->adminPool->reveal());
     }
 
-    public function testFindViewByName()
+    public function testFindViewByName(): void
     {
         $viewBuilder1 = new ViewBuilder('test1', '/test1', 'test1');
         $viewBuilder1->setOption('value', 'test1');
@@ -64,11 +64,11 @@ class ViewRegistryTest extends TestCase
         $viewBuilder2->setOption('value', 'test2');
         $viewBuilder3 = new ViewBuilder('test3', '/test3', 'test3');
         $viewBuilder3->setOption('value', 'test3');
-        $this->admin1->configureViews(Argument::any())->will(function($arguments) use ($viewBuilder1) {
+        $this->admin1->configureViews(Argument::any())->will(function($arguments) use ($viewBuilder1): void {
             $arguments[0]->add($viewBuilder1);
         });
         $this->admin2->configureViews(Argument::any())->will(
-            function($arguments) use ($viewBuilder2, $viewBuilder3) {
+            function($arguments) use ($viewBuilder2, $viewBuilder3): void {
                 $arguments[0]->add($viewBuilder2);
                 $arguments[0]->add($viewBuilder3);
             }
@@ -78,14 +78,14 @@ class ViewRegistryTest extends TestCase
         $this->assertEquals($view, $viewBuilder2->getView());
     }
 
-    public function testFindViewByNameException()
+    public function testFindViewByNameException(): void
     {
         $this->expectException(ViewNotFoundException::class);
 
         $this->viewRegistry->findViewByName('not_existing');
     }
 
-    public function testGetViews()
+    public function testGetViews(): void
     {
         $viewBuilder1 = new ViewBuilder('test1', '/test1', 'test1');
         $viewBuilder1->setOption('value', 'test1');
@@ -95,12 +95,12 @@ class ViewRegistryTest extends TestCase
         $viewBuilder3->setOption('value', 'test3');
 
         $this->admin1->configureViews(Argument::any())->will(
-            function($arguments) use ($viewBuilder1) {
+            function($arguments) use ($viewBuilder1): void {
                 $arguments[0]->add($viewBuilder1);
             }
         )->shouldBeCalledTimes(1);
         $this->admin2->configureViews(Argument::any())->will(
-            function($arguments) use ($viewBuilder2, $viewBuilder3) {
+            function($arguments) use ($viewBuilder2, $viewBuilder3): void {
                 $arguments[0]->add($viewBuilder2);
                 $arguments[0]->add($viewBuilder3);
             }
@@ -113,7 +113,7 @@ class ViewRegistryTest extends TestCase
         $this->assertEquals($viewBuilder3->getView(), $views[2]);
     }
 
-    public function testGetViewsMemoryCache()
+    public function testGetViewsMemoryCache(): void
     {
         $viewBuilder1 = new ViewBuilder('test1', '/test1', 'test1');
         $viewBuilder1->setOption('value', 'test1');
@@ -122,12 +122,12 @@ class ViewRegistryTest extends TestCase
         $viewBuilder3 = new ViewBuilder('test3', '/test3', 'test3');
         $viewBuilder3->setOption('value', 'test3');
         $this->admin1->configureViews(Argument::any())->will(
-            function($arguments) use ($viewBuilder1) {
+            function($arguments) use ($viewBuilder1): void {
                 $arguments[0]->add($viewBuilder1);
             }
         )->shouldBeCalledTimes(1);
         $this->admin2->configureViews(Argument::any())->will(
-            function($arguments) use ($viewBuilder2, $viewBuilder3) {
+            function($arguments) use ($viewBuilder2, $viewBuilder3): void {
                 $arguments[0]->add($viewBuilder2);
                 $arguments[0]->add($viewBuilder3);
             }
@@ -139,20 +139,20 @@ class ViewRegistryTest extends TestCase
         $this->assertSame($views1, $views2);
     }
 
-    public function testViewWithNonExistingParent()
+    public function testViewWithNonExistingParent(): void
     {
         $this->expectException(ParentViewNotFoundException::class);
 
         $viewBuilder = new ViewBuilder('test1', '/test1', 'test1');
         $viewBuilder->setParent('not-existing');
-        $this->admin1->configureViews(Argument::any())->will(function($arguments) use ($viewBuilder) {
+        $this->admin1->configureViews(Argument::any())->will(function($arguments) use ($viewBuilder): void {
             $arguments[0]->add($viewBuilder);
         });
 
         $this->viewRegistry->getViews();
     }
 
-    public function testViewsMergeOptions()
+    public function testViewsMergeOptions(): void
     {
         $viewBuilder1 = new ViewBuilder('test1', '/test1', 'test1');
         $viewBuilder1->setOption('view1', 'test1');
@@ -168,7 +168,7 @@ class ViewRegistryTest extends TestCase
         $viewBuilder2->setOption('value', 'test');
 
         $this->admin1->configureViews(Argument::any())->will(
-            function($arguments) use ($viewBuilder1, $viewBuilder1_1, $viewBuilder1_1_1, $viewBuilder2) {
+            function($arguments) use ($viewBuilder1, $viewBuilder1_1, $viewBuilder1_1_1, $viewBuilder2): void {
                 $arguments[0]->add($viewBuilder1);
                 $arguments[0]->add($viewBuilder1_1);
                 $arguments[0]->add($viewBuilder1_1_1);

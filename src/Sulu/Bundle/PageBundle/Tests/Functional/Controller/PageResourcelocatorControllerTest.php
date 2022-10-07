@@ -124,7 +124,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
         return $data;
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -163,7 +163,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
         $this->assertEquals('/news/test-1/test-1', $response->resourceLocator);
     }
 
-    public function testGenerateWithIncompleteParts()
+    public function testGenerateWithIncompleteParts(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -193,7 +193,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
         $this->assertEquals('/test', $response->resourceLocator);
     }
 
-    public function testGetAction()
+    public function testGetAction(): void
     {
         // prepare history nodes
         $newsData = $this->data[1];
@@ -218,7 +218,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
         $this->assertEquals('/news', $result['_embedded']['page_resourcelocators'][0]['resourcelocator']);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         // prepare history nodes
         $newsData = $this->data[1];

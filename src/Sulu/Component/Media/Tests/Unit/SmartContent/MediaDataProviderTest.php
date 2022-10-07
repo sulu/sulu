@@ -103,14 +103,14 @@ class MediaDataProviderTest extends TestCase
         );
     }
 
-    public function testGetConfiguration()
+    public function testGetConfiguration(): void
     {
         $configuration = $this->mediaDataProvider->getConfiguration();
 
         $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
     }
 
-    public function testEnabledAudienceTargeting()
+    public function testEnabledAudienceTargeting(): void
     {
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $collectionManager = $this->prophesize(CollectionManagerInterface::class);
@@ -133,7 +133,7 @@ class MediaDataProviderTest extends TestCase
         $this->assertTrue($configuration->hasAudienceTargeting());
     }
 
-    public function testDisabledAudienceTargeting()
+    public function testDisabledAudienceTargeting(): void
     {
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $collectionManager = $this->prophesize(CollectionManagerInterface::class);
@@ -156,7 +156,7 @@ class MediaDataProviderTest extends TestCase
         $this->assertFalse($configuration->hasAudienceTargeting());
     }
 
-    public function testGetTypesConfiguration()
+    public function testGetTypesConfiguration(): void
     {
         /** @var EntityManagerInterface|ObjectProphecy $entityManager */
         $entityManager = $this->prophesize(EntityManagerInterface::class);
@@ -219,7 +219,7 @@ class MediaDataProviderTest extends TestCase
         $this->assertSame('translated_audio', $configuration->getTypes()[1]->getName());
     }
 
-    public function testGetDefaultParameter()
+    public function testGetDefaultParameter(): void
     {
         $parameter = $this->mediaDataProvider->getDefaultPropertyParameter();
 
@@ -256,7 +256,7 @@ class MediaDataProviderTest extends TestCase
     /**
      * @dataProvider dataItemsDataProvider
      */
-    public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items)
+    public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items): void
     {
         $this->dataProviderRepository
              ->findByFilters(
@@ -286,7 +286,7 @@ class MediaDataProviderTest extends TestCase
         $this->assertEquals($items, $result->getItems());
     }
 
-    public function testResolveDataItemsWithoutSecurity()
+    public function testResolveDataItemsWithoutSecurity(): void
     {
         $mediaDataProvider = new MediaDataProvider(
             $this->dataProviderRepository->reveal(),
@@ -373,7 +373,7 @@ class MediaDataProviderTest extends TestCase
         $hasNextPage,
         $user,
         $items
-    ) {
+    ): void {
         $webspace = new Webspace();
         $security = new WebspaceSecurity();
         $security->setSystem('website');
@@ -422,7 +422,7 @@ class MediaDataProviderTest extends TestCase
         $this->assertEquals($items, $result->getItems());
     }
 
-    public function testResolveDataSource()
+    public function testResolveDataSource(): void
     {
         $collection = $this->prophesize(Collection::class);
         $collection->getId()->willReturn(1);

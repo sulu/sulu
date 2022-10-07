@@ -46,7 +46,7 @@ class InitializeCommandTest extends TestCase
     /**
      * It should initialize the workspace.
      */
-    public function testInitialize()
+    public function testInitialize(): void
     {
         $this->initializer->initialize(Argument::type(OutputInterface::class), false)
             ->shouldBeCalled();
@@ -56,7 +56,7 @@ class InitializeCommandTest extends TestCase
     /**
      * It should ask for confirmation and purge the workspace.
      */
-    public function testPurgeWorkspace()
+    public function testPurgeWorkspace(): void
     {
         $this->initializer->initialize(Argument::type(OutputInterface::class), true)
             ->shouldBeCalled();
@@ -74,7 +74,7 @@ class InitializeCommandTest extends TestCase
     /**
      * It should abort if user does not confirm.
      */
-    public function testPurgeWorkspaceAbort()
+    public function testPurgeWorkspaceAbort(): void
     {
         $this->initializer->initialize(Argument::type(OutputInterface::class), Argument::any())
             ->shouldNotBeCalled();
@@ -92,7 +92,7 @@ class InitializeCommandTest extends TestCase
     /**
      * It should not ask if --force is used.
      */
-    public function testForceNoAsk()
+    public function testForceNoAsk(): void
     {
         $this->initializer->initialize(Argument::type(OutputInterface::class), true)
             ->shouldBeCalled();

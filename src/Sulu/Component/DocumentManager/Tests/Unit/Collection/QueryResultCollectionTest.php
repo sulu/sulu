@@ -44,7 +44,7 @@ class QueryResultCollectionTest extends TestCase
     /**
      * It should be iterable.
      */
-    public function testIterable()
+    public function testIterable(): void
     {
         $results = new \ArrayIterator([
             $this->row1->reveal(),

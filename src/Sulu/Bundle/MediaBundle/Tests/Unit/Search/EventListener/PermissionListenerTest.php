@@ -46,7 +46,7 @@ class PermissionListenerTest extends TestCase
         );
     }
 
-    public function testOnPermissionUpdate()
+    public function testOnPermissionUpdate(): void
     {
         $event = new PermissionUpdateEvent(Collection::class, '1', null);
         $document1 = new \stdClass();
@@ -59,7 +59,7 @@ class PermissionListenerTest extends TestCase
         $this->permissionListener->onPermissionUpdate($event);
     }
 
-    public function testOnPermissionUpdateWrongType()
+    public function testOnPermissionUpdateWrongType(): void
     {
         $event = new PermissionUpdateEvent(\stdClass::class, '1', null);
 

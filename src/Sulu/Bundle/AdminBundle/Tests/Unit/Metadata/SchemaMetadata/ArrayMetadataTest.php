@@ -53,7 +53,7 @@ class ArrayMetadataTest extends TestCase
     /**
      * @dataProvider provideToJsonSchema
      */
-    public function testToJsonSchema($schemaMetadata, $minItems, $maxItems, $uniqueItems, $expectedSchema)
+    public function testToJsonSchema($schemaMetadata, $minItems, $maxItems, $uniqueItems, $expectedSchema): void
     {
         $property = new ArrayMetadata($schemaMetadata, $minItems, $maxItems, $uniqueItems);
         $jsonSchema = $property->toJsonSchema();

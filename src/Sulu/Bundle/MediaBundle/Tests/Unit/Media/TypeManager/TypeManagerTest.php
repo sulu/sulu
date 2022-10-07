@@ -69,7 +69,7 @@ class TypeManagerTest extends SuluTestCase
         );
     }
 
-    public function testMediaTypes()
+    public function testMediaTypes(): void
     {
         $data = [
             // documents

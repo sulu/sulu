@@ -15,7 +15,7 @@ use Sulu\Bundle\WebsiteBundle\Tests\Functional\BaseFunctional;
 
 class DomainRepositoryTest extends BaseFunctional
 {
-    public function testFindByUrlAndEnvironment()
+    public function testFindByUrlAndEnvironment(): void
     {
         $domain = $this->findOrCreateNewDomain(['url' => 'sulu.io', 'environment' => 'dev']);
         $this->entityManager->flush();

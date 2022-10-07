@@ -38,7 +38,7 @@ class AdminRequestProcessorTest extends TestCase
     /**
      * @dataProvider provideData
      */
-    public function testProcess(array $expected = [], $webspaceKey = null, $locale = null, $language = null)
+    public function testProcess(array $expected = [], $webspaceKey = null, $locale = null, $language = null): void
     {
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $provider = new AdminRequestProcessor($webspaceManager->reveal(), 'prod');
@@ -70,7 +70,7 @@ class AdminRequestProcessorTest extends TestCase
         $this->assertEquals($localization, $result->getAttribute('localization'));
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $provider = new AdminRequestProcessor($webspaceManager->reveal(), 'prod');

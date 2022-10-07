@@ -34,7 +34,7 @@ class PathSegmentRegistryTest extends TestCase
     /**
      * It should retrieve a path segment.
      */
-    public function testGetPathSegment()
+    public function testGetPathSegment(): void
     {
         $segment = $this->pathRegistry->getPathSegment('base');
         $this->assertEquals('cmf', $segment);
@@ -43,7 +43,7 @@ class PathSegmentRegistryTest extends TestCase
     /**
      * It should throw an exception when the given path segment role does not exist.
      */
-    public function testThrowException()
+    public function testThrowException(): void
     {
         $this->expectExceptionMessage('Unknown path segment "not exist". Known path segments: "base", "foobar"');
         $this->expectException(\InvalidArgumentException::class);

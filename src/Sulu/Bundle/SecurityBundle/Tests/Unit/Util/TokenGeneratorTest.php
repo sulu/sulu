@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 class TokenGeneratorTest extends TestCase
 {
-    public function testGenerateToken()
+    public function testGenerateToken(): void
     {
         $tokenGenerator = new TokenGenerator();
         $token = $tokenGenerator->generateToken();

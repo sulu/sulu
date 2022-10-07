@@ -35,7 +35,7 @@ class ContainerExpressionLanguageProviderTest extends TestCase
         $this->expressionLanguage = new ExpressionLanguage(null, [$containerExpressionLanguageProvider]);
     }
 
-    public function testEvaluateWithService()
+    public function testEvaluateWithService(): void
     {
         $testService = new \stdClass();
         $testService->variable = 'test';
@@ -44,7 +44,7 @@ class ContainerExpressionLanguageProviderTest extends TestCase
         $this->assertEquals('test', $this->expressionLanguage->evaluate('service("test_service").variable'));
     }
 
-    public function testEvaluateWithParameter()
+    public function testEvaluateWithParameter(): void
     {
         $this->container->getParameter('test_variable')->willReturn('test');
         $this->assertEquals('test', $this->expressionLanguage->evaluate('parameter("test_variable")'));

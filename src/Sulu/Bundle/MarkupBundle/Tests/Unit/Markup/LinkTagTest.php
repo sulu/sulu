@@ -158,7 +158,7 @@ class LinkTagTest extends TestCase
     /**
      * @dataProvider provideParseData
      */
-    public function testParseAll($tag, $attributes, $items, $expected)
+    public function testParseAll($tag, $attributes, $items, $expected): void
     {
         $uuids = [
             \explode('#', $attributes['href'], 2)[0],
@@ -171,7 +171,7 @@ class LinkTagTest extends TestCase
         $this->assertEquals([$tag => $expected], $result);
     }
 
-    public function testParseAllWithoutUrlHelper()
+    public function testParseAllWithoutUrlHelper(): void
     {
         $this->linkTag = new LinkTag($this->providerPool->reveal(), true, null);
 
@@ -191,7 +191,7 @@ class LinkTagTest extends TestCase
         );
     }
 
-    public function testParseAllMultipleTags()
+    public function testParseAllMultipleTags(): void
     {
         $this->providers['article']->preload(['123-123-123', '312-312-312'], 'de', true)
             ->willReturn(
@@ -238,7 +238,7 @@ class LinkTagTest extends TestCase
         );
     }
 
-    public function testParseAllMultipleProvider()
+    public function testParseAllMultipleProvider(): void
     {
         $this->providers['page']->preload(['312-312-312'], 'de', true)
             ->willReturn(
@@ -273,7 +273,7 @@ class LinkTagTest extends TestCase
         );
     }
 
-    public function testParseAllMultipleProviderSameId()
+    public function testParseAllMultipleProviderSameId(): void
     {
         $this->providers['page']->preload(['123-123-123'], 'de', true)
             ->willReturn(
@@ -308,7 +308,7 @@ class LinkTagTest extends TestCase
         );
     }
 
-    public function testParseAllMultipleTagsMissingContent()
+    public function testParseAllMultipleTagsMissingContent(): void
     {
         $tag1 = '<sulu-link href="123-123-123" provider="article">Test-Content</sulu-link>';
         $tag2 = '<sulu-link href="123-123-123" title="Test-Title" provider="article"/>';
@@ -343,7 +343,7 @@ class LinkTagTest extends TestCase
         );
     }
 
-    public function testParseAllValidationState()
+    public function testParseAllValidationState(): void
     {
         $this->providers['article']->preload(['123-123-123', '456-123-123', '456-789-123'], 'de', true)
             ->willReturn(
@@ -403,7 +403,7 @@ class LinkTagTest extends TestCase
         );
     }
 
-    public function testParseAllValidationStateInPreview()
+    public function testParseAllValidationStateInPreview(): void
     {
         $this->linkTag = new LinkTag($this->providerPool->reveal(), true, $this->urlHelper);
 
@@ -465,7 +465,7 @@ class LinkTagTest extends TestCase
         );
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $this->providers['article']->preload(['123-123-123'], 'de', false)
             ->willReturn(
@@ -513,7 +513,7 @@ class LinkTagTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    public function testValidateInvalid()
+    public function testValidateInvalid(): void
     {
         $this->providers['article']->preload(['123-123-123'], 'de', false)->willReturn([]);
 
@@ -535,7 +535,7 @@ class LinkTagTest extends TestCase
         );
     }
 
-    public function testValidateUnpublished()
+    public function testValidateUnpublished(): void
     {
         $this->providers['article']->preload(['123-123-123'], 'de', false)
             ->willReturn(
@@ -562,7 +562,7 @@ class LinkTagTest extends TestCase
         );
     }
 
-    public function testValidateMixed()
+    public function testValidateMixed(): void
     {
         $this->providers['article']->preload(['123-123-123', '312-312-312', '123-456-789'], 'de', false)
             ->willReturn(
@@ -605,7 +605,7 @@ class LinkTagTest extends TestCase
         );
     }
 
-    public function testValidateAllMultipleProviders()
+    public function testValidateAllMultipleProviders(): void
     {
         $this->providers['page']->preload(['123-123-123'], 'de', false)
             ->willReturn(
@@ -637,7 +637,7 @@ class LinkTagTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    public function testValidateAllMultipleProvidersSameId()
+    public function testValidateAllMultipleProvidersSameId(): void
     {
         $this->providers['page']->preload(['123-123-123'], 'de', false)
             ->willReturn(

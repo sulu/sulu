@@ -40,7 +40,7 @@ class ParameterRequestProcessorTest extends TestCase
         );
     }
 
-    public function testProcess()
+    public function testProcess(): void
     {
         $request = new Request(['_portal' => 'sulu_io', '_locale' => 'de']);
 
@@ -54,7 +54,7 @@ class ParameterRequestProcessorTest extends TestCase
         $this->assertEquals($portalInformation, $requestAttributes->getAttribute('portalInformation'));
     }
 
-    public function testProcessWithoutLocale()
+    public function testProcessWithoutLocale(): void
     {
         $request = new Request(['_portal' => 'sulu_io']);
 
@@ -64,7 +64,7 @@ class ParameterRequestProcessorTest extends TestCase
         );
     }
 
-    public function testProcessWithoutPortal()
+    public function testProcessWithoutPortal(): void
     {
         $request = new Request(['_locale' => 'sulu_io']);
 
@@ -74,7 +74,7 @@ class ParameterRequestProcessorTest extends TestCase
         );
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $this->assertTrue($this->parameterRequestProcessor->validate(new RequestAttributes()));
     }

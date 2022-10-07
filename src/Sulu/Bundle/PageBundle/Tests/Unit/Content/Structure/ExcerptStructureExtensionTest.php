@@ -23,7 +23,7 @@ use Sulu\Component\Import\Manager\ImportManagerInterface;
 
 class ExcerptStructureExtensionTest extends TestCase
 {
-    public function testSaveSetLocaleAndWebspace()
+    public function testSaveSetLocaleAndWebspace(): void
     {
         $structure = $this->prophesize(StructureInterface::class);
         $structure->getProperties()->willReturn([]);
@@ -53,7 +53,7 @@ class ExcerptStructureExtensionTest extends TestCase
         $excerptExtension->save($node->reveal(), [], 'sulu_io', 'de');
     }
 
-    public function testLoadSetLocaleAndWebspace()
+    public function testLoadSetLocaleAndWebspace(): void
     {
         $structure = $this->prophesize(StructureInterface::class);
         $structure->getProperties()->willReturn([]);

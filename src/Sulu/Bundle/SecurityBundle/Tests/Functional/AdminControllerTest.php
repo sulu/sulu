@@ -15,7 +15,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
-    public function testRouteConfig()
+    public function testRouteConfig(): void
     {
         $client = $this->createAuthenticatedClient();
         $client->jsonRequest('GET', '/admin/config');
@@ -43,7 +43,7 @@ class AdminControllerTest extends SuluTestCase
         );
     }
 
-    public function testUserMetadataAction()
+    public function testUserMetadataAction(): void
     {
         $client = $this->createAuthenticatedClient();
 
@@ -64,7 +64,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals(['password'], $schema->allOf[1]->anyOf[1]->required);
     }
 
-    public function testRoleMetadataAction()
+    public function testRoleMetadataAction(): void
     {
         $client = $this->createAuthenticatedClient();
 

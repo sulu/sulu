@@ -16,7 +16,7 @@ use Sulu\Component\DocumentManager\DocumentManager;
 
 class BarfooFixture implements DocumentFixtureInterface
 {
-    public function load(DocumentManager $documentManager)
+    public function load(DocumentManager $documentManager): void
     {
     }
 

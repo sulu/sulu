@@ -68,7 +68,7 @@ class WorkspaceInitializerTest extends TestCase
     /**
      * It should create the workspace on connections with non-existing workspaces.
      */
-    public function testCreateWorkspace()
+    public function testCreateWorkspace(): void
     {
         $this->connectionRegistry->getConnections()->willReturn([
             $this->session1->reveal(),

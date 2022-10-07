@@ -111,13 +111,13 @@ class ParentSubscriberTest extends TestCase
         $this->hydrateEvent->getNode()->willReturn($this->node);
     }
 
-    public function testHydrateNotImplementing()
+    public function testHydrateNotImplementing(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->notImplementing)->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
-    public function testHydrateParent()
+    public function testHydrateParent(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
         $this->hydrateEvent->getOptions()->willReturn(['test' => true]);
@@ -134,7 +134,7 @@ class ParentSubscriberTest extends TestCase
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
-    public function testHydrateParentNoUuid()
+    public function testHydrateParentNoUuid(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->document->reveal())->shouldBeCalled();
         $this->hydrateEvent->getOptions()->willReturn(['test' => true])->shouldBeCalled();
@@ -146,7 +146,7 @@ class ParentSubscriberTest extends TestCase
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
-    public function testThrowExceptionRootNode()
+    public function testThrowExceptionRootNode(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->hydrateEvent->getDocument()->willReturn($this->document->reveal());
@@ -158,7 +158,7 @@ class ParentSubscriberTest extends TestCase
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
     }
 
-    public function testMove()
+    public function testMove(): void
     {
         $this->moveEvent->getDocument()->willReturn($this->document);
         $this->inspector->getNode($this->document)->willReturn($this->node);
@@ -170,7 +170,7 @@ class ParentSubscriberTest extends TestCase
         $this->subscriber->handleMove($this->moveEvent->reveal());
     }
 
-    public function testHandleChangeParent()
+    public function testHandleChangeParent(): void
     {
         $persistEvent = $this->prophesize(PersistEvent::class);
         $persistEvent->getDocument()->willReturn($this->document->reveal());
@@ -187,7 +187,7 @@ class ParentSubscriberTest extends TestCase
         $this->subscriber->handleChangeParent($persistEvent->reveal());
     }
 
-    public function testHandleChangeParentWithSameParent()
+    public function testHandleChangeParentWithSameParent(): void
     {
         $persistEvent = $this->prophesize(PersistEvent::class);
         $persistEvent->getDocument()->willReturn($this->document->reveal());
@@ -201,7 +201,7 @@ class ParentSubscriberTest extends TestCase
         $this->subscriber->handleChangeParent($persistEvent->reveal());
     }
 
-    public function testHandleChangeParentWithWrongDocument()
+    public function testHandleChangeParentWithWrongDocument(): void
     {
         $persistEvent = $this->prophesize(PersistEvent::class);
         $persistEvent->getDocument(new \stdClass());

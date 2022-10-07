@@ -35,7 +35,7 @@ class VersionControllerTest extends SuluTestCase
         $this->initPhpcr();
     }
 
-    public function testPostRestore()
+    public function testPostRestore(): void
     {
         $documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $document = $documentManager->create('page');
@@ -62,7 +62,7 @@ class VersionControllerTest extends SuluTestCase
         $this->assertEquals('first title', $response['title']);
     }
 
-    public function testPostRestoreInvalidVersion()
+    public function testPostRestoreInvalidVersion(): void
     {
         $documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $document = $documentManager->create('page');
@@ -81,7 +81,7 @@ class VersionControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testCGet()
+    public function testCGet(): void
     {
         $documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $document = $documentManager->create('page');

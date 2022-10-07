@@ -32,7 +32,7 @@ class TargetGroupRepositoryTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testFindAllActiveForWebspaceOrderedByPriority()
+    public function testFindAllActiveForWebspaceOrderedByPriority(): void
     {
         $targetGroup1 = $this->createTargetGroup('Target Group 1', false, true, 5);
         $targetGroupRule1 = $this->createTargetGroupRule('Target Group Rule 1', $targetGroup1);
@@ -61,7 +61,7 @@ class TargetGroupRepositoryTest extends SuluTestCase
         $this->assertEquals('Target Group 2', $targetGroups[1]->getTitle());
     }
 
-    public function testFindAllActiveForWebspaceOrderedByPriorityWithFrequency()
+    public function testFindAllActiveForWebspaceOrderedByPriorityWithFrequency(): void
     {
         $targetGroup1 = $this->createTargetGroup('Target Group 1', false, true, 5);
         $targetGroupRule1 = $this->createTargetGroupRule('Target Group Rule 1', $targetGroup1);
@@ -107,7 +107,7 @@ class TargetGroupRepositoryTest extends SuluTestCase
         $this->assertCount(1, $targetGroups[0]->getRules());
     }
 
-    public function testFindByIds()
+    public function testFindByIds(): void
     {
         $targetGroup1 = $this->createTargetGroup('Target Group 1', true, true, 5);
         $targetGroup2 = $this->createTargetGroup('Target Group 2', true, true, 5);

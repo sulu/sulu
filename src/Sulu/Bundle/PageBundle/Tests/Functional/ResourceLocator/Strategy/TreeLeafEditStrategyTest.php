@@ -51,7 +51,7 @@ class TreeLeafEditStrategyTest extends SuluTestCase
         $this->initPhpcr();
     }
 
-    public function testDeleteByPath()
+    public function testDeleteByPath(): void
     {
         $rootNode = $this->session->getNode('/cmf/sulu_io/routes/de');
 
@@ -106,7 +106,7 @@ class TreeLeafEditStrategyTest extends SuluTestCase
         $this->assertFalse($rootNode->hasNode('test/news-1/sub-2'));
     }
 
-    public function testChangeResourceSegment()
+    public function testChangeResourceSegment(): void
     {
         // create routes for content
         $parentDocument = $this->documentManager->find('/cmf/sulu_io/contents');
@@ -195,7 +195,7 @@ class TreeLeafEditStrategyTest extends SuluTestCase
         $this->assertEquals('/test/news-2/sub-2', $this->getRlForHistory('/news/news-2/sub-2'));
     }
 
-    public function testChangeResourceSegmentUnpublishedChildren()
+    public function testChangeResourceSegmentUnpublishedChildren(): void
     {
         $parentDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
@@ -271,7 +271,7 @@ class TreeLeafEditStrategyTest extends SuluTestCase
         );
     }
 
-    public function testGetInputType()
+    public function testGetInputType(): void
     {
         $this->assertEquals(ResourceLocatorStrategyInterface::INPUT_TYPE_LEAF, $this->resourceLocatorStrategy->getInputType());
     }

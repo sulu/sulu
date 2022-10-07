@@ -59,7 +59,7 @@ class PageSelectionTest extends TestCase
         $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
     }
 
-    public function testWriteWithNoneExistingUUID()
+    public function testWriteWithNoneExistingUUID(): void
     {
         $pageSelection = new PageSelection(
             $this->contentQueryExecutor->reveal(),
@@ -87,7 +87,7 @@ class PageSelectionTest extends TestCase
         $pageSelection->write($node->reveal(), $this->property->reveal(), 1, 'test', 'de', null);
     }
 
-    public function testGetContentData()
+    public function testGetContentData(): void
     {
         $pageSelection = new PageSelection(
             $this->contentQueryExecutor->reveal(),
@@ -116,7 +116,7 @@ class PageSelectionTest extends TestCase
         );
     }
 
-    public function testGetContentDataWithUser()
+    public function testGetContentDataWithUser(): void
     {
         $pageSelection = new PageSelection(
             $this->contentQueryExecutor->reveal(),
@@ -152,7 +152,7 @@ class PageSelectionTest extends TestCase
         $pageSelection->getContentData($this->property->reveal());
     }
 
-    public function testGetContentDataWithoutPathParameter()
+    public function testGetContentDataWithoutPathParameter(): void
     {
         $pageSelection = new PageSelection(
             $this->contentQueryExecutor->reveal(),
@@ -182,7 +182,7 @@ class PageSelectionTest extends TestCase
         );
     }
 
-    public function testPreResolve()
+    public function testPreResolve(): void
     {
         $pageSelection = new PageSelection(
             $this->contentQueryExecutor->reveal(),

@@ -113,7 +113,7 @@ class ManagedStructureTest extends TestCase
     /**
      * It should lazily initialize a localized property.
      */
-    public function testGetLocalizedProperty()
+    public function testGetLocalizedProperty(): void
     {
         $name = 'test';
         $contentTypeName = 'hello';
@@ -129,7 +129,7 @@ class ManagedStructureTest extends TestCase
     /**
      * It should bind values.
      */
-    public function testBind()
+    public function testBind(): void
     {
         $name = 'test';
         $contentTypeName = 'hello';
@@ -169,7 +169,7 @@ class ManagedStructureTest extends TestCase
     /**
      * It should bind also null values.
      */
-    public function testBindNullValue()
+    public function testBindNullValue(): void
     {
         $name = 'test';
         $contentTypeName = 'hello';
@@ -209,7 +209,7 @@ class ManagedStructureTest extends TestCase
     /**
      * It should lazily initialize a non-localized property.
      */
-    public function testGetNonLocalizedProperty()
+    public function testGetNonLocalizedProperty(): void
     {
         $name = 'test';
         $contentTypeName = 'hello';
@@ -225,7 +225,7 @@ class ManagedStructureTest extends TestCase
     /**
      * It should act as an array.
      */
-    public function testArrayAccess()
+    public function testArrayAccess(): void
     {
         $name = 'test';
         $contentTypeName = 'hello';

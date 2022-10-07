@@ -34,7 +34,7 @@ class SystemStoreTest extends TestCase
         $this->systemStore = new SystemStore($this->roleRepository->reveal());
     }
 
-    public function testSetSystem()
+    public function testSetSystem(): void
     {
         $this->systemStore->setSystem('Sulu');
         $this->assertEquals('Sulu', $this->systemStore->getSystem());
@@ -42,7 +42,7 @@ class SystemStoreTest extends TestCase
         $this->assertEquals('Sulu Test', $this->systemStore->getSystem());
     }
 
-    public function testGetAnonymousRoleWithLazyLoading()
+    public function testGetAnonymousRoleWithLazyLoading(): void
     {
         $role = $this->prophesize(RoleInterface::class);
         $this->roleRepository
@@ -54,7 +54,7 @@ class SystemStoreTest extends TestCase
         $this->assertEquals($role->reveal(), $this->systemStore->getAnonymousRole());
     }
 
-    public function testGetNonExistingAnonymousRole()
+    public function testGetNonExistingAnonymousRole(): void
     {
         $this->systemStore->setSystem('Sulu');
         $this->assertEquals(null, $this->systemStore->getAnonymousRole());

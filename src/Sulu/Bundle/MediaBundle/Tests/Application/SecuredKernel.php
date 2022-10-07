@@ -37,7 +37,7 @@ class SecuredKernel extends Kernel
             . $this->environment;
     }
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         parent::registerContainerConfiguration($loader);
 

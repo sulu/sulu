@@ -36,7 +36,7 @@ class ResolveTargetEntitiesPassTest extends AbstractCompilerPassTestCase
         );
     }
 
-    public function testResolveTargetEntities()
+    public function testResolveTargetEntities(): void
     {
         $this->compile();
 

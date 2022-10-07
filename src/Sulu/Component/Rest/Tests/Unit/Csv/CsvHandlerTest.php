@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CsvHandlerTest extends TestCase
 {
-    public function testNonListResponse()
+    public function testNonListResponse(): void
     {
         $this->expectException(ObjectNotSupportedException::class);
         $object = new \stdClass();
@@ -39,7 +39,7 @@ class CsvHandlerTest extends TestCase
         $handler->createResponse($viewHandler->reveal(), $view, $request->reveal(), $format);
     }
 
-    public function testListRepresentation()
+    public function testListRepresentation(): void
     {
         $listRepresentation = $this->prophesize(ListRepresentation::class);
         $listRepresentation->getRel()->willReturn('contacts');
@@ -82,7 +82,7 @@ class CsvHandlerTest extends TestCase
         );
     }
 
-    public function testCollectionRepresentation()
+    public function testCollectionRepresentation(): void
     {
         $collectionRepresentation = $this->prophesize(CollectionRepresentation::class);
         $collectionRepresentation->getRel()->willReturn('contacts');
@@ -125,7 +125,7 @@ class CsvHandlerTest extends TestCase
         );
     }
 
-    public function testListRepresentationDifferentConfig()
+    public function testListRepresentationDifferentConfig(): void
     {
         $listRepresentation = $this->prophesize(ListRepresentation::class);
         $listRepresentation->getRel()->willReturn('contacts');
@@ -168,7 +168,7 @@ class CsvHandlerTest extends TestCase
         );
     }
 
-    public function testListRepresentationWithArray()
+    public function testListRepresentationWithArray(): void
     {
         $listRepresentation = $this->prophesize(ListRepresentation::class);
         $listRepresentation->getRel()->willReturn('contacts');
@@ -211,7 +211,7 @@ class CsvHandlerTest extends TestCase
         );
     }
 
-    public function testListRepresentationEmpty()
+    public function testListRepresentationEmpty(): void
     {
         $listRepresentation = $this->prophesize(ListRepresentation::class);
         $listRepresentation->getRel()->willReturn('contacts');

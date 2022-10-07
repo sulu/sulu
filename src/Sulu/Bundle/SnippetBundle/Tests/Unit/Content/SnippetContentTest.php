@@ -57,7 +57,7 @@ class SnippetContentTest extends TestCase
         );
     }
 
-    public function testGetContentData()
+    public function testGetContentData(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $structure = $this->prophesize(StructureBridge::class);
@@ -79,7 +79,7 @@ class SnippetContentTest extends TestCase
         $this->assertEquals([['title' => 'test-1']], $result);
     }
 
-    public function testGetContentDataWithExtensions()
+    public function testGetContentDataWithExtensions(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $structure = $this->prophesize(StructureBridge::class);
@@ -106,7 +106,7 @@ class SnippetContentTest extends TestCase
         $this->assertEquals([['title' => 'test-1', 'taxonomies' => ['categories' => [], 'tags' => []]]], $result);
     }
 
-    public function testGetViewData()
+    public function testGetViewData(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $structure = $this->prophesize(StructureBridge::class);
@@ -128,7 +128,7 @@ class SnippetContentTest extends TestCase
         $this->assertEquals([['title' => 'test-2', 'template' => 'default']], $result);
     }
 
-    public function testPreResolve()
+    public function testPreResolve(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $structure = $this->prophesize(StructureBridge::class);

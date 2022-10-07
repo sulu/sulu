@@ -82,7 +82,7 @@ class WebspaceImportTest extends SuluTestCase
      * - get documents
      * - test document data.
      */
-    public function testImport12Xliff()
+    public function testImport12Xliff(): void
     {
         // run language import
         $importData = [
@@ -155,7 +155,7 @@ class WebspaceImportTest extends SuluTestCase
      * - get documents
      * - test document data.
      */
-    public function testImport12XliffRU()
+    public function testImport12XliffRU(): void
     {
         // run language import
         // import it to FR (because RU isn't initialized)
@@ -229,7 +229,7 @@ class WebspaceImportTest extends SuluTestCase
      * - get documents
      * - test document data.
      */
-    public function testImport12XliffWithBlockInBlock()
+    public function testImport12XliffWithBlockInBlock(): void
     {
         // run language import
         // import it to FR (because RU isn't initialized)
@@ -290,7 +290,7 @@ class WebspaceImportTest extends SuluTestCase
     /**
      * Removes the created export.xliff file.
      */
-    private function removeImportFile()
+    private function removeImportFile(): void
     {
         try {
             $fs = new Filesystem();
@@ -306,7 +306,7 @@ class WebspaceImportTest extends SuluTestCase
     /**
      * Creates the export.xliff file and replace the placeholder with the current uuid.
      */
-    private function prepareImportData()
+    private function prepareImportData(): void
     {
         $fs = new Filesystem();
 
@@ -375,7 +375,7 @@ class WebspaceImportTest extends SuluTestCase
     /**
      * Create the test-pages.
      */
-    private function prepareData()
+    private function prepareData(): void
     {
         $this->pages[0] = $this->createSimplePage('Parent', '/parent');
         $this->documentManager->publish($this->pages[0], 'en');

@@ -17,7 +17,7 @@ use Sulu\Component\DocumentManager\DocumentManager;
 
 class GroupFooFixture implements DocumentFixtureInterface, DocumentFixtureGroupInterface
 {
-    public function load(DocumentManager $documentManager)
+    public function load(DocumentManager $documentManager): void
     {
         return;
     }

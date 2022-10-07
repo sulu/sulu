@@ -37,7 +37,7 @@ class ContentTypesDumpCommandTest extends SuluTestCase
         $this->tester = new CommandTester($command);
     }
 
-    public function testExecute()
+    public function testExecute(): void
     {
         $this->tester->execute([]);
 

@@ -42,7 +42,7 @@ class StructureSubscriberTest extends TestCase
         $this->subscriber = new StructureSubscriber($this->searchManager->reveal());
     }
 
-    public function testIndexPersistedDocument()
+    public function testIndexPersistedDocument(): void
     {
         $document = $this->prophesize(StructureBehavior::class);
         $persistEvent = $this->getPersistEventMock($document->reveal());
@@ -52,7 +52,7 @@ class StructureSubscriberTest extends TestCase
         $this->subscriber->indexPersistedDocument($persistEvent->reveal());
     }
 
-    public function testIndexPersistedDocumentUnsecuredDocument()
+    public function testIndexPersistedDocumentUnsecuredDocument(): void
     {
         $document = $this->prophesize(StructureBehavior::class);
         $document->willImplement(SecurityBehavior::class);
@@ -65,7 +65,7 @@ class StructureSubscriberTest extends TestCase
         $this->subscriber->indexPersistedDocument($persistEvent->reveal());
     }
 
-    public function testIndexPersistedDocumentSecuredDocument()
+    public function testIndexPersistedDocumentSecuredDocument(): void
     {
         $document = $this->prophesize(StructureBehavior::class);
         $document->willImplement(SecurityBehavior::class);
@@ -78,7 +78,7 @@ class StructureSubscriberTest extends TestCase
         $this->subscriber->indexPersistedDocument($persistEvent->reveal());
     }
 
-    public function testIndexPublishedDocument()
+    public function testIndexPublishedDocument(): void
     {
         $document = $this->prophesize(StructureBehavior::class);
         $publishEvent = $this->getPublishEventMock($document->reveal());
@@ -88,7 +88,7 @@ class StructureSubscriberTest extends TestCase
         $this->subscriber->indexPublishedDocument($publishEvent->reveal());
     }
 
-    public function testIndexPublishedDocumentUnsecuredDocument()
+    public function testIndexPublishedDocumentUnsecuredDocument(): void
     {
         $document = $this->prophesize(StructureBehavior::class);
         $document->willImplement(SecurityBehavior::class);
@@ -101,7 +101,7 @@ class StructureSubscriberTest extends TestCase
         $this->subscriber->indexPublishedDocument($publishEvent->reveal());
     }
 
-    public function testIndexPublishedDocumentSecuredDocument()
+    public function testIndexPublishedDocumentSecuredDocument(): void
     {
         $document = $this->prophesize(StructureBehavior::class);
         $document->willImplement(SecurityBehavior::class);
@@ -114,7 +114,7 @@ class StructureSubscriberTest extends TestCase
         $this->subscriber->indexPublishedDocument($publishEvent->reveal());
     }
 
-    public function testIndexDocumentAfterRemoveDraft()
+    public function testIndexDocumentAfterRemoveDraft(): void
     {
         $removeDraftEvent = $this->prophesize(RemoveDraftEvent::class);
         $document = $this->prophesize(StructureBehavior::class);
@@ -128,7 +128,7 @@ class StructureSubscriberTest extends TestCase
         $this->subscriber->indexDocumentAfterRemoveDraft($removeDraftEvent->reveal());
     }
 
-    public function testDeindexRemovedDocument()
+    public function testDeindexRemovedDocument(): void
     {
         $removeEvent = $this->prophesize(RemoveEvent::class);
 
@@ -140,7 +140,7 @@ class StructureSubscriberTest extends TestCase
         $this->subscriber->deindexRemovedDocument($removeEvent->reveal());
     }
 
-    public function testDeindexRemovedDocumentWithWorkflowStageBehavior()
+    public function testDeindexRemovedDocumentWithWorkflowStageBehavior(): void
     {
         $removeEvent = $this->prophesize(RemoveEvent::class);
 
@@ -161,7 +161,7 @@ class StructureSubscriberTest extends TestCase
         $this->subscriber->deindexRemovedDocument($removeEvent->reveal());
     }
 
-    public function testDeindexUnpublishedDocument()
+    public function testDeindexUnpublishedDocument(): void
     {
         $unpublishEvent = $this->prophesize(UnpublishEvent::class);
 
@@ -173,7 +173,7 @@ class StructureSubscriberTest extends TestCase
         $this->subscriber->deindexUnpublishedDocument($unpublishEvent->reveal());
     }
 
-    public function testDeindexRemovedLocaleDocument()
+    public function testDeindexRemovedLocaleDocument(): void
     {
         $unpublishEvent = $this->prophesize(RemoveLocaleEvent::class);
 

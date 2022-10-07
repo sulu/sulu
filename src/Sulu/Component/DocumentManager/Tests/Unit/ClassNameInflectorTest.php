@@ -16,7 +16,7 @@ use Sulu\Component\DocumentManager\ClassNameInflector;
 
 class ClassNameInflectorTest extends TestCase
 {
-    public function testInflector()
+    public function testInflector(): void
     {
         $this->assertEquals(
             'Hello',

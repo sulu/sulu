@@ -190,7 +190,7 @@ class MediaManagerTest extends TestCase
     /**
      * @dataProvider provideGetByIds
      */
-    public function testGetByIds($ids, $user, $permissions, $media, $result)
+    public function testGetByIds($ids, $user, $permissions, $media, $result): void
     {
         /** @var TokenInterface|ObjectProphecy $token */
         $token = $this->prophesize(TokenInterface::class);
@@ -228,7 +228,7 @@ class MediaManagerTest extends TestCase
         $this->mediaManager->get(1);
     }
 
-    public function testGetWithoutToken()
+    public function testGetWithoutToken(): void
     {
         $this->tokenStorage->getToken()->willReturn(null);
         $this->mediaRepository->findMedia(Argument::cetera())->willReturn([])->shouldBeCalled();
@@ -237,7 +237,7 @@ class MediaManagerTest extends TestCase
         $this->mediaManager->get(1, [], null, null, 64);
     }
 
-    public function testGetWithoutSuluUser()
+    public function testGetWithoutSuluUser(): void
     {
         $user = $this->prophesize(UserInterface::class);
         $token = $this->prophesize(TokenInterface::class);
@@ -250,7 +250,7 @@ class MediaManagerTest extends TestCase
         $this->mediaManager->get('de', [], null, null, 64);
     }
 
-    public function testGetWithSuluUser()
+    public function testGetWithSuluUser(): void
     {
         $user = $this->prophesize(SuluUserInterface::class);
         $token = $this->prophesize(TokenInterface::class);
@@ -263,7 +263,7 @@ class MediaManagerTest extends TestCase
         $this->mediaManager->get('de', [], null, null, 64);
     }
 
-    public function testDeleteWithSecurity()
+    public function testDeleteWithSecurity(): void
     {
         $collection = $this->prophesize(Collection::class);
         $collection->getId()->willReturn(2);
@@ -281,7 +281,7 @@ class MediaManagerTest extends TestCase
         $this->mediaManager->delete(1, true);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $collection = $this->prophesize(Collection::class);
         $collection->getId()->willReturn(2);
@@ -338,7 +338,7 @@ class MediaManagerTest extends TestCase
     /**
      * @dataProvider provideSpecialCharacterFileName
      */
-    public function testSpecialCharacterFileName($fileName, $cleanUpArgument, $cleanUpResult, $extension)
+    public function testSpecialCharacterFileName($fileName, $cleanUpArgument, $cleanUpResult, $extension): void
     {
         /** @var UploadedFile|ObjectProphecy $uploadedFile */
         $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith([__DIR__ . \DIRECTORY_SEPARATOR . 'test.txt', 1, null, null, 1, true]);
@@ -370,12 +370,12 @@ class MediaManagerTest extends TestCase
     /**
      * @dataProvider provideSpecialCharacterUrl
      */
-    public function testSpecialCharacterUrl($id, $filename, $version, $expected)
+    public function testSpecialCharacterUrl($id, $filename, $version, $expected): void
     {
         $this->assertEquals($expected, $this->mediaManager->getUrl($id, $filename, $version));
     }
 
-    public function testSaveWrongVersionType()
+    public function testSaveWrongVersionType(): void
     {
         $this->expectException(InvalidMediaTypeException::class);
 
@@ -410,7 +410,7 @@ class MediaManagerTest extends TestCase
         $this->mediaManager->save($uploadedFile->reveal(), ['id' => 1], 42);
     }
 
-    public function testSaveWithChangedFocusPoint()
+    public function testSaveWithChangedFocusPoint(): void
     {
         $media = $this->prophesize(Media::class);
         $media->getId()->willReturn(1);
@@ -453,7 +453,7 @@ class MediaManagerTest extends TestCase
         $this->mediaManager->save(null, ['id' => 1, 'locale' => 'en', 'focusPointX' => 1, 'focusPointY' => 2], 1);
     }
 
-    public function testSaveWithSameFocusPoint()
+    public function testSaveWithSameFocusPoint(): void
     {
         $media = $this->prophesize(Media::class);
         $media->getId()->willReturn(1);

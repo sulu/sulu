@@ -15,7 +15,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class WebspaceLocalizationControllerTest extends SuluTestCase
 {
-    public function testCgetAction()
+    public function testCgetAction(): void
     {
         $client = $this->createAuthenticatedClient();
 
@@ -39,7 +39,7 @@ class WebspaceLocalizationControllerTest extends SuluTestCase
         $this->assertContains(['localization' => 'de_at'], $filteredData);
     }
 
-    public function testCgetActionWithNotExistingWebspace()
+    public function testCgetActionWithNotExistingWebspace(): void
     {
         $client = $this->createAuthenticatedClient();
 

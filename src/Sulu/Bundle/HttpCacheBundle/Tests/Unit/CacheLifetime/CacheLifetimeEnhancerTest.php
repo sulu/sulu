@@ -105,7 +105,7 @@ class CacheLifetimeEnhancerTest extends TestCase
      *
      * @dataProvider provideCacheLifeTime
      */
-    public function testEnhance(int $cacheLifetime, ?int $requestCacheLifetime, int $expectedCacheLifetime)
+    public function testEnhance(int $cacheLifetime, ?int $requestCacheLifetime, int $expectedCacheLifetime): void
     {
         $this->page->getCacheLifeTime()->willReturn(
             ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => $cacheLifetime]
@@ -134,7 +134,7 @@ class CacheLifetimeEnhancerTest extends TestCase
         $this->cacheLifetimeEnhancer->enhance($this->response->reveal(), $this->page->reveal());
     }
 
-    public function testEnhanceSnippet()
+    public function testEnhanceSnippet(): void
     {
         $this->cacheLifetimeEnhancer->enhance($this->response->reveal(), $this->snippet->reveal());
         $this->response->setPublic()->shouldNotBeCalled();

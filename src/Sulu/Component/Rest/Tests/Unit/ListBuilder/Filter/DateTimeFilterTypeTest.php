@@ -46,7 +46,7 @@ class DateTimeFilterTypeTest extends TestCase
     /**
      * @dataProvider provideFilter
      */
-    public function testFilter($fieldName, $value, $expected)
+    public function testFilter($fieldName, $value, $expected): void
     {
         $fieldDescriptor = $this->prophesize(FieldDescriptor::class);
 
@@ -72,7 +72,7 @@ class DateTimeFilterTypeTest extends TestCase
     /**
      * @dataProvider provideFilterFromOnly
      */
-    public function testFilterFromOnly($fieldName, $value, $expected)
+    public function testFilterFromOnly($fieldName, $value, $expected): void
     {
         $fieldDescriptor = $this->prophesize(FieldDescriptor::class);
 
@@ -94,7 +94,7 @@ class DateTimeFilterTypeTest extends TestCase
     /**
      * @dataProvider provideFilterToOnly
      */
-    public function testFilterToOnly($fieldName, $value, $expected)
+    public function testFilterToOnly($fieldName, $value, $expected): void
     {
         $fieldDescriptor = $this->prophesize(FieldDescriptor::class);
 
@@ -116,7 +116,7 @@ class DateTimeFilterTypeTest extends TestCase
     /**
      * @dataProvider provideFilterWithInvalidOptions
      */
-    public function testFilterWithInvalidOptions($value)
+    public function testFilterWithInvalidOptions($value): void
     {
         $this->expectException(InvalidFilterTypeOptionsException::class);
 

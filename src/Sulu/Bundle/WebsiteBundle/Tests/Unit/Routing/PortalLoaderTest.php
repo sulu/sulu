@@ -68,7 +68,7 @@ class PortalLoaderTest extends TestCase
         $this->localizations = [$de, $en];
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         $portalInformation1 = $this->prophesize(PortalInformation::class);
         $portalInformation1->getPrefix()->willReturn('de/');
@@ -115,7 +115,7 @@ class PortalLoaderTest extends TestCase
         $this->assertEquals('', $routeCollection->get('route2')->getHost());
     }
 
-    public function testLoadWithEmptyPortalPrefix()
+    public function testLoadWithEmptyPortalPrefix(): void
     {
         $portalInformation1 = $this->prophesize(PortalInformation::class);
         $portalInformation1->getPrefix()->willReturn('');
@@ -150,7 +150,7 @@ class PortalLoaderTest extends TestCase
         $this->assertEquals('', $routeCollection->get('route2')->getHost());
     }
 
-    public function testLoadSingleRoute()
+    public function testLoadSingleRoute(): void
     {
         $portalInformation1 = $this->prophesize(PortalInformation::class);
         $portalInformation1->getPrefix()->willReturn('de/');
@@ -187,7 +187,7 @@ class PortalLoaderTest extends TestCase
         $this->assertEquals('', $routeCollection->get('route')->getHost());
     }
 
-    public function testLoadSingleRouteWithHost()
+    public function testLoadSingleRouteWithHost(): void
     {
         $portalInformation1 = $this->prophesize(PortalInformation::class);
         $portalInformation1->getPrefix()->willReturn('de/');
@@ -227,7 +227,7 @@ class PortalLoaderTest extends TestCase
         $this->assertEquals('sulu.io', $routeCollection->get('route')->getHost());
     }
 
-    public function testLoadSingleRouteWithCondition()
+    public function testLoadSingleRouteWithCondition(): void
     {
         $portalInformation1 = $this->prophesize(PortalInformation::class);
         $portalInformation1->getPrefix()->willReturn('de/');
@@ -269,7 +269,7 @@ class PortalLoaderTest extends TestCase
         $this->assertEquals('request.get("test") === "sulu.io"', $routeCollection->get('route')->getCondition());
     }
 
-    public function testLoadWithRequirements()
+    public function testLoadWithRequirements(): void
     {
         $portalInformation1 = $this->prophesize(PortalInformation::class);
         $portalInformation1->getPrefix()->willReturn('de/');

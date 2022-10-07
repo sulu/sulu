@@ -19,7 +19,7 @@ use Sulu\Component\Webspace\Webspace;
 
 class WebspaceUrlProviderTest extends TestCase
 {
-    public function testGetUrls()
+    public function testGetUrls(): void
     {
         $urls = [
             new Url('sulu.lo'),

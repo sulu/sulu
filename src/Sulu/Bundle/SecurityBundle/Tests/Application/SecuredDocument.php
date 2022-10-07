@@ -54,7 +54,7 @@ class SecuredDocument implements AutoNameBehavior, NodeNameBehavior, PathBehavio
         return $this->uuid;
     }
 
-    public function setTitle($title)
+    public function setTitle($title): void
     {
         $this->title = $title;
     }
@@ -64,7 +64,7 @@ class SecuredDocument implements AutoNameBehavior, NodeNameBehavior, PathBehavio
         return $this->title;
     }
 
-    public function setParent($parent)
+    public function setParent($parent): void
     {
         $this->parent = $parent;
     }
@@ -74,7 +74,7 @@ class SecuredDocument implements AutoNameBehavior, NodeNameBehavior, PathBehavio
         return $this->parent;
     }
 
-    public function setPermissions($permissions)
+    public function setPermissions($permissions): void
     {
         $this->permissions = $permissions;
     }

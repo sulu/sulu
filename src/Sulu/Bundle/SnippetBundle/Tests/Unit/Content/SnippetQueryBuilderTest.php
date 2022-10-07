@@ -65,14 +65,14 @@ class SnippetQueryBuilderTest extends TestCase
         );
     }
 
-    public function testBuild()
+    public function testBuild(): void
     {
         list($sql2) = $this->snippetQueryBuilder->build('sulu_io', ['de']);
 
         $this->assertStringContainsString('page.[jcr:mixinTypes] = "sulu:snippet"', $sql2);
     }
 
-    public function testBuildWithTypes()
+    public function testBuildWithTypes(): void
     {
         $this->snippetQueryBuilder->init([
             'config' => [
@@ -90,7 +90,7 @@ class SnippetQueryBuilderTest extends TestCase
         $this->assertStringContainsString('(ISDESCENDANTNODE(page, \'/cmf/snippets/default\')', $sql2);
     }
 
-    public function testBuildWithProperties()
+    public function testBuildWithProperties(): void
     {
         $this->structureManager->getStructures(Structure::TYPE_SNIPPET)->shouldBeCalled()->willReturn([]);
 

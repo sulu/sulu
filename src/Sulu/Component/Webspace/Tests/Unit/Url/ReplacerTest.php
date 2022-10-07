@@ -16,35 +16,35 @@ use Sulu\Component\Webspace\Url\Replacer;
 
 class ReplacerTest extends TestCase
 {
-    public function testHasLanguageReplacer()
+    public function testHasLanguageReplacer(): void
     {
         $replacer = new Replacer('sulu.io');
         $this->assertFalse($replacer->hasLanguageReplacer('sulu.io'));
         $this->assertTrue($replacer->hasLanguageReplacer('sulu.io/{language}'));
     }
 
-    public function testHasCountryReplacer()
+    public function testHasCountryReplacer(): void
     {
         $replacer = new Replacer();
         $this->assertFalse($replacer->hasCountryReplacer('sulu.io'));
         $this->assertTrue($replacer->hasCountryReplacer('sulu.io/{country}'));
     }
 
-    public function testHasLocalizationReplacer()
+    public function testHasLocalizationReplacer(): void
     {
         $replacer = new Replacer();
         $this->assertFalse($replacer->hasLocalizationReplacer('sulu.io'));
         $this->assertTrue($replacer->hasLocalizationReplacer('sulu.io/{localization}'));
     }
 
-    public function testHasSegmentReplacer()
+    public function testHasSegmentReplacer(): void
     {
         $replacer = new Replacer();
         $this->assertFalse($replacer->hasSegmentReplacer('sulu.io'));
         $this->assertTrue($replacer->hasSegmentReplacer('sulu.io/{segment}'));
     }
 
-    public function testReplaceCountry()
+    public function testReplaceCountry(): void
     {
         $replacer = new Replacer();
         $this->assertEquals(
@@ -53,32 +53,32 @@ class ReplacerTest extends TestCase
         );
     }
 
-    public function testReplaceLanguage()
+    public function testReplaceLanguage(): void
     {
         $replacer = new Replacer();
         $this->assertEquals('sulu.io/{country}/de', $replacer->replaceLanguage('sulu.io/{country}/{language}', 'de'));
     }
 
-    public function testReplaceLocalization()
+    public function testReplaceLocalization(): void
     {
         $replacer = new Replacer();
         $this->assertEquals('sulu.io/de_at', $replacer->replaceLocalization('sulu.io/{localization}', 'de_at'));
     }
 
-    public function testReplaceSegment()
+    public function testReplaceSegment(): void
     {
         $replacer = new Replacer();
         $this->assertEquals('sulu.io/winter', $replacer->replaceSegment('sulu.io/{segment}', 'winter'));
     }
 
-    public function testCleanup()
+    public function testCleanup(): void
     {
         $replacer = new Replacer();
         $this->assertEquals('sulu.io', $replacer->cleanup('sulu.io/{segment}/{language}/{country}'));
         $this->assertEquals('sulu.io/test', $replacer->cleanup('sulu.io/{localization}/test'));
     }
 
-    public function testAppendLocalizationReplacer()
+    public function testAppendLocalizationReplacer(): void
     {
         $replacer = new Replacer();
         $this->assertEquals(

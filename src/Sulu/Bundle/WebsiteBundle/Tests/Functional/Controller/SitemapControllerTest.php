@@ -47,7 +47,7 @@ class SitemapControllerTest extends WebsiteTestCase
         $em->flush();
     }
 
-    public function testIndexSingleLanguage()
+    public function testIndexSingleLanguage(): void
     {
         $crawler = $this->client->request('GET', 'http://sulu.lo/sitemap.xml');
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
@@ -60,7 +60,7 @@ class SitemapControllerTest extends WebsiteTestCase
         $this->assertEquals('http://sulu.lo/', $crawler->filterXPath('//x:urlset/x:url[1]/x:loc[1]')->text());
     }
 
-    public function testIndexMultipleLanguage()
+    public function testIndexMultipleLanguage(): void
     {
         $crawler = $this->client->request('GET', 'http://test.lo/sitemap.xml');
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
@@ -107,7 +107,7 @@ class SitemapControllerTest extends WebsiteTestCase
         $this->assertEquals('http://test.lo/en', $crawler->filterXPath('//x:urlset/x:url[2]/x:loc')->text());
     }
 
-    public function testIndexMultipleTlds()
+    public function testIndexMultipleTlds(): void
     {
         $crawler = $this->client->request('GET', 'http://sulu.com/sitemap.xml');
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
@@ -116,13 +116,13 @@ class SitemapControllerTest extends WebsiteTestCase
         $this->assertStringNotContainsString('sulu.at', $crawler->text());
     }
 
-    public function testProvider()
+    public function testProvider(): void
     {
         $this->client->request('GET', 'http://sulu.lo/sitemaps/pages.xml');
         $this->assertHttpStatusCode(301, $this->client->getResponse());
     }
 
-    public function testPaginated()
+    public function testPaginated(): void
     {
         $crawler = $this->client->request('GET', 'http://sulu.lo/sitemaps/pages-1.xml');
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
@@ -134,21 +134,21 @@ class SitemapControllerTest extends WebsiteTestCase
         $this->assertEquals('http://sulu.lo/', $crawler->filterXPath('//x:urlset/x:url[1]/x:loc[1]')->text());
     }
 
-    public function testPaginatedOverMax()
+    public function testPaginatedOverMax(): void
     {
         $crawler = $this->client->request('GET', 'http://sulu.lo/sitemaps/pages-2.xml');
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testNotExistingProvider()
+    public function testNotExistingProvider(): void
     {
         $crawler = $this->client->request('GET', 'http://sulu.lo/sitemaps/test-2.xml');
         $crawler->registerNamespace('x', 'http://www.sitemaps.org/schemas/sitemap/0.9');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testSitemapIndexFile()
+    public function testSitemapIndexFile(): void
     {
         $crawler = $this->client->request('GET', 'http://sulu.index/sitemap.xml');
         $this->assertHttpStatusCode(200, $this->client->getResponse());

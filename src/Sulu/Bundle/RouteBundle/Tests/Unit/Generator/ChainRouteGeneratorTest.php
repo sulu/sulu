@@ -73,7 +73,7 @@ class ChainRouteGeneratorTest extends TestCase
         );
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $this->routeGenerator->generate($this->entity, ['route_schema' => '/{title}'])->willReturn('/test');
 
@@ -83,7 +83,7 @@ class ChainRouteGeneratorTest extends TestCase
         $this->assertEquals(\get_class($this->entity), $result->getEntityClass());
     }
 
-    public function testGenerateWithPath()
+    public function testGenerateWithPath(): void
     {
         $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
 
@@ -93,7 +93,7 @@ class ChainRouteGeneratorTest extends TestCase
         $this->assertEquals(\get_class($this->entity), $result->getEntityClass());
     }
 
-    public function testGenerateInheritMapping()
+    public function testGenerateInheritMapping(): void
     {
         $entity = new TestRoutableProxy();
         $this->routeGenerator->generate($entity, ['route_schema' => '/{title}'])->willReturn('/test');
@@ -104,7 +104,7 @@ class ChainRouteGeneratorTest extends TestCase
         $this->assertEquals(TestRoutable::class, $result->getEntityClass());
     }
 
-    public function testGenerateInheritMappingWithPath()
+    public function testGenerateInheritMappingWithPath(): void
     {
         $entity = new TestRoutableProxy();
         $this->routeGenerator->generate(Argument::cetera())->shouldNotBeCalled();
@@ -115,7 +115,7 @@ class ChainRouteGeneratorTest extends TestCase
         $this->assertEquals(TestRoutable::class, $result->getEntityClass());
     }
 
-    public function testGenerateNoMapping()
+    public function testGenerateNoMapping(): void
     {
         $this->expectException(MissingClassMappingConfigurationException::class);
         $entity = $this->prophesize(RoutableInterface::class);
@@ -149,7 +149,7 @@ class TestRoutable implements RoutableInterface
         return $this->route;
     }
 
-    public function setRoute(RouteInterface $route)
+    public function setRoute(RouteInterface $route): void
     {
         $this->route = $route;
     }

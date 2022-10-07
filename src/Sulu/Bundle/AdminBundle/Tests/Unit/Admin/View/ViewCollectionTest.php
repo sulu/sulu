@@ -18,7 +18,7 @@ use Sulu\Bundle\AdminBundle\Exception\ViewNotFoundException;
 
 class ViewCollectionTest extends TestCase
 {
-    public function testGet()
+    public function testGet(): void
     {
         $viewBuilder = new ViewBuilder('sulu_test', '/test', 'test');
 
@@ -28,7 +28,7 @@ class ViewCollectionTest extends TestCase
         $this->assertEquals($viewBuilder, $viewCollection->get('sulu_test'));
     }
 
-    public function testHas()
+    public function testHas(): void
     {
         $viewBuilder = new ViewBuilder('sulu_test', '/test', 'test');
 
@@ -38,14 +38,14 @@ class ViewCollectionTest extends TestCase
         $this->assertTrue($viewCollection->has('sulu_test'));
     }
 
-    public function testHasNotExisting()
+    public function testHasNotExisting(): void
     {
         $viewCollection = new ViewCollection();
 
         $this->assertFalse($viewCollection->has('sulu_test'));
     }
 
-    public function testAll()
+    public function testAll(): void
     {
         $viewBuilder1 = new ViewBuilder('sulu_test_1', '/test', 'test');
         $viewBuilder2 = new ViewBuilder('sulu_test_2', '/test', 'test');
@@ -60,7 +60,7 @@ class ViewCollectionTest extends TestCase
         $this->assertContains($viewBuilder2, $views);
     }
 
-    public function testGetNotExistingView()
+    public function testGetNotExistingView(): void
     {
         $this->expectException(ViewNotFoundException::class);
 

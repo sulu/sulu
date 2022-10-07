@@ -15,7 +15,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class TeaserControllerTest extends SuluTestCase
 {
-    public function testCgetActionEmpty()
+    public function testCgetActionEmpty(): void
     {
         $client = $this->createAuthenticatedClient();
 

@@ -57,7 +57,7 @@ class FormXmlLoaderTest extends TestCase
         $this->loader = new FormXmlLoader($propertiesXmlParser, $schemaXmlParser, $locales, $formMetadataMapper);
     }
 
-    public function testLoadForm()
+    public function testLoadForm(): void
     {
         /** @var LocalizedFormMetadataCollection */
         $formMetadataCollection = $this->loader->load($this->getFormDirectory() . 'form.xml');
@@ -99,7 +99,7 @@ class FormXmlLoaderTest extends TestCase
         $this->assertCount(3, $schemaMetadata->toJsonSchema()['required']);
     }
 
-    public function testLoadFormWithLocalization()
+    public function testLoadFormWithLocalization(): void
     {
         $this->translator->trans('mr', [], 'admin', 'en')->willReturn('en_mr');
         $this->translator->trans('mr', [], 'admin', 'de')->willReturn('de_mr');
@@ -167,7 +167,7 @@ class FormXmlLoaderTest extends TestCase
         $this->assertCount(3, $schemaMetadataDe->toJsonSchema()['required']);
     }
 
-    public function testLoadFormWithEvaluations()
+    public function testLoadFormWithEvaluations(): void
     {
         /**
          * @var LocalizedFormMetadataCollection
@@ -227,7 +227,7 @@ class FormXmlLoaderTest extends TestCase
         );
     }
 
-    public function testLoadFormWithSchema()
+    public function testLoadFormWithSchema(): void
     {
         /**
          * @var LocalizedFormMetadataCollection
@@ -289,7 +289,7 @@ class FormXmlLoaderTest extends TestCase
         );
     }
 
-    public function testLoadFormSchemaWithBlocks()
+    public function testLoadFormSchemaWithBlocks(): void
     {
         /**
          * @var LocalizedFormMetadataCollection
@@ -347,7 +347,7 @@ class FormXmlLoaderTest extends TestCase
         );
     }
 
-    public function testLoadFormMetadataWithNestedBlocks()
+    public function testLoadFormMetadataWithNestedBlocks(): void
     {
         /**
          * @var LocalizedFormMetadataCollection
@@ -490,7 +490,7 @@ class FormXmlLoaderTest extends TestCase
         $this->assertEquals('headline2', $type112Items['headline2']->getName());
     }
 
-    public function testLoadFormWithoutLabel()
+    public function testLoadFormWithoutLabel(): void
     {
         /**
          * @var LocalizedFormMetadataCollection
@@ -502,7 +502,7 @@ class FormXmlLoaderTest extends TestCase
         $this->assertInstanceOf(FormMetadata::class, $formMetadata);
     }
 
-    public function testLoadFormWithExpressionParam()
+    public function testLoadFormWithExpressionParam(): void
     {
         /**
          * LocalizedFormMetadataCollection.
@@ -522,7 +522,7 @@ class FormXmlLoaderTest extends TestCase
         );
     }
 
-    public function testLoadFormWithSizedSections()
+    public function testLoadFormWithSizedSections(): void
     {
         /**
          * @var LocalizedFormMetadataCollection
@@ -541,7 +541,7 @@ class FormXmlLoaderTest extends TestCase
         $this->assertCount(1, $formMetadata->getItems()['name']->getItems());
     }
 
-    public function testLoadFormInvalidRootTag()
+    public function testLoadFormInvalidRootTag(): void
     {
         $this->expectException(InvalidRootTagException::class);
         $this->expectExceptionMessageMatches('/"form"/');
@@ -551,7 +551,7 @@ class FormXmlLoaderTest extends TestCase
         );
     }
 
-    public function testLoadFormInvalid()
+    public function testLoadFormInvalid(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 

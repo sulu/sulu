@@ -52,25 +52,25 @@ class SitemapProviderPoolTest extends TestCase
         ]);
     }
 
-    public function testGetProvider()
+    public function testGetProvider(): void
     {
         $this->assertEquals($this->pagesSitemapProvider->reveal(), $this->pool->getProvider('pages'));
     }
 
-    public function testGetProviderNotExists()
+    public function testGetProviderNotExists(): void
     {
         $this->expectException(SitemapProviderNotFoundException::class);
 
         $this->pool->getProvider('test');
     }
 
-    public function testHasProvider()
+    public function testHasProvider(): void
     {
         $this->assertTrue($this->pool->hasProvider('pages'));
         $this->assertFalse($this->pool->hasProvider('test'));
     }
 
-    public function testGetIndex()
+    public function testGetIndex(): void
     {
         $lastMod = new \DateTime();
         $this->pagesSitemapProvider->createSitemap('http', 'sulu.io')->willReturn(new Sitemap('pages', 1));

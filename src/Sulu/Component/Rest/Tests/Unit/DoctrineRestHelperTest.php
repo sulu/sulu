@@ -35,7 +35,7 @@ class DoctrineRestHelperTest extends TestCase
         $this->restHelper = new DoctrineRestHelper($this->listRestHelper);
     }
 
-    public function testProcessSubEntities()
+    public function testProcessSubEntities(): void
     {
         $entities = $this->getMockBuilder('Doctrine\Common\Collections\Collection')
             ->getMockForAbstractClass();

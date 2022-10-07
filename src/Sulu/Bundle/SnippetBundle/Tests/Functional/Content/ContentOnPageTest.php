@@ -49,7 +49,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
         $this->loadFixtures();
     }
 
-    public function loadFixtures()
+    public function loadFixtures(): void
     {
         $this->snippet1 = $this->documentManager->create('snippet');
         $this->snippet1->setStructureType('hotel');
@@ -101,7 +101,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
     /**
      * @dataProvider provideSaveSnippetPage
      */
-    public function testSaveLoadSnippetPage($webspaceKey, $templateKey, $locale, $data)
+    public function testSaveLoadSnippetPage($webspaceKey, $templateKey, $locale, $data): void
     {
         foreach ($data['hotels'] as &$varName) {
             $varName = $this->{$varName}->getUUid();

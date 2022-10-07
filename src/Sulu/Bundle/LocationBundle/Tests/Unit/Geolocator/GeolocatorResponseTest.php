@@ -24,7 +24,7 @@ class GeolocatorResponseTest extends TestCase
         $this->location = $this->getMockBuilder('Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation')->getMock();
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $expected = [
             'foo' => 'bar',

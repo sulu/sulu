@@ -25,7 +25,7 @@ class BuilderTest extends TestCase
     /**
      * @dataProvider provideBoolean
      */
-    public function testTags($enable)
+    public function testTags($enable): void
     {
         $builder = Builder::create();
 
@@ -45,7 +45,7 @@ class BuilderTest extends TestCase
     /**
      * @dataProvider provideBoolean
      */
-    public function testCategories($enable)
+    public function testCategories($enable): void
     {
         $builder = Builder::create();
 
@@ -65,7 +65,7 @@ class BuilderTest extends TestCase
     /**
      * @dataProvider provideBoolean
      */
-    public function testLimit($enable)
+    public function testLimit($enable): void
     {
         $builder = Builder::create();
 
@@ -85,7 +85,7 @@ class BuilderTest extends TestCase
     /**
      * @dataProvider provideBoolean
      */
-    public function testPresentAs($enable)
+    public function testPresentAs($enable): void
     {
         $builder = Builder::create();
 
@@ -105,7 +105,7 @@ class BuilderTest extends TestCase
     /**
      * @dataProvider provideBoolean
      */
-    public function testPagination($enable)
+    public function testPagination($enable): void
     {
         $builder = Builder::create();
 
@@ -122,7 +122,7 @@ class BuilderTest extends TestCase
         $this->assertFalse($configuration->hasPresentAs());
     }
 
-    public function testSorting()
+    public function testSorting(): void
     {
         $expectedSorting = [
             new PropertyParameter('entity.id', 'Identification'),
@@ -152,7 +152,7 @@ class BuilderTest extends TestCase
         $this->assertEquals($expectedSorting, $configuration->getSorting());
     }
 
-    public function testDatasource()
+    public function testDatasource(): void
     {
         $builder = Builder::create();
 
@@ -173,7 +173,7 @@ class BuilderTest extends TestCase
         $this->assertEquals('column_list', $configuration->getDatasourceAdapter());
     }
 
-    public function testView()
+    public function testView(): void
     {
         $builder = Builder::create();
 

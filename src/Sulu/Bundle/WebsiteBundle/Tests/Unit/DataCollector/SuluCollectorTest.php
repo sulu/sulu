@@ -55,14 +55,14 @@ class SuluCollectorTest extends TestCase
         $this->suluCollector = new SuluCollector();
     }
 
-    public function testCollectorNoComplexObjects()
+    public function testCollectorNoComplexObjects(): void
     {
         $this->attributes->has('_sulu')->willReturn(false)->shouldBeCalled();
         $this->attributes->get(Argument::any())->shouldNotBeCalled();
         $this->suluCollector->collect($this->request->reveal(), $this->response->reveal());
     }
 
-    public function testCollector()
+    public function testCollector(): void
     {
         $structure = $this->prophesize(PageBridge::class);
 
