@@ -1,5 +1,16 @@
 # Upgrade
 
+## 2.5.2
+
+### Add indexes to route table
+
+Improve performance of the `Route` table with additional indexes for the database:
+
+```sql
+CREATE INDEX idx_resource ON ro_routes (entity_id, entity_class);
+CREATE INDEX idx_history ON ro_routes (history);
+```
+
 ## 2.5.0
 
 ### Updated JavaScript dependencies
@@ -329,6 +340,17 @@ framework:
 
 It should also be considered to remove the **SwiftMailer** and **SwiftMailerBundle**
 from your application and replace it with [**Symfony Mailer**](https://symfony.com/doc/6.1/mailer.html).
+
+## 2.4.5
+
+### Add indexes to route table
+
+Improve performance of the `Route` table with additional indexes for the database:
+
+```sql
+CREATE INDEX idx_resource ON ro_routes (entity_id, entity_class);
+CREATE INDEX idx_history ON ro_routes (history);
+```
 
 ## 2.4.4
 
