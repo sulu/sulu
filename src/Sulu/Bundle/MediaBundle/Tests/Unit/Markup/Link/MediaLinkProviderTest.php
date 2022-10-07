@@ -47,12 +47,12 @@ class MediaLinkProviderTest extends TestCase
         );
     }
 
-    public function testGetConfiguration()
+    public function testGetConfiguration(): void
     {
         $this->assertNull($this->mediaLinkProvider->getConfiguration());
     }
 
-    public function testPreload()
+    public function testPreload(): void
     {
         $this->mediaRepository->findMediaDisplayInfo([3, 6], 'de')->willReturn([
             ['id' => 3, 'title' => 'Test1', 'defaultTitle' => 'defaultTitle1', 'name' => 'test1.jpg', 'version' => 3],

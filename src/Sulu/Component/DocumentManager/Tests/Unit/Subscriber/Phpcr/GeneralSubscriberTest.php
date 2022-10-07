@@ -114,7 +114,7 @@ class GeneralSubscriberTest extends TestCase
     /**
      * It should move a document.
      */
-    public function testHandleMove()
+    public function testHandleMove(): void
     {
         $this->moveEvent->getDocument()->willReturn($this->document);
         $this->moveEvent->getDestId()->willReturn(self::DST_PATH);
@@ -131,7 +131,7 @@ class GeneralSubscriberTest extends TestCase
     /**
      * It should copy a document.
      */
-    public function testHandleCopy()
+    public function testHandleCopy(): void
     {
         $this->copyEvent->getDocument()->willReturn($this->document);
         $this->copyEvent->getDestId()->willReturn(self::DST_PATH);
@@ -150,7 +150,7 @@ class GeneralSubscriberTest extends TestCase
     /**
      * It should clear/reset the PHPCR session.
      */
-    public function testHandleClear()
+    public function testHandleClear(): void
     {
         $this->nodeManager->clear()->shouldBeCalled();
         $this->generalSubscriber->handleClear($this->clearEvent->reveal());
@@ -159,7 +159,7 @@ class GeneralSubscriberTest extends TestCase
     /**
      * It should save the PHPCR session.
      */
-    public function testHandleFlush()
+    public function testHandleFlush(): void
     {
         $this->nodeManager->save()->shouldBeCalled();
         $this->generalSubscriber->handleFlush($this->flushEvent->reveal());

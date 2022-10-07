@@ -189,7 +189,7 @@ class BlockContentTypeTest extends TestCase
         $this->blockProperty->addType($type2);
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $this->prepareSingleBlockProperty();
 
@@ -241,7 +241,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
 
-    public function testReadWithoutSettings()
+    public function testReadWithoutSettings(): void
     {
         $this->prepareSingleBlockProperty();
 
@@ -309,7 +309,7 @@ class BlockContentTypeTest extends TestCase
         );
     }
 
-    public function testReadWithEmptySettings()
+    public function testReadWithEmptySettings(): void
     {
         $this->prepareSingleBlockProperty();
 
@@ -379,7 +379,7 @@ class BlockContentTypeTest extends TestCase
         );
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $this->prepareSingleBlockProperty();
 
@@ -440,7 +440,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
 
-    public function testReadMultiple()
+    public function testReadMultiple(): void
     {
         $this->prepareMultipleBlockProperty();
 
@@ -518,7 +518,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
 
-    public function testWriteMultiple()
+    public function testWriteMultiple(): void
     {
         $this->prepareMultipleBlockProperty();
 
@@ -605,7 +605,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
 
-    public function testReadMultipleDifferentTypes()
+    public function testReadMultipleDifferentTypes(): void
     {
         $this->prepareMultipleBlockProperty();
 
@@ -668,7 +668,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
 
-    public function testWriteMultipleDifferentTypes()
+    public function testWriteMultipleDifferentTypes(): void
     {
         $this->prepareMultipleBlockProperty();
 
@@ -740,7 +740,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
 
-    public function testGetContentData()
+    public function testGetContentData(): void
     {
         $this->prepareSingleBlockProperty();
 
@@ -775,7 +775,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals($data, $result);
     }
 
-    public function testGetContentDataWithSkips()
+    public function testGetContentDataWithSkips(): void
     {
         $this->prepareSingleBlockProperty();
 
@@ -826,7 +826,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals([['type' => 'type2', 'name' => 'Test-Name-3', 'settings' => []]], $result);
     }
 
-    public function testGetViewData()
+    public function testGetViewData(): void
     {
         $this->prepareSingleBlockProperty();
 
@@ -875,7 +875,7 @@ class BlockContentTypeTest extends TestCase
         );
     }
 
-    public function testGetViewDataWithSkips()
+    public function testGetViewDataWithSkips(): void
     {
         $this->prepareSingleBlockProperty();
 

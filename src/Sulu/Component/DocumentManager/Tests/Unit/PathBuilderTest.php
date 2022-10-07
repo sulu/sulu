@@ -32,7 +32,7 @@ class PathBuilderTest extends TestCase
      * It should build a path
      * Using a combination of tokens and literal values.
      */
-    public function testBuild()
+    public function testBuild(): void
     {
         $result = $this->pathBuilder->build(['%one%', '%two%', 'four']);
         $this->assertEquals('/one/two/four', $result);
@@ -41,7 +41,7 @@ class PathBuilderTest extends TestCase
     /**
      * It should build "/" for an empty array.
      */
-    public function testBuildEmpty()
+    public function testBuildEmpty(): void
     {
         $this->assertEquals('/', $this->pathBuilder->build([]));
     }
@@ -49,7 +49,7 @@ class PathBuilderTest extends TestCase
     /**
      * It should build "/" for an array with "/".
      */
-    public function testBuildSingleSlash()
+    public function testBuildSingleSlash(): void
     {
         $this->assertEquals('/', $this->pathBuilder->build(['/']));
     }
@@ -57,7 +57,7 @@ class PathBuilderTest extends TestCase
     /**
      * It should replace "//" with "/".
      */
-    public function testBuildNoDoubleSlash()
+    public function testBuildNoDoubleSlash(): void
     {
         $this->assertEquals('/hello/world', $this->pathBuilder->build(['hello', '', '', 'world']));
     }
@@ -65,7 +65,7 @@ class PathBuilderTest extends TestCase
     /**
      * It should allow sub paths.
      */
-    public function testBuildSubPath()
+    public function testBuildSubPath(): void
     {
         $this->assertEquals('/hello/world/goodbye/world/k', $this->pathBuilder->build(['hello', 'world/goodbye/world', 'k']));
     }

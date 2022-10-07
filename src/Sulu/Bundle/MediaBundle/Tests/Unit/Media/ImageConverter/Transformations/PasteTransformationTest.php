@@ -56,7 +56,7 @@ class PasteTransformationTest extends SuluTestCase
         parent::setUp();
     }
 
-    public function testPaste()
+    public function testPaste(): void
     {
         $image = $this->prophesize(ImageInterface::class);
         $image->getSize()->willReturn(new Box(700, 500));
@@ -72,7 +72,7 @@ class PasteTransformationTest extends SuluTestCase
         $this->assertInstanceOf(ImageInterface::class, $returnImage);
     }
 
-    public function testNoPaste()
+    public function testNoPaste(): void
     {
         $image = $this->prophesize(ImageInterface::class);
 

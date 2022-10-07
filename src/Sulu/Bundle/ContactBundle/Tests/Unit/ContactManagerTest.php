@@ -115,7 +115,7 @@ class ContactManagerTest extends TestCase
         );
     }
 
-    public function testAddTag()
+    public function testAddTag(): void
     {
         $contact = $this->prophesize(Contact::class);
         $tag = $this->prophesize(TagInterface::class);

@@ -15,7 +15,7 @@ use Sulu\Bundle\WebsiteBundle\Tests\Functional\BaseFunctional;
 
 class AnalyticsRepositoryTest extends BaseFunctional
 {
-    public function testFindByWebspaceKey()
+    public function testFindByWebspaceKey(): void
     {
         $this->purgeDatabase();
         $this->create(
@@ -47,7 +47,7 @@ class AnalyticsRepositoryTest extends BaseFunctional
         $this->assertEmpty($result);
     }
 
-    public function testFindById()
+    public function testFindById(): void
     {
         $entity = $this->create(
             'sulu_io',
@@ -65,7 +65,7 @@ class AnalyticsRepositoryTest extends BaseFunctional
         $this->assertEquals('test-1', $result->getTitle());
     }
 
-    public function testFindByUrl()
+    public function testFindByUrl(): void
     {
         $this->purgeDatabase();
         $this->create(
@@ -106,7 +106,7 @@ class AnalyticsRepositoryTest extends BaseFunctional
         $this->assertEquals('test-2', $result[0]->getTitle());
     }
 
-    public function testFindByUrlDifferentWebspaces()
+    public function testFindByUrlDifferentWebspaces(): void
     {
         $this->purgeDatabase();
         $this->create(

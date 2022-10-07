@@ -125,7 +125,7 @@ class DoctrineCaseFieldDescriptorTest extends TestCase
     /**
      * @dataProvider dataProvider
      */
-    public function testComplete($name, $case1, $case2, $select, $joins, $search)
+    public function testComplete($name, $case1, $case2, $select, $joins, $search): void
     {
         $fieldDescriptor = new DoctrineCaseFieldDescriptor($name, $case1, $case2);
 

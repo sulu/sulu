@@ -31,7 +31,7 @@ class CropperTest extends SuluTestCase
         $this->cropper = new Cropper();
     }
 
-    public function testCrop()
+    public function testCrop(): void
     {
         $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
@@ -43,7 +43,7 @@ class CropperTest extends SuluTestCase
         $this->assertEquals(100, $image->getSize()->getHeight());
     }
 
-    public function testValid()
+    public function testValid(): void
     {
         $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
@@ -60,7 +60,7 @@ class CropperTest extends SuluTestCase
         $this->assertTrue($valid);
     }
 
-    public function testValidWithOneDimension()
+    public function testValidWithOneDimension(): void
     {
         $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
@@ -79,7 +79,7 @@ class CropperTest extends SuluTestCase
         $this->assertTrue($valid);
     }
 
-    public function testValidSameSize()
+    public function testValidSameSize(): void
     {
         $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
@@ -96,7 +96,7 @@ class CropperTest extends SuluTestCase
         $this->assertTrue($valid);
     }
 
-    public function testValidTooSmallButMaxWidthForImage()
+    public function testValidTooSmallButMaxWidthForImage(): void
     {
         $imagine = $this->createImagine();
         $imageBox = new Box(60, 100);
@@ -113,7 +113,7 @@ class CropperTest extends SuluTestCase
         $this->assertTrue($valid);
     }
 
-    public function testNotValidTooSmall()
+    public function testNotValidTooSmall(): void
     {
         $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
@@ -130,7 +130,7 @@ class CropperTest extends SuluTestCase
         $this->assertFalse($valid);
     }
 
-    public function testNotValidExceedX()
+    public function testNotValidExceedX(): void
     {
         $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);
@@ -147,7 +147,7 @@ class CropperTest extends SuluTestCase
         $this->assertFalse($valid);
     }
 
-    public function testNotValidExceedY()
+    public function testNotValidExceedY(): void
     {
         $imagine = $this->createImagine();
         $imageBox = new Box(1000, 500);

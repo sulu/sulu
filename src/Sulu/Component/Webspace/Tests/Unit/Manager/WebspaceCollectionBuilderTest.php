@@ -54,7 +54,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->logger = $this->getMockBuilder('\Psr\Log\LoggerInterface')->getMock();
     }
 
-    public function testBuild()
+    public function testBuild(): void
     {
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
@@ -160,7 +160,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         );
     }
 
-    public function testBuildWithMultipleLocalizationUrls()
+    public function testBuildWithMultipleLocalizationUrls(): void
     {
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
@@ -182,7 +182,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertEquals('en', $portalInformations['sulu.us']->getLocalization()->getLocale());
     }
 
-    public function testBuildWithMainUrl()
+    public function testBuildWithMainUrl(): void
     {
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
@@ -209,7 +209,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertEquals('sulu.at', $main->getMainUrl()->getUrl());
     }
 
-    public function testBuildWithCustomUrl()
+    public function testBuildWithCustomUrl(): void
     {
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
@@ -237,7 +237,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertEquals('*.sulu.lo', $prod->getCustomUrls()[1]->getUrl());
     }
 
-    public function testLanguageSpecificPartial()
+    public function testLanguageSpecificPartial(): void
     {
         $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
             $this->loader,
@@ -263,7 +263,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertSame($portalInformations['usa.sulu.io']->getPriority(), 9);
     }
 
-    public function testThrowForMissingDefaultTemplate()
+    public function testThrowForMissingDefaultTemplate(): void
     {
         $this->expectException(InvalidTemplateException::class);
 
@@ -277,7 +277,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $webspaceCollection = $webspaceCollectionBuilder->build();
     }
 
-    public function testThrowForMissingExcludedTemplate()
+    public function testThrowForMissingExcludedTemplate(): void
     {
         $this->expectException(InvalidTemplateException::class);
 

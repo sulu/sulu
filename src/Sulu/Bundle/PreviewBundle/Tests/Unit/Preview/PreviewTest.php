@@ -86,7 +86,7 @@ class PreviewTest extends TestCase
         $this->preview = new Preview($objectProviderRegistry, $this->cache->reveal(), $this->renderer->reveal());
     }
 
-    public function testStart()
+    public function testStart(): void
     {
         $data = ['title' => 'Sulu'];
         $dataJson = \json_encode($data);
@@ -120,7 +120,7 @@ class PreviewTest extends TestCase
         )->shouldBeCalled();
     }
 
-    public function testStartWithoutData()
+    public function testStartWithoutData(): void
     {
         $data = ['title' => 'Sulu is awesome'];
         $dataJson = \json_encode($data);
@@ -154,14 +154,14 @@ class PreviewTest extends TestCase
         )->shouldBeCalled();
     }
 
-    public function testStartWithoutProvider()
+    public function testStartWithoutProvider(): void
     {
         $this->expectException(ProviderNotFoundException::class);
 
         $this->preview->start('xxx', 1, 1, ['locale' => $this->locale]);
     }
 
-    public function testStop()
+    public function testStop(): void
     {
         $this->cache->contains('123-123-123')->willReturn(true);
         $this->cache->delete('123-123-123')->shouldBeCalled();
@@ -169,7 +169,7 @@ class PreviewTest extends TestCase
         $this->preview->stop('123-123-123');
     }
 
-    public function testStopNotExists()
+    public function testStopNotExists(): void
     {
         $this->cache->contains('123-123-123')->willReturn(false);
         $this->cache->delete(Argument::any())->shouldNotBeCalled();
@@ -179,21 +179,21 @@ class PreviewTest extends TestCase
         // nothing should happen
     }
 
-    public function testExists()
+    public function testExists(): void
     {
         $this->cache->contains('123-123-123')->willReturn(true);
 
         $this->assertTrue($this->preview->exists('123-123-123'));
     }
 
-    public function testExistsNot()
+    public function testExistsNot(): void
     {
         $this->cache->contains('123-123-123')->willReturn(false);
 
         $this->assertFalse($this->preview->exists('123-123-123'));
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $data = ['title' => 'Sulu'];
         $dataJson = \json_encode($data);
@@ -254,7 +254,7 @@ class PreviewTest extends TestCase
         );
     }
 
-    public function testUpdateNoData()
+    public function testUpdateNoData(): void
     {
         $data = ['title' => 'Sulu'];
         $dataJson = \json_encode($data);
@@ -297,7 +297,7 @@ class PreviewTest extends TestCase
         );
     }
 
-    public function testUpdateTokenNotExists()
+    public function testUpdateTokenNotExists(): void
     {
         $this->expectException(TokenNotFoundException::class);
 
@@ -313,7 +313,7 @@ class PreviewTest extends TestCase
         $this->preview->update($token, ['title' => 'SULU'], ['webspaceKey' => $this->webspaceKey]);
     }
 
-    public function testUpdateWithOptions()
+    public function testUpdateWithOptions(): void
     {
         $data = ['title' => 'Sulu'];
         $dataJson = \json_encode($data);
@@ -366,7 +366,7 @@ class PreviewTest extends TestCase
         );
     }
 
-    public function testUpdateContext()
+    public function testUpdateContext(): void
     {
         $data = ['title' => 'Sulu', 'template' => 'default'];
         $dataJson = \json_encode($data);
@@ -442,7 +442,7 @@ class PreviewTest extends TestCase
         );
     }
 
-    public function testUpdateContextNoContentReplacer()
+    public function testUpdateContextNoContentReplacer(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('The "{% block content %}" could not be found in the twig template');
@@ -486,7 +486,7 @@ class PreviewTest extends TestCase
         );
     }
 
-    public function testUpdateContextNoContext()
+    public function testUpdateContextNoContext(): void
     {
         $data = ['title' => 'Sulu', 'template' => 'default'];
         $dataJson = \json_encode($data);
@@ -535,7 +535,7 @@ class PreviewTest extends TestCase
         );
     }
 
-    public function testUpdateContextWithOptions()
+    public function testUpdateContextWithOptions(): void
     {
         $data = ['title' => 'Sulu', 'template' => 'default'];
         $dataJson = \json_encode($data);
@@ -611,7 +611,7 @@ class PreviewTest extends TestCase
         );
     }
 
-    public function testRender()
+    public function testRender(): void
     {
         $data = ['title' => 'Sulu'];
         $dataJson = \json_encode($data);
@@ -675,7 +675,7 @@ class PreviewTest extends TestCase
         );
     }
 
-    public function testRenderWithOptions()
+    public function testRenderWithOptions(): void
     {
         $data = ['title' => 'Sulu'];
         $dataJson = \json_encode($data);

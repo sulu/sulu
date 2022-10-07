@@ -49,7 +49,7 @@ class PermissionListenerTest extends TestCase
         );
     }
 
-    public function testOnPermissionUpdate()
+    public function testOnPermissionUpdate(): void
     {
         $document = new \stdClass();
         $event = new PermissionUpdateEvent(SecurityBehavior::class, '1', null);
@@ -60,7 +60,7 @@ class PermissionListenerTest extends TestCase
         $this->permissionListener->onPermissionUpdate($event);
     }
 
-    public function testOnPermissionUpdateNotSecured()
+    public function testOnPermissionUpdateNotSecured(): void
     {
         $event = new PermissionUpdateEvent(\stdClass::class, '1', null);
 

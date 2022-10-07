@@ -63,7 +63,7 @@ class RequestDefaultLocaleProviderTest extends TestCase
         );
     }
 
-    public function testGetDefaultLocale()
+    public function testGetDefaultLocale(): void
     {
         $this->portal->getLocalizations()->willReturn([
             new Localization('de', 'de'),
@@ -78,7 +78,7 @@ class RequestDefaultLocaleProviderTest extends TestCase
         $this->assertEquals('en', $defaultLocale->getLocale(Localization::ISO6391));
     }
 
-    public function testGetDefaultLocaleWithoutRequest()
+    public function testGetDefaultLocaleWithoutRequest(): void
     {
         $this->requestStack->getCurrentRequest()->willReturn(null);
 

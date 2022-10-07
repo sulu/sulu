@@ -80,7 +80,7 @@ class SnippetImportTest extends SuluTestCase
      * - get documents
      * - test document data.
      */
-    public function testImport12Xliff()
+    public function testImport12Xliff(): void
     {
         // run language import
         $importData = [
@@ -129,7 +129,7 @@ class SnippetImportTest extends SuluTestCase
     /**
      * Removes the created export.xliff file.
      */
-    private function removeImportFile()
+    private function removeImportFile(): void
     {
         try {
             $fs = new Filesystem();
@@ -143,7 +143,7 @@ class SnippetImportTest extends SuluTestCase
     /**
      * Creates the export.xliff file and replace the placeholder with the current uuid.
      */
-    private function prepareImportData()
+    private function prepareImportData(): void
     {
         $fs = new Filesystem();
 
@@ -168,7 +168,7 @@ class SnippetImportTest extends SuluTestCase
     /**
      * Create the test-pages.
      */
-    private function prepareData()
+    private function prepareData(): void
     {
         $this->snippets[0] = $this->documentManager->create('snippet');
         $this->snippets[0]->setStructureType('hotel');

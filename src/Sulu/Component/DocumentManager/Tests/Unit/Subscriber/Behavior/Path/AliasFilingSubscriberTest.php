@@ -115,7 +115,7 @@ class AliasFilingSubscriberTest extends TestCase
     /**
      * It should return early if the document is not implementing the behavior.
      */
-    public function testPersistNotImplementing()
+    public function testPersistNotImplementing(): void
     {
         $this->persistEvent->getDocument()->willReturn(new \stdClass())->shouldBeCalled();
         $this->subscriber->handlePersist($this->persistEvent->reveal());
@@ -124,7 +124,7 @@ class AliasFilingSubscriberTest extends TestCase
     /**
      * It should set the parent document.
      */
-    public function testSetParentDocument()
+    public function testSetParentDocument(): void
     {
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->persistEvent->hasParentNode()->willReturn(true);

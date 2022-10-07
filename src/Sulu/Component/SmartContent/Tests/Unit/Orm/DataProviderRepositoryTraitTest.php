@@ -61,7 +61,7 @@ class DataProviderRepositoryTraitTest extends TestCase
         $this->dataProviderRepositoryTrait = $this->getMockForTrait(DataProviderRepositoryTrait::class);
     }
 
-    public function testFindByFiltersIds()
+    public function testFindByFiltersIds(): void
     {
         $findByFiltersIdsReflection = new \ReflectionMethod(
             \get_class($this->dataProviderRepositoryTrait),
@@ -88,7 +88,7 @@ class DataProviderRepositoryTraitTest extends TestCase
         $queryBuilder->distinct()->shouldBeCalled();
     }
 
-    public function testFindByFiltersIdsWithUser()
+    public function testFindByFiltersIdsWithUser(): void
     {
         $user = $this->prophesize(UserInterface::class);
         $accessControlQueryEnhancer = $this->prophesize(AccessControlQueryEnhancer::class);
@@ -159,7 +159,7 @@ class DataProviderRepositoryTraitTest extends TestCase
             ->shouldBeCalled();
     }
 
-    public function testFindByFiltersIdsWithDatasourceWithoutIncludeSubFolders()
+    public function testFindByFiltersIdsWithDatasourceWithoutIncludeSubFolders(): void
     {
         $findByFiltersIdsReflection = new \ReflectionMethod(
             \get_class($this->dataProviderRepositoryTrait),
@@ -186,7 +186,7 @@ class DataProviderRepositoryTraitTest extends TestCase
         $queryBuilder->distinct()->shouldBeCalled();
     }
 
-    public function testFindByFiltersWithSorting()
+    public function testFindByFiltersWithSorting(): void
     {
         $query = $this->prophesize(Query::class);
         $query->setParameter(Argument::cetera())->willReturn($query);
@@ -214,7 +214,7 @@ class DataProviderRepositoryTraitTest extends TestCase
         $queryBuilder->orderBy('entity.test', 'asc')->shouldBeCalled();
     }
 
-    public function testFindByFiltersWithoutSorting()
+    public function testFindByFiltersWithoutSorting(): void
     {
         $query = $this->prophesize(Query::class);
         $query->setParameter(Argument::cetera())->willReturn($query);

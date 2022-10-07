@@ -47,7 +47,7 @@ class DoctrineOrExpressionTest extends TestCase
         $this->queryBuilder->expects($this->any())->method('setParameter')->willReturnSelf();
     }
 
-    public function testGetStatement()
+    public function testGetStatement(): void
     {
         $fieldDescriptor1 = new DoctrineFieldDescriptor('name1', 'name1', self::$entityName);
         $value1 = 'test1';

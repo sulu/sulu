@@ -62,14 +62,14 @@ class AccountDataProviderTest extends TestCase
         );
     }
 
-    public function testGetConfiguration()
+    public function testGetConfiguration(): void
     {
         $configuration = $this->accountDataProvider->getConfiguration();
 
         $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
     }
 
-    public function testGetDefaultParameter()
+    public function testGetDefaultParameter(): void
     {
         $parameter = $this->accountDataProvider->getDefaultPropertyParameter();
 
@@ -100,7 +100,7 @@ class AccountDataProviderTest extends TestCase
     /**
      * @dataProvider dataItemsDataProvider
      */
-    public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items)
+    public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items): void
     {
         $this->dataProviderRepository->findByFilters(
             $filters,
@@ -160,7 +160,7 @@ class AccountDataProviderTest extends TestCase
         $repositoryResult,
         $hasNextPage,
         $items
-    ) {
+    ): void {
         $serializeCallback = function(Account $account) {
             return $this->serialize($account);
         };
@@ -202,7 +202,7 @@ class AccountDataProviderTest extends TestCase
         $this->assertEquals($items, $result->getItems());
     }
 
-    public function testResolveDataSource()
+    public function testResolveDataSource(): void
     {
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);

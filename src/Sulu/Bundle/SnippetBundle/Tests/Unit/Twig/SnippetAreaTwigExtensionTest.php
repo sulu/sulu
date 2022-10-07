@@ -52,7 +52,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
      */
     private $snippetResolver;
 
-    public function testLoadByArea()
+    public function testLoadByArea(): void
     {
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -82,7 +82,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLoadByAreaWrongType()
+    public function testLoadByAreaWrongType(): void
     {
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -112,7 +112,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $this->assertEquals(null, $twigExtension->loadByArea('test'));
     }
 
-    public function testLoadByAreaNotExist()
+    public function testLoadByAreaNotExist(): void
     {
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -139,7 +139,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLoadByAreaOtherLocale()
+    public function testLoadByAreaOtherLocale(): void
     {
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -169,7 +169,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLoadByAreaOtherWebspace()
+    public function testLoadByAreaOtherWebspace(): void
     {
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);

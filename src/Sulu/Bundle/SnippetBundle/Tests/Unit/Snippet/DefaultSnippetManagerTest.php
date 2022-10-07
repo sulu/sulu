@@ -89,7 +89,7 @@ class DefaultSnippetManagerTest extends TestCase
         $uuid,
         $exists = true,
         $sameType = true
-    ) {
+    ): void {
         $settingsManager = $this->prophesize(SettingsManagerInterface::class);
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
         $webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
@@ -137,7 +137,7 @@ class DefaultSnippetManagerTest extends TestCase
         $this->assertEquals($result, $document);
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $settingsManager = $this->prophesize(SettingsManagerInterface::class);
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
@@ -175,7 +175,7 @@ class DefaultSnippetManagerTest extends TestCase
     /**
      * @dataProvider loadDataProvider
      */
-    public function testLoad($webspaceKey, $locale, $type, $uuid, $exists = true, $sameType = true)
+    public function testLoad($webspaceKey, $locale, $type, $uuid, $exists = true, $sameType = true): void
     {
         $settingsManager = $this->prophesize(SettingsManagerInterface::class);
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
@@ -221,7 +221,7 @@ class DefaultSnippetManagerTest extends TestCase
         $this->assertEquals($result, $document);
     }
 
-    public function testLoadIdentifier()
+    public function testLoadIdentifier(): void
     {
         $settingsManager = $this->prophesize(SettingsManagerInterface::class);
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
@@ -246,7 +246,7 @@ class DefaultSnippetManagerTest extends TestCase
         $this->assertEquals('123-123-123', $uuid);
     }
 
-    public function testIsDefault()
+    public function testIsDefault(): void
     {
         $settingsManager = $this->prophesize(SettingsManagerInterface::class);
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
@@ -280,7 +280,7 @@ class DefaultSnippetManagerTest extends TestCase
         $this->assertFalse($manager->isDefault('321-123-123'));
     }
 
-    public function testLoadType()
+    public function testLoadType(): void
     {
         $settingsManager = $this->prophesize(SettingsManagerInterface::class);
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
@@ -315,7 +315,7 @@ class DefaultSnippetManagerTest extends TestCase
         $this->assertEquals(null, $manager->loadType('321-321-321'));
     }
 
-    public function testLoadWebspaces()
+    public function testLoadWebspaces(): void
     {
         $settingsManager = $this->prophesize(SettingsManagerInterface::class);
         $documentManager = $this->prophesize(DocumentManagerInterface::class);
@@ -350,7 +350,7 @@ class DefaultSnippetManagerTest extends TestCase
         $this->assertEquals([], $manager->loadWebspaces('321-321-321'));
     }
 
-    public function testGetTypeForArea()
+    public function testGetTypeForArea(): void
     {
         $settingsManager = $this->prophesize(SettingsManagerInterface::class);
         $documentManager = $this->prophesize(DocumentManagerInterface::class);

@@ -16,14 +16,14 @@ use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 
 class ToolbarActionTest extends TestCase
 {
-    public function testGetType()
+    public function testGetType(): void
     {
         $toolbarAction = new ToolbarAction('sulu_admin.delete', ['allow_conflict_deletion' => false]);
 
         $this->assertSame('sulu_admin.delete', $toolbarAction->getType());
     }
 
-    public function testGetOptions()
+    public function testGetOptions(): void
     {
         $toolbarAction = new ToolbarAction('sulu_admin.delete', ['allow_conflict_deletion' => false]);
 

@@ -28,7 +28,7 @@ class LocalizationTest extends TestCase
         $this->localization->setXDefault(true);
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $expected = [
             'language' => 'de',
@@ -43,7 +43,7 @@ class LocalizationTest extends TestCase
         $this->assertEquals($expected, $this->localization->toArray());
     }
 
-    public function testGetLocale()
+    public function testGetLocale(): void
     {
         $this->assertEquals('de_at', $this->localization->getLocale(Localization::UNDERSCORE));
         $this->assertEquals('de-at', $this->localization->getLocale(Localization::DASH));
@@ -64,7 +64,7 @@ class LocalizationTest extends TestCase
     /**
      * @dataProvider formatProvider
      */
-    public function testCreateFromString($format)
+    public function testCreateFromString($format): void
     {
         $localization = Localization::createFromString($format, $format);
 

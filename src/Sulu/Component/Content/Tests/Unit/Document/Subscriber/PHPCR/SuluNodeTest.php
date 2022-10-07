@@ -83,7 +83,7 @@ class SuluNodeTest extends TestCase
     /**
      * @dataProvider provideDelegateData
      */
-    public function testDelegate($functionName, $returnValue, $arguments = [])
+    public function testDelegate($functionName, $returnValue, $arguments = []): void
     {
         $node = $this->prophesize(NodeInterface::class);
 
@@ -94,7 +94,7 @@ class SuluNodeTest extends TestCase
         $this->assertEquals($returnValue, \call_user_func_array([$suluNode, $functionName], $arguments));
     }
 
-    public function testGetIterator()
+    public function testGetIterator(): void
     {
         $node = $this->prophesize(NodeInterface::class)->willImplement(\IteratorAggregate::class);
         $node->getIterator()->willReturn($this->prophesize(\Iterator::class)->reveal());
@@ -104,7 +104,7 @@ class SuluNodeTest extends TestCase
         $this->assertInstanceOf(\Iterator::class, $suluNode->getIterator());
     }
 
-    public function testSetProperty()
+    public function testSetProperty(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $node = $this->prophesize(NodeInterface::class)->willImplement(\IteratorAggregate::class);
@@ -117,7 +117,7 @@ class SuluNodeTest extends TestCase
         $this->assertEquals($property->reveal(), $suluNode->setProperty('test-1', 'test', PropertyType::STRING));
     }
 
-    public function testSetPropertySameType()
+    public function testSetPropertySameType(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $node = $this->prophesize(NodeInterface::class)->willImplement(\IteratorAggregate::class);
@@ -130,7 +130,7 @@ class SuluNodeTest extends TestCase
         $this->assertEquals($property->reveal(), $suluNode->setProperty('test-1', 'test', PropertyType::STRING));
     }
 
-    public function testSetPropertyDifferentType()
+    public function testSetPropertyDifferentType(): void
     {
         $oldProperty = $this->prophesize(PropertyInterface::class);
         $property = $this->prophesize(PropertyInterface::class);

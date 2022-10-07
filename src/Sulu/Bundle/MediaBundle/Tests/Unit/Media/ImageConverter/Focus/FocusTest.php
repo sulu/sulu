@@ -35,7 +35,7 @@ class FocusTest extends TestCase
     /**
      * @dataProvider provideFocus
      */
-    public function testFocus($imageWidth, $imageHeight, $x, $y, $width, $height, $cropX, $cropY, $cropWidth, $cropHeight)
+    public function testFocus($imageWidth, $imageHeight, $x, $y, $width, $height, $cropX, $cropY, $cropWidth, $cropHeight): void
     {
         $image = $this->prophesize(ImageInterface::class);
         $image->getSize()->willReturn(new Box($imageWidth, $imageHeight));

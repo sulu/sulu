@@ -49,7 +49,7 @@ class ContentEnhancerTest extends TestCase
     /**
      * @dataProvider enhanceProvider
      */
-    public function testEnhance($redirect, $target)
+    public function testEnhance($redirect, $target): void
     {
         $webspace = $this->prophesize(Webspace::class);
 

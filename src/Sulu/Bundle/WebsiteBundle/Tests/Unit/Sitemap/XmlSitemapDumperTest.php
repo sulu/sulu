@@ -59,7 +59,7 @@ class XmlSitemapDumperTest extends TestCase
         );
     }
 
-    public function testGetDumpPath()
+    public function testGetDumpPath(): void
     {
         $this->assertEquals(
             '/http/sulu.lo/sitemaps/pages-1.xml',
@@ -67,7 +67,7 @@ class XmlSitemapDumperTest extends TestCase
         );
     }
 
-    public function testGetIndexDumpPath()
+    public function testGetIndexDumpPath(): void
     {
         $this->assertEquals(
             '/http/sulu.lo/sitemap.xml',
@@ -75,7 +75,7 @@ class XmlSitemapDumperTest extends TestCase
         );
     }
 
-    public function testDumpHost()
+    public function testDumpHost(): void
     {
         $this->renderer->renderIndex('http', 'sulu.io')->willReturn('<sitemapindex/>');
 
@@ -114,7 +114,7 @@ class XmlSitemapDumperTest extends TestCase
         $this->dumper->dumpHost('http', 'sulu.io');
     }
 
-    public function testDumpPortalInformationNoIndex()
+    public function testDumpPortalInformationNoIndex(): void
     {
         $this->renderer->renderIndex('http', 'sulu.io')->willReturn(null);
 
@@ -137,7 +137,7 @@ class XmlSitemapDumperTest extends TestCase
         $this->dumper->dumpHost('http', 'sulu.io');
     }
 
-    public function testDumpHostWildcard()
+    public function testDumpHostWildcard(): void
     {
         $this->renderer->renderIndex('http', 'sulu.io')->willReturn('<sitemapindex/>');
 
@@ -176,7 +176,7 @@ class XmlSitemapDumperTest extends TestCase
         $this->dumper->dumpHost('http', 'sulu.io');
     }
 
-    public function testDumpPortalInformationMultiplePages()
+    public function testDumpPortalInformationMultiplePages(): void
     {
         $this->renderer->renderIndex('http', 'sulu.io')->willReturn('<sitemapindex/>');
 

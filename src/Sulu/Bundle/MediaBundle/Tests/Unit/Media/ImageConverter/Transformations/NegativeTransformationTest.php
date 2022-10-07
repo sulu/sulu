@@ -36,7 +36,7 @@ class NegativeTransformationTest extends SuluTestCase
         parent::setUp();
     }
 
-    public function testNegative()
+    public function testNegative(): void
     {
         $image = $this->prophesize(ImageInterface::class);
         $effects = $this->prophesize(EffectsInterface::class);

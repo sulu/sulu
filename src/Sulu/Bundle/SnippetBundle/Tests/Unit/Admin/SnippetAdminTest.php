@@ -59,7 +59,7 @@ class SnippetAdminTest extends TestCase
     /**
      * @dataProvider provideConfigureViews
      */
-    public function testConfigureViews($locales)
+    public function testConfigureViews($locales): void
     {
         $snippetAdmin = new SnippetAdmin(
             $this->viewBuilderFactory,

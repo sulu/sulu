@@ -35,7 +35,7 @@ class ContactTitleControllerTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testCgetAction()
+    public function testCgetAction(): void
     {
         $contactTitle1 = $this->createContactTitle('BSc');
         $contactTitle2 = $this->createContactTitle('MSc');
@@ -54,7 +54,7 @@ class ContactTitleControllerTest extends SuluTestCase
         $this->assertEquals('MSc', $contactTitles[1]->title);
     }
 
-    public function testCdeleteAction()
+    public function testCdeleteAction(): void
     {
         $contactTitle1 = $this->createContactTitle('BSc');
         $contactTitle2 = $this->createContactTitle('MSc');
@@ -77,7 +77,7 @@ class ContactTitleControllerTest extends SuluTestCase
         $this->assertEquals('MSc', $contactTitles[0]->title);
     }
 
-    public function testCpatchAction()
+    public function testCpatchAction(): void
     {
         $contactTitle1 = $this->createContactTitle('BSc');
         $contactTitle2 = $this->createContactTitle('MSc');

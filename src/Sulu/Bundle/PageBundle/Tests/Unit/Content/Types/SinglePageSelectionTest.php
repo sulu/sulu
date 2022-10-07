@@ -69,7 +69,7 @@ class SinglePageSelectionTest extends TestCase
     /**
      * @dataProvider providePreResolve
      */
-    public function testPreResolve($propertyValue, $expected)
+    public function testPreResolve($propertyValue, $expected): void
     {
         $this->property->getValue()->willReturn($propertyValue);
         $this->type->preResolve($this->property->reveal());
@@ -83,7 +83,7 @@ class SinglePageSelectionTest extends TestCase
         }
     }
 
-    public function testContentData()
+    public function testContentData(): void
     {
         $structure = $this->prophesize(StructureInterface::class);
         $structure->getLanguageCode()->willReturn('de');

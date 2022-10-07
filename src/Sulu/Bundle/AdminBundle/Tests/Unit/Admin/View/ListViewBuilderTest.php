@@ -22,7 +22,7 @@ class ListViewBuilderTest extends TestCase
 {
     use ReadObjectAttributeTrait;
 
-    public function testBuildListViewWithClone()
+    public function testBuildListViewWithClone(): void
     {
         $viewBuilder = (new ListViewBuilder('sulu_role.add_form', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -32,7 +32,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertNotSame($viewBuilder->getView(), $viewBuilder->getView());
     }
 
-    public function testBuildListViewWithoutResourceKey()
+    public function testBuildListViewWithoutResourceKey(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('/"setResourceKey"/');
@@ -41,7 +41,7 @@ class ListViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildListViewWithoutListAdapters()
+    public function testBuildListViewWithoutListAdapters(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('/"addListAdapters"/');
@@ -96,7 +96,7 @@ class ListViewBuilderTest extends TestCase
         string $addView,
         string $editView,
         string $rerenderAttribute
-    ) {
+    ): void {
         $viewBuilder = (new ListViewBuilder($name, $path))
             ->setResourceKey($resourceKey)
             ->setListKey($listKey)
@@ -125,7 +125,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame('sulu_admin.list', $view->getType());
     }
 
-    public function testBuildListViewAddingAdaptersTwice()
+    public function testBuildListViewAddingAdaptersTwice(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -137,7 +137,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame(['table', 'column_list', 'tree'], $view->getOption('adapters'));
     }
 
-    public function testBuildListWithLocales()
+    public function testBuildListWithLocales(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles/:locale'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -152,7 +152,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame('de', $view->getAttributeDefault('locale'));
     }
 
-    public function testBuildListWithLocalesWithoutLocalePlaceholder()
+    public function testBuildListWithLocalesWithoutLocalePlaceholder(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');
@@ -167,7 +167,7 @@ class ListViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildListWithoutLocalesWithLocalePlaceholder()
+    public function testBuildListWithoutLocalesWithLocalePlaceholder(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('":locale"');
@@ -179,7 +179,7 @@ class ListViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildListWithoutListKey()
+    public function testBuildListWithoutListKey(): void
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessageMatches('"listKey"');
@@ -190,7 +190,7 @@ class ListViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function testBuildListViewWithSearch()
+    public function testBuildListViewWithSearch(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -203,7 +203,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertTrue($view->getOption('searchable'));
     }
 
-    public function testBuildListViewWithoutSearch()
+    public function testBuildListViewWithoutSearch(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -216,7 +216,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertFalse($view->getOption('searchable'));
     }
 
-    public function testBuildListViewWithSelection()
+    public function testBuildListViewWithSelection(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -229,7 +229,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertTrue($view->getOption('selectable'));
     }
 
-    public function testBuildListViewWithoutSelection()
+    public function testBuildListViewWithoutSelection(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -242,7 +242,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertFalse($view->getOption('selectable'));
     }
 
-    public function testBuildListWithViewrAttributesToListRequest()
+    public function testBuildListWithViewrAttributesToListRequest(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -258,7 +258,7 @@ class ListViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildListWithRouterAttributesToListMetadata()
+    public function testBuildListWithRouterAttributesToListMetadata(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -274,7 +274,7 @@ class ListViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildListWithResourceStorePropertiesToListRequest()
+    public function testBuildListWithResourceStorePropertiesToListRequest(): void
     {
         $view = (new ListViewBuilder('sulu_role.datagrid', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -290,7 +290,7 @@ class ListViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildListWithResourceStorePropertiesToMetadataRequest()
+    public function testBuildListWithResourceStorePropertiesToMetadataRequest(): void
     {
         $view = (new ListViewBuilder('sulu_role.datagrid', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -306,7 +306,7 @@ class ListViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildListWithRequestParameters()
+    public function testBuildListWithRequestParameters(): void
     {
         $view = (new ListViewBuilder('sulu_role.datagrid', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -322,7 +322,7 @@ class ListViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildListSetParent()
+    public function testBuildListSetParent(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -334,7 +334,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame('sulu_role.parent_view', $view->getParent());
     }
 
-    public function testBuildListSetOption()
+    public function testBuildListSetOption(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -346,7 +346,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame('test', $view->getOption('resourceKey'));
     }
 
-    public function testBuildListSetTabTitle()
+    public function testBuildListSetTabTitle(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -358,7 +358,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame('sulu_role.title', $view->getOption('tabTitle'));
     }
 
-    public function testBuildListSetTabOrder()
+    public function testBuildListSetTabOrder(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -370,7 +370,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame(5, $view->getOption('tabOrder'));
     }
 
-    public function testBuildListSetTabPriority()
+    public function testBuildListSetTabPriority(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -382,7 +382,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame(5, $view->getOption('tabPriority'));
     }
 
-    public function testBuildListSetTabCondition()
+    public function testBuildListSetTabCondition(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -394,7 +394,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame('state == 1', $view->getOption('tabCondition'));
     }
 
-    public function testBuildListSetBackView()
+    public function testBuildListSetBackView(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -406,7 +406,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame('sulu_category.edit_form', $view->getOption('backView'));
     }
 
-    public function testBuildListSetItemDisabledCondition()
+    public function testBuildListSetItemDisabledCondition(): void
     {
         $view = (new ListViewBuilder('sulu_role.list', '/roles'))
             ->setResourceKey(RoleInterface::RESOURCE_KEY)
@@ -418,7 +418,7 @@ class ListViewBuilderTest extends TestCase
         $this->assertSame('(_permissions && !_permissions.delete)', $view->getOption('itemDisabledCondition'));
     }
 
-    public function testBuildAddToolbarActions()
+    public function testBuildAddToolbarActions(): void
     {
         $saveToolbarAction = new ToolbarAction('sulu_admin.save');
         $typesToolbarAction = new ToolbarAction('sulu_admin.types');
@@ -438,7 +438,7 @@ class ListViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildAddItemActions()
+    public function testBuildAddItemActions(): void
     {
         $linkItemAction = new ToolbarAction('sulu_admin.link');
         $exportItemAction = new ToolbarAction('sulu_admin.export');
@@ -458,7 +458,7 @@ class ListViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildAddTabBadge()
+    public function testBuildAddTabBadge(): void
     {
         $fooBadge = new Badge('sulu_foo.get_foo_badge');
         $barBadge = new Badge('sulu_bar.get_bar_badge');

@@ -36,7 +36,7 @@ class SharpenTransformationTest extends SuluTestCase
         parent::setUp();
     }
 
-    public function testSharpen()
+    public function testSharpen(): void
     {
         $image = $this->prophesize(ImageInterface::class);
         $effects = $this->prophesize(EffectsInterface::class);

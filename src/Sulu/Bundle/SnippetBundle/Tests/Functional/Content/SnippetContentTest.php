@@ -90,13 +90,13 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->getContainer()->get('sulu_document_manager.document_manager')->clear();
     }
 
-    public function testPropertyRead()
+    public function testPropertyRead(): void
     {
         $this->property->expects($this->exactly(2))
             ->method('getName')->will($this->returnValue('i18n:de-hotels'));
         $this->property->expects($this->once())
             ->method('setValue')
-            ->will($this->returnCallback(function($snippets) {
+            ->will($this->returnCallback(function($snippets): void {
                 foreach ($snippets as $snippet) {
                     $this->assertTrue(UUIDHelper::isUUID($snippet));
                 }
@@ -106,7 +106,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->contentType->read($pageNode, $this->property, 'sulu_io', 'de', null);
     }
 
-    public function testPropertyWriteContentMapper()
+    public function testPropertyWriteContentMapper(): void
     {
         $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $this->assertTrue($pageNode->hasProperty('i18n:de-hotels'));
@@ -120,7 +120,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertEquals('Le grande budapest', $hotel1->getPropertyValue('i18n:de-title'));
     }
 
-    public function testPropertyWriteUnknownType()
+    public function testPropertyWriteUnknownType(): void
     {
         $this->expectExceptionMessage('Property value must either be a UUID or a Snippet');
         $this->expectException(\InvalidArgumentException::class);
@@ -132,7 +132,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->contentType->write($pageNode, $this->property, 0, 'sulu_io', 'de', null);
     }
 
-    public function testGetContentData()
+    public function testGetContentData(): void
     {
         $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $pageStructure = $this->contentMapper->loadByNode($pageNode, 'de');
@@ -180,7 +180,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertCount(0, $data);
     }
 
-    public function testGetContentDataShadow()
+    public function testGetContentDataShadow(): void
     {
         $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $pageStructure = $this->contentMapper->loadByNode($pageNode, 'en', 'sulu_io', true, false, false);
@@ -195,7 +195,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertEquals('L\'Hôtel New Hampshire', $hotel2['title']);
     }
 
-    public function testPreResolve()
+    public function testPreResolve(): void
     {
         $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $pageStructure = $this->contentMapper->loadByNode($pageNode, 'en', 'sulu_io', true, false, false);
@@ -209,7 +209,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         }
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $this->property->expects($this->any())
             ->method('getName')->will($this->returnValue('i18n:de-hotels'));
@@ -220,7 +220,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertFalse($pageNode->hasProperty('i18n:de-hotels'));
     }
 
-    public function testGetContentDataDefaultNoType()
+    public function testGetContentDataDefaultNoType(): void
     {
         $structure = $this->prophesize(PageBridge::class);
         $structure->getWebspaceKey()->willReturn('sulu_io');
@@ -238,7 +238,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertCount(0, $data);
     }
 
-    public function testGetContentDataDefaultNoDefault()
+    public function testGetContentDataDefaultNoDefault(): void
     {
         $structure = $this->prophesize(PageBridge::class);
         $structure->getWebspaceKey()->willReturn('sulu_io');
@@ -263,7 +263,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertCount(0, $data);
     }
 
-    public function testGetContentDataDefault()
+    public function testGetContentDataDefault(): void
     {
         $structure = $this->prophesize(PageBridge::class);
         $structure->getWebspaceKey()->willReturn('sulu_io');
@@ -288,7 +288,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertCount(1, $data);
     }
 
-    public function testGetContentDataDefaultWrongType()
+    public function testGetContentDataDefaultWrongType(): void
     {
         $structure = $this->prophesize(PageBridge::class);
         $structure->getWebspaceKey()->willReturn('sulu_io');
@@ -312,7 +312,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertCount(0, $data);
     }
 
-    public function testGetContentDataDefaultZone()
+    public function testGetContentDataDefaultZone(): void
     {
         $structure = $this->prophesize(PageBridge::class);
         $structure->getWebspaceKey()->willReturn('sulu_io');
@@ -337,7 +337,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertCount(1, $data);
     }
 
-    public function testGetContentDataDefaultDefaultNotSet()
+    public function testGetContentDataDefaultDefaultNotSet(): void
     {
         $structure = $this->prophesize(PageBridge::class);
         $structure->getWebspaceKey()->willReturn('sulu_io');
@@ -359,7 +359,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->assertCount(0, $data);
     }
 
-    public function testGetContentDataDefaultDefaultFalse()
+    public function testGetContentDataDefaultDefaultFalse(): void
     {
         $structure = $this->prophesize(PageBridge::class);
         $structure->getWebspaceKey()->willReturn('sulu_io');

@@ -37,7 +37,7 @@ class UuidSubscriberTest extends TestCase
     /**
      * It should return early when not implementing.
      */
-    public function testHydrateNotImplementing()
+    public function testHydrateNotImplementing(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->notImplementing)->shouldBeCalled();
         $this->subscriber->handleUuid($this->hydrateEvent->reveal());
@@ -46,7 +46,7 @@ class UuidSubscriberTest extends TestCase
     /**
      * It should set the node name on the document.
      */
-    public function testUuid()
+    public function testUuid(): void
     {
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
         $this->hydrateEvent->getDocument()->willReturn($this->document);

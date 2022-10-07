@@ -73,17 +73,17 @@ class StructureConverterTest extends TestCase
         );
     }
 
-    public function testConvertWithoutDocument()
+    public function testConvertWithoutDocument(): void
     {
         $this->assertSame('abcd', $this->structureConverter->convert('abcd'));
     }
 
-    public function testConvertNull()
+    public function testConvertNull(): void
     {
         $this->assertNull($this->structureConverter->convert(null));
     }
 
-    public function testConvertStringValue()
+    public function testConvertStringValue(): void
     {
         $uuid = 'abcd';
         $locale = 'en';
@@ -125,7 +125,7 @@ class StructureConverterTest extends TestCase
         ], $value);
     }
 
-    public function testConvertStringValueNotFound()
+    public function testConvertStringValueNotFound(): void
     {
         $uuid = 'not-existing-value';
         $locale = 'en';
@@ -143,7 +143,7 @@ class StructureConverterTest extends TestCase
         ], $value);
     }
 
-    public function testConvertArrayValue()
+    public function testConvertArrayValue(): void
     {
         $uuids = ['abcd', 'efgh', ['invalid-value']];
         $locale = 'en';
@@ -210,7 +210,7 @@ class StructureConverterTest extends TestCase
         $this->assertSame($secondFields[0]->getValue(), $value['fields'][2]->getValue());
     }
 
-    public function testConvertArrayValueNotFound()
+    public function testConvertArrayValueNotFound(): void
     {
         $uuids = ['abcd', 'not-existing-value'];
         $locale = 'en';

@@ -24,7 +24,7 @@ class RedirectEnhancerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testEnhance()
+    public function testEnhance(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn('sulu.io');
@@ -72,7 +72,7 @@ class RedirectEnhancerTest extends TestCase
         );
     }
 
-    public function testEnhanceWithQueryString()
+    public function testEnhanceWithQueryString(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn('sulu.io');
@@ -120,7 +120,7 @@ class RedirectEnhancerTest extends TestCase
         );
     }
 
-    public function testEnhanceWithRequestFormatAndQueryString()
+    public function testEnhanceWithRequestFormatAndQueryString(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn('sulu.io');

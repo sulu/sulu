@@ -52,7 +52,7 @@ class PortalTest extends TestCase
         $this->url = $this->prophesize(Url::class);
     }
 
-    public function testGetEnvironment()
+    public function testGetEnvironment(): void
     {
         $this->environment->getType()->willReturn('dev');
         $this->portal->addEnvironment($this->environment->reveal());
@@ -60,20 +60,20 @@ class PortalTest extends TestCase
         $this->assertEquals($this->environment->reveal(), $this->portal->getEnvironment('dev'));
     }
 
-    public function testGetNotExistringEnvironment()
+    public function testGetNotExistringEnvironment(): void
     {
         $this->expectException(EnvironmentNotFoundException::class);
 
         $this->portal->getEnvironment('dev');
     }
 
-    public function testGetEnvironmentFromEmptyPortal()
+    public function testGetEnvironmentFromEmptyPortal(): void
     {
         $this->expectException(EnvironmentNotFoundException::class);
         $this->portal->getEnvironment('dev');
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $expected = [
             'name' => 'foo',

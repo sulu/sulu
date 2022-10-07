@@ -36,7 +36,7 @@ class DocumentRegistryTest extends TestCase
     /**
      * It should register a document and its associated PHPCR node.
      */
-    public function testRegisterDocument()
+    public function testRegisterDocument(): void
     {
         $this->registry->registerDocument($this->document, $this->node->reveal(), 'fr');
         $this->assertTrue($this->registry->hasDocument($this->document));
@@ -48,7 +48,7 @@ class DocumentRegistryTest extends TestCase
      *
      * @depends testRegisterDocument
      */
-    public function testDeregisterDocument()
+    public function testDeregisterDocument(): void
     {
         $this->registry->registerDocument($this->document, $this->node->reveal(), 'fr');
         $this->registry->deregisterDocument($this->document);
@@ -59,7 +59,7 @@ class DocumentRegistryTest extends TestCase
     /**
      * It should throw an exception when an unregistered document is deregistered.
      */
-    public function testDeregisterDocumentUnknown()
+    public function testDeregisterDocumentUnknown(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->registry->deregisterDocument($this->document);
@@ -70,7 +70,7 @@ class DocumentRegistryTest extends TestCase
      *
      * @depends testRegisterDocument
      */
-    public function testGetNodeForDocument()
+    public function testGetNodeForDocument(): void
     {
         $this->registry->registerDocument($this->document, $this->node->reveal(), 'fr');
         $this->assertSame(
@@ -82,7 +82,7 @@ class DocumentRegistryTest extends TestCase
     /**
      * Throw an exception if an attempt is made to re-register a document.
      */
-    public function testDifferentInstanceSameNode()
+    public function testDifferentInstanceSameNode(): void
     {
         $this->expectExceptionMessage('is already registered');
         $this->expectException(\RuntimeException::class);
@@ -94,7 +94,7 @@ class DocumentRegistryTest extends TestCase
     /**
      * It should throw an exception if an unregistered document is passed to get node for document.
      */
-    public function testGetNodeForDocumentUnknown()
+    public function testGetNodeForDocumentUnknown(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->registry->getNodeForDocument($this->document);
@@ -105,7 +105,7 @@ class DocumentRegistryTest extends TestCase
      *
      * @depends testRegisterDocument
      */
-    public function testGetDocumentForNode()
+    public function testGetDocumentForNode(): void
     {
         $this->registry->registerDocument($this->document, $this->node->reveal(), 'fr');
         $document = $this->registry->getDocumentForNode($this->node->reveal(), 'fr');
@@ -115,7 +115,7 @@ class DocumentRegistryTest extends TestCase
     /**
      * It should provide a method to clear the registry.
      */
-    public function testClear()
+    public function testClear(): void
     {
         $this->registry->registerDocument($this->document, $this->node->reveal(), 'fr');
         $this->assertTrue($this->registry->hasDocument($this->document));
@@ -126,7 +126,7 @@ class DocumentRegistryTest extends TestCase
     /**
      * It should be able to determine the locale of a document.
      */
-    public function testGetLocaleForDocument()
+    public function testGetLocaleForDocument(): void
     {
         $this->registry->registerDocument($this->document, $this->node->reveal(), 'fr');
         $this->assertEquals('fr', $this->registry->getLocaleForDocument($this->document));
@@ -135,7 +135,7 @@ class DocumentRegistryTest extends TestCase
     /**
      * It should return the default locale.
      */
-    public function testGetDefaultLocale()
+    public function testGetDefaultLocale(): void
     {
         $this->assertEquals('de', $this->registry->getDefaultLocale());
     }

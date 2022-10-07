@@ -88,7 +88,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         );
     }
 
-    public function testGetSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         $events = $this->webspaceSerializeEventSubscriber->getSubscribedEvents();
 
@@ -104,7 +104,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         }
     }
 
-    public function testAppendPortalInformation()
+    public function testAppendPortalInformation(): void
     {
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn('sulu_io');
@@ -139,7 +139,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         );
     }
 
-    public function testAppendUrls()
+    public function testAppendUrls(): void
     {
         $urls = [
             new Url('sulu.lo'),
@@ -174,7 +174,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         );
     }
 
-    public function testAppendCustomUrls()
+    public function testAppendCustomUrls(): void
     {
         $customUrls = [
             new CustomUrl('sulu.lo'),
@@ -239,7 +239,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         );
     }
 
-    public function testAppendPermissions()
+    public function testAppendPermissions(): void
     {
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn('sulu');

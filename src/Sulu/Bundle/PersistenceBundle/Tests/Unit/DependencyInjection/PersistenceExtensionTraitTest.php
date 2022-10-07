@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class PersistenceExtensionTraitTest extends AbstractContainerBuilderTestCase
 {
-    public function testPersistenceExtensionTrait()
+    public function testPersistenceExtensionTrait(): void
     {
         $repository = new class() {
         };
@@ -74,10 +74,10 @@ class PersistenceExtensionTraitTest extends AbstractContainerBuilderTestCase
         );
     }
 
-    public function testPersistenceExtensionTraitWithAccessControlQueryEnhancer()
+    public function testPersistenceExtensionTraitWithAccessControlQueryEnhancer(): void
     {
         $repository = new class() {
-            public function setAccessControlQueryEnhancer($accessControlQueryEnhancer)
+            public function setAccessControlQueryEnhancer($accessControlQueryEnhancer): void
             {
             }
         };

@@ -22,7 +22,7 @@ class ExternalLinkEnhancerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testEnhance()
+    public function testEnhance(): void
     {
         $structure = $this->prophesize(PageBridge::class);
         $structure->getNodeType()->willReturn(Structure::NODE_TYPE_EXTERNAL_LINK);
@@ -42,7 +42,7 @@ class ExternalLinkEnhancerTest extends TestCase
         );
     }
 
-    public function testEnhanceNoStructure()
+    public function testEnhanceNoStructure(): void
     {
         $structure = $this->prophesize(PageBridge::class);
         $structure->getNodeType()->willReturn(Structure::NODE_TYPE_EXTERNAL_LINK);
@@ -55,7 +55,7 @@ class ExternalLinkEnhancerTest extends TestCase
         $this->assertEquals([], $defaults);
     }
 
-    public function testEnhanceInternalLink()
+    public function testEnhanceInternalLink(): void
     {
         $structure = $this->prophesize(PageBridge::class);
         $structure->getNodeType()->willReturn(Structure::NODE_TYPE_INTERNAL_LINK);

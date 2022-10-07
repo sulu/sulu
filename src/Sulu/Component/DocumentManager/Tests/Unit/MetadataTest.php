@@ -30,7 +30,7 @@ class MetadataTest extends TestCase
      * It should throw an exception if no class is set and the ReflectionClass
      * is requested.
      */
-    public function testNoClassGetReflection()
+    public function testNoClassGetReflection(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->metadata->getReflectionClass();
@@ -39,7 +39,7 @@ class MetadataTest extends TestCase
     /**
      * It should return the reflection class.
      */
-    public function testReflectionClass()
+    public function testReflectionClass(): void
     {
         $this->metadata->setClass('\stdClass');
         $reflection = $this->metadata->getReflectionClass();
@@ -53,7 +53,7 @@ class MetadataTest extends TestCase
         $this->assertNotSame($reflection, $this->metadata->getReflectionClass());
     }
 
-    public function testGetFieldMappingsEmpty()
+    public function testGetFieldMappingsEmpty(): void
     {
         $this->assertIsArray($this->metadata->getFieldMappings());
     }

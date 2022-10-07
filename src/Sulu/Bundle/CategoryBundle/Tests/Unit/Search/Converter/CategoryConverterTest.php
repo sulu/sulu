@@ -74,17 +74,17 @@ class CategoryConverterTest extends TestCase
         );
     }
 
-    public function testConvertWithoutDocument()
+    public function testConvertWithoutDocument(): void
     {
         $this->assertSame(1, $this->categoryConverter->convert(1));
     }
 
-    public function testConvertNull()
+    public function testConvertNull(): void
     {
         $this->assertNull($this->categoryConverter->convert(null));
     }
 
-    public function testConvertStringValue()
+    public function testConvertStringValue(): void
     {
         $id = 1;
         $locale = 'en';
@@ -128,7 +128,7 @@ class CategoryConverterTest extends TestCase
         ], $value);
     }
 
-    public function testConvertArrayValue()
+    public function testConvertArrayValue(): void
     {
         $ids = [1, 2, 'invalid-value'];
         $locale = 'en';
@@ -200,7 +200,7 @@ class CategoryConverterTest extends TestCase
         $this->assertSame($secondFields[0]->getValue(), $value['fields'][2]->getValue());
     }
 
-    public function testConvertDefaultCategory()
+    public function testConvertDefaultCategory(): void
     {
         $id = 1;
         $locale = 'en';
@@ -250,7 +250,7 @@ class CategoryConverterTest extends TestCase
         ], $value);
     }
 
-    public function testConvertCategoryNotFound()
+    public function testConvertCategoryNotFound(): void
     {
         $ids = [1];
         $locale = 'en';

@@ -88,7 +88,7 @@ class StructureBridgeSerializationTest extends SuluTestCase
     /**
      * @depends testSerialize
      */
-    public function testDeserialize($data)
+    public function testDeserialize($data): void
     {
         $result = $this->serializer->deserialize(
             $data,

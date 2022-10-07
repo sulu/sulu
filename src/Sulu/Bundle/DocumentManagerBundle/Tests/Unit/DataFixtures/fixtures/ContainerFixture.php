@@ -20,12 +20,12 @@ class ContainerFixture implements DocumentFixtureInterface, ContainerAwareInterf
 {
     public $container;
 
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(ContainerInterface $container = null): void
     {
         $this->container = $container;
     }
 
-    public function load(DocumentManager $documentManager)
+    public function load(DocumentManager $documentManager): void
     {
     }
 

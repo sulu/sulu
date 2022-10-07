@@ -42,7 +42,7 @@ class ReferrerRuleTest extends TestCase
     /**
      * @dataProvider provideEvaluationData
      */
-    public function testEvaluate($referrerHeader, $referrer, $options, $result)
+    public function testEvaluate($referrerHeader, $referrer, $options, $result): void
     {
         $referrerRule = new ReferrerRule($this->requestStack->reveal(), $this->translator->reveal(), $referrerHeader);
 
@@ -78,7 +78,7 @@ class ReferrerRuleTest extends TestCase
         ];
     }
 
-    public function testEvaluateWithBothHeaders()
+    public function testEvaluateWithBothHeaders(): void
     {
         $referrerRule = new ReferrerRule($this->requestStack->reveal(), $this->translator->reveal(), 'X-Forwarded-Referrer');
 
@@ -91,7 +91,7 @@ class ReferrerRuleTest extends TestCase
         $this->assertFalse($referrerRule->evaluate(['referrer' => '/wrong/referer']));
     }
 
-    public function testEvaluateWithoutConfiguredHeader()
+    public function testEvaluateWithoutConfiguredHeader(): void
     {
         $referrerRule = new ReferrerRule($this->requestStack->reveal(), $this->translator->reveal(), 'X-Forwarded-Referrer');
 

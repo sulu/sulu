@@ -31,7 +31,7 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testUserBlame()
+    public function testUserBlame(): void
     {
         $tokenStorage = $this->getContainer()->get('security.token_storage');
         $user = new User();
@@ -67,7 +67,7 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $this->assertNull($contact->getCreator());
     }
 
-    public function testExternalUserBlame()
+    public function testExternalUserBlame(): void
     {
         $this->createExternalUser();
 
@@ -83,7 +83,7 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $this->assertNull($contact->getChanger());
     }
 
-    public function testExternalUserNoBlame()
+    public function testExternalUserNoBlame(): void
     {
         $this->createExternalUser();
 
@@ -96,7 +96,7 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $this->assertIsInt($permission->getId());
     }
 
-    public function testSetUserBlame()
+    public function testSetUserBlame(): void
     {
         $tokenStorage = $this->getContainer()->get('security.token_storage');
         $user = new User();
@@ -142,7 +142,7 @@ class UserBlameSubscriberIntegrationTest extends SuluTestCase
         $this->assertSame($contact->getChanger(), $otherUser);
     }
 
-    private function createExternalUser()
+    private function createExternalUser(): void
     {
         $tokenStorage = $this->getContainer()->get('security.token_storage');
         $user = new InMemoryUser('test', 'test');

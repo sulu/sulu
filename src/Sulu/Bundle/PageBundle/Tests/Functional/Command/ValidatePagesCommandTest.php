@@ -46,7 +46,7 @@ class ValidatePagesCommandTest extends SuluTestCase
         $this->setupPages();
     }
 
-    public function testExecute()
+    public function testExecute(): void
     {
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
         $this->assertCount(4, $homeDocument->getChildren());

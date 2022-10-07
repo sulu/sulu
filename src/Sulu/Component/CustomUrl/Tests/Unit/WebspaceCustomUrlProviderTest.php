@@ -22,7 +22,7 @@ class WebspaceCustomUrlProviderTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testGetUrls()
+    public function testGetUrls(): void
     {
         $customUrlManager = $this->prophesize(CustomUrlManagerInterface::class);
         $provider = new WebspaceCustomUrlProvider($customUrlManager->reveal());

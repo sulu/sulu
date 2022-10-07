@@ -164,7 +164,7 @@ class ContentTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLoadWithoutProperties()
+    public function testLoadWithoutProperties(): void
     {
         $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $pageDocument->willImplement(SecurityBehavior::class);
@@ -202,7 +202,7 @@ class ContentTwigExtensionTest extends TestCase
         $this->assertSame($resolvedStructure, $result);
     }
 
-    public function testLoadWithoutPropertiesWithPermissions()
+    public function testLoadWithoutPropertiesWithPermissions(): void
     {
         $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $pageDocument->willImplement(SecurityBehavior::class);
@@ -245,7 +245,7 @@ class ContentTwigExtensionTest extends TestCase
         $this->assertSame($resolvedStructure, $result);
     }
 
-    public function testLoadWithoutPropertiesWithoutPermissions()
+    public function testLoadWithoutPropertiesWithoutPermissions(): void
     {
         $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $pageDocument->willImplement(SecurityBehavior::class);
@@ -280,7 +280,7 @@ class ContentTwigExtensionTest extends TestCase
         $this->assertEquals(null, $result);
     }
 
-    public function testLoadWithoutPropertiesNonWebspaceBehaviorDocument()
+    public function testLoadWithoutPropertiesNonWebspaceBehaviorDocument(): void
     {
         $snippetDocument = $this->prophesize(StructureBehavior::class);
 
@@ -316,7 +316,7 @@ class ContentTwigExtensionTest extends TestCase
         $this->assertSame($resolvedStructure, $result);
     }
 
-    public function testLoadWithDeprecatedRequestStack()
+    public function testLoadWithDeprecatedRequestStack(): void
     {
         $requestStack = $this->prophesize(RequestStack::class);
         $extension = new ContentTwigExtension(
@@ -366,7 +366,7 @@ class ContentTwigExtensionTest extends TestCase
         $this->assertSame($resolvedStructure, $result);
     }
 
-    public function testLoadWithRequestStack()
+    public function testLoadWithRequestStack(): void
     {
         $requestStack = $this->prophesize(RequestStack::class);
         $extension = new ContentTwigExtension(
@@ -418,7 +418,7 @@ class ContentTwigExtensionTest extends TestCase
         $this->assertSame($resolvedStructure, $result);
     }
 
-    public function testLoadWithRequestStackAndException()
+    public function testLoadWithRequestStackAndException(): void
     {
         $requestStack = $this->prophesize(RequestStack::class);
         $extension = new ContentTwigExtension(
@@ -453,7 +453,7 @@ class ContentTwigExtensionTest extends TestCase
         $extension->load('123-123-123');
     }
 
-    public function testLoadWithProperties()
+    public function testLoadWithProperties(): void
     {
         $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $pageDocument->willImplement(SecurityBehavior::class);
@@ -499,7 +499,7 @@ class ContentTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLoadWithPropertiesWithKeys()
+    public function testLoadWithPropertiesWithKeys(): void
     {
         $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $pageDocument->willImplement(SecurityBehavior::class);
@@ -548,7 +548,7 @@ class ContentTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLoadWithPropertiesIncludingExcerpt()
+    public function testLoadWithPropertiesIncludingExcerpt(): void
     {
         $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $pageDocument->willImplement(SecurityBehavior::class);
@@ -602,14 +602,14 @@ class ContentTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLoadNull()
+    public function testLoadNull(): void
     {
         $this->contentMapper->load(Argument::cetera())->shouldNotBeCalled();
 
         $this->assertNull($this->extension->load(null));
     }
 
-    public function testLoadNotExistingDocument()
+    public function testLoadNotExistingDocument(): void
     {
         $documentNotFoundException = $this->prophesize(DocumentNotFoundException::class);
         $documentNotFoundException->__toString()->willReturn('something');
@@ -619,7 +619,7 @@ class ContentTwigExtensionTest extends TestCase
         $this->assertNull($this->extension->load('999-999-999'));
     }
 
-    public function testLoadParentWithoutProperties()
+    public function testLoadParentWithoutProperties(): void
     {
         $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $pageDocument->willImplement(SecurityBehavior::class);
@@ -657,7 +657,7 @@ class ContentTwigExtensionTest extends TestCase
         $this->assertSame($resolvedStructure, $result);
     }
 
-    public function testLoadParentWithProperties()
+    public function testLoadParentWithProperties(): void
     {
         $pageDocument = $this->prophesize(WebspaceBehavior::class);
         $pageDocument->willImplement(SecurityBehavior::class);
@@ -707,7 +707,7 @@ class ContentTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLoadParentStartPage()
+    public function testLoadParentStartPage(): void
     {
         $this->expectException(
             'Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException',

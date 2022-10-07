@@ -113,7 +113,7 @@ class UserBlameSubscriberTest extends TestCase
         $this->entityManager->getUnitOfWork()->willReturn($this->unitOfWork);
     }
 
-    public function testLoadClassMetadata()
+    public function testLoadClassMetadata(): void
     {
         $this->loadClassMetadataEvent->getClassMetadata()->willReturn($this->classMetadata->reveal());
         $this->classMetadata->getReflectionClass()->willReturn($this->refl->reveal());
@@ -213,7 +213,7 @@ class UserBlameSubscriberTest extends TestCase
      *
      * @dataProvider provideLifecycle
      */
-    public function testOnFlush($changeset, $expectedFields, $insert = true)
+    public function testOnFlush($changeset, $expectedFields, $insert = true): void
     {
         $entity = $this->userBlameObject->reveal();
 
@@ -260,7 +260,7 @@ class UserBlameSubscriberTest extends TestCase
      *
      * @dataProvider provideLifecycle
      */
-    public function testOnFlushOtherUser($changeset)
+    public function testOnFlushOtherUser($changeset): void
     {
         $symfonyUser = $this->prophesize(SymfonyUserInterface::class);
         $token = $this->prophesize(TokenInterface::class);

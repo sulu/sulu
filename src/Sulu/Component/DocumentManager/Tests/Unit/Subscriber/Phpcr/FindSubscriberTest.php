@@ -47,7 +47,7 @@ class FindSubscriberTest extends TestCase
     /**
      * It should find an existing document.
      */
-    public function testFind()
+    public function testFind(): void
     {
         $this->doTestFind(['type' => null]);
     }
@@ -66,7 +66,7 @@ class FindSubscriberTest extends TestCase
      *
      * @dataProvider provideFindWithTypeOrClass
      */
-    public function testFindWithTypeOrClass($type, $typeOrClass, $shouldThrow)
+    public function testFindWithTypeOrClass($type, $typeOrClass, $shouldThrow): void
     {
         if ($shouldThrow) {
             $this->metadataFactory->getAliases()->willReturn(['test1', 'test2']);

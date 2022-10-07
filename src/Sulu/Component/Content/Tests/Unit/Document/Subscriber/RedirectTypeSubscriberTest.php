@@ -55,14 +55,14 @@ class RedirectTypeSubscriberTest extends SubscriberTestCase
         $this->event->getMetadata()->willReturn($this->metadata);
     }
 
-    public function testHandlePersist()
+    public function testHandlePersist(): void
     {
         $this->document->setRedirectTarget(new \stdClass());
         $this->document->getRedirectTarget()->shouldBeCalled();
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
-    public function testHandlePersistSelf()
+    public function testHandlePersistSelf(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->document->getRedirectTarget()->willReturn($this->document->reveal())->shouldBeCalled();
@@ -70,7 +70,7 @@ class RedirectTypeSubscriberTest extends SubscriberTestCase
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
-    public function testLoadMetadata()
+    public function testLoadMetadata(): void
     {
         $this->metadata->getReflectionClass()->willReturn(new \ReflectionClass($this->document->reveal()));
         $this->metadata->addFieldMapping('redirectType', Argument::any())->shouldBeCalled();

@@ -29,7 +29,7 @@ class AppCache extends SuluHttpCache implements KernelInterface
         return $this->kernel->serialize();
     }
 
-    public function unserialize($serialized)
+    public function unserialize($serialized): void
     {
         $this->kernel->unserialize($serialized);
     }

@@ -21,7 +21,7 @@ class EnvironmentTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $expected = [
             'type' => 'foo',
@@ -69,7 +69,7 @@ class EnvironmentTest extends TestCase
     /**
      * @dataProvider addUrlProvider
      */
-    public function testAddUrl(array $urls, Url $expectedMainUrl)
+    public function testAddUrl(array $urls, Url $expectedMainUrl): void
     {
         $environment = new Environment();
         foreach ($urls as $url) {

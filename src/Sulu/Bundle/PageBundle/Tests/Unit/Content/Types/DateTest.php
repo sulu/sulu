@@ -22,7 +22,7 @@ class DateTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testRead()
+    public function testRead(): void
     {
         $webspaceKey = 'sulu_io';
         $locale = 'de';
@@ -42,7 +42,7 @@ class DateTest extends TestCase
         $property->setValue($dateValue->format('Y-m-d'))->shouldBeCalled();
     }
 
-    public function testReadPropertyNotExists()
+    public function testReadPropertyNotExists(): void
     {
         $webspaceKey = 'sulu_io';
         $locale = 'de';
@@ -61,7 +61,7 @@ class DateTest extends TestCase
         $property->setValue('')->shouldBeCalled();
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $webspaceKey = 'sulu_io';
         $locale = 'de';

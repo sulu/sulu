@@ -128,7 +128,7 @@ class RoleControllerTest extends SuluTestCase
         $this->em->clear();
     }
 
-    public function testList()
+    public function testList(): void
     {
         $this->client->jsonRequest('GET', '/api/roles?flat=true');
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -139,7 +139,7 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals('Sulu', $response->_embedded->roles[0]->system);
     }
 
-    public function testListWithAnonymous()
+    public function testListWithAnonymous(): void
     {
         $this->client->request('GET', '/api/roles?flat=true&include-anonymous=true');
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -147,7 +147,7 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals(3, \count($response->_embedded->roles));
     }
 
-    public function testGetById()
+    public function testGetById(): void
     {
         $this->client->jsonRequest('GET', '/api/roles/' . $this->role1->getId());
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -175,7 +175,7 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals('Security Type 1', $response->securityType->name);
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -272,7 +272,7 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals('Security Type 2', $response->securityType->name);
     }
 
-    public function testPut()
+    public function testPut(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -400,7 +400,7 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals('Security Type 2', $response->securityType->name);
     }
 
-    public function testPutRemoveSecurityType()
+    public function testPutRemoveSecurityType(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -516,7 +516,7 @@ class RoleControllerTest extends SuluTestCase
         $this->assertObjectNotHasAttribute('securityType', $response);
     }
 
-    public function testPutNotExisting()
+    public function testPutNotExisting(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -533,7 +533,7 @@ class RoleControllerTest extends SuluTestCase
         $this->assertStringContainsString('11230', $response->message);
     }
 
-    public function testPutWithExistingName()
+    public function testPutWithExistingName(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -550,7 +550,7 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals(1101, $response->code);
     }
 
-    public function testPutWithExistingKey()
+    public function testPutWithExistingKey(): void
     {
         // setting key to 'sulu_administrator' should return a conflict
         $this->client->jsonRequest(
@@ -585,7 +585,7 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals(null, $response->key);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -616,7 +616,7 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals(1, \count($response->_embedded->roles));
     }
 
-    public function testDeleteNotExisting()
+    public function testDeleteNotExisting(): void
     {
         $this->client->jsonRequest(
             'DELETE',
@@ -629,7 +629,7 @@ class RoleControllerTest extends SuluTestCase
         $this->assertStringContainsString('11230', $response->message);
     }
 
-    public function testGetAllRoles()
+    public function testGetAllRoles(): void
     {
         $this->client->jsonRequest('GET', '/api/roles');
 

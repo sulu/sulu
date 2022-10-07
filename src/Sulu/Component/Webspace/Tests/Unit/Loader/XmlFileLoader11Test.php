@@ -42,7 +42,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->loader = new XmlFileLoader11($locator->reveal());
     }
 
-    public function testSupports10()
+    public function testSupports10(): void
     {
         $this->assertFalse(
             $this->loader->supports(
@@ -51,7 +51,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
     }
 
-    public function testSupports11()
+    public function testSupports11(): void
     {
         $this->assertTrue(
             $this->loader->supports(
@@ -60,7 +60,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         $webspace = $this->loader->load($this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io.xml');
 
@@ -285,7 +285,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
     }
 
-    public function testLoadNoStrategy()
+    public function testLoadNoStrategy(): void
     {
         $webspace = $this->loader->load($this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_no_strategy.xml');
 
@@ -293,7 +293,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('tree_leaf_edit', $webspace->getResourceLocatorStrategy());
     }
 
-    public function testLoadWithoutPortalLocalizations()
+    public function testLoadWithoutPortalLocalizations(): void
     {
         $webspace = $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_withoutPortalLocalization.xml'
@@ -360,7 +360,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
     }
 
-    public function testLoadWithIncorrectUrlDefinition()
+    public function testLoadWithIncorrectUrlDefinition(): void
     {
         $this->expectException(InvalidUrlDefinitionException::class);
 
@@ -369,14 +369,14 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
     }
 
-    public function testLoadInvalid()
+    public function testLoadInvalid(): void
     {
         $this->expectExceptionMessage('Could not parse webspace XML file');
         $this->expectException(InvalidWebspaceException::class);
         $this->loader->load($this->getResourceDirectory() . '/DataFixtures/Webspace/invalid/massiveart.xml');
     }
 
-    public function testLoadWithNotExistingDefault()
+    public function testLoadWithNotExistingDefault(): void
     {
         $this->expectException(PortalDefaultLocalizationNotFoundException::class);
 
@@ -385,7 +385,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
     }
 
-    public function testLoadWithoutDefaultSegment()
+    public function testLoadWithoutDefaultSegment(): void
     {
         $this->expectException(WebspaceDefaultSegmentNotFoundException::class);
 
@@ -394,7 +394,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
     }
 
-    public function testLoadWithTwoDefaultLocalization()
+    public function testLoadWithTwoDefaultLocalization(): void
     {
         $this->expectException(InvalidWebspaceDefaultLocalizationException::class);
 
@@ -403,7 +403,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
     }
 
-    public function testLocalizations()
+    public function testLocalizations(): void
     {
         $localizations = $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/massiveart.xml'
@@ -426,7 +426,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals(null, $localizations[1]->getShadow());
     }
 
-    public function testSingleLanguage()
+    public function testSingleLanguage(): void
     {
         $webspace = $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_singleLanguage.xml'
@@ -456,7 +456,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertNull($devUrl->getSegment());
     }
 
-    public function testLoadWithInvalidWebspaceKey()
+    public function testLoadWithInvalidWebspaceKey(): void
     {
         $this->expectException(InvalidWebspaceException::class);
 
@@ -465,7 +465,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
     }
 
-    public function testTemplateWithNonUniqueType()
+    public function testTemplateWithNonUniqueType(): void
     {
         $this->expectException(InvalidWebspaceException::class);
 
@@ -474,7 +474,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
     }
 
-    public function testUrlWithTrailingSlash()
+    public function testUrlWithTrailingSlash(): void
     {
         $webspace = $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/url-with-trailing-slash/sulu.io_url_with_slash.xml'
@@ -487,7 +487,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('sulu-with-slash.lo', $environmentDev->getUrls()[1]->getUrl());
     }
 
-    public function testXDefaulLocale()
+    public function testXDefaulLocale(): void
     {
         $webspace = $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/xdefault/sulu.io_xdefault_locale.xml'
@@ -497,7 +497,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('en_us', $webspace->getPortals()[0]->getXDefaultLocalization()->getLocale());
     }
 
-    public function testXDefaulLocaleNotExists()
+    public function testXDefaulLocaleNotExists(): void
     {
         $webspace = $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/xdefault/sulu.io_no_xdefault_locale.xml'
@@ -507,7 +507,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('de_at', $webspace->getPortals()[0]->getXDefaultLocalization()->getLocale());
     }
 
-    public function testInvalidCustomUrl()
+    public function testInvalidCustomUrl(): void
     {
         $this->expectException(InvalidCustomUrlException::class);
 
@@ -516,7 +516,7 @@ class XmlFileLoader11Test extends WebspaceTestCase
         );
     }
 
-    public function testLoadDynamicOrder()
+    public function testLoadDynamicOrder(): void
     {
         $webspace = $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_dynamicOrder.xml'

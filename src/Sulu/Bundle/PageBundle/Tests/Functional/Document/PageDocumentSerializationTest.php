@@ -88,7 +88,7 @@ class PageDocumentSerializationTest extends SuluTestCase
      *
      * @depends testSerialization
      */
-    public function testDeserialization($data)
+    public function testDeserialization($data): void
     {
         $page = $this->serializer->deserialize($data, PageDocument::class, 'json');
 
@@ -105,7 +105,7 @@ class PageDocumentSerializationTest extends SuluTestCase
     /**
      * It can serialize persisted documents.
      */
-    public function testSerializationPersisted()
+    public function testSerializationPersisted(): void
     {
         $page = $this->createPage([
             'title' => 'Hello',
@@ -123,7 +123,7 @@ class PageDocumentSerializationTest extends SuluTestCase
     /**
      * It can deserialize persisted documents with routes.
      */
-    public function testDeserializationPersisted()
+    public function testDeserializationPersisted(): void
     {
         $page = $this->createPage([
             'title' => 'Hello',

@@ -63,7 +63,7 @@ class ListMetadataProviderTest extends TestCase
         $this->listMetadataProvider = new ListMetadataProvider($loaders, $visitors);
     }
 
-    public function testGetMetadataFromLoader1()
+    public function testGetMetadataFromLoader1(): void
     {
         $listMetadata = new ListMetadata();
         $listMetadata->addField(new FieldMetadata('field1'));
@@ -82,7 +82,7 @@ class ListMetadataProviderTest extends TestCase
         $this->assertEquals($listMetadata, $metadata);
     }
 
-    public function testGetMetadataFromLoader2()
+    public function testGetMetadataFromLoader2(): void
     {
         $listMetadata = new ListMetadata();
         $listMetadata->addField(new FieldMetadata('field1'));
@@ -101,7 +101,7 @@ class ListMetadataProviderTest extends TestCase
         $this->assertEquals($listMetadata, $metadata);
     }
 
-    public function testGetMetadataNotExisting()
+    public function testGetMetadataNotExisting(): void
     {
         $this->xmlListMetadataLoader1->getMetadata('list1', 'en', [])->willReturn(null)->shouldBeCalled();
         $this->xmlListMetadataLoader2->getMetadata('list1', 'en', [])->willReturn(null)->shouldBeCalled();

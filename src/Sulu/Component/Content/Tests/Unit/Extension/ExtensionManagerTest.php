@@ -54,7 +54,7 @@ class ExtensionManagerTest extends TestCase
     /**
      * @dataProvider addProvider
      */
-    public function testAdd($extensions, $type, $expected)
+    public function testAdd($extensions, $type, $expected): void
     {
         $manager = new ExtensionManager();
 
@@ -100,7 +100,7 @@ class ExtensionManagerTest extends TestCase
     /**
      * @dataProvider hasProvider
      */
-    public function testHas($extensions, $type, $name, $expected)
+    public function testHas($extensions, $type, $name, $expected): void
     {
         $manager = new ExtensionManager();
 
@@ -140,7 +140,7 @@ class ExtensionManagerTest extends TestCase
     /**
      * @dataProvider getProvider
      */
-    public function testGet($extensions, $type, $name, $expected)
+    public function testGet($extensions, $type, $name, $expected): void
     {
         $manager = new ExtensionManager();
 
@@ -180,7 +180,7 @@ class ExtensionManagerTest extends TestCase
     /**
      * @dataProvider getExceptionProvider
      */
-    public function testGetException($extensions, $type, $name, $exxceptionName)
+    public function testGetException($extensions, $type, $name, $exxceptionName): void
     {
         $this->expectException($exxceptionName);
 

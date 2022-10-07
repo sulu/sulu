@@ -30,7 +30,7 @@ class PreviewRendererTest extends KernelTestCase
         $this->previewRenderer = self::getContainer()->get('sulu_preview_test.preview.renderer');
     }
 
-    public function testTargetGroupProperty()
+    public function testTargetGroupProperty(): void
     {
         $this->assertSame(
             'X-Sulu-Target-Group',

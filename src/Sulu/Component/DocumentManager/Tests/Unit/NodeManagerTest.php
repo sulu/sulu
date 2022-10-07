@@ -74,7 +74,7 @@ class NodeManagerTest extends TestCase
     /**
      * It should be able to find a node1 by UUID1.
      */
-    public function testFindByUuid()
+    public function testFindByUuid(): void
     {
         $this->session->getNodeByIdentifier(self::UUID1)->willReturn($this->node1->reveal());
         $node1 = $this->manager->find(self::UUID1);
@@ -84,7 +84,7 @@ class NodeManagerTest extends TestCase
     /**
      * It should be able to find a node1 by path.
      */
-    public function testFindByPath()
+    public function testFindByPath(): void
     {
         $this->session->getNode(self::PATH1)->willReturn($this->node1->reveal());
         $node1 = $this->manager->find(self::PATH1);
@@ -94,7 +94,7 @@ class NodeManagerTest extends TestCase
     /**
      * It should throw an exception if the node1 was not found.
      */
-    public function testFindNotFound()
+    public function testFindNotFound(): void
     {
         $this->expectException(DocumentNotFoundException::class);
         $this->session->getNode(self::PATH1)->willThrow(new PathNotFoundException('Not found'));
@@ -104,7 +104,7 @@ class NodeManagerTest extends TestCase
     /**
      * It should be able to remove a document by UUID1.
      */
-    public function testRemoveByUUid()
+    public function testRemoveByUUid(): void
     {
         $this->session->getNodeByIdentifier(self::UUID1)->willReturn($this->node1->reveal());
         $this->node1->getPath()->willReturn(self::PATH1);
@@ -115,7 +115,7 @@ class NodeManagerTest extends TestCase
     /**
      * It should be able to remove by path.
      */
-    public function testRemoveByPath()
+    public function testRemoveByPath(): void
     {
         $this->session->removeItem(self::PATH1)->shouldBeCalled();
         $this->manager->remove(self::PATH1);
@@ -124,7 +124,7 @@ class NodeManagerTest extends TestCase
     /**
      * It should be able to copy a node1.
      */
-    public function testCopy()
+    public function testCopy(): void
     {
         $this->session->getNodeByIdentifier(self::UUID1)->willReturn($this->node1->reveal());
         $this->node1->getPath()->willReturn(self::PATH1);
@@ -139,7 +139,7 @@ class NodeManagerTest extends TestCase
     /**
      * It should be able to save the session.
      */
-    public function testSave()
+    public function testSave(): void
     {
         $this->session->save()->shouldBeCalled();
         $this->manager->save();
@@ -148,7 +148,7 @@ class NodeManagerTest extends TestCase
     /**
      * It should clear/reset the PHPCR session.
      */
-    public function testClear()
+    public function testClear(): void
     {
         $this->session->refresh(false)->shouldBeCalled();
         $this->manager->clear();
@@ -157,7 +157,7 @@ class NodeManagerTest extends TestCase
     /**
      * It should purge the workspace.
      */
-    public function testPurgeWorkspace()
+    public function testPurgeWorkspace(): void
     {
         $this->session->getRootNode()->willReturn($this->node1->reveal())->shouldBeCalled();
         $this->node1->getProperties()->willReturn([])->shouldBeCalled();

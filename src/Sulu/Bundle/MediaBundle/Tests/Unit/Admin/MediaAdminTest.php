@@ -83,7 +83,7 @@ class MediaAdminTest extends TestCase
         );
     }
 
-    public function testGetSecurityContexts()
+    public function testGetSecurityContexts(): void
     {
         $webspace1 = new Webspace();
         $security1 = new Security();

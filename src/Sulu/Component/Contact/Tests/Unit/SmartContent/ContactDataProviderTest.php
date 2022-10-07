@@ -62,14 +62,14 @@ class ContactDataProviderTest extends TestCase
         );
     }
 
-    public function testGetConfiguration()
+    public function testGetConfiguration(): void
     {
         $configuration = $this->contactDataProvider->getConfiguration();
 
         $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
     }
 
-    public function testGetDefaultParameter()
+    public function testGetDefaultParameter(): void
     {
         $parameter = $this->contactDataProvider->getDefaultPropertyParameter();
 
@@ -100,7 +100,7 @@ class ContactDataProviderTest extends TestCase
     /**
      * @dataProvider dataItemsDataProvider
      */
-    public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items)
+    public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items): void
     {
         $this->dataProviderRepository->findByFilters(
             $filters,
@@ -128,7 +128,7 @@ class ContactDataProviderTest extends TestCase
         $this->assertEquals($items, $result->getItems());
     }
 
-    public function testNullSortBy()
+    public function testNullSortBy(): void
     {
         $contacts = [
             $this->createContact(1, 'Max', 'Mustermann')->reveal(),
@@ -188,7 +188,7 @@ class ContactDataProviderTest extends TestCase
         $repositoryResult,
         $hasNextPage,
         $items
-    ) {
+    ): void {
         $serializeCallback = function(Contact $contact) {
             return $this->serialize($contact);
         };
@@ -230,7 +230,7 @@ class ContactDataProviderTest extends TestCase
         $this->assertEquals($items, $result->getItems());
     }
 
-    public function testResolveDataSource()
+    public function testResolveDataSource(): void
     {
         $this->assertNull($this->contactDataProvider->resolveDatasource('', [], []));
     }

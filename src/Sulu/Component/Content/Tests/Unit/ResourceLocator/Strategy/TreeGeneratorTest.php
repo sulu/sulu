@@ -16,7 +16,7 @@ use Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeGenerator;
 
 class TreeGeneratorTest extends TestCase
 {
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $generator = new TreeGenerator();
 

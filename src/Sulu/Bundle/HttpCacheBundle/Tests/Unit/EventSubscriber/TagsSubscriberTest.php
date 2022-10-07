@@ -113,7 +113,7 @@ class TagsSubscriberTest extends TestCase
         );
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $expectedTags = [
             'test-1',
@@ -126,7 +126,7 @@ class TagsSubscriberTest extends TestCase
         $this->tagsSubscriber->addTags();
     }
 
-    public function testGetEmptyReferenceStore()
+    public function testGetEmptyReferenceStore(): void
     {
         $this->referenceStores['test_uuid']->getAll()->willReturn([]);
         $expectedTags = [
@@ -138,7 +138,7 @@ class TagsSubscriberTest extends TestCase
         $this->tagsSubscriber->addTags();
     }
 
-    public function testGetWithoutStructure()
+    public function testGetWithoutStructure(): void
     {
         $this->request->get('structure')->willReturn(null);
         $expectedTags = [
@@ -151,7 +151,7 @@ class TagsSubscriberTest extends TestCase
         $this->tagsSubscriber->addTags();
     }
 
-    public function testGetWithWrongStructure()
+    public function testGetWithWrongStructure(): void
     {
         $this->request->get('structure')->willReturn(\stdClass::class);
         $expectedTags = [
@@ -164,7 +164,7 @@ class TagsSubscriberTest extends TestCase
         $this->tagsSubscriber->addTags();
     }
 
-    public function testGetWithoutRequest()
+    public function testGetWithoutRequest(): void
     {
         $this->requestStack->getCurrentRequest()->willReturn(null);
         $expectedTags = [
@@ -177,7 +177,7 @@ class TagsSubscriberTest extends TestCase
         $this->tagsSubscriber->addTags();
     }
 
-    public function testEmptyReferenceStore()
+    public function testEmptyReferenceStore(): void
     {
         $this->request->get('structure')->willReturn(null);
         $this->referenceStores['test_uuid']->getAll()->willReturn([]);

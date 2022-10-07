@@ -120,7 +120,7 @@ class AccountTrashItemHandlerTest extends TestCase
             });
 
         $this->doctrineRestoreHelper->persistAndFlushWithId(Argument::cetera())
-            ->will(static function($args) {
+            ->will(static function($args): void {
                 /** @var AccountInterface $account */
                 $account = $args[0];
 
@@ -219,7 +219,7 @@ class AccountTrashItemHandlerTest extends TestCase
             ->shouldBeCalled();
         $this->entityManager->persist(Argument::cetera())
             ->shouldBeCalled()
-            ->will(static function($args) {
+            ->will(static function($args): void {
                 /** @var AccountInterface $account */
                 $account = $args[0];
 

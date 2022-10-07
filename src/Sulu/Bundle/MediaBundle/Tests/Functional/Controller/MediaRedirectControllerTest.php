@@ -108,7 +108,7 @@ class MediaRedirectControllerTest extends SuluTestCase
         }
     }
 
-    public function recursiveRemoveDirectory($directory, $counter = 0)
+    public function recursiveRemoveDirectory($directory, $counter = 0): void
     {
         foreach (\glob($directory . '/*') as $file) {
             if (\is_dir($file)) {
@@ -126,7 +126,7 @@ class MediaRedirectControllerTest extends SuluTestCase
     /**
      * set up two categories.
      */
-    private function setUpCategory()
+    private function setUpCategory(): void
     {
         /* First Category
         -------------------------------------*/
@@ -309,7 +309,7 @@ class MediaRedirectControllerTest extends SuluTestCase
     /**
      * Test redirect to original.
      */
-    public function testRedirect()
+    public function testRedirect(): void
     {
         $media = $this->createMedia('photo');
 
@@ -324,7 +324,7 @@ class MediaRedirectControllerTest extends SuluTestCase
     /**
      * Test redirect to format.
      */
-    public function testRedirectFormat()
+    public function testRedirectFormat(): void
     {
         $media = $this->createMedia('photo');
 

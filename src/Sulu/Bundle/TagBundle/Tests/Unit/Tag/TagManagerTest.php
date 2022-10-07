@@ -139,7 +139,7 @@ class TagManagerTest extends TestCase
         );
     }
 
-    public function testResolveTagNames()
+    public function testResolveTagNames(): void
     {
         $tagNames = ['Tag1', 'Tag2', 'Tag3', 'InvalidTag'];
 
@@ -148,7 +148,7 @@ class TagManagerTest extends TestCase
         $this->assertEquals([1, 2, 3], $tagIds);
     }
 
-    public function testResolveTagIds()
+    public function testResolveTagIds(): void
     {
         $tagIds = [1, 2, 3, 99];
 

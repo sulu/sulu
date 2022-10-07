@@ -21,7 +21,7 @@ class ReferenceStorePoolTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testGetStores()
+    public function testGetStores(): void
     {
         $innerStore = $this->prophesize(ReferenceStoreInterface::class);
 
@@ -30,7 +30,7 @@ class ReferenceStorePoolTest extends TestCase
         $this->assertEquals(['test' => $innerStore->reveal()], $store->getStores());
     }
 
-    public function testGetStore()
+    public function testGetStore(): void
     {
         $innerStore = $this->prophesize(ReferenceStoreInterface::class);
 
@@ -39,7 +39,7 @@ class ReferenceStorePoolTest extends TestCase
         $this->assertEquals($innerStore->reveal(), $store->getStore('test'));
     }
 
-    public function testGetStoreNotExisting()
+    public function testGetStoreNotExisting(): void
     {
         $this->expectException(ReferenceStoreNotExistsException::class);
         $store = new ReferenceStorePool([]);

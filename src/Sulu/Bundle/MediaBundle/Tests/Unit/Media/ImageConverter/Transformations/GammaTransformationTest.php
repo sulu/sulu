@@ -36,7 +36,7 @@ class GammaTransformationTest extends SuluTestCase
         parent::setUp();
     }
 
-    public function testGamma()
+    public function testGamma(): void
     {
         $image = $this->prophesize(ImageInterface::class);
         $effects = $this->prophesize(EffectsInterface::class);

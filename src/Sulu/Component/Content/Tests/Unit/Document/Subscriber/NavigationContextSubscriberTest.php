@@ -53,7 +53,7 @@ class NavigationContextSubscriberTest extends TestCase
         $this->event->getMetadata()->willReturn($this->metadata);
     }
 
-    public function testLoadMetadata()
+    public function testLoadMetadata(): void
     {
         $this->metadata->getReflectionClass()->willReturn(new \ReflectionClass($this->document->reveal()));
         $this->metadata->addFieldMapping('navigationContexts', Argument::any())->shouldBeCalled();

@@ -23,7 +23,7 @@ class WebspaceUrlProviderTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testGetUrls()
+    public function testGetUrls(): void
     {
         $urls = [
             new Url('sulu.lo'),

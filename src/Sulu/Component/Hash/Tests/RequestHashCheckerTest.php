@@ -54,7 +54,7 @@ class RequestHashCheckerTest extends TestCase
     /**
      * @dataProvider provideCheckHash
      */
-    public function testCheckHash($force, $givenHash, $realHash, $valid)
+    public function testCheckHash($force, $givenHash, $realHash, $valid): void
     {
         $request = new Request(['force' => $force], $givenHash ? ['_hash' => $givenHash] : []);
         $object = new \stdClass();

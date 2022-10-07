@@ -84,7 +84,7 @@ class MarkupListenerTest extends TestCase
         $this->listener = new MarkupListener(['html' => $this->markupParser->reveal()], ['text/html' => 'html']);
     }
 
-    public function testReplaceMarkup()
+    public function testReplaceMarkup(): void
     {
         $this->request->getRequestFormat(null)->willReturn('html');
         $this->request->getLocale()->willReturn('de');
@@ -100,7 +100,7 @@ class MarkupListenerTest extends TestCase
         $this->listener->replaceMarkup($this->event);
     }
 
-    public function testReplaceMarkupWithEmptyContent()
+    public function testReplaceMarkupWithEmptyContent(): void
     {
         $this->request->getRequestFormat()->willReturn('html');
         $this->request->getLocale()->willReturn('de');

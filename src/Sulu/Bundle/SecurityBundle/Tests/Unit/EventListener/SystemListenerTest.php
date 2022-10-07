@@ -39,7 +39,7 @@ class SystemListenerTest extends TestCase
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
     }
 
-    public function testSetAdminSystem()
+    public function testSetAdminSystem(): void
     {
         $systemListener = $this->createSystemListener('admin');
         $requestEvent = $this->prophesize(RequestEvent::class);
@@ -59,7 +59,7 @@ class SystemListenerTest extends TestCase
     /**
      * @dataProvider provideSetWebsiteSystem
      */
-    public function testSetWebsiteSystem(string $system)
+    public function testSetWebsiteSystem(string $system): void
     {
         $systemListener = $this->createSystemListener('website');
         $requestEvent = $this->prophesize(RequestEvent::class);

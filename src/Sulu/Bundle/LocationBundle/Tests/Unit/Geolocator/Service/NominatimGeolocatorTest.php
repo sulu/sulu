@@ -47,7 +47,7 @@ class NominatimGeolocatorTest extends TestCase
      *
      * @dataProvider provideLocate
      */
-    public function testGuzzleLocate($query, $expectedCount, $expectationMap)
+    public function testGuzzleLocate($query, $expectedCount, $expectationMap): void
     {
         $fixtureName = __DIR__ . '/responses/' . \md5($query) . '.json';
         $fixture = \file_get_contents($fixtureName);
@@ -73,7 +73,7 @@ class NominatimGeolocatorTest extends TestCase
     /**
      * @dataProvider provideLocate
      */
-    public function testLocate($query, $expectedCount, $expectationMap)
+    public function testLocate($query, $expectedCount, $expectationMap): void
     {
         $fixtureName = __DIR__ . '/responses/' . \md5($query) . '.json';
         /** @var string $fixture */

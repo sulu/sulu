@@ -29,7 +29,7 @@ class PageBridgeSubscriberTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testSerialize()
+    public function testSerialize(): void
     {
         $pageBridge = $this->prophesize(PageBridge::class);
         $document = $this->prophesize(PageDocument::class);

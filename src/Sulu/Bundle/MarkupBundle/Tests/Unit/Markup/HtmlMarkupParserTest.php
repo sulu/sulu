@@ -66,7 +66,7 @@ class HtmlMarkupParserTest extends TestCase
         );
     }
 
-    public function testParse()
+    public function testParse(): void
     {
         $this->linkTag->parseAll(
             ['<sulu-link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test']],
@@ -88,7 +88,7 @@ EOT;
         $this->assertStringContainsString('<a href="/test" title="test">page title</a>', $response);
     }
 
-    public function testParseMultiple()
+    public function testParseMultiple(): void
     {
         $this->linkTag->parseAll(
             [
@@ -118,7 +118,7 @@ EOT;
         $this->assertStringContainsString('<a href="/test-2" title="test">page-2 title</a>', $response);
     }
 
-    public function testParseSame()
+    public function testParseSame(): void
     {
         $this->linkTag->parseAll(
             ['<sulu-link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test']],
@@ -142,7 +142,7 @@ EOT;
         $this->assertStringNotContainsString('<sulu-link href="123-123-123" title="test" />', $response);
     }
 
-    public function testParseDifferentTags()
+    public function testParseDifferentTags(): void
     {
         $this->linkTag->parseAll(
             ['<sulu-link href="123-123-123" title="test" />' => ['href' => '123-123-123', 'title' => 'test']],
@@ -172,7 +172,7 @@ EOT;
         $this->assertStringContainsString('<img src="/img/test.jpg" title="test"/>', $response);
     }
 
-    public function testParseNonEmptyTag()
+    public function testParseNonEmptyTag(): void
     {
         $this->linkTag->parseAll(
             [
@@ -200,7 +200,7 @@ EOT;
         $this->assertStringContainsString('<a href="/test" title="test">link content</a>', $response);
     }
 
-    public function testParseNested()
+    public function testParseNested(): void
     {
         $this->linkTag->parseAll(
             [
@@ -231,7 +231,7 @@ EOT;
         $this->assertStringContainsString('<a href="/test" title="test"><img src="test.jpg"/></a>', $response);
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $this->linkTag->validateAll(
             [
@@ -257,7 +257,7 @@ EOT;
         $this->assertEmpty($response);
     }
 
-    public function testValidateInvalidTest()
+    public function testValidateInvalidTest(): void
     {
         $this->linkTag->validateAll(
             [
@@ -289,7 +289,7 @@ EOT;
         );
     }
 
-    public function testValidateInvalidRemoved()
+    public function testValidateInvalidRemoved(): void
     {
         $this->linkTag->validateAll(
             [
@@ -321,7 +321,7 @@ EOT;
         );
     }
 
-    public function testValidateDifferentInvalidTags()
+    public function testValidateDifferentInvalidTags(): void
     {
         $this->linkTag->validateAll(
             ['<sulu-link href="123-123-123" title="test"/>' => ['href' => '123-123-123', 'title' => 'test']],

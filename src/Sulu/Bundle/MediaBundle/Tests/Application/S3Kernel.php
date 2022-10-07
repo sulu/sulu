@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class S3Kernel extends Kernel implements CompilerPassInterface
 {
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         parent::registerContainerConfiguration($loader);
 
@@ -34,7 +34,7 @@ class S3Kernel extends Kernel implements CompilerPassInterface
             . $this->environment;
     }
 
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $container->getDefinition('sulu_media.storage.s3')->setPublic(true);
         $container->getDefinition('sulu_media.storage.s3.adapter')

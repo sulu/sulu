@@ -74,7 +74,7 @@ class AuthenticationHandlerTest extends TestCase
         $this->authenticationHandler = new AuthenticationHandler($router->reveal(), ['email', 'trusted_devices']);
     }
 
-    public function testOnAuthenticationSuccess()
+    public function testOnAuthenticationSuccess(): void
     {
         $this->request->isXmlHttpRequest()->willReturn(false);
 
@@ -87,7 +87,7 @@ class AuthenticationHandlerTest extends TestCase
         $this->assertEquals(302, $response->getStatusCode());
     }
 
-    public function testOnAuthenticationSuccessAjax()
+    public function testOnAuthenticationSuccessAjax(): void
     {
         $this->request->isXmlHttpRequest()->willReturn(true);
 
@@ -110,7 +110,7 @@ class AuthenticationHandlerTest extends TestCase
         ], $response);
     }
 
-    public function testOnAuthenticationFailure()
+    public function testOnAuthenticationFailure(): void
     {
         $this->request->isXmlHttpRequest()->willReturn(false);
 
@@ -123,7 +123,7 @@ class AuthenticationHandlerTest extends TestCase
         $this->assertEquals(302, $response->getStatusCode());
     }
 
-    public function testOnAuthenticationFailureAjax()
+    public function testOnAuthenticationFailureAjax(): void
     {
         $this->request->isXmlHttpRequest()->willReturn(true);
 

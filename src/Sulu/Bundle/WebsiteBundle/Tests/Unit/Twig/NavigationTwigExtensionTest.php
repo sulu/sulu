@@ -43,7 +43,7 @@ class NavigationTwigExtensionTest extends TestCase
     /**
      * @dataProvider activeElementProvider
      */
-    public function testActiveElement($expected, $requestPath, $itemPath)
+    public function testActiveElement($expected, $requestPath, $itemPath): void
     {
         $extension = new NavigationTwigExtension(
             $this->prophesize(ContentMapperInterface::class)->reveal(),
@@ -53,7 +53,7 @@ class NavigationTwigExtensionTest extends TestCase
         $this->assertEquals($expected, $extension->navigationIsActiveFunction($requestPath, $itemPath));
     }
 
-    public function testBreadcrumbFunctionDocumentNotFound()
+    public function testBreadcrumbFunctionDocumentNotFound(): void
     {
         $navigationMapper = $this->prophesize(NavigationMapperInterface::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -76,7 +76,7 @@ class NavigationTwigExtensionTest extends TestCase
         $this->assertEquals([], $extension->breadcrumbFunction('123-123-123'));
     }
 
-    public function testFlatNavigationFunctionDocumentNotFound()
+    public function testFlatNavigationFunctionDocumentNotFound(): void
     {
         $navigationMapper = $this->prophesize(NavigationMapperInterface::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -104,7 +104,7 @@ class NavigationTwigExtensionTest extends TestCase
         $this->assertEquals([], $extension->flatNavigationFunction('123-123-123'));
     }
 
-    public function testTreeNavigationFunctionDocumentNotFound()
+    public function testTreeNavigationFunctionDocumentNotFound(): void
     {
         $navigationMapper = $this->prophesize(NavigationMapperInterface::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -132,7 +132,7 @@ class NavigationTwigExtensionTest extends TestCase
         $this->assertEquals([], $extension->treeNavigationFunction('123-123-123'));
     }
 
-    public function testFlatRootNavigation()
+    public function testFlatRootNavigation(): void
     {
         $navigationMapper = $this->prophesize(NavigationMapperInterface::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);

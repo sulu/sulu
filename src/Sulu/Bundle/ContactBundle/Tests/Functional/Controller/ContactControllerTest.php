@@ -64,7 +64,7 @@ class ContactControllerTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testGetById()
+    public function testGetById(): void
     {
         $title = $this->createTitle('MSc');
         $position = $this->createPosition('Manager');
@@ -160,7 +160,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrter Herr Dr Mustermann', $response->salutation);
     }
 
-    public function testPostAccountIDNull()
+    public function testPostAccountIDNull(): void
     {
         $title = $this->createTitle('MSc');
         $position = $this->createPosition('Manager');
@@ -293,7 +293,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
     }
 
-    public function testPostCategoryNull()
+    public function testPostCategoryNull(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -314,7 +314,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEmpty($response->categories);
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         $title = $this->createTitle('MSc');
         $position = $this->createPosition('Manager');
@@ -458,7 +458,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals($category2->getId(), $response->categories[1]);
     }
 
-    public function testPostWithAccountWithoutPosition()
+    public function testPostWithAccountWithoutPosition(): void
     {
         $collectionType = $this->createCollectionType('My collection type');
         $account = $this->createAccount('Musterfirma');
@@ -487,7 +487,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals($account->getid(), $response->account->id);
     }
 
-    public function testPostEmptyAddress()
+    public function testPostEmptyAddress(): void
     {
         $addressType = $this->createAddressType('Private');
         $this->em->flush();
@@ -514,7 +514,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertCount(1, $response->addresses);
     }
 
-    public function testPostWithoutBankNameAndBic()
+    public function testPostWithoutBankNameAndBic(): void
     {
         $addressType = $this->createAddressType('Private');
         $this->em->flush();
@@ -543,7 +543,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertNull($response->bankAccounts[0]->bic);
     }
 
-    public function testPostEmptyLatitude()
+    public function testPostEmptyLatitude(): void
     {
         $title = $this->createTitle('MSc');
         $addressType = $this->createAddressType('Private');
@@ -593,7 +593,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertNull($response['addresses'][0]['longitude']);
     }
 
-    public function testPostWithoutAdditionalData()
+    public function testPostWithoutAdditionalData(): void
     {
         $title = $this->createTitle('MSc');
         $position = $this->createPosition('Manager');
@@ -621,7 +621,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals($title->getId(), $response->title);
     }
 
-    public function testPostWithoutFormOfAddress()
+    public function testPostWithoutFormOfAddress(): void
     {
         $title = $this->createTitle('MSc');
         $position = $this->createPosition('Manager');
@@ -648,7 +648,7 @@ class ContactControllerTest extends SuluTestCase
         );
     }
 
-    public function testPostWithEmptyAdditionalData()
+    public function testPostWithEmptyAdditionalData(): void
     {
         $title = $this->createTitle('MSc');
         $position = $this->createPosition('Manager');
@@ -692,7 +692,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrte Frau Dr Mustermann', $response->salutation);
     }
 
-    public function testGetListSearchEmpty()
+    public function testGetListSearchEmpty(): void
     {
         $this->client->jsonRequest('GET', '/api/contacts?flat=true&search=Nothing&searchFields=fullName');
 
@@ -703,7 +703,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(0, \count($response->_embedded->contacts));
     }
 
-    public function testGetListSearch()
+    public function testGetListSearch(): void
     {
         $contact1 = new Contact();
         $contact1->setFirstName('Erika');
@@ -723,7 +723,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Erika Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
-    public function testGetListFilter()
+    public function testGetListFilter(): void
     {
         $contact1 = new Contact();
         $contact1->setFirstName('Erika');
@@ -748,7 +748,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('John Doe', $response->_embedded->contacts[0]->fullName);
     }
 
-    public function testGetListSearchWithExcludedAccountId()
+    public function testGetListSearchWithExcludedAccountId(): void
     {
         $account1 = $this->createAccount('Musterfirma 1');
         $account2 = $this->createAccount('Musterfirma 2');
@@ -796,7 +796,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Erika Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
-    public function testGetListByAccountId()
+    public function testGetListByAccountId(): void
     {
         $account1 = $this->createAccount('Musterfirma 1');
         $this->em->persist($account1);
@@ -844,7 +844,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Erika Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
-    public function testGetListBySystem()
+    public function testGetListBySystem(): void
     {
         $suluContact = new Contact();
         $suluContact->setFirstName('Max');
@@ -879,7 +879,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
-    public function testPut()
+    public function testPut(): void
     {
         $title = $this->createTitle('MSc');
         $position = $this->createPosition('Manager');
@@ -1102,7 +1102,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals($category3->getId(), $response->categories[0]);
     }
 
-    public function testPutEmptyContactDetails()
+    public function testPutEmptyContactDetails(): void
     {
         $emailType = $this->createEmailType('Private');
         $faxType = $this->createFaxType('Private');
@@ -1172,7 +1172,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEmpty($response->contactDetails->websites);
     }
 
-    public function testPutEmptyContactDetailsOnExistingValues()
+    public function testPutEmptyContactDetailsOnExistingValues(): void
     {
         $emailType = $this->createEmailType('Private');
         $email = $this->createEmail('max.mustermann@muster.at', $emailType);
@@ -1259,7 +1259,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEmpty($response->contactDetails->websites);
     }
 
-    public function testPutDeleteAndAddWithoutId()
+    public function testPutDeleteAndAddWithoutId(): void
     {
         $title = $this->createTitle('MSc');
         $position = $this->createPosition('Manager');
@@ -1395,7 +1395,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrter John', $response->salutation);
     }
 
-    public function testPutNoEmail()
+    public function testPutNoEmail(): void
     {
         $title = $this->createTitle('MSc');
         $position = $this->createPosition('Manager');
@@ -1511,7 +1511,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrter John', $response->salutation);
     }
 
-    public function testPutNewCountry()
+    public function testPutNewCountry(): void
     {
         $title = $this->createTitle('MSc');
         $position = $this->createPosition('Manager');
@@ -1613,7 +1613,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrter John', $response->salutation);
     }
 
-    public function testPutNewAccount()
+    public function testPutNewAccount(): void
     {
         $title = $this->createTitle('MSc');
         $position = $this->createPosition('Manager');
@@ -1720,7 +1720,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Sehr geehrter John', $response->salutation);
     }
 
-    public function testPutReplaceAccount()
+    public function testPutReplaceAccount(): void
     {
         $accountOld = $this->createAccount('Musterfirma Old');
         $accountNew = $this->createAccount('Musterfirma New');
@@ -1753,7 +1753,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertCount(1, $contact->getAccountContacts());
     }
 
-    public function testPutNotExisting()
+    public function testPutNotExisting(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -1766,7 +1766,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testGetList()
+    public function testGetList(): void
     {
         $this->client->jsonRequest('GET', '/api/contacts?flat=true&fields=fullName,title,formOfAddress,salutation');
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1781,7 +1781,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertObjectNotHasAttribute('firstName', $response->_embedded->contacts[0]);
     }
 
-    public function testGetListFields()
+    public function testGetListFields(): void
     {
         $contact = $this->createContact('Max', 'Mustermann');
         $this->em->flush();
@@ -1801,7 +1801,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
     }
 
-    public function testGetListIds()
+    public function testGetListIds(): void
     {
         $contact1 = new Contact();
         $contact1->setFirstName('Erika');
@@ -1831,7 +1831,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals($contact3->getId(), $response->_embedded->contacts[2]->id);
     }
 
-    public function testGetListIdsEmpty()
+    public function testGetListIdsEmpty(): void
     {
         $this->client->jsonRequest('GET', '/api/contacts?flat=true&ids=');
         $response = \json_decode($this->client->getResponse()->getContent());
@@ -1839,7 +1839,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertCount(0, $response->_embedded->contacts);
     }
 
-    public function testGetListIdsOrder()
+    public function testGetListIdsOrder(): void
     {
         $contact1 = new Contact();
         $contact1->setFirstName('Erika');
@@ -1869,7 +1869,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals($contact2->getId(), $response->_embedded->contacts[2]->id);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $contact = $this->createContact('Max', 'Mustermann');
         $this->em->flush();
@@ -1890,7 +1890,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertNotNull($trashItem);
     }
 
-    public function testDeleteNotExisting()
+    public function testDeleteNotExisting(): void
     {
         $this->client->jsonRequest('DELETE', '/api/contacts/4711');
 
@@ -1903,7 +1903,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(1, $response->total);
     }
 
-    public function testPutRemovedAccount()
+    public function testPutRemovedAccount(): void
     {
         $title = $this->createTitle('MSc');
         $position = $this->createPosition('Manager');
@@ -2112,7 +2112,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertNull($response->salutation);
     }
 
-    public function testPatchNotExisting()
+    public function testPatchNotExisting(): void
     {
         $this->client->jsonRequest(
             'PATCH',
@@ -2125,7 +2125,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testPatchAssignedMedias()
+    public function testPatchAssignedMedias(): void
     {
         $collectionType = $this->createCollectionType('My collection type');
         $collection = $this->createCollection($collectionType);
@@ -2185,7 +2185,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(0, \count($response->medias));
     }
 
-    public function testPrimaryAddressHandlingPost()
+    public function testPrimaryAddressHandlingPost(): void
     {
         $position = $this->createPosition('Manager');
         $emailType = $this->createEmailType('Private');
@@ -2292,7 +2292,7 @@ class ContactControllerTest extends SuluTestCase
         );
     }
 
-    public function testPrimaryAddressHandlingPut()
+    public function testPrimaryAddressHandlingPut(): void
     {
         $title = $this->createTitle('MSc');
         $position = $this->createPosition('Manager');
@@ -2414,7 +2414,7 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(true, $response->addresses[2]->primaryAddress);
     }
 
-    public function testPostEmptyBirthday()
+    public function testPostEmptyBirthday(): void
     {
         $contact = $this->createContact('Max', 'Mustermann', null, new \DateTime());
         $this->em->flush();

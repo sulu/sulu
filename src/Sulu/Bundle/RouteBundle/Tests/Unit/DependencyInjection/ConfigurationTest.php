@@ -29,7 +29,7 @@ class ConfigurationTest extends AbstractExtensionConfigurationTestCase
         return new Configuration();
     }
 
-    public function testLoadMappingConfigWithDashUnderlines()
+    public function testLoadMappingConfigWithDashUnderlines(): void
     {
         $config = [
             __DIR__ . '/../../Application/config/test_config.yml',

@@ -43,7 +43,7 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
         $this->subscriber = new ShadowCopyPropertiesSubscriber($this->encoder->reveal());
     }
 
-    public function testCopyToShadows()
+    public function testCopyToShadows(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $property->getName()->willReturn('i18n:de-shadow-base');
@@ -64,7 +64,7 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
         $this->subscriber->copyToShadows($this->document->reveal(), $this->node->reveal());
     }
 
-    public function testCopyToShadowsMultiple()
+    public function testCopyToShadowsMultiple(): void
     {
         $property1 = $this->prophesize(PropertyInterface::class);
         $property1->getName()->willReturn('i18n:de-shadow-base');
@@ -93,7 +93,7 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
         $this->subscriber->copyToShadows($this->document->reveal(), $this->node->reveal());
     }
 
-    public function testCopyFromShadow()
+    public function testCopyFromShadow(): void
     {
         $this->document->getShadowLocale()->willReturn('en');
         $this->document->getLocale()->willReturn('de');
@@ -109,7 +109,7 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
         $this->subscriber->copyFromShadow($this->document->reveal(), $this->node->reveal());
     }
 
-    public function testHandlePersistShadow()
+    public function testHandlePersistShadow(): void
     {
         $this->document->isShadowLocaleEnabled()->willReturn(true);
 
@@ -130,7 +130,7 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
         $this->subscriber->copyShadowProperties($this->persistEvent->reveal());
     }
 
-    public function testHandlePersistNotShadow()
+    public function testHandlePersistNotShadow(): void
     {
         $this->document->isShadowLocaleEnabled()->willReturn(false);
 

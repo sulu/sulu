@@ -72,7 +72,7 @@ class SeoTwigExtensionTest extends TestCase
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
     }
 
-    public function testGetFunctions()
+    public function testGetFunctions(): void
     {
         $result = $this->seoTwigExtension->getFunctions();
 
@@ -96,7 +96,7 @@ class SeoTwigExtensionTest extends TestCase
         $unexpectedResults = [],
         $resourceLocator = '/test',
         $requestSeoData = []
-    ) {
+    ): void {
         $this->markTestSkipped(); // TODO add functional tests for template rendering
 
         $this->request->get('_seo', [])->willReturn($requestSeoData);
@@ -143,7 +143,7 @@ class SeoTwigExtensionTest extends TestCase
         }
     }
 
-    public function testRenderSeoTagsWithoutPortal()
+    public function testRenderSeoTagsWithoutPortal(): void
     {
         $this->markTestSkipped(); // TODO add functional tests for template rendering
 

@@ -52,7 +52,7 @@ class RouterListenerTest extends TestCase
         $this->routerListener = new RouterListener($this->baseRouteListener->reveal(), $this->requestAnalyzer->reveal());
     }
 
-    public function testAnalyzeRequest()
+    public function testAnalyzeRequest(): void
     {
         $request = new Request([], [], ['_requestAnalyzer' => true]);
         $event = $this->createRequestEvent($request);
@@ -63,7 +63,7 @@ class RouterListenerTest extends TestCase
         $this->routerListener->onKernelRequest($event);
     }
 
-    public function testAnalyzeRequestDisabled()
+    public function testAnalyzeRequestDisabled(): void
     {
         $request = new Request([], [], ['_requestAnalyzer' => false]);
         $event = $this->createRequestEvent($request);
@@ -74,7 +74,7 @@ class RouterListenerTest extends TestCase
         $this->routerListener->onKernelRequest($event);
     }
 
-    public function testAnalyzeRequestDisabledByEsiInProdEnv()
+    public function testAnalyzeRequestDisabledByEsiInProdEnv(): void
     {
         $request = new Request([], [], ['_requestAnalyzer' => '0']);
         $event = $this->createRequestEvent($request);
@@ -85,7 +85,7 @@ class RouterListenerTest extends TestCase
         $this->routerListener->onKernelRequest($event);
     }
 
-    public function testAnalyzeRequestDefault()
+    public function testAnalyzeRequestDefault(): void
     {
         $request = new Request();
         $event = $this->createRequestEvent($request);

@@ -26,7 +26,7 @@ class PortalLoaderTest extends WebsiteTestCase
         $this->client = static::createWebsiteClient();
     }
 
-    public function testPortalRouteEnDynamicLocalization()
+    public function testPortalRouteEnDynamicLocalization(): void
     {
         $this->client->request('GET', 'http://example.lo/en/portal-route');
         $response = $this->client->getResponse();
@@ -34,7 +34,7 @@ class PortalLoaderTest extends WebsiteTestCase
         $this->assertSame('Portal Route', $response->getContent());
     }
 
-    public function testPortalRouteDeDynamicLocalization()
+    public function testPortalRouteDeDynamicLocalization(): void
     {
         $this->client->request('GET', 'http://example.lo/de/portal-route');
         $response = $this->client->getResponse();
@@ -42,13 +42,13 @@ class PortalLoaderTest extends WebsiteTestCase
         $this->assertSame('Portal Route', $response->getContent());
     }
 
-    public function testPortalRouteFrNotExistLocale()
+    public function testPortalRouteFrNotExistLocale(): void
     {
         $this->client->request('GET', 'http://example.lo/fr/portal-route');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testPortalRouteWithoutPrefix()
+    public function testPortalRouteWithoutPrefix(): void
     {
         $this->client->request('GET', 'http://example-english.lo/portal-route');
         $response = $this->client->getResponse();
@@ -56,7 +56,7 @@ class PortalLoaderTest extends WebsiteTestCase
         $this->assertSame('Portal Route', $response->getContent());
     }
 
-    public function testPortalRouteWithPrefix()
+    public function testPortalRouteWithPrefix(): void
     {
         $this->client->request('GET', 'http://example-english.lo/valid-prefix/portal-route');
         $response = $this->client->getResponse();
@@ -64,7 +64,7 @@ class PortalLoaderTest extends WebsiteTestCase
         $this->assertSame('Portal Route', $response->getContent());
     }
 
-    public function testPortalRouteInvalidPrefix()
+    public function testPortalRouteInvalidPrefix(): void
     {
         $this->client->request('GET', 'http://example-english.lo/invalid-prefix/portal-route');
         $this->assertHttpStatusCode(404, $this->client->getResponse());

@@ -45,7 +45,7 @@ class PortalInformationTest extends TestCase
     /**
      * @dataProvider provideUrl
      */
-    public function testGetHostAndPrefix($url, $host, $prefix)
+    public function testGetHostAndPrefix($url, $host, $prefix): void
     {
         $this->portalInformation->setUrl($url);
 
@@ -53,7 +53,7 @@ class PortalInformationTest extends TestCase
         $this->assertEquals($prefix, $this->portalInformation->getPrefix());
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $expected = [
             'type' => 'foo',

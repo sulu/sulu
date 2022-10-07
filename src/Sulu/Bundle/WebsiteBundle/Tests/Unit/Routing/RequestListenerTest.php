@@ -61,7 +61,7 @@ class RequestListenerTest extends TestCase
         $this->requestContext = $this->prophesize(RequestContext::class);
     }
 
-    public function testRequestAnalyzer()
+    public function testRequestAnalyzer(): void
     {
         $this->portalInformation->getPrefix()->willReturn('test/');
         $this->portalInformation->getHost()->willReturn('sulu.io');

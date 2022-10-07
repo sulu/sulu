@@ -256,7 +256,7 @@ class NavigationMapperTest extends SuluTestCase
         return $documents;
     }
 
-    public function testMainNavigation()
+    public function testMainNavigation(): void
     {
         $main = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2);
         $this->assertEquals(2, \count($main));
@@ -289,7 +289,7 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertEquals(0, \count($main[1]['children'][1]['children']));
     }
 
-    public function testMainNavigationWithoutPathParameter()
+    public function testMainNavigationWithoutPathParameter(): void
     {
         $navigationMapper = new NavigationMapper(
             $this->contentMapper,
@@ -309,7 +309,7 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertArrayNotHasKey('path', $main[1]);
     }
 
-    public function testMainNavigationWithSegment()
+    public function testMainNavigationWithSegment(): void
     {
         $main = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2, false, null, false, 'w');
         $this->assertEquals(2, \count($main));
@@ -334,7 +334,7 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertEquals('/products/products-1', $main[1]['children'][0]['url']);
     }
 
-    public function testMainNavigationWithSecuredDocument()
+    public function testMainNavigationWithSecuredDocument(): void
     {
         $userRole = new UserRole();
         $userRole->setLocale((string) \json_encode(['en']));
@@ -358,7 +358,7 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertEquals('Secured Document', $main[2]['title']);
     }
 
-    public function testMainNavigationWithoutSecuredDocument()
+    public function testMainNavigationWithoutSecuredDocument(): void
     {
         $main = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2, false, null, false, 'w');
         $this->assertCount(2, $main);
@@ -366,7 +366,7 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertEquals('Products', $main[1]['title']);
     }
 
-    public function testNavigation()
+    public function testNavigation(): void
     {
         $main = $this->navigationMapper->getNavigation($this->data['news']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(2, \count($main));
@@ -384,7 +384,7 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertEquals('/news/news-2', $main[1]['path']);
     }
 
-    public function testNavigationWithoutPathParameter()
+    public function testNavigationWithoutPathParameter(): void
     {
         $navigationMapper = new NavigationMapper(
             $this->contentMapper,
@@ -412,7 +412,7 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertArrayNotHasKey('path', $main[0]);
     }
 
-    public function testMainNavigationFlat()
+    public function testMainNavigationFlat(): void
     {
         $result = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 1, true);
         $this->assertEquals(2, \count($result));
@@ -432,7 +432,7 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertEquals('Products-2', $result[5]['title']);
     }
 
-    public function testNavigationFlat()
+    public function testNavigationFlat(): void
     {
         $this->markTestSkipped('This method does not work at more than one level. See issue #1252');
 
@@ -453,7 +453,7 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertEquals('SubNews', $result[2]['title']);
     }
 
-    public function testNavigationExcerpt()
+    public function testNavigationExcerpt(): void
     {
         $userRole = new UserRole();
         $userRole->setLocale((string) \json_encode(['en']));
@@ -496,7 +496,7 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertEquals('', $result[2]['excerpt']['title']);
     }
 
-    public function testBreadcrumb()
+    public function testBreadcrumb(): void
     {
         $breadcrumb = $this->navigationMapper->getBreadcrumb($this->data['news/news-2']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(3, \count($breadcrumb));
@@ -510,7 +510,7 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertEquals('/news/news-2', $breadcrumb[2]->getUrl());
     }
 
-    public function testNavContexts()
+    public function testNavContexts(): void
     {
         // context footer (only news and one sub page news-1)
         $result = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2, false, 'footer');
@@ -544,7 +544,7 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertEquals('Products-2', $layer2[1]['title']);
     }
 
-    public function testNavContextsFlat()
+    public function testNavContextsFlat(): void
     {
         // context footer (only news and one sub page news-1)
         $result = $this->navigationMapper->getRootNavigation('sulu_io', 'en', 2, true, 'footer');
@@ -583,7 +583,7 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertEquals('Products-2', $result[4]['title']);
     }
 
-    public function testNavigationTestPage()
+    public function testNavigationTestPage(): void
     {
         $document = $this->createPageDocument();
         $document->setStructureType('simple');
@@ -642,7 +642,7 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertEquals('/products/products-3', $main[2]['url']);
     }
 
-    public function testNavigationStateTestParent()
+    public function testNavigationStateTestParent(): void
     {
         $document = $this->data['products'];
         $document->setStructureType('simple');
@@ -662,7 +662,7 @@ class NavigationMapperTest extends SuluTestCase
         $this->assertEquals('/news/news-2', $navigation[0]['children'][1]['url']);
     }
 
-    public function testNavigationOrder()
+    public function testNavigationOrder(): void
     {
         $main = $this->navigationMapper->getNavigation($this->data['news']->getUuid(), 'sulu_io', 'en', 1);
         $this->assertEquals(2, \count($main));
@@ -750,7 +750,7 @@ class ExcerptStructureExtension extends AbstractExtension
         $this->structureManager = $structureManager;
     }
 
-    public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
+    public function save(NodeInterface $node, $data, $webspaceKey, $languageCode): void
     {
         foreach ($this->excerptStructure->getProperties() as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
@@ -795,7 +795,7 @@ class ExcerptStructureExtension extends AbstractExtension
         return $data;
     }
 
-    public function setLanguageCode($languageCode, $languageNamespace, $namespace)
+    public function setLanguageCode($languageCode, $languageNamespace, $namespace): void
     {
         // lazy load excerpt structure to avoid redeclaration of classes
         // should be done before parent::setLanguageCode because it uses the $thi<->properties

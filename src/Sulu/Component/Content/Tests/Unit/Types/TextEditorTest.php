@@ -63,7 +63,7 @@ class TextEditorTest extends TestCase
         $this->textEditor = new TextEditor($this->markupParser->reveal());
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $content = <<<'EOT'
 <sulu-link href="123">Hello Hikaro Sulu</sulu-link>
@@ -83,7 +83,7 @@ EOT
         $this->textEditor->read($this->node->reveal(), $this->property->reveal(), 'sulu_io', 'de', null);
     }
 
-    public function testReadInvalid()
+    public function testReadInvalid(): void
     {
         $content = <<<'EOT'
 <sulu-link href="123">Hello</sulu-link>
@@ -112,7 +112,7 @@ EOT
         $this->textEditor->read($this->node->reveal(), $this->property->reveal(), 'sulu_io', 'de', null);
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $content = <<<'EOT'
 <sulu-link href="123">Hello</sulu-link>
@@ -133,7 +133,7 @@ EOT
         $this->textEditor->write($this->node->reveal(), $this->property->reveal(), 1, 'sulu_io', 'de', null);
     }
 
-    public function testWriteNoValue()
+    public function testWriteNoValue(): void
     {
         $this->property->getName()->willReturn('i18n:de-description');
         $this->property->getValue()->willReturn(null);

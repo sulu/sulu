@@ -42,7 +42,7 @@ class NameResolverTest extends TestCase
         $this->nameResolver = new NameResolver();
     }
 
-    public function testResolveWithNotExistingName()
+    public function testResolveWithNotExistingName(): void
     {
         $this->parentNode->hasNode('foo')->willReturn(false);
         $name = $this->nameResolver->resolveName($this->parentNode->reveal(), 'foo');
@@ -50,7 +50,7 @@ class NameResolverTest extends TestCase
         $this->assertEquals('foo', $name);
     }
 
-    public function testResolveIncrementWithExistingName()
+    public function testResolveIncrementWithExistingName(): void
     {
         $this->parentNode->hasNode('foo')->willReturn(true);
         $this->parentNode->hasNode('foo-1')->willReturn(true);
@@ -60,7 +60,7 @@ class NameResolverTest extends TestCase
         $this->assertEquals('foo-2', $name);
     }
 
-    public function testResolveForNode()
+    public function testResolveForNode(): void
     {
         $this->parentNode->hasNode('foo')->willReturn(true);
         $this->parentNode->getNode('foo')->willReturn($this->node->reveal());
@@ -69,7 +69,7 @@ class NameResolverTest extends TestCase
         $this->assertEquals('foo', $name);
     }
 
-    public function testResolveForNodeWithIncrement()
+    public function testResolveForNodeWithIncrement(): void
     {
         $this->parentNode->hasNode('foo')->willReturn(true);
         $this->parentNode->getNode('foo')->willReturn($this->node->reveal());

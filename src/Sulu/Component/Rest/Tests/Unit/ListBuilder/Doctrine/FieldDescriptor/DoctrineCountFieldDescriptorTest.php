@@ -17,7 +17,7 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 
 class DoctrineCountFieldDescriptorTest extends TestCase
 {
-    public function testGetSelect()
+    public function testGetSelect(): void
     {
         $doctrineCountFieldDescriptor = new DoctrineCountFieldDescriptor(
             'test',
@@ -38,7 +38,7 @@ class DoctrineCountFieldDescriptorTest extends TestCase
         );
     }
 
-    public function testGetSelectWithDistinct()
+    public function testGetSelectWithDistinct(): void
     {
         $doctrineCountFieldDescriptor = new DoctrineCountFieldDescriptor(
             'test',

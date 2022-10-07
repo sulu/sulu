@@ -43,7 +43,7 @@ class KeywordManagerTest extends TestCase
     /**
      * @dataProvider provideSaveData
      */
-    public function testSave($exists = false, $has = false, $keywordString = 'Test', $locale = 'de')
+    public function testSave($exists = false, $has = false, $keywordString = 'Test', $locale = 'de'): void
     {
         $repository = $this->prophesize(KeywordRepositoryInterface::class);
         $categoryTranslationRepository = $this->prophesize(CategoryTranslationRepositoryInterface::class);
@@ -104,7 +104,7 @@ class KeywordManagerTest extends TestCase
         $this->assertEquals($exists ? $otherKeyword->reveal() : $keyword->reveal(), $result);
     }
 
-    public function testSaveWithNotExistingCategoryTranslation()
+    public function testSaveWithNotExistingCategoryTranslation(): void
     {
         $repository = $this->prophesize(KeywordRepositoryInterface::class);
         $categoryTranslationRepository = $this->prophesize(CategoryTranslationRepositoryInterface::class);
@@ -165,7 +165,7 @@ class KeywordManagerTest extends TestCase
     /**
      * @dataProvider provideDeleteData
      */
-    public function testDelete($referenced = false, $keywordString = 'Test', $locale = 'de')
+    public function testDelete($referenced = false, $keywordString = 'Test', $locale = 'de'): void
     {
         $repository = $this->prophesize(KeywordRepositoryInterface::class);
         $categoryTranslationRepository = $this->prophesize(CategoryTranslationRepositoryInterface::class);

@@ -21,7 +21,7 @@ class ForwardedUrlRequestProcessorTest extends TestCase
     /**
      * @dataProvider provideProcess
      */
-    public function testProcess($urlHeader, $url, $host, $port, $path)
+    public function testProcess($urlHeader, $url, $host, $port, $path): void
     {
         $forwardedUrlRequestProcessor = new ForwardedUrlRequestProcessor($urlHeader);
         $request = new Request();

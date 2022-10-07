@@ -32,7 +32,7 @@ class AuthenticationEntryPointTest extends TestCase
         $this->authenticationEntryPoint = new AuthenticationEntryPoint($urlGenerator->reveal());
     }
 
-    public function testStart()
+    public function testStart(): void
     {
         $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
         $result = $this->authenticationEntryPoint->start($request->reveal());

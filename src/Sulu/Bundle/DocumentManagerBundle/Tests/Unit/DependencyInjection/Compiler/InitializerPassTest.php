@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class InitializerPassTest extends TestCase
 {
-    public function testPass()
+    public function testPass(): void
     {
         $container = new ContainerBuilder();
 

@@ -21,7 +21,7 @@ class ListToTreeConverterTest extends TestCase
         return ['path' => $path, 'a' => $number];
     }
 
-    public function testConvert()
+    public function testConvert(): void
     {
         $i = 0;
         $data = [
@@ -88,7 +88,7 @@ class ListToTreeConverterTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testConvertWithoutRoot()
+    public function testConvertWithoutRoot(): void
     {
         $i = 0;
         $data = [
@@ -148,7 +148,7 @@ class ListToTreeConverterTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testConvertWithEmptyItems()
+    public function testConvertWithEmptyItems(): void
     {
         $i = 0;
         $data = [
@@ -176,7 +176,7 @@ class ListToTreeConverterTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testConvertWithEmptyItemsWithMoveUp()
+    public function testConvertWithEmptyItemsWithMoveUp(): void
     {
         $i = 0;
         $data = [
@@ -216,14 +216,14 @@ class ListToTreeConverterTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function testConvertEmptyArray()
+    public function testConvertEmptyArray(): void
     {
         $converter = new ListToTreeConverter();
         $result = $converter->convert([]);
         $this->assertEmpty($result);
     }
 
-    public function testConvertWithChildren()
+    public function testConvertWithChildren(): void
     {
         $i = 0;
         $data = [

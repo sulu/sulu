@@ -80,7 +80,7 @@ class ContactMediaControllerTest extends SuluTestCase
         $this->em->flush();
     }
 
-    public function testGetList()
+    public function testGetList(): void
     {
         $media1 = $this->createMedia('photo.jpeg');
         $this->contact->addMedia($media1);
@@ -97,7 +97,7 @@ class ContactMediaControllerTest extends SuluTestCase
         $this->assertTrue(\is_string($response->_embedded->contact_media[0]->thumbnails->{'sulu-100x100'}));
     }
 
-    public function testContactMediaPost()
+    public function testContactMediaPost(): void
     {
         $media1 = $this->createMedia('photo.jpeg');
         $this->contact->addMedia($media1);
@@ -137,7 +137,7 @@ class ContactMediaControllerTest extends SuluTestCase
         $this->assertIsInt($response->medias[1]);
     }
 
-    public function testContactMediaPostNotExistingMedia()
+    public function testContactMediaPostNotExistingMedia(): void
     {
         $media1 = $this->createMedia('photo.jpeg');
         $this->contact->addMedia($media1);
@@ -171,7 +171,7 @@ class ContactMediaControllerTest extends SuluTestCase
         $this->assertEquals(1, \count($response->medias));
     }
 
-    public function testContactMediaDelete()
+    public function testContactMediaDelete(): void
     {
         $media1 = $this->createMedia('photo.jpeg');
         $this->contact->addMedia($media1);
@@ -194,7 +194,7 @@ class ContactMediaControllerTest extends SuluTestCase
         $this->assertEquals(0, \count($response->medias));
     }
 
-    public function testContactMediaDeleteNotExistingRelation()
+    public function testContactMediaDeleteNotExistingRelation(): void
     {
         $media1 = $this->createMedia('photo.jpeg');
         $this->contact->addMedia($media1);

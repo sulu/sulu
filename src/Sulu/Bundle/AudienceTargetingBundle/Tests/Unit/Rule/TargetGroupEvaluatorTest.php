@@ -73,7 +73,7 @@ class TargetGroupEvaluatorTest extends TestCase
         $evaluatedTargetGroup,
         $frequency = TargetGroupRuleInterface::FREQUENCY_SESSION,
         $currentTargetGroup = null
-    ) {
+    ): void {
         $webspace = null;
         if ($webspaceKey) {
             $webspace = new Webspace();

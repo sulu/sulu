@@ -41,7 +41,7 @@ class TitleSubscriberTest extends TestCase
         $this->titleSubscriber = new TitleSubscriber($this->propertyEncoder->reveal());
     }
 
-    public function testSetTitleOnDocument()
+    public function testSetTitleOnDocument(): void
     {
         $event = $this->prophesize(HydrateEvent::class);
         $document = $this->prophesize(TitleBehavior::class);
@@ -56,7 +56,7 @@ class TitleSubscriberTest extends TestCase
         $this->titleSubscriber->setTitleOnDocument($event->reveal());
     }
 
-    public function testSetTitleOnDocumentLocalized()
+    public function testSetTitleOnDocumentLocalized(): void
     {
         $event = $this->prophesize(HydrateEvent::class);
         $document = $this->prophesize(LocalizedTitleBehavior::class);
@@ -72,7 +72,7 @@ class TitleSubscriberTest extends TestCase
         $this->titleSubscriber->setTitleOnDocument($event->reveal());
     }
 
-    public function testSetTitleOnDocumentLocalizedWithoutLocale()
+    public function testSetTitleOnDocumentLocalizedWithoutLocale(): void
     {
         $event = $this->prophesize(HydrateEvent::class);
         $document = $this->prophesize(LocalizedTitleBehavior::class);
@@ -84,7 +84,7 @@ class TitleSubscriberTest extends TestCase
         $this->titleSubscriber->setTitleOnDocument($event->reveal());
     }
 
-    public function testSetTitleOnDocumentWithWrongDocument()
+    public function testSetTitleOnDocumentWithWrongDocument(): void
     {
         $event = $this->prophesize(HydrateEvent::class);
         $document = new \stdClass();
@@ -96,7 +96,7 @@ class TitleSubscriberTest extends TestCase
         $this->titleSubscriber->setTitleOnDocument($event->reveal());
     }
 
-    public function testSetTitleOnNode()
+    public function testSetTitleOnNode(): void
     {
         $event = $this->prophesize(PersistEvent::class);
         $document = $this->prophesize(TitleBehavior::class);
@@ -112,7 +112,7 @@ class TitleSubscriberTest extends TestCase
         $this->titleSubscriber->setTitleOnNode($event->reveal());
     }
 
-    public function testSetTitleOnNodeLocalized()
+    public function testSetTitleOnNodeLocalized(): void
     {
         $event = $this->prophesize(PersistEvent::class);
         $document = $this->prophesize(LocalizedTitleBehavior::class);
@@ -128,7 +128,7 @@ class TitleSubscriberTest extends TestCase
         $this->titleSubscriber->setTitleOnNode($event->reveal());
     }
 
-    public function testSetTitleOnNodeLocalizedWithoutLocale()
+    public function testSetTitleOnNodeLocalizedWithoutLocale(): void
     {
         $event = $this->prophesize(PersistEvent::class);
         $document = $this->prophesize(LocalizedTitleBehavior::class);
@@ -140,7 +140,7 @@ class TitleSubscriberTest extends TestCase
         $this->titleSubscriber->setTitleOnNode($event->reveal());
     }
 
-    public function testSetTitleOnNodeWithWrongDocument()
+    public function testSetTitleOnNodeWithWrongDocument(): void
     {
         $event = $this->prophesize(PersistEvent::class);
         $document = new \stdClass();

@@ -31,7 +31,7 @@ class MetadataProviderRegistryTest extends TestCase
         $this->metadataProviderRegistry = new MetadataProviderRegistry();
     }
 
-    public function testGetMetadataProvider()
+    public function testGetMetadataProvider(): void
     {
         $metadataProvider1 = $this->prophesize(MetadataProviderInterface::class);
         $metadataProvider2 = $this->prophesize(MetadataProviderInterface::class);
@@ -49,7 +49,7 @@ class MetadataProviderRegistryTest extends TestCase
         );
     }
 
-    public function testGetNotExistingMetadataProvider()
+    public function testGetNotExistingMetadataProvider(): void
     {
         $this->expectException(MetadataProviderNotFoundException::class);
         $this->metadataProviderRegistry->getMetadataProvider('test1');

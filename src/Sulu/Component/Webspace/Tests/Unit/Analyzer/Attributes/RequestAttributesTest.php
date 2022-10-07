@@ -31,14 +31,14 @@ class RequestAttributesTest extends TestCase
     /**
      * @dataProvider provideData
      */
-    public function testGetAttribute(array $attributes, $name, $default, $expected)
+    public function testGetAttribute(array $attributes, $name, $default, $expected): void
     {
         $instance = new RequestAttributes($attributes);
 
         $this->assertEquals($expected, $instance->getAttribute($name, $default));
     }
 
-    public function testMerge()
+    public function testMerge(): void
     {
         $instance1 = new RequestAttributes();
         $instance2 = new RequestAttributes(['test1' => 1]);

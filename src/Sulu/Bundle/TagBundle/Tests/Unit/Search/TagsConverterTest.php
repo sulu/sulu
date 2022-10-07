@@ -23,7 +23,7 @@ class TagsConverterTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testConvert()
+    public function testConvert(): void
     {
         $tagManager = $this->prophesize(TagManager::class);
         $tagsConverter = new TagsConverter($tagManager->reveal());
@@ -33,7 +33,7 @@ class TagsConverterTest extends TestCase
         $this->assertEquals([1, 2, 3], $tagsConverter->convert(['Tag1', 'Tag2', 'Tag3']));
     }
 
-    public function testConvertNull()
+    public function testConvertNull(): void
     {
         $tagManager = $this->prophesize(TagManager::class);
         $tagsConverter = new TagsConverter($tagManager->reveal());
@@ -43,7 +43,7 @@ class TagsConverterTest extends TestCase
         );
     }
 
-    public function testConvertWithDocumentAndNull()
+    public function testConvertWithDocumentAndNull(): void
     {
         $tagManager = $this->prophesize(TagManager::class);
         $tagsConverter = new TagsConverter($tagManager->reveal());
@@ -53,7 +53,7 @@ class TagsConverterTest extends TestCase
         );
     }
 
-    public function testConvertWithDocumentAndStringValue()
+    public function testConvertWithDocumentAndStringValue(): void
     {
         $tagManager = $this->prophesize(TagManager::class);
         $tagsConverter = new TagsConverter($tagManager->reveal());
@@ -84,7 +84,7 @@ class TagsConverterTest extends TestCase
         $this->assertSame($tag->getName(), $nameField->getValue());
     }
 
-    public function testConvertWithDocumentAndArrayValue()
+    public function testConvertWithDocumentAndArrayValue(): void
     {
         $tagManager = $this->prophesize(TagManager::class);
         $tagsConverter = new TagsConverter($tagManager->reveal());

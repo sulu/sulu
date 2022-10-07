@@ -47,7 +47,7 @@ class BrowserRuleTest extends TestCase
     /**
      * @dataProvider provideEvaluate
      */
-    public function testEvaluate($browserShortName, $options, $result)
+    public function testEvaluate($browserShortName, $options, $result): void
     {
         $this->deviceDetector->getClient('short_name')->willReturn($browserShortName);
         $this->assertEquals($result, $this->browserRule->evaluate($options));

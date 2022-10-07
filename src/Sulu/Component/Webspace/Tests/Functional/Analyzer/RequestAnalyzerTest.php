@@ -186,7 +186,7 @@ class RequestAnalyzerTest extends TestCase
     /**
      * @dataProvider provideAnalyze
      */
-    public function testAnalyze($config, $expected = [])
+    public function testAnalyze($config, $expected = []): void
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu');
@@ -231,7 +231,7 @@ class RequestAnalyzerTest extends TestCase
     /**
      * @dataProvider provideAnalyzeWithFormat
      */
-    public function testAnalyzeWithFormat($config, $expected = [])
+    public function testAnalyzeWithFormat($config, $expected = []): void
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu');
@@ -277,7 +277,7 @@ class RequestAnalyzerTest extends TestCase
         $this->assertEquals($expected['format'], $request->getRequestFormat());
     }
 
-    public function testAnalyzeNotExisting()
+    public function testAnalyzeNotExisting(): void
     {
         $this->expectException(UrlMatchNotFoundException::class);
         $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), Argument::any())->willReturn([]);
@@ -295,7 +295,7 @@ class RequestAnalyzerTest extends TestCase
     /**
      * @dataProvider provideAnalyze
      */
-    public function testAnalyzeCurrentRequest($config, $expected = [])
+    public function testAnalyzeCurrentRequest($config, $expected = []): void
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu');
@@ -339,7 +339,7 @@ class RequestAnalyzerTest extends TestCase
         $this->assertEquals($expected['resource_locator_prefix'], $this->requestAnalyzer->getResourceLocatorPrefix());
     }
 
-    public function testAnalyzeNoCurrentRequest()
+    public function testAnalyzeNoCurrentRequest(): void
     {
         $this->requestStack->getCurrentRequest()->willReturn(null);
 

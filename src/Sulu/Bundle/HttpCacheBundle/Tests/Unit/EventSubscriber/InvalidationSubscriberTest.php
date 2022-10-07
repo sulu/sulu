@@ -131,7 +131,7 @@ class InvalidationSubscriberTest extends TestCase
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforePublishing($request, $scheme)
+    public function testInvalidateDocumentBeforePublishing($request, $scheme): void
     {
         $documentUuid = '743389e6-2ac5-4673-9835-3e709a27a03d';
 
@@ -203,7 +203,7 @@ class InvalidationSubscriberTest extends TestCase
         $this->invalidationSubscriber->invalidateDocumentBeforePublishing($event->reveal());
     }
 
-    public function testInvalidateDocumentBeforePublishingDocumentNotPublished()
+    public function testInvalidateDocumentBeforePublishingDocumentNotPublished(): void
     {
         $documentUuid = '743389e6-2ac5-7777-9835-3e709a27a03d';
 
@@ -232,7 +232,7 @@ class InvalidationSubscriberTest extends TestCase
         $this->invalidationSubscriber->invalidateDocumentBeforePublishing($event->reveal());
     }
 
-    public function testInvalidateDocumentBeforePublishingExcerpt()
+    public function testInvalidateDocumentBeforePublishingExcerpt(): void
     {
         $documentUuid = '743389e6-2ac5-7777-9835-3e709a27a03d';
 
@@ -268,7 +268,7 @@ class InvalidationSubscriberTest extends TestCase
         $this->invalidationSubscriber->invalidateDocumentBeforePublishing($event->reveal());
     }
 
-    public function testInvalidateDocumentBeforePublishingWrongDocument()
+    public function testInvalidateDocumentBeforePublishingWrongDocument(): void
     {
         $document = new \stdClass();
         $event = $this->prophesize(PublishEvent::class);
@@ -282,7 +282,7 @@ class InvalidationSubscriberTest extends TestCase
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforeUnpublishing($request, $scheme)
+    public function testInvalidateDocumentBeforeUnpublishing($request, $scheme): void
     {
         $documentUuid = '743c89e6-2ac5-7777-9835-3e709a27a03d';
 
@@ -351,7 +351,7 @@ class InvalidationSubscriberTest extends TestCase
         $this->invalidationSubscriber->invalidateDocumentBeforeUnpublishing($event->reveal());
     }
 
-    public function testInvalidateDocumentBeforeUnpublishingDocumentNotPublished()
+    public function testInvalidateDocumentBeforeUnpublishingDocumentNotPublished(): void
     {
         $documentUuid = '743c89e6-2ac5-7777-1234-3e709a27a03d';
 
@@ -378,7 +378,7 @@ class InvalidationSubscriberTest extends TestCase
         $this->invalidationSubscriber->invalidateDocumentBeforeUnpublishing($event->reveal());
     }
 
-    public function testInvalidateDocumentBeforeUnpublishingWrongDocument()
+    public function testInvalidateDocumentBeforeUnpublishingWrongDocument(): void
     {
         $document = new \stdClass();
         $event = $this->prophesize(PublishEvent::class);
@@ -392,7 +392,7 @@ class InvalidationSubscriberTest extends TestCase
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforeRemoving($request, $scheme)
+    public function testInvalidateDocumentBeforeRemoving($request, $scheme): void
     {
         $documentUuid = '743c89e6-2ac5-7777-1234-3e709a27a0bb';
 
@@ -484,7 +484,7 @@ class InvalidationSubscriberTest extends TestCase
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforeRemovingLocale($request, $scheme)
+    public function testInvalidateDocumentBeforeRemovingLocale($request, $scheme): void
     {
         $documentUuid = '743c89e6-2ac5-7777-1234-3e709a27a0bb';
 
@@ -555,7 +555,7 @@ class InvalidationSubscriberTest extends TestCase
         $this->invalidationSubscriber->invalidateDocumentBeforeRemovingLocale($event->reveal());
     }
 
-    public function testInvalidateDocumentBeforeRemovingWithResourceLocatorNotFoundException()
+    public function testInvalidateDocumentBeforeRemovingWithResourceLocatorNotFoundException(): void
     {
         $event = $this->prophesize(RemoveEvent::class);
         $document = $this->prophesize(ResourceSegmentBehavior::class)
@@ -574,7 +574,7 @@ class InvalidationSubscriberTest extends TestCase
         $this->invalidationSubscriber->invalidateDocumentBeforeRemoving($event->reveal());
     }
 
-    public function testInvalidateDocumentBeforeRemovingWrongDocument()
+    public function testInvalidateDocumentBeforeRemovingWrongDocument(): void
     {
         $document = new \stdClass();
         $event = $this->prophesize(RemoveEvent::class);

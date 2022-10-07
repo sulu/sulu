@@ -36,7 +36,7 @@ class SegmentSubscriberTest extends TestCase
         $this->segmentSubscriber = new SegmentSubscriber('X-Sulu-Segment', $this->requestAnalyzer->reveal(), '_ss');
     }
 
-    public function testAddVaryHeaderWithSegmentedWebspace()
+    public function testAddVaryHeaderWithSegmentedWebspace(): void
     {
         $request = new Request();
         $response = new Response();
@@ -50,7 +50,7 @@ class SegmentSubscriberTest extends TestCase
         $this->assertEquals(['X-Sulu-Segment'], $response->getVary());
     }
 
-    public function testAddVaryHeaderWithoutSegmentedWebspace()
+    public function testAddVaryHeaderWithoutSegmentedWebspace(): void
     {
         $request = new Request();
         $response = new Response();
@@ -81,7 +81,7 @@ class SegmentSubscriberTest extends TestCase
         $defaultSegmentKey,
         $expectedSegmentKey,
         $expecedCookiCount
-    ) {
+    ): void {
         $request = new Request();
         $response = new Response();
 

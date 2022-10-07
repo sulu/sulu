@@ -24,7 +24,7 @@ class SeoEnhancerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testEnhance()
+    public function testEnhance(): void
     {
         $request = $this->prophesize(Request::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -64,7 +64,7 @@ class SeoEnhancerTest extends TestCase
         );
     }
 
-    public function testEnhanceWithCanonical()
+    public function testEnhanceWithCanonical(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn('sulu.io');

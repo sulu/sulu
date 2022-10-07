@@ -146,7 +146,7 @@ class PageTreeRouteContentTypeTest extends TestCase
         $this->documentInspector->getWebspace($this->document->reveal())->willReturn($this->webspaceKey);
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $value = [
             'path' => '/test-page/test-custom-child',
@@ -178,7 +178,7 @@ class PageTreeRouteContentTypeTest extends TestCase
         $this->assertEquals($value, $result);
     }
 
-    public function testReadNotSet()
+    public function testReadNotSet(): void
     {
         $value = [
             'path' => '/test-page/test-custom-child',
@@ -203,7 +203,7 @@ class PageTreeRouteContentTypeTest extends TestCase
         $this->assertEquals($value, $result);
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $value = [
             'path' => '/test-page/test-custom-child',
@@ -234,7 +234,7 @@ class PageTreeRouteContentTypeTest extends TestCase
         );
     }
 
-    public function testWriteExistingPageRelation()
+    public function testWriteExistingPageRelation(): void
     {
         $value = [
             'path' => '/test-page/test-custom-child',
@@ -268,13 +268,13 @@ class PageTreeRouteContentTypeTest extends TestCase
         );
     }
 
-    public function testWriteGeneratePath()
+    public function testWriteGeneratePath(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test-custom-child');
 
         $route->setPath('/test-page/test-custom-child')->shouldBeCalled()->will(
-            function() use ($route) {
+            function() use ($route): void {
                 $route->getPath()->willReturn('/test-page/test-custom-child');
             }
         );
@@ -317,13 +317,13 @@ class PageTreeRouteContentTypeTest extends TestCase
         );
     }
 
-    public function testWriteGeneratePathRoot()
+    public function testWriteGeneratePathRoot(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test-custom-child');
 
         $route->setPath('/test-custom-child')->shouldBeCalled()->will(
-            function() use ($route) {
+            function() use ($route): void {
                 $route->getPath()->willReturn('/test-custom-child');
             }
         );
@@ -366,7 +366,7 @@ class PageTreeRouteContentTypeTest extends TestCase
         );
     }
 
-    public function testGetContentData()
+    public function testGetContentData(): void
     {
         $value = [
             'page' => [
@@ -382,7 +382,7 @@ class PageTreeRouteContentTypeTest extends TestCase
         $this->assertEquals($value['path'], $this->contentType->getContentData($this->property->reveal()));
     }
 
-    public function testGetViewData()
+    public function testGetViewData(): void
     {
         $value = [
             'page' => [

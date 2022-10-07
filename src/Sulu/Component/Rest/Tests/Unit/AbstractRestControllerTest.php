@@ -35,7 +35,7 @@ class AbstractRestControllerTest extends TestCase
         $this->controller = $this->getMockForAbstractClass(AbstractRestController::class, [$viewHandler->reveal()]);
     }
 
-    public function testResponseGetById()
+    public function testResponseGetById(): void
     {
         $method = new \ReflectionMethod(AbstractRestController::class, 'responseGetById');
         $method->setAccessible(true);
@@ -52,7 +52,7 @@ class AbstractRestControllerTest extends TestCase
         $this->assertEquals(['id' => 1], $view->getData());
     }
 
-    public function testResponseGetByNotExistingId()
+    public function testResponseGetByNotExistingId(): void
     {
         $method = new \ReflectionMethod(AbstractRestController::class, 'responseGetById');
         $method->setAccessible(true);
@@ -68,7 +68,7 @@ class AbstractRestControllerTest extends TestCase
         $this->assertEquals(404, $view->getStatusCode());
     }
 
-    public function testProcessPutEmpty()
+    public function testProcessPutEmpty(): void
     {
         $delete = function() {
             $this->fail('delete should not be called');
@@ -89,7 +89,7 @@ class AbstractRestControllerTest extends TestCase
         $this->assertTrue($result);
     }
 
-    public function testProcessPutWithDelete()
+    public function testProcessPutWithDelete(): void
     {
         $deleteCalled = false;
         $delete = function() use (&$deleteCalled) {
@@ -124,7 +124,7 @@ class AbstractRestControllerTest extends TestCase
         $this->assertTrue($deleteCalled);
     }
 
-    public function testProcessPutWithUpdate()
+    public function testProcessPutWithUpdate(): void
     {
         $delete = function() {
             $this->fail('delete should not be called');
@@ -163,7 +163,7 @@ class AbstractRestControllerTest extends TestCase
         $this->assertTrue($updateCalled);
     }
 
-    public function testProcessPutWithAdd()
+    public function testProcessPutWithAdd(): void
     {
         $delete = function() {
             $this->fail('delete should not be called');
@@ -197,7 +197,7 @@ class AbstractRestControllerTest extends TestCase
         $this->assertTrue($addCalled);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $method = new \ReflectionMethod(AbstractRestController::class, 'responseDelete');
         $method->setAccessible(true);
@@ -214,7 +214,7 @@ class AbstractRestControllerTest extends TestCase
         $this->assertEquals(null, $view->getData());
     }
 
-    public function testDeleteWithNotExistingEntity()
+    public function testDeleteWithNotExistingEntity(): void
     {
         $method = new \ReflectionMethod(AbstractRestController::class, 'responseDelete');
         $method->setAccessible(true);
@@ -230,7 +230,7 @@ class AbstractRestControllerTest extends TestCase
         $this->assertEquals(404, $view->getStatusCode());
     }
 
-    public function testDeleteWithError()
+    public function testDeleteWithError(): void
     {
         $method = new \ReflectionMethod(AbstractRestController::class, 'responseDelete');
         $method->setAccessible(true);

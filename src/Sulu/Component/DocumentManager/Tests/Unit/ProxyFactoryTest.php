@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use ProxyManager\Factory\LazyLoadingGhostFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
@@ -32,32 +33,32 @@ class ProxyFactoryTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $parentNode;
 
     /**
-     * @var MetadataFactoryInterface
+     * @var ObjectProphecy<MetadataFactoryInterface>
      */
     private $metadataFactory;
 
     /**
-     * @var Metadata\
+     * @var ObjectProphecy<Metadata>
      */
     private $metadata;
 
     /**
-     * @var DocumentRegistry
+     * @var ObjectProphecy<DocumentRegistry>
      */
     private $documentRegistry;
 
     /**
-     * @var EventDispatcherInterface
+     * @var ObjectProphecy<EventDispatcherInterface>
      */
     private $dispatcher;
 
@@ -97,8 +98,10 @@ class ProxyFactoryTest extends TestCase
 
     /**
      * It should populate the documents parent property with a proxy.
+     *
+     * @return array{0: ObjectProphecy<EventDispatcherInterface>, 1: \ProxyManager\Proxy\GhostObjectInterface>
      */
-    public function testCreateProxy()
+    public function testCreateProxy(): array
     {
         $this->documentRegistry->hasNode(Argument::type(NodeInterface::class), 'de')->willReturn(false);
         $this->documentRegistry->getDocumentForNode(Argument::any())->willReturn(new \stdClass());
@@ -118,7 +121,7 @@ class ProxyFactoryTest extends TestCase
     /**
      * It should populate the documents parent property (with custom options) with a proxy.
      */
-    public function testCreateProxyOptions()
+    public function testCreateProxyOptions(): void
     {
         $options = ['test_option' => 'test'];
 
@@ -150,7 +153,7 @@ class ProxyFactoryTest extends TestCase
      *
      * @depends testCreateProxy
      */
-    public function testHydrateLazyProxy($result)
+    public function testHydrateLazyProxy($result): void
     {
         list($dispatcher, $proxy) = $result;
 
@@ -169,7 +172,7 @@ class ProxyFactoryTest extends TestCase
     /**
      * It should create a children node collection.
      */
-    public function testCreateChildrenCollection()
+    public function testCreateChildrenCollection(): void
     {
         $this->documentRegistry->getNodeForDocument($this->document)->willReturn($this->node->reveal());
         $this->documentRegistry->getOriginalLocaleForDocument($this->document)->willReturn('de');

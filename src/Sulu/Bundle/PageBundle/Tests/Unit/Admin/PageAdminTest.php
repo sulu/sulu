@@ -84,7 +84,7 @@ class PageAdminTest extends TestCase
         $this->webspaceManager->getWebspaceCollection()->willReturn($this->webspaceCollection->reveal());
     }
 
-    public function testGetViews()
+    public function testGetViews(): void
     {
         $this->securityChecker->hasPermission('sulu.webspaces.test-1', 'edit')->willReturn(true);
         $this->securityChecker->hasPermission('sulu.activities.activities', 'view')->willReturn(true);
@@ -132,7 +132,7 @@ class PageAdminTest extends TestCase
         $this->assertTrue($viewCollection->has('sulu_page.page_edit_form.activity'));
     }
 
-    public function testGetConfigWithVersioning()
+    public function testGetConfigWithVersioning(): void
     {
         $admin = new PageAdmin(
             $this->viewBuilderFactory,
@@ -177,7 +177,7 @@ class PageAdminTest extends TestCase
         );
     }
 
-    public function testGetConfigWithoutVersioning()
+    public function testGetConfigWithoutVersioning(): void
     {
         $admin = new PageAdmin(
             $this->viewBuilderFactory,
@@ -204,7 +204,7 @@ class PageAdminTest extends TestCase
         );
     }
 
-    public function testGetSecurityContexts()
+    public function testGetSecurityContexts(): void
     {
         $admin = new PageAdmin(
             $this->viewBuilderFactory,

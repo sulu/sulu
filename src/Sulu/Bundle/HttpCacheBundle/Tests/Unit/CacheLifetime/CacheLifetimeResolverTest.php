@@ -18,13 +18,13 @@ use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 
 class CacheLifetimeResolverTest extends TestCase
 {
-    public function testSupportWrongType()
+    public function testSupportWrongType(): void
     {
         $cacheLifetimeResolver = new CacheLifetimeResolver();
         $this->assertFalse($cacheLifetimeResolver->supports('test', '10'));
     }
 
-    public function testSupportSeconds()
+    public function testSupportSeconds(): void
     {
         $cacheLifetimeResolver = new CacheLifetimeResolver();
         $this->assertTrue($cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, '10'));
@@ -33,7 +33,7 @@ class CacheLifetimeResolverTest extends TestCase
         $this->assertFalse($cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_SECONDS, 'asdf'));
     }
 
-    public function testSupportExpression()
+    public function testSupportExpression(): void
     {
         $cacheLifetimeResolver = new CacheLifetimeResolver();
         $this->assertTrue($cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_EXPRESSION, '@daily'));
@@ -43,7 +43,7 @@ class CacheLifetimeResolverTest extends TestCase
         $this->assertFalse($cacheLifetimeResolver->supports(CacheLifetimeResolverInterface::TYPE_EXPRESSION, 'asdf'));
     }
 
-    public function testResolveSeconds()
+    public function testResolveSeconds(): void
     {
         $cacheLifetimeResolver = new CacheLifetimeResolver();
         $this->assertEquals(10, $cacheLifetimeResolver->resolve(CacheLifetimeResolverInterface::TYPE_SECONDS, '10'));
@@ -51,7 +51,7 @@ class CacheLifetimeResolverTest extends TestCase
         $this->assertEquals(0, $cacheLifetimeResolver->resolve(CacheLifetimeResolverInterface::TYPE_SECONDS, 0));
     }
 
-    public function testResolveExpression()
+    public function testResolveExpression(): void
     {
         $cacheLifetimeResolver = new CacheLifetimeResolver();
         $now = new \DateTime();

@@ -15,7 +15,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
-    public function testRouteConfig()
+    public function testRouteConfig(): void
     {
         $client = $this->createAuthenticatedClient();
         $client->jsonRequest('GET', '/admin/config');
@@ -36,7 +36,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('Edit', $formRoute->options->toolbarActions[3]->options->label);
     }
 
-    public function testTeaserConfig()
+    public function testTeaserConfig(): void
     {
         $client = $this->createAuthenticatedClient();
         $client->jsonRequest('GET', '/admin/config');
@@ -51,7 +51,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('pages', $pageConfig->teaser->pages->resourceKey);
     }
 
-    public function testSmartContentConfig()
+    public function testSmartContentConfig(): void
     {
         $client = $this->createAuthenticatedClient();
         $client->jsonRequest('GET', '/admin/config');
@@ -69,7 +69,7 @@ class AdminControllerTest extends SuluTestCase
         );
     }
 
-    public function testWebspacesConfig()
+    public function testWebspacesConfig(): void
     {
         $client = $this->createAuthenticatedClient();
         $client->jsonRequest('GET', '/admin/config');
@@ -107,7 +107,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals([], $pageConfig->webspaces->destination_io->customUrls);
     }
 
-    public function testPagesListMetadataAction()
+    public function testPagesListMetadataAction(): void
     {
         $client = $this->createAuthenticatedClient();
 
@@ -124,7 +124,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('string', $response->id->type);
     }
 
-    public function testPagesFormMetadataAction()
+    public function testPagesFormMetadataAction(): void
     {
         $client = $this->createAuthenticatedClient();
 
@@ -199,7 +199,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('excerpt.description', $smartContentOptions->properties->value[4]->value);
     }
 
-    public function testPageSeoFormMetadataAction()
+    public function testPageSeoFormMetadataAction(): void
     {
         $client = $this->createAuthenticatedClient();
 
@@ -217,7 +217,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('properties', $response->schema);
     }
 
-    public function testPageExcerptFormMetadataAction()
+    public function testPageExcerptFormMetadataAction(): void
     {
         $client = $this->createAuthenticatedClient();
 
@@ -236,7 +236,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('properties', $response->schema);
     }
 
-    public function testPageSettingFormMetadataAction()
+    public function testPageSettingFormMetadataAction(): void
     {
         $client = $this->createAuthenticatedClient();
 

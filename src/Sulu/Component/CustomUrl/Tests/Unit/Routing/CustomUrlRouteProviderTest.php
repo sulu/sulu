@@ -61,7 +61,7 @@ class CustomUrlRouteProviderTest extends TestCase
         $hasTarget = true,
         $workflowStage = WorkflowStage::PUBLISHED,
         $webspaceKey = 'sulu_io'
-    ) {
+    ): void {
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn($webspaceKey);
 

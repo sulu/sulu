@@ -101,7 +101,7 @@ class FormatOptionsManagerTest extends TestCase
         $this->setUpFormatOptions();
     }
 
-    private function setUpMedia()
+    private function setUpMedia(): void
     {
         $this->media[] = new Media();
 
@@ -114,7 +114,7 @@ class FormatOptionsManagerTest extends TestCase
         $this->media[0]->addFile($file);
     }
 
-    private function setUpFormatOptions()
+    private function setUpFormatOptions(): void
     {
         $this->formatOptions[] = new FormatOptions();
         $this->formatOptions[0]->setFormatKey('sulu-50x50');
@@ -133,7 +133,7 @@ class FormatOptionsManagerTest extends TestCase
         $this->media[0]->getFiles()[0]->getFileVersions()[0]->addFormatOptions($this->formatOptions[1]);
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $this->mediaManager->getEntityById(42)->willReturn($this->media[0]);
         $this->formatOptionsRepository->find(
@@ -151,7 +151,7 @@ class FormatOptionsManagerTest extends TestCase
         $this->assertEquals(7, $formatOptions['cropWidth']);
     }
 
-    public function testGetNotExistingFormat()
+    public function testGetNotExistingFormat(): void
     {
         $this->expectException(FormatNotFoundException::class);
         $this->mediaManager->getEntityById(42)->willReturn($this->media[0]);
@@ -165,7 +165,7 @@ class FormatOptionsManagerTest extends TestCase
         $this->formatOptionsManager->get(42, 'not-existing');
     }
 
-    public function testGetAll()
+    public function testGetAll(): void
     {
         $this->mediaManager->getEntityById(42)->willReturn($this->media[0]);
         $this->formatOptionsRepository->findBy(
@@ -187,7 +187,7 @@ class FormatOptionsManagerTest extends TestCase
         $this->assertEquals(19, $formatOptions['sulu-100x100']['cropWidth']);
     }
 
-    public function testGetAllNotExistingFormat()
+    public function testGetAllNotExistingFormat(): void
     {
         $this->expectException(FormatNotFoundException::class);
         $this->mediaManager->getEntityById(42)->willReturn($this->media[0]);
@@ -200,7 +200,7 @@ class FormatOptionsManagerTest extends TestCase
         $this->formatOptionsManager->get(42, 'not-existing');
     }
 
-    public function testSave()
+    public function testSave(): void
     {
         $this->mediaManager->getEntityById(42)->willReturn($this->media[0]);
 
@@ -225,7 +225,7 @@ class FormatOptionsManagerTest extends TestCase
         $this->assertEquals(13, $formatOptions->getCropWidth());
     }
 
-    public function testSaveNotExisting()
+    public function testSaveNotExisting(): void
     {
         $this->expectException(FormatNotFoundException::class);
         $this->mediaManager->getEntityById(42)->willReturn($this->media[0]);
@@ -246,7 +246,7 @@ class FormatOptionsManagerTest extends TestCase
         $this->formatManager->purge(42, Argument::any(), Argument::any(), Argument::any())->shouldNotHaveBeenCalled();
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $this->mediaManager->getEntityById(42)->willReturn($this->media[0]);
 
@@ -257,7 +257,7 @@ class FormatOptionsManagerTest extends TestCase
         $this->formatManager->purge(42, Argument::any(), Argument::any(), Argument::any())->shouldHaveBeenCalled();
     }
 
-    public function testDeleteNotExisting()
+    public function testDeleteNotExisting(): void
     {
         $this->mediaManager->getEntityById(42)->willReturn($this->media[0]);
 

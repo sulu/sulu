@@ -78,7 +78,7 @@ class WebsiteSearchControllerTest extends TestCase
         );
     }
 
-    public function testQueryAction()
+    public function testQueryAction(): void
     {
         $request = new Request(['q' => 'Test']);
 
@@ -115,7 +115,7 @@ class WebsiteSearchControllerTest extends TestCase
         $this->assertInstanceOf(Response::class, $this->websiteSearchController->queryAction($request));
     }
 
-    public function testQueryActionWithDifferentIndexes()
+    public function testQueryActionWithDifferentIndexes(): void
     {
         $this->websiteSearchController = new WebsiteSearchController(
             $this->searchManager->reveal(),

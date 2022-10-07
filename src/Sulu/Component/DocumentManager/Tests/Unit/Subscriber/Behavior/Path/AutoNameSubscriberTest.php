@@ -145,7 +145,7 @@ class AutoNameSubscriberTest extends TestCase
     /**
      * It should return early if the document is not an instance of AutoName behavior.
      */
-    public function testNotInstanceOfAutoName()
+    public function testNotInstanceOfAutoName(): void
     {
         $document = new \stdClass();
         $this->persistEvent->getOption('auto_name')->willReturn(true)->shouldBeCalled();
@@ -157,7 +157,7 @@ class AutoNameSubscriberTest extends TestCase
     /**
      * It should throw an exception if the document has no title.
      */
-    public function testNoTitle()
+    public function testNoTitle(): void
     {
         $this->expectException(DocumentManagerException::class);
 
@@ -173,7 +173,7 @@ class AutoNameSubscriberTest extends TestCase
     /**
      * It should assign a name based on the documents title.
      */
-    public function testAutoName()
+    public function testAutoName(): void
     {
         $this->doTestAutoName('hai', 'hai', true, false);
         $this->subscriber->handlePersist($this->persistEvent->reveal());
@@ -182,7 +182,7 @@ class AutoNameSubscriberTest extends TestCase
     /**
      * It should not assign a new name, if the option says it is disabled.
      */
-    public function testAutoNameWithDisabledOption()
+    public function testAutoNameWithDisabledOption(): void
     {
         $this->persistEvent->getOption('auto_name')->willReturn(false);
         $this->persistEvent->getDocument()->willReturn($this->prophesize(AutoNameBehavior::class)->reveal());
@@ -195,7 +195,7 @@ class AutoNameSubscriberTest extends TestCase
     /**
      * It should not assign a new name, if a not supported document is passed.
      */
-    public function testAutoNameWithNotSupportedDocument()
+    public function testAutoNameWithNotSupportedDocument(): void
     {
         $this->persistEvent->getOption('auto_name')->willReturn(false);
         $this->persistEvent->getDocument()->willReturn(new \stdClass());
@@ -208,7 +208,7 @@ class AutoNameSubscriberTest extends TestCase
     /**
      * It should not rename the node if the document is being saved a non-default locale.
      */
-    public function testAlreadyHasNodeNonDefaultLocale()
+    public function testAlreadyHasNodeNonDefaultLocale(): void
     {
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
         $this->persistEvent->getLocale()->willReturn('ay');
@@ -223,7 +223,7 @@ class AutoNameSubscriberTest extends TestCase
     /**
      * It should ensure there is no confict when moving a node.
      */
-    public function testMoveConflict()
+    public function testMoveConflict(): void
     {
         $this->moveEvent->getDocument()->willReturn($this->document);
         $this->moveEvent->getDestId()->willReturn(1234);
@@ -239,7 +239,7 @@ class AutoNameSubscriberTest extends TestCase
     /**
      * It should rename the node.
      */
-    public function testRename()
+    public function testRename(): void
     {
         $this->persistEvent->getOption('auto_name')->willReturn(true);
         $this->persistEvent->getOption('auto_rename')->willReturn(true);
@@ -279,7 +279,7 @@ class AutoNameSubscriberTest extends TestCase
     /**
      * It should not rename the node for auto_name false.
      */
-    public function testRenameAutoNameFalse()
+    public function testRenameAutoNameFalse(): void
     {
         $this->persistEvent->getOption('auto_name')->willReturn(false);
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
@@ -292,7 +292,7 @@ class AutoNameSubscriberTest extends TestCase
     /**
      * It should not rename the node for a document which does not implement AutoNameBehavior.
      */
-    public function testRenameWrongDocument()
+    public function testRenameWrongDocument(): void
     {
         $this->persistEvent->getOption('auto_name')->willReturn(true);
         $this->persistEvent->getDocument()->willReturn(new \stdClass());
@@ -305,7 +305,7 @@ class AutoNameSubscriberTest extends TestCase
     /**
      * It should not rename the node for not for a locale which is not default.
      */
-    public function testRenameNotDefaultLocale()
+    public function testRenameNotDefaultLocale(): void
     {
         $this->persistEvent->getOption('auto_name')->willReturn(true);
         $this->persistEvent->getOption('auto_name_locale')->willReturn('en');
@@ -320,7 +320,7 @@ class AutoNameSubscriberTest extends TestCase
     /**
      * It should not rename the node if no node isset.
      */
-    public function testRenameForNoNode()
+    public function testRenameForNoNode(): void
     {
         $this->persistEvent->getOption('auto_name')->willReturn(true);
         $this->persistEvent->getOption('auto_name_locale')->willReturn('en');
@@ -336,7 +336,7 @@ class AutoNameSubscriberTest extends TestCase
     /**
      * It should not rename the node if node is new.
      */
-    public function testRenameForNewNode()
+    public function testRenameForNewNode(): void
     {
         $this->persistEvent->getOption('auto_name')->willReturn(true);
         $this->persistEvent->getOption('auto_name_locale')->willReturn('en');

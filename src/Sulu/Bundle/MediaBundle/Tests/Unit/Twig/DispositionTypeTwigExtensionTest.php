@@ -21,7 +21,7 @@ class DispositionTypeTwigExtensionTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testGetMediaUrlWithoutForceDispositionType()
+    public function testGetMediaUrlWithoutForceDispositionType(): void
     {
         $this->assertEquals(
             'http://sulu.lo/media/1',
@@ -29,7 +29,7 @@ class DispositionTypeTwigExtensionTest extends TestCase
         );
     }
 
-    public function testGetMediaUrlWithForceInlineDispositionType()
+    public function testGetMediaUrlWithForceInlineDispositionType(): void
     {
         $this->assertEquals(
             'http://sulu.lo/media/1?inline=1',
@@ -37,7 +37,7 @@ class DispositionTypeTwigExtensionTest extends TestCase
         );
     }
 
-    public function testGetMediaUrlWithForceAttachmentDispositionType()
+    public function testGetMediaUrlWithForceAttachmentDispositionType(): void
     {
         $this->assertEquals(
             'http://sulu.lo/media/1?inline=0',
@@ -45,7 +45,7 @@ class DispositionTypeTwigExtensionTest extends TestCase
         );
     }
 
-    public function testGetMediaUrlWithForceWrongDispositionType()
+    public function testGetMediaUrlWithForceWrongDispositionType(): void
     {
         $this->assertEquals(
             'http://sulu.lo/media/1',

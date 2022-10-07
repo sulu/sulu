@@ -36,7 +36,7 @@ class NodeNameSlugifierTest extends TestCase
         $this->nodeNameSlugifier = new NodeNameSlugifier($this->slugifier->reveal());
     }
 
-    public function testSlugify()
+    public function testSlugify(): void
     {
         $this->slugifier->slugify('Test article')->willReturn('test-article');
 
@@ -65,7 +65,7 @@ class NodeNameSlugifierTest extends TestCase
     /**
      * @dataProvider provide10eData
      */
-    public function testSlugify10e($actual, $expected)
+    public function testSlugify10e($actual, $expected): void
     {
         $this->slugifier->slugify($actual)->willReturn($actual);
 

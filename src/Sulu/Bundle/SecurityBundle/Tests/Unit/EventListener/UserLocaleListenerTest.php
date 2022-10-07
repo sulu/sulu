@@ -83,14 +83,14 @@ class UserLocaleListenerTest extends TestCase
         $this->userLocaleListener = new UserLocaleListener($this->tokenStorage->reveal(), $this->translator->reveal());
     }
 
-    public function testCopyUserLocaleToRequestWithoutUser()
+    public function testCopyUserLocaleToRequestWithoutUser(): void
     {
         $this->request->setLocale(Argument::any())->shouldNotBeCalled();
         $this->userLocaleListener->copyUserLocaleToRequest($this->event);
         $this->translator->setLocale(Argument::any())->shouldNotBeCalled();
     }
 
-    public function testCopyUserLocaleToRequest()
+    public function testCopyUserLocaleToRequest(): void
     {
         $user = $this->prophesize(UserInterface::class);
         $user->getLocale()->willReturn('de');

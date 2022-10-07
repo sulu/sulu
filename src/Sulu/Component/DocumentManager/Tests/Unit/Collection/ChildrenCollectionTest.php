@@ -40,7 +40,7 @@ class ChildrenCollectionTest extends TestCase
     /**
      * It should be iterable.
      */
-    public function testIterable()
+    public function testIterable(): void
     {
         $children = new \ArrayIterator([
             $this->childNode->reveal(),

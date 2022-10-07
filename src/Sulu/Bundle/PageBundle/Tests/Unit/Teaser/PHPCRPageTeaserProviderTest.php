@@ -285,7 +285,7 @@ class PHPCRPageTeaserProviderTest extends TestCase
         );
     }
 
-    private function assertTeaser(Teaser $expected, Teaser $teaser)
+    private function assertTeaser(Teaser $expected, Teaser $teaser): void
     {
         $this->assertEquals($expected->getId(), $teaser->getId());
         $this->assertEquals($expected->getType(), $teaser->getType());

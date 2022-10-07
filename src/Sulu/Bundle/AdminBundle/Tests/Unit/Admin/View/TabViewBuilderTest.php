@@ -16,7 +16,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\TabViewBuilder;
 
 class TabViewBuilderTest extends TestCase
 {
-    public function testBuildTabViewWithClone()
+    public function testBuildTabViewWithClone(): void
     {
         $viewBuilder = (new TabViewBuilder('sulu_role.add_form', '/roles'));
 
@@ -61,7 +61,7 @@ class TabViewBuilderTest extends TestCase
         string $path,
         ?array $routerAttributesToBlacklist1,
         ?array $routerAttributesToBlacklist2
-    ) {
+    ): void {
         $viewBuilder = new TabViewBuilder($name, $path);
 
         $expectedRouterAttributesToBlacklist = [];
@@ -87,7 +87,7 @@ class TabViewBuilderTest extends TestCase
         );
     }
 
-    public function testBuildFormWithParent()
+    public function testBuildFormWithParent(): void
     {
         $view = (new TabViewBuilder('sulu_role.add_form', '/roles/:locale'))
             ->setParent('sulu_admin.test')
@@ -96,7 +96,7 @@ class TabViewBuilderTest extends TestCase
         $this->assertSame('sulu_admin.test', $view->getParent());
     }
 
-    public function testBuildFormWithOption()
+    public function testBuildFormWithOption(): void
     {
         $view = (new TabViewBuilder('sulu_role.add_form', '/roles/:locale'))
             ->setOption('resourceKey', 'test')

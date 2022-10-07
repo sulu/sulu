@@ -26,7 +26,7 @@ class DelegatingTagExtractorTest extends TestCase
      */
     private $html = '<html><body><h1>Test</h1></body></html>';
 
-    public function testCount()
+    public function testCount(): void
     {
         $extractors = [
             $this->prophesize(TagExtractorInterface::class),
@@ -48,7 +48,7 @@ class DelegatingTagExtractorTest extends TestCase
         $this->assertEquals(12, $extractor->count($this->html));
     }
 
-    public function testExtract()
+    public function testExtract(): void
     {
         $extractors = [
             $this->prophesize(TagExtractorInterface::class),

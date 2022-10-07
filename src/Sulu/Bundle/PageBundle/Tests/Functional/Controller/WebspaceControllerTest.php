@@ -15,7 +15,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class WebspaceControllerTest extends SuluTestCase
 {
-    public function testCgetAction()
+    public function testCgetAction(): void
     {
         $client = $this->createAuthenticatedClient();
 

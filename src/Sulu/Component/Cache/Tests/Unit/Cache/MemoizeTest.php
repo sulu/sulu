@@ -46,7 +46,7 @@ class MemoizeTest extends TestCase
         $this->mem = new Memoize($this->cache->reveal(), $this->defaultLifeTime);
     }
 
-    public function testMemoizeFirstCall()
+    public function testMemoizeFirstCall(): void
     {
         $mem = $this->mem;
         $called = 0;
@@ -78,7 +78,7 @@ class MemoizeTest extends TestCase
         $this->assertEquals(2, $called);
     }
 
-    public function testMemoizeFirstCallWithLifeTime()
+    public function testMemoizeFirstCallWithLifeTime(): void
     {
         $mem = $this->mem;
         $called = 0;
@@ -111,7 +111,7 @@ class MemoizeTest extends TestCase
         $this->assertEquals(2, $called);
     }
 
-    public function testMemoizeSecondCall()
+    public function testMemoizeSecondCall(): void
     {
         $mem = $this->mem;
         $called = 0;
@@ -143,7 +143,7 @@ class MemoizeTest extends TestCase
         $this->assertEquals(0, $called);
     }
 
-    public function testMemoizeByIdFirstCall()
+    public function testMemoizeByIdFirstCall(): void
     {
         $mem = $this->mem;
         $called = 0;
@@ -177,7 +177,7 @@ class MemoizeTest extends TestCase
         $this->assertEquals(2, $called);
     }
 
-    public function testMemoizeByIdFirstCallWithLifeTime()
+    public function testMemoizeByIdFirstCallWithLifeTime(): void
     {
         $mem = $this->mem;
         $called = 0;
@@ -212,7 +212,7 @@ class MemoizeTest extends TestCase
         $this->assertEquals(2, $called);
     }
 
-    public function testMemoizeByIdSecondCall()
+    public function testMemoizeByIdSecondCall(): void
     {
         $mem = $this->mem;
         $called = 0;

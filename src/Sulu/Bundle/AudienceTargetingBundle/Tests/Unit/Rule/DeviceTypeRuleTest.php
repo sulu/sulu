@@ -47,7 +47,7 @@ class DeviceTypeRuleTest extends TestCase
     /**
      * @dataProvider provideEvaluate
      */
-    public function testEvaluate($deviceType, $options, $result)
+    public function testEvaluate($deviceType, $options, $result): void
     {
         $this->deviceDetector->isDesktop()->willReturn(DeviceTypeRule::DESKTOP === $deviceType);
         $this->deviceDetector->isTablet()->willReturn(DeviceTypeRule::TABLET === $deviceType);

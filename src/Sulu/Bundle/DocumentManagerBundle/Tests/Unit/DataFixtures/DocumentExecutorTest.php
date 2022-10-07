@@ -40,7 +40,7 @@ class DocumentExecutorTest extends TestCase
     /**
      * It should purge the workspace if required.
      */
-    public function testPurge()
+    public function testPurge(): void
     {
         $this->initializer->initialize($this->output, true)->shouldNotBeCalled();
         $this->executer->execute([], true, false, $this->output);
@@ -49,7 +49,7 @@ class DocumentExecutorTest extends TestCase
     /**
      * It should initialize the workspace if required.
      */
-    public function testInitialize()
+    public function testInitialize(): void
     {
         $this->initializer->initialize($this->output, false)->shouldBeCalled();
         $this->executer->execute([], false, true, $this->output);
@@ -58,7 +58,7 @@ class DocumentExecutorTest extends TestCase
     /**
      * It should execute the fixtures.
      */
-    public function testLoadFixtures()
+    public function testLoadFixtures(): void
     {
         $this->fixture1->load($this->documentManager->reveal())->shouldBeCalled();
         $this->executer->execute([$this->fixture1->reveal()], false, false, $this->output);

@@ -23,7 +23,7 @@ class GeolocatorControllerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testQuery()
+    public function testQuery(): void
     {
         $geolocatorResponse = $this->prophesize(GeolocatorResponse::class);
         $geolocatorResponse->toArray()->willReturn(['test']);

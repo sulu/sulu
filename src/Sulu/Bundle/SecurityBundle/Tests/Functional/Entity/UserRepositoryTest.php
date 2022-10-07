@@ -148,7 +148,7 @@ class UserRepositoryTest extends SuluTestCase
         $this->em->flush();
     }
 
-    public function testFindUsersById()
+    public function testFindUsersById(): void
     {
         $user1 = $this->prepareUser('Sulu1', 'max', 'max');
         $user2 = $this->prepareUser('Sulu2', 'erika', 'erika');
@@ -169,7 +169,7 @@ class UserRepositoryTest extends SuluTestCase
         $this->assertNotContains($user3->getId(), $userIds);
     }
 
-    public function testFindUserByEmail()
+    public function testFindUserByEmail(): void
     {
         $this->prepareUser('Sulu', 'sulu', 'sulu');
 
@@ -182,7 +182,7 @@ class UserRepositoryTest extends SuluTestCase
         $this->assertEquals('test', $user->getUserIdentifier());
     }
 
-    public function testFindUserWithSecurityByIdentifier()
+    public function testFindUserWithSecurityByIdentifier(): void
     {
         $this->prepareUser('Sulu', 'sulu', 'sulu');
 
@@ -198,7 +198,7 @@ class UserRepositoryTest extends SuluTestCase
         $this->assertEquals('test', $userByUsername->getUserIdentifier());
     }
 
-    public function testFindUserByToken()
+    public function testFindUserByToken(): void
     {
         $this->prepareUser('Sulu', 'sulu', 'sulu');
 
@@ -211,7 +211,7 @@ class UserRepositoryTest extends SuluTestCase
         $this->assertEquals('admin', $user->getUserIdentifier());
     }
 
-    public function testFindUserBySystem()
+    public function testFindUserBySystem(): void
     {
         $this->prepareUser('Sulu Role 2', 'sulu', 'sulu');
         $this->prepareUser('Client Role', 'client', 'client', true, false, 'Client');

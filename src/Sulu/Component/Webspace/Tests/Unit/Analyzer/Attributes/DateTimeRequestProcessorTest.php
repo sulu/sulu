@@ -28,7 +28,7 @@ class DateTimeRequestProcessorTest extends TestCase
         $this->dateTimeRequestProcessor = new DateTimeRequestProcessor();
     }
 
-    public function testProcess()
+    public function testProcess(): void
     {
         $attributes = $this->dateTimeRequestProcessor->process(new Request(), new RequestAttributes());
         $this->assertEqualsWithDelta($attributes->getAttribute('dateTime'), new \DateTime(), 1);

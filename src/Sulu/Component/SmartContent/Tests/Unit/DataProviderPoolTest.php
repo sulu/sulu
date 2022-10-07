@@ -72,7 +72,7 @@ class DataProviderPoolTest extends TestCase
     /**
      * @dataProvider addProvider
      */
-    public function testAdd(DataProviderPool $pool, $providers, $expectedProviders, $exceptionName = null)
+    public function testAdd(DataProviderPool $pool, $providers, $expectedProviders, $exceptionName = null): void
     {
         if ($exceptionName) {
             $this->expectException($exceptionName);
@@ -108,7 +108,7 @@ class DataProviderPoolTest extends TestCase
     /**
      * @dataProvider existsProvider
      */
-    public function testExists(DataProviderPool $pool, $alias, $expected)
+    public function testExists(DataProviderPool $pool, $alias, $expected): void
     {
         $this->assertEquals($expected, $pool->exists($alias));
     }
@@ -137,7 +137,7 @@ class DataProviderPoolTest extends TestCase
     /**
      * @dataProvider getProvider
      */
-    public function testGet(DataProviderPool $pool, $alias, $expectedProvider, $exceptionName = null)
+    public function testGet(DataProviderPool $pool, $alias, $expectedProvider, $exceptionName = null): void
     {
         if ($exceptionName) {
             $this->expectException($exceptionName);
@@ -173,7 +173,7 @@ class DataProviderPoolTest extends TestCase
     /**
      * @dataProvider getAllProvider
      */
-    public function testGetAll(DataProviderPool $pool, $expectedProviders)
+    public function testGetAll(DataProviderPool $pool, $expectedProviders): void
     {
         $this->assertEquals($expectedProviders, $pool->getAll());
     }

@@ -39,21 +39,21 @@ class XmlFormatLoader11Test extends WebspaceTestCase
         $this->loader = new XmlFormatLoader11($locator->reveal());
     }
 
-    public function testSupports10()
+    public function testSupports10(): void
     {
         $this->assertFalse(
             $this->loader->supports(\dirname(__DIR__) . '/../../Fixtures/image-formats/version10.xml')
         );
     }
 
-    public function testSupports11()
+    public function testSupports11(): void
     {
         $this->assertTrue(
             $this->loader->supports(\dirname(__DIR__) . '/../../Fixtures/image-formats/version11.xml')
         );
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         $result = $this->loader->load(\dirname(__DIR__) . '/../../Fixtures/image-formats/version11.xml');
 
@@ -164,7 +164,7 @@ class XmlFormatLoader11Test extends WebspaceTestCase
         $this->assertNotNull($result['3840x2160-retina']['internal']);
     }
 
-    public function testLoadWithMissingDimension()
+    public function testLoadWithMissingDimension(): void
     {
         $this->expectException(MissingScaleDimensionException::class);
         $this->loader->load(\dirname(__DIR__) . '/../../Fixtures/image-formats/version11_missing_dimension.xml');

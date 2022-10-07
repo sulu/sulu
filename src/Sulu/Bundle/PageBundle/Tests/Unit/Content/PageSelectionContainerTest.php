@@ -43,7 +43,7 @@ class PageSelectionContainerTest extends TestCase
         $this->builder = $this->prophesize(ContentQueryBuilder::class);
     }
 
-    public function testGetDataDraftAndPublished()
+    public function testGetDataDraftAndPublished(): void
     {
         $this->container = new PageSelectionContainer(
             [2, 3, 1],
@@ -63,7 +63,7 @@ class PageSelectionContainerTest extends TestCase
         $this->container->getData();
     }
 
-    public function testGetDataWithPermissions()
+    public function testGetDataWithPermissions(): void
     {
         $this->container = new PageSelectionContainer(
             [2, 3, 1],
@@ -84,7 +84,7 @@ class PageSelectionContainerTest extends TestCase
         $this->container->getData();
     }
 
-    public function testGetDataOnlyPublished()
+    public function testGetDataOnlyPublished(): void
     {
         $this->container = new PageSelectionContainer(
             [2, 3, 1],
@@ -104,7 +104,7 @@ class PageSelectionContainerTest extends TestCase
         $this->container->getData();
     }
 
-    public function testGetDataOrder()
+    public function testGetDataOrder(): void
     {
         $this->executor->execute('default', ['en'], $this->builder, true, -1, null, null, false, null)->willReturn([
             ['id' => 1, 'path' => 'phpcr/path/1'],
@@ -126,7 +126,7 @@ class PageSelectionContainerTest extends TestCase
         $this->assertEquals([['id' => 2], ['id' => 3], ['id' => 1, 'path' => 'phpcr/path/1']], $result);
     }
 
-    public function testGetDataWithUser()
+    public function testGetDataWithUser(): void
     {
         $user = $this->prophesize(UserInterface::class);
 
@@ -149,7 +149,7 @@ class PageSelectionContainerTest extends TestCase
         $this->container->getData();
     }
 
-    public function testGetDataWithoutPathParameter()
+    public function testGetDataWithoutPathParameter(): void
     {
         $this->executor->execute('default', ['en'], $this->builder, true, -1, null, null, false, null)->willReturn([
             ['id' => 1, 'path' => 'phpcr/path/1'],

@@ -99,7 +99,7 @@ class PagesSitemapProviderTest extends TestCase
         );
     }
 
-    public function testBuild()
+    public function testBuild(): void
     {
         $localization = new Localization('de');
         $this->webspace->getDefaultLocalization()->willReturn($localization);
@@ -137,7 +137,7 @@ class PagesSitemapProviderTest extends TestCase
         }
     }
 
-    public function testBuildWithPermissions()
+    public function testBuildWithPermissions(): void
     {
         $localization = new Localization('de');
         $this->webspace->getDefaultLocalization()->willReturn($localization);
@@ -177,7 +177,7 @@ class PagesSitemapProviderTest extends TestCase
         $this->assertEquals('http://localhost/test-3', $result[1]->getLoc());
     }
 
-    public function testBuildMultipleLocales()
+    public function testBuildMultipleLocales(): void
     {
         $localization = new Localization('de');
         $localizationEn = new Localization('en');
@@ -242,7 +242,7 @@ class PagesSitemapProviderTest extends TestCase
         $this->assertEquals('http://localhost/en-test-1', $alternateLinks2['en']->getHref());
     }
 
-    public function testBuildHideInSitemap()
+    public function testBuildHideInSitemap(): void
     {
         $localization = new Localization('de');
         $this->webspace->getDefaultLocalization()->willReturn($localization);
@@ -275,7 +275,7 @@ class PagesSitemapProviderTest extends TestCase
         $this->assertEquals(new \DateTime($pages[0]->getData()['changed']), $result[0]->getLastMod());
     }
 
-    public function testBuildInternalExternalLink()
+    public function testBuildInternalExternalLink(): void
     {
         $localization = new Localization('de');
         $this->webspace->getDefaultLocalization()->willReturn($localization);

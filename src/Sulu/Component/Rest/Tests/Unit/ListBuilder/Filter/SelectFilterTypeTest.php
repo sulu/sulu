@@ -49,7 +49,7 @@ class SelectFilterTypeTest extends TestCase
     /**
      * @dataProvider provideFilter
      */
-    public function testFilter($fieldName, $value, $expected)
+    public function testFilter($fieldName, $value, $expected): void
     {
         $fieldDescriptor = $this->prophesize(FieldDescriptor::class);
         $this->selectFilterType->filter($this->listBuilder->reveal(), $fieldDescriptor->reveal(), $value);
@@ -57,7 +57,7 @@ class SelectFilterTypeTest extends TestCase
         $this->listBuilder->in($fieldDescriptor->reveal(), $expected)->shouldBeCalled();
     }
 
-    public function testFilterWithInvalidOptions()
+    public function testFilterWithInvalidOptions(): void
     {
         $this->expectException(InvalidFilterTypeOptionsException::class);
 

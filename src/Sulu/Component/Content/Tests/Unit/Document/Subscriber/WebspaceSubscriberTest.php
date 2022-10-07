@@ -62,7 +62,7 @@ class WebspaceSubscriberTest extends SubscriberTestCase
         );
     }
 
-    public function testHandleWebspace()
+    public function testHandleWebspace(): void
     {
         $document = $this->prophesize(WebspaceBehavior::class);
         $this->persistEvent->getDocument()->willReturn($document);
@@ -73,7 +73,7 @@ class WebspaceSubscriberTest extends SubscriberTestCase
         $this->subscriber->handleWebspace($this->persistEvent->reveal());
     }
 
-    public function testDeleteUnavailableLocales()
+    public function testDeleteUnavailableLocales(): void
     {
         $copyEvent = $this->prophesize(CopyEvent::class);
 

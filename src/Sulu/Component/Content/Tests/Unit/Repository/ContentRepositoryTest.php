@@ -169,7 +169,7 @@ class ContentRepositoryTest extends TestCase
         $qomFactory->createQuery(Argument::cetera())->willReturn($this->query->reveal());
     }
 
-    public function testFindWithBrokenTemplate()
+    public function testFindWithBrokenTemplate(): void
     {
         $mapping = MappingBuilder::create()->setResolveUrl(true)->getMapping();
 

@@ -28,7 +28,7 @@ class NamespaceRegistryTest extends TestCase
     /**
      * It should return an alias for a given role.
      */
-    public function testGetPrefix()
+    public function testGetPrefix(): void
     {
         $alias = $this->registry->getPrefix('system');
         $this->assertEquals('asys', $alias);
@@ -37,7 +37,7 @@ class NamespaceRegistryTest extends TestCase
     /**
      * It should thow an exception if the alias is not known.
      */
-    public function testGetUnknownPrefix()
+    public function testGetUnknownPrefix(): void
     {
         $this->expectException(DocumentManagerException::class);
         $this->registry->getPrefix('foobarbar');

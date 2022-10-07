@@ -20,7 +20,7 @@ class ReplacerXmlLoaderTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testLoad()
+    public function testLoad(): void
     {
         $filename = 'replacers.xml';
 
@@ -75,7 +75,7 @@ class ReplacerXmlLoaderTest extends TestCase
     /**
      * @dataProvider examplesDataProvider
      */
-    public function testRealFile($locale, $from, $to)
+    public function testRealFile($locale, $from, $to): void
     {
         $filename = 'replacers.xml';
 

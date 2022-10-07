@@ -36,7 +36,7 @@ class GrayscaleTransformationTest extends SuluTestCase
         parent::setUp();
     }
 
-    public function testGrayscale()
+    public function testGrayscale(): void
     {
         $image = $this->prophesize(ImageInterface::class);
         $effects = $this->prophesize(EffectsInterface::class);

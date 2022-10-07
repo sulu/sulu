@@ -40,7 +40,7 @@ class DocumentInspectorTest extends TestCase
     /**
      * It should return the current locale for the given document.
      */
-    public function testGetLocale()
+    public function testGetLocale(): void
     {
         $this->documentRegistry->getLocaleForDocument($this->document)->willReturn('de');
 
@@ -51,7 +51,7 @@ class DocumentInspectorTest extends TestCase
     /**
      * It should return the document path.
      */
-    public function testGetPath()
+    public function testGetPath(): void
     {
         $this->documentRegistry->getNodeForDocument($this->document)->willReturn($this->node->reveal());
         $this->node->getPath()->willReturn('/path/to');
@@ -63,7 +63,7 @@ class DocumentInspectorTest extends TestCase
     /**
      * It should return a PHPCR node.
      */
-    public function testGetPhpcrNode()
+    public function testGetPhpcrNode(): void
     {
         $this->documentRegistry->getNodeForDocument($this->document)->willReturn($this->node->reveal());
 
@@ -74,7 +74,7 @@ class DocumentInspectorTest extends TestCase
     /**
      * It should return the depth of the document in the repository.
      */
-    public function testGetDepth()
+    public function testGetDepth(): void
     {
         $this->documentRegistry->getNodeForDocument($this->document)->willReturn($this->node->reveal());
         $this->node->getDepth()->willReturn(6);
@@ -85,7 +85,7 @@ class DocumentInspectorTest extends TestCase
     /**
      * It should return the name of the document.
      */
-    public function testGetName()
+    public function testGetName(): void
     {
         $this->documentRegistry->getNodeForDocument($this->document)->willReturn($this->node->reveal());
         $this->node->getName()->willReturn('hello');
@@ -96,7 +96,7 @@ class DocumentInspectorTest extends TestCase
     /**
      * It should return a children.
      */
-    public function testGetChildren()
+    public function testGetChildren(): void
     {
         $childrenCollection = new \stdClass();
         $this->proxyFactory->createChildrenCollection($this->document, [])->willReturn($childrenCollection);
@@ -109,7 +109,7 @@ class DocumentInspectorTest extends TestCase
     /**
      * It should return true if it has children.
      */
-    public function testHasChildren()
+    public function testHasChildren(): void
     {
         $this->node->hasNodes()->willReturn(true);
         $this->documentRegistry->getNodeForDocument($this->document)->willReturn($this->node->reveal());

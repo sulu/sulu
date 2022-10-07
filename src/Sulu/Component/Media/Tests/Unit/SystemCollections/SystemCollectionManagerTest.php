@@ -342,7 +342,7 @@ class SystemCollectionManagerTest extends TestCase
     /**
      * @dataProvider configProvider
      */
-    public function testWarmUp($config, $existingCollections, $notExistingCollections, $data)
+    public function testWarmUp($config, $existingCollections, $notExistingCollections, $data): void
     {
         $tokenStorage = $this->getTokenStorage();
         $collectionManager = $this->getCollectionManager($existingCollections, $notExistingCollections);
@@ -369,7 +369,7 @@ class SystemCollectionManagerTest extends TestCase
     /**
      * @dataProvider getProvider
      */
-    public function testGetSystemCollection($data, $key, $expected, $exception = null)
+    public function testGetSystemCollection($data, $key, $expected, $exception = null): void
     {
         if (null !== $exception) {
             $this->expectException($exception);
@@ -401,7 +401,7 @@ class SystemCollectionManagerTest extends TestCase
     /**
      * @dataProvider isProvider
      */
-    public function testIsSystemCollection($data, $id, $expected)
+    public function testIsSystemCollection($data, $id, $expected): void
     {
         $tokenStorage = $this->getTokenStorage();
         $collectionManager = $this->getCollectionManager();

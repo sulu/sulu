@@ -23,7 +23,7 @@ class SymfonyExpressionTokenProviderTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testResolve()
+    public function testResolve(): void
     {
         $translator = $this->prophesize(Translator::class);
         $translator->getLocale()->willReturn('de');
@@ -39,7 +39,7 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $this->assertEquals('TEST', $provider->provide($entity, 'object.name'));
     }
 
-    public function testResolveTranslation()
+    public function testResolveTranslation(): void
     {
         $translator = $this->prophesize(Translator::class);
         $translator->getLocale()->willReturn('de');
@@ -55,7 +55,7 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         $this->assertEquals('TEST', $provider->provide($entity, 'translator.trans("test-key")'));
     }
 
-    public function testResolveWithImplode()
+    public function testResolveWithImplode(): void
     {
         $translator = $this->prophesize(Translator::class);
         $translator->getLocale()->willReturn('de');
@@ -92,7 +92,7 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         );
     }
 
-    public function testResolveWithIsArray()
+    public function testResolveWithIsArray(): void
     {
         $translator = $this->prophesize(Translator::class);
         $translator->getLocale()->willReturn('de');
@@ -114,7 +114,7 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         );
     }
 
-    public function testResolveNotExists()
+    public function testResolveNotExists(): void
     {
         $this->expectException(CannotEvaluateTokenException::class);
         $translator = $this->prophesize(Translator::class);

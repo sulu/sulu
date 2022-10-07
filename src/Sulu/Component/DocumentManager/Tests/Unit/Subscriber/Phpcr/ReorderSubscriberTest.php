@@ -40,7 +40,7 @@ class ReorderSubscriberTest extends TestCase
         );
     }
 
-    public function testHandleReorder()
+    public function testHandleReorder(): void
     {
         $node = $this->prophesize(NodeInterface::class);
         $event = $this->prophesize(ReorderEvent::class);

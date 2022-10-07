@@ -16,7 +16,7 @@ use Sulu\Component\DocumentManager\DocumentManager;
 
 class FoobarFixture implements DocumentFixtureInterface
 {
-    public function load(DocumentManager $documentManager)
+    public function load(DocumentManager $documentManager): void
     {
     }
 

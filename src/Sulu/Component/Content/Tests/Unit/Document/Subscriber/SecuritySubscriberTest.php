@@ -66,7 +66,7 @@ class SecuritySubscriberTest extends SubscriberTestCase
         );
     }
 
-    public function testPersist()
+    public function testPersist(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $property->getName()->willReturn('sec:role-1');
@@ -99,7 +99,7 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
-    public function testPersistWithoutPath()
+    public function testPersistWithoutPath(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $property->getName()->willReturn('sec:role-1');
@@ -125,7 +125,7 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
-    public function testPersistWithDeletingRoles()
+    public function testPersistWithDeletingRoles(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $property->getName()->willReturn('sec:role-2');
@@ -159,7 +159,7 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
-    public function testPersistWithoutAnyRoles()
+    public function testPersistWithoutAnyRoles(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $property->getName()->willReturn('sec:role-2');
@@ -188,7 +188,7 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $this->subscriber->handlePersist($this->persistEvent->reveal());
     }
 
-    public function testPersistCreate()
+    public function testPersistCreate(): void
     {
         $this->propertyEncoder
              ->encode('system_localized', StructureSubscriber::STRUCTURE_TYPE_FIELD, '*')
@@ -217,7 +217,7 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $this->subscriber->handlePersistCreate($this->persistEvent->reveal());
     }
 
-    public function testPersistCreateForExistingDocument()
+    public function testPersistCreateForExistingDocument(): void
     {
         $this->propertyEncoder
              ->encode('system_localized', StructureSubscriber::STRUCTURE_TYPE_FIELD, '*')
@@ -237,7 +237,7 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $this->subscriber->handlePersistCreate($this->persistEvent->reveal());
     }
 
-    public function testPersistCreateForDocumentWithoutParentNode()
+    public function testPersistCreateForDocumentWithoutParentNode(): void
     {
         $this->propertyEncoder
              ->encode('system_localized', StructureSubscriber::STRUCTURE_TYPE_FIELD, '*')
@@ -256,7 +256,7 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $this->subscriber->handlePersistCreate($this->persistEvent->reveal());
     }
 
-    public function testPersistCreateForDocumentWithPermissions()
+    public function testPersistCreateForDocumentWithPermissions(): void
     {
         $this->propertyEncoder
              ->encode('system_localized', StructureSubscriber::STRUCTURE_TYPE_FIELD, '*')
@@ -275,7 +275,7 @@ class SecuritySubscriberTest extends SubscriberTestCase
         $this->subscriber->handlePersistCreate($this->persistEvent->reveal());
     }
 
-    public function testHydrate()
+    public function testHydrate(): void
     {
         /** @var SecurityBehavior $document */
         $document = $this->prophesize(SecurityBehavior::class);

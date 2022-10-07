@@ -114,7 +114,7 @@ class CustomUrlRouteControllerTest extends SuluTestCase
         $excpected,
         $statusCode = 204,
         $restErrorCode = null
-    ) {
+    ): void {
         foreach ($before as $beforeData) {
             $beforeData['targetDocument'] = $this->contentDocument->getUuid();
             $this->client->jsonRequest('POST', '/api/webspaces/sulu_io/custom-urls', $beforeData);

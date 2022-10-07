@@ -49,7 +49,7 @@ class LocalFormatCacheTest extends TestCase
     /**
      * testMediaUrlEncoding.
      */
-    public function testMediaUrlEncoding()
+    public function testMediaUrlEncoding(): void
     {
         $version = 2;
         $subVersion = 3;

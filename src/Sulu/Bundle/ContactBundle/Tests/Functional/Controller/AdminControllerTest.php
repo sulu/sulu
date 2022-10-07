@@ -36,7 +36,7 @@ class AdminControllerTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testContactsConfig()
+    public function testContactsConfig(): void
     {
         $this->initPhpcr();
         $em = $this->getEntityManager();
@@ -123,7 +123,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals('private fax', $contactConfig->faxTypes[1]->name);
     }
 
-    public function testContactsListMetadataAction()
+    public function testContactsListMetadataAction(): void
     {
         $this->client->jsonRequest('GET', '/admin/metadata/list/contacts');
 
@@ -142,7 +142,7 @@ class AdminControllerTest extends SuluTestCase
         ], $response['accountId']['filterTypeParameters']);
     }
 
-    public function testAccountsListMetadataAction()
+    public function testAccountsListMetadataAction(): void
     {
         $this->client->jsonRequest('GET', '/admin/metadata/list/accounts');
 
@@ -155,7 +155,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('city', $response);
     }
 
-    public function testContactFormMetadataAction()
+    public function testContactFormMetadataAction(): void
     {
         $this->createCollectionTypes();
 
@@ -174,7 +174,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals(['firstName', 'lastName', 'formOfAddress'], $schema->required);
     }
 
-    public function testAccountFormMetadataAction()
+    public function testAccountFormMetadataAction(): void
     {
         $this->createCollectionTypes();
 
@@ -193,7 +193,7 @@ class AdminControllerTest extends SuluTestCase
         $this->assertEquals(['name'], $schema->required);
     }
 
-    private function createCollectionTypes()
+    private function createCollectionTypes(): void
     {
         $em = $this->getEntityManager();
         $metadata = $em->getClassMetaData(CollectionType::class);

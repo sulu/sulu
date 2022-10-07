@@ -2791,7 +2791,7 @@ class TestExtension extends AbstractExtension
         $this->additionalPrefix = $additionalPrefix;
     }
 
-    public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
+    public function save(NodeInterface $node, $data, $webspaceKey, $languageCode): void
     {
         $node->setProperty($this->getPropertyName('a'), $data['a']);
         $node->setProperty($this->getPropertyName('b'), $data['b']);

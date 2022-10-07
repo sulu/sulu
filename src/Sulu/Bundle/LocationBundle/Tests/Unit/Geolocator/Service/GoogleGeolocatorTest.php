@@ -61,7 +61,7 @@ class GoogleGeolocatorTest extends TestCase
     /**
      * @dataProvider provideLocate
      */
-    public function testLocate($query, $expectedCount, $expectationMap)
+    public function testLocate($query, $expectedCount, $expectationMap): void
     {
         $fixtureName = __DIR__ . '/google-responses/' . \md5($query) . '.json';
         /** @var string $fixture */
@@ -85,7 +85,7 @@ class GoogleGeolocatorTest extends TestCase
         }
     }
 
-    public function testApiKey()
+    public function testApiKey(): void
     {
         $mockResponse = new MockResponse('{"status": "OK","results":[]}');
 
@@ -102,7 +102,7 @@ class GoogleGeolocatorTest extends TestCase
      *
      * @dataProvider provideLocate
      */
-    public function testLegacyGuzzleLocate($query, $expectedCount, $expectationMap)
+    public function testLegacyGuzzleLocate($query, $expectedCount, $expectationMap): void
     {
         if (!\class_exists(Client::class)) {
             $this->markTestSkipped('No guzzle found to test legacy guzzle integration.');
@@ -132,7 +132,7 @@ class GoogleGeolocatorTest extends TestCase
     /**
      * Test if BC is maintained and guzzle client still works.
      */
-    public function testLegacyGuzzleApiKey()
+    public function testLegacyGuzzleApiKey(): void
     {
         if (!\class_exists(Client::class)) {
             $this->markTestSkipped('No guzzle found to test legacy guzzle integration.');

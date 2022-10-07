@@ -119,7 +119,7 @@ class PageLinkProviderTest extends TestCase
         );
     }
 
-    public function testGetConfiguration()
+    public function testGetConfiguration(): void
     {
         $this->translator->trans('sulu_page.pages', [], 'admin')->willReturn('Pages');
         $this->translator->trans('sulu_page.single_selection_overlay_title', [], 'admin')->willReturn('Choose page');
@@ -139,7 +139,7 @@ class PageLinkProviderTest extends TestCase
         );
     }
 
-    public function testPreload()
+    public function testPreload(): void
     {
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
         $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn(new Webspace());
@@ -184,7 +184,7 @@ class PageLinkProviderTest extends TestCase
         $this->assertEquals(!empty($contents[2]->getPropertyWithDefault('published')), $result[2]->isPublished());
     }
 
-    public function testPreloadRemoved()
+    public function testPreloadRemoved(): void
     {
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
         $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn(new Webspace());
@@ -223,7 +223,7 @@ class PageLinkProviderTest extends TestCase
         $this->assertEquals(!empty($contents[1]->getPropertyWithDefault('published')), $result[1]->isPublished());
     }
 
-    public function testPreloadNoRequest()
+    public function testPreloadNoRequest(): void
     {
         $this->requestStack->getCurrentRequest()->willReturn(null);
         $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn(new Webspace());
@@ -256,7 +256,7 @@ class PageLinkProviderTest extends TestCase
         $this->assertEquals(!empty($contents[0]->getPropertyWithDefault('published')), $result[0]->isPublished());
     }
 
-    public function testPreloadWithSecurityAndWebsiteSecurityEnabled()
+    public function testPreloadWithSecurityAndWebsiteSecurityEnabled(): void
     {
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
         $webspace = new Webspace();
@@ -321,7 +321,7 @@ class PageLinkProviderTest extends TestCase
         $this->assertEquals($contents[2]->getId(), $result[2]->getId());
     }
 
-    public function testPreloadWithSecurity()
+    public function testPreloadWithSecurity(): void
     {
         $this->requestStack->getCurrentRequest()->willReturn($this->request->reveal());
         $webspace = new Webspace();

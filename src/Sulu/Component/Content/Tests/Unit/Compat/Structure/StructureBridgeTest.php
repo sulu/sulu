@@ -30,7 +30,7 @@ class StructureBridgeTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testCopyFrom()
+    public function testCopyFrom(): void
     {
         $titleProperty = $this->prophesize(PropertyMetadata::class);
         $titleProperty->getName()->willReturn('title');
@@ -89,7 +89,7 @@ class StructureBridgeTest extends TestCase
         $structure->copyFrom($copyFromStructure->reveal());
     }
 
-    public function testGetNodeName()
+    public function testGetNodeName(): void
     {
         $metadata = $this->prophesize(StructureMetadata::class);
         $inspector = $this->prophesize(DocumentInspector::class);
@@ -108,7 +108,7 @@ class StructureBridgeTest extends TestCase
         $this->assertEquals('test', $structure->getNodeName());
     }
 
-    public function testGetNodeNameForInternalLink()
+    public function testGetNodeNameForInternalLink(): void
     {
         $metadata = $this->prophesize(StructureMetadata::class);
         $inspector = $this->prophesize(DocumentInspector::class);
@@ -132,7 +132,7 @@ class StructureBridgeTest extends TestCase
         $this->assertEquals('test', $structure->getNodeName());
     }
 
-    public function testGetIsShadow()
+    public function testGetIsShadow(): void
     {
         $metadata = $this->prophesize(StructureMetadata::class);
         $inspector = $this->prophesize(DocumentInspector::class);
@@ -153,7 +153,7 @@ class StructureBridgeTest extends TestCase
         $this->assertEquals('de', $structure->getShadowBaseLanguage());
     }
 
-    public function testGetIsShadowWrongDocument()
+    public function testGetIsShadowWrongDocument(): void
     {
         $metadata = $this->prophesize(StructureMetadata::class);
         $inspector = $this->prophesize(DocumentInspector::class);
@@ -172,7 +172,7 @@ class StructureBridgeTest extends TestCase
         $this->assertNull($structure->getShadowBaseLanguage());
     }
 
-    public function testGetExt()
+    public function testGetExt(): void
     {
         $ext = [
             'seo' => [],
@@ -197,7 +197,7 @@ class StructureBridgeTest extends TestCase
         $this->assertSame($ext, $structure->getExt());
     }
 
-    public function testWithoutDocument()
+    public function testWithoutDocument(): void
     {
         $metadata = $this->prophesize(StructureMetadata::class);
         $inspector = $this->prophesize(DocumentInspector::class);

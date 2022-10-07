@@ -68,7 +68,7 @@ class TargetGroupSubscriberTest extends TestCase
         $this->targetGroupRepository = $this->prophesize(TargetGroupRepositoryInterface::class);
     }
 
-    public function testSetTargetGroupWithHeaderAndCookie()
+    public function testSetTargetGroupWithHeaderAndCookie(): void
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
@@ -105,7 +105,7 @@ class TargetGroupSubscriberTest extends TestCase
         $targetGroupHeader,
         $headerTargetGroup,
         $result
-    ) {
+    ): void {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
             false,
@@ -156,7 +156,7 @@ class TargetGroupSubscriberTest extends TestCase
         $evaluationResult,
         $result,
         $resultUpdate
-    ) {
+    ): void {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
             false,
@@ -217,7 +217,7 @@ class TargetGroupSubscriberTest extends TestCase
     /**
      * @dataProvider provideSetTargetGroupFromEvaluation
      */
-    public function testSetTargetGroupFromEvaluation($evaluatedTargetGroup, $result)
+    public function testSetTargetGroupFromEvaluation($evaluatedTargetGroup, $result): void
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
@@ -263,7 +263,7 @@ class TargetGroupSubscriberTest extends TestCase
         ];
     }
 
-    public function testSetTargetGroupFromEvaluationOnTargetHitUrl()
+    public function testSetTargetGroupFromEvaluationOnTargetHitUrl(): void
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
@@ -295,7 +295,7 @@ class TargetGroupSubscriberTest extends TestCase
     /**
      * @dataProvider provideAddVaryHeader
      */
-    public function testAddVaryHeader($targetGroupUrl, $requestUrl, $hasInfluencedContent, $header, $varyHeaders)
+    public function testAddVaryHeader($targetGroupUrl, $requestUrl, $hasInfluencedContent, $header, $varyHeaders): void
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
@@ -337,7 +337,7 @@ class TargetGroupSubscriberTest extends TestCase
     /**
      * @dataProvider provideAddSetCookieHeader
      */
-    public function testAddSetCookieHeader($targetGroupCookie, $visitorSession, $hasChanged, $url, $cookieValue)
+    public function testAddSetCookieHeader($targetGroupCookie, $visitorSession, $hasChanged, $url, $cookieValue): void
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
@@ -395,7 +395,7 @@ class TargetGroupSubscriberTest extends TestCase
         $forwardedRefererHeader,
         $forwardedUuidHeader,
         $uuid
-    ) {
+    ): void {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
             false,
@@ -445,7 +445,7 @@ class TargetGroupSubscriberTest extends TestCase
         ];
     }
 
-    public function testAddTargetGroupHitScriptInPreview()
+    public function testAddTargetGroupHitScriptInPreview(): void
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
@@ -476,7 +476,7 @@ class TargetGroupSubscriberTest extends TestCase
         $this->assertEquals('', $response->getContent());
     }
 
-    public function testAddTargetGroupHitScriptNonHtml()
+    public function testAddTargetGroupHitScriptNonHtml(): void
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
@@ -506,7 +506,7 @@ class TargetGroupSubscriberTest extends TestCase
         $this->assertEquals('{}', $response->getContent());
     }
 
-    public function testAddTargetGroupHitScriptHtmlUtf8()
+    public function testAddTargetGroupHitScriptHtmlUtf8(): void
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
@@ -537,7 +537,7 @@ class TargetGroupSubscriberTest extends TestCase
         $this->assertEquals('<body><script></script></body>', $response->getContent());
     }
 
-    public function testAddTargetGroupHitScriptNonGet()
+    public function testAddTargetGroupHitScriptNonGet(): void
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),

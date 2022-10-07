@@ -42,7 +42,7 @@ class QueryStringRuleTest extends TestCase
     /**
      * @dataProvider provideEvaluate
      */
-    public function testEvaluate($url, $urlHeader, $urlHeaderValue, $options, $result)
+    public function testEvaluate($url, $urlHeader, $urlHeaderValue, $options, $result): void
     {
         $queryStringRule = new QueryStringRule($this->requestStack->reveal(), $this->translator->reveal(), $urlHeader);
 

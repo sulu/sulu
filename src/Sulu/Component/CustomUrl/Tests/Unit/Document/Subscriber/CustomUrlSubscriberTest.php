@@ -79,7 +79,7 @@ class CustomUrlSubscriberTest extends TestCase
         );
     }
 
-    public function testHandleRemove()
+    public function testHandleRemove(): void
     {
         $removeEvent = $this->prophesize(RemoveEvent::class);
         $document = $this->prophesize(CustomUrlDocument::class);
@@ -94,7 +94,7 @@ class CustomUrlSubscriberTest extends TestCase
         $this->documentManager->remove($routeDocument->reveal())->shouldBeCalled();
     }
 
-    public function testHandlePersist()
+    public function testHandlePersist(): void
     {
         $persistEvent = $this->prophesize(PersistEvent::class);
         $document = $this->prophesize(CustomUrlDocument::class);

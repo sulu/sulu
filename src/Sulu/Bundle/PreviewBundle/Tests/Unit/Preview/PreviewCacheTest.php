@@ -18,7 +18,7 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class PreviewCacheTest extends TestCase
 {
-    public function testPreviewCache()
+    public function testPreviewCache(): void
     {
         $previewCache = new PreviewCache(new ArrayAdapter());
 
@@ -30,7 +30,7 @@ class PreviewCacheTest extends TestCase
         $this->assertFalse($previewCache->contains('id'));
     }
 
-    public function testLegacyPreviewCache()
+    public function testLegacyPreviewCache(): void
     {
         $previewCache = new PreviewCache(new ArrayCache());
 

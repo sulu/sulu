@@ -27,7 +27,7 @@ class ErrorControllerTest extends WebsiteTestCase
         $this->initPhpcr();
     }
 
-    public function test404ErrorTemplate()
+    public function test404ErrorTemplate(): void
     {
         /* @var KernelBrowser $client */
         $this->client->request('GET', 'http://sulu.lo/_error/404');
@@ -37,7 +37,7 @@ class ErrorControllerTest extends WebsiteTestCase
         $this->assertStringContainsString('404 Error Template', $response->getContent());
     }
 
-    public function testDefaultErrorTemplate()
+    public function testDefaultErrorTemplate(): void
     {
         /* @var KernelBrowser $client */
         $this->client->request('GET', 'http://sulu.lo/_error/500');

@@ -22,7 +22,7 @@ class DateTimeTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testRead()
+    public function testRead(): void
     {
         $webspaceKey = 'sulu_io';
         $locale = 'de';
@@ -41,7 +41,7 @@ class DateTimeTest extends TestCase
         $dateTime->read($node->reveal(), $property->reveal(), $webspaceKey, $locale, null);
     }
 
-    public function testReadPropertyNotExists()
+    public function testReadPropertyNotExists(): void
     {
         $webspaceKey = 'sulu_io';
         $locale = 'de';
@@ -59,7 +59,7 @@ class DateTimeTest extends TestCase
         $dateTime->read($node->reveal(), $property->reveal(), $webspaceKey, $locale, null);
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $webspaceKey = 'sulu_io';
         $locale = 'de';
@@ -76,7 +76,7 @@ class DateTimeTest extends TestCase
         $dateTime->write($node->reveal(), $property->reveal(), 1, $webspaceKey, $locale, null);
     }
 
-    public function testWriteNull()
+    public function testWriteNull(): void
     {
         $webspaceKey = 'sulu_io';
         $locale = 'de';
@@ -97,7 +97,7 @@ class DateTimeTest extends TestCase
         $dateTime->write($node->reveal(), $property->reveal(), 1, $webspaceKey, $locale, null);
     }
 
-    public function testGetContentData()
+    public function testGetContentData(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $property->getValue()->shouldBeCalled()->willReturn('2020-07-02T11:30:00');
@@ -109,7 +109,7 @@ class DateTimeTest extends TestCase
         $this->assertSame('2020-07-02T11:30:00', $result->format('Y-m-d\TH:i:s'));
     }
 
-    public function testGetContentDataEmpty()
+    public function testGetContentDataEmpty(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $property->getValue()->shouldBeCalled()->willReturn('');

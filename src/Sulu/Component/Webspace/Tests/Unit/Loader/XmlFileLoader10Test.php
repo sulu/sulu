@@ -37,7 +37,7 @@ class XmlFileLoader10Test extends WebspaceTestCase
         $this->loader = new XmlFileLoader10($locator->reveal());
     }
 
-    public function testSupports10()
+    public function testSupports10(): void
     {
         $this->assertTrue(
             $this->loader->supports(
@@ -46,7 +46,7 @@ class XmlFileLoader10Test extends WebspaceTestCase
         );
     }
 
-    public function testSupports11()
+    public function testSupports11(): void
     {
         $this->assertFalse(
             $this->loader->supports(
@@ -55,7 +55,7 @@ class XmlFileLoader10Test extends WebspaceTestCase
         );
     }
 
-    public function testLoadDeprecated()
+    public function testLoadDeprecated(): void
     {
         $webspace = $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_deprecated.xml'
@@ -131,7 +131,7 @@ class XmlFileLoader10Test extends WebspaceTestCase
         $this->assertEquals(['error-404' => 'test.html.twig', 'error' => 'test.html.twig'], $webspace->getTemplates());
     }
 
-    public function testLoadWithInvalidWebspaceKey()
+    public function testLoadWithInvalidWebspaceKey(): void
     {
         $this->expectException(InvalidWebspaceException::class);
 
@@ -140,7 +140,7 @@ class XmlFileLoader10Test extends WebspaceTestCase
         );
     }
 
-    public function testLoadDynamicOrder()
+    public function testLoadDynamicOrder(): void
     {
         $webspace = $this->loader->load(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/valid/sulu.io_deprecatedDynamicOrder.xml'

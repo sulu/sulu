@@ -98,13 +98,13 @@ class SnippetTwigExtensionTest extends SuluTestCase
         $this->getContainer()->get('security.token_storage')->setToken(new UsernamePasswordToken($user, 'test'));
     }
 
-    public function testLoadSnippetNotExists()
+    public function testLoadSnippetNotExists(): void
     {
         $snippet = $this->extension->loadSnippet('123-123-123');
         $this->assertNull($snippet);
     }
 
-    public function testLoadSnippet()
+    public function testLoadSnippet(): void
     {
         /** @var SnippetDocument $snippet */
         $snippet = $this->documentManager->create('snippet');
@@ -135,7 +135,7 @@ class SnippetTwigExtensionTest extends SuluTestCase
         $this->assertEquals([], $snippet['view']['description']);
     }
 
-    public function testLoadSnippetLocale()
+    public function testLoadSnippetLocale(): void
     {
         /** @var PageDocument $document */
         $document = $this->documentManager->create('snippet');
@@ -191,7 +191,7 @@ class SnippetTwigExtensionTest extends SuluTestCase
         $this->assertEquals([], $snippet['view']['description']);
     }
 
-    public function testLoadSnippetExcerpt()
+    public function testLoadSnippetExcerpt(): void
     {
         /** @var SnippetDocument $snippet */
         $snippet = $this->documentManager->create('snippet');

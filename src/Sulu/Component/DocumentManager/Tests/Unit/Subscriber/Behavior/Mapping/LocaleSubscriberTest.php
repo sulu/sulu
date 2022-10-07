@@ -41,7 +41,7 @@ class LocaleSubscriberTest extends TestCase
     /**
      * It should return early when not implementing.
      */
-    public function testHydrateNotImplementing()
+    public function testHydrateNotImplementing(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->notImplementing)->shouldBeCalled();
         $this->subscriber->handleLocale($this->hydrateEvent->reveal());
@@ -50,7 +50,7 @@ class LocaleSubscriberTest extends TestCase
     /**
      * It should set the node name on the document.
      */
-    public function testHydrate()
+    public function testHydrate(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->document);
         $this->hydrateEvent->getAccessor()->willReturn($this->accessor);

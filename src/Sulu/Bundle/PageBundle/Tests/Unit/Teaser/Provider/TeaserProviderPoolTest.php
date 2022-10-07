@@ -50,29 +50,29 @@ class TeaserProviderPoolTest extends TestCase
         );
     }
 
-    public function testGetProvider()
+    public function testGetProvider(): void
     {
         $this->assertEquals($this->providers['content']->reveal(), $this->teaserProviderPool->getProvider('content'));
     }
 
-    public function testGetProviderNotFound()
+    public function testGetProviderNotFound(): void
     {
         $this->expectException(ProviderNotFoundException::class);
 
         $this->teaserProviderPool->getProvider('test');
     }
 
-    public function testHasProvider()
+    public function testHasProvider(): void
     {
         $this->assertTrue($this->teaserProviderPool->hasProvider('content'));
     }
 
-    public function testHasProviderNotFound()
+    public function testHasProviderNotFound(): void
     {
         $this->assertFalse($this->teaserProviderPool->hasProvider('test'));
     }
 
-    public function testGetConfiguration()
+    public function testGetConfiguration(): void
     {
         $configuration = [
             'content' => new TeaserConfiguration('Pages', 'pages', 'column_list', ['title'], 'Choose'),

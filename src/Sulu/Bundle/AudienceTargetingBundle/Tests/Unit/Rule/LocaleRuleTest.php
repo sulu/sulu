@@ -56,7 +56,7 @@ class LocaleRuleTest extends TestCase
     /**
      * @dataProvider provideEvaluationData
      */
-    public function testEvaluate($languages, $options, $result)
+    public function testEvaluate($languages, $options, $result): void
     {
         $this->request->getLanguages()->willReturn($languages);
         $this->assertEquals($result, $this->localeRule->evaluate($options));

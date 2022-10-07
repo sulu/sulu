@@ -96,14 +96,14 @@ class TreeFullEditStrategyTest extends TestCase
         );
     }
 
-    public function testGetChildPart()
+    public function testGetChildPart(): void
     {
         $this->assertEquals('test/asdf', $this->treeStrategy->getChildPart('/test/asdf'));
         $this->assertEquals('asdf', $this->treeStrategy->getChildPart('/asdf'));
         $this->assertEquals('asdf', $this->treeStrategy->getChildPart('asdf'));
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $title = 'new-page';
         $parentUuid = 'uuid-uuid-uuid-uuid';
@@ -125,7 +125,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->assertEquals('path/to/parent/new-page', $result);
     }
 
-    public function testGenerateWithSegmentKey()
+    public function testGenerateWithSegmentKey(): void
     {
         $title = 'new-page';
         $parentUuid = 'uuid-uuid-uuid-uuid';
@@ -148,7 +148,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->assertEquals('path/to/parent/new-page', $result);
     }
 
-    public function testGenerateWithUuid()
+    public function testGenerateWithUuid(): void
     {
         $title = 'new-page';
         $parentUuid = 'uuid-uuid-uuid-uuid';
@@ -171,7 +171,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->assertEquals('path/to/parent/new-page', $result);
     }
 
-    public function testGenerateWithoutParentUuid()
+    public function testGenerateWithoutParentUuid(): void
     {
         $title = 'new-page';
         $webspaceKey = 'sulu_io';
@@ -189,7 +189,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->assertEquals('path/to/parent/new-page', $result);
     }
 
-    public function testSave()
+    public function testSave(): void
     {
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';
@@ -210,7 +210,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->treeStrategy->save($document->reveal(), null);
     }
 
-    public function testSaveSame()
+    public function testSaveSame(): void
     {
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';
@@ -228,7 +228,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->treeStrategy->save($document->reveal(), null);
     }
 
-    public function testSaveInvalid()
+    public function testSaveInvalid(): void
     {
         $this->expectException(ResourceLocatorNotValidException::class);
 
@@ -249,7 +249,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->treeStrategy->save($document->reveal(), null);
     }
 
-    public function testSaveAlreadyExist()
+    public function testSaveAlreadyExist(): void
     {
         $this->expectException(ResourceLocatorAlreadyExistsException::class);
 
@@ -275,7 +275,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->treeStrategy->save($document->reveal(), null);
     }
 
-    public function testSaveWithPublishedChild()
+    public function testSaveWithPublishedChild(): void
     {
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';
@@ -301,7 +301,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->treeStrategy->save($document->reveal(), null);
     }
 
-    public function testSaveWithUnpublishedChild()
+    public function testSaveWithUnpublishedChild(): void
     {
         $webspaceKey = 'sulu_io';
         $languageCode = 'de';
@@ -328,7 +328,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->treeStrategy->save($document->reveal(), null);
     }
 
-    public function testLoadByContent()
+    public function testLoadByContent(): void
     {
         $document = $this->prophesize(PageDocument::class);
         $node = $this->prophesize(NodeInterface::class);
@@ -343,7 +343,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->assertEquals('path/to/document', $result);
     }
 
-    public function testLoadByContentUuid()
+    public function testLoadByContentUuid(): void
     {
         $uuid = 'uuid-uuid-uuid-uuid';
         $webspaceKey = 'sulu_io';
@@ -355,7 +355,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->assertEquals('path/to/document', $result);
     }
 
-    public function testLoadByContentUuidWithSegmentKey()
+    public function testLoadByContentUuidWithSegmentKey(): void
     {
         $uuid = 'uuid-uuid-uuid-uuid';
         $webspaceKey = 'sulu_io';
@@ -370,7 +370,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->assertEquals('path/to/document', $result);
     }
 
-    public function testLoadHistoryByContentUuid()
+    public function testLoadHistoryByContentUuid(): void
     {
         $uuid = 'uuid-uuid-uuid-uuid';
         $webspaceKey = 'sulu_io';
@@ -386,7 +386,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->assertEquals('old/path', $result[0]->getResourceLocator());
     }
 
-    public function testLoadHistoryByContentUuidWithSegmentKey()
+    public function testLoadHistoryByContentUuidWithSegmentKey(): void
     {
         $uuid = 'uuid-uuid-uuid-uuid';
         $webspaceKey = 'sulu_io';
@@ -403,7 +403,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->assertEquals('old/path', $result[0]->getResourceLocator());
     }
 
-    public function testLoadByResourceLocator()
+    public function testLoadByResourceLocator(): void
     {
         $resourceLocator = 'path/to/document';
         $webspaceKey = 'sulu_io';
@@ -415,7 +415,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->assertEquals('uuid', $result);
     }
 
-    public function testLoadByResourceLocatorWithSegmentKey()
+    public function testLoadByResourceLocatorWithSegmentKey(): void
     {
         $resourceLocator = 'path/to/document';
         $webspaceKey = 'sulu_io';
@@ -435,7 +435,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->assertEquals('uuid', $result);
     }
 
-    public function testIsValid()
+    public function testIsValid(): void
     {
         $path = 'som/valid/path';
         $this->cleaner->validate($path)->willReturn(true);
@@ -443,12 +443,12 @@ class TreeFullEditStrategyTest extends TestCase
         $this->assertTrue($this->treeStrategy->isValid($path, 'default', 'de'));
     }
 
-    public function testIsValidSlash()
+    public function testIsValidSlash(): void
     {
         $this->assertFalse($this->treeStrategy->isValid('/', 'default', 'de'));
     }
 
-    public function testDeleteByPath()
+    public function testDeleteByPath(): void
     {
         $path = 'path/to/document';
         $languageCode = 'de';
@@ -457,7 +457,7 @@ class TreeFullEditStrategyTest extends TestCase
         $this->treeStrategy->deleteById($path, $languageCode);
     }
 
-    public function testDeleteByPathWithSegment()
+    public function testDeleteByPathWithSegment(): void
     {
         $path = 'path/to/document';
         $languageCode = 'de';

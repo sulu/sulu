@@ -103,7 +103,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         );
     }
 
-    public function testGetAll()
+    public function testGetAll(): void
     {
         $webspaces = $this->webspaceManager->getWebspaceCollection();
 
@@ -205,7 +205,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('massiveart.lo/{localization}', $environmentProd->getUrls()[0]->getUrl());
     }
 
-    public function testFindWebspaceByKey()
+    public function testFindWebspaceByKey(): void
     {
         $webspace = $this->webspaceManager->findWebspaceByKey('sulu_io');
 
@@ -251,7 +251,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
     }
 
-    public function testFindPortalByKey()
+    public function testFindPortalByKey(): void
     {
         $portal = $this->webspaceManager->findPortalByKey('sulucmf_at');
 
@@ -280,19 +280,19 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
     }
 
-    public function testFindWebspaceByNotExistingKey()
+    public function testFindWebspaceByNotExistingKey(): void
     {
         $portal = $this->webspaceManager->findWebspaceByKey('not_existing');
         $this->assertNull($portal);
     }
 
-    public function testFindPortalByNotExistingKey()
+    public function testFindPortalByNotExistingKey(): void
     {
         $portal = $this->webspaceManager->findPortalByKey('not_existing');
         $this->assertNull($portal);
     }
 
-    public function testFindPortalInformationByUrl()
+    public function testFindPortalInformationByUrl(): void
     {
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('sulu.at/test/test/test', 'prod');
         $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocale());
@@ -387,7 +387,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
     }
 
-    public function testFindPortalInformationsByUrl()
+    public function testFindPortalInformationsByUrl(): void
     {
         $portalInformations = $this->webspaceManager->findPortalInformationsByUrl('sulu.at/test/test/test', 'prod');
         $portalInformation = \reset($portalInformations);
@@ -502,7 +502,7 @@ class WebspaceManagerTest extends WebspaceTestCase
     /**
      * @dataProvider provideFindPortalInformationByUrl
      */
-    public function testFindPortalInformationByUrlWithInvalidSuffix($url, $shouldFind)
+    public function testFindPortalInformationByUrlWithInvalidSuffix($url, $shouldFind): void
     {
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl($url, 'dev');
 
@@ -513,7 +513,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         }
     }
 
-    public function testFindPortalInformationsByWebspaceKeyAndLocale()
+    public function testFindPortalInformationsByWebspaceKeyAndLocale(): void
     {
         $portalInformations = $this->webspaceManager->findPortalInformationsByWebspaceKeyAndLocale(
             'sulu_io',
@@ -528,7 +528,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('de_at', $portalInformation->getLocale());
     }
 
-    public function testFindPortalInformationsByPortalKeyAndLocale()
+    public function testFindPortalInformationsByPortalKeyAndLocale(): void
     {
         $portalInformations = $this->webspaceManager->findPortalInformationsByPortalKeyAndLocale(
             'sulucmf_at',
@@ -543,7 +543,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('de_at', $portalInformation->getLocale());
     }
 
-    public function testLoadMultiple()
+    public function testLoadMultiple(): void
     {
         $this->webspaceManager = new WebspaceManager(
             $this->loader,
@@ -575,7 +575,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('sulu_io', $webspace->getKey());
     }
 
-    public function testLoadMissingDefaultTemplate()
+    public function testLoadMissingDefaultTemplate(): void
     {
         $this->expectException(InvalidTemplateException::class);
 
@@ -599,7 +599,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $webspaces = $this->webspaceManager->getWebspaceCollection();
     }
 
-    public function testLoadExcludedDefaultTemplate()
+    public function testLoadExcludedDefaultTemplate(): void
     {
         $this->expectException(InvalidTemplateException::class);
 
@@ -621,7 +621,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $webspaces = $this->webspaceManager->getWebspaceCollection();
     }
 
-    public function testRedirectUrl()
+    public function testRedirectUrl(): void
     {
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('www.sulu.at/test/test', 'prod');
 
@@ -644,7 +644,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('sulu', $webspace->getTheme());
     }
 
-    public function testLocalizations()
+    public function testLocalizations(): void
     {
         $localizations = $this->webspaceManager->findWebspaceByKey('massiveart')->getLocalizations();
 
@@ -676,7 +676,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals(null, $allLocalizations[2]->getShadow());
     }
 
-    public function testFindUrlsByResourceLocator()
+    public function testFindUrlsByResourceLocator(): void
     {
         $result = $this->webspaceManager->findUrlsByResourceLocator('/test', 'dev', 'en_us', 'massiveart');
 
@@ -687,7 +687,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals(['http://sulu.lo/test'], $result);
     }
 
-    public function testFindUrlsByResourceLocatorWithScheme()
+    public function testFindUrlsByResourceLocatorWithScheme(): void
     {
         $result = $this->webspaceManager->findUrlsByResourceLocator(
             '/test',
@@ -705,7 +705,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals(['https://sulu.lo/test'], $result);
     }
 
-    public function testFindUrlsByResourceLocatorWithSchemeNull()
+    public function testFindUrlsByResourceLocatorWithSchemeNull(): void
     {
         $result = $this->webspaceManager->findUrlsByResourceLocator(
             '/test',
@@ -723,7 +723,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals(['http://sulu.lo/test'], $result);
     }
 
-    public function testFindUrlsByResourceLocatorWithSchemeFromRequest()
+    public function testFindUrlsByResourceLocatorWithSchemeFromRequest(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn('massiveart.lo');
@@ -740,7 +740,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals(['https://sulu.lo/test'], $result);
     }
 
-    public function testFindUrlsByResourceLocatorWithWebspaceFromRequest()
+    public function testFindUrlsByResourceLocatorWithWebspaceFromRequest(): void
     {
         $webspace = new Webspace();
         $webspace->setKey('dan_io');
@@ -752,7 +752,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals(['http://dan.lo/de/test'], $result);
     }
 
-    public function testFindUrlsByResourceLocatorRoot()
+    public function testFindUrlsByResourceLocatorRoot(): void
     {
         $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'en_us', 'massiveart');
 
@@ -763,7 +763,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals(['http://sulu.lo/'], $result);
     }
 
-    public function testFindUrlsByResourceLocatorRootWithScheme()
+    public function testFindUrlsByResourceLocatorRootWithScheme(): void
     {
         $result = $this->webspaceManager->findUrlsByResourceLocator('/', 'dev', 'en_us', 'massiveart', null, 'https');
 
@@ -774,7 +774,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals(['https://sulu.lo/'], $result);
     }
 
-    public function testFindUrlsByResourceLocatorWithCustomHttpPort()
+    public function testFindUrlsByResourceLocatorWithCustomHttpPort(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn('massiveart.lo');
@@ -790,7 +790,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals(['http://sulu.lo/test'], $result);
     }
 
-    public function testFindUrlsByResourceLocatorWithCustomHttpsPort()
+    public function testFindUrlsByResourceLocatorWithCustomHttpsPort(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn('sulu.lo');
@@ -806,7 +806,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals(['https://sulu.lo:4444/test'], $result);
     }
 
-    public function testFindUrlByResourceLocator()
+    public function testFindUrlByResourceLocator(): void
     {
         $result = $this->webspaceManager->findUrlByResourceLocator('/test', 'dev', 'de_at', 'sulu_io');
         $this->assertEquals('http://sulu.lo/test', $result);
@@ -831,7 +831,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('https://sulu.lo/test', $result);
     }
 
-    public function testFindUrlByResourceLocatorWithWebspaceFromRequest()
+    public function testFindUrlByResourceLocatorWithWebspaceFromRequest(): void
     {
         $webspace = new Webspace();
         $webspace->setKey('dan_io');
@@ -842,7 +842,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('http://dan.lo/de/test', $result);
     }
 
-    public function testFindUrlByResourceLocatorWithCustomHttpPort()
+    public function testFindUrlByResourceLocatorWithCustomHttpPort(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn('massiveart.lo');
@@ -856,7 +856,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('http://sulu.lo/test', $result);
     }
 
-    public function testFindUrlByResourceLocatorWithCustomHttpsPort()
+    public function testFindUrlByResourceLocatorWithCustomHttpsPort(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn('sulu.lo');
@@ -870,7 +870,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('https://sulu.lo:4444/test', $result);
     }
 
-    public function testGetPortals()
+    public function testGetPortals(): void
     {
         $portals = $this->webspaceManager->getPortals();
 
@@ -887,7 +887,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         );
     }
 
-    public function testGetUrls()
+    public function testGetUrls(): void
     {
         $urls = $this->webspaceManager->getUrls('dev');
 
@@ -902,7 +902,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertContains('massiveart.lo/de', $urls);
     }
 
-    public function testGetPortalInformations()
+    public function testGetPortalInformations(): void
     {
         $portalInformations = $this->webspaceManager->getPortalInformations('dev');
 
@@ -917,7 +917,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertArrayHasKey('massiveart.lo/de', $portalInformations);
     }
 
-    public function testGetAllLocalizations()
+    public function testGetAllLocalizations(): void
     {
         $localizations = $this->webspaceManager->getAllLocalizations();
 
@@ -988,7 +988,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         );
     }
 
-    public function testGetAllLocalesByWebspaces()
+    public function testGetAllLocalesByWebspaces(): void
     {
         $webspacesLocales = $this->webspaceManager->getAllLocalesByWebspaces();
 
@@ -1025,7 +1025,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals(['country' => 'at', 'language' => 'de'], \reset($webspacesLocales['dan_io']));
     }
 
-    public function testGetWebspaceCollectionReplaceHost()
+    public function testGetWebspaceCollectionReplaceHost(): void
     {
         $portalInformations = \array_values(
             $this->webspaceManager->getPortalInformationsByWebspaceKey(

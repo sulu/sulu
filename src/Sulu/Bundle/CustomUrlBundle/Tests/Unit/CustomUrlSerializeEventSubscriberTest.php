@@ -29,7 +29,7 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testGetSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         $generator = $this->prophesize(GeneratorInterface::class);
         $userManager = $this->prophesize(UserManagerInterface::class);
@@ -54,7 +54,7 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
         }
     }
 
-    public function testOnPostSerialize()
+    public function testOnPostSerialize(): void
     {
         $generator = $this->prophesize(GeneratorInterface::class);
         $userManager = $this->prophesize(UserManagerInterface::class);
@@ -114,7 +114,7 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
         }), 'test2')->shouldBeCalled();
     }
 
-    public function testOnPostSerializeWrongDocument()
+    public function testOnPostSerializeWrongDocument(): void
     {
         $generator = $this->prophesize(GeneratorInterface::class);
         $userManager = $this->prophesize(UserManagerInterface::class);
@@ -138,7 +138,7 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
         $generator->generate(Argument::any(), Argument::any(), Argument::any())->shouldNotBeCalled();
     }
 
-    public function testOnPostSerializeNoTarget()
+    public function testOnPostSerializeNoTarget(): void
     {
         $generator = $this->prophesize(GeneratorInterface::class);
         $userManager = $this->prophesize(UserManagerInterface::class);
@@ -191,7 +191,7 @@ class CustomUrlSerializeEventSubscriberTest extends TestCase
         }), 'test2')->shouldBeCalled();
     }
 
-    public function testOnPostSerializeNoCreatorAndChanger()
+    public function testOnPostSerializeNoCreatorAndChanger(): void
     {
         $generator = $this->prophesize(GeneratorInterface::class);
         $userManager = $this->prophesize(UserManagerInterface::class);

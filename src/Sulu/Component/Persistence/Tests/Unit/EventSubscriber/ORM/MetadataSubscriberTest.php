@@ -112,7 +112,7 @@ class MetadataSubscriberTest extends TestCase
         $this->subscriber = new MetadataSubscriber($objects);
     }
 
-    public function testLoadClassMetadataWithCustomRepository()
+    public function testLoadClassMetadataWithCustomRepository(): void
     {
         $this->loadClassMetadataEvent->getClassMetadata()->willReturn($this->classMetadata->reveal());
         $this->classMetadata->getName()->willReturn(\stdClass::class);
@@ -128,7 +128,7 @@ class MetadataSubscriberTest extends TestCase
         $this->subscriber->loadClassMetadata($this->loadClassMetadataEvent->reveal());
     }
 
-    public function testLoadClassMetadataWithoutCustomRepository()
+    public function testLoadClassMetadataWithoutCustomRepository(): void
     {
         $this->loadClassMetadataEvent->getClassMetadata()->willReturn($this->classMetadata->reveal());
         $this->classMetadata->getName()->willReturn(\Closure::class);
@@ -144,7 +144,7 @@ class MetadataSubscriberTest extends TestCase
         $this->subscriber->loadClassMetadata($this->loadClassMetadataEvent->reveal());
     }
 
-    public function testLoadClassMetadataWithoutParent()
+    public function testLoadClassMetadataWithoutParent(): void
     {
         $this->object = $this->prophesize(\stdClass::class);
         $this->loadClassMetadataEvent->getClassMetadata()->willReturn($this->classMetadata->reveal());

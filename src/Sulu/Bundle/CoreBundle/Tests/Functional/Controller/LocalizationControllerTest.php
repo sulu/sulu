@@ -27,7 +27,7 @@ class LocalizationControllerTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testCgetAction()
+    public function testCgetAction(): void
     {
         $this->client->jsonRequest(
             'GET',

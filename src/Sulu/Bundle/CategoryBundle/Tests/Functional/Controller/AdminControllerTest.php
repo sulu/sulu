@@ -15,7 +15,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class AdminControllerTest extends SuluTestCase
 {
-    public function testMetadataAction()
+    public function testMetadataAction(): void
     {
         $client = $this->createAuthenticatedClient();
 

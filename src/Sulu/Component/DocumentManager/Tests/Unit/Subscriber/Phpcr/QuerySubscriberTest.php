@@ -103,7 +103,7 @@ class QuerySubscriberTest extends TestCase
     /**
      * It should provide a Query object from a JCR-SQL2 string.
      */
-    public function testHandleCreate()
+    public function testHandleCreate(): void
     {
         $query = 'SELECT * FROM [nt:unstructured]';
         $locale = 'fr';
@@ -128,7 +128,7 @@ class QuerySubscriberTest extends TestCase
     /**
      * It should provide a Query object for a PHPCR query object.
      */
-    public function testHandleCreateFromPhpcrQuery()
+    public function testHandleCreateFromPhpcrQuery(): void
     {
         $locale = 'fr';
         $primarySelector = 'p';
@@ -152,7 +152,7 @@ class QuerySubscriberTest extends TestCase
     /**
      * It should handle query execution and set the result.
      */
-    public function testHandleQueryExecute()
+    public function testHandleQueryExecute(): void
     {
         $locale = 'fr';
         $primarySelector = 'p';

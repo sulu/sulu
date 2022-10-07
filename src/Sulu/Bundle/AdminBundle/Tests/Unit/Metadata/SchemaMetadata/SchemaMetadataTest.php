@@ -22,7 +22,7 @@ class SchemaMetadataTest extends TestCase
      * It is absolutely necessary that no empty array is returned, because an empty array would be serialized as array
      * instead of an object in JSON, which would cause the JsonSchema library in the frontend to crash.
      */
-    public function testEmptyJsonSchemaReturningNonEmptyArray()
+    public function testEmptyJsonSchemaReturningNonEmptyArray(): void
     {
         $schema = new SchemaMetadata();
 
@@ -31,7 +31,7 @@ class SchemaMetadataTest extends TestCase
         ], $schema->toJsonSchema());
     }
 
-    public function testNestedJsonSchema()
+    public function testNestedJsonSchema(): void
     {
         $schema = new SchemaMetadata(
             [

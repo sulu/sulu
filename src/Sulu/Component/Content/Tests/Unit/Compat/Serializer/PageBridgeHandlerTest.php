@@ -29,7 +29,7 @@ class PageBridgeHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testDeserialize()
+    public function testDeserialize(): void
     {
         $documentInspector = $this->prophesize(DocumentInspector::class);
         $propertyFactory = $this->prophesize(LegacyPropertyFactory::class);

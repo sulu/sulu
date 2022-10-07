@@ -85,7 +85,7 @@ class LegacyResettingControllerTest extends SuluTestCase
         $this->em->clear();
     }
 
-    public function testSendEmailAction()
+    public function testSendEmailAction(): void
     {
         $this->client->enableProfiler();
 
@@ -123,7 +123,7 @@ class LegacyResettingControllerTest extends SuluTestCase
         $this->assertEquals($expectedEmailData['body'], $message->getBody());
     }
 
-    public function testSendEmailActionWithUsername()
+    public function testSendEmailActionWithUsername(): void
     {
         $this->client->enableProfiler();
 
@@ -162,7 +162,7 @@ class LegacyResettingControllerTest extends SuluTestCase
         $this->assertEquals($expectedEmailData['body'], $message->getBody());
     }
 
-    public function testSendEmailActionWithUserWithoutEmail()
+    public function testSendEmailActionWithUserWithoutEmail(): void
     {
         $this->client->enableProfiler();
 
@@ -201,7 +201,7 @@ class LegacyResettingControllerTest extends SuluTestCase
         $this->assertEquals($expectedEmailData['body'], $message->getBody());
     }
 
-    public function testResendEmailActionTooMuch()
+    public function testResendEmailActionTooMuch(): void
     {
         $this->client->enableProfiler();
 
@@ -239,7 +239,7 @@ class LegacyResettingControllerTest extends SuluTestCase
         $this->assertEquals($counter, $user->getPasswordResetTokenEmailsSent());
     }
 
-    public function testSendEmailActionWithMissingUser()
+    public function testSendEmailActionWithMissingUser(): void
     {
         $this->client->enableProfiler();
 
@@ -254,7 +254,7 @@ class LegacyResettingControllerTest extends SuluTestCase
         $this->assertEquals(0, $mailCollector->getMessageCount());
     }
 
-    public function testSendEmailActionWithNotExistingUser()
+    public function testSendEmailActionWithNotExistingUser(): void
     {
         $this->client->enableProfiler();
 
@@ -271,7 +271,7 @@ class LegacyResettingControllerTest extends SuluTestCase
         $this->assertEquals(0, $mailCollector->getMessageCount());
     }
 
-    public function testSendEmailActionMultipleTimes()
+    public function testSendEmailActionMultipleTimes(): void
     {
         $this->client->enableProfiler();
 
@@ -295,7 +295,7 @@ class LegacyResettingControllerTest extends SuluTestCase
         $this->assertEquals(1, $mailCollector->getMessageCount());
     }
 
-    public function testResetAction()
+    public function testResetAction(): void
     {
         $newPassword = 'anewpasswordishouldremeber';
 
@@ -329,7 +329,7 @@ class LegacyResettingControllerTest extends SuluTestCase
         $this->assertNull($user->getPasswordResetTokenExpiresAt());
     }
 
-    public function testResetActionWithoutToken()
+    public function testResetActionWithoutToken(): void
     {
         $passwordBefore = $this->users[2]->getPassword();
 
@@ -344,7 +344,7 @@ class LegacyResettingControllerTest extends SuluTestCase
         $this->assertEquals($passwordBefore, $user->getPassword());
     }
 
-    public function testResetActionWithInvalidToken()
+    public function testResetActionWithInvalidToken(): void
     {
         $passwordBefore = $this->users[2]->getPassword();
 
@@ -360,7 +360,7 @@ class LegacyResettingControllerTest extends SuluTestCase
         $this->assertEquals($passwordBefore, $user->getPassword());
     }
 
-    public function testResetActionNoRole()
+    public function testResetActionNoRole(): void
     {
         $user = $this->createUser(4);
         $this->em->persist($user);
@@ -376,7 +376,7 @@ class LegacyResettingControllerTest extends SuluTestCase
         $this->assertEquals(null, $response);
     }
 
-    public function testResetActionDifferentSystem()
+    public function testResetActionDifferentSystem(): void
     {
         $role = $this->createRole('Website');
         $this->em->persist($role);

@@ -41,7 +41,7 @@ class TargetGroupSelectionTest extends TestCase
         $this->audienceTargetingGroups = new TargetGroupSelection($this->targetGroupRepository->reveal());
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $node = $this->prophesize(NodeInterface::class);
         $property = $this->prophesize(PropertyInterface::class);
@@ -54,7 +54,7 @@ class TargetGroupSelectionTest extends TestCase
         $this->audienceTargetingGroups->read($node->reveal(), $property->reveal(), 'sulu_io', 'en', null);
     }
 
-    public function testGetContentDataEmpty()
+    public function testGetContentDataEmpty(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
 
@@ -66,7 +66,7 @@ class TargetGroupSelectionTest extends TestCase
         $this->assertEquals([], $contentData);
     }
 
-    public function testGetContentData()
+    public function testGetContentData(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
 
@@ -81,7 +81,7 @@ class TargetGroupSelectionTest extends TestCase
         $this->assertSame([$targetGroup1, $targetGroup2], $contentData);
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $node = $this->prophesize(NodeInterface::class);
         $property = $this->prophesize(PropertyInterface::class);
@@ -93,7 +93,7 @@ class TargetGroupSelectionTest extends TestCase
         $this->audienceTargetingGroups->write($node->reveal(), $property->reveal(), 1, 'sulu_io', 'en', null);
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $node = $this->prophesize(NodeInterface::class);
         $property = $this->prophesize(PropertyInterface::class);
@@ -108,7 +108,7 @@ class TargetGroupSelectionTest extends TestCase
         $this->audienceTargetingGroups->remove($node->reveal(), $property->reveal(), 'sulu_io', 'en', null);
     }
 
-    public function testRemoveNotExisting()
+    public function testRemoveNotExisting(): void
     {
         $node = $this->prophesize(NodeInterface::class);
         $property = $this->prophesize(PropertyInterface::class);
@@ -123,14 +123,14 @@ class TargetGroupSelectionTest extends TestCase
         $this->audienceTargetingGroups->remove($node->reveal(), $property->reveal(), 'sulu_io', 'en', null);
     }
 
-    public function testExportData()
+    public function testExportData(): void
     {
         $this->assertEquals('[]', $this->audienceTargetingGroups->exportData(null));
         $this->assertEquals('[]', $this->audienceTargetingGroups->exportData([]));
         $this->assertEquals('[1]', $this->audienceTargetingGroups->exportData([1]));
     }
 
-    public function testImportDataEmpty()
+    public function testImportDataEmpty(): void
     {
         $node = $this->prophesize(NodeInterface::class);
         $property = $this->prophesize(PropertyInterface::class);
@@ -144,7 +144,7 @@ class TargetGroupSelectionTest extends TestCase
         $this->audienceTargetingGroups->importData($node->reveal(), $property->reveal(), '[]', 1, 'sulu_io', 'en');
     }
 
-    public function testImportData()
+    public function testImportData(): void
     {
         $node = $this->prophesize(NodeInterface::class);
         $property = $this->prophesize(PropertyInterface::class);

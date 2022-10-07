@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
 {
-    public function testModelInterfaceMapping()
+    public function testModelInterfaceMapping(): void
     {
         $bundle = new UsingPersistenceBundleTrait();
         $bundle->modelInterfaces = [
@@ -43,7 +43,7 @@ class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
         );
     }
 
-    public function testModelInterfaceMappingWithParameter()
+    public function testModelInterfaceMappingWithParameter(): void
     {
         $bundle = new UsingPersistenceBundleTrait();
         $bundle->modelInterfaces = [
@@ -70,7 +70,7 @@ class PersistenceBundleTraitTest extends AbstractContainerBuilderTestCase
         );
     }
 
-    public function testInvalidModelInterfaceMapping()
+    public function testInvalidModelInterfaceMapping(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $bundle = new UsingPersistenceBundleTrait();

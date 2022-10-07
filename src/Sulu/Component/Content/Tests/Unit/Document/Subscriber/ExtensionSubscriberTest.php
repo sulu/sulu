@@ -87,7 +87,7 @@ class ExtensionSubscriberTest extends SubscriberTestCase
     /**
      * It should hydrate data from extensions.
      */
-    public function testHydrateExtensionsData()
+    public function testHydrateExtensionsData(): void
     {
         $expectedData = [
             'foo' => 'bar',
@@ -123,7 +123,7 @@ class ExtensionSubscriberTest extends SubscriberTestCase
     /**
      * It should return early if the locale is null.
      */
-    public function testPersistLocaleIsNull()
+    public function testPersistLocaleIsNull(): void
     {
         $document = new TestExtensionDocument();
         $this->persistEvent->getLocale()->willReturn(null);
@@ -136,7 +136,7 @@ class ExtensionSubscriberTest extends SubscriberTestCase
     /**
      * It should persist data from extensions.
      */
-    public function testPersistExtensionsData()
+    public function testPersistExtensionsData(): void
     {
         $document = new TestExtensionDocument(
             [

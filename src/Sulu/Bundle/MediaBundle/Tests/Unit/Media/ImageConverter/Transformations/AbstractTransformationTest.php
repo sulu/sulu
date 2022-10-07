@@ -53,7 +53,7 @@ abstract class AbstractTransformationTest extends SuluTestCase
      */
     abstract protected function getDataList();
 
-    public function testTransformation()
+    public function testTransformation(): void
     {
         foreach ($this->getDataList() as $data) {
             $imageWidth = $this->imageWidth;

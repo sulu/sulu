@@ -77,7 +77,7 @@ class FieldDescriptorFactoryTest extends TestCase
         );
     }
 
-    public function testGetFieldDescriptors()
+    public function testGetFieldDescriptors(): void
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('complete');
 
@@ -115,7 +115,7 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
-    public function testGetFieldDescriptorsMinimal()
+    public function testGetFieldDescriptorsMinimal(): void
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('minimal');
 
@@ -130,7 +130,7 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
-    public function testGetFieldDescriptorsGroupConcat()
+    public function testGetFieldDescriptorsGroupConcat(): void
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('group-concat');
 
@@ -149,7 +149,7 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
-    public function testGetFieldDescriptorsCase()
+    public function testGetFieldDescriptorsCase(): void
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('case');
 
@@ -173,7 +173,7 @@ class FieldDescriptorFactoryTest extends TestCase
         );
     }
 
-    public function testGetFieldDescriptorsIdentity()
+    public function testGetFieldDescriptorsIdentity(): void
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('identity');
 
@@ -192,7 +192,7 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
-    public function testGetFieldDescriptorsOptions()
+    public function testGetFieldDescriptorsOptions(): void
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('options');
 
@@ -223,7 +223,7 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
-    public function testGetFieldDescriptorsCount()
+    public function testGetFieldDescriptorsCount(): void
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('count');
 
@@ -242,7 +242,7 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
     }
 
-    public function testGetFieldDescriptorsMixed()
+    public function testGetFieldDescriptorsMixed(): void
     {
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('mixed');
 
@@ -257,7 +257,7 @@ class FieldDescriptorFactoryTest extends TestCase
         );
     }
 
-    public function testGetFieldDescriptorsNotExisting()
+    public function testGetFieldDescriptorsNotExisting(): void
     {
         $this->assertNull($this->fieldDescriptorFactory->getFieldDescriptors('not-existing'));
     }

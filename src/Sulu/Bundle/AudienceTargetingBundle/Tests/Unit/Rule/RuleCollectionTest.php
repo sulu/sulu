@@ -21,7 +21,7 @@ class RuleCollectionTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testGetName()
+    public function testGetName(): void
     {
         $rule1 = $this->prophesize(RuleInterface::class);
         $rule2 = $this->prophesize(RuleInterface::class);
@@ -32,7 +32,7 @@ class RuleCollectionTest extends TestCase
         $this->assertSame($rule2->reveal(), $ruleCollection->getRule('rule2'));
     }
 
-    public function testGetNotExistingName()
+    public function testGetNotExistingName(): void
     {
         $this->expectException(RuleNotFoundException::class, 'The rule with the name "rule" could not be found.');
         $ruleCollection = new RuleCollection([]);
@@ -40,7 +40,7 @@ class RuleCollectionTest extends TestCase
         $ruleCollection->getRule('rule');
     }
 
-    public function testGetRules()
+    public function testGetRules(): void
     {
         $rule1 = $this->prophesize(RuleInterface::class);
         $rule2 = $this->prophesize(RuleInterface::class);

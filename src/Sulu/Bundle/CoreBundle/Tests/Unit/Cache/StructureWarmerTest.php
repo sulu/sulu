@@ -26,7 +26,7 @@ class StructureWarmerTest extends TestCase
         $this->warmer = new StructureWarmer($this->structureManager->reveal());
     }
 
-    public function testWarmup()
+    public function testWarmup(): void
     {
         $this->structureManager->getStructures('page')->shouldBeCalled();
         $this->structureManager->getStructures('snippet')->shouldBeCalled();

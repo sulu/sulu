@@ -29,7 +29,7 @@ class DocumentHelperTest extends TestCase
     /**
      * It should return a debug title for a document.
      */
-    public function testDebugTitle()
+    public function testDebugTitle(): void
     {
         $title = DocumentHelper::getDebugTitle($this->document);
         $this->assertEquals(32, \strlen($title));
@@ -38,7 +38,7 @@ class DocumentHelperTest extends TestCase
     /**
      * It should show the title for a document which implements the TitleBehavior.
      */
-    public function testDebugTitleWithTitle()
+    public function testDebugTitleWithTitle(): void
     {
         $this->titleDocument->getTitle()->willReturn('Hello');
         $title = DocumentHelper::getDebugTitle($this->titleDocument->reveal());

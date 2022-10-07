@@ -19,7 +19,7 @@ class UsingPersistenceExtensionTrait extends Extension
 {
     use PersistenceExtensionTrait;
 
-    public function load(array $config, ContainerBuilder $container)
+    public function load(array $config, ContainerBuilder $container): void
     {
         $this->configurePersistence($config['objects'], $container);
     }

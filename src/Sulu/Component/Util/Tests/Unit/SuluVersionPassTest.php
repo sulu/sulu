@@ -20,7 +20,7 @@ class SuluVersionPassTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testProcess()
+    public function testProcess(): void
     {
         $versionPass = new SuluVersionPass();
         $container = $this->prophesize(ContainerBuilder::class);

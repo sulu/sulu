@@ -46,7 +46,7 @@ class RouteGeneratorTest extends TestCase
         $this->generator = new RouteGenerator($this->tokenProvider->reveal(), $this->slugifier->reveal());
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $entity = $this->prophesize(RoutableInterface::class);
 
@@ -64,7 +64,7 @@ class RouteGeneratorTest extends TestCase
         $this->assertEquals('/prefix/test-title/postfix/1', $path);
     }
 
-    public function testGetOptionsResolver()
+    public function testGetOptionsResolver(): void
     {
         $optionsResolver = $this->generator->getOptionsResolver(['route_schema' => '/{entity.getTitle()}']);
         $this->assertEquals(['route_schema'], $optionsResolver->getRequiredOptions());

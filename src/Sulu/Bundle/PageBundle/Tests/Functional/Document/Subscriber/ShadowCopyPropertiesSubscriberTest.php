@@ -64,7 +64,7 @@ class ShadowCopyPropertiesSubscriberTest extends SuluTestCase
         $this->session->refresh(false);
     }
 
-    public function testCopyShadowPropertiesToShadow()
+    public function testCopyShadowPropertiesToShadow(): void
     {
         /** @var PageDocument $germanDocument */
         $germanDocument = $this->documentManager->find('/cmf/sulu_io/contents/english-page', 'de');
@@ -93,7 +93,7 @@ class ShadowCopyPropertiesSubscriberTest extends SuluTestCase
         $this->assertEquals(['main'], $node->getPropertyValue('i18n:de-navContexts'));
     }
 
-    public function testCopyShadowPropertiesFromShadow()
+    public function testCopyShadowPropertiesFromShadow(): void
     {
         /** @var PageDocument $englishDocument */
         $englishDocument = $this->documentManager->find('/cmf/sulu_io/contents/english-page', 'en');

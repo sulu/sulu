@@ -47,7 +47,7 @@ class OperatingSystemRuleTest extends TestCase
     /**
      * @dataProvider provideEvaluate
      */
-    public function testEvaluate($operatingSystemShortName, $options, $result)
+    public function testEvaluate($operatingSystemShortName, $options, $result): void
     {
         $this->deviceDetector->getOs('short_name')->willReturn($operatingSystemShortName);
         $this->assertEquals($result, $this->operatingSystemRule->evaluate($options));

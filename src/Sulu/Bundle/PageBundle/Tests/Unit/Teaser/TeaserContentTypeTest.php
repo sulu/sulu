@@ -73,7 +73,7 @@ class TeaserContentTypeTest extends TestCase
         );
     }
 
-    public function testGetDefaultParameter()
+    public function testGetDefaultParameter(): void
     {
         $configuration = [new TeaserConfiguration('content', 'pages', 'column_list', ['title'], 'Choose')];
         $this->teaserProviderPool->getConfiguration()->willReturn($configuration);
@@ -87,7 +87,7 @@ class TeaserContentTypeTest extends TestCase
         );
     }
 
-    public function testGetContentDataEmpty()
+    public function testGetContentDataEmpty(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $property->getValue()->willReturn([]);
@@ -95,7 +95,7 @@ class TeaserContentTypeTest extends TestCase
         $this->assertEquals([], $this->contentType->getContentData($property->reveal()));
     }
 
-    public function testGetContentData()
+    public function testGetContentData(): void
     {
         $items = [
             ['type' => 'content', 'id' => '123-123-123', 'mediaId' => 15],
@@ -128,7 +128,7 @@ class TeaserContentTypeTest extends TestCase
         $this->assertEquals($teasers, $this->contentType->getContentData($property->reveal()));
     }
 
-    public function testGetViewDataEmpty()
+    public function testGetViewDataEmpty(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $property->getValue()->willReturn(['presentAs' => 'col1']);
@@ -139,7 +139,7 @@ class TeaserContentTypeTest extends TestCase
         );
     }
 
-    public function testGetViewData()
+    public function testGetViewData(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $property->getValue()->willReturn([]);
@@ -150,7 +150,7 @@ class TeaserContentTypeTest extends TestCase
         );
     }
 
-    public function testPreResolve()
+    public function testPreResolve(): void
     {
         $data = [
             'items' => [

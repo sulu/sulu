@@ -37,7 +37,7 @@ class TagRequestHandlerTest extends TestCase
     /**
      * @dataProvider getProvider
      */
-    public function testGetTagsProvider($tagsParameter, $tagsString, $expected)
+    public function testGetTagsProvider($tagsParameter, $tagsString, $expected): void
     {
         $requestStack = $this->prophesize(RequestStack::class);
         $request = $this->prophesize(Request::class);
@@ -68,7 +68,7 @@ class TagRequestHandlerTest extends TestCase
     /**
      * @dataProvider appendProvider
      */
-    public function testAppendTagToUrl($tagsParameter, $url, $tagsString, $expected)
+    public function testAppendTagToUrl($tagsParameter, $url, $tagsString, $expected): void
     {
         $tag = ['name' => 'Test'];
 
@@ -102,7 +102,7 @@ class TagRequestHandlerTest extends TestCase
     /**
      * @dataProvider setProvider
      */
-    public function testSetTagToUrl($tagsParameter, $url, $tagsString, $expected)
+    public function testSetTagToUrl($tagsParameter, $url, $tagsString, $expected): void
     {
         $tag = ['name' => 'Test'];
 
@@ -136,7 +136,7 @@ class TagRequestHandlerTest extends TestCase
     /**
      * @dataProvider removeProvider
      */
-    public function testRemoveTagsFromUrl($tagsParameter, $url, $tagsString)
+    public function testRemoveTagsFromUrl($tagsParameter, $url, $tagsString): void
     {
         $requestStack = $this->prophesize(RequestStack::class);
         $request = $this->prophesize(Request::class);

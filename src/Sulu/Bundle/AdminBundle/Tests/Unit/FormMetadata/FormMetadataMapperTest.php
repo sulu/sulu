@@ -52,7 +52,7 @@ class FormMetadataMapperTest extends TestCase
         );
     }
 
-    public function testMapTags()
+    public function testMapTags(): void
     {
         $result = $this->formMetadataMapper->mapTags([
             [
@@ -79,7 +79,7 @@ class FormMetadataMapperTest extends TestCase
         $this->assertEquals([], $result[1]->getAttributes());
     }
 
-    public function testMapPropertiesEnglish()
+    public function testMapPropertiesEnglish(): void
     {
         $form = $this->createFormWithBasicProperties();
 
@@ -105,7 +105,7 @@ class FormMetadataMapperTest extends TestCase
         $this->assertEquals('onInvalid', $newProperty1->getOnInvalid());
     }
 
-    public function testMapPropertiesGerman()
+    public function testMapPropertiesGerman(): void
     {
         $form = $this->createFormWithBasicProperties();
 
@@ -131,7 +131,7 @@ class FormMetadataMapperTest extends TestCase
         $this->assertEquals('onInvalid', $property1->getOnInvalid());
     }
 
-    public function testMapPropertiesWithTags()
+    public function testMapPropertiesWithTags(): void
     {
         $form = $this->createFormWithAdvancedProperty();
 
@@ -151,7 +151,7 @@ class FormMetadataMapperTest extends TestCase
         $this->assertEquals(20, $item->getTags()[1]->getPriority());
     }
 
-    public function testMapPropertiesWithComponents()
+    public function testMapPropertiesWithComponents(): void
     {
         $form = $this->createFormWithAdvancedProperty();
         $property = $form->getChild('name');
@@ -219,7 +219,7 @@ class FormMetadataMapperTest extends TestCase
         $this->assertContains('property4', \array_keys($item->getTypes()['component2']->getItems()));
     }
 
-    public function testMapPropertiesWithParametersEnglish()
+    public function testMapPropertiesWithParametersEnglish(): void
     {
         $form = $this->createFormWithAdvancedProperty();
 
@@ -250,7 +250,7 @@ class FormMetadataMapperTest extends TestCase
         $this->assertNull($item->getOptions()['form_options']->getValue()[0]->getInfoText());
     }
 
-    public function testMapPropertiesWithParametersGerman()
+    public function testMapPropertiesWithParametersGerman(): void
     {
         $form = $this->createFormWithAdvancedProperty();
 
@@ -271,7 +271,7 @@ class FormMetadataMapperTest extends TestCase
         $this->assertEquals('LabelDeutsch', $item->getOptions()['label']->getTitle());
     }
 
-    public function testMapChildrenWithSection()
+    public function testMapChildrenWithSection(): void
     {
         $form = $this->createFormWithSection();
 
@@ -297,7 +297,7 @@ class FormMetadataMapperTest extends TestCase
         $this->assertEquals('checkbox', $section->getItems()['property3']->getType());
     }
 
-    public function testMapChildrenWithBlockEnglish()
+    public function testMapChildrenWithBlockEnglish(): void
     {
         $form = $this->createFormWithBlock();
 
@@ -327,7 +327,7 @@ class FormMetadataMapperTest extends TestCase
         $this->assertContains('property4', \array_keys($block->getTypes()['component2']->getItems()));
     }
 
-    public function testMapChildrenWithBlockGerman()
+    public function testMapChildrenWithBlockGerman(): void
     {
         $form = $this->createFormWithBlock();
 
@@ -357,7 +357,7 @@ class FormMetadataMapperTest extends TestCase
         $this->assertContains('property4', \array_keys($block->getTypes()['component2']->getItems()));
     }
 
-    public function testMapSchema()
+    public function testMapSchema(): void
     {
         $form = $this->createFormWithRequiredProperties();
 
@@ -384,7 +384,7 @@ class FormMetadataMapperTest extends TestCase
         ], $schema->toJsonSchema());
     }
 
-    public function testMapSchemaWithoutMapper()
+    public function testMapSchemaWithoutMapper(): void
     {
         $form = $this->createFormWithRequiredProperties();
 
@@ -403,7 +403,7 @@ class FormMetadataMapperTest extends TestCase
         ], $schema->toJsonSchema());
     }
 
-    public function testMapSchemaWithBlock()
+    public function testMapSchemaWithBlock(): void
     {
         $form = $this->createFormWithBlock();
 

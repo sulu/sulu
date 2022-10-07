@@ -22,7 +22,7 @@ class TrailingHTMLEnhancerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function testEnhance()
+    public function testEnhance(): void
     {
         $customUrl = $this->prophesize(CustomUrlDocument::class);
         $webspace = $this->prophesize(Webspace::class);
@@ -50,7 +50,7 @@ class TrailingHTMLEnhancerTest extends TestCase
         );
     }
 
-    public function testEnhanceWithoutHtml()
+    public function testEnhanceWithoutHtml(): void
     {
         $customUrl = $this->prophesize(CustomUrlDocument::class);
         $webspace = $this->prophesize(Webspace::class);

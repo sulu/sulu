@@ -45,7 +45,7 @@ class InstantiatorSubscriberTest extends TestCase
     /**
      * It should create a document for a managed PHPCR node.
      */
-    public function testHandleHydrate()
+    public function testHandleHydrate(): void
     {
         $this->hydrateEvent->hasDocument()->willReturn(false);
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
@@ -61,7 +61,7 @@ class InstantiatorSubscriberTest extends TestCase
     /**
      * If the document has already been set, do nothing.
      */
-    public function testHandleHydrateDocumentAlreadySet()
+    public function testHandleHydrateDocumentAlreadySet(): void
     {
         $this->hydrateEvent->hasDocument()->willReturn(true)->shouldBeCalled();
         $this->subscriber->handleHydrate($this->hydrateEvent->reveal());
@@ -70,7 +70,7 @@ class InstantiatorSubscriberTest extends TestCase
     /**
      * It should create a new document.
      */
-    public function testHandleCreate()
+    public function testHandleCreate(): void
     {
         $this->createEvent->getAlias()->willReturn(self::ALIAS);
         $this->metadataFactory->getMetadataForAlias(self::ALIAS)->willReturn(

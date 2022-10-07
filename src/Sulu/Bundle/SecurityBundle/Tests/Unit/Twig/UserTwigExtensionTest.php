@@ -46,7 +46,7 @@ class UserTwigExtensionTest extends TestCase
         $this->extension = new UserTwigExtension($this->cache, $this->userRepository->reveal());
     }
 
-    public function testResolveUserFunction()
+    public function testResolveUserFunction(): void
     {
         $user1 = new User();
         $user1->setUsername('hikaru');
@@ -64,7 +64,7 @@ class UserTwigExtensionTest extends TestCase
         $this->assertEquals('sulu', $user->getUsername());
     }
 
-    public function testResolveUserFunctionNonExisting()
+    public function testResolveUserFunctionNonExisting(): void
     {
         $user = $this->extension->resolveUserFunction(3);
         $this->assertNull($user);

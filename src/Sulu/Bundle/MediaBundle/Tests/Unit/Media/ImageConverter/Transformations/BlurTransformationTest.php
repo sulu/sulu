@@ -36,7 +36,7 @@ class BlurTransformationTest extends SuluTestCase
         parent::setUp();
     }
 
-    public function testBlur()
+    public function testBlur(): void
     {
         $image = $this->prophesize(ImageInterface::class);
         $effects = $this->prophesize(EffectsInterface::class);

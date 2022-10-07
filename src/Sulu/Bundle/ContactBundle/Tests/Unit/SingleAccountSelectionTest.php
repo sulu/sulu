@@ -73,7 +73,7 @@ class SingleAccountSelectionTest extends TestCase
         );
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $this->node->hasProperty('account')->willReturn(true);
         $this->node->getPropertyValue('account')->willReturn(1);
@@ -91,7 +91,7 @@ class SingleAccountSelectionTest extends TestCase
         $this->assertEquals(1, $property->getValue());
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $this->node->setProperty('account', 1)->shouldBeCalled();
 
@@ -108,7 +108,7 @@ class SingleAccountSelectionTest extends TestCase
         );
     }
 
-    public function testWriteObjectDeprecated()
+    public function testWriteObjectDeprecated(): void
     {
         $this->node->setProperty('account', 1)->shouldBeCalled();
 
@@ -125,7 +125,7 @@ class SingleAccountSelectionTest extends TestCase
         );
     }
 
-    public function testWriteNothing()
+    public function testWriteNothing(): void
     {
         $this->node->hasProperty('account')->shouldBeCalled();
         $property = new Property('account', [], 'single_account_selection');
@@ -143,7 +143,7 @@ class SingleAccountSelectionTest extends TestCase
         );
     }
 
-    public function testDefaultParams()
+    public function testDefaultParams(): void
     {
         $this->assertEquals(
             [],
@@ -151,7 +151,7 @@ class SingleAccountSelectionTest extends TestCase
         );
     }
 
-    public function testViewDataEmpty()
+    public function testViewDataEmpty(): void
     {
         $this->assertEquals(
             [],
@@ -159,7 +159,7 @@ class SingleAccountSelectionTest extends TestCase
         );
     }
 
-    public function testViewData()
+    public function testViewData(): void
     {
         $property = new Property('account', [], 'single_account_selection');
         $property->setValue(1);
@@ -170,14 +170,14 @@ class SingleAccountSelectionTest extends TestCase
         );
     }
 
-    public function testContentDataEmpty()
+    public function testContentDataEmpty(): void
     {
         $this->assertNull(
             $this->singleAccountSelection->getContentData(new Property('account', [], 'single_account_selection'))
         );
     }
 
-    public function testContentData()
+    public function testContentData(): void
     {
         $structure = $this->prophesize(StructureInterface::class);
         $structure->getLanguageCode()->willReturn('de');
@@ -193,7 +193,7 @@ class SingleAccountSelectionTest extends TestCase
         $this->assertEquals($this->account->reveal(), $this->singleAccountSelection->getContentData($property));
     }
 
-    public function testContentDataWithNonExistingAccount()
+    public function testContentDataWithNonExistingAccount(): void
     {
         $structure = $this->prophesize(StructureInterface::class);
         $structure->getLanguageCode()->willReturn('de');
@@ -209,7 +209,7 @@ class SingleAccountSelectionTest extends TestCase
         $this->assertNull($this->singleAccountSelection->getContentData($property));
     }
 
-    public function testPreResolveEmpty()
+    public function testPreResolveEmpty(): void
     {
         $property = new Property('account', [], 'single_account_selection');
         $property->setValue(null);
@@ -219,7 +219,7 @@ class SingleAccountSelectionTest extends TestCase
         $this->singleAccountSelection->preResolve($property);
     }
 
-    public function testPreResolveEmptyArray()
+    public function testPreResolveEmptyArray(): void
     {
         $property = new Property('account', [], 'single_account_selection');
         $property->setValue([]);
@@ -229,7 +229,7 @@ class SingleAccountSelectionTest extends TestCase
         $this->singleAccountSelection->preResolve($property);
     }
 
-    public function testPreResolve()
+    public function testPreResolve(): void
     {
         $property = new Property('account', [], 'single_account_selection');
         $property->setValue(22);

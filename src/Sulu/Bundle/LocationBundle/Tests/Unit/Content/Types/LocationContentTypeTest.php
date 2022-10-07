@@ -59,7 +59,7 @@ class LocationContentTypeTest extends TestCase
     /**
      * @dataProvider provideRead
      */
-    public function testRead($data)
+    public function testRead($data): void
     {
         $this->initReadTest($data);
 
@@ -84,7 +84,7 @@ class LocationContentTypeTest extends TestCase
     /**
      * @dataProvider provideRead
      */
-    public function testWrite($data)
+    public function testWrite($data): void
     {
         $this->suluProperty->expects($this->once())
             ->method('getName')

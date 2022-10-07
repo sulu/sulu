@@ -58,7 +58,7 @@ class CacheInvalidationListenerTest extends TestCase
     /**
      * @dataProvider provideFunctionName
      */
-    public function testPostUpdate($functionName)
+    public function testPostUpdate($functionName): void
     {
         $entity = $this->prophesize(MediaInterface::class);
 
@@ -74,7 +74,7 @@ class CacheInvalidationListenerTest extends TestCase
     /**
      * @dataProvider provideFunctionName
      */
-    public function testPostUpdateFile($functionName)
+    public function testPostUpdateFile($functionName): void
     {
         $media = $this->prophesize(MediaInterface::class);
         $entity = $this->prophesize(File::class);
@@ -92,7 +92,7 @@ class CacheInvalidationListenerTest extends TestCase
     /**
      * @dataProvider provideFunctionName
      */
-    public function testPostUpdateFileVersion($functionName)
+    public function testPostUpdateFileVersion($functionName): void
     {
         $media = $this->prophesize(MediaInterface::class);
         $file = $this->prophesize(File::class);
@@ -126,7 +126,7 @@ class CacheInvalidationListenerTest extends TestCase
     /**
      * @dataProvider provideFunctionName
      */
-    public function testPostUpdateFileVersionMeta($functionName)
+    public function testPostUpdateFileVersionMeta($functionName): void
     {
         $media = $this->prophesize(MediaInterface::class);
         $file = $this->prophesize(File::class);
@@ -150,7 +150,7 @@ class CacheInvalidationListenerTest extends TestCase
     /**
      * @dataProvider provideFunctionName
      */
-    public function testPostUpdateOther($functionName)
+    public function testPostUpdateOther($functionName): void
     {
         $entity = $this->prophesize(\stdClass::class);
 

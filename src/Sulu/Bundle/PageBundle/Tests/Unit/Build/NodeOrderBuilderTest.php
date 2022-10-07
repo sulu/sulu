@@ -92,7 +92,7 @@ class NodeOrderBuilderTest extends TestCase
         $this->nodeOrderBuilder->setContext($this->context->reveal());
     }
 
-    public function testBuild()
+    public function testBuild(): void
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');

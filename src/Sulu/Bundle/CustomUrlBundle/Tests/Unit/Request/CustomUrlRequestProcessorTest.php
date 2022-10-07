@@ -65,7 +65,7 @@ class CustomUrlRequestProcessorTest extends TestCase
         $noConcretePortal = false,
         $workflowStage = WorkflowStage::PUBLISHED,
         $webspaceKey = 'sulu_io'
-    ) {
+    ): void {
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn($webspaceKey);
 

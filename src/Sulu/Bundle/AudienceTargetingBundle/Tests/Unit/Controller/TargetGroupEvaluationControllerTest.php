@@ -52,7 +52,7 @@ class TargetGroupEvaluationControllerTest extends TestCase
     /**
      * @dataProvider provideTargetGroup
      */
-    public function testTargetGroupAction($header, $currentTargetGroup, $targetGroup, $targetGroupId)
+    public function testTargetGroupAction($header, $currentTargetGroup, $targetGroup, $targetGroupId): void
     {
         if ($currentTargetGroup) {
             $this->targetGroupRepository->find($currentTargetGroup->getId())->willReturn($currentTargetGroup);
@@ -103,7 +103,7 @@ class TargetGroupEvaluationControllerTest extends TestCase
     /**
      * @dataProvider provideTargetGroupHit
      */
-    public function testTargetGroupHitAction($oldTargetGroup, $newTargetGroup, $newTargetGroupId)
+    public function testTargetGroupHitAction($oldTargetGroup, $newTargetGroup, $newTargetGroupId): void
     {
         $this->targetGroupRepository->find($oldTargetGroup->getId())->willReturn($oldTargetGroup);
         $this->targetGroupEvaluator->evaluate(
