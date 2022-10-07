@@ -52,6 +52,7 @@ class SuluSnippetExtensionTest extends AbstractExtensionTestCase
         ]);
 
         $this->assertContainerBuilderHasParameter('sulu_snippet.twig.snippet.cache_lifetime', 20);
+        $this->assertContainerBuilderHasParameter('sulu_snippet.admin_view', 'single_list');
         $this->assertContainerBuilderHasService('sulu_snippet.snippet_trash_subscriber');
     }
 }

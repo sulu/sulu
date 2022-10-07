@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\SnippetBundle\DependencyInjection;
 
+use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -43,6 +44,13 @@ class Configuration implements ConfigurationInterface
                                 ->end()
                             ->end()
                         ->end()
+                    ->end()
+                ->end()
+                ->scalarNode('admin_view')
+                    ->defaultValue(SnippetAdmin::VIEW_SINGLE_LIST)
+                    ->validate()
+                        ->ifNotInArray(['single_list', 'types_list'])
+                        ->thenInvalid('Invalid snippet admin view "%s"')
                     ->end()
                 ->end()
             ->end();

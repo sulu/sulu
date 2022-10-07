@@ -8,6 +8,9 @@
             <argument type="service" id="sulu_security.security_checker"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument>%sulu_snippet.content-type.default_enabled%</argument>
+            <argument>%sulu_snippet.admin_view%</argument>
+            <argument type="service" id="sulu_admin.form_metadata_provider" on-invalid="null"/>
+            <argument type="service" id="security.token_storage" on-invalid="null"/>
 
             <tag name="sulu.admin"/>
             <tag name="sulu.context" context="admin"/>
