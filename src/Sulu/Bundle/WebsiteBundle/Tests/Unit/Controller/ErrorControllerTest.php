@@ -28,7 +28,7 @@ use Twig\Loader\FilesystemLoader;
 class ErrorControllerTest extends TestCase
 {
     /**
-     * @var ObjectProphecy<ErrorController>
+     * @var ObjectProphecy<SymfonyErrorController>
      */
     private $symfonyErrorController;
 

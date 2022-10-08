@@ -35,7 +35,7 @@ class TemplateAttributeResolverTest extends TestCase
     protected $requestAnalyzer;
 
     /**
-     * @var ObjectProphecy<RequestAnalyzerResolverInterface>
+     * @var RequestAnalyzerResolverInterface
      */
     protected $requestAnalyzerResolver;
 
@@ -90,7 +90,6 @@ class TemplateAttributeResolverTest extends TestCase
         $webspacePortalName = 'Sulu';
 
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
-        $this->requestAnalyzerResolver = $this->prophesize(RequestAnalyzerResolverInterface::class);
         $this->router = $this->prophesize(RouterInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
         $this->request = $this->prophesize(Request::class);

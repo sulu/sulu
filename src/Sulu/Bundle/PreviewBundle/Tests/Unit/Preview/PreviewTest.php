@@ -66,7 +66,7 @@ class PreviewTest extends TestCase
     private $webspaceKey = 'sulu_io';
 
     /**
-     * @var ObjectProphecy<stdClass>
+     * @var ObjectProphecy<\stdClass>
      */
     private $object;
 

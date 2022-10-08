@@ -32,7 +32,7 @@ class SettingsManagerTest extends TestCase
     private $sessionManager;
 
     /**
-     * @var ObjectProphecy<SessionManagerInterface>
+     * @var ObjectProphecy<DeprecatedSessionManagerInterface>
      */
     private $deprecatedSessionManager;
 

@@ -67,7 +67,7 @@ class PageTreeRouteContentTypeTest extends TestCase
     private $routeRepository;
 
     /**
-     * @var ObjectProphecy<RouteInterface>
+     * @var RouteInterface
      */
     private $route;
 
@@ -120,7 +120,6 @@ class PageTreeRouteContentTypeTest extends TestCase
         $this->conflictResolver = $this->prophesize(ConflictResolverInterface::class);
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
         $this->routeRepository = $this->prophesize(RouteRepositoryInterface::class);
-        $this->route = $this->prophesize(RouteInterface::class);
         $this->property = $this->prophesize(PropertyInterface::class);
         $this->node = $this->prophesize(NodeInterface::class);
 

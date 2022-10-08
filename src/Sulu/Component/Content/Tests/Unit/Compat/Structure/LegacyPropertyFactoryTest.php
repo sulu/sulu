@@ -279,7 +279,7 @@ class LegacyPropertyFactoryTest extends TestCase
     }
 
     /**
-     * @param PropertyMetadata $property
+     * @param ObjectProphecy<PropertyMetadata> $property
      */
     private function setUpProperty($property)
     {

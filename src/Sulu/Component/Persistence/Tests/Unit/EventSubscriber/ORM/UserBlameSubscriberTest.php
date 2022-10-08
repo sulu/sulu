@@ -49,7 +49,7 @@ class UserBlameSubscriberTest extends TestCase
     private $classMetadata;
 
     /**
-     * @var ObjectProphecy<ReflectionClass>
+     * @var ObjectProphecy<\ReflectionClass>
      */
     private $refl;
 

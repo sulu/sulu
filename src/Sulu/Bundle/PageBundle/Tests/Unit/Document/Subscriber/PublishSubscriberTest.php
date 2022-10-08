@@ -262,11 +262,11 @@ class PublishSubscriberTest extends TestCase
             ->willReturn(\array_slice($properties, 5, 5));
 
         $this->propertyEncoder->localizedSystemName('', 'de')
-            ->shouldBeCalled(2)
+            ->shouldBeCalledTimes(2)
             ->willReturn('i18n:de-');
 
         $this->propertyEncoder->localizedContentName('', 'de')
-            ->shouldBeCalled(2)
+            ->shouldBeCalledTimes(2)
             ->willReturn('i18n:de-');
 
         $this->publishSubscriber->removeLocalePropertiesFromPublicWorkspace($event->reveal());
