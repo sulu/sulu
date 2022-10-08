@@ -12,6 +12,7 @@
 namespace Unit\Sulu\Bundle\WebsiteBundle\EventListener;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\EventListener\RouterListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;

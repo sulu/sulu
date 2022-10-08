@@ -15,6 +15,7 @@ use Massive\Bundle\BuildBundle\Build\BuilderContext;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Bundle\PageBundle\Build\NodeOrderBuilder;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;

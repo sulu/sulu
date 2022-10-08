@@ -16,6 +16,7 @@ use PHPCR\NodeInterface;
 use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\RootPathPurgeInitializer;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use Symfony\Component\Console\Output\OutputInterface;

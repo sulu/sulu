@@ -13,6 +13,7 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Command\InitializeCommand;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Symfony\Component\Console\Helper\QuestionHelper;

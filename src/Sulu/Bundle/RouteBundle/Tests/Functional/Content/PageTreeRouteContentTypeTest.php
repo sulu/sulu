@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\RouteBundle\Content\Type\PageTreeRouteContentType;

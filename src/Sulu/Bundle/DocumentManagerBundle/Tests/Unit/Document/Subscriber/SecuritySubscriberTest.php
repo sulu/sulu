@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Document\Subscriber;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Document\Subscriber\SecuritySubscriber;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\Security\Authentication\UserInterface;

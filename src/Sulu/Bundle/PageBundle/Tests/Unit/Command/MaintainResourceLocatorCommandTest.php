@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Command;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Bundle\PageBundle\Command\MaintainResourceLocatorCommand;
 use Sulu\Component\Content\Compat\PropertyInterface;

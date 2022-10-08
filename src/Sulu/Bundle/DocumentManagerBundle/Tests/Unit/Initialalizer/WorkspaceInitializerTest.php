@@ -16,6 +16,7 @@ use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use PHPCR\WorkspaceInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\WorkspaceInitializer;
 use Symfony\Component\Console\Output\BufferedOutput;
 

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\DataCollector;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\DataCollector\SuluCollector;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;

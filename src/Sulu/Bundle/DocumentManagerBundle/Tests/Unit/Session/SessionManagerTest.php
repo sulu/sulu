@@ -14,6 +14,7 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Session;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Session\SessionManager;
 
 class SessionManagerTest extends TestCase

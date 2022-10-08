@@ -13,9 +13,9 @@ namespace Sulu\Bundle\ContactBundle\Tests\Unit;
 
 use Jackalope\Node;
 use JMS\Serializer\SerializationContext;
-use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;

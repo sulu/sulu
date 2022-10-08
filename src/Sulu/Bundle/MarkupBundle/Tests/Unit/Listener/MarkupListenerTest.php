@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Listener;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Listener\MarkupListener;
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Symfony\Component\HttpFoundation\HeaderBag;

@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Search\EventListener;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
