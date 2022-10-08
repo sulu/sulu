@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Rest\Exception\SearchFieldNotFoundException;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
@@ -28,12 +29,12 @@ class RestHelperTest extends TestCase
     private $restHelper;
 
     /**
-     * @var ListRestHelper
+     * @var ObjectProphecy<ListRestHelper>
      */
     private $listRestHelper;
 
     /**
-     * @var ListBuilderInterface
+     * @var ObjectProphecy<ListBuilderInterface>
      */
     private $listBuilder;
 

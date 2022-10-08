@@ -19,6 +19,7 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -46,12 +47,12 @@ class DoctrineListBuilderTest extends TestCase
     use ReadObjectAttributeTrait;
 
     /**
-     * @var ObjectProphecy|EventDispatcherInterface
+     * @var ObjectProphecy<EventDispatcherInterface>
      */
     private $eventDispatcher;
 
     /**
-     * @var ObjectProphecy|FilterTypeRegistry
+     * @var ObjectProphecy<FilterTypeRegistry>
      */
     private $filterTypeRegistry;
 
@@ -61,22 +62,22 @@ class DoctrineListBuilderTest extends TestCase
     private $doctrineListBuilder;
 
     /**
-     * @var ObjectProphecy|EntityManager
+     * @var ObjectProphecy<EntityManager>
      */
     private $entityManager;
 
     /**
-     * @var ObjectProphecy|ClassMetadata
+     * @var ObjectProphecy<ClassMetadata>
      */
     private $classMetadata;
 
     /**
-     * @var ObjectProphecy|QueryBuilder
+     * @var ObjectProphecy<QueryBuilder>
      */
     private $queryBuilder;
 
     /**
-     * @var ObjectProphecy|AbstractQuery
+     * @var ObjectProphecy<AbstractQuery>
      */
     private $query;
 

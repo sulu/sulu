@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Audit;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\DocumentManager\Behavior\Audit\LocalizedTimestampBehavior;
 use Sulu\Component\DocumentManager\Behavior\Audit\TimestampBehavior;
@@ -28,12 +29,12 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Audit\TimestampSubscriber
 class TimestampSubscriberTest extends TestCase
 {
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $propertyEncoder;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 

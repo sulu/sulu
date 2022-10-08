@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Document\Subscriber\TitleSubscriber;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocalizedTitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
@@ -23,7 +24,7 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 class TitleSubscriberTest extends TestCase
 {
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $propertyEncoder;
 

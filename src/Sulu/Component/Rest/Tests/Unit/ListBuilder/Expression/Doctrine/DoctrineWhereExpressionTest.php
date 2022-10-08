@@ -14,6 +14,7 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Expression\Doctrine;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\DoctrineWhereExpression;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
@@ -35,7 +36,7 @@ class DoctrineWhereExpressionTest extends TestCase
     private $uniqueIdLength = 23;
 
     /**
-     * @var QueryBuilder
+     * @var ObjectProphecy<QueryBuilder>
      */
     private $queryBuilder;
 

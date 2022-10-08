@@ -15,6 +15,7 @@ namespace Sulu\Component\Webspace\Tests\Unit\Manager;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 

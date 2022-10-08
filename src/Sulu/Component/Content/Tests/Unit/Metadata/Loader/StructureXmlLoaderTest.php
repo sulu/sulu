@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\Metadata\Loader;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Exception\InvalidDefaultTypeException;
@@ -39,7 +40,7 @@ class StructureXmlLoaderTest extends TestCase
     ];
 
     /**
-     * @var TranslatorInterface|ObjectProphecy
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 
@@ -49,12 +50,12 @@ class StructureXmlLoaderTest extends TestCase
     private $loader;
 
     /**
-     * @var ContentTypeManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<ContentTypeManagerInterface>
      */
     private $contentTypeManager;
 
     /**
-     * @var CacheLifetimeResolverInterface|ObjectProphecy
+     * @var ObjectProphecy<CacheLifetimeResolverInterface>
      */
     private $cacheLifetimeResolver;
 

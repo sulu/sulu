@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Document\Initializer;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\PageBundle\Document\RouteDocument;
 use Sulu\Component\DocumentManager\DocumentInspector;
@@ -29,27 +30,27 @@ use Symfony\Component\Console\Output\Output;
 class WebspaceInitializerTest extends TestCase
 {
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var DocumentManagerInterface
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 
     /**
-     * @var PathBuilder
+     * @var ObjectProphecy<PathBuilder>
      */
     private $pathBuilder;
 
     /**
-     * @var NodeManager
+     * @var ObjectProphecy<NodeManager>
      */
     private $nodeManager;
 
@@ -59,12 +60,12 @@ class WebspaceInitializerTest extends TestCase
     private $webspaceInitializer;
 
     /**
-     * @var Output
+     * @var ObjectProphecy<Output>
      */
     private $output;
 
     /**
-     * @var WebspaceCollection
+     * @var ObjectProphecy<WebspaceCollection>
      */
     private $webspaceCollection;
 

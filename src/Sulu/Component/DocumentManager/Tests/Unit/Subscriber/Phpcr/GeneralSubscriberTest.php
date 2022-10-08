@@ -13,6 +13,7 @@ namespace Sulu\Comonent\DocumentManager\Tests\Unit\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\ClearEvent;
 use Sulu\Component\DocumentManager\Event\CopyEvent;
@@ -32,42 +33,42 @@ class GeneralSubscriberTest extends TestCase
     public const DST_NAME = 'foo';
 
     /**
-     * @var NodeManager
+     * @var ObjectProphecy<NodeManager>
      */
     private $nodeManager;
 
     /**
-     * @var DocumentRegistry
+     * @var ObjectProphecy<DocumentRegistry>
      */
     private $documentRegistry;
 
     /**
-     * @var NodeHelperInterface
+     * @var ObjectProphecy<NodeHelperInterface>
      */
     private $nodeHelper;
 
     /**
-     * @var MoveEvent
+     * @var ObjectProphecy<MoveEvent>
      */
     private $moveEvent;
 
     /**
-     * @var CopyEvent
+     * @var ObjectProphecy<CopyEvent>
      */
     private $copyEvent;
 
     /**
-     * @var ClearEvent
+     * @var ObjectProphecy<ClearEvent>
      */
     private $clearEvent;
 
     /**
-     * @var FlushEvent
+     * @var ObjectProphecy<FlushEvent>
      */
     private $flushEvent;
 
     /**
-     * @var RefreshEvent
+     * @var ObjectProphecy<RefreshEvent>
      */
     private $refreshEvent;
 
@@ -77,7 +78,7 @@ class GeneralSubscriberTest extends TestCase
     private $document;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 

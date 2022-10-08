@@ -17,6 +17,7 @@ use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -33,22 +34,22 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 class WorkflowStageSubscriberTest extends TestCase
 {
     /**
-     * @var PropertyEncoder|ObjectProphecy
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $propertyEncoder;
 
     /**
-     * @var DocumentInspector|ObjectProphecy
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 
     /**
-     * @var SessionInterface|ObjectProphecy
+     * @var ObjectProphecy<SessionInterface>
      */
     private $defaultSession;
 
     /**
-     * @var SessionInterface|ObjectProphecy
+     * @var ObjectProphecy<SessionInterface>
      */
     private $liveSession;
 
@@ -58,22 +59,22 @@ class WorkflowStageSubscriberTest extends TestCase
     private $workflowStageSubscriber;
 
     /**
-     * @var WorkflowStageBehavior|ObjectProphecy
+     * @var ObjectProphecy<WorkflowStageBehavior>
      */
     private $document;
 
     /**
-     * @var NodeInterface|ObjectProphecy
+     * @var ObjectProphecy<NodeInterface>
      */
     private $defaultNode;
 
     /**
-     * @var NodeInterface|ObjectProphecy
+     * @var ObjectProphecy<NodeInterface>
      */
     private $liveNode;
 
     /**
-     * @var DocumentAccessor|ObjectProphecy
+     * @var ObjectProphecy<DocumentAccessor>
      */
     private $documentAccessor;
 

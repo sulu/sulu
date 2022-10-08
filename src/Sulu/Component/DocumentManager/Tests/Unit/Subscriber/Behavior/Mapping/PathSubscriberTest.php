@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Mapping;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\DocumentInspector;
@@ -23,22 +24,22 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\PathSubscriber;
 class PathSubscriberTest extends TestCase
 {
     /**
-     * @var AbstractMappingEvent
+     * @var ObjectProphecy<AbstractMappingEvent>
      */
     private $abstractMappingEvent;
 
     /**
-     * @var PathBehavior
+     * @var ObjectProphecy<PathBehavior>
      */
     private $document;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $pathNode;
 
@@ -48,12 +49,12 @@ class PathSubscriberTest extends TestCase
     private $pathDocument;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $inspector;
 
     /**
-     * @var DocumentAccessor
+     * @var ObjectProphecy<DocumentAccessor>
      */
     private $accessor;
 

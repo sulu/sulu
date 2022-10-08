@@ -21,12 +21,12 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 class SubscriberTestCase extends TestCase
 {
     /**
-     * @var PersistEvent
+     * @var ObjectProphecy<PersistEvent>
      */
     protected $persistEvent;
 
     /**
-     * @var HydrateEvent
+     * @var ObjectProphecy<HydrateEvent>
      */
     protected $hydrateEvent;
 
@@ -36,22 +36,22 @@ class SubscriberTestCase extends TestCase
     protected $notImplementing;
 
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     protected $encoder;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     protected $node;
 
     /**
-     * @var DocumentAccessor
+     * @var ObjectProphecy<DocumentAccessor>
      */
     protected $accessor;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     protected $parentNode;
 

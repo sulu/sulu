@@ -13,6 +13,7 @@ namespace Sulu\Comonent\DocumentManager\Tests\Unit\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Event\ReorderEvent;
 use Sulu\Component\DocumentManager\NodeHelperInterface;
 use Sulu\Component\DocumentManager\Subscriber\Phpcr\ReorderSubscriber;
@@ -20,7 +21,7 @@ use Sulu\Component\DocumentManager\Subscriber\Phpcr\ReorderSubscriber;
 class ReorderSubscriberTest extends TestCase
 {
     /**
-     * @var NodeHelperInterface
+     * @var ObjectProphecy<NodeHelperInterface>
      */
     private $nodeHelper;
 

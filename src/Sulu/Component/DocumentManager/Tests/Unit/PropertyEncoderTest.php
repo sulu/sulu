@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 
@@ -24,7 +25,7 @@ class PropertyEncoderTest extends TestCase
     private $encoder;
 
     /**
-     * @var NamespaceRegistry
+     * @var ObjectProphecy<NamespaceRegistry>
      */
     private $namespaceRegistry;
 

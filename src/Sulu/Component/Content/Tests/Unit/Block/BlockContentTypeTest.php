@@ -12,9 +12,9 @@
 namespace Sulu\Component\Content\Tests\Unit\Block;
 
 use Jackalope\Node;
-use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\PageBundle\Content\Types\SinglePageSelection;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
@@ -49,7 +49,7 @@ class BlockContentTypeTest extends TestCase
     private $subBlockProperty;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<Node>
      */
     private $node;
 
@@ -59,27 +59,27 @@ class BlockContentTypeTest extends TestCase
     private $contentTypeValueMap;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var TargetGroupStoreInterface
+     * @var ObjectProphecy<TargetGroupStoreInterface>
      */
     private $targetGroupStore;
 
     /**
-     * @var ContentTypeManagerInterface
+     * @var ObjectProphecy<ContentTypeManager>
      */
     private $contentTypeManager;
 
     /**
-     * @var BlockVisitorInterface
+     * @var ObjectProphecy<BlockVisitorInterface>
      */
     private $blockVisitor1;
 
     /**
-     * @var BlockVisitorInterface
+     * @var ObjectProphecy<BlockVisitorInterface>
      */
     private $blockVisitor2;
 

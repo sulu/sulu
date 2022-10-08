@@ -12,6 +12,7 @@
 namespace Sulu\Component\Security\Tests\Unit\Authorization\AccessControl;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
@@ -28,12 +29,12 @@ class PhpcrAccessControlProviderTest extends TestCase
     private $phpcrAccessControlProvider;
 
     /**
-     * @var RoleRepositoryInterface
+     * @var ObjectProphecy<RoleRepositoryInterface>
      */
     private $roleRepository;
 
     /**
-     * @var DocumentManagerInterface
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 

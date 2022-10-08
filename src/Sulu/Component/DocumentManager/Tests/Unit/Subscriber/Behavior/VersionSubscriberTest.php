@@ -21,6 +21,7 @@ use PHPCR\Version\VersionInterface;
 use PHPCR\Version\VersionManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\Behavior\VersionBehavior;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
@@ -35,22 +36,22 @@ use Symfony\Bridge\PhpUnit\ClockMock;
 class VersionSubscriberTest extends TestCase
 {
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $session;
 
     /**
-     * @var Workspace
+     * @var ObjectProphecy<Workspace>
      */
     private $workspace;
 
     /**
-     * @var VersionManagerInterface
+     * @var ObjectProphecy<VersionManagerInterface>
      */
     private $versionManager;
 
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $propertyEncoder;
 

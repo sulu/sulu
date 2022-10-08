@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
@@ -29,17 +30,17 @@ class LinkTest extends TestCase
     private $link;
 
     /**
-     * @var ObjectProphecy|LinkProviderPoolInterface
+     * @var ObjectProphecy<LinkProviderPoolInterface>
      */
     private $providerPool;
 
     /**
-     * @var ObjectProphecy|LinkProviderInterface
+     * @var ObjectProphecy<LinkProviderInterface>
      */
     private $provider;
 
     /**
-     * @var ObjectProphecy|PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 

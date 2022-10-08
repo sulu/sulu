@@ -17,6 +17,7 @@ use JMS\Serializer\SerializationContext;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
@@ -42,27 +43,27 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class MediaDataProviderTest extends TestCase
 {
     /**
-     * @var DataProviderRepositoryInterface
+     * @var ObjectProphecy<DataProviderRepositoryInterface>
      */
     private $dataProviderRepository;
 
     /**
-     * @var CollectionManagerInterface
+     * @var ObjectProphecy<CollectionManagerInterface>
      */
     private $collectionManager;
 
     /**
-     * @var ArraySerializerInterface
+     * @var ObjectProphecy<ArraySerializerInterface>
      */
     private $serializer;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $referenceStore;
 
@@ -72,12 +73,12 @@ class MediaDataProviderTest extends TestCase
     private $mediaDataProvider;
 
     /**
-     * @var Security
+     * @var ObjectProphecy<Security>
      */
     private $security;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 

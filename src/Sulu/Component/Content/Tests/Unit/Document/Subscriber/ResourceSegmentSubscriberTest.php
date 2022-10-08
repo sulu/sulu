@@ -16,6 +16,7 @@ use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -39,27 +40,27 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 class ResourceSegmentSubscriberTest extends TestCase
 {
     /**
-     * @var PropertyEncoder|ObjectProphecy
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $encoder;
 
     /**
-     * @var DocumentManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 
     /**
-     * @var DocumentInspector|ObjectProphecy
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 
     /**
-     * @var ResourceLocatorStrategyInterface|ObjectProphecy
+     * @var ObjectProphecy<ResourceLocatorStrategyInterface>
      */
     private $resourceLocatorStrategy;
 
     /**
-     * @var ResourceLocatorStrategyPoolInterface|ObjectProphecy
+     * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
     private $resourceLocatorStrategyPool;
 
@@ -69,17 +70,17 @@ class ResourceSegmentSubscriberTest extends TestCase
     private $document;
 
     /**
-     * @var StructureMetadata|ObjectProphecy
+     * @var ObjectProphecy<StructureMetadata>
      */
     private $structureMetadata;
 
     /**
-     * @var SessionInterface|ObjectProphecy
+     * @var ObjectProphecy<SessionInterface>
      */
     private $defaultSession;
 
     /**
-     * @var SessionInterface|ObjectProphecy
+     * @var ObjectProphecy<SessionInterface>
      */
     private $liveSession;
 
@@ -89,7 +90,7 @@ class ResourceSegmentSubscriberTest extends TestCase
     private $resourceSegmentSubscriber;
 
     /**
-     * @var PropertyMetadata|ObjectProphecy
+     * @var ObjectProphecy<PropertyMetadata>
      */
     private $propertyMetaData;
 

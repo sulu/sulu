@@ -14,6 +14,7 @@ namespace Sulu\Component\SmartContent\Tests\Unit;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -55,12 +56,12 @@ class ContentTypeTest extends TestCase
     private $request;
 
     /**
-     * @var TagRequestHandlerInterface
+     * @var ObjectProphecy<TagRequestHandlerInterface>
      */
     private $tagRequestHandler;
 
     /**
-     * @var CategoryRequestHandlerInterface
+     * @var ObjectProphecy<CategoryRequestHandlerInterface>
      */
     private $categoryRequestHandler;
 
@@ -70,27 +71,27 @@ class ContentTypeTest extends TestCase
     private $dataProviderPool;
 
     /**
-     * @var DataProviderInterface
+     * @var ObjectProphecy<DataProviderInterface>
      */
     private $pageDataProvider;
 
     /**
-     * @var TargetGroupStoreInterface
+     * @var ObjectProphecy<TargetGroupStoreInterface>
      */
     private $targetGroupStore;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $categoryReferenceStore;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $tagReferenceStore;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 

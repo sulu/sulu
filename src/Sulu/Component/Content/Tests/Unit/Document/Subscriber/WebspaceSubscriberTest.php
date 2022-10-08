@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Subscriber\WebspaceSubscriber;
@@ -25,7 +26,7 @@ use Sulu\Component\Webspace\Webspace;
 class WebspaceSubscriberTest extends SubscriberTestCase
 {
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $inspector;
 
@@ -35,12 +36,12 @@ class WebspaceSubscriberTest extends SubscriberTestCase
     private $subscriber;
 
     /**
-     * @var DocumentManagerInterface
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 

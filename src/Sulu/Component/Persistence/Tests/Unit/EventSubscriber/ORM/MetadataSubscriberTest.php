@@ -21,43 +21,44 @@ use Doctrine\Persistence\Mapping\ReflectionService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Component\Persistence\EventSubscriber\ORM\MetadataSubscriber;
 
 class MetadataSubscriberTest extends TestCase
 {
     /**
-     * @var LoadClassMetadataEventArgs|ObjectProphecy
+     * @var ObjectProphecy<LoadClassMetadataEventArgs>
      */
     protected $loadClassMetadataEvent;
 
     /**
-     * @var ClassMetadata|ObjectProphecy
+     * @var ObjectProphecy<ClassMetadata>
      */
     protected $classMetadata;
 
     /**
-     * @var \ReflectionClass|ObjectProphecy
+     * @var ObjectProphecy<ReflectionClass>
      */
     protected $reflection;
 
     /**
-     * @var EntityManager|ObjectProphecy
+     * @var ObjectProphecy<EntityManager>
      */
     protected $entityManager;
 
     /**
-     * @var ClassMetadataFactory|ObjectProphecy
+     * @var ObjectProphecy<ClassMetadataFactory>
      */
     protected $classMetadataFactory;
 
     /**
-     * @var ReflectionService|ObjectProphecy
+     * @var ObjectProphecy<ReflectionService>
      */
     protected $reflectionService;
 
     /**
-     * @var Configuration|ObjectProphecy
+     * @var ObjectProphecy<Configuration>
      */
     protected $configuration;
 
@@ -67,12 +68,12 @@ class MetadataSubscriberTest extends TestCase
     protected $subscriber;
 
     /**
-     * @var \stdClass|ObjectProphecy
+     * @var ObjectProphecy<stdClass>
      */
     protected $object;
 
     /**
-     * @var \stdClass|ObjectProphecy
+     * @var ObjectProphecy<stdClass>
      */
     protected $parentObject;
 

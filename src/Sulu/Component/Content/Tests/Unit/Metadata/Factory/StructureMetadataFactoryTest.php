@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Metadata\Factory;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Factory\Exception\DocumentTypeNotFoundException;
@@ -54,12 +55,12 @@ class StructureMetadataFactoryTest extends TestCase
     private $overriddenDefaultMappingFile;
 
     /**
-     * @var TranslatorInterface
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 
     /**
-     * @var LoaderInterface
+     * @var ObjectProphecy<LoaderInterface>
      */
     private $loader;
 

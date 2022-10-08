@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Metadata\General\Driver;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Metadata\AbstractPropertyMetadata;
 use Sulu\Component\Rest\ListBuilder\Metadata\ConcatenationPropertyMetadata;
@@ -29,7 +30,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 class ListXmlLoaderTest extends TestCase
 {
     /**
-     * @var ParameterBagInterface
+     * @var ObjectProphecy<ParameterBagInterface>
      */
     private $parameterBag;
 

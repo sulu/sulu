@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\tests\Unit\Subscriber\Core;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -23,7 +24,7 @@ use Sulu\Component\DocumentManager\Subscriber\Core\RegistratorSubscriber;
 class RegistratorSubscriberTest extends TestCase
 {
     /**
-     * @var DocumentRegistry
+     * @var ObjectProphecy<DocumentRegistry>
      */
     private $registry;
 
@@ -33,7 +34,7 @@ class RegistratorSubscriberTest extends TestCase
     private $subscriber;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
@@ -43,17 +44,17 @@ class RegistratorSubscriberTest extends TestCase
     private $document;
 
     /**
-     * @var HydrateEvent
+     * @var ObjectProphecy<HydrateEvent>
      */
     private $hydrateEvent;
 
     /**
-     * @var PersistEvent
+     * @var ObjectProphecy<PersistEvent>
      */
     private $persistEvent;
 
     /**
-     * @var RemoveEvent
+     * @var ObjectProphecy<RemoveEvent>
      */
     private $removeEvent;
 

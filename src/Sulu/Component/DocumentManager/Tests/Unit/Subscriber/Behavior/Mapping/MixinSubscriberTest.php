@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Event\AbstractMappingEvent;
 use Sulu\Component\DocumentManager\Metadata;
@@ -24,7 +25,7 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\MixinSubscriber;
 class MixinSubscriberTest extends TestCase
 {
     /**
-     * @var MetadataFactoryInterface|ObjectProphecy
+     * @var ObjectProphecy<MetadataFactoryInterface>
      */
     private $metadataFactory;
 

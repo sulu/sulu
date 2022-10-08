@@ -14,6 +14,7 @@ namespace Sulu\Comonent\DocumentManager\tests\Unit\Subscriber\Phpcr;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\RefreshEvent;
@@ -25,12 +26,12 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class RefreshSubscriberTest extends TestCase
 {
     /**
-     * @var EventDispatcherInterface
+     * @var ObjectProphecy<EventDispatcherInterface>
      */
     private $eventDispatcher;
 
     /**
-     * @var DocumentRegistry
+     * @var ObjectProphecy<DocumentRegistry>
      */
     private $documentRegistry;
 

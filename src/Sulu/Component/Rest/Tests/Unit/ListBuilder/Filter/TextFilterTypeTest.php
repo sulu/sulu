@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
 use Sulu\Component\Rest\ListBuilder\Filter\TextFilterType;
@@ -25,7 +26,7 @@ class TextFilterTypeTest extends TestCase
     private $textFilterType;
 
     /**
-     * @var ListBuilderInterface
+     * @var ObjectProphecy<ListBuilderInterface>
      */
     private $listBuilder;
 

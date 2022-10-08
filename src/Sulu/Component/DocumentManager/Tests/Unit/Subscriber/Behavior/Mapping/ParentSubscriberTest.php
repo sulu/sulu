@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\NodeType\NodeTypeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\DocumentManager;
@@ -27,17 +28,17 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\ParentSubscriber;
 class ParentSubscriberTest extends TestCase
 {
     /**
-     * @var HydrateEvent
+     * @var ObjectProphecy<HydrateEvent>
      */
     private $hydrateEvent;
 
     /**
-     * @var MoveEvent
+     * @var ObjectProphecy<MoveEvent>
      */
     private $moveEvent;
 
     /**
-     * @var ParentBehavior
+     * @var ObjectProphecy<ParentBehavior>
      */
     private $document;
 
@@ -47,17 +48,17 @@ class ParentSubscriberTest extends TestCase
     private $notImplementing;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var NodeTypeInterface
+     * @var ObjectProphecy<NodeTypeInterface>
      */
     private $primaryNodeType;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $parentNode;
 
@@ -67,17 +68,17 @@ class ParentSubscriberTest extends TestCase
     private $parentDocument;
 
     /**
-     * @var ProxyFactory
+     * @var ObjectProphecy<ProxyFactory>
      */
     private $proxyFactory;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $inspector;
 
     /**
-     * @var DocumentManager
+     * @var ObjectProphecy<DocumentManager>
      */
     private $documentManager;
 

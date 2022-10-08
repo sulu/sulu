@@ -19,6 +19,7 @@ use Doctrine\ORM\UnitOfWork;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Persistence\EventSubscriber\ORM\UserBlameSubscriber;
 use Sulu\Component\Persistence\Model\UserBlameInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -49,7 +50,7 @@ class UserBlameSubscriberTest extends TestCase
     private $classMetadata;
 
     /**
-     * @var ObjectProphecy<\ReflectionClass>
+     * @var ObjectProphecy<ReflectionClass>
      */
     private $refl;
 
@@ -64,7 +65,7 @@ class UserBlameSubscriberTest extends TestCase
     private $unitOfWork;
 
     /**
-     * @var UserInterface
+     * @var ObjectProphecy<UserInterface>
      */
     private $user;
 

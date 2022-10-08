@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Types\Block;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Metadata;
 use Sulu\Component\Content\Types\Block\SegmentBlockVisitor;
@@ -22,7 +23,7 @@ use Sulu\Component\Webspace\Webspace;
 class SegmentBlockVisitorTest extends TestCase
 {
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 

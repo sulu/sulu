@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Compat\Structure;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Compat\Property;
@@ -33,7 +34,7 @@ use Sulu\Component\DocumentManager\NamespaceRegistry;
 class LegacyPropertyFactoryTest extends TestCase
 {
     /**
-     * @var NamespaceRegistry
+     * @var ObjectProphecy<NamespaceRegistry>
      */
     private $namespaceRegistry;
 
@@ -43,32 +44,32 @@ class LegacyPropertyFactoryTest extends TestCase
     private $factory;
 
     /**
-     * @var PropertyMetadata
+     * @var ObjectProphecy<PropertyMetadata>
      */
     private $property1;
 
     /**
-     * @var PropertyMetadata
+     * @var ObjectProphecy<PropertyMetadata>
      */
     private $property2;
 
     /**
-     * @var SectionMetadata
+     * @var ObjectProphecy<SectionMetadata>
      */
     private $section;
 
     /**
-     * @var BlockMetadata
+     * @var ObjectProphecy<BlockMetadata>
      */
     private $block;
 
     /**
-     * @var ComponentMetadata
+     * @var ObjectProphecy<ComponentMetadata>
      */
     private $component;
 
     /**
-     * @var ComponentMetadata
+     * @var ObjectProphecy<ComponentMetadata>
      */
     private $component2;
 

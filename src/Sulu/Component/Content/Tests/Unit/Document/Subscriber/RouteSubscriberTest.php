@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\Util\PathHelper;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
@@ -31,22 +32,22 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 class RouteSubscriberTest extends TestCase
 {
     /**
-     * @var DocumentManagerInterface
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 
     /**
-     * @var SessionManagerInterface
+     * @var ObjectProphecy<SessionManagerInterface>
      */
     private $sessionManager;
 
     /**
-     * @var NodeManager
+     * @var ObjectProphecy<NodeManager>
      */
     private $nodeManager;
 
