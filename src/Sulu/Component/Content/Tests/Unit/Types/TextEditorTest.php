@@ -46,7 +46,7 @@ class TextEditorTest extends TestCase
     private $property;
 
     /**
-     * @var ObjectProphecy<PropertyInterface>
+     * @var ObjectProphecy<NodePropertyInterface>
      */
     private $nodeProperty;
 

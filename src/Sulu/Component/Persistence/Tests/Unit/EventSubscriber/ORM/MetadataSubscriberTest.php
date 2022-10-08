@@ -37,7 +37,7 @@ class MetadataSubscriberTest extends TestCase
     protected $classMetadata;
 
     /**
-     * @var ObjectProphecy<ReflectionClass>
+     * @var ObjectProphecy<\ReflectionClass>
      */
     protected $reflection;
 
@@ -67,12 +67,12 @@ class MetadataSubscriberTest extends TestCase
     protected $subscriber;
 
     /**
-     * @var ObjectProphecy<stdClass>
+     * @var ObjectProphecy<\stdClass>
      */
     protected $object;
 
     /**
-     * @var ObjectProphecy<stdClass>
+     * @var ObjectProphecy<\stdClass>
      */
     protected $parentObject;
 
