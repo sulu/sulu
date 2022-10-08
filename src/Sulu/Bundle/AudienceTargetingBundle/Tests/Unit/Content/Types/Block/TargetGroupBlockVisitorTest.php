@@ -20,7 +20,7 @@ use Sulu\Component\Content\Compat\Metadata;
 class TargetGroupBlockVisitorTest extends TestCase
 {
     /**
-     * @var TargetGroupStoreInterface
+     * @var ObjectProphecy<TargetGroupStoreInterface>
      */
     private $targetGroupStore;
 

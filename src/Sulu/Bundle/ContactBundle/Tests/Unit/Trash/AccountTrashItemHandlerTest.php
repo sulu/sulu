@@ -57,27 +57,27 @@ class AccountTrashItemHandlerTest extends TestCase
     use SetGetPrivatePropertyTrait;
 
     /**
-     * @var TrashItemRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<TrashItemRepositoryInterface>
      */
     private $trashItemRepository;
 
     /**
-     * @var AccountRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<AccountRepositoryInterface>
      */
     private $accountRepository;
 
     /**
-     * @var DoctrineRestoreHelperInterface|ObjectProphecy
+     * @var ObjectProphecy<DoctrineRestoreHelperInterface>
      */
     private $doctrineRestoreHelper;
 
     /**
-     * @var EntityManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<EntityManagerInterface>
      */
     private $entityManager;
 
     /**
-     * @var DomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DomainEventCollectorInterface>
      */
     private $domainEventCollector;
 

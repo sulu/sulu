@@ -35,27 +35,27 @@ class PageAdminTest extends TestCase
     private $viewBuilderFactory;
 
     /**
-     * @var SecurityChecker|ObjectProphecy
+     * @var ObjectProphecy<SecurityChecker>
      */
     private $securityChecker;
 
     /**
-     * @var WebspaceCollection|ObjectProphecy
+     * @var ObjectProphecy<WebspaceCollection>
      */
     private $webspaceCollection;
 
     /**
-     * @var WebspaceManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var SessionManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<SessionManagerInterface>
      */
     private $sessionManager;
 
     /**
-     * @var TeaserProviderPoolInterface|ObjectProphecy
+     * @var ObjectProphecy<TeaserProviderPoolInterface>
      */
     private $teaserProviderPool;
 

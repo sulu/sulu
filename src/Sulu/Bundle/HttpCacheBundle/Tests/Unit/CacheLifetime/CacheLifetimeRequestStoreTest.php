@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class CacheLifetimeRequestStoreTest extends TestCase
 {
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 

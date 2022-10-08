@@ -24,7 +24,7 @@ class ContainerExpressionLanguageProviderTest extends TestCase
     private $expressionLanguage;
 
     /**
-     * @var ContainerInterface
+     * @var ObjectProphecy<ContainerInterface>
      */
     private $container;
 

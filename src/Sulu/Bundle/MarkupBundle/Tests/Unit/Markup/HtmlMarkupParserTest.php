@@ -27,17 +27,17 @@ class HtmlMarkupParserTest extends TestCase
     public const VALIDATE_REMOVED = 'removed';
 
     /**
-     * @var TagInterface
+     * @var ObjectProphecy<TagInterface>
      */
     private $linkTag;
 
     /**
-     * @var TagInterface
+     * @var ObjectProphecy<TagInterface>
      */
     private $mediaTag;
 
     /**
-     * @var TagRegistryInterface
+     * @var ObjectProphecy<TagRegistryInterface>
      */
     private $tagRegistry;
 

@@ -27,12 +27,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PageTeaserProviderTest extends TestCase
 {
     /**
-     * @var SearchManagerInterface
+     * @var ObjectProphecy<SearchManagerInterface>
      */
     private $searchManager;
 
     /**
-     * @var SearchQueryBuilder
+     * @var ObjectProphecy<SearchQueryBuilder>
      */
     private $search;
 
@@ -42,7 +42,7 @@ class PageTeaserProviderTest extends TestCase
     private $pageTeaserProvider;
 
     /**
-     * @var TranslatorInterface
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 

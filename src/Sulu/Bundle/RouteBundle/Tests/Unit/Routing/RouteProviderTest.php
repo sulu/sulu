@@ -35,22 +35,22 @@ class RouteProviderTest extends TestCase
     private $routeProvider;
 
     /**
-     * @var RouteRepositoryInterface
+     * @var ObjectProphecy<RouteRepositoryInterface>
      */
     private $routeRepository;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var RouteDefaultsProviderInterface
+     * @var ObjectProphecy<RouteDefaultsProviderInterface>
      */
     private $defaultsProvider;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 

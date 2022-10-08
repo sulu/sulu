@@ -24,12 +24,12 @@ use Symfony\Component\Security\Core\Exception\LockedException;
 class UserProviderTest extends TestCase
 {
     /**
-     * @var UserRepositoryInterface
+     * @var ObjectProphecy<UserRepositoryInterface>
      */
     private $userRepository;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 

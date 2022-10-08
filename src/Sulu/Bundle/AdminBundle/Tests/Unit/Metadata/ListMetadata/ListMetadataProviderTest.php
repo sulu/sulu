@@ -29,22 +29,22 @@ class ListMetadataProviderTest extends TestCase
     private $listMetadataProvider;
 
     /**
-     * @var ObjectProphecy|ListMetadataLoaderInterface
+     * @var ObjectProphecy<ListMetadataLoaderInterface>
      */
     private $xmlListMetadataLoader1;
 
     /**
-     * @var ObjectProphecy|ListMetadataLoaderInterface
+     * @var ObjectProphecy<ListMetadataLoaderInterface>
      */
     private $xmlListMetadataLoader2;
 
     /**
-     * @var ObjectProphecy|ListMetadataVisitorInterface
+     * @var ObjectProphecy<ListMetadataVisitorInterface>
      */
     private $listMetadataVisitor1;
 
     /**
-     * @var ObjectProphecy|ListMetadataVisitorInterface
+     * @var ObjectProphecy<ListMetadataVisitorInterface>
      */
     private $listMetadataVisitor2;
 

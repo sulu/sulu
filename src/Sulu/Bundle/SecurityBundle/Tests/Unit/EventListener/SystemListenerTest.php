@@ -21,12 +21,12 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 class SystemListenerTest extends TestCase
 {
     /**
-     * @var SystemStoreInterface
+     * @var ObjectProphecy<SystemStoreInterface>
      */
     private $systemStore;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 

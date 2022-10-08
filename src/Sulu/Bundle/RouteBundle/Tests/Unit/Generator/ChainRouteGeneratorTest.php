@@ -30,12 +30,12 @@ class ChainRouteGeneratorTest extends TestCase
     private $mappings;
 
     /**
-     * @var RouteGeneratorInterface
+     * @var ObjectProphecy<RouteGeneratorInterface>
      */
     private $routeGenerator;
 
     /**
-     * @var RouteRepositoryInterface
+     * @var ObjectProphecy<RouteRepositoryInterface>
      */
     private $routeRepository;
 

@@ -30,17 +30,17 @@ class PortalLoaderTest extends TestCase
     private $portalLoader;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var LoaderResolverInterface
+     * @var ObjectProphecy<LoaderResolverInterface>
      */
     private $loaderResolver;
 
     /**
-     * @var LoaderInterface
+     * @var ObjectProphecy<LoaderInterface>
      */
     private $loader;
 

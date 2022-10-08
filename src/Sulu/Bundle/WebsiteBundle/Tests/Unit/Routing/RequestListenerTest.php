@@ -24,27 +24,27 @@ use Symfony\Component\Routing\RouterInterface;
 class RequestListenerTest extends TestCase
 {
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var RouterInterface
+     * @var ObjectProphecy<RouterInterface>
      */
     private $router;
 
     /**
-     * @var PortalInformation
+     * @var ObjectProphecy<PortalInformation>
      */
     private $portalInformation;
 
     /**
-     * @var RequestContext
+     * @var ObjectProphecy<RequestContext>
      */
     private $requestContext;
 
     /**
-     * @var HttpKernelInterface
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $kernel;
 

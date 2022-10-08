@@ -59,27 +59,27 @@ class ContactTrashItemHandlerTest extends TestCase
     use SetGetPrivatePropertyTrait;
 
     /**
-     * @var TrashItemRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<TrashItemRepositoryInterface>
      */
     private $trashItemRepository;
 
     /**
-     * @var ContactRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<ContactRepositoryInterface>
      */
     private $contactRepository;
 
     /**
-     * @var DoctrineRestoreHelperInterface|ObjectProphecy
+     * @var ObjectProphecy<DoctrineRestoreHelperInterface>
      */
     private $doctrineRestoreHelper;
 
     /**
-     * @var EntityManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<EntityManagerInterface>
      */
     private $entityManager;
 
     /**
-     * @var DomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DomainEventCollectorInterface>
      */
     private $domainEventCollector;
 

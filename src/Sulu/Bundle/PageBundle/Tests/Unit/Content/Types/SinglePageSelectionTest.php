@@ -21,12 +21,12 @@ use Sulu\Component\Content\Compat\StructureInterface;
 class SinglePageSelectionTest extends TestCase
 {
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $referenceStore;
 

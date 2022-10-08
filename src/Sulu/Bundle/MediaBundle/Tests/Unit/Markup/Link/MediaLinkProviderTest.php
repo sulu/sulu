@@ -19,12 +19,12 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 class MediaLinkProviderTest extends TestCase
 {
     /**
-     * @var MediaRepositoryInterface
+     * @var ObjectProphecy<MediaRepositoryInterface>
      */
     private $mediaRepository;
 
     /**
-     * @var MediaManagerInterface
+     * @var ObjectProphecy<MediaManagerInterface>
      */
     private $mediaManager;
 

@@ -25,12 +25,12 @@ use Twig\Environment;
 class XmlSitemapRendererTest extends TestCase
 {
     /**
-     * @var SitemapProviderPoolInterface
+     * @var ObjectProphecy<SitemapProviderPoolInterface>
      */
     protected $providerPoolInterface;
 
     /**
-     * @var Environment
+     * @var ObjectProphecy<Environment>
      */
     protected $engine;
 

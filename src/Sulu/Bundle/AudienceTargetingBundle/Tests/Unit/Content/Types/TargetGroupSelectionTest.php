@@ -23,7 +23,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 class TargetGroupSelectionTest extends TestCase
 {
     /**
-     * @var TargetGroupRepositoryInterface
+     * @var ObjectProphecy<TargetGroupRepositoryInterface>
      */
     private $targetGroupRepository;
 

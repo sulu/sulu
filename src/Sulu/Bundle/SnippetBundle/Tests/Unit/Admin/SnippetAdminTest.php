@@ -30,12 +30,12 @@ class SnippetAdminTest extends TestCase
     private $viewBuilderFactory;
 
     /**
-     * @var SecurityChecker
+     * @var ObjectProphecy<SecurityChecker>
      */
     private $securityChecker;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 

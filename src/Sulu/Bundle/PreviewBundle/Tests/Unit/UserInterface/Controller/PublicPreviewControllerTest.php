@@ -25,22 +25,22 @@ use Twig\Environment;
 class PublicPreviewControllerTest extends TestCase
 {
     /**
-     * @var PreviewRendererInterface|ObjectProphecy
+     * @var ObjectProphecy<PreviewRendererInterface>
      */
     private $previewRenderer;
 
     /**
-     * @var PreviewObjectProviderRegistryInterface|ObjectProphecy
+     * @var ObjectProphecy<PreviewObjectProviderRegistryInterface>
      */
     private $previewObjectProviderRegistry;
 
     /**
-     * @var PreviewLinkRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<PreviewLinkRepositoryInterface>
      */
     private $previewLinkRepository;
 
     /**
-     * @var Environment|ObjectProphecy
+     * @var ObjectProphecy<Environment>
      */
     private $twig;
 

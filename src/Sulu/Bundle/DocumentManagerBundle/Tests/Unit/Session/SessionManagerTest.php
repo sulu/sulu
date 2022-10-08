@@ -19,12 +19,12 @@ use Sulu\Bundle\DocumentManagerBundle\Session\SessionManager;
 class SessionManagerTest extends TestCase
 {
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $defaultSession;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $liveSession;
 

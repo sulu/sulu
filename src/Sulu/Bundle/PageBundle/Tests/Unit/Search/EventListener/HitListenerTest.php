@@ -24,7 +24,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 class HitListenerTest extends TestCase
 {
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
@@ -34,12 +34,12 @@ class HitListenerTest extends TestCase
     private $listener;
 
     /**
-     * @var Document
+     * @var ObjectProphecy<Document>
      */
     private $document;
 
     /**
-     * @var HitEvent
+     * @var ObjectProphecy<HitEvent>
      */
     private $event;
 

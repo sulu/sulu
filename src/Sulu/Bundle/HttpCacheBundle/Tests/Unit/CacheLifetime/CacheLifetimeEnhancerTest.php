@@ -31,32 +31,32 @@ class CacheLifetimeEnhancerTest extends TestCase
     private $cacheLifetimeEnhancer;
 
     /**
-     * @var CacheLifetimeRequestStore
+     * @var ObjectProphecy<CacheLifetimeRequestStore>
      */
     private $cacheLifetimeRequestStore;
 
     /**
-     * @var CacheLifetimeResolver
+     * @var ObjectProphecy<CacheLifetimeResolver>
      */
     private $cacheLifetimeResolver;
 
     /**
-     * @var PageBridge
+     * @var ObjectProphecy<PageBridge>
      */
     private $page;
 
     /**
-     * @var SnippetBridge
+     * @var ObjectProphecy<SnippetBridge>
      */
     private $snippet;
 
     /**
-     * @var Response
+     * @var ObjectProphecy<Response>
      */
     private $response;
 
     /**
-     * @var ResponseHeaderBag
+     * @var ObjectProphecy<ResponseHeaderBag>
      */
     private $responseHeaderBag;
 

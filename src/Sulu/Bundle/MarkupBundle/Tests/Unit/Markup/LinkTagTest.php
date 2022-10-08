@@ -29,7 +29,7 @@ class LinkTagTest extends TestCase
     private $providers;
 
     /**
-     * @var LinkProviderPoolInterface
+     * @var ObjectProphecy<LinkProviderPoolInterface>
      */
     private $providerPool;
 

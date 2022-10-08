@@ -25,7 +25,7 @@ class CacheManagerTest extends TestCase
     private $cacheManager;
 
     /**
-     * @var FOSCacheManager
+     * @var ObjectProphecy<CacheManager>
      */
     private $fosCacheManager;
 

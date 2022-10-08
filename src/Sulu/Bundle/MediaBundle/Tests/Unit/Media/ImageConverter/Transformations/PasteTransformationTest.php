@@ -32,7 +32,7 @@ class PasteTransformationTest extends SuluTestCase
     protected $pasteTransformation;
 
     /**
-     * @var FileLocator
+     * @var ObjectProphecy<FileLocator>
      */
     protected $fileLocator;
 

@@ -25,27 +25,27 @@ use Sulu\Component\Webspace\Webspace;
 class SnippetAreaTwigExtensionTest extends TestCase
 {
     /**
-     * @var DefaultSnippetManagerInterface
+     * @var ObjectProphecy<DefaultSnippetManagerInterface>
      */
     private $defaultSnippetManager;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var Webspace
+     * @var ObjectProphecy<Webspace>
      */
     private $webspace;
 
     /**
-     * @var Localization
+     * @var ObjectProphecy<Localization>
      */
     private $localization;
 
     /**
-     * @var SnippetResolverInterface
+     * @var ObjectProphecy<SnippetResolverInterface>
      */
     private $snippetResolver;
 

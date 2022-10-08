@@ -28,20 +28,44 @@ class DefaultControllerTest extends TestCase
 {
     private $defaultController;
 
+    /**
+     * @var ObjectProphecy<ContainerInterface>
+     */
     private $container;
 
+    /**
+     * @var ObjectProphecy<Environment>
+     */
     private $twig;
 
+    /**
+     * @var ObjectProphecy<FilesystemLoader>
+     */
     private $twigLoader;
 
+    /**
+     * @var ObjectProphecy<Request>
+     */
     private $request;
 
+    /**
+     * @var ObjectProphecy<RequestStack>
+     */
     private $requestStack;
 
+    /**
+     * @var ObjectProphecy<PageBridge>
+     */
     private $structure;
 
+    /**
+     * @var ObjectProphecy<ParameterResolverInterface>
+     */
     private $parameterResolver;
 
+    /**
+     * @var ObjectProphecy<RequestAnalyzerInterface>
+     */
     private $requestAnalyzer;
 
     public function setUp(): void

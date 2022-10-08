@@ -19,7 +19,7 @@ use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 class AutoIncrementConflictResolverTest extends TestCase
 {
     /**
-     * @var RouteRepositoryInterface
+     * @var ObjectProphecy<RouteRepositoryInterface>
      */
     private $routeRepository;
 

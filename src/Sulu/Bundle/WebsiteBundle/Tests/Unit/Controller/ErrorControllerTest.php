@@ -27,22 +27,22 @@ use Twig\Loader\FilesystemLoader;
 class ErrorControllerTest extends TestCase
 {
     /**
-     * @var SymfonyErrorController
+     * @var ObjectProphecy<ErrorController>
      */
     private $symfonyErrorController;
 
     /**
-     * @var Environment
+     * @var ObjectProphecy<Environment>
      */
     private $twig;
 
     /**
-     * @var FilesystemLoader
+     * @var ObjectProphecy<FilesystemLoader>
      */
     private $loader;
 
     /**
-     * @var TemplateAttributeResolverInterface
+     * @var ObjectProphecy<TemplateAttributeResolverInterface>
      */
     private $templateAttributeResolver;
 

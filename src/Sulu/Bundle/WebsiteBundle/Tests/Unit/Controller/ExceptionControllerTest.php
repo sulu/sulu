@@ -36,22 +36,22 @@ class ExceptionControllerTest extends TestCase
     private $innerExceptionController;
 
     /**
-     * @var Environment
+     * @var ObjectProphecy<Environment>
      */
     private $twig;
 
     /**
-     * @var FilesystemLoader
+     * @var ObjectProphecy<FilesystemLoader>
      */
     private $loader;
 
     /**
-     * @var ParameterResolverInterface
+     * @var ObjectProphecy<ParameterResolverInterface>
      */
     private $parameterResolver;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 

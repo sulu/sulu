@@ -25,17 +25,17 @@ use Sulu\Component\Content\Compat\Structure\StructureBridge;
 class SingleSnippetSelectionTest extends TestCase
 {
     /**
-     * @var DefaultSnippetManagerInterface
+     * @var ObjectProphecy<DefaultSnippetManagerInterface>
      */
     private $defaultSnippetManager;
 
     /**
-     * @var SnippetResolverInterface
+     * @var ObjectProphecy<SnippetResolverInterface>
      */
     private $snippetResolver;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $referenceStore;
 

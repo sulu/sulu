@@ -30,32 +30,32 @@ class ContactSelectionTest extends TestCase
     private $contactSelection;
 
     /**
-     * @var ContactRepositoryInterface
+     * @var ObjectProphecy<ContactRepositoryInterface>
      */
     private $contactRepository;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStore>
      */
     private $contactReferenceStore;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 
     /**
-     * @var ContactInterface
+     * @var ObjectProphecy<ContactInterface>
      */
     private $contact1;
 
     /**
-     * @var ContactInterface
+     * @var ObjectProphecy<ContactInterface>
      */
     private $contact2;
 

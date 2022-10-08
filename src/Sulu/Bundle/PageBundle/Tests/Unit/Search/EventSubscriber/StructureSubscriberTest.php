@@ -27,7 +27,7 @@ use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 class StructureSubscriberTest extends TestCase
 {
     /**
-     * @var SearchManagerInterface
+     * @var ObjectProphecy<SearchManagerInterface>
      */
     private $searchManager;
 

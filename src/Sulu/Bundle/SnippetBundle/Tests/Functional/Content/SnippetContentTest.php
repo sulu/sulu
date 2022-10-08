@@ -59,7 +59,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
     protected $contentType;
 
     /**
-     * @var DefaultSnippetManagerInterface
+     * @var ObjectProphecy<DefaultSnippetManagerInterface>
      */
     protected $defaultSnippetManager;
 

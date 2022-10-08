@@ -21,7 +21,7 @@ use Sulu\Bundle\ActivityBundle\Domain\Repository\ActivityRepositoryInterface;
 class StoreActivitySubscriberTest extends TestCase
 {
     /**
-     * @var ActivityRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<ActivityRepositoryInterface>
      */
     private $activityRepository;
 

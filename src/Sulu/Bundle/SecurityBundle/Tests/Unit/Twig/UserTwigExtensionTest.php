@@ -31,7 +31,7 @@ class UserTwigExtensionTest extends TestCase
     private $cache;
 
     /**
-     * @var UserRepository
+     * @var ObjectProphecy<UserRepository>
      */
     private $userRepository;
 

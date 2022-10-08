@@ -19,7 +19,7 @@ use Symfony\Component\Process\ExecutableFinder;
 class SuluMediaExtensionTest extends AbstractExtensionTestCase
 {
     /**
-     * @var ExecutableFinder
+     * @var ObjectProphecy<ExecutableFinder>
      */
     private $executableFinder;
 

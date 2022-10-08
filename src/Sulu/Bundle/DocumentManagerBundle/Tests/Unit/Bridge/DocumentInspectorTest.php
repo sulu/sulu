@@ -32,17 +32,17 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 class DocumentInspectorTest extends TestCase
 {
     /**
-     * @var DocumentRegistry
+     * @var ObjectProphecy<DocumentRegistry>
      */
     private $documentRegistry;
 
     /**
-     * @var PathSegmentRegistry
+     * @var ObjectProphecy<PathSegmentRegistry>
      */
     private $pathSegmentRegistry;
 
     /**
-     * @var NamespaceRegistry
+     * @var ObjectProphecy<NamespaceRegistry>
      */
     private $namespaceRegistry;
 
@@ -52,37 +52,37 @@ class DocumentInspectorTest extends TestCase
     private $document;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var MetadataFactoryInterface
+     * @var ObjectProphecy<MetadataFactoryInterface>
      */
     private $metadataFactory;
 
     /**
-     * @var StructureMetadataFactoryInterface
+     * @var ObjectProphecy<StructureMetadataFactoryInterface>
      */
     private $structureMetadataFactory;
 
     /**
-     * @var Metadata\
+     * @var ObjectProphecy<Metadata>
      */
     private $metadata;
 
     /**
-     * @var ProxyFactory
+     * @var ObjectProphecy<ProxyFactory>
      */
     private $proxyFactory;
 
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $propertyEncoder;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 

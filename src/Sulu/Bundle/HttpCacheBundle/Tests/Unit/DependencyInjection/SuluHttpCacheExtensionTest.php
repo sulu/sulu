@@ -29,31 +29,30 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
 {
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var ContentTypeManagerInterface
+     * @var ObjectProphecy<ContentTypeManagerInterface>
      */
     private $contentTypeManager;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
     /**
      * @var ReplacerInterface
      */
-
     /**
-     * @var LoggerInterface
+     * @var ObjectProphecy<LoggerInterface>
      */
     private $logger;
 
     /**
-     * @var LoggerInterface
+     * @var ObjectProphecy<ReferenceStorePoolInterface>
      */
     private $referenceStore;
 

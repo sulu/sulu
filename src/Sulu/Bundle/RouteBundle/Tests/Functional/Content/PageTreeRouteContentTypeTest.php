@@ -31,42 +31,42 @@ use Sulu\Component\Route\Document\Behavior\RoutableBehavior;
 class PageTreeRouteContentTypeTest extends TestCase
 {
     /**
-     * @var DocumentManagerInterface
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 
     /**
-     * @var DocumentRegistry
+     * @var ObjectProphecy<DocumentRegistry>
      */
     private $documentRegistry;
 
     /**
-     * @var ChainRouteGeneratorInterface
+     * @var ObjectProphecy<ChainRouteGeneratorInterface>
      */
     private $chainRouteGenerator;
 
     /**
-     * @var ConflictResolverInterface
+     * @var ObjectProphecy<ConflictResolverInterface>
      */
     private $conflictResolver;
 
     /**
-     * @var EntityManagerInterface
+     * @var ObjectProphecy<EntityManagerInterface>
      */
     private $entityManager;
 
     /**
-     * @var RouteRepositoryInterface
+     * @var ObjectProphecy<RouteRepositoryInterface>
      */
     private $routeRepository;
 
     /**
-     * @var RouteInterface
+     * @var ObjectProphecy<RouteInterface>
      */
     private $route;
 
@@ -76,17 +76,17 @@ class PageTreeRouteContentTypeTest extends TestCase
     private $contentType;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 
     /**
-     * @var BasePageDocument
+     * @var ObjectProphecy<BasePageDocument>
      */
     private $document;
 

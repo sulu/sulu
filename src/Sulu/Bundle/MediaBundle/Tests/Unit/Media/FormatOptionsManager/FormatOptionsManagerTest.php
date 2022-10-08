@@ -33,27 +33,27 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 class FormatOptionsManagerTest extends TestCase
 {
     /**
-     * @var EntityManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<EntityManagerInterface>
      */
     private $em;
 
     /**
-     * @var EntityRepository|ObjectProphecy
+     * @var ObjectProphecy<EntityRepository>
      */
     private $formatOptionsRepository;
 
     /**
-     * @var MediaManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<MediaManagerInterface>
      */
     private $mediaManager;
 
     /**
-     * @var FormatManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<FormatManagerInterface>
      */
     private $formatManager;
 
     /**
-     * @var DomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DomainEventCollectorInterface>
      */
     private $domainEventCollector;
 

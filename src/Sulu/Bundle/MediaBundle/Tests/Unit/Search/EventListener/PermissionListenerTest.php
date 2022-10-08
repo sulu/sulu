@@ -26,12 +26,12 @@ class PermissionListenerTest extends TestCase
     private $permissionListener;
 
     /**
-     * @var FileVersionMetaRepository
+     * @var ObjectProphecy<FileVersionMetaRepository>
      */
     private $fileVersionMetaRepository;
 
     /**
-     * @var SearchManagerInterface
+     * @var ObjectProphecy<SearchManagerInterface>
      */
     private $searchManager;
 

@@ -32,27 +32,27 @@ use Twig\Environment;
 class TargetGroupSubscriberTest extends TestCase
 {
     /**
-     * @var Environment|ObjectProphecy
+     * @var ObjectProphecy<Environment>
      */
     private $twig;
 
     /**
-     * @var TargetGroupStoreInterface|ObjectProphecy
+     * @var ObjectProphecy<TargetGroupStoreInterface>
      */
     private $targetGroupStore;
 
     /**
-     * @var TargetGroupEvaluatorInterface|ObjectProphecy
+     * @var ObjectProphecy<TargetGroupEvaluatorInterface>
      */
     private $targetGroupEvaluator;
 
     /**
-     * @var TargetGroupRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<TargetGroupRepositoryInterface>
      */
     private $targetGroupRepository;
 
     /**
-     * @var HttpKernelInterface|ObjectProphecy
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $kernel;
 

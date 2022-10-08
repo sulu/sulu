@@ -21,12 +21,12 @@ use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface;
 class MediaImageExtractorTest extends TestCase
 {
     /**
-     * @var ImagineInterface|ObjectProphecy
+     * @var ObjectProphecy<ImagineInterface>
      */
     private $imagine;
 
     /**
-     * @var VideoThumbnailServiceInterface|ObjectProphecy
+     * @var ObjectProphecy<VideoThumbnailServiceInterface>
      */
     private $videoThumbnail;
 

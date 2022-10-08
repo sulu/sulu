@@ -29,22 +29,22 @@ use Symfony\Component\Routing\RouterInterface;
 class TemplateAttributeResolverTest extends TestCase
 {
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     protected $requestAnalyzer;
 
     /**
-     * @var RequestAnalyzerResolverInterface
+     * @var ObjectProphecy<RequestAnalyzerResolverInterface>
      */
     protected $requestAnalyzerResolver;
 
     /**
-     * @var RouterInterface
+     * @var ObjectProphecy<RouterInterface>
      */
     protected $router;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     protected $requestStack;
 
@@ -54,22 +54,22 @@ class TemplateAttributeResolverTest extends TestCase
     protected $portalInformations;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     protected $webspaceManager;
 
     /**
-     * @var Webspace
+     * @var ObjectProphecy<Webspace>
      */
     protected $webspace;
 
     /**
-     * @var Portal
+     * @var ObjectProphecy<Portal>
      */
     protected $portal;
 
     /**
-     * @var Request
+     * @var ObjectProphecy<Request>
      */
     protected $request;
 

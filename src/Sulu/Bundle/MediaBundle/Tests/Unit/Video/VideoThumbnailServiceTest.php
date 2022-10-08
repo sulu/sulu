@@ -21,7 +21,7 @@ use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailService;
 class VideoThumbnailServiceTest extends TestCase
 {
     /**
-     * @var Video
+     * @var ObjectProphecy<Video>
      */
     protected $video;
 
@@ -31,12 +31,12 @@ class VideoThumbnailServiceTest extends TestCase
     protected $videoThumbnailService;
 
     /**
-     * @var Frame
+     * @var ObjectProphecy<Frame>
      */
     protected $frame;
 
     /**
-     * @var FFMpeg
+     * @var ObjectProphecy<FFMpeg>
      */
     protected $ffmpeg;
 

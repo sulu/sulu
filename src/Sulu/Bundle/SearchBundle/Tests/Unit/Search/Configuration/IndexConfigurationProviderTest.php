@@ -18,7 +18,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class IndexConfigurationProviderTest extends TestCase
 {
     /**
-     * @var TranslatorInterface
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 

@@ -27,12 +27,12 @@ use Symfony\Component\Console\Tester\CommandTester;
 class FixturesLoadCommandTest extends TestCase
 {
     /**
-     * @var DocumentExecutor
+     * @var ObjectProphecy<DocumentExecutor>
      */
     private $executor;
 
     /**
-     * @var DocumentFixtureInterface
+     * @var ObjectProphecy<DocumentFixtureInterface>
      */
     private $fixture1;
 

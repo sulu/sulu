@@ -25,7 +25,7 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 class CacheInvalidationListenerTest extends TestCase
 {
     /**
-     * @var CacheManager
+     * @var ObjectProphecy<CacheManager>
      */
     private $cacheManager;
 

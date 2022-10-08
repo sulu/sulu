@@ -36,22 +36,22 @@ use Symfony\Component\Routing\Route;
 class RedirectExceptionSubscriberTest extends TestCase
 {
     /**
-     * @var RequestMatcherInterface|ObjectProphecy
+     * @var ObjectProphecy<RequestMatcherInterface>
      */
     private $router;
 
     /**
-     * @var RequestAnalyzerInterface|ObjectProphecy
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var DefaultLocaleProviderInterface|ObjectProphecy
+     * @var ObjectProphecy<DefaultLocaleProviderInterface>
      */
     private $defaultLocaleProvider;
 
     /**
-     * @var ReplacerInterface|ObjectProphecy
+     * @var ObjectProphecy<ReplacerInterface>
      */
     private $urlReplacer;
 
@@ -61,12 +61,12 @@ class RedirectExceptionSubscriberTest extends TestCase
     private $exceptionListener;
 
     /**
-     * @var RequestAttributes|ObjectProphecy
+     * @var ObjectProphecy<RequestAttributes>
      */
     private $attributes;
 
     /**
-     * @var Request|ObjectProphecy
+     * @var ObjectProphecy<Request>
      */
     private $request;
 
@@ -76,7 +76,7 @@ class RedirectExceptionSubscriberTest extends TestCase
     private $event;
 
     /**
-     * @var HttpKernelInterface|ObjectProphecy
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $kernel;
 

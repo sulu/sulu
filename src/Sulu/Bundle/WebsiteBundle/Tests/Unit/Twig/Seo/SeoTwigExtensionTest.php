@@ -31,22 +31,22 @@ class SeoTwigExtensionTest extends TestCase
     private $seoTwigExtension;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var ContentPathInterface
+     * @var ObjectProphecy<ContentPathInterface>
      */
     private $contentPath;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
     /**
-     * @var Request
+     * @var ObjectProphecy<Request>
      */
     private $request;
 

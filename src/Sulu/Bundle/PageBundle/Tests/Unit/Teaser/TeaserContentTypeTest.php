@@ -29,22 +29,22 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 class TeaserContentTypeTest extends TestCase
 {
     /**
-     * @var TeaserProviderPoolInterface
+     * @var ObjectProphecy<TeaserProviderPoolInterface>
      */
     private $teaserProviderPool;
 
     /**
-     * @var TeaserManagerInterface
+     * @var ObjectProphecy<TeaserManagerInterface>
      */
     private $teaserManager;
 
     /**
-     * @var ReferenceStorePoolInterface
+     * @var ObjectProphecy<ReferenceStorePoolInterface>
      */
     private $referenceStorePool;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $mediaReferenceStore;
 

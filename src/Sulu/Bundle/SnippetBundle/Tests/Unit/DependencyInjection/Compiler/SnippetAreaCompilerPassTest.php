@@ -20,12 +20,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class SnippetAreaCompilerPassTest extends TestCase
 {
     /**
-     * @var ContainerBuilder
+     * @var ObjectProphecy<ContainerBuilder>
      */
     protected $container;
 
     /**
-     * @var StructureMetadataFactoryInterface
+     * @var ObjectProphecy<StructureMetadataFactoryInterface>
      */
     protected $structureFactory;
 

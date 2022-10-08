@@ -25,12 +25,12 @@ class PageSelectionContainerTest extends TestCase
     private $container;
 
     /**
-     * @var ContentQueryExecutor
+     * @var ObjectProphecy<ContentQueryExecutor>
      */
     private $executor;
 
     /**
-     * @var ContentQueryBuilder
+     * @var ObjectProphecy<ContentQueryBuilder>
      */
     private $builder;
 

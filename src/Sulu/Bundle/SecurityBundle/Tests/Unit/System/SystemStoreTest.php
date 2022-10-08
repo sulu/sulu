@@ -19,7 +19,7 @@ use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 class SystemStoreTest extends TestCase
 {
     /**
-     * @var RoleRepositoryInterface
+     * @var ObjectProphecy<RoleRepositoryInterface>
      */
     private $roleRepository;
 

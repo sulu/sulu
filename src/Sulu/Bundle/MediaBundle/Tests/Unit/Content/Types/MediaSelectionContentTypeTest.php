@@ -32,12 +32,12 @@ class MediaSelectionContentTypeTest extends TestCase
     private $mediaSelection;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $mediaReferenceStore;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
@@ -47,7 +47,7 @@ class MediaSelectionContentTypeTest extends TestCase
     private $webspace;
 
     /**
-     * @var MediaManagerInterface
+     * @var ObjectProphecy<MediaManagerInterface>
      */
     private $mediaManager;
 

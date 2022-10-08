@@ -22,7 +22,7 @@ use Sulu\Bundle\PageBundle\Content\Structure\SeoStructureExtension;
 class SeoStructureExtensionTest extends TestCase
 {
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 

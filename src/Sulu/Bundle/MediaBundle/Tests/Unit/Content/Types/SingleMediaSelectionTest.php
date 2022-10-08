@@ -41,22 +41,22 @@ class SingleMediaSelectionTest extends TestCase
     private $singleMediaSelection;
 
     /**
-     * @var MediaManagerInterface
+     * @var ObjectProphecy<MediaManager>
      */
     private $mediaManager;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStore>
      */
     private $mediaReferenceStore;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var SecurityCheckerInterface
+     * @var ObjectProphecy<SecurityCheckerInterface>
      */
     private $securityChecker;
 
@@ -66,17 +66,17 @@ class SingleMediaSelectionTest extends TestCase
     private $webspace;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $nodeProperty;
 
     /**
-     * @var Media
+     * @var ObjectProphecy<Media>
      */
     private $media;
 

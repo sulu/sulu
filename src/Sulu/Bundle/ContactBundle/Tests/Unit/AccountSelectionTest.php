@@ -31,32 +31,32 @@ class AccountSelectionTest extends TestCase
     private $accountSelection;
 
     /**
-     * @var AccountManager
+     * @var ObjectProphecy<AccountManager>
      */
     private $accountManager;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStore>
      */
     private $accountReferenceStore;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 
     /**
-     * @var Account
+     * @var ObjectProphecy<Account>
      */
     private $account1;
 
     /**
-     * @var Account
+     * @var ObjectProphecy<Account>
      */
     private $account2;
 

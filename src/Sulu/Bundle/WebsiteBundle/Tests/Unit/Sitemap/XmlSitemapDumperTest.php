@@ -23,17 +23,17 @@ use Symfony\Component\Filesystem\Filesystem;
 class XmlSitemapDumperTest extends TestCase
 {
     /**
-     * @var XmlSitemapRendererInterface
+     * @var ObjectProphecy<XmlSitemapRendererInterface>
      */
     protected $renderer;
 
     /**
-     * @var SitemapProviderPoolInterface
+     * @var ObjectProphecy<SitemapProviderPoolInterface>
      */
     protected $providerPool;
 
     /**
-     * @var Filesystem
+     * @var ObjectProphecy<Filesystem>
      */
     protected $filesystem;
 

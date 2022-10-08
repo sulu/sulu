@@ -36,22 +36,22 @@ use Sulu\Component\DocumentManager\NodeHelperInterface;
 class PublishSubscriberTest extends TestCase
 {
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $liveSession;
 
     /**
-     * @var NodeHelperInterface
+     * @var ObjectProphecy<NodeHelperInterface>
      */
     private $nodeHelper;
 
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $propertyEncoder;
 
     /**
-     * @var MetadataFactoryInterface
+     * @var ObjectProphecy<MetadataFactoryInterface>
      */
     private $metadataFactory;
 
@@ -61,7 +61,7 @@ class PublishSubscriberTest extends TestCase
     private $publishSubscriber;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 

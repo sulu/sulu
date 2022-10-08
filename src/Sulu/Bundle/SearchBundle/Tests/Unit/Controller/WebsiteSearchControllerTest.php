@@ -28,27 +28,27 @@ use Twig\Loader\FilesystemLoader;
 class WebsiteSearchControllerTest extends TestCase
 {
     /**
-     * @var SearchManagerInterface
+     * @var ObjectProphecy<SearchManagerInterface>
      */
     private $searchManager;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var ParameterResolverInterface
+     * @var ObjectProphecy<ParameterResolverInterface>
      */
     private $parameterResolver;
 
     /**
-     * @var Environment
+     * @var ObjectProphecy<Environment>
      */
     private $twig;
 
     /**
-     * @var FilesystemLoader
+     * @var ObjectProphecy<FilesystemLoader>
      */
     private $twigLoader;
 

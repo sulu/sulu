@@ -21,7 +21,7 @@ use Sulu\Bundle\PageBundle\Teaser\TeaserManagerInterface;
 class TeaserManagerTest extends TestCase
 {
     /**
-     * @var TeaserProviderPoolInterface
+     * @var ObjectProphecy<TeaserProviderPoolInterface>
      */
     private $providerPool;
 

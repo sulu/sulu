@@ -19,7 +19,7 @@ use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 class CustomUrlModifiedEventTest extends TestCase
 {
     /**
-     * @var CustomUrlDocument|ObjectProphecy
+     * @var ObjectProphecy<CustomUrlDocument>
      */
     private $customUrlDocument;
 

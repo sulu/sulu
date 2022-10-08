@@ -33,7 +33,7 @@ class FormXmlLoaderTest extends TestCase
     private $loader;
 
     /**
-     * @var TranslatorInterface
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 

@@ -22,22 +22,22 @@ use Sulu\Component\Webspace\Webspace;
 class ContentPathTwigExtensionTest extends TestCase
 {
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var Webspace
+     * @var ObjectProphecy<Webspace>
      */
     private $suluWebspace;
 
     /**
-     * @var Webspace
+     * @var ObjectProphecy<Webspace>
      */
     private $testWebspace;
 

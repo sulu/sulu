@@ -23,7 +23,7 @@ use Symfony\Component\Translation\Translator;
 class TranslatorListenerTest extends TestCase
 {
     /**
-     * @var HttpKernelInterface
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $kernel;
 

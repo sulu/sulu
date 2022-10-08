@@ -38,27 +38,27 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class WebspaceSerializeEventSubscriberTest extends TestCase
 {
     /**
-     * @var WebspaceUrlProviderInterface
+     * @var ObjectProphecy<WebspaceUrlProviderInterface>
      */
     private $webspaceUrlProvider;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var ResourceLocatorStrategyPoolInterface
+     * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
     private $resourceLocatorStrategyPool;
 
     /**
-     * @var AccessControlManagerInterface
+     * @var ObjectProphecy<AccessControlManagerInterface>
      */
     private $accessControlManager;
 
     /**
-     * @var TokenStorageInterface
+     * @var ObjectProphecy<TokenStorageInterface>
      */
     private $tokenStorage;
 

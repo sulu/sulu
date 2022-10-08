@@ -31,17 +31,17 @@ class ViewRegistryTest extends TestCase
     protected $viewRegistry;
 
     /**
-     * @var AdminPool
+     * @var ObjectProphecy<AdminPool>
      */
     protected $adminPool;
 
     /**
-     * @var Admin
+     * @var ObjectProphecy<Admin>
      */
     protected $admin1;
 
     /**
-     * @var Admin
+     * @var ObjectProphecy<Admin>
      */
     protected $admin2;
 

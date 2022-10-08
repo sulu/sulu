@@ -29,27 +29,27 @@ class NavigationRegistryTest extends TestCase
     protected $navigationRegistry;
 
     /**
-     * @var ViewRegistry
+     * @var ObjectProphecy<ViewRegistry>
      */
     protected $viewRegistry;
 
     /**
-     * @var AdminPool
+     * @var ObjectProphecy<AdminPool>
      */
     protected $adminPool;
 
     /**
-     * @var Admin
+     * @var ObjectProphecy<Admin>
      */
     protected $admin1;
 
     /**
-     * @var Admin
+     * @var ObjectProphecy<Admin>
      */
     protected $admin2;
 
     /**
-     * @var TranslatorInterface
+     * @var ObjectProphecy<TranslatorInterface>
      */
     protected $translator;
 

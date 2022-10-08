@@ -33,27 +33,27 @@ class SingleAccountSelectionTest extends TestCase
     private $singleAccountSelection;
 
     /**
-     * @var AccountManager
+     * @var ObjectProphecy<AccountManager>
      */
     private $accountManager;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStore>
      */
     private $accountReferenceStore;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 
     /**
-     * @var AccountInterface
+     * @var ObjectProphecy<Account>
      */
     private $account;
 

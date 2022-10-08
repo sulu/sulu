@@ -35,42 +35,42 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class CategoryManagerTest extends TestCase
 {
     /**
-     * @var CategoryRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<CategoryRepositoryInterface>
      */
     protected $categoryRepository;
 
     /**
-     * @var CategoryMetaRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<CategoryMetaRepositoryInterface>
      */
     protected $categoryMetaRepository;
 
     /**
-     * @var CategoryTranslationRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<CategoryTranslationRepositoryInterface>
      */
     protected $categoryTranslateRepository;
 
     /**
-     * @var UserRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<UserRepositoryInterface>
      */
     protected $userRepository;
 
     /**
-     * @var EntityManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<EntityManagerInterface>
      */
     protected $entityManager;
 
     /**
-     * @var EventDispatcherInterface|ObjectProphecy
+     * @var ObjectProphecy<EventDispatcherInterface>
      */
     protected $eventDispatcher;
 
     /**
-     * @var KeywordManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<KeywordManagerInterface>
      */
     private $keywordManager;
 
     /**
-     * @var DomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DomainEventCollectorInterface>
      */
     private $domainEventCollector;
 

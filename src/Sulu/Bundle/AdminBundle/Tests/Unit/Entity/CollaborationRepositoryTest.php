@@ -21,7 +21,7 @@ use Symfony\Component\Cache\CacheItem;
 class CollaborationRepositoryTest extends TestCase
 {
     /**
-     * @var CacheItemPoolInterface
+     * @var ObjectProphecy<CacheItemPoolInterface>
      */
     private $cache;
 

@@ -51,42 +51,42 @@ class ContactAccountSelectionTest extends TestCase
     private $segmentKey = 'winter';
 
     /**
-     * @var ContactManagerInterface
+     * @var ObjectProphecy<ContactManagerInterface>
      */
     private $contactManager;
 
     /**
-     * @var ContactManagerInterface
+     * @var ObjectProphecy<ContactManagerInterface>
      */
     private $accountManager;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<Node>
      */
     private $node;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 
     /**
-     * @var StructureInterface
+     * @var ObjectProphecy<StructureInterface>
      */
     private $structure;
 
     /**
-     * @var ArraySerializerInterface
+     * @var ObjectProphecy<ArraySerializerInterface>
      */
     private $serializer;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $accountReferenceStore;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $contactReferenceStore;
 

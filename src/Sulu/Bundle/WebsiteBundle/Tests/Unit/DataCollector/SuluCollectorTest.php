@@ -26,17 +26,17 @@ use Symfony\Component\HttpFoundation\Response;
 class SuluCollectorTest extends TestCase
 {
     /**
-     * @var Request
+     * @var ObjectProphecy<Request>
      */
     protected $request;
 
     /**
-     * @var ParameterBag
+     * @var ObjectProphecy<ParameterBag>
      */
     protected $attributes;
 
     /**
-     * @var Response
+     * @var ObjectProphecy<Response>
      */
     protected $response;
 

@@ -24,7 +24,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class MarkupListenerTest extends TestCase
 {
     /**
-     * @var MarkupParserInterface
+     * @var ObjectProphecy<MarkupParserInterface>
      */
     private $markupParser;
 
@@ -34,17 +34,17 @@ class MarkupListenerTest extends TestCase
     private $event;
 
     /**
-     * @var Response
+     * @var ObjectProphecy<Response>
      */
     private $response;
 
     /**
-     * @var HeaderBag
+     * @var ObjectProphecy<HeaderBag>
      */
     private $responseHeaders;
 
     /**
-     * @var Request
+     * @var ObjectProphecy<Request>
      */
     private $request;
 
@@ -54,7 +54,7 @@ class MarkupListenerTest extends TestCase
     private $listener;
 
     /**
-     * @var HttpKernelInterface
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $kernel;
 

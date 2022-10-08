@@ -20,22 +20,22 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class InitializerTest extends TestCase
 {
     /**
-     * @var ContainerInterface
+     * @var ObjectProphecy<ContainerInterface>
      */
     private $container;
 
     /**
-     * @var InitializerInterface
+     * @var ObjectProphecy<InitializerInterface>
      */
     private $initializer1;
 
     /**
-     * @var InitializerInterface
+     * @var ObjectProphecy<InitializerInterface>
      */
     private $initializer2;
 
     /**
-     * @var InitializerInterface
+     * @var ObjectProphecy<InitializerInterface>
      */
     private $initializer3;
 

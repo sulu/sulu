@@ -22,12 +22,12 @@ use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInte
 class PermissionInheritanceSubscriberTest extends TestCase
 {
     /**
-     * @var AccessControlManagerInterface
+     * @var ObjectProphecy<AccessControlManagerInterface>
      */
     private $accessControlManager;
 
     /**
-     * @var EntityManagerInterface
+     * @var ObjectProphecy<EntityManagerInterface>
      */
     private $entityManager;
 

@@ -25,22 +25,22 @@ use Symfony\Component\Translation\Translator;
 class UserLocaleListenerTest extends TestCase
 {
     /**
-     * @var TokenInterface
+     * @var ObjectProphecy<TokenInterface>
      */
     private $token;
 
     /**
-     * @var TokenStorageInterface
+     * @var ObjectProphecy<TokenStorageInterface>
      */
     private $tokenStorage;
 
     /**
-     * @var Translator
+     * @var ObjectProphecy<Translator>
      */
     private $translator;
 
     /**
-     * @var Request
+     * @var ObjectProphecy<Request>
      */
     private $request;
 
@@ -55,7 +55,7 @@ class UserLocaleListenerTest extends TestCase
     private $userLocaleListener;
 
     /**
-     * @var HttpKernelInterface
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $kernel;
 

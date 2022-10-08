@@ -23,17 +23,17 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class RequestDefaultLocaleProviderTest extends TestCase
 {
     /**
-     * @var Portal
+     * @var ObjectProphecy<Portal>
      */
     private $portal;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 

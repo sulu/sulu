@@ -20,12 +20,12 @@ use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPool;
 class SitemapProviderPoolTest extends TestCase
 {
     /**
-     * @var SitemapProviderInterface
+     * @var ObjectProphecy<SitemapProviderInterface>
      */
     public $pagesSitemapProvider;
 
     /**
-     * @var SitemapProviderInterface
+     * @var ObjectProphecy<SitemapProviderInterface>
      */
     public $articlesSitemapProvider;
 

@@ -24,22 +24,22 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 class SnippetQueryBuilderTest extends TestCase
 {
     /**
-     * @var StructureManagerInterface
+     * @var ObjectProphecy<StructureManagerInterface>
      */
     private $structureManager;
 
     /**
-     * @var ExtensionManagerInterface
+     * @var ObjectProphecy<ExtensionManagerInterface>
      */
     private $extensionManager;
 
     /**
-     * @var SessionManagerInterface
+     * @var ObjectProphecy<SessionManagerInterface>
      */
     private $sessionManager;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $session;
 

@@ -22,12 +22,12 @@ use Sulu\Component\Webspace\Webspace;
 class MetaTwigExtensionTest extends TestCase
 {
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var ContentPathInterface
+     * @var ObjectProphecy<ContentPathInterface>
      */
     private $contentPath;
 

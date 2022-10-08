@@ -30,28 +30,58 @@ use Sulu\Bundle\SearchBundle\Search\Document;
 
 class MediaSearchSubscriberTest extends TestCase
 {
+    /**
+     * @var ObjectProphecy<MediaManagerInterface>
+     */
     private $mediaManager;
 
     private $subscriber;
 
+    /**
+     * @var ObjectProphecy<ClassMetadata>
+     */
     private $metadata;
 
+    /**
+     * @var ObjectProphecy<IndexMetadata>
+     */
     private $indexMetadata;
 
+    /**
+     * @var ObjectProphecy<FileVersionMeta>
+     */
     private $fileVersionMeta;
 
+    /**
+     * @var ObjectProphecy<FileVersion>
+     */
     private $fileVersion;
 
+    /**
+     * @var ObjectProphecy<File>
+     */
     private $file;
 
+    /**
+     * @var ObjectProphecy<Media>
+     */
     private $media;
 
+    /**
+     * @var ObjectProphecy<PreIndexEvent>
+     */
     private $event;
 
+    /**
+     * @var ObjectProphecy<Document>
+     */
     private $document;
 
     private $reflection;
 
+    /**
+     * @var ObjectProphecy<Factory>
+     */
     private $factory;
 
     public function setUp(): void

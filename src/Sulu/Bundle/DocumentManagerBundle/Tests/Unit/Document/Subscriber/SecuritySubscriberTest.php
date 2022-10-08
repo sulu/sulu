@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class SecuritySubscriberTest extends TestCase
 {
     /**
-     * @var TokenStorageInterface
+     * @var ObjectProphecy<TokenStorageInterface>
      */
     private $tokenStorage;
 

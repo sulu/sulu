@@ -22,12 +22,12 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class RouterListenerTest extends TestCase
 {
     /**
-     * @var BaseRouteListener
+     * @var ObjectProphecy<RouterListener>
      */
     private $baseRouteListener;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
@@ -37,7 +37,7 @@ class RouterListenerTest extends TestCase
     private $routerListener;
 
     /**
-     * @var HttpKernelInterface
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $kernel;
 

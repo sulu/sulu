@@ -24,12 +24,12 @@ use Symfony\Component\Console\Tester\CommandTester;
 class InitializeCommandTest extends TestCase
 {
     /**
-     * @var mixed
+     * @var ObjectProphecy<QuestionHelper>
      */
     private $questionHelper;
 
     /**
-     * @var mixed
+     * @var ObjectProphecy<Initializer>
      */
     private $initializer;
 

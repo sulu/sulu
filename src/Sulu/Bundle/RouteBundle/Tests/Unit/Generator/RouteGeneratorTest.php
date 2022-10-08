@@ -21,12 +21,12 @@ use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
 class RouteGeneratorTest extends TestCase
 {
     /**
-     * @var TokenProviderInterface
+     * @var ObjectProphecy<TokenProviderInterface>
      */
     private $tokenProvider;
 
     /**
-     * @var SlugifierInterface
+     * @var ObjectProphecy<SlugifierInterface>
      */
     private $slugifier;
 

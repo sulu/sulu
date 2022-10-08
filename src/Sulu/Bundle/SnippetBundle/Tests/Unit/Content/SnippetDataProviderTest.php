@@ -33,32 +33,32 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class SnippetDataProviderTest extends TestCase
 {
     /**
-     * @var ContentQueryExecutorInterface
+     * @var ObjectProphecy<ContentQueryExecutorInterface>
      */
     private $contentQueryExecutor;
 
     /**
-     * @var ContentQueryBuilderInterface
+     * @var ObjectProphecy<ContentQueryBuilderInterface>
      */
     private $snippetQueryBuilder;
 
     /**
-     * @var SuluNodeHelper
+     * @var ObjectProphecy<SuluNodeHelper>
      */
     private $nodeHelper;
 
     /**
-     * @var LazyLoadingValueHolderFactory
+     * @var ObjectProphecy<LazyLoadingValueHolderFactory>
      */
     private $proxyFactory;
 
     /**
-     * @var DocumentManagerInterface
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 
     /**
-     * @var DocumentManagerInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $referenceStore;
 
