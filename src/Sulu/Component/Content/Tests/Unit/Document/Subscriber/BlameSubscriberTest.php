@@ -15,7 +15,6 @@ use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Document\Behavior\BlameBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedBlameBehavior;
 use Sulu\Component\Content\Document\Subscriber\BlameSubscriber;

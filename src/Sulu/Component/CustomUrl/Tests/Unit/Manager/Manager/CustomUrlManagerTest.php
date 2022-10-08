@@ -14,7 +14,6 @@ namespace Sulu\Component\CustomUrl\Tests\Unit\Manager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlCreatedEvent;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlModifiedEvent;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRemovedEvent;

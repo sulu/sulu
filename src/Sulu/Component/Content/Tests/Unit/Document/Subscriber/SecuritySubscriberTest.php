@@ -16,7 +16,6 @@ use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Subscriber\SecuritySubscriber;
 use Sulu\Component\Content\Document\Subscriber\StructureSubscriber;

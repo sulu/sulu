@@ -21,7 +21,6 @@ use Doctrine\Persistence\Mapping\ReflectionService;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepository;
 use Sulu\Component\Persistence\EventSubscriber\ORM\MetadataSubscriber;
 

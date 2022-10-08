@@ -13,7 +13,6 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;

@@ -12,7 +12,6 @@
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Document\Structure\StructureInterface;
