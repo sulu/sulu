@@ -9,7 +9,10 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Hash\Tests;Sulu\Component\Hash\Testsuse ProphecyProphecyObjectProphecy;use PHPUnit\Framework\TestCase;
+namespace Sulu\Component\Hash\Tests;
+
+use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Hash\HasherInterface;
 use Sulu\Component\Hash\RequestHashChecker;
 use Sulu\Component\Rest\Exception\InvalidHashException;
