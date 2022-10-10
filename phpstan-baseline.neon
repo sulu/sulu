@@ -36162,7 +36162,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$_embedded on mixed\\.$#"
-			count: 10
+			count: 7
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
