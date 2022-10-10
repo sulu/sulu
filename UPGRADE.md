@@ -1,5 +1,32 @@
 # Upgrade
 
+## 2.6.0
+
+### Deprecated urls variable in return value of sulu_content_load
+
+The `urls` variable in the return value of the `sulu_content_load` function was deprecated.
+This makes the data consistent with the data that is available inside of page templates.
+Instead of using the `urls` variable, you should pass `url` in the `properties` parameter of
+the function:
+
+```twig
+{% set page = sulu_content_load('1234-1234-1234-1234', {
+    'title': 'title',
+    'url': 'url',
+}) %}
+```
+
+If you need to use the `urls` variable, you can enable it in your configuration. Be aware that
+this configuration option will be removed in the next major version.
+
+```yaml
+# config/packages/sulu_website.yaml
+sulu_website:
+    twig:
+        attributes:
+            urls: true
+```
+
 ## 2.5.2
 
 ### Add indexes to route table
