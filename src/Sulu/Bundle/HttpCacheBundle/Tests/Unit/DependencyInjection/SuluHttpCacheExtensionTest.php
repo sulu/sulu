@@ -14,6 +14,7 @@ namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\DependencyInjection;
 use FOS\HttpCacheBundle\CacheManager;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\HttpCacheBundle\DependencyInjection\SuluHttpCacheExtension;
@@ -29,31 +30,30 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
 {
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var ContentTypeManagerInterface
+     * @var ObjectProphecy<ContentTypeManagerInterface>
      */
     private $contentTypeManager;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
     /**
      * @var ReplacerInterface
      */
-
     /**
-     * @var LoggerInterface
+     * @var ObjectProphecy<LoggerInterface>
      */
     private $logger;
 
     /**
-     * @var LoggerInterface
+     * @var ObjectProphecy<ReferenceStorePoolInterface>
      */
     private $referenceStore;
 

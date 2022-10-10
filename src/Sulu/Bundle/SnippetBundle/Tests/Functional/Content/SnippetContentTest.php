@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Content;
 use PHPCR\SessionInterface;
 use PHPCR\Util\UUIDHelper;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
@@ -59,7 +60,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
     protected $contentType;
 
     /**
-     * @var DefaultSnippetManagerInterface
+     * @var ObjectProphecy<DefaultSnippetManagerInterface>
      */
     protected $defaultSnippetManager;
 

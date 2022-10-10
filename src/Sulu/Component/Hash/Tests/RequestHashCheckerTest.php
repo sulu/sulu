@@ -12,6 +12,7 @@
 namespace Sulu\Component\Hash\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Hash\HasherInterface;
 use Sulu\Component\Hash\RequestHashChecker;
 use Sulu\Component\Rest\Exception\InvalidHashException;
@@ -20,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 class RequestHashCheckerTest extends TestCase
 {
     /**
-     * @var HasherInterface
+     * @var ObjectProphecy<HasherInterface>
      */
     private $hasher;
 

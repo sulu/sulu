@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Markup;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Bundle\MarkupBundle\Markup\LinkTag;
@@ -32,27 +33,27 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class LinkTagTest extends TestCase
 {
     /**
-     * @var ContentRepositoryInterface
+     * @var ObjectProphecy<ContentRepositoryInterface>
      */
     private $contentRepository;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
     /**
-     * @var Request
+     * @var ObjectProphecy<Request>
      */
     private $request;
 
     /**
-     * @var TranslatorInterface
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 

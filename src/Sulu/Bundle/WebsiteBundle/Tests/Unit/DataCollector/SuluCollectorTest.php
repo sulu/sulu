@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\DataCollector;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\DataCollector\SuluCollector;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -26,17 +27,17 @@ use Symfony\Component\HttpFoundation\Response;
 class SuluCollectorTest extends TestCase
 {
     /**
-     * @var Request
+     * @var ObjectProphecy<Request>
      */
     protected $request;
 
     /**
-     * @var ParameterBag
+     * @var ObjectProphecy<ParameterBag>
      */
     protected $attributes;
 
     /**
-     * @var Response
+     * @var ObjectProphecy<Response>
      */
     protected $response;
 

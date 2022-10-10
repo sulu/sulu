@@ -17,6 +17,7 @@ use Imagine\Image\Palette\PaletteInterface;
 use Imagine\Image\Palette\RGB;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyMediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\CropperInterface;
@@ -31,42 +32,42 @@ use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 class ImagineImageConverterTest extends TestCase
 {
     /**
-     * @var ImagineInterface
+     * @var ObjectProphecy<ImagineInterface>
      */
     private $imagine;
 
     /**
-     * @var ImagineInterface
+     * @var ObjectProphecy<ImagineInterface>
      */
     private $svgImagine;
 
     /**
-     * @var StorageInterface
+     * @var ObjectProphecy<StorageInterface>
      */
     private $storage;
 
     /**
-     * @var MediaImageExtractorInterface
+     * @var ObjectProphecy<MediaImageExtractorInterface>
      */
     private $mediaImageExtractor;
 
     /**
-     * @var TransformationPoolInterface
+     * @var ObjectProphecy<TransformationPoolInterface>
      */
     private $transformationPool;
 
     /**
-     * @var FocusInterface
+     * @var ObjectProphecy<FocusInterface>
      */
     private $focus;
 
     /**
-     * @var ScalerInterface
+     * @var ObjectProphecy<ScalerInterface>
      */
     private $scaler;
 
     /**
-     * @var CropperInterface
+     * @var ObjectProphecy<CropperInterface>
      */
     private $cropper;
 

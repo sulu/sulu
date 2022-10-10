@@ -25,7 +25,7 @@ class MemoizeTest extends TestCase
     private $mem;
 
     /**
-     * @var CacheProvider|ObjectProphecy
+     * @var ObjectProphecy<CacheProvider>
      */
     private $cache;
 

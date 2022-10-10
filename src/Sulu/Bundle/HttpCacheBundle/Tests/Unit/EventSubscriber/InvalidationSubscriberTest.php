@@ -13,6 +13,7 @@ namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\EventListener;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManager;
 use Sulu\Bundle\HttpCacheBundle\EventSubscriber\InvalidationSubscriber;
@@ -46,42 +47,42 @@ class InvalidationSubscriberTest extends TestCase
     private $invalidationSubscriber;
 
     /**
-     * @var CacheManager
+     * @var ObjectProphecy<CacheManager>
      */
     private $cacheManager;
 
     /**
-     * @var StructureManagerInterface
+     * @var ObjectProphecy<StructureManagerInterface>
      */
     private $structureManager;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 
     /**
-     * @var ResourceLocatorStrategyInterface
+     * @var ObjectProphecy<ResourceLocatorStrategyInterface>
      */
     private $resourceLocatorStrategy;
 
     /**
-     * @var ResourceLocatorStrategyPoolInterface
+     * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
     private $resourceLocatorStrategyPool;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
     /**
-     * @var TagManagerInterface
+     * @var ObjectProphecy<TagManagerInterface>
      */
     private $tagManager;
 

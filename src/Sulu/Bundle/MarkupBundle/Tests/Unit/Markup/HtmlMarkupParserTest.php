@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MarkupBundle\Tests\Unit\Markup;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Markup\DelegatingTagExtractor;
 use Sulu\Bundle\MarkupBundle\Markup\HtmlMarkupParser;
 use Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor;
@@ -27,17 +28,17 @@ class HtmlMarkupParserTest extends TestCase
     public const VALIDATE_REMOVED = 'removed';
 
     /**
-     * @var TagInterface
+     * @var ObjectProphecy<TagInterface>
      */
     private $linkTag;
 
     /**
-     * @var TagInterface
+     * @var ObjectProphecy<TagInterface>
      */
     private $mediaTag;
 
     /**
-     * @var TagRegistryInterface
+     * @var ObjectProphecy<TagRegistryInterface>
      */
     private $tagRegistry;
 

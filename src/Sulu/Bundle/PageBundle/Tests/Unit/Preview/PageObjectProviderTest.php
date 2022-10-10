@@ -26,17 +26,17 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 class PageObjectProviderTest extends TestCase
 {
     /**
-     * @var DocumentManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 
     /**
-     * @var SerializerInterface|ObjectProphecy
+     * @var ObjectProphecy<SerializerInterface>
      */
     private $serializer;
 
     /**
-     * @var DocumentInspector|ObjectProphecy
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 

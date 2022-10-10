@@ -21,7 +21,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class DomainEventDispatcherTest extends TestCase
 {
     /**
-     * @var EventDispatcherInterface|ObjectProphecy
+     * @var ObjectProphecy<EventDispatcherInterface>
      */
     private $innerEventDispatcher;
 

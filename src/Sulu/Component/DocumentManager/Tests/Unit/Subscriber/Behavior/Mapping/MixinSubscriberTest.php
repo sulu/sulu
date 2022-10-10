@@ -24,7 +24,7 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\MixinSubscriber;
 class MixinSubscriberTest extends TestCase
 {
     /**
-     * @var MetadataFactoryInterface|ObjectProphecy
+     * @var ObjectProphecy<MetadataFactoryInterface>
      */
     private $metadataFactory;
 

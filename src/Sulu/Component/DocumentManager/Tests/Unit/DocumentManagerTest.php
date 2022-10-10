@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Collection\QueryResultCollection;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Event\ClearEvent;
@@ -48,7 +49,7 @@ class DocumentManagerTest extends TestCase
     private $eventDispatcher;
 
     /**
-     * @var NodeManager
+     * @var ObjectProphecy<NodeManager>
      */
     private $nodeManager;
 
@@ -58,7 +59,7 @@ class DocumentManagerTest extends TestCase
     private $documentManager;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
@@ -68,12 +69,12 @@ class DocumentManagerTest extends TestCase
     private $document;
 
     /**
-     * @var Query
+     * @var ObjectProphecy<Query>
      */
     private $query;
 
     /**
-     * @var QueryResultCollection
+     * @var ObjectProphecy<QueryResultCollection>
      */
     private $queryResultCollection;
 

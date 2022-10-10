@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Content\Document\Behavior\AuthorBehavior;
@@ -29,22 +30,22 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 class AuthorSubscriberTest extends TestCase
 {
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $propertyEncoder;
 
     /**
-     * @var UserRepositoryInterface
+     * @var ObjectProphecy<UserRepositoryInterface>
      */
     protected $userRepository;
 
     /**
-     * @var MetadataFactoryInterface
+     * @var ObjectProphecy<MetadataFactoryInterface>
      */
     private $metadataFactory;
 
     /**
-     * @var Metadata
+     * @var ObjectProphecy<Metadata>
      */
     private $metadata;
 

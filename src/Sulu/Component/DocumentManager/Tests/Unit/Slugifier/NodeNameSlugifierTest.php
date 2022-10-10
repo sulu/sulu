@@ -12,13 +12,14 @@
 namespace Sulu\Component\DocumentManager\tests\Unit\Slugifier;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Slugifier\NodeNameSlugifier;
 use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
 
 class NodeNameSlugifierTest extends TestCase
 {
     /**
-     * @var SlugifierInterface
+     * @var ObjectProphecy<SlugifierInterface>
      */
     private $slugifier;
 

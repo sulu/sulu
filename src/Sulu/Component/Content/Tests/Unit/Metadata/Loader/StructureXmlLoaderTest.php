@@ -39,7 +39,7 @@ class StructureXmlLoaderTest extends TestCase
     ];
 
     /**
-     * @var TranslatorInterface|ObjectProphecy
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 
@@ -49,12 +49,12 @@ class StructureXmlLoaderTest extends TestCase
     private $loader;
 
     /**
-     * @var ContentTypeManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<ContentTypeManagerInterface>
      */
     private $contentTypeManager;
 
     /**
-     * @var CacheLifetimeResolverInterface|ObjectProphecy
+     * @var ObjectProphecy<CacheLifetimeResolverInterface>
      */
     private $cacheLifetimeResolver;
 

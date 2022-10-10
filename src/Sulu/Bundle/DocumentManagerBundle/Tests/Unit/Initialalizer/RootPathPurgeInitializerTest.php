@@ -16,6 +16,7 @@ use PHPCR\NodeInterface;
 use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\RootPathPurgeInitializer;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,22 +24,22 @@ use Symfony\Component\Console\Output\OutputInterface;
 class RootPathPurgeInitializerTest extends TestCase
 {
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $session1;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $session2;
 
     /**
-     * @var ConnectionRegistry
+     * @var ObjectProphecy<ConnectionRegistry>
      */
     private $connectionRegistry;
 
     /**
-     * @var PathSegmentRegistry
+     * @var ObjectProphecy<PathSegmentRegistry>
      */
     private $segmentRegistry;
 
@@ -48,12 +49,12 @@ class RootPathPurgeInitializerTest extends TestCase
     private $rootPathPurgeInitializer;
 
     /**
-     * @var OutputInterface
+     * @var ObjectProphecy<OutputInterface>
      */
     private $output;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 

@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Audit\Pa
 use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
@@ -25,7 +26,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ExplicitSubscriberTest extends TestCase
 {
     /**
-     * @var PersistEvent
+     * @var ObjectProphecy<PersistEvent>
      */
     private $persistEvent;
 
@@ -35,22 +36,22 @@ class ExplicitSubscriberTest extends TestCase
     private $document;
 
     /**
-     * @var NodeManager
+     * @var ObjectProphecy<NodeManager>
      */
     private $nodeManager;
 
     /**
-     * @var ConfigureOptionsEvent
+     * @var ObjectProphecy<ConfigureOptionsEvent>
      */
     private $configureEvent;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $parentNode;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 

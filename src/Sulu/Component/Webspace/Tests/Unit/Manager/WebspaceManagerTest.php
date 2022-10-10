@@ -38,7 +38,7 @@ class WebspaceManagerTest extends WebspaceTestCase
     protected $loader;
 
     /**
-     * @var ObjectProphecy|RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
@@ -53,7 +53,7 @@ class WebspaceManagerTest extends WebspaceTestCase
     private $cacheDirectory;
 
     /**
-     * @var ObjectProphecy|StructureMetadataFactoryInterface
+     * @var ObjectProphecy<StructureMetadataFactoryInterface>
      */
     private $structureMetadataFactory;
 

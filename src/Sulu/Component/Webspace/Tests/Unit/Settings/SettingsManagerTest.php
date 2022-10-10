@@ -14,6 +14,7 @@ namespace Sulu\Component\Webspace\Tests\Unit\Settings;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Session\SessionManagerInterface;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface as DeprecatedSessionManagerInterface;
 use Sulu\Component\Webspace\Settings\SettingsManager;
@@ -26,12 +27,12 @@ class SettingsManagerTest extends TestCase
     private $settingsManager;
 
     /**
-     * @var SessionManagerInterface
+     * @var ObjectProphecy<SessionManagerInterface>
      */
     private $sessionManager;
 
     /**
-     * @var DeprecatedSessionManagerInterface
+     * @var ObjectProphecy<DeprecatedSessionManagerInterface>
      */
     private $deprecatedSessionManager;
 

@@ -42,47 +42,47 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ContentTwigExtensionTest extends TestCase
 {
     /**
-     * @var StructureResolverInterface|ObjectProphecy
+     * @var ObjectProphecy<StructureResolverInterface>
      */
     private $structureResolver;
 
     /**
-     * @var ContentMapperInterface|ObjectProphecy
+     * @var ObjectProphecy<ContentMapperInterface>
      */
     private $contentMapper;
 
     /**
-     * @var RequestAnalyzerInterface|ObjectProphecy
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var SessionManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<SessionManagerInterface>
      */
     private $sessionManager;
 
     /**
-     * @var SessionInterface|ObjectProphecy
+     * @var ObjectProphecy<SessionInterface>
      */
     private $session;
 
     /**
-     * @var NodeInterface|ObjectProphecy
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var NodeInterface|ObjectProphecy
+     * @var ObjectProphecy<NodeInterface>
      */
     private $parentNode;
 
     /**
-     * @var NodeInterface|ObjectProphecy
+     * @var ObjectProphecy<NodeInterface>
      */
     private $startPageNode;
 
     /**
-     * @var LoggerInterface|ObjectProphecy
+     * @var ObjectProphecy<LoggerInterface>
      */
     private $logger;
 
@@ -92,17 +92,17 @@ class ContentTwigExtensionTest extends TestCase
     private $extension;
 
     /**
-     * @var SecurityCheckerInterface|ObjectProphecy
+     * @var ObjectProphecy<SecurityCheckerInterface>
      */
     private $securityChecker;
 
     /**
-     * @var WebspaceManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var Webspace|ObjectProphecy
+     * @var ObjectProphecy<Webspace>
      */
     private $webspace;
 

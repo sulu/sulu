@@ -17,6 +17,7 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Massive\Bundle\SearchBundle\Search\SearchQueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\PageBundle\Teaser\PageTeaserProvider;
 use Sulu\Bundle\PageBundle\Teaser\PHPCRPageTeaserProvider;
@@ -27,12 +28,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PageTeaserProviderTest extends TestCase
 {
     /**
-     * @var SearchManagerInterface
+     * @var ObjectProphecy<SearchManagerInterface>
      */
     private $searchManager;
 
     /**
-     * @var SearchQueryBuilder
+     * @var ObjectProphecy<SearchQueryBuilder>
      */
     private $search;
 
@@ -42,7 +43,7 @@ class PageTeaserProviderTest extends TestCase
     private $pageTeaserProvider;
 
     /**
-     * @var TranslatorInterface
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 

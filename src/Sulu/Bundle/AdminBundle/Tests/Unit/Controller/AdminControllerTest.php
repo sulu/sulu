@@ -16,6 +16,7 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use JMS\Serializer\SerializerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
@@ -45,87 +46,87 @@ use Twig\Environment;
 class AdminControllerTest extends TestCase
 {
     /**
-     * @var UrlGeneratorInterface
+     * @var ObjectProphecy<UrlGeneratorInterface>
      */
     private $urlGenerator;
 
     /**
-     * @var TokenStorageInterface
+     * @var ObjectProphecy<TokenStorageInterface>
      */
     private $tokenStorage;
 
     /**
-     * @var TokenInterface
+     * @var ObjectProphecy<TokenInterface>
      */
     private $token;
 
     /**
-     * @var User
+     * @var ObjectProphecy<User>
      */
     private $user;
 
     /**
-     * @var AdminPool
+     * @var ObjectProphecy<AdminPool>
      */
     private $adminPool;
 
     /**
-     * @var SerializerInterface
+     * @var ObjectProphecy<SerializerInterface>
      */
     private $serializer;
 
     /**
-     * @var ViewHandlerInterface
+     * @var ObjectProphecy<ViewHandlerInterface>
      */
     private $viewHandler;
 
     /**
-     * @var Environment
+     * @var ObjectProphecy<Environment>
      */
     private $engine;
 
     /**
-     * @var TranslatorBagInterface
+     * @var ObjectProphecy<TranslatorBagInterface>
      */
     private $translatorBag;
 
     /**
-     * @var MetadataProviderRegistry
+     * @var ObjectProphecy<MetadataProviderRegistry>
      */
     private $metadataProviderRegistry;
 
     /**
-     * @var ViewRegistry
+     * @var ObjectProphecy<ViewRegistry>
      */
     private $viewRegistry;
 
     /**
-     * @var NavigationRegistry
+     * @var ObjectProphecy<NavigationRegistry>
      */
     private $navigationRegistry;
 
     /**
-     * @var FieldTypeOptionRegistryInterface
+     * @var ObjectProphecy<FieldTypeOptionRegistryInterface>
      */
     private $fieldTypeOptionRegistry;
 
     /**
-     * @var ContactManagerInterface
+     * @var ObjectProphecy<ContactManagerInterface>
      */
     private $contactManager;
 
     /**
-     * @var DataProviderPoolInterface
+     * @var ObjectProphecy<DataProviderPoolInterface>
      */
     private $dataProviderPool;
 
     /**
-     * @var LinkProviderPoolInterface
+     * @var ObjectProphecy<LinkProviderPoolInterface>
      */
     private $linkProviderPool;
 
     /**
-     * @var LocalizationManagerInterface
+     * @var ObjectProphecy<LocalizationManagerInterface>
      */
     private $localizationManager;
 

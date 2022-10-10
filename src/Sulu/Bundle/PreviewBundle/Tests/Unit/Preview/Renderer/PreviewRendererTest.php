@@ -43,32 +43,32 @@ use Twig\Error\RuntimeError;
 class PreviewRendererTest extends TestCase
 {
     /**
-     * @var RouteDefaultsProviderInterface
+     * @var ObjectProphecy<RouteDefaultsProviderInterface>
      */
     private $routeDefaultsProvider;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
     /**
-     * @var KernelFactoryInterface
+     * @var ObjectProphecy<KernelFactoryInterface>
      */
     private $kernelFactory;
 
     /**
-     * @var HttpKernelInterface
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $httpKernel;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var EventDispatcherInterface
+     * @var ObjectProphecy<EventDispatcherInterface>
      */
     private $eventDispatcher;
 

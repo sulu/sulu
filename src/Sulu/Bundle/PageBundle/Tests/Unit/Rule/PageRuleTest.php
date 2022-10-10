@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Rule;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Rule\PageRule;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
@@ -27,22 +28,22 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PageRuleTest extends TestCase
 {
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var TranslatorInterface
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 
     /**
-     * @var ResourceLocatorStrategyPoolInterface
+     * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
     private $resourceLocatorStrategyPool;
 

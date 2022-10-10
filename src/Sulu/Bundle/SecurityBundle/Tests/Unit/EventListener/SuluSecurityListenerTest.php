@@ -50,12 +50,12 @@ class SuluSecurityListenerTest extends TestCase
     private $securityListener;
 
     /**
-     * @var ObjectProphecy
+     * @var ObjectProphecy<SecurityCheckerInterface>
      */
     private $securityChecker;
 
     /**
-     * @var HttpKernelInterface
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $kernel;
 

@@ -15,12 +15,11 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
 use Sulu\Bundle\ContactBundle\Content\Types\SingleAccountSelection;
-use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -33,27 +32,27 @@ class SingleAccountSelectionTest extends TestCase
     private $singleAccountSelection;
 
     /**
-     * @var AccountManager
+     * @var ObjectProphecy<AccountManager>
      */
     private $accountManager;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStore>
      */
     private $accountReferenceStore;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 
     /**
-     * @var AccountInterface
+     * @var ObjectProphecy<Account>
      */
     private $account;
 

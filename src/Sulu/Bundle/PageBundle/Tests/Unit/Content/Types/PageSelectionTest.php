@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\PageBundle\Content\Types\PageSelection;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -26,27 +27,27 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 class PageSelectionTest extends TestCase
 {
     /**
-     * @var ContentQueryExecutorInterface
+     * @var ObjectProphecy<ContentQueryExecutorInterface>
      */
     private $contentQueryExecutor;
 
     /**
-     * @var ContentQueryBuilderInterface
+     * @var ObjectProphecy<ContentQueryBuilderInterface>
      */
     private $contentQueryBuilder;
 
     /**
-     * @var LoggerInterface
+     * @var ObjectProphecy<LoggerInterface>
      */
     private $logger;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $referenceStore;
 

@@ -14,6 +14,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Command;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Bundle\PageBundle\Command\MaintainResourceLocatorCommand;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -33,32 +34,32 @@ use Symfony\Component\Console\Output\OutputInterface;
 class MaintainResourceLocatorCommandTest extends TestCase
 {
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var SessionManagerInterface
+     * @var ObjectProphecy<SessionManagerInterface>
      */
     private $sessionManager;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $liveSession;
 
     /**
-     * @var MetadataFactoryInterface
+     * @var ObjectProphecy<MetadataFactoryInterface>
      */
     private $metadataFactory;
 
     /**
-     * @var StructureMetadataFactory
+     * @var ObjectProphecy<StructureMetadataFactory>
      */
     private $structureMetadataFactory;
 
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $propertyEncoder;
 
@@ -68,12 +69,12 @@ class MaintainResourceLocatorCommandTest extends TestCase
     private $maintainResourceLocatorCommand;
 
     /**
-     * @var InputInterface
+     * @var ObjectProphecy<InputInterface>
      */
     private $input;
 
     /**
-     * @var OutputInterface
+     * @var ObjectProphecy<OutputInterface>
      */
     private $output;
 

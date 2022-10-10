@@ -38,17 +38,17 @@ class RequestAnalyzerTest extends TestCase
     private $requestAnalyzer;
 
     /**
-     * @var ObjectProphecy|WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var ObjectProphecy|ContentMapperInterface
+     * @var ObjectProphecy<ContentMapperInterface>
      */
     private $contentMapper;
 
     /**
-     * @var ObjectProphecy|RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 

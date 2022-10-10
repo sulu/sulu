@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Markup\Link;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkConfiguration;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\PageBundle\Markup\Link\PageLinkProvider;
@@ -33,27 +34,27 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PageLinkProviderTest extends TestCase
 {
     /**
-     * @var ContentRepositoryInterface
+     * @var ObjectProphecy<ContentRepositoryInterface>
      */
     protected $contentRepository;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     protected $webspaceManager;
 
     /**
-     * @var Request
+     * @var ObjectProphecy<Request>
      */
     protected $request;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     protected $requestStack;
 
     /**
-     * @var TranslatorInterface
+     * @var ObjectProphecy<TranslatorInterface>
      */
     protected $translator;
 
@@ -83,12 +84,12 @@ class PageLinkProviderTest extends TestCase
     protected $pageLinkProvider;
 
     /**
-     * @var AccessControlManagerInterface
+     * @var ObjectProphecy<AccessControlManagerInterface>
      */
     private $accessControlManager;
 
     /**
-     * @var TokenStorageInterface
+     * @var ObjectProphecy<TokenStorageInterface>
      */
     private $tokenStorage;
 

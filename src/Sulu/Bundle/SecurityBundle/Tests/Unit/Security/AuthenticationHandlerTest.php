@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Security;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -30,22 +31,22 @@ class AuthenticationHandlerTest extends TestCase
     private $authenticationHandler;
 
     /**
-     * @var AuthenticationException
+     * @var ObjectProphecy<AuthenticationException>
      */
     private $exception;
 
     /**
-     * @var Request
+     * @var ObjectProphecy<Request>
      */
     private $request;
 
     /**
-     * @var TokenInterface
+     * @var ObjectProphecy<TokenInterface>
      */
     private $token;
 
     /**
-     * @var UserInterface
+     * @var ObjectProphecy<UserInterface>
      */
     private $user;
 

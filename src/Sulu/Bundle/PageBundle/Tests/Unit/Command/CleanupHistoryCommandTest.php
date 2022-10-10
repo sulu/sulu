@@ -15,6 +15,7 @@ use Jackalope\Workspace;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Command\CleanupHistoryCommand;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,27 +24,27 @@ use Symfony\Component\Console\Output\OutputInterface;
 class CleanupHistoryCommandTest extends TestCase
 {
     /**
-     * @var SessionManagerInterface
+     * @var ObjectProphecy<SessionManagerInterface>
      */
     private $sessionManager;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $defaultSession;
 
     /**
-     * @var Workspace
+     * @var ObjectProphecy<Workspace>
      */
     private $defaultWorkspace;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $liveSession;
 
     /**
-     * @var Workspace
+     * @var ObjectProphecy<Workspace>
      */
     private $liveWorkspace;
 
@@ -53,12 +54,12 @@ class CleanupHistoryCommandTest extends TestCase
     private $cleanupHistoryCommand;
 
     /**
-     * @var InputInterface
+     * @var ObjectProphecy<InputInterface>
      */
     private $input;
 
     /**
-     * @var OutputInterface
+     * @var ObjectProphecy<OutputInterface>
      */
     private $output;
 

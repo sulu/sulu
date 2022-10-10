@@ -15,6 +15,7 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\Controller\PermissionController;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
@@ -30,22 +31,22 @@ class PermissionControllerTest extends TestCase
     private $permissionController;
 
     /**
-     * @var AccessControlManagerInterface
+     * @var ObjectProphecy<AccessControlManagerInterface>
      */
     private $accessControlManager;
 
     /**
-     * @var SecurityCheckerInterface
+     * @var ObjectProphecy<SecurityCheckerInterface>
      */
     private $securityChecker;
 
     /**
-     * @var RoleRepositoryInterface
+     * @var ObjectProphecy<RoleRepositoryInterface>
      */
     private $roleRepository;
 
     /**
-     * @var ViewHandlerInterface
+     * @var ObjectProphecy<ViewHandlerInterface>
      */
     private $viewHandler;
 

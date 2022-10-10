@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Mapping\
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
@@ -21,7 +22,7 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\NodeNameSubscribe
 class NodeNameSubscriberTest extends TestCase
 {
     /**
-     * @var HydrateEvent
+     * @var ObjectProphecy<HydrateEvent>
      */
     private $hydrateEvent;
 
@@ -31,7 +32,7 @@ class NodeNameSubscriberTest extends TestCase
     private $notImplementing;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 

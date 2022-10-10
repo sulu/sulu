@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Form\DataTransformer;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Form\DataTransformer\DocumentToUuidTransformer;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -20,8 +21,14 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 
 class DocumentToUuidTransformerTest extends TestCase
 {
+    /**
+     * @var ObjectProphecy<DocumentManagerInterface>
+     */
     private $documentManager;
 
+    /**
+     * @var ObjectProphecy<UuidBehavior>
+     */
     private $document;
 
     private $transformer;

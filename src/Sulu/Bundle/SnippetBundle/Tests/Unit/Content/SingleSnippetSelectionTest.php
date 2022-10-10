@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Content;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SnippetBundle\Content\SingleSnippetSelection;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
@@ -25,17 +26,17 @@ use Sulu\Component\Content\Compat\Structure\StructureBridge;
 class SingleSnippetSelectionTest extends TestCase
 {
     /**
-     * @var DefaultSnippetManagerInterface
+     * @var ObjectProphecy<DefaultSnippetManagerInterface>
      */
     private $defaultSnippetManager;
 
     /**
-     * @var SnippetResolverInterface
+     * @var ObjectProphecy<SnippetResolverInterface>
      */
     private $snippetResolver;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $referenceStore;
 

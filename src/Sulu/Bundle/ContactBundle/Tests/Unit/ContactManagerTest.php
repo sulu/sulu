@@ -36,52 +36,52 @@ class ContactManagerTest extends TestCase
     private $contactManager;
 
     /**
-     * @var ObjectProphecy|ObjectManager
+     * @var ObjectProphecy<ObjectManager>
      */
     private $em;
 
     /**
-     * @var ObjectProphecy|TagManagerInterface
+     * @var ObjectProphecy<TagManagerInterface>
      */
     private $tagManager;
 
     /**
-     * @var ObjectProphecy|MediaManagerInterface
+     * @var ObjectProphecy<MediaManagerInterface>
      */
     private $mediaManager;
 
     /**
-     * @var ObjectProphecy|AccountRepositoryInterface
+     * @var ObjectProphecy<AccountRepositoryInterface>
      */
     private $accountRepository;
 
     /**
-     * @var ObjectProphecy|ContactTitleRepository
+     * @var ObjectProphecy<ContactTitleRepository>
      */
     private $contactTitleRepository;
 
     /**
-     * @var ObjectProphecy|ContactRepository
+     * @var ObjectProphecy<ContactRepository>
      */
     private $contactRepository;
 
     /**
-     * @var ObjectProphecy|MediaRepositoryInterface
+     * @var ObjectProphecy<MediaRepositoryInterface>
      */
     private $mediaRepository;
 
     /**
-     * @var ObjectProphecy|DomainEventCollectorInterface
+     * @var ObjectProphecy<DomainEventCollectorInterface>
      */
     private $eventCollector;
 
     /**
-     * @var ObjectProphecy|TrashManagerInterface
+     * @var ObjectProphecy<TrashManagerInterface>
      */
     private $trashManager;
 
     /**
-     * @var ObjectProphecy|UserRepository
+     * @var ObjectProphecy<UserRepository>
      */
     private $userRepository;
 

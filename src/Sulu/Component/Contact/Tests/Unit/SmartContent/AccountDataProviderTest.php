@@ -14,6 +14,7 @@ namespace Sulu\Component\Contact\Tests\Unit\SmartContent;
 use JMS\Serializer\SerializationContext;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Contact\SmartContent\AccountDataItem;
@@ -27,17 +28,17 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 class AccountDataProviderTest extends TestCase
 {
     /**
-     * @var DataProviderRepositoryInterface
+     * @var ObjectProphecy<DataProviderRepositoryInterface>
      */
     private $dataProviderRepository;
 
     /**
-     * @var ArraySerializerInterface
+     * @var ObjectProphecy<ArraySerializerInterface>
      */
     private $serializer;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $referenceStore;
 

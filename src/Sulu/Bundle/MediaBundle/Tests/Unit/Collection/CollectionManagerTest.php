@@ -32,37 +32,37 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 class CollectionManagerTest extends TestCase
 {
     /**
-     * @var CollectionRepository|ObjectProphecy
+     * @var ObjectProphecy<CollectionRepository>
      */
     private $collectionRepository;
 
     /**
-     * @var MediaRepository|ObjectProphecy
+     * @var ObjectProphecy<MediaRepository>
      */
     private $mediaRepository;
 
     /**
-     * @var FormatManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<FormatManagerInterface>
      */
     private $formatManager;
 
     /**
-     * @var UserRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<UserRepositoryInterface>
      */
     private $userRepository;
 
     /**
-     * @var EntityManager|ObjectProphecy
+     * @var ObjectProphecy<EntityManager>
      */
     private $entityManager;
 
     /**
-     * @var DomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DomainEventCollectorInterface>
      */
     private $domainEventCollector;
 
     /**
-     * @var TrashManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<TrashManagerInterface>
      */
     private $trashManager;
 

@@ -13,9 +13,9 @@ namespace Sulu\Bundle\ContactBundle\Tests\Unit;
 
 use Jackalope\Node;
 use JMS\Serializer\SerializationContext;
-use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
@@ -51,42 +51,42 @@ class ContactAccountSelectionTest extends TestCase
     private $segmentKey = 'winter';
 
     /**
-     * @var ContactManagerInterface
+     * @var ObjectProphecy<ContactManagerInterface>
      */
     private $contactManager;
 
     /**
-     * @var ContactManagerInterface
+     * @var ObjectProphecy<ContactManagerInterface>
      */
     private $accountManager;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<Node>
      */
     private $node;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 
     /**
-     * @var StructureInterface
+     * @var ObjectProphecy<StructureInterface>
      */
     private $structure;
 
     /**
-     * @var ArraySerializerInterface
+     * @var ObjectProphecy<ArraySerializerInterface>
      */
     private $serializer;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $accountReferenceStore;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $contactReferenceStore;
 

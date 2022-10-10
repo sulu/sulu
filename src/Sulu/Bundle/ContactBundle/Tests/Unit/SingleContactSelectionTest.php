@@ -15,11 +15,11 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Content\Types\SingleContactSelection;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\Property;
 
 class SingleContactSelectionTest extends TestCase
@@ -30,27 +30,27 @@ class SingleContactSelectionTest extends TestCase
     private $singleContactSelection;
 
     /**
-     * @var ContactRepositoryInterface
+     * @var ObjectProphecy<ContactRepositoryInterface>
      */
     private $contactRepository;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStore>
      */
     private $contactReferenceStore;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 
     /**
-     * @var ContactInterface
+     * @var ObjectProphecy<ContactInterface>
      */
     private $contact;
 

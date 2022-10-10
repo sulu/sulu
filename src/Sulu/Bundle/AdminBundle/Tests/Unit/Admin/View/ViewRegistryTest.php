@@ -13,6 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Admin\View;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilder;
@@ -31,17 +32,17 @@ class ViewRegistryTest extends TestCase
     protected $viewRegistry;
 
     /**
-     * @var AdminPool
+     * @var ObjectProphecy<AdminPool>
      */
     protected $adminPool;
 
     /**
-     * @var Admin
+     * @var ObjectProphecy<Admin>
      */
     protected $admin1;
 
     /**
-     * @var Admin
+     * @var ObjectProphecy<Admin>
      */
     protected $admin2;
 

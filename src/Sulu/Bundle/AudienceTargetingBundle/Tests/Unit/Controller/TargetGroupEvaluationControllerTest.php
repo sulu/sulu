@@ -25,17 +25,17 @@ use Symfony\Component\HttpFoundation\Request;
 class TargetGroupEvaluationControllerTest extends TestCase
 {
     /**
-     * @var TargetGroupEvaluatorInterface|ObjectProphecy
+     * @var ObjectProphecy<TargetGroupEvaluatorInterface>
      */
     private $targetGroupEvaluator;
 
     /**
-     * @var TargetGroupRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<TargetGroupRepositoryInterface>
      */
     private $targetGroupRepository;
 
     /**
-     * @var TargetGroupStoreInterface|ObjectProphecy
+     * @var ObjectProphecy<TargetGroupStoreInterface>
      */
     private $targetGroupStore;
 

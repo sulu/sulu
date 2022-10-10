@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber\Compat;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Compat\StructureManager;
@@ -33,27 +34,27 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class ContentMapperSubscriberTest extends TestCase
 {
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 
     /**
-     * @var EventDispatcherInterface
+     * @var ObjectProphecy<EventDispatcherInterface>
      */
     private $eventDispatcher;
 
     /**
-     * @var ContentMapperInterface
+     * @var ObjectProphecy<ContentMapperInterface>
      */
     private $contentMapper;
 
     /**
-     * @var SuluNodeHelper
+     * @var ObjectProphecy<SuluNodeHelper>
      */
     private $nodeHelper;
 
     /**
-     * @var StructureManager
+     * @var ObjectProphecy<StructureManager>
      */
     private $structureManager;
 

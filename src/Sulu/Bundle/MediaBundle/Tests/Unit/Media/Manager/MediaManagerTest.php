@@ -58,87 +58,87 @@ class MediaManagerTest extends TestCase
     private $mediaManager;
 
     /**
-     * @var MediaRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<MediaRepositoryInterface>
      */
     private $mediaRepository;
 
     /**
-     * @var CollectionRepository|ObjectProphecy
+     * @var ObjectProphecy<CollectionRepository>
      */
     private $collectionRepository;
 
     /**
-     * @var UserRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<UserRepositoryInterface>
      */
     private $userRepository;
 
     /**
-     * @var CategoryRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<CategoryRepositoryInterface>
      */
     private $categoryRepository;
 
     /**
-     * @var TargetGroupRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<TargetGroupRepositoryInterface>
      */
     private $targetGroupRepository;
 
     /**
-     * @var EntityManager|ObjectProphecy
+     * @var ObjectProphecy<EntityManager>
      */
     private $em;
 
     /**
-     * @var StorageInterface|ObjectProphecy
+     * @var ObjectProphecy<StorageInterface>
      */
     private $storage;
 
     /**
-     * @var FileValidatorInterface|ObjectProphecy
+     * @var ObjectProphecy<FileValidatorInterface>
      */
     private $validator;
 
     /**
-     * @var FormatManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<FormatManagerInterface>
      */
     private $formatManager;
 
     /**
-     * @var TagManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<TagManagerInterface>
      */
     private $tagManager;
 
     /**
-     * @var TypeManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<TypeManagerInterface>
      */
     private $typeManager;
 
     /**
-     * @var PathCleanupInterface|ObjectProphecy
+     * @var ObjectProphecy<PathCleanupInterface>
      */
     private $pathCleaner;
 
     /**
-     * @var DomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DomainEventCollectorInterface>
      */
     private $domainEventCollector;
 
     /**
-     * @var TokenStorageInterface|ObjectProphecy
+     * @var ObjectProphecy<TokenStorageInterface>
      */
     private $tokenStorage;
 
     /**
-     * @var SecurityCheckerInterface|ObjectProphecy
+     * @var ObjectProphecy<SecurityCheckerInterface>
      */
     private $securityChecker;
 
     /**
-     * @var MediaPropertiesProviderInterface|ObjectProphecy
+     * @var ObjectProphecy<MediaPropertiesProviderInterface>
      */
     private $mediaPropertiesProvider;
 
     /**
-     * @var CategoryManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<CategoryManagerInterface>
      */
     private $categoryManager;
 

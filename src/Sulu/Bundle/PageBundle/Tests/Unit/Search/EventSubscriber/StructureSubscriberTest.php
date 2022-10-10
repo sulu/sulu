@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Search\EventSubscriber;
 
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
@@ -27,7 +28,7 @@ use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 class StructureSubscriberTest extends TestCase
 {
     /**
-     * @var SearchManagerInterface
+     * @var ObjectProphecy<SearchManagerInterface>
      */
     private $searchManager;
 

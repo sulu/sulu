@@ -47,42 +47,42 @@ use Sulu\Component\Webspace\Webspace;
 class ContentRepositoryTest extends TestCase
 {
     /**
-     * @var ObjectProphecy|SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $session;
 
     /**
-     * @var ObjectProphecy|SessionManagerInterface
+     * @var ObjectProphecy<SessionManagerInterface>
      */
     private $sessionManager;
 
     /**
-     * @var ObjectProphecy|DocumentManagerInterface
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 
     /**
-     * @var ObjectProphecy|PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $propertyEncoder;
 
     /**
-     * @var ObjectProphecy|WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var ObjectProphecy|LocalizationFinderInterface
+     * @var ObjectProphecy<LocalizationFinderInterface>
      */
     private $localizationFinder;
 
     /**
-     * @var ObjectProphecy|StructureManagerInterface
+     * @var ObjectProphecy<StructureManagerInterface>
      */
     private $structureManager;
 
     /**
-     * @var ObjectProphecy|SuluNodeHelper
+     * @var ObjectProphecy<SuluNodeHelper>
      */
     private $nodeHelper;
 
@@ -92,12 +92,12 @@ class ContentRepositoryTest extends TestCase
     private $contentRepository;
 
     /**
-     * @var ObjectProphecy|SystemStoreInterface
+     * @var ObjectProphecy<SystemStoreInterface>
      */
     private $systemStore;
 
     /**
-     * @var ObjectProphecy|QueryInterface
+     * @var ObjectProphecy<QueryInterface>
      */
     private $query;
 

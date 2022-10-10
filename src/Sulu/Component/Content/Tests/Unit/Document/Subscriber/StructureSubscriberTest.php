@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\ContentTypeInterface;
@@ -33,57 +34,57 @@ use Sulu\Component\Webspace\Webspace;
 class StructureSubscriberTest extends SubscriberTestCase
 {
     /**
-     * @var ContentTypeManagerInterface
+     * @var ObjectProphecy<ContentTypeManagerInterface>
      */
     private $contentTypeManager;
 
     /**
-     * @var PropertyMetadata
+     * @var ObjectProphecy<PropertyMetadata>
      */
     private $structureProperty;
 
     /**
-     * @var ContentTypeInterface
+     * @var ObjectProphecy<ContentTypeInterface>
      */
     private $contentType;
 
     /**
-     * @var PropertyValue
+     * @var ObjectProphecy<PropertyValue>
      */
     private $propertyValue;
 
     /**
-     * @var TranslatedProperty
+     * @var ObjectProphecy<TranslatedProperty>
      */
     private $legacyProperty;
 
     /**
-     * @var StructureMetadata
+     * @var ObjectProphecy<StructureMetadata>
      */
     private $structureMetadata;
 
     /**
-     * @var ManagedStructure
+     * @var ObjectProphecy<ManagedStructure>
      */
     private $structure;
 
     /**
-     * @var LegacyPropertyFactory
+     * @var ObjectProphecy<LegacyPropertyFactory>
      */
     private $propertyFactory;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $inspector;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var StructureBehavior
+     * @var ObjectProphecy<StructureBehavior>
      */
     private $document;
 

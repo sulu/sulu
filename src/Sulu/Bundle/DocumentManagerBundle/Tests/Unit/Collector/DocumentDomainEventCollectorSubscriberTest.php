@@ -21,7 +21,7 @@ use Sulu\Component\DocumentManager\Event\FlushEvent;
 class DocumentDomainEventCollectorSubscriberTest extends TestCase
 {
     /**
-     * @var DocumentDomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DocumentDomainEventCollectorInterface>
      */
     private $documentDomainEventCollector;
 

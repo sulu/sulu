@@ -22,7 +22,7 @@ use Symfony\Component\Filesystem\Filesystem;
 class FormatCacheRegenerateCommandTest extends TestCase
 {
     /**
-     * @var ObjectProphecy|FormatManagerInterface
+     * @var ObjectProphecy<FormatManagerInterface>
      */
     private $formatManager;
 

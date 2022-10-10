@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\Entity\PermissionInheritanceInterface;
 use Sulu\Bundle\SecurityBundle\EventListener\PermissionInheritanceSubscriber;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
@@ -22,12 +23,12 @@ use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInte
 class PermissionInheritanceSubscriberTest extends TestCase
 {
     /**
-     * @var AccessControlManagerInterface
+     * @var ObjectProphecy<AccessControlManagerInterface>
      */
     private $accessControlManager;
 
     /**
-     * @var EntityManagerInterface
+     * @var ObjectProphecy<EntityManagerInterface>
      */
     private $entityManager;
 

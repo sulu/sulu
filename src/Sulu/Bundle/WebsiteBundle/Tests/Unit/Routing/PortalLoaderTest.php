@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Routing;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\Routing\PortalLoader;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -30,17 +31,17 @@ class PortalLoaderTest extends TestCase
     private $portalLoader;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var LoaderResolverInterface
+     * @var ObjectProphecy<LoaderResolverInterface>
      */
     private $loaderResolver;
 
     /**
-     * @var LoaderInterface
+     * @var ObjectProphecy<LoaderInterface>
      */
     private $loader;
 

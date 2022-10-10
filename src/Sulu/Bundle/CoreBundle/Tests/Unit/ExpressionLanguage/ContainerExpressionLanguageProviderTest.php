@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CoreBundle\Tests\Unit\ExpressionLanguage;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\CoreBundle\ExpressionLanguage\ContainerExpressionLanguageProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -24,7 +25,7 @@ class ContainerExpressionLanguageProviderTest extends TestCase
     private $expressionLanguage;
 
     /**
-     * @var ContainerInterface
+     * @var ObjectProphecy<ContainerInterface>
      */
     private $container;
 

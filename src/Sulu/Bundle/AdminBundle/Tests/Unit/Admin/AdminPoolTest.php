@@ -25,12 +25,12 @@ class AdminPoolTest extends TestCase
     protected $adminPool;
 
     /**
-     * @var Admin|ObjectProphecy
+     * @var ObjectProphecy<Admin>
      */
     protected $admin1;
 
     /**
-     * @var Admin|ObjectProphecy
+     * @var ObjectProphecy<Admin>
      */
     protected $admin2;
 

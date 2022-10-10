@@ -20,7 +20,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class DispatchSpecificDomainEventSubscriberTest extends TestCase
 {
     /**
-     * @var EventDispatcherInterface|ObjectProphecy
+     * @var ObjectProphecy<EventDispatcherInterface>
      */
     private $eventDispatcher;
 

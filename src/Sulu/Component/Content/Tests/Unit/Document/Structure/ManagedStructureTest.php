@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Property;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -30,52 +31,52 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
 class ManagedStructureTest extends TestCase
 {
     /**
-     * @var ContentTypeManagerInterface
+     * @var ObjectProphecy<ContentTypeManagerInterface>
      */
     private $contentTypeManager;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var StructureMetadata
+     * @var ObjectProphecy<StructureMetadata>
      */
     private $structureMetadata;
 
     /**
-     * @var StructureBehavior
+     * @var ObjectProphecy<StructureBehavior>
      */
     private $document;
 
     /**
-     * @var ContentTypeInterface
+     * @var ObjectProphecy<ContentTypeInterface>
      */
     private $contentType;
 
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $encoder;
 
     /**
-     * @var PropertyMetadata
+     * @var ObjectProphecy<PropertyMetadata>
      */
     private $propertyMetadata;
 
     /**
-     * @var LegacyPropertyFactory
+     * @var ObjectProphecy<LegacyPropertyFactory>
      */
     private $propertyFactory;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $inspector;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $legacyProperty;
 

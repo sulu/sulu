@@ -12,6 +12,7 @@
 namespace vendor\sulu\sulu\src\Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Initialalizer;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\InitializerInterface;
 use Symfony\Component\Console\Output\NullOutput;
@@ -20,22 +21,22 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class InitializerTest extends TestCase
 {
     /**
-     * @var ContainerInterface
+     * @var ObjectProphecy<ContainerInterface>
      */
     private $container;
 
     /**
-     * @var InitializerInterface
+     * @var ObjectProphecy<InitializerInterface>
      */
     private $initializer1;
 
     /**
-     * @var InitializerInterface
+     * @var ObjectProphecy<InitializerInterface>
      */
     private $initializer2;
 
     /**
-     * @var InitializerInterface
+     * @var ObjectProphecy<InitializerInterface>
      */
     private $initializer3;
 

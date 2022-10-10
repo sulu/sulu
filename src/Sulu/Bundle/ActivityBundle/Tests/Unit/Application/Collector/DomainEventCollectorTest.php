@@ -21,7 +21,7 @@ use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 class DomainEventCollectorTest extends TestCase
 {
     /**
-     * @var DomainEventDispatcherInterface|ObjectProphecy
+     * @var ObjectProphecy<DomainEventDispatcherInterface>
      */
     private $domainEventDispatcher;
 

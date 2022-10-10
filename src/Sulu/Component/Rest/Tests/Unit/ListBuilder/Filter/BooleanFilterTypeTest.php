@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Filter;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Filter\BooleanFilterType;
 use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
@@ -25,7 +26,7 @@ class BooleanFilterTypeTest extends TestCase
     private $booleanFilterType;
 
     /**
-     * @var ListBuilderInterface
+     * @var ObjectProphecy<ListBuilderInterface>
      */
     private $listBuilder;
 

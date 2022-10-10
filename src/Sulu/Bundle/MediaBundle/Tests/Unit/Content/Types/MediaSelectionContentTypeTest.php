@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Tests\Unit\Content\Types;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
 use Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -32,12 +33,12 @@ class MediaSelectionContentTypeTest extends TestCase
     private $mediaSelection;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $mediaReferenceStore;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
@@ -47,7 +48,7 @@ class MediaSelectionContentTypeTest extends TestCase
     private $webspace;
 
     /**
-     * @var MediaManagerInterface
+     * @var ObjectProphecy<MediaManagerInterface>
      */
     private $mediaManager;
 

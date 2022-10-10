@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Tests\Unit\Teaser;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderInterface;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
 use Sulu\Bundle\PageBundle\Teaser\Teaser;
@@ -21,7 +22,7 @@ use Sulu\Bundle\PageBundle\Teaser\TeaserManagerInterface;
 class TeaserManagerTest extends TestCase
 {
     /**
-     * @var TeaserProviderPoolInterface
+     * @var ObjectProphecy<TeaserProviderPoolInterface>
      */
     private $providerPool;
 

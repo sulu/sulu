@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Markup\Link;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Markup\Link\MediaLinkProvider;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -19,12 +20,12 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 class MediaLinkProviderTest extends TestCase
 {
     /**
-     * @var MediaRepositoryInterface
+     * @var ObjectProphecy<MediaRepositoryInterface>
      */
     private $mediaRepository;
 
     /**
-     * @var MediaManagerInterface
+     * @var ObjectProphecy<MediaManagerInterface>
      */
     private $mediaManager;
 

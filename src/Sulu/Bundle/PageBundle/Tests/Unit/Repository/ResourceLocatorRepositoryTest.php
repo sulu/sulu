@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Repository;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Repository\ResourceLocatorRepository;
 use Sulu\Bundle\PageBundle\Repository\ResourceLocatorRepositoryInterface;
 use Sulu\Component\Content\Compat\Property;
@@ -35,22 +36,22 @@ class ResourceLocatorRepositoryTest extends TestCase
     private $repository;
 
     /**
-     * @var StructureManagerInterface
+     * @var ObjectProphecy<StructureManagerInterface>
      */
     private $structureManager;
 
     /**
-     * @var ResourceLocatorStrategyInterface
+     * @var ObjectProphecy<ResourceLocatorStrategyInterface>
      */
     private $resourceLocatorStrategy;
 
     /**
-     * @var ResourceLocatorStrategyPoolInterface
+     * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
     private $resourceLocatorStrategyPool;
 
     /**
-     * @var DocumentManagerInterface
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 

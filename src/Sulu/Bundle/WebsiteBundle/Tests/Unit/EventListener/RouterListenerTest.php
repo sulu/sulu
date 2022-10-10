@@ -12,6 +12,7 @@
 namespace Unit\Sulu\Bundle\WebsiteBundle\EventListener;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\EventListener\RouterListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,12 +23,12 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class RouterListenerTest extends TestCase
 {
     /**
-     * @var BaseRouteListener
+     * @var ObjectProphecy<BaseRouteListener>
      */
     private $baseRouteListener;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
@@ -37,7 +38,7 @@ class RouterListenerTest extends TestCase
     private $routerListener;
 
     /**
-     * @var HttpKernelInterface
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $kernel;
 

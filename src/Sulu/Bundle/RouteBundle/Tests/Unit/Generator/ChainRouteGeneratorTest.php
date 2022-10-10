@@ -13,6 +13,7 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\Generator;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\RouteBundle\Entity\Route;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Exception\MissingClassMappingConfigurationException;
@@ -30,12 +31,12 @@ class ChainRouteGeneratorTest extends TestCase
     private $mappings;
 
     /**
-     * @var RouteGeneratorInterface
+     * @var ObjectProphecy<RouteGeneratorInterface>
      */
     private $routeGenerator;
 
     /**
-     * @var RouteRepositoryInterface
+     * @var ObjectProphecy<RouteRepositoryInterface>
      */
     private $routeRepository;
 

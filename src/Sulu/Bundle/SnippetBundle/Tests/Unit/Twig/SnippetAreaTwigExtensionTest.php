@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Twig;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
@@ -25,27 +26,27 @@ use Sulu\Component\Webspace\Webspace;
 class SnippetAreaTwigExtensionTest extends TestCase
 {
     /**
-     * @var DefaultSnippetManagerInterface
+     * @var ObjectProphecy<DefaultSnippetManagerInterface>
      */
     private $defaultSnippetManager;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var Webspace
+     * @var ObjectProphecy<Webspace>
      */
     private $webspace;
 
     /**
-     * @var Localization
+     * @var ObjectProphecy<Localization>
      */
     private $localization;
 
     /**
-     * @var SnippetResolverInterface
+     * @var ObjectProphecy<SnippetResolverInterface>
      */
     private $snippetResolver;
 

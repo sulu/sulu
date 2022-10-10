@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\ResourceLocator\Strategy;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -34,37 +35,37 @@ use Sulu\Component\Util\SuluNodeHelper;
 class TreeLeafEditStrategyTest extends TestCase
 {
     /**
-     * @var ResourceLocatorMapperInterface
+     * @var ObjectProphecy<ResourceLocatorMapperInterface>
      */
     private $mapper;
 
     /**
-     * @var PathCleanupInterface
+     * @var ObjectProphecy<PathCleanupInterface>
      */
     private $cleaner;
 
     /**
-     * @var StructureManagerInterface
+     * @var ObjectProphecy<StructureManagerInterface>
      */
     private $structureManager;
 
     /**
-     * @var ContentTypeManagerInterface
+     * @var ObjectProphecy<ContentTypeManagerInterface>
      */
     private $contentTypeManager;
 
     /**
-     * @var SuluNodeHelper
+     * @var ObjectProphecy<SuluNodeHelper>
      */
     private $nodeHelper;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 
     /**
-     * @var DocumentManagerInterface
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 

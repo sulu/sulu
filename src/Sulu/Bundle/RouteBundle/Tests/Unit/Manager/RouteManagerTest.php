@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\RouteBundle\Tests\Unit\Manager;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\RouteBundle\Entity\Route;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Exception\RouteIsNotUniqueException;
@@ -26,17 +27,17 @@ use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 class RouteManagerTest extends TestCase
 {
     /**
-     * @var ChainRouteGeneratorInterface
+     * @var ObjectProphecy<ChainRouteGeneratorInterface>
      */
     private $chainRouteGenerator;
 
     /**
-     * @var RouteRepositoryInterface
+     * @var ObjectProphecy<RouteRepositoryInterface>
      */
     private $routeRepository;
 
     /**
-     * @var ConflictResolverInterface
+     * @var ObjectProphecy<ConflictResolverInterface>
      */
     private $conflictResolver;
 
@@ -46,7 +47,7 @@ class RouteManagerTest extends TestCase
     private $manager;
 
     /**
-     * @var RoutableInterface
+     * @var ObjectProphecy<RoutableInterface>
      */
     private $entity;
 

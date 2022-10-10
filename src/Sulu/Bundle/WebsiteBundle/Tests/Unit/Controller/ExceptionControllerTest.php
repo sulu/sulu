@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Controller;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\Controller\ExceptionController;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -36,22 +37,22 @@ class ExceptionControllerTest extends TestCase
     private $innerExceptionController;
 
     /**
-     * @var Environment
+     * @var ObjectProphecy<Environment>
      */
     private $twig;
 
     /**
-     * @var FilesystemLoader
+     * @var ObjectProphecy<FilesystemLoader>
      */
     private $loader;
 
     /**
-     * @var ParameterResolverInterface
+     * @var ObjectProphecy<ParameterResolverInterface>
      */
     private $parameterResolver;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 

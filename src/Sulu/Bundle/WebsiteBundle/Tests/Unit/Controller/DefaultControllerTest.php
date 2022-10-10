@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Controller;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\Controller\DefaultController;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
@@ -28,20 +29,44 @@ class DefaultControllerTest extends TestCase
 {
     private $defaultController;
 
+    /**
+     * @var ObjectProphecy<ContainerInterface>
+     */
     private $container;
 
+    /**
+     * @var ObjectProphecy<Environment>
+     */
     private $twig;
 
+    /**
+     * @var ObjectProphecy<FilesystemLoader>
+     */
     private $twigLoader;
 
+    /**
+     * @var ObjectProphecy<Request>
+     */
     private $request;
 
+    /**
+     * @var ObjectProphecy<RequestStack>
+     */
     private $requestStack;
 
+    /**
+     * @var ObjectProphecy<PageBridge>
+     */
     private $structure;
 
+    /**
+     * @var ObjectProphecy<ParameterResolverInterface>
+     */
     private $parameterResolver;
 
+    /**
+     * @var ObjectProphecy<RequestAnalyzerInterface>
+     */
     private $requestAnalyzer;
 
     public function setUp(): void

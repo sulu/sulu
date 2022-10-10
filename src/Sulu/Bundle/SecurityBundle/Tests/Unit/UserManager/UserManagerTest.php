@@ -30,37 +30,37 @@ class UserManagerTest extends TestCase
     private $userManager;
 
     /**
-     * @var ObjectProphecy|UserRepositoryInterface
+     * @var ObjectProphecy<UserRepositoryInterface>
      */
     private $userRepository;
 
     /**
-     * @var ObjectProphecy|DomainEventCollectorInterface
+     * @var ObjectProphecy<DomainEventCollectorInterface>
      */
     private $eventCollector;
 
     /**
-     * @var ObjectProphecy|ObjectManager
+     * @var ObjectProphecy<ObjectManager>
      */
     private $objectManager;
 
     /**
-     * @var ObjectProphecy|RoleRepositoryInterface
+     * @var ObjectProphecy<RoleRepositoryInterface>
      */
     private $roleRepository;
 
     /**
-     * @var ObjectProphecy|GroupRepository
+     * @var ObjectProphecy<GroupRepository>
      */
     private $groupRepository;
 
     /**
-     * @var ObjectProphecy|SaltGenerator
+     * @var ObjectProphecy<SaltGenerator>
      */
     private $saltGenerator;
 
     /**
-     * @var ObjectProphecy|ContactManager
+     * @var ObjectProphecy<ContactManager>
      */
     private $contactManager;
 

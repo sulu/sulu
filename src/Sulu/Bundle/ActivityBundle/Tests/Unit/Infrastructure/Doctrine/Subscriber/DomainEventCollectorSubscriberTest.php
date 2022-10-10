@@ -21,7 +21,7 @@ use Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Subscriber\DomainEventCol
 class DomainEventCollectorSubscriberTest extends TestCase
 {
     /**
-     * @var DomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DomainEventCollectorInterface>
      */
     private $domainEventCollector;
 
