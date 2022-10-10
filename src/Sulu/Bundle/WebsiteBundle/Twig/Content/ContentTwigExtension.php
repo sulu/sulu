@@ -77,6 +77,11 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
     private $requestStack;
 
     /**
+     * @var array
+     */
+    private $enabledTwigAttributes;
+
+    /**
      * Constructor.
      */
     public function __construct(
@@ -87,7 +92,10 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         LoggerInterface $logger = null,
         $securityChecker = null,
         WebspaceManagerInterface $webspaceManager = null,
-        RequestStack $requestStack = null
+        RequestStack $requestStack = null,
+        array $enabledTwigAttributes = [
+            'urls' => true,
+        ]
     ) {
         $this->contentMapper = $contentMapper;
         $this->structureResolver = $structureResolver;
@@ -115,6 +123,8 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
                 \E_USER_DEPRECATED
             );
         }
+
+        $this->enabledTwigAttributes = $enabledTwigAttributes;
     }
 
     public function getFunctions()
@@ -199,20 +209,28 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         array $includedProperties = null
     ) {
         if (null === $this->requestStack) {
-            return $this->structureResolver->resolve($structure, $loadExcerpt, $includedProperties);
+            $structureData = $this->structureResolver->resolve($structure, $loadExcerpt, $includedProperties);
+        } else {
+            $currentRequest = $this->requestStack->getCurrentRequest();
+
+            // This sets query parameters, request parameters and files to an empty array
+            $subRequest = $currentRequest->duplicate([], [], null, null, []);
+            $this->requestStack->push($subRequest);
+
+            try {
+                $structureData = $this->structureResolver->resolve($structure, $loadExcerpt, $includedProperties);
+            } finally {
+                $this->requestStack->pop();
+            }
         }
 
-        $currentRequest = $this->requestStack->getCurrentRequest();
-
-        // This sets query parameters, request parameters and files to an empty array
-        $subRequest = $currentRequest->duplicate([], [], null, null, []);
-        $this->requestStack->push($subRequest);
-
-        try {
-            return $this->structureResolver->resolve($structure, $loadExcerpt, $includedProperties);
-        } finally {
-            $this->requestStack->pop();
+        if ($this->enabledTwigAttributes['urls'] ?? true) {
+            @\trigger_error('Enabling the "urls" parameter is deprecated since Sulu 2.2', \E_USER_DEPRECATED);
+        } else {
+            unset($structureData['urls']);
         }
+
+        return $structureData;
     }
 
     private function resolveProperties(StructureInterface $contentStructure, array $properties): array
