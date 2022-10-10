@@ -16,8 +16,10 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluatorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -238,6 +240,8 @@ class TargetGroupSubscriber implements EventSubscriberInterface
         if ($this->preview
             || 0 !== \strpos($response->headers->get('Content-Type'), 'text/html')
             || Request::METHOD_GET !== $request->getMethod()
+            || $response instanceof BinaryFileResponse
+            || $response instanceof StreamedResponse
         ) {
             return;
         }
