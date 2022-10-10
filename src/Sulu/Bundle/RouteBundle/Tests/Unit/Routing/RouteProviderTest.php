@@ -14,6 +14,7 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\Routing;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
@@ -38,22 +39,22 @@ class RouteProviderTest extends TestCase
     private $routeProvider;
 
     /**
-     * @var RouteRepositoryInterface
+     * @var ObjectProphecy<RouteRepositoryInterface>
      */
     private $routeRepository;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var RouteDefaultsProviderInterface
+     * @var ObjectProphecy<RouteDefaultsProviderInterface>
      */
     private $defaultsProvider;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 

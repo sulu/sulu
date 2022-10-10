@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Unit\EventListener;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\EventListener\UserLocaleListener;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,22 +29,22 @@ class UserLocaleListenerTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var TokenInterface
+     * @var ObjectProphecy<TokenInterface>
      */
     private $token;
 
     /**
-     * @var TokenStorageInterface
+     * @var ObjectProphecy<TokenStorageInterface>
      */
     private $tokenStorage;
 
     /**
-     * @var Translator
+     * @var ObjectProphecy<Translator>
      */
     private $translator;
 
     /**
-     * @var Request
+     * @var ObjectProphecy<Request>
      */
     private $request;
 
@@ -58,7 +59,7 @@ class UserLocaleListenerTest extends TestCase
     private $userLocaleListener;
 
     /**
-     * @var HttpKernelInterface
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $kernel;
 

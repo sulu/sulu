@@ -16,6 +16,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
@@ -28,7 +29,7 @@ class CacheInvalidationListenerTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var CacheManager
+     * @var ObjectProphecy<CacheManager>
      */
     private $cacheManager;
 

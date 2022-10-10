@@ -17,6 +17,7 @@ use PHPCR\SessionInterface;
 use PHPCR\WorkspaceInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\WorkspaceInitializer;
 use Symfony\Component\Console\Output\BufferedOutput;
 
@@ -25,17 +26,17 @@ class WorkspaceInitializerTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $session1;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $session2;
 
     /**
-     * @var ConnectionRegistry
+     * @var ObjectProphecy<ConnectionRegistry>
      */
     private $connectionRegistry;
 
@@ -45,12 +46,12 @@ class WorkspaceInitializerTest extends TestCase
     private $initializer;
 
     /**
-     * @var WorkspaceInterface
+     * @var ObjectProphecy<WorkspaceInterface>
      */
     private $workspace1;
 
     /**
-     * @var WorkspaceInterface
+     * @var ObjectProphecy<WorkspaceInterface>
      */
     private $workspace2;
 

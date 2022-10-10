@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -24,12 +25,12 @@ class SubscriberTestCase extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var PersistEvent
+     * @var ObjectProphecy<PersistEvent>
      */
     protected $persistEvent;
 
     /**
-     * @var HydrateEvent
+     * @var ObjectProphecy<HydrateEvent>
      */
     protected $hydrateEvent;
 
@@ -39,22 +40,22 @@ class SubscriberTestCase extends TestCase
     protected $notImplementing;
 
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     protected $encoder;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     protected $node;
 
     /**
-     * @var DocumentAccessor
+     * @var ObjectProphecy<DocumentAccessor>
      */
     protected $accessor;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     protected $parentNode;
 

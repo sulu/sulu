@@ -29,12 +29,12 @@ class PreviewTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var Cache
+     * @var ObjectProphecy<Cache>
      */
     private $cache;
 
     /**
-     * @var PreviewRendererInterface
+     * @var ObjectProphecy<PreviewRendererInterface>
      */
     private $renderer;
 
@@ -49,7 +49,7 @@ class PreviewTest extends TestCase
     private $preview;
 
     /**
-     * @var PreviewObjectProviderInterface
+     * @var ObjectProphecy<PreviewObjectProviderInterface>
      */
     private $provider;
 
@@ -69,7 +69,7 @@ class PreviewTest extends TestCase
     private $webspaceKey = 'sulu_io';
 
     /**
-     * @var \stdClass|ObjectProphecy
+     * @var ObjectProphecy<\stdClass>
      */
     private $object;
 

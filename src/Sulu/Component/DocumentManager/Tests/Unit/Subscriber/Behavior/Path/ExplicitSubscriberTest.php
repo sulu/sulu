@@ -15,6 +15,7 @@ use PHPCR\ItemExistsException;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
@@ -28,7 +29,7 @@ class ExplicitSubscriberTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var PersistEvent
+     * @var ObjectProphecy<PersistEvent>
      */
     private $persistEvent;
 
@@ -38,22 +39,22 @@ class ExplicitSubscriberTest extends TestCase
     private $document;
 
     /**
-     * @var NodeManager
+     * @var ObjectProphecy<NodeManager>
      */
     private $nodeManager;
 
     /**
-     * @var ConfigureOptionsEvent
+     * @var ObjectProphecy<ConfigureOptionsEvent>
      */
     private $configureEvent;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $parentNode;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 

@@ -18,6 +18,7 @@ use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Hash\HasherInterface;
 use Sulu\Component\Hash\Serializer\Subscriber\HashSerializeEventSubscriber;
 use Sulu\Component\Persistence\Model\AuditableInterface;
@@ -27,7 +28,7 @@ class HashSerializeEventSubscriberTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var HasherInterface
+     * @var ObjectProphecy<HasherInterface>
      */
     private $hasher;
 
@@ -37,12 +38,12 @@ class HashSerializeEventSubscriberTest extends TestCase
     private $hashSerializeEventSubscriber;
 
     /**
-     * @var SerializationVisitorInterface
+     * @var ObjectProphecy<SerializationVisitorInterface>
      */
     private $visitor;
 
     /**
-     * @var ObjectEvent
+     * @var ObjectProphecy<ObjectEvent>
      */
     private $objectEvent;
 

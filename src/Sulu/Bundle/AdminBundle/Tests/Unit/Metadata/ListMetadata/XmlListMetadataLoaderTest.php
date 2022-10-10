@@ -31,12 +31,12 @@ class XmlListMetadataLoaderTest extends TestCase
     private $xmlListMetadataLoader;
 
     /**
-     * @var TranslatorInterface|ObjectProphecy
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 
     /**
-     * @var FieldDescriptorFactoryInterface|ObjectProphecy
+     * @var ObjectProphecy<FieldDescriptorFactoryInterface>
      */
     private $fieldDescriptorFactory;
 

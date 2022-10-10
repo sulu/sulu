@@ -15,6 +15,7 @@ use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
@@ -33,22 +34,22 @@ class DoctrineAccessControlProviderTest extends TestCase
     private $doctrineAccessControlProvider;
 
     /**
-     * @var ObjectManager
+     * @var ObjectProphecy<ObjectManager>
      */
     private $objectManager;
 
     /**
-     * @var RoleRepositoryInterface
+     * @var ObjectProphecy<RoleRepositoryInterface>
      */
     private $roleRepository;
 
     /**
-     * @var AccessControlRepositoryInterface
+     * @var ObjectProphecy<AccessControlRepositoryInterface>
      */
     private $accessControlRepository;
 
     /**
-     * @var MaskConverterInterface
+     * @var ObjectProphecy<MaskConverterInterface>
      */
     private $maskConverter;
 

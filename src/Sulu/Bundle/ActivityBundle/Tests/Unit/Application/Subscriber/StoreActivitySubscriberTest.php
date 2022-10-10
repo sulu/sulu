@@ -24,7 +24,7 @@ class StoreActivitySubscriberTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var ActivityRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<ActivityRepositoryInterface>
      */
     private $activityRepository;
 

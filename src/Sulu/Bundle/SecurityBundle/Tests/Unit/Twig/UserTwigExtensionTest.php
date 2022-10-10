@@ -15,6 +15,7 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Twig\UserTwigExtension;
@@ -34,7 +35,7 @@ class UserTwigExtensionTest extends TestCase
     private $cache;
 
     /**
-     * @var UserRepository
+     * @var ObjectProphecy<UserRepository>
      */
     private $userRepository;
 

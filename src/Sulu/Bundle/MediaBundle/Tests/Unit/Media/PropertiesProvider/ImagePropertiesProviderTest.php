@@ -28,7 +28,7 @@ class ImagePropertiesProviderTest extends TestCase
     use CreateUploadedFileTrait;
 
     /**
-     * @var ObjectProphecy|ImagineInterface
+     * @var ObjectProphecy<ImagineInterface>
      */
     private $imagine;
 

@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\LocalizationFinder;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
@@ -32,17 +33,17 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     public const FIX_WEBSPACE = 'sulu_io';
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $inspector;
 
     /**
-     * @var DocumentRegistry
+     * @var ObjectProphecy<DocumentRegistry>
      */
     private $registry;
 
@@ -52,17 +53,17 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     private $document;
 
     /**
-     * @var Webspace
+     * @var ObjectProphecy<Webspace>
      */
     private $webspace;
 
     /**
-     * @var Localization
+     * @var ObjectProphecy<Localization>
      */
     private $localization1;
 
     /**
-     * @var Localization
+     * @var ObjectProphecy<Localization>
      */
     private $localization2;
 

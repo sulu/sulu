@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Component\Content\Document\Behavior\AuthorBehavior;
@@ -32,22 +33,22 @@ class AuthorSubscriberTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $propertyEncoder;
 
     /**
-     * @var UserRepositoryInterface
+     * @var ObjectProphecy<UserRepositoryInterface>
      */
     protected $userRepository;
 
     /**
-     * @var MetadataFactoryInterface
+     * @var ObjectProphecy<MetadataFactoryInterface>
      */
     private $metadataFactory;
 
     /**
-     * @var Metadata
+     * @var ObjectProphecy<Metadata>
      */
     private $metadata;
 

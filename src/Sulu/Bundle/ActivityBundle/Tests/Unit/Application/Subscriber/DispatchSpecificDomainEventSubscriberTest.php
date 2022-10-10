@@ -23,7 +23,7 @@ class DispatchSpecificDomainEventSubscriberTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var EventDispatcherInterface|ObjectProphecy
+     * @var ObjectProphecy<EventDispatcherInterface>
      */
     private $eventDispatcher;
 

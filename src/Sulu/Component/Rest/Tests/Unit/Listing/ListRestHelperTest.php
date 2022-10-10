@@ -14,6 +14,7 @@ namespace Sulu\Component\Rest\Tests\Unit\Listing;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Rest\Listing\ListRestHelper;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,6 +22,9 @@ class ListRestHelperTest extends TestCase
 {
     use ProphecyTrait;
 
+    /**
+     * @var ObjectProphecy<ObjectManager>
+     */
     protected $em;
 
     public function setUp(): void

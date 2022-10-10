@@ -24,7 +24,7 @@ class DocumentDomainEventCollectorTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var DomainEventDispatcherInterface|ObjectProphecy
+     * @var ObjectProphecy<DomainEventDispatcherInterface>
      */
     private $domainEventDispatcher;
 

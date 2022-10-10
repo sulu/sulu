@@ -22,6 +22,7 @@ use PHPCR\Version\VersionManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\Behavior\VersionBehavior;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
@@ -38,22 +39,22 @@ class VersionSubscriberTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $session;
 
     /**
-     * @var Workspace
+     * @var ObjectProphecy<Workspace>
      */
     private $workspace;
 
     /**
-     * @var VersionManagerInterface
+     * @var ObjectProphecy<VersionManagerInterface>
      */
     private $versionManager;
 
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $propertyEncoder;
 

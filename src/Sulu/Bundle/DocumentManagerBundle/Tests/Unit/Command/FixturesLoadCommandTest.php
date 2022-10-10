@@ -14,6 +14,7 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Command\FixturesLoadCommand;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
@@ -30,12 +31,12 @@ class FixturesLoadCommandTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var DocumentExecutor
+     * @var ObjectProphecy<DocumentExecutor>
      */
     private $executor;
 
     /**
-     * @var DocumentFixtureInterface
+     * @var ObjectProphecy<DocumentFixtureInterface>
      */
     private $fixture1;
 

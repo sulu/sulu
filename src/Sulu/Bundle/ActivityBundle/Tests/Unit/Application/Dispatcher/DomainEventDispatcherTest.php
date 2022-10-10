@@ -24,7 +24,7 @@ class DomainEventDispatcherTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var EventDispatcherInterface|ObjectProphecy
+     * @var ObjectProphecy<EventDispatcherInterface>
      */
     private $innerEventDispatcher;
 

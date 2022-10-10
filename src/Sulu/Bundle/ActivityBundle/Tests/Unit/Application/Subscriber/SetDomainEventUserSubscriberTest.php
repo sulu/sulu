@@ -25,7 +25,7 @@ class SetDomainEventUserSubscriberTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var Security|ObjectProphecy
+     * @var ObjectProphecy<Security>
      */
     private $security;
 

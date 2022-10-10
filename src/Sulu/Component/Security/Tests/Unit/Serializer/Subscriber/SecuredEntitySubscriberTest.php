@@ -17,6 +17,7 @@ use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
@@ -35,32 +36,32 @@ class SecuredEntitySubscriberTest extends TestCase
     private $securedEntitySubscriber;
 
     /**
-     * @var AccessControlManagerInterface
+     * @var ObjectProphecy<AccessControlManagerInterface>
      */
     private $accessControlManager;
 
     /**
-     * @var TokenStorageInterface
+     * @var ObjectProphecy<TokenStorageInterface>
      */
     private $tokenStorage;
 
     /**
-     * @var TokenInterface
+     * @var ObjectProphecy<TokenInterface>
      */
     private $token;
 
     /**
-     * @var ObjectEvent
+     * @var ObjectProphecy<ObjectEvent>
      */
     private $objectEvent;
 
     /**
-     * @var UserInterface
+     * @var ObjectProphecy<UserInterface>
      */
     private $user;
 
     /**
-     * @var SerializationVisitorInterface
+     * @var ObjectProphecy<SerializationVisitorInterface>
      */
     private $visitor;
 

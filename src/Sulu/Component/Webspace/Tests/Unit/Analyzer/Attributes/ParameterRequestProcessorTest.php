@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Tests\Unit\Analyzer\Attributes;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Webspace\Analyzer\Attributes\ParameterRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -24,7 +25,7 @@ class ParameterRequestProcessorTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 

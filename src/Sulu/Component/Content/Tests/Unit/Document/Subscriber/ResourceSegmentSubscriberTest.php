@@ -42,27 +42,27 @@ class ResourceSegmentSubscriberTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var PropertyEncoder|ObjectProphecy
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $encoder;
 
     /**
-     * @var DocumentManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 
     /**
-     * @var DocumentInspector|ObjectProphecy
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 
     /**
-     * @var ResourceLocatorStrategyInterface|ObjectProphecy
+     * @var ObjectProphecy<ResourceLocatorStrategyInterface>
      */
     private $resourceLocatorStrategy;
 
     /**
-     * @var ResourceLocatorStrategyPoolInterface|ObjectProphecy
+     * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
     private $resourceLocatorStrategyPool;
 
@@ -72,17 +72,17 @@ class ResourceSegmentSubscriberTest extends TestCase
     private $document;
 
     /**
-     * @var StructureMetadata|ObjectProphecy
+     * @var ObjectProphecy<StructureMetadata>
      */
     private $structureMetadata;
 
     /**
-     * @var SessionInterface|ObjectProphecy
+     * @var ObjectProphecy<SessionInterface>
      */
     private $defaultSession;
 
     /**
-     * @var SessionInterface|ObjectProphecy
+     * @var ObjectProphecy<SessionInterface>
      */
     private $liveSession;
 
@@ -92,7 +92,7 @@ class ResourceSegmentSubscriberTest extends TestCase
     private $resourceSegmentSubscriber;
 
     /**
-     * @var PropertyMetadata|ObjectProphecy
+     * @var ObjectProphecy<PropertyMetadata>
      */
     private $propertyMetaData;
 

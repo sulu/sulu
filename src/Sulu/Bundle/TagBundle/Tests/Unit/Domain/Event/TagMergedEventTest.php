@@ -22,7 +22,7 @@ class TagMergedEventTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var TagInterface|ObjectProphecy
+     * @var ObjectProphecy<TagInterface>
      */
     private $destinationTag;
 

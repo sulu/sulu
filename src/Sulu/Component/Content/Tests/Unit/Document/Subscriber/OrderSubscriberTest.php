@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 use PHPCR\NodeInterface;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
@@ -25,12 +26,12 @@ class OrderSubscriberTest extends SubscriberTestCase
     use ProphecyTrait;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $propertyEncoder;
 
@@ -40,7 +41,7 @@ class OrderSubscriberTest extends SubscriberTestCase
     private $subscriber;
 
     /**
-     * @var OrderBehavior
+     * @var ObjectProphecy<OrderBehavior>
      */
     private $document;
 

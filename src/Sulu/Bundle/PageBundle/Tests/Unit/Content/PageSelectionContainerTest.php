@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Content;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Content\PageSelectionContainer;
 use Sulu\Component\Content\Query\ContentQueryBuilder;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
@@ -28,12 +29,12 @@ class PageSelectionContainerTest extends TestCase
     private $container;
 
     /**
-     * @var ContentQueryExecutor
+     * @var ObjectProphecy<ContentQueryExecutor>
      */
     private $executor;
 
     /**
-     * @var ContentQueryBuilder
+     * @var ObjectProphecy<ContentQueryBuilder>
      */
     private $builder;
 

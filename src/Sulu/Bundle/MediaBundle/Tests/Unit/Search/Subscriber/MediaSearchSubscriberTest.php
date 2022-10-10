@@ -19,6 +19,7 @@ use Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -33,28 +34,58 @@ class MediaSearchSubscriberTest extends TestCase
 {
     use ProphecyTrait;
 
+    /**
+     * @var ObjectProphecy<MediaManagerInterface>
+     */
     private $mediaManager;
 
     private $subscriber;
 
+    /**
+     * @var ObjectProphecy<ClassMetadata>
+     */
     private $metadata;
 
+    /**
+     * @var ObjectProphecy<IndexMetadata>
+     */
     private $indexMetadata;
 
+    /**
+     * @var ObjectProphecy<FileVersionMeta>
+     */
     private $fileVersionMeta;
 
+    /**
+     * @var ObjectProphecy<FileVersion>
+     */
     private $fileVersion;
 
+    /**
+     * @var ObjectProphecy<File>
+     */
     private $file;
 
+    /**
+     * @var ObjectProphecy<Media>
+     */
     private $media;
 
+    /**
+     * @var ObjectProphecy<PreIndexEvent>
+     */
     private $event;
 
+    /**
+     * @var ObjectProphecy<Document>
+     */
     private $document;
 
     private $reflection;
 
+    /**
+     * @var ObjectProphecy<Factory>
+     */
     private $factory;
 
     public function setUp(): void

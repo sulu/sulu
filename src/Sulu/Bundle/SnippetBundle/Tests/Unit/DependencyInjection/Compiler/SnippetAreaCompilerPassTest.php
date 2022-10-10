@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\DependencyInjection\Compiler;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SnippetBundle\DependencyInjection\Compiler\SnippetAreaCompilerPass;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
@@ -23,12 +24,12 @@ class SnippetAreaCompilerPassTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var ContainerBuilder
+     * @var ObjectProphecy<ContainerBuilder>
      */
     protected $container;
 
     /**
-     * @var StructureMetadataFactoryInterface
+     * @var ObjectProphecy<StructureMetadataFactoryInterface>
      */
     protected $structureFactory;
 

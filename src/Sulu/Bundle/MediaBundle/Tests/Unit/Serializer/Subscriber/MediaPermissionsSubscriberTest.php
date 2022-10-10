@@ -38,32 +38,32 @@ class MediaPermissionsSubscriberTest extends TestCase
     private $mediaPermissionsSubscriber;
 
     /**
-     * @var AccessControlManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<AccessControlManagerInterface>
      */
     private $accessControlManager;
 
     /**
-     * @var TokenStorageInterface|ObjectProphecy
+     * @var ObjectProphecy<TokenStorageInterface>
      */
     private $tokenStorage;
 
     /**
-     * @var TokenInterface|ObjectProphecy
+     * @var ObjectProphecy<TokenInterface>
      */
     private $token;
 
     /**
-     * @var ObjectEvent|ObjectProphecy
+     * @var ObjectProphecy<ObjectEvent>
      */
     private $objectEvent;
 
     /**
-     * @var UserInterface|ObjectProphecy
+     * @var ObjectProphecy<UserInterface>
      */
     private $user;
 
     /**
-     * @var SerializationVisitorInterface|ObjectProphecy
+     * @var ObjectProphecy<SerializationVisitorInterface>
      */
     private $visitor;
 

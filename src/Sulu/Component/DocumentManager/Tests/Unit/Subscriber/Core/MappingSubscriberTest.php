@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Core;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
@@ -29,22 +30,22 @@ class MappingSubscriberTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var MetadataFactoryInterface
+     * @var ObjectProphecy<MetadataFactoryInterface>
      */
     private $metadataFactory;
 
     /**
-     * @var PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $encoder;
 
     /**
-     * @var Metadata\
+     * @var ObjectProphecy<Metadata>
      */
     private $metadata;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
@@ -54,27 +55,27 @@ class MappingSubscriberTest extends TestCase
     private $document;
 
     /**
-     * @var DocumentAccessor
+     * @var ObjectProphecy<DocumentAccessor>
      */
     private $accessor;
 
     /**
-     * @var PersistEvent
+     * @var ObjectProphecy<PersistEvent>
      */
     private $persistEvent;
 
     /**
-     * @var HydrateEvent
+     * @var ObjectProphecy<HydrateEvent>
      */
     private $hydrateEvent;
 
     /**
-     * @var ProxyFactory
+     * @var ObjectProphecy<ProxyFactory>
      */
     private $proxyFactory;
 
     /**
-     * @var DocumentRegistry
+     * @var ObjectProphecy<DocumentRegistry>
      */
     private $documentRegistry;
 

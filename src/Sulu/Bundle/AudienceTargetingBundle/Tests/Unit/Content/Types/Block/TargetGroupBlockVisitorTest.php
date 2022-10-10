@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Types\Block;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AudienceTargetingBundle\Content\Types\Block\TargetGroupBlockVisitor;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
@@ -23,7 +24,7 @@ class TargetGroupBlockVisitorTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var TargetGroupStoreInterface
+     * @var ObjectProphecy<TargetGroupStoreInterface>
      */
     private $targetGroupStore;
 

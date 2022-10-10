@@ -31,12 +31,12 @@ class XmlFormMetadataLoaderTest extends TestCase
     public const CACHE_DIR = __DIR__ . '/../../../../../../../tests/Resources/cache';
 
     /**
-     * @var ObjectProphecy&FormXmlLoader
+     * @var ObjectProphecy<FormXmlLoader>
      */
     private $formXmlLoader;
 
     /**
-     * @var ObjectProphecy&FieldMetadataValidatorInterface
+     * @var ObjectProphecy<FieldMetadataValidatorInterface>
      */
     private $fieldMetadataValidator;
 

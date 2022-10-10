@@ -28,7 +28,7 @@ class VideoPropertiesProviderTest extends TestCase
     use CreateUploadedFileTrait;
 
     /**
-     * @var ObjectProphecy|FFProbe
+     * @var ObjectProphecy<FFProbe>
      */
     private $ffprobe;
 

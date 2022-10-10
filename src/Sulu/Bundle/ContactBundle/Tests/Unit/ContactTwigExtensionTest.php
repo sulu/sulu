@@ -35,7 +35,7 @@ class ContactTwigExtensionTest extends TestCase
     private $cache;
 
     /**
-     * @var ContactRepository|ObjectProphecy
+     * @var ObjectProphecy<ContactRepository>
      */
     private $contactRepository;
 

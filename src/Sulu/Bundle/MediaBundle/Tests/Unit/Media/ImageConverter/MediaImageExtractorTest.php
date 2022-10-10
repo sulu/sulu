@@ -24,12 +24,12 @@ class MediaImageExtractorTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var ImagineInterface|ObjectProphecy
+     * @var ObjectProphecy<ImagineInterface>
      */
     private $imagine;
 
     /**
-     * @var VideoThumbnailServiceInterface|ObjectProphecy
+     * @var ObjectProphecy<VideoThumbnailServiceInterface>
      */
     private $videoThumbnail;
 

@@ -24,7 +24,7 @@ class DocumentDomainEventCollectorSubscriberTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var DocumentDomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DocumentDomainEventCollectorInterface>
      */
     private $documentDomainEventCollector;
 

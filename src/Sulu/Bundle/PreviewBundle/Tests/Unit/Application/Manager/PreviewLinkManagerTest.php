@@ -31,27 +31,27 @@ class PreviewLinkManagerTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var PreviewLinkRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<PreviewLinkRepositoryInterface>
      */
     private $previewLinkRepository;
 
     /**
-     * @var DomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DomainEventCollectorInterface>
      */
     private $domainEventCollector;
 
     /**
-     * @var PreviewObjectProviderRegistryInterface|ObjectProphecy
+     * @var ObjectProphecy<PreviewObjectProviderRegistryInterface>
      */
     private $previewObjectProviderRegistry;
 
     /**
-     * @var PreviewObjectProviderInterface|ObjectProphecy
+     * @var ObjectProphecy<PreviewObjectProviderInterface>
      */
     private $previewObjectProvider;
 
     /**
-     * @var RouterInterface|ObjectProphecy
+     * @var ObjectProphecy<RouterInterface>
      */
     private $router;
 

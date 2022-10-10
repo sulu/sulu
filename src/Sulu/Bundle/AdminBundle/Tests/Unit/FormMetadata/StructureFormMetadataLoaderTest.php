@@ -33,22 +33,22 @@ class StructureFormMetadataLoaderTest extends TestCase
     public const CACHE_DIR = __DIR__ . '/../../../../../../../tests/Resources/cache';
 
     /**
-     * @var ObjectProphecy&StructureMetadataFactoryInterface
+     * @var ObjectProphecy<StructureMetadataFactoryInterface>
      */
     private $structureMetadataFactory;
 
     /**
-     * @var ObjectProphecy&FormMetadataMapper
+     * @var ObjectProphecy<FormMetadataMapper>
      */
     private $formMetadataMapper;
 
     /**
-     * @var ObjectProphecy&WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var ObjectProphecy&FieldMetadataValidatorInterface
+     * @var ObjectProphecy<FieldMetadataValidatorInterface>
      */
     private $fieldMetadataValidator;
 

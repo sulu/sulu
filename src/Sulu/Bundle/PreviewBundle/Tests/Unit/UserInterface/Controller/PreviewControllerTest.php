@@ -27,12 +27,12 @@ class PreviewControllerTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var PreviewInterface|ObjectProphecy
+     * @var ObjectProphecy<PreviewInterface>
      */
     private $preview;
 
     /**
-     * @var TokenStorageInterface|ObjectProphecy
+     * @var ObjectProphecy<TokenStorageInterface>
      */
     private $tokenStorage;
 

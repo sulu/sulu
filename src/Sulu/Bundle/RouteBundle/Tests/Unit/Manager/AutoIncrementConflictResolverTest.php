@@ -13,6 +13,7 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\Manager;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Manager\AutoIncrementConflictResolver;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
@@ -22,7 +23,7 @@ class AutoIncrementConflictResolverTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var RouteRepositoryInterface
+     * @var ObjectProphecy<RouteRepositoryInterface>
      */
     private $routeRepository;
 

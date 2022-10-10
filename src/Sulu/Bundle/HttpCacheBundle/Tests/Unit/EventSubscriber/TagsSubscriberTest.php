@@ -34,22 +34,22 @@ class TagsSubscriberTest extends TestCase
     private $tagsSubscriber;
 
     /**
-     * @var ReferenceStorePoolInterface|ObjectProphecy
+     * @var ObjectProphecy<ReferenceStorePoolInterface>
      */
     private $referenceStorePool;
 
     /**
-     * @var SymfonyResponseTagger|ObjectProphecy
+     * @var ObjectProphecy<SymfonyResponseTagger>
      */
     private $symfonyResponseTagger;
 
     /**
-     * @var Request|ObjectProphecy
+     * @var ObjectProphecy<Request>
      */
     private $request;
 
     /**
-     * @var RequestStack|ObjectProphecy
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
@@ -59,7 +59,7 @@ class TagsSubscriberTest extends TestCase
     private $referenceStores;
 
     /**
-     * @var StructureInterface|ObjectProphecy
+     * @var ObjectProphecy<StructureInterface>
      */
     private $structure;
 

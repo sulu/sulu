@@ -44,32 +44,32 @@ class CustomUrlManagerTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var DocumentManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 
     /**
-     * @var DocumentInspector|ObjectProphecy
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 
     /**
-     * @var CustomUrlRepository|ObjectProphecy
+     * @var ObjectProphecy<CustomUrlRepository>
      */
     private $customUrlRepository;
 
     /**
-     * @var MetadataFactoryInterface|ObjectProphecy
+     * @var ObjectProphecy<MetadataFactoryInterface>
      */
     private $metadataFactory;
 
     /**
-     * @var PathBuilder|ObjectProphecy
+     * @var ObjectProphecy<PathBuilder>
      */
     private $pathBuilder;
 
     /**
-     * @var WebspaceManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
@@ -79,7 +79,7 @@ class CustomUrlManagerTest extends TestCase
     private $environment;
 
     /**
-     * @var DocumentDomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DocumentDomainEventCollectorInterface>
      */
     private $documentDomainEventCollector;
 
@@ -89,7 +89,7 @@ class CustomUrlManagerTest extends TestCase
     private $targetDocument;
 
     /**
-     * @var Metadata|ObjectProphecy
+     * @var ObjectProphecy<Metadata>
      */
     private $metadata;
 

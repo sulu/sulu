@@ -37,17 +37,17 @@ class NumberTest extends TestCase
     private $number;
 
     /**
-     * @var NodeInterface|ObjectProphecy
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var PropertyInterface|ObjectProphecy
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 
     /**
-     * @var NodePropertyInterface|ObjectProphecy
+     * @var ObjectProphecy<NodePropertyInterface>
      */
     private $nodeProperty;
 

@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\tests\Unit;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\NameResolver;
 
 class NameResolverTest extends TestCase
@@ -21,12 +22,12 @@ class NameResolverTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $parentNode;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 

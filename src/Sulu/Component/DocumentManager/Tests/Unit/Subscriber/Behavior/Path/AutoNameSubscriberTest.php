@@ -16,6 +16,7 @@ use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Behavior\Path\AutoNameBehavior;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\MoveEvent;
@@ -34,27 +35,27 @@ class AutoNameSubscriberTest extends TestCase
     public const DEFAULT_LOCALE = 'en';
 
     /**
-     * @var DocumentRegistry
+     * @var ObjectProphecy<DocumentRegistry>
      */
     private $documentRegistry;
 
     /**
-     * @var SlugifierInterface
+     * @var ObjectProphecy<SlugifierInterface>
      */
     private $slugifier;
 
     /**
-     * @var PersistEvent
+     * @var ObjectProphecy<PersistEvent>
      */
     private $persistEvent;
 
     /**
-     * @var MoveEvent
+     * @var ObjectProphecy<MoveEvent>
      */
     private $moveEvent;
 
     /**
-     * @var AutoNameBehavior
+     * @var ObjectProphecy<AutoNameBehavior>
      */
     private $document;
 
@@ -64,22 +65,22 @@ class AutoNameSubscriberTest extends TestCase
     private $parentDocument;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $newNode;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $parentNode;
 
     /**
-     * @var Metadata
+     * @var ObjectProphecy<Metadata>
      */
     private $metadata;
 
@@ -89,12 +90,12 @@ class AutoNameSubscriberTest extends TestCase
     private $parent;
 
     /**
-     * @var NameResolver
+     * @var ObjectProphecy<NameResolver>
      */
     private $resolver;
 
     /**
-     * @var NodeManager
+     * @var ObjectProphecy<NodeManager>
      */
     private $nodeManager;
 
@@ -104,12 +105,12 @@ class AutoNameSubscriberTest extends TestCase
     private $subscriber;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $session;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $liveSession;
 

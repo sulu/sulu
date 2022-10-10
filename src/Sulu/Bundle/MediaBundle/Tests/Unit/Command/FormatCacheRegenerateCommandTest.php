@@ -25,7 +25,7 @@ class FormatCacheRegenerateCommandTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var ObjectProphecy|FormatManagerInterface
+     * @var ObjectProphecy<FormatManagerInterface>
      */
     private $formatManager;
 

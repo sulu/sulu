@@ -16,6 +16,7 @@ use PHPCR\PropertyInterface as PHPCRPropertyInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AudienceTargetingBundle\Content\Types\TargetGroupSelection;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
@@ -26,7 +27,7 @@ class TargetGroupSelectionTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var TargetGroupRepositoryInterface
+     * @var ObjectProphecy<TargetGroupRepositoryInterface>
      */
     private $targetGroupRepository;
 

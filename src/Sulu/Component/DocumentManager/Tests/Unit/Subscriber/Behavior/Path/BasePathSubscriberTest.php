@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Audit\Pa
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Behavior\Path\BasePathBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -28,7 +29,7 @@ class BasePathSubscriberTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var PersistEvent
+     * @var ObjectProphecy<PersistEvent>
      */
     private $persistEvent;
 
@@ -38,7 +39,7 @@ class BasePathSubscriberTest extends TestCase
     private $notImplementing;
 
     /**
-     * @var BasePathBehavior
+     * @var ObjectProphecy<BasePathBehavior>
      */
     private $document;
 
@@ -48,27 +49,27 @@ class BasePathSubscriberTest extends TestCase
     private $parentDocument;
 
     /**
-     * @var NodeManager
+     * @var ObjectProphecy<NodeManager>
      */
     private $nodeManager;
 
     /**
-     * @var DocumentManager
+     * @var ObjectProphecy<DocumentManager>
      */
     private $documentManager;
 
     /**
-     * @var MetadataFactoryInterface
+     * @var ObjectProphecy<MetadataFactoryInterface>
      */
     private $metadataFactory;
 
     /**
-     * @var MetaData
+     * @var ObjectProphecy<Metadata>
      */
     private $metadata;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $parentNode;
 

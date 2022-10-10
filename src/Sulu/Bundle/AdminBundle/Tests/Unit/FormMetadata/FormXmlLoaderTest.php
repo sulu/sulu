@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AdminBundle\Tests\Unit\FormMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Exception\InvalidRootTagException;
 use Sulu\Bundle\AdminBundle\Exception\PropertyMetadataMapperNotFoundException;
 use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
@@ -36,7 +37,7 @@ class FormXmlLoaderTest extends TestCase
     private $loader;
 
     /**
-     * @var TranslatorInterface
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 

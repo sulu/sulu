@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\PropertyInterface;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\Subscriber\ShadowCopyPropertiesSubscriber;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
@@ -28,7 +29,7 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
     private $subscriber;
 
     /**
-     * @var object
+     * @var ObjectProphecy<TestShadowDocumentInterface>
      */
     private $document;
 

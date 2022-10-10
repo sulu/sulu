@@ -29,7 +29,7 @@ class SecuritySubscriberTest extends SubscriberTestCase
     use ProphecyTrait;
 
     /**
-     * @var ObjectProphecy|NodeInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $liveSession;
 
@@ -39,12 +39,12 @@ class SecuritySubscriberTest extends SubscriberTestCase
     private $subscriber;
 
     /**
-     * @var ObjectProphecy|PropertyEncoder
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $propertyEncoder;
 
     /**
-     * @var ObjectProphecy|AccessControlManagerInterface
+     * @var ObjectProphecy<AccessControlManagerInterface>
      */
     private $accessControlManager;
 

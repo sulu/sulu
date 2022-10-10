@@ -17,6 +17,7 @@ use FFMpeg\Media\Frame;
 use FFMpeg\Media\Video;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailService;
 
 class VideoThumbnailServiceTest extends TestCase
@@ -24,7 +25,7 @@ class VideoThumbnailServiceTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var Video
+     * @var ObjectProphecy<Video>
      */
     protected $video;
 
@@ -34,12 +35,12 @@ class VideoThumbnailServiceTest extends TestCase
     protected $videoThumbnailService;
 
     /**
-     * @var Frame
+     * @var ObjectProphecy<Frame>
      */
     protected $frame;
 
     /**
-     * @var FFMpeg
+     * @var ObjectProphecy<FFMpeg>
      */
     protected $ffmpeg;
 

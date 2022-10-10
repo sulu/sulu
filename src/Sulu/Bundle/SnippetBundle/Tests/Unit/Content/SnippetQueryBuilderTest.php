@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SnippetBundle\Content\SnippetQueryBuilder;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure;
@@ -27,22 +28,22 @@ class SnippetQueryBuilderTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var StructureManagerInterface
+     * @var ObjectProphecy<StructureManagerInterface>
      */
     private $structureManager;
 
     /**
-     * @var ExtensionManagerInterface
+     * @var ObjectProphecy<ExtensionManagerInterface>
      */
     private $extensionManager;
 
     /**
-     * @var SessionManagerInterface
+     * @var ObjectProphecy<SessionManagerInterface>
      */
     private $sessionManager;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $session;
 

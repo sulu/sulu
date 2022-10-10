@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Subscriber\RedirectTypeSubscriber;
 use Sulu\Component\DocumentManager\Event\MetadataLoadEvent;
@@ -28,17 +29,17 @@ class RedirectTypeSubscriberTest extends SubscriberTestCase
     private $subscriber;
 
     /**
-     * @var RedirectTypeBehavior
+     * @var ObjectProphecy<RedirectTypeBehavior>
      */
     private $document;
 
     /**
-     * @var Metadata
+     * @var ObjectProphecy<Metadata>
      */
     private $metadata;
 
     /**
-     * @var MetadataLoadEvent
+     * @var ObjectProphecy<MetadataLoadEvent>
      */
     private $event;
 

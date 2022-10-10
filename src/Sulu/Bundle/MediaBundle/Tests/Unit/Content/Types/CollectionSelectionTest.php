@@ -33,12 +33,12 @@ class CollectionSelectionTest extends TestCase
     private $collectionSelection;
 
     /**
-     * @var CollectionManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<CollectionManagerInterface>
      */
     private $collectionManager;
 
     /**
-     * @var ReferenceStoreInterface|ObjectProphecy
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $collectionReferenceStore;
 

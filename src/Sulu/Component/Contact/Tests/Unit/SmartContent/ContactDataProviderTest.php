@@ -15,6 +15,7 @@ use JMS\Serializer\SerializationContext;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Contact\SmartContent\ContactDataItem;
@@ -30,17 +31,17 @@ class ContactDataProviderTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var DataProviderRepositoryInterface
+     * @var ObjectProphecy<DataProviderRepositoryInterface>
      */
     private $dataProviderRepository;
 
     /**
-     * @var ArraySerializerInterface
+     * @var ObjectProphecy<ArraySerializerInterface>
      */
     private $serializer;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $referenceStore;
 

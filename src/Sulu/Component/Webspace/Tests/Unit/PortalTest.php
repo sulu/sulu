@@ -13,6 +13,7 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Exception\EnvironmentNotFoundException;
@@ -29,17 +30,17 @@ class PortalTest extends TestCase
     private $portal;
 
     /**
-     * @var Environment
+     * @var ObjectProphecy<Environment>
      */
     private $environment;
 
     /**
-     * @var Localization
+     * @var ObjectProphecy<Localization>
      */
     private $localization;
 
     /**
-     * @var Url
+     * @var ObjectProphecy<Url>
      */
     private $url;
 

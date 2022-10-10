@@ -32,17 +32,17 @@ class LinkTest extends TestCase
     private $link;
 
     /**
-     * @var ObjectProphecy|LinkProviderPoolInterface
+     * @var ObjectProphecy<LinkProviderPoolInterface>
      */
     private $providerPool;
 
     /**
-     * @var ObjectProphecy|LinkProviderInterface
+     * @var ObjectProphecy<LinkProviderInterface>
      */
     private $provider;
 
     /**
-     * @var ObjectProphecy|PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 

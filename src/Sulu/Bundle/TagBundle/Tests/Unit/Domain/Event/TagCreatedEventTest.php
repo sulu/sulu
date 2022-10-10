@@ -22,7 +22,7 @@ class TagCreatedEventTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var TagInterface|ObjectProphecy
+     * @var ObjectProphecy<TagInterface>
      */
     private $tag;
 

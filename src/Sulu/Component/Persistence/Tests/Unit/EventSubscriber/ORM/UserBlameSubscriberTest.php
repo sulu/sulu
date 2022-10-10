@@ -67,7 +67,7 @@ class UserBlameSubscriberTest extends TestCase
     private $unitOfWork;
 
     /**
-     * @var UserInterface
+     * @var ObjectProphecy<UserInterface>
      */
     private $user;
 

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Twig;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Meta\MetaTwigExtension;
 use Sulu\Component\Localization\Localization;
@@ -25,12 +26,12 @@ class MetaTwigExtensionTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var ContentPathInterface
+     * @var ObjectProphecy<ContentPathInterface>
      */
     private $contentPath;
 

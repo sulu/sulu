@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Compat\StructureManager;
@@ -36,27 +37,27 @@ class ContentMapperSubscriberTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 
     /**
-     * @var EventDispatcherInterface
+     * @var ObjectProphecy<EventDispatcherInterface>
      */
     private $eventDispatcher;
 
     /**
-     * @var ContentMapperInterface
+     * @var ObjectProphecy<ContentMapperInterface>
      */
     private $contentMapper;
 
     /**
-     * @var SuluNodeHelper
+     * @var ObjectProphecy<SuluNodeHelper>
      */
     private $nodeHelper;
 
     /**
-     * @var StructureManager
+     * @var ObjectProphecy<StructureManager>
      */
     private $structureManager;
 

@@ -36,7 +36,7 @@ class ActivityRepositoryTest extends SuluTestCase
     private $entityManager;
 
     /**
-     * @var DomainEvent|ObjectProphecy
+     * @var ObjectProphecy<DomainEvent>
      */
     private $domainEvent;
 

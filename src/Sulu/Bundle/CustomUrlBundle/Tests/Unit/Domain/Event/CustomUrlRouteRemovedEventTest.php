@@ -22,7 +22,7 @@ class CustomUrlRouteRemovedEventTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var CustomUrlDocument|ObjectProphecy
+     * @var ObjectProphecy<CustomUrlDocument>
      */
     private $customUrlDocument;
 

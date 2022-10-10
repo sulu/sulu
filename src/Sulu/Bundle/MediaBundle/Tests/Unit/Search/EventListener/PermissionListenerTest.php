@@ -15,6 +15,7 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
@@ -29,12 +30,12 @@ class PermissionListenerTest extends TestCase
     private $permissionListener;
 
     /**
-     * @var FileVersionMetaRepository
+     * @var ObjectProphecy<FileVersionMetaRepository>
      */
     private $fileVersionMetaRepository;
 
     /**
-     * @var SearchManagerInterface
+     * @var ObjectProphecy<SearchManagerInterface>
      */
     private $searchManager;
 

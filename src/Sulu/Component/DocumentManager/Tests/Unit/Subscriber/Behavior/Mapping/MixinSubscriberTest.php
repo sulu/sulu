@@ -27,7 +27,7 @@ class MixinSubscriberTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var MetadataFactoryInterface|ObjectProphecy
+     * @var ObjectProphecy<MetadataFactoryInterface>
      */
     private $metadataFactory;
 

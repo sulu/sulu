@@ -24,7 +24,7 @@ class DomainEventCollectorSubscriberTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var DomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DomainEventCollectorInterface>
      */
     private $domainEventCollector;
 

@@ -33,7 +33,7 @@ class LegacyPropertyFactoryTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var NamespaceRegistry
+     * @var ObjectProphecy<NamespaceRegistry>
      */
     private $namespaceRegistry;
 
@@ -43,32 +43,32 @@ class LegacyPropertyFactoryTest extends TestCase
     private $factory;
 
     /**
-     * @var PropertyMetadata
+     * @var ObjectProphecy<PropertyMetadata>
      */
     private $property1;
 
     /**
-     * @var PropertyMetadata
+     * @var ObjectProphecy<PropertyMetadata>
      */
     private $property2;
 
     /**
-     * @var SectionMetadata
+     * @var ObjectProphecy<SectionMetadata>
      */
     private $section;
 
     /**
-     * @var BlockMetadata
+     * @var ObjectProphecy<BlockMetadata>
      */
     private $block;
 
     /**
-     * @var ComponentMetadata
+     * @var ObjectProphecy<ComponentMetadata>
      */
     private $component;
 
     /**
-     * @var ComponentMetadata
+     * @var ObjectProphecy<ComponentMetadata>
      */
     private $component2;
 
@@ -279,7 +279,7 @@ class LegacyPropertyFactoryTest extends TestCase
     }
 
     /**
-     * @param PropertyMetadata $property
+     * @param ObjectProphecy<PropertyMetadata> $property
      */
     private function setUpProperty($property)
     {

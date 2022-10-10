@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Content;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
@@ -26,17 +27,17 @@ class SnippetContentTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var DefaultSnippetManagerInterface
+     * @var ObjectProphecy<DefaultSnippetManagerInterface>
      */
     private $defaultSnippetManager;
 
     /**
-     * @var SnippetResolverInterface
+     * @var ObjectProphecy<SnippetResolverInterface>
      */
     private $snippetResolver;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $referenceStore;
 

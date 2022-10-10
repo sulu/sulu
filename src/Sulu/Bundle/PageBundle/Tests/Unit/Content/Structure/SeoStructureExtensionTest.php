@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Content\Structure\SeoStructureExtension;
 
 class SeoStructureExtensionTest extends TestCase
@@ -22,7 +23,7 @@ class SeoStructureExtensionTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 

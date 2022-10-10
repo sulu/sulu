@@ -14,6 +14,7 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\Generator;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\RouteBundle\Generator\RouteGenerator;
 use Sulu\Bundle\RouteBundle\Generator\TokenProviderInterface;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
@@ -24,12 +25,12 @@ class RouteGeneratorTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var TokenProviderInterface
+     * @var ObjectProphecy<TokenProviderInterface>
      */
     private $tokenProvider;
 
     /**
-     * @var SlugifierInterface
+     * @var ObjectProphecy<SlugifierInterface>
      */
     private $slugifier;
 

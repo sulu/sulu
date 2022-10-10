@@ -18,6 +18,7 @@ use Massive\Bundle\SearchBundle\Search\QueryHit;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Search\EventListener\HitListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -27,7 +28,7 @@ class HitListenerTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
@@ -37,12 +38,12 @@ class HitListenerTest extends TestCase
     private $listener;
 
     /**
-     * @var Document
+     * @var ObjectProphecy<Document>
      */
     private $document;
 
     /**
-     * @var HitEvent
+     * @var ObjectProphecy<HitEvent>
      */
     private $event;
 

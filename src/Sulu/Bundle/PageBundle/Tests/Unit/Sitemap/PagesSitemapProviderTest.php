@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Sulu\Bundle\WebsiteBundle\Sitemap;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Sitemap\PagesSitemapProvider;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -30,17 +31,17 @@ class PagesSitemapProviderTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var ContentRepositoryInterface
+     * @var ObjectProphecy<ContentRepositoryInterface>
      */
     private $contentRepository;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var AccessControlManagerInterface
+     * @var ObjectProphecy<AccessControlManagerInterface>
      */
     private $accessControlManager;
 
@@ -50,17 +51,17 @@ class PagesSitemapProviderTest extends TestCase
     private $sitemapProvider;
 
     /**
-     * @var PortalInformation
+     * @var ObjectProphecy<PortalInformation>
      */
     private $portalInformation;
 
     /**
-     * @var PortalInformation
+     * @var ObjectProphecy<PortalInformation>
      */
     private $portalInformationEn;
 
     /**
-     * @var Webspace
+     * @var ObjectProphecy<Webspace>
      */
     private $webspace;
 
