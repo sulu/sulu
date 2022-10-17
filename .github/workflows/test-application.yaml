@@ -158,7 +158,7 @@ jobs:
                       database: postgres
                       phpcr-transport: jackrabbit
                       dependency-versions: 'highest'
-                      php-extensions: 'ctype, iconv, mysql, imagick'
+                      php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
                       composer-stability: dev
                       composer-options: '--ignore-platform-req="php"'
