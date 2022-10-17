@@ -158,7 +158,7 @@ jobs:
                       database: postgres
                       phpcr-transport: doctrinedbal
                       dependency-versions: 'highest'
-                      php-extensions: 'ctype, iconv, mysql, gd'
+                      php-extensions: 'ctype, iconv, pdo_pgsql, pgsql, gd'
                       tools: 'composer:v2'
                       composer-stability: dev
                       composer-options: '--ignore-platform-req="php"'
