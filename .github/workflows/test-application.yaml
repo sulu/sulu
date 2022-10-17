@@ -156,7 +156,7 @@ jobs:
 
                     - php-version: '8.2'
                       database: postgres
-                      phpcr-transport: jackrabbit
+                      phpcr-transport: doctrinedbal
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
