@@ -22,9 +22,11 @@ use Sulu\Bundle\AudienceTargetingBundle\EventListener\TargetGroupSubscriber;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluatorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -466,6 +468,68 @@ class TargetGroupSubscriberTest extends TestCase
         $request = new Request();
         $request->setMethod(Request::METHOD_GET);
         $response = new Response();
+        $response->headers->set('Content-Type', 'text/html');
+        $event = $this->createResponseEvent($request, $response);
+
+        $this->twig->render(Argument::cetera())->shouldNotBeCalled();
+
+        $targetGroupSubscriber->addTargetGroupHitScript($event);
+
+        $this->assertEquals('', $response->getContent());
+    }
+
+    public function testAddTargetGroupHitScriptOnBinaryFileResponse(): void
+    {
+        $targetGroupSubscriber = new TargetGroupSubscriber(
+            $this->twig->reveal(),
+            false,
+            $this->targetGroupStore->reveal(),
+            $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
+            '/_target_group',
+            '/_target_group_hit',
+            'X-Forwarded-Url',
+            'X-Forwarded-Referer',
+            'X-Forwarded-UUID',
+            'X-Sulu-Target-Group',
+            'sulu-visitor-target-group',
+            'visitor-session'
+        );
+
+        $request = new Request();
+        $request->setMethod(Request::METHOD_GET);
+        $response = new BinaryFileResponse(__FILE__);
+        $response->headers->set('Content-Type', 'text/html');
+        $event = $this->createResponseEvent($request, $response);
+
+        $this->twig->render(Argument::cetera())->shouldNotBeCalled();
+
+        $targetGroupSubscriber->addTargetGroupHitScript($event);
+
+        $this->assertEquals('', $response->getContent());
+    }
+
+    public function testAddTargetGroupHitScriptOnStreamedResponse(): void
+    {
+        $targetGroupSubscriber = new TargetGroupSubscriber(
+            $this->twig->reveal(),
+            false,
+            $this->targetGroupStore->reveal(),
+            $this->targetGroupEvaluator->reveal(),
+            $this->targetGroupRepository->reveal(),
+            '/_target_group',
+            '/_target_group_hit',
+            'X-Forwarded-Url',
+            'X-Forwarded-Referer',
+            'X-Forwarded-UUID',
+            'X-Sulu-Target-Group',
+            'sulu-visitor-target-group',
+            'visitor-session'
+        );
+
+        $request = new Request();
+        $request->setMethod(Request::METHOD_GET);
+        $response = new StreamedResponse(function() {});
         $response->headers->set('Content-Type', 'text/html');
         $event = $this->createResponseEvent($request, $response);
 

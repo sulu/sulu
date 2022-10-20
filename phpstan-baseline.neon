@@ -14866,11 +14866,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media\\:\\:getName\\(\\) should return int but returns string\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media\\:\\:getProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
@@ -14953,11 +14948,6 @@ parameters:
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
 			count: 6
-			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
-
-		-
-			message: "#^Parameter \\#1 \\$name of method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:setName\\(\\) expects string, int given\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
 
 		-
@@ -18038,11 +18028,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$userId of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManager\\:\\:getUser\\(\\) expects int, int\\|null given\\.$#"
 			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
-			message: "#^Parameter \\#2 \\$fileName of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatManager\\\\FormatManagerInterface\\:\\:getFormats\\(\\) expects string, int given\\.$#"
-			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
