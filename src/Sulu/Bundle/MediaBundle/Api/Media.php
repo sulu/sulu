@@ -445,7 +445,7 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @param int $name
+     * @param string $name
      *
      * @return $this
      */
@@ -461,7 +461,7 @@ class Media extends ApiWrapper
      *
      * @SerializedName("name")
      *
-     * @return int
+     * @return string
      */
     public function getName()
     {
