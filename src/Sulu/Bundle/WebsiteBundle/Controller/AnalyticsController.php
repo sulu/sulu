@@ -160,8 +160,6 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
     /**
      * Removes a list of analytics.
      *
-     * @param $webspace
-     *
      * @return Response
      */
     public function cdeleteAction(Request $request, $webspace)

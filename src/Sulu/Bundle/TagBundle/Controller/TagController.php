@@ -109,8 +109,6 @@ class TagController extends AbstractRestController implements ClassResourceInter
     /**
      * Returns a single tag with the given id.
      *
-     * @param $id
-     *
      * @return Response
      */
     public function getAction($id)
@@ -207,8 +205,6 @@ class TagController extends AbstractRestController implements ClassResourceInter
     /**
      * Updates the tag with the given ID.
      *
-     * @param $id
-     *
      * @return Response
      *
      * @throws \Exception
@@ -246,8 +242,6 @@ class TagController extends AbstractRestController implements ClassResourceInter
 
     /**
      * Deletes the tag with the given ID.
-     *
-     * @param $id
      *
      * @return Response
      */

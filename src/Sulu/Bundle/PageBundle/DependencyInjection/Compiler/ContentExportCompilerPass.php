@@ -36,10 +36,6 @@ class ContentExportCompilerPass implements CompilerPassInterface
         }
     }
 
-    /**
-     * @param $id
-     * @param $tagAttributes
-     */
     private function processTagAttributes(ContainerBuilder $container, $id, $tagAttributes)
     {
         $definition = $container->getDefinition(self::CONTENT_EXPORT_SERVICE_ID);
@@ -52,11 +48,6 @@ class ContentExportCompilerPass implements CompilerPassInterface
         }
     }
 
-    /**
-     * @param $tagAttributes
-     * @param $contentTypeName
-     * @param $definition
-     */
     private function exportAttribute($tagAttributes, $contentTypeName, $definition)
     {
         foreach ($tagAttributes as $attributes) {

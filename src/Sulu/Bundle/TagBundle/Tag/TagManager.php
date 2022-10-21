@@ -98,8 +98,6 @@ class TagManager implements TagManagerInterface
     /**
      * Loads the tag with the given name.
      *
-     * @param $name
-     *
      * @return TagInterface|null
      */
     public function findByName($name)
@@ -147,7 +145,7 @@ class TagManager implements TagManagerInterface
 
             return $tag;
         } catch (UniqueConstraintViolationException $exc) {
-            throw new TagAlreadyExistsException($name);
+            throw new TagAlreadyExistsException($name, $exc);
         }
     }
 
@@ -230,8 +228,6 @@ class TagManager implements TagManagerInterface
     /**
      * Resolves tag ids to names.
      *
-     * @param $tagIds
-     *
      * @return array
      */
     public function resolveTagIds($tagIds)
@@ -250,8 +246,6 @@ class TagManager implements TagManagerInterface
 
     /**
      * Resolves tag names to ids.
-     *
-     * @param $tagNames
      *
      * @return array
      */

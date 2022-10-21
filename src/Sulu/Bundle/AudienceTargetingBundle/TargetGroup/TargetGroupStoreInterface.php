@@ -34,8 +34,6 @@ interface TargetGroupStoreInterface
     /**
      * Sets the given target group as the new one, and marking this value as changed.
      *
-     * @param $targetGroupId
-     *
      * @return string
      */
     public function updateTargetGroupId($targetGroupId);

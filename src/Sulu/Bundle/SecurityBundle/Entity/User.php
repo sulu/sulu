@@ -735,8 +735,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
     /**
      * Set firstName.
      *
-     * @param $firstName
-     *
      * @return $this
      */
     public function setFirstName($firstName)
@@ -760,8 +758,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * Set lastName.
-     *
-     * @param $lastName
      *
      * @return $this
      */

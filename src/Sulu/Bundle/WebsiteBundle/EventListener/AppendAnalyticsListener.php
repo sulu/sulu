@@ -66,9 +66,6 @@ class AppendAnalyticsListener
      */
     private $preview;
 
-    /**
-     * @param $environment
-     */
     public function __construct(
         Environment $engine,
         RequestAnalyzerInterface $requestAnalyzer,

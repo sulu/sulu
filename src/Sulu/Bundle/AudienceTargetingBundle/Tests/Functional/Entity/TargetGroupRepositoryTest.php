@@ -139,8 +139,6 @@ class TargetGroupRepositoryTest extends SuluTestCase
     }
 
     /**
-     * @param $targetGroup
-     *
      * @return TargetGroupRule
      */
     private function createTargetGroupRule(
