@@ -36,8 +36,6 @@ interface TagManagerInterface
     /**
      * Loads the tag with the given name.
      *
-     * @param $name
-     *
      * @return TagInterface
      */
     public function findByName($name);
@@ -56,8 +54,6 @@ interface TagManagerInterface
      *
      * @param array $data The data of the tag to save
      * @param number|null $id The id for saving the tag (optional)
-     *
-     * @return
      */
     public function save($data, $id = null);
 
@@ -84,16 +80,12 @@ interface TagManagerInterface
     /**
      * Resolves tag ids to names.
      *
-     * @param $tagIds
-     *
      * @return array
      */
     public function resolveTagIds($tagIds);
 
     /**
      * Resolves tag names to ids.
-     *
-     * @param $tagNames
      *
      * @return array
      */

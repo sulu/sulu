@@ -79,7 +79,6 @@ interface NodeRepositoryInterface
      * returns webspace as node.
      *
      * @param string $webspaceKey
-     * @param $languageCode
      * @param int $depth
      * @param bool $excludeGhosts
      */

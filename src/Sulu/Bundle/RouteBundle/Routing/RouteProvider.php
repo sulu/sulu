@@ -279,8 +279,6 @@ class RouteProvider implements RouteProviderInterface
      * Server encodes the url and symfony does not encode it
      * Symfony decodes this data here https://github.com/symfony/symfony/blob/3.3/src/Symfony/Component/Routing/Matcher/UrlMatcher.php#L91.
      *
-     * @param $pathInfo
-     *
      * @return string
      */
     private function decodePathInfo($pathInfo)

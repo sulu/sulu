@@ -530,8 +530,6 @@ class UserManager implements UserManagerInterface
     /**
      * Updates an existing UserRole with the given data.
      *
-     * @param $userRoleData
-     *
      * @return bool
      *
      * @throws EntityNotFoundException
@@ -556,8 +554,6 @@ class UserManager implements UserManagerInterface
 
     /**
      * Adds a new UserRole to the given user.
-     *
-     * @param $userRoleData
      *
      * @return bool
      *
@@ -597,8 +593,6 @@ class UserManager implements UserManagerInterface
     /**
      * Adds a new UserGroup to the given user.
      *
-     * @param $userGroupData
-     *
      * @return bool
      *
      * @throws EntityNotFoundException
@@ -624,8 +618,6 @@ class UserManager implements UserManagerInterface
 
     /**
      * Updates an existing UserGroup with the given data.
-     *
-     * @param $userGroupData
      *
      * @return bool
      *

@@ -73,9 +73,6 @@ class RequestAnalyzerTest extends TestCase
         );
     }
 
-    /**
-     * @param $portalInformation
-     */
     protected function prepareWebspaceManager($portalInformation)
     {
         $this->webspaceManager->findPortalInformationsByUrl(Argument::any(), Argument::any())
