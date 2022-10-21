@@ -35376,11 +35376,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/SuluTagBundle.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\Exception\\\\TagAlreadyExistsException\\:\\:\\$name \\(int\\) does not accept string\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Tag/Exception/TagAlreadyExistsException.php
-
-		-
 			message: "#^Argument of an invalid type float\\|int supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
@@ -35461,11 +35456,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
 
 		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 150\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagManagerInterface\\:\\:delete\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManagerInterface.php
@@ -35512,11 +35502,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagManagerInterface\\:\\:save\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Tag/TagManagerInterface.php
-
-		-
-			message: "#^PHPDoc tag @return has invalid value \\(\\)\\: Unexpected token \"\\\\n     \", expected type at offset 181$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManagerInterface.php
 

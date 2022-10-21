@@ -47,8 +47,6 @@ interface CategoryTranslationInterface extends AuditableInterface
     /**
      * Set description.
      *
-     * @param $description
-     *
      * @return CategoryTranslationInterface
      */
     public function setDescription($description);

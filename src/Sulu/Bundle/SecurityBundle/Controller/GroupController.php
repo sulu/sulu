@@ -127,8 +127,6 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     /**
      * Returns the group with the given id.
      *
-     * @param $id
-     *
      * @return Response
      */
     public function getAction($id)
@@ -182,8 +180,6 @@ class GroupController extends AbstractRestController implements ClassResourceInt
 
     /**
      * Updates the group with the given id and the data given by the request.
-     *
-     * @param $id
      *
      * @return Response
      */
@@ -251,8 +247,6 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     /**
      * Deletes the group with the given id.
      *
-     * @param $id
-     *
      * @return Response
      */
     public function deleteAction($id)
@@ -302,8 +296,6 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     /**
      * Updates an already existing role.
      *
-     * @param $roleData
-     *
      * @return bool
      */
     private function updateRole(RoleInterface $role, $roleData)
@@ -313,8 +305,6 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     }
 
     /**
-     * @param $group
-     *
      * @throws EntityNotFoundException
      */
     public function setParent($group, Request $request)

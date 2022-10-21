@@ -57,8 +57,6 @@ class ExportTwigExtension extends AbstractExtension
     }
 
     /**
-     * @param $content
-     *
      * @return string
      */
     public function escapeXmlContent($content)

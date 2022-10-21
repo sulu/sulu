@@ -334,7 +334,6 @@ class WebspaceExportTest extends SuluTestCase
     }
 
     /**
-     * @param $name
      * @param string $prefix
      *
      * @return array
@@ -553,13 +552,6 @@ class WebspaceExportTest extends SuluTestCase
     }
 
     /**
-     * @param $name
-     * @param $type
-     * @param $options
-     * @param $value
-     * @param $children
-     * @param $forceValue
-     *
      * @return array
      */
     private function createItemArray(
