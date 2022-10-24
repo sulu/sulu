@@ -643,6 +643,27 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals('Hotel description DE', $newPage->getStructure()->getProperty('description')->getValue());
     }
 
+    public function testCopy(): void
+    {
+        $params = [
+            'locale' => 'de',
+            'action' => 'copy',
+        ];
+
+        $query = \http_build_query($params);
+        $this->client->jsonRequest('POST', \sprintf('/api/snippets/%s?%s', $this->hotel1->getUuid(), $query));
+        $response = $this->client->getResponse();
+
+        $result = \json_decode($response->getContent(), true);
+        $this->assertHttpStatusCode(200, $response);
+
+        $this->assertNotSame($this->hotel1->getUuid(), $result['id']);
+
+        $document = $this->documentManager->find($result['id'], 'de');
+
+        $this->assertEquals($this->hotel1->getTitle(), $document->getTitle());
+    }
+
     private function loadFixtures(): void
     {
         // HOTELS

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -14,6 +16,7 @@ namespace Sulu\Bundle\SnippetBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
@@ -73,7 +76,7 @@ class SnippetAdmin extends Admin
         ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         WebspaceManagerInterface $webspaceManager,
-        $defaultEnabled
+        $defaultEnabled,
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
@@ -100,6 +103,7 @@ class SnippetAdmin extends Admin
         $formToolbarActionsWithType = [];
         $formToolbarActionsWithoutType = [];
         $listToolbarActions = [];
+        $editDropdownToolbarActions = [];
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::ADD)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.add');
@@ -109,6 +113,15 @@ class SnippetAdmin extends Admin
             $formToolbarActionsWithoutType[] = new ToolbarAction('sulu_admin.save');
             $formToolbarActionsWithType[] = new ToolbarAction('sulu_admin.save');
             $formToolbarActionsWithType[] = new ToolbarAction('sulu_admin.type', ['sort_by' => 'title']);
+
+            $editDropdownToolbarActions[] = new ToolbarAction('sulu_admin.copy', [
+                'visible_condition' => '!!id',
+            ]);
+            if (1 < \count($snippetLocales)) {
+                $editDropdownToolbarActions[] = new ToolbarAction('sulu_admin.copy_locale', [
+                    'visible_condition' => '!!id',
+                ]);
+            }
         }
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::DELETE)) {
@@ -118,6 +131,14 @@ class SnippetAdmin extends Admin
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.export');
+        }
+
+        if (0 !== \count($editDropdownToolbarActions)) {
+            $formToolbarActionsWithType[] = new DropdownToolbarAction(
+                'sulu_admin.edit',
+                'su-pen',
+                $editDropdownToolbarActions,
+            );
         }
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
@@ -130,14 +151,14 @@ class SnippetAdmin extends Admin
                     ->addLocales($snippetLocales)
                     ->setAddView(static::ADD_FORM_VIEW)
                     ->setEditView(static::EDIT_FORM_VIEW)
-                    ->addToolbarActions($listToolbarActions)
+                    ->addToolbarActions($listToolbarActions),
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createResourceTabViewBuilder(static::ADD_FORM_VIEW, '/snippets/:locale/add')
                     ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                     ->addLocales($snippetLocales)
-                    ->setBackView(static::LIST_VIEW)
+                    ->setBackView(static::LIST_VIEW),
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createFormViewBuilder('sulu_snippet.add_form.details', '/details')
@@ -146,7 +167,7 @@ class SnippetAdmin extends Admin
                     ->setTabTitle('sulu_admin.details')
                     ->setEditView(static::EDIT_FORM_VIEW)
                     ->addToolbarActions($formToolbarActionsWithType)
-                    ->setParent(static::ADD_FORM_VIEW)
+                    ->setParent(static::ADD_FORM_VIEW),
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
@@ -154,7 +175,7 @@ class SnippetAdmin extends Admin
                     ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                     ->addLocales($snippetLocales)
                     ->setBackView(static::LIST_VIEW)
-                    ->setTitleProperty('title')
+                    ->setTitleProperty('title'),
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createFormViewBuilder('sulu_snippet.edit_form.details', '/details')
@@ -162,7 +183,7 @@ class SnippetAdmin extends Admin
                     ->setFormKey('snippet')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($formToolbarActionsWithType)
-                    ->setParent(static::EDIT_FORM_VIEW)
+                    ->setParent(static::EDIT_FORM_VIEW),
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
@@ -172,7 +193,7 @@ class SnippetAdmin extends Admin
                     ->setTabTitle('sulu_snippet.taxonomies')
                     ->addToolbarActions($formToolbarActionsWithoutType)
                     ->setTitleVisible(true)
-                    ->setParent(static::EDIT_FORM_VIEW)
+                    ->setParent(static::EDIT_FORM_VIEW),
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
@@ -181,7 +202,7 @@ class SnippetAdmin extends Admin
                     ->setOption('tabTitle', 'sulu_snippet.default_snippets')
                     ->setOption('tabOrder', 3072)
                     ->setParent(PageAdmin::WEBSPACE_TABS_VIEW)
-                    ->addRerenderAttribute('webspace')
+                    ->addRerenderAttribute('webspace'),
             );
         }
     }
