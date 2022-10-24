@@ -38,7 +38,7 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
             return;
         }
 
-        if (this.protocol !== 'mailto:') {
+        if (!href.startsWith('mailto:')) {
             this.href = href;
 
             return;
