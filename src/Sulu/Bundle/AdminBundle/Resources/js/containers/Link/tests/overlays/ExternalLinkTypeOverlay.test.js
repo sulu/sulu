@@ -90,7 +90,7 @@ test('Display given URL with query parameters in href input', () => {
 
     const externalLinkOverlay = shallow(
         <ExternalLinkTypeOverlay
-            href="http://www.sulu.io?param=value-1"
+            href="http://www.sulu.io/contact-us?param=value-1"
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
             onHrefChange={urlChangeSpy}
@@ -102,7 +102,7 @@ test('Display given URL with query parameters in href input', () => {
         />
     );
 
-    expect(externalLinkOverlay.find('Url').prop('value')).toEqual('http://www.sulu.io?param=value-1');
+    expect(externalLinkOverlay.find('Url').prop('value')).toEqual('http://www.sulu.io/contact-us?param=value-1');
 });
 
 test('Do not call onHrefChange handler if input did not loose focus', () => {

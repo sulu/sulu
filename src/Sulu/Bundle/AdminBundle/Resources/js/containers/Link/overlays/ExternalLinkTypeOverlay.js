@@ -38,8 +38,8 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
             return;
         }
 
-        if (href.startsWith('mailto:')) {
-            const urlParts = String(href).split('?');
+        if (typeof href === 'string' && href.startsWith('mailto:')) {
+            const urlParts = href.split('?');
             const urlParameters = new URLSearchParams(urlParts[1]);
             const mailSubject = urlParameters.get('subject');
             const mailBody = urlParameters.get('body');
@@ -51,7 +51,7 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
             return;
         }
 
-        this.href = href;
+        this.href = String(href);
         this.mailSubject = undefined;
         this.mailBody = undefined;
     }
