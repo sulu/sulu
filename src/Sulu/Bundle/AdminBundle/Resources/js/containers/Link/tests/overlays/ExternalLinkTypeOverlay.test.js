@@ -92,6 +92,27 @@ test('Pass correct props to Dialog', () => {
     expect(externalLinkOverlay.find('Dialog').prop('open')).toEqual(false);
 });
 
+test('Display given URL with query parameters in href input', () => {
+    const targetChangeSpy = jest.fn();
+    const urlChangeSpy = jest.fn();
+
+    const externalLinkOverlay = shallow(
+        <ExternalLinkTypeOverlay
+            href="http://www.sulu.io/contact-us?param=value-1"
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            onHrefChange={urlChangeSpy}
+            onTargetChange={targetChangeSpy}
+            onTitleChange={jest.fn()}
+            open={true}
+            target="_blank"
+            title={undefined}
+        />
+    );
+
+    expect(externalLinkOverlay.find('Url').prop('value')).toEqual('http://www.sulu.io/contact-us?param=value-1');
+});
+
 test('Do not call onHrefChange handler if input did not loose focus', () => {
     const targetChangeSpy = jest.fn();
     const urlChangeSpy = jest.fn();
@@ -148,7 +169,7 @@ test('Fields should change immediately after protocol was changed', () => {
     expect(externalLinkOverlay.find('Field[label="sulu_admin.mail_body"]')).toHaveLength(1);
 });
 
-test('Call onHrefChange with all mail values', () => {
+test('Call onHrefChange with URL that includes mail subject and mail body for mailto links', () => {
     const targetChangeSpy = jest.fn();
     const urlChangeSpy = jest.fn();
 
@@ -186,6 +207,30 @@ test('Call onHrefChange with all mail values', () => {
     expect(urlChangeSpy).not.toBeCalledWith('mailto:test@example.org?subject=Subject%20Line&body=Body%20Text');
     externalLinkOverlay.find('Field[label="sulu_admin.mail_body"] TextArea').prop('onBlur')();
     expect(urlChangeSpy).toBeCalledWith('mailto:test@example.org?subject=Subject%20Line&body=Body%20Text');
+});
+
+test('Should not include mail subject and body in URL after switching to another protocol', () => {
+    const urlChangeSpy = jest.fn();
+
+    const externalLinkOverlay = mount(
+        <ExternalLinkTypeOverlay
+            href="mailto:test@example.org?subject=Subject&body=Body%20Text"
+            onCancel={jest.fn()}
+            onConfirm={jest.fn()}
+            onHrefChange={urlChangeSpy}
+            onTargetChange={jest.fn()}
+            onTitleChange={jest.fn()}
+            open={true}
+            target="_blank"
+            title={undefined}
+        />
+    );
+
+    externalLinkOverlay.find('Url').prop('onBlur')();
+    expect(urlChangeSpy).toHaveBeenNthCalledWith(1, 'mailto:test@example.org?subject=Subject&body=Body%20Text');
+
+    externalLinkOverlay.find('Url').find('SingleSelect').prop('onChange')('https://');
+    expect(urlChangeSpy).toHaveBeenNthCalledWith(2, 'https://test@example.org');
 });
 
 test('Reset target to self when a mailto link is entered', () => {

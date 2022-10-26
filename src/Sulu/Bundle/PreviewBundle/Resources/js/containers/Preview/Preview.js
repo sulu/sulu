@@ -46,6 +46,7 @@ class Preview extends React.Component<Props> {
 
     schemaDisposer: () => mixed;
     dataDisposer: () => mixed;
+    localeDisposer: () => mixed;
 
     @computed get webspaceKey() {
         const {
@@ -88,7 +89,6 @@ class Preview extends React.Component<Props> {
         }));
 
         this.createPreviewStore();
-
         if (Preview.mode === 'auto') {
             this.startPreview();
         }
@@ -182,6 +182,13 @@ class Preview extends React.Component<Props> {
                 }
             }
         );
+
+        this.localeDisposer = reaction(
+            () => toJS(formStore.locale),
+            () => {
+                this.previewStore.restart();
+            }
+        );
     };
 
     updatePreview = debounce((data: Object) => {
@@ -221,6 +228,10 @@ class Preview extends React.Component<Props> {
 
         if (this.dataDisposer) {
             this.dataDisposer();
+        }
+
+        if (this.localeDisposer) {
+            this.localeDisposer();
         }
     }
 
