@@ -42,16 +42,22 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
             return;
         }
 
-        const urlParts = String(href).split('?');
+        if (typeof href === 'string' && href.startsWith('mailto:')) {
+            const urlParts = href.split('?');
+            const urlParameters = new URLSearchParams(urlParts[1]);
+            const mailSubject = urlParameters.get('subject');
+            const mailBody = urlParameters.get('body');
 
-        this.href = urlParts[0];
+            this.href = urlParts[0];
+            this.mailSubject = mailSubject ? mailSubject : undefined;
+            this.mailBody = mailBody ? mailBody : undefined;
 
-        const urlParameters = new URLSearchParams(urlParts[1]);
-        const mailSubject = urlParameters.get('subject');
-        const mailBody = urlParameters.get('body');
+            return;
+        }
 
-        this.mailSubject = mailSubject ? mailSubject : undefined;
-        this.mailBody = mailBody ? mailBody : undefined;
+        this.href = String(href);
+        this.mailSubject = undefined;
+        this.mailBody = undefined;
     }
 
     callUrlChange = () => {
@@ -68,18 +74,20 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
             return;
         }
 
-        if (href.startsWith('mailto:') && onTargetChange) {
-            onTargetChange('_self');
-        }
-
         const urlParameters = new URLSearchParams();
 
-        if (mailSubject) {
-            urlParameters.set('subject', mailSubject);
-        }
+        if (href.startsWith('mailto:')) {
+            if (onTargetChange) {
+                onTargetChange('_self');
+            }
 
-        if (mailBody) {
-            urlParameters.set('body', mailBody);
+            if (mailSubject) {
+                urlParameters.set('subject', mailSubject);
+            }
+
+            if (mailBody) {
+                urlParameters.set('body', mailBody);
+            }
         }
 
         onHrefChange(
