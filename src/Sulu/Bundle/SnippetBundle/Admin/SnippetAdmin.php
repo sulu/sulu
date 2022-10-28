@@ -74,7 +74,7 @@ class SnippetAdmin extends Admin
         ViewBuilderFactoryInterface $viewBuilderFactory,
         SecurityCheckerInterface $securityChecker,
         WebspaceManagerInterface $webspaceManager,
-        $defaultEnabled,
+        $defaultEnabled
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
         $this->securityChecker = $securityChecker;
@@ -149,14 +149,14 @@ class SnippetAdmin extends Admin
                     ->addLocales($snippetLocales)
                     ->setAddView(static::ADD_FORM_VIEW)
                     ->setEditView(static::EDIT_FORM_VIEW)
-                    ->addToolbarActions($listToolbarActions),
+                    ->addToolbarActions($listToolbarActions)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createResourceTabViewBuilder(static::ADD_FORM_VIEW, '/snippets/:locale/add')
                     ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                     ->addLocales($snippetLocales)
-                    ->setBackView(static::LIST_VIEW),
+                    ->setBackView(static::LIST_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createFormViewBuilder('sulu_snippet.add_form.details', '/details')
@@ -165,7 +165,7 @@ class SnippetAdmin extends Admin
                     ->setTabTitle('sulu_admin.details')
                     ->setEditView(static::EDIT_FORM_VIEW)
                     ->addToolbarActions($formToolbarActionsWithType)
-                    ->setParent(static::ADD_FORM_VIEW),
+                    ->setParent(static::ADD_FORM_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
@@ -173,7 +173,7 @@ class SnippetAdmin extends Admin
                     ->setResourceKey(SnippetDocument::RESOURCE_KEY)
                     ->addLocales($snippetLocales)
                     ->setBackView(static::LIST_VIEW)
-                    ->setTitleProperty('title'),
+                    ->setTitleProperty('title')
             );
             $viewCollection->add(
                 $this->viewBuilderFactory->createFormViewBuilder('sulu_snippet.edit_form.details', '/details')
@@ -181,7 +181,7 @@ class SnippetAdmin extends Admin
                     ->setFormKey('snippet')
                     ->setTabTitle('sulu_admin.details')
                     ->addToolbarActions($formToolbarActionsWithType)
-                    ->setParent(static::EDIT_FORM_VIEW),
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
@@ -191,7 +191,7 @@ class SnippetAdmin extends Admin
                     ->setTabTitle('sulu_snippet.taxonomies')
                     ->addToolbarActions($formToolbarActionsWithoutType)
                     ->setTitleVisible(true)
-                    ->setParent(static::EDIT_FORM_VIEW),
+                    ->setParent(static::EDIT_FORM_VIEW)
             );
             $viewCollection->add(
                 $this->viewBuilderFactory
@@ -200,7 +200,7 @@ class SnippetAdmin extends Admin
                     ->setOption('tabTitle', 'sulu_snippet.default_snippets')
                     ->setOption('tabOrder', 3072)
                     ->setParent(PageAdmin::WEBSPACE_TABS_VIEW)
-                    ->addRerenderAttribute('webspace'),
+                    ->addRerenderAttribute('webspace')
             );
         }
     }

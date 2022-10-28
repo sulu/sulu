@@ -133,7 +133,7 @@ class SnippetAdminTest extends TestCase
                 new DropdownToolbarAction(
                     'sulu_admin.edit',
                     'su-pen',
-                    $dropdownActions,
+                    $dropdownActions
                 ),
             ],
         ], $this->readObjectAttribute($addDetailView, 'options'));
@@ -157,7 +157,7 @@ class SnippetAdminTest extends TestCase
                 new DropdownToolbarAction(
                     'sulu_admin.edit',
                     'su-pen',
-                    $dropdownActions,
+                    $dropdownActions
                 ),
             ],
         ], $this->readObjectAttribute($editDetailView, 'options'));
