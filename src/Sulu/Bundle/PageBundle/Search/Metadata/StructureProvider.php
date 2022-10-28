@@ -313,6 +313,7 @@ EOT;
             $propertyMapping = new ComplexMetadata();
 
             foreach ($property->getComponents() as $component) {
+                /** @var \Sulu\Component\Content\Metadata\PropertyMetadata $componentProperty */
                 foreach ($component->getChildren() as $componentProperty) {
                     $this->mapProperty(
                         $componentProperty,
