@@ -3431,6 +3431,16 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
 
 		-
+			message: "#^Offset 0 does not exist on array\\{\\}\\.$#"
+			count: 3
+			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
+
+		-
+			message: "#^Offset 1 does not exist on array\\{\\}\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:provideAddSetCookieHeader\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
@@ -14861,11 +14871,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media\\:\\:getMeta\\(\\) should return Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersionMeta but returns Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersionMeta\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media\\:\\:getProperties\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Api/Media.php
@@ -18386,6 +18391,21 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
+			message: "#^Access to an undefined property object\\:\\:\\$changed\\.$#"
+			count: 3
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$description\\.$#"
+			count: 3
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$title\\.$#"
+			count: 3
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
+
+		-
 			message: "#^Cannot access offset '_embedded' on mixed\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
@@ -18442,7 +18462,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$_embedded on mixed\\.$#"
-			count: 58
+			count: 43
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
@@ -18681,6 +18701,36 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/FormatControllerTest.php
 
 		-
+			message: "#^Access to an undefined property object\\:\\:\\$categories\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$contentLanguages\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$publishLanguages\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$tags\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$targetGroups\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
+
+		-
+			message: "#^Access to an undefined property object\\:\\:\\$thumbnails\\.$#"
+			count: 3
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
+
+		-
 			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
@@ -18791,11 +18841,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
-			message: "#^Cannot access property \\$categories on mixed\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
-
-		-
 			message: "#^Cannot access property \\$code on mixed\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
@@ -18807,7 +18852,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$contentLanguages on mixed\\.$#"
-			count: 3
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
@@ -18862,22 +18907,17 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$publishLanguages on mixed\\.$#"
-			count: 3
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$tags on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$targetGroups on mixed\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
-
-		-
-			message: "#^Cannot access property \\$thumbnails on mixed\\.$#"
-			count: 3
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
@@ -26552,7 +26592,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'ext' on Sulu\\\\Component\\\\Content\\\\Compat\\\\Structure\\\\PageBridge\\.$#"
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
 		-
