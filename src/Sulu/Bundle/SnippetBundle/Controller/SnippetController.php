@@ -333,6 +333,17 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
                     }
 
                     break;
+                case 'copy':
+                    /** @var SnippetDocument $document */
+                    $document = $this->documentManager->find($id, $locale);
+                    $copiedPath = $this->documentManager->copy($document, \dirname($document->getPath()));
+                    $this->documentManager->flush();
+
+                    $this->documentManager->publish($document, $locale);
+                    $this->documentManager->flush();
+
+                    $id = $copiedPath;
+                    break;
                 default:
                     throw new RestException('Unrecognized action: ' . $action);
             }

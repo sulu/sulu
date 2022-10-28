@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItem;
 use Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationItemCollection;
+use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
@@ -100,6 +101,7 @@ class SnippetAdmin extends Admin
         $formToolbarActionsWithType = [];
         $formToolbarActionsWithoutType = [];
         $listToolbarActions = [];
+        $editDropdownToolbarActions = [];
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::ADD)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.add');
@@ -109,6 +111,15 @@ class SnippetAdmin extends Admin
             $formToolbarActionsWithoutType[] = new ToolbarAction('sulu_admin.save');
             $formToolbarActionsWithType[] = new ToolbarAction('sulu_admin.save');
             $formToolbarActionsWithType[] = new ToolbarAction('sulu_admin.type', ['sort_by' => 'title']);
+
+            $editDropdownToolbarActions[] = new ToolbarAction('sulu_admin.copy', [
+                'visible_condition' => '!!id',
+            ]);
+            if (1 < \count($snippetLocales)) {
+                $editDropdownToolbarActions[] = new ToolbarAction('sulu_admin.copy_locale', [
+                    'visible_condition' => '!!id',
+                ]);
+            }
         }
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::DELETE)) {
@@ -118,6 +129,14 @@ class SnippetAdmin extends Admin
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.export');
+        }
+
+        if (0 !== \count($editDropdownToolbarActions)) {
+            $formToolbarActionsWithType[] = new DropdownToolbarAction(
+                'sulu_admin.edit',
+                'su-pen',
+                $editDropdownToolbarActions,
+            );
         }
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {

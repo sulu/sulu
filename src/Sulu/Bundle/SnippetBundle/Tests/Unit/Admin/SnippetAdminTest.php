@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Admin;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\AdminBundle\Admin\View\DropdownToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
@@ -86,6 +87,17 @@ class SnippetAdminTest extends TestCase
         $editFormView = $viewCollection->get('sulu_snippet.edit_form')->getView();
         $editDetailView = $viewCollection->get('sulu_snippet.edit_form.details')->getView();
 
+        $dropdownActions = [
+            new ToolbarAction('sulu_admin.copy', [
+                'visible_condition' => '!!id',
+            ]),
+        ];
+        if (1 < \count($locales)) {
+            $dropdownActions[] = new ToolbarAction('sulu_admin.copy_locale', [
+                'visible_condition' => '!!id',
+            ]);
+        }
+
         $this->assertEquals('sulu_snippet.list', $listView->getName());
         $this->assertEquals([
             'title' => 'sulu_snippet.snippets',
@@ -118,6 +130,11 @@ class SnippetAdminTest extends TestCase
                 new Toolbaraction('sulu_admin.save'),
                 new Toolbaraction('sulu_admin.type', ['sort_by' => 'title']),
                 new Toolbaraction('sulu_admin.delete'),
+                new DropdownToolbarAction(
+                    'sulu_admin.edit',
+                    'su-pen',
+                    $dropdownActions
+                ),
             ],
         ], $this->readObjectAttribute($addDetailView, 'options'));
         $this->assertEquals('sulu_snippet.edit_form', $editFormView->getName());
@@ -137,6 +154,11 @@ class SnippetAdminTest extends TestCase
                 new Toolbaraction('sulu_admin.save'),
                 new Toolbaraction('sulu_admin.type', ['sort_by' => 'title']),
                 new Toolbaraction('sulu_admin.delete'),
+                new DropdownToolbarAction(
+                    'sulu_admin.edit',
+                    'su-pen',
+                    $dropdownActions
+                ),
             ],
         ], $this->readObjectAttribute($editDetailView, 'options'));
     }
