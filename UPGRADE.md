@@ -1,6 +1,6 @@
 # Upgrade
 
-## 2.4.5
+## 2.4.6
 
 ### Add indexes to route table
 
