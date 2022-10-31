@@ -318,7 +318,7 @@ EOT;
                     $this->mapProperty(
                         $componentProperty,
                         $propertyMapping,
-                        $componentProperty->getType() . '_',
+                        $component->getName() . '_',
                         'type === \'' . $component->getName() . '\''
                     );
                 }
