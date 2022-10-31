@@ -90,7 +90,7 @@ export default class PreviewStore {
     }
 
     restart(): Promise<string> {
-        return this.stop().then(this.start);
+        return this.stop().then(() => this.start());
     }
 
     update(data: Object): Promise<string> {
