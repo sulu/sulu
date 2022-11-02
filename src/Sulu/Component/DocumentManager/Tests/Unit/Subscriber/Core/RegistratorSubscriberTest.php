@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\tests\Unit\Subscriber\Core;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -23,7 +24,7 @@ use Sulu\Component\DocumentManager\Subscriber\Core\RegistratorSubscriber;
 class RegistratorSubscriberTest extends TestCase
 {
     /**
-     * @var DocumentRegistry
+     * @var ObjectProphecy<DocumentRegistry>
      */
     private $registry;
 
@@ -33,7 +34,7 @@ class RegistratorSubscriberTest extends TestCase
     private $subscriber;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
@@ -43,17 +44,17 @@ class RegistratorSubscriberTest extends TestCase
     private $document;
 
     /**
-     * @var HydrateEvent
+     * @var ObjectProphecy<HydrateEvent>
      */
     private $hydrateEvent;
 
     /**
-     * @var PersistEvent
+     * @var ObjectProphecy<PersistEvent>
      */
     private $persistEvent;
 
     /**
-     * @var RemoveEvent
+     * @var ObjectProphecy<RemoveEvent>
      */
     private $removeEvent;
 
@@ -75,7 +76,7 @@ class RegistratorSubscriberTest extends TestCase
      * It should set the document on hydrate if the document for the node to
      * be hydrated is already in the registry.
      */
-    public function testDocumentFromRegistry()
+    public function testDocumentFromRegistry(): void
     {
         $this->hydrateEvent->hasDocument()->willReturn(false);
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
@@ -91,7 +92,7 @@ class RegistratorSubscriberTest extends TestCase
     /**
      * It should halt propagation if the document is already in the registry and the "rehydrate" option is false.
      */
-    public function testDocumentFromRegistryNoRehydration()
+    public function testDocumentFromRegistryNoRehydration(): void
     {
         $this->hydrateEvent->hasDocument()->willReturn(false);
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
@@ -111,7 +112,7 @@ class RegistratorSubscriberTest extends TestCase
     /**
      * It should set the default locale.
      */
-    public function testDefaultLocale()
+    public function testDefaultLocale(): void
     {
         $this->hydrateEvent->getLocale()->willReturn(null);
         $this->registry->getDefaultLocale()->willReturn('de');
@@ -123,7 +124,7 @@ class RegistratorSubscriberTest extends TestCase
     /**
      * It should stop propagation if the document is already loaded in the requested locale.
      */
-    public function testStopPropagation()
+    public function testStopPropagation(): void
     {
         $locale = 'de';
         $originalLocale = 'de';
@@ -142,7 +143,7 @@ class RegistratorSubscriberTest extends TestCase
     /**
      * It should not stop propagation if the document is loaded with rehydrate option.
      */
-    public function testStopPropagationRehydrate()
+    public function testStopPropagationRehydrate(): void
     {
         $locale = 'de';
         $originalLocale = 'de';
@@ -162,7 +163,7 @@ class RegistratorSubscriberTest extends TestCase
      * It should set the node to the event on persist if the node for the document
      * being persisted is already in the registry.
      */
-    public function testPersistNodeFromRegistry()
+    public function testPersistNodeFromRegistry(): void
     {
         $this->persistEvent->hasNode()->willReturn(false);
         $this->persistEvent->getDocument()->willReturn($this->document);
@@ -175,7 +176,7 @@ class RegistratorSubscriberTest extends TestCase
     /**
      * The node should be available from the event.
      */
-    public function testReorderNodeFomRegistry()
+    public function testReorderNodeFomRegistry(): void
     {
         $reorderEvent = $this->prophesize(ReorderEvent::class);
         $reorderEvent->hasNode()->willReturn(false);
@@ -189,7 +190,7 @@ class RegistratorSubscriberTest extends TestCase
     /**
      * It should return early if the document has already been set.
      */
-    public function testDocumentFromRegistryAlreadySet()
+    public function testDocumentFromRegistryAlreadySet(): void
     {
         $this->hydrateEvent->hasDocument()->willReturn(true)->shouldBeCalled();
         $this->subscriber->handleDocumentFromRegistry($this->hydrateEvent->reveal());
@@ -198,7 +199,7 @@ class RegistratorSubscriberTest extends TestCase
     /**
      * Is should return early if the node is not managed.
      */
-    public function testDocumentFromRegistryNoNode()
+    public function testDocumentFromRegistryNoNode(): void
     {
         $this->hydrateEvent->hasDocument()->willReturn(true)->shouldBeCalled();
         $this->registry->hasNode($this->node->reveal(), 'fr')->willReturn(false);
@@ -208,7 +209,7 @@ class RegistratorSubscriberTest extends TestCase
     /**
      * It should register documents on the HYDRATE event.
      */
-    public function testHandleRegisterHydrate()
+    public function testHandleRegisterHydrate(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->document);
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
@@ -222,7 +223,7 @@ class RegistratorSubscriberTest extends TestCase
     /**
      * It should not register documents on the HYDRATE event when there is already a document.
      */
-    public function testHandleRegisterHydrateAlreadyExisting()
+    public function testHandleRegisterHydrateAlreadyExisting(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->document);
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
@@ -237,7 +238,7 @@ class RegistratorSubscriberTest extends TestCase
     /**
      * It should register documents on the PERSIST event.
      */
-    public function testHandleRegisterPersist()
+    public function testHandleRegisterPersist(): void
     {
         $this->persistEvent->getDocument()->willReturn($this->document);
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
@@ -251,7 +252,7 @@ class RegistratorSubscriberTest extends TestCase
     /**
      * It should not register on PERSIST when there is already a document.
      */
-    public function testHandleRegisterPersistAlreadyExists()
+    public function testHandleRegisterPersistAlreadyExists(): void
     {
         $this->persistEvent->getDocument()->willReturn($this->document);
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
@@ -266,7 +267,7 @@ class RegistratorSubscriberTest extends TestCase
     /**
      * It should deregister the document on the REMOVE event.
      */
-    public function testHandleRemove()
+    public function testHandleRemove(): void
     {
         $this->removeEvent->getDocument()->willReturn($this->document);
         $this->registry->deregisterDocument($this->document)->shouldBeCalled();

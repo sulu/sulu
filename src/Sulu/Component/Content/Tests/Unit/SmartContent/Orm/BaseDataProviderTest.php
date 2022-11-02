@@ -29,7 +29,7 @@ use Symfony\Component\Security\Core\Security;
 
 class BaseDataProviderTest extends TestCase
 {
-    public function testGetDefaultPropertyParameter()
+    public function testGetDefaultPropertyParameter(): void
     {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
         $serializer = $this->prophesize(ArraySerializerInterface::class);
@@ -58,7 +58,7 @@ class BaseDataProviderTest extends TestCase
     /**
      * @dataProvider configurationProvider
      */
-    public function testInitConfiguration($tags, $categories, $limit, $presentAs, $paginated, $sorting)
+    public function testInitConfiguration($tags, $categories, $limit, $presentAs, $paginated, $sorting): void
     {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
         $serializer = $this->prophesize(ArraySerializerInterface::class);
@@ -97,7 +97,7 @@ class BaseDataProviderTest extends TestCase
         $this->assertEquals(\count($sorting) > 0, $configuration->hasSorting());
     }
 
-    public function testResolveDataSource()
+    public function testResolveDataSource(): void
     {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
         $serializer = $this->prophesize(ArraySerializerInterface::class);
@@ -209,7 +209,7 @@ class BaseDataProviderTest extends TestCase
         $repositoryResult,
         $hasNextPage,
         $items
-    ) {
+    ): void {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
         $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', $options, null, null)
             ->shouldBeCalled()->willReturn($repositoryResult);
@@ -244,7 +244,7 @@ class BaseDataProviderTest extends TestCase
         $repositoryResult,
         $hasNextPage,
         $items
-    ) {
+    ): void {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
         $repository->findByFilters($filters, $page, $pageSize, $limit, 'en', [], null, null)
             ->shouldBeCalled()
@@ -285,7 +285,7 @@ class BaseDataProviderTest extends TestCase
         $repositoryResult,
         $hasNextPage,
         $items
-    ) {
+    ): void {
         $mockedItems = \array_map(
             function($item) {
                 $mock = $this->prophesize(ResourceItemInterface::class);
@@ -339,7 +339,7 @@ class BaseDataProviderTest extends TestCase
         }
     }
 
-    public function testResolveResourceItemsWithUser()
+    public function testResolveResourceItemsWithUser(): void
     {
         $user = $this->prophesize(UserInterface::class);
 
@@ -382,7 +382,7 @@ class BaseDataProviderTest extends TestCase
         );
     }
 
-    public function testResolveResourceItemsWithUserWithoutPermissionCheck()
+    public function testResolveResourceItemsWithUserWithoutPermissionCheck(): void
     {
         $user = $this->prophesize(UserInterface::class);
 
@@ -437,7 +437,7 @@ class BaseDataProviderTest extends TestCase
         $repositoryResult,
         $hasNextPage,
         $items
-    ) {
+    ): void {
         $mockedItems = \array_map(
             function($item) {
                 $mock = $this->prophesize(ResourceItemInterface::class);

@@ -39,7 +39,7 @@ class AppendAnalyticsListenerTest extends TestCase
      *
      * @param string $format
      */
-    public function testAppendFormatNoEffect($format)
+    public function testAppendFormatNoEffect($format): void
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -65,7 +65,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $response->setContent(Argument::any())->shouldNotBeCalled();
     }
 
-    public function testBinaryFileResponse()
+    public function testBinaryFileResponse(): void
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -91,7 +91,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $response->setContent(Argument::any())->shouldNotBeCalled();
     }
 
-    public function testAppendFormat()
+    public function testAppendFormat(): void
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -149,7 +149,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $listener->onResponse($event);
     }
 
-    public function testAppendWildcard()
+    public function testAppendWildcard(): void
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -248,7 +248,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $listener->onResponse($event);
     }
 
-    public function testAppendGoogleTagManager()
+    public function testAppendGoogleTagManager(): void
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -307,7 +307,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $listener->onResponse($event);
     }
 
-    public function testAppendPiwik()
+    public function testAppendPiwik(): void
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -366,7 +366,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $listener->onResponse($event);
     }
 
-    public function testAppendCustom()
+    public function testAppendCustom(): void
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -425,7 +425,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $listener->onResponse($event);
     }
 
-    public function testAppendPreview()
+    public function testAppendPreview(): void
     {
         $engine = $this->prophesize(Environment::class);
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);

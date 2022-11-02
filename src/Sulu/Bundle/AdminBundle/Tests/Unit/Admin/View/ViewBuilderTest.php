@@ -52,7 +52,7 @@ class ViewBuilderTest extends TestCase
         array $attributeDefaults,
         ?string $parent,
         array $rerenderAttributes
-    ) {
+    ): void {
         $viewBuilder = new ViewBuilder($name, $path, $type);
         $expectedView = new View($name, $path, $type);
 
@@ -79,7 +79,7 @@ class ViewBuilderTest extends TestCase
         $this->assertEquals($expectedView, $viewBuilder->getView());
     }
 
-    public function testOverrideType()
+    public function testOverrideType(): void
     {
         $viewBuilder = new ViewBuilder('sulu_admin.test', '/test', 'test1');
         $viewBuilder->setType('test2');
@@ -89,7 +89,7 @@ class ViewBuilderTest extends TestCase
         $this->assertEquals($expectedView, $viewBuilder->getView());
     }
 
-    public function testGetName()
+    public function testGetName(): void
     {
         $viewBuilder = new ViewBuilder('sulu_admin.test', '/test', 'test1');
 

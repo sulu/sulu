@@ -34,7 +34,7 @@ class TargetGroupControllerTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testGetById()
+    public function testGetById(): void
     {
         $targetGroup = $this->createTargetGroup([
             'title' => 'Target Group Title',
@@ -65,7 +65,7 @@ class TargetGroupControllerTest extends SuluTestCase
         $this->assertCount(2, $response['webspaces']);
     }
 
-    public function testGetAll()
+    public function testGetAll(): void
     {
         $targetGroup1 = $this->createTargetGroup([
             'title' => 'Target Group Title',
@@ -91,7 +91,7 @@ class TargetGroupControllerTest extends SuluTestCase
         $this->assertCount(2, $targetGroups);
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         $data = [
             'title' => 'Target Group Title',
@@ -137,7 +137,7 @@ class TargetGroupControllerTest extends SuluTestCase
         $this->assertEquals($data['rules'][0]['conditions'][0]['condition'], $rule1Conditions->getCondition());
     }
 
-    public function testPut()
+    public function testPut(): void
     {
         $targetGroup = $this->createTargetGroup([
             'title' => 'Target Group Title',
@@ -201,7 +201,7 @@ class TargetGroupControllerTest extends SuluTestCase
         $this->assertEquals($data['rules'][0]['conditions'][0]['condition'], $rule1Conditions->getCondition());
     }
 
-    public function testPutWithRemoveRoleAndWebspaces()
+    public function testPutWithRemoveRoleAndWebspaces(): void
     {
         $targetGroup = $this->createTargetGroup([
             'title' => 'Target Group Title',
@@ -297,7 +297,7 @@ class TargetGroupControllerTest extends SuluTestCase
         $this->assertEquals($data['rules'][0]['conditions'][0]['condition'], $rule1->getConditions()[0]->getCondition());
     }
 
-    public function testPutWithCreateTargetGroupCondition()
+    public function testPutWithCreateTargetGroupCondition(): void
     {
         $targetGroup = $this->createTargetGroup([
             'title' => 'Target Group Title',
@@ -361,7 +361,7 @@ class TargetGroupControllerTest extends SuluTestCase
         $this->assertEquals($data['rules'][0]['conditions'][0]['condition'], $rule1Conditions->getCondition());
     }
 
-    public function testSingleDelete()
+    public function testSingleDelete(): void
     {
         $targetGroup = $this->createTargetGroup([
             'title' => 'Target Group Title',
@@ -383,7 +383,7 @@ class TargetGroupControllerTest extends SuluTestCase
         $this->assertNull($targetGroup);
     }
 
-    public function testMultipleDelete()
+    public function testMultipleDelete(): void
     {
         $targetGroup1 = $this->createTargetGroup([
             'title' => 'Target Group Title',

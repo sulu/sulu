@@ -40,7 +40,7 @@ class QueryTest extends TestCase
     /**
      * It should be able to return PHPCR results.
      */
-    public function testExecutePhpcr()
+    public function testExecutePhpcr(): void
     {
         $parameters = [
             'one' => 'two',
@@ -69,7 +69,7 @@ class QueryTest extends TestCase
     /**
      * It should return documents by default.
      */
-    public function testExecuteDocument()
+    public function testExecuteDocument(): void
     {
         $resultCollection = $this->prophesize(QueryResultCollection::class);
         $this->dispatcher->dispatch(new QueryExecuteEvent($this->query), Events::QUERY_EXECUTE)->will(function($args) use ($resultCollection) {

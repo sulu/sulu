@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Unit\Repository;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Repository\ResourceLocatorRepository;
 use Sulu\Bundle\PageBundle\Repository\ResourceLocatorRepositoryInterface;
 use Sulu\Component\Content\Compat\Property;
@@ -35,22 +36,22 @@ class ResourceLocatorRepositoryTest extends TestCase
     private $repository;
 
     /**
-     * @var StructureManagerInterface
+     * @var ObjectProphecy<StructureManagerInterface>
      */
     private $structureManager;
 
     /**
-     * @var ResourceLocatorStrategyInterface
+     * @var ObjectProphecy<ResourceLocatorStrategyInterface>
      */
     private $resourceLocatorStrategy;
 
     /**
-     * @var ResourceLocatorStrategyPoolInterface
+     * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
     private $resourceLocatorStrategyPool;
 
     /**
-     * @var DocumentManagerInterface
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 
@@ -70,7 +71,7 @@ class ResourceLocatorRepositoryTest extends TestCase
         );
     }
 
-    public function testGenerateWithParentUuid()
+    public function testGenerateWithParentUuid(): void
     {
         $parts = [
             'title' => 'news',
@@ -96,7 +97,7 @@ class ResourceLocatorRepositoryTest extends TestCase
         $this->assertEquals($result['resourceLocator'], $resourcelocator);
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $parts = [
             'title' => 'news',
@@ -121,7 +122,7 @@ class ResourceLocatorRepositoryTest extends TestCase
         $this->assertEquals($result['resourceLocator'], $resourcelocator);
     }
 
-    public function testGetHistory()
+    public function testGetHistory(): void
     {
         $uuid = '0123456789abcdef';
         $webspace = 'sulu_io';
@@ -140,7 +141,7 @@ class ResourceLocatorRepositoryTest extends TestCase
         $this->assertEquals('/test3', $result['_embedded']['page_resourcelocators'][2]['resourcelocator']);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $resourcelocator = '/test';
         $webspace = 'sulu_io';
@@ -150,7 +151,7 @@ class ResourceLocatorRepositoryTest extends TestCase
         $this->repository->delete($resourcelocator, $webspace, $locale);
     }
 
-    public function testDeleteWithSegment()
+    public function testDeleteWithSegment(): void
     {
         $resourcelocator = '/test';
         $webspace = 'sulu_io';

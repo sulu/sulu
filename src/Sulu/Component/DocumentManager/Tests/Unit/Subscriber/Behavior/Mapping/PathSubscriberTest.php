@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Mapping;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Behavior\Mapping\PathBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\DocumentInspector;
@@ -23,22 +24,22 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\PathSubscriber;
 class PathSubscriberTest extends TestCase
 {
     /**
-     * @var AbstractMappingEvent
+     * @var ObjectProphecy<AbstractMappingEvent>
      */
     private $abstractMappingEvent;
 
     /**
-     * @var PathBehavior
+     * @var ObjectProphecy<PathBehavior>
      */
     private $document;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $pathNode;
 
@@ -48,12 +49,12 @@ class PathSubscriberTest extends TestCase
     private $pathDocument;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $inspector;
 
     /**
-     * @var DocumentAccessor
+     * @var ObjectProphecy<DocumentAccessor>
      */
     private $accessor;
 
@@ -78,14 +79,14 @@ class PathSubscriberTest extends TestCase
         );
     }
 
-    public function testSetInitialPathNotImplementing()
+    public function testSetInitialPathNotImplementing(): void
     {
         $this->abstractMappingEvent->getDocument()->willReturn(\stdClass::class);
         $this->accessor->set(Argument::cetera())->shouldNotBeCalled();
         $this->pathSubscriber->setInitialPath($this->abstractMappingEvent->reveal());
     }
 
-    public function testSetInitialPath()
+    public function testSetInitialPath(): void
     {
         $this->abstractMappingEvent->getDocument()->willReturn($this->document->reveal());
 
@@ -95,14 +96,14 @@ class PathSubscriberTest extends TestCase
         $this->pathSubscriber->setInitialPath($this->abstractMappingEvent->reveal());
     }
 
-    public function testSetFinalPathNotImplementing()
+    public function testSetFinalPathNotImplementing(): void
     {
         $this->abstractMappingEvent->getDocument()->willReturn(\stdClass::class);
         $this->accessor->set(Argument::cetera())->shouldNotBeCalled();
         $this->pathSubscriber->setFinalPath($this->abstractMappingEvent->reveal());
     }
 
-    public function testSetFinalPath()
+    public function testSetFinalPath(): void
     {
         $this->abstractMappingEvent->getDocument()->willReturn($this->document->reveal());
 

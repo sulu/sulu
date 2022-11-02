@@ -245,7 +245,7 @@ class QueryBuilderTest extends SuluTestCase
         return $documents;
     }
 
-    public function testProperties()
+    public function testProperties(): void
     {
         $documents = $this->propertiesProvider();
 
@@ -340,7 +340,7 @@ class QueryBuilderTest extends SuluTestCase
         return [$news, $products, $documents];
     }
 
-    public function testDatasource()
+    public function testDatasource(): void
     {
         list($news, $products, $nodes) = $this->datasourceProvider();
 
@@ -374,7 +374,7 @@ class QueryBuilderTest extends SuluTestCase
         $this->assertEquals(0, \count($result));
     }
 
-    public function testIncludeSubFolder()
+    public function testIncludeSubFolder(): void
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
         list($news, $products, $nodes) = $this->datasourceProvider();
@@ -407,7 +407,7 @@ class QueryBuilderTest extends SuluTestCase
         }
     }
 
-    public function testSecurity()
+    public function testSecurity(): void
     {
         $webspace = $this->getContainer()->get('sulu_core.webspace.webspace_manager')
             ->findWebspaceByKey('test_io');
@@ -455,7 +455,7 @@ class QueryBuilderTest extends SuluTestCase
         $this->assertEquals('Document', $result[0]['title']);
     }
 
-    public function testSecurityWithoutPermissionCheck()
+    public function testSecurityWithoutPermissionCheck(): void
     {
         $webspace = $this->getContainer()->get('sulu_core.webspace.webspace_manager')
             ->findWebspaceByKey('sulu_io');
@@ -504,7 +504,7 @@ class QueryBuilderTest extends SuluTestCase
         $this->assertEquals('Secured document', $result[1]['title']);
     }
 
-    public function testAudienceTargeting()
+    public function testAudienceTargeting(): void
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
 
@@ -564,7 +564,7 @@ class QueryBuilderTest extends SuluTestCase
         $this->assertEquals('Family', $result[0]['title']);
     }
 
-    public function testAudienceTargetingDeactivated()
+    public function testAudienceTargetingDeactivated(): void
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
 
@@ -649,7 +649,7 @@ class QueryBuilderTest extends SuluTestCase
         $this->assertEquals('Single', $result[1]['title']);
     }
 
-    public function testAudienceTargetingDeactivatedTargetGroupEvaluator()
+    public function testAudienceTargetingDeactivatedTargetGroupEvaluator(): void
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
 
@@ -741,7 +741,7 @@ class QueryBuilderTest extends SuluTestCase
         $this->assertContains('Single', $titles);
     }
 
-    public function testSegment()
+    public function testSegment(): void
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
 
@@ -881,7 +881,7 @@ class QueryBuilderTest extends SuluTestCase
         return [$documents, $t1, $t2, $t1t2];
     }
 
-    public function testTags()
+    public function testTags(): void
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
         list($nodes, $t1, $t2, $t1t2) = $this->tagsProvider();
@@ -927,7 +927,7 @@ class QueryBuilderTest extends SuluTestCase
         $this->assertEquals(0, \count($result));
     }
 
-    public function testWebsiteTags()
+    public function testWebsiteTags(): void
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
         list($nodes, $t1, $t2, $t1t2) = $this->tagsProvider();
@@ -1017,7 +1017,7 @@ class QueryBuilderTest extends SuluTestCase
         $this->assertEquals(0, \count($result));
     }
 
-    public function testTagsBoth()
+    public function testTagsBoth(): void
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
         list($nodes, $t1, $t2, $t1t2) = $this->tagsProvider();
@@ -1117,7 +1117,7 @@ class QueryBuilderTest extends SuluTestCase
         return $documents;
     }
 
-    public function testCategories()
+    public function testCategories(): void
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
         $this->categoriesProvider();
@@ -1250,7 +1250,7 @@ class QueryBuilderTest extends SuluTestCase
         return [$documents];
     }
 
-    public function testOrderBy()
+    public function testOrderBy(): void
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
         list($nodes) = $this->orderByProvider();
@@ -1291,7 +1291,7 @@ class QueryBuilderTest extends SuluTestCase
         $this->assertEquals('A', $result[3]['title']);
     }
 
-    public function testOrderByOrder()
+    public function testOrderByOrder(): void
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
         list($nodes) = $this->orderByProvider();
@@ -1350,7 +1350,7 @@ class QueryBuilderTest extends SuluTestCase
         $this->assertEquals('y', $result[3]['title']);
     }
 
-    public function testOrderByOrderWithIncludeSubFolders()
+    public function testOrderByOrderWithIncludeSubFolders(): void
     {
         $root = $this->sessionManager->getContentNode('sulu_io');
         list($news, $products, $nodes) = $this->datasourceProvider();
@@ -1398,7 +1398,7 @@ class QueryBuilderTest extends SuluTestCase
         $this->assertContains('/products', $paths);
     }
 
-    public function testExtension()
+    public function testExtension(): void
     {
         /** @var PageDocument[] $documents */
         $documents = $this->propertiesProvider();
@@ -1430,7 +1430,7 @@ class QueryBuilderTest extends SuluTestCase
         }
     }
 
-    public function testIds()
+    public function testIds(): void
     {
         $nodes = $this->propertiesProvider();
 
@@ -1451,7 +1451,7 @@ class QueryBuilderTest extends SuluTestCase
         $this->assertArrayHasKey($result[1]['id'], $nodes);
     }
 
-    public function testExcluded()
+    public function testExcluded(): void
     {
         $nodes = $this->propertiesProvider();
         $uuids = \array_keys($nodes);
@@ -1663,7 +1663,7 @@ class QueryBuilderTest extends SuluTestCase
         return [$document->getResourceSegment() => $document];
     }
 
-    public function testShadow()
+    public function testShadow(): void
     {
         $data = $this->shadowProvider();
 

@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Metadata\Factory;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Metadata\Factory\Exception\DocumentTypeNotFoundException;
@@ -54,12 +55,12 @@ class StructureMetadataFactoryTest extends TestCase
     private $overriddenDefaultMappingFile;
 
     /**
-     * @var TranslatorInterface
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 
     /**
-     * @var LoaderInterface
+     * @var ObjectProphecy<LoaderInterface>
      */
     private $loader;
 
@@ -114,7 +115,7 @@ class StructureMetadataFactoryTest extends TestCase
     /**
      * It should throw an exception if a non existing document alias is given.
      */
-    public function testGetStructureBadType()
+    public function testGetStructureBadType(): void
     {
         $this->expectExceptionMessage('Structure path for document type "non_existing" is not mapped. Mapped structure types: "page');
         $this->expectException(DocumentTypeNotFoundException::class);
@@ -124,7 +125,7 @@ class StructureMetadataFactoryTest extends TestCase
     /**
      * It should throw an exception if a non existing structure type is given.
      */
-    public function testGetStructureNonExisting()
+    public function testGetStructureNonExisting(): void
     {
         $this->expectExceptionMessage('Could not load structure type "overview_not_existing" for document type "page", looked in "');
         $this->expectException(StructureTypeNotFoundException::class);
@@ -134,7 +135,7 @@ class StructureMetadataFactoryTest extends TestCase
     /**
      * It should use a default structure type if null is given.
      */
-    public function testGetStructureDefault()
+    public function testGetStructureDefault(): void
     {
         $somethingStructure = new StructureMetadata();
         $this->loader->load($this->somethingMappingFile, 'page')->willReturn($somethingStructure);
@@ -143,7 +144,7 @@ class StructureMetadataFactoryTest extends TestCase
         $this->factory->getStructureMetadata('page');
     }
 
-    public function testGetStructureTypes()
+    public function testGetStructureTypes(): void
     {
         $this->assertEquals(['page', 'snoopet'], $this->factory->getStructureTypes());
     }
@@ -151,7 +152,7 @@ class StructureMetadataFactoryTest extends TestCase
     /**
      * It should cache the result.
      */
-    public function testCacheResult()
+    public function testCacheResult(): void
     {
         $somethingStructure = new StructureMetadata();
         $this->loader->load($this->somethingMappingFile, 'page')->willReturn($somethingStructure);
@@ -162,12 +163,12 @@ class StructureMetadataFactoryTest extends TestCase
         $this->factory->getStructureMetadata('page');
     }
 
-    public function testGetStructureDefaultNoSet()
+    public function testGetStructureDefaultNoSet(): void
     {
         $this->assertNull($this->factory->getStructureMetadata('snoopet'));
     }
 
-    public function testGetStructureWithApostrophe()
+    public function testGetStructureWithApostrophe(): void
     {
         $contentTypeManager = $this->prophesize(ContentTypeManagerInterface::class);
         $contentTypeManager->has(Argument::any())->willReturn(true);
@@ -202,7 +203,7 @@ class StructureMetadataFactoryTest extends TestCase
      * is only called once (that the subsequent fetches do not reload
      * the metadata from the source).
      */
-    public function testGetStructure()
+    public function testGetStructure(): void
     {
         $somethingStructure = new StructureMetadata();
         $this->loader->load($this->somethingMappingFile, 'page')->willReturn($somethingStructure);
@@ -219,7 +220,7 @@ class StructureMetadataFactoryTest extends TestCase
     /**
      * Test that the structure is searched in the right direction of the configured folder.
      */
-    public function testDirection()
+    public function testDirection(): void
     {
         $somethingStructure = new StructureMetadata();
         $this->loader->load($this->defaultMappingFile, 'page')
@@ -232,7 +233,7 @@ class StructureMetadataFactoryTest extends TestCase
     /**
      * It returns all structures that are available.
      */
-    public function testGetStructures()
+    public function testGetStructures(): void
     {
         $somethingStructure = new StructureMetadata();
         $defaultStructure = new StructureMetadata();

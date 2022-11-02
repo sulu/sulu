@@ -49,7 +49,7 @@ class RoleSettingControllerTest extends SuluTestCase
         $this->entityManager->clear();
     }
 
-    public function testGetNotExisting()
+    public function testGetNotExisting(): void
     {
         $this->client->jsonRequest('GET', '/api/roles/' . $this->role->getId() . '/settings/test');
         $this->assertHttpStatusCode(204, $this->client->getResponse());
@@ -67,7 +67,7 @@ class RoleSettingControllerTest extends SuluTestCase
         return $key;
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $key = $this->testPut();
 
@@ -91,7 +91,7 @@ class RoleSettingControllerTest extends SuluTestCase
         return $key;
     }
 
-    public function testGetArray()
+    public function testGetArray(): void
     {
         $key = $this->testPutArray();
 

@@ -20,7 +20,7 @@ class SearchManagerTest extends BaseTestCase
      * The search manager should update existing documents with the same IDs rather
      * than creating new documents.
      */
-    public function testSearchManager()
+    public function testSearchManager(): void
     {
         $nbResults = 10;
         $documents = $this->generateDocumentIndex($nbResults);
@@ -36,7 +36,7 @@ class SearchManagerTest extends BaseTestCase
         }
     }
 
-    public function testSearchByWebspace()
+    public function testSearchByWebspace(): void
     {
         $this->generateDocumentIndex(4, '/test-');
         $this->generateDocumentIndex(2, '/test-1');

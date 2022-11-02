@@ -12,9 +12,9 @@
 namespace Sulu\Component\Content\Tests\Unit\Block;
 
 use Jackalope\Node;
-use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\PageBundle\Content\Types\SinglePageSelection;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
@@ -49,7 +49,7 @@ class BlockContentTypeTest extends TestCase
     private $subBlockProperty;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<Node>
      */
     private $node;
 
@@ -59,27 +59,27 @@ class BlockContentTypeTest extends TestCase
     private $contentTypeValueMap;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var TargetGroupStoreInterface
+     * @var ObjectProphecy<TargetGroupStoreInterface>
      */
     private $targetGroupStore;
 
     /**
-     * @var ContentTypeManagerInterface
+     * @var ObjectProphecy<ContentTypeManager>
      */
     private $contentTypeManager;
 
     /**
-     * @var BlockVisitorInterface
+     * @var ObjectProphecy<BlockVisitorInterface>
      */
     private $blockVisitor1;
 
     /**
-     * @var BlockVisitorInterface
+     * @var ObjectProphecy<BlockVisitorInterface>
      */
     private $blockVisitor2;
 
@@ -186,7 +186,7 @@ class BlockContentTypeTest extends TestCase
         $this->blockProperty->addType($type2);
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $this->prepareSingleBlockProperty();
 
@@ -238,7 +238,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
 
-    public function testReadWithoutSettings()
+    public function testReadWithoutSettings(): void
     {
         $this->prepareSingleBlockProperty();
 
@@ -306,7 +306,7 @@ class BlockContentTypeTest extends TestCase
         );
     }
 
-    public function testReadWithEmptySettings()
+    public function testReadWithEmptySettings(): void
     {
         $this->prepareSingleBlockProperty();
 
@@ -376,7 +376,7 @@ class BlockContentTypeTest extends TestCase
         );
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $this->prepareSingleBlockProperty();
 
@@ -437,7 +437,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
 
-    public function testReadMultiple()
+    public function testReadMultiple(): void
     {
         $this->prepareMultipleBlockProperty();
 
@@ -515,7 +515,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
 
-    public function testWriteMultiple()
+    public function testWriteMultiple(): void
     {
         $this->prepareMultipleBlockProperty();
 
@@ -602,7 +602,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
 
-    public function testReadMultipleDifferentTypes()
+    public function testReadMultipleDifferentTypes(): void
     {
         $this->prepareMultipleBlockProperty();
 
@@ -665,7 +665,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
 
-    public function testWriteMultipleDifferentTypes()
+    public function testWriteMultipleDifferentTypes(): void
     {
         $this->prepareMultipleBlockProperty();
 
@@ -737,7 +737,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals($data, $this->blockProperty->getValue());
     }
 
-    public function testGetContentData()
+    public function testGetContentData(): void
     {
         $this->prepareSingleBlockProperty();
 
@@ -772,7 +772,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals($data, $result);
     }
 
-    public function testGetContentDataWithSkips()
+    public function testGetContentDataWithSkips(): void
     {
         $this->prepareSingleBlockProperty();
 
@@ -823,7 +823,7 @@ class BlockContentTypeTest extends TestCase
         $this->assertEquals([['type' => 'type2', 'name' => 'Test-Name-3', 'settings' => []]], $result);
     }
 
-    public function testGetViewData()
+    public function testGetViewData(): void
     {
         $this->prepareSingleBlockProperty();
 
@@ -872,7 +872,7 @@ class BlockContentTypeTest extends TestCase
         );
     }
 
-    public function testGetViewDataWithSkips()
+    public function testGetViewDataWithSkips(): void
     {
         $this->prepareSingleBlockProperty();
 

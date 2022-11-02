@@ -91,7 +91,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->phpcrMapper = new PhpcrMapper($this->sessionManager, $this->documentManager, $this->documentInspector);
     }
 
-    private function prepareTestData()
+    private function prepareTestData(): void
     {
         $this->prepareRouteTestData($this->defaultSession);
         $this->prepareRouteTestData($this->liveSession);
@@ -107,7 +107,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->documentManager->flush();
     }
 
-    private function prepareRouteTestData(SessionInterface $session)
+    private function prepareRouteTestData(SessionInterface $session): void
     {
         $products = $session->getNode('/cmf/sulu_io/routes/de')->addNode('products');
         $products->addMixin('mix:referenceable');
@@ -137,7 +137,7 @@ class PhpcrMapperTest extends SuluTestCase
         $session->save();
     }
 
-    public function testUnique()
+    public function testUnique(): void
     {
         // exists in phpcr
         $result = $this->phpcrMapper->unique('/products/machines', 'sulu_io', 'de');
@@ -160,7 +160,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertTrue($result);
     }
 
-    public function testGetUniquePath()
+    public function testGetUniquePath(): void
     {
         // machines & machines-1 exists
         $result = $this->phpcrMapper->getUniquePath('/products/machines', 'sulu_io', 'de');
@@ -183,7 +183,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertTrue($this->phpcrMapper->unique($result, 'sulu_io', 'de'));
     }
 
-    public function testGetUniquePathForCurrentDocument()
+    public function testGetUniquePathForCurrentDocument(): void
     {
         /** @var BasePageDocument $document1 */
         $document1 = $this->document1;
@@ -195,14 +195,14 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertEquals($document1->getResourceSegment() . '-1', $result);
     }
 
-    public function testSaveFailure()
+    public function testSaveFailure(): void
     {
         $this->expectException('Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException');
         $this->document1->setResourceSegment('/products/machines/drill');
         $this->phpcrMapper->save($this->document1);
     }
 
-    public function testSave()
+    public function testSave(): void
     {
         $this->document1->setResourceSegment('/products/news/content1-news');
         $this->phpcrMapper->save($this->document1);
@@ -217,7 +217,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertTrue($node->hasProperty('sulu:content'));
     }
 
-    public function testSaveEmptyRouteNode()
+    public function testSaveEmptyRouteNode(): void
     {
         $childDocument = $this->createDocument($this->homeDocument, 'Test-Child', '/test/child');
         $this->documentManager->persist($childDocument, 'de');
@@ -235,7 +235,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertTrue($node->hasProperty('sulu:content'));
     }
 
-    public function testReadFailure()
+    public function testReadFailure(): void
     {
         $content = $this->defaultSession->getNode('/cmf/sulu_io/contents')->addNode('content');
         $content->addMixin('mix:referenceable');
@@ -245,7 +245,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->phpcrMapper->loadByContent($content, 'sulu_io', 'de');
     }
 
-    public function testReadFailureUuid()
+    public function testReadFailureUuid(): void
     {
         $content = $this->defaultSession->getNode('/cmf/sulu_io/contents')->addNode('content');
         $content->addMixin('mix:referenceable');
@@ -255,7 +255,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->phpcrMapper->loadByContentUuid($content->getIdentifier(), 'sulu_io', 'de');
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $this->document1->setResourceSegment('/products/news/content1-news');
         $this->phpcrMapper->save($this->document1);
@@ -265,7 +265,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertEquals('/products/news/content1-news', $result);
     }
 
-    public function testReadUuid()
+    public function testReadUuid(): void
     {
         $this->document1->setResourceSegment('/products/news/content1-news');
         $this->phpcrMapper->save($this->document1);
@@ -293,7 +293,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertSame($this->homeDocument->getUuid(), $uuid);
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         // create route for content
         $this->document1->setResourceSegment('/products/news/content1-news');
@@ -304,7 +304,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertEquals($this->document1->getUuid(), $result);
     }
 
-    public function testMove()
+    public function testMove(): void
     {
         // create route for content
         $this->document1->setResourceSegment('/products/news/content1-news');
@@ -341,7 +341,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->phpcrMapper->loadByResourceLocator('/products/news/content1-news', 'sulu_io', 'de');
     }
 
-    public function testMoveTwice()
+    public function testMoveTwice(): void
     {
         // create route for content
         $this->document1->setResourceSegment('/products/news/content1-news');
@@ -382,7 +382,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->phpcrMapper->loadByResourceLocator('/products/news/content1-news', 'sulu_io', 'de');
     }
 
-    public function testGetParentPath()
+    public function testGetParentPath(): void
     {
         $session = $this->sessionManager->getSession();
 
@@ -415,7 +415,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertNull($result);
     }
 
-    public function testLoadHistoryByContentUuid()
+    public function testLoadHistoryByContentUuid(): void
     {
         \sleep(1);
 
@@ -467,7 +467,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertTrue($result[3]->getCreated() > $result[4]->getCreated());
     }
 
-    public function testLoadHistoryByContentUuidWithoutRoutes()
+    public function testLoadHistoryByContentUuidWithoutRoutes(): void
     {
         $document = $this->createDocument($this->homeDocument, 'Test', '/test');
         $this->documentManager->persist($document, 'de');
@@ -476,7 +476,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertEmpty($this->phpcrMapper->loadHistoryByContentUuid($document->getUuid(), 'sulu_io', 'de'));
     }
 
-    public function testDeleteByPath()
+    public function testDeleteByPath(): void
     {
         $session = $this->sessionManager->getSession();
         $rootNode = $session->getNode('/cmf/sulu_io/routes/de');
@@ -518,7 +518,7 @@ class PhpcrMapperTest extends SuluTestCase
         $this->assertFalse($rootNode->hasNode('test'));
     }
 
-    public function testTreeDeleteByPath()
+    public function testTreeDeleteByPath(): void
     {
         $session = $this->sessionManager->getSession();
         $rootNode = $session->getNode('/cmf/sulu_io/routes/de');

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\Routing;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface;
@@ -35,22 +36,22 @@ class RouteProviderTest extends TestCase
     private $routeProvider;
 
     /**
-     * @var RouteRepositoryInterface
+     * @var ObjectProphecy<RouteRepositoryInterface>
      */
     private $routeRepository;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var RouteDefaultsProviderInterface
+     * @var ObjectProphecy<RouteDefaultsProviderInterface>
      */
     private $defaultsProvider;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
@@ -69,7 +70,7 @@ class RouteProviderTest extends TestCase
         );
     }
 
-    public function testGetRouteCollectionForRequestNoRoute()
+    public function testGetRouteCollectionForRequestNoRoute(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/de/test');
@@ -89,7 +90,7 @@ class RouteProviderTest extends TestCase
         $this->assertCount(0, $collection);
     }
 
-    public function testGetRouteCollectionForRequestNoFullMatch()
+    public function testGetRouteCollectionForRequestNoFullMatch(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/test');
@@ -108,7 +109,7 @@ class RouteProviderTest extends TestCase
         $this->assertCount(0, $collection);
     }
 
-    public function testGetRouteCollectionForRequestNoSupport()
+    public function testGetRouteCollectionForRequestNoSupport(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/de/test');
@@ -135,7 +136,7 @@ class RouteProviderTest extends TestCase
         $this->assertCount(0, $collection);
     }
 
-    public function testGetRouteCollectionForRequestUnpublished()
+    public function testGetRouteCollectionForRequestUnpublished(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/de/test');
@@ -166,7 +167,7 @@ class RouteProviderTest extends TestCase
         $this->assertCount(0, $collection);
     }
 
-    public function testGetRouteCollectionForRequest()
+    public function testGetRouteCollectionForRequest(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/de/test');
@@ -202,7 +203,7 @@ class RouteProviderTest extends TestCase
         $this->assertEquals(['test' => 1], $routes[0]->getDefaults());
     }
 
-    public function testGetRouteCollectionForRequestWithFormat()
+    public function testGetRouteCollectionForRequestWithFormat(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/de/test.json');
@@ -238,7 +239,7 @@ class RouteProviderTest extends TestCase
         $this->assertEquals(['test' => 1], $routes[0]->getDefaults());
     }
 
-    public function testGetRouteCollectionForRequestWithUmlauts()
+    public function testGetRouteCollectionForRequestWithUmlauts(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn(\rawurlencode('/de/käße'));
@@ -274,7 +275,7 @@ class RouteProviderTest extends TestCase
         $this->assertEquals(['test' => 1], $routes[0]->getDefaults());
     }
 
-    public function testGetRouteCollectionForRequestTwice()
+    public function testGetRouteCollectionForRequestTwice(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/de/test');
@@ -311,7 +312,7 @@ class RouteProviderTest extends TestCase
         $this->assertEquals(['test' => 1], $routes[0]->getDefaults());
     }
 
-    public function testGetRouteCollectionForRequestWithHistory()
+    public function testGetRouteCollectionForRequestWithHistory(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/de/test');
@@ -355,7 +356,7 @@ class RouteProviderTest extends TestCase
         );
     }
 
-    public function testGetRouteCollectionForRequestWithHistoryWithoutQueryString()
+    public function testGetRouteCollectionForRequestWithHistoryWithoutQueryString(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/de/test');
@@ -399,7 +400,7 @@ class RouteProviderTest extends TestCase
         );
     }
 
-    public function testGetRouteCollectionForRequestNoPrefix()
+    public function testGetRouteCollectionForRequestNoPrefix(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/test');
@@ -435,7 +436,7 @@ class RouteProviderTest extends TestCase
         $this->assertEquals(['test' => 1], $routes[0]->getDefaults());
     }
 
-    public function testGetRouteCollectionForRequestEndingDot()
+    public function testGetRouteCollectionForRequestEndingDot(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/test.');
@@ -453,7 +454,7 @@ class RouteProviderTest extends TestCase
         $this->assertCount(0, $collection);
     }
 
-    public function testGetRouteCollectionForRequestWithoutFormatExtension()
+    public function testGetRouteCollectionForRequestWithoutFormatExtension(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/de/test');
@@ -489,7 +490,7 @@ class RouteProviderTest extends TestCase
         $this->assertEquals(['test' => 1], $routes[0]->getDefaults());
     }
 
-    public function testGetRouteCollectionForRequestWithOtherSegment()
+    public function testGetRouteCollectionForRequestWithOtherSegment(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/de/test');
@@ -547,7 +548,7 @@ class RouteProviderTest extends TestCase
         $this->assertEquals('/de/test', $routes[0]->getPath());
     }
 
-    public function testGetRouteCollectionForRequestWithSameSegment()
+    public function testGetRouteCollectionForRequestWithSameSegment(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getPathInfo()->willReturn('/de/test');

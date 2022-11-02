@@ -15,14 +15,13 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
-use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
@@ -41,22 +40,22 @@ class SingleMediaSelectionTest extends TestCase
     private $singleMediaSelection;
 
     /**
-     * @var MediaManagerInterface
+     * @var ObjectProphecy<MediaManager>
      */
     private $mediaManager;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStore>
      */
     private $mediaReferenceStore;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var SecurityCheckerInterface
+     * @var ObjectProphecy<SecurityCheckerInterface>
      */
     private $securityChecker;
 
@@ -66,17 +65,17 @@ class SingleMediaSelectionTest extends TestCase
     private $webspace;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $nodeProperty;
 
     /**
-     * @var Media
+     * @var ObjectProphecy<Media>
      */
     private $media;
 
@@ -101,7 +100,7 @@ class SingleMediaSelectionTest extends TestCase
         );
     }
 
-    public function testReadEmpty()
+    public function testReadEmpty(): void
     {
         $property = $this->prophesize(Property::class);
         $property->getName()->willReturn('media');
@@ -119,7 +118,7 @@ class SingleMediaSelectionTest extends TestCase
         );
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $property = $this->prophesize(Property::class);
         $property->getName()->willReturn('media');
@@ -138,7 +137,7 @@ class SingleMediaSelectionTest extends TestCase
         );
     }
 
-    public function testWriteEmpty()
+    public function testWriteEmpty(): void
     {
         $property = new Property('media', [], 'single_media_selection');
         $property->setValue(null);
@@ -158,7 +157,7 @@ class SingleMediaSelectionTest extends TestCase
         );
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $property = new Property('media', [], 'single_media_selection');
         $property->setValue(['id' => 11]);
@@ -175,7 +174,7 @@ class SingleMediaSelectionTest extends TestCase
         );
     }
 
-    public function testDefaultParams()
+    public function testDefaultParams(): void
     {
         $property = new Property('media', [], 'single_media_selection');
         $property->setValue(null);
@@ -186,7 +185,7 @@ class SingleMediaSelectionTest extends TestCase
         );
     }
 
-    public function testDefaultValue()
+    public function testDefaultValue(): void
     {
         $this->assertEquals(
             '{"id": null}',
@@ -194,7 +193,7 @@ class SingleMediaSelectionTest extends TestCase
         );
     }
 
-    public function testViewDataEmpty()
+    public function testViewDataEmpty(): void
     {
         $property = new Property('media', [], 'single_media_selection');
         $property->setValue(null);
@@ -204,7 +203,7 @@ class SingleMediaSelectionTest extends TestCase
         );
     }
 
-    public function testViewData()
+    public function testViewData(): void
     {
         $property = new Property('media', [], 'single_media_selection');
         $property->setValue(['id' => 11]);
@@ -215,7 +214,7 @@ class SingleMediaSelectionTest extends TestCase
         );
     }
 
-    public function testContentDataEmpty()
+    public function testContentDataEmpty(): void
     {
         $property = new Property('media', [], 'single_media_selection');
         $property->setValue(null);
@@ -225,7 +224,7 @@ class SingleMediaSelectionTest extends TestCase
         );
     }
 
-    public function testContentData()
+    public function testContentData(): void
     {
         $structure = $this->prophesize(StructureInterface::class);
         $structure->getLanguageCode()->willReturn('de');
@@ -250,7 +249,7 @@ class SingleMediaSelectionTest extends TestCase
         $this->assertEquals($this->media->reveal(), $this->singleMediaSelection->getContentData($property));
     }
 
-    public function testContentDataForMissingPermissions()
+    public function testContentDataForMissingPermissions(): void
     {
         $structure = $this->prophesize(StructureInterface::class);
         $structure->getLanguageCode()->willReturn('de');
@@ -280,7 +279,7 @@ class SingleMediaSelectionTest extends TestCase
         $this->assertNull($this->singleMediaSelection->getContentData($property));
     }
 
-    public function testContentDataForMissingPermissionsWithPermissionCheckFalse()
+    public function testContentDataForMissingPermissionsWithPermissionCheckFalse(): void
     {
         $structure = $this->prophesize(StructureInterface::class);
         $structure->getLanguageCode()->willReturn('de');
@@ -310,7 +309,7 @@ class SingleMediaSelectionTest extends TestCase
         $this->assertEquals($this->media->reveal(), $this->singleMediaSelection->getContentData($property));
     }
 
-    public function testContentDataDeleted()
+    public function testContentDataDeleted(): void
     {
         $structure = $this->prophesize(StructureInterface::class);
         $structure->getLanguageCode()->willReturn('de');
@@ -324,7 +323,7 @@ class SingleMediaSelectionTest extends TestCase
         $this->assertNull($this->singleMediaSelection->getContentData($property));
     }
 
-    public function testPreResolveEmpty()
+    public function testPreResolveEmpty(): void
     {
         $property = new Property('media', [], 'single_media_selection');
         $property->setValue(null);
@@ -334,7 +333,7 @@ class SingleMediaSelectionTest extends TestCase
         $this->singleMediaSelection->preResolve($property);
     }
 
-    public function testPreResolve()
+    public function testPreResolve(): void
     {
         $property = new Property('media', [], 'single_media_selection');
         $property->setValue(['id' => 11]);

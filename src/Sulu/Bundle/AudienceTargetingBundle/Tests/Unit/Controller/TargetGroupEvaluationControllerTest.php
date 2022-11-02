@@ -25,17 +25,17 @@ use Symfony\Component\HttpFoundation\Request;
 class TargetGroupEvaluationControllerTest extends TestCase
 {
     /**
-     * @var TargetGroupEvaluatorInterface|ObjectProphecy
+     * @var ObjectProphecy<TargetGroupEvaluatorInterface>
      */
     private $targetGroupEvaluator;
 
     /**
-     * @var TargetGroupRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<TargetGroupRepositoryInterface>
      */
     private $targetGroupRepository;
 
     /**
-     * @var TargetGroupStoreInterface|ObjectProphecy
+     * @var ObjectProphecy<TargetGroupStoreInterface>
      */
     private $targetGroupStore;
 
@@ -49,7 +49,7 @@ class TargetGroupEvaluationControllerTest extends TestCase
     /**
      * @dataProvider provideTargetGroup
      */
-    public function testTargetGroupAction($header, $currentTargetGroup, $targetGroup, $targetGroupId)
+    public function testTargetGroupAction($header, $currentTargetGroup, $targetGroup, $targetGroupId): void
     {
         if ($currentTargetGroup) {
             $this->targetGroupRepository->find($currentTargetGroup->getId())->willReturn($currentTargetGroup);
@@ -100,7 +100,7 @@ class TargetGroupEvaluationControllerTest extends TestCase
     /**
      * @dataProvider provideTargetGroupHit
      */
-    public function testTargetGroupHitAction($oldTargetGroup, $newTargetGroup, $newTargetGroupId)
+    public function testTargetGroupHitAction($oldTargetGroup, $newTargetGroup, $newTargetGroupId): void
     {
         $this->targetGroupRepository->find($oldTargetGroup->getId())->willReturn($oldTargetGroup);
         $this->targetGroupEvaluator->evaluate(

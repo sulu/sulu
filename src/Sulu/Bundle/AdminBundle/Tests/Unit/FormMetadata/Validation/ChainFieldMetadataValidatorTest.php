@@ -20,12 +20,12 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\FieldMetadataValida
 class ChainFieldMetadataValidatorTest extends TestCase
 {
     /**
-     * @var ObjectProphecy&FieldMetadataValidatorInterface
+     * @var ObjectProphecy<FieldMetadataValidatorInterface>
      */
     private $fieldMetadataValidator1;
 
     /**
-     * @var ObjectProphecy&FieldMetadataValidatorInterface
+     * @var ObjectProphecy<FieldMetadataValidatorInterface>
      */
     private $fieldMetadataValidator2;
 
@@ -45,7 +45,7 @@ class ChainFieldMetadataValidatorTest extends TestCase
         ]);
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $fieldMetadata = new FieldMetadata('some_field');
 

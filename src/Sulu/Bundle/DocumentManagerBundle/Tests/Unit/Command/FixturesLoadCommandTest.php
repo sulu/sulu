@@ -13,6 +13,7 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Command\FixturesLoadCommand;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
@@ -27,12 +28,12 @@ use Symfony\Component\Console\Tester\CommandTester;
 class FixturesLoadCommandTest extends TestCase
 {
     /**
-     * @var DocumentExecutor
+     * @var ObjectProphecy<DocumentExecutor>
      */
     private $executor;
 
     /**
-     * @var DocumentFixtureInterface
+     * @var ObjectProphecy<DocumentFixtureInterface>
      */
     private $fixture1;
 
@@ -69,7 +70,7 @@ class FixturesLoadCommandTest extends TestCase
     /**
      * It should show a message if no fixtures are found.
      */
-    public function testNoFixtures()
+    public function testNoFixtures(): void
     {
         $tester = $this->execute([
             '--no-interaction' => true,
@@ -81,7 +82,7 @@ class FixturesLoadCommandTest extends TestCase
     /**
      * It should load fixtures.
      */
-    public function testLoadFixtures()
+    public function testLoadFixtures(): void
     {
         $this->fixtures->append($this->fixture1->reveal());
 
@@ -101,7 +102,7 @@ class FixturesLoadCommandTest extends TestCase
     /**
      * It should not purge the database when --append is given.
      */
-    public function testLoadFixturesAppend()
+    public function testLoadFixturesAppend(): void
     {
         $this->fixtures->append($this->fixture1->reveal());
 
@@ -123,7 +124,7 @@ class FixturesLoadCommandTest extends TestCase
     /**
      * It should not initialize when --no-initialize is specified.
      */
-    public function testLoadFixturesNoInitialize()
+    public function testLoadFixturesNoInitialize(): void
     {
         $this->fixtures->append($this->fixture1->reveal());
 
@@ -145,7 +146,7 @@ class FixturesLoadCommandTest extends TestCase
     /**
      * It should load specified fixtures.
      */
-    public function testLoadSpecified()
+    public function testLoadSpecified(): void
     {
         $fooFixture = new FooFixture();
         $this->fixtures->append($fooFixture);
@@ -168,7 +169,7 @@ class FixturesLoadCommandTest extends TestCase
     /**
      * It should load a specified group.
      */
-    public function testLoadGroup()
+    public function testLoadGroup(): void
     {
         $fooFixture = new GroupBarFixture();
         $fooFixture2 = new GroupFooFixture();
@@ -194,7 +195,7 @@ class FixturesLoadCommandTest extends TestCase
     /**
      * It should show a message if no fixtures are found.
      */
-    public function testNoFixturesInteraction()
+    public function testNoFixturesInteraction(): void
     {
         $helper = $this->prophesize(QuestionHelper::class);
         $helper->setHelperSet(Argument::cetera())->willReturn(null);

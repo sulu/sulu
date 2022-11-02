@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Sulu\Bundle\PageBundle\Content\Types\PageSelection;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -26,27 +27,27 @@ use Sulu\Component\Content\Query\ContentQueryExecutorInterface;
 class PageSelectionTest extends TestCase
 {
     /**
-     * @var ContentQueryExecutorInterface
+     * @var ObjectProphecy<ContentQueryExecutorInterface>
      */
     private $contentQueryExecutor;
 
     /**
-     * @var ContentQueryBuilderInterface
+     * @var ObjectProphecy<ContentQueryBuilderInterface>
      */
     private $contentQueryBuilder;
 
     /**
-     * @var LoggerInterface
+     * @var ObjectProphecy<LoggerInterface>
      */
     private $logger;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $referenceStore;
 
@@ -59,7 +60,7 @@ class PageSelectionTest extends TestCase
         $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
     }
 
-    public function testWriteWithNoneExistingUUID()
+    public function testWriteWithNoneExistingUUID(): void
     {
         $pageSelection = new PageSelection(
             $this->contentQueryExecutor->reveal(),
@@ -87,7 +88,7 @@ class PageSelectionTest extends TestCase
         $pageSelection->write($node->reveal(), $this->property->reveal(), 1, 'test', 'de', null);
     }
 
-    public function testGetContentData()
+    public function testGetContentData(): void
     {
         $pageSelection = new PageSelection(
             $this->contentQueryExecutor->reveal(),
@@ -116,7 +117,7 @@ class PageSelectionTest extends TestCase
         );
     }
 
-    public function testGetContentDataWithUser()
+    public function testGetContentDataWithUser(): void
     {
         $pageSelection = new PageSelection(
             $this->contentQueryExecutor->reveal(),
@@ -152,7 +153,7 @@ class PageSelectionTest extends TestCase
         $pageSelection->getContentData($this->property->reveal());
     }
 
-    public function testGetContentDataWithoutPathParameter()
+    public function testGetContentDataWithoutPathParameter(): void
     {
         $pageSelection = new PageSelection(
             $this->contentQueryExecutor->reveal(),
@@ -182,7 +183,7 @@ class PageSelectionTest extends TestCase
         );
     }
 
-    public function testPreResolve()
+    public function testPreResolve(): void
     {
         $pageSelection = new PageSelection(
             $this->contentQueryExecutor->reveal(),

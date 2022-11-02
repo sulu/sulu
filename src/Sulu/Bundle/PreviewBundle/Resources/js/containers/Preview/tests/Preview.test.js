@@ -31,6 +31,7 @@ jest.mock('debounce', () => jest.fn((value) => value));
 
 jest.mock('../stores/PreviewStore', () => jest.fn(function(resourceKey) {
     this.resourceKey = resourceKey;
+    this.restart = jest.fn().mockReturnValue(Promise.resolve());
     this.start = jest.fn().mockReturnValue(Promise.resolve());
     this.update = jest.fn().mockReturnValue(Promise.resolve());
     this.updateContext = jest.fn().mockReturnValue(Promise.resolve());
@@ -511,6 +512,43 @@ test('React and update-context when schema is changed', () => {
 
     return startPromise.then(() => {
         expect(previewStore.updateContext).toBeCalledWith('homepage', {title: 'Test'});
+    });
+});
+
+test('React and restart when locale is changed', () => {
+    const resourceStore = new ResourceStore('pages', 1);
+    const formStore = new ResourceFormStore(resourceStore, 'pages');
+
+    // $FlowFixMe
+    formStore.data = observable.map({title: 'Test'});
+    // $FlowFixMe
+    formStore.loading = false;
+    // $FlowFixMe
+    formStore.type = observable.box('default');
+    formStore.schema = observable.box({title: {label: 'Title'}});
+    // $FlowFixMe
+    formStore.locale = observable.box('en');
+
+    const router = new Router({});
+    const preview = mount(<Preview formStore={formStore} router={router} />);
+
+    const startPromise = Promise.resolve();
+    const updateContextPromise = Promise.resolve('<h1>Sulu is awesome</h1>');
+
+    const previewStore = preview.instance().previewStore;
+    previewStore.start.mockReturnValue(startPromise);
+    previewStore.updateContext.mockReturnValue(updateContextPromise);
+    previewStore.starting = false;
+
+    preview.instance().handleStartClick();
+
+    // $FlowFixMe
+    formStore.type.set('homepage');
+    // $FlowFixMe
+    formStore.locale.set('de');
+
+    return startPromise.then(() => {
+        expect(previewStore.restart).toBeCalled();
     });
 });
 

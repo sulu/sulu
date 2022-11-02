@@ -18,7 +18,7 @@ use Sulu\Bundle\AdminBundle\Exception\NavigationItemNotFoundException;
 
 class NavigationItemCollectionTest extends TestCase
 {
-    public function testGet()
+    public function testGet(): void
     {
         $navigationItem = new NavigationItem('sulu_test');
 
@@ -28,7 +28,7 @@ class NavigationItemCollectionTest extends TestCase
         $this->assertEquals($navigationItem, $navigationItemCollection->get('sulu_test'));
     }
 
-    public function testHas()
+    public function testHas(): void
     {
         $navigationItem = new NavigationItem('sulu_test');
 
@@ -38,14 +38,14 @@ class NavigationItemCollectionTest extends TestCase
         $this->assertTrue($navigationItemCollection->has('sulu_test'));
     }
 
-    public function testHasNotExistingRoute()
+    public function testHasNotExistingRoute(): void
     {
         $navigationItemCollection = new NavigationItemCollection();
 
         $this->assertFalse($navigationItemCollection->has('sulu_test'));
     }
 
-    public function testAll()
+    public function testAll(): void
     {
         $navigationItem1 = new NavigationItem('sulu_test_1');
         $navigationItem2 = new NavigationItem('sulu_test_2');
@@ -60,7 +60,7 @@ class NavigationItemCollectionTest extends TestCase
         $this->assertContains($navigationItem2, $routes);
     }
 
-    public function testGetNotExistingRoute()
+    public function testGetNotExistingRoute(): void
     {
         $this->expectException(NavigationItemNotFoundException::class);
 

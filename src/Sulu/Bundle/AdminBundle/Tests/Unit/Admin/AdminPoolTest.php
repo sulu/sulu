@@ -25,12 +25,12 @@ class AdminPoolTest extends TestCase
     protected $adminPool;
 
     /**
-     * @var Admin|ObjectProphecy
+     * @var ObjectProphecy<Admin>
      */
     protected $admin1;
 
     /**
-     * @var Admin|ObjectProphecy
+     * @var ObjectProphecy<Admin>
      */
     protected $admin2;
 
@@ -49,14 +49,14 @@ class AdminPoolTest extends TestCase
         $this->adminPool->addAdmin($this->admin2->reveal());
     }
 
-    public function testAdmins()
+    public function testAdmins(): void
     {
         $this->assertEquals(2, \count($this->adminPool->getAdmins()));
         $this->assertSame($this->admin1->reveal(), $this->adminPool->getAdmins()[0]);
         $this->assertSame($this->admin2->reveal(), $this->adminPool->getAdmins()[1]);
     }
 
-    public function testSecurityContexts()
+    public function testSecurityContexts(): void
     {
         $this->admin1->getSecurityContexts()->willReturn([
             'Sulu' => [

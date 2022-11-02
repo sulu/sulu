@@ -14,17 +14,18 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Session;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Session\SessionManager;
 
 class SessionManagerTest extends TestCase
 {
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $defaultSession;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $liveSession;
 
@@ -41,7 +42,7 @@ class SessionManagerTest extends TestCase
         $this->sessionManager = new SessionManager($this->defaultSession->reveal(), $this->liveSession->reveal());
     }
 
-    public function testSetNodeProperty()
+    public function testSetNodeProperty(): void
     {
         $defaultNode = $this->prophesize(NodeInterface::class);
         $defaultNode->setProperty('settings:setting', 'data')->shouldBeCalled();
@@ -54,7 +55,7 @@ class SessionManagerTest extends TestCase
         $this->sessionManager->setNodeProperty('/cmf/sulu_io', 'settings:setting', 'data');
     }
 
-    public function testFlush()
+    public function testFlush(): void
     {
         $this->defaultSession->save()->shouldBeCalled();
         $this->liveSession->save()->shouldBeCalled();

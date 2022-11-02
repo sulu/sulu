@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Controller;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\Controller\ErrorController;
 use Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolverInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
@@ -27,22 +28,22 @@ use Twig\Loader\FilesystemLoader;
 class ErrorControllerTest extends TestCase
 {
     /**
-     * @var SymfonyErrorController
+     * @var ObjectProphecy<SymfonyErrorController>
      */
     private $symfonyErrorController;
 
     /**
-     * @var Environment
+     * @var ObjectProphecy<Environment>
      */
     private $twig;
 
     /**
-     * @var FilesystemLoader
+     * @var ObjectProphecy<FilesystemLoader>
      */
     private $loader;
 
     /**
-     * @var TemplateAttributeResolverInterface
+     * @var ObjectProphecy<TemplateAttributeResolverInterface>
      */
     private $templateAttributeResolver;
 

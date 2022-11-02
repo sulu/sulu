@@ -13,6 +13,7 @@ namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\CacheLifetime;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\HttpCacheBundle\Cache\SuluHttpCache;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancer;
 use Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore;
@@ -31,32 +32,32 @@ class CacheLifetimeEnhancerTest extends TestCase
     private $cacheLifetimeEnhancer;
 
     /**
-     * @var CacheLifetimeRequestStore
+     * @var ObjectProphecy<CacheLifetimeRequestStore>
      */
     private $cacheLifetimeRequestStore;
 
     /**
-     * @var CacheLifetimeResolver
+     * @var ObjectProphecy<CacheLifetimeResolver>
      */
     private $cacheLifetimeResolver;
 
     /**
-     * @var PageBridge
+     * @var ObjectProphecy<PageBridge>
      */
     private $page;
 
     /**
-     * @var SnippetBridge
+     * @var ObjectProphecy<SnippetBridge>
      */
     private $snippet;
 
     /**
-     * @var Response
+     * @var ObjectProphecy<Response>
      */
     private $response;
 
     /**
-     * @var ResponseHeaderBag
+     * @var ObjectProphecy<ResponseHeaderBag>
      */
     private $responseHeaderBag;
 
@@ -105,7 +106,7 @@ class CacheLifetimeEnhancerTest extends TestCase
      *
      * @dataProvider provideCacheLifeTime
      */
-    public function testEnhance(int $cacheLifetime, ?int $requestCacheLifetime, int $expectedCacheLifetime)
+    public function testEnhance(int $cacheLifetime, ?int $requestCacheLifetime, int $expectedCacheLifetime): void
     {
         $this->page->getCacheLifeTime()->willReturn(
             ['type' => CacheLifetimeResolverInterface::TYPE_SECONDS, 'value' => $cacheLifetime]
@@ -134,7 +135,7 @@ class CacheLifetimeEnhancerTest extends TestCase
         $this->cacheLifetimeEnhancer->enhance($this->response->reveal(), $this->page->reveal());
     }
 
-    public function testEnhanceSnippet()
+    public function testEnhanceSnippet(): void
     {
         $this->cacheLifetimeEnhancer->enhance($this->response->reveal(), $this->snippet->reveal());
         $this->response->setPublic()->shouldNotBeCalled();

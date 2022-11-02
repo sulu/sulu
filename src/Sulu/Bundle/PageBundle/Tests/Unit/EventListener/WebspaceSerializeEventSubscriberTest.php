@@ -18,6 +18,7 @@ use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\EventListener\WebspaceSerializeEventSubscriber;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\Localization\Localization;
@@ -38,27 +39,27 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class WebspaceSerializeEventSubscriberTest extends TestCase
 {
     /**
-     * @var WebspaceUrlProviderInterface
+     * @var ObjectProphecy<WebspaceUrlProviderInterface>
      */
     private $webspaceUrlProvider;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var ResourceLocatorStrategyPoolInterface
+     * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
     private $resourceLocatorStrategyPool;
 
     /**
-     * @var AccessControlManagerInterface
+     * @var ObjectProphecy<AccessControlManagerInterface>
      */
     private $accessControlManager;
 
     /**
-     * @var TokenStorageInterface
+     * @var ObjectProphecy<TokenStorageInterface>
      */
     private $tokenStorage;
 
@@ -85,7 +86,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         );
     }
 
-    public function testGetSubscribedEvents()
+    public function testGetSubscribedEvents(): void
     {
         $events = $this->webspaceSerializeEventSubscriber->getSubscribedEvents();
 
@@ -101,7 +102,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         }
     }
 
-    public function testAppendPortalInformation()
+    public function testAppendPortalInformation(): void
     {
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn('sulu_io');
@@ -136,7 +137,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         );
     }
 
-    public function testAppendUrls()
+    public function testAppendUrls(): void
     {
         $urls = [
             new Url('sulu.lo'),
@@ -171,7 +172,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         );
     }
 
-    public function testAppendCustomUrls()
+    public function testAppendCustomUrls(): void
     {
         $customUrls = [
             new CustomUrl('sulu.lo'),
@@ -236,7 +237,7 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
         );
     }
 
-    public function testAppendPermissions()
+    public function testAppendPermissions(): void
     {
         $webspace = $this->prophesize(Webspace::class);
         $webspace->getKey()->willReturn('sulu');

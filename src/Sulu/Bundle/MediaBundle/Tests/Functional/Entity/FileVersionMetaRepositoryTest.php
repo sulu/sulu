@@ -72,7 +72,7 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
         $this->em->flush();
     }
 
-    public function testFindLatestWithoutSecurity()
+    public function testFindLatestWithoutSecurity(): void
     {
         $this->createFile('Old Title 1', 'New Title 1');
         $this->createFile('Old Title 2', 'New Title 2');
@@ -92,7 +92,7 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
         $this->assertNotContains('Old Title 2', $titles);
     }
 
-    public function testFindByCollectionId()
+    public function testFindByCollectionId(): void
     {
         $collection = new Collection();
         $collection->setType($this->collectionType);
@@ -120,7 +120,7 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
         $this->assertNotContains('Old Title 3', $titles);
     }
 
-    private function createFile($oldTitle, $newTitle, $collection = null)
+    private function createFile($oldTitle, $newTitle, $collection = null): void
     {
         $media = new Media();
         $media->setType($this->mediaType);
@@ -137,7 +137,7 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
         $this->em->persist($media);
     }
 
-    private function createFileVersion(File $file, $title, $version)
+    private function createFileVersion(File $file, $title, $version): void
     {
         $fileVersion = new FileVersion();
         $fileVersion->setName($title . '.png');

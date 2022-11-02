@@ -35,27 +35,27 @@ class CollectionTrashItemHandlerTest extends TestCase
     use SetGetPrivatePropertyTrait;
 
     /**
-     * @var TrashItemRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<TrashItemRepositoryInterface>
      */
     private $trashItemRepository;
 
     /**
-     * @var CollectionRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<CollectionRepositoryInterface>
      */
     private $collectionRepository;
 
     /**
-     * @var DoctrineRestoreHelperInterface|ObjectProphecy
+     * @var ObjectProphecy<DoctrineRestoreHelperInterface>
      */
     private $doctrineRestoreHelper;
 
     /**
-     * @var EntityManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<EntityManagerInterface>
      */
     private $entityManager;
 
     /**
-     * @var DomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DomainEventCollectorInterface>
      */
     private $domainEventCollector;
 
@@ -93,7 +93,7 @@ class CollectionTrashItemHandlerTest extends TestCase
             });
 
         $this->doctrineRestoreHelper->persistAndFlushWithId(Argument::cetera())
-            ->will(static function($args) {
+            ->will(static function($args): void {
                 /** @var CollectionInterface $collection */
                 $collection = $args[0];
 
@@ -192,7 +192,7 @@ class CollectionTrashItemHandlerTest extends TestCase
             ->shouldBeCalled();
         $this->entityManager->persist(Argument::cetera())
             ->shouldBeCalled()
-            ->will(static function($args) {
+            ->will(static function($args): void {
                 /** @var CollectionInterface $collection */
                 $collection = $args[0];
 

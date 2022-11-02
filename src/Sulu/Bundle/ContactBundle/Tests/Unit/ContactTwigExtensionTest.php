@@ -32,7 +32,7 @@ class ContactTwigExtensionTest extends TestCase
     private $cache;
 
     /**
-     * @var ContactRepository|ObjectProphecy
+     * @var ObjectProphecy<ContactRepository>
      */
     private $contactRepository;
 
@@ -44,7 +44,7 @@ class ContactTwigExtensionTest extends TestCase
         $this->extension = new ContactTwigExtension($this->cache, $this->contactRepository->reveal());
     }
 
-    public function testResolveContactFunction()
+    public function testResolveContactFunction(): void
     {
         $contact1 = new Contact();
         $contact1->setFirstName('Hikaru');
@@ -64,7 +64,7 @@ class ContactTwigExtensionTest extends TestCase
         $this->assertEquals('John Cho', $contact->getFullName());
     }
 
-    public function testResolveContactFunctionNonExisting()
+    public function testResolveContactFunctionNonExisting(): void
     {
         $contact = $this->extension->resolveContactFunction(3);
         $this->assertNull($contact);

@@ -30,7 +30,7 @@ class LocalizationManagerTest extends TestCase
         $this->localizationManager = new LocalizationManager();
     }
 
-    public function testGetAllLocalizations()
+    public function testGetAllLocalizations(): void
     {
         $localization1 = new Localization();
         $localization1->setLanguage('de');
@@ -50,7 +50,7 @@ class LocalizationManagerTest extends TestCase
         $this->assertContains($localization3, $localizations);
     }
 
-    public function testGetAllLocalizationsWithSameLocalizations()
+    public function testGetAllLocalizationsWithSameLocalizations(): void
     {
         $localization1 = new Localization();
         $localization1->setLanguage('de');

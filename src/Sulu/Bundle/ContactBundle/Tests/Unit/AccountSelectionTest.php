@@ -15,11 +15,11 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Contact\AccountManager;
 use Sulu\Bundle\ContactBundle\Content\Types\AccountSelection;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\StructureInterface;
 
@@ -31,32 +31,32 @@ class AccountSelectionTest extends TestCase
     private $accountSelection;
 
     /**
-     * @var AccountManager
+     * @var ObjectProphecy<AccountManager>
      */
     private $accountManager;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStore>
      */
     private $accountReferenceStore;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 
     /**
-     * @var Account
+     * @var ObjectProphecy<Account>
      */
     private $account1;
 
     /**
-     * @var Account
+     * @var ObjectProphecy<Account>
      */
     private $account2;
 
@@ -76,7 +76,7 @@ class AccountSelectionTest extends TestCase
         );
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $this->node->hasProperty('accounts')->willReturn(true);
         $this->node->getPropertyValue('accounts')->willReturn([123, 789]);
@@ -93,7 +93,7 @@ class AccountSelectionTest extends TestCase
         );
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $property = new Property('accounts', [], 'account_selection');
         $property->setValue([123, 789]);
@@ -110,7 +110,7 @@ class AccountSelectionTest extends TestCase
         );
     }
 
-    public function testWriteNothing()
+    public function testWriteNothing(): void
     {
         $property = new Property('accounts', [], 'account_selection');
         $property->setValue(null);
@@ -129,7 +129,7 @@ class AccountSelectionTest extends TestCase
         );
     }
 
-    public function testDefaultParams()
+    public function testDefaultParams(): void
     {
         $this->assertSame(
             [],
@@ -137,7 +137,7 @@ class AccountSelectionTest extends TestCase
         );
     }
 
-    public function testViewDataEmpty()
+    public function testViewDataEmpty(): void
     {
         $this->assertSame(
             [],
@@ -145,7 +145,7 @@ class AccountSelectionTest extends TestCase
         );
     }
 
-    public function testViewData()
+    public function testViewData(): void
     {
         $property = new Property('accounts', [], 'account_selection');
         $property->setValue([123, 789]);
@@ -156,7 +156,7 @@ class AccountSelectionTest extends TestCase
         );
     }
 
-    public function testContentDataEmpty()
+    public function testContentDataEmpty(): void
     {
         $this->assertSame(
             [],
@@ -164,7 +164,7 @@ class AccountSelectionTest extends TestCase
         );
     }
 
-    public function testContentData()
+    public function testContentData(): void
     {
         $structure = $this->prophesize(StructureInterface::class);
         $structure->getLanguageCode()->willReturn('de');
@@ -179,7 +179,7 @@ class AccountSelectionTest extends TestCase
         $this->assertSame($result, $this->accountSelection->getContentData($property));
     }
 
-    public function testContentDataWithSorting()
+    public function testContentDataWithSorting(): void
     {
         $structure = $this->prophesize(StructureInterface::class);
         $structure->getLanguageCode()->willReturn('de');
@@ -197,7 +197,7 @@ class AccountSelectionTest extends TestCase
         );
     }
 
-    public function testPreResolveEmpty()
+    public function testPreResolveEmpty(): void
     {
         $property = new Property('accounts', [], 'account_selection');
         $property->setValue(null);
@@ -207,7 +207,7 @@ class AccountSelectionTest extends TestCase
         $this->accountSelection->preResolve($property);
     }
 
-    public function testPreResolve()
+    public function testPreResolve(): void
     {
         $property = new Property('accounts', [], 'account_selection');
         $property->setValue([123, 789]);

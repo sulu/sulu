@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sitemap;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\Exception\SitemapProviderNotFoundException;
 use Sulu\Bundle\WebsiteBundle\Sitemap\Sitemap;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderInterface;
@@ -20,12 +21,12 @@ use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPool;
 class SitemapProviderPoolTest extends TestCase
 {
     /**
-     * @var SitemapProviderInterface
+     * @var ObjectProphecy<SitemapProviderInterface>
      */
     public $pagesSitemapProvider;
 
     /**
-     * @var SitemapProviderInterface
+     * @var ObjectProphecy<SitemapProviderInterface>
      */
     public $articlesSitemapProvider;
 
@@ -52,25 +53,25 @@ class SitemapProviderPoolTest extends TestCase
         ]);
     }
 
-    public function testGetProvider()
+    public function testGetProvider(): void
     {
         $this->assertEquals($this->pagesSitemapProvider->reveal(), $this->pool->getProvider('pages'));
     }
 
-    public function testGetProviderNotExists()
+    public function testGetProviderNotExists(): void
     {
         $this->expectException(SitemapProviderNotFoundException::class);
 
         $this->pool->getProvider('test');
     }
 
-    public function testHasProvider()
+    public function testHasProvider(): void
     {
         $this->assertTrue($this->pool->hasProvider('pages'));
         $this->assertFalse($this->pool->hasProvider('test'));
     }
 
-    public function testGetIndex()
+    public function testGetIndex(): void
     {
         $lastMod = new \DateTime();
         $this->pagesSitemapProvider->createSitemap('http', 'sulu.io')->willReturn(new Sitemap('pages', 1));

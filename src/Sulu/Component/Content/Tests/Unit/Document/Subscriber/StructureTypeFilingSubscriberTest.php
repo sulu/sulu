@@ -15,10 +15,10 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureTypeFilingBehavior;
 use Sulu\Component\Content\Document\Subscriber\StructureTypeFilingSubscriber;
-use Sulu\Component\DocumentManager\Behavior\Path\BasePathBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Metadata;
@@ -27,12 +27,12 @@ use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 class StructureTypeFilingSubscriberTest extends TestCase
 {
     /**
-     * @var PersistEvent
+     * @var ObjectProphecy<PersistEvent>
      */
     private $persistEvent;
 
     /**
-     * @var BasePathBehavior
+     * @var ObjectProphecy<StructureTypeFilingBehavior>
      */
     private $document;
 
@@ -42,42 +42,42 @@ class StructureTypeFilingSubscriberTest extends TestCase
     private $parentDocument;
 
     /**
-     * @var DocumentManager
+     * @var ObjectProphecy<DocumentManager>
      */
     private $documentManager;
 
     /**
-     * @var MetadataFactoryInterface
+     * @var ObjectProphecy<MetadataFactoryInterface>
      */
     private $metadataFactory;
 
     /**
-     * @var MetaData
+     * @var ObjectProphecy<Metadata>
      */
     private $metadata;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $parentNode;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $defaultSession;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $defaultNode;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $liveSession;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $liveNode;
 
@@ -113,7 +113,7 @@ class StructureTypeFilingSubscriberTest extends TestCase
     /**
      * It should return early if the document is not implementing the behavior.
      */
-    public function testPersistNotImplementing()
+    public function testPersistNotImplementing(): void
     {
         $this->persistEvent->getDocument()->willReturn(new \stdClass());
         $this->persistEvent->setParentNode(Argument::any())->shouldNotBeCalled();
@@ -123,7 +123,7 @@ class StructureTypeFilingSubscriberTest extends TestCase
     /**
      * It should set the parent document.
      */
-    public function testSetParentDocument()
+    public function testSetParentDocument(): void
     {
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->persistEvent->hasParentNode()->willReturn(true);

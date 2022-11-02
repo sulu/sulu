@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Unit\Twig;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Sulu\Bundle\SecurityBundle\Twig\UserTwigExtension;
@@ -31,7 +32,7 @@ class UserTwigExtensionTest extends TestCase
     private $cache;
 
     /**
-     * @var UserRepository
+     * @var ObjectProphecy<UserRepository>
      */
     private $userRepository;
 
@@ -43,7 +44,7 @@ class UserTwigExtensionTest extends TestCase
         $this->extension = new UserTwigExtension($this->cache, $this->userRepository->reveal());
     }
 
-    public function testResolveUserFunction()
+    public function testResolveUserFunction(): void
     {
         $user1 = new User();
         $user1->setUsername('hikaru');
@@ -61,7 +62,7 @@ class UserTwigExtensionTest extends TestCase
         $this->assertEquals('sulu', $user->getUsername());
     }
 
-    public function testResolveUserFunctionNonExisting()
+    public function testResolveUserFunctionNonExisting(): void
     {
         $user = $this->extension->resolveUserFunction(3);
         $this->assertNull($user);

@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\DocumentManager\PropertyEncoder;
 
@@ -24,7 +25,7 @@ class PropertyEncoderTest extends TestCase
     private $encoder;
 
     /**
-     * @var NamespaceRegistry
+     * @var ObjectProphecy<NamespaceRegistry>
      */
     private $namespaceRegistry;
 
@@ -45,7 +46,7 @@ class PropertyEncoderTest extends TestCase
     /**
      * It should encode localized system properties.
      */
-    public function testEncodeLocalizedSystem()
+    public function testEncodeLocalizedSystem(): void
     {
         $name = $this->encoder->localizedSystemName('created', 'fr');
         $this->assertEquals('lsys:fr-created', $name);
@@ -54,7 +55,7 @@ class PropertyEncoderTest extends TestCase
     /**
      * It should encode system properties.
      */
-    public function testEncodeSystem()
+    public function testEncodeSystem(): void
     {
         $name = $this->encoder->systemName('created');
         $this->assertEquals('nsys:created', $name);
@@ -63,7 +64,7 @@ class PropertyEncoderTest extends TestCase
     /**
      * It should throw exception.
      */
-    public function testEncodeLocalizedSystemEmptyLocale()
+    public function testEncodeLocalizedSystemEmptyLocale(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -73,7 +74,7 @@ class PropertyEncoderTest extends TestCase
     /**
      * It should throw exception.
      */
-    public function testEncodeLocalizedContentEmptyLocale()
+    public function testEncodeLocalizedContentEmptyLocale(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -83,7 +84,7 @@ class PropertyEncoderTest extends TestCase
     /**
      * It should throw exception.
      */
-    public function testLocalizedContentEmptyLocale()
+    public function testLocalizedContentEmptyLocale(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -93,7 +94,7 @@ class PropertyEncoderTest extends TestCase
     /**
      * It should throw exception.
      */
-    public function testLocalizedSystemEmptyLocale()
+    public function testLocalizedSystemEmptyLocale(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 

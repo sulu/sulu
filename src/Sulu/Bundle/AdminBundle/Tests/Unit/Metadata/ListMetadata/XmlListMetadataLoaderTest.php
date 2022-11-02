@@ -28,12 +28,12 @@ class XmlListMetadataLoaderTest extends TestCase
     private $xmlListMetadataLoader;
 
     /**
-     * @var TranslatorInterface|ObjectProphecy
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 
     /**
-     * @var FieldDescriptorFactoryInterface|ObjectProphecy
+     * @var ObjectProphecy<FieldDescriptorFactoryInterface>
      */
     private $fieldDescriptorFactory;
 
@@ -47,7 +47,7 @@ class XmlListMetadataLoaderTest extends TestCase
         );
     }
 
-    public function testGetMetadata()
+    public function testGetMetadata(): void
     {
         $this->translator->trans('sulu_contact.firstname', [], 'admin', 'de')->willReturn('First name');
         $this->translator->trans('sulu_contact.lastname', [], 'admin', 'de')->willReturn('Last name');
@@ -149,7 +149,7 @@ class XmlListMetadataLoaderTest extends TestCase
         $this->assertEquals(['color' => 'red'], $accountListFields['name']->getTransformerTypeParameters());
     }
 
-    public function testGetMetadataNotExisting()
+    public function testGetMetadataNotExisting(): void
     {
         $notExistingMetadata = $this->xmlListMetadataLoader->getMetadata('not-existing', 'de');
         $this->assertNull($notExistingMetadata);

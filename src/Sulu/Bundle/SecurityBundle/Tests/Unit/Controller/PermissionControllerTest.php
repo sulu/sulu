@@ -15,6 +15,7 @@ use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\Controller\PermissionController;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
@@ -30,22 +31,22 @@ class PermissionControllerTest extends TestCase
     private $permissionController;
 
     /**
-     * @var AccessControlManagerInterface
+     * @var ObjectProphecy<AccessControlManagerInterface>
      */
     private $accessControlManager;
 
     /**
-     * @var SecurityCheckerInterface
+     * @var ObjectProphecy<SecurityCheckerInterface>
      */
     private $securityChecker;
 
     /**
-     * @var RoleRepositoryInterface
+     * @var ObjectProphecy<RoleRepositoryInterface>
      */
     private $roleRepository;
 
     /**
-     * @var ViewHandlerInterface
+     * @var ObjectProphecy<ViewHandlerInterface>
      */
     private $viewHandler;
 
@@ -102,7 +103,7 @@ class PermissionControllerTest extends TestCase
     /**
      * @dataProvider providePermissionData
      */
-    public function testGetAction($id, $resourceKey, $permissions)
+    public function testGetAction($id, $resourceKey, $permissions): void
     {
         $request = new Request(['id' => $id, 'resourceKey' => $resourceKey]);
         $this->accessControlManager->getPermissions($this->resources[$resourceKey]['security_class'], $id)
@@ -122,7 +123,7 @@ class PermissionControllerTest extends TestCase
     /**
      * @dataProvider providePermissionData
      */
-    public function testPutAction($id, $resourceKey, $permissions)
+    public function testPutAction($id, $resourceKey, $permissions): void
     {
         $request = new Request(
             [
@@ -138,7 +139,7 @@ class PermissionControllerTest extends TestCase
 
         \array_walk(
             $permissions,
-            function(&$permissionLine) {
+            function(&$permissionLine): void {
                 $permissionLine = 'true' === $permissionLine || true === $permissionLine;
             }
         );
@@ -169,7 +170,7 @@ class PermissionControllerTest extends TestCase
     /**
      * @dataProvider provideWrongPermissionData
      */
-    public function testPutActionWithWrongData($id, $class, $permissions)
+    public function testPutActionWithWrongData($id, $class, $permissions): void
     {
         $request = new Request(
             [
@@ -186,7 +187,7 @@ class PermissionControllerTest extends TestCase
         $this->permissionController->cputAction($request);
     }
 
-    public function testPutActionWithInheritance()
+    public function testPutActionWithInheritance(): void
     {
         $request = new Request(
             [
@@ -204,7 +205,7 @@ class PermissionControllerTest extends TestCase
         $this->permissionController->cputAction($request);
     }
 
-    public function testPutActionWithMissingPermissionsAndWebspace()
+    public function testPutActionWithMissingPermissionsAndWebspace(): void
     {
         $this->expectException(AccessDeniedException::class);
 
@@ -237,7 +238,7 @@ class PermissionControllerTest extends TestCase
         $this->permissionController->cputAction($request);
     }
 
-    public function testPutActionWithPermissionsAndWebspace()
+    public function testPutActionWithPermissionsAndWebspace(): void
     {
         $this->securityChecker->checkPermission('sulu_page.example', 'security')->willReturn(true);
 

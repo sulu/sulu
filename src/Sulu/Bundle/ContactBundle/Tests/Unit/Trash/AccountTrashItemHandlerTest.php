@@ -57,27 +57,27 @@ class AccountTrashItemHandlerTest extends TestCase
     use SetGetPrivatePropertyTrait;
 
     /**
-     * @var TrashItemRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<TrashItemRepositoryInterface>
      */
     private $trashItemRepository;
 
     /**
-     * @var AccountRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<AccountRepositoryInterface>
      */
     private $accountRepository;
 
     /**
-     * @var DoctrineRestoreHelperInterface|ObjectProphecy
+     * @var ObjectProphecy<DoctrineRestoreHelperInterface>
      */
     private $doctrineRestoreHelper;
 
     /**
-     * @var EntityManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<EntityManagerInterface>
      */
     private $entityManager;
 
     /**
-     * @var DomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DomainEventCollectorInterface>
      */
     private $domainEventCollector;
 
@@ -118,7 +118,7 @@ class AccountTrashItemHandlerTest extends TestCase
             });
 
         $this->doctrineRestoreHelper->persistAndFlushWithId(Argument::cetera())
-            ->will(static function($args) {
+            ->will(static function($args): void {
                 /** @var AccountInterface $account */
                 $account = $args[0];
 
@@ -217,7 +217,7 @@ class AccountTrashItemHandlerTest extends TestCase
             ->shouldBeCalled();
         $this->entityManager->persist(Argument::cetera())
             ->shouldBeCalled()
-            ->will(static function($args) {
+            ->will(static function($args): void {
                 /** @var AccountInterface $account */
                 $account = $args[0];
 

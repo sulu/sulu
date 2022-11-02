@@ -43,32 +43,32 @@ use Twig\Error\RuntimeError;
 class PreviewRendererTest extends TestCase
 {
     /**
-     * @var RouteDefaultsProviderInterface
+     * @var ObjectProphecy<RouteDefaultsProviderInterface>
      */
     private $routeDefaultsProvider;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
     /**
-     * @var KernelFactoryInterface
+     * @var ObjectProphecy<KernelFactoryInterface>
      */
     private $kernelFactory;
 
     /**
-     * @var HttpKernelInterface
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $httpKernel;
 
     /**
-     * @var WebspaceManagerInterface
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var EventDispatcherInterface
+     * @var ObjectProphecy<EventDispatcherInterface>
      */
     private $eventDispatcher;
 
@@ -136,7 +136,7 @@ class PreviewRendererTest extends TestCase
     /**
      * @dataProvider portalDataProvider
      */
-    public function testRender($scheme, $portalUrl)
+    public function testRender($scheme, $portalUrl): void
     {
         $object = $this->prophesize(\stdClass::class);
 
@@ -209,7 +209,7 @@ class PreviewRendererTest extends TestCase
         $this->assertEquals('<title>Hallo</title>', $response);
     }
 
-    public function testRenderWithTargetGroup()
+    public function testRenderWithTargetGroup(): void
     {
         $object = $this->prophesize(\stdClass::class);
 
@@ -252,7 +252,7 @@ class PreviewRendererTest extends TestCase
         $this->assertEquals('<title>Hallo</title>', $response);
     }
 
-    public function testRenderWithSegment()
+    public function testRenderWithSegment(): void
     {
         $object = $this->prophesize(\stdClass::class);
 
@@ -298,7 +298,7 @@ class PreviewRendererTest extends TestCase
         $this->assertEquals('<title>Hallo</title>', $response);
     }
 
-    public function testRenderWithDateTime()
+    public function testRenderWithDateTime(): void
     {
         $object = $this->prophesize(\stdClass::class);
 
@@ -345,7 +345,7 @@ class PreviewRendererTest extends TestCase
         $this->assertEquals('<title>Hallo</title>', $response);
     }
 
-    public function testRenderPortalNotFound()
+    public function testRenderPortalNotFound(): void
     {
         $object = $this->prophesize(\stdClass::class);
 
@@ -375,7 +375,7 @@ class PreviewRendererTest extends TestCase
         $this->assertEquals('<title>Hallo</title>', $response);
     }
 
-    public function testRenderWebspaceNotFound()
+    public function testRenderWebspaceNotFound(): void
     {
         $this->expectException(WebspaceNotFoundException::class);
         $object = new \stdClass();
@@ -393,7 +393,7 @@ class PreviewRendererTest extends TestCase
         $this->renderer->render($object, 1, true, ['webspaceKey' => 'not_existing', 'locale' => 'de']);
     }
 
-    public function testRenderWebspaceLocalizationNotFound()
+    public function testRenderWebspaceLocalizationNotFound(): void
     {
         $this->expectException(WebspaceLocalizationNotFoundException::class);
 
@@ -412,7 +412,7 @@ class PreviewRendererTest extends TestCase
         $this->renderer->render($object, 1, true, ['webspaceKey' => 'sulu_io', 'locale' => 'de']);
     }
 
-    public function testRenderRouteDefaultsProviderNotFound()
+    public function testRenderRouteDefaultsProviderNotFound(): void
     {
         $this->expectException(RouteDefaultsProviderNotFoundException::class, '', 9902);
 
@@ -446,7 +446,7 @@ class PreviewRendererTest extends TestCase
         $this->renderer->render($object->reveal(), 1, true, ['webspaceKey' => 'sulu_io', 'locale' => 'de']);
     }
 
-    public function testRenderTwigError()
+    public function testRenderTwigError(): void
     {
         $this->expectException(TwigException::class, '', 9903);
 
@@ -480,7 +480,7 @@ class PreviewRendererTest extends TestCase
         $this->renderer->render($object->reveal(), 1, true, ['webspaceKey' => 'sulu_io', 'locale' => 'de']);
     }
 
-    public function testRenderInvalidArgumentException()
+    public function testRenderInvalidArgumentException(): void
     {
         $this->expectException(TemplateNotFoundException::class, '', 9904);
 
@@ -514,7 +514,7 @@ class PreviewRendererTest extends TestCase
         $this->renderer->render($object->reveal(), 1, true, ['webspaceKey' => 'sulu_io', 'locale' => 'de']);
     }
 
-    public function testRenderHttpExceptionWithPreviousException()
+    public function testRenderHttpExceptionWithPreviousException(): void
     {
         $this->expectException(TemplateNotFoundException::class, '', 9904);
 
@@ -550,7 +550,7 @@ class PreviewRendererTest extends TestCase
         $this->renderer->render($object->reveal(), 1, true, ['webspaceKey' => 'sulu_io', 'locale' => 'de']);
     }
 
-    public function testRenderHttpExceptionWithoutPreviousException()
+    public function testRenderHttpExceptionWithoutPreviousException(): void
     {
         $this->expectException(UnexpectedException::class, '', 9905);
 
@@ -586,7 +586,7 @@ class PreviewRendererTest extends TestCase
         $this->renderer->render($object->reveal(), 1, true, ['webspaceKey' => 'sulu_io', 'locale' => 'de']);
     }
 
-    public function testRenderRequestWithServerAttributes()
+    public function testRenderRequestWithServerAttributes(): void
     {
         $object = $this->prophesize(\stdClass::class);
 

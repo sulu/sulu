@@ -15,11 +15,11 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Content\Types\SingleContactSelection;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
-use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\Property;
 
 class SingleContactSelectionTest extends TestCase
@@ -30,27 +30,27 @@ class SingleContactSelectionTest extends TestCase
     private $singleContactSelection;
 
     /**
-     * @var ContactRepositoryInterface
+     * @var ObjectProphecy<ContactRepositoryInterface>
      */
     private $contactRepository;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStore>
      */
     private $contactReferenceStore;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 
     /**
-     * @var ContactInterface
+     * @var ObjectProphecy<ContactInterface>
      */
     private $contact;
 
@@ -67,7 +67,7 @@ class SingleContactSelectionTest extends TestCase
         );
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $this->node->hasProperty('contact')->willReturn(true);
         $this->node->getPropertyValue('contact')->willReturn(1);
@@ -84,7 +84,7 @@ class SingleContactSelectionTest extends TestCase
         );
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $this->node->setProperty('contact', Argument::is(1))->shouldBeCalled();
         $property = new Property('contact', [], 'single_contact_selection');
@@ -100,7 +100,7 @@ class SingleContactSelectionTest extends TestCase
         );
     }
 
-    public function testWriteNothing()
+    public function testWriteNothing(): void
     {
         $this->node->hasProperty('contact')->shouldBeCalled();
         $property = new Property('contact', [], 'single_contact_selection');
@@ -118,7 +118,7 @@ class SingleContactSelectionTest extends TestCase
         );
     }
 
-    public function testDefaultParams()
+    public function testDefaultParams(): void
     {
         $this->assertEquals(
             [],
@@ -126,7 +126,7 @@ class SingleContactSelectionTest extends TestCase
         );
     }
 
-    public function testViewDataEmpty()
+    public function testViewDataEmpty(): void
     {
         $this->assertEquals(
             [],
@@ -134,7 +134,7 @@ class SingleContactSelectionTest extends TestCase
         );
     }
 
-    public function testViewData()
+    public function testViewData(): void
     {
         $property = new Property('contact', [], 'single_contact_selection');
         $property->setValue(1);
@@ -145,14 +145,14 @@ class SingleContactSelectionTest extends TestCase
         );
     }
 
-    public function testContentDataEmpty()
+    public function testContentDataEmpty(): void
     {
         $this->assertNull(
             $this->singleContactSelection->getContentData(new Property('contact', [], 'single_contact_selection'))
         );
     }
 
-    public function testContentData()
+    public function testContentData(): void
     {
         $property = new Property('contact', [], 'single_contact_selection');
         $property->setValue(1);
@@ -161,7 +161,7 @@ class SingleContactSelectionTest extends TestCase
         $this->assertEquals($this->contact->reveal(), $this->singleContactSelection->getContentData($property));
     }
 
-    public function testPreResolveEmpty()
+    public function testPreResolveEmpty(): void
     {
         $property = new Property('contact', [], 'single_contact_selection');
         $property->setValue(null);
@@ -171,7 +171,7 @@ class SingleContactSelectionTest extends TestCase
         $this->singleContactSelection->preResolve($property);
     }
 
-    public function testPreResolve()
+    public function testPreResolve(): void
     {
         $property = new Property('contact', [], 'single_contact_selection');
         $property->setValue(22);

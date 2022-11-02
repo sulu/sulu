@@ -19,7 +19,7 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 class TagMergedEventTest extends TestCase
 {
     /**
-     * @var TagInterface|ObjectProphecy
+     * @var ObjectProphecy<TagInterface>
      */
     private $destinationTag;
 

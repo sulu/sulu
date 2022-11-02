@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class TaggedServiceCollectorCompilerPassTest extends TestCase
 {
-    public function testProcess()
+    public function testProcess(): void
     {
         $container = $this->prophesize(ContainerBuilder::class);
         $container->hasDefinition('test')->willReturn(true);
@@ -41,7 +41,7 @@ class TaggedServiceCollectorCompilerPassTest extends TestCase
         $this->assertEquals('id2', $result[2]->__toString());
     }
 
-    public function testProcessDifferentArgument()
+    public function testProcessDifferentArgument(): void
     {
         $container = $this->prophesize(ContainerBuilder::class);
         $container->hasDefinition('test')->willReturn(true);
@@ -62,7 +62,7 @@ class TaggedServiceCollectorCompilerPassTest extends TestCase
         $this->assertCount(3, $result);
     }
 
-    public function testProcessNoDefinition()
+    public function testProcessNoDefinition(): void
     {
         $container = $this->prophesize(ContainerBuilder::class);
         $container->hasDefinition('test')->willReturn(false);
@@ -73,7 +73,7 @@ class TaggedServiceCollectorCompilerPassTest extends TestCase
         $compilerPass->process($container->reveal());
     }
 
-    public function testProcessWithAlias()
+    public function testProcessWithAlias(): void
     {
         $container = $this->prophesize(ContainerBuilder::class);
         $container->hasDefinition('test')->willReturn(true);

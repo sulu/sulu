@@ -52,7 +52,7 @@ class TagTwigExtensionTest extends TestCase
     /**
      * @dataProvider getProvider
      */
-    public function testGetTags($tagData)
+    public function testGetTags($tagData): void
     {
         $tags = [];
         foreach ($tagData as $tagItem) {
@@ -94,7 +94,7 @@ class TagTwigExtensionTest extends TestCase
     /**
      * @dataProvider appendProvider
      */
-    public function testAppendTagUrl($tagsParameter, $url, $tagsString, $expected)
+    public function testAppendTagUrl($tagsParameter, $url, $tagsString, $expected): void
     {
         $tag = ['name' => 'Test'];
 
@@ -137,7 +137,7 @@ class TagTwigExtensionTest extends TestCase
     /**
      * @dataProvider setProvider
      */
-    public function testSetTagUrl($tagsParameter, $url, $tagsString, $expected)
+    public function testSetTagUrl($tagsParameter, $url, $tagsString, $expected): void
     {
         $tag = ['name' => 'Test'];
 
@@ -180,7 +180,7 @@ class TagTwigExtensionTest extends TestCase
     /**
      * @dataProvider clearProvider
      */
-    public function testClearTagUrl($tagsParameter, $url, $tagsString)
+    public function testClearTagUrl($tagsParameter, $url, $tagsString): void
     {
         $tagManager = $this->prophesize(TagManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);

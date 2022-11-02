@@ -133,7 +133,7 @@ class SuluNodeHelperTest extends TestCase
         );
     }
 
-    public function testGetLanguagesForNode()
+    public function testGetLanguagesForNode(): void
     {
         $languages = $this->helper->getLanguagesForNode($this->node);
 
@@ -141,7 +141,7 @@ class SuluNodeHelperTest extends TestCase
         $this->assertEquals(['fr', 'de'], $languages);
     }
 
-    public function testLocalizedPropertyValues()
+    public function testLocalizedPropertyValues(): void
     {
         $localizedValues = $this->helper->getLocalizedPropertyValues($this->node, 'changer');
 
@@ -168,7 +168,7 @@ class SuluNodeHelperTest extends TestCase
     /**
      * @dataProvider provideExtractWebspaceFromPath
      */
-    public function testExtractWebspaceFromPath($path, $expected)
+    public function testExtractWebspaceFromPath($path, $expected): void
     {
         $res = $this->helper->extractWebspaceFromPath($path);
         $this->assertEquals($expected, $res);
@@ -190,7 +190,7 @@ class SuluNodeHelperTest extends TestCase
     /**
      * @dataProvider provideExtractSnippetTypeFromPath
      */
-    public function testExtractSnippetTypeFromPath($path, $expected, $valid = true)
+    public function testExtractSnippetTypeFromPath($path, $expected, $valid = true): void
     {
         if (false === $valid) {
             $this->expectException(\InvalidArgumentException::class);
@@ -213,7 +213,7 @@ class SuluNodeHelperTest extends TestCase
     /**
      * @dataProvider provideGetStructureTypeForNode
      */
-    public function testGetStructureTypeForNode($nodeType, $expected)
+    public function testGetStructureTypeForNode($nodeType, $expected): void
     {
         $this->node->expects($this->any())
             ->method('getPropertyValueWithDefault')
@@ -237,7 +237,7 @@ class SuluNodeHelperTest extends TestCase
     /**
      * @dataProvider provideHasSuluNodeType
      */
-    public function testHasSuluNodeType($nodeTypes, $expected)
+    public function testHasSuluNodeType($nodeTypes, $expected): void
     {
         $this->node->expects($this->any())
             ->method('getPropertyValueWithDefault')
@@ -247,7 +247,7 @@ class SuluNodeHelperTest extends TestCase
         $this->assertEquals($expected, $this->helper->hasSuluNodeType($this->node, $nodeTypes));
     }
 
-    public function testSiblingNodes()
+    public function testSiblingNodes(): void
     {
         for ($i = 1; $i <= 3; ++$i) {
             ${'node' . $i} = $this->getMockBuilder('Jackalope\Node')->disableOriginalConstructor()->getMock();
@@ -272,7 +272,7 @@ class SuluNodeHelperTest extends TestCase
         $this->assertSame($node1->getPath(), $res->getPath());
     }
 
-    public function testGetBaseSnippetUuid()
+    public function testGetBaseSnippetUuid(): void
     {
         $baseSnippetNode = $this->getMockBuilder(Node::class)->disableOriginalConstructor()->getMock();
         $baseSnippetNode->expects($this->any())

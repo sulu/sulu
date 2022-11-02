@@ -28,7 +28,7 @@ class ConstMetadataTest extends TestCase
     /**
      * @dataProvider provideToJsonSchema
      */
-    public function testToJsonSchema($const, $expectedSchema)
+    public function testToJsonSchema($const, $expectedSchema): void
     {
         $property = new ConstMetadata($const);
         $jsonSchema = $property->toJsonSchema();

@@ -77,7 +77,7 @@ class AccountControllerTest extends SuluTestCase
     /**
      * Tests if all accounts are returned when fetching flat api by ids.
      */
-    public function testCGetByIdsOnFlatApi()
+    public function testCGetByIdsOnFlatApi(): void
     {
         $amount = 11;
 
@@ -111,7 +111,7 @@ class AccountControllerTest extends SuluTestCase
     /**
      * Tests if all accounts are returned when fetching flat api by ids.
      */
-    public function testCGetByIdsOnFlatApiWithLimit()
+    public function testCGetByIdsOnFlatApiWithLimit(): void
     {
         $accounts = $this->createMultipleMinimalAccounts(11);
         $this->em->flush();
@@ -142,7 +142,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertCount(1, $response->_embedded->accounts);
     }
 
-    public function testCgetSerializationExclusions()
+    public function testCgetSerializationExclusions(): void
     {
         $account = $this->createAccount('Company');
         $contact = $this->createContact($account, 'Vorname', 'Nachname');
@@ -161,7 +161,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertArrayNotHasKey('account', $response['_embedded']['accounts'][0]['contacts'][0]);
     }
 
-    public function testGetById()
+    public function testGetById(): void
     {
         $mediaType = $this->createMediaType('image');
         $collectionType = $this->createCollectionType('My collection type');
@@ -258,7 +258,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertTrue(\is_string($response->logo->thumbnails->{'sulu-100x100'}));
     }
 
-    public function testGetByIdNotExisting()
+    public function testGetByIdNotExisting(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -272,7 +272,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    public function testGetEmptyAccountContacts()
+    public function testGetEmptyAccountContacts(): void
     {
         $account = new Account();
         $account->setName('test');
@@ -290,7 +290,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertCount(0, $response->_embedded->account_contacts);
     }
 
-    public function testGetAccountContacts()
+    public function testGetAccountContacts(): void
     {
         $account = new Account();
         $account->setName('test');
@@ -351,7 +351,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Max', $response['_embedded']['account_contacts'][1]['firstName']);
     }
 
-    public function testGetAccountContactsSearch()
+    public function testGetAccountContactsSearch(): void
     {
         $account = new Account();
         $account->setName('test');
@@ -400,7 +400,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Max Mustermann', $response['_embedded']['account_contacts'][0]['fullName']);
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         $mediaType = $this->createMediaType('image');
         $collectionType = $this->createCollectionType('My collection type');
@@ -543,7 +543,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals($category2->getId(), $response->categories[1]);
     }
 
-    public function testPostWithNullContactDetails()
+    public function testPostWithNullContactDetails(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -559,7 +559,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('ExampleCompany', $response->name);
     }
 
-    public function testPostWithNullLogo()
+    public function testPostWithNullLogo(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -579,7 +579,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('ExampleCompany', $response->name);
     }
 
-    public function testPostWithIds()
+    public function testPostWithIds(): void
     {
         $phoneType = $this->createPhoneType('Private');
         $urlType = $this->createUrlType('Private');
@@ -701,7 +701,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertStringContainsString('19', $response->message);
     }
 
-    public function testPostWithNotExistingUrlType()
+    public function testPostWithNotExistingUrlType(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -724,7 +724,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    public function testPostWithNotExistingEmailType()
+    public function testPostWithNotExistingEmailType(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -751,7 +751,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    public function testPostWithNotExistingPhoneType()
+    public function testPostWithNotExistingPhoneType(): void
     {
         $phoneType = $this->createPhoneType('Private');
         $this->em->flush();
@@ -782,7 +782,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    public function testPostWithNotExistingAddressType()
+    public function testPostWithNotExistingAddressType(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -808,7 +808,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    public function testPostWithNotExistingFaxType()
+    public function testPostWithNotExistingFaxType(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -831,7 +831,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    public function testPostWithNotExistingCountry()
+    public function testPostWithNotExistingCountry(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -857,7 +857,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertTrue(isset($response->message));
     }
 
-    public function testGetList()
+    public function testGetList(): void
     {
         $this->createAccount('Company');
         $parent = $this->createAccount('Parent');
@@ -874,7 +874,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Company', $response->_embedded->accounts[0]->name);
     }
 
-    public function testGetListSearch()
+    public function testGetListSearch(): void
     {
         $this->createAccount('Company');
         $this->createAccount('Something');
@@ -895,7 +895,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Company', $response->_embedded->accounts[0]->name);
     }
 
-    public function testPut()
+    public function testPut(): void
     {
         $mediaType = $this->createMediaType('image');
         $collectionType = $this->createCollectionType('My collection type');
@@ -1131,7 +1131,7 @@ class AccountControllerTest extends SuluTestCase
         }
     }
 
-    public function testPutNoDetails()
+    public function testPutNoDetails(): void
     {
         $urlType = $this->createUrlType('Private');
         $url = $this->createUrl('http://www.company.example', $urlType);
@@ -1198,7 +1198,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(0, \count($response->addresses));
     }
 
-    public function testPutWithNullLogo()
+    public function testPutWithNullLogo(): void
     {
         $urlType = $this->createUrlType('Private');
         $url = $this->createUrl('http://www.company.example', $urlType);
@@ -1248,7 +1248,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('ExampleCompany', $response->name);
     }
 
-    public function testPutContacts()
+    public function testPutContacts(): void
     {
         $account = $this->createAccount('Company');
         $contact = $this->createContact(null, 'Max', 'Mustermann');
@@ -1283,7 +1283,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('CEO', $accountContacts[0]->position);
     }
 
-    public function testPutWithNullMainContact()
+    public function testPutWithNullMainContact(): void
     {
         $contact = $this->createContact(null, 'Max', 'Mustermann');
         $account = $this->createAccount(
@@ -1319,7 +1319,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(null, $response->mainContact);
     }
 
-    public function testPutNotExisting()
+    public function testPutNotExisting(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -1332,7 +1332,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testPatchNotExisting()
+    public function testPatchNotExisting(): void
     {
         $this->client->jsonRequest(
             'PATCH',
@@ -1345,7 +1345,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testPatchAssignedMedias()
+    public function testPatchAssignedMedias(): void
     {
         $account = $this->createAccount('Company');
         $mediaType = $this->createMediaType('image');
@@ -1409,7 +1409,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(0, \count($response->medias));
     }
 
-    public function testDeleteById()
+    public function testDeleteById(): void
     {
         $account = $this->createAccount('Company');
         $this->em->flush();
@@ -1427,7 +1427,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertNotNull($trashItem);
     }
 
-    public function testDeleteParentById()
+    public function testDeleteParentById(): void
     {
         $parentAccount = $this->createAccount('Parent Company');
         $childAccount = $this->createAccount('Company', $parentAccount);
@@ -1443,7 +1443,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Company', $response->items[0]->name);
     }
 
-    public function testAccountAddresses()
+    public function testAccountAddresses(): void
     {
         $addressType = $this->createAddressType('Private');
 
@@ -1471,7 +1471,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertNotNull($address->id);
     }
 
-    public function testDeleteByIdAndNotDeleteContacts()
+    public function testDeleteByIdAndNotDeleteContacts(): void
     {
         $account = $this->createAccount('Company');
         $contact = $this->createContact($account, 'Vorname', 'Nachname');
@@ -1494,7 +1494,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(2, $response->total);
     }
 
-    public function testDeleteByIdAndDeleteContacts()
+    public function testDeleteByIdAndDeleteContacts(): void
     {
         $account = $this->createAccount('Company');
 
@@ -1534,7 +1534,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(1, $response->total);
     }
 
-    public function testDeleteByIdNotExisting()
+    public function testDeleteByIdNotExisting(): void
     {
         $this->client->jsonRequest('DELETE', '/api/accounts/4711');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
@@ -1543,7 +1543,7 @@ class AccountControllerTest extends SuluTestCase
     /**
      * Test if deleteinfo returns correct data.
      */
-    public function testMultipleDeleteInfo()
+    public function testMultipleDeleteInfo(): void
     {
         $account = $this->createAccount('Company');
 
@@ -1605,7 +1605,7 @@ class AccountControllerTest extends SuluTestCase
     /**
      * Test if deleteinfo returns correct data.
      */
-    public function testGetDeleteInfoById()
+    public function testGetDeleteInfoById(): void
     {
         $account = $this->createAccount('Company');
 
@@ -1648,7 +1648,7 @@ class AccountControllerTest extends SuluTestCase
     /**
      * Test if delete info returns right isAllowed, when there is a superaccount.
      */
-    public function testGetDeleteInfoByIdWithSuperAccount()
+    public function testGetDeleteInfoByIdWithSuperAccount(): void
     {
         $account = $this->createAccount('Parent');
 
@@ -1677,13 +1677,13 @@ class AccountControllerTest extends SuluTestCase
         $this->assertLessThanOrEqual(3, \count($response->children));
     }
 
-    public function testGetDeleteInfoByIdNotExisting()
+    public function testGetDeleteInfoByIdNotExisting(): void
     {
         $this->client->jsonRequest('GET', '/api/accounts/4711/deleteinfo');
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testPutRemovedParentAccount()
+    public function testPutRemovedParentAccount(): void
     {
         $urlType = $this->createUrlType('Private');
         $emailType = $this->createEmailType('Private');
@@ -1856,7 +1856,7 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
     }
 
-    public function testPrimaryAddressHandlingPost()
+    public function testPrimaryAddressHandlingPost(): void
     {
         $urlType = $this->createUrlType('Private');
         $emailType = $this->createEmailType('Private');
@@ -1942,7 +1942,7 @@ class AccountControllerTest extends SuluTestCase
         }
     }
 
-    public function testPrimaryAddressHandlingPut()
+    public function testPrimaryAddressHandlingPut(): void
     {
         $urlType = $this->createUrlType('Private');
         $url = $this->createUrl('http://www.company.example', $urlType);
@@ -2061,7 +2061,7 @@ class AccountControllerTest extends SuluTestCase
         };
     }
 
-    public function testGetAccountsWithNoParent()
+    public function testGetAccountsWithNoParent(): void
     {
         $this->createAccount('Account 1');
         $account2 = $this->createAccount('Account 2');

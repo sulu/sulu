@@ -47,7 +47,7 @@ class DoctrineNotExpressionTest extends TestCase
         $this->queryBuilder->expects($this->any())->method('setParameter')->willReturnSelf();
     }
 
-    public function testNotInStatement()
+    public function testNotInStatement(): void
     {
         $fieldDescriptor = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
         $values = [1, 2, 3];

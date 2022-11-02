@@ -19,7 +19,7 @@ use Sulu\Component\Webspace\Webspace;
 
 class WebspaceCustomUrlProviderTest extends TestCase
 {
-    public function testGetUrls()
+    public function testGetUrls(): void
     {
         $customUrlManager = $this->prophesize(CustomUrlManagerInterface::class);
         $provider = new WebspaceCustomUrlProvider($customUrlManager->reveal());

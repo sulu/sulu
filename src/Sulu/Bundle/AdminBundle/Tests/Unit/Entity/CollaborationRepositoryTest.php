@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Unit\Entity;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Cache\CacheItemPoolInterface;
 use Sulu\Bundle\AdminBundle\Entity\Collaboration;
 use Sulu\Bundle\AdminBundle\Entity\CollaborationRepository;
@@ -21,7 +22,7 @@ use Symfony\Component\Cache\CacheItem;
 class CollaborationRepositoryTest extends TestCase
 {
     /**
-     * @var CacheItemPoolInterface
+     * @var ObjectProphecy<CacheItemPoolInterface>
      */
     private $cache;
 
@@ -40,7 +41,7 @@ class CollaborationRepositoryTest extends TestCase
         ClockMock::withClockMock(false);
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         $cacheItem = new CacheItem();
         $this->cache->getItem('page_8')->willReturn($cacheItem);
@@ -62,7 +63,7 @@ class CollaborationRepositoryTest extends TestCase
         $this->assertEquals($collaboration1, $result);
     }
 
-    public function testFindWithNotExistingCollaboration()
+    public function testFindWithNotExistingCollaboration(): void
     {
         $cacheItem = new CacheItem();
         $this->cache->getItem('page_8')->willReturn($cacheItem);
@@ -84,7 +85,7 @@ class CollaborationRepositoryTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testFindWithNotExistingCacheItem()
+    public function testFindWithNotExistingCacheItem(): void
     {
         $collaborationRepository = new CollaborationRepository($this->cache->reveal(), 20);
 
@@ -139,7 +140,7 @@ class CollaborationRepositoryTest extends TestCase
         $fullName2,
         $resourceKey,
         $id
-    ) {
+    ): void {
         $cacheItem = new CacheItem();
         $this->cache->getItem($resourceKey . '_' . $id)->willReturn($cacheItem);
         $collaborationRepository = new CollaborationRepository($this->cache->reveal(), $threshold);
@@ -188,7 +189,7 @@ class CollaborationRepositoryTest extends TestCase
         $this->assertEquals([$collaboration2], $result);
     }
 
-    public function testUpdateWithSameCollaborationId()
+    public function testUpdateWithSameCollaborationId(): void
     {
         $cacheItem = new CacheItem();
         $this->cache->getItem('page_8')->willReturn($cacheItem);
@@ -214,7 +215,7 @@ class CollaborationRepositoryTest extends TestCase
         $this->assertEquals([$collaboration1], $result);
     }
 
-    public function testUpdateWithUpdatedChangedTime()
+    public function testUpdateWithUpdatedChangedTime(): void
     {
         $cacheItem = new CacheItem();
         $this->cache->getItem('page_8')->willReturn($cacheItem);
@@ -241,7 +242,7 @@ class CollaborationRepositoryTest extends TestCase
         $this->assertEquals($started + 10, $collaboration1->getChanged());
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $cacheItem = new CacheItem();
         $this->cache->getItem('page_8')->willReturn($cacheItem);

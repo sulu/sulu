@@ -56,7 +56,7 @@ class PathCleanupTest extends TestCase
     /**
      * @dataProvider cleanupProvider
      */
-    public function testCleanup($a, $b, $locale)
+    public function testCleanup($a, $b, $locale): void
     {
         $clean = $this->cleaner->cleanup($a, $locale);
         $this->assertEquals($b, $clean);
@@ -83,7 +83,7 @@ class PathCleanupTest extends TestCase
         ];
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $this->assertFalse($this->cleaner->validate('-/aSDf     asdf/äöü-'));
         $this->assertTrue($this->cleaner->validate('/asdf/asdf'));

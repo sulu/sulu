@@ -109,7 +109,7 @@ class MediaPreviewControllerTest extends SuluTestCase
         $this->em->flush();
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         $media = $this->createMedia('photo');
         $preview = new UploadedFile($this->getImagePath(), 'preview.jpeg', 'image/jpeg');
@@ -143,7 +143,7 @@ class MediaPreviewControllerTest extends SuluTestCase
         $this->assertStringContainsString('preview.jpg?v=2-0', $response->thumbnails->{'sulu-400x400'});
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $preview = $this->createMedia('preview');
         $media = $this->createMedia('photo', 'en-gb', 'image', $preview);

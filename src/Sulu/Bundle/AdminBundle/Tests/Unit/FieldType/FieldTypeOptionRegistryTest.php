@@ -26,12 +26,12 @@ class FieldTypeOptionRegistryTest extends TestCase
         $this->fieldTypeOptionRegistry = new FieldTypeOptionRegistry();
     }
 
-    public function testToArrayEmpty()
+    public function testToArrayEmpty(): void
     {
         $this->assertEquals([], $this->fieldTypeOptionRegistry->toArray());
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $this->fieldTypeOptionRegistry->add('snippet', 'selection', ['resourceKey' => 'snippet']);
         $this->fieldTypeOptionRegistry->add('page_selection', 'selection', ['resourceKey' => 'page']);

@@ -31,7 +31,7 @@ class DataCacheTest extends TestCase
     /**
      * @dataProvider provideIsFreshData
      */
-    public function testIsFresh($file, $createFile, $expected)
+    public function testIsFresh($file, $createFile, $expected): void
     {
         $filesystem = new Filesystem();
         if ($createFile) {
@@ -45,7 +45,7 @@ class DataCacheTest extends TestCase
         $this->assertEquals($expected, $cache->isFresh());
     }
 
-    public function testWrite()
+    public function testWrite(): DataCache
     {
         $file = \tempnam(\sys_get_temp_dir(), 'sulu-test');
         $cache = new DataCache($file);
@@ -60,7 +60,7 @@ class DataCacheTest extends TestCase
     /**
      * @depends testWrite
      */
-    public function testRead(CacheInterface $cache)
+    public function testRead(CacheInterface $cache): void
     {
         $this->assertEquals(['test' => 'test'], $cache->read());
     }

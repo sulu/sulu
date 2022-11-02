@@ -33,7 +33,7 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
         ];
     }
 
-    public function testLoadNoConfig()
+    public function testLoadNoConfig(): void
     {
         $this->load([
             'content' => [
@@ -69,7 +69,7 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    public function testDefaults()
+    public function testDefaults(): void
     {
         $this->load([
             'content' => [
@@ -96,7 +96,7 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
         );
     }
 
-    public function testLocales()
+    public function testLocales(): void
     {
         $this->load(
             [

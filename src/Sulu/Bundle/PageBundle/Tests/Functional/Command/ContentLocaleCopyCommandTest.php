@@ -50,7 +50,7 @@ class ContentLocaleCopyCommandTest extends SuluTestCase
         $this->tester = new CommandTester($command);
     }
 
-    public function testRun()
+    public function testRun(): void
     {
         $this->initPhpcr();
 

@@ -244,7 +244,7 @@ class UserControllerTest extends SuluTestCase
         $this->em->clear();
     }
 
-    public function testList()
+    public function testList(): void
     {
         $this->client->jsonRequest('GET', '/api/users?flat=true');
 
@@ -257,7 +257,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('de', $response->_embedded->users[0]->locale);
     }
 
-    public function testGetById()
+    public function testGetById(): void
     {
         $this->client->jsonRequest('GET', '/api/users/' . $this->user1->getId());
 
@@ -272,7 +272,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('Max Muster', $response->fullName);
     }
 
-    public function testGetByNotExistingId()
+    public function testGetByNotExistingId(): void
     {
         $this->client->jsonRequest('GET', '/api/users/1120');
 
@@ -282,7 +282,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertStringContainsString('1120', $response->message);
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -367,7 +367,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('en', $response->userGroups[1]->locales[0]);
     }
 
-    public function testPostWithEntireContactObject()
+    public function testPostWithEntireContactObject(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -403,7 +403,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('en', $response->locale);
     }
 
-    public function testPostWithMissingUsername()
+    public function testPostWithMissingUsername(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -433,7 +433,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertStringContainsString('username', $response->message);
     }
 
-    public function testPostWithMissingPassword()
+    public function testPostWithMissingPassword(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -463,7 +463,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertStringContainsString('password', $response->message);
     }
 
-    public function testPostWithNotUniqueEmail()
+    public function testPostWithNotUniqueEmail(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -493,7 +493,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals(1004, $response->code);
     }
 
-    public function testPostWithContactEmail()
+    public function testPostWithContactEmail(): void
     {
         // no user-email passed, but a unique contact-email
         // so the controller should use the contact-email as the user-email as well
@@ -527,7 +527,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('contact.unique@test.com', $response->contact->emails[0]->email);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $this->client->jsonRequest('DELETE', '/api/users/' . $this->user1->getId());
 
@@ -541,14 +541,14 @@ class UserControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testDeleteNotExisting()
+    public function testDeleteNotExisting(): void
     {
         $this->client->jsonRequest('DELETE', '/api/users/11235');
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testPut()
+    public function testPut(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -639,7 +639,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('en', $response->userGroups[1]->locales[0]);
     }
 
-    public function testPostNonUniqueUserame()
+    public function testPostNonUniqueUserame(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -661,7 +661,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('The username "admin" is already assigned to another contact.', $response->detail);
     }
 
-    public function testPutNonUniqueUsername()
+    public function testPutNonUniqueUsername(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -696,7 +696,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('The username "admin" is already assigned to another contact.', $response->detail);
     }
 
-    public function testPatch()
+    public function testPatch(): void
     {
         $this->client->jsonRequest(
             'PATCH',
@@ -745,7 +745,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
     }
 
-    public function testPatchNonUniqueUsername()
+    public function testPatchNonUniqueUsername(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -775,7 +775,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('The username "admin" is already assigned to another contact.', $response->detail);
     }
 
-    public function testPutWithMissingUsername()
+    public function testPutWithMissingUsername(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -808,7 +808,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertStringContainsString('username', $response->message);
     }
 
-    public function testPutWithMissingPassword()
+    public function testPutWithMissingPassword(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -847,7 +847,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals($this->user1->getPassword(), $user->getPassword());
     }
 
-    public function testGetUserAndRolesByContact()
+    public function testGetUserAndRolesByContact(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -868,7 +868,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('Sulu', $response->userRoles[1]->role->system);
     }
 
-    public function testGetUserAndRolesByContactNotExisting()
+    public function testGetUserAndRolesByContactNotExisting(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -879,7 +879,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('{}', $this->client->getResponse()->getContent());
     }
 
-    public function testGetUserAndRolesWithoutParam()
+    public function testGetUserAndRolesWithoutParam(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -887,14 +887,26 @@ class UserControllerTest extends SuluTestCase
         );
 
         $response = \json_decode($this->client->getResponse()->getContent());
+        $users = $response->_embedded->users;
 
-        $this->assertEquals(4, \count($response->_embedded->users));
-        $this->assertEquals('admin', $response->_embedded->users[0]->username);
-        $this->assertObjectNotHasAttribute('password', $response->_embedded->users[0]);
-        $this->assertEquals('de', $response->_embedded->users[0]->locale);
+        $this->assertEquals(4, \count($users));
+
+        $adminUser = null;
+        foreach ($users as $user) {
+            if ('admin' === $user->username) {
+                $adminUser = $user;
+
+                break;
+            }
+        }
+
+        $this->assertNotNull($adminUser);
+        $this->assertEquals('admin', $adminUser->username);
+        $this->assertObjectNotHasAttribute('password', $adminUser);
+        $this->assertEquals('de', $adminUser->locale);
     }
 
-    public function testCGetProperties()
+    public function testCGetProperties(): void
     {
         $this->client->jsonRequest(
             'GET',
@@ -920,7 +932,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertObjectNotHasAttribute('bankAccounts', $contact);
     }
 
-    public function testPutWithRemovedRoles()
+    public function testPutWithRemovedRoles(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -996,7 +1008,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals(1, \count($response->userRoles));
     }
 
-    public function testPostWithEmptyPassword()
+    public function testPostWithEmptyPassword(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -1031,7 +1043,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(400, $this->client->getResponse());
     }
 
-    public function testPutWithoutPassword()
+    public function testPutWithoutPassword(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -1053,7 +1065,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertObjectNotHasAttribute('password', $response);
     }
 
-    public function testPutWithEmptyPassword()
+    public function testPutWithEmptyPassword(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -1100,7 +1112,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals($this->user1->getSalt(), $refreshedUser->getSalt());
     }
 
-    public function testEnableUser()
+    public function testEnableUser(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -1118,7 +1130,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals(true, $response->enabled);
     }
 
-    public function testLockUser()
+    public function testLockUser(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -1134,7 +1146,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertSame((string) $this->user1->getId(), $activity->getResourceId());
     }
 
-    public function testUnlockUser()
+    public function testUnlockUser(): void
     {
         $this->client->jsonRequest(
             'POST',

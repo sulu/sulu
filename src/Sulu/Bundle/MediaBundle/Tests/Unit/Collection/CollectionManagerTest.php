@@ -32,37 +32,37 @@ use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 class CollectionManagerTest extends TestCase
 {
     /**
-     * @var CollectionRepository|ObjectProphecy
+     * @var ObjectProphecy<CollectionRepository>
      */
     private $collectionRepository;
 
     /**
-     * @var MediaRepository|ObjectProphecy
+     * @var ObjectProphecy<MediaRepository>
      */
     private $mediaRepository;
 
     /**
-     * @var FormatManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<FormatManagerInterface>
      */
     private $formatManager;
 
     /**
-     * @var UserRepositoryInterface|ObjectProphecy
+     * @var ObjectProphecy<UserRepositoryInterface>
      */
     private $userRepository;
 
     /**
-     * @var EntityManager|ObjectProphecy
+     * @var ObjectProphecy<EntityManager>
      */
     private $entityManager;
 
     /**
-     * @var DomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DomainEventCollectorInterface>
      */
     private $domainEventCollector;
 
     /**
-     * @var TrashManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<TrashManagerInterface>
      */
     private $trashManager;
 
@@ -118,7 +118,7 @@ class CollectionManagerTest extends TestCase
         return $entity->reveal();
     }
 
-    public function testGetTreeWithSystemCollections()
+    public function testGetTreeWithSystemCollections(): void
     {
         $this->collectionRepository->findCollectionSet(
             0,
@@ -137,7 +137,7 @@ class CollectionManagerTest extends TestCase
         $tree = $this->collectionManager->getTree('de', 10, 10, 'test', 0, ['test']);
     }
 
-    public function testGetTreeWithoutSystemCollections()
+    public function testGetTreeWithoutSystemCollections(): void
     {
         $this->collectionRepository->findCollectionSet(
             0,
@@ -156,7 +156,7 @@ class CollectionManagerTest extends TestCase
         $this->collectionManager->getTree('de', 10, 10, 'test', 0, ['test'], false);
     }
 
-    public function testGetTreeById()
+    public function testGetTreeById(): void
     {
         $entities = [
             $this->createEntity(1, 'de'),
@@ -194,7 +194,7 @@ class CollectionManagerTest extends TestCase
     /**
      * This is e.g. needed for createing SystemCollections during installation.
      */
-    public function testSaveWithoutUserId()
+    public function testSaveWithoutUserId(): void
     {
         $collectionEntity = $this->createEntity(1, 'de');
         $this->collectionRepository->findCollectionById(1)->willReturn($collectionEntity);

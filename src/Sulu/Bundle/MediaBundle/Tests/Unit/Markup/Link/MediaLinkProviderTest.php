@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\Markup\Link;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Markup\Link\MediaLinkProvider;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
@@ -19,12 +20,12 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 class MediaLinkProviderTest extends TestCase
 {
     /**
-     * @var MediaRepositoryInterface
+     * @var ObjectProphecy<MediaRepositoryInterface>
      */
     private $mediaRepository;
 
     /**
-     * @var MediaManagerInterface
+     * @var ObjectProphecy<MediaManagerInterface>
      */
     private $mediaManager;
 
@@ -44,12 +45,12 @@ class MediaLinkProviderTest extends TestCase
         );
     }
 
-    public function testGetConfiguration()
+    public function testGetConfiguration(): void
     {
         $this->assertNull($this->mediaLinkProvider->getConfiguration());
     }
 
-    public function testPreload()
+    public function testPreload(): void
     {
         $this->mediaRepository->findMediaDisplayInfo([3, 6], 'de')->willReturn([
             ['id' => 3, 'title' => 'Test1', 'defaultTitle' => 'defaultTitle1', 'name' => 'test1.jpg', 'version' => 3],

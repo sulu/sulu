@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\RouteBundle\Tests\Unit\Manager;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Manager\AutoIncrementConflictResolver;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
@@ -19,7 +20,7 @@ use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 class AutoIncrementConflictResolverTest extends TestCase
 {
     /**
-     * @var RouteRepositoryInterface
+     * @var ObjectProphecy<RouteRepositoryInterface>
      */
     private $routeRepository;
 
@@ -34,7 +35,7 @@ class AutoIncrementConflictResolverTest extends TestCase
         $this->resolver = new AutoIncrementConflictResolver($this->routeRepository->reveal());
     }
 
-    public function testResolve()
+    public function testResolve(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');
@@ -47,12 +48,12 @@ class AutoIncrementConflictResolverTest extends TestCase
         $this->assertEquals($route->reveal(), $result);
     }
 
-    public function testResolveWithConflict()
+    public function testResolveWithConflict(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');
         $route->setPath('/test-1')->shouldBeCalled()->will(
-            function() use ($route) {
+            function() use ($route): void {
                 $route->getPath()->willReturn('/test-1');
             }
         );
@@ -74,17 +75,17 @@ class AutoIncrementConflictResolverTest extends TestCase
         $this->assertEquals($route->reveal(), $result);
     }
 
-    public function testResolveWithConflictTwice()
+    public function testResolveWithConflictTwice(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');
         $route->setPath('/test-1')->shouldBeCalled()->will(
-            function() use ($route) {
+            function() use ($route): void {
                 $route->getPath()->willReturn('/test-1');
             }
         );
         $route->setPath('/test-2')->shouldBeCalled()->will(
-            function() use ($route) {
+            function() use ($route): void {
                 $route->getPath()->willReturn('/test-2');
             }
         );
@@ -113,7 +114,7 @@ class AutoIncrementConflictResolverTest extends TestCase
         $this->assertEquals($route->reveal(), $result);
     }
 
-    public function testResolveWithSame()
+    public function testResolveWithSame(): void
     {
         $route = $this->prophesize(RouteInterface::class);
         $route->getPath()->willReturn('/test');

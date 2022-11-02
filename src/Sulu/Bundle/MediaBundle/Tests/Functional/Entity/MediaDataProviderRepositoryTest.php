@@ -575,7 +575,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     /**
      * @dataProvider findByProvider
      */
-    public function testFindByFilters($filters, $page, $pageSize, $limit, $expected, $tags = [], $options = [])
+    public function testFindByFilters($filters, $page, $pageSize, $limit, $expected, $tags = [], $options = []): void
     {
         foreach ($this->collectionData as $collection) {
             $this->collections[] = $this->createCollection(
@@ -655,7 +655,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     /**
      * @dataProvider provideFindByFiltersWithAudienceTargeting
      */
-    public function testFindByFiltersWithAudienceTargeting($targetGroupIndex, $expectedIndexes)
+    public function testFindByFiltersWithAudienceTargeting($targetGroupIndex, $expectedIndexes): void
     {
         /** @var TargetGroupInterface[] $targetGroups */
         $targetGroups = [];
@@ -697,7 +697,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $this->assertEquals($expectedMediaIds, $mediaIds);
     }
 
-    public function testFindByFiltersWithSecurityAllowed()
+    public function testFindByFiltersWithSecurityAllowed(): void
     {
         $collection = $this->createCollection('Collection 1');
         $this->em->flush();
@@ -724,7 +724,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $this->assertEquals('Media 2', $mediaResults[1]->getName());
     }
 
-    public function testFindByFiltersWithSecurityDenied()
+    public function testFindByFiltersWithSecurityDenied(): void
     {
         $this->systemStore->setSystem('Website');
         $collection = $this->createCollection('Collection 1');
@@ -749,7 +749,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $this->assertCount(0, $mediaResults);
     }
 
-    public function testFindByFiltersWithSecurityMixedPermissions()
+    public function testFindByFiltersWithSecurityMixedPermissions(): void
     {
         $this->systemStore->setSystem('Website');
         $collection = $this->createCollection('Collection');
@@ -785,7 +785,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $this->assertEquals('Media 2', $mediaResults[1]->getName());
     }
 
-    public function testFindByFiltersWithSecurityDeniedAndOtherSystem()
+    public function testFindByFiltersWithSecurityDeniedAndOtherSystem(): void
     {
         $this->systemStore->setSystem('Website');
         $collection = $this->createCollection('Collection 1');

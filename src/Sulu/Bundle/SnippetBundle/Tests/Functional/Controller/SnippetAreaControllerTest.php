@@ -38,7 +38,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
         $this->loadFixtures();
     }
 
-    public function testCGet()
+    public function testCGet(): void
     {
         $this->client->jsonRequest('GET', '/api/snippet-areas?webspace=sulu_io');
 
@@ -61,7 +61,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
         $this->assertEquals(null, $data[2]['defaultUuid']);
     }
 
-    public function testPutDefault()
+    public function testPutDefault(): void
     {
         $this->client->jsonRequest(
             'PUT',
@@ -101,7 +101,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
     /**
      * @depends testPutDefault
      */
-    public function testDeleteDefault()
+    public function testDeleteDefault(): void
     {
         $this->client->jsonRequest(
             'DELETE',

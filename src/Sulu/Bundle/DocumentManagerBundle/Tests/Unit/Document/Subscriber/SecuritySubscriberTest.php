@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Document\Subscriber;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Document\Subscriber\SecuritySubscriber;
 use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -23,7 +24,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 class SecuritySubscriberTest extends TestCase
 {
     /**
-     * @var TokenStorageInterface
+     * @var ObjectProphecy<TokenStorageInterface>
      */
     private $tokenStorage;
 
@@ -38,7 +39,7 @@ class SecuritySubscriberTest extends TestCase
         $this->securitySubscriber = new SecuritySubscriber($this->tokenStorage->reveal());
     }
 
-    public function testSetDefaultUser()
+    public function testSetDefaultUser(): void
     {
         $event = $this->prophesize(ConfigureOptionsEvent::class);
 
@@ -58,7 +59,7 @@ class SecuritySubscriberTest extends TestCase
         $this->securitySubscriber->setDefaultUser($event->reveal());
     }
 
-    public function testSetDefaultUserWithNullToken()
+    public function testSetDefaultUserWithNullToken(): void
     {
         $event = $this->prophesize(ConfigureOptionsEvent::class);
 
@@ -72,7 +73,7 @@ class SecuritySubscriberTest extends TestCase
         $this->securitySubscriber->setDefaultUser($event->reveal());
     }
 
-    public function testSetDefaultUserWithAnonymousToken()
+    public function testSetDefaultUserWithAnonymousToken(): void
     {
         $event = $this->prophesize(ConfigureOptionsEvent::class);
 
@@ -87,7 +88,7 @@ class SecuritySubscriberTest extends TestCase
         $this->securitySubscriber->setDefaultUser($event->reveal());
     }
 
-    public function testSetDefaultUserWithNonSuluUser()
+    public function testSetDefaultUserWithNonSuluUser(): void
     {
         $event = $this->prophesize(ConfigureOptionsEvent::class);
 

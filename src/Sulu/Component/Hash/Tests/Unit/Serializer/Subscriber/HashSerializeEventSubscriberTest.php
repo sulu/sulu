@@ -17,6 +17,7 @@ use JMS\Serializer\Visitor\DeserializationVisitorInterface;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Hash\HasherInterface;
 use Sulu\Component\Hash\Serializer\Subscriber\HashSerializeEventSubscriber;
 use Sulu\Component\Persistence\Model\AuditableInterface;
@@ -24,7 +25,7 @@ use Sulu\Component\Persistence\Model\AuditableInterface;
 class HashSerializeEventSubscriberTest extends TestCase
 {
     /**
-     * @var HasherInterface
+     * @var ObjectProphecy<HasherInterface>
      */
     private $hasher;
 
@@ -34,12 +35,12 @@ class HashSerializeEventSubscriberTest extends TestCase
     private $hashSerializeEventSubscriber;
 
     /**
-     * @var SerializationVisitorInterface
+     * @var ObjectProphecy<SerializationVisitorInterface>
      */
     private $visitor;
 
     /**
-     * @var ObjectEvent
+     * @var ObjectProphecy<ObjectEvent>
      */
     private $objectEvent;
 
@@ -52,7 +53,7 @@ class HashSerializeEventSubscriberTest extends TestCase
         $this->objectEvent->getVisitor()->willReturn($this->visitor->reveal());
     }
 
-    public function testOnPostSerialize()
+    public function testOnPostSerialize(): void
     {
         $object = $this->prophesize(AuditableInterface::class);
         $this->objectEvent->getObject()->willReturn($object);
@@ -63,7 +64,7 @@ class HashSerializeEventSubscriberTest extends TestCase
         $this->hashSerializeEventSubscriber->onPostSerialize($this->objectEvent->reveal());
     }
 
-    public function testOnPostSerializeWithWrongObject()
+    public function testOnPostSerializeWithWrongObject(): void
     {
         $object = new \stdClass();
         $this->objectEvent->getObject()->willReturn($object);
@@ -74,7 +75,7 @@ class HashSerializeEventSubscriberTest extends TestCase
         $this->hashSerializeEventSubscriber->onPostSerialize($this->objectEvent->reveal());
     }
 
-    public function testOnNonSerializationVisitor()
+    public function testOnNonSerializationVisitor(): void
     {
         $xmlVisitor = $this->prophesize(DeserializationVisitorInterface::class);
         $object = $this->prophesize(AuditableInterface::class);

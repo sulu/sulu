@@ -54,19 +54,19 @@
 
 {%- block description -%}
     {%- if seoDescription -%}
-        <meta name="description" content="{{ seoDescription }}"/>
+        <meta name="description" content="{{ seoDescription }}">
     {%- endif -%}
 {%- endblock -%}
 
 {%- block keywords -%}
     {%- if seoKeywords -%}
-        <meta name="keywords" content="{{ seoKeywords }}"/>
+        <meta name="keywords" content="{{ seoKeywords }}">
     {%- endif -%}
 {%- endblock -%}
 
 {%- block robots -%}
     {%- if seoRobots -%}
-        <meta name="robots" content="{{ seoRobots }}"/>
+        <meta name="robots" content="{{ seoRobots }}">
     {%- endif -%}
 {%- endblock -%}
 
@@ -75,7 +75,7 @@
     {%- if localizations|length > 1 -%}
         {%- for localization in localizations -%}
             {%- if localization.alternate is not defined or localization.alternate -%}
-                <link rel="alternate" href="{{ localization.url }}" hreflang="{{ localization.locale|replace({'_': '-'}) }}"/>
+                <link rel="alternate" href="{{ localization.url }}" hreflang="{{ localization.locale|replace({'_': '-'}) }}">
             {%- endif -%}
         {%- endfor -%}
     {%- endif -%}
@@ -83,5 +83,5 @@
 
 {%- block canonical -%}
     {#- Set canonical to itself if a bot clone the page -#}
-    <link rel="canonical" href="{{ seoCanonical|default(app.request.uri) }}"/>
+    <link rel="canonical" href="{{ seoCanonical|default(app.request.uri) }}">
 {%- endblock -%}

@@ -29,47 +29,47 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ParameterResolverTest extends TestCase
 {
     /**
-     * @var StructureResolverInterface|ObjectProphecy
+     * @var ObjectProphecy<StructureResolverInterface>
      */
     private $structureResolver;
 
     /**
-     * @var RequestAnalyzerResolverInterface|ObjectProphecy
+     * @var ObjectProphecy<RequestAnalyzerResolverInterface>
      */
     private $requestAnalyzerResolver;
 
     /**
-     * @var WebspaceManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
     /**
-     * @var RequestStack|ObjectProphecy
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
     /**
-     * @var Request|ObjectProphecy
+     * @var ObjectProphecy<Request>
      */
     private $request;
 
     /**
-     * @var RequestAnalyzerInterface|ObjectProphecy
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var PageBridge|ObjectProphecy
+     * @var ObjectProphecy<PageBridge>
      */
     private $structure;
 
     /**
-     * @var Portal|ObjectProphecy
+     * @var ObjectProphecy<Portal>
      */
     private $portal;
 
     /**
-     * @var Webspace|ObjectProphecy
+     * @var ObjectProphecy<Webspace>
      */
     private $webspace;
 

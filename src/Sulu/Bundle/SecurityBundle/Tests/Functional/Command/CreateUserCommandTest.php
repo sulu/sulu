@@ -48,14 +48,14 @@ class CreateUserCommandTest extends SuluTestCase
         $this->tester = new CommandTester($this->command);
     }
 
-    public function testCreateUser()
+    public function testCreateUser(): void
     {
         $this->createRole('test');
         $this->createUser('sulu', 'test');
         $this->assertEquals('Created user "sulu" in role "test"' . \PHP_EOL, $this->tester->getDisplay());
     }
 
-    public function testCreateUserAlreadyExists()
+    public function testCreateUserAlreadyExists(): void
     {
         $this->createRole('test');
         $this->createUser('sulu', 'test');
@@ -64,28 +64,28 @@ class CreateUserCommandTest extends SuluTestCase
         $this->assertEquals('User "sulu" already exists', \trim($this->tester->getDisplay()));
     }
 
-    public function testCreateUserNonExistingRole()
+    public function testCreateUserNonExistingRole(): void
     {
         $this->createRole('test');
         $this->createUser('sulu', 'testfoobar');
         $this->assertEquals('Role "testfoobar" not found. The following roles are available: "test"' . \PHP_EOL, $this->tester->getDisplay());
     }
 
-    public function testCreateUserNonExistingLocale()
+    public function testCreateUserNonExistingLocale(): void
     {
         $this->createRole('test');
         $this->createUser('sulu', 'test', 'ax');
         $this->assertStringContainsString('Given locale "ax" is invalid, must be one of "', $this->tester->getDisplay());
     }
 
-    public function testCreateUserNoRoles()
+    public function testCreateUserNoRoles(): void
     {
         $this->expectExceptionMessage('The system currently has no roles. Use the "sulu:security:role:create" command to create roles.');
         $this->expectException(\RuntimeException::class);
         $this->createUser('sulu', 'blah');
     }
 
-    private function createRole($roleName)
+    private function createRole($roleName): void
     {
         $doctrine = $this->getContainer()->get('doctrine');
         $em = $doctrine->getManager();
@@ -99,7 +99,7 @@ class CreateUserCommandTest extends SuluTestCase
         $em->flush();
     }
 
-    private function createUser($username, $role, $locale = 'en')
+    private function createUser($username, $role, $locale = 'en'): void
     {
         $this->tester->execute(
             [

@@ -16,6 +16,7 @@ use PHPCR\NodeInterface;
 use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\RootPathPurgeInitializer;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,22 +24,22 @@ use Symfony\Component\Console\Output\OutputInterface;
 class RootPathPurgeInitializerTest extends TestCase
 {
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $session1;
 
     /**
-     * @var SessionInterface
+     * @var ObjectProphecy<SessionInterface>
      */
     private $session2;
 
     /**
-     * @var ConnectionRegistry
+     * @var ObjectProphecy<ConnectionRegistry>
      */
     private $connectionRegistry;
 
     /**
-     * @var PathSegmentRegistry
+     * @var ObjectProphecy<PathSegmentRegistry>
      */
     private $segmentRegistry;
 
@@ -48,12 +49,12 @@ class RootPathPurgeInitializerTest extends TestCase
     private $rootPathPurgeInitializer;
 
     /**
-     * @var OutputInterface
+     * @var ObjectProphecy<OutputInterface>
      */
     private $output;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
@@ -75,7 +76,7 @@ class RootPathPurgeInitializerTest extends TestCase
     /**
      * It should purge the root path of all sessions.
      */
-    public function testPurgeRootNodes()
+    public function testPurgeRootNodes(): void
     {
         $this->connectionRegistry->getConnections()->willReturn([
             $this->session1->reveal(),
@@ -100,7 +101,7 @@ class RootPathPurgeInitializerTest extends TestCase
     /**
      * It should skip purging if the workspace does not exist.
      */
-    public function testDoNotPurgeWorkspaceNotFound()
+    public function testDoNotPurgeWorkspaceNotFound(): void
     {
         $this->connectionRegistry->getConnections()->willReturn([
             $this->session1->reveal(),
@@ -123,7 +124,7 @@ class RootPathPurgeInitializerTest extends TestCase
         $this->rootPathPurgeInitializer->initialize($this->output->reveal(), true);
     }
 
-    public function testInitializeWithFalsePurgeFlag()
+    public function testInitializeWithFalsePurgeFlag(): void
     {
         $this->connectionRegistry->getConnections()->shouldNotBeCalled();
         $this->rootPathPurgeInitializer->initialize($this->output->reveal(), false);

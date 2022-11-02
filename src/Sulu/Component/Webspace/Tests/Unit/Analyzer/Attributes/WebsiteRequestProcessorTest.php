@@ -55,7 +55,7 @@ class WebsiteRequestProcessorTest extends TestCase
         );
     }
 
-    public function testProcess()
+    public function testProcess(): void
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu');
@@ -108,7 +108,7 @@ class WebsiteRequestProcessorTest extends TestCase
         $this->assertEquals('sulu.io/de', $portalInformation3->getUrl());
     }
 
-    public function testProcessPriority()
+    public function testProcessPriority(): void
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu');
@@ -160,7 +160,7 @@ class WebsiteRequestProcessorTest extends TestCase
         $this->assertEquals('sulu.lo', $portalInformation2->getUrl());
     }
 
-    public function testProcessSamePriorityDifferentLength()
+    public function testProcessSamePriorityDifferentLength(): void
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu');
@@ -259,7 +259,7 @@ class WebsiteRequestProcessorTest extends TestCase
      *
      * @dataProvider provideValidateData
      */
-    public function testValidate($attributes, $exception = null, $message = '', $portalInformations = [])
+    public function testValidate($attributes, $exception = null, $message = '', $portalInformations = []): void
     {
         if (null !== $exception) {
             $this->expectException($exception, $message);

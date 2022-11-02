@@ -13,6 +13,7 @@ namespace Sulu\Component\Security\Authorization;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 
 /**
  * Implementation of Sulu specific security checks, includes a subject, the type of permission and the localization.
@@ -39,9 +40,8 @@ class SecurityChecker extends AbstractSecurityChecker
 
     public function hasPermission($subject, $permission)
     {
-        if (!$subject || !$this->tokenStorage->getToken()) {
+        if (!$subject) {
             // if there is no subject the operation is allowed, since we have nothing to check against
-            // if there is no token we are not behind a firewall, so the action is also allowed (e.g. command execution)
             return true;
         }
 
@@ -49,8 +49,12 @@ class SecurityChecker extends AbstractSecurityChecker
             $subject = new SecurityCondition($subject);
         }
 
-        $granted = $this->authorizationChecker->isGranted($permission, $subject);
-
-        return $granted;
+        try {
+            return $this->authorizationChecker->isGranted($permission, $subject);
+        } catch (AuthenticationCredentialsNotFoundException $e) {
+            // the AuthorizationChecker service will throw an exception if enable_authenticator_manager is false and
+            // no firewall is active. we grant access per default if there is no active firewall
+            return true;
+        }
     }
 }

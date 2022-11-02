@@ -28,7 +28,7 @@ class HiddenBlockVisitorTest extends TestCase
         $this->hiddenBlockVisitor = new HiddenBlockVisitor();
     }
 
-    public function testShouldNotSkipWithObjectAsSettings()
+    public function testShouldNotSkipWithObjectAsSettings(): void
     {
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(new \stdClass());
@@ -36,7 +36,7 @@ class HiddenBlockVisitorTest extends TestCase
         $this->assertEquals($blockPropertyType, $this->hiddenBlockVisitor->visit($blockPropertyType));
     }
 
-    public function testShouldNotSkipWithEmptyArrayAsSettings()
+    public function testShouldNotSkipWithEmptyArrayAsSettings(): void
     {
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings([]);
@@ -44,7 +44,7 @@ class HiddenBlockVisitorTest extends TestCase
         $this->assertEquals($blockPropertyType, $this->hiddenBlockVisitor->visit($blockPropertyType));
     }
 
-    public function testShouldSkipWithHiddenSetting()
+    public function testShouldSkipWithHiddenSetting(): void
     {
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(['hidden' => true]);
@@ -52,7 +52,7 @@ class HiddenBlockVisitorTest extends TestCase
         $this->assertNull($this->hiddenBlockVisitor->visit($blockPropertyType));
     }
 
-    public function testShouldNotSkipWithHiddenSetting()
+    public function testShouldNotSkipWithHiddenSetting(): void
     {
         $blockPropertyType = new BlockPropertyType('type1', new Metadata([]));
         $blockPropertyType->setSettings(['hidden' => false]);

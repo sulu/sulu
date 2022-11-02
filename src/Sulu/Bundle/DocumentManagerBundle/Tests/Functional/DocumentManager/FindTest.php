@@ -24,7 +24,7 @@ class FindTest extends BaseTestCase
     /**
      * Persist a document in a single locale.
      */
-    public function testPersist()
+    public function testPersist(): void
     {
         $this->generateDataSet([
             'locales' => ['en'],
@@ -40,7 +40,7 @@ class FindTest extends BaseTestCase
     /**
      * Persist a document in a many locales.
      */
-    public function testPersistManyLocales()
+    public function testPersistManyLocales(): void
     {
         $this->generateDataSet([
             'locales' => ['en', 'de'],
@@ -56,7 +56,7 @@ class FindTest extends BaseTestCase
     /**
      * It can persist and find without any locales.
      */
-    public function testPersistFindNoLocales()
+    public function testPersistFindNoLocales(): void
     {
         $manager = $this->getDocumentManager();
         $document = $manager->create('full');

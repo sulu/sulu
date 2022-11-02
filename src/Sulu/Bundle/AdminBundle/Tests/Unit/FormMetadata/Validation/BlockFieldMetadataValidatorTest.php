@@ -78,7 +78,7 @@ class BlockFieldMetadataValidatorTest extends TestCase
         return $sectionMetadata;
     }
 
-    private function expectReservedPropertyNameException(string $formKey, string $blockName, string $propertyName)
+    private function expectReservedPropertyNameException(string $formKey, string $blockName, string $propertyName): void
     {
         $this->expectException(ReservedPropertyNameException::class);
         $this->expectExceptionMessageMatches('"' . $formKey . '"');
@@ -86,7 +86,7 @@ class BlockFieldMetadataValidatorTest extends TestCase
         $this->expectExceptionMessageMatches('"' . $propertyName . '"');
     }
 
-    public function testValidate()
+    public function testValidate(): void
     {
         $item = $this->createFieldMetadata('valid_name', 'text_line');
         $type = $this->createFormMetadata('some_block_type', [$item]);
@@ -97,7 +97,7 @@ class BlockFieldMetadataValidatorTest extends TestCase
         $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
     }
 
-    public function testValidatePropertyNameSettings()
+    public function testValidatePropertyNameSettings(): void
     {
         $item = $this->createFieldMetadata('settings', 'text_line');
         $type = $this->createFormMetadata('some_block_type', [$item]);
@@ -108,7 +108,7 @@ class BlockFieldMetadataValidatorTest extends TestCase
         $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
     }
 
-    public function testValidateBlockWithSectionWithSettingsProperty()
+    public function testValidateBlockWithSectionWithSettingsProperty(): void
     {
         $item = $this->createFieldMetadata('settings', 'text_line');
         $section = $this->createSectionMetadata('some_section', [$item]);
@@ -120,7 +120,7 @@ class BlockFieldMetadataValidatorTest extends TestCase
         $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
     }
 
-    public function testValidateBlockWithSectionWithValidProperties()
+    public function testValidateBlockWithSectionWithValidProperties(): void
     {
         $sectionItem = $this->createFieldMetadata('other_valid_name', 'text_line');
         $section = $this->createSectionMetadata('some_section', [$sectionItem]);
@@ -133,7 +133,7 @@ class BlockFieldMetadataValidatorTest extends TestCase
         $this->blockFieldMetadataValidator->validate($block, 'some_form_key');
     }
 
-    public function testValidateNotBlock()
+    public function testValidateNotBlock(): void
     {
         $property = $this->createFieldMetadata('some_property', 'text_line');
 

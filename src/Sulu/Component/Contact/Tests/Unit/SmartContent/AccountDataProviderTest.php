@@ -14,6 +14,7 @@ namespace Sulu\Component\Contact\Tests\Unit\SmartContent;
 use JMS\Serializer\SerializationContext;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Contact\SmartContent\AccountDataItem;
@@ -27,17 +28,17 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 class AccountDataProviderTest extends TestCase
 {
     /**
-     * @var DataProviderRepositoryInterface
+     * @var ObjectProphecy<DataProviderRepositoryInterface>
      */
     private $dataProviderRepository;
 
     /**
-     * @var ArraySerializerInterface
+     * @var ObjectProphecy<ArraySerializerInterface>
      */
     private $serializer;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $referenceStore;
 
@@ -59,14 +60,14 @@ class AccountDataProviderTest extends TestCase
         );
     }
 
-    public function testGetConfiguration()
+    public function testGetConfiguration(): void
     {
         $configuration = $this->accountDataProvider->getConfiguration();
 
         $this->assertInstanceOf(ProviderConfigurationInterface::class, $configuration);
     }
 
-    public function testGetDefaultParameter()
+    public function testGetDefaultParameter(): void
     {
         $parameter = $this->accountDataProvider->getDefaultPropertyParameter();
 
@@ -97,7 +98,7 @@ class AccountDataProviderTest extends TestCase
     /**
      * @dataProvider dataItemsDataProvider
      */
-    public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items)
+    public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items): void
     {
         $this->dataProviderRepository->findByFilters(
             $filters,
@@ -157,7 +158,7 @@ class AccountDataProviderTest extends TestCase
         $repositoryResult,
         $hasNextPage,
         $items
-    ) {
+    ): void {
         $serializeCallback = function(Account $account) {
             return $this->serialize($account);
         };
@@ -199,7 +200,7 @@ class AccountDataProviderTest extends TestCase
         $this->assertEquals($items, $result->getItems());
     }
 
-    public function testResolveDataSource()
+    public function testResolveDataSource(): void
     {
         $serializer = $this->prophesize(ArraySerializerInterface::class);
         $referenceStore = $this->prophesize(ReferenceStoreInterface::class);

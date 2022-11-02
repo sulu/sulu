@@ -39,7 +39,7 @@ class ReferrerCollectionTest extends TestCase
     /**
      * It should be iterable.
      */
-    public function testIterable()
+    public function testIterable(): void
     {
         $references = new \ArrayIterator([
             $this->reference->reveal(),

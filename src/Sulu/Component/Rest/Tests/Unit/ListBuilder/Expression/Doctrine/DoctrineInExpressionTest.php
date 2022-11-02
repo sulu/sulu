@@ -46,7 +46,7 @@ class DoctrineInExpressionTest extends TestCase
         $this->queryBuilder->expects($this->any())->method('setParameter')->willReturnSelf();
     }
 
-    public function testGetStatement()
+    public function testGetStatement(): void
     {
         $fieldDescriptor = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
         $values = [1, 2, 3];
@@ -61,7 +61,7 @@ class DoctrineInExpressionTest extends TestCase
         $this->assertEquals(1, $result);
     }
 
-    public function testGetStatementSingleNullValue()
+    public function testGetStatementSingleNullValue(): void
     {
         $fieldDescriptor = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
         $values = [null];

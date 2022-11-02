@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\Security;
 class SetDomainEventUserSubscriberTest extends TestCase
 {
     /**
-     * @var Security|ObjectProphecy
+     * @var ObjectProphecy<Security>
      */
     private $security;
 

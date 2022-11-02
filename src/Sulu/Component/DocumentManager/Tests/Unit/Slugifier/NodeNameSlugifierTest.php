@@ -12,13 +12,14 @@
 namespace Sulu\Component\DocumentManager\tests\Unit\Slugifier;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Slugifier\NodeNameSlugifier;
 use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
 
 class NodeNameSlugifierTest extends TestCase
 {
     /**
-     * @var SlugifierInterface
+     * @var ObjectProphecy<SlugifierInterface>
      */
     private $slugifier;
 
@@ -33,7 +34,7 @@ class NodeNameSlugifierTest extends TestCase
         $this->nodeNameSlugifier = new NodeNameSlugifier($this->slugifier->reveal());
     }
 
-    public function testSlugify()
+    public function testSlugify(): void
     {
         $this->slugifier->slugify('Test article')->willReturn('test-article');
 
@@ -62,7 +63,7 @@ class NodeNameSlugifierTest extends TestCase
     /**
      * @dataProvider provide10eData
      */
-    public function testSlugify10e($actual, $expected)
+    public function testSlugify10e($actual, $expected): void
     {
         $this->slugifier->slugify($actual)->willReturn($actual);
 

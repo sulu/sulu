@@ -44,7 +44,7 @@ class MultipleTranslatedPropertiesTest extends TestCase
     /**
      * @dataProvider provideGetName
      */
-    public function testGetName($structureType, $name, $expectedName)
+    public function testGetName($structureType, $name, $expectedName): void
     {
         $this->properties->setLanguage('de');
         $this->properties->setStructureType($structureType);

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Content;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SnippetBundle\Content\SingleSnippetSelection;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
@@ -25,17 +26,17 @@ use Sulu\Component\Content\Compat\Structure\StructureBridge;
 class SingleSnippetSelectionTest extends TestCase
 {
     /**
-     * @var DefaultSnippetManagerInterface
+     * @var ObjectProphecy<DefaultSnippetManagerInterface>
      */
     private $defaultSnippetManager;
 
     /**
-     * @var SnippetResolverInterface
+     * @var ObjectProphecy<SnippetResolverInterface>
      */
     private $snippetResolver;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $referenceStore;
 
@@ -57,7 +58,7 @@ class SingleSnippetSelectionTest extends TestCase
         );
     }
 
-    public function testGetContentData()
+    public function testGetContentData(): void
     {
         $structure = $this->prophesize(StructureBridge::class);
         $structure->getWebspaceKey()->willReturn('sulu_io');
@@ -81,7 +82,7 @@ class SingleSnippetSelectionTest extends TestCase
         $this->assertEquals(['title' => 'test-1'], $result);
     }
 
-    public function testGetContentDataNullValue()
+    public function testGetContentDataNullValue(): void
     {
         $structure = $this->prophesize(StructureBridge::class);
         $structure->getWebspaceKey()->willReturn('sulu_io');
@@ -99,7 +100,7 @@ class SingleSnippetSelectionTest extends TestCase
         $this->assertEquals(null, $result);
     }
 
-    public function testGetContentDataFallbackToSnippetArea()
+    public function testGetContentDataFallbackToSnippetArea(): void
     {
         $structure = $this->prophesize(StructureBridge::class);
         $structure->getWebspaceKey()->willReturn('sulu_io');
@@ -126,7 +127,7 @@ class SingleSnippetSelectionTest extends TestCase
         $this->assertEquals(['title' => 'test-1'], $result);
     }
 
-    public function testGetContentDataWithExtensions()
+    public function testGetContentDataWithExtensions(): void
     {
         $structure = $this->prophesize(StructureBridge::class);
         $structure->getWebspaceKey()->willReturn('sulu_io');
@@ -154,7 +155,7 @@ class SingleSnippetSelectionTest extends TestCase
         $this->assertEquals(['title' => 'test-1', 'taxonomies' => ['categories' => [], 'tags' => []]], $result);
     }
 
-    public function testGetViewData()
+    public function testGetViewData(): void
     {
         $structure = $this->prophesize(StructureBridge::class);
         $structure->getWebspaceKey()->willReturn('sulu_io');
@@ -178,7 +179,7 @@ class SingleSnippetSelectionTest extends TestCase
         $this->assertEquals(['title' => 'test-2', 'template' => 'default'], $result);
     }
 
-    public function testGetViewDataNullValue()
+    public function testGetViewDataNullValue(): void
     {
         $structure = $this->prophesize(StructureBridge::class);
         $structure->getWebspaceKey()->willReturn('sulu_io');
@@ -196,7 +197,7 @@ class SingleSnippetSelectionTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    public function testPreResolve()
+    public function testPreResolve(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $property->getValue()->willReturn('123-123-123');
@@ -206,7 +207,7 @@ class SingleSnippetSelectionTest extends TestCase
         $this->referenceStore->add('123-123-123')->shouldBeCalled();
     }
 
-    public function testPreResolveNullValue()
+    public function testPreResolveNullValue(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $property->getValue()->willReturn(null);

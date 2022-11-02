@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Tests\Unit\User;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
@@ -24,12 +25,12 @@ use Symfony\Component\Security\Core\Exception\LockedException;
 class UserProviderTest extends TestCase
 {
     /**
-     * @var UserRepositoryInterface
+     * @var ObjectProphecy<UserRepositoryInterface>
      */
     private $userRepository;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
@@ -57,21 +58,21 @@ class UserProviderTest extends TestCase
         $this->userRepository->findUserByIdentifier('sulu')->willReturn($this->user);
     }
 
-    public function testLoginFailDisabledUser()
+    public function testLoginFailDisabledUser(): void
     {
         $this->expectException(DisabledException::class);
         $this->user->setEnabled(false);
         $this->userProvider->loadUserByUsername('sulu');
     }
 
-    public function testLoginFailLockedUser()
+    public function testLoginFailLockedUser(): void
     {
         $this->expectException(LockedException::class);
         $this->user->setLocked(true);
         $this->userProvider->loadUserByUsername('sulu');
     }
 
-    public function testLoadUserByUsername()
+    public function testLoadUserByUsername(): void
     {
         $role = new Role();
         $role->setSystem('Sulu');
@@ -83,19 +84,19 @@ class UserProviderTest extends TestCase
         $this->assertEquals('test@sulu.io', $user->getEmail());
     }
 
-    public function testRefreshUser()
+    public function testRefreshUser(): void
     {
         $this->assertEquals($this->user->getUsername(), $this->userProvider->refreshUser($this->user)->getUsername());
     }
 
-    public function testRefreshUserWithLockedUser()
+    public function testRefreshUserWithLockedUser(): void
     {
         $this->expectException(LockedException::class);
         $this->user->setLocked(true);
         $this->userProvider->refreshUser($this->user);
     }
 
-    public function testRefreshUserWithDisabledUser()
+    public function testRefreshUserWithDisabledUser(): void
     {
         $this->expectException(DisabledException::class);
         $this->user->setEnabled(false);

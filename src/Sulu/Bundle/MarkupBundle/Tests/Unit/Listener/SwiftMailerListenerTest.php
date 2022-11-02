@@ -21,22 +21,22 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class SwiftMailerListenerTest extends TestCase
 {
     /**
-     * @var MarkupParserInterface
+     * @var ObjectProphecy<MarkupParserInterface>
      */
     private $markupParser;
 
     /**
-     * @var \Swift_Events_SendEvent
+     * @var ObjectProphecy<\Swift_Events_SendEvent>
      */
     private $event;
 
     /**
-     * @var \Swift_Mime_SimpleMessage
+     * @var ObjectProphecy<\Swift_Mime_SimpleMessage>
      */
     private $simpleMessage;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
@@ -52,13 +52,9 @@ class SwiftMailerListenerTest extends TestCase
 
     protected function setUp(): void
     {
-        /* @var MarkupParserInterface|ObjectProphecy markupParser */
         $this->markupParser = $this->prophesize(MarkupParserInterface::class);
-        /* @var \Swift_Events_SendEvent|ObjectProphecy event */
         $this->event = $this->prophesize(\Swift_Events_SendEvent::class);
-        /* @var RequestStack|ObjectProphecy requestStack */
         $this->requestStack = $this->prophesize(RequestStack::class);
-        /* @var \Swift_Mime_SimpleMessage|ObjectProphecy simpleMessage */
         $this->simpleMessage = $this->prophesize(\Swift_Mime_SimpleMessage::class);
         $this->event->getMessage()->willReturn($this->simpleMessage->reveal());
 

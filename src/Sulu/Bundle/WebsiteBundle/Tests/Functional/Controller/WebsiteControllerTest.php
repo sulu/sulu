@@ -27,7 +27,7 @@ class WebsiteControllerTest extends WebsiteTestCase
         $this->initPhpcr();
     }
 
-    public function testPage()
+    public function testPage(): void
     {
         /* @var KernelBrowser $client */
 
@@ -37,7 +37,7 @@ class WebsiteControllerTest extends WebsiteTestCase
         $this->assertHttpStatusCode(200, $response);
     }
 
-    public function testPage406ForNotExistFormat()
+    public function testPage406ForNotExistFormat(): void
     {
         $this->client->request('GET', 'http://sulu.lo/.xml');
 
@@ -45,7 +45,7 @@ class WebsiteControllerTest extends WebsiteTestCase
         $this->assertHttpStatusCode(406, $response);
     }
 
-    public function testPageClientAcceptHeaderNotUsed()
+    public function testPageClientAcceptHeaderNotUsed(): void
     {
         $this->client->request('GET', 'http://sulu.lo/', [], [], [
             'HTTP_ACCEPT' => 'text/plain',

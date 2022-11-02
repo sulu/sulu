@@ -29,7 +29,7 @@ class PropertyValueTest extends TestCase
     /**
      * @dataProvider provideOffsetSetData
      */
-    public function testOffsetSet($value, $setName, $setValue, $expected)
+    public function testOffsetSet($value, $setName, $setValue, $expected): void
     {
         $propertyValue = new PropertyValue('test', $value);
 

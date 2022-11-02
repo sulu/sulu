@@ -69,7 +69,7 @@ class ResourceLocatorTest extends SuluTestCase
         $this->em = $this->getContainer()->get('doctrine')->getManager();
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $property = new Property('url', [], 'resource_locator');
         $property->setValue('/test');
@@ -83,7 +83,7 @@ class ResourceLocatorTest extends SuluTestCase
         $this->assertEquals('/test', $node->getPropertyValue('url'));
     }
 
-    public function testLoadFromProperty()
+    public function testLoadFromProperty(): void
     {
         $property = new Property('url', [], 'resource_locator');
 
@@ -97,7 +97,7 @@ class ResourceLocatorTest extends SuluTestCase
         $this->assertEquals('/test', $property->getValue());
     }
 
-    public function testLoadFromNode()
+    public function testLoadFromNode(): void
     {
         $property = new Property('url', [], 'resource_locator');
         $property->setValue('/test');

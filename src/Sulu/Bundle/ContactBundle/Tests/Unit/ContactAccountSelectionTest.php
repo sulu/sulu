@@ -13,9 +13,9 @@ namespace Sulu\Bundle\ContactBundle\Tests\Unit;
 
 use Jackalope\Node;
 use JMS\Serializer\SerializationContext;
-use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Api\Account;
 use Sulu\Bundle\ContactBundle\Api\Contact;
 use Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface;
@@ -51,42 +51,42 @@ class ContactAccountSelectionTest extends TestCase
     private $segmentKey = 'winter';
 
     /**
-     * @var ContactManagerInterface
+     * @var ObjectProphecy<ContactManagerInterface>
      */
     private $contactManager;
 
     /**
-     * @var ContactManagerInterface
+     * @var ObjectProphecy<ContactManagerInterface>
      */
     private $accountManager;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<Node>
      */
     private $node;
 
     /**
-     * @var PropertyInterface
+     * @var ObjectProphecy<PropertyInterface>
      */
     private $property;
 
     /**
-     * @var StructureInterface
+     * @var ObjectProphecy<StructureInterface>
      */
     private $structure;
 
     /**
-     * @var ArraySerializerInterface
+     * @var ObjectProphecy<ArraySerializerInterface>
      */
     private $serializer;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $accountReferenceStore;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $contactReferenceStore;
 
@@ -110,7 +110,7 @@ class ContactAccountSelectionTest extends TestCase
         $this->contactReferenceStore = $this->prophesize(ReferenceStoreInterface::class);
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -136,7 +136,7 @@ class ContactAccountSelectionTest extends TestCase
         );
     }
 
-    public function testReadNull()
+    public function testReadNull(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -162,7 +162,7 @@ class ContactAccountSelectionTest extends TestCase
         );
     }
 
-    public function testReadPropertyNotExists()
+    public function testReadPropertyNotExists(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -188,7 +188,7 @@ class ContactAccountSelectionTest extends TestCase
         );
     }
 
-    public function testWrite()
+    public function testWrite(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -214,7 +214,7 @@ class ContactAccountSelectionTest extends TestCase
         );
     }
 
-    public function testWriteNull()
+    public function testWriteNull(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -241,7 +241,7 @@ class ContactAccountSelectionTest extends TestCase
         );
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -273,7 +273,7 @@ class ContactAccountSelectionTest extends TestCase
         );
     }
 
-    public function testGetViewData()
+    public function testGetViewData(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -290,7 +290,7 @@ class ContactAccountSelectionTest extends TestCase
         $this->assertEquals([], $view);
     }
 
-    public function testGetDefaultValue()
+    public function testGetDefaultValue(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -307,7 +307,7 @@ class ContactAccountSelectionTest extends TestCase
         $this->assertEquals([], $defaultValue);
     }
 
-    public function testGetDefaultParams()
+    public function testGetDefaultParams(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -330,7 +330,7 @@ class ContactAccountSelectionTest extends TestCase
         );
     }
 
-    public function testHasValue()
+    public function testHasValue(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -356,7 +356,7 @@ class ContactAccountSelectionTest extends TestCase
         );
     }
 
-    public function testGetContentDataOnlyContact()
+    public function testGetContentDataOnlyContact(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -398,7 +398,7 @@ class ContactAccountSelectionTest extends TestCase
         $this->assertEquals(['id' => 3], $result[2]);
     }
 
-    public function testGetContentDataCombined()
+    public function testGetContentDataCombined(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -441,7 +441,7 @@ class ContactAccountSelectionTest extends TestCase
         $this->assertEquals(['id' => 2], $result[2]);
     }
 
-    public function testGetContentDataOrderOnlyContact()
+    public function testGetContentDataOrderOnlyContact(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -484,7 +484,7 @@ class ContactAccountSelectionTest extends TestCase
         $this->assertEquals(['id' => 3], $contacts[2]);
     }
 
-    public function testGetContentDataEmpty()
+    public function testGetContentDataEmpty(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -505,7 +505,7 @@ class ContactAccountSelectionTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    public function testGetContentDataNull()
+    public function testGetContentDataNull(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -526,7 +526,7 @@ class ContactAccountSelectionTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    public function testGetContentDataWrongType()
+    public function testGetContentDataWrongType(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),
@@ -547,7 +547,7 @@ class ContactAccountSelectionTest extends TestCase
         $this->assertCount(0, $result);
     }
 
-    public function testPreResolve()
+    public function testPreResolve(): void
     {
         $type = new ContactAccountSelection(
             $this->contactManager->reveal(),

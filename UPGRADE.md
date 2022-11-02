@@ -1,5 +1,16 @@
 # Upgrade
 
+## 2.4.6
+
+### Add indexes to route table
+
+Improve performance of the `Route` table with additional indexes for the database:
+
+```sql
+CREATE INDEX idx_resource ON ro_routes (entity_id, entity_class);
+CREATE INDEX idx_history ON ro_routes (history);
+```
+
 ## 2.4.4
 
 ### Add indexes to activities table

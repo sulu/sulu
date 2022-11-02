@@ -16,12 +16,13 @@ use FFMpeg\FFMpeg;
 use FFMpeg\Media\Frame;
 use FFMpeg\Media\Video;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailService;
 
 class VideoThumbnailServiceTest extends TestCase
 {
     /**
-     * @var Video
+     * @var ObjectProphecy<Video>
      */
     protected $video;
 
@@ -31,12 +32,12 @@ class VideoThumbnailServiceTest extends TestCase
     protected $videoThumbnailService;
 
     /**
-     * @var Frame
+     * @var ObjectProphecy<Frame>
      */
     protected $frame;
 
     /**
-     * @var FFMpeg
+     * @var ObjectProphecy<FFMpeg>
      */
     protected $ffmpeg;
 
@@ -51,7 +52,7 @@ class VideoThumbnailServiceTest extends TestCase
         $this->videoThumbnailService = new VideoThumbnailService($this->ffmpeg->reveal());
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $timecode = TimeCode::fromString('00:00:00:01');
 
@@ -62,7 +63,7 @@ class VideoThumbnailServiceTest extends TestCase
         $this->videoThumbnailService->generate('1.mp4', '00:00:00:01', '1.jpg');
     }
 
-    public function testBatchGenerate()
+    public function testBatchGenerate(): void
     {
         $times = ['00:00:00:01', '00:00:00:11', '00:00:00:21'];
 

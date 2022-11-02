@@ -35,7 +35,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testFindByNoPagination()
+    public function testFindByNoPagination(): void
     {
         $contact1 = $this->createContact('Max', 'Mustermann');
         $contact2 = $this->createContact('Erika', 'Mustermann');
@@ -47,7 +47,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact2], $result);
     }
 
-    public function testFindByPage1NoLimit()
+    public function testFindByPage1NoLimit(): void
     {
         $contact1 = $this->createContact('Max', 'Mustermann');
         $contact2 = $this->createContact('Erika', 'Mustermann');
@@ -62,7 +62,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact2, $contact3], $result);
     }
 
-    public function testFindByPage2NoLimit()
+    public function testFindByPage2NoLimit(): void
     {
         $contact1 = $this->createContact('Max', 'Mustermann');
         $contact2 = $this->createContact('Erika', 'Mustermann');
@@ -76,7 +76,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact3, $contact4], $result);
     }
 
-    public function testFindByLimit3()
+    public function testFindByLimit3(): void
     {
         $contact1 = $this->createContact('Max', 'Mustermann');
         $contact2 = $this->createContact('Erika', 'Mustermann');
@@ -90,7 +90,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact2, $contact3], $result);
     }
 
-    public function testFindByPage1Limit5()
+    public function testFindByPage1Limit5(): void
     {
         $contact1 = $this->createContact('Max', 'Mustermann');
         $contact2 = $this->createContact('Erika', 'Mustermann');
@@ -105,7 +105,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact2, $contact3, $contact4], $result);
     }
 
-    public function testFindByPage2Limit5()
+    public function testFindByPage2Limit5(): void
     {
         $contact1 = $this->createContact('Max', 'Mustermann');
         $contact2 = $this->createContact('Erika', 'Mustermann');
@@ -120,7 +120,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact4, $contact5], $result);
     }
 
-    public function testFindByLimit2OrderAsc()
+    public function testFindByLimit2OrderAsc(): void
     {
         $contact1 = $this->createContact('AA', 'Mustermann');
         $contact2 = $this->createContact('BB', 'Mustermann');
@@ -134,7 +134,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact2], $result);
     }
 
-    public function testFindByLimit2OrderDesc()
+    public function testFindByLimit2OrderDesc(): void
     {
         $contact1 = $this->createContact('AA', 'Mustermann');
         $contact2 = $this->createContact('BB', 'Mustermann');
@@ -148,7 +148,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact4, $contact3], $result);
     }
 
-    public function testFindByTagOr()
+    public function testFindByTagOr(): void
     {
         $tag1 = $this->createTag('Tag 1');
         $tag2 = $this->createTag('Tag 2');
@@ -171,7 +171,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact4], $result);
     }
 
-    public function testFindByTagAnd()
+    public function testFindByTagAnd(): void
     {
         $tag1 = $this->createTag('Tag 1');
         $tag2 = $this->createTag('Tag 2');
@@ -194,7 +194,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact4], $result);
     }
 
-    public function testFindByWebsiteTagOr()
+    public function testFindByWebsiteTagOr(): void
     {
         $tag1 = $this->createTag('Tag 1');
         $tag2 = $this->createTag('Tag 2');
@@ -217,7 +217,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact4], $result);
     }
 
-    public function testFindByWebsiteTagAnd()
+    public function testFindByWebsiteTagAnd(): void
     {
         $tag1 = $this->createTag('Tag 1');
         $tag2 = $this->createTag('Tag 2');
@@ -240,7 +240,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact4], $result);
     }
 
-    public function testFindByTagAndWebsiteTag()
+    public function testFindByTagAndWebsiteTag(): void
     {
         $tag1 = $this->createTag('Tag 1');
         $tag2 = $this->createTag('Tag 2');
@@ -268,7 +268,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact4], $result);
     }
 
-    public function testFindByTagAndWebsiteTagOr()
+    public function testFindByTagAndWebsiteTagOr(): void
     {
         $tag1 = $this->createTag('Tag 1');
         $tag2 = $this->createTag('Tag 2');
@@ -297,7 +297,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact4], $result);
     }
 
-    public function testFindByTagOrAndWebsiteTagOr()
+    public function testFindByTagOrAndWebsiteTagOr(): void
     {
         $tag1 = $this->createTag('Tag 1');
         $tag2 = $this->createTag('Tag 2');
@@ -326,7 +326,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact4], $result);
     }
 
-    public function testFindByCategoryOr()
+    public function testFindByCategoryOr(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -349,7 +349,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact4], $result);
     }
 
-    public function testFindByCategoryAnd()
+    public function testFindByCategoryAnd(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -372,7 +372,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact4], $result);
     }
 
-    public function testFindByWebsiteCategoryOr()
+    public function testFindByWebsiteCategoryOr(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -395,7 +395,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact4], $result);
     }
 
-    public function testFindByWebsiteCategoryAnd()
+    public function testFindByWebsiteCategoryAnd(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -418,7 +418,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact4], $result);
     }
 
-    public function testFindByCategoryAndWebsiteCategory()
+    public function testFindByCategoryAndWebsiteCategory(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -446,7 +446,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact4], $result);
     }
 
-    public function testFindByCategoryAndWebsiteCategoryOr()
+    public function testFindByCategoryAndWebsiteCategoryOr(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -475,7 +475,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact4], $result);
     }
 
-    public function testFindByCategoryOrAndWebsiteCategoryOr()
+    public function testFindByCategoryOrAndWebsiteCategoryOr(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -504,7 +504,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact1, $contact4], $result);
     }
 
-    public function testFindByCategoryAndTag()
+    public function testFindByCategoryAndTag(): void
     {
         $category1 = $this->createCategory('Category 1');
         $tag1 = $this->createTag('Tag 1');
@@ -532,7 +532,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact4, $contact5], $result);
     }
 
-    public function testFindByWebsiteCategoryAndWebsiteTag()
+    public function testFindByWebsiteCategoryAndWebsiteTag(): void
     {
         $category1 = $this->createCategory('Category 1');
         $category2 = $this->createCategory('Category 2');
@@ -567,7 +567,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals([$contact6], $result);
     }
 
-    public function testFindByIds()
+    public function testFindByIds(): void
     {
         $contact1 = $this->createContact('Max', 'Mustermann');
         $contact2 = $this->createContact('Anne', 'Mustermann');
@@ -581,21 +581,21 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals('Anne', $result[1]->getFirstName());
     }
 
-    public function testFindByNotExistingIds()
+    public function testFindByNotExistingIds(): void
     {
         $result = $this->contactRepository->findByIds([15, 99]);
 
         $this->assertCount(0, $result);
     }
 
-    public function testFindByIdsEmpty()
+    public function testFindByIdsEmpty(): void
     {
         $result = $this->contactRepository->findByIds([]);
 
         $this->assertCount(0, $result);
     }
 
-    public function testFindGetAllSortByIdAsc()
+    public function testFindGetAllSortByIdAsc(): void
     {
         $contact1 = $this->createContact('Max', 'Mustermann');
         $contact2 = $this->createContact('Anne', 'Mustermann');
@@ -607,7 +607,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals('Anne', $result[1]['firstName']);
     }
 
-    public function testFindGetAllSortByFirstNameAsc()
+    public function testFindGetAllSortByFirstNameAsc(): void
     {
         $contact1 = $this->createContact('Max', 'Mustermann');
         $contact2 = $this->createContact('Anne', 'Mustermann');
@@ -621,7 +621,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals('Max', $result[2]['firstName']);
     }
 
-    public function testFindGetAllSortByFirstNameDesc()
+    public function testFindGetAllSortByFirstNameDesc(): void
     {
         $contact1 = $this->createContact('Max', 'Mustermann');
         $contact2 = $this->createContact('Anne', 'Mustermann');
@@ -635,7 +635,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals('Anne', $result[2]['firstName']);
     }
 
-    public function testFindGetAllSortByIdAscWithLimit()
+    public function testFindGetAllSortByIdAscWithLimit(): void
     {
         $contact1 = $this->createContact('Max', 'Mustermann');
         $contact2 = $this->createContact('Anne', 'Mustermann');
@@ -651,7 +651,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals('Georg', $result[2]['firstName']);
     }
 
-    public function testFindGetAllSortByIdAscWithLimitAndOffset()
+    public function testFindGetAllSortByIdAscWithLimitAndOffset(): void
     {
         $contact1 = $this->createContact('Max', 'Mustermann');
         $contact2 = $this->createContact('Anne', 'Mustermann');
@@ -667,7 +667,7 @@ class ContactRepositoryTest extends SuluTestCase
         $this->assertEquals('Erika', $result[2]['firstName']);
     }
 
-    public function testFindGetAllSortByIdWithLastName()
+    public function testFindGetAllSortByIdWithLastName(): void
     {
         $contact1 = $this->createContact('Max', 'Mustermann');
         $contact2 = $this->createContact('Anne', 'Musterfrau');

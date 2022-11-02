@@ -35,7 +35,7 @@ class PositionControllerTest extends SuluTestCase
         $this->purgeDatabase();
     }
 
-    public function testCgetAction()
+    public function testCgetAction(): void
     {
         $position1 = $this->createPosition('CEO');
         $position2 = $this->createPosition('CFO');
@@ -54,7 +54,7 @@ class PositionControllerTest extends SuluTestCase
         $this->assertEquals('CFO', $positions[1]->position);
     }
 
-    public function testCgetActionWithIds()
+    public function testCgetActionWithIds(): void
     {
         $position1 = $this->createPosition('CEO');
         $position2 = $this->createPosition('CFO');
@@ -74,7 +74,7 @@ class PositionControllerTest extends SuluTestCase
         $this->assertEquals('COO', $positions[1]->position);
     }
 
-    public function testCdeleteAction()
+    public function testCdeleteAction(): void
     {
         $position1 = $this->createPosition('CEO');
         $position2 = $this->createPosition('CFO');
@@ -97,7 +97,7 @@ class PositionControllerTest extends SuluTestCase
         $this->assertEquals('CFO', $positions[0]->position);
     }
 
-    public function testCpatchAction()
+    public function testCpatchAction(): void
     {
         $position1 = $this->createPosition('CEO');
         $position2 = $this->createPosition('CFO');

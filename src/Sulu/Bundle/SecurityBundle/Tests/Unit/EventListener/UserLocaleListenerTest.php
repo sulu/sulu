@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Unit\EventListener;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\EventListener\UserLocaleListener;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,22 +26,22 @@ use Symfony\Component\Translation\Translator;
 class UserLocaleListenerTest extends TestCase
 {
     /**
-     * @var TokenInterface
+     * @var ObjectProphecy<TokenInterface>
      */
     private $token;
 
     /**
-     * @var TokenStorageInterface
+     * @var ObjectProphecy<TokenStorageInterface>
      */
     private $tokenStorage;
 
     /**
-     * @var Translator
+     * @var ObjectProphecy<Translator>
      */
     private $translator;
 
     /**
-     * @var Request
+     * @var ObjectProphecy<Request>
      */
     private $request;
 
@@ -55,7 +56,7 @@ class UserLocaleListenerTest extends TestCase
     private $userLocaleListener;
 
     /**
-     * @var HttpKernelInterface
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $kernel;
 
@@ -80,14 +81,14 @@ class UserLocaleListenerTest extends TestCase
         $this->userLocaleListener = new UserLocaleListener($this->tokenStorage->reveal(), $this->translator->reveal());
     }
 
-    public function testCopyUserLocaleToRequestWithoutUser()
+    public function testCopyUserLocaleToRequestWithoutUser(): void
     {
         $this->request->setLocale(Argument::any())->shouldNotBeCalled();
         $this->userLocaleListener->copyUserLocaleToRequest($this->event);
         $this->translator->setLocale(Argument::any())->shouldNotBeCalled();
     }
 
-    public function testCopyUserLocaleToRequest()
+    public function testCopyUserLocaleToRequest(): void
     {
         $user = $this->prophesize(UserInterface::class);
         $user->getLocale()->willReturn('de');

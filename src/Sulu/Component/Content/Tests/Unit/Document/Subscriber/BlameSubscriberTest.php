@@ -28,27 +28,27 @@ use Sulu\Component\DocumentManager\PropertyEncoder;
 class BlameSubscriberTest extends TestCase
 {
     /**
-     * @var PersistEvent|ObjectProphecy
+     * @var ObjectProphecy<PersistEvent>
      */
     private $persistEvent;
 
     /**
-     * @var HydrateEvent|ObjectProphecy
+     * @var ObjectProphecy<HydrateEvent>
      */
     private $hydrateEvent;
 
     /**
-     * @var NodeInterface|ObjectProphecy
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
     /**
-     * @var DocumentAccessor|ObjectProphecy
+     * @var ObjectProphecy<DocumentAccessor>
      */
     private $accessor;
 
     /**
-     * @var PropertyEncoder|ObjectProphecy
+     * @var ObjectProphecy<PropertyEncoder>
      */
     private $propertyEncoder;
 

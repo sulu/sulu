@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Locale;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\Locale\DefaultLocaleProviderInterface;
 use Sulu\Bundle\WebsiteBundle\Locale\RequestDefaultLocaleProvider;
 use Sulu\Component\Localization\Localization;
@@ -23,17 +24,17 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class RequestDefaultLocaleProviderTest extends TestCase
 {
     /**
-     * @var Portal
+     * @var ObjectProphecy<Portal>
      */
     private $portal;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
@@ -60,7 +61,7 @@ class RequestDefaultLocaleProviderTest extends TestCase
         );
     }
 
-    public function testGetDefaultLocale()
+    public function testGetDefaultLocale(): void
     {
         $this->portal->getLocalizations()->willReturn([
             new Localization('de', 'de'),
@@ -75,7 +76,7 @@ class RequestDefaultLocaleProviderTest extends TestCase
         $this->assertEquals('en', $defaultLocale->getLocale(Localization::ISO6391));
     }
 
-    public function testGetDefaultLocaleWithoutRequest()
+    public function testGetDefaultLocaleWithoutRequest(): void
     {
         $this->requestStack->getCurrentRequest()->willReturn(null);
 

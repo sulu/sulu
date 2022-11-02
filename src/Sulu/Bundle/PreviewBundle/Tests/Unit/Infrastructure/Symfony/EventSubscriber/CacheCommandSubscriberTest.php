@@ -26,7 +26,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class CacheCommandSubscriberTest extends TestCase
 {
     /**
-     * @var KernelFactoryInterface|ObjectProphecy
+     * @var ObjectProphecy<KernelFactoryInterface>
      */
     private $kernelFactory;
 
@@ -36,12 +36,12 @@ class CacheCommandSubscriberTest extends TestCase
     private $cacheCommandSubscriber;
 
     /**
-     * @var KernelInterface|ObjectProphecy
+     * @var ObjectProphecy<KernelInterface>
      */
     private $previewKernel;
 
     /**
-     * @var Application|ObjectProphecy
+     * @var ObjectProphecy<Application>
      */
     private $application;
 

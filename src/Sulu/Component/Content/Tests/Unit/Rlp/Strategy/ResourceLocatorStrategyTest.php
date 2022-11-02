@@ -12,6 +12,7 @@
 namespace Sulu\Component\Content\Tests\Unit\ResourceLocator\Strategy;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
@@ -27,42 +28,42 @@ use Sulu\Component\Util\SuluNodeHelper;
 class ResourceLocatorStrategyTest extends TestCase
 {
     /**
-     * @var ResourceLocatorMapperInterface
+     * @var ObjectProphecy<ResourceLocatorMapperInterface>
      */
     private $mapper;
 
     /**
-     * @var PathCleanupInterface
+     * @var ObjectProphecy<PathCleanupInterface>
      */
     private $cleaner;
 
     /**
-     * @var StructureManagerInterface
+     * @var ObjectProphecy<StructureManagerInterface>
      */
     private $structureManager;
 
     /**
-     * @var ContentTypeManagerInterface
+     * @var ObjectProphecy<ContentTypeManagerInterface>
      */
     private $contentTypeManager;
 
     /**
-     * @var SuluNodeHelper
+     * @var ObjectProphecy<SuluNodeHelper>
      */
     private $nodeHelper;
 
     /**
-     * @var DocumentInspector
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 
     /**
-     * @var DocumentManagerInterface
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 
     /**
-     * @var ResourceLocatorGeneratorInterface
+     * @var ObjectProphecy<ResourceLocatorGeneratorInterface>
      */
     private $resourceLocatorGenerator;
 
@@ -97,7 +98,7 @@ class ResourceLocatorStrategyTest extends TestCase
         );
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $document = $this->prophesize(ParentBehavior::class);
 
@@ -119,7 +120,7 @@ class ResourceLocatorStrategyTest extends TestCase
         );
     }
 
-    public function testGenerateWithParentDocument()
+    public function testGenerateWithParentDocument(): void
     {
         $document = $this->prophesize(ParentBehavior::class);
         $parentDocument = $this->prophesize(ParentBehavior::class);
@@ -148,7 +149,7 @@ class ResourceLocatorStrategyTest extends TestCase
         );
     }
 
-    public function testGenerateWithParent()
+    public function testGenerateWithParent(): void
     {
         $this->resourceLocatorGenerator->generate('test', null)->willReturn('/test');
         $this->cleaner->cleanup('/test', 'de')->willReturn('/test');

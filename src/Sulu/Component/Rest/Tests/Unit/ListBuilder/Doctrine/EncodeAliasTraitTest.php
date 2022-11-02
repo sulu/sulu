@@ -47,7 +47,7 @@ class EncodeAliasTraitTest extends TestCase
     /**
      * @dataProvider encodeAliasDataProvider
      */
-    public function testEncodeAlias($value, $expected)
+    public function testEncodeAlias($value, $expected): void
     {
         $method = new \ReflectionMethod(\get_class($this->encodeAlias), 'encodeAlias');
         $method->setAccessible(true);

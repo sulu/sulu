@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Audit\Pa
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Behavior\Path\BasePathBehavior;
 use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
@@ -25,7 +26,7 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Path\BasePathSubscriber;
 class BasePathSubscriberTest extends TestCase
 {
     /**
-     * @var PersistEvent
+     * @var ObjectProphecy<PersistEvent>
      */
     private $persistEvent;
 
@@ -35,7 +36,7 @@ class BasePathSubscriberTest extends TestCase
     private $notImplementing;
 
     /**
-     * @var BasePathBehavior
+     * @var ObjectProphecy<BasePathBehavior>
      */
     private $document;
 
@@ -45,27 +46,27 @@ class BasePathSubscriberTest extends TestCase
     private $parentDocument;
 
     /**
-     * @var NodeManager
+     * @var ObjectProphecy<NodeManager>
      */
     private $nodeManager;
 
     /**
-     * @var DocumentManager
+     * @var ObjectProphecy<DocumentManager>
      */
     private $documentManager;
 
     /**
-     * @var MetadataFactoryInterface
+     * @var ObjectProphecy<MetadataFactoryInterface>
      */
     private $metadataFactory;
 
     /**
-     * @var MetaData
+     * @var ObjectProphecy<Metadata>
      */
     private $metadata;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $parentNode;
 
@@ -95,7 +96,7 @@ class BasePathSubscriberTest extends TestCase
     /**
      * It should return early if the document is not implementing the behavior.
      */
-    public function testPersistNotImplementing()
+    public function testPersistNotImplementing(): void
     {
         $this->persistEvent->getDocument()->willReturn($this->notImplementing)->shouldBeCalled();
         $this->subscriber->handlePersist($this->persistEvent->reveal());
@@ -104,7 +105,7 @@ class BasePathSubscriberTest extends TestCase
     /**
      * It should set the parent document.
      */
-    public function testSetParentDocument()
+    public function testSetParentDocument(): void
     {
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->persistEvent->getLocale()->willReturn('fr');

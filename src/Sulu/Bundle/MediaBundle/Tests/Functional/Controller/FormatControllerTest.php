@@ -22,7 +22,7 @@ class FormatControllerTest extends SuluTestCase
      */
     private $formatOptions;
 
-    public function testCGet()
+    public function testCGet(): void
     {
         $client = $this->createAuthenticatedClient();
 
@@ -49,7 +49,7 @@ class FormatControllerTest extends SuluTestCase
         );
     }
 
-    public function testCGetWithoutLocale()
+    public function testCGetWithoutLocale(): void
     {
         $client = $this->createAuthenticatedClient();
         $client->jsonRequest('GET', '/api/formats');

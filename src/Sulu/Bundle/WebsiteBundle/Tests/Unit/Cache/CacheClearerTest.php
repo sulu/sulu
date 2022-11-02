@@ -26,22 +26,22 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class CacheClearerTest extends TestCase
 {
     /**
-     * @var Filesystem|ObjectProphecy;
+     * @var ObjectProphecy<Filesystem>
      */
     private $filesystem;
 
     /**
-     * @var RequestStack|ObjectProphecy;
+     * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
     /**
-     * @var Request|ObjectProphecy;
+     * @var ObjectProphecy<Request>
      */
     private $request;
 
     /**
-     * @var EventDispatcherInterface|ObjectProphecy;
+     * @var ObjectProphecy<EventDispatcherInterface>
      */
     private $eventDispatcher;
 

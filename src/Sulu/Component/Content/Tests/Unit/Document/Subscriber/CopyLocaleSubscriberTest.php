@@ -24,17 +24,17 @@ use Sulu\Component\DocumentManager\Event\CopyLocaleEvent;
 class CopyLocaleSubscriberTest extends SubscriberTestCase
 {
     /**
-     * @var DocumentManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 
     /**
-     * @var DocumentInspector|ObjectProphecy
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 
     /**
-     * @var ResourceLocatorStrategyPoolInterface|ObjectProphecy
+     * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
     private $resourceLocatorStrategyPool;
 

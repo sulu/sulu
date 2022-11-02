@@ -16,14 +16,14 @@ use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 
 class ListItemActionTest extends TestCase
 {
-    public function testGetType()
+    public function testGetType(): void
     {
         $toolbarAction = new ListItemAction('sulu_admin.link', ['link_property' => 'url']);
 
         $this->assertSame('sulu_admin.link', $toolbarAction->getType());
     }
 
-    public function testGetOptions()
+    public function testGetOptions(): void
     {
         $toolbarAction = new ListItemAction('sulu_admin.link', ['link_property' => 'url']);
 

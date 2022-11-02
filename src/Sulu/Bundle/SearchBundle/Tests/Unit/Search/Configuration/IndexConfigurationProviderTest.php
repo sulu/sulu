@@ -13,12 +13,13 @@ namespace Sulu\Bundle\SearchBundle\Search\Configuration;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class IndexConfigurationProviderTest extends TestCase
 {
     /**
-     * @var TranslatorInterface
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 
@@ -28,7 +29,7 @@ class IndexConfigurationProviderTest extends TestCase
         $this->translator->trans(Argument::cetera())->willReturnArgument(0);
     }
 
-    public function testGetIndexConfigurations()
+    public function testGetIndexConfigurations(): void
     {
         $indexConfigurationProvider = new IndexConfigurationProvider(
             $this->translator->reveal(),
@@ -72,7 +73,7 @@ class IndexConfigurationProviderTest extends TestCase
         $this->assertEquals(new Route('test2', []), $indexConfigurations['index2']->getRoute());
     }
 
-    public function testGetIndexConfiguration()
+    public function testGetIndexConfiguration(): void
     {
         $indexConfigurationProvider = new IndexConfigurationProvider(
             $this->translator->reveal(),

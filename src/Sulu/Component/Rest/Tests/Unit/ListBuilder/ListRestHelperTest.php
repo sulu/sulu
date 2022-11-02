@@ -12,6 +12,7 @@
 namespace Sulu\Component\Rest\Tests\Unit\ListBuilder;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -19,7 +20,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ListRestHelperTest extends TestCase
 {
     /**
-     * @var RequestStack
+     * @var ObjectProphecy<RequestStack>
      */
     protected $requestStack;
 
@@ -144,7 +145,7 @@ class ListRestHelperTest extends TestCase
     /**
      * @dataProvider dataFieldsProvider
      */
-    public function testGetFields($request, $expected)
+    public function testGetFields($request, $expected): void
     {
         $this->requestStack->getCurrentRequest()->willReturn($request);
         $helper = new ListRestHelper($this->requestStack->reveal());

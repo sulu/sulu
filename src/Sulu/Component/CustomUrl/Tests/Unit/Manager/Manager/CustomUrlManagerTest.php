@@ -41,32 +41,32 @@ use Sulu\Component\Webspace\Webspace;
 class CustomUrlManagerTest extends TestCase
 {
     /**
-     * @var DocumentManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<DocumentManagerInterface>
      */
     private $documentManager;
 
     /**
-     * @var DocumentInspector|ObjectProphecy
+     * @var ObjectProphecy<DocumentInspector>
      */
     private $documentInspector;
 
     /**
-     * @var CustomUrlRepository|ObjectProphecy
+     * @var ObjectProphecy<CustomUrlRepository>
      */
     private $customUrlRepository;
 
     /**
-     * @var MetadataFactoryInterface|ObjectProphecy
+     * @var ObjectProphecy<MetadataFactoryInterface>
      */
     private $metadataFactory;
 
     /**
-     * @var PathBuilder|ObjectProphecy
+     * @var ObjectProphecy<PathBuilder>
      */
     private $pathBuilder;
 
     /**
-     * @var WebspaceManagerInterface|ObjectProphecy
+     * @var ObjectProphecy<WebspaceManagerInterface>
      */
     private $webspaceManager;
 
@@ -76,7 +76,7 @@ class CustomUrlManagerTest extends TestCase
     private $environment;
 
     /**
-     * @var DocumentDomainEventCollectorInterface|ObjectProphecy
+     * @var ObjectProphecy<DocumentDomainEventCollectorInterface>
      */
     private $documentDomainEventCollector;
 
@@ -86,7 +86,7 @@ class CustomUrlManagerTest extends TestCase
     private $targetDocument;
 
     /**
-     * @var Metadata|ObjectProphecy
+     * @var ObjectProphecy<Metadata>
      */
     private $metadata;
 
@@ -120,7 +120,7 @@ class CustomUrlManagerTest extends TestCase
         );
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $this->metadata->getFieldMappings()->willReturn($this->getMapping());
         $this->metadataFactory->getMetadataForAlias('custom_url')->willReturn($this->metadata);
@@ -166,7 +166,7 @@ class CustomUrlManagerTest extends TestCase
         $this->assertTrue($result->isRedirect());
     }
 
-    public function testFindList()
+    public function testFindList(): void
     {
         $this->pathBuilder->build(['%base%', 'sulu_io', '%custom_urls%', '%custom_urls_items%'])
             ->willReturn('/cmf/sulu_io/custom_urls/items');
@@ -196,7 +196,7 @@ class CustomUrlManagerTest extends TestCase
         $this->assertEquals([['title' => 'Test-1'], ['title' => 'Test-2']], $result);
     }
 
-    public function testFindUrls()
+    public function testFindUrls(): void
     {
         $this->pathBuilder->build(['%base%', 'sulu_io', '%custom_urls%', '%custom_urls_items%'])
             ->willReturn('/cmf/sulu_io/custom_urls/items');
@@ -209,7 +209,7 @@ class CustomUrlManagerTest extends TestCase
         $this->assertEquals(['1.sulu.lo', '1.sulu.lo/2'], $result);
     }
 
-    public function testFindHistoryRoutesById()
+    public function testFindHistoryRoutesById(): void
     {
         $customUrlDocument = $this->prophesize(CustomUrlDocument::class);
         $this->documentManager->find('123-456-789', 'en', ['load_ghost_content' => true])
@@ -245,7 +245,7 @@ class CustomUrlManagerTest extends TestCase
         );
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         $document = $this->prophesize(CustomUrlDocument::class);
 
@@ -257,7 +257,7 @@ class CustomUrlManagerTest extends TestCase
         $this->assertEquals($document->reveal(), $result);
     }
 
-    public function testFindByUrl()
+    public function testFindByUrl(): void
     {
         $routeDocument = $this->prophesize(RouteDocument::class);
         $customUrlDocument = $this->prophesize(CustomUrlDocument::class);
@@ -275,7 +275,7 @@ class CustomUrlManagerTest extends TestCase
         $this->assertEquals($customUrlDocument->reveal(), $result);
     }
 
-    public function testFindRouteByUrl()
+    public function testFindRouteByUrl(): void
     {
         $routeDocument = $this->prophesize(RouteDocument::class);
 
@@ -290,7 +290,7 @@ class CustomUrlManagerTest extends TestCase
         $this->assertEquals($routeDocument->reveal(), $result);
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $document = $this->prophesize(CustomUrlDocument::class);
         $targetDocument = $this->prophesize(PageDocument::class);
@@ -346,7 +346,7 @@ class CustomUrlManagerTest extends TestCase
         $this->assertEquals($document->reveal(), $result);
     }
 
-    public function testUpdateItemExists()
+    public function testUpdateItemExists(): void
     {
         $document = $this->prophesize(CustomUrlDocument::class);
         $targetDocument = $this->prophesize(PageDocument::class);
@@ -401,7 +401,7 @@ class CustomUrlManagerTest extends TestCase
         );
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $document = $this->prophesize(CustomUrlDocument::class);
         $document->getUuid()->willReturn('1234-1234-1234-1234');
@@ -415,7 +415,7 @@ class CustomUrlManagerTest extends TestCase
         $this->manager->delete('123-123-123');
     }
 
-    public function testDeleteRoute()
+    public function testDeleteRoute(): void
     {
         $routeDocument = $this->prophesize(RouteDocument::class);
         $customUrlDocument = $this->prophesize(CustomUrlDocument::class);
@@ -433,7 +433,7 @@ class CustomUrlManagerTest extends TestCase
         $this->assertEquals($routeDocument->reveal(), $result);
     }
 
-    public function testDeleteHistory()
+    public function testDeleteHistory(): void
     {
         $this->expectException(RouteNotRemovableException::class);
 

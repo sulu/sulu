@@ -32,7 +32,7 @@ class {{ cache_class }} extends {{ base_class }}
         // new webspace
         $webspace = new Webspace();
         $webspace->setKey('{{ webspace.key }}');
-        $webspace->setName({{ webspace.name|json_encode|raw }});
+        $webspace->setName({{ webspace.name|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }});
 {% if webspace.security != null %}
         $security = new Security();
         $security->setSystem('{{ webspace.security.system }}');

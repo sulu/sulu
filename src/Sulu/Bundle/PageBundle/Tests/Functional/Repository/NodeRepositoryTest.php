@@ -128,7 +128,7 @@ class NodeRepositoryTest extends SuluTestCase
         return $this->save($data, 'overview', 'sulu_io', 'en', 1, true, null, null, Structure::STATE_PUBLISHED);
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $document = $this->prepareGetTestData();
 
@@ -138,14 +138,14 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals($document->getStructure()->getProperty('url')->getValue(), $result['url']);
     }
 
-    public function testGetWebspaceNode()
+    public function testGetWebspaceNode(): void
     {
         $result = $this->nodeRepository->getWebspaceNode('sulu_io', 'en');
 
         $this->assertEquals('Sulu CMF', $result['_embedded']['pages'][0]['title']);
     }
 
-    public function testGetWebspaceNodes()
+    public function testGetWebspaceNodes(): void
     {
         $result = $this->nodeRepository->getWebspaceNodes('en');
 
@@ -157,7 +157,7 @@ class NodeRepositoryTest extends SuluTestCase
     /**
      * It should load the node tree tiers up until the tier containing the given UUID.
      */
-    public function testGetNodesTreeUntilGivenUuid()
+    public function testGetNodesTreeUntilGivenUuid(): void
     {
         $structures = $this->prepareGetTreeTestData();
         $structure = $structures[2];
@@ -170,7 +170,7 @@ class NodeRepositoryTest extends SuluTestCase
     /**
      * It should load the node tree tiers up until the tier containing the given UUID.
      */
-    public function testGetNodesTree()
+    public function testGetNodesTree(): void
     {
         $structures = $this->prepareGetTreeTestData();
         $structure = $structures[0];
@@ -185,7 +185,7 @@ class NodeRepositoryTest extends SuluTestCase
     /**
      * It should get the node tree tiers with ghosts.
      */
-    public function testGetNodesTreeWithGhosts()
+    public function testGetNodesTreeWithGhosts(): void
     {
         $structures = $this->prepareGetTreeTestData();
         $structure = $structures[0];
@@ -227,7 +227,7 @@ class NodeRepositoryTest extends SuluTestCase
         return $structures;
     }
 
-    public function testExtensionData()
+    public function testExtensionData(): void
     {
         $data = $this->prepareGetTestData();
         $extData = ['a' => 'A', 'b' => 'B'];
@@ -250,7 +250,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('/news/test', $result['url']);
     }
 
-    public function testGetByIds()
+    public function testGetByIds(): void
     {
         $data = $this->prepareGetTestData();
 
@@ -271,7 +271,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('/testtitle', $result['_embedded']['pages'][0]['path']);
     }
 
-    public function testGetByIdsNotExisitingID()
+    public function testGetByIdsNotExisitingID(): void
     {
         $data = $this->prepareGetTestData();
 
@@ -293,7 +293,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('/testtitle', $result['_embedded']['pages'][0]['path']);
     }
 
-    public function testGetFilteredNodesInOrder()
+    public function testGetFilteredNodesInOrder(): void
     {
         $data = [
             [
@@ -350,7 +350,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('Testtitle1', $nodes[1]['title']);
     }
 
-    public function testGetFilteredNodesInOrderByTitle()
+    public function testGetFilteredNodesInOrderByTitle(): void
     {
         $data = [
             [
@@ -459,7 +459,7 @@ class NodeRepositoryTest extends SuluTestCase
         return $data;
     }
 
-    public function testOrderAt()
+    public function testOrderAt(): void
     {
         $data = $this->prepareOrderBeforeData();
 
@@ -483,7 +483,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertEquals('Test1', $nodes[3]['title']);
     }
 
-    public function testCopyLocale()
+    public function testCopyLocale(): void
     {
         $document = $this->save(
             [
@@ -510,7 +510,7 @@ class NodeRepositoryTest extends SuluTestCase
         $this->assertContains('en', $result['contentLocales']);
     }
 
-    public function testCopyMultipleLocales()
+    public function testCopyMultipleLocales(): void
     {
         $document = $this->save(
             [
@@ -635,7 +635,7 @@ class TestExtension extends AbstractExtension
         $this->additionalPrefix = $additionalPrefix;
     }
 
-    public function save(NodeInterface $node, $data, $webspaceKey, $languageCode)
+    public function save(NodeInterface $node, $data, $webspaceKey, $languageCode): void
     {
         $node->setProperty($this->getPropertyName('a'), $data['a']);
         $node->setProperty($this->getPropertyName('b'), $data['b']);

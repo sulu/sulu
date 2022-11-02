@@ -11,8 +11,11 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
+use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -35,7 +38,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $mediaTypes->load($this->getEntityManager());
     }
 
-    public function testDownloadAction()
+    public function testDownloadAction(): void
     {
         $filePath = $this->createMediaFile('test.jpg');
         $media = $this->createMedia($filePath, 'file-without-extension');
@@ -45,7 +48,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $this->assertHttpStatusCode(200, $response);
     }
 
-    public function testNotExistVersionDownloadAction()
+    public function testNotExistVersionDownloadAction(): void
     {
         $filePath = $this->createMediaFile('test.jpg');
         $media = $this->createMedia($filePath, 'file-without-extension');
@@ -55,7 +58,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $this->assertHttpStatusCode(404, $response);
     }
 
-    public function testOldExistVersionDownloadAction()
+    public function testOldExistVersionDownloadAction(): void
     {
         $filePath = $this->createMediaFile('test.jpg');
         $oldMedia = $this->createMedia($filePath, 'file-without-extension');
@@ -77,7 +80,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
         );
     }
 
-    public function testDownloadWithoutExtensionAction()
+    public function testDownloadWithoutExtensionAction(): void
     {
         $filePath = $this->createMediaFile('file-without-extension');
         $media = $this->createMedia($filePath, 'File without Extension');
@@ -87,7 +90,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $this->assertHttpStatusCode(200, $response);
     }
 
-    public function testDownloadWithDotInName()
+    public function testDownloadWithDotInName(): void
     {
         $filePath = $this->createMediaFile('fitness-seasons.agency--C-&-C--Rodach,-Johannes');
         $media = $this->createMedia($filePath, 'fitness-seasons.agency--C-&-C--Rodach,-Johannes');
@@ -106,14 +109,14 @@ class MediaStreamControllerTest extends WebsiteTestCase
         );
     }
 
-    public function testGetImageActionForNonExistingMedia()
+    public function testGetImageActionForNonExistingMedia(): void
     {
         $this->client->jsonRequest('GET', '/uploads/media/sulu-400x400/01/test.jpg?v=1');
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    public function testGetImageAction()
+    public function testGetImageAction(): void
     {
         $filePath = $this->createMediaFile('test.jpg');
         $media = $this->createMedia($filePath, 'Test jpg');
@@ -127,7 +130,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $this->assertSame('image/gif', $this->client->getResponse()->headers->get('Content-Type'));
     }
 
-    public function testGetImageActionSvg()
+    public function testGetImageActionSvg(): void
     {
         $filePath = $this->createMediaFile('test.svg', 'sulu.svg');
         $media = $this->createMedia($filePath, 'Test svg');
@@ -141,7 +144,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $this->assertSame('image/svg+xml', $this->client->getResponse()->headers->get('Content-Type'));
     }
 
-    public function testGetImageActionSvgAsJpg()
+    public function testGetImageActionSvgAsJpg(): void
     {
         if (!\class_exists(\Imagick::class)) {
             $this->markTestSkipped('Imagick pecl extension is not installed.');
@@ -157,19 +160,22 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $this->assertSame('image/jpeg', $this->client->getResponse()->headers->get('Content-Type'));
     }
 
-    public function testDownloadActionForNonExistingMedia()
+    public function testDownloadActionForNonExistingMedia(): void
     {
         $this->client->jsonRequest('GET', '/media/999/download/test.jpg?v=1');
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
 
-    private function createUploadedFile($path)
+    private function createUploadedFile(string $path): UploadedFile
     {
-        return new UploadedFile($path, \basename($path), \mime_content_type($path));
+        /** @var string $mimeType */
+        $mimeType = \mime_content_type($path);
+
+        return new UploadedFile($path, \basename($path), $mimeType);
     }
 
-    private function createCollection($title = 'Test')
+    private function createCollection(string $title = 'Test'): int
     {
         $collection = $this->getCollectionManager()->save(
             [
@@ -183,7 +189,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
         return $collection->getId();
     }
 
-    private function createMedia($path, $title)
+    private function createMedia(string $path, string $title): Media
     {
         return $this->getMediaManager()->save(
             $this->createUploadedFile($path),
@@ -196,7 +202,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
         );
     }
 
-    private function createMediaVersion($id, $path, $title)
+    private function createMediaVersion(int $id, string $path, string $title): Media
     {
         return $this->getMediaManager()->save(
             $this->createUploadedFile($path),
@@ -210,17 +216,17 @@ class MediaStreamControllerTest extends WebsiteTestCase
         );
     }
 
-    private function getMediaManager()
+    private function getMediaManager(): MediaManager
     {
         return $this->getContainer()->get('sulu_media.media_manager');
     }
 
-    private function getCollectionManager()
+    private function getCollectionManager(): CollectionManager
     {
         return $this->getContainer()->get('sulu_media.collection_manager');
     }
 
-    private function createMediaFile(string $name, string $fileName = 'photo.jpeg')
+    private function createMediaFile(string $name, string $fileName = 'photo.jpeg'): string
     {
         $filePath = \sys_get_temp_dir() . '/' . $name;
         \copy(__DIR__ . '/../../Fixtures/files/' . $fileName, $filePath);

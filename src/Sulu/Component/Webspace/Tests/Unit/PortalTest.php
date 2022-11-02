@@ -12,6 +12,7 @@
 namespace Sulu\Component\Webspace\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Exception\EnvironmentNotFoundException;
@@ -26,17 +27,17 @@ class PortalTest extends TestCase
     private $portal;
 
     /**
-     * @var Environment
+     * @var ObjectProphecy<Environment>
      */
     private $environment;
 
     /**
-     * @var Localization
+     * @var ObjectProphecy<Localization>
      */
     private $localization;
 
     /**
-     * @var Url
+     * @var ObjectProphecy<Url>
      */
     private $url;
 
@@ -49,7 +50,7 @@ class PortalTest extends TestCase
         $this->url = $this->prophesize(Url::class);
     }
 
-    public function testGetEnvironment()
+    public function testGetEnvironment(): void
     {
         $this->environment->getType()->willReturn('dev');
         $this->portal->addEnvironment($this->environment->reveal());
@@ -57,20 +58,20 @@ class PortalTest extends TestCase
         $this->assertEquals($this->environment->reveal(), $this->portal->getEnvironment('dev'));
     }
 
-    public function testGetNotExistringEnvironment()
+    public function testGetNotExistringEnvironment(): void
     {
         $this->expectException(EnvironmentNotFoundException::class);
 
         $this->portal->getEnvironment('dev');
     }
 
-    public function testGetEnvironmentFromEmptyPortal()
+    public function testGetEnvironmentFromEmptyPortal(): void
     {
         $this->expectException(EnvironmentNotFoundException::class);
         $this->portal->getEnvironment('dev');
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $expected = [
             'name' => 'foo',

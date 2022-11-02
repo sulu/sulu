@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Search\EventListener;
 use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
@@ -26,12 +27,12 @@ class PermissionListenerTest extends TestCase
     private $permissionListener;
 
     /**
-     * @var FileVersionMetaRepository
+     * @var ObjectProphecy<FileVersionMetaRepository>
      */
     private $fileVersionMetaRepository;
 
     /**
-     * @var SearchManagerInterface
+     * @var ObjectProphecy<SearchManagerInterface>
      */
     private $searchManager;
 
@@ -46,7 +47,7 @@ class PermissionListenerTest extends TestCase
         );
     }
 
-    public function testOnPermissionUpdate()
+    public function testOnPermissionUpdate(): void
     {
         $event = new PermissionUpdateEvent(Collection::class, '1', null);
         $document1 = new \stdClass();
@@ -59,7 +60,7 @@ class PermissionListenerTest extends TestCase
         $this->permissionListener->onPermissionUpdate($event);
     }
 
-    public function testOnPermissionUpdateWrongType()
+    public function testOnPermissionUpdateWrongType(): void
     {
         $event = new PermissionUpdateEvent(\stdClass::class, '1', null);
 

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Twig;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
@@ -25,31 +26,31 @@ use Sulu\Component\Webspace\Webspace;
 class SnippetAreaTwigExtensionTest extends TestCase
 {
     /**
-     * @var DefaultSnippetManagerInterface
+     * @var ObjectProphecy<DefaultSnippetManagerInterface>
      */
     private $defaultSnippetManager;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var Webspace
+     * @var ObjectProphecy<Webspace>
      */
     private $webspace;
 
     /**
-     * @var Localization
+     * @var ObjectProphecy<Localization>
      */
     private $localization;
 
     /**
-     * @var SnippetResolverInterface
+     * @var ObjectProphecy<SnippetResolverInterface>
      */
     private $snippetResolver;
 
-    public function testLoadByArea()
+    public function testLoadByArea(): void
     {
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -79,7 +80,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLoadByAreaWrongType()
+    public function testLoadByAreaWrongType(): void
     {
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -109,7 +110,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $this->assertEquals(null, $twigExtension->loadByArea('test'));
     }
 
-    public function testLoadByAreaNotExist()
+    public function testLoadByAreaNotExist(): void
     {
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -136,7 +137,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLoadByAreaOtherLocale()
+    public function testLoadByAreaOtherLocale(): void
     {
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -166,7 +167,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
         );
     }
 
-    public function testLoadByAreaOtherWebspace()
+    public function testLoadByAreaOtherWebspace(): void
     {
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
         $this->requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);

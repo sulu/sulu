@@ -39,7 +39,7 @@ class RemoveForeignContextServicesPassTest extends AbstractCompilerPassTestCase
     /**
      * @dataProvider provideWebsiteServices
      */
-    public function testRemoveWebsiteServices($services)
+    public function testRemoveWebsiteServices($services): void
     {
         $this->setParameter('sulu.context', 'website');
 

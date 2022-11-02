@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Tests\Unit\Teaser;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
 use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
@@ -29,22 +30,22 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 class TeaserContentTypeTest extends TestCase
 {
     /**
-     * @var TeaserProviderPoolInterface
+     * @var ObjectProphecy<TeaserProviderPoolInterface>
      */
     private $teaserProviderPool;
 
     /**
-     * @var TeaserManagerInterface
+     * @var ObjectProphecy<TeaserManagerInterface>
      */
     private $teaserManager;
 
     /**
-     * @var ReferenceStorePoolInterface
+     * @var ObjectProphecy<ReferenceStorePoolInterface>
      */
     private $referenceStorePool;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ObjectProphecy<ReferenceStoreInterface>
      */
     private $mediaReferenceStore;
 
@@ -70,7 +71,7 @@ class TeaserContentTypeTest extends TestCase
         );
     }
 
-    public function testGetDefaultParameter()
+    public function testGetDefaultParameter(): void
     {
         $configuration = [new TeaserConfiguration('content', 'pages', 'column_list', ['title'], 'Choose')];
         $this->teaserProviderPool->getConfiguration()->willReturn($configuration);
@@ -84,7 +85,7 @@ class TeaserContentTypeTest extends TestCase
         );
     }
 
-    public function testGetContentDataEmpty()
+    public function testGetContentDataEmpty(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $property->getValue()->willReturn([]);
@@ -92,7 +93,7 @@ class TeaserContentTypeTest extends TestCase
         $this->assertEquals([], $this->contentType->getContentData($property->reveal()));
     }
 
-    public function testGetContentData()
+    public function testGetContentData(): void
     {
         $items = [
             ['type' => 'content', 'id' => '123-123-123', 'mediaId' => 15],
@@ -125,7 +126,7 @@ class TeaserContentTypeTest extends TestCase
         $this->assertEquals($teasers, $this->contentType->getContentData($property->reveal()));
     }
 
-    public function testGetViewDataEmpty()
+    public function testGetViewDataEmpty(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $property->getValue()->willReturn(['presentAs' => 'col1']);
@@ -136,7 +137,7 @@ class TeaserContentTypeTest extends TestCase
         );
     }
 
-    public function testGetViewData()
+    public function testGetViewData(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
         $property->getValue()->willReturn([]);
@@ -147,7 +148,7 @@ class TeaserContentTypeTest extends TestCase
         );
     }
 
-    public function testPreResolve()
+    public function testPreResolve(): void
     {
         $data = [
             'items' => [

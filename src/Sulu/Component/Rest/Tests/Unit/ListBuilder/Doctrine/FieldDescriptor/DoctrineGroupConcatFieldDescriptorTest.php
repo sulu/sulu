@@ -17,7 +17,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcat
 
 class DoctrineGroupConcatFieldDescriptorTest extends TestCase
 {
-    public function testGetSelect()
+    public function testGetSelect(): void
     {
         $doctrineGroupConcatFieldDescriptor = new DoctrineGroupConcatFieldDescriptor(
             new DoctrineFieldDescriptor('test', '', 'TestEntity'),
@@ -30,7 +30,7 @@ class DoctrineGroupConcatFieldDescriptorTest extends TestCase
         );
     }
 
-    public function testGetSelectWithGlue()
+    public function testGetSelectWithGlue(): void
     {
         $doctrineGroupConcatFieldDescriptor = new DoctrineGroupConcatFieldDescriptor(
             new DoctrineFieldDescriptor('test', '', 'TestEntity'),

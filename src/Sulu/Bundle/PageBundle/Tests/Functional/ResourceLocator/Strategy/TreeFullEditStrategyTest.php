@@ -51,7 +51,7 @@ class TreeFullEditStrategyTest extends SuluTestCase
         $this->initPhpcr();
     }
 
-    public function testDeleteByPath()
+    public function testDeleteByPath(): void
     {
         $rootNode = $this->session->getNode('/cmf/sulu_io/routes/de');
 
@@ -78,7 +78,7 @@ class TreeFullEditStrategyTest extends SuluTestCase
         $this->assertTrue($rootNode->hasNode('test'));
     }
 
-    public function testChangeResourceSegment()
+    public function testChangeResourceSegment(): void
     {
         $rootNode = $this->session->getNode('/cmf/sulu_io/routes/de');
 
@@ -114,7 +114,7 @@ class TreeFullEditStrategyTest extends SuluTestCase
         $this->assertEquals('/test', $this->getRlForHistory('/news'));
     }
 
-    public function testChangeResourceSegmentUnpublishedChildren()
+    public function testChangeResourceSegmentUnpublishedChildren(): void
     {
         $parentDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
@@ -190,7 +190,7 @@ class TreeFullEditStrategyTest extends SuluTestCase
         );
     }
 
-    public function testGetInputType()
+    public function testGetInputType(): void
     {
         $this->assertEquals(ResourceLocatorStrategyInterface::INPUT_TYPE_FULL, $this->resourceLocatorStrategy->getInputType());
     }

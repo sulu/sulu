@@ -13,7 +13,7 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Search;
 
 class DeleteDocumentTest extends BaseTestCase
 {
-    public function testDeleteDocument()
+    public function testDeleteDocument(): void
     {
         $searchManager = $this->getSearchManager();
         $mapper = $this->getContainer()->get('sulu.content.mapper');

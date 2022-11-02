@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Mapping\
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Behavior\Mapping\NodeNameBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
@@ -21,7 +22,7 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\NodeNameSubscribe
 class NodeNameSubscriberTest extends TestCase
 {
     /**
-     * @var HydrateEvent
+     * @var ObjectProphecy<HydrateEvent>
      */
     private $hydrateEvent;
 
@@ -31,7 +32,7 @@ class NodeNameSubscriberTest extends TestCase
     private $notImplementing;
 
     /**
-     * @var NodeInterface
+     * @var ObjectProphecy<NodeInterface>
      */
     private $node;
 
@@ -64,7 +65,7 @@ class NodeNameSubscriberTest extends TestCase
     /**
      * It should return early when not implementing.
      */
-    public function testHydrateNotImplementing()
+    public function testHydrateNotImplementing(): void
     {
         $this->hydrateEvent->getDocument()->willReturn($this->notImplementing)->shouldBeCalled();
         $this->subscriber->setFinalNodeName($this->hydrateEvent->reveal());
@@ -73,7 +74,7 @@ class NodeNameSubscriberTest extends TestCase
     /**
      * It should set the node name on the document.
      */
-    public function testHydrate()
+    public function testHydrate(): void
     {
         $this->hydrateEvent->getNode()->willReturn($this->node->reveal());
         $this->hydrateEvent->getDocument()->willReturn($this->document);

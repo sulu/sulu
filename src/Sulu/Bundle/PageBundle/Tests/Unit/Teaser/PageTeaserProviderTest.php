@@ -17,6 +17,7 @@ use Massive\Bundle\SearchBundle\Search\SearchManagerInterface;
 use Massive\Bundle\SearchBundle\Search\SearchQueryBuilder;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\PageBundle\Teaser\Configuration\TeaserConfiguration;
 use Sulu\Bundle\PageBundle\Teaser\PageTeaserProvider;
 use Sulu\Bundle\PageBundle\Teaser\PHPCRPageTeaserProvider;
@@ -27,12 +28,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PageTeaserProviderTest extends TestCase
 {
     /**
-     * @var SearchManagerInterface
+     * @var ObjectProphecy<SearchManagerInterface>
      */
     private $searchManager;
 
     /**
-     * @var SearchQueryBuilder
+     * @var ObjectProphecy<SearchQueryBuilder>
      */
     private $search;
 
@@ -42,7 +43,7 @@ class PageTeaserProviderTest extends TestCase
     private $pageTeaserProvider;
 
     /**
-     * @var TranslatorInterface
+     * @var ObjectProphecy<TranslatorInterface>
      */
     private $translator;
 
@@ -68,7 +69,7 @@ class PageTeaserProviderTest extends TestCase
         );
     }
 
-    public function testConfiguration()
+    public function testConfiguration(): void
     {
         $configuration = $this->pageTeaserProvider->getConfiguration();
 
@@ -85,7 +86,7 @@ class PageTeaserProviderTest extends TestCase
         );
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         $data = [
             '123-123-123' => [
@@ -137,7 +138,7 @@ class PageTeaserProviderTest extends TestCase
         $this->assertTeaser($ids[1], $data[$ids[1]], $result[1]);
     }
 
-    public function testFindShowDrafts()
+    public function testFindShowDrafts(): void
     {
         $pageTeaserProvider = new PageTeaserProvider(
             $this->searchManager->reveal(),
@@ -234,7 +235,7 @@ class PageTeaserProviderTest extends TestCase
         return $queryHit->reveal();
     }
 
-    private function assertTeaser($id, array $expected, Teaser $teaser)
+    private function assertTeaser($id, array $expected, Teaser $teaser): void
     {
         $this->assertEquals($id, $teaser->getId());
         $this->assertEquals('pages', $teaser->getType());

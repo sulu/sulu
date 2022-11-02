@@ -43,7 +43,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->initPhpcr();
     }
 
-    public function testCGet()
+    public function testCGet(): void
     {
         $this->createPage('test-1', 'de');
         $this->createPage('test-2', 'de');
@@ -67,7 +67,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->assertEquals('/test-3', $items[2]['path']);
     }
 
-    public function testCGetWithShadow()
+    public function testCGetWithShadow(): void
     {
         $this->createShadowPage('test-1', 'en', 'de');
         $this->createPage('test-2', 'de');
@@ -87,7 +87,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->assertEquals('test-3', $items[2]['title']);
     }
 
-    public function testCGetExcludeShadow()
+    public function testCGetExcludeShadow(): void
     {
         $this->createShadowPage('test-1', 'en', 'de');
         $this->createPage('test-2', 'de');
@@ -110,7 +110,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->assertEquals('test-3', $items[1]['title']);
     }
 
-    public function testCGetWithGhost()
+    public function testCGetWithGhost(): void
     {
         $this->createPage('test-1', 'en');
         $this->createPage('test-2', 'de');
@@ -130,7 +130,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->assertEquals('test-3', $items[2]['title']);
     }
 
-    public function testCGetExcludeGhost()
+    public function testCGetExcludeGhost(): void
     {
         $this->createPage('test-1', 'en');
         $this->createPage('test-2', 'de');
@@ -153,7 +153,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->assertEquals('test-3', $items[1]['title']);
     }
 
-    public function testCGetWithGhostAndShadow()
+    public function testCGetWithGhostAndShadow(): void
     {
         $this->createPage('test-1', 'en');
         $this->createShadowPage('test-2', 'en', 'de');
@@ -173,7 +173,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->assertEquals('test-3', $items[2]['title']);
     }
 
-    public function testCGetExcludeGhostAndShadow()
+    public function testCGetExcludeGhostAndShadow(): void
     {
         $this->createPage('test-1', 'en');
         $this->createShadowPage('test-2', 'en', 'de');
@@ -195,7 +195,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->assertEquals('test-3', $items[0]['title']);
     }
 
-    public function testLinkedInternal()
+    public function testLinkedInternal(): void
     {
         $link = $this->createPage('test-1', 'en');
         $page = $this->createInternalLinkPage('test-2', 'en', $link);
@@ -210,7 +210,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->assertEquals('internal', $result['linked']);
     }
 
-    public function testLinkedExternal()
+    public function testLinkedExternal(): void
     {
         $page = $this->createExternalLinkPage('test-2', 'en', 'http://www.google.at');
 
@@ -224,7 +224,7 @@ class PageControllerFieldsTest extends SuluTestCase
         $this->assertEquals('external', $result['linked']);
     }
 
-    public function testTypeShadow()
+    public function testTypeShadow(): void
     {
         $page = $this->createShadowPage('test-2', 'en', 'de');
 

@@ -42,7 +42,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->initEntities();
     }
 
-    public function testListEmptyResponse()
+    public function testListEmptyResponse(): void
     {
         $this->client->jsonRequest('GET', '/api/webspaces/test/analytics');
 
@@ -52,7 +52,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEmpty($response['_embedded']['analytics']);
     }
 
-    public function testListWithAllDomains()
+    public function testListWithAllDomains(): void
     {
         $this->client->jsonRequest('GET', '/api/webspaces/blog_sulu_io/analytics');
 
@@ -68,7 +68,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEquals(null, $items[0]['domains']);
     }
 
-    public function testList()
+    public function testList(): void
     {
         $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/analytics');
 
@@ -103,7 +103,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEquals('www.sulu.io', $items[3]['domains'][0]);
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $this->client->jsonRequest('GET', '/api/webspaces/sulu_io/analytics/' . $this->entities[0]->getId());
 
@@ -117,7 +117,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEquals('www.sulu.io/{localization}', $response['domains'][0]);
     }
 
-    public function testPost()
+    public function testPost(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -141,7 +141,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEquals('www.sulu.io/{localization}', $response['domains'][0]);
     }
 
-    public function testPut()
+    public function testPut(): void
     {
         $this->client->jsonRequest(
             'POST',
@@ -167,7 +167,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEquals('www.sulu.io', $response['domains'][0]);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $this->client->jsonRequest('DELETE', '/api/webspaces/test_io/analytics/' . $this->entities[4]->getId());
         $this->assertHttpStatusCode(204, $this->client->getResponse());
@@ -179,7 +179,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEmpty($response['_embedded']['analytics']);
     }
 
-    public function testDeleteMultiple()
+    public function testDeleteMultiple(): void
     {
         $ids = [
             $this->entities[0]->getId(),
@@ -198,7 +198,7 @@ class AnalyticsControllerTest extends SuluTestCase
         $this->assertEmpty($response['_embedded']['analytics']);
     }
 
-    public function initEntities()
+    public function initEntities(): void
     {
         $this->entities[] = $this->analyticsManager->create(
             'sulu_io',

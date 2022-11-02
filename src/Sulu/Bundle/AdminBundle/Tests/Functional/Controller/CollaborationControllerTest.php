@@ -28,7 +28,7 @@ class CollaborationControllerTest extends SuluTestCase
         $collaborations = $this->getContainer()->get('cache.global_clearer')->clear('');
     }
 
-    public function testPostWithSingleUser()
+    public function testPostWithSingleUser(): void
     {
         $session = $this->client->getContainer()->get('session');
         $session->start();
@@ -49,7 +49,7 @@ class CollaborationControllerTest extends SuluTestCase
         $this->assertEquals('4', $collaborations[0]->getId());
     }
 
-    public function testPostWithMultipleUsers()
+    public function testPostWithMultipleUsers(): void
     {
         $cache = $this->getContainer()->get('sulu_admin.collaboration_cache');
 
@@ -84,7 +84,7 @@ class CollaborationControllerTest extends SuluTestCase
         $this->assertObjectHasAttribute('changed', $collaborations[1]);
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $session = $this->client->getContainer()->get('session');
         $session->start();

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Security;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -30,22 +31,22 @@ class AuthenticationHandlerTest extends TestCase
     private $authenticationHandler;
 
     /**
-     * @var AuthenticationException
+     * @var ObjectProphecy<AuthenticationException>
      */
     private $exception;
 
     /**
-     * @var Request
+     * @var ObjectProphecy<Request>
      */
     private $request;
 
     /**
-     * @var TokenInterface
+     * @var ObjectProphecy<TokenInterface>
      */
     private $token;
 
     /**
-     * @var UserInterface
+     * @var ObjectProphecy<UserInterface>
      */
     private $user;
 
@@ -68,7 +69,7 @@ class AuthenticationHandlerTest extends TestCase
         $this->authenticationHandler = new AuthenticationHandler($router->reveal(), $session->reveal(), 'Sulu');
     }
 
-    public function testOnAuthenticationSuccess()
+    public function testOnAuthenticationSuccess(): void
     {
         $this->request->isXmlHttpRequest()->willReturn(false);
 
@@ -81,7 +82,7 @@ class AuthenticationHandlerTest extends TestCase
         $this->assertEquals(302, $response->getStatusCode());
     }
 
-    public function testOnAuthenticationSuccessAjax()
+    public function testOnAuthenticationSuccessAjax(): void
     {
         $this->request->isXmlHttpRequest()->willReturn(true);
 
@@ -97,7 +98,7 @@ class AuthenticationHandlerTest extends TestCase
         $this->assertEquals('/admin/#target/path', $response['url']);
     }
 
-    public function testOnAuthenticationFailure()
+    public function testOnAuthenticationFailure(): void
     {
         $this->request->isXmlHttpRequest()->willReturn(false);
 
@@ -110,7 +111,7 @@ class AuthenticationHandlerTest extends TestCase
         $this->assertEquals(302, $response->getStatusCode());
     }
 
-    public function testOnAuthenticationFailureAjax()
+    public function testOnAuthenticationFailureAjax(): void
     {
         $this->request->isXmlHttpRequest()->willReturn(true);
 

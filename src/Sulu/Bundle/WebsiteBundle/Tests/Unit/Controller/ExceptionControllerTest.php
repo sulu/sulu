@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Controller;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\Controller\ExceptionController;
 use Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -36,22 +37,22 @@ class ExceptionControllerTest extends TestCase
     private $innerExceptionController;
 
     /**
-     * @var Environment
+     * @var ObjectProphecy<Environment>
      */
     private $twig;
 
     /**
-     * @var FilesystemLoader
+     * @var ObjectProphecy<FilesystemLoader>
      */
     private $loader;
 
     /**
-     * @var ParameterResolverInterface
+     * @var ObjectProphecy<ParameterResolverInterface>
      */
     private $parameterResolver;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
@@ -88,7 +89,7 @@ class ExceptionControllerTest extends TestCase
     /**
      * @dataProvider provideShowAction
      */
-    public function testShowActionFormat($retrievedFormat, $templateAvailable, $expectExceptionFormat)
+    public function testShowActionFormat($retrievedFormat, $templateAvailable, $expectExceptionFormat): void
     {
         $request = new Request();
         $request->setRequestFormat($retrievedFormat);
@@ -147,7 +148,7 @@ class ExceptionControllerTest extends TestCase
     /**
      * @dataProvider provideShowActionErrorTemplate
      */
-    public function testShowActionErrorTemplate($templates, $errorCode, $expectedTemplate)
+    public function testShowActionErrorTemplate($templates, $errorCode, $expectedTemplate): void
     {
         $request = new Request();
         $exception = $this->createFlattenException(new \Exception(), $errorCode);

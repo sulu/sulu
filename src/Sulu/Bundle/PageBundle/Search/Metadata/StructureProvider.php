@@ -288,8 +288,9 @@ EOT;
 
     /**
      * @param IndexMetadata|ComplexMetadata $metadata
+     * @param string|null $condition
      */
-    private function mapProperty(ItemMetadata $property, $metadata, string $prefix = '')
+    private function mapProperty(ItemMetadata $property, $metadata, string $prefix = '', $condition = null)
     {
         $propertyName = $prefix . $property->getName();
 
@@ -298,11 +299,13 @@ EOT;
                 \sprintf(
                     'object.getStructure().%s.getValue()',
                     $property->getName()
-                )
+                ),
+                $condition
             );
         } else {
             $field = $this->factory->createMetadataProperty(
-                '[' . $property->getName() . ']'
+                '[' . $property->getName() . ']',
+                $condition
             );
         }
 
@@ -310,11 +313,13 @@ EOT;
             $propertyMapping = new ComplexMetadata();
 
             foreach ($property->getComponents() as $component) {
+                /** @var \Sulu\Component\Content\Metadata\PropertyMetadata $componentProperty */
                 foreach ($component->getChildren() as $componentProperty) {
                     $this->mapProperty(
                         $componentProperty,
                         $propertyMapping,
-                        $component->getName() . '_'
+                        $component->getName() . '_',
+                        'type === \'' . $component->getName() . '\''
                     );
                 }
             }

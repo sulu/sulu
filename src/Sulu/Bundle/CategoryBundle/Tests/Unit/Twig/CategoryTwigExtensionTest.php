@@ -89,7 +89,7 @@ class CategoryTwigExtensionTest extends TestCase
     /**
      * @dataProvider getProvider
      */
-    public function testGet($categoryData, $locale = 'en', $parent = null, $depth = null)
+    public function testGet($categoryData, $locale = 'en', $parent = null, $depth = null): void
     {
         $categoryEntities = [];
         $categoryApis = [];
@@ -158,7 +158,7 @@ class CategoryTwigExtensionTest extends TestCase
     /**
      * @dataProvider appendProvider
      */
-    public function testAppendUrl($parameter, $url, $string, $expected)
+    public function testAppendUrl($parameter, $url, $string, $expected): void
     {
         $category = ['id' => 3, 'name' => 'test'];
 
@@ -203,7 +203,7 @@ class CategoryTwigExtensionTest extends TestCase
     /**
      * @dataProvider setProvider
      */
-    public function testSetUrl($parameter, $url, $string, $expected)
+    public function testSetUrl($parameter, $url, $string, $expected): void
     {
         $category = ['id' => 3, 'name' => 'test'];
 
@@ -246,7 +246,7 @@ class CategoryTwigExtensionTest extends TestCase
     /**
      * @dataProvider clearProvider
      */
-    public function testClearUrl($parameter, $url, $string)
+    public function testClearUrl($parameter, $url, $string): void
     {
         $manager = $this->prophesize(CategoryManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);

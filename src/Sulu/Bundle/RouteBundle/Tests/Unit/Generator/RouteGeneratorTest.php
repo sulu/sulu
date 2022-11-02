@@ -13,6 +13,7 @@ namespace Sulu\Bundle\RouteBundle\Tests\Unit\Generator;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\RouteBundle\Generator\RouteGenerator;
 use Sulu\Bundle\RouteBundle\Generator\TokenProviderInterface;
 use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
@@ -21,12 +22,12 @@ use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
 class RouteGeneratorTest extends TestCase
 {
     /**
-     * @var TokenProviderInterface
+     * @var ObjectProphecy<TokenProviderInterface>
      */
     private $tokenProvider;
 
     /**
-     * @var SlugifierInterface
+     * @var ObjectProphecy<SlugifierInterface>
      */
     private $slugifier;
 
@@ -43,7 +44,7 @@ class RouteGeneratorTest extends TestCase
         $this->generator = new RouteGenerator($this->tokenProvider->reveal(), $this->slugifier->reveal());
     }
 
-    public function testGenerate()
+    public function testGenerate(): void
     {
         $entity = $this->prophesize(RoutableInterface::class);
 
@@ -61,7 +62,7 @@ class RouteGeneratorTest extends TestCase
         $this->assertEquals('/prefix/test-title/postfix/1', $path);
     }
 
-    public function testGetOptionsResolver()
+    public function testGetOptionsResolver(): void
     {
         $optionsResolver = $this->generator->getOptionsResolver(['route_schema' => '/{entity.getTitle()}']);
         $this->assertEquals(['route_schema'], $optionsResolver->getRequiredOptions());

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Routing;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\Routing\RequestListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\PortalInformation;
@@ -24,27 +25,27 @@ use Symfony\Component\Routing\RouterInterface;
 class RequestListenerTest extends TestCase
 {
     /**
-     * @var RequestAnalyzerInterface
+     * @var ObjectProphecy<RequestAnalyzerInterface>
      */
     private $requestAnalyzer;
 
     /**
-     * @var RouterInterface
+     * @var ObjectProphecy<RouterInterface>
      */
     private $router;
 
     /**
-     * @var PortalInformation
+     * @var ObjectProphecy<PortalInformation>
      */
     private $portalInformation;
 
     /**
-     * @var RequestContext
+     * @var ObjectProphecy<RequestContext>
      */
     private $requestContext;
 
     /**
-     * @var HttpKernelInterface
+     * @var ObjectProphecy<HttpKernelInterface>
      */
     private $kernel;
 
@@ -59,7 +60,7 @@ class RequestListenerTest extends TestCase
         $this->requestContext = $this->prophesize(RequestContext::class);
     }
 
-    public function testRequestAnalyzer()
+    public function testRequestAnalyzer(): void
     {
         $this->portalInformation->getPrefix()->willReturn('test/');
         $this->portalInformation->getHost()->willReturn('sulu.io');

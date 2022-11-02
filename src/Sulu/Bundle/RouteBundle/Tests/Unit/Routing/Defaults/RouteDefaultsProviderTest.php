@@ -42,7 +42,7 @@ class RouteDefaultsProviderTest extends TestCase
         );
     }
 
-    public function testSupportFalse()
+    public function testSupportFalse(): void
     {
         foreach ($this->providers as $provider) {
             $provider->supports('Test')->shouldBeCalled()->willReturn(false);
@@ -51,7 +51,7 @@ class RouteDefaultsProviderTest extends TestCase
         $this->assertFalse($this->defaultsProvider->supports('Test'));
     }
 
-    public function testSupport()
+    public function testSupport(): void
     {
         $this->providers[0]->supports('Test')->shouldBeCalled()->willReturn(true);
         $this->providers[1]->supports('Test')->shouldNotBeCalled()->willReturn(false);
@@ -60,7 +60,7 @@ class RouteDefaultsProviderTest extends TestCase
         $this->assertTrue($this->defaultsProvider->supports('Test'));
     }
 
-    public function testIsPublishedFalse()
+    public function testIsPublishedFalse(): void
     {
         $this->providers[0]->supports('Test')->shouldBeCalled()->willReturn(true);
         $this->providers[0]->isPublished('Test', 1, 'de')->shouldBeCalled()->willReturn(false);
@@ -68,7 +68,7 @@ class RouteDefaultsProviderTest extends TestCase
         $this->assertFalse($this->defaultsProvider->isPublished('Test', 1, 'de'));
     }
 
-    public function testIsPublished()
+    public function testIsPublished(): void
     {
         $this->providers[0]->supports('Test')->shouldBeCalled()->willReturn(true);
         $this->providers[0]->isPublished('Test', 1, 'de')->shouldBeCalled()->willReturn(true);
@@ -76,7 +76,7 @@ class RouteDefaultsProviderTest extends TestCase
         $this->assertTrue($this->defaultsProvider->isPublished('Test', 1, 'de'));
     }
 
-    public function testGetByEntityFalse()
+    public function testGetByEntityFalse(): void
     {
         foreach ($this->providers as $provider) {
             $provider->supports('Test')->shouldBeCalled()->willReturn(false);
@@ -86,7 +86,7 @@ class RouteDefaultsProviderTest extends TestCase
         $this->assertNull($this->defaultsProvider->getByEntity('Test', '1', 'de'));
     }
 
-    public function testGetByEntity()
+    public function testGetByEntity(): void
     {
         $this->providers[0]->supports('Test')->shouldBeCalled()->willReturn(true);
         $this->providers[0]->getByEntity('Test', '1', 'de', null)->shouldBeCalled()->willReturn(['test' => 1]);

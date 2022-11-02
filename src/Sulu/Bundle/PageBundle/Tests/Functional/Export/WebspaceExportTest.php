@@ -59,7 +59,7 @@ class WebspaceExportTest extends SuluTestCase
         $this->webspaceExporter = $this->getContainer()->get('sulu_page.export.webspace');
     }
 
-    public function test12Xliff()
+    public function test12Xliff(): void
     {
         $documents = $this->prepareData();
         $exportData = $this->webspaceExporter->getExportData('sulu_io');

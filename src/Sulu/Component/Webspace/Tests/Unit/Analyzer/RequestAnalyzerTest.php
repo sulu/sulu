@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestAnalyzerTest extends TestCase
 {
-    public function testAnalyzeAndValidate()
+    public function testAnalyzeAndValidate(): void
     {
         $provider = $this->prophesize(RequestProcessorInterface::class);
         $request = new Request();
@@ -42,7 +42,7 @@ class RequestAnalyzerTest extends TestCase
         $requestAnalyzer->validate($request);
     }
 
-    public function testAnalyzeAndValidateWithError()
+    public function testAnalyzeAndValidateWithError(): void
     {
         $this->expectException(UrlMatchNotFoundException::class);
         $provider = $this->prophesize(RequestProcessorInterface::class);
@@ -61,7 +61,7 @@ class RequestAnalyzerTest extends TestCase
         $requestAnalyzer->validate($request);
     }
 
-    public function testAnalyzeWithoutValidateWithError()
+    public function testAnalyzeWithoutValidateWithError(): void
     {
         $provider = $this->prophesize(RequestProcessorInterface::class);
         $request = new Request();
@@ -78,7 +78,7 @@ class RequestAnalyzerTest extends TestCase
         $requestAnalyzer->analyze($request);
     }
 
-    public function testGetAttribute()
+    public function testGetAttribute(): void
     {
         $provider = $this->prophesize(RequestProcessorInterface::class);
         $request = new Request();
@@ -98,7 +98,7 @@ class RequestAnalyzerTest extends TestCase
         $this->assertEquals(2, $requestAnalyzer->getAttribute('test1', 2));
     }
 
-    public function testGetAttributeTwice()
+    public function testGetAttributeTwice(): void
     {
         $provider = $this->prophesize(RequestProcessorInterface::class);
         $request = new Request();
@@ -121,7 +121,7 @@ class RequestAnalyzerTest extends TestCase
         $this->assertEquals(2, $requestAnalyzer->getAttribute('test1', 2));
     }
 
-    public function testGetAttributeAfterChangingSegment()
+    public function testGetAttributeAfterChangingSegment(): void
     {
         $provider = $this->prophesize(RequestProcessorInterface::class);
 
@@ -155,7 +155,7 @@ class RequestAnalyzerTest extends TestCase
         $this->assertSame($summerSegment, $requestAnalyzer->getSegment());
     }
 
-    public function testAnalyzeMultipleProvider()
+    public function testAnalyzeMultipleProvider(): void
     {
         $request = $this->prophesize(Request::class);
         $request->getHost()->willReturn('www.sulu.io');
@@ -213,7 +213,7 @@ class RequestAnalyzerTest extends TestCase
     /**
      * @dataProvider provideGetter
      */
-    public function testGetter(array $attributes, $method, $expected)
+    public function testGetter(array $attributes, $method, $expected): void
     {
         $provider = $this->prophesize(RequestProcessorInterface::class);
 
@@ -232,7 +232,7 @@ class RequestAnalyzerTest extends TestCase
         $this->assertSame($expected, $requestAnalyzer->{$method}());
     }
 
-    public function testGetDateTime()
+    public function testGetDateTime(): void
     {
         $provider = $this->prophesize(RequestProcessorInterface::class);
         $request = new Request();

@@ -36,7 +36,7 @@ class DispositionTypeResolverTest extends TestCase
         );
     }
 
-    public function testGetMimeTypeDisposition()
+    public function testGetMimeTypeDisposition(): void
     {
         // Test MimeType defined as inline disposition
         $this->assertEquals(

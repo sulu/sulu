@@ -17,7 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class SuluVersionPassTest extends TestCase
 {
-    public function testProcess()
+    public function testProcess(): void
     {
         $versionPass = new SuluVersionPass();
         $container = $this->prophesize(ContainerBuilder::class);
