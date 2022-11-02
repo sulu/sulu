@@ -119,7 +119,7 @@ class SecurityCheckerTest extends TestCase
         $this->assertTrue($this->securityChecker->checkPermission('sulu.media.collection', 'view'));
     }
 
-    public function testIsGrantedWithAuthenticationCredentialsNotFoundException (): void
+    public function testIsGrantedWithAuthenticationCredentialsNotFoundException(): void
     {
         $this->tokenStorage->getToken()->willReturn(null);
         $this->authorizationChecker->isGranted(Argument::any(), Argument::any())->willThrow(new AuthenticationCredentialsNotFoundException());
