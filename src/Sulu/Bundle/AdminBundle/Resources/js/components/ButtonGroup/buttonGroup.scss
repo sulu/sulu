@@ -18,7 +18,15 @@
         border-bottom-right-radius: $iconBorderRadius;
     }
 
-    &:not(:last-child) {
-        border-right: 0;
+    &:not(:first-child) {
+        border-left-width: 0;
+    }
+
+    &:disabled:not(:last-child) {
+        border-right-width: 0;
+    }
+
+    &:disabled + & {
+        border-left-width: 1px;
     }
 }
