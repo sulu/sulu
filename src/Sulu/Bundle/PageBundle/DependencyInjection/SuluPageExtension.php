@@ -211,17 +211,6 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
             );
         }
 
-        if ($container->hasExtension('fos_js_routing')) {
-            $container->prependExtensionConfig(
-                'fos_js_routing',
-                [
-                    'routes_to_expose' => [
-                        'sulu_page.post_page_version_trigger',
-                    ],
-                ]
-            );
-        }
-
         if ($container->hasExtension('sulu_search')) {
             $container->prependExtensionConfig(
                 'sulu_page',

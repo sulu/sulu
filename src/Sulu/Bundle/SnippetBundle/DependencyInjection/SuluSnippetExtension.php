@@ -103,17 +103,6 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
             );
         }
 
-        if ($container->hasExtension('fos_js_routing')) {
-            $container->prependExtensionConfig(
-                'fos_js_routing',
-                [
-                    'routes_to_expose' => [
-                        'sulu_snippet.put_snippet-area',
-                    ],
-                ]
-            );
-        }
-
         if ($container->hasExtension('sulu_search')) {
             $container->prependExtensionConfig(
                 'sulu_search',
