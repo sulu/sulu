@@ -354,15 +354,17 @@ function processConfig(config: Object) {
 function startAdmin() {
     // eslint-disable-next-line no-console
     console.log(
-        '%cWelcome to Sulu CMS 👋' + "\n" +
-        "%c\n" +
-        'The Symfony based content management platform.' + "\n" +
-        "\n" +
-        '📖 Developer documentation: %chttps://docs.sulu.io/%c, %chttps://jsdocs.sulu.io/%c and %chttps://symfony.com/doc%c' + "\n" +
-        '🤝 Contribute to Sulu: %chttps://github.com/sulu/sulu%c' + "\n" +
-        '🔎 Create a new issue: %chttps://github.com/sulu/sulu/issues%c' + "\n" +
-        '🪜 Examples: %chttps://github.com/sulu/sulu-demo%c and %chttps://github.com/sulu/sulu-workshop%c' + "\n" +
-        "\n" +
+        '%cWelcome to Sulu CMS 👋' + '\n' +
+        '%c\n' +
+        'The Symfony based content management platform.' + '\n' +
+        '\n' +
+        '📖 Developer documentation: %chttps://docs.sulu.io/%c,' +
+        ' %chttps://jsdocs.sulu.io/%c and %chttps://symfony.com/doc%c' + '\n' +
+        '🤝 Contribute to Sulu: %chttps://github.com/sulu/sulu%c' + '\n' +
+        '🔎 Create a new issue: %chttps://github.com/sulu/sulu/issues%c' + '\n' +
+        '🪜 Implementation examples: %chttps://github.com/sulu/sulu-demo%c' +
+        ' and %chttps://github.com/sulu/sulu-workshop%c' + '\n' +
+        '\n' +
         'If you like Sulu – give it a ⭐ on Github: %chttps://github.com/sulu/sulu%c',
         'font-family: monospace; font-size: 24px; font-weight: bold;',
         'font-family: monospace; font-size: 10px;',
@@ -381,7 +383,7 @@ function startAdmin() {
         'font-family: monospace; font-size: 10px; text-decoration: underline;',
         'font-family: monospace; font-size: 10px; text-decoration: none;',
         'font-family: monospace; font-size: 10px; text-decoration: underline;',
-        'font-family: monospace; font-size: 10px; text-decoration: none;',
+        'font-family: monospace; font-size: 10px; text-decoration: none;'
     );
 
     if (Config.suluVersion !== SULU_ADMIN_BUILD_VERSION) {
