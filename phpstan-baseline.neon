@@ -1841,6 +1841,16 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/CollaborationControllerTest.php
 
 		-
+			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/CollaborationControllerTest.php
+
+		-
+			message: "#^Cannot call method getResourceKey\\(\\) on mixed\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/CollaborationControllerTest.php
+
+		-
 			message: "#^Parameter \\#1 \\$array of function array_values expects array, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/CollaborationControllerTest.php
@@ -19206,7 +19216,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerAdminTest.php
 
 		-
-			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			message: "#^Call to method getEncoder\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerAdminTest.php
+
+		-
+			message: "#^Call to method getPasswordHasher\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerAdminTest.php
 
@@ -19226,7 +19241,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerTest.php
 
 		-
-			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			message: "#^Call to method getEncoder\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerWebsiteSecuredTest.php
+
+		-
+			message: "#^Call to method getPasswordHasher\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerWebsiteSecuredTest.php
 
@@ -22011,7 +22031,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Content/Types/SegmentSelect.php
 
 		-
-			message: "#^Possibly invalid array key type \\(array\\|string\\)\\.$#"
+			message: "#^Possibly invalid array key type \\(array\\<int, string\\>\\|string\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Content/Types/SegmentSelect.php
 
@@ -22406,7 +22426,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
 
 		-
-			message: "#^Parameter \\#3 \\$version of method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:restore\\(\\) expects string, array\\|string given\\.$#"
+			message: "#^Parameter \\#3 \\$version of method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:restore\\(\\) expects string, array\\<int, string\\>\\|string given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
 
@@ -31441,17 +31461,12 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/Compiler/AliasForSecurityEncoderCompilerPass.php
 
 		-
-			message: "#^If condition is always true\\.$#"
+			message: "#^If condition is always false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/Compiler/TwoFactorCompilerPass.php
 
 		-
-			message: "#^Left side of && is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/Compiler/TwoFactorCompilerPass.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between 0 and int\\<1, 2\\> will always evaluate to false\\.$#"
+			message: "#^Left side of && is always false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/Compiler/TwoFactorCompilerPass.php
 
@@ -32276,6 +32291,11 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Command/CreateUserCommandTest.php
 
 		-
+			message: "#^Parameter \\#7 \\$passwordHasherFactory of class Sulu\\\\Bundle\\\\SecurityBundle\\\\Command\\\\CreateUserCommand constructor expects Symfony\\\\Component\\\\PasswordHasher\\\\Hasher\\\\PasswordHasherFactoryInterface\\|Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactoryInterface, Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Command/CreateUserCommandTest.php
+
+		-
 			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\SecurityBundle\\\\Tests\\\\Functional\\\\Controller\\\\GroupControllerTest\\:\\:\\$em\\.$#"
 			count: 7
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
@@ -32381,6 +32401,16 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ProfileControllerTest.php
 
 		-
+			message: "#^Call to method getEncoder\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
+
+		-
+			message: "#^Call to method getPasswordHasher\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
+
+		-
 			message: "#^Cannot access property \\$code on mixed\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
@@ -32388,11 +32418,6 @@ parameters:
 		-
 			message: "#^Cannot call method getCollector\\(\\) on Symfony\\\\Component\\\\HttpKernel\\\\Profiler\\\\Profile\\|false\\|null\\.$#"
 			count: 9
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
-
-		-
-			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
 
 		-
@@ -33291,11 +33316,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Util/TokenGenerator.php
 
 		-
-			message: "#^Parameter \\#1 \\$prefix of function uniqid expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Util/TokenGenerator.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Util\\\\TokenGenerator\\:\\:\\$useOpenSsl has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Util/TokenGenerator.php
@@ -33807,11 +33827,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
-
-		-
-			message: "#^Parameter \\#7 \\$total of class Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListRepresentation constructor expects int, array\\<Sulu\\\\Component\\\\Content\\\\Compat\\\\Structure\\\\SnippetBridge\\>\\|int\\<0, max\\> given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
 
@@ -37821,7 +37836,12 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Controller/AnalyticsControllerTest.php
 
 		-
-			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			message: "#^Call to method getEncoder\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Controller/CacheControllerTest.php
+
+		-
+			message: "#^Call to method getPasswordHasher\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Controller/CacheControllerTest.php
 
@@ -54481,6 +54501,11 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
+
+		-
 			message: "#^Left side of && is always true\\.$#"
 			count: 2
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
@@ -59868,6 +59893,11 @@ parameters:
 		-
 			message: "#^Offset \\*NEVER\\* does not exist on array\\{\\}\\.$#"
 			count: 1
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function strlen expects string, TKey of int\\|string given\\.$#"
+			count: 2
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
 
 		-
