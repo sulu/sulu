@@ -826,11 +826,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
 
 		-
-			message: "#^Parameter \\#2 \\$data of function hash expects string, array\\<int, string\\>\\|string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
-
-		-
 			message: "#^Parameter \\#2 \\.\\.\\.\\$replacements of function array_replace_recursive expects array, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
@@ -33377,11 +33372,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Util\\\\TokenGenerator\\:\\:getRandomNumber\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Util/TokenGenerator.php
-
-		-
-			message: "#^Parameter \\#1 \\$prefix of function uniqid expects string, int given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Util/TokenGenerator.php
 
