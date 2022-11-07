@@ -19216,12 +19216,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerAdminTest.php
 
 		-
-			message: "#^Call to method getEncoder\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerAdminTest.php
-
-		-
-			message: "#^Call to method getPasswordHasher\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerAdminTest.php
 
@@ -19241,12 +19236,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerTest.php
 
 		-
-			message: "#^Call to method getEncoder\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerWebsiteSecuredTest.php
-
-		-
-			message: "#^Call to method getPasswordHasher\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerWebsiteSecuredTest.php
 
@@ -31461,12 +31451,17 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/Compiler/AliasForSecurityEncoderCompilerPass.php
 
 		-
-			message: "#^If condition is always false\\.$#"
+			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/Compiler/TwoFactorCompilerPass.php
 
 		-
-			message: "#^Left side of && is always false\\.$#"
+			message: "#^Left side of && is always true\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/Compiler/TwoFactorCompilerPass.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between 0 and int\\<1, 2\\> will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/Compiler/TwoFactorCompilerPass.php
 
@@ -32291,11 +32286,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Command/CreateUserCommandTest.php
 
 		-
-			message: "#^Parameter \\#7 \\$passwordHasherFactory of class Sulu\\\\Bundle\\\\SecurityBundle\\\\Command\\\\CreateUserCommand constructor expects Symfony\\\\Component\\\\PasswordHasher\\\\Hasher\\\\PasswordHasherFactoryInterface\\|Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactoryInterface, Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Command/CreateUserCommandTest.php
-
-		-
 			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\SecurityBundle\\\\Tests\\\\Functional\\\\Controller\\\\GroupControllerTest\\:\\:\\$em\\.$#"
 			count: 7
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
@@ -32401,16 +32391,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ProfileControllerTest.php
 
 		-
-			message: "#^Call to method getEncoder\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
-
-		-
-			message: "#^Call to method getPasswordHasher\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
-
-		-
 			message: "#^Cannot access property \\$code on mixed\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
@@ -32418,6 +32398,11 @@ parameters:
 		-
 			message: "#^Cannot call method getCollector\\(\\) on Symfony\\\\Component\\\\HttpKernel\\\\Profiler\\\\Profile\\|false\\|null\\.$#"
 			count: 9
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
+
+		-
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
 
 		-
@@ -37836,12 +37821,7 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Controller/AnalyticsControllerTest.php
 
 		-
-			message: "#^Call to method getEncoder\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Controller/CacheControllerTest.php
-
-		-
-			message: "#^Call to method getPasswordHasher\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Controller/CacheControllerTest.php
 
