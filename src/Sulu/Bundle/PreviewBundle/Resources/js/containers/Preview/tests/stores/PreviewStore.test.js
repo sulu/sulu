@@ -240,13 +240,12 @@ test('Should set webspace', () => {
     expect(previewStore.webspace).toEqual('example');
 });
 
-
 test('Should request server on restart preview with new locale', () => {
     const locale = observable.box('en');
     const previewStore = new PreviewStore('pages', '123-123-123', locale, 'sulu_io');
     previewStore.start();
 
-    locale.set('de')
+    locale.set('de');
 
     // $FlowFixMe
     Requester.post = jest.fn();
