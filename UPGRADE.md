@@ -368,7 +368,7 @@ framework:
 It should also be considered to remove the **SwiftMailer** and **SwiftMailerBundle**
 from your application and replace it with [**Symfony Mailer**](https://symfony.com/doc/6.1/mailer.html).
 
-## 2.4.5
+## 2.4.6
 
 ### Add indexes to route table
 

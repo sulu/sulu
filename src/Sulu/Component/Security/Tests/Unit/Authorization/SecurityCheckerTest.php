@@ -21,6 +21,7 @@ use Symfony\Component\Security\Core\Authentication\Token\NullToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 
 class SecurityCheckerTest extends TestCase
 {
@@ -119,6 +120,14 @@ class SecurityCheckerTest extends TestCase
     {
         $this->tokenStorage->getToken()->willReturn(null);
         $this->authorizationChecker->isGranted(Argument::any(), Argument::any())->willReturn(true);
+
+        $this->assertTrue($this->securityChecker->checkPermission('sulu.media.collection', 'view'));
+    }
+
+    public function testIsGrantedWithAuthenticationCredentialsNotFoundException(): void
+    {
+        $this->tokenStorage->getToken()->willReturn(null);
+        $this->authorizationChecker->isGranted(Argument::any(), Argument::any())->willThrow(new AuthenticationCredentialsNotFoundException());
 
         $this->assertTrue($this->securityChecker->checkPermission('sulu.media.collection', 'view'));
     }

@@ -239,3 +239,23 @@ test('Should set webspace', () => {
     previewStore.setWebspace('example');
     expect(previewStore.webspace).toEqual('example');
 });
+
+test('Should request server on restart preview with new locale', () => {
+    const locale = observable.box('en');
+    const previewStore = new PreviewStore('pages', '123-123-123', locale, 'sulu_io');
+    previewStore.start();
+
+    locale.set('de');
+
+    // $FlowFixMe
+    Requester.post = jest.fn();
+    const startPromise = Promise.resolve({token: '123-123-123'});
+    const stopPromise = Promise.resolve();
+    Requester.post.mockReturnValueOnce(stopPromise);
+    Requester.post.mockReturnValueOnce(startPromise);
+
+    return previewStore.restart().then(() => {
+        expect(Requester.post).toBeCalledWith('/stop');
+        expect(Requester.post).toBeCalledWith('/start?provider=pages&id=123-123-123&locale=de');
+    });
+});
