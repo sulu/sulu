@@ -117,7 +117,7 @@ function exec_sf_cmd($cmd, $echo = true, $checkForError = true)
     }
 
     return exec_cmd(
-        'php ' . get_test_console_path() . ' ' . $cmd,
+        PHP_BINARY . ' ' . get_test_console_path() . ' ' . $cmd,
         $echo,
         $checkForError
     );
@@ -254,7 +254,7 @@ function run_bundle_tests(\SplFileInfo $phpunitFile)
     $flags = $input->getOption('flags');
 
     $process = exec_cmd(sprintf(
-        '%s --configuration %s %s',
+        PHP_BINARY . ' %s --configuration %s %s',
         get_phpunit_path(),
         $phpunitFile->getPathname(),
         $flags
@@ -286,7 +286,7 @@ function init_bundle()
     }
 
     $process = exec_cmd(sprintf(
-        'php %s %s',
+        PHP_BINARY . ' %s %s',
         $console,
         'debug:container doctrine.orm.entity_manager'
     ), false, false);
@@ -299,13 +299,13 @@ function init_bundle()
     write_info('Doctrine ORM detected, updating the schema for the bundle.');
 
     exec_cmd(sprintf(
-        'php %s %s',
+        PHP_BINARY . ' %s %s',
         $console,
         ' doctrine:schema:update --force'
     ));
 
     exec_cmd(sprintf(
-        'php %s %s',
+        PHP_BINARY . ' %s %s',
         $console,
         ' sulu:document:initialize --purge --force --ansi'
     ));
