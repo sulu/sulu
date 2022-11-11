@@ -35,7 +35,7 @@ class IconAdapter extends AbstractAdapter {
      *
      * @returns {JSX.Element|Null}
      */
-    renderIcon(icon: array, index: int) {
+    renderIcon(icon, index) {
         const id = icon.id;
         const {
             onItemSelectionChange,
