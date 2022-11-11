@@ -32,7 +32,7 @@ class ExposeResourceRoutesPass implements CompilerPassInterface
 
         // Collect all resource routes that have to be exposed
         foreach ($resources as $resource) {
-            if (isset($resource['routes'])) {
+            if (isset($resource['routes'])) { // @phpstan-ignore-line
                 foreach ($resource['routes'] as $routeName) {
                     $routeNames[] = $routeName;
                 }
@@ -40,8 +40,13 @@ class ExposeResourceRoutesPass implements CompilerPassInterface
         }
 
         $extractorDefinition = $container->getDefinition('fos_js_routing.extractor');
-        $allRouteNames = \array_unique(\array_merge($extractorDefinition->getArgument(1), $routeNames));
+        $alreadyDefinedRouteNames = $extractorDefinition->getArgument(1);
 
+        if (!is_array($alreadyDefinedRouteNames)) {
+            throw new \InvalidArgumentException('Invalid type of the second argument of service "fos_js_routing.extractor". Expected array.');
+        }
+
+        $allRouteNames = \array_unique(\array_merge($alreadyDefinedRouteNames, $routeNames));
         $extractorDefinition->replaceArgument(1, $allRouteNames);
     }
 }
