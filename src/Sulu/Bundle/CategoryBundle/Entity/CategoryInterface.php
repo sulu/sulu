@@ -163,7 +163,7 @@ interface CategoryInterface extends AuditableInterface
     /**
      * Get single meta by locale or false if does not exists.
      *
-     * @param string $locale
+     * @param ?string $locale
      *
      * @return CategoryTranslationInterface|false
      */
