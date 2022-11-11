@@ -21,6 +21,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class IconController extends AbstractRestController implements ClassResourceInterface
 {
+    /**
+     * @var mixed[]
+     */
     private array $iconSets;
 
     /**
@@ -41,7 +44,6 @@ class IconController extends AbstractRestController implements ClassResourceInte
      */
     public function cgetAction(Request $request)
     {
-        dd($this->iconSets);
         $iconSet = $this->iconSets[$request->query->get('icon_set')];
         $search = $request->query->get('search');
         $provider = $iconSet['provider'];
@@ -86,7 +88,7 @@ class IconController extends AbstractRestController implements ClassResourceInte
     /**
      * Return a set of SVG icons from a specific directory.
      *
-     * @param array<mixed> $iconSet
+     * @param array<array{path: string}> $iconSet
      *
      * @return array<array{id: string, content: string}>
      */
@@ -97,7 +99,7 @@ class IconController extends AbstractRestController implements ClassResourceInte
 
         // TODO maybe do this in a compilerpass to avoid file system access in the runtime
         $finder = new Finder();
-        $finder->in($path);
+        $finder->in((string) $path);
 
         foreach ($finder as $file) {
             $icons[] = [
@@ -112,7 +114,7 @@ class IconController extends AbstractRestController implements ClassResourceInte
     /**
      * Return a set of icons from the icomoon selection.json.
      *
-     * @param array<mixed> $iconSet
+     * @param array<array{selection_json: string}> $iconSet
      *
      * @return array<array{id: string, content: string}>
      */
