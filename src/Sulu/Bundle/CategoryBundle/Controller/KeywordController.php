@@ -127,13 +127,15 @@ class KeywordController extends AbstractRestController implements ClassResourceI
         $listBuilder = $this->listBuilderFactory->create($this->keywordClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptor);
 
-        $categoryTranslation = $category->findTranslationByLocale($request->get('locale'));
+        /** @var string $locale */
+        $locale = $request->get('locale');
+        $categoryTranslation = $category->findTranslationByLocale($locale);
 
         if (false == $categoryTranslation) {
             return $this->handleView($this->view(null, 404));
         }
 
-        $listBuilder->where($fieldDescriptor['locale'], $request->get('locale'));
+        $listBuilder->where($fieldDescriptor['locale'], $locale);
         $listBuilder->where(
             $fieldDescriptor['categoryTranslationIds'],
             $categoryTranslation
