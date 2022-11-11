@@ -44,7 +44,10 @@ export default class SingleIconSelect extends React.Component<Props> {
         }
     };
 
-    @action handleOverlayConfirm = (value: string) => {
+    /**
+     * @param {Object} value
+     */
+    @action handleOverlayConfirm = (value) => {
         const {
             onChange,
         } = this.props;
