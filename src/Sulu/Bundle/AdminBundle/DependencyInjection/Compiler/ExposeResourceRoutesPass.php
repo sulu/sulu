@@ -42,7 +42,7 @@ class ExposeResourceRoutesPass implements CompilerPassInterface
         $extractorDefinition = $container->getDefinition('fos_js_routing.extractor');
         $alreadyDefinedRouteNames = $extractorDefinition->getArgument(1);
 
-        if (!is_array($alreadyDefinedRouteNames)) {
+        if (!\is_array($alreadyDefinedRouteNames)) {
             throw new \InvalidArgumentException('Invalid type of the second argument of service "fos_js_routing.extractor". Expected array.');
         }
 
