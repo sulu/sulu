@@ -15,6 +15,13 @@ class IconAdapter extends AbstractAdapter {
 
     static icon = 'su-magic';
 
+    /**
+     * @param onItemSelectionChange
+     */
+    handleClick = (onItemSelectionChange: ?(rowId: string | number, selected?: boolean) => void) => {
+        return onItemSelectionChange;
+    };
+
     render() {
         const {
             data,
@@ -48,7 +55,7 @@ class IconAdapter extends AbstractAdapter {
                 id={id}
                 isSelected={id === selections[0]}
                 key={index}
-                onClick={onItemSelectionChange}
+                onClick={this.handleClick(onItemSelectionChange)}
             />
         );
     }
