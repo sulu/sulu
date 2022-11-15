@@ -35,17 +35,6 @@ class SuluLocationExtension extends Extension implements PrependExtensionInterfa
                 ]
             );
         }
-
-        if ($container->hasExtension('fos_js_routing')) {
-            $container->prependExtensionConfig(
-                'fos_js_routing',
-                [
-                    'routes_to_expose' => [
-                        'sulu_location.geolocator_query',
-                    ],
-                ]
-            );
-        }
     }
 
     public function load(array $configs, ContainerBuilder $container)
