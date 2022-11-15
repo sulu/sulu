@@ -22,12 +22,12 @@ use Symfony\Component\HttpFoundation\Response;
 class IconController extends AbstractRestController implements ClassResourceInterface
 {
     /**
-     * @var mixed[]
+     * @var array<array<array{path: string, selection_json: string}>>
      */
     private array $iconSets;
 
     /**
-     * @param array<mixed> $iconSets
+     * @param array<array<array{path: string, selection_json: string}>> $iconSets
      */
     public function __construct(
         ViewHandlerInterface $viewHandler,
@@ -44,7 +44,7 @@ class IconController extends AbstractRestController implements ClassResourceInte
      */
     public function cgetAction(Request $request)
     {
-        $iconSet = $this->iconSets[$request->query->get('icon_set')];
+        $iconSet = (array) $this->iconSets[$request->query->get('icon_set')];
         $search = $request->query->get('search');
         $provider = $iconSet['provider'];
         $icons = [];
@@ -122,14 +122,19 @@ class IconController extends AbstractRestController implements ClassResourceInte
     {
         $icons = [];
         $selectionJsonPath = $iconSet['options']['selection_json'];
+        $selectionContent = \file_get_contents($selectionJsonPath);
 
-        if (!$selectionJsonPath) {
+        if (!$selectionContent) {
             return $icons;
         }
 
-        $selection = \json_decode(\file_get_contents((string) $selectionJsonPath));
+        $selection = (array) \json_decode($selectionContent);
+        $iconsArray = (array) $selection['icons'];
 
-        foreach ($selection->icons as $icon) {
+        /**
+         * @var \stdClass $icon
+         */
+        foreach ($iconsArray as $icon) {
             $paths = [];
 
             foreach ($icon->icon->paths as $index => $path) {
