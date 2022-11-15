@@ -47,7 +47,7 @@ export default class SingleIconSelect extends React.Component<Props> {
     /**
      * @param {Object} value
      */
-    @action handleOverlayConfirm = (value) => {
+    @action handleOverlayConfirm = (value: { id: string }) => {
         const {
             onChange,
         } = this.props;
@@ -69,7 +69,6 @@ export default class SingleIconSelect extends React.Component<Props> {
 
     render() {
         const {
-            disabled,
             schemaOptions: {
                 icon_set: {
                     value: iconSet,
@@ -86,7 +85,7 @@ export default class SingleIconSelect extends React.Component<Props> {
             <Fragment>
                 <SingleItemSelection
                     className=""
-                    disabled={disabled}
+                    disabled={false}
                     emptyText={translate('sulu_admin.single_icon_select.select')}
                     id={value}
                     leftButton={{

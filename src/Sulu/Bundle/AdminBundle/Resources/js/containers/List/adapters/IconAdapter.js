@@ -30,12 +30,12 @@ class IconAdapter extends AbstractAdapter {
     /**
      * Renders a single icon.
      *
-     * @param {Object} icon
-     * @param {Number} index
+     * @param {object} icon
+     * @param {number} index
      *
      * @returns {JSX.Element|Null}
      */
-    renderIcon(icon, index) {
+    renderIcon(icon: { content: string, id: string }, index: number) {
         const id = icon.id;
         const {
             onItemSelectionChange,
