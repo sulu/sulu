@@ -132,7 +132,7 @@ class ImagineImageConverter implements ImageConverterInterface
                     case 'image/gif':
                         $preferredExtension = 'gif';
                         break;
-                    case  'image/avif':
+                    case 'image/avif':
                         $preferredExtension = 'avif';
                         break;
                 }
@@ -143,7 +143,7 @@ class ImagineImageConverter implements ImageConverterInterface
                     'gif',
                     'png',
                     'webp',
-                    'avif'
+                    'avif',
                 ]);
             }
         }
