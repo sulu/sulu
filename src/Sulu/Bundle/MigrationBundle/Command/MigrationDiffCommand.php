@@ -49,7 +49,10 @@ class MigrationDiffCommand extends Command
         foreach (static::$databases as $database => $databaseUrl) {
             $ui->section('Create Database: ' . $database);
 
-            $envs = ['DATABASE_URL' => $databaseUrl]; // TODO not working like expected
+            $envs = [
+                'DATABASE_URL' => $databaseUrl,
+                'SYMFONY_DOTENV_VARS' => false, // see https://symfony.com/doc/6.1/components/process.html#setting-environment-variables-for-processes
+            ];
 
             $createDatabaseCommand = new Process([
                 \PHP_BINARY,
