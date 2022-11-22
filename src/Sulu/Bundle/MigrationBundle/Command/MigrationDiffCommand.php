@@ -44,7 +44,7 @@ class MigrationDiffCommand extends Command
         $this->setDescription(
             'A command used for core developers to generate doctrine migrations.'
         );
-        $this->addOption('console-path', null, InputOption::VALUE_REQUIRED, 'Path to the bin/console script', 'bin/console');
+        $this->addOption('console-path', null, InputOption::VALUE_REQUIRED, 'Path to the bin/console script', 'bin/adminconsole');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
