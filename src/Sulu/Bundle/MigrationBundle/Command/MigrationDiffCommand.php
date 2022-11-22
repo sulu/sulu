@@ -29,7 +29,7 @@ class MigrationDiffCommand extends Command
     protected static $defaultName = 'sulu:migration:migration-diff';
 
     /**
-     * This are configured in the ../Resources/docker/docker-compose.yml file
+     * This are configured in the ../Resources/docker/docker-compose.yml file.
      *
      * @var array<string, string>
      */
@@ -39,7 +39,7 @@ class MigrationDiffCommand extends Command
         'MariaDB 10' => 'mysql://root:@127.0.0.1:3307/su_myapp?serverVersion=mariadb-10.6.4&charset=utf8mb4',
     ];
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setDescription(
             'A command used for core developers to generate doctrine migrations.'
@@ -47,7 +47,7 @@ class MigrationDiffCommand extends Command
         $this->addOption('console-path', null, InputOption::VALUE_REQUIRED, 'Path to the bin/console script', 'bin/console');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $consolePath = $input->getOption('console-path');
         $ui = new SymfonyStyle($input, $output);
@@ -122,15 +122,15 @@ class MigrationDiffCommand extends Command
         return 0;
     }
 
-    private function replaceAbortWithSkip()
+    private function replaceAbortWithSkip(): void
     {
         $finder = new Finder();
-        $finder->files()->in(dirname(__DIR__) . '/Migrations')->name('Version*.php');
+        $finder->files()->in(\dirname(__DIR__) . '/Migrations')->name('Version*.php');
 
         foreach ($finder as $file) {
             \file_put_contents(
                 $file->getPathname(),
-                str_replace('abortIf', 'skipIf', $file->getContents())
+                \str_replace('abortIf', 'skipIf', $file->getContents())
             );
         }
     }
