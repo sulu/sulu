@@ -36,7 +36,7 @@ trait SetGetPrivatePropertyTrait
     }
 
     /**
-     * Get an object's property, including private properties declared in parent classes
+     * Get an object's property, including private properties declared in parent classes.
      *
      * @throws \Exception when the property doesn't exist in the object's class, or in its parent classes
      */
@@ -54,10 +54,10 @@ trait SetGetPrivatePropertyTrait
         } while (false !== $reflection);
 
         throw new \LogicException(
-            sprintf(
-                "Property %s does not exist in class %s, or in its parent classes",
+            \sprintf(
+                'Property %s does not exist in class %s, or in its parent classes',
                 $propertyName,
-                get_class($object)
+                \get_class($object)
             )
         );
     }

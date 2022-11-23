@@ -41,10 +41,13 @@ class PageRemovedEvent extends DomainEvent
     private $pageTitleLocale;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $context;
 
+    /**
+     * @param array<string, mixed> $context
+     */
     public function __construct(
         string $pageId,
         string $webspaceKey,
