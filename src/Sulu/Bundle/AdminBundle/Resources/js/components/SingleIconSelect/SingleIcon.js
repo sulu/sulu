@@ -7,7 +7,7 @@ type Props = {
     content: string,
     id: string | number,
     isSelected: boolean,
-    onClick?: (id: string | number, selected: boolean) => void,
+    onClick?: (id: string | number) => void,
 };
 
 export default class SingleIcon extends React.PureComponent<Props> {
