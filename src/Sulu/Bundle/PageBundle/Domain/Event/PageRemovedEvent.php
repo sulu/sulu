@@ -40,11 +40,20 @@ class PageRemovedEvent extends DomainEvent
      */
     private $pageTitleLocale;
 
+    /**
+     * @var array<string, mixed>
+     */
+    private $context;
+
+    /**
+     * @param array<string, mixed> $context
+     */
     public function __construct(
         string $pageId,
         string $webspaceKey,
         ?string $pageTitle,
-        ?string $pageTitleLocale
+        ?string $pageTitleLocale,
+        array $context = []
     ) {
         parent::__construct();
 
@@ -52,11 +61,17 @@ class PageRemovedEvent extends DomainEvent
         $this->webspaceKey = $webspaceKey;
         $this->pageTitle = $pageTitle;
         $this->pageTitleLocale = $pageTitleLocale;
+        $this->context = $context;
     }
 
     public function getEventType(): string
     {
         return 'removed';
+    }
+
+    public function getEventContext(): array
+    {
+        return $this->context;
     }
 
     public function getResourceKey(): string
