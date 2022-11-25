@@ -293,4 +293,73 @@ class ImagineImageConverterTest extends TestCase
 
         $this->assertEquals('new-image-content', $this->imagineImageConverter->convert($fileVersion, '640x480', 'jpg'));
     }
+
+    public function testSupportedOutputImageFormatWithoutMimeType(): void
+    {
+        $this->assertEquals([], $this->imagineImageConverter->getSupportedOutputImageFormats(null));
+        $this->assertEquals([], $this->imagineImageConverter->getSupportedOutputImageFormats(''));
+    }
+
+    public function testSupportedOutputFormatsWithInvalidMimeType(): void
+    {
+        $this->assertEquals([], $this->imagineImageConverter->getSupportedOutputImageFormats('wrong'));
+    }
+
+    public function testPreferredExtension(): void
+    {
+        $this->assertEquals('jpg', $this->imagineImageConverter->getSupportedOutputImageFormats('image/ico')[0]);
+    }
+
+    /**
+     * @dataProvider getSimpleExtensionsByMimeTypes
+     */
+    public function testSupportedOutputFormatsWithSimpleValidMimeType(string $mimeType, string $extension): void
+    {
+        $result = \array_unique([
+            $extension,
+            'jpg',
+            'gif',
+            'png',
+            'webp',
+            'avif',
+        ]);
+
+        $this->assertEquals($result, $this->imagineImageConverter->getSupportedOutputImageFormats($mimeType));
+    }
+
+    public function getSimpleExtensionsByMimeTypes(): \Generator
+    {
+        yield ['image/png', 'png'];
+        yield ['image/webp', 'webp'];
+        yield ['image/gif', 'gif'];
+        yield ['image/avif', 'avif'];
+    }
+
+    /**
+     * @dataProvider getSvgMimeTypes
+     */
+    public function testSupportedOutputFormatsWithValidSvgMimeType(string $mimeType): void
+    {
+        $this->assertEquals('svg', $this->imagineImageConverter->getSupportedOutputImageFormats($mimeType)[0]);
+    }
+
+    /**
+     * @dataProvider getSvgMimeTypes
+     *
+     * @throws \ReflectionException
+     */
+    public function testSupportedOutputFormatsWithValidSvgMimeTypeWithoutSvhImagine(string $mimeType): void
+    {
+        $reflection = new \ReflectionClass($this->imagineImageConverter);
+        $property = $reflection->getProperty('svgImagine');
+        $property->setAccessible(true);
+        $property->setValue($this->imagineImageConverter, null);
+        $this->assertEquals('png', $this->imagineImageConverter->getSupportedOutputImageFormats($mimeType)[0]);
+    }
+
+    public function getSvgMimeTypes(): \Generator
+    {
+        yield ['image/svg+xml'];
+        yield ['image/svg'];
+    }
 }

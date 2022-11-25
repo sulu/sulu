@@ -254,6 +254,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
             \array_merge([
                 'jpeg_quality' => 100,
                 'webp_quality' => 100,
+                'avif_quality' => 100,
             ], $config['format_manager']['default_imagine_options'])
         );
 
