@@ -338,7 +338,7 @@ class ImagineImageConverterTest extends TestCase
     /**
      * @dataProvider getSvgMimeTypes
      */
-    public function testSupportedOutputFormatsWithValidSvgMimeType($mimeType): void
+    public function testSupportedOutputFormatsWithValidSvgMimeType(string $mimeType): void
     {
         $this->assertEquals('svg', $this->imagineImageConverter->getSupportedOutputImageFormats($mimeType)[0]);
     }
@@ -348,7 +348,7 @@ class ImagineImageConverterTest extends TestCase
      *
      * @throws \ReflectionException
      */
-    public function testSupportedOutputFormatsWithValidSvgMimeTypeWithoutSvhImagine($mimeType): void
+    public function testSupportedOutputFormatsWithValidSvgMimeTypeWithoutSvhImagine(string $mimeType): void
     {
         $reflection = new \ReflectionClass($this->imagineImageConverter);
         $property = $reflection->getProperty('svgImagine');
