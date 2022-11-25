@@ -3,8 +3,8 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
 import DefaultLoadingStrategy from '../loadingStrategies/DefaultLoadingStrategy';
-import singleIconSelectStyle from '../../../components/SingleIconSelect/singleIconSelect.scss';
-import SingleIconComponent from '../../../components/SingleIconSelect/SingleIcon';
+import singleIconSelectStyle from '../../../containers/Form/fields/singleIconSelect.scss';
+import IconCard from '../../../components/IconCard/IconCard';
 import AbstractAdapter from './AbstractAdapter';
 
 @observer
@@ -15,11 +15,10 @@ class IconAdapter extends AbstractAdapter {
 
     static icon = 'su-magic';
 
-    /**
-     * @param onItemSelectionChange
-     */
-    handleClick = (onItemSelectionChange: ?(rowId: string | number, selected?: boolean) => void) => {
-        return onItemSelectionChange;
+    handleClick = (iconId: string) => {
+        if (this.props.onItemSelectionChange) {
+            this.props.onItemSelectionChange(iconId, !this.props.selections.includes(iconId));
+        }
     };
 
     render() {
@@ -29,33 +28,24 @@ class IconAdapter extends AbstractAdapter {
 
         return (
             <div className={singleIconSelectStyle.iconsOverlayItems}>
-                {data.map((icon, index) => this.renderIcon(icon, index))}
+                {data.map((icon) => this.renderIcon(icon))}
             </div>
         );
     }
 
-    /**
-     * Renders a single icon.
-     *
-     * @param {object} icon
-     * @param {number} index
-     *
-     * @returns {JSX.Element|Null}
-     */
-    renderIcon(icon: { content: string, id: string }, index: number) {
+    renderIcon(icon: { content: string, id: string }) {
         const id = icon.id;
         const {
-            onItemSelectionChange,
             selections,
         } = this.props;
 
         return (
-            <SingleIconComponent
+            <IconCard
                 content={icon.content}
                 id={id}
-                isSelected={id === selections[0]}
-                key={index}
-                onClick={this.handleClick(onItemSelectionChange)}
+                isSelected={selections.includes(id)}
+                key={id}
+                onClick={this.handleClick}
             />
         );
     }

@@ -1,19 +1,19 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import singleIconSelectStyle from './singleIconSelect.scss';
+import singleIconSelectStyle from '../../containers/Form/fields/singleIconSelect.scss';
 
 type Props = {
     content: string,
-    id: string | number,
+    id: string,
     isSelected: boolean,
-    onClick?: (id: string | number) => void,
+    onClick?: (id: string) => void,
 };
 
-export default class SingleIcon extends React.PureComponent<Props> {
+export default class IconCard extends React.PureComponent<Props> {
     handleClick = () => {
         if (this.props.onClick) {
-            this.props.onClick(this.props.id, true);
+            this.props.onClick(this.props.id);
         }
     };
 
