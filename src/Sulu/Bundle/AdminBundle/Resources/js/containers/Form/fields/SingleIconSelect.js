@@ -6,7 +6,7 @@ import SingleItemSelection from '../../../components/SingleItemSelection';
 import {translate} from '../../../utils/Translator';
 import SingleListOverlay from '../../SingleListOverlay';
 import userStore from '../../../stores/userStore';
-import singleIconSelectStyle from '../../../components/SingleIconSelect/singleIconSelect.scss';
+import singleIconSelectStyle from './singleIconSelect.scss';
 import type {FieldTypeProps} from '../../../types';
 import type {IObservableValue} from 'mobx/lib/mobx';
 
@@ -34,7 +34,7 @@ export default class SingleIconSelect extends React.Component<Props> {
         this.overlayOpen = false;
     }
 
-    @action handleRemove = () => {
+    handleRemove = () => {
         const {
             onChange,
         } = this.props;
@@ -81,18 +81,14 @@ export default class SingleIconSelect extends React.Component<Props> {
         return (
             <Fragment>
                 <SingleItemSelection
-                    className=""
-                    disabled={false}
                     emptyText={translate('sulu_admin.single_icon_select.select')}
                     id={value}
                     leftButton={{
                         icon: 'su-magic',
                         onClick: this.handleOverlayOpen,
                     }}
-                    loading={false}
                     onItemClick={this.handleOverlayOpen}
                     onRemove={value ? this.handleRemove : undefined}
-                    valid={true}
                     value={value}
                 >
                     {value &&
@@ -104,8 +100,6 @@ export default class SingleIconSelect extends React.Component<Props> {
 
                 <SingleListOverlay
                     adapter="icon"
-                    disabledIds={[]}
-                    itemDisabledCondition=""
                     listKey="icons"
                     locale={this.locale}
                     onClose={this.handleOverlayClose}

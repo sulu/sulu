@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Types;
 
+use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\SimpleContentType;
 
 class SingleIconSelect extends SimpleContentType
@@ -18,5 +19,16 @@ class SingleIconSelect extends SimpleContentType
     public function __construct()
     {
         parent::__construct('single_icon_select');
+    }
+
+    public function getViewData(PropertyInterface $property)
+    {
+        $params = $property->getParams();
+
+        $content = [
+            'iconSet' => $params['icon_set']->getValue()
+        ];
+
+        return $content;
     }
 }

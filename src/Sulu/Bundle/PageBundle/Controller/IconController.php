@@ -15,12 +15,16 @@ use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
+use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class IconController extends AbstractRestController implements ClassResourceInterface
 {
+    use RequestParametersTrait;
+
     /**
      * @var array<array<array{path: string, selection_json: string}>>
      */
@@ -44,7 +48,8 @@ class IconController extends AbstractRestController implements ClassResourceInte
      */
     public function cgetAction(Request $request)
     {
-        $iconSet = (array) $this->iconSets[$request->query->get('icon_set')];
+        $iconSetName = $this->getRequestParameter($request, 'icon_set', true);
+        $iconSet = (array) $this->iconSets[$iconSetName];
         $search = $request->query->get('search');
         $provider = $iconSet['provider'];
         $icons = [];
@@ -57,6 +62,8 @@ class IconController extends AbstractRestController implements ClassResourceInte
             case 'icomoon':
                 $icons = $this->getIconsAsIcomoon($iconSet);
                 break;
+            default:
+                throw new BadRequestException();
         }
 
         // Implement a simple search functionality.
