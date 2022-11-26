@@ -106,7 +106,16 @@ class PathCleanup implements PathCleanupInterface
 
         $totalParts = \count($parts);
         foreach ($parts as $i => $part) {
-            $slug = $this->slugger->slug($part, '-', $languageCode);
+            try {
+                $slug = $this->slugger->slug($part, '-', $languageCode);
+            } catch (\IntlException $e) { // handle unknown emoji transliterator id
+                if (\method_exists($this->slugger, 'withEmoji')) {
+                    $this->slugger = $this->slugger->withEmoji(false);
+                    $slug = $this->slugger->slug($part, '-', $languageCode);
+                } else {
+                    throw $e;
+                }
+            }
             $slug = $slug->lower();
             if (0 === $i || $i + 1 === $totalParts || !$slug->isEmpty()) {
                 $newParts[] = $slug->toString();
