@@ -53,6 +53,10 @@ class PathCleanup implements PathCleanupInterface
             $slugger = new AsciiSlugger();
         }
 
+        if (\method_exists($slugger, 'withEmoji')) {
+            $slugger = $slugger->withEmoji();
+        }
+
         $this->replacers = $replacers;
         $this->slugger = $slugger;
     }
