@@ -130,7 +130,7 @@ class LinkTagTest extends TestCase
             [
                 '<sulu-link href="123-123-123">Test-Content</sulu-link>',
                 ['href' => '123-123-123', 'content' => 'Test-Content'],
-                '<a href="/de/test" title="Pagetitle">Test-Content</a>',
+                '<a href="/de/test">Test-Content</a>',
             ],
             [
                 '<sulu-link href="123-123-123" title="Test-Title" target="_blank">Test-Content</sulu-link>',
@@ -215,7 +215,7 @@ class LinkTagTest extends TestCase
 
         $this->assertEquals(
             [
-                $tag1 => '<a href="/de/test-1" title="1">Test-Content</a>',
+                $tag1 => '<a href="/de/test-1">Test-Content</a>',
                 $tag2 => '<a href="/de/test-2" title="Test-Title">2</a>',
                 $tag3 => '<a href="/de/test-1" title="Test-Title">Test-Content</a>',
                 $tag4 => '<a href="/de/test-1" title="Test-Title" target="_blank">Test-Content</a>',
