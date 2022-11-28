@@ -29,7 +29,12 @@ class PathCleanup implements PathCleanupInterface
     /**
      * @var SluggerInterface
      */
-    private $slugger;
+    private $sluggerWithEmoji;
+
+    /**
+     * @var SluggerInterface
+     */
+    private $sluggerWithoutEmoji;
 
     /**
      * valid pattern for path
@@ -54,11 +59,13 @@ class PathCleanup implements PathCleanupInterface
         }
 
         if (\method_exists($slugger, 'withEmoji')) {
-            $slugger = $slugger->withEmoji();
+            $this->sluggerWithEmoji = $slugger->withEmoji();
+        } else {
+            $this->sluggerWithEmoji = $slugger;
         }
 
         $this->replacers = $replacers;
-        $this->slugger = $slugger;
+        $this->sluggerWithoutEmoji = $slugger;
     }
 
     /**
@@ -107,14 +114,9 @@ class PathCleanup implements PathCleanupInterface
         $totalParts = \count($parts);
         foreach ($parts as $i => $part) {
             try {
-                $slug = $this->slugger->slug($part, '-', $languageCode);
+                $slug = $this->sluggerWithEmoji->slug($part, '-', $languageCode);
             } catch (\IntlException $e) { // handle unknown emoji transliterator id
-                if (\method_exists($this->slugger, 'withEmoji')) {
-                    $this->slugger = $this->slugger->withEmoji(false);
-                    $slug = $this->slugger->slug($part, '-', $languageCode);
-                } else {
-                    throw $e;
-                }
+                $slug = $this->sluggerWithoutEmoji->slug($part, '-', $languageCode);
             }
             $slug = $slug->lower();
             if (0 === $i || $i + 1 === $totalParts || !$slug->isEmpty()) {
