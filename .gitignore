@@ -57,6 +57,11 @@ phpunit.xml
 jackrabbit-standalone*
 jackrabbit/*
 
+# Symfony CLI
+# https://symfony.com/doc/current/setup/symfony_server.html#different-php-settings-per-project
+/php.ini
+/.php-version
+
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php

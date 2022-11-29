@@ -102,7 +102,7 @@ class CategoryConverter implements ConverterInterface
     /**
      * @return Field[]
      */
-    private function getFieldsById(int $id, string $locale): array
+    private function getFieldsById(int $id, ?string $locale): array
     {
         try {
             $category = $this->categoryManager->findById($id);

@@ -99,7 +99,7 @@ class LinkTagTest extends TestCase
                 '<sulu-link href="123-123-123" provider="article">Test-Content</sulu-link>',
                 ['href' => '123-123-123', 'content' => 'Test-Content', 'provider' => 'article'],
                 [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
-                '<a href="http://sulu.lo/de/test" title="Page-Title">Test-Content</a>',
+                '<a href="http://sulu.lo/de/test">Test-Content</a>',
             ],
             [
                 '<sulu-link href="123-123-123" title="Test-Title" target="_blank" provider="article">Test-Content</sulu-link>',
@@ -134,7 +134,7 @@ class LinkTagTest extends TestCase
                     'content' => 'Test-Content',
                 ],
                 [new LinkItem('123-123-123', 'Page-Title', '/de/test', true)],
-                '<a href="http://sulu.lo/de/test" class="test" title="Page-Title">Test-Content</a>',
+                '<a href="http://sulu.lo/de/test" class="test">Test-Content</a>',
             ],
             [
                 '<sulu-link href="123-123-123" title="Test-Title" class="test" provider="article">Test-Content</sulu-link>',
@@ -282,7 +282,7 @@ class LinkTagTest extends TestCase
 
         $this->assertEquals(
             [
-                $tag1 => '<a href="http://sulu.lo/de/test-1" title="Page-Title 1">Test-Content</a>',
+                $tag1 => '<a href="http://sulu.lo/de/test-1">Test-Content</a>',
                 $tag2 => '<a href="http://sulu.lo/de/test-2" title="Test-Title">Page-Title 2</a>',
                 $tag3 => '<a href="http://sulu.lo/de/test-1" title="Test-Title">Test-Content</a>',
                 $tag4 => '<a href="http://sulu.lo/de/test-1" title="Test-Title" target="_blank">Test-Content</a>',
@@ -319,8 +319,8 @@ class LinkTagTest extends TestCase
 
         $this->assertEquals(
             [
-                $tag1 => '<a href="http://sulu.lo/de/test-2" title="Page-Title 2">Page-Title 2</a>',
-                $tag2 => '<a href="http://sulu.lo/de/test-1" title="Page-Title 1">Page-Title 1</a>',
+                $tag1 => '<a href="http://sulu.lo/de/test-2">Page-Title 2</a>',
+                $tag2 => '<a href="http://sulu.lo/de/test-1">Page-Title 1</a>',
             ],
             $result
         );
@@ -354,8 +354,8 @@ class LinkTagTest extends TestCase
 
         $this->assertEquals(
             [
-                $tag1 => '<a href="http://sulu.lo/de/test-2" title="Page-Title 2">Page-Title 2</a>',
-                $tag2 => '<a href="http://sulu.lo/de/test-1" title="Page-Title 1">Page-Title 1</a>',
+                $tag1 => '<a href="http://sulu.lo/de/test-2">Page-Title 2</a>',
+                $tag2 => '<a href="http://sulu.lo/de/test-1">Page-Title 1</a>',
             ],
             $result
         );
