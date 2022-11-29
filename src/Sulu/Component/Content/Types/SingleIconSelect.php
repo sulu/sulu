@@ -21,12 +21,13 @@ class SingleIconSelect extends SimpleContentType
         parent::__construct('single_icon_select');
     }
 
-    public function getViewData(PropertyInterface $property)
+    public function getContentData(PropertyInterface $property)
     {
         $params = $property->getParams();
 
         $content = [
-            'iconSet' => $params['icon_set']->getValue()
+            'icon' => $property->getValue(),
+            'iconSet' => $params['icon_set']->getValue(),
         ];
 
         return $content;
