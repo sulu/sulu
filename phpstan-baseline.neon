@@ -4616,11 +4616,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
 
 		-
-			message: "#^Parameter \\#1 \\$locale of method Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryInterface\\:\\:findTranslationByLocale\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
-
-		-
 			message: "#^Parameter \\#1 \\$locale of method Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\KeywordInterface\\:\\:setLocale\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
@@ -4647,11 +4642,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\AbstractListBuilder\\:\\:where\\(\\) expects string, Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslationInterface given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
-
-		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\AbstractListBuilder\\:\\:where\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
 
