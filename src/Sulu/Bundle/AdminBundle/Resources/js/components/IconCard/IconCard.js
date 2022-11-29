@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import classNames from 'classnames';
-import singleIconSelectStyle from '../../containers/Form/fields/singleIconSelect.scss';
+import iconCardStyle from './iconCard.scss';
 
 type Props = {
     content: string,
@@ -25,15 +25,15 @@ export default class IconCard extends React.PureComponent<Props> {
         } = this.props;
 
         const classesNames = classNames(
-            singleIconSelectStyle.iconsOverlayItemContent,
+            iconCardStyle.iconCardContent,
             {
-                [singleIconSelectStyle.isSelected]: isSelected,
+                [iconCardStyle.isSelected]: isSelected,
             }
         );
 
         return (
             <div
-                className={singleIconSelectStyle.iconsOverlayItem}
+                className={iconCardStyle.iconCard}
                 onClick={this.handleClick}
                 role="button"
                 tabIndex="0"
@@ -41,7 +41,7 @@ export default class IconCard extends React.PureComponent<Props> {
                 <div className={classesNames}>
                     <div dangerouslySetInnerHTML={{__html: content}} />
 
-                    <div className={singleIconSelectStyle.iconsOverlayItemTitle}>
+                    <div className={iconCardStyle.iconCardTitle}>
                         {id}
                     </div>
                 </div>

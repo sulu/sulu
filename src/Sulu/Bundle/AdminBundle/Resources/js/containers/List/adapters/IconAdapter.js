@@ -3,8 +3,8 @@ import {observer} from 'mobx-react';
 import React from 'react';
 import FlatStructureStrategy from '../structureStrategies/FlatStructureStrategy';
 import DefaultLoadingStrategy from '../loadingStrategies/DefaultLoadingStrategy';
-import singleIconSelectStyle from '../../../containers/Form/fields/singleIconSelect.scss';
 import IconCard from '../../../components/IconCard/IconCard';
+import iconAdapterStyle from './iconAdapter.scss';
 import AbstractAdapter from './AbstractAdapter';
 
 @observer
@@ -16,8 +16,10 @@ class IconAdapter extends AbstractAdapter {
     static icon = 'su-magic';
 
     handleClick = (iconId: string) => {
-        if (this.props.onItemSelectionChange) {
-            this.props.onItemSelectionChange(iconId, !this.props.selections.includes(iconId));
+        const {onItemSelectionChange} = this.props;
+
+        if (onItemSelectionChange) {
+            onItemSelectionChange(iconId, !this.props.selections.includes(iconId));
         }
     };
 
@@ -27,7 +29,7 @@ class IconAdapter extends AbstractAdapter {
         } = this.props;
 
         return (
-            <div className={singleIconSelectStyle.iconsOverlayItems}>
+            <div className={iconAdapterStyle.iconCards}>
                 {data.map((icon) => this.renderIcon(icon))}
             </div>
         );

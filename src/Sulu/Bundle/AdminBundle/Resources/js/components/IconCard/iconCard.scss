@@ -1,21 +1,8 @@
 @import 'sulu-admin-bundle/containers/Application/colors.scss';
-@import 'sulu-admin-bundle/containers/Application/variables.scss';
 
 $iconsTextColor: #262626;
 
-.icon-item {
-    display: flex;
-    align-items: center;
-    height: 100%;
-}
-
-.icons-overlay-items {
-    display: flex;
-    flex-wrap: wrap;
-    margin: -16px;
-}
-
-.icons-overlay-item {
+.icon-card {
     width: 25%;
     padding: 16px;
 
@@ -28,7 +15,7 @@ $iconsTextColor: #262626;
     }
 }
 
-.icons-overlay-item-content {
+.icon-card-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -59,7 +46,7 @@ $iconsTextColor: #262626;
     }
 }
 
-.icons-overlay-item-title {
+.icon-card-title {
     display: block;
     width: 100%;
     margin-top: 10px;

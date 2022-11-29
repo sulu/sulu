@@ -48,6 +48,7 @@ class IconController extends AbstractRestController implements ClassResourceInte
      */
     public function cgetAction(Request $request)
     {
+        /** @var string $iconSetName */
         $iconSetName = $this->getRequestParameter($request, 'icon_set', true);
         $iconSet = (array) $this->iconSets[$iconSetName];
         $search = $request->query->get('search');
