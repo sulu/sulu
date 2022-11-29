@@ -104,6 +104,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         {
                             loader: MiniCssExtractPlugin.loader,
                         },
+                        // style loader not required in our setup
                         'css-loader',
                     ],
                 },
