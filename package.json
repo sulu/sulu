@@ -50,9 +50,9 @@
         "autoprefixer": "^10.4.7",
         "babel-jest": "^26.3.0",
         "babel-loader": "^8.0.6",
-        "clean-webpack-plugin": "^4.0.0",
         "core-js": "^3.18.0",
         "css-loader": "^5.2.4",
+        "css-minimizer-webpack-plugin": "^4.2.2",
         "dependency-cruiser": "^11.12.0",
         "empty": "^0.10.1",
         "enzyme": "^3.3.0",
@@ -71,11 +71,10 @@
         "identity-obj-proxy": "^3.0.0",
         "jest": "^26.4.2",
         "jest-canvas-mock": "^2.1.1",
-        "mini-css-extract-plugin": "^1.5.0",
+        "mini-css-extract-plugin": "^2.7.1",
         "mobx": "^4.0.0",
         "mobx-react": "^5.0.0",
         "moment-timezone": "^0.5.14",
-        "optimize-css-assets-webpack-plugin": "^6.0.1",
         "postcss": "^8.4.14",
         "postcss-calc": "^8.2.4",
         "postcss-hexrgba": "^2.1.0",
@@ -93,10 +92,9 @@
         "stylelint": "^14.9.1",
         "stylelint-config-standard-scss": "^5.0.0",
         "url-search-params-polyfill": "^8.0.0",
-        "webpack": "^4.27.0",
-        "webpack-clean-obsolete-chunks": "^0.4.0",
-        "webpack-cli": "^4.7.0",
-        "webpack-manifest-plugin": "^4.0.2"
+        "webpack": "^5.75.0",
+        "webpack-cli": "^5.0.0",
+        "webpack-manifest-plugin": "^5.0.0"
     },
     "jest": {
         "moduleNameMapper": {

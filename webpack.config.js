@@ -8,7 +8,6 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     env = env ? env : {};
     argv = argv ? argv : {};
 
-    const publicPath = env && env.public_path ? env.public_path : '/';
     const outputPath = env && env.output_path ? env.output_path : path.join('build', 'admin');
     // eslint-disable-next-line no-undef
     const projectRootPath = env && env.project_root_path ? env.project_root_path : __dirname;
@@ -31,19 +30,17 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     }
 
     const webpack = require(path.resolve(nodeModulesPath, 'webpack'));
-    const CleanObsoleteChunksPlugin = require(path.resolve(nodeModulesPath, 'webpack-clean-obsolete-chunks'));
-    const CleanWebpackPlugin = require(path.resolve(nodeModulesPath, 'clean-webpack-plugin')).CleanWebpackPlugin;
     const ManifestPlugin = require(path.resolve(nodeModulesPath, 'webpack-manifest-plugin')).WebpackManifestPlugin;
     const MiniCssExtractPlugin = require(path.resolve(nodeModulesPath, 'mini-css-extract-plugin'));
-    const OptimizeCssAssetsPlugin = require(path.resolve(nodeModulesPath, 'optimize-css-assets-webpack-plugin'));
+    const CssMinimizerPlugin = require(path.resolve(nodeModulesPath, 'css-minimizer-webpack-plugin'));
     const {styles} = require(path.resolve(nodeModulesPath, '@ckeditor/ckeditor5-dev-utils'));
 
     return {
         entry: [path.resolve(__dirname, 'index.js')], // eslint-disable-line no-undef
         output: {
-            path: path.resolve(projectRootPath, publicDir),
-            filename: outputPath + '/[name].[chunkhash].js',
-            publicPath,
+            clean: true,
+            path: path.resolve(projectRootPath, publicDir, outputPath),
+            filename: '[name].[chunkhash].js',
         },
         stats: 'minimal',
         performance: {
@@ -51,23 +48,29 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
         },
         devtool: argv.mode === 'development' ? 'eval-source-map' : 'source-map',
         plugins: [
-            new CleanWebpackPlugin({
-                cleanOnceBeforeBuildPatterns: [path.resolve(projectRootPath, publicDir, outputPath)],
-                dangerouslyAllowCleanPatternsOutsideProject: true,
-                dry: false,
-            }),
             new MiniCssExtractPlugin({
-                filename: outputPath + '/[name].[chunkhash].css',
+                filename: '[name].[chunkhash].css',
             }),
-            new OptimizeCssAssetsPlugin(),
+            new CssMinimizerPlugin(),
             new ManifestPlugin({
-                fileName: outputPath + '/manifest.json',
+                map: (file) => {
+                    // see https://github.com/shellscape/webpack-manifest-plugin/issues/229
+                    file.path = file.path.replace(/^auto\//, '/' + outputPath + '/');
+                    return file;
+                },
             }),
-            new CleanObsoleteChunksPlugin(),
             new webpack.DefinePlugin({
                 SULU_ADMIN_BUILD_VERSION: JSON.stringify(suluVersion),
             }),
         ],
+        optimization: {
+            minimizer: [
+                // For webpack@5 you can use the `...` syntax to extend existing minimizers
+                //      see: https://webpack.js.org/plugins/css-minimizer-webpack-plugin/
+                `...`, // eslint-disable-line quotes
+                new CssMinimizerPlugin(),
+            ],
+        },
         resolve: {
             alias: {
                 'fos-jsrouting': path.resolve(
@@ -100,10 +103,6 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                     use: [
                         {
                             loader: MiniCssExtractPlugin.loader,
-                            options: {
-                                // set path to public root from bundled css: https://github.com/sulu/sulu/pull/6225
-                                publicPath: path.relative(outputPath, '.'),
-                            },
                         },
                         'css-loader',
                     ],
@@ -113,16 +112,12 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                     use: [
                         {
                             loader: MiniCssExtractPlugin.loader,
-                            options: {
-                                // set path to public root from bundled css: https://github.com/sulu/sulu/pull/6225
-                                publicPath: path.relative(outputPath, '.'),
-                            },
                         },
                         {
                             loader: 'css-loader',
                             options: {
                                 modules: {
-                                    localIdentName: '[local]--[hash:base64:10]',
+                                    localIdentName: '[local]--[contenthash:base64:10]',
                                     exportLocalsConvention: 'camelCase',
                                 },
                                 importLoaders: 1,
@@ -140,10 +135,6 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                     use: [
                         {
                             loader: MiniCssExtractPlugin.loader,
-                            options: {
-                                // set path to public root from bundled css: https://github.com/sulu/sulu/pull/6225
-                                publicPath: path.relative(outputPath, '.'),
-                            },
                         },
                         {
                             loader: 'css-loader',
@@ -170,7 +161,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         {
                             loader: 'file-loader',
                             options: {
-                                name: outputPath + '/fonts/[name].[hash].[ext]',
+                                name: 'fonts/[name].[contenthash].[ext]',
                             },
                         },
                     ],
@@ -181,7 +172,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         {
                             loader: 'file-loader',
                             options: {
-                                name: outputPath + '/images/[name].[hash].[ext]',
+                                name: 'images/[name].[contenthash].[ext]',
                             },
                         },
                     ],
