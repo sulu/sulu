@@ -11,6 +11,7 @@ test('The valid email addresses', () => {
 });
 
 test('The invalid email addresses', () => {
+    expect(validateEmail(null)).toBe(false);
     expect(validateEmail('example')).toBe(false);
     expect(validateEmail('example@')).toBe(false);
     expect(validateEmail('example@localhost@')).toBe(false);
