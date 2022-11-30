@@ -16,7 +16,7 @@ Sulu requires now new versions of the following JS packages:
 - `is-email` was removed and replaced by `sulu-admin-bundle/utils/Email/validateEmail` method 
 
 If you created custom admin components you need to upgrade also
-upgrade your components. The core js will automatically be update
+that components. The core js will automatically be update
 via the [update build](https://docs.sulu.io/en/latest/upgrades/upgrade-2.x.html) command.
 
 ### Deprecated urls variable in return value of sulu_content_load
