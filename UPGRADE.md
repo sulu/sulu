@@ -2,6 +2,24 @@
 
 ## 2.6.0
 
+### Webpack 5 upgrade
+
+Sulu now uses Webpack 5 to build the administration interface application. To enable this, the following JavaScript dependencies were updated/changed:
+
+- `webpack`: `^5.75.0`
+- `webpack-cli`: `^5.0`
+- `webpack-manifest-plugin`: `^5.0.0`
+- `mini-css-extract-plugin`: `^2.7.1`
+- `optimize-css-assets-webpack-plugin` was removed replaced by `css-minimizer-webpack-plugin`: `^4.2.2`
+- `clean-webpack-plugin` was removed and replaced by `clean: true` webpack output option
+- `webpack-clean-obsolete-chunks` was removed and replaced by `clean: true` webpack output option
+- `is-email` was removed and replaced by `sulu-admin-bundle/utils/Email/validateEmail` method 
+
+If you have integrated custom JavaScript components into the administration interface,
+you might need to adjust your components to be compatible with the updated dependencies.
+If you have not integrated custom JavaScript code, you project is adjusted automatically by the
+[update build](https://docs.sulu.io/en/latest/upgrades/upgrade-2.x.html) command.
+
 ### Deprecated urls variable in return value of sulu_content_load
 
 The `urls` variable in the return value of the `sulu_content_load` function was deprecated.
