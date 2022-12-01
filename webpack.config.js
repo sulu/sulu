@@ -46,6 +46,10 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
         performance: {
             hints: false,
         },
+        snapshot: {
+            // detect changes in "node_modules/@sulu": https://github.com/webpack/webpack/issues/11612
+            managedPaths: [],
+        },
         devtool: argv.mode === 'development' ? 'eval-source-map' : 'source-map',
         plugins: [
             new MiniCssExtractPlugin({
