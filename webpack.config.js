@@ -65,9 +65,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
         ],
         optimization: {
             minimizer: [
-                // For webpack@5 you can use the `...` syntax to extend existing minimizers
-                //      see: https://webpack.js.org/plugins/css-minimizer-webpack-plugin/
-                `...`, // eslint-disable-line quotes
+                '...', // extend existing minimizers: https://webpack.js.org/plugins/css-minimizer-webpack-plugin/
                 new CssMinimizerPlugin(),
             ],
         },
