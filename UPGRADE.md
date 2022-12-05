@@ -20,6 +20,11 @@ you might need to adjust your components to be compatible with the updated depen
 If you have not integrated custom JavaScript code, you project is adjusted automatically by the
 [update build](https://docs.sulu.io/en/latest/upgrades/upgrade-2.x.html) command.
 
+Additionally, the following packages where upgraded:
+
+- `@ckeditor/ckeditor5-dev-utils`: `^31.1.0`
+- `@ckeditor/ckeditor5-*`: `^35.3.0`
+
 ### Deprecated urls variable in return value of sulu_content_load
 
 The `urls` variable in the return value of the `sulu_content_load` function was deprecated.
