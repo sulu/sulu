@@ -35,5 +35,9 @@
                 <cascade-persist/>
             </cascade>
         </one-to-many>
+
+        <indexes>
+            <index name="active_idx" columns="active"/>
+        </indexes>
     </mapped-superclass>
 </doctrine-mapping>
