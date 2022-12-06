@@ -8,7 +8,7 @@
         table="at_target_groups"
     >
         <indexes>
-            <index name="active_idx" columns="active"/>
+            <index name="idx_active" columns="active"/>
         </indexes>
 
         <id name="id" type="integer" column="id">

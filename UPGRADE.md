@@ -16,7 +16,7 @@ CREATE INDEX idx_history ON ro_routes (history);
 Only if you use audience targeting: Improve performance of the `AudienceTargeting` table with additional indexes for the database:
 
 ```sql
-CREATE INDEX active_idx ON `at_target_groups` (`active`);
+CREATE INDEX idx_active ON `at_target_groups` (`active`);
 ```
 
 ## 2.4.4
