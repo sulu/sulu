@@ -115,8 +115,8 @@ class PathCleanupTest extends TestCase
 
     public function emojiCleanupProvider(): \Generator
     {
-        yield ['a 😺, and a 🦁 go to 🏞️', 'a-grinning-cat-and-a-lion-go-to-national-park', 'en'];
-        yield ['Menus with 🍕 or 🍝', 'menus-with-pizza-or-spaghetti', 'en'];
-        yield ['Menus with 🍕 or 🍝', 'menus-with-or', 'unknown'];
+        yield 'default' => ['a 😺, and a 🦁 go to 🏞️', 'a-grinning-cat-and-a-lion-go-to-national-park', 'en'];
+        yield 'locale code with dash' => ['Menus with 🍕 or 🍝', 'menus-with-pizza-or-spaghetti', 'en-US'];
+        yield 'unknown locale' => ['Menus with 🍕 or 🍝', 'menus-with-or', 'unknown'];
     }
 }

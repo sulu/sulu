@@ -29,12 +29,7 @@ class PathCleanup implements PathCleanupInterface
     /**
      * @var SluggerInterface
      */
-    private $sluggerWithEmoji;
-
-    /**
-     * @var SluggerInterface
-     */
-    private $sluggerWithoutEmoji;
+    private $slugger;
 
     /**
      * valid pattern for path
@@ -59,13 +54,11 @@ class PathCleanup implements PathCleanupInterface
         }
 
         if (\method_exists($slugger, 'withEmoji')) {
-            $this->sluggerWithEmoji = $slugger->withEmoji();
-        } else {
-            $this->sluggerWithEmoji = $slugger;
+            $slugger = $slugger->withEmoji();
         }
 
         $this->replacers = $replacers;
-        $this->sluggerWithoutEmoji = $slugger;
+        $this->slugger = $slugger;
     }
 
     /**
@@ -85,6 +78,7 @@ class PathCleanup implements PathCleanupInterface
                 $replacers,
                 isset($this->replacers[$languageCode]) ? $this->replacers[$languageCode] : []
             );
+            $languageCode = \str_replace('-', '_', $languageCode);
         }
 
         if (\count($replacers) > 0) {
@@ -113,11 +107,7 @@ class PathCleanup implements PathCleanupInterface
 
         $totalParts = \count($parts);
         foreach ($parts as $i => $part) {
-            try {
-                $slug = $this->sluggerWithEmoji->slug($part, '-', $languageCode);
-            } catch (\IntlException $e) { // handle unknown emoji transliterator id
-                $slug = $this->sluggerWithoutEmoji->slug($part, '-', $languageCode);
-            }
+            $slug = $this->slugger->slug($part, '-', $languageCode);
             $slug = $slug->lower();
             if (0 === $i || $i + 1 === $totalParts || !$slug->isEmpty()) {
                 $newParts[] = $slug->toString();
