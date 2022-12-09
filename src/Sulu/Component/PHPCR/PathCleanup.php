@@ -53,6 +53,10 @@ class PathCleanup implements PathCleanupInterface
             $slugger = new AsciiSlugger();
         }
 
+        if (\method_exists($slugger, 'withEmoji')) {
+            $slugger = $slugger->withEmoji();
+        }
+
         $this->replacers = $replacers;
         $this->slugger = $slugger;
     }
@@ -74,6 +78,7 @@ class PathCleanup implements PathCleanupInterface
                 $replacers,
                 isset($this->replacers[$languageCode]) ? $this->replacers[$languageCode] : []
             );
+            $languageCode = \str_replace('-', '_', $languageCode);
         }
 
         if (\count($replacers) > 0) {
