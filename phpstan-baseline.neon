@@ -30736,11 +30736,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Command\\\\CreateUserCommand\\:\\:getRoleNames\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Command\\\\CreateUserCommand\\:\\:interact\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
