@@ -354,25 +354,23 @@ class CreateUserCommand extends Command
     /**
      * Return the names of all the roles.
      *
-     * @return array
+     * @return array<string>
      *
      * @throws \RuntimeException If no roles exist
      */
-    private function getRoleNames()
+    private function getRoleNames(): array
     {
-        $roles = $this->roleRepository->findAllRoles();
+        $roles = $this->roleRepository->findAllRoles(['anonymous' => false]);
         $roleNames = [];
 
         foreach ($roles as $role) {
-            if (!$role->getAnonymous()) {
-                $roleNames[] = $role->getName();
-            }
+            $roleNames[] = $role->getName();
         }
 
         if (empty($roleNames)) {
-            throw new \RuntimeException(\sprintf(
+            throw new \RuntimeException(
                 'The system currently has no roles. Use the "sulu:security:role:create" command to create roles.'
-            ));
+            );
         }
 
         return $roleNames;
