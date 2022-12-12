@@ -7,6 +7,10 @@
         repository-class="Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepository"
         table="at_target_groups"
     >
+        <indexes>
+            <index name="idx_active" columns="active"/>
+        </indexes>
+
         <id name="id" type="integer" column="id">
             <generator strategy="AUTO"/>
         </id>
