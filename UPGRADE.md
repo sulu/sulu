@@ -407,6 +407,14 @@ CREATE INDEX idx_resource ON ro_routes (entity_id, entity_class);
 CREATE INDEX idx_history ON ro_routes (history);
 ```
 
+### Add indexes to audience targeting table
+
+Only if you use audience targeting: Improve performance of the `AudienceTargeting` table with additional indexes for the database:
+
+```sql
+CREATE INDEX idx_active ON `at_target_groups` (`active`);
+```
+
 ## 2.4.4
 
 ### Add indexes to activities table
