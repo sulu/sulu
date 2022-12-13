@@ -4756,7 +4756,7 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryRepository\\:\\:findDescendantCategoryResources\\(\\) should return array\\<array\\{id\\: int, resourceKey\\: string, depth\\: int\\}\\> but returns array\\<int, mixed\\>\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryRepository\\:\\:findDescendantCategoryResources\\(\\) should return array\\<array\\{id\\: int, resourceKey\\: string, depth\\: int\\}\\> but returns array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryRepository.php
 
@@ -9866,7 +9866,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByAccountId\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface\\> but returns array\\<int, mixed\\>\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByAccountId\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface\\> but returns array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
@@ -16396,7 +16396,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionRepository\\:\\:findDescendantCollectionResources\\(\\) should return array\\<array\\{id\\: int, resourceKey\\: string, depth\\: int\\}\\> but returns array\\<int, mixed\\>\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionRepository\\:\\:findDescendantCollectionResources\\(\\) should return array\\<array\\{id\\: int, resourceKey\\: string, depth\\: int\\}\\> but returns array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
@@ -16926,7 +16926,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMediaResourcesByCollection\\(\\) should return array\\<array\\{id\\: int, resourceKey\\: string, depth\\: int\\}\\> but returns array\\<int, mixed\\>\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMediaResourcesByCollection\\(\\) should return array\\<array\\{id\\: int, resourceKey\\: string, depth\\: int\\}\\> but returns array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
 
