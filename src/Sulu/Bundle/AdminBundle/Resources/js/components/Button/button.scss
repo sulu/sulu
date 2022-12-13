@@ -150,6 +150,10 @@ $iconColorActive: $white;
 
     &:hover:not(:disabled) {
         background-color: $silver;
+
+        &.active {
+            background-color: $scorpion;
+        }
     }
 
     &:disabled {
