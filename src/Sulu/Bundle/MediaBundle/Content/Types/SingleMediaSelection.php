@@ -22,10 +22,14 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollector;
+use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
@@ -34,7 +38,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
-class SingleMediaSelection extends SimpleContentType implements PreResolvableContentTypeInterface, PropertyMetadataMapperInterface
+class SingleMediaSelection extends SimpleContentType implements PreResolvableContentTypeInterface, PropertyMetadataMapperInterface, ReferenceContentTypeInterface
 {
     /**
      * @var MediaManagerInterface
@@ -185,5 +189,25 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         }
 
         return new PropertyMetadata($propertyMetadata->getName(), $mandatory, $singleMediaSelectionMetadata);
+    }
+
+    public function getReferences(PropertyValue $property, ReferenceCollector $referenceCollector): void
+    {
+        $data = $property->getValue();
+        if (!isset($data['id'])) {
+            return;
+        }
+
+        $media = $this->mediaManager->getById($data['id'], $referenceCollector->getReferenceLocale());
+
+        $referenceCollector->addReference(
+            MediaInterface::RESOURCE_KEY,
+            $data['id'],
+            $media->getName(),
+            'id',
+            MediaAdmin::SECURITY_CONTEXT,
+            Collection::class,
+            (string) $media->getCollection()
+        );
     }
 }

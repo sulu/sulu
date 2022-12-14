@@ -22,13 +22,19 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
+use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
+use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollector;
+use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -38,7 +44,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 /**
  * content type for image selection.
  */
-class MediaSelectionContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, PropertyMetadataMapperInterface
+class MediaSelectionContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, PropertyMetadataMapperInterface, ReferenceContentTypeInterface
 {
     /**
      * @var MediaManagerInterface
@@ -248,5 +254,26 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         }
 
         return new PropertyMetadata($propertyMetadata->getName(), $mandatory, $mediaSelectionMetadata);
+    }
+
+    public function getReferences(PropertyValue $property, ReferenceCollector $referenceCollector): void
+    {
+        $data = $property->getValue();
+        if (!isset($data['ids']) || !\is_array($data['ids'])) {
+            return;
+        }
+
+        foreach ($data['ids'] as $id) {
+            $media = $this->mediaManager->getById($id, $referenceCollector->getReferenceLocale());
+            $referenceCollector->addReference(
+                MediaInterface::RESOURCE_KEY,
+                $id,
+                $media->getName(),
+                'id',
+                MediaAdmin::SECURITY_CONTEXT,
+                Collection::class,
+                (string) $media->getCollection()
+            );
+        }
     }
 }

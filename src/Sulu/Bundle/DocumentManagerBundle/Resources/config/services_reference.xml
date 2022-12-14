@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sulu_document_manager.reference_subscriber"
+                 class="Sulu\Bundle\DocumentManagerBundle\Reference\Subscriber\DocumentReferenceSubscriber">
+            <argument type="tagged_iterator" tag="sulu_document_manager.reference_provider" index-by="alias"/>
+
+            <tag name="sulu_document_manager.event_subscriber" />
+        </service>
+
+        <service id="sulu_document.command.document_references"
+                 class="Sulu\Bundle\DocumentManagerBundle\Reference\Command\DocumentReferencesCommand">
+            <argument type="service" id="sulu_document_manager.default_session"/>
+            <argument type="service" id="sulu_core.webspace.webspace_manager"/>
+            <argument type="service" id="sulu_document_manager.document_manager"/>
+            <argument type="tagged_iterator" tag="sulu_document_manager.reference_provider" index-by="alias"/>
+
+            <tag name="console.command"/>
+        </service>
+
+    </services>
+</container>

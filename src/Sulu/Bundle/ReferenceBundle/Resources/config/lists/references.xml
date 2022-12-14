@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+<list xmlns="http://schemas.sulu.io/list-builder/list">
+    <key>references</key>
+
+    <properties>
+        <property
+            name="referenceResourceId"
+            translation="sulu_admin.id"
+            visibility="yes"
+            searchability="yes"
+            sortable="false"
+            width="shrink"
+        />
+
+        <property
+            name="referenceTitle"
+            translation="sulu_admin.title"
+            visibility="yes"
+            searchability="yes"
+            sortable="true"
+            width="auto"
+        >
+            <field-name>referenceTitle</field-name>
+            <entity-name>%sulu.model.reference.class%</entity-name>
+        </property>
+
+        <property
+            name="referenceResourceKey"
+            translation="sulu_admin.resource"
+            visibility="yes"
+            searchability="yes"
+            sortable="false"
+            width="auto"
+        >
+            <field-name>referenceResourceKey</field-name>
+            <entity-name>%sulu.model.reference.class%</entity-name>
+        </property>
+
+        <property
+            name="referenceCount"
+            translation="sulu_admin.reference.count"
+            visibility="yes"
+            searchability="yes"
+            sortable="true"
+            width="auto"
+        >
+            <field-name>referenceCount</field-name>
+            <entity-name>%sulu.model.reference.class%</entity-name>
+        </property>
+
+    </properties>
+</list>

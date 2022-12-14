@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="sulu_page.reference_provider" class="Sulu\Bundle\PageBundle\Reference\Provider\PageReferenceProvider">
+            <argument type="service" id="sulu.content.type_manager"/>
+            <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu_reference.reference_repository"/>
+            <argument type="service" id="sulu_document_manager.document_inspector"/>
+            <argument type="constant">Sulu\Component\Content\Compat\Structure::TYPE_PAGE</argument>
+
+            <tag name="sulu_document_manager.reference_provider" alias="page" />
+        </service>
+    </services>
+</container>
