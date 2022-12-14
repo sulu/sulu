@@ -17,7 +17,7 @@ exports[`Display a field with a required label 1`] = `
       <div>
         Test
       </div>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -41,11 +41,11 @@ exports[`Display a field with an error 1`] = `
       <div>
         Test
       </div>
-      <label
+      <div
         class="errorLabel"
       >
         Error! Help!
-      </label>
+      </div>
     </div>
   </div>
 </div>
@@ -62,7 +62,7 @@ exports[`Display a field with colSpan and after space 1`] = `
       <div>
         Test
       </div>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -81,12 +81,12 @@ exports[`Display a field with description 1`] = `
       <div>
         Test
       </div>
-      <label
+      <div
         class="descriptionLabel"
       >
         Testdescription
-      </label>
-      <label
+      </div>
+      <div
         class="errorLabel"
       />
     </div>
@@ -110,7 +110,7 @@ exports[`Display a field with label 1`] = `
       <p>
         Test
       </p>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -149,7 +149,7 @@ exports[`Display a field with label and type 1`] = `
       <p>
         Test
       </p>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -168,7 +168,7 @@ exports[`Display a field without label 1`] = `
       <p>
         Test
       </p>
-      <label
+      <div
         class="errorLabel"
       />
     </div>

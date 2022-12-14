@@ -66,7 +66,7 @@ exports[`Render overlay with a URL 1`] = `
           value="www.sulu.io"
         />
       </div>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -121,7 +121,7 @@ exports[`Render overlay with a URL 1`] = `
           />
         </button>
       </div>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -145,7 +145,7 @@ exports[`Render overlay with a URL 1`] = `
           value=""
         />
       </div>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -173,7 +173,7 @@ exports[`Render overlay with a URL 1`] = `
           sulu_admin.no_follow
         </div>
       </label>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -247,7 +247,7 @@ exports[`Render overlay with an undefined URL 1`] = `
           value=""
         />
       </div>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -302,7 +302,7 @@ exports[`Render overlay with an undefined URL 1`] = `
           />
         </button>
       </div>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -326,7 +326,7 @@ exports[`Render overlay with an undefined URL 1`] = `
           value=""
         />
       </div>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -354,7 +354,7 @@ exports[`Render overlay with an undefined URL 1`] = `
           sulu_admin.no_follow
         </div>
       </label>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -428,7 +428,7 @@ exports[`Render overlay with mailto URL 1`] = `
           value="test@example.org"
         />
       </div>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -452,7 +452,7 @@ exports[`Render overlay with mailto URL 1`] = `
           value="Subject"
         />
       </div>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -473,7 +473,7 @@ exports[`Render overlay with mailto URL 1`] = `
       >
         Body
       </textarea>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -497,7 +497,7 @@ exports[`Render overlay with mailto URL 1`] = `
           value=""
         />
       </div>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
@@ -525,7 +525,7 @@ exports[`Render overlay with mailto URL 1`] = `
           sulu_admin.no_follow
         </div>
       </label>
-      <label
+      <div
         class="errorLabel"
       />
     </div>

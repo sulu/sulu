@@ -57,7 +57,7 @@ Array [
                       value=""
                     />
                   </div>
-                  <label
+                  <div
                     class="errorLabel"
                   />
                 </div>
@@ -112,7 +112,7 @@ Array [
                       />
                     </button>
                   </div>
-                  <label
+                  <div
                     class="errorLabel"
                   />
                 </div>
@@ -142,12 +142,12 @@ Array [
                       sulu_audience_targeting.add_condition
                     </span>
                   </button>
-                  <label
+                  <div
                     class="descriptionLabel"
                   >
                     sulu_audience_targeting.conditions_info_text
-                  </label>
-                  <label
+                  </div>
+                  <div
                     class="errorLabel"
                   />
                 </div>
