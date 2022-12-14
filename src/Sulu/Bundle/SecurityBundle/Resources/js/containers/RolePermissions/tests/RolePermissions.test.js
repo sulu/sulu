@@ -320,7 +320,7 @@ test('Call onChange callback when new matrix for system is added', () => {
         rolePermissions.update();
         expect(rolePermissions.find('Matrix')).toHaveLength(2);
 
-        rolePermissions.find('Matrix').find('Row[name="2"] Item[icon="su-eye"] > div').simulate('click');
+        rolePermissions.find('Matrix').find('Row[name="2"] Item[icon="su-eye"] > button').simulate('click');
 
         expect(changeSpy).toHaveBeenLastCalledWith({
             '1': {
