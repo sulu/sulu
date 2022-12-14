@@ -56,51 +56,56 @@ exports[`Render matrix with correct given values 2`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected"
             title="View"
+            type="button"
           >
             <span
               aria-label="su-eye"
               class="su-eye"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item"
             title="Add"
+            type="button"
           >
             <span
               aria-label="su-plus-circle"
               class="su-plus-circle"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="Edit"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="Delete"
+            type="button"
           >
             <span
               aria-label="su-trash-alt"
               class="su-trash-alt"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item"
             title="Security"
+            type="button"
           >
             <span
               aria-label="su-lock"
               class="su-lock"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"
@@ -120,51 +125,56 @@ exports[`Render matrix with correct given values 2`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected"
             title="View"
+            type="button"
           >
             <span
               aria-label="su-eye"
               class="su-eye"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="Add"
+            type="button"
           >
             <span
               aria-label="su-plus-circle"
               class="su-plus-circle"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="Edit"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item"
             title="Delete"
+            type="button"
           >
             <span
               aria-label="su-trash-alt"
               class="su-trash-alt"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item"
             title="Security"
+            type="button"
           >
             <span
               aria-label="su-lock"
               class="su-lock"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"

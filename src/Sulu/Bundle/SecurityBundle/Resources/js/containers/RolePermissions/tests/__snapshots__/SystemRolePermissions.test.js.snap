@@ -42,33 +42,36 @@ exports[`Render permissions for a single system 1`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected"
             title="View"
+            type="button"
           >
             <span
               aria-label="su-eye"
               class="su-eye"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item"
             title="Add"
+            type="button"
           >
             <span
               aria-label="su-plus-circle"
               class="su-plus-circle"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="Edit"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"
@@ -88,33 +91,36 @@ exports[`Render permissions for a single system 1`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item"
             title="View"
+            type="button"
           >
             <span
               aria-label="su-eye"
               class="su-eye"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="Add"
+            type="button"
           >
             <span
               aria-label="su-plus-circle"
               class="su-plus-circle"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item"
             title="Edit"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"
