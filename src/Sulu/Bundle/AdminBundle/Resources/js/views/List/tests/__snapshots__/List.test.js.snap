@@ -82,7 +82,7 @@ Array [
                         />
                       </button>
                     </div>
-                    <label
+                    <div
                       class="errorLabel"
                     />
                   </div>
@@ -130,7 +130,7 @@ Array [
                         />
                       </button>
                     </div>
-                    <label
+                    <div
                       class="errorLabel"
                     />
                   </div>
@@ -182,7 +182,7 @@ Array [
                         />
                       </button>
                     </div>
-                    <label
+                    <div
                       class="errorLabel"
                     />
                   </div>
@@ -232,7 +232,7 @@ Array [
                         />
                       </button>
                     </div>
-                    <label
+                    <div
                       class="errorLabel"
                     />
                   </div>

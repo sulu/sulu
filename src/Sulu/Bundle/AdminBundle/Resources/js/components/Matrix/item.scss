@@ -2,6 +2,7 @@
 
 $itemColor: $shakespeare;
 $itemBorderColor: $shakespeare;
+$itemBackgroundColor: $white;
 
 $itemBackgroundColorSelected: $shakespeare;
 $itemColorSelected: $white;
@@ -13,6 +14,7 @@ $itemBackgroundColorDisabledSelected: $silver;
 
 .item {
     align-items: center;
+    background-color: $itemBackgroundColor;
     border-radius: 6px;
     border: 1px solid $itemBorderColor;
     color: $itemColor;
@@ -21,6 +23,7 @@ $itemBackgroundColorDisabledSelected: $silver;
     font-size: 16px;
     justify-content: center;
     margin-right: 5px;
+    padding: 0;
     text-align: center;
     height: 26px;
     width: 26px;

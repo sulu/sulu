@@ -100,7 +100,7 @@ Array [
                     />
                   </button>
                 </div>
-                <label
+                <div
                   class="errorLabel"
                 />
               </div>

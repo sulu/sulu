@@ -36,7 +36,7 @@ exports[`Render section with children 1`] = `
           />
         </div>
       </div>
-      <label
+      <div
         class="errorLabel"
       />
     </div>
