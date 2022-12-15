@@ -21,6 +21,19 @@ export default class Folder extends React.PureComponent<Props> {
         }
     };
 
+    handleKeypress = (event: SyntheticKeyboardEvent<HTMLElement>) => {
+        const {onClick, id} = this.props;
+
+        if (!onClick) {
+            return;
+        }
+
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.stopPropagation();
+            onClick(id);
+        }
+    };
+
     render() {
         const {
             hasPermissions,
@@ -32,6 +45,7 @@ export default class Folder extends React.PureComponent<Props> {
             <div
                 className={folderStyles.folder}
                 onClick={this.handleClick}
+                onKeyPress={this.handleKeypress}
                 role="button"
                 tabIndex="0"
             >
