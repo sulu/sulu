@@ -3,7 +3,7 @@
 exports[`Render a basic Masonry view with the MediaCardOverviewAdapter 1`] = `
 <section>
   <div>
-    <div
+    <ul
       class="masonry"
     >
       <li
@@ -274,7 +274,7 @@ exports[`Render a basic Masonry view with the MediaCardOverviewAdapter 1`] = `
           </div>
         </div>
       </li>
-    </div>
+    </ul>
   </div>
   <div
     class="indicator"

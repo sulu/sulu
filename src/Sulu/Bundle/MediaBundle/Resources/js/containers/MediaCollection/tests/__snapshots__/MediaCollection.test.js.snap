@@ -290,7 +290,7 @@ exports[`Render the MediaCollection 1`] = `
     >
       <section>
         <div>
-          <div
+          <ul
             class="masonry"
           >
             <li
@@ -561,7 +561,7 @@ exports[`Render the MediaCollection 1`] = `
                 </div>
               </div>
             </li>
-          </div>
+          </ul>
         </div>
         <div
           class="indicator"
@@ -856,7 +856,7 @@ exports[`Render the MediaCollection for all media 1`] = `
     >
       <section>
         <div>
-          <div
+          <ul
             class="masonry"
           >
             <li
@@ -1127,7 +1127,7 @@ exports[`Render the MediaCollection for all media 1`] = `
                 </div>
               </div>
             </li>
-          </div>
+          </ul>
         </div>
         <div
           class="indicator"
