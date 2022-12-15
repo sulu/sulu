@@ -22,42 +22,46 @@ exports[`Render in disabled state 1`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected disabled"
             title="sulu_security.view"
+            type="button"
           >
             <span
               aria-label="su-eye"
               class="su-eye"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected disabled"
             title="sulu_security.add"
+            type="button"
           >
             <span
               aria-label="su-plus-circle"
               class="su-plus-circle"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected disabled"
             title="sulu_security.edit"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected disabled"
             title="sulu_security.delete"
+            type="button"
           >
             <span
               aria-label="su-trash-alt"
               class="su-trash-alt"
             />
-          </div>
+          </button>
         </td>
       </tr>
       <tr
@@ -71,42 +75,46 @@ exports[`Render in disabled state 1`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected disabled"
             title="sulu_security.view"
+            type="button"
           >
             <span
               aria-label="su-eye"
               class="su-eye"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected disabled"
             title="sulu_security.add"
+            type="button"
           >
             <span
               aria-label="su-plus-circle"
               class="su-plus-circle"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected disabled"
             title="sulu_security.edit"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected disabled"
             title="sulu_security.delete"
+            type="button"
           >
             <span
               aria-label="su-trash-alt"
               class="su-trash-alt"
             />
-          </div>
+          </button>
         </td>
       </tr>
     </tbody>
@@ -194,42 +202,46 @@ exports[`Render with empty webspace section 4`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected"
             title="sulu_security.view"
+            type="button"
           >
             <span
               aria-label="su-eye"
               class="su-eye"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.add"
+            type="button"
           >
             <span
               aria-label="su-plus-circle"
               class="su-plus-circle"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.edit"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.delete"
+            type="button"
           >
             <span
               aria-label="su-trash-alt"
               class="su-trash-alt"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"
@@ -249,42 +261,46 @@ exports[`Render with empty webspace section 4`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected"
             title="sulu_security.view"
+            type="button"
           >
             <span
               aria-label="su-eye"
               class="su-eye"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.add"
+            type="button"
           >
             <span
               aria-label="su-plus-circle"
               class="su-plus-circle"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.edit"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.delete"
+            type="button"
           >
             <span
               aria-label="su-trash-alt"
               class="su-trash-alt"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"
@@ -320,42 +336,46 @@ exports[`Render with minimal 1`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected"
             title="sulu_security.view"
+            type="button"
           >
             <span
               aria-label="su-eye"
               class="su-eye"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.add"
+            type="button"
           >
             <span
               aria-label="su-plus-circle"
               class="su-plus-circle"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.edit"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.delete"
+            type="button"
           >
             <span
               aria-label="su-trash-alt"
               class="su-trash-alt"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"
@@ -375,42 +395,46 @@ exports[`Render with minimal 1`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected"
             title="sulu_security.view"
+            type="button"
           >
             <span
               aria-label="su-eye"
               class="su-eye"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.add"
+            type="button"
           >
             <span
               aria-label="su-plus-circle"
               class="su-plus-circle"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.edit"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.delete"
+            type="button"
           >
             <span
               aria-label="su-trash-alt"
               class="su-trash-alt"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"
@@ -501,60 +525,66 @@ exports[`Render with webspace section 3`] = `
           <td
             class="items"
           >
-            <div
+            <button
               class="item selected"
               title="sulu_security.view"
+              type="button"
             >
               <span
                 aria-label="su-eye"
                 class="su-eye"
               />
-            </div>
-            <div
+            </button>
+            <button
               class="item selected"
               title="sulu_security.add"
+              type="button"
             >
               <span
                 aria-label="su-plus-circle"
                 class="su-plus-circle"
               />
-            </div>
-            <div
+            </button>
+            <button
               class="item selected"
               title="sulu_security.edit"
+              type="button"
             >
               <span
                 aria-label="su-pen"
                 class="su-pen"
               />
-            </div>
-            <div
+            </button>
+            <button
               class="item selected"
               title="sulu_security.delete"
+              type="button"
             >
               <span
                 aria-label="su-trash-alt"
                 class="su-trash-alt"
               />
-            </div>
-            <div
+            </button>
+            <button
               class="item"
               title="sulu_security.live"
+              type="button"
             >
               <span
                 aria-label="su-publish"
                 class="su-publish"
               />
-            </div>
-            <div
+            </button>
+            <button
               class="item"
               title="sulu_security.security"
+              type="button"
             >
               <span
                 aria-label="su-lock"
                 class="su-lock"
               />
-            </div>
+            </button>
             <button
               class="rowButton"
               type="button"
@@ -574,42 +604,46 @@ exports[`Render with webspace section 3`] = `
           <td
             class="items"
           >
-            <div
+            <button
               class="item"
               title="sulu_security.view"
+              type="button"
             >
               <span
                 aria-label="su-eye"
                 class="su-eye"
               />
-            </div>
-            <div
+            </button>
+            <button
               class="item"
               title="sulu_security.add"
+              type="button"
             >
               <span
                 aria-label="su-plus-circle"
                 class="su-plus-circle"
               />
-            </div>
-            <div
+            </button>
+            <button
               class="item"
               title="sulu_security.edit"
+              type="button"
             >
               <span
                 aria-label="su-pen"
                 class="su-pen"
               />
-            </div>
-            <div
+            </button>
+            <button
               class="item"
               title="sulu_security.delete"
+              type="button"
             >
               <span
                 aria-label="su-trash-alt"
                 class="su-trash-alt"
               />
-            </div>
+            </button>
             <button
               class="rowButton"
               type="button"
@@ -629,42 +663,46 @@ exports[`Render with webspace section 3`] = `
           <td
             class="items"
           >
-            <div
+            <button
               class="item"
               title="sulu_security.view"
+              type="button"
             >
               <span
                 aria-label="su-eye"
                 class="su-eye"
               />
-            </div>
-            <div
+            </button>
+            <button
               class="item"
               title="sulu_security.add"
+              type="button"
             >
               <span
                 aria-label="su-plus-circle"
                 class="su-plus-circle"
               />
-            </div>
-            <div
+            </button>
+            <button
               class="item"
               title="sulu_security.edit"
+              type="button"
             >
               <span
                 aria-label="su-pen"
                 class="su-pen"
               />
-            </div>
-            <div
+            </button>
+            <button
               class="item"
               title="sulu_security.delete"
+              type="button"
             >
               <span
                 aria-label="su-trash-alt"
                 class="su-trash-alt"
               />
-            </div>
+            </button>
             <button
               class="rowButton"
               type="button"
@@ -701,42 +739,46 @@ exports[`Render with webspace section 4`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected"
             title="sulu_security.view"
+            type="button"
           >
             <span
               aria-label="su-eye"
               class="su-eye"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.add"
+            type="button"
           >
             <span
               aria-label="su-plus-circle"
               class="su-plus-circle"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.edit"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.delete"
+            type="button"
           >
             <span
               aria-label="su-trash-alt"
               class="su-trash-alt"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"
@@ -756,42 +798,46 @@ exports[`Render with webspace section 4`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected"
             title="sulu_security.view"
+            type="button"
           >
             <span
               aria-label="su-eye"
               class="su-eye"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.add"
+            type="button"
           >
             <span
               aria-label="su-plus-circle"
               class="su-plus-circle"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.edit"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="sulu_security.delete"
+            type="button"
           >
             <span
               aria-label="su-trash-alt"
               class="su-trash-alt"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"

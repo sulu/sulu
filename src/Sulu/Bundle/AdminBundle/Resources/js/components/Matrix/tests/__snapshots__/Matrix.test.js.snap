@@ -17,33 +17,36 @@ exports[`Render the Matrix component 1`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item"
             title="View"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item"
             title="Edit"
+            type="button"
           >
             <span
               aria-label="su-plus"
               class="su-plus"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item"
             title="Delete"
+            type="button"
           >
             <span
               aria-label="su-trash-alt"
               class="su-trash-alt"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"
@@ -63,15 +66,16 @@ exports[`Render the Matrix component 1`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item"
             title="View"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"
@@ -91,24 +95,26 @@ exports[`Render the Matrix component 1`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item"
             title="View"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item"
             title="Edit"
+            type="button"
           >
             <span
               aria-label="su-plus"
               class="su-plus"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"
@@ -139,33 +145,36 @@ exports[`Render the Matrix component with values 1`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected"
             title="View"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected"
             title="Edit"
+            type="button"
           >
             <span
               aria-label="su-plus"
               class="su-plus"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item"
             title="Delete"
+            type="button"
           >
             <span
               aria-label="su-trash-alt"
               class="su-trash-alt"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"
@@ -185,15 +194,16 @@ exports[`Render the Matrix component with values 1`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected"
             title="View"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"
@@ -213,24 +223,26 @@ exports[`Render the Matrix component with values 1`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected"
             title="View"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item"
             title="Edit"
+            type="button"
           >
             <span
               aria-label="su-plus"
               class="su-plus"
             />
-          </div>
+          </button>
           <button
             class="rowButton"
             type="button"
@@ -261,33 +273,36 @@ exports[`Render the Matrix component with values in disabled state 1`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected disabled"
             title="View"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item selected disabled"
             title="Edit"
+            type="button"
           >
             <span
               aria-label="su-plus"
               class="su-plus"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item disabled"
             title="Delete"
+            type="button"
           >
             <span
               aria-label="su-trash-alt"
               class="su-trash-alt"
             />
-          </div>
+          </button>
         </td>
       </tr>
       <tr
@@ -301,15 +316,16 @@ exports[`Render the Matrix component with values in disabled state 1`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected disabled"
             title="View"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
+          </button>
         </td>
       </tr>
       <tr
@@ -323,24 +339,26 @@ exports[`Render the Matrix component with values in disabled state 1`] = `
         <td
           class="items"
         >
-          <div
+          <button
             class="item selected disabled"
             title="View"
+            type="button"
           >
             <span
               aria-label="su-pen"
               class="su-pen"
             />
-          </div>
-          <div
+          </button>
+          <button
             class="item disabled"
             title="Edit"
+            type="button"
           >
             <span
               aria-label="su-plus"
               class="su-plus"
             />
-          </div>
+          </button>
         </td>
       </tr>
     </tbody>

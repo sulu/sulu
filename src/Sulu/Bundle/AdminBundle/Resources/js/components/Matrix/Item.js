@@ -52,9 +52,14 @@ export default class Item extends React.PureComponent<Props> {
         const itemTitle = title ? title : name.charAt(0).toUpperCase() + name.slice(1);
 
         return (
-            <div className={itemClass} onClick={!disabled ? this.handleClick : undefined} title={itemTitle}>
+            <button
+                className={itemClass}
+                onClick={!disabled ? this.handleClick : undefined}
+                title={itemTitle}
+                type="button"
+            >
                 <Icon name={icon} />
-            </div>
+            </button>
         );
     }
 }
