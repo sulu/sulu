@@ -58,6 +58,10 @@ $darkIconColor: $doveGray;
             background-color: $inputDisabledBackgroundColor;
             -webkit-text-fill-color: $inputDisabledColor; /* Necessary for Safari and iOS */
         }
+
+        &:focus-visible {
+            outline-offset: 0;
+        }
     }
 
     &.left {
