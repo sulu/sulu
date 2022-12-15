@@ -15,10 +15,29 @@ $inputBackgroundColor: $white;
     box-sizing: border-box;
 }
 
-*:focus-visible {
+:focus-visible {
     outline-width: 2px;
     outline-style: solid;
     outline-offset: -2px;
+}
+
+/* Fallback for browsers without :focus-visible support */
+@supports not selector(:focus-visible) {
+    :focus {
+        outline-width: 2px;
+        outline-style: solid;
+        outline-offset: -2px;
+    }
+}
+
+:focus {
+    outline-width: 2px;
+    outline-style: solid;
+    outline-offset: -2px;
+}
+
+:focus:not(:focus-visible) {
+    outline: none;
 }
 
 html {
