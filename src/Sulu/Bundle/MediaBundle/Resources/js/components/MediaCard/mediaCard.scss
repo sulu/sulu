@@ -45,6 +45,10 @@ $downloadButtonBorderColorActive: $shakespeare;
     border-radius: $mediaCardBorderRadius 0 0 0;
     background-color: $headerBackgroundColor;
 
+    &:focus .checkbox {
+        margin-left: 0;
+    }
+
     .no-download-list & {
         border-radius: $mediaCardBorderRadius $mediaCardBorderRadius 0 0;
     }
@@ -64,6 +68,7 @@ $downloadButtonBorderColorActive: $shakespeare;
     border-radius: 0 $mediaCardBorderRadius 0 0;
 
     &:hover,
+    &:focus,
     &.active {
         background-color: $downloadButtonBackgroundColorActive;
         color: $downloadButtonTextColorActive;
@@ -75,6 +80,10 @@ $downloadButtonBorderColorActive: $shakespeare;
     margin-left: -26px;
     will-change: margin-left;
     transition: margin-left .15s linear;
+
+    input[type='checkbox'] {
+        visibility: hidden;
+    }
 }
 
 .ghost-indicator {
@@ -119,6 +128,7 @@ $downloadButtonBorderColorActive: $shakespeare;
     }
 
     &:hover,
+    &:focus,
     .show-cover & {
         .cover {
             opacity: 1;
