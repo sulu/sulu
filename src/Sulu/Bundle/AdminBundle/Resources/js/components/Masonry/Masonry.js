@@ -37,7 +37,7 @@ export default class Masonry extends React.PureComponent<Props> {
         this.handleImagesLoading();
     }
 
-    setMasonryRef = (ref: ?ElementRef<'div'>) => {
+    setMasonryRef = (ref: ?ElementRef<'ul'>) => {
         this.masonryRef = ref;
     };
 
