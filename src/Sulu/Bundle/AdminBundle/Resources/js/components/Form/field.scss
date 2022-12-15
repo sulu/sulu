@@ -61,7 +61,7 @@ $errorLabelHeight: 20px;
     color: $labelColor;
     font-size: 10px;
     line-height: $errorLabelHeight;
-    height: $errorLabelHeight;
+    min-height: $errorLabelHeight;
 
     .dark & {
         color: $labelDarkColor;
