@@ -10,6 +10,7 @@ exports[`Render a MediaCard component 1`] = `
     <div
       class="description"
       role="button"
+      tabindex="0"
     >
       <div
         class="title"
@@ -78,6 +79,7 @@ exports[`Render a MediaCard component 1`] = `
   <div
     class="media"
     role="button"
+    tabindex="0"
   >
     <img
       alt="Test"
@@ -100,6 +102,7 @@ exports[`Render a MediaCard component with MimeTypeIndicator if an error appeare
     <div
       class="description"
       role="button"
+      tabindex="0"
     >
       <div
         class="title"
@@ -168,6 +171,7 @@ exports[`Render a MediaCard component with MimeTypeIndicator if an error appeare
   <div
     class="media"
     role="button"
+    tabindex="0"
   >
     <div
       class="mimeTypeIndicator"
@@ -195,6 +199,7 @@ exports[`Render a MediaCard component with a checkbox for selection 1`] = `
     <div
       class="description"
       role="button"
+      tabindex="0"
     >
       <div
         class="title"
@@ -279,6 +284,7 @@ exports[`Render a MediaCard component with a checkbox for selection 1`] = `
   <div
     class="media"
     role="button"
+    tabindex="0"
   >
     <img
       alt="Test"
@@ -301,6 +307,7 @@ exports[`Render a MediaCard component with ghostLocale 1`] = `
     <div
       class="description"
       role="button"
+      tabindex="0"
     >
       <div
         class="title"
@@ -374,6 +381,7 @@ exports[`Render a MediaCard component with ghostLocale 1`] = `
   <div
     class="media"
     role="button"
+    tabindex="0"
   >
     <img
       alt="Test"
@@ -396,6 +404,7 @@ exports[`Render a MediaCard component with loader if image has not been loaded y
     <div
       class="description"
       role="button"
+      tabindex="0"
     >
       <div
         class="title"
@@ -464,6 +473,7 @@ exports[`Render a MediaCard component with loader if image has not been loaded y
   <div
     class="media"
     role="button"
+    tabindex="0"
   >
     <img
       alt="Test"
