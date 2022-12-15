@@ -100,7 +100,7 @@ exports[`Render block with schema 1`] = `
                     />
                   </div>
                 </div>
-                <label
+                <div
                   class="errorLabel"
                 />
               </div>
@@ -129,7 +129,7 @@ exports[`Render block with schema 1`] = `
                     />
                   </div>
                 </div>
-                <label
+                <div
                   class="errorLabel"
                 />
               </div>
@@ -228,7 +228,7 @@ exports[`Render block with schema 1`] = `
                     />
                   </div>
                 </div>
-                <label
+                <div
                   class="errorLabel"
                 />
               </div>
@@ -257,7 +257,7 @@ exports[`Render block with schema 1`] = `
                     />
                   </div>
                 </div>
-                <label
+                <div
                   class="errorLabel"
                 />
               </div>
@@ -388,7 +388,7 @@ exports[`Render block with schema and error on fields already being modified 1`]
                     />
                   </div>
                 </div>
-                <label
+                <div
                   class="errorLabel"
                 />
               </div>
@@ -488,11 +488,11 @@ exports[`Render block with schema and error on fields already being modified 1`]
                     />
                   </div>
                 </div>
-                <label
+                <div
                   class="errorLabel"
                 >
                   sulu_admin.error_minlength
-                </label>
+                </div>
               </div>
             </div>
           </div>
@@ -589,7 +589,7 @@ exports[`Render block with schema and error on fields already being modified 1`]
                     />
                   </div>
                 </div>
-                <label
+                <div
                   class="errorLabel"
                 />
               </div>
@@ -720,7 +720,7 @@ exports[`Render block with schema and error on fields already being modified 2`]
                     />
                   </div>
                 </div>
-                <label
+                <div
                   class="errorLabel"
                 />
               </div>
@@ -820,11 +820,11 @@ exports[`Render block with schema and error on fields already being modified 2`]
                     />
                   </div>
                 </div>
-                <label
+                <div
                   class="errorLabel"
                 >
                   sulu_admin.error_minlength
-                </label>
+                </div>
               </div>
             </div>
           </div>
@@ -922,11 +922,11 @@ exports[`Render block with schema and error on fields already being modified 2`]
                     />
                   </div>
                 </div>
-                <label
+                <div
                   class="errorLabel"
                 >
                   sulu_admin.error_minlength
-                </label>
+                </div>
               </div>
             </div>
           </div>

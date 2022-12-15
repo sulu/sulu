@@ -141,13 +141,13 @@ class Field<T: string | number> extends React.Component<Props<T>> {
                     }
                     {children}
                     {description &&
-                        <label className={fieldStyles.descriptionLabel}>
+                        <div className={fieldStyles.descriptionLabel}>
                             {description}
-                        </label>
+                        </div>
                     }
-                    <label className={fieldStyles.errorLabel}>
+                    <div className={fieldStyles.errorLabel}>
                         {error}
-                    </label>
+                    </div>
                 </div>
             </Grid.Item>
         );
