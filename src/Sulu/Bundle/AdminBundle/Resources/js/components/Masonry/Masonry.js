@@ -155,12 +155,12 @@ export default class Masonry extends React.PureComponent<Props> {
         const clonedItems = this.cloneItems(children);
 
         return (
-            <div
+            <ul
                 className={masonryStyles.masonry}
                 ref={this.setMasonryRef}
             >
                 {clonedItems}
-            </div>
+            </ul>
         );
     }
 }
