@@ -121,7 +121,7 @@ class MediaCard extends React.Component<Props> {
             onSelectionChange,
         } = this.props;
 
-        if (!onSelectionChange || !id) {
+        if (!onSelectionChange) {
             return;
         }
 
