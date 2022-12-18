@@ -304,7 +304,7 @@ exports[`Render a simple MediaOverview 1`] = `
     >
       <section>
         <div>
-          <div
+          <ul
             class="masonry"
           >
             <li
@@ -575,7 +575,7 @@ exports[`Render a simple MediaOverview 1`] = `
                 </div>
               </div>
             </li>
-          </div>
+          </ul>
         </div>
         <div
           class="indicator"

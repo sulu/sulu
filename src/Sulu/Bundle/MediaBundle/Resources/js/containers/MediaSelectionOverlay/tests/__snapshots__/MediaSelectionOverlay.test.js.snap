@@ -346,7 +346,7 @@ Array [
                 >
                   <section>
                     <div>
-                      <div
+                      <ul
                         class="masonry"
                         style="position: relative; height: 0px;"
                       >
@@ -618,7 +618,7 @@ Array [
                             </div>
                           </div>
                         </li>
-                      </div>
+                      </ul>
                     </div>
                     <div
                       class="indicator"
@@ -1038,7 +1038,7 @@ Array [
                 >
                   <section>
                     <div>
-                      <div
+                      <ul
                         class="masonry"
                         style="position: relative; height: 0px;"
                       >
@@ -1310,7 +1310,7 @@ Array [
                             </div>
                           </div>
                         </li>
-                      </div>
+                      </ul>
                     </div>
                     <div
                       class="indicator"

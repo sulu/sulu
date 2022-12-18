@@ -2,7 +2,7 @@
 
 exports[`Render a Masonry container with items 1`] = `
 <div>
-  <div
+  <ul
     class="masonry"
     style="position: relative; height: 0px;"
   >
@@ -33,13 +33,13 @@ exports[`Render a Masonry container with items 1`] = `
         />
       </div>
     </li>
-  </div>
+  </ul>
 </div>
 `;
 
 exports[`Render an empty Masonry container 1`] = `
 <div>
-  <div
+  <ul
     class="masonry"
     style="position: relative; height: 0px;"
   />
