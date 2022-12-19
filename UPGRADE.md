@@ -2,6 +2,10 @@
 
 ## 2.6.0
 
+### Admin Build directory moved to dist
+
+The admin build directory was moved from `public/build/admin` to `public/dist/admin` to avoid conflicts with webpack encore.
+
 ### Webpack 5 upgrade
 
 Sulu now uses Webpack 5 to build the administration interface application. To enable this, the following JavaScript dependencies were updated/changed:
