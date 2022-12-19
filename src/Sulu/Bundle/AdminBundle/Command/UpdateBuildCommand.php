@@ -219,12 +219,20 @@ class UpdateBuildCommand extends Command
         ];
 
         foreach ($oldBuildDirs as $oldBuildDir) {
-            if ($filesystem->exists($this->projectDir . $oldBuildDir)) {
-                if ('y' === \strtolower(
-                    $ui->ask(\sprintf('Old admin build directory (%s) detected, move to new directory (%s))?', $oldBuildDir, static::BUILD_DIR), 'y')
-                )) {
-                    $filesystem->rename($this->projectDir . $oldBuildDir, $this->projectDir . static::BUILD_DIR);
+            if (!$filesystem->exists($this->projectDir . $oldBuildDir)) {
+                continue;
+            }
+
+            if ('y' === \strtolower(
+                $ui->ask(\sprintf('Old admin build directory (%s) detected, move to new directory (%s))?', $oldBuildDir, static::BUILD_DIR), 'y')
+            )) {
+                if ($filesystem->exists($this->projectDir . static::BUILD_DIR)) {
+                    $filesystem->remove($this->projectDir . $oldBuildDir);
+
+                    continue;
                 }
+
+                $filesystem->rename($this->projectDir . $oldBuildDir, $this->projectDir . static::BUILD_DIR);
             }
         }
 
