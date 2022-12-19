@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default class Masonry extends React.PureComponent<Props> {
-    masonryRef: ?ElementRef<'div'>;
+    masonryRef: ?ElementRef<'ul'>;
 
     masonry: typeof MasonryLayout;
 
@@ -37,7 +37,7 @@ export default class Masonry extends React.PureComponent<Props> {
         this.handleImagesLoading();
     }
 
-    setMasonryRef = (ref: ?ElementRef<'div'>) => {
+    setMasonryRef = (ref: ?ElementRef<'ul'>) => {
         this.masonryRef = ref;
     };
 
@@ -155,12 +155,12 @@ export default class Masonry extends React.PureComponent<Props> {
         const clonedItems = this.cloneItems(children);
 
         return (
-            <div
+            <ul
                 className={masonryStyles.masonry}
                 ref={this.setMasonryRef}
             >
                 {clonedItems}
-            </div>
+            </ul>
         );
     }
 }
