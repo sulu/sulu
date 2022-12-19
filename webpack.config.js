@@ -90,7 +90,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                 {
                     test: /\.js$/,
                     // eslint-disable-next-line max-len
-                    exclude: /node_modules[/\\](?!(sulu-(.*)-bundle|@ckeditor|ckeditor5)[/\\])/,
+                    exclude: /node_modules[/\\](?!(sulu-(.*)-bundle|@ckeditor|ckeditor5|array-move)[/\\])/,
                     use: {
                         loader: 'babel-loader',
                         options: {

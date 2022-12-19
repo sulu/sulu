@@ -112,7 +112,7 @@
         ],
         "clearMocks": true,
         "transformIgnorePatterns": [
-            "node_modules/(?!(@ckeditor|ckeditor5)/)"
+            "node_modules/(?!(@ckeditor|ckeditor5|array-move)/)"
         ],
         "testPathIgnorePatterns": [
             "vendor/friendsofsymfony"
