@@ -31,7 +31,7 @@ final class FormOfAddressProvider implements FormOfAddressProviderInterface
             ],
             [
                 'name' => '2',
-                'title' => $this->translator->trans('sulu_contact.other_form_of_address', [], 'admin', $locale),
+                'title' => $this->translator->trans('sulu_contact.neutral_form_of_address', [], 'admin', $locale),
             ],
         ];
     }

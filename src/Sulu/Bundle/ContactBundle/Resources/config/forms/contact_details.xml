@@ -46,7 +46,7 @@
                     </params>
                 </property>
 
-                <property name="formOfAddress" type="single_select" colspan="3">
+                <property name="formOfAddress" type="single_select" mandatory="true" colspan="3">
                     <meta>
                         <title>sulu_contact.form_of_address</title>
                     </meta>
