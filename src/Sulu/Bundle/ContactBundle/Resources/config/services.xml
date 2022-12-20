@@ -210,5 +210,13 @@
         >
             <tag name="sulu_core.list_builder_filter_type" alias="country" />
         </service>
+
+        <service
+            id="sulu_contact.form_of_address_provider"
+            class="Sulu\Bundle\ContactBundle\Provider\FormOfAddressProvider"
+            public="true"
+        >
+            <argument type="service" id="translator"/>
+        </service>
     </services>
 </container>
