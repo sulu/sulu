@@ -134,9 +134,9 @@ class Contact extends ApiEntity implements ContactInterface
     protected $socialMediaProfiles;
 
     /**
-     * @var int
+     * @var int|null
      */
-    protected $formOfAddress = 0;
+    protected $formOfAddress;
 
     /**
      * @var string|null
