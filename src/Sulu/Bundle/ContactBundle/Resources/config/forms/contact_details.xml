@@ -51,19 +51,7 @@
                         <title>sulu_contact.form_of_address</title>
                     </meta>
                     <params>
-                        <param name="default_value" value="0"/>
-                        <param name="values" type="collection">
-                            <param name="0">
-                                <meta>
-                                    <title>sulu_contact.male_form_of_address</title>
-                                </meta>
-                            </param>
-                            <param name="1">
-                                <meta>
-                                    <title>sulu_contact.female_form_of_address</title>
-                                </meta>
-                            </param>
-                        </param>
+                        <param name="values" type="expression" value="service('sulu_contact.form_of_address_provider').getValues(locale)"/>
                     </params>
                 </property>
 

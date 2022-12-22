@@ -9756,12 +9756,12 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/BankAccount.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact\\:\\:getMainAccountContact\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact\\:\\:getFormOfAddress\\(\\) should return int but returns int\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/Contact.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact\\:\\:\\$formOfAddress type mapping mismatch\\: database can contain int\\|null but property expects int\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact\\:\\:getMainAccountContact\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/Contact.php
 
