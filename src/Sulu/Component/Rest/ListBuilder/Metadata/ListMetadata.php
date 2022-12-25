@@ -13,47 +13,44 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
 class ListMetadata
 {
-    /**
-     * @var string
-     */
-    private $resource;
+    private string $resource;
 
-    /**
-     * @var string
-     */
-    private $key;
+    private string $key;
 
     /**
      * @var AbstractPropertyMetadata[]
      */
-    private $propertiesMetadata = [];
+    private array $propertiesMetadata = [];
 
-    public function setResource($resource)
+    public function setResource(string $resource): void
     {
         $this->resource = $resource;
     }
 
-    public function getResource()
+    public function getResource(): string
     {
         return $this->resource;
     }
 
-    public function setKey(string $key)
+    public function setKey(string $key): void
     {
         $this->key = $key;
     }
 
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
 
-    public function getPropertiesMetadata()
+    /**
+     * @return AbstractPropertyMetadata[]
+     */
+    public function getPropertiesMetadata(): array
     {
         return $this->propertiesMetadata;
     }
 
-    public function addPropertyMetadata(AbstractPropertyMetadata $propertyMetadata)
+    public function addPropertyMetadata(AbstractPropertyMetadata $propertyMetadata): void
     {
         $this->propertiesMetadata[] = $propertyMetadata;
     }

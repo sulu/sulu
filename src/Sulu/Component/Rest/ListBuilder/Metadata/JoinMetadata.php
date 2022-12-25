@@ -24,83 +24,59 @@ class JoinMetadata
 
     public const JOIN_CONDITION_METHOD_WITH = 'WITH';
 
-    /**
-     * @var string
-     */
-    private $entityName;
+    private string $entityName;
 
-    /**
-     * @var string
-     */
-    private $entityField;
+    private string $entityField;
 
-    /**
-     * @var string
-     */
-    private $condition = null;
+    private ?string $condition = null;
 
     /**
      * @var 'ON'|'WITH'
      */
-    private $conditionMethod = self::JOIN_CONDITION_METHOD_WITH;
+    private string $conditionMethod = self::JOIN_CONDITION_METHOD_WITH;
 
     /**
      * Defines the join method (left, right or inner join).
      *
      * @var 'LEFT'|'INNER'|'RIGHT'
      */
-    private $method = self::JOIN_METHOD_LEFT;
+    private string $method = self::JOIN_METHOD_LEFT;
 
     /**
      * The name of the entity to join.
-     *
-     * @return string
      */
-    public function getEntityName()
+    public function getEntityName(): string
     {
         return $this->entityName;
     }
 
-    /**
-     * @param string $entityName
-     */
-    public function setEntityName($entityName)
+    public function setEntityName(string $entityName): void
     {
         $this->entityName = $entityName;
     }
 
     /**
      * The field, which should be joined.
-     *
-     * @return string
      */
-    public function getEntityField()
+    public function getEntityField(): string
     {
         return $this->entityField;
     }
 
-    /**
-     * @param string $entityField
-     */
-    public function setEntityField($entityField)
+    public function setEntityField(string $entityField): void
     {
         $this->entityField = $entityField;
     }
 
     /**
      * The additional condition which should apply to the join.
-     *
-     * @return string
      */
-    public function getCondition()
+    public function getCondition(): ?string
     {
         return $this->condition;
     }
 
-    /**
-     * @param string $condition
-     */
-    public function setCondition($condition)
+    public function setCondition(string $condition): void
     {
         $this->condition = $condition;
     }
@@ -108,7 +84,7 @@ class JoinMetadata
     /**
      * @return 'ON'|'WITH'
      */
-    public function getConditionMethod()
+    public function getConditionMethod(): string
     {
         return $this->conditionMethod;
     }
@@ -116,7 +92,7 @@ class JoinMetadata
     /**
      * @param 'ON'|'WITH' $conditionMethod
      */
-    public function setConditionMethod($conditionMethod)
+    public function setConditionMethod(string $conditionMethod): void
     {
         $this->conditionMethod = $conditionMethod;
     }
@@ -126,7 +102,7 @@ class JoinMetadata
      *
      * @return 'LEFT'|'INNER'|'RIGHT'
      */
-    public function getMethod()
+    public function getMethod(): string
     {
         return $this->method;
     }
@@ -134,7 +110,7 @@ class JoinMetadata
     /**
      * @param 'LEFT'|'INNER'|'RIGHT' $method
      */
-    public function setMethod($method)
+    public function setMethod(string $method): void
     {
         $this->method = $method;
     }

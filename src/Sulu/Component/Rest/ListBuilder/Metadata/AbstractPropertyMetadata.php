@@ -18,195 +18,120 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
  */
 abstract class AbstractPropertyMetadata
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $translation;
+    private string $translation;
 
-    /**
-     * @var string
-     */
-    private $visibility = FieldDescriptorInterface::VISIBILITY_NEVER;
+    private string $visibility = FieldDescriptorInterface::VISIBILITY_NEVER;
 
-    /**
-     * @var string
-     */
-    private $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER;
+    private string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER;
 
-    /**
-     * @var string
-     */
-    private $type = 'string';
+    private string $type = 'string';
 
-    /**
-     * @var bool
-     */
-    private $sortable = true;
+    private bool $sortable = true;
 
-    /**
-     * @var array
-     */
-    private $transformerTypeParameters;
+    /** @var array<mixed> */
+    private array $transformerTypeParameters;
 
-    /**
-     * @var string
-     */
-    private $filterType;
+    private string $filterType;
 
-    /**
-     * @var array
-     */
-    private $filterTypeParameters;
+    /** @var array<mixed> */
+    private array $filterTypeParameters;
 
-    /**
-     * @var string
-     */
-    private $width;
+    private string $width;
 
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $this->name = $name;
         // default for translation can be overwritten by setter
         $this->translation = \ucfirst($name);
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
-    public function getTranslation()
+    public function getTranslation(): string
     {
         return $this->translation;
     }
 
-    /**
-     * @param string $translation
-     */
-    public function setTranslation($translation)
+    public function setTranslation(string $translation): void
     {
         $this->translation = $translation;
     }
 
-    /**
-     * @return string
-     */
-    public function getVisibility()
+    public function getVisibility(): string
     {
         return $this->visibility;
     }
 
-    /**
-     * @param string $visibility
-     */
-    public function setVisibility($visibility)
+    public function setVisibility(string $visibility): void
     {
         $this->visibility = $visibility;
     }
 
-    /**
-     * @return string
-     */
-    public function getSearchability()
+    public function getSearchability(): string
     {
         return $this->searchability;
     }
 
-    /**
-     * @param string $searchability
-     */
-    public function setSearchability($searchability)
+    public function setSearchability(string $searchability): void
     {
         $this->searchability = $searchability;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     */
-    public function setType($type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
 
-    /**
-     * @return bool
-     */
-    public function isSortable()
+    public function isSortable(): bool
     {
         return $this->sortable;
     }
 
-    /**
-     * @param bool $sortable
-     */
-    public function setSortable($sortable)
+    public function setSortable(bool $sortable): void
     {
         $this->sortable = $sortable;
     }
 
-    /**
-     * @return array
-     */
-    public function getTransformerTypeParameters()
+    /** @return array<mixed> */
+    public function getTransformerTypeParameters(): array
     {
         return $this->transformerTypeParameters;
     }
 
-    /**
-     * @param array $transformerTypeParameters
-     */
-    public function setTransformerTypeParameters($transformerTypeParameters)
+    /** @param array<mixed> $transformerTypeParameters */
+    public function setTransformerTypeParameters(array $transformerTypeParameters): void
     {
         $this->transformerTypeParameters = $transformerTypeParameters;
     }
 
-    /**
-     * @return string
-     */
-    public function getFilterType()
+    public function getFilterType(): string
     {
         return $this->filterType;
     }
 
-    /**
-     * @param string $filterType
-     */
-    public function setFilterType($filterType)
+    public function setFilterType(string $filterType): void
     {
         $this->filterType = $filterType;
     }
 
-    /**
-     * @return array
-     */
-    public function getFilterTypeParameters()
+    /** @return array<mixed> */
+    public function getFilterTypeParameters(): array
     {
         return $this->filterTypeParameters;
     }
 
-    /**
-     * @param array $parameters
-     */
-    public function setFilterTypeParameters($parameters)
+    /** @param array<mixed> $parameters */
+    public function setFilterTypeParameters(array $parameters): void
     {
         $this->filterTypeParameters = $parameters;
     }

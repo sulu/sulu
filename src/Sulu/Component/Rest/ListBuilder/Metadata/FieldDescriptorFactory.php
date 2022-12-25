@@ -163,10 +163,15 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
         $joins = [];
         if ($fieldMetadata) {
             foreach ($fieldMetadata->getJoins() as $joinMetadata) {
+                $condition = $joinMetadata->getCondition();
+                if ($condition !== null) {
+                    $condition = $this->resolveOptions($condition, $options);
+                }
+
                 $joins[$joinMetadata->getEntityName()] = new DoctrineJoinDescriptor(
                     $this->resolveOptions($joinMetadata->getEntityName(), $options),
                     $this->resolveOptions($joinMetadata->getEntityField(), $options),
-                    $this->resolveOptions($joinMetadata->getCondition(), $options),
+                    $condition,
                     $joinMetadata->getMethod(),
                     $joinMetadata->getConditionMethod()
                 );
@@ -223,7 +228,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
             $propertyMetadata->isSortable(),
-            $this->resolveOptions($propertyMetadata->getDistinct(), $options),
+            $propertyMetadata->getDistinct(),
             $propertyMetadata->getWidth()
         );
     }
@@ -263,7 +268,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
             $propertyMetadata->getSearchability(),
             $propertyMetadata->getType(),
             $propertyMetadata->isSortable(),
-            $this->resolveOptions($propertyMetadata->getDistinct(), $options),
+            $propertyMetadata->getDistinct(),
             $propertyMetadata->getWidth()
         );
     }

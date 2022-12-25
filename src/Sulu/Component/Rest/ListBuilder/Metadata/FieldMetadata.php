@@ -16,20 +16,14 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata;
  */
 class FieldMetadata
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $entityName;
+    private string $entityName;
 
     /**
      * @var JoinMetadata[]
      */
-    private $joins = [];
+    private array $joins = [];
 
     public function __construct($name, $entityName)
     {
@@ -37,18 +31,12 @@ class FieldMetadata
         $this->entityName = $entityName;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
-    public function getEntityName()
+    public function getEntityName(): string
     {
         return $this->entityName;
     }
@@ -56,7 +44,7 @@ class FieldMetadata
     /**
      * @return JoinMetadata[]
      */
-    public function getJoins()
+    public function getJoins(): array
     {
         return $this->joins;
     }
@@ -64,12 +52,12 @@ class FieldMetadata
     /**
      * @param JoinMetadata[] $joins
      */
-    public function setJoins(array $joins)
+    public function setJoins(array $joins): void
     {
         $this->joins = $joins;
     }
 
-    public function addJoin(JoinMetadata $join)
+    public function addJoin(JoinMetadata $join): void
     {
         $this->joins[] = $join;
     }
