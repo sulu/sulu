@@ -168,9 +168,14 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
                     $condition = $this->resolveOptions($condition, $options);
                 }
 
+                $joinEntity = $joinMetadata->getEntityField();
+                if (null !== $joinEntity) {
+                    $joinEntity = $this->resolveOptions($joinEntity, $options);
+                }
+
                 $joins[$joinMetadata->getEntityName()] = new DoctrineJoinDescriptor(
                     $this->resolveOptions($joinMetadata->getEntityName(), $options),
-                    $this->resolveOptions($joinMetadata->getEntityField(), $options),
+                    $joinEntity,
                     $condition,
                     $joinMetadata->getMethod(),
                     $joinMetadata->getConditionMethod()

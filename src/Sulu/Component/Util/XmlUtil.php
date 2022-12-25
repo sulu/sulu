@@ -21,8 +21,10 @@ class XmlUtil
      *
      * @param string $path
      * @param \DOMNode $context
+     *
+     * @return bool|float|int|string|null
      */
-    public static function getValueFromXPath($path, \DOMXPath $xpath, \DOMNode $context = null, $default = null): mixed
+    public static function getValueFromXPath($path, \DOMXPath $xpath, \DOMNode $context = null, $default = null)
     {
         $result = $xpath->query($path, $context);
         if (0 === $result->length) {

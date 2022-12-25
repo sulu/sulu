@@ -149,7 +149,7 @@ class ListXmlLoader
             );
         }
 
-        $propertyMetadata->setFilterType(XmlUtil::getValueFromXPath('x:filter/@type', $xpath, $propertyNode));
+        $propertyMetadata->setFilterType((string) XmlUtil::getValueFromXPath('x:filter/@type', $xpath, $propertyNode));
 
         $filterParamNodes = $xpath->query('x:filter/x:params', $propertyNode);
         if (\count($filterParamNodes) > 0) {
@@ -242,7 +242,7 @@ class ListXmlLoader
             (string) XmlUtil::getValueFromXPath('@name', $xpath, $propertyNode)
         );
 
-        $propertyMetadata->setGlue(XmlUtil::getValueFromXPath('@glue', $xpath, $propertyNode) ?? ' ');
+        $propertyMetadata->setGlue((string) (XmlUtil::getValueFromXPath('@glue', $xpath, $propertyNode) ?? ' '));
 
         foreach ($xpath->query('x:field', $propertyNode) as $fieldNode) {
             if (null === $field = $this->getField($xpath, $fieldNode)) {

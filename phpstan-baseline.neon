@@ -54471,12 +54471,22 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
+			message: "#^Cannot cast mixed to int\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
+
+		-
 			message: "#^Left side of && is always true\\.$#"
 			count: 2
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder\\:\\:__construct\\(\\) has parameter \\$permissions with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder\\:\\:addAccessControl\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
@@ -55781,12 +55791,82 @@ parameters:
 			path: src/Sulu/Component/Rest/Listing/ListRestHelper.php
 
 		-
+			message: "#^Left side of && is always true\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:compareData\\(\\) has parameter \\$entities with no value type specified in iterable type Traversable\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:compareData\\(\\) has parameter \\$requestEntities with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:compareEntitiesWithData\\(\\) has parameter \\$entities with no value type specified in iterable type Traversable\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:compareEntitiesWithData\\(\\) has parameter \\$requestEntities with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:findMatchByCallback\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:findMatchByCallback\\(\\) has parameter \\$entity with no value type specified in iterable type Traversable\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:findMatchByCallback\\(\\) has parameter \\$matchedEntry with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:findMatchByCallback\\(\\) has parameter \\$requestEntities with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:initializeListBuilder\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
 
 		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:processSubEntities\\(\\) has parameter \\$entities with no value type specified in iterable type Traversable\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:processSubEntities\\(\\) has parameter \\$requestEntities with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
 			message: "#^Parameter \\#1 \\$filter of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:filter\\(\\) expects array, array\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
+			message: "#^Strict comparison using \\!\\=\\= between null and null will always evaluate to false\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
+			message: "#^Trying to invoke \\(callable\\(\\)\\: mixed\\)\\|null but it might not be a callable\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/RestHelper.php
+
+		-
+			message: "#^Variable \\$entities in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
 
@@ -58799,16 +58879,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Util\\\\WildcardUrlUtil\\:\\:resolve\\(\\) should return string but empty return statement found\\.$#"
 			count: 1
 			path: src/Sulu/Component/Util/WildcardUrlUtil.php
-
-		-
-			message: "#^Cannot access property \\$length on DOMNodeList\\<DOMNode\\>\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/XmlUtil.php
-
-		-
-			message: "#^Cannot call method item\\(\\) on DOMNodeList\\<DOMNode\\>\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/XmlUtil.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Util\\\\XmlUtil\\:\\:getBooleanValueFromXPath\\(\\) has parameter \\$default with no type specified\\.$#"

@@ -104,10 +104,10 @@ abstract class AbstractPropertyMetadata
         $this->sortable = $sortable;
     }
 
-    /** @return array<mixed> */
-    public function getTransformerTypeParameters(): array
+    /** @return array<mixed>|null */
+    public function getTransformerTypeParameters(): ?array
     {
-        return $this->transformerTypeParameters;
+        return $this->transformerTypeParameters ?? null;
     }
 
     /** @param array<mixed> $transformerTypeParameters */
@@ -126,10 +126,10 @@ abstract class AbstractPropertyMetadata
         $this->filterType = $filterType;
     }
 
-    /** @return array<mixed> */
-    public function getFilterTypeParameters(): array
+    /** @return array<mixed>|null */
+    public function getFilterTypeParameters(): ?array
     {
-        return $this->filterTypeParameters;
+        return $this->filterTypeParameters ?? null;
     }
 
     /** @param array<mixed> $parameters */

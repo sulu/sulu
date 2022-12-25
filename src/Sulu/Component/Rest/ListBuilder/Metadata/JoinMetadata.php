@@ -28,7 +28,7 @@ class JoinMetadata
 
     private string $entityName;
 
-    private string $entityField;
+    private ?string $entityField = null;
 
     private ?string $condition = null;
 
@@ -60,7 +60,7 @@ class JoinMetadata
     /**
      * The field, which should be joined.
      */
-    public function getEntityField(): string
+    public function getEntityField(): ?string
     {
         return $this->entityField;
     }
