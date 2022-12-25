@@ -164,7 +164,7 @@ class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWa
         if ($fieldMetadata) {
             foreach ($fieldMetadata->getJoins() as $joinMetadata) {
                 $condition = $joinMetadata->getCondition();
-                if ($condition !== null) {
+                if (null !== $condition) {
                     $condition = $this->resolveOptions($condition, $options);
                 }
 
