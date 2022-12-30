@@ -93,7 +93,7 @@ class AdminControllerTest extends SuluTestCase
         $collectionType = new LoadCollectionTypes();
         $collectionType->load($this->getEntityManager());
 
-        $this->client->request('GET', '/admin/');
+        $crawler = $this->client->request('GET', '/admin/');
 
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
@@ -101,14 +101,14 @@ class AdminControllerTest extends SuluTestCase
         $this->assertIsString($html);
 
         // extract json from html
-        $html = \explode('SULU_CONFIG = Object.freeze(', $html, 2)[1] ?? null;
-        $this->assertIsString($html, 'Could not extract "Sulu_CONFIG" from response object.');
-        $json = \explode(');', $html, 2)[0] ?? null;
-        $this->assertIsString($json, 'Could not find end of "SULU_CONFIG" in the response content.');
-        $config = \json_decode($json, true);
+        $applicationElement = $crawler->filter('#application')->first();
+        $this->assertEquals(1, $applicationElement->count(), 'Failed getting the application element');
+        $configJson = $applicationElement->attr('data-config');
+        $this->assertIsString($configJson, 'Failed to retrieve the configuration json');
+        $config = \json_decode($configJson, true);
 
         // test config object
-        $this->assertIsArray($config, 'Extracted "SULU_CONFIG" is not a valid json object.');
+        $this->assertIsArray($config, 'Extracted config is not a valid json object.');
         $this->assertSame([
             'initialLoginState' => true,
             'translations' => [
