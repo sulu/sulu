@@ -389,6 +389,20 @@ function startAdmin() {
         'font-family: monospace; font-size: 10px; text-decoration: none;'
     );
 
+    const id = 'application';
+    const applicationElement = document.getElementById(id);
+
+    if (!applicationElement) {
+        throw new Error(`DOM element with ID "${id}" was not found!`);
+    }
+
+    if (!('config' in applicationElement.dataset)) {
+        throw new Error('Configuration not found');
+    }
+
+    Object.assign(Config, JSON.parse(applicationElement.dataset.config));
+    Object.freeze(Config);
+
     if (Config.suluVersion !== SULU_ADMIN_BUILD_VERSION) {
         log.error(
             'Sulu administration interface: JavaScript build version mismatch' +
@@ -407,13 +421,6 @@ function startAdmin() {
     initializer.initialize(Config.initialLoginState).then(() => {
         router.reload();
     });
-
-    const id = 'application';
-    const applicationElement = document.getElementById(id);
-
-    if (!applicationElement) {
-        throw new Error('DOM element with ID "id" was not found!');
-    }
 
     render(
         <Application appVersion={Config.appVersion} router={router} suluVersion={Config.suluVersion} />,
