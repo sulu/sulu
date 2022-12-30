@@ -31,7 +31,7 @@ class CollectionType
     private $name;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $key;
 
@@ -178,7 +178,7 @@ class CollectionType
     /**
      * Get key.
      *
-     * @return string
+     * @return string|null
      */
     public function getKey()
     {

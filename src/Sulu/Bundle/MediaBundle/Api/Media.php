@@ -222,7 +222,7 @@ class Media extends ApiWrapper
      *
      * @SerializedName("mimeType")
      *
-     * @return string
+     * @return string|null
      */
     public function getMimeType()
     {
@@ -883,7 +883,7 @@ class Media extends ApiWrapper
      *
      * @SerializedName("properties")
      *
-     * @return array
+     * @return array|null
      */
     public function getProperties()
     {
@@ -1125,7 +1125,7 @@ class Media extends ApiWrapper
      *
      * @SerializedName("focusPointX")
      *
-     * @return int
+     * @return int|null
      */
     public function getFocusPointX()
     {
@@ -1149,7 +1149,7 @@ class Media extends ApiWrapper
      *
      * @SerializedName("focusPointY")
      *
-     * @return int
+     * @return int|null
      */
     public function getFocusPointY()
     {

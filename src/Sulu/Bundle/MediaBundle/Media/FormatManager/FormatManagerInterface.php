@@ -35,7 +35,7 @@ interface FormatManagerInterface
      * @param string $fileName
      * @param int $version
      * @param int $subVersion
-     * @param string $mimeType
+     * @param string|null $mimeType
      *
      * @return array
      */
@@ -45,7 +45,7 @@ interface FormatManagerInterface
      * Returns a definition of a format with a given key.
      *
      * @param string $formatKey
-     * @param string $locale
+     * @param string|null $locale
      *
      * @return array
      */
@@ -65,7 +65,7 @@ interface FormatManagerInterface
      *
      * @param int $idMedia
      * @param string $fileName
-     * @param string $mimeType
+     * @param string|null $mimeType
      *
      * @return bool
      */
@@ -73,6 +73,8 @@ interface FormatManagerInterface
 
     /**
      * Clears the format cache.
+     *
+     * @return void
      */
     public function clearCache();
 }

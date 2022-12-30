@@ -106,7 +106,7 @@ class Address
     private $countryCode;
 
     /**
-     * @var bool
+     * @var bool|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      *
@@ -115,7 +115,7 @@ class Address
     private $primaryAddress;
 
     /**
-     * @var bool
+     * @var bool|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      *
@@ -124,7 +124,7 @@ class Address
     private $deliveryAddress;
 
     /**
-     * @var bool
+     * @var bool|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      *
@@ -438,7 +438,7 @@ class Address
     /**
      * Get primaryAddress.
      *
-     * @return bool
+     * @return bool|null
      */
     public function getPrimaryAddress()
     {
@@ -462,7 +462,7 @@ class Address
     /**
      * Get deliveryAddress.
      *
-     * @return bool
+     * @return bool|null
      */
     public function getDeliveryAddress()
     {
@@ -486,7 +486,7 @@ class Address
     /**
      * Get billingAddress.
      *
-     * @return bool
+     * @return bool|null
      */
     public function getBillingAddress()
     {

@@ -35,8 +35,6 @@ interface ImageConverterInterface
      * Get supported image formats by mimeType.
      * The first returned image format will be used as default.
      *
-     * @param string $mimeType
-     *
      * @return string[]
      */
     public function getSupportedOutputImageFormats(?string $mimeType): array;

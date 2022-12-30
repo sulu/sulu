@@ -238,7 +238,7 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
     /**
      * Purges a file-version of a media with a given id.
      *
-     * @param int $mediaId
+     * @return void
      */
     private function purgeMedia($mediaId, FileVersion $fileVersion)
     {
