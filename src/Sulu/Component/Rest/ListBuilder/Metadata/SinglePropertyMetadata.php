@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -18,9 +16,12 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata;
  */
 class SinglePropertyMetadata extends AbstractPropertyMetadata
 {
-    private ?FieldMetadata $field;
+    private ?FieldMetadata $field = null;
 
-    public function setField(?FieldMetadata $field): void
+    /**
+     * @return void
+     */
+    public function setField(?FieldMetadata $field)
     {
         $this->field = $field;
     }

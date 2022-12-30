@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -15,31 +13,51 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata;
 
 class ListMetadata
 {
-    private string $resource;
+    /**
+     * @var string
+     */
+    private $resource;
 
-    private string $key;
+    /**
+     * @var string
+     */
+    private $key;
 
     /**
      * @var AbstractPropertyMetadata[]
      */
-    private array $propertiesMetadata = [];
+    private $propertiesMetadata = [];
 
-    public function setResource(string $resource): void
+    /**
+     * @param string $resource
+     *
+     * @return void
+     */
+    public function setResource($resource)
     {
         $this->resource = $resource;
     }
 
-    public function getResource(): string
+    /**
+     * @return string
+     */
+    public function getResource()
     {
         return $this->resource;
     }
 
-    public function setKey(string $key): void
+    /**
+     * @return void
+     */
+    public function setKey(string $key)
     {
         $this->key = $key;
     }
 
-    public function getKey(): string
+    /**
+     * @return string
+     */
+    public function getKey()
     {
         return $this->key;
     }
@@ -47,12 +65,15 @@ class ListMetadata
     /**
      * @return AbstractPropertyMetadata[]
      */
-    public function getPropertiesMetadata(): array
+    public function getPropertiesMetadata()
     {
         return $this->propertiesMetadata;
     }
 
-    public function addPropertyMetadata(AbstractPropertyMetadata $propertyMetadata): void
+    /**
+     * @return void
+     */
+    public function addPropertyMetadata(AbstractPropertyMetadata $propertyMetadata)
     {
         $this->propertiesMetadata[] = $propertyMetadata;
     }

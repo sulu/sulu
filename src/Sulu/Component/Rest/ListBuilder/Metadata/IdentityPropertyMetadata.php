@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -20,7 +18,10 @@ class IdentityPropertyMetadata extends AbstractPropertyMetadata
 {
     private ?FieldMetadata $field;
 
-    public function setField(?FieldMetadata $field): void
+    /**
+     * @return void
+     */
+    public function setField(?FieldMetadata $field)
     {
         $this->field = $field;
     }

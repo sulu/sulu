@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -28,23 +26,29 @@ class CasePropertyMetadata extends AbstractPropertyMetadata
      *
      * @return FieldMetadata[]
      */
-    public function getCases(): array
+    public function getCases()
     {
         return $this->cases;
     }
 
     /**
      * Returns a single case.
+     *
+     * @param int $index
+     *
+     * @return FieldMetadata
      */
-    public function getCase(int $index): FieldMetadata
+    public function getCase($index)
     {
         return $this->cases[$index];
     }
 
     /**
      * Add a case.
+     *
+     * @return void
      */
-    public function addCase(FieldMetadata $case): void
+    public function addCase(FieldMetadata $case)
     {
         $this->cases[] = $case;
     }

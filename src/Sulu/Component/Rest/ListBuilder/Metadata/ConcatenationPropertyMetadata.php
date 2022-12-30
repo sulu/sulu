@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -25,7 +23,10 @@ class ConcatenationPropertyMetadata extends AbstractPropertyMetadata
 
     private string $glue;
 
-    public function setGlue(string $glue): void
+    /**
+     * @return void
+     */
+    public function setGlue(string $glue)
     {
         $this->glue = $glue;
     }
@@ -43,7 +44,10 @@ class ConcatenationPropertyMetadata extends AbstractPropertyMetadata
         return $this->fields;
     }
 
-    public function addField(FieldMetadata $field): void
+    /**
+     * @return void
+     */
+    public function addField(FieldMetadata $field)
     {
         $this->fields[] = $field;
     }

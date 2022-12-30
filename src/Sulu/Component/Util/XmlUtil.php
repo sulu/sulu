@@ -27,7 +27,7 @@ class XmlUtil
     public static function getValueFromXPath($path, \DOMXPath $xpath, \DOMNode $context = null, $default = null)
     {
         $result = $xpath->query($path, $context);
-        if (0 === $result->length) {
+        if (false === $result || 0 === $result->length) {
             return $default;
         }
 
@@ -44,8 +44,10 @@ class XmlUtil
      *
      * @param string $path
      * @param \DOMNode $context
+     *
+     * @return bool|null
      */
-    public static function getBooleanValueFromXPath($path, \DOMXPath $xpath, \DOMNode $context = null, $default = null): ?bool
+    public static function getBooleanValueFromXPath($path, \DOMXPath $xpath, \DOMNode $context = null, $default = null)
     {
         $value = self::getValueFromXPath($path, $xpath, $context, $default);
 

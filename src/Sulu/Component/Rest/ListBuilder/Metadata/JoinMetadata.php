@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -26,59 +24,89 @@ class JoinMetadata
 
     public const JOIN_CONDITION_METHOD_WITH = 'WITH';
 
-    private string $entityName;
+    /**
+     * @var string
+     */
+    private $entityName;
 
-    private ?string $entityField = null;
+    /**
+     * @var string|null
+     */
+    private $entityField = null;
 
-    private ?string $condition = null;
+    /**
+     * @var string|null
+     */
+    private $condition = null;
 
     /**
      * @var 'ON'|'WITH'
      */
-    private string $conditionMethod = self::JOIN_CONDITION_METHOD_WITH;
+    private $conditionMethod = self::JOIN_CONDITION_METHOD_WITH;
 
     /**
      * Defines the join method (left, right or inner join).
      *
      * @var 'LEFT'|'INNER'|'RIGHT'
      */
-    private string $method = self::JOIN_METHOD_LEFT;
+    private $method = self::JOIN_METHOD_LEFT;
 
     /**
      * The name of the entity to join.
+     *
+     * @return string
      */
-    public function getEntityName(): string
+    public function getEntityName()
     {
         return $this->entityName;
     }
 
-    public function setEntityName(string $entityName): void
+    /**
+     * @param string $entityName
+     *
+     * @return void
+     */
+    public function setEntityName($entityName)
     {
         $this->entityName = $entityName;
     }
 
     /**
      * The field, which should be joined.
+     *
+     * @return string|null
      */
-    public function getEntityField(): ?string
+    public function getEntityField()
     {
         return $this->entityField;
     }
 
-    public function setEntityField(string $entityField): void
+    /**
+     * @param string $entityField
+     *
+     * @return void
+     */
+    public function setEntityField($entityField)
     {
         $this->entityField = $entityField;
     }
 
     /**
      * The additional condition which should apply to the join.
+     *
+     * @return string|null
      */
-    public function getCondition(): ?string
+    public function getCondition()
     {
         return $this->condition;
     }
 
-    public function setCondition(string $condition): void
+    /**
+     * @param string $condition
+     *
+     * @return void
+     */
+    public function setCondition($condition)
     {
         $this->condition = $condition;
     }
@@ -86,15 +114,17 @@ class JoinMetadata
     /**
      * @return 'ON'|'WITH'
      */
-    public function getConditionMethod(): string
+    public function getConditionMethod()
     {
         return $this->conditionMethod;
     }
 
     /**
      * @param 'ON'|'WITH' $conditionMethod
+     *
+     * @return void
      */
-    public function setConditionMethod(string $conditionMethod): void
+    public function setConditionMethod($conditionMethod)
     {
         $this->conditionMethod = $conditionMethod;
     }
@@ -104,15 +134,17 @@ class JoinMetadata
      *
      * @return 'LEFT'|'INNER'|'RIGHT'
      */
-    public function getMethod(): string
+    public function getMethod()
     {
         return $this->method;
     }
 
     /**
      * @param 'LEFT'|'INNER'|'RIGHT' $method
+     *
+     * @return void
      */
-    public function setMethod(string $method): void
+    public function setMethod($method)
     {
         $this->method = $method;
     }

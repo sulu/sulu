@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -22,20 +20,28 @@ class CountPropertyMetadata extends AbstractPropertyMetadata
 
     private bool $distinct;
 
-    public function setField(FieldMetadata $field): void
+    /**
+     * @return void
+     */
+    public function setField(FieldMetadata $field)
     {
         $this->field = $field;
     }
 
     /**
      * Returns metadata for field.
+     *
+     * @return FieldMetadata
      */
-    public function getField(): FieldMetadata
+    public function getField()
     {
         return $this->field;
     }
 
-    public function setDistinct(bool $distinct): void
+    /**
+     * @return void
+     */
+    public function setDistinct(bool $distinct)
     {
         $this->distinct = $distinct;
     }

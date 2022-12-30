@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -20,120 +18,214 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
  */
 abstract class AbstractPropertyMetadata
 {
-    private string $name;
+    /**
+     * @var string
+     */
+    private $name;
 
-    private string $translation;
+    /**
+     * @var string
+     */
+    private $translation;
 
-    private string $visibility = FieldDescriptorInterface::VISIBILITY_NEVER;
+    /**
+     * @var string
+     */
+    private $visibility = FieldDescriptorInterface::VISIBILITY_NEVER;
 
-    private string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER;
+    /**
+     * @var string
+     */
+    private $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER;
 
-    private string $type = 'string';
+    /**
+     * @var string
+     */
+    private $type = 'string';
 
-    private bool $sortable = true;
+    /**
+     * @var bool
+     */
+    private $sortable = true;
 
-    /** @var array<mixed> */
-    private array $transformerTypeParameters;
+    /**
+     * @var array<mixed>|null
+     */
+    private $transformerTypeParameters = null;
 
-    private string $filterType;
+    /**
+     * @var string
+     */
+    private $filterType;
 
-    /** @var array<mixed> */
-    private array $filterTypeParameters;
+    /**
+     * @var array<mixed>|null
+     */
+    private $filterTypeParameters = null;
 
-    private string $width;
+    /**
+     * @var string
+     */
+    private $width;
 
-    public function __construct(string $name)
+    /**
+     * @param string $name
+     */
+    public function __construct($name)
     {
         $this->name = $name;
         // default for translation can be overwritten by setter
         $this->translation = \ucfirst($name);
     }
 
-    public function getName(): string
+    /**
+     * @return string
+     */
+    public function getName()
     {
         return $this->name;
     }
 
-    public function getTranslation(): string
+    /**
+     * @return string
+     */
+    public function getTranslation()
     {
         return $this->translation;
     }
 
-    public function setTranslation(string $translation): void
+    /**
+     * @param string $translation
+     *
+     * @return void
+     */
+    public function setTranslation($translation)
     {
         $this->translation = $translation;
     }
 
-    public function getVisibility(): string
+    /**
+     * @return string
+     */
+    public function getVisibility()
     {
         return $this->visibility;
     }
 
-    public function setVisibility(string $visibility): void
+    /**
+     * @param string $visibility
+     *
+     * @return void
+     */
+    public function setVisibility($visibility)
     {
         $this->visibility = $visibility;
     }
 
-    public function getSearchability(): string
+    /**
+     * @return string
+     */
+    public function getSearchability()
     {
         return $this->searchability;
     }
 
-    public function setSearchability(string $searchability): void
+    /**
+     * @param string $searchability
+     *
+     * @return void
+     */
+    public function setSearchability($searchability)
     {
         $this->searchability = $searchability;
     }
 
-    public function getType(): string
+    /**
+     * @return string
+     */
+    public function getType()
     {
         return $this->type;
     }
 
-    public function setType(string $type): void
+    /**
+     * @param string $type
+     *
+     * @return void
+     */
+    public function setType($type)
     {
         $this->type = $type;
     }
 
-    public function isSortable(): bool
+    /**
+     * @return bool
+     */
+    public function isSortable()
     {
         return $this->sortable;
     }
 
-    public function setSortable(bool $sortable): void
+    /**
+     * @param bool $sortable
+     *
+     * @return void
+     */
+    public function setSortable($sortable)
     {
         $this->sortable = $sortable;
     }
 
-    /** @return array<mixed>|null */
-    public function getTransformerTypeParameters(): ?array
+    /**
+     * @return array<mixed>|null
+     */
+    public function getTransformerTypeParameters()
     {
-        return $this->transformerTypeParameters ?? null;
+        return $this->transformerTypeParameters;
     }
 
-    /** @param array<mixed> $transformerTypeParameters */
-    public function setTransformerTypeParameters(array $transformerTypeParameters): void
+    /**
+     * @param array<mixed> $transformerTypeParameters
+     *
+     * @return void
+     */
+    public function setTransformerTypeParameters($transformerTypeParameters)
     {
         $this->transformerTypeParameters = $transformerTypeParameters;
     }
 
-    public function getFilterType(): string
+    /**
+     * @return string
+     */
+    public function getFilterType()
     {
         return $this->filterType;
     }
 
-    public function setFilterType(string $filterType): void
+    /**
+     * @param string $filterType
+     *
+     * @return void
+     */
+    public function setFilterType($filterType)
     {
         $this->filterType = $filterType;
     }
 
-    /** @return array<mixed>|null */
-    public function getFilterTypeParameters(): ?array
+    /**
+     * @return array<mixed>|null
+     */
+    public function getFilterTypeParameters()
     {
-        return $this->filterTypeParameters ?? null;
+        return $this->filterTypeParameters;
     }
 
-    /** @param array<mixed> $parameters */
-    public function setFilterTypeParameters(array $parameters): void
+    /**
+     * @param array<mixed> $parameters
+     *
+     * @return void
+     */
+    public function setFilterTypeParameters($parameters)
     {
         $this->filterTypeParameters = $parameters;
     }
