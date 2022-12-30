@@ -11,6 +11,8 @@
 
 namespace Sulu\Component\Util;
 
+use Webmozart\Assert\Assert;
+
 /**
  * Utilties for extracting data from a dom-document using xpath.
  */
@@ -27,7 +29,9 @@ class XmlUtil
     public static function getValueFromXPath($path, \DOMXPath $xpath, \DOMNode $context = null, $default = null)
     {
         $result = $xpath->query($path, $context);
-        if (false === $result || 0 === $result->length) {
+        Assert::object($result, \sprintf('XPath Expression "%s" is invalid.', $path));
+
+        if (0 === $result->length) {
             return $default;
         }
 
