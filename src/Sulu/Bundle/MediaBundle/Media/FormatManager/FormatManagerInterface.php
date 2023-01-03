@@ -16,6 +16,13 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Defines the operations of the FormatManager
  * The FormatManager is a interface to manage Image Formats and Converts.
+ *
+ * @phpstan-type TypeDefinition array{
+ *   internal:mixed,
+ *   key: string,
+ *   title: string,
+ *   scale: mixed
+ * }
  */
 interface FormatManagerInterface
 {
@@ -47,7 +54,7 @@ interface FormatManagerInterface
      * @param string $formatKey
      * @param string|null $locale
      *
-     * @return array
+     * @return TypeDefinition
      */
     public function getFormatDefinition($formatKey, $locale = null);
 
@@ -56,7 +63,7 @@ interface FormatManagerInterface
      *
      * @param string $locale
      *
-     * @return array
+     * @return array<array-key, TypeDefinition>
      */
     public function getFormatDefinitions($locale = null);
 

@@ -129,7 +129,7 @@ class FormatManager implements FormatManagerInterface
 
             $supportedImageFormats = $this->converter->getSupportedOutputImageFormats($fileVersion->getMimeType());
             if (empty($supportedImageFormats)) {
-                throw new InvalidMimeTypeForPreviewException($fileVersion->getMimeType());
+                throw new InvalidMimeTypeForPreviewException($fileVersion->getMimeType() ?? '-null-');
             }
 
             if (!\in_array($imageFormat, $supportedImageFormats)) {
@@ -258,7 +258,6 @@ class FormatManager implements FormatManagerInterface
         $definitionsArray = [];
 
         foreach ($this->formats as $format) {
-            $options = [];
             $definitionsArray[$format['key']] = $this->getFormatDefinition($format['key'], $locale);
         }
 

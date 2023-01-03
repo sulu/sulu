@@ -40,6 +40,12 @@ function getOptionalProperties(DOMDocument $xml): array
 function checkDocCommentType(string $className, ReflectionProperty $property): void
 {
     $docComment = $property->getDocComment();
+
+    // If the doc comment does not exist, then the function returns false
+    if (false === $docComment) {
+        return;
+    }
+
     $matches = [];
     if (\preg_match('/@var\s+(\S+)/', $docComment, $matches)) {
         $types = \explode('|', $matches[1]);
@@ -51,7 +57,7 @@ function checkDocCommentType(string $className, ReflectionProperty $property): v
     }
 }
 
-function reportDefectiveType(string $className, string $property, string $currentType)
+function reportDefectiveType(string $className, string $property, string $currentType): void
 {
     echo "Kaputt @ $className $property $currentType\n";
 }

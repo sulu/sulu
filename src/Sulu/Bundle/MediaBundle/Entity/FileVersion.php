@@ -617,7 +617,7 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * @return mixed[]|null|false
+     * @return mixed
      */
     public function getProperties()
     {
@@ -631,7 +631,7 @@ class FileVersion implements AuditableInterface
     {
         $serializedText = \json_encode($properties);
         if (false === $serializedText) {
-            return;
+            return $this;
         }
         $this->properties = $serializedText;
 

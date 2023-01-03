@@ -276,7 +276,7 @@ class ImagineImageConverter implements ImageConverterInterface
                 $focusX = $fileVersion->getFocusPointX();
                 $focusY = $fileVersion->getFocusPointY();
                 if (null === $focusX || null === $focusY) {
-                    return $image;
+                    return $layer;
                 }
 
                 return $this->focus->focus(

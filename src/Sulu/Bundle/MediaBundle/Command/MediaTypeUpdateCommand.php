@@ -59,8 +59,13 @@ class MediaTypeUpdateCommand extends Command
             foreach ($media->getFiles() as $file) {
                 /** @var FileVersion $fileVersion */
                 foreach ($file->getFileVersions() as $fileVersion) {
+                    $mimeType = $fileVersion->getMimeType();
+                    if (null === $mimeType) {
+                        continue;
+                    }
+
                     if ($fileVersion->getVersion() == $file->getVersion()) {
-                        $mediaTypeId = $this->mediaTypeManager->getMediaType($fileVersion->getMimeType());
+                        $mediaTypeId = $this->mediaTypeManager->getMediaType($mimeType);
                         if ($media->getType()->getId() != $mediaTypeId) {
                             $oldType = $media->getType();
                             $newType = $this->mediaTypeManager->get($mediaTypeId);
