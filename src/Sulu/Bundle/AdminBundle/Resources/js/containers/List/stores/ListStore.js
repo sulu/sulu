@@ -391,8 +391,8 @@ export default class ListStore {
         this.structureStrategy = structureStrategy;
 
         if (hadStructureStrategy) {
-            // force a reload with the currently active item to match new structure
-            this.activate(this.active.get());
+            // force a reload to match new structure
+            this.reload();
         }
     };
 

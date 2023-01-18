@@ -1792,9 +1792,10 @@ test('Should trigger a mobx autorun if activate is called with the same id', () 
     autorunDisposer();
 });
 
-test('Should activate the current item if structure strategy is changed to trigger a reload', () => {
+test('Should call the reload method if structure strategy is changed', () => {
     const page = observable.box();
     const listStore = new ListStore('snippets', 'snippets', 'list_test', {page});
+    const reloadSpy = jest.spyOn(listStore, 'reload');
     listStore.schema = {};
 
     const loadingStrategy = new LoadingStrategy();
@@ -1808,7 +1809,7 @@ test('Should activate the current item if structure strategy is changed to trigg
 
     const otherStructureStrategy = new StructureStrategy();
     listStore.updateStructureStrategy(otherStructureStrategy);
-    expect(otherStructureStrategy.activate).toBeCalledWith(3);
+    expect(reloadSpy).toBeCalled();
 });
 
 test('Should call the activate method of the structure strategy if an item gets activated', () => {
