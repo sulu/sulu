@@ -16531,11 +16531,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:\\$storageOptions \\(string\\) does not accept string\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersionContentLanguage\\:\\:setId\\(\\) should return int but returns \\$this\\(Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersionContentLanguage\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersionContentLanguage.php
