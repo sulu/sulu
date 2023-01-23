@@ -51,6 +51,6 @@ class ReplacersCompilerPass implements CompilerPassInterface
 
         $service = $container->getDefinition('sulu.content.path_cleaner');
         $replacers = $this->loader->load($this->filename);
-        $service->addArgument($replacers);
+        $service->replaceArgument('$replacers', $replacers);
     }
 }
