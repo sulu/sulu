@@ -14,7 +14,7 @@ namespace Sulu\Component\Persistence\Model;
 use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
- * Classes implementing this interface must ensure they keep track of uses that create and update it.
+ * Classes implementing this interface must ensure they keep track of users that create and update it.
  */
 interface UserBlameInterface
 {
