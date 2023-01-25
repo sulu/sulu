@@ -18,6 +18,7 @@ exports[`Render a basic Masonry view with MediaCards 1`] = `
             <div
               class="description"
               role="button"
+              tabindex="0"
             >
               <div
                 class="title"
@@ -113,6 +114,7 @@ exports[`Render a basic Masonry view with MediaCards 1`] = `
           <div
             class="media"
             role="button"
+            tabindex="0"
           >
             <img
               alt="Title 1"
@@ -152,6 +154,7 @@ exports[`Render a basic Masonry view with MediaCards 1`] = `
             <div
               class="description"
               role="button"
+              tabindex="0"
             >
               <div
                 class="title"
@@ -252,6 +255,7 @@ exports[`Render a basic Masonry view with MediaCards 1`] = `
           <div
             class="media"
             role="button"
+            tabindex="0"
           >
             <img
               alt="Title 1"
