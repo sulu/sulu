@@ -18,6 +18,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorOptions;
 use Sulu\Bundle\LocationBundle\Geolocator\Service\GoogleGeolocator;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -95,6 +96,19 @@ class GoogleGeolocatorTest extends TestCase
 
         $this->assertArrayHasKey('key', $mockResponse->getRequestOptions()['query']);
         $this->assertEquals('foobar-key', $mockResponse->getRequestOptions()['query']['key']);
+    }
+
+    public function testAcceptLanguage(): void
+    {
+        $mockResponse = new MockResponse('{"status": "OK","results":[]}');
+
+        $httpClient = new MockHttpClient($mockResponse);
+        $geolocator = new GoogleGeolocator($httpClient, 'foobar-key');
+        $options = new GeolocatorOptions();
+        $options->setAcceptLanguage('it-IT, it;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5');
+        $geolocator->locate('foobar', $options);
+
+        $this->assertContains('Accept-Language: it-IT, it;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5', $mockResponse->getRequestOptions()['headers']);
     }
 
     /**
