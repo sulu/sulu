@@ -30,6 +30,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\FileVersionNotFoundException;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Component\Rest\ApiWrapper;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * Class Media
@@ -222,7 +223,7 @@ class Media extends ApiWrapper
      *
      * @SerializedName("mimeType")
      *
-     * @return string
+     * @return string|null
      */
     public function getMimeType()
     {
@@ -883,11 +884,17 @@ class Media extends ApiWrapper
      *
      * @SerializedName("properties")
      *
-     * @return array
+     * @return array|null
      */
     public function getProperties()
     {
-        return $this->getFileVersion()->getProperties();
+        $properties = $this->getFileVersion()->getProperties();
+        if (null === $properties) {
+            return null;
+        }
+        Assert::isArray($properties);
+
+        return $properties;
     }
 
     /**
@@ -1125,7 +1132,7 @@ class Media extends ApiWrapper
      *
      * @SerializedName("focusPointX")
      *
-     * @return int
+     * @return int|null
      */
     public function getFocusPointX()
     {
@@ -1149,7 +1156,7 @@ class Media extends ApiWrapper
      *
      * @SerializedName("focusPointY")
      *
-     * @return int
+     * @return int|null
      */
     public function getFocusPointY()
     {

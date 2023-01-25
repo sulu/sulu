@@ -26,7 +26,7 @@ class CategoryTranslation implements CategoryTranslationInterface
     protected $translation;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $description;
 
@@ -93,6 +93,9 @@ class CategoryTranslation implements CategoryTranslationInterface
         return $this->translation;
     }
 
+    /**
+     * @return string|null
+     */
     public function getDescription()
     {
         return $this->description;

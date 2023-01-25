@@ -43,7 +43,7 @@ class Contact extends ApiEntity implements ContactInterface
     protected $firstName;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $middleName;
 
@@ -180,7 +180,7 @@ class Contact extends ApiEntity implements ContactInterface
     protected $accountContacts;
 
     /**
-     * @var bool
+     * @var bool|null
      */
     protected $newsletter;
 
@@ -294,6 +294,9 @@ class Contact extends ApiEntity implements ContactInterface
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getMiddleName()
     {
         return $this->middleName;
@@ -632,6 +635,9 @@ class Contact extends ApiEntity implements ContactInterface
         return $this;
     }
 
+    /**
+     * @return bool|null
+     */
     public function getNewsletter()
     {
         return $this->newsletter;

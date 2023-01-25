@@ -49,7 +49,7 @@ class Permission
     private $role;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @Expose
      */
@@ -154,7 +154,7 @@ class Permission
     /**
      * Get module.
      *
-     * @return string
+     * @return string|null
      */
     public function getModule()
     {

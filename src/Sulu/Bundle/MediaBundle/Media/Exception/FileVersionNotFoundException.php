@@ -15,7 +15,7 @@ class FileVersionNotFoundException extends MediaException
 {
     /**
      * @param int $id
-     * @param int $version
+     * @param int|string $version
      */
     public function __construct($id, $version)
     {

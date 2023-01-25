@@ -32,7 +32,7 @@ class TargetGroup implements TargetGroupInterface
     private $title;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $description;
 
@@ -87,6 +87,9 @@ class TargetGroup implements TargetGroupInterface
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getDescription()
     {
         return $this->description;

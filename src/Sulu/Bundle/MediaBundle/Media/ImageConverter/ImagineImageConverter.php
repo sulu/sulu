@@ -273,10 +273,16 @@ class ImagineImageConverter implements ImageConverterInterface
         return $this->modifyAllLayers(
             $image,
             function(ImageInterface $layer) use ($fileVersion, $scale) {
+                $focusX = $fileVersion->getFocusPointX();
+                $focusY = $fileVersion->getFocusPointY();
+                if (null === $focusX || null === $focusY) {
+                    return $layer;
+                }
+
                 return $this->focus->focus(
                     $layer,
-                    $fileVersion->getFocusPointX(),
-                    $fileVersion->getFocusPointY(),
+                    $focusX,
+                    $focusY,
                     $scale['x'],
                     $scale['y']
                 );

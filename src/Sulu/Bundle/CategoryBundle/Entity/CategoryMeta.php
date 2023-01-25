@@ -27,7 +27,7 @@ class CategoryMeta implements CategoryMetaInterface
     protected $value;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $locale;
 
@@ -72,6 +72,9 @@ class CategoryMeta implements CategoryMetaInterface
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getLocale()
     {
         return $this->locale;

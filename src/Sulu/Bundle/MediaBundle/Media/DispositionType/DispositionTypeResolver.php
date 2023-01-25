@@ -45,6 +45,11 @@ class DispositionTypeResolver implements DispositionTypeResolverInterface
         $this->mimeTypesAttachment = $mimeTypesAttachment;
     }
 
+    /**
+     * @param string|null $mimeType
+     *
+     * @return string
+     */
     public function getByMimeType($mimeType)
     {
         if (\in_array($mimeType, $this->mimeTypesInline)) {
