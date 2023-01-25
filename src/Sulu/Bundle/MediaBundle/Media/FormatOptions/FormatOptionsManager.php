@@ -57,10 +57,13 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
     private $domainEventCollector;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      */
     private $formats;
 
+    /**
+     * @param array<string, mixed> $formats
+     */
     public function __construct(
         EntityManagerInterface $em,
         EntityRepository $formatOptionsRepository,
@@ -77,6 +80,12 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         $this->formats = $formats;
     }
 
+    /**
+     * @param int $mediaId
+     * @param string $formatKey
+     *
+     * @return array{cropX?: int, cropY?: int, cropWidth?: int, cropHeight?: int}
+     */
     public function get($mediaId, $formatKey)
     {
         if (!isset($this->formats[$formatKey])) {
@@ -101,6 +110,9 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         return $this->entityToArray($formatOptions);
     }
 
+    /**
+     * @param int $mediaId
+     */
     public function getAll($mediaId)
     {
         $media = $this->mediaManager->getEntityById($mediaId);
@@ -118,6 +130,13 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         return $formatOptionsArray;
     }
 
+    /**
+     * @param int $mediaId
+     * @param string $formatKey
+     * @param array{cropX?:int, cropY?: int, cropWidth?:int, cropHeight?:int} $data
+     *
+     * @return FormatOptions
+     */
     public function save($mediaId, $formatKey, array $data)
     {
         if (!isset($this->formats[$formatKey])) {
@@ -151,6 +170,12 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
         return $formatOptions;
     }
 
+    /**
+     * @param int $mediaId
+     * @param string $formatKey
+     *
+     * @return void
+     */
     public function delete($mediaId, $formatKey)
     {
         if (!isset($this->formats[$formatKey])) {
@@ -202,6 +227,8 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
     /**
      * Sets a given array of data onto a given format-options entity.
      *
+     * @param array{cropX?:int, cropY?: int, cropWidth?:int, cropHeight?:int} $data
+     *
      * @return FormatOptions The format-options entity with set data
      *
      * @throws FormatOptionsMissingParameterException
@@ -223,7 +250,7 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
     /**
      * Converts a given entity to its array representation.
      *
-     * @return array
+     * @return array{cropX: int, cropY: int, cropWidth: int, cropHeight: int}
      */
     private function entityToArray(FormatOptions $formatOptions)
     {
@@ -239,14 +266,15 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
      * Purges a file-version of a media with a given id.
      *
      * @param int $mediaId
+     *
+     * @return void
      */
     private function purgeMedia($mediaId, FileVersion $fileVersion)
     {
         $this->formatManager->purge(
             $mediaId,
             $fileVersion->getName(),
-            $fileVersion->getMimeType(),
-            $fileVersion->getStorageOptions()
+            $fileVersion->getMimeType()
         );
     }
 }

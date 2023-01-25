@@ -925,7 +925,7 @@ class MediaManager implements MediaManagerInterface
 
         // set properties
         $properties = $media->getFileVersion()->getProperties();
-        if (null !== $properties) {
+        if (\is_array($properties)) {
             $media->setProperties($properties);
         }
 

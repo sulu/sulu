@@ -16,6 +16,13 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Defines the operations of the FormatManager
  * The FormatManager is a interface to manage Image Formats and Converts.
+ *
+ * @phpstan-type TypeDefinition array{
+ *   internal:mixed,
+ *   key: string,
+ *   title: string,
+ *   scale: mixed
+ * }
  */
 interface FormatManagerInterface
 {
@@ -35,7 +42,7 @@ interface FormatManagerInterface
      * @param string $fileName
      * @param int $version
      * @param int $subVersion
-     * @param string $mimeType
+     * @param string|null $mimeType
      *
      * @return array
      */
@@ -45,9 +52,9 @@ interface FormatManagerInterface
      * Returns a definition of a format with a given key.
      *
      * @param string $formatKey
-     * @param string $locale
+     * @param string|null $locale
      *
-     * @return array
+     * @return TypeDefinition
      */
     public function getFormatDefinition($formatKey, $locale = null);
 
@@ -56,7 +63,7 @@ interface FormatManagerInterface
      *
      * @param string $locale
      *
-     * @return array
+     * @return array<array-key, TypeDefinition>
      */
     public function getFormatDefinitions($locale = null);
 
@@ -65,7 +72,7 @@ interface FormatManagerInterface
      *
      * @param int $idMedia
      * @param string $fileName
-     * @param string $mimeType
+     * @param string|null $mimeType
      *
      * @return bool
      */
@@ -73,6 +80,8 @@ interface FormatManagerInterface
 
     /**
      * Clears the format cache.
+     *
+     * @return void
      */
     public function clearCache();
 }

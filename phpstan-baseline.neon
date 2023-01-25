@@ -2546,11 +2546,6 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Entity/TargetGroup.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroup\\:\\:\\$description type mapping mismatch\\: database can contain string\\|null but property expects string\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Entity/TargetGroup.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupCondition\\:\\:\\$rule type mapping mismatch\\: database can contain Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupRule\\|null but property expects Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupRuleInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Entity/TargetGroupCondition.php
@@ -4686,11 +4681,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/SuluCategoryExtension.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryMeta\\:\\:\\$locale type mapping mismatch\\: database can contain string\\|null but property expects string\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryMeta.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryRepository\\:\\:createNew\\(\\) should return Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryInterface but returns object\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryRepository.php
@@ -4847,11 +4837,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$p of method Doctrine\\\\Common\\\\Collections\\\\ReadableCollection\\<\\(int\\|string\\),mixed\\>\\:\\:exists\\(\\) expects Closure\\(\\(int\\|string\\), mixed\\)\\: bool, Closure\\(mixed, Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\KeywordInterface\\)\\: bool given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslation\\:\\:\\$description type mapping mismatch\\: database can contain string\\|null but property expects string\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
 
@@ -9696,21 +9681,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/Address.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Address\\:\\:\\$billingAddress type mapping mismatch\\: database can contain bool\\|null but property expects bool\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/Address.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Address\\:\\:\\$deliveryAddress type mapping mismatch\\: database can contain bool\\|null but property expects bool\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/Address.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Address\\:\\:\\$primaryAddress type mapping mismatch\\: database can contain bool\\|null but property expects bool\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/Address.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AddressRepository\\:\\:findByAccountId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AddressRepository.php
@@ -9762,16 +9732,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact\\:\\:getMainAccountContact\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/Contact.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact\\:\\:\\$middleName type mapping mismatch\\: database can contain string\\|null but property expects string\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/Contact.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact\\:\\:\\$newsletter type mapping mismatch\\: database can contain bool\\|null but property expects bool\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/Contact.php
 
@@ -16086,7 +16046,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
 
 		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 173\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
+			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 172\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
 
@@ -16152,11 +16112,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$key of function array_key_exists expects int\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/AbstractImageFormatCompilerPass.php
-
-		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/AbstractImageFormatCompilerPass.php
 
@@ -16471,11 +16426,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepositoryInterface.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionType\\:\\:\\$key type mapping mismatch\\: database can contain string\\|null but property expects string\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionType.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\File\\:\\:removeFileVersion\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/File.php
@@ -16487,11 +16437,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:addTargetGroup\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:getProperties\\(\\) should return array but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
 
@@ -16581,42 +16526,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:\\$focusPointX type mapping mismatch\\: database can contain int\\|null but property expects int\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:\\$focusPointY type mapping mismatch\\: database can contain int\\|null but property expects int\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:\\$id \\(int\\) does not accept null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:\\$mimeType type mapping mismatch\\: database can contain string\\|null but property expects string\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:\\$properties \\(string\\) does not accept string\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:\\$properties type mapping mismatch\\: database can contain string\\|null but property expects string\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:\\$storageOptions \\(string\\) does not accept string\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersion\\:\\:\\$storageOptions type mapping mismatch\\: database can contain string\\|null but property expects string\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersion.php
 
@@ -17416,21 +17326,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatManager\\\\FormatManager\\:\\:clearCache\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatManager\\\\FormatManager\\:\\:getFormatDefinition\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatManager\\\\FormatManager\\:\\:getFormatDefinitions\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatManager\\\\FormatManager\\:\\:getFormats\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
@@ -17481,52 +17376,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatManager\\\\FormatManagerInterface\\:\\:clearCache\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatManager\\\\FormatManagerInterface\\:\\:getFormatDefinition\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatManager\\\\FormatManagerInterface\\:\\:getFormatDefinitions\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManagerInterface.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatManager\\\\FormatManagerInterface\\:\\:getFormats\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManagerInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatManager\\\\FormatManagerInterface\\:\\:purge\\(\\) invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManager\\:\\:__construct\\(\\) has parameter \\$formatOptionsRepository with generic class Doctrine\\\\ORM\\\\EntityRepository but does not specify its types\\: TEntityClass$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManager\\:\\:__construct\\(\\) has parameter \\$formats with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManager\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManager\\:\\:entityToArray\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManager\\:\\:get\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
 
@@ -17536,32 +17391,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManager\\:\\:purgeMedia\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManager\\:\\:save\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManager\\:\\:setDataOnEntity\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
-
-		-
-			message: "#^Parameter \\#2 \\$version of class Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Exception\\\\FileVersionNotFoundException constructor expects int, string given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManager\\:\\:\\$formatOptionsRepository with generic class Doctrine\\\\ORM\\\\EntityRepository does not specify its types\\: TEntityClass$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManager\\:\\:\\$formats type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
 
@@ -31539,11 +31369,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\GroupRepository\\:\\:findGroupById\\(\\) should return Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\Group but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/GroupRepository.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\Permission\\:\\:\\$module type mapping mismatch\\: database can contain string\\|null but property expects string\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/Permission.php
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\Permission\\:\\:\\$role \\(Sulu\\\\Component\\\\Security\\\\Authentication\\\\RoleInterface\\) does not accept Sulu\\\\Component\\\\Security\\\\Authentication\\\\RoleInterface\\|null\\.$#"
@@ -53731,11 +53556,6 @@ parameters:
 			path: src/Sulu/Component/PHPCR/Tests/Unit/PathCleanupTest.php
 
 		-
-			message: "#^Argument of an invalid type array\\<string, class\\-string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
-
-		-
 			message: "#^Cannot call method getAllClassNames\\(\\) on Doctrine\\\\Persistence\\\\Mapping\\\\Driver\\\\MappingDriver\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Component/Persistence/EventSubscriber/ORM/MetadataSubscriber.php
@@ -54111,7 +53931,7 @@ parameters:
 			path: src/Sulu/Component/Rest/Csv/CsvHandler.php
 
 		-
-			message: "#^Offset 'value' does not exist on array\\{value\\: int\\|string, type\\: int\\|string\\|null, position\\: int\\}\\|null\\.$#"
+			message: "#^Offset 'value' does not exist on Doctrine\\\\Common\\\\Lexer\\\\Token\\<1\\|2\\|3\\|4\\|5\\|6\\|7\\|8\\|9\\|10\\|11\\|12\\|13\\|14\\|15\\|16\\|17\\|18\\|19\\|100\\|101\\|102\\|200\\|201\\|202\\|203\\|204\\|205\\|206\\|207\\|208\\|209\\|210\\|211\\|212\\|213\\|214\\|215\\|216\\|217\\|218\\|219\\|220\\|221\\|222\\|223\\|224\\|225\\|226\\|227\\|228\\|229\\|230\\|231\\|232\\|233\\|234\\|235\\|236\\|237\\|238\\|239\\|240\\|241\\|242\\|243\\|244\\|245\\|246\\|247\\|248\\|249\\|250\\|251\\|252\\|253\\|254\\|255\\|256, string\\>\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/DQL/Cast.php
 

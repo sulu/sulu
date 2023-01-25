@@ -49,12 +49,12 @@ class FileVersion implements AuditableInterface
     private $size;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $mimeType;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $storageOptions;
 
@@ -106,7 +106,7 @@ class FileVersion implements AuditableInterface
     private $defaultMeta;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $properties = '{}';
 
@@ -121,12 +121,12 @@ class FileVersion implements AuditableInterface
     private $targetGroups;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $focusPointX;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $focusPointY;
 
@@ -256,7 +256,7 @@ class FileVersion implements AuditableInterface
     /**
      * Get mimeType.
      *
-     * @return string
+     * @return string|null
      */
     public function getMimeType()
     {
@@ -271,7 +271,7 @@ class FileVersion implements AuditableInterface
     public function getExtension()
     {
         $pathInfo = \pathinfo($this->getName());
-        $extension = MimeTypes::getDefault()->getExtensions($this->getMimeType())[0] ?? null;
+        $extension = MimeTypes::getDefault()->getExtensions($this->getMimeType() ?? '')[0] ?? null;
         if ($extension) {
             return $extension;
         } elseif (isset($pathInfo['extension'])) {
@@ -283,7 +283,12 @@ class FileVersion implements AuditableInterface
 
     public function setStorageOptions(array $storageOptions)
     {
-        $this->storageOptions = \json_encode($storageOptions);
+        $serializedText = \json_encode($storageOptions);
+        if (false === $serializedText) {
+            return;
+        }
+
+        $this->storageOptions = $serializedText;
 
         return $this;
     }
@@ -293,7 +298,7 @@ class FileVersion implements AuditableInterface
      */
     public function getStorageOptions(): array
     {
-        $storageOptions = \json_decode($this->storageOptions, true);
+        $storageOptions = \json_decode($this->storageOptions ?? '', true);
         if (!$storageOptions) {
             return [];
         }
@@ -612,11 +617,11 @@ class FileVersion implements AuditableInterface
     }
 
     /**
-     * @return mixed[]
+     * @return mixed
      */
     public function getProperties()
     {
-        return \json_decode($this->properties, true);
+        return \json_decode($this->properties ?? '', true);
     }
 
     /**
@@ -624,7 +629,11 @@ class FileVersion implements AuditableInterface
      */
     public function setProperties(array $properties)
     {
-        $this->properties = \json_encode($properties);
+        $serializedText = \json_encode($properties);
+        if (false === $serializedText) {
+            return $this;
+        }
+        $this->properties = $serializedText;
 
         return $this;
     }
@@ -688,7 +697,7 @@ class FileVersion implements AuditableInterface
     /**
      * Returns the x coordinate of the focus point.
      *
-     * @return int
+     * @return int|null
      */
     public function getFocusPointX()
     {
@@ -708,7 +717,7 @@ class FileVersion implements AuditableInterface
     /**
      * Returns the y coordinate of the focus point.
      *
-     * @return int
+     * @return int|null
      */
     public function getFocusPointY()
     {

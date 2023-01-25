@@ -1,10 +1,9 @@
 // @flow
-import React, {type Node} from 'react';
+import React, {type Node, type ElementRef} from 'react';
 import debounce from 'debounce';
 import {translate} from '../../utils/Translator';
 import Loader from '../Loader';
 import infiniteScrollerStyles from './infiniteScroller.scss';
-import type {ElementRef} from 'react';
 
 type Props = {
     children: Node,

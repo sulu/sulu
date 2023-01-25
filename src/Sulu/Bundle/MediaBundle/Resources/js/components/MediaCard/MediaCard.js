@@ -85,6 +85,23 @@ class MediaCard extends React.Component<Props> {
         }
     };
 
+    handleKeypress = (event: SyntheticKeyboardEvent<HTMLElement>) => {
+        const {
+            id,
+            onClick,
+            selected,
+        } = this.props;
+
+        if (!onClick) {
+            return;
+        }
+
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.stopPropagation();
+            onClick(id, !selected);
+        }
+    };
+
     handleHeaderClick = () => {
         const {
             id,
@@ -92,7 +109,24 @@ class MediaCard extends React.Component<Props> {
             onSelectionChange,
         } = this.props;
 
-        if (onSelectionChange && id) {
+        if (onSelectionChange) {
+            onSelectionChange(id, !selected);
+        }
+    };
+
+    handleHeaderKeypress = (event: SyntheticKeyboardEvent<HTMLElement>) => {
+        const {
+            id,
+            selected,
+            onSelectionChange,
+        } = this.props;
+
+        if (!onSelectionChange) {
+            return;
+        }
+
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.stopPropagation();
             onSelectionChange(id, !selected);
         }
     };
@@ -168,7 +202,9 @@ class MediaCard extends React.Component<Props> {
                     <div
                         className={mediaCardStyles.description}
                         onClick={this.handleHeaderClick}
+                        onKeyPress={this.handleHeaderKeypress}
                         role="button"
+                        tabIndex="0"
                     >
                         <div className={mediaCardStyles.title}>
                             {onSelectionChange
@@ -214,7 +250,9 @@ class MediaCard extends React.Component<Props> {
                 <div
                     className={mediaCardStyles.media}
                     onClick={this.handleClick}
+                    onKeyPress={this.handleKeypress}
                     role="button"
+                    tabIndex="0"
                 >
                     {image && !this.imageError
                         ? (
