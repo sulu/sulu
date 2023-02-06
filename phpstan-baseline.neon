@@ -54066,11 +54066,6 @@ parameters:
 			path: src/Sulu/Component/Rest/Exception/UniqueConstraintViolationException.php
 
 		-
-			message: "#^Cannot access offset 'code' on array\\|bool\\|float\\|int\\|string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/FlattenExceptionNormalizer.php
-
-		-
 			message: "#^Cannot call method getCode\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/FlattenExceptionNormalizer.php
@@ -56014,11 +56009,6 @@ parameters:
 			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\DoctrineRestHelperTest\\:\\:\\$listRestHelper has unknown class PHPUnit\\\\Framework\\\\MockObject_MockObject as its type\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/DoctrineRestHelperTest.php
-
-		-
-			message: "#^Cannot access offset 'code' on array\\|bool\\|float\\|int\\|string\\|null\\.$#"
-			count: 4
-			path: src/Sulu/Component/Rest/Tests/Unit/FlattenExceptionNormalizerTest.php
 
 		-
 			message: "#^Access to an undefined property Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderTest\\:\\:\\$systemStore\\.$#"
