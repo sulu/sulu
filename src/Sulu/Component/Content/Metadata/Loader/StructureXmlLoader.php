@@ -47,7 +47,7 @@ class StructureXmlLoader extends AbstractLoader
      * reserved names for sulu internals
      * TODO should be possible to inject from config.
      *
-     * @var array
+     * @var array<string>
      */
     private $reservedPropertyNames = [
         'template',
@@ -150,7 +150,6 @@ class StructureXmlLoader extends AbstractLoader
         $structure = new StructureMetadata();
         $structure->setResource($resource);
         $structure->setName($data['key']);
-        $structure->setCacheLifetime($data['cacheLifetime']);
         $structure->setController($data['controller']);
         $structure->setInternal($data['internal']);
         $structure->setCacheLifetime($data['cacheLifetime']);
@@ -246,24 +245,20 @@ class StructureXmlLoader extends AbstractLoader
      */
     protected function loadTemplateAttributes($resource, \DOMXPath $xpath, $type)
     {
-        if ('page' === $type || 'home' === $type) {
-            $result = [
-                'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
-                'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
-                'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
-                'internal' => $this->getValueFromXPath('/x:template/x:internal', $xpath),
-                'cacheLifetime' => $this->loadCacheLifetime('/x:template/x:cacheLifetime', $xpath),
-                'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
-                'areas' => $this->loadStructureAreas('/x:template/x:areas/x:area', $xpath),
-                'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
-            ];
+        $result = [
+            'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
+            'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
+            'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
+            'cacheLifetime' => $this->loadCacheLifetime('/x:template/x:cacheLifetime', $xpath),
+            'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
+            'areas' => $this->loadStructureAreas('/x:template/x:areas/x:area', $xpath),
+            'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
+        ];
 
-            $result = \array_filter(
-                $result,
-                function($value) {
-                    return null !== $value;
-                }
-            );
+        if ('page' === $type || 'home' === $type) {
+            $result['internal'] = $this->getValueFromXPath('/x:template/x:internal', $xpath);
+
+            $result = \array_filter($result, fn ($value) => null !== $value);
 
             foreach (['key', 'view', 'controller', 'cacheLifetime'] as $requiredProperty) {
                 if (!isset($result[$requiredProperty])) {
@@ -278,22 +273,7 @@ class StructureXmlLoader extends AbstractLoader
                 }
             }
         } else {
-            $result = [
-                'key' => $this->getValueFromXPath('/x:template/x:key', $xpath),
-                'view' => $this->getValueFromXPath('/x:template/x:view', $xpath),
-                'controller' => $this->getValueFromXPath('/x:template/x:controller', $xpath),
-                'cacheLifetime' => $this->loadCacheLifetime('/x:template/x:cacheLifetime', $xpath),
-                'tags' => $this->loadStructureTags('/x:template/x:tag', $xpath),
-                'areas' => $this->loadStructureAreas('/x:template/x:areas/x:area', $xpath),
-                'meta' => $this->loadMeta('/x:template/x:meta/x:*', $xpath),
-            ];
-
-            $result = \array_filter(
-                $result,
-                function($value) {
-                    return null !== $value;
-                }
-            );
+            $result = \array_filter($result, fn ($value) => null !== $value);
 
             if (\count($result) < 1) {
                 throw new InvalidXmlException($result['key']);
@@ -308,7 +288,7 @@ class StructureXmlLoader extends AbstractLoader
      *
      * @param string $path
      *
-     * @return array
+     * @return array{type: string|null, value: mixed}
      */
     private function loadCacheLifetime($path, \DOMXPath $xpath)
     {
@@ -377,6 +357,9 @@ class StructureXmlLoader extends AbstractLoader
         return $data;
     }
 
+    /**
+     * @return void
+     */
     private function mapMeta(StructureMetadata $structure, $meta)
     {
         $structure->setTitles(
@@ -458,36 +441,25 @@ class StructureXmlLoader extends AbstractLoader
         return true;
     }
 
+    /**
+     * Finds reserved property names and returns the first instance or null if there are no reserved properties.
+     */
     private function findReservedProperties(array $propertyData): ?string
     {
-        foreach ($this->reservedPropertyNames as $reservedPropertyName) {
-            if ($this->isReservedProperty($propertyData, $reservedPropertyName)) {
-                return $reservedPropertyName;
-            }
-        }
-
-        return null;
-    }
-
-    private function isReservedProperty(array $propertyData, string $reservedPropertyName): bool
-    {
         foreach ($propertyData as $property) {
-            if ($property->getName() === $reservedPropertyName) {
-                return true;
+            if (\in_array($property->getName(), $this->reservedPropertyNames)) {
+                return $property->getName();
             }
 
             if ($property instanceof SectionMetadata) {
-                $isReservedProperty = $this->isReservedProperty(
-                    $property->getChildren(),
-                    $reservedPropertyName
-                );
+                $reservedName = $this->findReservedProperties($property->getChildren());
 
-                if ($isReservedProperty) {
-                    return true;
+                if (null !== $reservedName) {
+                    return $reservedName;
                 }
             }
         }
 
-        return false;
+        return null;
     }
 }

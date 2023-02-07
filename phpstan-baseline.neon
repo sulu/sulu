@@ -44856,17 +44856,7 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Loader\\\\StructureXmlLoader\\:\\:isReservedProperty\\(\\) has parameter \\$propertyData with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Loader\\\\StructureXmlLoader\\:\\:load\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Loader\\\\StructureXmlLoader\\:\\:loadCacheLifetime\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
@@ -44882,11 +44872,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Loader\\\\StructureXmlLoader\\:\\:loadTemplateAttributes\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Loader\\\\StructureXmlLoader\\:\\:mapMeta\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
@@ -44942,11 +44927,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Component\\\\Content\\\\Metadata\\\\Loader\\\\StructureXmlLoader\\:\\:\\$requiredTagNames type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Metadata\\\\Loader\\\\StructureXmlLoader\\:\\:\\$reservedPropertyNames type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Loader/StructureXmlLoader.php
 
