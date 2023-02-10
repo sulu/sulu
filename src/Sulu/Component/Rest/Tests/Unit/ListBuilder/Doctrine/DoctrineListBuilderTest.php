@@ -1057,7 +1057,7 @@ class DoctrineListBuilderTest extends TestCase
         $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName);
 
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.name AS name_alias')->shouldBeCalled();
-        $this->queryBuilder->groupBy(self::$entityNameAlias . '.name')->shouldBeCalledTimes(2);
+        $this->queryBuilder->groupBy(self::$entityNameAlias . '.name')->shouldBeCalledTimes(1);
 
         $this->doctrineListBuilder->setSelectFields(
             [
@@ -1284,7 +1284,7 @@ class DoctrineListBuilderTest extends TestCase
      */
     public function testSingleQuery(): void
     {
-        $this->entityManager->createQueryBuilder()->shouldBeCalledTimes(1)->willReturn($this->queryBuilder->reveal());
+        $this->entityManager->createQueryBuilder()->shouldBeCalledTimes(2)->willReturn($this->queryBuilder->reveal());
 
         $this->doctrineListBuilder->limit(null);
         $this->doctrineListBuilder->execute();
