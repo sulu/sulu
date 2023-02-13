@@ -15,8 +15,10 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Rest\ListBuilder\AbstractListBuilder;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineGroupConcatFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderCreateEvent;
 use Sulu\Component\Rest\ListBuilder\Event\ListBuilderEvents;
@@ -250,13 +252,6 @@ class DoctrineListBuilder extends AbstractListBuilder
         $this->eventDispatcher->dispatch($event, ListBuilderEvents::LISTBUILDER_CREATE);
         $this->expressionFields = $this->getUniqueExpressionFieldDescriptors($this->expressions);
 
-        if (!$this->limit && !$this->search && empty($this->expressions)) {
-            $queryBuilder = $this->createFullQueryBuilder($this->createQueryBuilder());
-            $this->assignParameters($queryBuilder);
-
-            return $queryBuilder->getQuery()->getArrayResult();
-        }
-
         // first create simplified id query
         // select ids with all necessary filter data
         $ids = $this->findIdsByGivenCriteria();
@@ -266,12 +261,12 @@ class DoctrineListBuilder extends AbstractListBuilder
             return [];
         }
 
-        $this->queryBuilder = $this->createFullQueryBuilder(
+        $this->queryBuilder = $this->createNonGroupQueryBuilder(
             $this->em->createQueryBuilder()->from($this->entityName, $this->encodeAlias($this->entityName))
         );
 
         // now select all data
-        $this->assignJoins($this->queryBuilder);
+        $this->assignJoins($this->queryBuilder, $this->getNonGroupJoins());
 
         // use ids previously selected ids for query
         $select = $this->idField->getSelect();
@@ -279,21 +274,93 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         $this->assignParameters($this->queryBuilder);
 
-        return $this->queryBuilder->getQuery()->getArrayResult();
+        $nonGroupResult = $this->queryBuilder->getQuery()->getArrayResult();
+
+        if (!$this->hasGroupingFieldDescriptor()) {
+            return $nonGroupResult;
+        }
+
+        $this->queryBuilder = $this->createGroupQueryBuilder(
+            $this->em->createQueryBuilder()->from($this->entityName, $this->encodeAlias($this->entityName))
+        );
+
+        // now select all data
+        $this->assignJoins($this->queryBuilder, $this->getGroupJoins());
+
+        // use ids previously selected ids for query
+        $select = $this->idField->getSelect();
+        $this->queryBuilder->where($select . ' IN (:ids)')->setParameter('ids', $ids);
+        $this->queryBuilder->indexBy($this->encodeAlias($this->entityName), $this->idField->getSelect());
+
+        $this->assignParameters($this->queryBuilder);
+
+        $groupResult = $this->queryBuilder->getQuery()->getArrayResult();
+
+        $result = [];
+        foreach ($nonGroupResult as $item) {
+            $result[] = \array_merge($item, $groupResult[$item[$this->idField->getName()]] ?? []);
+        }
+
+        return $result;
+    }
+
+    protected function hasGroupingFieldDescriptor(): bool
+    {
+        foreach ($this->selectFields as $field) {
+            if ($this->isGroupingFieldDescriptor($field)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
      * @return QueryBuilder
      */
-    protected function createFullQueryBuilder(QueryBuilder $queryBuilder)
+    protected function createGroupQueryBuilder(QueryBuilder $queryBuilder)
     {
+        $queryBuilder->addSelect($this->getSelectAs($this->idField));
+
         // Add all select fields
         foreach ($this->selectFields as $field) {
-            $queryBuilder->addSelect($this->getSelectAs($field));
+            if ($this->isGroupingFieldDescriptor($field)) {
+                $queryBuilder->addSelect($this->getSelectAs($field));
+            }
         }
 
         // group by
         $this->assignGroupBy($queryBuilder);
+
+        // assign sort-fields
+        $this->assignSortFields($queryBuilder);
+
+        $queryBuilder->distinct($this->distinct);
+
+        return $queryBuilder;
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    protected function createNonGroupQueryBuilder(QueryBuilder $queryBuilder)
+    {
+        $hasId = false;
+
+        // Add all select fields
+        foreach ($this->selectFields as $field) {
+            if (!$this->isGroupingFieldDescriptor($field)) {
+                $queryBuilder->addSelect($this->getSelectAs($field));
+
+                if ($field->getName() === $this->idField->getName()) {
+                    $hasId = true;
+                }
+            }
+        }
+
+        if (!$hasId) {
+            $queryBuilder->addSelect($this->getSelectAs($this->idField));
+        }
 
         // assign sort-fields
         $this->assignSortFields($queryBuilder);
@@ -415,6 +482,36 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         foreach ($fields as $field) {
             $joins = \array_merge($joins, $field->getJoins());
+        }
+
+        return $joins;
+    }
+
+    protected function getGroupJoins()
+    {
+        $joins = [];
+        /** @var DoctrineFieldDescriptorInterface[] $fields */
+        $fields = \array_merge($this->sortFields, $this->selectFields);
+
+        foreach ($fields as $field) {
+            if ($this->isGroupingFieldDescriptor($field)) {
+                $joins = \array_merge($joins, $field->getJoins());
+            }
+        }
+
+        return $joins;
+    }
+
+    protected function getNonGroupJoins()
+    {
+        $joins = [];
+        /** @var DoctrineFieldDescriptorInterface[] $fields */
+        $fields = \array_merge($this->sortFields, $this->selectFields);
+
+        foreach ($fields as $field) {
+            if (!$this->isGroupingFieldDescriptor($field)) {
+                $joins = \array_merge($joins, $field->getJoins());
+            }
         }
 
         return $joins;
@@ -783,5 +880,14 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         return $select . $field->getName();
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isGroupingFieldDescriptor(DoctrineFieldDescriptorInterface $field)
+    {
+        return $field instanceof DoctrineCountFieldDescriptor
+            || $field instanceof DoctrineGroupConcatFieldDescriptor;
     }
 }

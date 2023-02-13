@@ -748,6 +748,50 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('John Doe', $response->_embedded->contacts[0]->fullName);
     }
 
+    public function testGetList(): void
+    {
+        $this->purgeDatabase();
+
+        $category1 = $this->createCategory('first-category-key', 'en', 'First Category', 'Description of Category');
+        $category2 = $this->createCategory('second-category-key', 'en', 'Second Category', 'Description of Category');
+
+        $contact1 = new Contact();
+        $contact1->setFirstName('Erika');
+        $contact1->setLastName('Mustermann');
+        $contact1->setSalutation('Frau');
+        $contact1->addCategory($category1);
+        $contact1->addCategory($category2);
+        $this->em->persist($contact1);
+
+        $contact2 = new Contact();
+        $contact2->setFirstName('John');
+        $contact2->setLastName('Doe');
+        $contact2->setSalutation('Mann');
+        $contact2->addCategory($category1);
+        $this->em->persist($contact2);
+        $this->em->flush();
+
+        $this->client->jsonRequest('GET', '/api/contacts?flat=true&fields=fullName,categoryNames');
+
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $response = \json_decode($this->client->getResponse()->getContent());
+
+        $this->assertEquals(3, $response->total);
+        $this->assertEquals(3, \count($response->_embedded->contacts));
+        $this->assertEquals('Erika Mustermann', $response->_embedded->contacts[0]->fullName);
+
+        $categoryNames = \explode(',', $response->_embedded->contacts[0]->categoryNames);
+        $this->assertCount(2, $categoryNames);
+        $this->assertContains('First Category', $categoryNames);
+        $this->assertContains('Second Category', $categoryNames);
+        $this->assertEquals('John Doe', $response->_embedded->contacts[1]->fullName);
+        $this->assertEquals('First Category', $response->_embedded->contacts[1]->categoryNames);
+
+        // Following contact is created as contact for the user which is used in the client
+        $this->assertEquals('Max Mustermann', $response->_embedded->contacts[2]->fullName);
+        $this->assertEquals(null, $response->_embedded->contacts[2]->categoryNames);
+    }
+
     public function testGetListSearchWithExcludedAccountId(): void
     {
         $account1 = $this->createAccount('Musterfirma 1');
@@ -1764,21 +1808,6 @@ class ContactControllerTest extends SuluTestCase
         );
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
-    }
-
-    public function testGetList(): void
-    {
-        $this->client->jsonRequest('GET', '/api/contacts?flat=true&fields=fullName,title,formOfAddress,salutation');
-        $response = \json_decode($this->client->getResponse()->getContent());
-
-        $this->assertEquals(1, $response->total);
-
-        $this->assertEquals('Max Mustermann', $response->_embedded->contacts[0]->fullName);
-        $this->assertNull($response->_embedded->contacts[0]->title);
-
-        $this->assertEquals(0, $response->_embedded->contacts[0]->formOfAddress);
-        $this->assertNull($response->_embedded->contacts[0]->salutation);
-        $this->assertObjectNotHasAttribute('firstName', $response->_embedded->contacts[0]);
     }
 
     public function testGetListFields(): void

@@ -10712,7 +10712,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$_embedded on mixed\\.$#"
-			count: 29
+			count: 31
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -54672,7 +54672,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset string on mixed\\.$#"
-			count: 1
+			count: 2
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
@@ -54776,6 +54776,16 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder\\:\\:getGroupJoins\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder\\:\\:getNonGroupJoins\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
+
+		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder\\:\\:getUniqueExpressionFieldDescriptors\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
@@ -54818,6 +54828,16 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$field of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder\\:\\:getSelectAs\\(\\) expects Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineFieldDescriptorInterface, Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\FieldDescriptorInterface given\\.$#"
 			count: 3
+			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
+
+		-
+			message: "#^Parameter \\#1 \\.\\.\\.\\$arrays of function array_merge expects array, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$arrays of function array_merge expects array, mixed given\\.$#"
+			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
@@ -56412,11 +56432,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderTest\\:\\:readObjectAttribute\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/DoctrineListBuilderTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$limit of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\AbstractListBuilder\\:\\:limit\\(\\) expects int, null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/DoctrineListBuilderTest.php
 
