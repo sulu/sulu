@@ -427,6 +427,7 @@ class AccountController extends AbstractRestController implements ClassResourceI
         if ('true' == $request->get('flat')) {
             $fieldDescriptors = $this->getFieldDescriptors();
             $listBuilder = $this->generateFlatListBuilder();
+            $listBuilder->addGroupBy($fieldDescriptors['id']);
             $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
             $this->applyRequestParameters($request, $listBuilder);
 
