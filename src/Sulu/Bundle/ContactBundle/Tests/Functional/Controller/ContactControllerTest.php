@@ -779,7 +779,11 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(3, $response->total);
         $this->assertEquals(3, \count($response->_embedded->contacts));
         $this->assertEquals('Erika Mustermann', $response->_embedded->contacts[0]->fullName);
-        $this->assertEquals('First Category,Second Category', $response->_embedded->contacts[0]->categoryNames);
+
+        $categoryNames = \explode(',', $response->_embedded->contacts[0]->categoryNames);
+        $this->assertCount(2, $categoryNames);
+        $this->assertContains('First Category', $categoryNames);
+        $this->assertContains('Second Category', $categoryNames);
         $this->assertEquals('John Doe', $response->_embedded->contacts[1]->fullName);
         $this->assertEquals('First Category', $response->_embedded->contacts[1]->categoryNames);
 

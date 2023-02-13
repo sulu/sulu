@@ -290,14 +290,15 @@ class DoctrineListBuilder extends AbstractListBuilder
         // use ids previously selected ids for query
         $select = $this->idField->getSelect();
         $this->queryBuilder->where($select . ' IN (:ids)')->setParameter('ids', $ids);
+        $this->queryBuilder->indexBy($this->encodeAlias($this->entityName), $this->idField->getSelect());
 
         $this->assignParameters($this->queryBuilder);
 
         $groupResult = $this->queryBuilder->getQuery()->getArrayResult();
 
         $result = [];
-        for ($i = 0; $i < \count($nonGroupResult); ++$i) {
-            $result[] = \array_merge($nonGroupResult[$i], $groupResult[$i]);
+        foreach ($nonGroupResult as $item) {
+            $result[] = \array_merge($item, $groupResult[$item[$this->idField->getName()]] ?? []);
         }
 
         return $result;
@@ -344,11 +345,21 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function createNonGroupQueryBuilder(QueryBuilder $queryBuilder)
     {
+        $hasId = false;
+
         // Add all select fields
         foreach ($this->selectFields as $field) {
             if (!$this->isGroupingFieldDescriptor($field)) {
                 $queryBuilder->addSelect($this->getSelectAs($field));
+
+                if ($field->getName() === $this->idField->getName()) {
+                    $hasId = true;
+                }
             }
+        }
+
+        if (!$hasId) {
+            $queryBuilder->addSelect($this->getSelectAs($this->idField));
         }
 
         // assign sort-fields
