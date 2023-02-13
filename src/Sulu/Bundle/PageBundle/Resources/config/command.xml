@@ -54,7 +54,7 @@
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu.content.webspace_structure_provider"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
-            <argument type="service" id="liip_theme.active_theme" on-invalid="null"/>
+            <argument type="service" id="event_dispatcher"/>
 
             <tag name="console.command"/>
         </service>

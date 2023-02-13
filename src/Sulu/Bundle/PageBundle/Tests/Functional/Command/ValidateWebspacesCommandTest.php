@@ -45,7 +45,8 @@ class ValidateWebspacesCommandTest extends SuluTestCase
             $controllerNameParser,
             $this->getContainer()->get('sulu.content.structure_manager'),
             $this->getContainer()->get('sulu.content.webspace_structure_provider'),
-            $this->getContainer()->get('sulu_core.webspace.webspace_manager')
+            $this->getContainer()->get('sulu_core.webspace.webspace_manager'),
+            $this->getContainer()->get('event_dispatcher')
         );
         $command->setApplication($application);
         $this->tester = new CommandTester($command);
