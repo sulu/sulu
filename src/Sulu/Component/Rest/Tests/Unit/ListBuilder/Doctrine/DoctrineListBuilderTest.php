@@ -167,6 +167,7 @@ class DoctrineListBuilderTest extends TestCase
             ]
         );
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.name AS name_alias')->shouldBeCalled();
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.desc AS desc_alias')->shouldBeCalled();
 
@@ -183,6 +184,7 @@ class DoctrineListBuilderTest extends TestCase
             ]
         );
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.name AS name_alias')->shouldBeCalled();
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.desc AS desc_alias')->shouldBeCalled();
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.test AS test_alias')->shouldNotBeCalled();
@@ -193,6 +195,8 @@ class DoctrineListBuilderTest extends TestCase
     public function testIdSelect(): void
     {
         $this->queryBuilder->select(self::$entityNameAlias . '.id AS id')->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -315,6 +319,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->addSelectField(new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName));
         $this->doctrineListBuilder->addSelectField(new DoctrineFieldDescriptor('desc', 'desc_alias', self::$entityName));
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.name AS name_alias')->shouldBeCalled();
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.desc AS desc_alias')->shouldBeCalled();
 
@@ -327,6 +332,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->addSelectField(new DoctrineFieldDescriptor('desc', 'desc_alias', self::$entityName));
         $this->doctrineListBuilder->addSelectField(new FieldDescriptor('test', 'test_alias', self::$entityName));
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.name AS name_alias')->shouldBeCalled();
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.desc AS desc_alias')->shouldBeCalled();
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.test AS test_alias')->shouldNotBeCalled();
@@ -346,6 +352,7 @@ class DoctrineListBuilderTest extends TestCase
             )
         );
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect(self::$translationEntityNameAlias . '.desc AS desc_alias')->shouldBeCalled();
         $this->queryBuilder->leftJoin(
             self::$entityNameAlias . '.translations',
@@ -360,6 +367,8 @@ class DoctrineListBuilderTest extends TestCase
     public function testAssignParametersForExecute(): void
     {
         $this->queryBuilder->getDQL()->willReturn('SELECT * FROM table WHERE locale = :locale AND parent = :parent');
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
 
         $this->doctrineListBuilder->setParameter('locale', 'de');
         $this->doctrineListBuilder->setParameter('parent', '7');
@@ -402,6 +411,8 @@ class DoctrineListBuilderTest extends TestCase
             )
         );
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
+
         // join is only needed in the preselect query, not in the main query. therefore it should be added a one time
         $this->queryBuilder->leftJoin(
             self::$entityNameAlias . '.translations',
@@ -434,6 +445,8 @@ class DoctrineListBuilderTest extends TestCase
             ''
         )->shouldBeCalledTimes(1);
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
+
         $this->queryBuilder->andWhere(Argument::containingString('.name = :name'))->shouldBeCalled();
         $this->queryBuilder->setParameter(Argument::containingString('name'), 'test-name')->shouldBeCalled();
 
@@ -459,6 +472,8 @@ class DoctrineListBuilderTest extends TestCase
             'WITH',
             ''
         )->shouldBeCalledTimes(1);
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect('SuluCoreBundle_ExampleTranslation.name AS name')->shouldBeCalledTimes(1);
 
         $this->doctrineListBuilder->execute();
@@ -485,6 +500,8 @@ class DoctrineListBuilderTest extends TestCase
         )->shouldBeCalledTimes(2);
 
         $this->queryBuilder->getDQLPart('select')->willReturn([]);
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         // will be called for preselect query
         $this->queryBuilder->addSelect('SuluCoreBundle_ExampleTranslation.desc AS desc_alias')->shouldBeCalled();
         // will be called for result (should not be displayed)
@@ -504,6 +521,8 @@ class DoctrineListBuilderTest extends TestCase
         );
         $this->doctrineListBuilder->search('value');
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
+
         $this->queryBuilder->andWhere(
             '(' . self::$translationEntityNameAlias . '.desc LIKE :search OR ' . self::$entityNameAlias . '.name LIKE :search)'
         )->shouldBeCalled();
@@ -520,6 +539,8 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->addSearchField(
             new DoctrineFieldDescriptor('name', 'name', self::$entityName)
         );
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
 
         $this->doctrineListBuilder->search('val*e');
 
@@ -546,6 +567,8 @@ class DoctrineListBuilderTest extends TestCase
         ]);
         $this->doctrineListBuilder->filter(['name' => 'value']);
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
+
         $filterType->filter($this->doctrineListBuilder, $nameFieldDescriptor, 'value')->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
@@ -566,6 +589,8 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
 
         $this->queryBuilder->getDQLPart('select')->willReturn([]);
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         // will be called for result (should not be displayed)
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.desc AS HIDDEN desc')->shouldBeCalled();
         // will be called for id query
@@ -580,6 +605,8 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
 
         $this->queryBuilder->getDQLPart('select')->willReturn([new Select('SuluCoreBundle_Example.desc AS desc')]);
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         // will NOT be called for result (should not be displayed)
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.desc AS HIDDEN desc')->shouldNotBeCalled();
         // will be called for id query
@@ -599,6 +626,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
         $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName));
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.desc AS desc')->shouldBeCalledTimes(1);
         $this->queryBuilder->addOrderBy('desc', 'ASC')->shouldBeCalledTimes(2);
 
@@ -615,6 +643,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName), 'ASC');
         $this->doctrineListBuilder->sort(new DoctrineFieldDescriptor('desc', 'desc', self::$entityName), 'DESC');
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.desc AS desc')->shouldBeCalledTimes(1);
         $this->queryBuilder->addOrderBy('desc', 'DESC')->shouldBeCalledTimes(2);
 
@@ -625,6 +654,8 @@ class DoctrineListBuilderTest extends TestCase
     {
         // when no sort is applied, results should be orderd by id by default
         $this->queryBuilder->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->shouldBeCalled();
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -641,9 +672,8 @@ class DoctrineListBuilderTest extends TestCase
             'name_desc'
         ));
 
-        $this->queryBuilder
-            ->addSelect($select)
-            ->shouldBeCalled();
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
+        $this->queryBuilder->addSelect($select)->shouldBeCalled();
 
         $selectExpression = $this->prophesize(Select::class);
         $selectExpression->getParts()->willReturn([$select]);
@@ -658,6 +688,7 @@ class DoctrineListBuilderTest extends TestCase
     {
         $this->doctrineListBuilder->limit(5);
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->setMaxResults(5)->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder->setFirstResult(0)->shouldBeCalled();
 
@@ -668,6 +699,7 @@ class DoctrineListBuilderTest extends TestCase
     {
         $this->doctrineListBuilder->setIds([11, 22]);
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->setParameter(Argument::containingString('id'), [11, 22])->shouldBeCalled();
         $this->queryBuilder->andWhere(
             Argument::containingString('SuluCoreBundle_Example.id IN (:id')
@@ -680,6 +712,7 @@ class DoctrineListBuilderTest extends TestCase
     {
         $this->doctrineListBuilder->setIds([]);
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->andWhere(
             Argument::containingString(' IS NULL')
         )->shouldBeCalled();
@@ -691,6 +724,7 @@ class DoctrineListBuilderTest extends TestCase
     {
         $this->doctrineListBuilder->setIds(null);
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->andWhere(
             Argument::containingString('SuluCoreBundle_Example.id IN (:id')
         )->shouldNotBeCalled();
@@ -702,6 +736,7 @@ class DoctrineListBuilderTest extends TestCase
     {
         $this->doctrineListBuilder->setExcludedIds([55, 99]);
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->setParameter(Argument::containingString('id'), [55, 99])->shouldBeCalled();
         $this->queryBuilder->andWhere(
             Argument::containingString('NOT(SuluCoreBundle_Example.id IN (:id')
@@ -714,6 +749,7 @@ class DoctrineListBuilderTest extends TestCase
     {
         $this->doctrineListBuilder->setExcludedIds([]);
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->andWhere(
             Argument::containingString('NOT(SuluCoreBundle_Example.id IN (:id')
         )->shouldNotBeCalled();
@@ -725,6 +761,7 @@ class DoctrineListBuilderTest extends TestCase
     {
         $this->doctrineListBuilder->setExcludedIds(null);
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->andWhere(
             Argument::containingString('NOT(SuluCoreBundle_Example.id IN (:id')
         )->shouldNotBeCalled();
@@ -776,6 +813,7 @@ class DoctrineListBuilderTest extends TestCase
             'desc_id' => 1,
         ];
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.id AS title_id')->shouldBeCalled();
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.id AS desc_id')->shouldBeCalled();
         $this->queryBuilder->setParameter(Argument::containingString('title'), 3)->shouldBeCalled();
@@ -813,6 +851,7 @@ class DoctrineListBuilderTest extends TestCase
             'title_id' => null,
         ];
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.id AS title_id')->shouldBeCalled();
         $this->queryBuilder->setParameter(Argument::containingString('title_id'), Argument::any())->shouldNotBeCalled();
 
@@ -836,6 +875,7 @@ class DoctrineListBuilderTest extends TestCase
             'title_id' => null,
         ];
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.id AS title_id')->shouldBeCalled();
         $this->queryBuilder->setParameter(Argument::containingString('title_id'), Argument::any())->shouldNotBeCalled();
 
@@ -861,6 +901,7 @@ class DoctrineListBuilderTest extends TestCase
             'desc_id' => 1,
         ];
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.id AS title_id')->shouldBeCalled();
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.id AS desc_id')->shouldBeCalled();
         $this->queryBuilder->setParameter(Argument::containingString('title_id'), 3)->shouldBeCalled();
@@ -892,6 +933,7 @@ class DoctrineListBuilderTest extends TestCase
     {
         $fieldDescriptor = new DoctrineFieldDescriptor('id', 'title_id', self::$entityName);
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.id AS title_id')->shouldBeCalled();
         $this->queryBuilder->setParameter(Argument::containingString('title_id'), [1, 2])->shouldBeCalled();
         $this->queryBuilder->andWhere(
@@ -931,6 +973,7 @@ class DoctrineListBuilderTest extends TestCase
 
         $this->queryBuilder->addSelect('. AS ')->shouldBeCalled();
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         // not necessary for id join
         $this->queryBuilder->leftJoin('a.test', 'a', 'WITH', '')->shouldBeCalled();
         // called when select ids and for selecting data
@@ -959,6 +1002,7 @@ class DoctrineListBuilderTest extends TestCase
 
         $this->doctrineListBuilder->setSelectFields($fieldDescriptors);
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.name AS name')->shouldBeCalled();
 
         $this->queryBuilder->leftJoin(
@@ -991,6 +1035,7 @@ class DoctrineListBuilderTest extends TestCase
 
         $this->doctrineListBuilder->setSelectFields($fieldDescriptors);
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.name AS name')->shouldBeCalled();
 
         $this->queryBuilder->leftJoin(
@@ -1037,6 +1082,7 @@ class DoctrineListBuilderTest extends TestCase
             ),
         ];
         $this->doctrineListBuilder->setSelectFields($fieldDescriptors);
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect('. AS ')->shouldBeCalled();
         $this->queryBuilder->leftJoin(
             self::$entityName . '1',
@@ -1057,8 +1103,9 @@ class DoctrineListBuilderTest extends TestCase
     {
         $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName);
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.name AS name_alias')->shouldBeCalled();
-        $this->queryBuilder->groupBy(self::$entityNameAlias . '.name')->shouldBeCalledTimes(2);
+        $this->queryBuilder->groupBy(self::$entityNameAlias . '.name')->shouldBeCalledTimes(1);
 
         $this->doctrineListBuilder->setSelectFields(
             [
@@ -1075,6 +1122,7 @@ class DoctrineListBuilderTest extends TestCase
     {
         $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName);
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.name AS name_alias')->shouldBeCalled();
         $this->queryBuilder->andWhere(
             Argument::containingString('SuluCoreBundle_Example.name BETWEEN :name_alias')
@@ -1099,12 +1147,16 @@ class DoctrineListBuilderTest extends TestCase
 
         $this->queryBuilder->distinct(true)->shouldBeCalled();
 
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
+
         $this->doctrineListBuilder->execute();
     }
 
     public function testNoDistinct(): void
     {
         $this->queryBuilder->distinct(false)->shouldBeCalled();
+
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
 
         $this->doctrineListBuilder->execute();
     }
@@ -1118,6 +1170,7 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->setIdField($idField->reveal());
 
         $this->queryBuilder->select('example.id AS id')->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->addSelect('example.id AS id')->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder->where('example.id IN (:ids)')->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
 
         $this->doctrineListBuilder->execute();
@@ -1142,7 +1195,7 @@ class DoctrineListBuilderTest extends TestCase
             ],
         ]);
 
-        $this->queryBuilder->select('example.uuid AS other')->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
+        $this->queryBuilder->addSelect('example.uuid AS other')->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder->where('example.uuid IN (:ids)')->shouldBeCalled()->willReturn($this->queryBuilder->reveal());
 
         $this->doctrineListBuilder->execute();
@@ -1151,7 +1204,7 @@ class DoctrineListBuilderTest extends TestCase
     public function testNoIdField(): void
     {
         $this->queryBuilder
-            ->select('SuluCoreBundle_Example.id AS id')
+            ->addSelect('SuluCoreBundle_Example.id AS id')
             ->shouldBeCalled()
             ->willReturn($this->queryBuilder->reveal());
         $this->queryBuilder
@@ -1186,6 +1239,7 @@ class DoctrineListBuilderTest extends TestCase
         $accessQueryBuilder->select('entity.id')
             ->shouldBeCalled()
             ->willReturn($accessQueryBuilder->reveal());
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
 
         $accessQueryBuilder->setParameter('entityClass', self::$entityName)->shouldBeCalled();
 
@@ -1247,6 +1301,7 @@ class DoctrineListBuilderTest extends TestCase
         $accessQueryBuilder->select('entity.id')
             ->shouldBeCalled()
             ->willReturn($accessQueryBuilder->reveal());
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
 
         $accessQueryBuilder->setParameter('entityClass', self::$entityName)->shouldBeCalled();
 
@@ -1280,17 +1335,6 @@ class DoctrineListBuilderTest extends TestCase
         $this->doctrineListBuilder->execute();
     }
 
-    /**
-     * Check if only one query is executed when no limit and no expressions.
-     */
-    public function testSingleQuery(): void
-    {
-        $this->entityManager->createQueryBuilder()->shouldBeCalledTimes(1)->willReturn($this->queryBuilder->reveal());
-
-        $this->doctrineListBuilder->limit(null);
-        $this->doctrineListBuilder->execute();
-    }
-
     public function testSetPermissionCheckWithSecuredEntityName(): void
     {
         $user = $this->prophesize(User::class);
@@ -1315,6 +1359,7 @@ class DoctrineListBuilderTest extends TestCase
         $accessQueryBuilder->select('entity.id')
             ->shouldBeCalled()
             ->willReturn($accessQueryBuilder->reveal());
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
 
         $accessQueryBuilder->setParameter('entityClass', \stdClass::class)->shouldBeCalled();
 
@@ -1384,6 +1429,7 @@ class DoctrineListBuilderTest extends TestCase
         $accessQueryBuilder->select('entity.id')
             ->shouldBeCalled()
             ->willReturn($accessQueryBuilder->reveal());
+        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
 
         $accessQueryBuilder->setParameter('entityClass', \stdClass::class)->shouldBeCalled();
 

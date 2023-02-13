@@ -306,6 +306,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
     {
         $fieldDescriptors = $this->getFieldDescriptors();
         $listBuilder = $this->listBuilderFactory->create($this->contactClass);
+        $listBuilder->addGroupBy($fieldDescriptors['id']);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
         $account = $request->get('accountId');
