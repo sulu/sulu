@@ -122,7 +122,7 @@ class WebspaceSubscriberTest extends SubscriberTestCase
         $englishProperty1->remove()->shouldNotBeCalled();
     }
 
-    public function testDeleteUnavailableLocalesNoneWebspaceDocument()
+    public function testDeleteUnavailableLocalesNoneWebspaceDocument(): void
     {
         $copyEvent = $this->prophesize(CopyEvent::class);
 
