@@ -23,6 +23,7 @@ use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\HttpFoundation\Response;
 
 class MediaRedirectControllerTest extends SuluTestCase
 {
@@ -304,6 +305,13 @@ class MediaRedirectControllerTest extends SuluTestCase
         $this->em->persist($this->collectionType);
         $this->em->persist($this->collectionMeta);
         $this->em->persist($collectionMeta2);
+    }
+
+    public function test404NotFound(): void
+    {
+        $this->client->jsonRequest('GET', '/redirect/media/1?locale=en-gb');
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 
     /**
