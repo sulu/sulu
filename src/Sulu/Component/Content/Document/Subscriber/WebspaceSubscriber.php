@@ -89,7 +89,6 @@ class WebspaceSubscriber implements EventSubscriberInterface
         if (!$webspace) {
             return;
         }
-        
         $webspaceLocales = \array_map(function($localization) {
             return $localization->getLocale();
         }, $webspace->getAllLocalizations());
