@@ -13,11 +13,13 @@ namespace Sulu\Component\Content\Tests\Unit\Document\Subscriber;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Subscriber\WebspaceSubscriber;
+use Sulu\Component\DocumentManager\Document\UnknownDocument;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\CopyEvent;
 use Sulu\Component\Localization\Localization;
@@ -121,5 +123,29 @@ class WebspaceSubscriberTest extends SubscriberTestCase
         $germanProperty1->remove()->shouldBeCalled();
         $germanProperty2->remove()->shouldBeCalled();
         $englishProperty1->remove()->shouldNotBeCalled();
+    }
+
+    public function testDeleteUnavailableLocalesNoneWebspaceDocument(): void
+    {
+        $copyEvent = $this->prophesize(CopyEvent::class);
+
+        $document = $this->prophesize(UnknownDocument::class);
+        $this->inspector->getLocale($document)->willReturn('fr');
+        $copyEvent->getDocument()->willReturn($document->reveal());
+
+        $copyEvent->getCopiedPath()->willReturn('/cmf/test_io/contents');
+
+        $copiedNode = $this->prophesize(NodeInterface::class);
+        $copyEvent->getCopiedNode()->willReturn($copiedNode->reveal());
+
+        $copiedDocument = $this->prophesize(UnknownDocument::class);
+        $this->documentManager->find('/cmf/test_io/contents', 'fr')->willReturn($copiedDocument->reveal());
+        $this->inspector->getWebspace($copiedDocument)->willReturn(null);
+
+        $this->webspaceManager->findWebspaceByKey(null)->willReturn(null);
+
+        $this->inspector->getLocales(Argument::any())->shouldNotBecalled();
+
+        $this->subscriber->deleteUnavailableLocales($copyEvent->reveal());
     }
 }

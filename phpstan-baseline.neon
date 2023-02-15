@@ -42806,11 +42806,6 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Subscriber/TitleSubscriber.php
 
 		-
-			message: "#^Cannot call method getAllLocalizations\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Webspace\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/WebspaceSubscriber.php
-
-		-
 			message: "#^Cannot call method remove\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/WebspaceSubscriber.php
