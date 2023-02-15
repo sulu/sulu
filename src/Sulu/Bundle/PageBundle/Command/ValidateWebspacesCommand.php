@@ -11,8 +11,11 @@
 
 namespace Sulu\Bundle\PageBundle\Command;
 
+use Sulu\Bundle\PreviewBundle\Preview\Events;
+use Sulu\Bundle\PreviewBundle\Preview\Events\PreRenderEvent;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\StructureProvider\WebspaceStructureProvider;
 use Sulu\Component\Webspace\Webspace;
@@ -20,6 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Twig\Environment;
 
 class ValidateWebspacesCommand extends Command
@@ -62,14 +66,14 @@ class ValidateWebspacesCommand extends Command
     private $errors = [];
 
     /**
-     * @var string
-     */
-    private $activeTheme;
-
-    /**
      * @var WebspaceManagerInterface
      */
     private $webspaceManager;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
     public function __construct(
         Environment $twig,
@@ -78,7 +82,7 @@ class ValidateWebspacesCommand extends Command
         StructureManagerInterface $structureManager,
         WebspaceStructureProvider $structureProvider,
         WebspaceManagerInterface $webspaceManager,
-        $activeTheme = null
+        EventDispatcherInterface $eventDispatcher
     ) {
         parent::__construct();
 
@@ -87,8 +91,8 @@ class ValidateWebspacesCommand extends Command
         $this->controllerNameConverter = $controllerNameConverter;
         $this->structureManager = $structureManager;
         $this->structureProvider = $structureProvider;
-        $this->activeTheme = $activeTheme;
         $this->webspaceManager = $webspaceManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     protected function configure()
@@ -106,9 +110,9 @@ class ValidateWebspacesCommand extends Command
         $messages = '';
 
         foreach ($webspaces as $webspace) {
-            if (null !== $this->activeTheme) {
-                $this->activeTheme->setName($webspace->getTheme());
-            }
+            $this->eventDispatcher->dispatch(new PreRenderEvent(new RequestAttributes([
+                        'webspace' => $webspace,
+                    ])), Events::PRE_RENDER);
 
             $this->outputWebspace($webspace);
         }
