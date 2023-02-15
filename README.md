@@ -28,9 +28,9 @@
 </p>
 <br/>
 
-[Sulu](https://sulu.io/) is a highly extensible open-source **PHP content management system based** on the [Symfony](https://symfony.com/) framework. Sulu is developed to deliver robust **multi-lingual and multi-portal websites** while providing an **intuitive and extensible administration interface** to manage the full content lifecycle. 
+[Sulu](https://sulu.io/) is a highly extensible open-source **PHP content management system based** on the [Symfony](https://symfony.com/) framework. Sulu is developed to deliver robust **multi-lingual and multi-portal websites** while providing an **intuitive and extensible administration interface** to manage the full content lifecycle.
 
-Have a look at the official [Sulu website](https://sulu.io/) for a comprehensive list of Sulu's features, core values and use cases. 
+Have a look at the official [Sulu website](https://sulu.io/) for a comprehensive list of Sulu's features, core values and use cases.
 
 <br/>
 <p align="center">
@@ -38,7 +38,7 @@ Have a look at the official [Sulu website](https://sulu.io/) for a comprehensive
 </p>
 <br/>
 
-This repository contains the **core framework of the Sulu content management system**. The framework implements the functionality that is built into the Sulu content management system and therefore is a dependency of all Sulu projects. 
+This repository contains the **core framework of the Sulu content management system**. The framework implements the functionality that is built into the Sulu content management system and therefore is a dependency of all Sulu projects.
 
 If you want to **start a new Sulu project**, you might be interested in the [sulu/skeleton](https://github.com/sulu/skeleton) template repository. If you are planning to **extend your existing Sulu project**, visit the [Sulu organization](https://github.com/sulu) on GitHub for a complete list of official Sulu bundles.
 
@@ -65,7 +65,7 @@ Feel free to **file a new issue** with a respective title and description on the
 
 ## ✅&nbsp; Requirements
 
-Sulu requires a **PHP version higher or equal to 7.2** and is compatible with every **Symfony version starting from 4.3**. Have a look at the `require` section in the [composer.json](composer.json) of the [sulu/sulu](https://github.com/sulu/sulu) core framework to find an **up-to-date list of the requirements** of Sulu content management system.
+Sulu requires a **PHP version higher or equal to 8.0** and is compatible with every **Symfony version starting from 5.4**. Have a look at the `require` section in the [composer.json](composer.json) of the [sulu/sulu](https://github.com/sulu/sulu) core framework to find an **up-to-date list of the requirements** of Sulu content management system.
 
 
 ## 📘&nbsp; License

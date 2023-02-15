@@ -55,6 +55,12 @@ sulu_website:
             urls: true
 ```
 
+## 2.5.7
+
+### Constructor of ValidateWebspacesCommand changed
+
+The constructor of `ValidateWebspacesCommand` requires now EventDispatcherInterface instead of activeTheme.
+
 ## 2.5.2
 
 ### Add indexes to route table

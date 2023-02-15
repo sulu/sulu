@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Controller;
 
 use Sulu\Bundle\MediaBundle\Api\Media;
+use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -48,8 +49,12 @@ class MediaRedirectController
         $locale = $this->getRequestParameter($request, 'locale', true);
         $format = $this->getRequestParameter($request, 'format');
 
-        /** @var Media $media */
-        $media = $this->mediaManager->getById($id, $locale);
+        try {
+            /** @var Media $media */
+            $media = $this->mediaManager->getById($id, $locale);
+        } catch (MediaNotFoundException $e) {
+            throw new NotFoundHttpException($e->getMessage(), $e);
+        }
 
         if (null === $format) {
             return new RedirectResponse($media->getUrl());
