@@ -100,6 +100,8 @@ class MediaDataProvider extends BaseDataProvider
                 ->enableSorting(
                     [
                         ['column' => 'fileVersionMeta.title', 'title' => 'sulu_admin.title'],
+                        ['column' => 'created', 'title' => 'sulu_admin.created'],
+                        ['column' => 'changed', 'title' => 'sulu_admin.changed'],
                     ]
                 )
                 ->enableTypes($this->getTypes())
