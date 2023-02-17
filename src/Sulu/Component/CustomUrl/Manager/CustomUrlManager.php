@@ -192,9 +192,15 @@ class CustomUrlManager implements CustomUrlManagerInterface
 
     public function findByPage(UuidBehavior $page)
     {
+        $descendentPaths = [];
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
+            $descendentPaths[] = sprintf('ISDESCENDANTNODE(a, "/cmf/%s/custom-urls")', $webspace->getKey());
+        }
+
         $query = $this->documentManager->createQuery(
             \sprintf(
-                'SELECT * FROM [nt:unstructured] AS a WHERE a.[jcr:mixinTypes] = "sulu:custom_url" AND a.[sulu:target] = "%s"',
+                'SELECT * FROM [nt:unstructured] AS a WHERE (%s) AND a.[jcr:mixinTypes] = "sulu:custom_url" AND a.[sulu:target] = "%s"',
+                implode(' OR ', $descendentPaths),
                 $page->getUuid()
             )
         );
