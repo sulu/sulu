@@ -18,6 +18,7 @@ use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRemovedEvent;
 use Sulu\Bundle\CustomUrlBundle\Domain\Event\CustomUrlRouteRemovedEvent;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface;
+use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\CustomUrl\Document\RouteDocument;
 use Sulu\Component\CustomUrl\Repository\CustomUrlRepository;
@@ -29,6 +30,7 @@ use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\DocumentManager\PathBuilder;
 use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
@@ -192,9 +194,16 @@ class CustomUrlManager implements CustomUrlManagerInterface
 
     public function findByPage(UuidBehavior $page)
     {
+        $webspaceKeys = array_map(function (Webspace $webspace) {
+            return $webspace->getKey();
+        }, $this->webspaceManager->getWebspaceCollection()->getWebspaces());
+        if ($page instanceof WebspaceBehavior) {
+            $webspaceKeys = [$page->getWebspaceName()];
+        }
+
         $descendentPaths = [];
-        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
-            $descendentPaths[] = sprintf('ISDESCENDANTNODE(a, "/cmf/%s/custom-urls")', $webspace->getKey());
+        foreach ($webspaceKeys as $webspaceKey) {
+            $descendentPaths[] = sprintf('ISDESCENDANTNODE(a, "/cmf/%s/custom-urls")', $webspaceKey);
         }
 
         $query = $this->documentManager->createQuery(
