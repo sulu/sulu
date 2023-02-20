@@ -16,11 +16,11 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata;
  */
 class SinglePropertyMetadata extends AbstractPropertyMetadata
 {
-    /**
-     * @var ?FieldMetadata
-     */
-    private $field;
+    private ?FieldMetadata $field = null;
 
+    /**
+     * @return void
+     */
     public function setField(?FieldMetadata $field)
     {
         $this->field = $field;

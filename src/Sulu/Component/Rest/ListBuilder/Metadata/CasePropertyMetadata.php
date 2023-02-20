@@ -19,7 +19,7 @@ class CasePropertyMetadata extends AbstractPropertyMetadata
     /**
      * @var FieldMetadata[]
      */
-    private $cases = [];
+    private array $cases = [];
 
     /**
      * Returns all cases.
@@ -45,6 +45,8 @@ class CasePropertyMetadata extends AbstractPropertyMetadata
 
     /**
      * Add a case.
+     *
+     * @return void
      */
     public function addCase(FieldMetadata $case)
     {

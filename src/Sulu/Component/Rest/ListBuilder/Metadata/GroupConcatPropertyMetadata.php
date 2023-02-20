@@ -16,21 +16,15 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata;
  */
 class GroupConcatPropertyMetadata extends AbstractPropertyMetadata
 {
-    /**
-     * @var ?FieldMetadata
-     */
-    private $field;
+    private ?FieldMetadata $field = null;
+
+    private string $glue;
+
+    private bool $distinct;
 
     /**
-     * @var string
+     * @return void
      */
-    private $glue;
-
-    /**
-     * @var bool
-     */
-    private $distinct;
-
     public function setField(?FieldMetadata $field)
     {
         $this->field = $field;
@@ -41,6 +35,9 @@ class GroupConcatPropertyMetadata extends AbstractPropertyMetadata
         return $this->field;
     }
 
+    /**
+     * @return void
+     */
     public function setGlue(string $glue)
     {
         $this->glue = $glue;
@@ -51,6 +48,9 @@ class GroupConcatPropertyMetadata extends AbstractPropertyMetadata
         return $this->glue;
     }
 
+    /**
+     * @return void
+     */
     public function setDistinct(bool $distinct)
     {
         $this->distinct = $distinct;

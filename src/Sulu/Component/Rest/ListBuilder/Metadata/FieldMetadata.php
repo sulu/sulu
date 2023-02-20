@@ -29,7 +29,7 @@ class FieldMetadata
     /**
      * @var JoinMetadata[]
      */
-    private $joins = [];
+    private array $joins = [];
 
     public function __construct($name, $entityName)
     {
@@ -63,12 +63,17 @@ class FieldMetadata
 
     /**
      * @param JoinMetadata[] $joins
+     *
+     * @return void
      */
     public function setJoins(array $joins)
     {
         $this->joins = $joins;
     }
 
+    /**
+     * @return void
+     */
     public function addJoin(JoinMetadata $join)
     {
         $this->joins[] = $join;
