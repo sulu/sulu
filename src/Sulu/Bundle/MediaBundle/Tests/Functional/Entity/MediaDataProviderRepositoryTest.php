@@ -171,7 +171,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
 
     private function createTag($name)
     {
-        $tag = $this->em->getRepository('SuluTagBundle:Tag')->createNew();
+        $tag = $this->em->getRepository(Tag::class)->createNew();
         $tag->setName($name);
 
         $this->em->persist($tag);

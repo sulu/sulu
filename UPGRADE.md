@@ -1875,7 +1875,7 @@ you had some `filter-type` attributes in your configurations, which would not ha
 -        <identity-property name="accountId" visibility="never" filter-type="auto-complete" translation="sulu_contact.organization">
 +        <identity-property name="accountId" visibility="never" translation="sulu_contact.organization">
              <field-name>account</field-name>
-             <entity-name>SuluContactBundle:AccountContact</entity-name>
+             <entity-name>Sulu\Bundle\ContactBundle\Entity\AccountContact</entity-name>
  
              <joins ref="accountContact"/>
  
