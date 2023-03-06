@@ -72,10 +72,12 @@ class SeoTwigExtension extends AbstractExtension
     ) {
         $template = '@SuluWebsite/Extension/seo.html.twig';
 
-        @\trigger_error(\sprintf(
+        @\trigger_deprecation(
+            'sulu/sulu',
+            '1.x',
             'This twig extension is deprecated and should not be used anymore, include the "%s".',
             $template
-        ));
+        );
 
         $defaultLocale = null;
         $portal = $this->requestAnalyzer->getPortal();

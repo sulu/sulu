@@ -26,14 +26,15 @@ class DocumentFixturePass implements CompilerPassInterface
             $definition = $container->getDefinition($id);
 
             if (\is_subclass_of($definition->getClass(), ContainerAwareInterface::class)) {
-                @\trigger_error(
+                @\trigger_deprecation(
+                    'sulu/sulu',
+                    '2.1',
                     \sprintf(
-                        'Document fixtures with the "%s" are deprecated since sulu/sulu 2.1,' . \PHP_EOL .
+                        'Document fixtures with the "%s" are deprecated,' . \PHP_EOL .
                         'use dependency injection for the "%s" service instead.',
                         ContainerAwareInterface::class,
                         $id
-                    ),
-                    \E_USER_DEPRECATED
+                    )
                 );
 
                 $definition->addMethodCall('setContainer', [new Reference('service_container')]);

@@ -57,7 +57,7 @@ class PreviewFormViewBuilder implements PreviewFormViewBuilderInterface
      */
     public function setRequestParameters(array $requestParameters): PreviewFormViewBuilderInterface
     {
-        @\trigger_error('The usage of the "setRequestParameters" method in the PreviewFormViewBuilder is deprecated. Please use "addRequestParameters" instead.', \E_USER_DEPRECATED);
+        @\trigger_deprecation('sulu/sulu', '2.1', 'The usage of the "setRequestParameters" method in the PreviewFormViewBuilder is deprecated. Please use "addRequestParameters" instead.');
 
         $this->setRequestParametersToView($this->view, $requestParameters);
 

@@ -75,10 +75,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         $this->blockVisitors = $blockVisitors;
 
         if (null === $this->blockVisitors) {
-            @\trigger_error(
-                'Instantiating BlockContentType without the $blockVisitors argument is deprecated.',
-                \E_USER_DEPRECATED
-            );
+            @\trigger_deprecation('sulu/sulu', '2.3', 'Instantiating BlockContentType without the $blockVisitors argument is deprecated.');
 
             $this->blockVisitors = [];
         }

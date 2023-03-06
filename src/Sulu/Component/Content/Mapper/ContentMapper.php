@@ -483,10 +483,11 @@ class ContentMapper implements ContentMapperInterface
         $destLocales,
         $structureType = LegacyStructure::TYPE_PAGE
     ) {
-        @\trigger_error(
+        @\trigger_deprecation(
+            'sulu/sulu',
+            '2.3',
             'The ContentMapperInterface::copyLanguage method is deprecated and will be removed in the future.'
-            . ' Use DocumentManagerInterface::copyLocale instead.',
-            \E_USER_DEPRECATED
+            . ' Use DocumentManagerInterface::copyLocale instead.'
         );
 
         if (!\is_array($destLocales)) {

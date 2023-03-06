@@ -43,12 +43,13 @@ class GoogleGeolocator implements GeolocatorInterface
         string $apiKey
     ) {
         if ($client instanceof ClientInterface) {
-            @\trigger_error(
+            @\trigger_deprecation(
+                'sulu/sulu',
+                '2.3',
                 \sprintf(
                     'Instantiating GoogleGeolocator with %s as first argument is deprecated, please use %s instead.',
                     ClientInterface::class, HttpClientInterface::class
-                ),
-                \E_USER_DEPRECATED
+                )
             );
         } elseif (!($client instanceof HttpClientInterface)) {
             throw new \InvalidArgumentException(

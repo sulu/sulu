@@ -112,7 +112,7 @@ class Role implements RoleInterface
      */
     public function getRole()
     {
-        @\trigger_error(\sprintf('The "%s" method is deprecated since Sulu 2.1, use "%s" instead.', __METHOD__, 'getIdentifier'), \E_USER_DEPRECATED);
+        @\trigger_deprecation('sulu/sulu', '2.1', 'The "%s" method is deprecated, use "%s" instead.', __METHOD__, 'getIdentifier');
 
         return $this->getIdentifier();
     }
