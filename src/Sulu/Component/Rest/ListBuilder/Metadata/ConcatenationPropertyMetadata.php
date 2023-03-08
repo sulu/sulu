@@ -19,13 +19,13 @@ class ConcatenationPropertyMetadata extends AbstractPropertyMetadata
     /**
      * @var FieldMetadata[]
      */
-    private $fields = [];
+    private array $fields = [];
+
+    private string $glue;
 
     /**
-     * @var string
+     * @return void
      */
-    private $glue;
-
     public function setGlue(string $glue)
     {
         $this->glue = $glue;
@@ -36,11 +36,17 @@ class ConcatenationPropertyMetadata extends AbstractPropertyMetadata
         return $this->glue;
     }
 
+    /**
+     * @return FieldMetadata[]
+     */
     public function getFields(): array
     {
         return $this->fields;
     }
 
+    /**
+     * @return void
+     */
     public function addField(FieldMetadata $field)
     {
         $this->fields[] = $field;

@@ -28,31 +28,51 @@ class ListMetadata
      */
     private $propertiesMetadata = [];
 
+    /**
+     * @param string $resource
+     *
+     * @return void
+     */
     public function setResource($resource)
     {
         $this->resource = $resource;
     }
 
+    /**
+     * @return string
+     */
     public function getResource()
     {
         return $this->resource;
     }
 
+    /**
+     * @return void
+     */
     public function setKey(string $key)
     {
         $this->key = $key;
     }
 
+    /**
+     * @return string
+     */
     public function getKey()
     {
         return $this->key;
     }
 
+    /**
+     * @return AbstractPropertyMetadata[]
+     */
     public function getPropertiesMetadata()
     {
         return $this->propertiesMetadata;
     }
 
+    /**
+     * @return void
+     */
     public function addPropertyMetadata(AbstractPropertyMetadata $propertyMetadata)
     {
         $this->propertiesMetadata[] = $propertyMetadata;

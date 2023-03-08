@@ -49,9 +49,9 @@ abstract class AbstractPropertyMetadata
     private $sortable = true;
 
     /**
-     * @var array
+     * @var array<mixed>|null
      */
-    private $transformerTypeParameters;
+    private $transformerTypeParameters = null;
 
     /**
      * @var string
@@ -59,15 +59,18 @@ abstract class AbstractPropertyMetadata
     private $filterType;
 
     /**
-     * @var array
+     * @var array<mixed>|null
      */
-    private $filterTypeParameters;
+    private $filterTypeParameters = null;
 
     /**
      * @var string
      */
     private $width;
 
+    /**
+     * @param string $name
+     */
     public function __construct($name)
     {
         $this->name = $name;
@@ -93,6 +96,8 @@ abstract class AbstractPropertyMetadata
 
     /**
      * @param string $translation
+     *
+     * @return void
      */
     public function setTranslation($translation)
     {
@@ -109,6 +114,8 @@ abstract class AbstractPropertyMetadata
 
     /**
      * @param string $visibility
+     *
+     * @return void
      */
     public function setVisibility($visibility)
     {
@@ -125,6 +132,8 @@ abstract class AbstractPropertyMetadata
 
     /**
      * @param string $searchability
+     *
+     * @return void
      */
     public function setSearchability($searchability)
     {
@@ -141,6 +150,8 @@ abstract class AbstractPropertyMetadata
 
     /**
      * @param string $type
+     *
+     * @return void
      */
     public function setType($type)
     {
@@ -157,6 +168,8 @@ abstract class AbstractPropertyMetadata
 
     /**
      * @param bool $sortable
+     *
+     * @return void
      */
     public function setSortable($sortable)
     {
@@ -164,7 +177,7 @@ abstract class AbstractPropertyMetadata
     }
 
     /**
-     * @return array
+     * @return array<mixed>|null
      */
     public function getTransformerTypeParameters()
     {
@@ -172,7 +185,9 @@ abstract class AbstractPropertyMetadata
     }
 
     /**
-     * @param array $transformerTypeParameters
+     * @param array<mixed> $transformerTypeParameters
+     *
+     * @return void
      */
     public function setTransformerTypeParameters($transformerTypeParameters)
     {
@@ -189,6 +204,8 @@ abstract class AbstractPropertyMetadata
 
     /**
      * @param string $filterType
+     *
+     * @return void
      */
     public function setFilterType($filterType)
     {
@@ -196,7 +213,7 @@ abstract class AbstractPropertyMetadata
     }
 
     /**
-     * @return array
+     * @return array<mixed>|null
      */
     public function getFilterTypeParameters()
     {
@@ -204,7 +221,9 @@ abstract class AbstractPropertyMetadata
     }
 
     /**
-     * @param array $parameters
+     * @param array<mixed> $parameters
+     *
+     * @return void
      */
     public function setFilterTypeParameters($parameters)
     {

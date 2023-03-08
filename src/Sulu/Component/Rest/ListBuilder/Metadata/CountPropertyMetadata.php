@@ -16,16 +16,13 @@ namespace Sulu\Component\Rest\ListBuilder\Metadata;
  */
 class CountPropertyMetadata extends AbstractPropertyMetadata
 {
-    /**
-     * @var FieldMetadata
-     */
-    private $field;
+    private FieldMetadata $field;
+
+    private bool $distinct;
 
     /**
-     * @var bool
+     * @return void
      */
-    private $distinct;
-
     public function setField(FieldMetadata $field)
     {
         $this->field = $field;
@@ -41,6 +38,9 @@ class CountPropertyMetadata extends AbstractPropertyMetadata
         return $this->field;
     }
 
+    /**
+     * @return void
+     */
     public function setDistinct(bool $distinct)
     {
         $this->distinct = $distinct;

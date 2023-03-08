@@ -54996,111 +54996,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelperInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:__construct\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/AbstractPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:getFilterTypeParameters\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/AbstractPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:getTransformerTypeParameters\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/AbstractPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:setFilterType\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/AbstractPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:setFilterTypeParameters\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/AbstractPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:setFilterTypeParameters\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/AbstractPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:setSearchability\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/AbstractPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:setSortable\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/AbstractPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:setTransformerTypeParameters\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/AbstractPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:setTransformerTypeParameters\\(\\) has parameter \\$transformerTypeParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/AbstractPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:setTranslation\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/AbstractPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:setType\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/AbstractPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:setVisibility\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/AbstractPropertyMetadata.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:\\$filterTypeParameters type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/AbstractPropertyMetadata.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:\\$transformerTypeParameters type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/AbstractPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\CasePropertyMetadata\\:\\:addCase\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/CasePropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ConcatenationPropertyMetadata\\:\\:addField\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ConcatenationPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ConcatenationPropertyMetadata\\:\\:getFields\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ConcatenationPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ConcatenationPropertyMetadata\\:\\:setGlue\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ConcatenationPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\CountPropertyMetadata\\:\\:setDistinct\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/CountPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\CountPropertyMetadata\\:\\:setField\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/CountPropertyMetadata.php
-
-		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\AbstractPropertyMetadata\\:\\:getDistinct\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
@@ -55251,21 +55146,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\FieldDescriptorFactory\\:\\:resolveOptions\\(\\) expects string, bool given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
-
-		-
-			message: "#^Parameter \\#10 \\$distinct of class Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineCountFieldDescriptor constructor expects bool, string given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
-
-		-
-			message: "#^Parameter \\#9 \\$distinct of class Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineGroupConcatFieldDescriptor constructor expects bool, string given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\FieldMetadata\\:\\:__construct\\(\\) has parameter \\$entityName with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldMetadata.php
@@ -55274,96 +55154,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\FieldMetadata\\:\\:__construct\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\FieldMetadata\\:\\:addJoin\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\FieldMetadata\\:\\:setJoins\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\GroupConcatPropertyMetadata\\:\\:setDistinct\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/GroupConcatPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\GroupConcatPropertyMetadata\\:\\:setField\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/GroupConcatPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\GroupConcatPropertyMetadata\\:\\:setGlue\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/GroupConcatPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\IdentityPropertyMetadata\\:\\:setField\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/IdentityPropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\JoinMetadata\\:\\:setCondition\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/JoinMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\JoinMetadata\\:\\:setConditionMethod\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/JoinMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\JoinMetadata\\:\\:setEntityField\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/JoinMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\JoinMetadata\\:\\:setEntityName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/JoinMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\JoinMetadata\\:\\:setMethod\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/JoinMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ListMetadata\\:\\:addPropertyMetadata\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ListMetadata\\:\\:getKey\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ListMetadata\\:\\:getPropertiesMetadata\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ListMetadata\\:\\:getResource\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ListMetadata\\:\\:setKey\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ListMetadata\\:\\:setResource\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ListMetadata\\:\\:setResource\\(\\) has parameter \\$resource with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListMetadata.php
 
 		-
 			message: "#^Argument of an invalid type DOMNodeList\\<DOMNode\\>\\|false supplied for foreach, only iterables are supported\\.$#"
@@ -55466,32 +55256,7 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListXmlLoader.php
 
 		-
-			message: "#^Parameter \\#1 \\$distinct of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\CountPropertyMetadata\\:\\:setDistinct\\(\\) expects bool, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListXmlLoader.php
-
-		-
-			message: "#^Parameter \\#1 \\$distinct of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\GroupConcatPropertyMetadata\\:\\:setDistinct\\(\\) expects bool, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListXmlLoader.php
-
-		-
-			message: "#^Parameter \\#1 \\$glue of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ConcatenationPropertyMetadata\\:\\:setGlue\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListXmlLoader.php
-
-		-
-			message: "#^Parameter \\#1 \\$glue of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\GroupConcatPropertyMetadata\\:\\:setGlue\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListXmlLoader.php
-
-		-
 			message: "#^Parameter \\#1 \\$key of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ListMetadata\\:\\:setKey\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListXmlLoader.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function trim expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListXmlLoader.php
 
@@ -55534,16 +55299,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$propertyNode of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ListXmlLoader\\:\\:loadIdentityPropertyMetadata\\(\\) expects DOMElement, DOMNode given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListXmlLoader.php
-
-		-
-			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
-			count: 4
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListXmlLoader.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\SinglePropertyMetadata\\:\\:setField\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/SinglePropertyMetadata.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\PaginatedRepresentation\\:\\:__construct\\(\\) has parameter \\$data with no type specified\\.$#"
@@ -58949,16 +58704,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Util\\\\WildcardUrlUtil\\:\\:resolve\\(\\) should return string but empty return statement found\\.$#"
 			count: 1
 			path: src/Sulu/Component/Util/WildcardUrlUtil.php
-
-		-
-			message: "#^Cannot access property \\$length on DOMNodeList\\<DOMNode\\>\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/XmlUtil.php
-
-		-
-			message: "#^Cannot call method item\\(\\) on DOMNodeList\\<DOMNode\\>\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/XmlUtil.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Util\\\\XmlUtil\\:\\:getBooleanValueFromXPath\\(\\) has parameter \\$default with no type specified\\.$#"

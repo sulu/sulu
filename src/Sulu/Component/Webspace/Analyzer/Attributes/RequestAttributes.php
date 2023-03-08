@@ -42,6 +42,14 @@ class RequestAttributes
     }
 
     /**
+     * @return mixed[]
+     */
+    public function getAttributes(): array
+    {
+        return $this->attributes;
+    }
+
+    /**
      * Merges this and the given attributes and returns a new instance.
      *
      * @return RequestAttributes

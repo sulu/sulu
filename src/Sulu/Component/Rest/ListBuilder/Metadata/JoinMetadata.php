@@ -30,12 +30,12 @@ class JoinMetadata
     private $entityName;
 
     /**
-     * @var string
+     * @var string|null
      */
-    private $entityField;
+    private $entityField = null;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $condition = null;
 
@@ -63,6 +63,8 @@ class JoinMetadata
 
     /**
      * @param string $entityName
+     *
+     * @return void
      */
     public function setEntityName($entityName)
     {
@@ -72,7 +74,7 @@ class JoinMetadata
     /**
      * The field, which should be joined.
      *
-     * @return string
+     * @return string|null
      */
     public function getEntityField()
     {
@@ -81,6 +83,8 @@ class JoinMetadata
 
     /**
      * @param string $entityField
+     *
+     * @return void
      */
     public function setEntityField($entityField)
     {
@@ -90,7 +94,7 @@ class JoinMetadata
     /**
      * The additional condition which should apply to the join.
      *
-     * @return string
+     * @return string|null
      */
     public function getCondition()
     {
@@ -99,6 +103,8 @@ class JoinMetadata
 
     /**
      * @param string $condition
+     *
+     * @return void
      */
     public function setCondition($condition)
     {
@@ -115,6 +121,8 @@ class JoinMetadata
 
     /**
      * @param 'ON'|'WITH' $conditionMethod
+     *
+     * @return void
      */
     public function setConditionMethod($conditionMethod)
     {
@@ -133,6 +141,8 @@ class JoinMetadata
 
     /**
      * @param 'LEFT'|'INNER'|'RIGHT' $method
+     *
+     * @return void
      */
     public function setMethod($method)
     {
