@@ -159,6 +159,7 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
 
         $defaultSessionDefinition = new Definition(Session::class, [new Reference('sulu_document_manager.decorated_default_session.inner')]);
         $defaultSessionDefinition->setDecoratedService($defaultSessionId);
+        $defaultSessionDefinition->setLazy(true); // see https://github.com/jackalope/jackalope-doctrine-dbal/issues/412#issuecomment-1447062722
         $container->setDefinition('sulu_document_manager.decorated_default_session', $defaultSessionDefinition);
 
         $liveSessionId = $this->getSessionServiceId($config['live_session']);
@@ -169,6 +170,7 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
 
         $liveSessionDefinition = new Definition(Session::class, [new Reference('sulu_document_manager.decorated_live_session.inner')]);
         $liveSessionDefinition->setDecoratedService($liveSessionId);
+        $liveSessionDefinition->setLazy(true); // see https://github.com/jackalope/jackalope-doctrine-dbal/issues/412#issuecomment-1447062722
         $container->setDefinition('sulu_document_manager.decorated_live_session', $liveSessionDefinition);
 
         $container->setParameter(
