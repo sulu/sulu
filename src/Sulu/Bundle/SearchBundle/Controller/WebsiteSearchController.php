@@ -74,9 +74,10 @@ class WebsiteSearchController
         $this->templateAttributeResolver = $templateAttributeResolver;
 
         if (null === $this->templateAttributeResolver) {
-            @\trigger_error(
-                'Instantiating the WebsiteSearchController class without the $templateAttributeResolver argument is deprecated.',
-                \E_USER_DEPRECATED
+            @\trigger_deprecation(
+                'sulu/sulu',
+                '2.4',
+                'Instantiating the WebsiteSearchController class without the $templateAttributeResolver argument is deprecated.'
             );
         }
     }

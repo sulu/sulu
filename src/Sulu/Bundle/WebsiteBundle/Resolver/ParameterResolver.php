@@ -125,7 +125,7 @@ class ParameterResolver implements ParameterResolverInterface
         }
 
         if ($this->enabledTwigAttributes['urls'] ?? true) {
-            @\trigger_error('Enabling the "urls" parameter is deprecated since Sulu 2.2', \E_USER_DEPRECATED);
+            @\trigger_deprecation('sulu/sulu', '2.2', 'Enabling the "urls" parameter is deprecated.');
 
             $structureData['urls'] = [];
             foreach ($localizations as $localization) {

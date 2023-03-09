@@ -26,9 +26,11 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
 
     public function load($resource, $type = null)
     {
-        @\trigger_error(
-            'XmlFormatLoader10 is deprecated since version 1.4 and will be removed in 2.0. Use XmlFormatLoader11 instead.',
-            \E_USER_DEPRECATED
+        @\trigger_deprecation(
+            'sulu/sulu',
+            '1.4',
+            '%s is deprecated and will be removed in 2.0. Use XmlFormatLoader11 instead.',
+            __CLASS__
         );
 
         return parent::load($resource, $type);

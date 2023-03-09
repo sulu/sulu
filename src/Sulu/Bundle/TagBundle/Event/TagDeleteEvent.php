@@ -32,13 +32,12 @@ class TagDeleteEvent extends Event
      */
     public function __construct(TagInterface $tag)
     {
-        @\trigger_error(
-            \sprintf(
-                'The "%s" class is deprecated since Sulu 2.3. Use the "%s" class instead.',
-                TagDeleteEvent::class,
-                TagRemovedEvent::class
-            ),
-            \E_USER_DEPRECATED
+        @\trigger_deprecation(
+            'sulu/sulu',
+            '2.3',
+            'The "%s" class is deprecated. Use the "%s" class instead.',
+            TagDeleteEvent::class,
+            TagRemovedEvent::class
         );
 
         $this->tag = $tag;

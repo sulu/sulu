@@ -19,13 +19,12 @@ use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\Response;
 
-@\trigger_error(
-    \sprintf(
-        'The "%s" class is deprecated since Sulu 2.0, use data from "%s" instead.',
-        LocalizationController::class,
-        AdminController::class
-    ),
-    \E_USER_DEPRECATED
+@\trigger_deprecation(
+    'sulu/sulu',
+    '2.0',
+    'The "%s" class is deprecated since, use data from "%s" instead.',
+    LocalizationController::class,
+    AdminController::class
 );
 
 /**

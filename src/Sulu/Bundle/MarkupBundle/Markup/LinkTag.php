@@ -49,9 +49,10 @@ class LinkTag implements TagInterface
         $this->urlHelper = $urlHelper;
 
         if (null === $this->urlHelper) {
-            @\trigger_error(
-                'Instantiating the LinkTag class without the $urlHelper argument is deprecated.',
-                \E_USER_DEPRECATED
+            @\trigger_deprecation(
+                'sulu/sulu',
+                '2.3',
+                'Instantiating the LinkTag class without the $urlHelper argument is deprecated.'
             );
         }
     }

@@ -440,9 +440,10 @@ class CategoryManager implements CategoryManagerInterface
 
     public function find($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
     {
-        @\trigger_error(
-            __METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentId() instead.',
-            \E_USER_DEPRECATED
+        @\trigger_deprecation(
+            'sulu/sulu',
+            '1.4',
+            __METHOD__ . '() is deprecated and will be removed in 2.0. Use findChildrenByParentId() instead.'
         );
 
         if ($parent && !$this->categoryRepository->isCategoryId($parent)) {
@@ -454,9 +455,10 @@ class CategoryManager implements CategoryManagerInterface
 
     public function findChildren($key, $sortBy = null, $sortOrder = null)
     {
-        @\trigger_error(
-            __METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenByParentKey() instead.',
-            \E_USER_DEPRECATED
+        @\trigger_deprecation(
+            'sulu/sulu',
+            '1.4',
+            __METHOD__ . '() is deprecated and will be removed in 2.0. Use findChildrenByParentKey() instead.'
         );
 
         return $this->categoryRepository->findChildren($key, $sortBy, $sortOrder);

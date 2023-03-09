@@ -277,7 +277,7 @@ class Category implements CategoryInterface
 
     public function addChildren(CategoryInterface $child)
     {
-        @\trigger_error(__METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use addChild() instead.', \E_USER_DEPRECATED);
+        @\trigger_deprecation('sulu/sulu', '1.4', __METHOD__ . '() is deprecated and will be removed in 2.0. Use addChild() instead.');
 
         $this->addChild($child);
     }
@@ -291,7 +291,7 @@ class Category implements CategoryInterface
 
     public function removeChildren(CategoryInterface $child)
     {
-        @\trigger_error(__METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use removeChild() instead.', \E_USER_DEPRECATED);
+        @\trigger_deprecation('sulu/sulu', '1.4', __METHOD__ . '() is deprecated and will be removed in 2.0. Use removeChild() instead.');
 
         $this->removeChild($child);
     }
