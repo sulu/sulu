@@ -219,24 +219,26 @@ class MediaManager implements MediaManagerInterface
         $this->trashManager = $trashManager;
 
         if (!$adminDownloadPath) {
-            @\trigger_error(
+            @\trigger_deprecation(
+                'sulu/sulu',
+                '2.2',
                 \sprintf(
                     'The usage of the "%s" without setting the "$adminDownloadPath" is deprecated and will not longer work in Sulu 3.0.',
                     MediaManager::class
-                ),
-                \E_USER_DEPRECATED
+                )
             );
         }
 
         $this->adminDownloadPath = $adminDownloadPath ?: '/admin' . $this->downloadPath;
 
         if (!\is_iterable($mediaPropertiesProviders)) {
-            @\trigger_error(
+            @\trigger_deprecation(
+                'sulu/sulu',
+                '2.3',
                 \sprintf(
                     'The usage of the "%s" without setting "$mediaPropertiesProviders" is deprecated and will not longer work in Sulu 3.0.',
                     MediaManager::class
-                ),
-                \E_USER_DEPRECATED
+                )
             );
 
             if ($mediaPropertiesProviders instanceof FFProbe) {

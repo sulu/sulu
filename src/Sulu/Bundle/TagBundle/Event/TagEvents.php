@@ -11,12 +11,11 @@
 
 namespace Sulu\Bundle\TagBundle\Event;
 
-@\trigger_error(
-    \sprintf(
-        'The "%s" class is deprecated since Sulu 2.3. Use the respective event class directly instead.',
-        TagEvents::class
-    ),
-    \E_USER_DEPRECATED
+@\trigger_deprecation(
+    'sulu/sulu',
+    '2.3',
+    'The "%s" class is deprecated. Use the respective event class directly instead.',
+    TagEvents::class
 );
 
 /**

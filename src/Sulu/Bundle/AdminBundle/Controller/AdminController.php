@@ -222,7 +222,7 @@ class AdminController
         $this->collaborationInterval = $collaborationInterval;
 
         if (null === $collaborationEnabled) {
-            @\trigger_error('Instantiating the AdminController without the $collaborationEnabled argument is deprecated!', \E_USER_DEPRECATED);
+            @\trigger_deprecation('sulu/sulu', '2.3', 'Instantiating the AdminController without the $collaborationEnabled argument is deprecated!');
         }
 
         $this->collaborationEnabled = $collaborationEnabled ?? true;

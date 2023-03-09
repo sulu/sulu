@@ -50,9 +50,10 @@ class MediaImageExtractor implements MediaImageExtractorInterface
     public function extract($resource/*, string $resourceMimeType*/)
     {
         if (\func_num_args() <= 1) {
-            @\trigger_error(
-                \sprintf('Calling "%s()" without $resourceMimeType parameter is deprecated.', __METHOD__),
-                \E_USER_DEPRECATED
+            @\trigger_deprecation(
+                'sulu/sulu',
+                '2.2',
+                \sprintf('Calling "%s()" without $resourceMimeType parameter is deprecated.', __METHOD__)
             );
 
             $mimeType = \mime_content_type($resource);

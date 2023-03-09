@@ -19,13 +19,12 @@ use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Component\Rest\AbstractRestController;
 use Symfony\Component\HttpFoundation\Request;
 
-@\trigger_error(
-    \sprintf(
-        'The "%s" class is deprecated since Sulu 2.2, use data from "%s" instead.',
-        ContextsController::class,
-        AdminController::class
-    ),
-    \E_USER_DEPRECATED
+@\trigger_deprecation(
+    'sulu/sulu',
+    '2.2',
+    'The "%s" class is deprecated, use data from "%s" instead.',
+    ContextsController::class,
+    AdminController::class
 );
 
 /**

@@ -89,19 +89,24 @@ abstract class ItemMetadata
 
     public function __get($name)
     {
-        @\trigger_error(
-            \sprintf('Do not use public property "%s" from "%s"', $name, __CLASS__),
-            \E_USER_DEPRECATED
-        );
+        @\trigger_deprecation(
+            'sulu/sulu',
+            '2.0',
+            'Do not use public property "%s" from "%s"',
+            $name,
+            __CLASS__);
 
         return $this[$name];
     }
 
     public function __set($name, $value)
     {
-        @\trigger_error(
-            \sprintf('Do not use public property "%s" from "%s"', $name, __CLASS__),
-            \E_USER_DEPRECATED
+        @\trigger_deprecation(
+            'sulu/sulu',
+            '2.0',
+            'Do not use public property "%s" from "%s"',
+            $name,
+            __CLASS__
         );
 
         return $this[$name] = $value;

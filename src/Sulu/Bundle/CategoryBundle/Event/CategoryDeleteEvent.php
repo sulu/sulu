@@ -32,13 +32,12 @@ class CategoryDeleteEvent extends Event
      */
     public function __construct(CategoryInterface $category)
     {
-        @\trigger_error(
-            \sprintf(
-                'The "%s" class is deprecated since Sulu 2.3. Use the "%s" class instead.',
-                CategoryDeleteEvent::class,
-                CategoryRemovedEvent::class
-            ),
-            \E_USER_DEPRECATED
+        @\trigger_deprecation(
+            'sulu/sulu',
+            '2.3',
+            'The "%s" class is deprecated. Use the "%s" class instead.',
+            __CLASS__,
+            CategoryRemovedEvent::class
         );
 
         $this->category = $category;
