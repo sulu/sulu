@@ -104,10 +104,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         $this->logger = $logger ?: new NullLogger();
 
         if ($securityChecker instanceof RequestStack) {
-            @\trigger_error(
-                'Instantiating the "ContentTwigExtension" without the "$securityChecker" and "$webspaceManager" parameter is deprecated',
-                \E_USER_DEPRECATED
-            );
+            @\trigger_deprecation('sulu/sulu', '2.2','Instantiating the "ContentTwigExtension" without the "$securityChecker" and "$webspaceManager" parameter is deprecated');
 
             $requestStack = $securityChecker;
             $securityChecker = null;
@@ -118,10 +115,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         $this->requestStack = $requestStack;
 
         if (null === $this->requestStack) {
-            @\trigger_error(
-                'Instantiating the "ContentTwigExtension" without the "$requestStack" parameter is deprecated',
-                \E_USER_DEPRECATED
-            );
+            @\trigger_deprecation('sulu/sulu', '2.3','Instantiating the "ContentTwigExtension" without the "$requestStack" parameter is deprecated');
         }
 
         $this->enabledTwigAttributes = $enabledTwigAttributes;
@@ -179,10 +173,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         }
 
         if (null === $properties) {
-            @\trigger_error(
-                'Calling the "sulu_content_load" function without a properties parameter is deprecated and has a negative impact on performance.',
-                \E_USER_DEPRECATED
-            );
+            @\trigger_deprecation('sulu/sulu', '2.3', 'Calling the "sulu_content_load" function without a properties parameter is deprecated and has a negative impact on performance.');
 
             return $this->resolveStructure($contentStructure);
         }

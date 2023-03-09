@@ -47,12 +47,13 @@ class NominatimGeolocator implements GeolocatorInterface
         string $key
     ) {
         if ($client instanceof ClientInterface) {
-            @\trigger_error(
+            @\trigger_deprecation(
+                'sulu/sulu',
+                '2.3',
                 \sprintf(
                     'Instantiating NominatimGeolocator with %s as first argument is deprecated, please use %s instead.',
                     ClientInterface::class, HttpClientInterface::class
-                ),
-                \E_USER_DEPRECATED
+                )
             );
         } elseif (!($client instanceof HttpClientInterface)) {
             throw new \InvalidArgumentException(

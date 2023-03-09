@@ -39,13 +39,12 @@ trait SecuredEntityRepositoryTrait
         $entityClass,
         $entityAlias
     ) {
-        @\trigger_error(
-            \sprintf(
-                'The "%s" is deprecated since Sulu 2.2. Use the "%s" service instead.',
-                __TRAIT__,
-                AccessControlQueryEnhancer::class
-            ),
-            \E_USER_DEPRECATED
+        @\trigger_deprecation(
+            'sulu/sulu',
+            '2.2',
+            'The "%s" is deprecated. Use the "%s" service instead.',
+            __TRAIT__,
+            AccessControlQueryEnhancer::class
         );
 
         $queryBuilder->leftJoin(

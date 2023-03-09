@@ -46,9 +46,10 @@ class PathCleanup implements PathCleanupInterface
     public function __construct(array $replacers, SluggerInterface $slugger = null)
     {
         if (null === $slugger) {
-            @\trigger_error(
-                'Initializing the PathCleanup without a slugger is deprecated since Sulu 2.1.',
-                \E_USER_DEPRECATED
+            @\trigger_deprecation(
+                'sulu/sulu',
+                '2.1',
+                'Initializing the PathCleanup without a slugger is deprecated.'
             );
             $slugger = new AsciiSlugger();
         }

@@ -407,7 +407,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         }
 
         if ($request->query->has('language')) {
-            @\trigger_error('The usage of the "language" parameter in the SnippetController is deprecated. Please use "locale" instead.', \E_USER_DEPRECATED);
+            @\trigger_deprecation('sulu/sulu', '2.1', 'The usage of the "language" parameter in the SnippetController is deprecated. Please use "locale" instead.');
         }
 
         return $request->query->get('language', null);

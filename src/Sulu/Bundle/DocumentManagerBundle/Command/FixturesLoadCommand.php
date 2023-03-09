@@ -121,14 +121,15 @@ EOT
         // check for deprecated document fixtures using the container directly
         foreach ($fixtures as $fixture) {
             if ($fixture instanceof ContainerAwareInterface) {
-                @\trigger_error(
+                @\trigger_deprecation(
+                    'sulu/sulu',
+                    '2.1',
                     \sprintf(
-                        'Document fixtures with the "%s" are deprecated since sulu/sulu 2.1,' . \PHP_EOL .
+                        'Document fixtures with the "%s" are deprecated,' . \PHP_EOL .
                         'use dependency injection for the "%s" service instead.',
                         ContainerAwareInterface::class,
                         \get_class($fixture)
-                    ),
-                    \E_USER_DEPRECATED
+                    )
                 );
             }
         }

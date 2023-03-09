@@ -175,14 +175,14 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
 
     public function findCategoryByIds(array $ids)
     {
-        @\trigger_error(__METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findCategoriesByIds() instead.', \E_USER_DEPRECATED);
+        @\trigger_deprecation('sulu/sulu', '1.4', __METHOD__ . '() is deprecated and will be removed in 2.0. Use findCategoriesByIds() instead.');
 
         return $this->findCategoriesByIds($ids);
     }
 
     public function findCategories($parent = null, $depth = null, $sortBy = null, $sortOrder = null)
     {
-        @\trigger_error(__METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenCategoriesByParentId() instead.', \E_USER_DEPRECATED);
+        @\trigger_deprecation('sulu/sulu', '1.4', __METHOD__ . '() is deprecated and will be removed in 2.0. Use findChildrenCategoriesByParentId() instead.');
 
         $queryBuilder = $this->getCategoryQuery();
         $queryBuilder->andWhere('category.parent IS NULL');
@@ -212,7 +212,7 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
 
     public function findChildren($key, $sortBy = null, $sortOrder = null)
     {
-        @\trigger_error(__METHOD__ . '() is deprecated since version 1.4 and will be removed in 2.0. Use findChildrenCategoriesByParentKey() instead.', \E_USER_DEPRECATED);
+        @\trigger_deprecation('sulu/sulu', '1.4', __METHOD__ . '() is deprecated and will be removed in 2.0. Use findChildrenCategoriesByParentKey() instead.');
 
         $queryBuilder = $this->getCategoryQuery()
             ->from('SuluCategoryBundle:Category', 'parent')

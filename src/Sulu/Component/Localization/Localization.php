@@ -229,7 +229,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     public function getLocalization($delimiter = '_')
     {
-        @\trigger_error(__METHOD__ . '() is deprecated since version 1.2 and will be removed in 2.0. Use getLocale() instead.', \E_USER_DEPRECATED);
+        @\trigger_deprecation('sulu/sulu', '1.2', __METHOD__ . '() is deprecated and will be removed in 2.0. Use getLocale() instead.');
 
         $localization = $this->getLanguage();
         if (null != $this->getCountry()) {
@@ -314,7 +314,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     public function setXDefault($xDefault)
     {
-        @\trigger_error(\sprintf('The "%s" method is deprecated on "%s" use "setDefault" instead.', __METHOD__, __CLASS__), \E_USER_DEPRECATED);
+        @\trigger_deprecation('sulu/sulu', '2.3', 'The "%s" method is deprecated on "%s" use "setDefault" instead.', __METHOD__, __CLASS__);
 
         $this->xDefault = $xDefault;
     }
@@ -339,7 +339,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     public function isXDefault()
     {
         if (\func_num_args() < 1 || \func_get_arg(0)) {
-            @\trigger_error(\sprintf('The "%s" method is deprecated on "%s" use "isDefault" instead.', __METHOD__, __CLASS__), \E_USER_DEPRECATED);
+            @\trigger_deprecation('sulu/sulu', '2.4', 'The "%s" method is deprecated on "%s" use "isDefault" instead.', __METHOD__, __CLASS__);
         }
 
         return $this->xDefault;

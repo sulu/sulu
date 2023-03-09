@@ -250,10 +250,11 @@ class UserManager implements UserManagerInterface
 
             if (!$patch || (null !== $contact || null !== $contactId)) {
                 if ($contact && !$contactId) {
-                    @\trigger_error(
+                    @\trigger_deprecation(
+                        'sulu/sulu',
+                        '1.4',
                         'Usage of the contact object to define the contact corresponding to the user is deprecated'
-                        . ' since version 1.4 and will be removed in 2.0. Use the contactId query parameter instead.',
-                        \E_USER_DEPRECATED
+                        . ' since version 1.4 and will be removed in 2.0. Use the contactId query parameter instead.'
                     );
                 }
                 $user->setContact($this->getContact($contactId ?: $contact['id']));
