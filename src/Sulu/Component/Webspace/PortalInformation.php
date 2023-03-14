@@ -205,7 +205,7 @@ class PortalInformation implements ArrayableInterface
      */
     public function setSegment($segment)
     {
-        @\trigger_deprecation(
+        @trigger_deprecation(
             'sulu/sulu',
             '2.2',
             'Segment on the PortalInformation will be removed and should not be used anymore.'
@@ -222,7 +222,7 @@ class PortalInformation implements ArrayableInterface
      */
     public function getSegment()
     {
-        @\trigger_deprecation(
+        @trigger_deprecation(
             'sulu/sulu',
             '2.2',
             'Segment on the PortalInformation will be removed and should not be used anymore.'
@@ -236,7 +236,7 @@ class PortalInformation implements ArrayableInterface
      */
     public function getSegmentKey()
     {
-        @\trigger_deprecation(
+        @trigger_deprecation(
             'sulu/sulu',
             '2.2',
             'Segment on the PortalInformation will be removed and should not be used anymore.'

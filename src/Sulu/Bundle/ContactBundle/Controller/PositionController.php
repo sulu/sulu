@@ -38,6 +38,7 @@ class PositionController extends AbstractRestController implements ClassResource
      * @var string
      *
      * @deprecated
+     *
      * @see Position::RESOURCE_KEY
      */
     protected static $entityKey = Position::RESOURCE_KEY;
@@ -299,9 +300,9 @@ class PositionController extends AbstractRestController implements ClassResource
      *
      * @param mixed[] $item
      *
-     * @throws EntityNotFoundException
-     *
      * @return Position added or updated entity
+     *
+     * @throws EntityNotFoundException
      */
     private function addAndUpdatePositions($item)
     {

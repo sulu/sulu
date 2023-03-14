@@ -122,7 +122,7 @@ abstract class AbstractMediaController extends AbstractRestController
         $this->fieldDescriptorFactory = $fieldDescriptorFactory;
 
         if (null === $this->mediaListBuilderFactory || null === $this->mediaListRepresentationFactory || null === $this->fieldDescriptorFactory) {
-            @\trigger_deprecation(
+            @trigger_deprecation(
                 'sulu/sulu',
                 '2.3',
                 'Instantiating AbstractMediaController without the $mediaListBuilderFactory, $mediaListRepresentationFactory or $fieldDescriptorFactory argument is deprecated.'

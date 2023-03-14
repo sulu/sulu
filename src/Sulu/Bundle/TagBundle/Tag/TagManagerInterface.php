@@ -36,8 +36,6 @@ interface TagManagerInterface
     /**
      * Loads the tag with the given name.
      *
-     * @param $name
-     *
      * @return TagInterface
      */
     public function findByName($name);
@@ -56,8 +54,6 @@ interface TagManagerInterface
      *
      * @param array $data The data of the tag to save
      * @param number|null $id The id for saving the tag (optional)
-     *
-     * @return
      */
     public function save($data, $id = null);
 
@@ -75,16 +71,14 @@ interface TagManagerInterface
      * @param array $srcTagIds The source tags, which will be removed afterwards
      * @param number $destTagId The destination tag, which will replace the source tag
      *
-     * @throws Exception\TagNotFoundException
-     *
      * @return TagInterface The new Tag, which is valid for both given tags
+     *
+     * @throws Exception\TagNotFoundException
      */
     public function merge($srcTagIds, $destTagId);
 
     /**
      * Resolves tag ids to names.
-     *
-     * @param $tagIds
      *
      * @return array
      */
@@ -92,8 +86,6 @@ interface TagManagerInterface
 
     /**
      * Resolves tag names to ids.
-     *
-     * @param $tagNames
      *
      * @return array
      */

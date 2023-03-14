@@ -35,9 +35,9 @@ interface ResourceLocatorMapperInterface
      * @param string $languageCode
      * @param string $segmentKey
      *
-     * @throws ResourceLocatorNotFoundException
-     *
      * @return string path
+     *
+     * @throws ResourceLocatorNotFoundException
      */
     public function loadByContent(NodeInterface $contentNode, $webspaceKey, $languageCode, $segmentKey = null);
 
@@ -49,9 +49,9 @@ interface ResourceLocatorMapperInterface
      * @param string $languageCode
      * @param string $segmentKey
      *
-     * @throws ResourceLocatorNotFoundException
-     *
      * @return string path
+     *
+     * @throws ResourceLocatorNotFoundException
      */
     public function loadByContentUuid($uuid, $webspaceKey, $languageCode, $segmentKey = null);
 
@@ -75,10 +75,10 @@ interface ResourceLocatorMapperInterface
      * @param string $languageCode
      * @param string $segmentKey
      *
+     * @return string uuid of content node
+     *
      * @throws ResourceLocatorMovedException resourceLocator has been moved
      * @throws ResourceLocatorNotFoundException resourceLocator not found or has no content reference
-     *
-     * @return string uuid of content node
      */
     public function loadByResourceLocator($resourceLocator, $webspaceKey, $languageCode, $segmentKey = null);
 

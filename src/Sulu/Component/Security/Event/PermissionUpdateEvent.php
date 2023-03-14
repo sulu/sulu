@@ -67,6 +67,7 @@ class PermissionUpdateEvent extends Event
 
     /**
      * @deprecated
+     *
      * @see PermissionUpdateEvent::getPermissions()
      *
      * Returns the security identifier for which the permissions have been updated.

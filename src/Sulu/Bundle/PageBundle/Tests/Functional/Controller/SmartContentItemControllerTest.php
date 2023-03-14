@@ -174,10 +174,6 @@ class SmartContentItemControllerTest extends SuluTestCase
     }
 
     /**
-     * @param $template
-     * @param $data
-     * @param $parent
-     *
      * @return PageDocument
      */
     private function savePage($template, $data, $parent, $publish = false, $tags = [])

@@ -138,8 +138,6 @@ interface RouteInterface
     /**
      * Add now history.
      *
-     * @param RouteInterface $history
-     *
      * @return RouteInterface
      */
     public function addHistory(self $history);

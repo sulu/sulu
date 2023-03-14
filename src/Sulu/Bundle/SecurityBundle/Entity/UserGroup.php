@@ -69,6 +69,7 @@ class UserGroup extends ApiEntity
      * Get Locales as array.
      *
      * @return array
+     *
      * @VirtualProperty
      * @SerializedName("locales")
      */

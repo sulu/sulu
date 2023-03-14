@@ -25,9 +25,6 @@ class GeneratorEventSubscriber implements EventSubscriberInterface
      */
     private $version;
 
-    /**
-     * @param $version
-     */
     public function __construct($version)
     {
         $this->version = $version;

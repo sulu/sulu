@@ -60,12 +60,14 @@ class Account implements AccountInterface
 
     /**
      * @var UserInterface|null
+     *
      * @Exclude
      */
     private $changer;
 
     /**
      * @var UserInterface|null
+     *
      * @Exclude
      */
     private $creator;
@@ -132,6 +134,7 @@ class Account implements AccountInterface
 
     /**
      * @var Collection<int, AccountInterface>
+     *
      * @Exclude
      */
     protected $children;
@@ -143,6 +146,7 @@ class Account implements AccountInterface
 
     /**
      * @var string
+     *
      * @Accessor(getter="getAddresses")
      */
     protected $addresses;
@@ -191,6 +195,7 @@ class Account implements AccountInterface
 
     /**
      * @var Collection<int, TagInterface>
+     *
      * @Accessor(getter="getTagNameArray")
      * @Type("array")
      */
@@ -203,6 +208,7 @@ class Account implements AccountInterface
 
     /**
      * @var Collection<int, AccountAddress>
+     *
      * @Exclude
      */
     protected $accountAddresses;

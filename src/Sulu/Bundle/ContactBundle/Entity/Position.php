@@ -22,12 +22,14 @@ class Position implements \JsonSerializable
 
     /**
      * @var string
+     *
      * @Groups({"fullContact", "partialContact"})
      */
     private $position;
 
     /**
      * @var int
+     *
      * @Groups({"fullContact", "partialContact"})
      */
     private $id;

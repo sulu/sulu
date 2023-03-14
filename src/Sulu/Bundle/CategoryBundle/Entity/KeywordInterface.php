@@ -124,8 +124,6 @@ interface KeywordInterface extends AuditableInterface
     public function getCategoryTranslationCount();
 
     /**
-     * @param KeywordInterface $keyword
-     *
      * @return bool
      */
     public function equals(self $keyword);

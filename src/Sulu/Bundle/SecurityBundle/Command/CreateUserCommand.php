@@ -334,10 +334,6 @@ class CreateUserCommand extends Command
 
     /**
      * Encodes the given password, for the given password, with he given salt and returns the result.
-     *
-     * @param $user
-     * @param $password
-     * @param $salt
      */
     private function encodePassword($user, $password, $salt)
     {

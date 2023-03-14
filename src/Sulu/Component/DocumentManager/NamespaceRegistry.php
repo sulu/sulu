@@ -30,9 +30,9 @@ class NamespaceRegistry
      *
      * @param string $role
      *
-     * @throws DocumentManagerException
-     *
      * @return string
+     *
+     * @throws DocumentManagerException
      */
     public function getPrefix($role)
     {

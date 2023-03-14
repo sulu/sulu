@@ -17,24 +17,28 @@ class RestoreConfiguration
 {
     /**
      * @var string|null
+     *
      * @Groups({"frontend"})
      */
     private $form;
 
     /**
      * @var string|null
+     *
      * @Groups({"frontend"})
      */
     private $view;
 
     /**
      * @var array<string, string>|null
+     *
      * @Groups({"frontend"})
      */
     private $resultToView;
 
     /**
      * @var array<string>|null
+     *
      * @Groups({"frontend"})
      */
     private $resultSerializationGroups;

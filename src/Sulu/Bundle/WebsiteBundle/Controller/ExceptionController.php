@@ -62,7 +62,7 @@ class ExceptionController
         Environment $twig,
         $debug
     ) {
-        @\trigger_deprecation('sulu/sulu', '2.0', __CLASS__ . ' is deprecated and will be removed in 3.0. Use the ErrorController instead.');
+        @trigger_deprecation('sulu/sulu', '2.0', __CLASS__ . ' is deprecated and will be removed in 3.0. Use the ErrorController instead.');
 
         $this->exceptionController = $exceptionController;
         $this->requestAnalyzer = $requestAnalyzer;

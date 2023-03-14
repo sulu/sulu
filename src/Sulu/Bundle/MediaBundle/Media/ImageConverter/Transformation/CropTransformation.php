@@ -24,7 +24,7 @@ class CropTransformation implements TransformationInterface
 {
     public function execute(ImageInterface $image, $parameters)
     {
-        @\trigger_deprecation(
+        @trigger_deprecation(
             'sulu/sulu',
             '1.4',
             '%s is deprecated. Use the scale config instead',

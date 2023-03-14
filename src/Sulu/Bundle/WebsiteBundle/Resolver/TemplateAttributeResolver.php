@@ -105,7 +105,7 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
         }
 
         if ($this->enabledTwigAttributes['urls'] ?? true) {
-            @\trigger_deprecation('sulu/sulu', '2.2', 'Enabling the "urls" parameter is deprecated.');
+            @trigger_deprecation('sulu/sulu', '2.2', 'Enabling the "urls" parameter is deprecated.');
 
             if (!isset($customParameters['urls'])) {
                 $customParameters['urls'] = [];

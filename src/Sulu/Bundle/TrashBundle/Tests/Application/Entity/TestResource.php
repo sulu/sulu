@@ -17,12 +17,14 @@ class TestResource
 {
     /**
      * @var string
+     *
      * @Groups({"restoreSerializationGroup"})
      */
     private $property1 = 'value-1';
 
     /**
      * @var string
+     *
      * @Groups({"otherSerializationGroup"})
      */
     private $property2 = 'value-2';

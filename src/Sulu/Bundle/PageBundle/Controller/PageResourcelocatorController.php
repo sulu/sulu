@@ -48,11 +48,11 @@ class PageResourcelocatorController extends AbstractRestController implements Cl
     /**
      * return resource-locator for sub-node.
      *
+     * @return Response
+     *
      * @throws MissingArgumentException
      *
      * @deprecated since 2.0, use ResourcelocatorController::postAction instead
-     *
-     * @return Response
      */
     public function postGenerateAction(Request $request)
     {

@@ -43,7 +43,7 @@ class GoogleGeolocator implements GeolocatorInterface
         string $apiKey
     ) {
         if ($client instanceof ClientInterface) {
-            @\trigger_deprecation(
+            @trigger_deprecation(
                 'sulu/sulu',
                 '2.3',
                 \sprintf(

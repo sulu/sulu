@@ -182,8 +182,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     /**
      * Returns the role with the given id.
      *
-     * @param $id
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction($id)
@@ -203,10 +201,10 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     /**
      * Creates a new role with the given data.
      *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
      * @throws \Sulu\Component\Rest\Exception\EntityIdAlreadySetException
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function postAction(Request $request)
     {
@@ -248,9 +246,9 @@ class RoleController extends AbstractRestController implements ClassResourceInte
                 $view = $this->view($this->convertRole($role), 200);
             } catch (UniqueConstraintViolationException $e) {
                 if (\strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
-                    throw new RoleNameAlreadyExistsException($name);
+                    throw new RoleNameAlreadyExistsException($name, $e);
                 } else {
-                    throw new RoleKeyAlreadyExistsException($key);
+                    throw new RoleKeyAlreadyExistsException($key, $e);
                 }
             }
         } catch (RestException $e) {
@@ -262,8 +260,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
 
     /**
      * Updates the role with the given id and the data given by the request.
-     *
-     * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -302,9 +298,9 @@ class RoleController extends AbstractRestController implements ClassResourceInte
             $view = $this->view($enfe->toArray(), 404);
         } catch (UniqueConstraintViolationException $e) {
             if (\strpos($e->getMessage(), 'Duplicate entry \'' . $role->getName())) {
-                throw new RoleNameAlreadyExistsException($name);
+                throw new RoleNameAlreadyExistsException($name, $e);
             } else {
-                throw new RoleKeyAlreadyExistsException($key);
+                throw new RoleKeyAlreadyExistsException($key, $e);
             }
         } catch (RestException $re) {
             $view = $this->view($re->toArray(), 400);
@@ -315,8 +311,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
 
     /**
      * Deletes the role with the given id.
-     *
-     * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -348,7 +342,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
      * Process all permissions from request.
      *
      * @param RoleInterface $role The contact on which is worked
-     * @param $permissions
      *
      * @return bool True if the processing was successful, otherwise false
      */
@@ -379,8 +372,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
 
     /**
      * Adds a permission to the given role.
-     *
-     * @param $permissionData
      *
      * @return bool
      *
@@ -415,8 +406,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
 
     /**
      * Updates an already existing permission.
-     *
-     * @param $permissionData
      *
      * @return bool
      */
@@ -472,8 +461,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
     /**
      * Checks if the data of the security type is correct.
      *
-     * @param $securityTypeData
-     *
      * @return bool
      */
     private function checkSecurityTypeData($securityTypeData)
@@ -485,7 +472,6 @@ class RoleController extends AbstractRestController implements ClassResourceInte
      * Sets the securityType from the given data to the role.
      *
      * @param RoleInterface $role
-     * @param $securityTypeData
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */

@@ -16,6 +16,7 @@ use Doctrine\ORM\Query\Lexer;
 
 /**
  * @deprecated
+ *
  * @see \Oro\ORM\Query\AST\Functions\Cast
  */
 class Cast extends FunctionNode

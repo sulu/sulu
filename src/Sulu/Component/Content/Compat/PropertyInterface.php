@@ -188,9 +188,9 @@ interface PropertyInterface extends ArrayableInterface
      *
      * @param string $name of property
      *
-     * @throws \InvalidArgumentException
-     *
      * @return PropertyType
+     *
+     * @throws \InvalidArgumentException
      */
     public function getType($name);
 

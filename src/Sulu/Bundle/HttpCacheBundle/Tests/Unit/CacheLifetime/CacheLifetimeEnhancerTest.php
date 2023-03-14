@@ -102,8 +102,6 @@ class CacheLifetimeEnhancerTest extends TestCase
     }
 
     /**
-     * @param $cacheLifetime
-     *
      * @dataProvider provideCacheLifeTime
      */
     public function testEnhance(int $cacheLifetime, ?int $requestCacheLifetime, int $expectedCacheLifetime): void

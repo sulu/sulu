@@ -23,30 +23,35 @@ class Fax
 {
     /**
      * @var string
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $fax;
 
     /**
      * @var int
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $id;
 
     /**
      * @var FaxType
+     *
      * @Groups({"fullAccount", "fullContact"})
      */
     private $faxType;
 
     /**
      * @var Collection<int, ContactInterface>
+     *
      * @Exclude
      */
     private $contacts;
 
     /**
      * @var Collection<int, AccountInterface>
+     *
      * @Exclude
      */
     private $accounts;

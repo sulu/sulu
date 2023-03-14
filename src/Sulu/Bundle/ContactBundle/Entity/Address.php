@@ -26,6 +26,7 @@ class Address
 {
     /**
      * @var string|null
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -33,6 +34,7 @@ class Address
 
     /**
      * @var string|null
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -40,6 +42,7 @@ class Address
 
     /**
      * @var string|null
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -47,6 +50,7 @@ class Address
 
     /**
      * @var string|null
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -54,6 +58,7 @@ class Address
 
     /**
      * @var string|null
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -61,6 +66,7 @@ class Address
 
     /**
      * @var string|null
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -68,6 +74,7 @@ class Address
 
     /**
      * @var int
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -75,6 +82,7 @@ class Address
 
     /**
      * @var AddressType
+     *
      * @Groups({"fullAccount", "fullContact"})
      * @Expose
      */
@@ -82,6 +90,7 @@ class Address
 
     /**
      * @var string|null
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -89,6 +98,7 @@ class Address
 
     /**
      * @var bool
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -96,6 +106,7 @@ class Address
 
     /**
      * @var bool
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -103,6 +114,7 @@ class Address
 
     /**
      * @var bool
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -110,6 +122,7 @@ class Address
 
     /**
      * @var string|null
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -117,6 +130,7 @@ class Address
 
     /**
      * @var string|null
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -124,6 +138,7 @@ class Address
 
     /**
      * @var string|null
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -141,6 +156,7 @@ class Address
 
     /**
      * @var string|null
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -148,6 +164,7 @@ class Address
 
     /**
      * @var string|null
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -155,6 +172,7 @@ class Address
 
     /**
      * @var float|null
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
@@ -162,6 +180,7 @@ class Address
 
     /**
      * @var float|null
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */

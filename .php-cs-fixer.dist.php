@@ -35,6 +35,11 @@ $config->setRiskyAllowed(true)
         'phpdoc_to_comment' => [
             'ignored_tags' => ['todo', 'var'],
         ],
+        'phpdoc_separation' => [
+            'groups' => [
+                ['Serializer\\*', 'VirtualProperty', 'Accessor', 'Type', 'Groups', 'Expose', 'Exclude', 'SerializedName', 'Inline', 'ExclusionPolicy'],
+            ],
+        ],
     ])
     ->setFinder($finder);
 

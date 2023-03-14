@@ -59,7 +59,7 @@ trait ListViewBuilderTrait
                     $this->addAdapterOptionsToView($route, [$defaultAdapter => $options]);
                     $listAdapters[$index] = $defaultAdapter;
 
-                    @\trigger_deprecation('sulu/sulu', '2.3',
+                    @trigger_deprecation('sulu/sulu', '2.3',
                         'The usage of the "' . $adapter . '" is deprecated.' .
                         'Please use "' . $defaultAdapter . '"  with adapterOptions instead.'
                     );

@@ -24,18 +24,21 @@ class Permission
 {
     /**
      * @var string
+     *
      * @Expose
      */
     private $context;
 
     /**
      * @var int
+     *
      * @Expose
      */
     private $permissions;
 
     /**
      * @var int
+     *
      * @Expose
      */
     private $id;
@@ -47,6 +50,7 @@ class Permission
 
     /**
      * @var string
+     *
      * @Expose
      */
     private $module;

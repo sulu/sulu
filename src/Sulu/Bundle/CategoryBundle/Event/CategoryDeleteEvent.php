@@ -32,7 +32,7 @@ class CategoryDeleteEvent extends Event
      */
     public function __construct(CategoryInterface $category)
     {
-        @\trigger_deprecation(
+        @trigger_deprecation(
             'sulu/sulu',
             '2.3',
             'The "%s" class is deprecated. Use the "%s" class instead.',

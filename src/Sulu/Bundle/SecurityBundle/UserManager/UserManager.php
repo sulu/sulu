@@ -235,7 +235,7 @@ class UserManager implements UserManagerInterface
 
             if (!$patch || (null !== $contact || null !== $contactId)) {
                 if ($contact && !$contactId) {
-                    @\trigger_deprecation(
+                    @trigger_deprecation(
                         'sulu/sulu',
                         '1.4',
                         'Usage of the contact object to define the contact corresponding to the user is deprecated'
@@ -508,11 +508,9 @@ class UserManager implements UserManagerInterface
     /**
      * Updates an existing UserRole with the given data.
      *
-     * @param $userRoleData
+     * @return bool
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     *
-     * @return bool
      */
     private function updateUserRole(UserRole $userRole, $userRoleData)
     {
@@ -535,11 +533,9 @@ class UserManager implements UserManagerInterface
     /**
      * Adds a new UserRole to the given user.
      *
-     * @param $userRoleData
+     * @return bool
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     *
-     * @return bool
      */
     private function addUserRole(UserInterface $user, $userRoleData)
     {
@@ -575,11 +571,9 @@ class UserManager implements UserManagerInterface
     /**
      * Adds a new UserGroup to the given user.
      *
-     * @param $userGroupData
+     * @return bool
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     *
-     * @return bool
      */
     private function addUserGroup(UserInterface $user, $userGroupData)
     {
@@ -603,11 +597,9 @@ class UserManager implements UserManagerInterface
     /**
      * Updates an existing UserGroup with the given data.
      *
-     * @param $userGroupData
+     * @return bool
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     *
-     * @return bool
      */
     private function updateUserGroup(UserGroup $userGroup, $userGroupData)
     {
@@ -632,9 +624,9 @@ class UserManager implements UserManagerInterface
      *
      * @param int $id
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     *
      * @return Contact
+     *
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     private function getContact($id)
     {

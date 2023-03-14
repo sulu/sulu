@@ -112,9 +112,9 @@ class SnippetRepository
      * @param string $sortBy
      * @param string $sortOrder
      *
-     * @throws \InvalidArgumentException
-     *
      * @return SnippetDocument[]
+     *
+     * @throws \InvalidArgumentException
      */
     public function getSnippets(
         $locale,
@@ -144,9 +144,9 @@ class SnippetRepository
      * @param string $sortBy
      * @param string $sortOrder
      *
-     * @throws \InvalidArgumentException
-     *
      * @return SnippetBridge[]
+     *
+     * @throws \InvalidArgumentException
      */
     public function getSnippetsAmount(
         $locale,
@@ -173,7 +173,7 @@ class SnippetRepository
      */
     public function copyLocale($uuid, $userId, $srcLocale, $destLocales)
     {
-        @\trigger_deprecation(
+        @trigger_deprecation(
             'sulu/sulu',
             '2.3',
             'The SnippetRepository::copyLocale method is deprecated and will be removed in the future.'

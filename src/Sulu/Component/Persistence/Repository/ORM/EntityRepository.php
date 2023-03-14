@@ -18,7 +18,9 @@ use Sulu\Component\Persistence\Repository\RepositoryInterface;
  * Doctrine ORM entity repository.
  *
  * @template T of object
+ *
  * @extends BaseEntityRepository<T>
+ *
  * @implements RepositoryInterface<T>
  */
 class EntityRepository extends BaseEntityRepository implements RepositoryInterface

@@ -76,7 +76,7 @@ class RouteController extends AbstractRestController implements ClassResourceInt
         $this->conflictResolver = $conflictResolver;
 
         if (null === $this->conflictResolver) {
-            @\trigger_deprecation(
+            @trigger_deprecation(
                 'sulu/sulu',
                 '2.3',
                 'Instantiating RouteController without the $conflictResolver argument is deprecated.'

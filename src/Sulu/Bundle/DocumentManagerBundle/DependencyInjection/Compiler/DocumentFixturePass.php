@@ -26,7 +26,7 @@ class DocumentFixturePass implements CompilerPassInterface
             $definition = $container->getDefinition($id);
 
             if (\is_subclass_of($definition->getClass(), ContainerAwareInterface::class)) {
-                @\trigger_deprecation(
+                @trigger_deprecation(
                     'sulu/sulu',
                     '2.1',
                     \sprintf(

@@ -21,6 +21,16 @@ parameters:
 			path: src/Sulu/Bundle/ActivityBundle/Domain/Repository/NullActivityRepository.php
 
 		-
+			message: "#^Cannot call method generate\\(\\) on Doctrine\\\\ORM\\\\Id\\\\AbstractIdGenerator\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Doctrine/Repository/ActivityRepository.php
+
+		-
+			message: "#^Cannot call method isPostInsertGenerator\\(\\) on Doctrine\\\\ORM\\\\Id\\\\AbstractIdGenerator\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Doctrine/Repository/ActivityRepository.php
+
+		-
 			message: "#^Parameter \\#2 \\$value of method Doctrine\\\\DBAL\\\\Query\\\\QueryBuilder\\:\\:setValue\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Doctrine/Repository/ActivityRepository.php
@@ -1829,11 +1839,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Serializer\\\\Subscriber\\\\TogglerToolbarActionSubscriber\\:\\:onPostSerialize\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Serializer/Subscriber/TogglerToolbarActionSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\SuluAdminBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/SuluAdminBundle.php
 
 		-
 			message: "#^Cannot access property \\$sulu_admin on mixed\\.$#"
@@ -12026,16 +12031,6 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlRouteController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CustomUrlBundle\\\\DependencyInjection\\\\SuluCustomUrlExtension\\:\\:load\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/DependencyInjection/SuluCustomUrlExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CustomUrlBundle\\\\DependencyInjection\\\\SuluCustomUrlExtension\\:\\:prepend\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/DependencyInjection/SuluCustomUrlExtension.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getTitle\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/EventListener/CustomUrlSerializeEventSubscriber.php
@@ -15816,11 +15811,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
 		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 318\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
@@ -15957,11 +15947,6 @@ parameters:
 
 		-
 			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 444\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
@@ -17176,11 +17161,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
 
 		-
-			message: "#^Cannot call method getNamedItem\\(\\) on DOMNamedNodeMap\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
-
-		-
 			message: "#^Cannot call method item\\(\\) on DOMNodeList\\<DOMNode\\>\\|false\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
@@ -17802,11 +17782,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$destination of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Video\\\\VideoThumbnailServiceInterface\\:\\:generate\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/MediaImageExtractor.php
-
-		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 127\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/MediaImageExtractor.php
 
@@ -31231,26 +31206,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 251\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 253\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 305\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 307\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
 			message: "#^Unable to resolve the template type T in call to method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:getRepository\\(\\)$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
@@ -31447,16 +31402,6 @@ parameters:
 
 		-
 			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/SuluSecurityExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\DependencyInjection\\\\SuluSecurityExtension\\:\\:load\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/SuluSecurityExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\DependencyInjection\\\\SuluSecurityExtension\\:\\:prepend\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/SuluSecurityExtension.php
 
@@ -32381,36 +32326,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
 
 		-
-			message: "#^Call to method getEmail\\(\\) on an unknown class SuluSecurityBundle\\:User\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
-
-		-
-			message: "#^Call to method getPassword\\(\\) on an unknown class SuluSecurityBundle\\:User\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
-
-		-
-			message: "#^Call to method getPasswordResetToken\\(\\) on an unknown class SuluSecurityBundle\\:User\\.$#"
-			count: 4
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
-
-		-
-			message: "#^Call to method getPasswordResetTokenEmailsSent\\(\\) on an unknown class SuluSecurityBundle\\:User\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
-
-		-
-			message: "#^Call to method getPasswordResetTokenExpiresAt\\(\\) on an unknown class SuluSecurityBundle\\:User\\.$#"
-			count: 4
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
-
-		-
-			message: "#^Call to method getSalt\\(\\) on an unknown class SuluSecurityBundle\\:User\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
-
-		-
 			message: "#^Cannot access property \\$code on mixed\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
@@ -32418,6 +32333,36 @@ parameters:
 		-
 			message: "#^Cannot call method getCollector\\(\\) on Symfony\\\\Component\\\\HttpKernel\\\\Profiler\\\\Profile\\|false\\|null\\.$#"
 			count: 9
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
+
+		-
+			message: "#^Cannot call method getEmail\\(\\) on SuluSecurityBundle\\:User\\|null\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
+
+		-
+			message: "#^Cannot call method getPassword\\(\\) on SuluSecurityBundle\\:User\\|null\\.$#"
+			count: 3
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
+
+		-
+			message: "#^Cannot call method getPasswordResetToken\\(\\) on SuluSecurityBundle\\:User\\|null\\.$#"
+			count: 4
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
+
+		-
+			message: "#^Cannot call method getPasswordResetTokenEmailsSent\\(\\) on SuluSecurityBundle\\:User\\|null\\.$#"
+			count: 3
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
+
+		-
+			message: "#^Cannot call method getPasswordResetTokenExpiresAt\\(\\) on SuluSecurityBundle\\:User\\|null\\.$#"
+			count: 4
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
+
+		-
+			message: "#^Cannot call method getSalt\\(\\) on SuluSecurityBundle\\:User\\|null\\.$#"
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
 
 		-
@@ -32576,11 +32521,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleSettingControllerTest.php
 
 		-
-			message: "#^Call to method getSalt\\(\\) on an unknown class SuluSecurityBundle\\:User\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
-
-		-
 			message: "#^Cannot access property \\$_embedded on mixed\\.$#"
 			count: 7
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
@@ -32652,6 +32592,11 @@ parameters:
 
 		-
 			message: "#^Cannot call method getPassword\\(\\) on Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\User\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
+
+		-
+			message: "#^Cannot call method getSalt\\(\\) on SuluSecurityBundle\\:User\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
@@ -35556,7 +35501,7 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
 
 		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 150\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
+			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 148\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
 
@@ -35607,11 +35552,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagManagerInterface\\:\\:save\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Tag/TagManagerInterface.php
-
-		-
-			message: "#^PHPDoc tag @return has invalid value \\(\\)\\: Unexpected token \"\\\\n     \", expected type at offset 181$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManagerInterface.php
 
@@ -36134,6 +36074,11 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\TestBundle\\\\Testing\\\\TestVoter\\:\\:vote\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TestBundle/Testing/TestVoter.php
+
+		-
+			message: "#^Parameter \\#1 \\$generator of method Doctrine\\\\ORM\\\\Mapping\\\\ClassMetadataInfo\\<object\\>\\:\\:setIdGenerator\\(\\) expects Doctrine\\\\ORM\\\\Id\\\\AbstractIdGenerator, Doctrine\\\\ORM\\\\Id\\\\AbstractIdGenerator\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/TrashBundle/Application/DoctrineRestoreHelper/DoctrineRestoreHelper.php
 
 		-
 			message: "#^If condition is always true\\.$#"
@@ -45701,6 +45646,11 @@ parameters:
 			path: src/Sulu/Component/Content/Query/ContentQueryBuilder.php
 
 		-
+			message: "#^Method Sulu\\\\Component\\\\Content\\\\Query\\\\ContentQueryBuilder\\:\\:buildSelectForStructures\\(\\) is unused\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Query/ContentQueryBuilder.php
+
+		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Query\\\\ContentQueryBuilder\\:\\:buildSelector\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Query/ContentQueryBuilder.php
@@ -48856,16 +48806,6 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Manager/CustomUrlManager.php
 
 		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 118\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Manager/CustomUrlManager.php
-
-		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 264\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Manager/CustomUrlManager.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Manager\\\\CustomUrlManagerInterface\\:\\:create\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Manager/CustomUrlManagerInterface.php
@@ -48892,6 +48832,11 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Manager\\\\TitleAlreadyExistsException\\:\\:__construct\\(\\) has parameter \\$title with no type specified\\.$#"
+			count: 1
+			path: src/Sulu/Component/CustomUrl/Manager/TitleAlreadyExistsException.php
+
+		-
+			message: "#^Property Sulu\\\\Component\\\\CustomUrl\\\\Manager\\\\TitleAlreadyExistsException\\:\\:\\$title has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Manager/TitleAlreadyExistsException.php
 
@@ -59646,11 +59591,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Loader/BaseXmlFileLoader.php
 
 		-
-			message: "#^Cannot call method getNamedItem\\(\\) on DOMNamedNodeMap\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Loader/BaseXmlFileLoader.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Loader\\\\BaseXmlFileLoader\\:\\:supports\\(\\) has parameter \\$type with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Loader/BaseXmlFileLoader.php
@@ -59727,7 +59667,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method getNamedItem\\(\\) on DOMNamedNodeMap\\|null\\.$#"
-			count: 13
+			count: 8
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
@@ -61429,9 +61369,4 @@ parameters:
 			message: "#^Property Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:\\$theme \\(string\\) does not accept string\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method App\\\\Kernel\\:\\:configureContainer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: tests/Kernel.php
 

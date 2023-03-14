@@ -34,6 +34,7 @@ class ContactAddress extends ApiWrapper
      * Returns the id of the product.
      *
      * @return int
+     *
      * @VirtualProperty
      * @SerializedName("id")
      */
@@ -60,6 +61,7 @@ class ContactAddress extends ApiWrapper
      * Get main.
      *
      * @return bool
+     *
      * @VirtualProperty
      * @SerializedName("main")
      */
@@ -84,6 +86,7 @@ class ContactAddress extends ApiWrapper
      * Get address.
      *
      * @return AddressEntity
+     *
      * @VirtualProperty
      * @SerializedName("address")
      */
