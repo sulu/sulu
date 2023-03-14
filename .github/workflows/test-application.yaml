@@ -142,6 +142,18 @@ jobs:
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, imagick'
                       tools: 'composer:v2'
+                      env:
+                          SYMFONY_DEPRECATIONS_HELPER: weak
+                          DATABASE_URL: mysql://root:root@127.0.0.1:3306/sulu_test?serverVersion=5.7
+                          DATABASE_CHARSET: utf8mb4
+                          DATABASE_COLLATE: utf8mb4_unicode_ci
+
+                    - php-version: '8.2'
+                      database: mysql
+                      phpcr-transport: doctrinedbal
+                      dependency-versions: 'highest'
+                      php-extensions: 'ctype, iconv, mysql, imagick'
+                      tools: 'composer:v2'
                       composer-stability: dev
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
