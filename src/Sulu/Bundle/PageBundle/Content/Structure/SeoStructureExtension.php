@@ -93,9 +93,6 @@ class SeoStructureExtension extends AbstractExtension implements ExportExtension
     }
 
     /**
-     * @param $key
-     * @param $format
-     *
      * @return array
      */
     protected function getExportOption($key, $format)

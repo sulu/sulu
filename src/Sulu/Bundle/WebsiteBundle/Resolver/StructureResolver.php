@@ -52,7 +52,7 @@ class StructureResolver implements StructureResolverInterface
         $this->enabledTwigAttributes = $enabledTwigAttributes;
 
         if ($enabledTwigAttributes['path'] ?? true) {
-            @\trigger_deprecation('sulu/sulu', '2.3', 'Enabling the "path" parameter is deprecated.');
+            @trigger_deprecation('sulu/sulu', '2.3', 'Enabling the "path" parameter is deprecated.');
         }
     }
 

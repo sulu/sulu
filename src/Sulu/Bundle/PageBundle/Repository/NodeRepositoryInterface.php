@@ -77,7 +77,6 @@ interface NodeRepositoryInterface
      * returns webspace as node.
      *
      * @param string $webspaceKey
-     * @param $languageCode
      * @param int $depth
      * @param bool $excludeGhosts
      */
@@ -190,6 +189,7 @@ interface NodeRepositoryInterface
 
     /**
      * @deprecated
+     *
      * @see DocumentManagerInterface::copyLocale()
      *
      * @param string $uuid

@@ -36,9 +36,9 @@ interface RouteManagerInterface
      * @param string|null $path
      * @param bool $resolveConflict
      *
-     * @throws RouteNotCreatedException
-     *
      * @return RouteInterface|null
+     *
+     * @throws RouteNotCreatedException
      */
     public function update(RoutableInterface $entity, $path = null, $resolveConflict = true);
 

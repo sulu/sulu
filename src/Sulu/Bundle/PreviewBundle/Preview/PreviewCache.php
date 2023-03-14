@@ -31,7 +31,7 @@ class PreviewCache
     public function __construct($cache)
     {
         if ($cache instanceof Cache) {
-            @\trigger_deprecation(
+            @trigger_deprecation(
                 'sulu/sulu',
                 '2.1',
                 'To inject $cache as instance of "%s" is deprecated, use a "%s" instead.',

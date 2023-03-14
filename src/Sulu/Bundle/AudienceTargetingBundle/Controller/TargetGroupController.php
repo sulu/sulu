@@ -206,9 +206,9 @@ class TargetGroupController extends AbstractRestController implements ClassResou
     /**
      * Handle multiple delete requests for target groups.
      *
-     * @throws MissingParameterException
-     *
      * @return Response
+     *
+     * @throws MissingParameterException
      */
     public function cdeleteAction(Request $request)
     {
@@ -284,9 +284,9 @@ class TargetGroupController extends AbstractRestController implements ClassResou
      *
      * @param int $id
      *
-     * @throws EntityNotFoundException
-     *
      * @return TargetGroupInterface
+     *
+     * @throws EntityNotFoundException
      */
     private function retrieveTargetGroupById($id)
     {

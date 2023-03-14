@@ -400,8 +400,6 @@ class ResettingController
 
     /**
      * Gives a user a token, so she's logged in.
-     *
-     * @param $request
      */
     private function loginUser(UserInterface $user, $request)
     {

@@ -112,7 +112,7 @@ class Role implements RoleInterface
      */
     public function getRole()
     {
-        @\trigger_deprecation('sulu/sulu', '2.1', 'The "%s" method is deprecated, use "%s" instead.', __METHOD__, 'getIdentifier');
+        @trigger_deprecation('sulu/sulu', '2.1', 'The "%s" method is deprecated, use "%s" instead.', __METHOD__, 'getIdentifier');
 
         return $this->getIdentifier();
     }

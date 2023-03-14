@@ -25,8 +25,6 @@ class SecurityTypeRepository extends EntityRepository
     /**
      * Searches for a role with a specific id.
      *
-     * @param $id
-     *
      * @return SecurityType|null
      */
     public function findSecurityTypeById($id)

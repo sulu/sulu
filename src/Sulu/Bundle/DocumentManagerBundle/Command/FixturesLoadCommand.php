@@ -121,7 +121,7 @@ EOT
         // check for deprecated document fixtures using the container directly
         foreach ($fixtures as $fixture) {
             if ($fixture instanceof ContainerAwareInterface) {
-                @\trigger_deprecation(
+                @trigger_deprecation(
                     'sulu/sulu',
                     '2.1',
                     \sprintf(

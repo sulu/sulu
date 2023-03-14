@@ -36,7 +36,7 @@ class PortalLoader extends FileLoader
         ?FileLocatorInterface $fileLocator = null
     ) {
         if (!$fileLocator) {
-            @\trigger_deprecation('sulu/sulu', '2.3', 'Initializing "' . __CLASS__ . '" without file locator is deprecated.');
+            @trigger_deprecation('sulu/sulu', '2.3', 'Initializing "' . __CLASS__ . '" without file locator is deprecated.');
 
             $fileLocator = new FileLocator();
         }

@@ -31,7 +31,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-@\trigger_deprecation(
+@trigger_deprecation(
     'sulu/sulu',
     '2.0',
     'The "%s" class is deprecated, use data from "%s" instead.',
@@ -708,7 +708,7 @@ class NodeRepository implements NodeRepositoryInterface
 
     public function copyLocale($uuid, $userId, $webspaceKey, $srcLocale, $destLocales)
     {
-        @\trigger_deprecation(
+        @trigger_deprecation(
             'sulu/sulu',
             '2.3',
             'The NodeRepository::copyLocale method is deprecated and will be removed in the future.'

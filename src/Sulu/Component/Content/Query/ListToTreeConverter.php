@@ -151,7 +151,9 @@ class ListToTreeConverter
      * @author  Kevin van Zonneveld &lt;kevin@vanzonneveld.net>
      * @author  Lachlan Donald
      * @author  Takkie
+     *
      * @copyright 2008 Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+     *
      * @license   http://www.opensource.org/licenses/bsd-license.php New BSD Licence
      *
      * @version   SVN: Release: $Id: explodeTree.inc.php 89 2008-09-05 20:52:48Z kevin $

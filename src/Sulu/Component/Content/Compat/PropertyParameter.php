@@ -21,6 +21,7 @@ class PropertyParameter implements \JsonSerializable
 {
     /**
      * @var string
+     *
      * @Type("string")
      * @Groups({"frontend"})
      */
@@ -28,18 +29,21 @@ class PropertyParameter implements \JsonSerializable
 
     /**
      * @var string|bool|array
+     *
      * @Groups({"frontend"})
      */
     private $value;
 
     /**
      * @var string
+     *
      * @Type("string")
      */
     private $type;
 
     /**
      * @var Metadata
+     *
      * @Type("Sulu\Component\Content\Compat\Metadata")
      */
     private $metadata;

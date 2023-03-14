@@ -89,8 +89,6 @@ class Collection extends ApiWrapper
 
     /**
      * Add child to resource.
-     *
-     * @param Collection $child
      */
     public function addChild(self $child)
     {

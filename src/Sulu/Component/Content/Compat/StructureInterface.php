@@ -267,9 +267,9 @@ interface StructureInterface extends \JsonSerializable
      *
      * @param string $tagName
      *
-     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
-     *
      * @return PropertyInterface[]
+     *
+     * @throws \Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException
      */
     public function getPropertiesByTagName($tagName);
 
@@ -319,8 +319,6 @@ interface StructureInterface extends \JsonSerializable
 
     /**
      * Copy static values from another structure.
-     *
-     * @param StructureInterface $structure
      */
     public function copyFrom(self $structure);
 }

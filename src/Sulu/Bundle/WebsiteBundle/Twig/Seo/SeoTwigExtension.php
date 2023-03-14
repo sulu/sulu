@@ -72,7 +72,7 @@ class SeoTwigExtension extends AbstractExtension
     ) {
         $template = '@SuluWebsite/Extension/seo.html.twig';
 
-        @\trigger_deprecation(
+        @trigger_deprecation(
             'sulu/sulu',
             '1.x',
             'This twig extension is deprecated and should not be used anymore, include the "%s".',

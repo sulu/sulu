@@ -30,6 +30,7 @@ class TargetGroupCondition implements TargetGroupConditionInterface
 
     /**
      * @var mixed[]
+     *
      * @Type("array")
      */
     private $condition;

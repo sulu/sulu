@@ -179,9 +179,9 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
     /**
      * Gets the latest file-version of a given media.
      *
-     * @throws FileVersionNotFoundException
-     *
      * @return FileVersion
+     *
+     * @throws FileVersionNotFoundException
      */
     private function getFileVersionForMedia(MediaInterface $media)
     {
@@ -202,9 +202,9 @@ class FormatOptionsManager implements FormatOptionsManagerInterface
     /**
      * Sets a given array of data onto a given format-options entity.
      *
-     * @throws FormatOptionsMissingParameterException
-     *
      * @return FormatOptions The format-options entity with set data
+     *
+     * @throws FormatOptionsMissingParameterException
      */
     private function setDataOnEntity(FormatOptions $formatOptions, array $data)
     {

@@ -23,30 +23,35 @@ class Phone
 {
     /**
      * @var string
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $phone;
 
     /**
      * @var int
+     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      */
     private $id;
 
     /**
      * @var PhoneType
+     *
      * @Groups({"fullAccount", "fullContact"})
      */
     private $phoneType;
 
     /**
      * @var Collection<int, ContactInterface>
+     *
      * @Exclude
      */
     private $contacts;
 
     /**
      * @var Collection<int, AccountInterface>
+     *
      * @Exclude
      */
     private $accounts;

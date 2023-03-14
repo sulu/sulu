@@ -219,7 +219,7 @@ class MediaManager implements MediaManagerInterface
         $this->trashManager = $trashManager;
 
         if (!$adminDownloadPath) {
-            @\trigger_deprecation(
+            @trigger_deprecation(
                 'sulu/sulu',
                 '2.2',
                 \sprintf(
@@ -232,7 +232,7 @@ class MediaManager implements MediaManagerInterface
         $this->adminDownloadPath = $adminDownloadPath ?: '/admin' . $this->downloadPath;
 
         if (!\is_iterable($mediaPropertiesProviders)) {
-            @\trigger_deprecation(
+            @trigger_deprecation(
                 'sulu/sulu',
                 '2.3',
                 \sprintf(
@@ -350,10 +350,10 @@ class MediaManager implements MediaManagerInterface
      * @param array $data
      * @param UserInterface $user
      *
+     * @return Media
+     *
      * @throws FileVersionNotFoundException
      * @throws InvalidMediaTypeException
-     *
-     * @return Media
      */
     private function modifyMedia($uploadedFile, $data, $user)
     {

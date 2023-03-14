@@ -39,7 +39,7 @@ trait SecuredEntityRepositoryTrait
         $entityClass,
         $entityAlias
     ) {
-        @\trigger_deprecation(
+        @trigger_deprecation(
             'sulu/sulu',
             '2.2',
             'The "%s" is deprecated. Use the "%s" service instead.',

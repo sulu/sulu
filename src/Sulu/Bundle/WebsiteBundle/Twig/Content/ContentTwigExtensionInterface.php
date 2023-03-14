@@ -24,9 +24,9 @@ interface ContentTwigExtensionInterface extends ExtensionInterface
      *
      * @param string $uuid
      *
-     * @throws ParentNotFoundException
-     *
      * @return array
+     *
+     * @throws ParentNotFoundException
      */
     public function loadParent($uuid);
 

@@ -38,6 +38,7 @@ class ContactTitleController extends AbstractRestController implements ClassReso
      * @var string
      *
      * @deprecated
+     *
      * @see ContactTitle::RESOURCE_KEY
      */
     protected static $entityKey = ContactTitle::RESOURCE_KEY;
@@ -292,9 +293,9 @@ class ContactTitleController extends AbstractRestController implements ClassReso
      *
      * @param mixed[] $item
      *
-     * @throws EntityNotFoundException
-     *
      * @return ContactTitle added or updated entity
+     *
+     * @throws EntityNotFoundException
      */
     private function addAndUpdateTitles($item)
     {

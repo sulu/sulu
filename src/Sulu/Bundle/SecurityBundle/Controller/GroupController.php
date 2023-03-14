@@ -126,8 +126,6 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     /**
      * Returns the group with the given id.
      *
-     * @param $id
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function getAction($id)
@@ -147,9 +145,9 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     /**
      * Creates a new group with the given data.
      *
-     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
-     *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
     public function postAction(Request $request)
     {
@@ -181,8 +179,6 @@ class GroupController extends AbstractRestController implements ClassResourceInt
 
     /**
      * Updates the group with the given id and the data given by the request.
-     *
-     * @param $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -250,8 +246,6 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     /**
      * Deletes the group with the given id.
      *
-     * @param $id
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function deleteAction($id)
@@ -301,8 +295,6 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     /**
      * Updates an already existing role.
      *
-     * @param $roleData
-     *
      * @return bool
      */
     private function updateRole(RoleInterface $role, $roleData)
@@ -312,8 +304,6 @@ class GroupController extends AbstractRestController implements ClassResourceInt
     }
 
     /**
-     * @param $group
-     *
      * @throws EntityNotFoundException
      */
     public function setParent($group, Request $request)

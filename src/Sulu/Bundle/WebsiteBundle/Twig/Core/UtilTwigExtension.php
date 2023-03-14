@@ -42,7 +42,7 @@ class UtilTwigExtension extends AbstractExtension
      */
     public function extract($url, $mode = null)
     {
-        @\trigger_deprecation('sulu/sulu', '2.3', 'The "sulu_util_domain_info" is deprecated and will be removed with Sulu 3.0.');
+        @trigger_deprecation('sulu/sulu', '2.3', 'The "sulu_util_domain_info" is deprecated and will be removed with Sulu 3.0.');
 
         if (\function_exists('tld_extract')) {
             return tld_extract($url, $mode);

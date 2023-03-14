@@ -161,6 +161,7 @@ interface ContentMapperInterface
      * Copies the content from one node from one localization to the other.
      *
      * @deprecated
+     *
      * @see DocumentManagerInterface::copyLocale()
      *
      * @param string $uuid
@@ -196,10 +197,10 @@ interface ContentMapperInterface
      * @param string $webspaceKey
      * @param string $languageCode
      *
+     * @return StructureInterface
+     *
      * @throws \Sulu\Component\Content\Exception\InvalidOrderPositionException
      *                                                                         thrown if position is out of range
-     *
-     * @return StructureInterface
      */
     public function orderAt($uuid, $position, $userId, $webspaceKey, $languageCode);
 

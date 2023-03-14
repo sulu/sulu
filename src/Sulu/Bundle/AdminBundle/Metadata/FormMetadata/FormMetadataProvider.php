@@ -57,7 +57,7 @@ class FormMetadataProvider implements MetadataProviderInterface
         $this->typedFormMetadataVisitors = $typedFormMetadataVisitors;
 
         if (!$fallbackLocale) {
-            @\trigger_deprecation('sulu/sulu', '2.4', 'The usage of the "FormMetadataProvider" without "$fallbackLocale" is deprecated. Please add "$fallbackLocale" instead.');
+            @trigger_deprecation('sulu/sulu', '2.4', 'The usage of the "FormMetadataProvider" without "$fallbackLocale" is deprecated. Please add "$fallbackLocale" instead.');
 
             $fallbackLocale = 'en';
         }

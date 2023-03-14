@@ -37,6 +37,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @var int
+     *
      * @Expose
      * @Groups({"frontend", "fullUser"})
      */
@@ -44,6 +45,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @var string
+     *
      * @Expose
      * @Groups({"fullUser", "profile"})
      */
@@ -51,6 +53,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @var string|null
+     *
      * @Expose
      * @Groups({"fullUser", "profile"})
      */
@@ -63,6 +66,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @var string
+     *
      * @Expose
      * @Groups({"frontend", "fullUser", "profile"})
      */
@@ -75,6 +79,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @var string|null
+     *
      * @Expose
      */
     protected $privateKey;
@@ -86,12 +91,14 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @var bool
+     *
      * @Expose
      */
     protected $locked = false;
 
     /**
      * @var bool
+     *
      * @Expose
      */
     protected $enabled = true;
@@ -123,6 +130,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @var ContactInterface
+     *
      * @Expose
      * @Groups({"frontend", "fullUser"})
      */
@@ -130,6 +138,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @var Collection|UserRole[]
+     *
      * @Expose
      */
     protected $userRoles;
@@ -138,6 +147,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
      * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
      *
      * @var Collection|UserGroup[]
+     *
      * @Expose
      */
     protected $userGroups;
@@ -711,8 +721,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
     /**
      * Set firstName.
      *
-     * @param $firstName
-     *
      * @return $this
      */
     public function setFirstName($firstName)
@@ -735,8 +743,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * Set lastName.
-     *
-     * @param $lastName
      *
      * @return $this
      */

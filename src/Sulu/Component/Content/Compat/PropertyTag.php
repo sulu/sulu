@@ -22,6 +22,7 @@ class PropertyTag
      * name of tag.
      *
      * @var string
+     *
      * @Type("string")
      */
     private $name;
@@ -30,6 +31,7 @@ class PropertyTag
      * priority of tag.
      *
      * @var int
+     *
      * @Type("integer")
      */
     private $priority;
@@ -38,6 +40,7 @@ class PropertyTag
      * attributes of the tag.
      *
      * @var array
+     *
      * @Type("array")
      */
     private $attributes = [];

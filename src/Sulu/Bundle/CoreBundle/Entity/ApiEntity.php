@@ -26,6 +26,7 @@ abstract class ApiEntity
      * general base path of entities.
      *
      * @var string
+     *
      * @Exclude
      */
     protected $apiBasePath = '/admin/api';
@@ -34,12 +35,14 @@ abstract class ApiEntity
      * $apiPath must be overriden by base entity.
      *
      * @var string
+     *
      * @Exclude
      */
     protected $apiPath;
 
     /**
      * @var int
+     *
      * @Exclude
      */
     private $id;

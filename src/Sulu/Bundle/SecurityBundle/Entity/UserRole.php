@@ -29,12 +29,14 @@ class UserRole extends ApiEntity
 {
     /**
      * @var int
+     *
      * @Expose
      */
     protected $id;
 
     /**
      * @var string
+     *
      * @Expose
      */
     protected $locale;
@@ -46,6 +48,7 @@ class UserRole extends ApiEntity
 
     /**
      * @var RoleInterface
+     *
      * @Expose
      */
     protected $role;
@@ -88,6 +91,7 @@ class UserRole extends ApiEntity
      * Get Locales as array.
      *
      * @return array
+     *
      * @VirtualProperty
      * @SerializedName("locales")
      */

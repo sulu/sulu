@@ -105,8 +105,6 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
     /**
      * Searches for a user with a specific contact id.
      *
-     * @param $id
-     *
      * @return array
      */
     public function findUserByContact($id)

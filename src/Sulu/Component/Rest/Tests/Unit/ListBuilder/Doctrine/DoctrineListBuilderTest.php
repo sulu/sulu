@@ -214,7 +214,7 @@ class DoctrineListBuilderTest extends TestCase
                     ),
                     'anotherEntityName' => new DoctrineJoinDescriptor(
                         self::$translationEntityName,
-                        'anotherEntityName' . '.translations',
+                        'anotherEntityName.translations',
                         null,
                         DoctrineJoinDescriptor::JOIN_METHOD_INNER
                     ),
@@ -246,7 +246,7 @@ class DoctrineListBuilderTest extends TestCase
                     ),
                     'anotherEntityName' => new DoctrineJoinDescriptor(
                         self::$translationEntityName,
-                        'anotherEntityName' . '.translations',
+                        'anotherEntityName.translations',
                         null,
                         DoctrineJoinDescriptor::JOIN_METHOD_INNER
                     ),
@@ -285,8 +285,7 @@ class DoctrineListBuilderTest extends TestCase
                 ),
                 'anotherEntityName' => new DoctrineJoinDescriptor(
                     self::$translationEntityName,
-                    'anotherEntityName' . '.translations'
-                ),
+                    'anotherEntityName.translations'),
             ]
         );
 

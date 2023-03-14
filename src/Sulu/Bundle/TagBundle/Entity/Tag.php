@@ -23,6 +23,7 @@ class Tag implements TagInterface
 {
     /**
      * @var string
+     *
      * @Expose
      * @Groups({"partialTag"})
      */
@@ -30,18 +31,21 @@ class Tag implements TagInterface
 
     /**
      * @var int
+     *
      * @Groups({"partialTag"})
      */
     private $id;
 
     /**
      * @var \DateTime
+     *
      * @Groups({"partialTag"})
      */
     private $created;
 
     /**
      * @var \DateTime
+     *
      * @Groups({"partialTag"})
      */
     private $changed;

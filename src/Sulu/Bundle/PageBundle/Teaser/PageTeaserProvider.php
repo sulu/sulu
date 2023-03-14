@@ -60,7 +60,7 @@ class PageTeaserProvider implements TeaserProviderInterface
         $this->phpcrPageTeaserProvider = $phpcrPageTeaserProvider;
 
         if (null === $this->phpcrPageTeaserProvider) {
-            @\trigger_deprecation(
+            @trigger_deprecation(
                 'sulu/sulu',
                 '2.3',
                 'Instantiating a PageTeaserProvider without the $phpcrPageTeaserProvider argument is deprecated!'

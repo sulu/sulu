@@ -21,9 +21,9 @@ interface DocumentManagerInterface
      * @param string $identifier Path or UUID
      * @param string $locale Locale
      *
-     * @throws Exception\DocumentManagerException
-     *
      * @return object
+     *
+     * @throws Exception\DocumentManagerException
      */
     public function find($identifier, $locale = null, array $options = []);
 
@@ -32,9 +32,9 @@ interface DocumentManagerInterface
      *
      * @param string $alias
      *
-     * @throws Exception\MetadataNotFoundException
-     *
      * @return object
+     *
+     * @throws Exception\MetadataNotFoundException
      */
     public function create($alias);
 
