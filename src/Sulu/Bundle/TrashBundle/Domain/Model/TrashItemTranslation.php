@@ -34,7 +34,6 @@ class TrashItemTranslation
 
     /**
      * @Expose
-     *
      * @Groups({"trash_item_admin_api"})
      *
      * @var string|null
@@ -43,7 +42,6 @@ class TrashItemTranslation
 
     /**
      * @Expose
-     *
      * @Groups({"trash_item_admin_api"})
      *
      * @var string

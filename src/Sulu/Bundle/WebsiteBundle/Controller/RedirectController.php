@@ -41,7 +41,7 @@ class RedirectController
      */
     public function redirectWebspaceAction(Request $request)
     {
-        @\trigger_deprecation('sulu/sulu', '1.6', __METHOD__ . '() is deprecated and will be removed in 2.0. Replaced by ExceptionListener::redirectPartialMatch.');
+        @trigger_deprecation('sulu/sulu', '1.6', __METHOD__ . '() is deprecated and will be removed in 2.0. Replaced by ExceptionListener::redirectPartialMatch.');
 
         $url = $this->resolveRedirectUrl(
             $request->get('redirect'),

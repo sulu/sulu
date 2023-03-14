@@ -63,7 +63,6 @@ class Contact extends ApiWrapper
      * @return int
      *
      * @VirtualProperty
-     *
      * @SerializedName("id")
      * @Groups({"fullContact","partialContact","select"})
      */
@@ -92,7 +91,6 @@ class Contact extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("firstName")
      * @Groups({"fullContact","partialContact"})
      */
@@ -121,7 +119,6 @@ class Contact extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("middleName")
      * @Groups({"fullContact","partialContact"})
      */
@@ -150,7 +147,6 @@ class Contact extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("lastName")
      * @Groups({"fullContact","partialContact"})
      */
@@ -163,7 +159,6 @@ class Contact extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("fullName")
      * @Groups({"fullContact","partialContact","select"})
      */
@@ -192,7 +187,6 @@ class Contact extends ApiWrapper
      * @return int
      *
      * @VirtualProperty
-     *
      * @SerializedName("title")
      * @Groups({"fullContact", "partialContact"})
      */
@@ -213,7 +207,6 @@ class Contact extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("titleName")
      * @Groups({"fullContact"})
      */
@@ -258,7 +251,6 @@ class Contact extends ApiWrapper
      * @return int
      *
      * @VirtualProperty
-     *
      * @SerializedName("position")
      * @Groups({"fullContact","partialContact"})
      */
@@ -279,7 +271,6 @@ class Contact extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("positionName")
      * @Groups({"fullContact"})
      */
@@ -314,7 +305,6 @@ class Contact extends ApiWrapper
      * @return \DateTime
      *
      * @VirtualProperty
-     *
      * @SerializedName("birthday")
      * @Groups({"fullContact"})
      */
@@ -329,7 +319,6 @@ class Contact extends ApiWrapper
      * @return \DateTime
      *
      * @VirtualProperty
-     *
      * @SerializedName("created")
      * @Groups({"fullContact"})
      */
@@ -344,7 +333,6 @@ class Contact extends ApiWrapper
      * @return \DateTime
      *
      * @VirtualProperty
-     *
      * @SerializedName("changed")
      * @Groups({"fullContact"})
      */
@@ -383,7 +371,6 @@ class Contact extends ApiWrapper
      * @return array
      *
      * @VirtualProperty
-     *
      * @SerializedName("locales")
      * @Groups({"fullContact"})
      */
@@ -434,7 +421,6 @@ class Contact extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("note")
      * @Groups({"fullContact"})
      */
@@ -473,7 +459,6 @@ class Contact extends ApiWrapper
      * @return array
      *
      * @VirtualProperty
-     *
      * @SerializedName("notes")
      * @Groups({"fullContact"})
      */
@@ -491,7 +476,6 @@ class Contact extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("contactDetails")
      * @Groups({"fullContact"})
      */
@@ -711,7 +695,6 @@ class Contact extends ApiWrapper
      * @return int
      *
      * @VirtualProperty
-     *
      * @SerializedName("formOfAddress")
      * @Groups({"fullContact"})
      */
@@ -740,7 +723,6 @@ class Contact extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("salutation")
      * @Groups({"fullContact"})
      */
@@ -763,7 +745,6 @@ class Contact extends ApiWrapper
      * @return Media
      *
      * @VirtualProperty
-     *
      * @SerializedName("avatar")
      * @Groups({"fullContact","partialContact"})
      */
@@ -806,7 +787,6 @@ class Contact extends ApiWrapper
      * @return array
      *
      * @VirtualProperty
-     *
      * @SerializedName("tags")
      * @Groups({"fullContact"})
      */
@@ -821,7 +801,6 @@ class Contact extends ApiWrapper
      * @return array
      *
      * @VirtualProperty
-     *
      * @SerializedName("bankAccounts")
      * @Groups({"fullContact"})
      */
@@ -858,7 +837,6 @@ class Contact extends ApiWrapper
      * @return bool
      *
      * @VirtualProperty
-     *
      * @SerializedName("newsletter")
      * @Groups({"fullContact"})
      */
@@ -887,7 +865,6 @@ class Contact extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("gender")
      * @Groups({"fullContact"})
      */
@@ -900,7 +877,6 @@ class Contact extends ApiWrapper
      * Returns main account.
      *
      * @VirtualProperty
-     *
      * @SerializedName("account")
      * @Groups({"fullContact"})
      */
@@ -918,7 +894,6 @@ class Contact extends ApiWrapper
      * Returns main addresses.
      *
      * @VirtualProperty
-     *
      * @SerializedName("addresses")
      * @Groups({"fullContact"})
      */
@@ -959,7 +934,6 @@ class Contact extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("mainEmail")
      * @Groups({"fullContact","partialContact"})
      */
@@ -988,7 +962,6 @@ class Contact extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("mainPhone")
      * @Groups({"fullContact","partialContact"})
      */
@@ -1017,7 +990,6 @@ class Contact extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("mainFax")
      * @Groups({"fullContact","partialContact"})
      */
@@ -1046,7 +1018,6 @@ class Contact extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("mainUrl")
      * @Groups({"fullContact","partialContact"})
      */
@@ -1059,7 +1030,6 @@ class Contact extends ApiWrapper
      * Returns the main address.
      *
      * @VirtualProperty
-     *
      * @SerializedName("mainAddress")
      * @Groups({"fullContact","partialContact"})
      */
@@ -1105,7 +1075,6 @@ class Contact extends ApiWrapper
      * @return Media[]
      *
      * @VirtualProperty
-     *
      * @SerializedName("medias")
      * @Groups({"fullContact"})
      */
@@ -1147,7 +1116,6 @@ class Contact extends ApiWrapper
      * @return Category[]
      *
      * @VirtualProperty
-     *
      * @SerializedName("categories")
      * @Groups({"fullContact"})
      */

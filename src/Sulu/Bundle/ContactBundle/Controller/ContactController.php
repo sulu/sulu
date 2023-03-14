@@ -47,6 +47,7 @@ class ContactController extends AbstractRestController implements ClassResourceI
 {
     /**
      * @deprecated
+     *
      * @see ContactInterface::RESOURCE_KEY
      *
      * @var string

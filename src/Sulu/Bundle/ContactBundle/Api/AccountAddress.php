@@ -35,7 +35,6 @@ class AccountAddress extends ApiWrapper
      * @return int
      *
      * @VirtualProperty
-     *
      * @SerializedName("id")
      * @Groups({"fullAccount"})
      */
@@ -64,7 +63,6 @@ class AccountAddress extends ApiWrapper
      * @return bool
      *
      * @VirtualProperty
-     *
      * @SerializedName("main")
      * @Groups({"fullAccount"})
      */
@@ -91,7 +89,6 @@ class AccountAddress extends ApiWrapper
      * @return AddressEntity
      *
      * @VirtualProperty
-     *
      * @SerializedName("address")
      * @Groups({"fullAccount"})
      */

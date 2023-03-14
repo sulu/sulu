@@ -28,7 +28,6 @@ class UserTwoFactor
 
     /**
      * @Expose
-     *
      * @Groups({"profile"})
      */
     private ?string $method = null;

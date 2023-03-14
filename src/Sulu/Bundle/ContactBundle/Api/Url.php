@@ -28,7 +28,6 @@ class Url extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("id")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -46,7 +45,6 @@ class Url extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("website")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -64,7 +62,6 @@ class Url extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("websiteType")
      * @Groups({"fullContact", "fullAccount"})
      */

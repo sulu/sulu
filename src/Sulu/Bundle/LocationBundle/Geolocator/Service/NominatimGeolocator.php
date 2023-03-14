@@ -47,7 +47,7 @@ class NominatimGeolocator implements GeolocatorInterface
         string $key
     ) {
         if ($client instanceof ClientInterface) {
-            @\trigger_deprecation(
+            @trigger_deprecation(
                 'sulu/sulu',
                 '2.3',
                 \sprintf(

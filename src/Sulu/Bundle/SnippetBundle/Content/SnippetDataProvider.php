@@ -108,7 +108,7 @@ class SnippetDataProvider implements DataProviderInterface
         $this->tokenStorage = $tokenStorage;
 
         if (!$formMetadataProvider) {
-            @\trigger_deprecation('sulu/sulu', '2.3', 'The usage of the "SnippetDataProvider" without setting the "FormMetadataProvider" is deprecated. Please inject the "FormMetadataProvider".');
+            @trigger_deprecation('sulu/sulu', '2.3', 'The usage of the "SnippetDataProvider" without setting the "FormMetadataProvider" is deprecated. Please inject the "FormMetadataProvider".');
         }
     }
 

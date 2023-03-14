@@ -38,6 +38,9 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
 {
     use PersistenceExtensionTrait;
 
+    /**
+     * @return void
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
@@ -104,6 +107,9 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
         );
     }
 
+    /**
+     * @return void
+     */
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('scheb_two_factor') && \interface_exists(AuthCodeMailerInterface::class)) {

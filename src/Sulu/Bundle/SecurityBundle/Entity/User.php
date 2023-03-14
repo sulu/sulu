@@ -41,7 +41,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
      * @var int
      *
      * @Expose
-     *
      * @Groups({"frontend", "fullUser"})
      */
     protected $id;
@@ -50,7 +49,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
      * @var string
      *
      * @Expose
-     *
      * @Groups({"fullUser", "profile"})
      */
     protected $username;
@@ -59,7 +57,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
      * @var string|null
      *
      * @Expose
-     *
      * @Groups({"fullUser", "profile"})
      */
     protected $email;
@@ -73,7 +70,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
      * @var string
      *
      * @Expose
-     *
      * @Groups({"frontend", "fullUser", "profile"})
      */
     protected $locale;
@@ -138,7 +134,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
      * @var ContactInterface
      *
      * @Expose
-     *
      * @Groups({"frontend", "fullUser"})
      */
     protected $contact;
@@ -576,7 +571,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @VirtualProperty
-     *
      * @Groups({"frontend"})
      */
     public function getRoles(): array
@@ -669,7 +663,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @VirtualProperty
-     *
      * @Groups({"frontend"})
      */
     public function getSettings()
@@ -708,7 +701,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("fullName")
      * @Groups({"frontend", "fullUser"})
      *
@@ -722,7 +714,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @VirtualProperty
-     *
      * @Groups({"profile"})
      *
      * @return string
@@ -746,7 +737,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * @VirtualProperty
-     *
      * @Groups({"profile"})
      *
      * @return string

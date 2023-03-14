@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\CategoryBundle\Event;
 
-@\trigger_deprecation(
+@trigger_deprecation(
     'sulu/sulu',
     '2.3',
     'The "%s" class is deprecated. Use the respective event class directly instead.',

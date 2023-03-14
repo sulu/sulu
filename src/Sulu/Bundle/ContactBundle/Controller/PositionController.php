@@ -39,6 +39,7 @@ class PositionController extends AbstractRestController implements ClassResource
      * @var string
      *
      * @deprecated
+     *
      * @see Position::RESOURCE_KEY
      */
     protected static $entityKey = Position::RESOURCE_KEY;

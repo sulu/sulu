@@ -28,7 +28,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
-@\trigger_deprecation(
+@trigger_deprecation(
     'sulu/sulu',
     '2.0',
     'The "%s" class is deprecated, use data from "%s" instead.',

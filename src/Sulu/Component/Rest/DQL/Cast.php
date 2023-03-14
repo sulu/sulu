@@ -18,6 +18,7 @@ use Doctrine\ORM\Query\SqlWalker;
 
 /**
  * @deprecated
+ *
  * @see \Oro\ORM\Query\AST\Functions\Cast
  */
 class Cast extends FunctionNode

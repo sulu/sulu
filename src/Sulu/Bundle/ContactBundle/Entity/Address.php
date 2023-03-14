@@ -28,7 +28,6 @@ class Address
      * @var string|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $street;
@@ -37,7 +36,6 @@ class Address
      * @var string|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $number;
@@ -46,7 +44,6 @@ class Address
      * @var string|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $addition;
@@ -55,7 +52,6 @@ class Address
      * @var string|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $zip;
@@ -64,7 +60,6 @@ class Address
      * @var string|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $city;
@@ -73,7 +68,6 @@ class Address
      * @var string|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $state;
@@ -82,7 +76,6 @@ class Address
      * @var int
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $id;
@@ -91,7 +84,6 @@ class Address
      * @var AddressType
      *
      * @Groups({"fullAccount", "fullContact"})
-     *
      * @Expose
      */
     private $addressType;
@@ -100,7 +92,6 @@ class Address
      * @var string|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $countryCode;
@@ -109,7 +100,6 @@ class Address
      * @var bool|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $primaryAddress;
@@ -118,7 +108,6 @@ class Address
      * @var bool|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $deliveryAddress;
@@ -127,7 +116,6 @@ class Address
      * @var bool|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $billingAddress;
@@ -136,7 +124,6 @@ class Address
      * @var string|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $postboxNumber;
@@ -145,7 +132,6 @@ class Address
      * @var string|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $postboxPostcode;
@@ -154,7 +140,6 @@ class Address
      * @var string|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $postboxCity;
@@ -173,7 +158,6 @@ class Address
      * @var string|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $note;
@@ -182,7 +166,6 @@ class Address
      * @var string|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $title;
@@ -191,7 +174,6 @@ class Address
      * @var float|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $latitude;
@@ -200,7 +182,6 @@ class Address
      * @var float|null
      *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
-     *
      * @Expose
      */
     private $longitude;

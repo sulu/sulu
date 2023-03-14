@@ -162,6 +162,7 @@ interface ContentMapperInterface
      * Copies the content from one node from one localization to the other.
      *
      * @deprecated
+     *
      * @see DocumentManagerInterface::copyLocale()
      *
      * @param string $uuid

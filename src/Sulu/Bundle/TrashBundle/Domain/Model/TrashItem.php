@@ -30,7 +30,6 @@ class TrashItem implements TrashItemInterface
 {
     /**
      * @Expose
-     *
      * @Groups({"trash_item_admin_api"})
      *
      * @var int
@@ -39,7 +38,6 @@ class TrashItem implements TrashItemInterface
 
     /**
      * @Expose
-     *
      * @Groups({"trash_item_admin_api"})
      *
      * @var string
@@ -48,7 +46,6 @@ class TrashItem implements TrashItemInterface
 
     /**
      * @Expose
-     *
      * @Groups({"trash_item_admin_api"})
      *
      * @var string
@@ -57,7 +54,6 @@ class TrashItem implements TrashItemInterface
 
     /**
      * @Expose
-     *
      * @Groups({"trash_item_admin_api"})
      *
      * @var mixed[]
@@ -70,7 +66,6 @@ class TrashItem implements TrashItemInterface
      *          -> "translation".
      *
      * @Expose
-     *
      * @Groups({"trash_item_admin_api"})
      *
      * @var string|null
@@ -83,7 +78,6 @@ class TrashItem implements TrashItemInterface
      *          -> ["locale" => "en"].
      *
      * @Expose
-     *
      * @Groups({"trash_item_admin_api"})
      *
      * @var mixed[]
@@ -92,7 +86,6 @@ class TrashItem implements TrashItemInterface
 
     /**
      * @Expose
-     *
      * @Groups({"trash_item_admin_api"})
      *
      * @var string|null
@@ -108,7 +101,6 @@ class TrashItem implements TrashItemInterface
 
     /**
      * @Expose
-     *
      * @Groups({"trash_item_admin_api"})
      *
      * @var string|null
@@ -117,7 +109,6 @@ class TrashItem implements TrashItemInterface
 
     /**
      * @Expose
-     *
      * @Groups({"trash_item_admin_api"})
      *
      * @var \DateTimeImmutable
@@ -285,7 +276,6 @@ class TrashItem implements TrashItemInterface
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("userId")
      * @Groups({"trash_item_api"})
      */

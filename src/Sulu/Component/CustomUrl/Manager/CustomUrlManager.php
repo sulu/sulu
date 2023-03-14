@@ -117,7 +117,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
             $this->documentManager->publish($document, CustomUrlDocument::DOCUMENT_LOCALE);
             $this->documentDomainEventCollector->collect(new CustomUrlCreatedEvent($document, $webspaceKey, $data));
         } catch (NodeNameAlreadyExistsException $ex) {
-            throw new TitleAlreadyExistsException($document->getTitle());
+            throw new TitleAlreadyExistsException($document->getTitle(), $ex);
         }
 
         return $document;
@@ -194,7 +194,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
 
     public function findByPage(UuidBehavior $page)
     {
-        $webspaceKeys = array_map(function (Webspace $webspace) {
+        $webspaceKeys = \array_map(function(Webspace $webspace) {
             return $webspace->getKey();
         }, $this->webspaceManager->getWebspaceCollection()->getWebspaces());
         if ($page instanceof WebspaceBehavior) {
@@ -203,13 +203,13 @@ class CustomUrlManager implements CustomUrlManagerInterface
 
         $descendentPaths = [];
         foreach ($webspaceKeys as $webspaceKey) {
-            $descendentPaths[] = sprintf('ISDESCENDANTNODE(a, "/cmf/%s/custom-urls")', $webspaceKey);
+            $descendentPaths[] = \sprintf('ISDESCENDANTNODE(a, "/cmf/%s/custom-urls")', $webspaceKey);
         }
 
         $query = $this->documentManager->createQuery(
             \sprintf(
                 'SELECT * FROM [nt:unstructured] AS a WHERE (%s) AND a.[jcr:mixinTypes] = "sulu:custom_url" AND a.[sulu:target] = "%s"',
-                implode(' OR ', $descendentPaths),
+                \implode(' OR ', $descendentPaths),
                 $page->getUuid()
             )
         );
@@ -276,7 +276,7 @@ class CustomUrlManager implements CustomUrlManagerInterface
                 new CustomUrlModifiedEvent($document, $this->documentInspector->getWebspace($document), $data)
             );
         } catch (NodeNameAlreadyExistsException $ex) {
-            throw new TitleAlreadyExistsException($document->getTitle());
+            throw new TitleAlreadyExistsException($document->getTitle(), $ex);
         }
 
         return $document;

@@ -259,7 +259,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
         $xDefaultNode = $localizationNode->attributes->getNamedItem('x-default');
         if ($xDefaultNode) {
             // @deprecated
-            @\trigger_deprecation('sulu/sulu', '2.3', 'Set x-default="true" attribute on the `<localization>` tag in webspace is deprecated use default="true" instead.');
+            @trigger_deprecation('sulu/sulu', '2.3', 'Set x-default="true" attribute on the `<localization>` tag in webspace is deprecated use default="true" instead.');
 
             $localization->setXDefault('true' == $xDefaultNode->nodeValue);
         } else {

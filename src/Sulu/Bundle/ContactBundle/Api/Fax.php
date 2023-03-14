@@ -28,7 +28,6 @@ class Fax extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("id")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -46,7 +45,6 @@ class Fax extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("fax")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -64,7 +62,6 @@ class Fax extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("faxType")
      * @Groups({"fullContact", "fullAccount"})
      */

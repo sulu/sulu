@@ -56,7 +56,7 @@ class SnippetCopiedEvent extends DomainEvent
      */
     public function getPageDocument(): SnippetDocument
     {
-        @\trigger_deprecation('sulu/sulu', '2.4', 'The "%s" method is deprecated. Use "%s" instead.', __METHOD__, 'getSnippetDocument');
+        @trigger_deprecation('sulu/sulu', '2.4', 'The "%s" method is deprecated. Use "%s" instead.', __METHOD__, 'getSnippetDocument');
 
         return $this->getSnippetDocument();
     }

@@ -36,7 +36,6 @@ class ContactAddress extends ApiWrapper
      * @return int
      *
      * @VirtualProperty
-     *
      * @SerializedName("id")
      */
     public function getId()
@@ -64,7 +63,6 @@ class ContactAddress extends ApiWrapper
      * @return bool
      *
      * @VirtualProperty
-     *
      * @SerializedName("main")
      */
     public function getMain()
@@ -90,7 +88,6 @@ class ContactAddress extends ApiWrapper
      * @return AddressEntity
      *
      * @VirtualProperty
-     *
      * @SerializedName("address")
      */
     public function getAddress()

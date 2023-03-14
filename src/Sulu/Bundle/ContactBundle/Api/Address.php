@@ -36,7 +36,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("street")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -54,7 +53,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("number")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -72,7 +70,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("addition")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -90,7 +87,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("zip")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -108,7 +104,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("city")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -126,7 +121,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("state")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -137,7 +131,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("id")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -155,7 +148,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("addressType")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -173,7 +165,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("countryCode")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -196,7 +187,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("primaryAddress")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -214,7 +204,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("deliveryAddress")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -232,7 +221,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("billingAddress")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -250,7 +238,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("postboxNumber")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -268,7 +255,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("postboxPostcode")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -286,7 +272,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("postboxCity")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -342,7 +327,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("note")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -360,7 +344,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("title")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -371,7 +354,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("latitude")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -389,7 +371,6 @@ class Address extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("longitude")
      * @Groups({"fullContact", "fullAccount"})
      */

@@ -52,7 +52,7 @@ class Configuration implements ConfigurationInterface
                                 ->beforeNormalization()
                                     ->ifTrue(function($v) { return false !== $v; })
                                     ->then(function($v) {
-                                        @\trigger_deprecation('sulu/sulu', '2.2', 'Enabling the "urls" parameter is deprecated.');
+                                        @trigger_deprecation('sulu/sulu', '2.2', 'Enabling the "urls" parameter is deprecated.');
 
                                         return $v;
                                     })
@@ -63,7 +63,7 @@ class Configuration implements ConfigurationInterface
                                 ->beforeNormalization()
                                     ->ifTrue(function($v) { return false !== $v; })
                                     ->then(function($v) {
-                                        @\trigger_deprecation('sulu/sulu', '2.3', 'Enabling the "path" parameter is deprecated.');
+                                        @trigger_deprecation('sulu/sulu', '2.3', 'Enabling the "path" parameter is deprecated.');
 
                                         return $v;
                                     })

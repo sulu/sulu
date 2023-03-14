@@ -26,7 +26,7 @@ class XmlFormatLoader10 extends BaseXmlFormatLoader
 
     public function load($resource, $type = null)
     {
-        @\trigger_deprecation(
+        @trigger_deprecation(
             'sulu/sulu',
             '1.4',
             '%s is deprecated and will be removed in 2.0. Use XmlFormatLoader11 instead.',
