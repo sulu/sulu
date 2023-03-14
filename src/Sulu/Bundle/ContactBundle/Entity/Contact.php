@@ -32,7 +32,6 @@ class Contact extends ApiEntity implements ContactInterface
      * @var int
      *
      * @Expose
-     *
      * @Groups({"frontend", "partialContact", "fullContact"})
      */
     protected $id;
@@ -321,7 +320,6 @@ class Contact extends ApiEntity implements ContactInterface
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("fullName")
      *
      * @return string
@@ -355,7 +353,6 @@ class Contact extends ApiEntity implements ContactInterface
 
     /**
      * @VirtualProperty
-     *
      * @Groups({"fullContact"})
      */
     public function getPosition()

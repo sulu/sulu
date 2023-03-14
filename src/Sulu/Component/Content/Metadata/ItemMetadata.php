@@ -89,7 +89,7 @@ abstract class ItemMetadata
 
     public function __get($name)
     {
-        @\trigger_deprecation(
+        @trigger_deprecation(
             'sulu/sulu',
             '2.0',
             'Do not use public property "%s" from "%s"',
@@ -101,7 +101,7 @@ abstract class ItemMetadata
 
     public function __set($name, $value)
     {
-        @\trigger_deprecation(
+        @trigger_deprecation(
             'sulu/sulu',
             '2.0',
             'Do not use public property "%s" from "%s"',

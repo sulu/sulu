@@ -93,7 +93,6 @@ class UserRole extends ApiEntity
      * @return array
      *
      * @VirtualProperty
-     *
      * @SerializedName("locales")
      */
     public function getLocales()

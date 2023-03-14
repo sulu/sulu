@@ -28,7 +28,6 @@ class SocialMediaProfile extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("id")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -46,7 +45,6 @@ class SocialMediaProfile extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("username")
      * @Groups({"fullContact", "fullAccount"})
      */
@@ -64,7 +62,6 @@ class SocialMediaProfile extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("socialMediaType")
      * @Groups({"fullContact", "fullAccount"})
      */

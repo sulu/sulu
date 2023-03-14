@@ -39,6 +39,7 @@ class ContactTitleController extends AbstractRestController implements ClassReso
      * @var string
      *
      * @deprecated
+     *
      * @see ContactTitle::RESOURCE_KEY
      */
     protected static $entityKey = ContactTitle::RESOURCE_KEY;

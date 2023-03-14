@@ -25,7 +25,6 @@ class Tag implements TagInterface
      * @var string
      *
      * @Expose
-     *
      * @Groups({"partialTag"})
      */
     private $name;

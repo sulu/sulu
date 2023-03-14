@@ -91,7 +91,6 @@ class RootCollection
      * @internal
      *
      * @VirtualProperty
-     *
      * @SerializedName("_embedded")
      */
     public function getEmbedded(): array

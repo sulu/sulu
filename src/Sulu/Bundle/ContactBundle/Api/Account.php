@@ -62,7 +62,6 @@ class Account extends ApiWrapper
      * @return int
      *
      * @VirtualProperty
-     *
      * @SerializedName("id")
      * @Groups({"fullAccount", "partialAccount"})
      */
@@ -119,7 +118,6 @@ class Account extends ApiWrapper
      * @return int
      *
      * @VirtualProperty
-     *
      * @SerializedName("depth")
      * @Groups({"fullAccount", "partialAccount"})
      */
@@ -148,7 +146,6 @@ class Account extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("name")
      * @Groups({"fullAccount", "partialAccount"})
      */
@@ -163,7 +160,6 @@ class Account extends ApiWrapper
      * @return \DateTime
      *
      * @VirtualProperty
-     *
      * @SerializedName("created")
      * @Groups({"fullAccount"})
      */
@@ -178,7 +174,6 @@ class Account extends ApiWrapper
      * @return \DateTime
      *
      * @VirtualProperty
-     *
      * @SerializedName("changed")
      * @Groups({"fullAccount"})
      */
@@ -207,7 +202,6 @@ class Account extends ApiWrapper
      * @return AccountInterface
      *
      * @VirtualProperty
-     *
      * @SerializedName("parent")
      * @Groups({"fullAccount"})
      */
@@ -339,7 +333,6 @@ class Account extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("note")
      * @Groups({"fullAccount"})
      */
@@ -374,7 +367,6 @@ class Account extends ApiWrapper
      * @return NoteEntity[]
      *
      * @VirtualProperty
-     *
      * @SerializedName("notes")
      * @Groups({"fullAccount"})
      */
@@ -392,7 +384,6 @@ class Account extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("contactDetails")
      * @Groups({"fullAccount"})
      */
@@ -501,7 +492,6 @@ class Account extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("corporation")
      * @Groups({"fullAccount", "partialAccount"})
      */
@@ -530,7 +520,6 @@ class Account extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("uid")
      * @Groups({"fullAccount"})
      */
@@ -559,7 +548,6 @@ class Account extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("registerNumber")
      * @Groups({"fullAccount"})
      */
@@ -594,7 +582,6 @@ class Account extends ApiWrapper
      * @return BankAccountEntity[]
      *
      * @VirtualProperty
-     *
      * @SerializedName("bankAccounts")
      * @Groups({"fullAccount"})
      */
@@ -637,7 +624,6 @@ class Account extends ApiWrapper
      * @return TagInterface[]
      *
      * @VirtualProperty
-     *
      * @SerializedName("tags")
      * @Groups({"fullAccount"})
      */
@@ -672,7 +658,6 @@ class Account extends ApiWrapper
      * @return AccountContact[]
      *
      * @VirtualProperty
-     *
      * @SerializedName("accountContacts")
      * @Groups({"fullAccount"})
      */
@@ -708,7 +693,6 @@ class Account extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("placeOfJurisdiction")
      * @Groups({"fullAccount"})
      */
@@ -737,7 +721,6 @@ class Account extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("number")
      * @Groups({"fullAccount", "partialAccount"})
      */
@@ -766,7 +749,6 @@ class Account extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("externalId")
      * @Groups({"fullAccount"})
      */
@@ -795,7 +777,6 @@ class Account extends ApiWrapper
      * @return Account
      *
      * @VirtualProperty
-     *
      * @SerializedName("mainContact")
      * @Groups({"fullAccount"})
      */
@@ -828,7 +809,6 @@ class Account extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("mainEmail")
      * @Groups({"fullAccount", "partialAccount"})
      */
@@ -857,7 +837,6 @@ class Account extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("mainPhone")
      * @Groups({"fullAccount", "partialAccount"})
      */
@@ -886,7 +865,6 @@ class Account extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("mainFax")
      * @Groups({"fullAccount", "partialAccount"})
      */
@@ -915,7 +893,6 @@ class Account extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("mainUrl")
      * @Groups({"fullAccount", "partialAccount"})
      */
@@ -950,7 +927,6 @@ class Account extends ApiWrapper
      * @return AccountAddress[]
      *
      * @VirtualProperty
-     *
      * @SerializedName("accountAddresses")
      */
     public function getAccountAddresses()
@@ -969,7 +945,6 @@ class Account extends ApiWrapper
      * returns addresses.
      *
      * @VirtualProperty
-     *
      * @SerializedName("addresses")
      * @Groups({"fullAccount"})
      */
@@ -994,7 +969,6 @@ class Account extends ApiWrapper
      * Returns the main address.
      *
      * @VirtualProperty
-     *
      * @SerializedName("mainAddress")
      * @Groups({"fullAccount", "partialAccount"})
      */
@@ -1020,7 +994,6 @@ class Account extends ApiWrapper
      * @return Contact[]
      *
      * @VirtualProperty
-     *
      * @SerializedName("contacts")
      * @Groups({"fullAccount"})
      */
@@ -1053,7 +1026,6 @@ class Account extends ApiWrapper
      * @return Media
      *
      * @VirtualProperty
-     *
      * @SerializedName("logo")
      * @Groups({"fullAccount"})
      */
@@ -1096,7 +1068,6 @@ class Account extends ApiWrapper
      * @return Media[]
      *
      * @VirtualProperty
-     *
      * @SerializedName("medias")
      * @Groups({"fullAccount"})
      */
@@ -1118,7 +1089,6 @@ class Account extends ApiWrapper
      * @return Category[]
      *
      * @VirtualProperty
-     *
      * @SerializedName("categories")
      * @Groups({"fullAccount"})
      */

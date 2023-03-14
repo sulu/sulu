@@ -19,7 +19,7 @@ use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Symfony\Component\HttpFoundation\Response;
 
-@\trigger_deprecation(
+@trigger_deprecation(
     'sulu/sulu',
     '2.0',
     'The "%s" class is deprecated since, use data from "%s" instead.',

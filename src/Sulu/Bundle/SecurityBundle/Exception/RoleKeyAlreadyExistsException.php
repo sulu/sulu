@@ -26,7 +26,7 @@ class RoleKeyAlreadyExistsException extends \Exception implements TranslationErr
     /**
      * @param string $key
      */
-    public function __construct($key, \Throwable $previous = null)
+    public function __construct($key, ?\Throwable $previous = null)
     {
         $this->key = $key;
         parent::__construct(\sprintf('Role with key "%s" already exists', $key), 1101, $previous);

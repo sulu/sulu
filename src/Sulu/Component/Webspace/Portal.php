@@ -178,7 +178,7 @@ class Portal
     public function setXDefaultLocalization($xDefaultLocalization)
     {
         if (\func_num_args() < 2 || \func_get_arg(1)) {
-            @\trigger_deprecation('sulu/sulu', '2.3', 'The "%s" method is deprecated on "%s" use "setDefaultLocalization" instead.', __METHOD__, __CLASS__);
+            @trigger_deprecation('sulu/sulu', '2.3', 'The "%s" method is deprecated on "%s" use "setDefaultLocalization" instead.', __METHOD__, __CLASS__);
         }
 
         $this->xDefaultLocalization = $xDefaultLocalization;
@@ -191,7 +191,7 @@ class Portal
      */
     public function getXDefaultLocalization()
     {
-        @\trigger_deprecation('sulu/sulu', '2.3', 'The "%s" method is deprecated on "%s" use "getDefaultLocalization" instead.', __METHOD__, __CLASS__);
+        @trigger_deprecation('sulu/sulu', '2.3', 'The "%s" method is deprecated on "%s" use "getDefaultLocalization" instead.', __METHOD__, __CLASS__);
 
         return $this->xDefaultLocalization;
     }

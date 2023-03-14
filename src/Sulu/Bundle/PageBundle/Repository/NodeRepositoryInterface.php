@@ -191,6 +191,7 @@ interface NodeRepositoryInterface
 
     /**
      * @deprecated
+     *
      * @see DocumentManagerInterface::copyLocale()
      *
      * @param string $uuid

@@ -145,7 +145,6 @@ class TargetGroup implements TargetGroupInterface
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("webspaceKeys")
      */
     public function getWebspaceKeys()

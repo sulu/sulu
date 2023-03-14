@@ -19,7 +19,7 @@ use Sulu\Bundle\AdminBundle\Controller\AdminController;
 use Sulu\Component\Rest\AbstractRestController;
 use Symfony\Component\HttpFoundation\Request;
 
-@\trigger_deprecation(
+@trigger_deprecation(
     'sulu/sulu',
     '2.2',
     'The "%s" class is deprecated, use data from "%s" instead.',

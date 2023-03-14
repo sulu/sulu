@@ -61,7 +61,7 @@ class DefaultSnippetTwigExtension extends AbstractExtension
 
     public function getDefault($snippetType, $webspaceKey = null, $locale = null)
     {
-        @\trigger_deprecation('sulu/sulu', '1.6', 'Loading snippets over the sulu_snippet_load_default is deprecated and will be removed in 2.0, use sulu_snippet_load_by_area instead.');
+        @trigger_deprecation('sulu/sulu', '1.6', 'Loading snippets over the sulu_snippet_load_default is deprecated and will be removed in 2.0, use sulu_snippet_load_by_area instead.');
 
         if (!$webspaceKey) {
             $webspaceKey = $this->requestAnalyzer->getWebspace()->getKey();

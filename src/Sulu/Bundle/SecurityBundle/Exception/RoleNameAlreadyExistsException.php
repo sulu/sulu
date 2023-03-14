@@ -26,7 +26,7 @@ class RoleNameAlreadyExistsException extends \Exception implements TranslationEr
     /**
      * @param string $name
      */
-    public function __construct($name, \Throwable $previous = null)
+    public function __construct($name, ?\Throwable $previous = null)
     {
         $this->name = $name;
         parent::__construct(\sprintf('Role "%s" already exists', $name), 1101, $previous);

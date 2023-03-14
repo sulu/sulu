@@ -56,7 +56,6 @@ class AccountContact extends ApiWrapper
      * @return bool
      *
      * @VirtualProperty
-     *
      * @SerializedName("main")
      * @Groups({"fullAccount"})
      */
@@ -71,7 +70,6 @@ class AccountContact extends ApiWrapper
      * @return int
      *
      * @VirtualProperty
-     *
      * @SerializedName("id")
      * @Groups({"fullAccount"})
      */
@@ -98,7 +96,6 @@ class AccountContact extends ApiWrapper
      * @return ContactEntity
      *
      * @VirtualProperty
-     *
      * @SerializedName("contact")
      * @Groups({"fullAccount"})
      */
@@ -130,7 +127,6 @@ class AccountContact extends ApiWrapper
      * @return Account
      *
      * @VirtualProperty
-     *
      * @SerializedName("account")
      * @Groups({"fullAccount"})
      */
@@ -164,7 +160,6 @@ class AccountContact extends ApiWrapper
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("position")
      * @Groups({"fullAccount"})
      */

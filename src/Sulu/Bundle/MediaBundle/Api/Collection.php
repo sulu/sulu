@@ -115,7 +115,6 @@ class Collection extends ApiWrapper
      * @internal
      *
      * @VirtualProperty
-     *
      * @SerializedName("_embedded")
      */
     public function getEmbedded(): array
@@ -131,7 +130,6 @@ class Collection extends ApiWrapper
      * Indicates if sub collections exists.
      *
      * @VirtualProperty
-     *
      * @SerializedName("hasChildren")
      *
      * @return bool
@@ -155,7 +153,6 @@ class Collection extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("description")
      *
      * @return string|null
@@ -172,7 +169,6 @@ class Collection extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("id")
      *
      * @return int
@@ -245,7 +241,6 @@ class Collection extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("style")
      *
      * @return array|null
@@ -275,7 +270,6 @@ class Collection extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("properties")
      *
      * @return array
@@ -287,7 +281,6 @@ class Collection extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("preview")
      *
      * @return array
@@ -311,7 +304,6 @@ class Collection extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("locale")
      */
     public function getLocale()
@@ -333,7 +325,6 @@ class Collection extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("title")
      *
      * @return string|null
@@ -362,7 +353,6 @@ class Collection extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("key")
      *
      * @return string|null
@@ -386,7 +376,6 @@ class Collection extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("type")
      *
      * @return CollectionType
@@ -398,7 +387,6 @@ class Collection extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("changed")
      *
      * @return string
@@ -435,7 +423,6 @@ class Collection extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("created")
      *
      * @return string
@@ -520,7 +507,6 @@ class Collection extends ApiWrapper
 
     /**
      * @VirtualProperty
-     *
      * @SerializedName("locked")
      *
      * @return string

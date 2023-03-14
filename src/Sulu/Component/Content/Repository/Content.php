@@ -219,7 +219,6 @@ class Content implements \ArrayAccess
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("template")
      */
     public function getTemplate()
@@ -237,7 +236,6 @@ class Content implements \ArrayAccess
      * @return string
      *
      * @VirtualProperty
-     *
      * @SerializedName("originalTemplate")
      */
     public function getOriginalTemplate()
@@ -418,7 +416,6 @@ class Content implements \ArrayAccess
      * @internal
      *
      * @VirtualProperty
-     *
      * @SerializedName("_embedded")
      */
     public function getEmbedded(): array

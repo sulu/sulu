@@ -79,11 +79,11 @@ class MediaDataProvider extends BaseDataProvider
         $this->translator = $translator;
 
         if (!$entityManager) {
-            @\trigger_deprecation('sulu/sulu', '2.3', 'The usage of the "MediaDataProvider" without setting the "EntityManager" is deprecated. Please inject the "EntityManager".');
+            @trigger_deprecation('sulu/sulu', '2.3', 'The usage of the "MediaDataProvider" without setting the "EntityManager" is deprecated. Please inject the "EntityManager".');
         }
 
         if (!$translator) {
-            @\trigger_deprecation('sulu/sulu', '2.3', 'The usage of the "MediaDataProvider" without setting the "Translator" is deprecated. Please inject the "Translator".');
+            @trigger_deprecation('sulu/sulu', '2.3', 'The usage of the "MediaDataProvider" without setting the "Translator" is deprecated. Please inject the "Translator".');
         }
     }
 

@@ -174,7 +174,7 @@ class SnippetRepository
      */
     public function copyLocale($uuid, $userId, $srcLocale, $destLocales)
     {
-        @\trigger_deprecation(
+        @trigger_deprecation(
             'sulu/sulu',
             '2.3',
             'The SnippetRepository::copyLocale method is deprecated and will be removed in the future.'

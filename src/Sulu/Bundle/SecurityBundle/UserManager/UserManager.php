@@ -250,7 +250,7 @@ class UserManager implements UserManagerInterface
 
             if (!$patch || (null !== $contact || null !== $contactId)) {
                 if ($contact && !$contactId) {
-                    @\trigger_deprecation(
+                    @trigger_deprecation(
                         'sulu/sulu',
                         '1.4',
                         'Usage of the contact object to define the contact corresponding to the user is deprecated'
