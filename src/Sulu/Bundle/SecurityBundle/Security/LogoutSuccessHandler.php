@@ -29,7 +29,7 @@ class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
 
     public function __construct(RouterInterface $router)
     {
-        @\trigger_error(__CLASS__ . '() is deprecated since version sulu/sulu 2.5 and will be removed in 3.0. Use LogoutEventSubscriber instead.', \E_USER_DEPRECATED);
+        @trigger_deprecation('sulu/sulu', '2.5', __CLASS__ . '() is deprecated and will be removed in 3.0. Use LogoutEventSubscriber instead.');
 
         $this->router = $router;
     }
