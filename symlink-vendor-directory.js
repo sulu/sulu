@@ -22,8 +22,8 @@ const path = require('path');
 
 const parameters = process.argv.slice(2);
 
-const from = parameters.length > 1 ? parameters[0] : '../../vendor';
-const to = parameters.length > 2 ? parameters[1] : 'node_modules/@sulu/vendor';
+const from = parameters.length >= 1 ? parameters[0] : '../../vendor';
+const to = parameters.length >= 2 ? parameters[1] : 'node_modules/@sulu/vendor';
 const doNotCheckCurrentDirectory = parameters.length > 3 && parameters[2] === '--force';
 
 if (
