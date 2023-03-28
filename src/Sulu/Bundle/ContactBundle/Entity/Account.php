@@ -145,7 +145,7 @@ class Account implements AccountInterface
     protected $parent;
 
     /**
-     * @var string
+     * @var Address[]
      *
      * @Accessor(getter="getAddresses")
      */
