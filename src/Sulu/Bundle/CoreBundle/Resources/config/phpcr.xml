@@ -17,5 +17,7 @@
                 <argument key="snippet">%sulu.content.node_names.snippet%</argument>
             </argument>
         </service>
+
+        <service id="Sulu\Component\PHPCR\PropertyParser\PropertyParserInterface" class="Sulu\Component\PHPCR\PropertyParser\PropertyParser" />
     </services>
 </container>
