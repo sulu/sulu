@@ -16,10 +16,7 @@ use Sulu\Component\Localization\Localization;
 
 class LocalizationTest extends TestCase
 {
-    /**
-     * @var Localization
-     */
-    private $localization;
+    private \Sulu\Component\Localization\Localization $localization;
 
     public function setUp(): void
     {

@@ -26,17 +26,14 @@ class MediaImageExtractorTest extends TestCase
     /**
      * @var ObjectProphecy<ImagineInterface>
      */
-    private $imagine;
+    private ObjectProphecy $imagine;
 
     /**
      * @var ObjectProphecy<VideoThumbnailServiceInterface>
      */
-    private $videoThumbnail;
+    private ObjectProphecy $videoThumbnail;
 
-    /**
-     * @var MediaImageExtractor
-     */
-    private $mediaImageExtractor;
+    private \Sulu\Bundle\MediaBundle\Media\ImageConverter\MediaImageExtractor $mediaImageExtractor;
 
     public function setUp(): void
     {

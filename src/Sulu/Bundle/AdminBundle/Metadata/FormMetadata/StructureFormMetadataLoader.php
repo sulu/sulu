@@ -24,45 +24,27 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerInterface
 {
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $structureMetadataFactory;
+    private \Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface $structureMetadataFactory;
 
-    /**
-     * @var FormMetadataMapper
-     */
-    private $formMetadataMapper;
+    private \Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper $formMetadataMapper;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var FieldMetadataValidatorInterface
-     */
-    private $fieldMetadataValidator;
+    private \Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\FieldMetadataValidatorInterface $fieldMetadataValidator;
 
     /**
      * @var string[]
      */
-    private $defaultTypes;
+    private array $defaultTypes;
 
     /**
      * @var string[]
      */
-    private $locales;
+    private array $locales;
 
-    /**
-     * @var string
-     */
-    private $cacheDir;
+    private string $cacheDir;
 
-    /**
-     * @var bool
-     */
-    private $debug;
+    private bool $debug;
 
     public function __construct(
         StructureMetadataFactoryInterface $structureMetadataFactory,

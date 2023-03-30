@@ -13,7 +13,7 @@ namespace Sulu\Component\Rest\ListBuilder\Filter;
 
 class FilterTypeNotFoundException extends \Exception
 {
-    private $type;
+    private string $type;
 
     public function __construct(string $type)
     {

@@ -30,20 +30,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CopyLocaleSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Component\DocumentManager\DocumentInspector $documentInspector;
 
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
+    private \Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool;
 
     public function __construct(
         DocumentManagerInterface $documentManager,

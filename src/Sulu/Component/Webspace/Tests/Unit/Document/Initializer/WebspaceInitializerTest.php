@@ -35,42 +35,39 @@ class WebspaceInitializerTest extends TestCase
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $documentInspector;
+    private ObjectProphecy $documentInspector;
 
     /**
      * @var ObjectProphecy<PathBuilder>
      */
-    private $pathBuilder;
+    private ObjectProphecy $pathBuilder;
 
     /**
      * @var ObjectProphecy<NodeManager>
      */
-    private $nodeManager;
+    private ObjectProphecy $nodeManager;
 
-    /**
-     * @var WebspaceInitializer
-     */
-    private $webspaceInitializer;
+    private \Sulu\Component\Webspace\Document\Initializer\WebspaceInitializer $webspaceInitializer;
 
     /**
      * @var ObjectProphecy<Output>
      */
-    private $output;
+    private ObjectProphecy $output;
 
     /**
      * @var ObjectProphecy<WebspaceCollection>
      */
-    private $webspaceCollection;
+    private ObjectProphecy $webspaceCollection;
 
     public function setUp(): void
     {

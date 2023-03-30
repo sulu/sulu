@@ -26,15 +26,9 @@ class AccountRecoverCommand extends Command
 {
     protected static $defaultName = 'sulu:contacts:accounts:recover';
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var AccountRepositoryInterface
-     */
-    private $accountRepository;
+    private \Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface $accountRepository;
 
     public function __construct(EntityManagerInterface $entityManager, AccountRepositoryInterface $accountRepository)
     {

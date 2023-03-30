@@ -36,25 +36,13 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
      */
     public const RESULT_KEY = 'analytics';
 
-    /**
-     * @var AnalyticsManagerInterface
-     */
-    private $analyticsManager;
+    private \Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface $analyticsManager;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var CacheClearerInterface
-     */
-    private $cacheClearer;
+    private \Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface $cacheClearer;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

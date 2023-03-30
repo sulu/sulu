@@ -21,15 +21,9 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class DebugEventDispatcher extends EventDispatcher
 {
-    /**
-     * @var Stopwatch
-     */
-    private $stopwatch;
+    private \Symfony\Component\Stopwatch\Stopwatch $stopwatch;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private \Psr\Log\LoggerInterface|\Psr\Log\NullLogger $logger;
 
     /**
      * @param LoggerInterface $logger

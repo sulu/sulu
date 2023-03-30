@@ -13,28 +13,17 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Command;
 
 use Sulu\Bundle\SnippetBundle\Command\SnippetLocaleCopyCommand;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\DocumentManager\DocumentManager;
-use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class SnippetLocaleCopyCommandTest extends SuluTestCase
 {
-    /**
-     * @var CommandTester
-     */
-    private $tester;
+    private \Symfony\Component\Console\Tester\CommandTester $tester;
 
-    /**
-     * @var DocumentManager
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
+    private ?object $documentRegistry = null;
 
     public function setUp(): void
     {

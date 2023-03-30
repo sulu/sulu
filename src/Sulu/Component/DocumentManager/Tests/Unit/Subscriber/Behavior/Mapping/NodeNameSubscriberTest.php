@@ -27,32 +27,20 @@ class NodeNameSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<HydrateEvent>
      */
-    private $hydrateEvent;
+    private ObjectProphecy $hydrateEvent;
 
-    /**
-     * @var \stdClass
-     */
-    private $notImplementing;
+    private \stdClass $notImplementing;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
-    /**
-     * @var TestNodeNameDocument
-     */
-    private $document;
+    private \Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Mapping\Mapping\TestNodeNameDocument $document;
 
-    /**
-     * @var DocumentAccessor
-     */
-    private $accessor;
+    private \Sulu\Component\DocumentManager\DocumentAccessor $accessor;
 
-    /**
-     * @var NodeNameSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\NodeNameSubscriber $subscriber;
 
     public function setUp(): void
     {

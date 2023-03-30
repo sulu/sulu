@@ -23,15 +23,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class ChildrenCollection extends AbstractLazyCollection
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher;
 
-    /**
-     * @var NodeInterface
-     */
-    private $parentNode;
+    private \PHPCR\NodeInterface $parentNode;
 
     /**
      * @var string
@@ -43,10 +37,7 @@ class ChildrenCollection extends AbstractLazyCollection
      */
     private $options;
 
-    /**
-     * @var bool
-     */
-    private $initialized = false;
+    private bool $initialized = false;
 
     /**
      * @param string $locale

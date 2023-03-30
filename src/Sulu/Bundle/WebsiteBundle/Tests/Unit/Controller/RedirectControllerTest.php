@@ -26,10 +26,7 @@ class RedirectControllerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var RedirectController
-     */
-    private $controller;
+    private \Sulu\Bundle\WebsiteBundle\Controller\RedirectController $controller;
 
     protected function setUp(): void
     {

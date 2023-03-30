@@ -31,15 +31,9 @@ class SmartContentItemController extends AbstractRestController
 {
     use RequestParametersTrait;
 
-    /**
-     * @var TagManagerInterface
-     */
-    private $tagManager;
+    private \Sulu\Bundle\TagBundle\Tag\TagManagerInterface $tagManager;
 
-    /**
-     * @var DataProviderPoolInterface
-     */
-    private $dataProviderPool;
+    private \Sulu\Component\SmartContent\DataProviderPoolInterface $dataProviderPool;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

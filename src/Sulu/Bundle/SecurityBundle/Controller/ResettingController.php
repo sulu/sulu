@@ -96,20 +96,11 @@ class ResettingController
      */
     protected $userRepository;
 
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
+    private \Symfony\Component\Routing\Generator\UrlGeneratorInterface $router;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
     /**
      * @var string

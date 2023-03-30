@@ -24,25 +24,13 @@ class PageRule implements RuleInterface
 {
     public const PAGE = 'page';
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
+    private \Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool;
 
     /**
      * @var string

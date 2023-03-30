@@ -26,20 +26,11 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  */
 class PageObjectProvider implements PreviewObjectProviderInterface
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
+    private \JMS\Serializer\SerializerInterface $serializer;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $documentInspector;
 
     public function __construct(DocumentManagerInterface $documentManager, SerializerInterface $serializer, DocumentInspector $documentInspector)
     {

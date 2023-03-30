@@ -44,20 +44,11 @@ class ContactAdmin extends Admin
 
     public const ACCOUNT_EDIT_FORM_VIEW = 'sulu_contact.account_edit_form';
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
+    private \Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface $viewBuilderFactory;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
-    /**
-     * @var ManagerRegistry
-     */
-    private $managerRegistry;
+    private \Doctrine\Persistence\ManagerRegistry $managerRegistry;
 
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,

@@ -17,20 +17,11 @@ use League\Flysystem\FilesystemInterface;
 
 class S3Storage extends FlysystemStorage
 {
-    /**
-     * @var AwsS3Adapter
-     */
-    private $adapter;
+    private \League\Flysystem\AwsS3v3\AwsS3Adapter $adapter;
 
-    /**
-     * @var string
-     */
-    private $endpoint;
+    private string $endpoint;
 
-    /**
-     * @var string
-     */
-    private $bucketName;
+    private string $bucketName;
 
     public function __construct(FilesystemInterface $filesystem, int $segments)
     {

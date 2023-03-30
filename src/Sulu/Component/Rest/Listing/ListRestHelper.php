@@ -40,10 +40,8 @@ class ListRestHelper
 
     /**
      * temp property for saving total amount of entities.
-     *
-     * @var int
      */
-    private $totalNumberOfElements;
+    private ?int $totalNumberOfElements = null;
 
     /**
      * The constructor takes the request as an argument, which

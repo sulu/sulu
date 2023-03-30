@@ -41,45 +41,21 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class ContentRouteProvider implements RouteProviderInterface
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $documentInspector;
 
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
+    private \Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool;
 
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
+    private \Sulu\Component\Content\Compat\StructureManagerInterface $structureManager;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var SecurityCheckerInterface|null
-     */
-    private $securityChecker;
+    private ?\Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker = null;
 
-    /**
-     * @var array
-     */
-    private $defaultOptions;
+    private array $defaultOptions;
 
     public function __construct(
         DocumentManagerInterface $documentManager,

@@ -26,12 +26,9 @@ class PhpWebspaceCollectionDumperTest extends TestCase
     /**
      * @var ObjectProphecy<WebspaceCollection>
      */
-    private $webspaceCollection;
+    private ObjectProphecy $webspaceCollection;
 
-    /**
-     * @var PhpWebspaceCollectionDumper
-     */
-    private $webspaceDumper;
+    private \Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper $webspaceDumper;
 
     public function setUp(): void
     {

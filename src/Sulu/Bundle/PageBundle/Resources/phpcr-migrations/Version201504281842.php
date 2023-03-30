@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Version201504281842 implements VersionInterface, ContainerAwareInterface
 {
-    private $container;
+    private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null;
 
     public function setContainer(ContainerInterface $container = null)
     {

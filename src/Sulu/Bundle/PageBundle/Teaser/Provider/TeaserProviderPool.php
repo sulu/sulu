@@ -19,7 +19,7 @@ class TeaserProviderPool implements TeaserProviderPoolInterface
     /**
      * @var TeaserProviderInterface[]
      */
-    private $providers;
+    private array $providers;
 
     /**
      * @param TeaserProviderInterface[] $providers

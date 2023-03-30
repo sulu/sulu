@@ -29,42 +29,39 @@ class CleanupHistoryCommandTest extends TestCase
     /**
      * @var ObjectProphecy<SessionManagerInterface>
      */
-    private $sessionManager;
+    private ObjectProphecy $sessionManager;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $defaultSession;
+    private ObjectProphecy $defaultSession;
 
     /**
      * @var ObjectProphecy<Workspace>
      */
-    private $defaultWorkspace;
+    private ObjectProphecy $defaultWorkspace;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $liveSession;
+    private ObjectProphecy $liveSession;
 
     /**
      * @var ObjectProphecy<Workspace>
      */
-    private $liveWorkspace;
+    private ObjectProphecy $liveWorkspace;
 
-    /**
-     * @var CleanupHistoryCommand
-     */
-    private $cleanupHistoryCommand;
+    private \Sulu\Bundle\PageBundle\Command\CleanupHistoryCommand $cleanupHistoryCommand;
 
     /**
      * @var ObjectProphecy<InputInterface>
      */
-    private $input;
+    private ObjectProphecy $input;
 
     /**
      * @var ObjectProphecy<OutputInterface>
      */
-    private $output;
+    private ObjectProphecy $output;
 
     public function setUp(): void
     {

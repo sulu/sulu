@@ -16,10 +16,7 @@ use Sulu\Component\DocumentManager\Metadata;
 
 class MetadataTest extends TestCase
 {
-    /**
-     * @var Metadata
-     */
-    private $metadata;
+    private \Sulu\Component\DocumentManager\Metadata $metadata;
 
     public function setUp(): void
     {

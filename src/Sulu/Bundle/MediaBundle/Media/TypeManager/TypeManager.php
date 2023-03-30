@@ -21,10 +21,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaTypeNotFoundException;
  */
 class TypeManager implements TypeManagerInterface
 {
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
+    private \Doctrine\Persistence\ObjectManager $objectManager;
 
     /**
      * @var array
@@ -39,7 +36,7 @@ class TypeManager implements TypeManagerInterface
     /**
      * @var MediaType[]
      */
-    private $mediaTypeEntities;
+    private ?array $mediaTypeEntities = null;
 
     /**
      * @param array $mediaTypes

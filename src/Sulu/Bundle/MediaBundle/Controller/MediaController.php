@@ -65,70 +65,31 @@ class MediaController extends AbstractMediaController implements
      */
     protected static $entityKey = MediaInterface::RESOURCE_KEY;
 
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
+    private \Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface $mediaManager;
 
-    /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
+    private \Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface $formatManager;
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
+    private \Sulu\Component\Rest\RestHelperInterface $restHelper;
 
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $doctrineListBuilderFactory;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var StorageInterface
-     */
-    private $storage;
+    private \Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface $storage;
 
-    /**
-     * @var CollectionRepositoryInterface
-     */
-    private $collectionRepository;
+    private \Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface $collectionRepository;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
+    private \Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface $fieldDescriptorFactory;
 
-    /**
-     * @var string
-     */
-    private $mediaClass;
+    private string $mediaClass;
 
-    /**
-     * @var string
-     */
-    private $collectionClass;
+    private string $collectionClass;
 
-    /**
-     * @var MediaListBuilderFactory|null
-     */
-    private $mediaListBuilderFactory;
+    private ?\Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory $mediaListBuilderFactory = null;
 
-    /**
-     * @var MediaListRepresentationFactory|null
-     */
-    private $mediaListRepresentationFactory;
+    private ?\Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory $mediaListRepresentationFactory = null;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

@@ -13,20 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
 class ObjectMetadata implements SchemaMetadataInterface
 {
-    /**
-     * @var PropertiesMetadata
-     */
-    private $propertiesMetadata;
+    private \Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertiesMetadata $propertiesMetadata;
 
-    /**
-     * @var int|null
-     */
-    private $minProperties;
+    private ?int $minProperties = null;
 
-    /**
-     * @var int|null
-     */
-    private $maxProperties;
+    private ?int $maxProperties = null;
 
     /**
      * @param PropertyMetadata[] $properties

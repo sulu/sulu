@@ -29,37 +29,34 @@ class RootPathPurgeInitializerTest extends TestCase
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $session1;
+    private ObjectProphecy $session1;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $session2;
+    private ObjectProphecy $session2;
 
     /**
      * @var ObjectProphecy<ConnectionRegistry>
      */
-    private $connectionRegistry;
+    private ObjectProphecy $connectionRegistry;
 
     /**
      * @var ObjectProphecy<PathSegmentRegistry>
      */
-    private $segmentRegistry;
+    private ObjectProphecy $segmentRegistry;
 
-    /**
-     * @var RootPathPurgeInitializer
-     */
-    private $rootPathPurgeInitializer;
+    private \Sulu\Bundle\DocumentManagerBundle\Initializer\RootPathPurgeInitializer $rootPathPurgeInitializer;
 
     /**
      * @var ObjectProphecy<OutputInterface>
      */
-    private $output;
+    private ObjectProphecy $output;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     public function setUp(): void
     {

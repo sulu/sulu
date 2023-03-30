@@ -24,20 +24,17 @@ class ContactTwigExtensionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ContactTwigExtension
-     */
-    private $extension;
+    private \Sulu\Bundle\ContactBundle\Twig\ContactTwigExtension $extension;
 
     /**
      * @var Cache
      */
-    private $cache;
+    private \Doctrine\Common\Cache\ArrayCache $cache;
 
     /**
      * @var ObjectProphecy<ContactRepository>
      */
-    private $contactRepository;
+    private ObjectProphecy $contactRepository;
 
     protected function setUp(): void
     {

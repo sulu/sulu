@@ -32,10 +32,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
  */
 class BlockContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
-    /**
-     * @var ContentTypeManagerInterface
-     */
-    private $contentTypeManager;
+    private \Sulu\Component\Content\ContentTypeManagerInterface $contentTypeManager;
 
     /**
      * @var string
@@ -43,23 +40,19 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     private $languageNamespace;
 
     /**
-     * @var RequestAnalyzerInterface
-     *
      * @deprecated This property is not needed anymore and will be removed in Sulu 3.0
      */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
     /**
-     * @var ?TargetGroupStoreInterface
-     *
      * @deprecated This property is not needed anymore and will be removed in Sulu 3.0
      */
-    private $targetGroupStore;
+    private ?\Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface $targetGroupStore = null;
 
     /**
      * @var BlockVisitorInterface[]
      */
-    private $blockVisitors;
+    private ?iterable $blockVisitors = null;
 
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,

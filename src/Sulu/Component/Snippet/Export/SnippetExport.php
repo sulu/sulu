@@ -28,10 +28,7 @@ use Twig\Environment;
  */
 class SnippetExport extends Export implements SnippetExportInterface
 {
-    /**
-     * @var SnippetRepository
-     */
-    private $snippetManager;
+    private \Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository $snippetManager;
 
     /**
      * @var OutputInterface

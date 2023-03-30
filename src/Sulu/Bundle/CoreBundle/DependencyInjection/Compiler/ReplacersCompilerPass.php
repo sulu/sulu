@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CoreBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -25,10 +24,7 @@ class ReplacersCompilerPass implements CompilerPassInterface
      */
     private $filename;
 
-    /**
-     * @var LoaderInterface
-     */
-    private $loader;
+    private ?object $loader = null;
 
     /**
      * ReplacersCompilerPass constructor.

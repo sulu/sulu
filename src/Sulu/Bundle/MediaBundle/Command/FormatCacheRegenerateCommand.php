@@ -24,20 +24,11 @@ class FormatCacheRegenerateCommand extends Command
 {
     protected static $defaultName = 'sulu:media:regenerate-formats';
 
-    /**
-     * @var Filesystem
-     */
-    private $fileSystem;
+    private \Symfony\Component\Filesystem\Filesystem $fileSystem;
 
-    /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
+    private \Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface $formatManager;
 
-    /**
-     * @var string
-     */
-    private $localFormatCachePath;
+    private string $localFormatCachePath;
 
     public function __construct(
         Filesystem $filesystem,

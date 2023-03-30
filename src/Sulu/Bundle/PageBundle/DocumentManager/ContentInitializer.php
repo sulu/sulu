@@ -27,10 +27,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ContentInitializer implements InitializerInterface
 {
-    /**
-     * @var ConnectionRegistry
-     */
-    private $connectionRegistry;
+    private \Doctrine\Persistence\ConnectionRegistry $connectionRegistry;
 
     /**
      * @var string

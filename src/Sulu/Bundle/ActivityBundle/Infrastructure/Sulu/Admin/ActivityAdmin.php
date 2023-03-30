@@ -26,22 +26,10 @@ class ActivityAdmin extends Admin
 
     public const LIST_VIEW = 'sulu_activity.activities.list';
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
     public function __construct(
-        ViewBuilderFactoryInterface $viewBuilderFactory,
-        SecurityCheckerInterface $securityChecker
+        private ViewBuilderFactoryInterface $viewBuilderFactory,
+        private SecurityCheckerInterface $securityChecker
     ) {
-        $this->viewBuilderFactory = $viewBuilderFactory;
-        $this->securityChecker = $securityChecker;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void

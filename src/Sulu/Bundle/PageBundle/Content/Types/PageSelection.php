@@ -30,20 +30,11 @@ use Sulu\Component\Util\ArrayableInterface;
  */
 class PageSelection extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
-    /**
-     * @var ContentQueryExecutorInterface
-     */
-    private $contentQueryExecutor;
+    private \Sulu\Component\Content\Query\ContentQueryExecutorInterface $contentQueryExecutor;
 
-    /**
-     * @var ContentQueryBuilderInterface
-     */
-    private $contentQueryBuilder;
+    private \Sulu\Component\Content\Query\ContentQueryBuilderInterface $contentQueryBuilder;
 
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $referenceStore;
+    private \Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface $referenceStore;
 
     /**
      * @var bool
@@ -55,10 +46,7 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
      */
     private $permissions;
 
-    /**
-     * @var array
-     */
-    private $enabledTwigAttributes = [];
+    private array $enabledTwigAttributes = [];
 
     public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,

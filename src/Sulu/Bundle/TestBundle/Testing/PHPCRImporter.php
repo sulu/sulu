@@ -18,15 +18,9 @@ use Symfony\Component\Config\Util\XmlUtils;
 
 class PHPCRImporter
 {
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private \PHPCR\SessionInterface $session;
 
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
+    private \PHPCR\SessionInterface $liveSession;
 
     public function __construct(SessionInterface $session, SessionInterface $liveSession)
     {

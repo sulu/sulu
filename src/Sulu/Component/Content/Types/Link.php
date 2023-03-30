@@ -25,10 +25,7 @@ class Link extends SimpleContentType
 {
     public const LINK_TYPE_EXTERNAL = 'external';
 
-    /**
-     * @var LinkProviderPoolInterface
-     */
-    private $providerPool;
+    private \Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface $providerPool;
 
     public function __construct(LinkProviderPoolInterface $providerPool)
     {

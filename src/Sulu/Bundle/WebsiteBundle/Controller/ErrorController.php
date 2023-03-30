@@ -22,25 +22,13 @@ use Twig\Environment;
 
 class ErrorController
 {
-    /**
-     * @var SymfonyErrorController
-     */
-    private $symfonyErrorController;
+    private SymfonyErrorController $symfonyErrorController;
 
-    /**
-     * @var bool
-     */
-    private $debug;
+    private bool $debug;
 
-    /**
-     * @var TemplateAttributeResolverInterface
-     */
-    private $templateAttributeResolver;
+    private \Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolverInterface $templateAttributeResolver;
 
-    /**
-     * @var Environment
-     */
-    private $twig;
+    private \Twig\Environment $twig;
 
     public function __construct(
         SymfonyErrorController $symfonyErrorController,

@@ -17,10 +17,7 @@ use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
 
 class GoogleCloudStorage extends FlysystemStorage
 {
-    /**
-     * @var GoogleStorageAdapter
-     */
-    private $adapter;
+    private \Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter $adapter;
 
     public function __construct(FilesystemInterface $filesystem, int $segments)
     {

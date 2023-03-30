@@ -47,10 +47,8 @@ class SitemapUrl
 
     /**
      * Datetime of last modification.
-     *
-     * @var \DateTime
      */
-    private $lastmod;
+    private ?\DateTime $lastmod = null;
 
     /**
      * Frequency of change.
@@ -71,7 +69,7 @@ class SitemapUrl
     /**
      * @var SitemapAlternateLink[]
      */
-    private $alternateLinks;
+    private ?array $alternateLinks = null;
 
     /**
      * @var array

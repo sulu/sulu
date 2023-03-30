@@ -29,10 +29,7 @@ class MetadataSubscriber implements EventSubscriber
      */
     protected $objects;
 
-    /**
-     * @var array
-     */
-    private $classNames;
+    private ?array $classNames = null;
 
     /**
      * Constructor.

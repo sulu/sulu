@@ -26,30 +26,15 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 
 final class TrashManager implements TrashManagerInterface
 {
-    /**
-     * @var TrashItemRepositoryInterface
-     */
-    private $trashItemRepository;
+    private \Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface $trashItemRepository;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
-    /**
-     * @var ServiceLocator
-     */
-    private $storeTrashItemHandlerLocator;
+    private \Symfony\Component\DependencyInjection\ServiceLocator $storeTrashItemHandlerLocator;
 
-    /**
-     * @var ServiceLocator
-     */
-    private $restoreTrashItemHandlerLocator;
+    private \Symfony\Component\DependencyInjection\ServiceLocator $restoreTrashItemHandlerLocator;
 
-    /**
-     * @var ServiceLocator
-     */
-    private $removeTrashItemHandlerLocator;
+    private \Symfony\Component\DependencyInjection\ServiceLocator $removeTrashItemHandlerLocator;
 
     public function __construct(
         TrashItemRepositoryInterface $trashItemRepository,

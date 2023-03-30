@@ -24,7 +24,7 @@ class MarkupListener implements EventSubscriberInterface
     /**
      * @var MarkupParserInterface
      */
-    private $markupParser;
+    private array $markupParser;
 
     /**
      * @param MarkupParserInterface[] $markupParser

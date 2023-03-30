@@ -23,9 +23,9 @@ class RouteDefaultsProviderTest extends TestCase
     /**
      * @var RouteDefaultsProviderInterface
      */
-    private $defaultsProvider;
+    private \Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProvider $defaultsProvider;
 
-    private $providers = [];
+    private array $providers = [];
 
     public function setUp(): void
     {

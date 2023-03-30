@@ -43,19 +43,15 @@ use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class ContactControllerTest extends SuluTestCase
 {
     /**
      * @var EntityManager
      */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

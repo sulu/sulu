@@ -33,25 +33,13 @@ final class CustomUrlTrashItemHandler implements
     RestoreTrashItemHandlerInterface,
     RestoreConfigurationProviderInterface
 {
-    /**
-     * @var TrashItemRepositoryInterface
-     */
-    private $trashItemRepository;
+    private \Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface $trashItemRepository;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $documentInspector;
 
-    /**
-     * @var DocumentDomainEventCollectorInterface
-     */
-    private $documentDomainEventCollector;
+    private \Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface $documentDomainEventCollector;
 
     public function __construct(
         TrashItemRepositoryInterface $trashItemRepository,

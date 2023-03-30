@@ -30,15 +30,12 @@ class SocialMediaProfileType implements \JsonSerializable
      */
     private $id;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private ?string $name = null;
 
     /**
      * @var Collection|SocialMediaProfile[]
      */
-    private $socialMediaProfiles;
+    private \Doctrine\Common\Collections\ArrayCollection|array $socialMediaProfiles;
 
     /**
      * Constructor.

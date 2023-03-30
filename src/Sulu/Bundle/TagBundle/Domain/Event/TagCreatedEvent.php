@@ -17,15 +17,12 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
 class TagCreatedEvent extends DomainEvent
 {
-    /**
-     * @var TagInterface
-     */
-    private $tag;
+    private \Sulu\Bundle\TagBundle\Tag\TagInterface $tag;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

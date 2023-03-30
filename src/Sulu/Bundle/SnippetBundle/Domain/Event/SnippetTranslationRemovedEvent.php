@@ -17,15 +17,9 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 
 class SnippetTranslationRemovedEvent extends DomainEvent
 {
-    /**
-     * @var SnippetDocument
-     */
-    private $snippetDocument;
+    private \Sulu\Bundle\SnippetBundle\Document\SnippetDocument $snippetDocument;
 
-    /**
-     * @var string
-     */
-    private $locale;
+    private string $locale;
 
     public function __construct(
         SnippetDocument $snippetDocument,

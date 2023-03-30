@@ -54,7 +54,7 @@ class DataProviderRepositoryTraitTest extends TestCase
     /**
      * @var DataProviderRepositoryTrait
      */
-    private $dataProviderRepositoryTrait;
+    private \PHPUnit\Framework\MockObject\MockObject $dataProviderRepositoryTrait;
 
     public function setUp(): void
     {
@@ -106,10 +106,7 @@ class DataProviderRepositoryTraitTest extends TestCase
         $dataProviderRepositoryTrait = new class($accessControlQueryEnhancer->reveal(), $queryBuilder->reveal()) {
             use DataProviderRepositoryTrait;
 
-            /**
-             * @var QueryBuilder
-             */
-            private $queryBuilder;
+            private \Doctrine\ORM\QueryBuilder $queryBuilder;
 
             public function __construct(AccessControlQueryEnhancer $accessControlQueryEnhancer, QueryBuilder $queryBuilder)
             {

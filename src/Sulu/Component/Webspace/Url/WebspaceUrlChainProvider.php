@@ -21,7 +21,7 @@ class WebspaceUrlChainProvider implements WebspaceUrlProviderInterface
     /**
      * @var WebspaceUrlProviderInterface[]
      */
-    private $chain;
+    private array $chain;
 
     public function __construct(array $chain = [])
     {

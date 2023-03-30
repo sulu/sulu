@@ -29,12 +29,9 @@ class TitleSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $propertyEncoder;
+    private ObjectProphecy $propertyEncoder;
 
-    /**
-     * @var TitleSubscriber
-     */
-    private $titleSubscriber;
+    private \Sulu\Component\Content\Document\Subscriber\TitleSubscriber $titleSubscriber;
 
     public function setUp(): void
     {

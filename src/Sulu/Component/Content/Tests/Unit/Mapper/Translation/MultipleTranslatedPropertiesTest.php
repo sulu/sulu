@@ -17,10 +17,7 @@ use Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties;
 
 class MultipleTranslatedPropertiesTest extends TestCase
 {
-    /**
-     * @var MultipleTranslatedProperties
-     */
-    private $properties;
+    private \Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties $properties;
 
     public function setUp(): void
     {

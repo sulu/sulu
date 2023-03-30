@@ -22,10 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SegmentRequestProcessorTest extends TestCase
 {
-    /**
-     * @var SegmentRequestProcessor
-     */
-    private $segmentRequestProcessor;
+    private \Sulu\Component\Webspace\Analyzer\Attributes\SegmentRequestProcessor $segmentRequestProcessor;
 
     public function setUp(): void
     {

@@ -13,20 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
 class IfThenElseMetadata implements SchemaMetadataInterface
 {
-    /**
-     * @var SchemaMetadata
-     */
-    private $if;
+    private \Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata $if;
 
-    /**
-     * @var SchemaMetadata|null
-     */
-    private $then;
+    private ?\Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata $then = null;
 
-    /**
-     * @var SchemaMetadata|null
-     */
-    private $else;
+    private ?\Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata $else = null;
 
     public function __construct(SchemaMetadata $if, ?SchemaMetadata $then = null, ?SchemaMetadata $else = null)
     {

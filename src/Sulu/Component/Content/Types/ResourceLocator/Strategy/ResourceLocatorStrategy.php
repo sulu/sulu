@@ -65,10 +65,7 @@ abstract class ResourceLocatorStrategy implements ResourceLocatorStrategyInterfa
      */
     protected $documentManager;
 
-    /**
-     * @var ResourceLocatorGeneratorInterface
-     */
-    private $resourceLocatorGenerator;
+    private \Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorGeneratorInterface $resourceLocatorGenerator;
 
     public function __construct(
         ResourceLocatorMapperInterface $mapper,

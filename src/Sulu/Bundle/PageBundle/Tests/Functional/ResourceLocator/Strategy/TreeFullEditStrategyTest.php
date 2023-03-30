@@ -11,35 +11,20 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\ResourceLocator\Strategy;
 
-use PHPCR\SessionInterface;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyInterface;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class TreeFullEditStrategyTest extends SuluTestCase
 {
-    /**
-     * @var ResourceLocatorStrategyInterface
-     */
-    private $resourceLocatorStrategy;
+    private ?object $resourceLocatorStrategy = null;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private ?object $documentInspector = null;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private ?object $session = null;
 
     public function setUp(): void
     {

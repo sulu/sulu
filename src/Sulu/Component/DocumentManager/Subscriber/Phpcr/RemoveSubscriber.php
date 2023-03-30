@@ -22,15 +22,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class RemoveSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
+    private \Sulu\Component\DocumentManager\DocumentRegistry $documentRegistry;
 
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
+    private \Sulu\Component\DocumentManager\NodeManager $nodeManager;
 
     public function __construct(
         DocumentRegistry $documentRegistry,

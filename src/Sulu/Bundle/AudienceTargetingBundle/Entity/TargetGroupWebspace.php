@@ -21,15 +21,9 @@ class TargetGroupWebspace implements TargetGroupWebspaceInterface
      */
     private $id;
 
-    /**
-     * @var string
-     */
-    private $webspaceKey;
+    private ?string $webspaceKey = null;
 
-    /**
-     * @var TargetGroupInterface
-     */
-    private $targetGroup;
+    private ?\Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface $targetGroup = null;
 
     public function getId()
     {

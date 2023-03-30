@@ -18,7 +18,7 @@ class ViewCollection
     /**
      * @var ViewBuilderInterface[]
      */
-    private $views = [];
+    private array $views = [];
 
     public function add(ViewBuilderInterface $viewBuilder): void
     {

@@ -15,10 +15,7 @@ use Sulu\Component\DocumentManager\Metadata;
 
 class MetadataLoadEvent extends AbstractEvent
 {
-    /**
-     * @var Metadata
-     */
-    private $metadata;
+    private \Sulu\Component\DocumentManager\Metadata $metadata;
 
     public function __construct(Metadata $metadata)
     {

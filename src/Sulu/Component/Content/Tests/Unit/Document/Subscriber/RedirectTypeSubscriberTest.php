@@ -23,25 +23,22 @@ class RedirectTypeSubscriberTest extends SubscriberTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var RedirectTypeSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\Content\Document\Subscriber\RedirectTypeSubscriber $subscriber;
 
     /**
      * @var ObjectProphecy<RedirectTypeBehavior>
      */
-    private $document;
+    private ObjectProphecy $document;
 
     /**
      * @var ObjectProphecy<Metadata>
      */
-    private $metadata;
+    private ObjectProphecy $metadata;
 
     /**
      * @var ObjectProphecy<MetadataLoadEvent>
      */
-    private $event;
+    private ObjectProphecy $event;
 
     public function setUp(): void
     {

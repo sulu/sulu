@@ -47,27 +47,16 @@ class DoctrineListBuilder extends AbstractListBuilder
     use SecuredEntityRepositoryTrait;
     use EncodeAliasTrait;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @var array
-     */
-    private $permissions;
+    private array $permissions;
 
-    /**
-     * @var EntityManager
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManager $em;
 
     /**
      * The name of the entity to build the list for.
-     *
-     * @var string
      */
-    private $entityName;
+    private string $entityName;
 
     /**
      * @var DoctrineFieldDescriptorInterface[]
@@ -96,54 +85,34 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected $queryBuilder;
 
-    /**
-     * @var bool
-     */
-    private $distinct = false;
+    private bool $distinct = false;
 
-    /**
-     * @var DoctrineFieldDescriptorInterface
-     */
-    private $idField;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor|\Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface $idField;
 
-    /**
-     * @var bool
-     */
-    private $permissionCheckWithDynamicEntityClass = false;
+    private bool $permissionCheckWithDynamicEntityClass = false;
 
     /**
      * @var class-string
      */
-    private $securedEntityName;
+    private string $securedEntityName;
 
-    /**
-     * @var string
-     */
-    private $securedEntityClassField;
+    private ?string $securedEntityClassField = null;
 
-    /**
-     * @var string
-     */
-    private $securedEntityIdField;
+    private ?string $securedEntityIdField = null;
 
     /**
      * Array of unique field descriptors needed for secure-check.
-     *
-     * @var array
      */
-    private $permissionCheckFields = [];
+    private array $permissionCheckFields = [];
 
-    /**
-     * @var ?AccessControlQueryEnhancer
-     */
-    private $accessControlQueryEnhancer;
+    private ?\Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer $accessControlQueryEnhancer = null;
 
     /**
      * @param class-string $entityName
      */
     public function __construct(
         EntityManager $em,
-        $entityName,
+        string $entityName,
         FilterTypeRegistry $filterTypeRegistry,
         EventDispatcherInterface $eventDispatcher,
         array $permissions,

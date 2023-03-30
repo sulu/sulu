@@ -66,20 +66,11 @@ class SnippetDocument implements
      */
     private $changer;
 
-    /**
-     * @var object
-     */
-    private $parent;
+    private ?object $parent = null;
 
-    /**
-     * @var string
-     */
-    private $title;
+    private ?string $title = null;
 
-    /**
-     * @var int
-     */
-    private $workflowStage;
+    private int|string $workflowStage;
 
     /**
      * @var \DateTime
@@ -91,25 +82,16 @@ class SnippetDocument implements
      */
     private $uuid;
 
-    /**
-     * @var string
-     */
-    private $structureType;
+    private ?string $structureType = null;
 
     /**
      * @var StructureInterface
      */
-    private $structure;
+    private \Sulu\Component\Content\Document\Structure\Structure $structure;
 
-    /**
-     * @var string
-     */
-    private $locale;
+    private ?string $locale = null;
 
-    /**
-     * @var string
-     */
-    private $originalLocale;
+    private ?string $originalLocale = null;
 
     /**
      * @var string
@@ -124,7 +106,7 @@ class SnippetDocument implements
     /**
      * @var array<mixed[]>|ExtensionContainer
      */
-    private $extensions;
+    private \Sulu\Component\Content\Document\Extension\ExtensionContainer|array $extensions;
 
     public function __construct()
     {

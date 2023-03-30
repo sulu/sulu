@@ -18,10 +18,7 @@ use FOS\RestBundle\View\View;
  */
 class ObjectNotSupportedException extends \Exception
 {
-    /**
-     * @var View
-     */
-    private $view;
+    private \FOS\RestBundle\View\View $view;
 
     public function __construct(View $view)
     {

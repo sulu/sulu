@@ -56,60 +56,30 @@ class TrashItemController extends AbstractRestController implements ClassResourc
 {
     use RequestParametersTrait;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $listBuilderFactory;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface $listBuilderFactory;
 
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
+    private \Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface $fieldDescriptorFactory;
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
+    private \Sulu\Component\Rest\RestHelperInterface $restHelper;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
-    /**
-     * @var TrashManagerInterface
-     */
-    private $trashManager;
+    private \Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface $trashManager;
 
-    /**
-     * @var TrashItemRepositoryInterface
-     */
-    private $trashItemRepository;
+    private \Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface $trashItemRepository;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
-    /**
-     * @var ServiceLocator
-     */
-    private $restoreConfigurationProviderLocator;
+    private \Symfony\Component\DependencyInjection\ServiceLocator $restoreConfigurationProviderLocator;
 
-    /**
-     * @var string
-     */
-    private $trashItemClass;
+    private string $trashItemClass;
 
     /**
      * @var array<string, int>
      */
-    private $permissions;
+    private array $permissions;
 
     /**
      * @param array<string, int> $permissions Inject `sulu_security.permissions` parameter

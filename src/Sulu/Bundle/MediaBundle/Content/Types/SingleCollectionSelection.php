@@ -26,10 +26,7 @@ class SingleCollectionSelection extends SimpleContentType implements PreResolvab
      */
     protected $collectionManager;
 
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $collectionReferenceStore;
+    private \Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface $collectionReferenceStore;
 
     public function __construct(
         CollectionManagerInterface $collectionManager,

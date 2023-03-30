@@ -29,22 +29,19 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $documentInspector;
+    private ObjectProphecy $documentInspector;
 
     /**
      * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
-    private $resourceLocatorStrategyPool;
+    private ObjectProphecy $resourceLocatorStrategyPool;
 
-    /**
-     * @var CopyLocaleSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\Content\Document\Subscriber\CopyLocaleSubscriber $subscriber;
 
     public function setUp(): void
     {

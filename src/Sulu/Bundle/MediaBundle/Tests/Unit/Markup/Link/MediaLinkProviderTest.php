@@ -25,17 +25,14 @@ class MediaLinkProviderTest extends TestCase
     /**
      * @var ObjectProphecy<MediaRepositoryInterface>
      */
-    private $mediaRepository;
+    private ObjectProphecy $mediaRepository;
 
     /**
      * @var ObjectProphecy<MediaManagerInterface>
      */
-    private $mediaManager;
+    private ObjectProphecy $mediaManager;
 
-    /**
-     * @var MediaLinkProvider
-     */
-    private $mediaLinkProvider;
+    private \Sulu\Bundle\MediaBundle\Markup\Link\MediaLinkProvider $mediaLinkProvider;
 
     public function setUp(): void
     {

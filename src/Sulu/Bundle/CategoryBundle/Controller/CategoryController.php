@@ -39,40 +39,25 @@ class CategoryController extends AbstractRestController implements ClassResource
 {
     use RequestParametersTrait;
 
-    /**
-     * @var CategoryRepositoryInterface
-     */
-    private $categoryRepository;
+    private \Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface $categoryRepository;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
+    private \Sulu\Component\Rest\RestHelperInterface $restHelper;
 
     /**
      * @var DoctrineListBuilderFactory
      */
-    private $listBuilderFactory;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface $listBuilderFactory;
 
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
+    private \Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface $fieldDescriptorFactory;
 
-    /**
-     * @var CategoryManagerInterface
-     */
-    private $categoryManager;
+    private \Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface $categoryManager;
 
     /**
      * @var class-string
      */
-    private $categoryClass;
+    private string $categoryClass;
 
     /**
      * @deprecated Use the CategoryInterface::RESOURCE_KEY constant instead

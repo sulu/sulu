@@ -26,10 +26,7 @@ class Property implements PropertyInterface, \JsonSerializable
      */
     private $name;
 
-    /**
-     * @var Metadata
-     */
-    private $metadata;
+    private \Sulu\Component\Content\Compat\Metadata $metadata;
 
     /**
      * is property mandatory.

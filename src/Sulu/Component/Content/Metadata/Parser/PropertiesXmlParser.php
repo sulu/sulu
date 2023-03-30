@@ -26,15 +26,12 @@ class PropertiesXmlParser
 {
     use XmlParserTrait;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
     /**
      * @var string[]
      */
-    private $locales;
+    private array $locales;
 
     public function __construct(TranslatorInterface $translator, array $locales)
     {

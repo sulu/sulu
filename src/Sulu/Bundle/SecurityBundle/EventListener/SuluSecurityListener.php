@@ -26,10 +26,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class SuluSecurityListener implements EventSubscriberInterface
 {
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
     public function __construct(SecurityCheckerInterface $securityChecker)
     {

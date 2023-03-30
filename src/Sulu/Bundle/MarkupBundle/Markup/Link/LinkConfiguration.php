@@ -16,53 +16,41 @@ use JMS\Serializer\Annotation\Groups;
 class LinkConfiguration
 {
     /**
-     * @var string
-     *
      * @Groups({"frontend"})
      */
-    private $title;
+    private string $title;
 
     /**
-     * @var string
-     *
      * @Groups({"frontend"})
      */
-    private $resourceKey;
+    private string $resourceKey;
 
     /**
-     * @var string
-     *
      * @Groups({"frontend"})
      */
-    private $listAdapter;
+    private string $listAdapter;
 
     /**
      * @var string[]
      *
      * @Groups({"frontend"})
      */
-    private $displayProperties;
+    private array $displayProperties;
 
     /**
-     * @var string
-     *
      * @Groups({"frontend"})
      */
-    private $overlayTitle;
+    private string $overlayTitle;
 
     /**
-     * @var string
-     *
      * @Groups({"frontend"})
      */
-    private $emptyText;
+    private string $emptyText;
 
     /**
-     * @var string
-     *
      * @Groups({"frontend"})
      */
-    private $icon;
+    private string $icon;
 
     public function __construct(
         string $title,

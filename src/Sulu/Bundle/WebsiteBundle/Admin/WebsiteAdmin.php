@@ -27,25 +27,13 @@ class WebsiteAdmin extends Admin
 {
     public const ANALYTICS_LIST_VIEW = 'sulu_webspace.analytics_list';
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
+    private \Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface $viewBuilderFactory;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
+    private \Symfony\Component\Routing\Generator\UrlGeneratorInterface $urlGenerator;
 
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,

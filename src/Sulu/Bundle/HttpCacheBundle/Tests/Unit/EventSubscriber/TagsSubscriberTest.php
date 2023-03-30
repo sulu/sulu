@@ -28,55 +28,43 @@ class TagsSubscriberTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var TagsSubscriber
-     */
-    private $tagsSubscriber;
+    private \Sulu\Bundle\HttpCacheBundle\EventSubscriber\TagsSubscriber $tagsSubscriber;
 
     /**
      * @var ObjectProphecy<ReferenceStorePoolInterface>
      */
-    private $referenceStorePool;
+    private ObjectProphecy $referenceStorePool;
 
     /**
      * @var ObjectProphecy<SymfonyResponseTagger>
      */
-    private $symfonyResponseTagger;
+    private ObjectProphecy $symfonyResponseTagger;
 
     /**
      * @var ObjectProphecy<Request>
      */
-    private $request;
+    private ObjectProphecy $request;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     /**
      * @var (ReferenceStoreInterface|ObjectProphecy)[]
      */
-    private $referenceStores;
+    private array $referenceStores;
 
     /**
      * @var ObjectProphecy<StructureInterface>
      */
-    private $structure;
+    private ObjectProphecy $structure;
 
-    /**
-     * @var string
-     */
-    private $uuid1;
+    private string $uuid1;
 
-    /**
-     * @var string
-     */
-    private $uuid2;
+    private string $uuid2;
 
-    /**
-     * @var string
-     */
-    private $currentStructureUuid;
+    private string $currentStructureUuid;
 
     public function setUp(): void
     {

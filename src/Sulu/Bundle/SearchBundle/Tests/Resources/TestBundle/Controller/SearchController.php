@@ -16,10 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SearchController
 {
-    /**
-     * @var SearchManager
-     */
-    private $searchManager;
+    private \Massive\Bundle\SearchBundle\Search\SearchManager $searchManager;
 
     public function __construct(SearchManager $searchManager)
     {

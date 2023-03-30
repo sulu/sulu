@@ -25,17 +25,14 @@ class OrderByTraitTest extends TestCase
     /**
      * @var ObjectProphecy<QueryBuilder>
      */
-    private $queryBuilder;
+    private ObjectProphecy $queryBuilder;
 
     /**
      * @var OrderByTrait
      */
-    private $orderByTrait;
+    private object $orderByTrait;
 
-    /**
-     * @var \ReflectionMethod
-     */
-    private $addOrderByFunction;
+    private \ReflectionMethod $addOrderByFunction;
 
     public function setUp(): void
     {

@@ -18,15 +18,9 @@ class QueryExecuteEvent extends AbstractEvent
 {
     use EventOptionsTrait;
 
-    /**
-     * @var Query
-     */
-    private $query;
+    private \Sulu\Component\DocumentManager\Query\Query $query;
 
-    /**
-     * @var QueryResultCollection
-     */
-    private $result;
+    private ?\Sulu\Component\DocumentManager\Collection\QueryResultCollection $result = null;
 
     public function __construct(Query $query, array $options = [])
     {

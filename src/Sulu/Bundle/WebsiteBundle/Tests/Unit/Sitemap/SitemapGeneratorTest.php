@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\Sitemap;
 
 use PHPCR\NodeInterface;
-use PHPCR\SessionInterface;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapContentQueryBuilder;
@@ -25,75 +24,40 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\AbstractExtension;
-use Sulu\Component\Content\Extension\ExtensionManagerInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Localization\Localization;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use UnitEnum;
 
 class SitemapGeneratorTest extends SuluTestCase
 {
-    /**
-     * @var Webspace
-     */
-    private $webspace;
+    private ?Webspace $webspace = null;
 
-    /**
-     * @var SitemapGenerator
-     */
-    private $sitemapGenerator;
+    private SitemapGenerator $sitemapGenerator;
 
-    /**
-     * @var ContentMapperInterface
-     */
-    private $mapper;
+    private ?object $mapper = null;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private ?object $session = null;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private ?object $sessionManager = null;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private ?WebspaceManagerInterface $webspaceManager = null;
 
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
+    private ?object $structureManager = null;
 
-    /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
+    private ?object $extensionManager = null;
 
-    /**
-     * @var string
-     */
-    private $languageNamespace;
+    private array|bool|float|int|string|\UnitEnum|null $languageNamespace = null;
 
-    /**
-     * @var NodeInterface
-     */
-    private $contents;
+    private NodeInterface $contents;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?DocumentManagerInterface $documentManager = null;
 
     protected function setUp(): void
     {
@@ -133,7 +97,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->getContainer()->get('security.token_storage')->setToken(new UsernamePasswordToken($user, 'test'));
     }
 
-    protected function prepareWebspaceManager()
+    protected function prepareWebspaceManager(): void
     {
         if (null !== $this->webspaceManager) {
             return;
@@ -171,7 +135,7 @@ class SitemapGeneratorTest extends SuluTestCase
             ->will($this->returnValue($this->webspace));
     }
 
-    public function getExtensionCallback()
+    public function getExtensionCallback(): ExcerptStructureExtension
     {
         return new ExcerptStructureExtension($this->structureManager, $this->contentTypeManager);
     }
@@ -407,10 +371,7 @@ class ExcerptStructureExtension extends AbstractExtension
      */
     protected $structureManager;
 
-    /**
-     * @var string
-     */
-    private $languageNamespace;
+    private ?string $languageNamespace = null;
 
     public function __construct(
         StructureManagerInterface $structureManager,
@@ -443,7 +404,7 @@ class ExcerptStructureExtension extends AbstractExtension
         }
     }
 
-    public function load(NodeInterface $node, $webspaceKey, $languageCode)
+    public function load(NodeInterface $node, $webspaceKey, $languageCode): array
     {
         $data = [];
         foreach ($this->excerptStructure->getProperties() as $property) {

@@ -19,15 +19,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class PhpcrSecuritySubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var PhpcrAccessControlProvider
-     */
-    private $phpcrAccessControlProvider;
+    private \Sulu\Component\Security\Authorization\AccessControl\PhpcrAccessControlProvider $phpcrAccessControlProvider;
 
-    /**
-     * @var DoctrineAccessControlProvider
-     */
-    private $doctrineAccessControlProvider;
+    private \Sulu\Component\Security\Authorization\AccessControl\DoctrineAccessControlProvider $doctrineAccessControlProvider;
 
     public function __construct(
         PhpcrAccessControlProvider $phpcrAccessControlProvider,

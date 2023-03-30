@@ -28,20 +28,17 @@ class SnippetAdminTest extends TestCase
     use ProphecyTrait;
     use ReadObjectAttributeTrait;
 
-    /**
-     * @var ViewBuilderFactory
-     */
-    private $viewBuilderFactory;
+    private \Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory $viewBuilderFactory;
 
     /**
      * @var ObjectProphecy<SecurityChecker>
      */
-    private $securityChecker;
+    private ObjectProphecy $securityChecker;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     public function setUp(): void
     {

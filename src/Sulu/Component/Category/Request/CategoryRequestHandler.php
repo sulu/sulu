@@ -18,10 +18,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class CategoryRequestHandler implements CategoryRequestHandlerInterface
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
     public function __construct(RequestStack $requestStack)
     {

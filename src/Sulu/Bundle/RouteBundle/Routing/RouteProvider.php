@@ -35,45 +35,27 @@ class RouteProvider implements RouteProviderInterface
 {
     public const ROUTE_PREFIX = 'sulu_route_';
 
-    /**
-     * @var RouteRepositoryInterface
-     */
-    private $routeRepository;
+    private \Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface $routeRepository;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var RouteDefaultsProviderInterface
-     */
-    private $routeDefaultsProvider;
+    private \Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface $routeDefaultsProvider;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
-    /**
-     * @var LazyLoadingValueHolderFactory
-     */
-    private $proxyFactory;
+    private \ProxyManager\Factory\LazyLoadingValueHolderFactory $proxyFactory;
 
-    /**
-     * @var array
-     */
-    private $defaultOptions;
+    private array $defaultOptions;
 
     /**
      * @var Route[]
      */
-    private $symfonyRouteCache = [];
+    private array $symfonyRouteCache = [];
 
     /**
      * @var SuluRoute[]
      */
-    private $routeCache = [];
+    private array $routeCache = [];
 
     public function __construct(
         RouteRepositoryInterface $routeRepository,

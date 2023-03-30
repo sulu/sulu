@@ -11,28 +11,16 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class PermissionControllerTest extends SuluTestCase
 {
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
     public function setUp(): void
     {

@@ -18,10 +18,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class DocumentDomainEventCollectorSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentDomainEventCollectorInterface
-     */
-    private $documentDomainEventCollector;
+    private \Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface $documentDomainEventCollector;
 
     public function __construct(
         DocumentDomainEventCollectorInterface $documentDomainEventCollector

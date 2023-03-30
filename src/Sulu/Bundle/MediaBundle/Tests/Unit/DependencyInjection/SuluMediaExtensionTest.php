@@ -25,7 +25,7 @@ class SuluMediaExtensionTest extends AbstractExtensionTestCase
     /**
      * @var ObjectProphecy<ExecutableFinder>
      */
-    private $executableFinder;
+    private ObjectProphecy $executableFinder;
 
     public function setUp(): void
     {

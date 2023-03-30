@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PreviewBundle\Tests\Functional\Preview\Renderer;
 
-use Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRenderer;
 use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 
@@ -19,10 +18,7 @@ class PreviewRendererTest extends KernelTestCase
 {
     use ReadObjectAttributeTrait;
 
-    /**
-     * @var PreviewRenderer
-     */
-    private $previewRenderer;
+    private ?object $previewRenderer = null;
 
     public function setUp(): void
     {

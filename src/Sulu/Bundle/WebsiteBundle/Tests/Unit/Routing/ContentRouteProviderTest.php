@@ -57,37 +57,37 @@ class ContentRouteProviderTest extends TestCase
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $documentInspector;
+    private ObjectProphecy $documentInspector;
 
     /**
      * @var ObjectProphecy<ResourceLocatorStrategyInterface>
      */
-    private $resourceLocatorStrategy;
+    private ObjectProphecy $resourceLocatorStrategy;
 
     /**
      * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
-    private $resourceLocatorStrategyPool;
+    private ObjectProphecy $resourceLocatorStrategyPool;
 
     /**
      * @var ObjectProphecy<StructureManagerInterface>
      */
-    private $structureManager;
+    private ObjectProphecy $structureManager;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     public function setUp(): void
     {

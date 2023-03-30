@@ -32,40 +32,37 @@ class PageAdminTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ViewBuilderFactory
-     */
-    private $viewBuilderFactory;
+    private \Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory $viewBuilderFactory;
 
     /**
      * @var ObjectProphecy<SecurityChecker>
      */
-    private $securityChecker;
+    private ObjectProphecy $securityChecker;
 
     /**
      * @var ObjectProphecy<WebspaceCollection>
      */
-    private $webspaceCollection;
+    private ObjectProphecy $webspaceCollection;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<SessionManagerInterface>
      */
-    private $sessionManager;
+    private ObjectProphecy $sessionManager;
 
     /**
      * @var ObjectProphecy<TeaserProviderPoolInterface>
      */
-    private $teaserProviderPool;
+    private ObjectProphecy $teaserProviderPool;
 
     /**
      * @var ActivityViewBuilderFactoryInterface
      */
-    private $activityViewBuilderFactory;
+    private \Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactory $activityViewBuilderFactory;
 
     public function setUp(): void
     {

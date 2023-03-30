@@ -24,20 +24,11 @@ class RoleSetting implements RoleSettingInterface
      */
     private $id;
 
-    /**
-     * @var string
-     */
-    private $key;
+    private ?string $key = null;
 
-    /**
-     * @var array
-     */
-    private $value;
+    private ?array $value = null;
 
-    /**
-     * @var RoleInterface
-     */
-    private $role;
+    private ?\Sulu\Component\Security\Authentication\RoleInterface $role = null;
 
     public function getId()
     {

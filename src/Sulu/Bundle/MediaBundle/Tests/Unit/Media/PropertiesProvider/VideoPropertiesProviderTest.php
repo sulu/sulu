@@ -30,12 +30,9 @@ class VideoPropertiesProviderTest extends TestCase
     /**
      * @var ObjectProphecy<FFProbe>
      */
-    private $ffprobe;
+    private ObjectProphecy $ffprobe;
 
-    /**
-     * @var VideoPropertiesProvider
-     */
-    private $videoPropertiesProvider;
+    private \Sulu\Bundle\MediaBundle\Media\PropertiesProvider\VideoPropertiesProvider $videoPropertiesProvider;
 
     protected function setUp(): void
     {

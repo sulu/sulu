@@ -22,10 +22,7 @@ class FocusTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var Focus
-     */
-    private $focus;
+    private \Sulu\Bundle\MediaBundle\Media\ImageConverter\Focus\Focus $focus;
 
     public function setUp(): void
     {

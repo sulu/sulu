@@ -29,37 +29,31 @@ class RegistratorSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<DocumentRegistry>
      */
-    private $registry;
+    private ObjectProphecy $registry;
 
-    /**
-     * @var RegistratorSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Core\RegistratorSubscriber $subscriber;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
-    /**
-     * @var \stdClass
-     */
-    private $document;
+    private \stdClass $document;
 
     /**
      * @var ObjectProphecy<HydrateEvent>
      */
-    private $hydrateEvent;
+    private ObjectProphecy $hydrateEvent;
 
     /**
      * @var ObjectProphecy<PersistEvent>
      */
-    private $persistEvent;
+    private ObjectProphecy $persistEvent;
 
     /**
      * @var ObjectProphecy<RemoveEvent>
      */
-    private $removeEvent;
+    private ObjectProphecy $removeEvent;
 
     public function setUp(): void
     {

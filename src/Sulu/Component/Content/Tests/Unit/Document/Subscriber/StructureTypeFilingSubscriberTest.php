@@ -32,62 +32,56 @@ class StructureTypeFilingSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<PersistEvent>
      */
-    private $persistEvent;
+    private ObjectProphecy $persistEvent;
 
     /**
      * @var ObjectProphecy<StructureTypeFilingBehavior>
      */
-    private $document;
+    private ObjectProphecy $document;
 
-    /**
-     * @var \stdClass
-     */
-    private $parentDocument;
+    private \stdClass $parentDocument;
 
     /**
      * @var ObjectProphecy<DocumentManager>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<MetadataFactoryInterface>
      */
-    private $metadataFactory;
+    private ObjectProphecy $metadataFactory;
 
     /**
      * @var ObjectProphecy<Metadata>
      */
-    private $metadata;
+    private ObjectProphecy $metadata;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $parentNode;
+    private ObjectProphecy $parentNode;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $defaultSession;
+    private ObjectProphecy $defaultSession;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $defaultNode;
+    private ObjectProphecy $defaultNode;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $liveSession;
+    private ObjectProphecy $liveSession;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $liveNode;
+    private ObjectProphecy $liveNode;
 
-    /**
-     * @var StructureTypeFilingSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\Content\Document\Subscriber\StructureTypeFilingSubscriber $subscriber;
 
     public function setUp(): void
     {

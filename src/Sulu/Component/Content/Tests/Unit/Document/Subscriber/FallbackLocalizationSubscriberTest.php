@@ -35,42 +35,39 @@ class FallbackLocalizationSubscriberTest extends SubscriberTestCase
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $inspector;
+    private ObjectProphecy $inspector;
 
     /**
      * @var ObjectProphecy<DocumentRegistry>
      */
-    private $registry;
+    private ObjectProphecy $registry;
 
     /**
      * @var StructureBehavior
      */
-    private $document;
+    private ObjectProphecy $document;
 
     /**
      * @var ObjectProphecy<Webspace>
      */
-    private $webspace;
+    private ObjectProphecy $webspace;
 
     /**
      * @var ObjectProphecy<Localization>
      */
-    private $localization1;
+    private ObjectProphecy $localization1;
 
     /**
      * @var ObjectProphecy<Localization>
      */
-    private $localization2;
+    private ObjectProphecy $localization2;
 
-    /**
-     * @var FallbackLocalizationSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\Content\Document\Subscriber\FallbackLocalizationSubscriber $subscriber;
 
     public function setUp(): void
     {

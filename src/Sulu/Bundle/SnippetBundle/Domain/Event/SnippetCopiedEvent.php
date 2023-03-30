@@ -17,25 +17,13 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 
 class SnippetCopiedEvent extends DomainEvent
 {
-    /**
-     * @var SnippetDocument
-     */
-    private $snippetDocument;
+    private \Sulu\Bundle\SnippetBundle\Document\SnippetDocument $snippetDocument;
 
-    /**
-     * @var string
-     */
-    private $sourceSnippetId;
+    private string $sourceSnippetId;
 
-    /**
-     * @var string|null
-     */
-    private $sourceSnippetTitle;
+    private ?string $sourceSnippetTitle = null;
 
-    /**
-     * @var string|null
-     */
-    private $sourceSnippetTitleLocale;
+    private ?string $sourceSnippetTitleLocale = null;
 
     public function __construct(
         SnippetDocument $snippetDocument,

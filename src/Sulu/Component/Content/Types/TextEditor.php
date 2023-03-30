@@ -24,10 +24,7 @@ class TextEditor extends SimpleContentType
 {
     public const INVALID_REGEX = '/(<%s-[a-z]+\b[^\/>]*)(\/>|>[^<]*<\/%s-[^\/>]*>)/';
 
-    /**
-     * @var MarkupParserInterface
-     */
-    private $markupParser;
+    private \Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface $markupParser;
 
     /**
      * @var string

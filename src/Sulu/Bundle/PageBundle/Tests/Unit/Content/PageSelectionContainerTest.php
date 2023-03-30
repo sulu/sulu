@@ -23,20 +23,17 @@ class PageSelectionContainerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var PageSelectionContainer
-     */
-    private $container;
+    private ?\Sulu\Bundle\PageBundle\Content\PageSelectionContainer $container = null;
 
     /**
      * @var ObjectProphecy<ContentQueryExecutor>
      */
-    private $executor;
+    private ObjectProphecy $executor;
 
     /**
      * @var ObjectProphecy<ContentQueryBuilder>
      */
-    private $builder;
+    private ObjectProphecy $builder;
 
     protected function setUp(): void
     {

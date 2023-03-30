@@ -13,40 +13,22 @@ namespace Sulu\Bundle\MarkupBundle\Markup\Link;
 
 class LinkConfigurationBuilder
 {
-    /**
-     * @var string
-     */
-    private $title;
+    private ?string $title = null;
 
-    /**
-     * @var string
-     */
-    private $resourceKey;
+    private ?string $resourceKey = null;
 
-    /**
-     * @var string
-     */
-    private $listAdapter;
+    private ?string $listAdapter = null;
 
     /**
      * @var string[]
      */
-    private $displayProperties;
+    private ?array $displayProperties = null;
 
-    /**
-     * @var string
-     */
-    private $overlayTitle;
+    private ?string $overlayTitle = null;
 
-    /**
-     * @var string
-     */
-    private $emptyText;
+    private ?string $emptyText = null;
 
-    /**
-     * @var string
-     */
-    private $icon;
+    private ?string $icon = null;
 
     public static function create()
     {

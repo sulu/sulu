@@ -35,25 +35,13 @@ class SecuritySubscriber implements EventSubscriberInterface
 
     public const SECURITY_PERMISSION_PROPERTY = 'sec:permissions';
 
-    /**
-     * @var array
-     */
-    private $permissions;
+    private array $permissions;
 
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
+    private \PHPCR\SessionInterface $liveSession;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private \Sulu\Component\DocumentManager\PropertyEncoder $propertyEncoder;
 
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
+    private \Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface $accessControlManager;
 
     public function __construct(
         array $permissions,

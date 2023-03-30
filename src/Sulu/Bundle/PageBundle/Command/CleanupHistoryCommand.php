@@ -24,20 +24,11 @@ class CleanupHistoryCommand extends Command
 {
     protected static $defaultName = 'sulu:content:cleanup-history';
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private \Sulu\Component\PHPCR\SessionManager\SessionManagerInterface $sessionManager;
 
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
+    private \PHPCR\SessionInterface $defaultSession;
 
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
+    private \PHPCR\SessionInterface $liveSession;
 
     public function __construct(
         SessionManagerInterface $sessionManager,

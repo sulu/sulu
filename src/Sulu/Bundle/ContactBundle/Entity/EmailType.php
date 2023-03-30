@@ -36,11 +36,9 @@ class EmailType implements \JsonSerializable
     private $id;
 
     /**
-     * @var Collection
-     *
      * @Exclude
      */
-    private $emails;
+    private \Doctrine\Common\Collections\ArrayCollection|array $emails;
 
     /**
      * Constructor.

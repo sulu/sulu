@@ -38,47 +38,44 @@ class WorkflowStageSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $propertyEncoder;
+    private ObjectProphecy $propertyEncoder;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $documentInspector;
+    private ObjectProphecy $documentInspector;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $defaultSession;
+    private ObjectProphecy $defaultSession;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $liveSession;
+    private ObjectProphecy $liveSession;
 
-    /**
-     * @var WorkflowStageSubscriber
-     */
-    private $workflowStageSubscriber;
+    private \Sulu\Component\Content\Document\Subscriber\WorkflowStageSubscriber $workflowStageSubscriber;
 
     /**
      * @var ObjectProphecy<WorkflowStageBehavior>
      */
-    private $document;
+    private ObjectProphecy $document;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $defaultNode;
+    private ObjectProphecy $defaultNode;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $liveNode;
+    private ObjectProphecy $liveNode;
 
     /**
      * @var ObjectProphecy<DocumentAccessor>
      */
-    private $documentAccessor;
+    private ObjectProphecy $documentAccessor;
 
     public function setUp(): void
     {

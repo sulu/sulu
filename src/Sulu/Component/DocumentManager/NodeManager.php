@@ -23,10 +23,7 @@ use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
  */
 class NodeManager
 {
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private \PHPCR\SessionInterface $session;
 
     public function __construct(SessionInterface $session)
     {

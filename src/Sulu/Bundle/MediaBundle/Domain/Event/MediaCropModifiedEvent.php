@@ -19,20 +19,14 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class MediaCropModifiedEvent extends DomainEvent
 {
-    /**
-     * @var MediaInterface
-     */
-    private $media;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaInterface $media;
 
-    /**
-     * @var string
-     */
-    private $formatKey;
+    private string $formatKey;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

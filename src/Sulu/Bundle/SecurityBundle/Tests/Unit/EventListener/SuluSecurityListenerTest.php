@@ -47,20 +47,17 @@ class SuluSecurityListenerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var SuluSecurityListener
-     */
-    private $securityListener;
+    private \Sulu\Bundle\SecurityBundle\EventListener\SuluSecurityListener $securityListener;
 
     /**
      * @var ObjectProphecy<SecurityCheckerInterface>
      */
-    private $securityChecker;
+    private ObjectProphecy $securityChecker;
 
     /**
      * @var ObjectProphecy<HttpKernelInterface>
      */
-    private $kernel;
+    private ObjectProphecy $kernel;
 
     public function setUp(): void
     {

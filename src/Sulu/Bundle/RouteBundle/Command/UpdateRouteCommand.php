@@ -32,15 +32,9 @@ class UpdateRouteCommand extends Command
      */
     private $translator;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var RouteManagerInterface
-     */
-    private $routeManager;
+    private \Sulu\Bundle\RouteBundle\Manager\RouteManagerInterface $routeManager;
 
     public function __construct(
         TranslatorInterface $translator,

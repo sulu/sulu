@@ -21,13 +21,11 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
-use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
-use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
@@ -37,7 +35,7 @@ class MediaRepositoryTest extends SuluTestCase
     /**
      * @var EntityManager
      */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
     /**
      * @var Collection[]
@@ -47,22 +45,16 @@ class MediaRepositoryTest extends SuluTestCase
     /**
      * @var MediaType[]
      */
-    private $mediaTypes = [];
+    private array $mediaTypes = [];
 
     /**
      * @var CollectionType[]
      */
-    private $collectionTypes = [];
+    private array $collectionTypes = [];
 
-    /**
-     * @var SystemStoreInterface
-     */
-    private $systemStore;
+    private ?object $systemStore = null;
 
-    /**
-     * @var MediaRepository
-     */
-    private $mediaRepository;
+    private ?object $mediaRepository = null;
 
     protected function setUp(): void
     {

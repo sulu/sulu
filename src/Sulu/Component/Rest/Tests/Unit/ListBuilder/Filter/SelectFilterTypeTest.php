@@ -23,15 +23,12 @@ class SelectFilterTypeTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var SelectFilterType
-     */
-    private $selectFilterType;
+    private \Sulu\Component\Rest\ListBuilder\Filter\SelectFilterType $selectFilterType;
 
     /**
      * @var ObjectProphecy<ListBuilderInterface>
      */
-    private $listBuilder;
+    private ObjectProphecy $listBuilder;
 
     public function setUp(): void
     {

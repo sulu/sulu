@@ -30,17 +30,17 @@ class TargetGroupEvaluationControllerTest extends TestCase
     /**
      * @var ObjectProphecy<TargetGroupEvaluatorInterface>
      */
-    private $targetGroupEvaluator;
+    private ObjectProphecy $targetGroupEvaluator;
 
     /**
      * @var ObjectProphecy<TargetGroupRepositoryInterface>
      */
-    private $targetGroupRepository;
+    private ObjectProphecy $targetGroupRepository;
 
     /**
      * @var ObjectProphecy<TargetGroupStoreInterface>
      */
-    private $targetGroupStore;
+    private ObjectProphecy $targetGroupStore;
 
     public function setUp(): void
     {

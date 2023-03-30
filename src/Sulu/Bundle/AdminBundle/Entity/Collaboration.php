@@ -46,15 +46,9 @@ class Collaboration
      */
     private $id;
 
-    /**
-     * @var int
-     */
-    private $started;
+    private int $started;
 
-    /**
-     * @var int
-     */
-    private $changed;
+    private int $changed;
 
     public function __construct($connectionId, $userId, $username, $fullName, $resourceKey, $id)
     {

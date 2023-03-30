@@ -28,17 +28,17 @@ class NodeHelperTest extends TestCase
     /**
      * @var NodeHelperInterface
      */
-    private $nodeHelper;
+    private \Sulu\Component\DocumentManager\NodeHelper $nodeHelper;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $session;
+    private ObjectProphecy $session;
 
     public function setUp(): void
     {

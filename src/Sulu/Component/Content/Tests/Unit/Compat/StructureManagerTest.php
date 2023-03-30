@@ -30,32 +30,32 @@ class StructureManagerTest extends TestCase
     /**
      * @var ObjectProphecy<StructureMetadataFactory>
      */
-    private $factory;
+    private ObjectProphecy $factory;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $inspector;
+    private ObjectProphecy $inspector;
 
     /**
      * @var ObjectProphecy<StructureMetadata>
      */
-    private $structure;
+    private ObjectProphecy $structure;
 
     /**
      * @var ObjectProphecy<ExtensionInterface>
      */
-    private $extension;
+    private ObjectProphecy $extension;
 
     /**
      * @var ObjectProphecy<LegacyPropertyFactory>
      */
-    private $propertyFactory;
+    private ObjectProphecy $propertyFactory;
 
     /**
      * @var StructureManagerInterface
      */
-    private $structureManager;
+    private \Sulu\Component\Content\Compat\StructureManager $structureManager;
 
     public function setUp(): void
     {

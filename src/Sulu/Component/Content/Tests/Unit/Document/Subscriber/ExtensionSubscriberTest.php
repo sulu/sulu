@@ -32,32 +32,29 @@ class ExtensionSubscriberTest extends SubscriberTestCase
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $inspector;
+    private ObjectProphecy $inspector;
 
     /**
      * @var ObjectProphecy<NamespaceRegistry>
      */
-    private $namespaceRegistry;
+    private ObjectProphecy $namespaceRegistry;
 
     /**
      * @var ObjectProphecy<ExtensionManagerInterface>
      */
-    private $extensionManager;
+    private ObjectProphecy $extensionManager;
 
     /**
      * @var ObjectProphecy<ExtensionInterface>
      */
-    private $extension;
+    private ObjectProphecy $extension;
 
     /**
      * @var ObjectProphecy<DocumentAccessor>
      */
-    private $documentAccessor;
+    private ObjectProphecy $documentAccessor;
 
-    /**
-     * @var ExtensionSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\Content\Document\Subscriber\ExtensionSubscriber $subscriber;
 
     public function setUp(): void
     {
@@ -169,7 +166,7 @@ class ExtensionSubscriberTest extends SubscriberTestCase
 
 class TestExtensionDocument implements ExtensionBehavior
 {
-    private $extensions;
+    private array|\Sulu\Component\Content\Document\Extension\ExtensionContainer $extensions;
 
     public function __construct(array $extensions = [])
     {

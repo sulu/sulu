@@ -27,10 +27,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var DelegatingLoader
-     */
-    private $loader;
+    private \Symfony\Component\Config\Loader\DelegatingLoader $loader;
 
     /**
      * @var \PHPUnit\Framework\MockObject_MockObject

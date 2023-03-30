@@ -13,16 +13,12 @@ namespace Sulu\Bundle\AdminBundle\Tests\Functional\Metadata\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\Exception\MetadataNotFoundException;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataProvider;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
 
 class FormMetadataProviderTest extends KernelTestCase
 {
-    /**
-     * @var FormMetadataProvider
-     */
-    private $formMetadataProvider;
+    private ?object $formMetadataProvider = null;
 
     public function setUp(): void
     {

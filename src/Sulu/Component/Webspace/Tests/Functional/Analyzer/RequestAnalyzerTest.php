@@ -35,25 +35,22 @@ class RequestAnalyzerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var RequestAnalyzer
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzer $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<ContentMapperInterface>
      */
-    private $contentMapper;
+    private ObjectProphecy $contentMapper;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     public function setUp(): void
     {

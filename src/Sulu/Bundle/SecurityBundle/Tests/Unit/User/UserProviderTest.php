@@ -30,22 +30,16 @@ class UserProviderTest extends TestCase
     /**
      * @var ObjectProphecy<UserRepositoryInterface>
      */
-    private $userRepository;
+    private ObjectProphecy $userRepository;
 
     /**
      * @var ObjectProphecy<SystemStoreInterface>
      */
-    private $systemStore;
+    private ObjectProphecy $systemStore;
 
-    /**
-     * @var UserProvider
-     */
-    private $userProvider;
+    private \Sulu\Bundle\SecurityBundle\User\UserProvider $userProvider;
 
-    /**
-     * @var User
-     */
-    private $user;
+    private \Sulu\Bundle\SecurityBundle\Entity\User $user;
 
     public function setUp(): void
     {

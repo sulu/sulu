@@ -23,10 +23,7 @@ class SegmentCacheListenerTests extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var SegmentCacheListener
-     */
-    private $segmentCacheListener;
+    private \Sulu\Bundle\WebsiteBundle\EventListener\SegmentCacheListener $segmentCacheListener;
 
     public function setUp(): void
     {

@@ -18,15 +18,9 @@ use Twig\Environment;
  */
 class XmlSitemapRenderer implements XmlSitemapRendererInterface
 {
-    /**
-     * @var SitemapProviderPoolInterface
-     */
-    private $sitemapProviderPool;
+    private \Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPoolInterface $sitemapProviderPool;
 
-    /**
-     * @var Environment
-     */
-    private $engine;
+    private \Twig\Environment $engine;
 
     public function __construct(
         SitemapProviderPoolInterface $sitemapProviderPool,

@@ -21,7 +21,7 @@ class AdminPool
      *
      * @var Admin[]
      */
-    private $pool = [];
+    private array $pool = [];
 
     /**
      * Adds a new admin.

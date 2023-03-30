@@ -20,20 +20,14 @@ use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
  */
 class ChainRouteGenerator implements ChainRouteGeneratorInterface
 {
-    /**
-     * @var array
-     */
-    private $mappings;
+    private array $mappings;
 
     /**
      * @var RouteGeneratorInterface[]
      */
-    private $routeGenerators;
+    private array $routeGenerators;
 
-    /**
-     * @var RouteRepositoryInterface
-     */
-    private $routeRepository;
+    private \Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface $routeRepository;
 
     /**
      * @param RouteGeneratorInterface[] $routeGenerators

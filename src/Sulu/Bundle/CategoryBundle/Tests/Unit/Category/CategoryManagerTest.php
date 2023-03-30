@@ -70,17 +70,17 @@ class CategoryManagerTest extends TestCase
     /**
      * @var ObjectProphecy<KeywordManagerInterface>
      */
-    private $keywordManager;
+    private ObjectProphecy $keywordManager;
 
     /**
      * @var ObjectProphecy<DomainEventCollectorInterface>
      */
-    private $domainEventCollector;
+    private ObjectProphecy $domainEventCollector;
 
     /**
      * @var CategoryManagerInterface
      */
-    private $categoryManager;
+    private \Sulu\Bundle\CategoryBundle\Category\CategoryManager $categoryManager;
 
     public function setUp(): void
     {

@@ -24,7 +24,7 @@ class CustomUrlModifiedEventTest extends TestCase
     /**
      * @var ObjectProphecy<CustomUrlDocument>
      */
-    private $customUrlDocument;
+    private ObjectProphecy $customUrlDocument;
 
     public function setUp(): void
     {

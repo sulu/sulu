@@ -23,10 +23,7 @@ class FormatController extends AbstractRestController implements ClassResourceIn
 {
     use RequestParametersTrait;
 
-    /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
+    private \Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface $formatManager;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

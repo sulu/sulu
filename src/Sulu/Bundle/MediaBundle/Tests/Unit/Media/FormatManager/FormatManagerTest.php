@@ -29,27 +29,21 @@ class FormatManagerTest extends TestCase
     /**
      * @var ObjectProphecy<MediaRepositoryInterface>
      */
-    private $mediaRepository;
+    private ObjectProphecy $mediaRepository;
 
     /**
      * @var ObjectProphecy<FormatCacheInterface>
      */
-    private $formatCache;
+    private ObjectProphecy $formatCache;
 
     /**
      * @var ObjectProphecy<ImageConverterInterface>
      */
-    private $imageConverter;
+    private ObjectProphecy $imageConverter;
 
-    /**
-     * @var array
-     */
-    private $formats;
+    private array $formats;
 
-    /**
-     * @var FormatManager
-     */
-    private $formatManager;
+    private \Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManager $formatManager;
 
     protected function setUp(): void
     {

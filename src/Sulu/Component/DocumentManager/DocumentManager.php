@@ -17,15 +17,12 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class DocumentManager implements DocumentManagerInterface, ResetInterface
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
     /**
      * @var array Cached options resolver instances
      */
-    private $optionsResolvers = [];
+    private array $optionsResolvers = [];
 
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {

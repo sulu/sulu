@@ -29,12 +29,9 @@ class TargetGroupSelectionTest extends TestCase
     /**
      * @var ObjectProphecy<TargetGroupRepositoryInterface>
      */
-    private $targetGroupRepository;
+    private ObjectProphecy $targetGroupRepository;
 
-    /**
-     * @var TargetGroupSelection
-     */
-    private $audienceTargetingGroups;
+    private \Sulu\Bundle\AudienceTargetingBundle\Content\Types\TargetGroupSelection $audienceTargetingGroups;
 
     public function setUp(): void
     {

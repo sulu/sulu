@@ -32,10 +32,7 @@ class BlameSubscriber implements EventSubscriberInterface
 
     public const CHANGER = 'changer';
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private \Sulu\Component\DocumentManager\PropertyEncoder $propertyEncoder;
 
     public function __construct(PropertyEncoder $propertyEncoder)
     {

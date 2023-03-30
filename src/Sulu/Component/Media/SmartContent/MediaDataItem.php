@@ -23,10 +23,7 @@ use Sulu\Component\SmartContent\ItemInterface;
  */
 class MediaDataItem implements ItemInterface
 {
-    /**
-     * @var Media
-     */
-    private $entity;
+    private \Sulu\Bundle\MediaBundle\Api\Media $entity;
 
     public function __construct(Media $entity)
     {

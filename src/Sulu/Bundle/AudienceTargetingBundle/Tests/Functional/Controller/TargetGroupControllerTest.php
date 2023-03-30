@@ -17,16 +17,12 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class TargetGroupControllerTest extends SuluTestCase
 {
     public const BASE_URL = 'api/target-groups';
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

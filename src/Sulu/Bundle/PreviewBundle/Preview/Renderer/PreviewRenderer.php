@@ -40,35 +40,17 @@ use Twig\Error\Error;
  */
 class PreviewRenderer implements PreviewRendererInterface
 {
-    /**
-     * @var RouteDefaultsProviderInterface
-     */
-    private $routeDefaultsProvider;
+    private \Sulu\Bundle\RouteBundle\Routing\Defaults\RouteDefaultsProviderInterface $routeDefaultsProvider;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
-    /**
-     * @var KernelFactoryInterface
-     */
-    private $kernelFactory;
+    private \Sulu\Bundle\PreviewBundle\Preview\Renderer\KernelFactoryInterface $kernelFactory;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @var array
-     */
-    private $previewDefaults;
+    private array $previewDefaults;
 
     /**
      * @var string

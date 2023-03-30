@@ -28,10 +28,7 @@ class ActivityControllerTest extends SuluTestCase
     public const GRANTED_CONTEXT = 'sulu.context.granted';
     public const NOT_GRANTED_CONTEXT = 'sulu.context.not_granted';
 
-    /**
-     * @var SuluKernelBrowser
-     */
-    private $client;
+    private SuluKernelBrowser $client;
 
     public static function setUpBeforeClass(): void
     {

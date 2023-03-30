@@ -32,30 +32,15 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var WebspaceUrlProviderInterface
-     */
-    private $webspaceUrlProvider;
+    private \Sulu\Component\Webspace\Url\WebspaceUrlProviderInterface $webspaceUrlProvider;
 
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
+    private \Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool;
 
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
+    private \Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface $accessControlManager;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage;
 
     /**
      * @var string

@@ -28,20 +28,11 @@ use Sulu\Component\Content\PreResolvableContentTypeInterface;
 
 class SnippetContent extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
-    /**
-     * @var SnippetResolverInterface
-     */
-    private $snippetResolver;
+    private \Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface $snippetResolver;
 
-    /**
-     * @var DefaultSnippetManagerInterface
-     */
-    private $defaultSnippetManager;
+    private \Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface $defaultSnippetManager;
 
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $referenceStore;
+    private \Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface $referenceStore;
 
     /**
      * @var bool

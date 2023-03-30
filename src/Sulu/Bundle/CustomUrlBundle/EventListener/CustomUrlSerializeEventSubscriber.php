@@ -26,20 +26,11 @@ use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
  */
 class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var GeneratorInterface
-     */
-    private $generator;
+    private \Sulu\Component\CustomUrl\Generator\GeneratorInterface $generator;
 
-    /**
-     * @var UserManagerInterface
-     */
-    private $userManager;
+    private \Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface $userManager;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $documentInspector;
 
     public function __construct(
         GeneratorInterface $generator,

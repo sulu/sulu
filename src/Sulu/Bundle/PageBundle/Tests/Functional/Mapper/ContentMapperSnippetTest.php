@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Mapper;
 
-use PHPCR\NodeInterface;
 use PHPCR\PathNotFoundException;
 use PHPCR\SessionInterface;
 use PHPCR\Util\UUIDHelper;
@@ -19,50 +18,30 @@ use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Mapper\ContentMapper;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class ContentMapperSnippetTest extends SuluTestCase
 {
-    /**
-     * @var ContentMapper
-     */
-    private $contentMapper;
+    private ?object $contentMapper = null;
 
     /**
      * @var SessionInterface
      */
     private $session;
 
-    /**
-     * @var SnippetDocument
-     */
-    private $snippet1;
+    private ?\Sulu\Bundle\SnippetBundle\Document\SnippetDocument $snippet1 = null;
 
-    /**
-     * @var SnippetDocument
-     */
-    private $snippet2;
+    private ?\Sulu\Bundle\SnippetBundle\Document\SnippetDocument $snippet2 = null;
 
-    /**
-     * @var string
-     */
-    private $snippet1OriginalPath;
+    private ?string $snippet1OriginalPath = null;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
     /**
      * @var HomeDocument
      */
-    private $parent;
+    private object $parent;
 
-    /**
-     * @var NodeInterface
-     */
-    private $snippet1Node;
+    private ?\PHPCR\NodeInterface $snippet1Node = null;
 
     public function setUp(): void
     {

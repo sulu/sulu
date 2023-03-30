@@ -17,20 +17,11 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 
 class WebspaceDefaultSnippetModifiedEvent extends DomainEvent
 {
-    /**
-     * @var string
-     */
-    private $webspaceKey;
+    private string $webspaceKey;
 
-    /**
-     * @var string
-     */
-    private $snippetAreaKey;
+    private string $snippetAreaKey;
 
-    /**
-     * @var SnippetDocument
-     */
-    private $snippet;
+    private \Sulu\Bundle\SnippetBundle\Document\SnippetDocument $snippet;
 
     public function __construct(
         string $webspaceKey,

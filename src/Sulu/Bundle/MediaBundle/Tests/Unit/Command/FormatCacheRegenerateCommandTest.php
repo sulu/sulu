@@ -27,7 +27,7 @@ class FormatCacheRegenerateCommandTest extends TestCase
     /**
      * @var ObjectProphecy<FormatManagerInterface>
      */
-    private $formatManager;
+    private ObjectProphecy $formatManager;
 
     public function setUp(): void
     {

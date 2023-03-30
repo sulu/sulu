@@ -38,10 +38,7 @@ abstract class BaseXmlFormatLoader extends FileLoader
      */
     protected $xpath;
 
-    /**
-     * @var array
-     */
-    private $globalOptions = [];
+    private array $globalOptions = [];
 
     /**
      * @return array

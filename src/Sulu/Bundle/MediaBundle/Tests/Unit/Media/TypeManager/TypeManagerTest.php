@@ -18,17 +18,14 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class TypeManagerTest extends SuluTestCase
 {
-    /**
-     * @var TypeManager
-     */
-    private $typeManager;
+    private \Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManager $typeManager;
 
     /**
      * @var ObjectProphecy
      */
     private $em;
 
-    private $mediaTypes = [
+    private array $mediaTypes = [
         [
             'type' => 'document',
             'mimeTypes' => ['*'],

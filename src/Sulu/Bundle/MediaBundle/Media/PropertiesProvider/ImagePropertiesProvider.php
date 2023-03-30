@@ -18,15 +18,9 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class ImagePropertiesProvider implements MediaPropertiesProviderInterface
 {
-    /**
-     * @var ImagineInterface
-     */
-    private $imagine;
+    private \Imagine\Image\ImagineInterface $imagine;
 
-    /**
-     * @var ImagineInterface|null
-     */
-    private $svgImagine;
+    private ?\Imagine\Image\ImagineInterface $svgImagine = null;
 
     public function __construct(
         ImagineInterface $imagine,

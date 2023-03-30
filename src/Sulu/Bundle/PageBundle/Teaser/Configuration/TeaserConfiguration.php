@@ -16,53 +16,43 @@ use JMS\Serializer\Annotation\Groups;
 class TeaserConfiguration
 {
     /**
-     * @var string
-     *
      * @Groups({"frontend"})
      */
-    private $title;
+    private string $title;
 
     /**
-     * @var string
-     *
      * @Groups({"frontend"})
      */
-    private $resourceKey;
+    private string $resourceKey;
 
     /**
-     * @var string
-     *
      * @Groups({"frontend"})
      */
-    private $listAdapter;
+    private string $listAdapter;
 
     /**
      * @var string[]
      *
      * @Groups({"frontend"})
      */
-    private $displayProperties;
+    private array $displayProperties;
 
     /**
-     * @var string
-     *
      * @Groups({"frontend"})
      */
-    private $overlayTitle;
+    private string $overlayTitle;
 
     /**
-     * @var string|null
-     *
      * @Groups({"frontend"})
      */
-    private $view;
+    private ?string $view = null;
 
     /**
      * @var array<string, string>|null
      *
      * @Groups({"frontend"})
      */
-    private $resultToView;
+    private ?array $resultToView = null;
 
     /**
      * @param array<string, string>|null $resultToView

@@ -18,10 +18,7 @@ use Sulu\Component\Content\Compat\Metadata;
  */
 class NavigationContext
 {
-    /**
-     * @var Metadata
-     */
-    private $metadata;
+    private \Sulu\Component\Content\Compat\Metadata $metadata;
 
     /**
      * @var string

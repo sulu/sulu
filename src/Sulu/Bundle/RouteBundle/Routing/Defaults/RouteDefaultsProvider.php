@@ -19,12 +19,12 @@ class RouteDefaultsProvider implements RouteDefaultsProviderInterface
     /**
      * @var RouteDefaultsProviderInterface[]
      */
-    private $defaultsProvider;
+    private array $defaultsProvider;
 
     /**
      * @var RouteDefaultsProviderInterface[]
      */
-    private $defaultsProviderMap = [];
+    private array $defaultsProviderMap = [];
 
     /**
      * @param RouteDefaultsProviderInterface[] $defaultsProvider

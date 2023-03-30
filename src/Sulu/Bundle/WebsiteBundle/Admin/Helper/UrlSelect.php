@@ -15,10 +15,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class UrlSelect
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
     /**
      * @var string

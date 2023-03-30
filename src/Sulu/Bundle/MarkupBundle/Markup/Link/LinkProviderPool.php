@@ -19,7 +19,7 @@ class LinkProviderPool implements LinkProviderPoolInterface
     /**
      * @var LinkProviderInterface[]
      */
-    private $providers;
+    private array $providers;
 
     /**
      * @param LinkProviderInterface[] $providers

@@ -20,31 +20,23 @@ class ListQueryBuilder
 {
     /**
      * List of all table aliases.
-     *
-     * @var array
      */
-    private $prefixes;
+    private ?array $prefixes = null;
 
     /**
      * Contains the join part of the dql.
-     *
-     * @var string
      */
-    private $joins;
+    private ?string $joins = null;
 
     /**
      * Contains the select part of the dql.
-     *
-     * @var string
      */
-    private $select;
+    private ?string $select = null;
 
     /**
      * Containing the fields which should be shown in the result.
-     *
-     * @var array
      */
-    private $fields = [];
+    private array $fields = [];
 
     /**
      * The array representation of the sortings.
@@ -77,17 +69,13 @@ class ListQueryBuilder
 
     /**
      * cache variable for replacing select string in some cases.
-     *
-     * @var string
      */
-    private $replaceSelect;
+    private ?string $replaceSelect = null;
 
     /**
      * defines if query is used for counting.
-     *
-     * @var bool
      */
-    private $countQuery;
+    private ?bool $countQuery = null;
 
     /**
      * The names of columns of the root entity.
@@ -98,10 +86,8 @@ class ListQueryBuilder
 
     /**
      * contains all fieldnames that are searched.
-     *
-     * @var array
      */
-    private $searchFields;
+    private array $searchFields;
 
     /**
      * contains searched fieldnames that can be queried by LIKE.
@@ -119,17 +105,13 @@ class ListQueryBuilder
 
     /**
      * used as a storage for saving relational fields.
-     *
-     * @var array
      */
-    private $relationalFilters = [];
+    private array $relationalFilters = [];
 
     /**
      * contains all join conditions.
-     *
-     * @var array
      */
-    private $joinConditions = [];
+    private array $joinConditions = [];
 
     /**
      * @param string[] $associationNames

@@ -43,10 +43,7 @@ class Permission
      */
     private $id;
 
-    /**
-     * @var RoleInterface
-     */
-    private $role;
+    private ?\Sulu\Component\Security\Authentication\RoleInterface $role = null;
 
     /**
      * @var string|null

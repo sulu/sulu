@@ -18,15 +18,9 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 
 class MediaLinkProvider implements LinkProviderInterface
 {
-    /**
-     * @var MediaRepositoryInterface
-     */
-    private $mediaRepository;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface $mediaRepository;
 
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
+    private \Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface $mediaManager;
 
     public function __construct(
         MediaRepositoryInterface $mediaRepository,

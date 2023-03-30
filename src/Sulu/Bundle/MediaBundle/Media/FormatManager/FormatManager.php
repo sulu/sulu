@@ -39,42 +39,24 @@ class FormatManager implements FormatManagerInterface
      *
      * @var MediaRepository
      */
-    private $mediaRepository;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface $mediaRepository;
 
-    /**
-     * @var FormatCacheInterface
-     */
-    private $formatCache;
+    private \Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface $formatCache;
 
-    /**
-     * @var ImageConverterInterface
-     */
-    private $converter;
+    private \Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface $converter;
 
-    /**
-     * @var bool
-     */
-    private $saveImage = false;
+    private bool $saveImage = false;
 
-    /**
-     * @var array
-     */
-    private $responseHeaders = [];
+    private array $responseHeaders = [];
 
-    /**
-     * @var Filesystem
-     */
-    private $fileSystem;
+    private \Symfony\Component\Filesystem\Filesystem $fileSystem;
 
     /**
      * @var array
      */
     private $formats;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private \Psr\Log\LoggerInterface|\Psr\Log\NullLogger $logger;
 
     /**
      * @var ParameterBag|null

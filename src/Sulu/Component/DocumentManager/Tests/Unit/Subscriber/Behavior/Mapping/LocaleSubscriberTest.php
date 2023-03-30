@@ -64,9 +64,9 @@ class LocaleSubscriberTest extends TestCase
 
 class TestLocaleDocument implements LocaleBehavior
 {
-    private $locale;
+    private ?string $locale = null;
 
-    private $originalLocale;
+    private ?string $originalLocale = null;
 
     public function getLocale()
     {

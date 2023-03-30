@@ -34,32 +34,29 @@ class WebsiteSearchControllerTest extends TestCase
     /**
      * @var ObjectProphecy<SearchManagerInterface>
      */
-    private $searchManager;
+    private ObjectProphecy $searchManager;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<ParameterResolverInterface>
      */
-    private $parameterResolver;
+    private ObjectProphecy $parameterResolver;
 
     /**
      * @var ObjectProphecy<Environment>
      */
-    private $twig;
+    private ObjectProphecy $twig;
 
     /**
      * @var ObjectProphecy<FilesystemLoader>
      */
-    private $twigLoader;
+    private ObjectProphecy $twigLoader;
 
-    /**
-     * @var WebsiteSearchController
-     */
-    private $websiteSearchController;
+    private \Sulu\Bundle\SearchBundle\Controller\WebsiteSearchController $websiteSearchController;
 
     public function setUp(): void
     {

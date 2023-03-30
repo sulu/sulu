@@ -16,25 +16,16 @@ use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 
 class PreviewLinkGeneratedEvent extends DomainEvent
 {
-    /**
-     * @var PreviewLinkInterface
-     */
-    private $previewLink;
+    private \Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface $previewLink;
 
-    /**
-     * @var string
-     */
-    private $link;
+    private string $link;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
-    /**
-     * @var string|null
-     */
-    private $securityContext;
+    private ?string $securityContext = null;
 
     /**
      * @param mixed[] $payload

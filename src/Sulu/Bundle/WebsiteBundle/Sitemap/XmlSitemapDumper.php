@@ -23,20 +23,11 @@ class XmlSitemapDumper implements XmlSitemapDumperInterface
      */
     private $baseDirectory;
 
-    /**
-     * @var XmlSitemapRendererInterface
-     */
-    private $sitemapRenderer;
+    private \Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapRendererInterface $sitemapRenderer;
 
-    /**
-     * @var SitemapProviderPoolInterface
-     */
-    private $sitemapProviderPool;
+    private \Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPoolInterface $sitemapProviderPool;
 
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private \Symfony\Component\Filesystem\Filesystem $filesystem;
 
     /**
      * @param string $baseDirectory

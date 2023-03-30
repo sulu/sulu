@@ -42,11 +42,9 @@ class PropertyParameter implements \JsonSerializable
     private $type;
 
     /**
-     * @var Metadata
-     *
      * @Type("Sulu\Component\Content\Compat\Metadata")
      */
-    private $metadata;
+    private \Sulu\Component\Content\Compat\Metadata $metadata;
 
     /**
      * Constructor.

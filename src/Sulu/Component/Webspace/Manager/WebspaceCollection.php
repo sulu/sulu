@@ -28,7 +28,7 @@ class WebspaceCollection implements \IteratorAggregate
      *
      * @var Webspace[]
      */
-    private $webspaces;
+    private array $webspaces;
 
     /**
      * All the portals in a specific sulu installation.
@@ -50,7 +50,7 @@ class WebspaceCollection implements \IteratorAggregate
      *
      * @var FileResource[]
      */
-    private $resources;
+    private ?array $resources = null;
 
     public function __construct(array $webspaces = [])
     {

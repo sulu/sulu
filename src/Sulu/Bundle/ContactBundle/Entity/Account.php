@@ -28,10 +28,7 @@ class Account implements AccountInterface
      */
     private $id;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private ?string $name = null;
 
     /**
      * @var int
@@ -48,22 +45,14 @@ class Account implements AccountInterface
      */
     protected $depth;
 
-    /**
-     * @var \DateTime
-     */
-    private $created;
+    private ?\DateTime $created = null;
+
+    private ?\DateTime $changed = null;
 
     /**
-     * @var \DateTime
-     */
-    private $changed;
-
-    /**
-     * @var UserInterface|null
-     *
      * @Exclude
      */
-    private $changer;
+    private ?\Sulu\Component\Security\Authentication\UserInterface $changer = null;
 
     /**
      * @var UserInterface|null
@@ -72,60 +61,27 @@ class Account implements AccountInterface
      */
     private $creator;
 
-    /**
-     * @var string|null
-     */
-    private $externalId;
+    private ?string $externalId = null;
 
-    /**
-     * @var string|null
-     */
-    private $number;
+    private ?string $number = null;
 
-    /**
-     * @var string|null
-     */
-    private $corporation;
+    private ?string $corporation = null;
 
-    /**
-     * @var string|null
-     */
-    private $uid;
+    private ?string $uid = null;
 
-    /**
-     * @var string|null
-     */
-    private $registerNumber;
+    private ?string $registerNumber = null;
 
-    /**
-     * @var string|null
-     */
-    private $placeOfJurisdiction;
+    private ?string $placeOfJurisdiction = null;
 
-    /**
-     * @var string|null
-     */
-    private $mainEmail;
+    private ?string $mainEmail = null;
 
-    /**
-     * @var string|null
-     */
-    private $mainPhone;
+    private ?string $mainPhone = null;
 
-    /**
-     * @var string|null
-     */
-    private $mainFax;
+    private ?string $mainFax = null;
 
-    /**
-     * @var string|null
-     */
-    private $mainUrl;
+    private ?string $mainUrl = null;
 
-    /**
-     * @var ContactInterface|null
-     */
-    private $mainContact;
+    private ?\Sulu\Bundle\ContactBundle\Entity\ContactInterface $mainContact = null;
 
     /**
      * @var MediaInterface|null

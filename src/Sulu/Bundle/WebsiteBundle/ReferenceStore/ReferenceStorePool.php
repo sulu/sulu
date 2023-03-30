@@ -19,7 +19,7 @@ class ReferenceStorePool implements ReferenceStorePoolInterface
     /**
      * @var ReferenceStoreInterface[]
      */
-    private $stores = [];
+    private array $stores = [];
 
     /**
      * @param ReferenceStoreInterface[] $stores

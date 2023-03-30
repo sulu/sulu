@@ -40,50 +40,26 @@ class ActivityController extends AbstractRestController implements ClassResource
 {
     use RequestParametersTrait;
 
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $listBuilderFactory;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface $listBuilderFactory;
 
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
+    private \Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface $fieldDescriptorFactory;
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
+    private \Sulu\Component\Rest\RestHelperInterface $restHelper;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
-    /**
-     * @var string
-     */
-    private $activityClass;
+    private string $activityClass;
 
-    /**
-     * @var string
-     */
-    private $contactClass;
+    private string $contactClass;
 
-    /**
-     * @var string
-     */
-    private $userClass;
+    private string $userClass;
 
     /**
      * @var array<string, int>
      */
-    private $permissions;
+    private array $permissions;
 
     /**
      * @param array<string, int> $permissions Inject `sulu_security.permissions` parameter

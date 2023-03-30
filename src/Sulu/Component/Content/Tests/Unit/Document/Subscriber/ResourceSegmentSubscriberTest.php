@@ -44,57 +44,54 @@ class ResourceSegmentSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $encoder;
+    private ObjectProphecy $encoder;
 
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $documentInspector;
+    private ObjectProphecy $documentInspector;
 
     /**
      * @var ObjectProphecy<ResourceLocatorStrategyInterface>
      */
-    private $resourceLocatorStrategy;
+    private ObjectProphecy $resourceLocatorStrategy;
 
     /**
      * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
-    private $resourceLocatorStrategyPool;
+    private ObjectProphecy $resourceLocatorStrategyPool;
 
     /**
      * @var ResourceSegmentBehavior|ObjectProphecy
      */
-    private $document;
+    private ObjectProphecy $document;
 
     /**
      * @var ObjectProphecy<StructureMetadata>
      */
-    private $structureMetadata;
+    private ObjectProphecy $structureMetadata;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $defaultSession;
+    private ObjectProphecy $defaultSession;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $liveSession;
+    private ObjectProphecy $liveSession;
 
-    /**
-     * @var ResourceSegmentSubscriber
-     */
-    private $resourceSegmentSubscriber;
+    private \Sulu\Component\Content\Document\Subscriber\ResourceSegmentSubscriber $resourceSegmentSubscriber;
 
     /**
      * @var ObjectProphecy<PropertyMetadata>
      */
-    private $propertyMetaData;
+    private ObjectProphecy $propertyMetaData;
 
     public function setUp(): void
     {

@@ -20,10 +20,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class MixinSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
+    private \Sulu\Component\DocumentManager\MetadataFactoryInterface $metadataFactory;
 
     public function __construct(MetadataFactoryInterface $metadataFactory)
     {

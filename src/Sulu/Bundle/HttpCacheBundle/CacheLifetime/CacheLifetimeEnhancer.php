@@ -17,10 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CacheLifetimeEnhancer implements CacheLifetimeEnhancerInterface
 {
-    /**
-     * @var CacheLifetimeResolverInterface
-     */
-    private $cacheLifetimeResolver;
+    private \Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface $cacheLifetimeResolver;
 
     /**
      * @var int
@@ -32,10 +29,7 @@ class CacheLifetimeEnhancer implements CacheLifetimeEnhancerInterface
      */
     private $sharedMaxAge;
 
-    /**
-     * @var CacheLifetimeRequestStore
-     */
-    private $cacheLifetimeRequestStore;
+    private \Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore $cacheLifetimeRequestStore;
 
     public function __construct(
         CacheLifetimeResolverInterface $cacheLifetimeResolver,

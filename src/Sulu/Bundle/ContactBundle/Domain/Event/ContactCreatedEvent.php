@@ -18,15 +18,12 @@ use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 
 class ContactCreatedEvent extends DomainEvent
 {
-    /**
-     * @var ContactInterface
-     */
-    private $contact;
+    private \Sulu\Bundle\ContactBundle\Entity\ContactInterface $contact;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

@@ -33,52 +33,49 @@ class QuerySubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $session;
+    private ObjectProphecy $session;
 
     /**
      * @var ObjectProphecy<WorkspaceInterface>
      */
-    private $workspace;
+    private ObjectProphecy $workspace;
 
     /**
      * @var ObjectProphecy<QueryManagerInterface>
      */
-    private $queryManager;
+    private ObjectProphecy $queryManager;
 
     /**
      * @var ObjectProphecy<EventDispatcherInterface>
      */
-    private $dispatcher;
+    private ObjectProphecy $dispatcher;
 
     /**
      * @var ObjectProphecy<QueryInterface>
      */
-    private $phpcrQuery;
+    private ObjectProphecy $phpcrQuery;
 
     /**
      * @var ObjectProphecy<QueryResultInterface>
      */
-    private $phpcrResult;
+    private ObjectProphecy $phpcrResult;
 
     /**
      * @var ObjectProphecy<QueryCreateEvent>
      */
-    private $queryCreateEvent;
+    private ObjectProphecy $queryCreateEvent;
 
     /**
      * @var ObjectProphecy<QueryExecuteEvent>
      */
-    private $queryExecuteEvent;
+    private ObjectProphecy $queryExecuteEvent;
 
     /**
      * @var ObjectProphecy<Query>
      */
-    private $query;
+    private ObjectProphecy $query;
 
-    /**
-     * @var QuerySubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Phpcr\QuerySubscriber $subscriber;
 
     public function setUp(): void
     {

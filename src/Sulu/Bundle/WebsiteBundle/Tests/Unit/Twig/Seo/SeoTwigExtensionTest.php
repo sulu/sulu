@@ -29,30 +29,27 @@ class SeoTwigExtensionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var SeoTwigExtension
-     */
-    private $seoTwigExtension;
+    private \Sulu\Bundle\WebsiteBundle\Twig\Seo\SeoTwigExtension $seoTwigExtension;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<ContentPathInterface>
      */
-    private $contentPath;
+    private ObjectProphecy $contentPath;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     /**
      * @var ObjectProphecy<Request>
      */
-    private $request;
+    private ObjectProphecy $request;
 
     public function setUp(): void
     {

@@ -27,20 +27,11 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CustomUrlRequestProcessor implements RequestProcessorInterface
 {
-    /**
-     * @var CustomUrlManagerInterface
-     */
-    private $customUrlManager;
+    private \Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface $customUrlManager;
 
-    /**
-     * @var GeneratorInterface
-     */
-    private $generator;
+    private \Sulu\Component\CustomUrl\Generator\GeneratorInterface $generator;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
     /**
      * @var string

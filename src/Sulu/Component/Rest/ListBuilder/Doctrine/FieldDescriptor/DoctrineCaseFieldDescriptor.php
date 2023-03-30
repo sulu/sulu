@@ -21,15 +21,9 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
  */
 class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
 {
-    /**
-     * @var DoctrineDescriptor
-     */
-    private $case1;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineDescriptor $case1;
 
-    /**
-     * @var DoctrineDescriptor
-     */
-    private $case2;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineDescriptor $case2;
 
     public function __construct(
         string $name,

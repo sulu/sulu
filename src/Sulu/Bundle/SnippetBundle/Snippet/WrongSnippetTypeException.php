@@ -28,10 +28,7 @@ class WrongSnippetTypeException extends \Exception
      */
     private $actual;
 
-    /**
-     * @var SnippetDocument
-     */
-    private $document;
+    private \Sulu\Bundle\SnippetBundle\Document\SnippetDocument $document;
 
     public function __construct($actual, $expected, SnippetDocument $document)
     {

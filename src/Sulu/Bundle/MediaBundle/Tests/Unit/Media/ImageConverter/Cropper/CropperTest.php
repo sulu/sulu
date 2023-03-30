@@ -23,7 +23,7 @@ class CropperTest extends SuluTestCase
     /**
      * @var CropperInterface
      */
-    private $cropper;
+    private \Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\Cropper $cropper;
 
     public function setUp(): void
     {

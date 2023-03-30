@@ -17,20 +17,14 @@ use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 
 class CustomUrlModifiedEvent extends DomainEvent
 {
-    /**
-     * @var CustomUrlDocument
-     */
-    private $customUrlDocument;
+    private \Sulu\Component\CustomUrl\Document\CustomUrlDocument $customUrlDocument;
 
-    /**
-     * @var string
-     */
-    private $webspaceKey;
+    private string $webspaceKey;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

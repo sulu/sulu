@@ -12,26 +12,18 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Bundle\WebsiteBundle\Analytics\AnalyticsManagerInterface;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class AnalyticsControllerTest extends SuluTestCase
 {
-    /**
-     * @var AnalyticsManagerInterface
-     */
-    private $analyticsManager;
+    private ?object $analyticsManager = null;
 
     /**
      * @var AnalyticsInterface[]
      */
-    private $entities = [];
+    private array $entities = [];
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

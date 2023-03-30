@@ -24,20 +24,17 @@ class SettingsManagerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var SettingsManager
-     */
-    private $settingsManager;
+    private \Sulu\Component\Webspace\Settings\SettingsManager $settingsManager;
 
     /**
      * @var ObjectProphecy<SessionManagerInterface>
      */
-    private $sessionManager;
+    private ObjectProphecy $sessionManager;
 
     /**
      * @var ObjectProphecy<DeprecatedSessionManagerInterface>
      */
-    private $deprecatedSessionManager;
+    private ObjectProphecy $deprecatedSessionManager;
 
     public function setUp(): void
     {

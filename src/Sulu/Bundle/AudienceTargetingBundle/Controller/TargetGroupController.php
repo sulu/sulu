@@ -39,35 +39,17 @@ class TargetGroupController extends AbstractRestController implements ClassResou
 {
     protected static $entityKey = 'target_groups';
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
+    private \Sulu\Component\Rest\RestHelperInterface $restHelper;
 
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
+    private \Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface $fieldDescriptorFactory;
 
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $listBuilderFactory;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface $listBuilderFactory;
 
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
+    private \JMS\Serializer\SerializerInterface $serializer;
 
-    /**
-     * @var TargetGroupRepositoryInterface
-     */
-    private $targetGroupRepository;
+    private \Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface $targetGroupRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

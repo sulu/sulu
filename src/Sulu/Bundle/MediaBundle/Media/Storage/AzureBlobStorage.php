@@ -18,20 +18,11 @@ use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 
 class AzureBlobStorage extends FlysystemStorage
 {
-    /**
-     * @var AzureBlobStorageAdapter
-     */
-    private $adapter;
+    private \League\Flysystem\AzureBlobStorage\AzureBlobStorageAdapter $adapter;
 
-    /**
-     * @var string
-     */
-    private $container;
+    private string $container;
 
-    /**
-     * @var BlobRestProxy
-     */
-    private $client;
+    private \MicrosoftAzure\Storage\Blob\BlobRestProxy $client;
 
     public function __construct(
         FilesystemInterface $filesystem,

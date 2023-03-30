@@ -23,10 +23,7 @@ use Twig\TwigFunction;
  */
 class MediaTwigExtension extends AbstractExtension
 {
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
+    private \Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface $mediaManager;
 
     public function __construct(MediaManagerInterface $mediaManager)
     {

@@ -34,47 +34,47 @@ class ParameterResolverTest extends TestCase
     /**
      * @var ObjectProphecy<StructureResolverInterface>
      */
-    private $structureResolver;
+    private ObjectProphecy $structureResolver;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerResolverInterface>
      */
-    private $requestAnalyzerResolver;
+    private ObjectProphecy $requestAnalyzerResolver;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     /**
      * @var ObjectProphecy<Request>
      */
-    private $request;
+    private ObjectProphecy $request;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<PageBridge>
      */
-    private $structure;
+    private ObjectProphecy $structure;
 
     /**
      * @var ObjectProphecy<Portal>
      */
-    private $portal;
+    private ObjectProphecy $portal;
 
     /**
      * @var ObjectProphecy<Webspace>
      */
-    private $webspace;
+    private ObjectProphecy $webspace;
 
     public function setUp(): void
     {

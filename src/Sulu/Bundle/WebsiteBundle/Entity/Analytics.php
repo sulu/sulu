@@ -23,15 +23,9 @@ class Analytics implements AnalyticsInterface
      */
     private $id;
 
-    /**
-     * @var string
-     */
-    private $title;
+    private string $title;
 
-    /**
-     * @var bool
-     */
-    private $allDomains;
+    private bool $allDomains;
 
     /**
      * @var mixed
@@ -40,22 +34,16 @@ class Analytics implements AnalyticsInterface
      */
     private $content;
 
-    /**
-     * @var string
-     */
-    private $type;
+    private string $type ;
+
+    private string $webspaceKey ;
 
     /**
-     * @var string
-     */
-    private $webspaceKey;
-
-    /**
-     * @var Collection|Domain[]
+     * @var Collection<Domain>
      *
      * @Exclude
      */
-    private $domains;
+    private Collection $domains;
 
     public function __construct()
     {
@@ -154,6 +142,8 @@ class Analytics implements AnalyticsInterface
 
     /**
      * @VirtualProperty
+     *
+     * @return Collection<array-key, string>|null
      */
     public function getDomains(): ?Collection
     {
@@ -161,8 +151,6 @@ class Analytics implements AnalyticsInterface
             return null;
         }
 
-        return $this->domains->map(function(Domain $domain) {
-            return $domain->getUrl();
-        });
+        return $this->domains->map(fn (Domain $domain): string => $domain->getUrl());
     }
 }

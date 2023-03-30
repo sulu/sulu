@@ -16,10 +16,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class SegmentBlockVisitor implements BlockVisitorInterface
 {
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
     public function __construct(RequestAnalyzerInterface $requestAnalyzer)
     {

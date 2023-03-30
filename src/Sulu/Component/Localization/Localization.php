@@ -88,16 +88,14 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @Groups({"frontend", "Default"})
      */
-    private $children;
+    private ?array $children = null;
 
     /**
      * The parent localization.
      *
-     * @var Localization
-     *
      * @Groups({"frontend", "Default"})
      */
-    private $parent;
+    private ?\Sulu\Component\Localization\Localization $parent = null;
 
     /**
      * Defines whether this localization is the default one or not.

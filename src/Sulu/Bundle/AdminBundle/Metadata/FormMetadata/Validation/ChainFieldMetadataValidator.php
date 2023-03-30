@@ -18,7 +18,7 @@ class ChainFieldMetadataValidator implements FieldMetadataValidatorInterface
     /**
      * @var iterable<FieldMetadataValidatorInterface>
      */
-    private $validators;
+    private iterable $validators;
 
     /**
      * @param iterable<FieldMetadataValidatorInterface> $validators

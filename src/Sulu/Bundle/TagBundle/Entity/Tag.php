@@ -22,43 +22,29 @@ use Sulu\Component\Security\Authentication\UserInterface;
 class Tag implements TagInterface
 {
     /**
-     * @var string
-     *
      * @Expose
      * @Groups({"partialTag"})
      */
-    private $name;
+    private ?string $name = null;
 
     /**
-     * @var int
-     *
      * @Groups({"partialTag"})
      */
-    private $id;
+    private ?int $id = null;
 
     /**
-     * @var \DateTime
-     *
      * @Groups({"partialTag"})
      */
-    private $created;
+    private ?\DateTime $created = null;
 
     /**
-     * @var \DateTime
-     *
      * @Groups({"partialTag"})
      */
-    private $changed;
+    private ?\DateTime $changed = null;
 
-    /**
-     * @var UserInterface|null
-     */
-    private $changer;
+    private ?\Sulu\Component\Security\Authentication\UserInterface $changer = null;
 
-    /**
-     * @var UserInterface|null
-     */
-    private $creator;
+    private ?\Sulu\Component\Security\Authentication\UserInterface $creator = null;
 
     public function setName($name)
     {

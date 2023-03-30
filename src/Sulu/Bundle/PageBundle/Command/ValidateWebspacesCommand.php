@@ -30,50 +30,23 @@ class ValidateWebspacesCommand extends Command
 {
     protected static $defaultName = 'sulu:content:validate:webspaces';
 
-    /**
-     * @var OutputInterface
-     */
-    private $output;
+    private ?\Symfony\Component\Console\Output\OutputInterface $output = null;
 
-    /**
-     * @var Environment
-     */
-    private $twig;
+    private \Twig\Environment $twig;
 
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $structureMetadataFactory;
+    private \Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface $structureMetadataFactory;
 
-    /**
-     * @var ControllerNameParser|null
-     */
-    private $controllerNameConverter;
+    private ?\Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser $controllerNameConverter = null;
 
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
+    private \Sulu\Component\Content\Compat\StructureManagerInterface $structureManager;
 
-    /**
-     * @var WebspaceStructureProvider
-     */
-    private $structureProvider;
+    private \Sulu\Component\Webspace\StructureProvider\WebspaceStructureProvider $structureProvider;
 
-    /**
-     * @var array
-     */
-    private $errors = [];
+    private array $errors = [];
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
         Environment $twig,

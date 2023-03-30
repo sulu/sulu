@@ -16,15 +16,9 @@ use Sulu\Component\Content\ContentTypeInterface;
 
 class UnexpectedPropertyType extends \Exception
 {
-    /**
-     * @var PropertyInterface
-     */
-    private $property;
+    private \Sulu\Component\Content\Compat\PropertyInterface $property;
 
-    /**
-     * @var ContentTypeInterface
-     */
-    private $contentType;
+    private \Sulu\Component\Content\ContentTypeInterface $contentType;
 
     public function __construct(PropertyInterface $property, ContentTypeInterface $contentType)
     {

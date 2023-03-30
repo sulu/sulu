@@ -16,7 +16,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
-use Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Repository\ActivityRepository;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -25,20 +24,14 @@ class ActivityRepositoryTest extends SuluTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ActivityRepository
-     */
-    private $repository;
+    private ?object $repository = null;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     /**
      * @var ObjectProphecy<DomainEvent>
      */
-    private $domainEvent;
+    private ObjectProphecy $domainEvent;
 
     public function setUp(): void
     {

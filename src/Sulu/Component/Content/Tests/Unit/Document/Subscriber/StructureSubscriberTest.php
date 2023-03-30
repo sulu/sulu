@@ -39,62 +39,59 @@ class StructureSubscriberTest extends SubscriberTestCase
     /**
      * @var ObjectProphecy<ContentTypeManagerInterface>
      */
-    private $contentTypeManager;
+    private ObjectProphecy $contentTypeManager;
 
     /**
      * @var ObjectProphecy<PropertyMetadata>
      */
-    private $structureProperty;
+    private ObjectProphecy $structureProperty;
 
     /**
      * @var ObjectProphecy<ContentTypeInterface>
      */
-    private $contentType;
+    private ObjectProphecy $contentType;
 
     /**
      * @var ObjectProphecy<PropertyValue>
      */
-    private $propertyValue;
+    private ObjectProphecy $propertyValue;
 
     /**
      * @var ObjectProphecy<TranslatedProperty>
      */
-    private $legacyProperty;
+    private ObjectProphecy $legacyProperty;
 
     /**
      * @var ObjectProphecy<StructureMetadata>
      */
-    private $structureMetadata;
+    private ObjectProphecy $structureMetadata;
 
     /**
      * @var ObjectProphecy<ManagedStructure>
      */
-    private $structure;
+    private ObjectProphecy $structure;
 
     /**
      * @var ObjectProphecy<LegacyPropertyFactory>
      */
-    private $propertyFactory;
+    private ObjectProphecy $propertyFactory;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $inspector;
+    private ObjectProphecy $inspector;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<StructureBehavior>
      */
-    private $document;
+    private ObjectProphecy $document;
 
-    /**
-     * @var StructureSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\Content\Document\Subscriber\StructureSubscriber $subscriber;
 
     public function setUp(): void
     {

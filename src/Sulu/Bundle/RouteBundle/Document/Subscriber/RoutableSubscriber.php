@@ -42,50 +42,23 @@ class RoutableSubscriber implements EventSubscriberInterface
 
     public const TAG_NAME = 'sulu_route.route_path';
 
-    /**
-     * @var ChainRouteGeneratorInterface
-     */
-    private $chainRouteGenerator;
+    private \Sulu\Bundle\RouteBundle\Generator\ChainRouteGeneratorInterface $chainRouteGenerator;
 
-    /**
-     * @var RouteManagerInterface
-     */
-    private $routeManager;
+    private \Sulu\Bundle\RouteBundle\Manager\RouteManagerInterface $routeManager;
 
-    /**
-     * @var RouteRepositoryInterface
-     */
-    private $routeRepository;
+    private \Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface $routeRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $documentInspector;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder $propertyEncoder;
 
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $metadataFactory;
+    private \Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface $metadataFactory;
 
-    /**
-     * @var ConflictResolverInterface
-     */
-    private $conflictResolver;
+    private \Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface $conflictResolver;
 
     public function __construct(
         ChainRouteGeneratorInterface $chainRouteGenerator,

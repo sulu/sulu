@@ -33,35 +33,17 @@ class MaintainResourceLocatorCommand extends Command
 {
     protected static $defaultName = 'sulu:content:resource-locator:maintain';
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private \Sulu\Component\PHPCR\SessionManager\SessionManagerInterface $sessionManager;
 
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
+    private \PHPCR\SessionInterface $liveSession;
 
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
+    private \Sulu\Component\DocumentManager\MetadataFactoryInterface $metadataFactory;
 
-    /**
-     * @var StructureMetadataFactory
-     */
-    private $structureMetadataFactory;
+    private \Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory $structureMetadataFactory;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder $propertyEncoder;
 
     public function __construct(
         WebspaceManagerInterface $webspaceManager,

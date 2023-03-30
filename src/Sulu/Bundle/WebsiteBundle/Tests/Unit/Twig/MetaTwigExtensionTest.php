@@ -28,17 +28,14 @@ class MetaTwigExtensionTest extends TestCase
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<ContentPathInterface>
      */
-    private $contentPath;
+    private ObjectProphecy $contentPath;
 
-    /**
-     * @var Portal
-     */
-    private $portal;
+    private \Sulu\Component\Webspace\Portal $portal;
 
     protected function setUp(): void
     {

@@ -23,20 +23,11 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
  */
 class TargetGroupEvaluator implements TargetGroupEvaluatorInterface
 {
-    /**
-     * @var TargetGroupRepositoryInterface
-     */
-    private $targetGroupRepository;
+    private \Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface $targetGroupRepository;
 
-    /**
-     * @var RuleCollectionInterface
-     */
-    private $ruleCollection;
+    private \Sulu\Bundle\AudienceTargetingBundle\Rule\RuleCollectionInterface $ruleCollection;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
     public function __construct(
         RuleCollectionInterface $ruleCollection,

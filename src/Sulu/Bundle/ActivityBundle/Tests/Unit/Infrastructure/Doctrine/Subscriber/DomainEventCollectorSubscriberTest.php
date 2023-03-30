@@ -26,7 +26,7 @@ class DomainEventCollectorSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<DomainEventCollectorInterface>
      */
-    private $domainEventCollector;
+    private ObjectProphecy $domainEventCollector;
 
     public function setUp(): void
     {

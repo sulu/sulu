@@ -33,22 +33,19 @@ class TargetGroupEvaluatorTest extends TestCase
     /**
      * @var ObjectProphecy<RuleCollectionInterface>
      */
-    private $ruleCollection;
+    private ObjectProphecy $ruleCollection;
 
     /**
      * @var ObjectProphecy<TargetGroupRepositoryInterface>
      */
-    private $targetGroupRepository;
+    private ObjectProphecy $targetGroupRepository;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
-    /**
-     * @var TargetGroupEvaluator
-     */
-    private $targetGroupEvaluator;
+    private \Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluator $targetGroupEvaluator;
 
     public function setUp(): void
     {

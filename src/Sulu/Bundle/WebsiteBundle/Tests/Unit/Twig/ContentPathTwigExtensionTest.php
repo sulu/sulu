@@ -28,32 +28,26 @@ class ContentPathTwigExtensionTest extends TestCase
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<Webspace>
      */
-    private $suluWebspace;
+    private ObjectProphecy $suluWebspace;
 
     /**
      * @var ObjectProphecy<Webspace>
      */
-    private $testWebspace;
+    private ObjectProphecy $testWebspace;
 
-    /**
-     * @var string
-     */
-    private $environment = 'prod';
+    private string $environment = 'prod';
 
-    /**
-     * @var ContentPathTwigExtension
-     */
-    private $extension;
+    private \Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathTwigExtension $extension;
 
     protected function setUp(): void
     {

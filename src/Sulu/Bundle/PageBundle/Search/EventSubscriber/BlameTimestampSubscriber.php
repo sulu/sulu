@@ -31,15 +31,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class BlameTimestampSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var Factory
-     */
-    private $factory;
+    private \Massive\Bundle\SearchBundle\Search\Factory $factory;
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManager $entityManager;
 
     public function __construct(Factory $factory, EntityManager $entityManager)
     {

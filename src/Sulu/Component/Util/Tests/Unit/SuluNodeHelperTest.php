@@ -25,57 +25,54 @@ class SuluNodeHelperTest extends TestCase
     /**
      * @var SessionInterface
      */
-    private $session;
+    private \PHPUnit\Framework\MockObject\MockObject $session;
 
     /**
      * @var StructureMetadataFactoryInterface
      */
-    private $structureMetadataFactory;
+    private \PHPUnit\Framework\MockObject\MockObject $structureMetadataFactory;
 
     /**
      * @var NodeInterface
      */
-    private $node;
+    private \PHPUnit\Framework\MockObject\MockObject $node;
 
     /**
      * @var PropertyInterface
      */
-    private $property1;
+    private \PHPUnit\Framework\MockObject\MockObject $property1;
 
     /**
      * @var PropertyInterface
      */
-    private $property2;
+    private \PHPUnit\Framework\MockObject\MockObject $property2;
 
     /**
      * @var PropertyInterface
      */
-    private $property3;
+    private \PHPUnit\Framework\MockObject\MockObject $property3;
 
     /**
      * @var PropertyInterface
      */
-    private $property4;
+    private \PHPUnit\Framework\MockObject\MockObject $property4;
 
     /**
      * @var PropertyInterface
      */
-    private $property5;
+    private \PHPUnit\Framework\MockObject\MockObject $property5;
 
     /**
      * @var PropertyInterface
      */
-    private $property6;
+    private \PHPUnit\Framework\MockObject\MockObject $property6;
 
     /**
      * @var PropertyInterface
      */
-    private $property7;
+    private \PHPUnit\Framework\MockObject\MockObject $property7;
 
-    /**
-     * @var SuluNodeHelper
-     */
-    private $helper;
+    private \Sulu\Component\Util\SuluNodeHelper $helper;
 
     public function setUp(): void
     {

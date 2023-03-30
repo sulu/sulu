@@ -33,30 +33,18 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class CustomUrlSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var GeneratorInterface
-     */
-    private $generator;
+    private \Sulu\Component\CustomUrl\Generator\GeneratorInterface $generator;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var PathBuilder
-     */
-    private $pathBuilder;
+    private \Sulu\Component\DocumentManager\PathBuilder $pathBuilder;
 
     /**
      * @var DocumentInspector
      */
     protected $inspector;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
     public function __construct(
         GeneratorInterface $generator,

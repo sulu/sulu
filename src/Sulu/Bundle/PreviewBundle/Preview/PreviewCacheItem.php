@@ -13,30 +13,18 @@ namespace Sulu\Bundle\PreviewBundle\Preview;
 
 class PreviewCacheItem
 {
-    /**
-     * @var string
-     */
-    private $id;
+    private string $id;
 
-    /**
-     * @var int
-     */
-    private $userId;
+    private int $userId;
 
-    /**
-     * @var string
-     */
-    private $providerKey;
+    private string $providerKey;
 
     /**
      * @var mixed
      */
     private $object;
 
-    /**
-     * @var string
-     */
-    private $html;
+    private ?string $html = null;
 
     public function __construct(string $id, int $userId, string $providerKey, $object)
     {

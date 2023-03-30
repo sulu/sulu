@@ -23,20 +23,11 @@ use Twig\TwigFunction;
  */
 class SeoTwigExtension extends AbstractExtension
 {
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var ContentPathInterface
-     */
-    private $contentPath;
+    private \Sulu\Bundle\WebsiteBundle\Twig\Content\ContentPathInterface $contentPath;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
     public function __construct(
         RequestAnalyzerInterface $requestAnalyzer,

@@ -39,47 +39,44 @@ class MaintainResourceLocatorCommandTest extends TestCase
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<SessionManagerInterface>
      */
-    private $sessionManager;
+    private ObjectProphecy $sessionManager;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $liveSession;
+    private ObjectProphecy $liveSession;
 
     /**
      * @var ObjectProphecy<MetadataFactoryInterface>
      */
-    private $metadataFactory;
+    private ObjectProphecy $metadataFactory;
 
     /**
      * @var ObjectProphecy<StructureMetadataFactory>
      */
-    private $structureMetadataFactory;
+    private ObjectProphecy $structureMetadataFactory;
 
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $propertyEncoder;
+    private ObjectProphecy $propertyEncoder;
 
-    /**
-     * @var MaintainResourceLocatorCommand
-     */
-    private $maintainResourceLocatorCommand;
+    private \Sulu\Bundle\PageBundle\Command\MaintainResourceLocatorCommand $maintainResourceLocatorCommand;
 
     /**
      * @var ObjectProphecy<InputInterface>
      */
-    private $input;
+    private ObjectProphecy $input;
 
     /**
      * @var ObjectProphecy<OutputInterface>
      */
-    private $output;
+    private ObjectProphecy $output;
 
     public function setUp(): void
     {

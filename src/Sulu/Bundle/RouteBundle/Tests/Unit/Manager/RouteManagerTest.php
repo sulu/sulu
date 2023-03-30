@@ -32,27 +32,24 @@ class RouteManagerTest extends TestCase
     /**
      * @var ObjectProphecy<ChainRouteGeneratorInterface>
      */
-    private $chainRouteGenerator;
+    private ObjectProphecy $chainRouteGenerator;
 
     /**
      * @var ObjectProphecy<RouteRepositoryInterface>
      */
-    private $routeRepository;
+    private ObjectProphecy $routeRepository;
 
     /**
      * @var ObjectProphecy<ConflictResolverInterface>
      */
-    private $conflictResolver;
+    private ObjectProphecy $conflictResolver;
 
-    /**
-     * @var RouteManager
-     */
-    private $manager;
+    private \Sulu\Bundle\RouteBundle\Manager\RouteManager $manager;
 
     /**
      * @var ObjectProphecy<RoutableInterface>
      */
-    private $entity;
+    private ObjectProphecy $entity;
 
     protected function setUp(): void
     {
@@ -594,10 +591,7 @@ class RouteManagerTest extends TestCase
 
 class TestRoutable implements RoutableInterface
 {
-    /**
-     * @var RouteInterface
-     */
-    private $route;
+    private ?\Sulu\Bundle\RouteBundle\Model\RouteInterface $route = null;
 
     /**
      * @param RouteInterface $route

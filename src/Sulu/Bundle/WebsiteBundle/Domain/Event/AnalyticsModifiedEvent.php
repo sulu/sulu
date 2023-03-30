@@ -17,15 +17,12 @@ use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 
 class AnalyticsModifiedEvent extends DomainEvent
 {
-    /**
-     * @var AnalyticsInterface
-     */
-    private $analytics;
+    private \Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface $analytics;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

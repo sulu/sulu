@@ -34,30 +34,15 @@ class RouteController extends AbstractRestController implements ClassResourceInt
 {
     use RequestParametersTrait;
 
-    /**
-     * @var array
-     */
-    private $resourceKeyMappings;
+    private array $resourceKeyMappings;
 
-    /**
-     * @var RouteRepositoryInterface
-     */
-    private $routeRepository;
+    private \Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface $routeRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var RouteGeneratorInterface
-     */
-    private $routeGenerator;
+    private \Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface $routeGenerator;
 
-    /**
-     * @var ConflictResolverInterface|null
-     */
-    private $conflictResolver;
+    private ?\Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface $conflictResolver = null;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\SnippetBundle\Command;
 
-use Jackalope\Query\QueryManager;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository;
@@ -30,40 +29,20 @@ class SnippetLocaleCopyCommand extends Command
 
     /**
      * The namespace for languages.
-     *
-     * @var string
      */
-    private $languageNamespace;
+    private string $languageNamespace;
 
-    /**
-     * @var SnippetRepository
-     */
-    private $snippetRepository;
+    private \Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository $snippetRepository;
 
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
+    private \Sulu\Component\Content\Mapper\ContentMapperInterface $contentMapper;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private \PHPCR\SessionInterface $session;
 
-    /**
-     * @var QueryManager
-     */
-    private $queryManager;
+    private ?\PHPCR\Query\QueryManagerInterface $queryManager = null;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var OutputInterface
-     */
-    private $output;
+    private ?\Symfony\Component\Console\Output\OutputInterface $output = null;
 
     public function __construct(
         SnippetRepository $snippetRepository,

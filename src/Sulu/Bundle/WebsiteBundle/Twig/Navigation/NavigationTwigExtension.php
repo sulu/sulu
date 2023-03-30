@@ -23,20 +23,11 @@ use Twig\TwigFunction;
  */
 class NavigationTwigExtension extends AbstractExtension implements NavigationTwigExtensionInterface
 {
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
+    private \Sulu\Component\Content\Mapper\ContentMapperInterface $contentMapper;
 
-    /**
-     * @var NavigationMapperInterface
-     */
-    private $navigationMapper;
+    private \Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapperInterface $navigationMapper;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private ?\Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer = null;
 
     public function __construct(
         ContentMapperInterface $contentMapper,

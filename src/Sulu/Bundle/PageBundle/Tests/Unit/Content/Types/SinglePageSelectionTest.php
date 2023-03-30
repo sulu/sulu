@@ -27,17 +27,14 @@ class SinglePageSelectionTest extends TestCase
     /**
      * @var ObjectProphecy<PropertyInterface>
      */
-    private $property;
+    private ObjectProphecy $property;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
      */
-    private $referenceStore;
+    private ObjectProphecy $referenceStore;
 
-    /**
-     * @var SinglePageSelection
-     */
-    private $type;
+    private \Sulu\Bundle\PageBundle\Content\Types\SinglePageSelection $type;
 
     public function setUp(): void
     {

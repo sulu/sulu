@@ -24,11 +24,9 @@ class PropertyType
     private $name;
 
     /**
-     * @var Metadata
-     *
      * @Type("Sulu\Component\Content\Compat\Metadata")
      */
-    private $metadata;
+    private \Sulu\Component\Content\Compat\Metadata $metadata;
 
     /**
      * properties managed by this block.
@@ -37,7 +35,7 @@ class PropertyType
      *
      * @Type("array<Sulu\Component\Content\Compat\Property>")
      */
-    private $childProperties = [];
+    private array $childProperties = [];
 
     public function __construct($name, $metadata)
     {

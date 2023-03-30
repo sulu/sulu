@@ -38,20 +38,11 @@ class SnippetAdmin extends Admin
 
     public const EDIT_FORM_VIEW = 'sulu_snippet.edit_form';
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
+    private \Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface $viewBuilderFactory;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
     /**
      * @var bool

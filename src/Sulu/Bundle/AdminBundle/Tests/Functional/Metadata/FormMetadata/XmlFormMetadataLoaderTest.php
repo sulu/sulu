@@ -13,15 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Tests\Functional\Metadata\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\XmlFormMetadataLoader;
 use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
 
 class XmlFormMetadataLoaderTest extends KernelTestCase
 {
-    /**
-     * @var XmlFormMetadataLoader
-     */
-    private $xmlFormMetadataLoader;
+    private ?object $xmlFormMetadataLoader = null;
 
     public function setUp(): void
     {

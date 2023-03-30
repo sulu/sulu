@@ -28,7 +28,7 @@ class RestHelper implements RestHelperInterface
     /**
      * @var ListRestHelperInterface
      */
-    private $listRestHelper;
+    private \Sulu\Component\Rest\ListBuilder\ListRestHelper $listRestHelper;
 
     public function __construct(ListRestHelper $listRestHelper)
     {

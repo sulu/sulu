@@ -29,22 +29,22 @@ class RequestDefaultLocaleProviderTest extends TestCase
     /**
      * @var ObjectProphecy<Portal>
      */
-    private $portal;
+    private ObjectProphecy $portal;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     /**
      * @var DefaultLocaleProviderInterface
      */
-    private $defaultLocaleProvider;
+    private \Sulu\Bundle\WebsiteBundle\Locale\RequestDefaultLocaleProvider $defaultLocaleProvider;
 
     public function setUp(): void
     {

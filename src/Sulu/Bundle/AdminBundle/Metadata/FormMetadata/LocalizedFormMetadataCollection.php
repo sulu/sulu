@@ -19,7 +19,7 @@ class LocalizedFormMetadataCollection
     /**
      * @var FormMetadata[]
      */
-    private $items = [];
+    private array $items = [];
 
     public function add(string $locale, FormMetadata $formMetadata)
     {

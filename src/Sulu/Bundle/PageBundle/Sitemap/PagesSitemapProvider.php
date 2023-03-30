@@ -29,25 +29,13 @@ use Sulu\Component\Webspace\PortalInformation;
  */
 class PagesSitemapProvider extends AbstractSitemapProvider
 {
-    /**
-     * @var ContentRepositoryInterface
-     */
-    private $contentRepository;
+    private \Sulu\Component\Content\Repository\ContentRepositoryInterface $contentRepository;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var string
-     */
-    private $environment;
+    private string $environment;
 
-    /**
-     * @var ?AccessControlManagerInterface
-     */
-    private $accessControlManager;
+    private ?\Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface $accessControlManager = null;
 
     public function __construct(
         ContentRepositoryInterface $contentRepository,

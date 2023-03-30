@@ -19,10 +19,7 @@ use Sulu\Component\Content\ContentTypeExportInterface;
 
 class CategorySelection extends ComplexContentType implements ContentTypeExportInterface
 {
-    /**
-     * @var CategoryManagerInterface
-     */
-    private $categoryManager;
+    private \Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface $categoryManager;
 
     public function __construct(CategoryManagerInterface $categoryManager)
     {

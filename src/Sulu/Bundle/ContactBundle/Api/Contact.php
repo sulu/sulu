@@ -43,10 +43,7 @@ class Contact extends ApiWrapper
 {
     public const TYPE = 'contact';
 
-    /**
-     * @var Media
-     */
-    private $avatar = null;
+    private ?\Sulu\Bundle\MediaBundle\Api\Media $avatar = null;
 
     /**
      * @param string $locale The locale of this product

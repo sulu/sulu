@@ -23,74 +23,40 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class UserControllerTest extends SuluTestCase
 {
     /**
      * @var EntityManager
      */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var Contact
-     */
-    private $contact1;
+    private \Sulu\Bundle\ContactBundle\Entity\Contact $contact1;
 
-    /**
-     * @var Contact
-     */
-    private $contact2;
+    private \Sulu\Bundle\ContactBundle\Entity\Contact $contact2;
 
-    /**
-     * @var Contact
-     */
-    private $contact3;
+    private \Sulu\Bundle\ContactBundle\Entity\Contact $contact3;
 
-    /**
-     * @var Role
-     */
-    private $role1;
+    private \Sulu\Bundle\SecurityBundle\Entity\Role $role1;
 
-    /**
-     * @var Role
-     */
-    private $role2;
+    private \Sulu\Bundle\SecurityBundle\Entity\Role $role2;
 
-    /**
-     * @var User
-     */
-    private $user1;
+    private \Sulu\Bundle\SecurityBundle\Entity\User $user1;
 
-    /**
-     * @var User
-     */
-    private $user2;
+    private \Sulu\Bundle\SecurityBundle\Entity\User $user2;
 
-    /**
-     * @var User
-     */
-    private $user3;
+    private \Sulu\Bundle\SecurityBundle\Entity\User $user3;
 
-    /**
-     * @var Group
-     */
-    private $group1;
+    private \Sulu\Bundle\SecurityBundle\Entity\Group $group1;
 
-    /**
-     * @var Group
-     */
-    private $group2;
+    private \Sulu\Bundle\SecurityBundle\Entity\Group $group2;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     /**
      * @var ObjectRepository<ActivityInterface>
      */
-    private $activityRepository;
+    private \Doctrine\ORM\EntityRepository $activityRepository;
 
     public function setUp(): void
     {

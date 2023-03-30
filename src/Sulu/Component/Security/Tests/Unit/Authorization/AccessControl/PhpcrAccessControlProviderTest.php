@@ -26,20 +26,17 @@ class PhpcrAccessControlProviderTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var PhpcrAccessControlProvider
-     */
-    private $phpcrAccessControlProvider;
+    private \Sulu\Component\Security\Authorization\AccessControl\PhpcrAccessControlProvider $phpcrAccessControlProvider;
 
     /**
      * @var ObjectProphecy<RoleRepositoryInterface>
      */
-    private $roleRepository;
+    private ObjectProphecy $roleRepository;
 
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     public function setUp(): void
     {

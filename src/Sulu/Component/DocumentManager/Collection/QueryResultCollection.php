@@ -21,15 +21,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class QueryResultCollection extends AbstractLazyCollection
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @var QueryResultInterface
-     */
-    private $result;
+    private \PHPCR\Query\QueryResultInterface $result;
 
     /**
      * @var string
@@ -41,10 +35,7 @@ class QueryResultCollection extends AbstractLazyCollection
      */
     private $options;
 
-    /**
-     * @var bool
-     */
-    private $initialized = false;
+    private bool $initialized = false;
 
     /**
      * @var null|string

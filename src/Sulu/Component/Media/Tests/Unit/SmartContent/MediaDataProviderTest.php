@@ -47,42 +47,39 @@ class MediaDataProviderTest extends TestCase
     /**
      * @var ObjectProphecy<DataProviderRepositoryInterface>
      */
-    private $dataProviderRepository;
+    private ObjectProphecy $dataProviderRepository;
 
     /**
      * @var ObjectProphecy<CollectionManagerInterface>
      */
-    private $collectionManager;
+    private ObjectProphecy $collectionManager;
 
     /**
      * @var ObjectProphecy<ArraySerializerInterface>
      */
-    private $serializer;
+    private ObjectProphecy $serializer;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
      */
-    private $referenceStore;
+    private ObjectProphecy $referenceStore;
 
-    /**
-     * @var MediaDataProvider
-     */
-    private $mediaDataProvider;
+    private \Sulu\Component\Media\SmartContent\MediaDataProvider $mediaDataProvider;
 
     /**
      * @var ObjectProphecy<Security>
      */
-    private $security;
+    private ObjectProphecy $security;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     public function setUp(): void
     {

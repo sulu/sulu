@@ -36,27 +36,24 @@ class StructureConverterTest extends TestCase
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<SearchManagerInterface>
      */
-    private $searchManager;
+    private ObjectProphecy $searchManager;
 
     /**
      * @var ObjectProphecy<ObjectToDocumentConverter>
      */
-    private $objectToDocumentConverter;
+    private ObjectProphecy $objectToDocumentConverter;
 
     /**
      * @var ObjectProphecy<EventDispatcherInterface>
      */
-    private $eventDispatcher;
+    private ObjectProphecy $eventDispatcher;
 
-    /**
-     * @var StructureConverter
-     */
-    private $structureConverter;
+    private \Sulu\Bundle\SearchBundle\Search\Converter\StructureConverter $structureConverter;
 
     protected function setUp(): void
     {

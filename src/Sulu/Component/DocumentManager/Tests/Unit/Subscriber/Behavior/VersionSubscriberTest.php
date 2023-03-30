@@ -41,37 +41,28 @@ class VersionSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $session;
+    private ObjectProphecy $session;
 
     /**
      * @var ObjectProphecy<Workspace>
      */
-    private $workspace;
+    private ObjectProphecy $workspace;
 
     /**
      * @var ObjectProphecy<VersionManagerInterface>
      */
-    private $versionManager;
+    private ObjectProphecy $versionManager;
 
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $propertyEncoder;
+    private ObjectProphecy $propertyEncoder;
 
-    /**
-     * @var \ReflectionProperty
-     */
-    private $checkoutPathsReflection;
+    private \ReflectionProperty $checkoutPathsReflection;
 
-    /**
-     * @var \ReflectionProperty
-     */
-    private $checkpointPathsReflection;
+    private \ReflectionProperty $checkpointPathsReflection;
 
-    /**
-     * @var VersionSubscriber
-     */
-    private $versionSubscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Behavior\VersionSubscriber $versionSubscriber;
 
     public function setUp(): void
     {

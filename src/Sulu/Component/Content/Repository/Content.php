@@ -76,30 +76,18 @@ class Content implements \ArrayAccess
      */
     private $template;
 
-    /**
-     * @var bool
-     */
-    private $brokenTemplate;
+    private ?bool $brokenTemplate = null;
 
     /**
      * @var Content[]
      */
     private $children;
 
-    /**
-     * @var array
-     */
-    private $data;
+    private array $data;
 
-    /**
-     * @var array
-     */
-    private $permissions;
+    private array $permissions;
 
-    /**
-     * @var StructureType
-     */
-    private $localizationType;
+    private ?\Sulu\Component\Content\Compat\StructureType $localizationType = null;
 
     /**
      * @var string
@@ -111,7 +99,7 @@ class Content implements \ArrayAccess
     /**
      * @var array<string, string|null>
      */
-    private $urls;
+    private ?array $urls = null;
 
     /**
      * @var string[]
@@ -120,10 +108,7 @@ class Content implements \ArrayAccess
      */
     private $contentLocales;
 
-    /**
-     * @var Row
-     */
-    private $row;
+    private ?\Jackalope\Query\Row $row = null;
 
     public function __construct(
         $locale,

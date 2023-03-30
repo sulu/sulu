@@ -28,10 +28,7 @@ class SecurityContextVoter implements VoterInterface
      */
     private $permissions;
 
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
+    private \Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface $accessControlManager;
 
     public function __construct(AccessControlManagerInterface $accessControlManager, $permissions)
     {

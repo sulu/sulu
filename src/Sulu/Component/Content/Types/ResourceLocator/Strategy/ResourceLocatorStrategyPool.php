@@ -21,12 +21,9 @@ class ResourceLocatorStrategyPool implements ResourceLocatorStrategyPoolInterfac
     /**
      * @var ResourceLocatorStrategyInterface[]
      */
-    private $strategies;
+    private array $strategies;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
     /**
      * @param ResourceLocatorStrategyInterface[] $strategies

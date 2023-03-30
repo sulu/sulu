@@ -13,35 +13,17 @@ namespace Sulu\Bundle\SearchBundle\Search\Configuration;
 
 class IndexConfiguration
 {
-    /**
-     * @var string
-     */
-    private $indexName;
+    private string $indexName;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $icon;
+    private string $icon;
 
-    /**
-     * @var Route
-     */
-    private $route;
+    private \Sulu\Bundle\SearchBundle\Search\Configuration\Route $route;
 
-    /**
-     * @var string
-     */
-    private $securityContext;
+    private ?string $securityContext = null;
 
-    /**
-     * @var array
-     */
-    private $contexts;
+    private array $contexts;
 
     public function __construct(
         string $indexName,

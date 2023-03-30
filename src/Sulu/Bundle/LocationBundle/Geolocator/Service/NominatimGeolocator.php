@@ -36,10 +36,7 @@ class NominatimGeolocator implements GeolocatorInterface
      */
     protected $baseUrl;
 
-    /**
-     * @var string
-     */
-    private $key;
+    private string $key;
 
     public function __construct(
         $client,

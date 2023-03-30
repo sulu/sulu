@@ -26,10 +26,7 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
  */
 abstract class AbstractImageFormatCompilerPass implements CompilerPassInterface
 {
-    /**
-     * @var array
-     */
-    private $globalOptions;
+    private array|bool|float|int|string|\UnitEnum|null $globalOptions = null;
 
     public function process(ContainerBuilder $container)
     {

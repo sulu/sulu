@@ -39,32 +39,29 @@ class ContentMapperSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $documentInspector;
+    private ObjectProphecy $documentInspector;
 
     /**
      * @var ObjectProphecy<EventDispatcherInterface>
      */
-    private $eventDispatcher;
+    private ObjectProphecy $eventDispatcher;
 
     /**
      * @var ObjectProphecy<ContentMapperInterface>
      */
-    private $contentMapper;
+    private ObjectProphecy $contentMapper;
 
     /**
      * @var ObjectProphecy<SuluNodeHelper>
      */
-    private $nodeHelper;
+    private ObjectProphecy $nodeHelper;
 
     /**
      * @var ObjectProphecy<StructureManager>
      */
-    private $structureManager;
+    private ObjectProphecy $structureManager;
 
-    /**
-     * @var ContentMapperSubscriber
-     */
-    private $contentMapperSubscriber;
+    private \Sulu\Component\Content\Document\Subscriber\Compat\ContentMapperSubscriber $contentMapperSubscriber;
 
     public function setUp(): void
     {

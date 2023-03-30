@@ -33,7 +33,7 @@ class SecurityType
     /**
      * @var Collection<int, RoleInterface>
      */
-    private $roles;
+    private \Doctrine\Common\Collections\ArrayCollection|array $roles;
 
     /**
      * Constructor.

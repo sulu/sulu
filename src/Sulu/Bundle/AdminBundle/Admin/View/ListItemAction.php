@@ -16,18 +16,14 @@ use JMS\Serializer\Annotation\Groups;
 class ListItemAction
 {
     /**
-     * @var string
-     *
      * @Groups({"frontend"})
      */
-    private $type;
+    private string $type;
 
     /**
-     * @var array
-     *
      * @Groups({"frontend"})
      */
-    private $options;
+    private array $options;
 
     public function __construct(string $type, array $options = [])
     {

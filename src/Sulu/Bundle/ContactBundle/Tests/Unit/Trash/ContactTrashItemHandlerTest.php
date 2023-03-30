@@ -63,32 +63,29 @@ class ContactTrashItemHandlerTest extends TestCase
     /**
      * @var ObjectProphecy<TrashItemRepositoryInterface>
      */
-    private $trashItemRepository;
+    private ObjectProphecy $trashItemRepository;
 
     /**
      * @var ObjectProphecy<ContactRepositoryInterface>
      */
-    private $contactRepository;
+    private ObjectProphecy $contactRepository;
 
     /**
      * @var ObjectProphecy<DoctrineRestoreHelperInterface>
      */
-    private $doctrineRestoreHelper;
+    private ObjectProphecy $doctrineRestoreHelper;
 
     /**
      * @var ObjectProphecy<EntityManagerInterface>
      */
-    private $entityManager;
+    private ObjectProphecy $entityManager;
 
     /**
      * @var ObjectProphecy<DomainEventCollectorInterface>
      */
-    private $domainEventCollector;
+    private ObjectProphecy $domainEventCollector;
 
-    /**
-     * @var ContactTrashItemHandler
-     */
-    private $contactTrashItemHandler;
+    private \Sulu\Bundle\ContactBundle\Trash\ContactTrashItemHandler $contactTrashItemHandler;
 
     public function setUp(): void
     {

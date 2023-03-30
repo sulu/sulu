@@ -22,25 +22,13 @@ class Preview implements PreviewInterface
 {
     public const CONTENT_REPLACER = '<!-- CONTENT-REPLACER -->';
 
-    /**
-     * @var PreviewObjectProviderRegistryInterface
-     */
-    private $previewObjectProviderRegistry;
+    private \Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry;
 
-    /**
-     * @var PreviewRendererInterface
-     */
-    private $renderer;
+    private \Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface $renderer;
 
-    /**
-     * @var PreviewCache
-     */
-    private $cache;
+    private \Sulu\Bundle\PreviewBundle\Preview\PreviewCache $cache;
 
-    /**
-     * @var int
-     */
-    private $cacheLifeTime;
+    private int $cacheLifeTime;
 
     /**
      * @param CacheItemPoolInterface|Cache $cache

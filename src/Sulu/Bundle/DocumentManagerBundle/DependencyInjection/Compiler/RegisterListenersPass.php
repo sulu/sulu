@@ -33,9 +33,9 @@ class RegisterListenersPass implements CompilerPassInterface
     protected $subscriberTag;
     protected $eventAliasesParameter;
 
-    private $hotPathEvents = [];
+    private array $hotPathEvents = [];
     private $hotPathTagName = 'container.hot_path';
-    private $noPreloadEvents = [];
+    private array $noPreloadEvents = [];
     private $noPreloadTagName = 'container.no_preload';
 
     public function __construct(string $dispatcherService = 'event_dispatcher', string $listenerTag = 'kernel.event_listener', string $subscriberTag = 'kernel.event_subscriber', string $eventAliasesParameter = 'event_dispatcher.event_aliases')

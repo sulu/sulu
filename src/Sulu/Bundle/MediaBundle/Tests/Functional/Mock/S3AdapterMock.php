@@ -22,10 +22,7 @@ class S3AdapterMock extends AwsS3Adapter implements AdapterInterface
     use StreamedTrait;
     use StreamedCopyTrait;
 
-    /**
-     * @var array
-     */
-    private $objectMap = [];
+    private array $objectMap = [];
 
     public function addFile(string $filePath, string $content): void
     {

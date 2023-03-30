@@ -21,10 +21,7 @@ class DocumentAccessor
      */
     private $document;
 
-    /**
-     * @var \ReflectionClass
-     */
-    private $reflection;
+    private \ReflectionClass $reflection;
 
     /**
      * @param object $document

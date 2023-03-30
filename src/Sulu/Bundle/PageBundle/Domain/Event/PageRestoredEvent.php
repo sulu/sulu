@@ -21,15 +21,12 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 
 class PageRestoredEvent extends DomainEvent
 {
-    /**
-     * @var PageDocument
-     */
-    private $pageDocument;
+    private \Sulu\Bundle\PageBundle\Document\PageDocument $pageDocument;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

@@ -98,65 +98,38 @@ class AccountController extends AbstractRestController implements ClassResourceI
 
     protected $accountAddressesFieldDescriptors;
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
+    private \Sulu\Component\Rest\RestHelperInterface $restHelper;
 
     /**
      * @var DoctrineListBuilderFactory
      */
-    private $listBuilderFactory;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface $listBuilderFactory;
 
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
+    private \Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface $fieldDescriptorFactory;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
+    private \Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface $mediaManager;
 
-    /**
-     * @var AccountRepositoryInterface
-     */
-    private $accountRepository;
+    private \Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface $accountRepository;
 
-    /**
-     * @var AccountManager
-     */
-    private $accountManager;
+    private \Sulu\Bundle\ContactBundle\Contact\AccountManager $accountManager;
 
-    /**
-     * @var AccountFactoryInterface
-     */
-    private $accountFactory;
+    private \Sulu\Bundle\ContactBundle\Contact\AccountFactoryInterface $accountFactory;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
     /**
      * @var class-string
      */
-    private $accountClass;
+    private string $accountClass;
 
     /**
      * @var class-string
      */
-    private $contactClass;
+    private string $contactClass;
 
-    /**
-     * @var TrashManagerInterface|null
-     */
-    private $trashManager;
+    private ?\Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface $trashManager = null;
 
     /**
      * @param class-string $accountClass

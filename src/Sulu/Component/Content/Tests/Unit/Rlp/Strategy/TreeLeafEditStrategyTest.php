@@ -40,42 +40,39 @@ class TreeLeafEditStrategyTest extends TestCase
     /**
      * @var ObjectProphecy<ResourceLocatorMapperInterface>
      */
-    private $mapper;
+    private ObjectProphecy $mapper;
 
     /**
      * @var ObjectProphecy<PathCleanupInterface>
      */
-    private $cleaner;
+    private ObjectProphecy $cleaner;
 
     /**
      * @var ObjectProphecy<StructureManagerInterface>
      */
-    private $structureManager;
+    private ObjectProphecy $structureManager;
 
     /**
      * @var ObjectProphecy<ContentTypeManagerInterface>
      */
-    private $contentTypeManager;
+    private ObjectProphecy $contentTypeManager;
 
     /**
      * @var ObjectProphecy<SuluNodeHelper>
      */
-    private $nodeHelper;
+    private ObjectProphecy $nodeHelper;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $documentInspector;
+    private ObjectProphecy $documentInspector;
 
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
-    /**
-     * @var TreeLeafEditStrategy
-     */
-    private $treeStrategy;
+    private \Sulu\Component\Content\Types\ResourceLocator\Strategy\TreeLeafEditStrategy $treeStrategy;
 
     public function setUp(): void
     {

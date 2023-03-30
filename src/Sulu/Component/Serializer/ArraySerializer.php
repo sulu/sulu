@@ -16,10 +16,7 @@ use JMS\Serializer\Serializer;
 
 class ArraySerializer implements ArraySerializerInterface
 {
-    /**
-     * @var Serializer
-     */
-    private $serializer;
+    private \JMS\Serializer\Serializer $serializer;
 
     public function __construct(Serializer $serializer)
     {

@@ -15,8 +15,6 @@ use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\Snippet\Import\SnippetImportInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -25,20 +23,14 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class SnippetImportTest extends SuluTestCase
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var SnippetImportInterface
-     */
-    private $snippetImporter;
+    private ?object $snippetImporter = null;
 
     /**
      * @var SnippetDocument[]
      */
-    private $snippets = [];
+    private array $snippets = [];
 
     /**
      * @var string

@@ -26,10 +26,7 @@ class MappingBuilder
         return new self();
     }
 
-    /**
-     * @var Mapping
-     */
-    private $mapping;
+    private \Sulu\Component\Content\Repository\Mapping\Mapping $mapping;
 
     private function __construct()
     {

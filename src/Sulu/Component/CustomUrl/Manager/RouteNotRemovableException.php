@@ -20,15 +20,9 @@ use Sulu\Component\Rest\Exception\RestException;
  */
 class RouteNotRemovableException extends RestException
 {
-    /**
-     * @var RouteDocument
-     */
-    private $routeDocument;
+    private \Sulu\Component\CustomUrl\Document\RouteDocument $routeDocument;
 
-    /**
-     * @var CustomUrlDocument
-     */
-    private $customUrl;
+    private \Sulu\Component\CustomUrl\Document\CustomUrlDocument $customUrl;
 
     /**
      * @var string

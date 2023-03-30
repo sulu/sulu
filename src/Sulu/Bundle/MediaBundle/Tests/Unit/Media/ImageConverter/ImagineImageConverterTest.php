@@ -37,47 +37,47 @@ class ImagineImageConverterTest extends TestCase
     /**
      * @var ObjectProphecy<ImagineInterface>
      */
-    private $imagine;
+    private ObjectProphecy $imagine;
 
     /**
      * @var ObjectProphecy<ImagineInterface>
      */
-    private $svgImagine;
+    private ObjectProphecy $svgImagine;
 
     /**
      * @var ObjectProphecy<StorageInterface>
      */
-    private $storage;
+    private ObjectProphecy $storage;
 
     /**
      * @var ObjectProphecy<MediaImageExtractorInterface>
      */
-    private $mediaImageExtractor;
+    private ObjectProphecy $mediaImageExtractor;
 
     /**
      * @var ObjectProphecy<TransformationPoolInterface>
      */
-    private $transformationPool;
+    private ObjectProphecy $transformationPool;
 
     /**
      * @var ObjectProphecy<FocusInterface>
      */
-    private $focus;
+    private ObjectProphecy $focus;
 
     /**
      * @var ObjectProphecy<ScalerInterface>
      */
-    private $scaler;
+    private ObjectProphecy $scaler;
 
     /**
      * @var ObjectProphecy<CropperInterface>
      */
-    private $cropper;
+    private ObjectProphecy $cropper;
 
     /**
      * @var ImageConverterInterface
      */
-    private $imagineImageConverter;
+    private \Sulu\Bundle\MediaBundle\Media\ImageConverter\ImagineImageConverter $imagineImageConverter;
 
     public function setUp(): void
     {

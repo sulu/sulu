@@ -30,27 +30,24 @@ class SnippetQueryBuilderTest extends TestCase
     /**
      * @var ObjectProphecy<StructureManagerInterface>
      */
-    private $structureManager;
+    private ObjectProphecy $structureManager;
 
     /**
      * @var ObjectProphecy<ExtensionManagerInterface>
      */
-    private $extensionManager;
+    private ObjectProphecy $extensionManager;
 
     /**
      * @var ObjectProphecy<SessionManagerInterface>
      */
-    private $sessionManager;
+    private ObjectProphecy $sessionManager;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $session;
+    private ObjectProphecy $session;
 
-    /**
-     * @var SnippetQueryBuilder
-     */
-    private $snippetQueryBuilder;
+    private \Sulu\Bundle\SnippetBundle\Content\SnippetQueryBuilder $snippetQueryBuilder;
 
     public function setUp(): void
     {

@@ -22,15 +22,9 @@ use Twig\TwigFunction;
  */
 class ContactTwigExtension extends AbstractExtension
 {
-    /**
-     * @var ContactRepository
-     */
-    private $contactRepository;
+    private \Sulu\Bundle\ContactBundle\Entity\ContactRepository $contactRepository;
 
-    /**
-     * @var Cache
-     */
-    private $cache;
+    private \Doctrine\Common\Cache\Cache $cache;
 
     public function __construct(Cache $cache, ContactRepository $contactRepository)
     {

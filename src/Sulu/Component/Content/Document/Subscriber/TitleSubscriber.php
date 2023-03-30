@@ -23,10 +23,7 @@ class TitleSubscriber implements EventSubscriberInterface
 {
     public const PROPERTY_NAME = 'title';
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private \Sulu\Component\DocumentManager\PropertyEncoder $propertyEncoder;
 
     public function __construct(PropertyEncoder $propertyEncoder)
     {

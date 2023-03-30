@@ -16,15 +16,12 @@ use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 
 class CacheClearedEvent extends DomainEvent
 {
-    /**
-     * @var string
-     */
-    private $webspaceKey;
+    private string $webspaceKey;
 
     /**
      * @var mixed[]
      */
-    private $tags;
+    private array $tags;
 
     /**
      * @param mixed[]|null $tags

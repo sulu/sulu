@@ -23,15 +23,9 @@ class InitializeCommand extends Command
 {
     protected static $defaultName = 'sulu:document:initialize';
 
-    /**
-     * @var Initializer
-     */
-    private $initializer;
+    private \Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer $initializer;
 
-    /**
-     * @var QuestionHelper
-     */
-    private $questionHelper;
+    private \Symfony\Component\Console\Helper\QuestionHelper $questionHelper;
 
     public function __construct(
         Initializer $initializer,

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\TrashBundle\Tests\Functional\Infrastructure\Doctrine\Repository;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Exception\TrashItemNotFoundException;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
@@ -23,15 +22,9 @@ class TrashItemRepositoryTest extends SuluTestCase
 {
     use CreateTrashItemTrait;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var TrashItemRepositoryInterface
-     */
-    private $repository;
+    private \Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface $repository;
 
     public function setUp(): void
     {

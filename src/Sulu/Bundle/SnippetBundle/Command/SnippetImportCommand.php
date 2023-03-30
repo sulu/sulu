@@ -26,15 +26,9 @@ class SnippetImportCommand extends Command
 {
     protected static $defaultName = 'sulu:snippet:import';
 
-    /**
-     * @var SnippetImportInterface
-     */
-    private $snippetImporter;
+    private \Sulu\Component\Snippet\Import\SnippetImportInterface $snippetImporter;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private \Psr\Log\LoggerInterface|\Psr\Log\NullLogger $logger;
 
     public function __construct(SnippetImportInterface $snippetImporter, LoggerInterface $logger = null)
     {

@@ -19,32 +19,21 @@ use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\DocumentManager\NodeManager;
 
 class SearchIntegrationTest extends SuluTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
+    private ?object $nodeManager = null;
 
     /**
      * @var HomeDocument
      */
     private $webspaceDocument;
 
-    /**
-     * @var ApiMedia
-     */
-    private $media;
+    private ApiMedia $media;
 
     public function setUp(): void
     {

@@ -27,7 +27,7 @@ class SetDomainEventUserSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<Security>
      */
-    private $security;
+    private ObjectProphecy $security;
 
     public function setUp(): void
     {

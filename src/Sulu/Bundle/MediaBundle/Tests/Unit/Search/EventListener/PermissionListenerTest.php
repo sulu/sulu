@@ -24,20 +24,17 @@ class PermissionListenerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var PermissionListener
-     */
-    private $permissionListener;
+    private \Sulu\Bundle\MediaBundle\Search\EventListener\PermissionListener $permissionListener;
 
     /**
      * @var ObjectProphecy<FileVersionMetaRepository>
      */
-    private $fileVersionMetaRepository;
+    private ObjectProphecy $fileVersionMetaRepository;
 
     /**
      * @var ObjectProphecy<SearchManagerInterface>
      */
-    private $searchManager;
+    private ObjectProphecy $searchManager;
 
     public function setUp(): void
     {

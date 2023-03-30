@@ -26,10 +26,7 @@ class TagMatchGroup
      */
     private $tagName;
 
-    /**
-     * @var array
-     */
-    private $tags;
+    private array $tags;
 
     /**
      * @param string $namespace

@@ -19,17 +19,11 @@ class SwiftMailerListener implements \Swift_Events_SendListener
     /**
      * @var MarkupParserInterface[]
      */
-    private $markupParser;
+    private array $markupParser;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
-    /**
-     * @var string
-     */
-    private $defaultLocale;
+    private string $defaultLocale;
 
     public function __construct(\Traversable $markupParser, RequestStack $requestStack, string $defaultLocale)
     {

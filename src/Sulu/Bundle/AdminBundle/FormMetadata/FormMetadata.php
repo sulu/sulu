@@ -21,15 +21,9 @@ use Sulu\Component\Content\Metadata\PropertiesMetadata;
  */
 class FormMetadata extends PropertiesMetadata
 {
-    /**
-     * @var string
-     */
-    private $key;
+    private ?string $key = null;
 
-    /**
-     * @var SchemaMetadata
-     */
-    private $schema;
+    private ?\Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata $schema = null;
 
     public function setKey(string $key)
     {

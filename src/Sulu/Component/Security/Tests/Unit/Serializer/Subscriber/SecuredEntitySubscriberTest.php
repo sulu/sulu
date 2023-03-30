@@ -30,40 +30,37 @@ class SecuredEntitySubscriberTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var SecuredEntitySubscriber
-     */
-    private $securedEntitySubscriber;
+    private \Sulu\Component\Security\Serializer\Subscriber\SecuredEntitySubscriber $securedEntitySubscriber;
 
     /**
      * @var ObjectProphecy<AccessControlManagerInterface>
      */
-    private $accessControlManager;
+    private ObjectProphecy $accessControlManager;
 
     /**
      * @var ObjectProphecy<TokenStorageInterface>
      */
-    private $tokenStorage;
+    private ObjectProphecy $tokenStorage;
 
     /**
      * @var ObjectProphecy<TokenInterface>
      */
-    private $token;
+    private ObjectProphecy $token;
 
     /**
      * @var ObjectProphecy<ObjectEvent>
      */
-    private $objectEvent;
+    private ObjectProphecy $objectEvent;
 
     /**
      * @var ObjectProphecy<UserInterface>
      */
-    private $user;
+    private ObjectProphecy $user;
 
     /**
      * @var ObjectProphecy<SerializationVisitorInterface>
      */
-    private $visitor;
+    private ObjectProphecy $visitor;
 
     public function setUp(): void
     {

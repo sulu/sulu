@@ -90,29 +90,23 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * @var DoctrineCollection<int, CollectionMeta>
      */
-    private $meta;
+    private \Doctrine\Common\Collections\ArrayCollection|array $meta;
 
     /**
      * @var DoctrineCollection<int, MediaInterface>
      *
      * @Exclude
      */
-    private $media;
+    private \Doctrine\Common\Collections\ArrayCollection|array $media;
 
     /**
      * @var DoctrineCollection<int, CollectionInterface>
      */
-    private $children;
+    private \Doctrine\Common\Collections\ArrayCollection|DoctrineCollection|array $children;
 
-    /**
-     * @var CollectionInterface|null
-     */
-    private $parent;
+    private ?\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $parent = null;
 
-    /**
-     * @var CollectionMeta
-     */
-    private $defaultMeta;
+    private ?\Sulu\Bundle\MediaBundle\Entity\CollectionMeta $defaultMeta = null;
 
     public function __construct()
     {

@@ -18,10 +18,7 @@ use Doctrine\ORM\QueryBuilder;
  */
 class DoctrineNotExpression extends AbstractDoctrineExpression
 {
-    /**
-     * @var AbstractDoctrineExpression
-     */
-    private $expression;
+    private \Sulu\Component\Rest\ListBuilder\Expression\Doctrine\AbstractDoctrineExpression $expression;
 
     /**
      * DoctrineNotExpression constructor.

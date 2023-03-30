@@ -18,15 +18,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class QueryStringRule implements RuleInterface
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
     /**
      * @var string

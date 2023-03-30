@@ -27,35 +27,17 @@ use Sulu\Bundle\WebsiteBundle\Entity\DomainRepository;
  */
 class AnalyticsManager implements AnalyticsManagerInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var AnalyticsRepositoryInterface
-     */
-    private $analyticsRepository;
+    private \Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepositoryInterface $analyticsRepository;
 
-    /**
-     * @var DomainRepository
-     */
-    private $domainRepository;
+    private \Sulu\Bundle\WebsiteBundle\Entity\DomainRepository $domainRepository;
 
-    /**
-     * @var string
-     */
-    private $environment;
+    private string $environment;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
-    /**
-     * @var TrashManagerInterface|null
-     */
-    private $trashManager;
+    private ?\Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface $trashManager = null;
 
     public function __construct(
         EntityManagerInterface $entityManager,

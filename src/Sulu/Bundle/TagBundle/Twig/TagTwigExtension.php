@@ -21,25 +21,13 @@ use Twig\TwigFunction;
 
 class TagTwigExtension extends AbstractExtension
 {
-    /**
-     * @var TagManagerInterface
-     */
-    private $tagManager;
+    private \Sulu\Bundle\TagBundle\Tag\TagManagerInterface $tagManager;
 
-    /**
-     * @var TagRequestHandlerInterface
-     */
-    private $tagRequestHandler;
+    private \Sulu\Component\Tag\Request\TagRequestHandlerInterface $tagRequestHandler;
 
-    /**
-     * @var ArraySerializerInterface
-     */
-    private $serializer;
+    private \Sulu\Component\Serializer\ArraySerializerInterface $serializer;
 
-    /**
-     * @var MemoizeInterface
-     */
-    private $memoizeCache;
+    private \Sulu\Component\Cache\MemoizeInterface $memoizeCache;
 
     public function __construct(
         TagManagerInterface $tagManager,

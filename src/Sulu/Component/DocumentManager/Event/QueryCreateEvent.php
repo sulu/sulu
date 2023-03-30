@@ -23,10 +23,7 @@ class QueryCreateEvent extends AbstractEvent
      */
     private $innerQuery;
 
-    /**
-     * @var Query
-     */
-    private $query;
+    private ?\Sulu\Component\DocumentManager\Query\Query $query = null;
 
     /**
      * @var string

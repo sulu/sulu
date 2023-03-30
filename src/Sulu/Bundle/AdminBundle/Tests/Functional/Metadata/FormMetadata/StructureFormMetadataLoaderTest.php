@@ -12,17 +12,13 @@
 namespace Sulu\Bundle\AdminBundle\Tests\Functional\Metadata\FormMetadata;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\StructureFormMetadataLoader;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Bundle\TestBundle\Testing\KernelTestCase;
 
 class StructureFormMetadataLoaderTest extends KernelTestCase
 {
-    /**
-     * @var StructureFormMetadataLoader
-     */
-    private $structureFormMetadataLoader;
+    private ?object $structureFormMetadataLoader = null;
 
     public function setUp(): void
     {

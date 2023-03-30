@@ -31,55 +31,25 @@ use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
  */
 class ImagineImageConverter implements ImageConverterInterface
 {
-    /**
-     * @var ImagineInterface
-     */
-    private $imagine;
+    private \Imagine\Image\ImagineInterface $imagine;
 
-    /**
-     * @var ImagineInterface
-     */
-    private $svgImagine;
+    private ?\Imagine\Image\ImagineInterface $svgImagine = null;
 
-    /**
-     * @var StorageInterface
-     */
-    private $storage;
+    private \Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface $storage;
 
-    /**
-     * @var MediaImageExtractorInterface
-     */
-    private $mediaImageExtractor;
+    private \Sulu\Bundle\MediaBundle\Media\ImageConverter\MediaImageExtractorInterface $mediaImageExtractor;
 
-    /**
-     * @var TransformationPoolInterface
-     */
-    private $transformationPool;
+    private \Sulu\Bundle\MediaBundle\Media\ImageConverter\TransformationPoolInterface $transformationPool;
 
-    /**
-     * @var FocusInterface
-     */
-    private $focus;
+    private \Sulu\Bundle\MediaBundle\Media\ImageConverter\Focus\FocusInterface $focus;
 
-    /**
-     * @var ScalerInterface
-     */
-    private $scaler;
+    private \Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler\ScalerInterface $scaler;
 
-    /**
-     * @var CropperInterface
-     */
-    private $cropper;
+    private \Sulu\Bundle\MediaBundle\Media\ImageConverter\Cropper\CropperInterface $cropper;
 
-    /**
-     * @var array
-     */
-    private $formats;
+    private array $formats;
 
-    /**
-     * @var array
-     */
-    private $supportedMimeTypes;
+    private array $supportedMimeTypes;
 
     public function __construct(
         ImagineInterface $imagine,

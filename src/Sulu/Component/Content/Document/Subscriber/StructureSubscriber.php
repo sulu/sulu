@@ -36,30 +36,15 @@ class StructureSubscriber implements EventSubscriberInterface
 {
     public const STRUCTURE_TYPE_FIELD = 'template';
 
-    /**
-     * @var ContentTypeManagerInterface
-     */
-    private $contentTypeManager;
+    private \Sulu\Component\Content\ContentTypeManagerInterface $contentTypeManager;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $inspector;
 
-    /**
-     * @var LegacyPropertyFactory
-     */
-    private $legacyPropertyFactory;
+    private \Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory $legacyPropertyFactory;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
+    private \Sulu\Component\DocumentManager\PropertyEncoder $encoder;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
     /**
      * @var array

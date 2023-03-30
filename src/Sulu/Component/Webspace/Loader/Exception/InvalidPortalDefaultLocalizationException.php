@@ -21,7 +21,7 @@ class InvalidPortalDefaultLocalizationException extends WebspaceException
      *
      * @var Webspace
      */
-    private $portal;
+    private \Sulu\Component\Webspace\Portal $portal;
 
     public function __construct(Webspace $webspace, Portal $portal, \Throwable $previous = null)
     {

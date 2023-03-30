@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
@@ -23,24 +22,17 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class CategoryControllerTest extends SuluTestCase
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     /**
      * @var ObjectRepository<ActivityInterface>
      */
-    private $activityRepository;
+    private \Doctrine\ORM\EntityRepository $activityRepository;
 
     public function setUp(): void
     {

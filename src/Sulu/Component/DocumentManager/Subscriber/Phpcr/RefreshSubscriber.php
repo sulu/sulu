@@ -22,15 +22,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RefreshSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
+    private \Sulu\Component\DocumentManager\DocumentRegistry $documentRegistry;
 
     public function __construct(EventDispatcherInterface $eventDispatcher, DocumentRegistry $documentRegistry)
     {

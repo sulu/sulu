@@ -22,10 +22,7 @@ class AuditableHasherTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var AuditableHasher
-     */
-    private $hasher;
+    private \Sulu\Component\Hash\AuditableHasher $hasher;
 
     public function setUp(): void
     {

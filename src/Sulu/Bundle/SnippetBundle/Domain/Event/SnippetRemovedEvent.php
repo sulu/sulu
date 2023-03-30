@@ -17,20 +17,11 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 
 class SnippetRemovedEvent extends DomainEvent
 {
-    /**
-     * @var string
-     */
-    private $snippetId;
+    private string $snippetId;
 
-    /**
-     * @var string|null
-     */
-    private $snippetTitle;
+    private ?string $snippetTitle = null;
 
-    /**
-     * @var string|null
-     */
-    private $snippetTitleLocale;
+    private ?string $snippetTitleLocale = null;
 
     public function __construct(string $snippetId, ?string $snippetTitle, ?string $snippetTitleLocale)
     {

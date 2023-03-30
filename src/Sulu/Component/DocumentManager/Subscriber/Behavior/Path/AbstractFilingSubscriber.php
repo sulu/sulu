@@ -23,15 +23,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 abstract class AbstractFilingSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
+    private \PHPCR\SessionInterface $defaultSession;
 
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
+    private \PHPCR\SessionInterface $liveSession;
 
     public function __construct(
         SessionInterface $defaultSession,

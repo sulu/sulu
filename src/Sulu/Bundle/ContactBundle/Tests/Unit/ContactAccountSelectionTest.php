@@ -33,65 +33,53 @@ class ContactAccountSelectionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var string
-     */
-    private $webspaceKey = 'sulu_test';
+    private string $webspaceKey = 'sulu_test';
 
-    /**
-     * @var string
-     */
-    private $locale = 'de';
+    private string $locale = 'de';
 
-    /**
-     * @var int
-     */
-    private $userId = 1;
+    private int $userId = 1;
 
-    /**
-     * @var string
-     */
-    private $segmentKey = 'winter';
+    private string $segmentKey = 'winter';
 
     /**
      * @var ObjectProphecy<ContactManagerInterface>
      */
-    private $contactManager;
+    private ObjectProphecy $contactManager;
 
     /**
      * @var ObjectProphecy<ContactManagerInterface>
      */
-    private $accountManager;
+    private ObjectProphecy $accountManager;
 
     /**
      * @var ObjectProphecy<Node>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<PropertyInterface>
      */
-    private $property;
+    private ObjectProphecy $property;
 
     /**
      * @var ObjectProphecy<StructureInterface>
      */
-    private $structure;
+    private ObjectProphecy $structure;
 
     /**
      * @var ObjectProphecy<ArraySerializerInterface>
      */
-    private $serializer;
+    private ObjectProphecy $serializer;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
      */
-    private $accountReferenceStore;
+    private ObjectProphecy $accountReferenceStore;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
      */
-    private $contactReferenceStore;
+    private ObjectProphecy $contactReferenceStore;
 
     protected function setUp(): void
     {

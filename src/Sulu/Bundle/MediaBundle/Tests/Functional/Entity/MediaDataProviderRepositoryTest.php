@@ -25,7 +25,6 @@ use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
-use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -35,32 +34,26 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     /**
      * @var EntityManager
      */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
     /**
      * @var TagInterface[]
      */
-    private $tags = [];
+    private array $tags = [];
 
     /**
      * @var Media[]
      */
-    private $medias = [];
+    private array $medias = [];
 
-    /**
-     * @var array
-     */
-    private $tagData = [
+    private array $tagData = [
         'Tag-0',
         'Tag-1',
         'Tag-2',
         'Tag-3',
     ];
 
-    /**
-     * @var array
-     */
-    private $mediaData = [
+    private array $mediaData = [
         ['Bild 1', 1, 'image/jpg', 'image', [0, 1, 2]],
         ['Bild 2', 2, 'image/jpg', 'image', [0, 1, 3]],
         ['Bild 3', 4, 'image/png', 'image', [0, 1]],
@@ -71,20 +64,14 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         ['Bild 8', 0, 'application/pdf', 'document', []],
     ];
 
-    /**
-     * @var array
-     */
-    private $mediaTypeData = ['image', 'video', 'document'];
+    private array $mediaTypeData = ['image', 'video', 'document'];
 
     /**
      * @var MediaType[]
      */
-    private $mediaTypes = [];
+    private array $mediaTypes = [];
 
-    /**
-     * @var array
-     */
-    private $collectionData = [
+    private array $collectionData = [
         ['Test-2', null],
         ['Test-1', null],
         ['Test-1.1', 1],
@@ -95,12 +82,9 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     /**
      * @var Collection[]
      */
-    private $collections;
+    private ?array $collections = null;
 
-    /**
-     * @var SystemStoreInterface
-     */
-    private $systemStore;
+    private ?object $systemStore = null;
 
     protected function setUp(): void
     {

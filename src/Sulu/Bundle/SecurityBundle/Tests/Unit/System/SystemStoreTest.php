@@ -25,12 +25,9 @@ class SystemStoreTest extends TestCase
     /**
      * @var ObjectProphecy<RoleRepositoryInterface>
      */
-    private $roleRepository;
+    private ObjectProphecy $roleRepository;
 
-    /**
-     * @var SystemStore
-     */
-    private $systemStore;
+    private \Sulu\Bundle\SecurityBundle\System\SystemStore $systemStore;
 
     public function setUp(): void
     {

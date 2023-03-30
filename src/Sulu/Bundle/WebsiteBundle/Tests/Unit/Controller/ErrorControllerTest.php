@@ -33,22 +33,22 @@ class ErrorControllerTest extends TestCase
     /**
      * @var ObjectProphecy<SymfonyErrorController>
      */
-    private $symfonyErrorController;
+    private ObjectProphecy $symfonyErrorController;
 
     /**
      * @var ObjectProphecy<Environment>
      */
-    private $twig;
+    private ObjectProphecy $twig;
 
     /**
      * @var ObjectProphecy<FilesystemLoader>
      */
-    private $loader;
+    private ObjectProphecy $loader;
 
     /**
      * @var ObjectProphecy<TemplateAttributeResolverInterface>
      */
-    private $templateAttributeResolver;
+    private ObjectProphecy $templateAttributeResolver;
 
     public function setUp(): void
     {

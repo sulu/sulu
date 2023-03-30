@@ -17,10 +17,7 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 
 class PropertyMetadataMapperRegistry
 {
-    /**
-     * @var ServiceLocator
-     */
-    private $locator;
+    private \Symfony\Component\DependencyInjection\ServiceLocator $locator;
 
     public function __construct(ServiceLocator $locator)
     {

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\AssignedGenerator;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -23,35 +22,19 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaPreviewControllerTest extends SuluTestCase
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var MediaType
-     */
-    private $imageType;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaType $imageType;
 
-    /**
-     * @var MediaType
-     */
-    private $videoType;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaType $videoType;
 
-    /**
-     * @var Collection
-     */
-    private $collection;
+    private \Sulu\Bundle\MediaBundle\Entity\Collection $collection;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

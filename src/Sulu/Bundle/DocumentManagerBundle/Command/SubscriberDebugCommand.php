@@ -25,10 +25,7 @@ class SubscriberDebugCommand extends Command
 
     public const PREFIX = 'sulu_document_manager.';
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {

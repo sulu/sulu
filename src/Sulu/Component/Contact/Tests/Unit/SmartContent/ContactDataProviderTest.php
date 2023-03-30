@@ -33,22 +33,19 @@ class ContactDataProviderTest extends TestCase
     /**
      * @var ObjectProphecy<DataProviderRepositoryInterface>
      */
-    private $dataProviderRepository;
+    private ObjectProphecy $dataProviderRepository;
 
     /**
      * @var ObjectProphecy<ArraySerializerInterface>
      */
-    private $serializer;
+    private ObjectProphecy $serializer;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
      */
-    private $referenceStore;
+    private ObjectProphecy $referenceStore;
 
-    /**
-     * @var ContactDataProvider
-     */
-    private $contactDataProvider;
+    private \Sulu\Component\Contact\SmartContent\ContactDataProvider $contactDataProvider;
 
     public function setUp(): void
     {

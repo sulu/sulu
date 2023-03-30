@@ -22,15 +22,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SnippetInitializer implements InitializerInterface
 {
-    /**
-     * @var ConnectionRegistry
-     */
-    private $connectionRegistry;
+    private \Doctrine\Persistence\ConnectionRegistry $connectionRegistry;
 
-    /**
-     * @var PathBuilder
-     */
-    private $pathBuilder;
+    private \Sulu\Component\DocumentManager\PathBuilder $pathBuilder;
 
     public function __construct(
         ConnectionRegistry $connectionRegistry,

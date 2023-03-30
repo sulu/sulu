@@ -24,24 +24,19 @@ class DoctrineWhereExpressionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var string
-     */
-    private static $entityName = 'SuluCoreBundle:Example';
+    private static string $entityName = 'SuluCoreBundle:Example';
 
     /**
      * http://php.net/manual/en/function.uniqid.php
      * With an empty prefix, the returned string will be 13 characters long. If more_entropy is TRUE,
      * it will be 23 characters.
-     *
-     * @var int
      */
-    private $uniqueIdLength = 23;
+    private int $uniqueIdLength = 23;
 
     /**
      * @var ObjectProphecy<QueryBuilder>
      */
-    private $queryBuilder;
+    private ObjectProphecy $queryBuilder;
 
     public function setUp(): void
     {

@@ -18,10 +18,7 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 
 class TextPropertyMetadataMapperTest extends TestCase
 {
-    /**
-     * @var TextPropertyMetadataMapper
-     */
-    private $textPropertyMetadataMapper;
+    private \Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\TextPropertyMetadataMapper $textPropertyMetadataMapper;
 
     protected function setUp(): void
     {

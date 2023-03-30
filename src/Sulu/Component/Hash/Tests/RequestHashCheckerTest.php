@@ -26,12 +26,9 @@ class RequestHashCheckerTest extends TestCase
     /**
      * @var ObjectProphecy<HasherInterface>
      */
-    private $hasher;
+    private ObjectProphecy $hasher;
 
-    /**
-     * @var RequestHashChecker
-     */
-    private $requestHashChecker;
+    private \Sulu\Component\Hash\RequestHashChecker $requestHashChecker;
 
     public function setUp(): void
     {

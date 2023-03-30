@@ -39,135 +39,57 @@ class AdminController
 {
     public const TRANSLATION_DOMAIN = 'admin';
 
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
+    private \Symfony\Component\Routing\Generator\UrlGeneratorInterface $urlGenerator;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage;
 
-    /**
-     * @var AdminPool
-     */
-    private $adminPool;
+    private \Sulu\Bundle\AdminBundle\Admin\AdminPool $adminPool;
 
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
+    private \JMS\Serializer\SerializerInterface $serializer;
 
-    /**
-     * @var ViewHandlerInterface
-     */
-    private $viewHandler;
+    private \FOS\RestBundle\View\ViewHandlerInterface $viewHandler;
 
-    /**
-     * @var Environment
-     */
-    private $engine;
+    private \Twig\Environment $engine;
 
-    /**
-     * @var TranslatorBagInterface
-     */
-    private $translatorBag;
+    private \Symfony\Component\Translation\TranslatorBagInterface $translatorBag;
 
-    /**
-     * @var MetadataProviderRegistry
-     */
-    private $metadataProviderRegistry;
+    private \Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry $metadataProviderRegistry;
 
-    /**
-     * @var ViewRegistry
-     */
-    private $viewRegistry;
+    private \Sulu\Bundle\AdminBundle\Admin\View\ViewRegistry $viewRegistry;
 
-    /**
-     * @var NavigationRegistry
-     */
-    private $navigationRegistry;
+    private \Sulu\Bundle\AdminBundle\Admin\Navigation\NavigationRegistry $navigationRegistry;
 
-    /**
-     * @var FieldTypeOptionRegistryInterface
-     */
-    private $fieldTypeOptionRegistry;
+    private \Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry;
 
-    /**
-     * @var ContactManagerInterface
-     */
-    private $contactManager;
+    private \Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface $contactManager;
 
-    /**
-     * @var DataProviderPoolInterface
-     */
-    private $dataProviderPool;
+    private \Sulu\Component\SmartContent\DataProviderPoolInterface $dataProviderPool;
 
-    /**
-     * @var LinkProviderPoolInterface
-     */
-    private $linkProviderPool;
+    private \Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface $linkProviderPool;
 
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
+    private \Sulu\Component\Localization\Manager\LocalizationManagerInterface $localizationManager;
 
-    /**
-     * @var string
-     */
-    private $environment;
+    private string $environment;
 
-    /**
-     * @var string
-     */
-    private $suluVersion;
+    private string $suluVersion;
 
-    /**
-     * @var string|null
-     */
-    private $appVersion;
+    private ?string $appVersion = null;
 
-    /**
-     * @var array
-     */
-    private $resources;
+    private array $resources;
 
-    /**
-     * @var array
-     */
-    private $locales;
+    private array $locales;
 
-    /**
-     * @var array
-     */
-    private $translations;
+    private array $translations;
 
-    /**
-     * @var string
-     */
-    private $fallbackLocale;
+    private string $fallbackLocale;
 
-    /**
-     * @var string
-     */
-    private $collaborationInterval;
+    private string $collaborationInterval;
 
-    /**
-     * @var bool
-     */
-    private $collaborationEnabled;
+    private bool $collaborationEnabled;
 
-    /**
-     * @var string|null
-     */
-    private $passwordPattern;
+    private ?string $passwordPattern = null;
 
-    /**
-     * @var string|null
-     */
-    private $passwordInfoTranslationKey;
+    private ?string $passwordInfoTranslationKey = null;
 
     public function __construct(
         UrlGeneratorInterface $urlGenerator,

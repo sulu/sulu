@@ -24,10 +24,7 @@ use Sulu\Bundle\PageBundle\Teaser\Teaser;
  */
 class TeaserSerializeEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
+    private \Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface $mediaManager;
 
     public function __construct(MediaManagerInterface $mediaManager)
     {

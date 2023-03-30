@@ -33,22 +33,19 @@ class AccountDataProviderTest extends TestCase
     /**
      * @var ObjectProphecy<DataProviderRepositoryInterface>
      */
-    private $dataProviderRepository;
+    private ObjectProphecy $dataProviderRepository;
 
     /**
      * @var ObjectProphecy<ArraySerializerInterface>
      */
-    private $serializer;
+    private ObjectProphecy $serializer;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
      */
-    private $referenceStore;
+    private ObjectProphecy $referenceStore;
 
-    /**
-     * @var AccountDataProvider
-     */
-    private $accountDataProvider;
+    private AccountDataProvider $accountDataProvider;
 
     public function setUp(): void
     {

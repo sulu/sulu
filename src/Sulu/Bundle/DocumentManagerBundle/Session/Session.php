@@ -19,10 +19,7 @@ use PHPCR\SessionInterface;
  */
 class Session implements SessionInterface
 {
-    /**
-     * @var SessionInterface
-     */
-    private $inner;
+    private \PHPCR\SessionInterface $inner;
 
     public function __construct(SessionInterface $inner)
     {

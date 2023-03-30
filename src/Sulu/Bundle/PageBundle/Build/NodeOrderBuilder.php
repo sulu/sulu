@@ -25,35 +25,17 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
  */
 class NodeOrderBuilder implements BuilderInterface
 {
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private \Sulu\Component\PHPCR\SessionManager\SessionManagerInterface $sessionManager;
 
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
+    private \PHPCR\SessionInterface $defaultSession;
 
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
+    private \PHPCR\SessionInterface $liveSession;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var string
-     */
-    private $propertyName;
+    private string $propertyName;
 
-    /**
-     * @var BuilderContext
-     */
-    private $context;
+    private ?\Massive\Bundle\BuildBundle\Build\BuilderContext $context = null;
 
     public function __construct(
         SessionManagerInterface $sessionManager,

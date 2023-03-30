@@ -28,30 +28,27 @@ class PortalLoaderTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var PortalLoader
-     */
-    private $portalLoader;
+    private \Sulu\Bundle\WebsiteBundle\Routing\PortalLoader $portalLoader;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<LoaderResolverInterface>
      */
-    private $loaderResolver;
+    private ObjectProphecy $loaderResolver;
 
     /**
      * @var ObjectProphecy<LoaderInterface>
      */
-    private $loader;
+    private ObjectProphecy $loader;
 
     /**
      * @var Localization[]
      */
-    private $localizations;
+    private array $localizations;
 
     public function setUp(): void
     {

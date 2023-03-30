@@ -79,20 +79,16 @@ abstract class Structure implements StructureInterface
     /**
      * array of properties.
      *
-     * @var array
-     *
      * @Type("array<string,Sulu\Component\Content\Compat\Property>")
      */
-    private $properties = [];
+    private array $properties = [];
 
     /**
      * has structure sub structures.
      *
-     * @var bool
-     *
      * @Type("boolean")
      */
-    private $hasChildren = false;
+    private bool $hasChildren = false;
 
     /**
      * children of node.
@@ -106,11 +102,9 @@ abstract class Structure implements StructureInterface
     /**
      * uuid of node in CR.
      *
-     * @var string
-     *
      * @Type("string")
      */
-    private $uuid;
+    private string $uuid;
 
     /**
      * user id of creator.
@@ -133,20 +127,16 @@ abstract class Structure implements StructureInterface
     /**
      * datetime of creation.
      *
-     * @var \DateTime
-     *
      * @Type("DateTime")
      */
-    private $created;
+    private ?\DateTime $created = null;
 
     /**
      * datetime of last changed.
      *
-     * @var \DateTime
-     *
      * @Type("DateTime")
      */
-    private $changed;
+    private ?\DateTime $changed = null;
 
     /**
      * first published.
@@ -174,20 +164,16 @@ abstract class Structure implements StructureInterface
     private $type;
 
     /**
-     * @var array
-     *
      * @Type("array")
      */
-    private $tags = [];
+    private array $tags = [];
 
     /**
      * type of node.
      *
-     * @var int
-     *
      * @Type("integer")
      */
-    private $nodeType;
+    private int $nodeType;
 
     /**
      * indicates internal structure.
@@ -211,42 +197,34 @@ abstract class Structure implements StructureInterface
      * when shadow is enabled, this node is a shadow for
      * this language.
      *
-     * @var string
-     *
      * @Type("string")
      */
-    private $shadowBaseLanguage = '';
+    private string $shadowBaseLanguage = '';
 
     /**
      * the shadows which are activated on this node. Note this is
      * not stored in the phpcr node, it is determined by the content mapper.
      *
-     * @var array
-     *
      * @Type("array")
      */
-    private $shadowLocales = [];
+    private array $shadowLocales = [];
 
     /**
-     * @var array
-     *
      * @Type("array")
      */
-    private $contentLocales = [];
+    private array $contentLocales = [];
 
     /**
-     * @var Metadata
-     *
      * @Type("Sulu\Component\Content\Compat\Metadata")
      */
-    private $metaData;
+    private \Sulu\Component\Content\Compat\Metadata $metaData;
 
     /**
      * @var StructureTag[]
      *
      * @Type("array")
      */
-    private $structureTags;
+    private ?array $structureTags = null;
 
     /**
      * path of node.

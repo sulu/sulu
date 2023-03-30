@@ -23,30 +23,15 @@ class PublicPreviewController
 {
     use RequestParametersTrait;
 
-    /**
-     * @var PreviewRendererInterface
-     */
-    private $previewRenderer;
+    private \Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRendererInterface $previewRenderer;
 
-    /**
-     * @var PreviewObjectProviderRegistryInterface
-     */
-    private $previewObjectProviderRegistry;
+    private \Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry;
 
-    /**
-     * @var PreviewLinkRepositoryInterface
-     */
-    private $previewLinkRepository;
+    private \Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface $previewLinkRepository;
 
-    /**
-     * @var Environment
-     */
-    private $twig;
+    private \Twig\Environment $twig;
 
-    /**
-     * @var Profiler|null
-     */
-    private $profiler;
+    private ?\Symfony\Component\HttpKernel\Profiler\Profiler $profiler = null;
 
     public function __construct(
         PreviewRendererInterface $previewRenderer,

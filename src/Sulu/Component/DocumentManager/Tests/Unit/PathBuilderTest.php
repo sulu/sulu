@@ -17,7 +17,7 @@ use Sulu\Component\DocumentManager\PathSegmentRegistry;
 
 class PathBuilderTest extends TestCase
 {
-    private $pathBuilder;
+    private \Sulu\Component\DocumentManager\PathBuilder $pathBuilder;
 
     public function setUp(): void
     {

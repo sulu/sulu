@@ -31,27 +31,27 @@ class SnippetAreaTwigExtensionTest extends TestCase
     /**
      * @var ObjectProphecy<DefaultSnippetManagerInterface>
      */
-    private $defaultSnippetManager;
+    private ?ObjectProphecy $defaultSnippetManager = null;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ?ObjectProphecy $requestAnalyzer = null;
 
     /**
      * @var ObjectProphecy<Webspace>
      */
-    private $webspace;
+    private ?ObjectProphecy $webspace = null;
 
     /**
      * @var ObjectProphecy<Localization>
      */
-    private $localization;
+    private ?ObjectProphecy $localization = null;
 
     /**
      * @var ObjectProphecy<SnippetResolverInterface>
      */
-    private $snippetResolver;
+    private ?ObjectProphecy $snippetResolver = null;
 
     public function testLoadByArea(): void
     {

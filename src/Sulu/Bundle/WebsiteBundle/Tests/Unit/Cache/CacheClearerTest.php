@@ -31,22 +31,22 @@ class CacheClearerTest extends TestCase
     /**
      * @var ObjectProphecy<Filesystem>
      */
-    private $filesystem;
+    private ObjectProphecy $filesystem;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     /**
      * @var ObjectProphecy<Request>
      */
-    private $request;
+    private ObjectProphecy $request;
 
     /**
      * @var ObjectProphecy<EventDispatcherInterface>
      */
-    private $eventDispatcher;
+    private ObjectProphecy $eventDispatcher;
 
     public function setUp(): void
     {

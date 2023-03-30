@@ -31,22 +31,19 @@ class CacheCommandSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<KernelFactoryInterface>
      */
-    private $kernelFactory;
+    private ObjectProphecy $kernelFactory;
 
-    /**
-     * @var CacheCommandSubscriber
-     */
-    private $cacheCommandSubscriber;
+    private \Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\EventSubscriber\CacheCommandSubscriber $cacheCommandSubscriber;
 
     /**
      * @var ObjectProphecy<KernelInterface>
      */
-    private $previewKernel;
+    private ObjectProphecy $previewKernel;
 
     /**
      * @var ObjectProphecy<Application>
      */
-    private $application;
+    private ObjectProphecy $application;
 
     public function setUp(): void
     {

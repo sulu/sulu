@@ -65,10 +65,7 @@ class GeolocatorLocation
      */
     protected $latitude;
 
-    /**
-     * @var string|null
-     */
-    private $displayName;
+    private ?string $displayName = null;
 
     public function getDisplayTitle(): ?string
     {

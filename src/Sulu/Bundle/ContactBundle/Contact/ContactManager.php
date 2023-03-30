@@ -51,20 +51,11 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
  */
 class ContactManager extends AbstractContactManager implements DataProviderRepositoryInterface
 {
-    /**
-     * @var AccountRepositoryInterface
-     */
-    private $accountRepository;
+    private \Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface $accountRepository;
 
-    /**
-     * @var ContactTitleRepository
-     */
-    private $contactTitleRepository;
+    private \Sulu\Bundle\ContactBundle\Entity\ContactTitleRepository $contactTitleRepository;
 
-    /**
-     * @var ContactRepository
-     */
-    private $contactRepository;
+    private \Sulu\Bundle\ContactBundle\Entity\ContactRepository $contactRepository;
 
     /**
      * @var MediaRepositoryInterface
@@ -81,10 +72,7 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      */
     protected $userRepository;
 
-    /**
-     * @var TrashManagerInterface|null
-     */
-    private $trashManager;
+    private ?\Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface $trashManager = null;
 
     public function __construct(
         ObjectManager $em,

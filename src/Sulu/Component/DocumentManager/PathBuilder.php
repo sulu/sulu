@@ -16,10 +16,7 @@ namespace Sulu\Component\DocumentManager;
  */
 class PathBuilder
 {
-    /**
-     * @var PathSegmentRegistry
-     */
-    private $registry;
+    private \Sulu\Component\DocumentManager\PathSegmentRegistry $registry;
 
     public function __construct(PathSegmentRegistry $registry)
     {

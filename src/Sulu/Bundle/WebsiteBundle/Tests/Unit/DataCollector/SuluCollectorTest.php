@@ -44,10 +44,7 @@ class SuluCollectorTest extends TestCase
      */
     protected $response;
 
-    /**
-     * @var SuluCollector
-     */
-    private $suluCollector;
+    private \Sulu\Bundle\WebsiteBundle\DataCollector\SuluCollector $suluCollector;
 
     public function setUp(): void
     {

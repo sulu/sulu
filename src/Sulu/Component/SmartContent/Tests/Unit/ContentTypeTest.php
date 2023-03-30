@@ -43,57 +43,57 @@ class ContentTypeTest extends TestCase
     /**
      * @var TagManagerInterface
      */
-    private $tagManager;
+    private \PHPUnit\Framework\MockObject\MockObject $tagManager;
 
     /**
      * @var RequestStack
      */
-    private $requestStack;
+    private \PHPUnit\Framework\MockObject\MockObject $requestStack;
 
     /**
      * @var Request
      */
-    private $request;
+    private \PHPUnit\Framework\MockObject\MockObject $request;
 
     /**
      * @var ObjectProphecy<TagRequestHandlerInterface>
      */
-    private $tagRequestHandler;
+    private ObjectProphecy $tagRequestHandler;
 
     /**
      * @var ObjectProphecy<CategoryRequestHandlerInterface>
      */
-    private $categoryRequestHandler;
+    private ObjectProphecy $categoryRequestHandler;
 
     /**
      * @var DataProviderPoolInterface
      */
-    private $dataProviderPool;
+    private \Sulu\Component\SmartContent\DataProviderPool $dataProviderPool;
 
     /**
      * @var ObjectProphecy<DataProviderInterface>
      */
-    private $pageDataProvider;
+    private ObjectProphecy $pageDataProvider;
 
     /**
      * @var ObjectProphecy<TargetGroupStoreInterface>
      */
-    private $targetGroupStore;
+    private ObjectProphecy $targetGroupStore;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
      */
-    private $categoryReferenceStore;
+    private ObjectProphecy $categoryReferenceStore;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
      */
-    private $tagReferenceStore;
+    private ObjectProphecy $tagReferenceStore;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     public function setUp(): void
     {

@@ -18,15 +18,12 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 
 class CollectionRestoredEvent extends DomainEvent
 {
-    /**
-     * @var CollectionInterface
-     */
-    private $collection;
+    private \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $collection;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

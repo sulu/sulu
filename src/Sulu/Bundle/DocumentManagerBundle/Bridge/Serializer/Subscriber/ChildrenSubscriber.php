@@ -25,15 +25,9 @@ use Sulu\Component\DocumentManager\DocumentRegistry;
  */
 class ChildrenSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $documentInspector;
 
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
+    private \Sulu\Component\DocumentManager\DocumentRegistry $documentRegistry;
 
     public function __construct(DocumentInspector $documentInspector, DocumentRegistry $documentRegistry)
     {

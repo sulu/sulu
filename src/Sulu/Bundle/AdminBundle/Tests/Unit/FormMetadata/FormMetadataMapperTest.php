@@ -33,15 +33,12 @@ class FormMetadataMapperTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var FormMetadataMapper
-     */
-    private $formMetadataMapper;
+    private \Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper $formMetadataMapper;
 
     /**
      * @var ObjectProphecy<PropertyMetadataMapperRegistry>
      */
-    private $propertyMetadataMapperRegistry;
+    private ObjectProphecy $propertyMetadataMapperRegistry;
 
     public function setUp(): void
     {

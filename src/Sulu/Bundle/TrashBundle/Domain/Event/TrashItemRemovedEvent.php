@@ -19,30 +19,15 @@ use Sulu\Bundle\TrashBundle\Infrastructure\Sulu\Admin\TrashAdmin;
 
 class TrashItemRemovedEvent extends DomainEvent
 {
-    /**
-     * @var int
-     */
-    private $trashItemId;
+    private int $trashItemId;
 
-    /**
-     * @var string
-     */
-    private $trashItemResourceKey;
+    private string $trashItemResourceKey;
 
-    /**
-     * @var string
-     */
-    private $trashItemResourceId;
+    private string $trashItemResourceId;
 
-    /**
-     * @var string|null
-     */
-    private $trashItemTitle;
+    private ?string $trashItemTitle = null;
 
-    /**
-     * @var string|null
-     */
-    private $trashItemTitleLocale;
+    private ?string $trashItemTitleLocale = null;
 
     public function __construct(
         int $trashItemId,

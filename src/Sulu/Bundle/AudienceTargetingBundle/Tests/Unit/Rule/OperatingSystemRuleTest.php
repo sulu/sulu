@@ -25,17 +25,14 @@ class OperatingSystemRuleTest extends TestCase
     /**
      * @var ObjectProphecy<DeviceDetector>
      */
-    private $deviceDetector;
+    private ObjectProphecy $deviceDetector;
 
     /**
      * @var ObjectProphecy<TranslatorInterface>
      */
-    private $translator;
+    private ObjectProphecy $translator;
 
-    /**
-     * @var OperatingSystemRule
-     */
-    private $operatingSystemRule;
+    private \Sulu\Bundle\AudienceTargetingBundle\Rule\OperatingSystemRule $operatingSystemRule;
 
     public function setUp(): void
     {

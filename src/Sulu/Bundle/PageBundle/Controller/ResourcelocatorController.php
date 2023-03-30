@@ -23,15 +23,9 @@ class ResourcelocatorController implements ClassResourceInterface
 {
     use RequestParametersTrait;
 
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
+    private \Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool;
 
-    /**
-     * @var ViewHandler
-     */
-    private $viewHandler;
+    private \FOS\RestBundle\View\ViewHandler $viewHandler;
 
     public function __construct(
         ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,

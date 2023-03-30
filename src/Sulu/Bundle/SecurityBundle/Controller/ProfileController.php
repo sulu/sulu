@@ -36,40 +36,19 @@ class ProfileController implements ClassResourceInterface
 {
     protected static $entityNameUserSetting = 'SuluSecurityBundle:UserSetting';
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage;
 
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
+    private \Doctrine\Persistence\ObjectManager $objectManager;
 
-    /**
-     * @var ViewHandlerInterface
-     */
-    private $viewHandler;
+    private \FOS\RestBundle\View\ViewHandlerInterface $viewHandler;
 
-    /**
-     * @var UserSettingRepositoryInterface
-     */
-    private $userSettingRepository;
+    private \Sulu\Component\Security\Authentication\UserSettingRepositoryInterface $userSettingRepository;
 
-    /**
-     * @var UserManager
-     */
-    private $userManager;
+    private \Sulu\Bundle\SecurityBundle\UserManager\UserManager $userManager;
 
-    /**
-     * @var string
-     */
-    private $userClass;
+    private string $userClass;
 
-    /**
-     * @var string
-     */
-    private $contactClass;
+    private string $contactClass;
 
     /**
      * @param UserManagerInterface $userManager

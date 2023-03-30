@@ -81,20 +81,16 @@ class Address
     private $id;
 
     /**
-     * @var AddressType
-     *
      * @Groups({"fullAccount", "fullContact"})
      * @Expose
      */
-    private $addressType;
+    private ?\Sulu\Bundle\ContactBundle\Entity\AddressType $addressType = null;
 
     /**
-     * @var string|null
-     *
      * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      * @Expose
      */
-    private $countryCode;
+    private ?string $countryCode = null;
 
     /**
      * @var bool|null
@@ -147,12 +143,12 @@ class Address
     /**
      * @var Collection<int, ContactAddress>
      */
-    private $contactAddresses;
+    private \Doctrine\Common\Collections\ArrayCollection|array $contactAddresses;
 
     /**
      * @var Collection<int, AccountAddress>
      */
-    private $accountAddresses;
+    private \Doctrine\Common\Collections\ArrayCollection|array $accountAddresses;
 
     /**
      * @var string|null

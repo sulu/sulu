@@ -21,10 +21,7 @@ use Ramsey\Uuid\Uuid;
  */
 class CacheManager implements CacheManagerInterface
 {
-    /**
-     * @var FOSCacheManager
-     */
-    private $fosCacheManager;
+    private FOSCacheManager $fosCacheManager;
 
     public function __construct(FOSCacheManager $fosCacheManager)
     {

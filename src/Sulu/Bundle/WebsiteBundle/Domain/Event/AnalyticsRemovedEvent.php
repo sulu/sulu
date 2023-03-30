@@ -17,20 +17,11 @@ use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 
 class AnalyticsRemovedEvent extends DomainEvent
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private int $id;
 
-    /**
-     * @var string
-     */
-    private $webspaceKey;
+    private string $webspaceKey;
 
-    /**
-     * @var string|null
-     */
-    private $analyticsTitle;
+    private ?string $analyticsTitle = null;
 
     public function __construct(
         int $id,

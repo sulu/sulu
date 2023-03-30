@@ -27,20 +27,17 @@ class SingleCollectionSelectionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var SingleCollectionSelection
-     */
-    private $singleCollectionSelection;
+    private \Sulu\Bundle\MediaBundle\Content\Types\SingleCollectionSelection $singleCollectionSelection;
 
     /**
      * @var ObjectProphecy<CollectionManagerInterface>
      */
-    private $collectionManager;
+    private ObjectProphecy $collectionManager;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
      */
-    private $collectionReferenceStore;
+    private ObjectProphecy $collectionReferenceStore;
 
     protected function setUp(): void
     {

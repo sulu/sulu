@@ -26,15 +26,9 @@ class FormatCacheCleanupCommand extends Command
 {
     protected static $defaultName = 'sulu:media:format:cache:cleanup';
 
-    /**
-     * @var EntityRepository
-     */
-    private $mediaRepository;
+    private \Doctrine\ORM\EntityRepository $mediaRepository;
 
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private \Symfony\Component\Filesystem\Filesystem $filesystem;
 
     /**
      * @var string

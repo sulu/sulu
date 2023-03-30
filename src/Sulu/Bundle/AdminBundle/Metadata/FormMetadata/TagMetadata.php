@@ -13,20 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Metadata\FormMetadata;
 
 class TagMetadata
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private ?string $name = null;
 
-    /**
-     * @var int|null
-     */
-    private $priority;
+    private ?int $priority = null;
 
-    /**
-     * @var array
-     */
-    private $attributes = [];
+    private array $attributes = [];
 
     public function getName(): string
     {

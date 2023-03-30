@@ -25,25 +25,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class PageTeaserProvider implements TeaserProviderInterface
 {
-    /**
-     * @var SearchManagerInterface
-     */
-    private $searchManager;
+    private \Massive\Bundle\SearchBundle\Search\SearchManagerInterface $searchManager;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
-    /**
-     * @var bool
-     */
-    private $showDrafts;
+    private bool $showDrafts;
 
     /**
      * @var TeaserProviderInterface|null
      */
-    private $phpcrPageTeaserProvider;
+    private ?\Sulu\Bundle\PageBundle\Teaser\PHPCRPageTeaserProvider $phpcrPageTeaserProvider = null;
 
     /**
      * @param PHPCRPageTeaserProvider|null $phpcrPageTeaserProvider

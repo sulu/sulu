@@ -35,47 +35,38 @@ class ProxyFactoryTest extends TestCase
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $parentNode;
+    private ObjectProphecy $parentNode;
 
     /**
      * @var ObjectProphecy<MetadataFactoryInterface>
      */
-    private $metadataFactory;
+    private ObjectProphecy $metadataFactory;
 
     /**
      * @var ObjectProphecy<Metadata>
      */
-    private $metadata;
+    private ObjectProphecy $metadata;
 
     /**
      * @var ObjectProphecy<DocumentRegistry>
      */
-    private $documentRegistry;
+    private ObjectProphecy $documentRegistry;
 
     /**
      * @var ObjectProphecy<EventDispatcherInterface>
      */
-    private $dispatcher;
+    private ObjectProphecy $dispatcher;
 
-    /**
-     * @var LazyLoadingGhostFactory
-     */
-    private $proxyFactory;
+    private \ProxyManager\Factory\LazyLoadingGhostFactory $proxyFactory;
 
-    /**
-     * @var TestProxyDocument
-     */
-    private $document;
+    private \Sulu\Component\DocumentManager\Tests\Unit\TestProxyDocument $document;
 
-    /**
-     * @var ProxyFactory
-     */
-    private $factory;
+    private \Sulu\Component\DocumentManager\ProxyFactory $factory;
 
     public function setUp(): void
     {
@@ -184,7 +175,7 @@ class ProxyFactoryTest extends TestCase
 
 class TestProxyDocument implements ParentBehavior
 {
-    private $parent;
+    private ?object $parent = null;
 
     public function getParent()
     {
@@ -199,7 +190,7 @@ class TestProxyDocument implements ParentBehavior
 
 class TestProxyDocumentProxy
 {
-    private $title = 'Hello';
+    private string $title = 'Hello';
 
     public function getTitle()
     {

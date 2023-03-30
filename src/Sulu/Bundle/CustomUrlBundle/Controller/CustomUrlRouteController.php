@@ -27,22 +27,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class CustomUrlRouteController extends AbstractRestController implements SecuredControllerInterface
 {
-    private static $relationName = 'custom_url_routes';
+    private static string $relationName = 'custom_url_routes';
 
-    /**
-     * @var CustomUrlManagerInterface
-     */
-    private $customUrlManager;
+    private \Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface $customUrlManager;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

@@ -21,20 +21,11 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class ContentQueryExecutor implements ContentQueryExecutorInterface
 {
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private \Sulu\Component\PHPCR\SessionManager\SessionManagerInterface $sessionManager;
 
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
+    private \Sulu\Component\Content\Mapper\ContentMapperInterface $contentMapper;
 
-    /**
-     * @var Stopwatch
-     */
-    private $stopwatch;
+    private ?\Symfony\Component\Stopwatch\Stopwatch $stopwatch = null;
 
     public function __construct(
         SessionManagerInterface $sessionManager,

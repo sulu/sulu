@@ -27,25 +27,16 @@ use Sulu\Component\HttpKernel\SuluKernel;
  */
 class StructureProvider implements LocalizedReindexProviderInterface
 {
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
+    private \Sulu\Component\DocumentManager\MetadataFactoryInterface $metadataFactory;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
     /**
      * @var StructureMetadataFactory
      */
-    private $structureFactory;
+    private \Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface $structureFactory;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $inspector;
 
     /**
      * @var string

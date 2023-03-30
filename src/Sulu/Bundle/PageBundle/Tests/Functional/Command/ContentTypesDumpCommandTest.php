@@ -19,10 +19,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class ContentTypesDumpCommandTest extends SuluTestCase
 {
-    /**
-     * @var CommandTester
-     */
-    private $tester;
+    private \Symfony\Component\Console\Tester\CommandTester $tester;
 
     public function setUp(): void
     {

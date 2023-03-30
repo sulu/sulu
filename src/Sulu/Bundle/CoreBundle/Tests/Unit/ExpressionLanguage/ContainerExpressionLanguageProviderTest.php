@@ -22,15 +22,12 @@ class ContainerExpressionLanguageProviderTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ExpressionLanguage
-     */
-    private $expressionLanguage;
+    private \Symfony\Component\ExpressionLanguage\ExpressionLanguage $expressionLanguage;
 
     /**
      * @var ObjectProphecy<ContainerInterface>
      */
-    private $container;
+    private ObjectProphecy $container;
 
     public function setUp(): void
     {

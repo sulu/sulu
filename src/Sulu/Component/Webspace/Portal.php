@@ -39,7 +39,7 @@ class Portal
      *
      * @var Localization[]
      */
-    private $localizations;
+    private ?array $localizations = null;
 
     /**
      * The default localization for this portal.
@@ -60,12 +60,9 @@ class Portal
     /**
      * @var Environment[]
      */
-    private $environments;
+    private ?array $environments = null;
 
-    /**
-     * @var Webspace
-     */
-    private $webspace;
+    private ?\Sulu\Component\Webspace\Webspace $webspace = null;
 
     /**
      * Sets the name of the portal.

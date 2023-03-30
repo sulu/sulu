@@ -29,20 +29,11 @@ final class InitCommand extends Command
 {
     protected static $defaultName = 'sulu:security:init';
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
+    private \Sulu\Component\Security\Authentication\RoleRepositoryInterface $roleRepository;
 
-    /**
-     * @var AdminPool
-     */
-    private $adminPool;
+    private \Sulu\Bundle\AdminBundle\Admin\AdminPool $adminPool;
 
     public function __construct(
         EntityManagerInterface $entityManager,

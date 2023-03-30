@@ -23,10 +23,7 @@ abstract class AbstractRestController
     use ControllerTrait;
     use RestControllerTrait;
 
-    /**
-     * @var TokenStorageInterface|null
-     */
-    private $tokenStorage;
+    private ?\Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage = null;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

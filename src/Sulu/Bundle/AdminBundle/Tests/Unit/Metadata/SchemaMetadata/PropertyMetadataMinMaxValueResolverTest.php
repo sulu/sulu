@@ -17,10 +17,7 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 
 class PropertyMetadataMinMaxValueResolverTest extends TestCase
 {
-    /**
-     * @var PropertyMetadataMinMaxValueResolver
-     */
-    private $propertyMetadataMinMaxValueResolver;
+    private \Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver;
 
     protected function setUp(): void
     {

@@ -16,10 +16,7 @@ use Sulu\Component\DocumentManager\PathSegmentRegistry;
 
 class PathSegmentRegistryTest extends TestCase
 {
-    /**
-     * @var PathSegmentRegistry
-     */
-    private $pathRegistry;
+    private \Sulu\Component\DocumentManager\PathSegmentRegistry $pathRegistry;
 
     public function setUp(): void
     {

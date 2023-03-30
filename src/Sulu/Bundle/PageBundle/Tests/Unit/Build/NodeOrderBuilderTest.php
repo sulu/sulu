@@ -32,42 +32,39 @@ class NodeOrderBuilderTest extends TestCase
     /**
      * @var ObjectProphecy<SessionManagerInterface>
      */
-    private $sessionManager;
+    private ObjectProphecy $sessionManager;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $defaultSession;
+    private ObjectProphecy $defaultSession;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $liveSession;
+    private ObjectProphecy $liveSession;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $propertyEncoder;
+    private ObjectProphecy $propertyEncoder;
 
     /**
      * @var ObjectProphecy<BuilderContext>
      */
-    private $context;
+    private ObjectProphecy $context;
 
     /**
      * @var ObjectProphecy<OutputInterface>
      */
-    private $output;
+    private ObjectProphecy $output;
 
-    /**
-     * @var NodeOrderBuilder
-     */
-    private $nodeOrderBuilder;
+    private \Sulu\Bundle\PageBundle\Build\NodeOrderBuilder $nodeOrderBuilder;
 
     public function setUp(): void
     {

@@ -44,55 +44,49 @@ class InvalidationSubscriberTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var InvalidationSubscriber
-     */
-    private $invalidationSubscriber;
+    private \Sulu\Bundle\HttpCacheBundle\EventSubscriber\InvalidationSubscriber $invalidationSubscriber;
 
     /**
      * @var ObjectProphecy<CacheManager>
      */
-    private $cacheManager;
+    private ObjectProphecy $cacheManager;
 
     /**
      * @var ObjectProphecy<StructureManagerInterface>
      */
-    private $structureManager;
+    private ObjectProphecy $structureManager;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $documentInspector;
+    private ObjectProphecy $documentInspector;
 
     /**
      * @var ObjectProphecy<ResourceLocatorStrategyInterface>
      */
-    private $resourceLocatorStrategy;
+    private ObjectProphecy $resourceLocatorStrategy;
 
     /**
      * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
-    private $resourceLocatorStrategyPool;
+    private ObjectProphecy $resourceLocatorStrategyPool;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     /**
      * @var ObjectProphecy<TagManagerInterface>
      */
-    private $tagManager;
+    private ObjectProphecy $tagManager;
 
-    /**
-     * @var string
-     */
-    private $env = 'prod';
+    private string $env = 'prod';
 
     public function setUp(): void
     {

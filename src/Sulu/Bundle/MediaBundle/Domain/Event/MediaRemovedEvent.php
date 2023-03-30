@@ -18,25 +18,13 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class MediaRemovedEvent extends DomainEvent
 {
-    /**
-     * @var int
-     */
-    private $mediaId;
+    private int $mediaId;
 
-    /**
-     * @var int
-     */
-    private $collectionId;
+    private int $collectionId;
 
-    /**
-     * @var string|null
-     */
-    private $mediaTitle;
+    private ?string $mediaTitle = null;
 
-    /**
-     * @var string|null
-     */
-    private $mediaTitleLocale;
+    private ?string $mediaTitleLocale = null;
 
     public function __construct(
         int $mediaId,

@@ -25,35 +25,20 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PHPCRPageTeaserProvider implements TeaserProviderInterface
 {
-    /**
-     * @var ContentQueryExecutorInterface
-     */
-    private $contentQueryExecutor;
+    private \Sulu\Component\Content\Query\ContentQueryExecutorInterface $contentQueryExecutor;
 
-    /**
-     * @var ContentQueryBuilderInterface
-     */
-    private $contentQueryBuilder;
+    private \Sulu\Component\Content\Query\ContentQueryBuilderInterface $contentQueryBuilder;
 
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $structureMetadataFactory;
+    private \Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface $structureMetadataFactory;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
-    /**
-     * @var bool
-     */
-    private $showDrafts;
+    private bool $showDrafts;
 
     /**
      * @var array<string, int>
      */
-    private $permissions;
+    private array $permissions;
 
     /**
      * @param bool $showDrafts Parameter "sulu_document_manager.show_drafts"

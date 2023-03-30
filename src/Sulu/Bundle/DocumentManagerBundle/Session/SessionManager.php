@@ -19,15 +19,9 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class SessionManager implements SessionManagerInterface, ResetInterface
 {
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
+    private \PHPCR\SessionInterface $defaultSession;
 
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
+    private \PHPCR\SessionInterface $liveSession;
 
     public function __construct(SessionInterface $defaultSession, SessionInterface $liveSession)
     {

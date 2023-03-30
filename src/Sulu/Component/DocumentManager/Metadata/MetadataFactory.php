@@ -22,10 +22,7 @@ use Sulu\Component\DocumentManager\MetadataFactoryInterface;
  */
 class MetadataFactory implements MetadataFactoryInterface
 {
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
+    private \Sulu\Component\DocumentManager\MetadataFactoryInterface $metadataFactory;
 
     public function __construct(MetadataFactoryInterface $metadataFactory)
     {

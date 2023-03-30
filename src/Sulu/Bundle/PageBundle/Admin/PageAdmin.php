@@ -49,40 +49,19 @@ class PageAdmin extends Admin
 
     public const EDIT_FORM_VIEW = 'sulu_page.page_edit_form';
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
+    private \Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface $viewBuilderFactory;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private \Sulu\Component\PHPCR\SessionManager\SessionManagerInterface $sessionManager;
 
-    /**
-     * @var TeaserProviderPoolInterface
-     */
-    private $teaserProviderPool;
+    private \Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface $teaserProviderPool;
 
-    /**
-     * @var bool
-     */
-    private $versioningEnabled;
+    private bool $versioningEnabled;
 
-    /**
-     * @var ActivityViewBuilderFactoryInterface
-     */
-    private $activityViewBuilderFactory;
+    private \Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactoryInterface $activityViewBuilderFactory;
 
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,

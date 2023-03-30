@@ -16,7 +16,7 @@ class PropertiesMetadata implements SchemaMetadataInterface
     /**
      * @var PropertyMetadata[]
      */
-    private $properties;
+    private array $properties;
 
     /**
      * @param PropertyMetadata[] $properties

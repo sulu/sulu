@@ -31,30 +31,15 @@ class PageTreeRouteContentType extends SimpleContentType
 {
     public const NAME = 'page_tree_route';
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
+    private \Sulu\Component\DocumentManager\DocumentRegistry $documentRegistry;
 
-    /**
-     * @var ChainRouteGeneratorInterface
-     */
-    private $chainRouteGenerator;
+    private \Sulu\Bundle\RouteBundle\Generator\ChainRouteGeneratorInterface $chainRouteGenerator;
 
-    /**
-     * @var ConflictResolverInterface
-     */
-    private $conflictResolver;
+    private \Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface $conflictResolver;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
     public function __construct(
         DocumentManagerInterface $documentManager,

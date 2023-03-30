@@ -26,30 +26,27 @@ class ListMetadataProviderTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ListMetadataProvider
-     */
-    private $listMetadataProvider;
+    private \Sulu\Bundle\AdminBundle\Metadata\ListMetadata\ListMetadataProvider $listMetadataProvider;
 
     /**
      * @var ObjectProphecy<ListMetadataLoaderInterface>
      */
-    private $xmlListMetadataLoader1;
+    private ObjectProphecy $xmlListMetadataLoader1;
 
     /**
      * @var ObjectProphecy<ListMetadataLoaderInterface>
      */
-    private $xmlListMetadataLoader2;
+    private ObjectProphecy $xmlListMetadataLoader2;
 
     /**
      * @var ObjectProphecy<ListMetadataVisitorInterface>
      */
-    private $listMetadataVisitor1;
+    private ObjectProphecy $listMetadataVisitor1;
 
     /**
      * @var ObjectProphecy<ListMetadataVisitorInterface>
      */
-    private $listMetadataVisitor2;
+    private ObjectProphecy $listMetadataVisitor2;
 
     public function setUp(): void
     {

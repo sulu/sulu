@@ -35,40 +35,19 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
 
     public const PREFIX_ACCOUNT = 'a';
 
-    /**
-     * @var ContactManagerInterface
-     */
-    private $contactManager;
+    private \Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface $contactManager;
 
-    /**
-     * @var ContactManagerInterface
-     */
-    private $accountManager;
+    private \Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface $accountManager;
 
-    /**
-     * @var ArraySerializerInterface
-     */
-    private $serializer;
+    private \Sulu\Component\Serializer\ArraySerializerInterface $serializer;
 
-    /**
-     * @var IdConverterInterface
-     */
-    private $converter;
+    private \Sulu\Bundle\ContactBundle\Util\IdConverterInterface $converter;
 
-    /**
-     * @var IndexComparatorInterface
-     */
-    private $comparator;
+    private \Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface $comparator;
 
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $accountReferenceStore;
+    private \Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface $accountReferenceStore;
 
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $contactReferenceStore;
+    private \Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface $contactReferenceStore;
 
     public function __construct(
         ContactManagerInterface $contactManager,

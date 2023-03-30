@@ -18,10 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class DateTimeRequestProcessorTest extends TestCase
 {
-    /**
-     * @var DateTimeRequestProcessor
-     */
-    private $dateTimeRequestProcessor;
+    private \Sulu\Component\Webspace\Analyzer\Attributes\DateTimeRequestProcessor $dateTimeRequestProcessor;
 
     public function setUp(): void
     {

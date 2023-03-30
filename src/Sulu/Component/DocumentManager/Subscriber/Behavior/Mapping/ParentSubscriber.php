@@ -27,20 +27,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ParentSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var ProxyFactory
-     */
-    private $proxyFactory;
+    private \Sulu\Component\DocumentManager\ProxyFactory $proxyFactory;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
+    private \Sulu\Component\DocumentManager\DocumentInspector $inspector;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
     public function __construct(
         ProxyFactory $proxyFactory,

@@ -21,12 +21,12 @@ class LocationContentTypeTest extends TestCase
     /**
      * @var NodeInterface
      */
-    private $phpcrNode;
+    private \PHPUnit\Framework\MockObject\MockObject $phpcrNode;
 
     /**
      * @var PropertyInterface
      */
-    private $suluProperty;
+    private \PHPUnit\Framework\MockObject\MockObject $suluProperty;
 
     /**
      * @var LocationContentType

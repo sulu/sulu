@@ -37,40 +37,25 @@ class Route implements RouteInterface, AuditableInterface
     private $id;
 
     /**
-     * @var string
-     *
      * @Expose
      */
-    private $path;
+    private string $path;
 
     /**
-     * @var string
-     *
      * @Expose
      */
-    private $locale;
+    private string $locale;
+
+    private string $entityClass;
+
+    private string $entityId;
 
     /**
-     * @var string
-     */
-    private $entityClass;
-
-    /**
-     * @var string
-     */
-    private $entityId;
-
-    /**
-     * @var bool
-     *
      * @Expose
      */
-    private $history = false;
+    private bool $history = false;
 
-    /**
-     * @var RouteInterface|null
-     */
-    private $target;
+    private ?\Sulu\Bundle\RouteBundle\Model\RouteInterface $target = null;
 
     /**
      * @var Collection<int, RouteInterface>

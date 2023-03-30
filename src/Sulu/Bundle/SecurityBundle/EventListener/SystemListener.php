@@ -21,20 +21,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class SystemListener implements EventSubscriberInterface
 {
-    /**
-     * @var SystemStoreInterface
-     */
-    private $systemStore;
+    private \Sulu\Bundle\SecurityBundle\System\SystemStoreInterface $systemStore;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var string
-     */
-    private $context;
+    private string $context;
 
     public function __construct(
         SystemStoreInterface $systemStore,

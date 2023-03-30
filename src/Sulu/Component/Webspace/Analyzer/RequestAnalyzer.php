@@ -26,12 +26,9 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     /**
      * @var RequestProcessorInterface[]
      */
-    private $requestProcessors;
+    private array $requestProcessors;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
     public function __construct(
         RequestStack $requestStack,

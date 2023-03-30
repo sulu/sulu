@@ -29,25 +29,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class InvalidationSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var CustomUrlManagerInterface
-     */
-    private $customUrlManager;
+    private \Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface $customUrlManager;
 
-    /**
-     * @var null|CacheManager
-     */
-    private $cacheManager;
+    private ?\Sulu\Bundle\HttpCacheBundle\Cache\CacheManager $cacheManager = null;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $documentInspector;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
     public function __construct(
         CustomUrlManagerInterface $customUrlManager,

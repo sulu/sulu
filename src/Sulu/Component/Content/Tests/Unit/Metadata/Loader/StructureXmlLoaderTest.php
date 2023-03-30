@@ -29,13 +29,13 @@ class StructureXmlLoaderTest extends TestCase
 {
     use ProphecyTrait;
 
-    private $requiredTagNames = [
+    private array $requiredTagNames = [
         'page' => ['sulu.rlp'],
         'home' => ['sulu.rlp'],
         'snippet' => [],
     ];
 
-    private $requiredPropertyNames = [
+    private array $requiredPropertyNames = [
         'page' => ['title'],
         'home' => ['title'],
         'snippet' => ['title'],
@@ -44,7 +44,7 @@ class StructureXmlLoaderTest extends TestCase
     /**
      * @var string[]
      */
-    private $locales = [
+    private array $locales = [
         'en' => 'en',
         'de' => 'de',
         'fr' => 'fr',
@@ -54,22 +54,19 @@ class StructureXmlLoaderTest extends TestCase
     /**
      * @var ObjectProphecy<TranslatorInterface>
      */
-    private $translator;
+    private ObjectProphecy $translator;
 
-    /**
-     * @var StructureXmlLoader
-     */
-    private $loader;
+    private \Sulu\Component\Content\Metadata\Loader\StructureXmlLoader $loader;
 
     /**
      * @var ObjectProphecy<ContentTypeManagerInterface>
      */
-    private $contentTypeManager;
+    private ObjectProphecy $contentTypeManager;
 
     /**
      * @var ObjectProphecy<CacheLifetimeResolverInterface>
      */
-    private $cacheLifetimeResolver;
+    private ObjectProphecy $cacheLifetimeResolver;
 
     public function setUp(): void
     {

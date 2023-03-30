@@ -38,47 +38,44 @@ class ValidateWebspacesCommandTest extends TestCase
     /**
      * @var ObjectProphecy<Environment>
      */
-    private $twig;
+    private ObjectProphecy $twig;
 
     /**
      * @var ObjectProphecy<StructureMetadataFactory>
      */
-    private $structureMetadataFactory;
+    private ObjectProphecy $structureMetadataFactory;
 
     /**
      * @var ObjectProphecy<StructureManagerInterface>
      */
-    private $structureManager;
+    private ObjectProphecy $structureManager;
 
     /**
      * @var ObjectProphecy<WebspaceStructureProvider>
      */
-    private $structureProvider;
+    private ObjectProphecy $structureProvider;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<EventDispatcherInterface>
      */
-    private $eventDispatcher;
+    private ObjectProphecy $eventDispatcher;
 
-    /**
-     * @var ValidateWebspacesCommand
-     */
-    private $validateWebspacesCommand;
+    private \Sulu\Bundle\PageBundle\Command\ValidateWebspacesCommand $validateWebspacesCommand;
 
     /**
      * @var ObjectProphecy<InputInterface>
      */
-    private $input;
+    private ObjectProphecy $input;
 
     /**
      * @var ObjectProphecy<OutputInterface>
      */
-    private $output;
+    private ObjectProphecy $output;
 
     public function setUp(): void
     {

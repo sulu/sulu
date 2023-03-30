@@ -22,20 +22,11 @@ use Twig\TwigFunction;
  */
 class SitemapTwigExtension extends AbstractExtension implements SitemapTwigExtensionInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var SitemapGeneratorInterface
-     */
-    private $sitemapGenerator;
+    private \Sulu\Bundle\WebsiteBundle\Sitemap\SitemapGeneratorInterface $sitemapGenerator;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private ?\Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer = null;
 
     /**
      * @var string

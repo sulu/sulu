@@ -25,17 +25,14 @@ class BrowserRuleTest extends TestCase
     /**
      * @var ObjectProphecy<DeviceDetector>
      */
-    private $deviceDetector;
+    private ObjectProphecy $deviceDetector;
 
     /**
      * @var ObjectProphecy<TranslatorInterface>
      */
-    private $translator;
+    private ObjectProphecy $translator;
 
-    /**
-     * @var BrowserRule
-     */
-    private $browserRule;
+    private \Sulu\Bundle\AudienceTargetingBundle\Rule\BrowserRule $browserRule;
 
     public function setUp(): void
     {

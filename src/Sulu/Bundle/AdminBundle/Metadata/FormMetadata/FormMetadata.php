@@ -17,32 +17,20 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 
 class FormMetadata extends AbstractMetadata
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private ?string $name = null;
 
-    /**
-     * @var string
-     */
-    private $title;
+    private ?string $title = null;
 
     /**
      * @var ItemMetadata[]
      *
      * @SerializedName("form")
      */
-    private $items;
+    private ?array $items = null;
 
-    /**
-     * @var SchemaMetadata
-     */
-    private $schema;
+    private ?\Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata $schema = null;
 
-    /**
-     * @var string
-     */
-    private $key;
+    private ?string $key = null;
 
     /**
      * @var TagMetadata[]

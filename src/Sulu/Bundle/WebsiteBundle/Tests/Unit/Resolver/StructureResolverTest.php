@@ -31,22 +31,22 @@ class StructureResolverTest extends TestCase
     /**
      * @var StructureResolverInterface
      */
-    private $structureResolver;
+    private \Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver $structureResolver;
 
     /**
      * @var ObjectProphecy<ContentTypeManagerInterface>
      */
-    private $contentTypeManager;
+    private ObjectProphecy $contentTypeManager;
 
     /**
      * @var ObjectProphecy<ContentTypeInterface>
      */
-    private $contentType;
+    private ObjectProphecy $contentType;
 
     /**
      * @var ObjectProphecy<ExtensionManagerInterface>
      */
-    private $extensionManager;
+    private ObjectProphecy $extensionManager;
 
     public function setUp(): void
     {

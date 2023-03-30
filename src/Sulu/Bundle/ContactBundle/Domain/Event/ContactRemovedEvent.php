@@ -17,15 +17,9 @@ use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 
 class ContactRemovedEvent extends DomainEvent
 {
-    /**
-     * @var int
-     */
-    private $contactId;
+    private int $contactId;
 
-    /**
-     * @var string
-     */
-    private $contactName;
+    private string $contactName;
 
     public function __construct(
         int $contactId,

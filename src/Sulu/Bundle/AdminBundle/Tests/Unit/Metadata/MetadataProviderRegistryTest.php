@@ -21,10 +21,7 @@ class MetadataProviderRegistryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var MetadataProviderRegistry
-     */
-    private $metadataProviderRegistry;
+    private \Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry $metadataProviderRegistry;
 
     public function setUp(): void
     {

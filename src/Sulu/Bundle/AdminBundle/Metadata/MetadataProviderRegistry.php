@@ -15,7 +15,7 @@ use Sulu\Bundle\AdminBundle\Exception\MetadataProviderNotFoundException;
 
 class MetadataProviderRegistry
 {
-    private $metadataProviders = [];
+    private array $metadataProviders = [];
 
     public function getMetadataProvider(string $type): MetadataProviderInterface
     {

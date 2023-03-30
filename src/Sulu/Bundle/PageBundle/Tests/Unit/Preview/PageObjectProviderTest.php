@@ -31,22 +31,19 @@ class PageObjectProviderTest extends TestCase
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<SerializerInterface>
      */
-    private $serializer;
+    private ObjectProphecy $serializer;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $documentInspector;
+    private ObjectProphecy $documentInspector;
 
-    /**
-     * @var PageObjectProvider
-     */
-    private $provider;
+    private \Sulu\Bundle\PageBundle\Preview\PageObjectProvider $provider;
 
     public function setUp(): void
     {

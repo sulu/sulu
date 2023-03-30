@@ -26,10 +26,7 @@ class SystemCollectionBuilder implements BuilderInterface
      */
     protected $output;
 
-    /**
-     * @var SystemCollectionManagerInterface
-     */
-    private $systemCollectionManager;
+    private \Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface $systemCollectionManager;
 
     public function __construct(SystemCollectionManagerInterface $systemCollectionManager)
     {

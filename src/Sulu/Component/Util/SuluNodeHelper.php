@@ -37,15 +37,9 @@ class SuluNodeHelper
      */
     private $paths;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private \PHPCR\SessionInterface $session;
 
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $structureMetadataFactory;
+    private \Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface $structureMetadataFactory;
 
     /**
      * @param string $languageNamespace

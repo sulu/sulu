@@ -17,39 +17,20 @@ use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 use Sulu\Bundle\TestBundle\Kernel\SuluKernelBrowser;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class PreviewLinkControllerTest extends SuluTestCase
 {
-    /**
-     * @var SuluKernelBrowser
-     */
-    private $client;
+    private \Sulu\Bundle\TestBundle\Kernel\SuluKernelBrowser $client;
 
-    /**
-     * @var BasePageDocument
-     */
-    private $homePage;
+    private \Sulu\Bundle\PageBundle\Document\BasePageDocument $homePage;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var string
-     */
-    private $resourceKey = 'pages';
+    private string $resourceKey = 'pages';
 
-    /**
-     * @var string
-     */
-    private $webspaceKey = 'sulu_io';
+    private string $webspaceKey = 'sulu_io';
 
-    /**
-     * @var string
-     */
-    private $locale = 'en';
+    private string $locale = 'en';
 
     public function setUp(): void
     {

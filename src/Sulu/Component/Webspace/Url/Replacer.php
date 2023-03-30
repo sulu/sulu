@@ -16,7 +16,7 @@ namespace Sulu\Component\Webspace\Url;
  */
 class Replacer implements ReplacerInterface
 {
-    private $replacers = [
+    private array $replacers = [
         self::REPLACER_LANGUAGE,
         self::REPLACER_COUNTRY,
         self::REPLACER_LOCALIZATION,

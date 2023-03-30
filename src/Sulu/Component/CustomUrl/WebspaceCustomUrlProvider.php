@@ -21,10 +21,7 @@ use Sulu\Component\Webspace\Webspace;
  */
 class WebspaceCustomUrlProvider implements WebspaceUrlProviderInterface
 {
-    /**
-     * @var CustomUrlManagerInterface
-     */
-    private $customUrlManager;
+    private \Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface $customUrlManager;
 
     public function __construct(CustomUrlManagerInterface $customUrlManager)
     {

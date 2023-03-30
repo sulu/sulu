@@ -32,40 +32,37 @@ class MediaPermissionsSubscriberTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var MediaPermissionsSubscriber
-     */
-    private $mediaPermissionsSubscriber;
+    private \Sulu\Bundle\MediaBundle\Serializer\Subscriber\MediaPermissionsSubscriber $mediaPermissionsSubscriber;
 
     /**
      * @var ObjectProphecy<AccessControlManagerInterface>
      */
-    private $accessControlManager;
+    private ObjectProphecy $accessControlManager;
 
     /**
      * @var ObjectProphecy<TokenStorageInterface>
      */
-    private $tokenStorage;
+    private ObjectProphecy $tokenStorage;
 
     /**
      * @var ObjectProphecy<TokenInterface>
      */
-    private $token;
+    private ObjectProphecy $token;
 
     /**
      * @var ObjectProphecy<ObjectEvent>
      */
-    private $objectEvent;
+    private ObjectProphecy $objectEvent;
 
     /**
      * @var ObjectProphecy<UserInterface>
      */
-    private $user;
+    private ObjectProphecy $user;
 
     /**
      * @var ObjectProphecy<SerializationVisitorInterface>
      */
-    private $visitor;
+    private ObjectProphecy $visitor;
 
     public function setUp(): void
     {

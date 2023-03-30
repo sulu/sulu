@@ -23,10 +23,7 @@ use Sulu\Component\SmartContent\ItemInterface;
  */
 class AccountDataItem implements ItemInterface
 {
-    /**
-     * @var Account
-     */
-    private $entity;
+    private \Sulu\Bundle\ContactBundle\Api\Account $entity;
 
     public function __construct(Account $entity)
     {

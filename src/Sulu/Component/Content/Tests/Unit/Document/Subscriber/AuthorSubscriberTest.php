@@ -35,7 +35,7 @@ class AuthorSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $propertyEncoder;
+    private ObjectProphecy $propertyEncoder;
 
     /**
      * @var ObjectProphecy<UserRepositoryInterface>
@@ -45,17 +45,14 @@ class AuthorSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<MetadataFactoryInterface>
      */
-    private $metadataFactory;
+    private ObjectProphecy $metadataFactory;
 
     /**
      * @var ObjectProphecy<Metadata>
      */
-    private $metadata;
+    private ObjectProphecy $metadata;
 
-    /**
-     * @var AuthorSubscriber
-     */
-    private $authorSubscriber;
+    private \Sulu\Component\Content\Document\Subscriber\AuthorSubscriber $authorSubscriber;
 
     protected function setUp(): void
     {

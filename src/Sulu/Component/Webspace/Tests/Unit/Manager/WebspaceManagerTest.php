@@ -43,22 +43,19 @@ class WebspaceManagerTest extends WebspaceTestCase
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     /**
      * @var WebspaceManager
      */
     protected $webspaceManager;
 
-    /**
-     * @var string
-     */
-    private $cacheDirectory;
+    private string $cacheDirectory;
 
     /**
      * @var ObjectProphecy<StructureMetadataFactoryInterface>
      */
-    private $structureMetadataFactory;
+    private ObjectProphecy $structureMetadataFactory;
 
     public function setUp(): void
     {

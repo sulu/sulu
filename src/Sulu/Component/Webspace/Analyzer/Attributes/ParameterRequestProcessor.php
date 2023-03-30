@@ -20,10 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ParameterRequestProcessor implements RequestProcessorInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
     /**
      * @var string

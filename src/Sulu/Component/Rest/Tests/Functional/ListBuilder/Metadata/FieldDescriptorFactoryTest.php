@@ -38,10 +38,7 @@ class FieldDescriptorFactoryTest extends TestCase
      */
     private $configCachePath;
 
-    /**
-     * @var bool
-     */
-    private $debug = false;
+    private bool $debug = false;
 
     /**
      * @var ProviderInterface[]

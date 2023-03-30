@@ -30,27 +30,27 @@ class RequestListenerTest extends TestCase
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<RouterInterface>
      */
-    private $router;
+    private ObjectProphecy $router;
 
     /**
      * @var ObjectProphecy<PortalInformation>
      */
-    private $portalInformation;
+    private ObjectProphecy $portalInformation;
 
     /**
      * @var ObjectProphecy<RequestContext>
      */
-    private $requestContext;
+    private ObjectProphecy $requestContext;
 
     /**
      * @var ObjectProphecy<HttpKernelInterface>
      */
-    private $kernel;
+    private ObjectProphecy $kernel;
 
     public function setUp(): void
     {

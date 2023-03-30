@@ -37,27 +37,15 @@ class TagManager implements TagManagerInterface
      *
      * @var TagRepository
      */
-    private $tagRepository;
+    private \Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface $tagRepository;
 
-    /**
-     * @var ObjectManager
-     */
-    private $em;
+    private \Doctrine\Persistence\ObjectManager $em;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
-    /**
-     * @var TrashManagerInterface|null
-     */
-    private $trashManager;
+    private ?\Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface $trashManager = null;
 
     public function __construct(
         TagRepositoryInterface $tagRepository,

@@ -24,20 +24,17 @@ class UserTwigExtensionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var UserTwigExtension
-     */
-    private $extension;
+    private \Sulu\Bundle\SecurityBundle\Twig\UserTwigExtension $extension;
 
     /**
      * @var Cache
      */
-    private $cache;
+    private \Doctrine\Common\Cache\ArrayCache $cache;
 
     /**
      * @var ObjectProphecy<UserRepository>
      */
-    private $userRepository;
+    private ObjectProphecy $userRepository;
 
     protected function setUp(): void
     {

@@ -33,47 +33,47 @@ class StructureProviderTest extends TestCase
     /**
      * @var LocalizedReindexProviderInterface
      */
-    private $provider;
+    private \Sulu\Bundle\PageBundle\Search\Reindex\StructureProvider $provider;
 
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<MetadataFactoryInterface>
      */
-    private $metadataFactory;
+    private ObjectProphecy $metadataFactory;
 
     /**
      * @var ObjectProphecy<StructureMetadataFactoryInterface>
      */
-    private $structureFactory;
+    private ObjectProphecy $structureFactory;
 
     /**
      * @var ObjectProphecy<Query>
      */
-    private $query;
+    private ObjectProphecy $query;
 
     /**
      * @var ObjectProphecy<Metadata>
      */
-    private $metadata1;
+    private ObjectProphecy $metadata1;
 
     /**
      * @var ObjectProphecy<StructureBehavior>
      */
-    private $structure;
+    private ObjectProphecy $structure;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $inspector;
+    private ObjectProphecy $inspector;
 
     /**
      * @var SecurityBehavior
      */
-    private $secureStructure;
+    private ObjectProphecy $secureStructure;
 
     public function setUp(): void
     {

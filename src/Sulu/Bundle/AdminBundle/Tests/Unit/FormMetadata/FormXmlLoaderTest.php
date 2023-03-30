@@ -31,15 +31,12 @@ class FormXmlLoaderTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var FormXmlLoader
-     */
-    private $loader;
+    private \Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader $loader;
 
     /**
      * @var ObjectProphecy<TranslatorInterface>
      */
-    private $translator;
+    private ObjectProphecy $translator;
 
     public function setUp(): void
     {

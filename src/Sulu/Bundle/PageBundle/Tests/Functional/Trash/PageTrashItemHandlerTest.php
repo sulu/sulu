@@ -11,40 +11,28 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Trash;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
-use Sulu\Bundle\PageBundle\Trash\PageTrashItemHandler;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Document\RedirectType;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class PageTrashItemHandlerTest extends SuluTestCase
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var PageTrashItemHandler
-     */
-    private $pageTrashItemHandler;
+    private ?object $pageTrashItemHandler = null;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
     /**
      * @var ObjectRepository<ActivityInterface>
      */
-    private $activityRepository;
+    private \Doctrine\ORM\EntityRepository $activityRepository;
 
     public function setUp(): void
     {

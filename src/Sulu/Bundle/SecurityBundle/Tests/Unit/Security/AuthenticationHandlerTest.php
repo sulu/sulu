@@ -28,30 +28,27 @@ class AuthenticationHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var AuthenticationHandler
-     */
-    private $authenticationHandler;
+    private \Sulu\Bundle\SecurityBundle\Security\AuthenticationHandler $authenticationHandler;
 
     /**
      * @var ObjectProphecy<AuthenticationException>
      */
-    private $exception;
+    private ObjectProphecy $exception;
 
     /**
      * @var ObjectProphecy<Request>
      */
-    private $request;
+    private ObjectProphecy $request;
 
     /**
      * @var ObjectProphecy<TokenInterface>
      */
-    private $token;
+    private ObjectProphecy $token;
 
     /**
      * @var ObjectProphecy<UserInterface>
      */
-    private $user;
+    private ObjectProphecy $user;
 
     public function setUp(): void
     {

@@ -21,10 +21,8 @@ class TagSelection extends ComplexContentType implements ContentTypeExportInterf
 {
     /**
      * Responsible for saving the tags in the database.
-     *
-     * @var TagManagerInterface
      */
-    private $tagManager;
+    private \Sulu\Bundle\TagBundle\Tag\TagManagerInterface $tagManager;
 
     public function __construct(TagManagerInterface $tagManager)
     {

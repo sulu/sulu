@@ -38,42 +38,42 @@ class FormatOptionsManagerTest extends TestCase
     /**
      * @var ObjectProphecy<EntityManagerInterface>
      */
-    private $em;
+    private ObjectProphecy $em;
 
     /**
      * @var ObjectProphecy<EntityRepository>
      */
-    private $formatOptionsRepository;
+    private ObjectProphecy $formatOptionsRepository;
 
     /**
      * @var ObjectProphecy<MediaManagerInterface>
      */
-    private $mediaManager;
+    private ObjectProphecy $mediaManager;
 
     /**
      * @var ObjectProphecy<FormatManagerInterface>
      */
-    private $formatManager;
+    private ObjectProphecy $formatManager;
 
     /**
      * @var ObjectProphecy<DomainEventCollectorInterface>
      */
-    private $domainEventCollector;
+    private ObjectProphecy $domainEventCollector;
 
     /**
      * @var MediaInterface[]
      */
-    private $media;
+    private ?array $media = null;
 
     /**
      * @var FormatOptions[]
      */
-    private $formatOptions;
+    private ?array $formatOptions = null;
 
     /**
      * @var FormatOptionsManagerInterface
      */
-    private $formatOptionsManager;
+    private \Sulu\Bundle\MediaBundle\Media\FormatOptions\FormatOptionsManager $formatOptionsManager;
 
     protected function setUp(): void
     {

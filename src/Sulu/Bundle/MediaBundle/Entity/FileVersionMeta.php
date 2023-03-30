@@ -46,10 +46,7 @@ class FileVersionMeta
      */
     private $locale;
 
-    /**
-     * @var FileVersion
-     */
-    private $fileVersion;
+    private ?\Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion = null;
 
     /**
      * Get id.

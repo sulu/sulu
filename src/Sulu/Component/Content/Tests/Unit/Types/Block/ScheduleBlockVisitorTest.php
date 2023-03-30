@@ -27,17 +27,14 @@ class ScheduleBlockVisitorTest extends TestCase
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<CacheLifetimeRequestStore>
      */
-    private $cacheLifetimeRequestStore;
+    private ObjectProphecy $cacheLifetimeRequestStore;
 
-    /**
-     * @var ScheduleBlockVisitor
-     */
-    private $scheduleBlockVisitor;
+    private \Sulu\Component\Content\Types\Block\ScheduleBlockVisitor $scheduleBlockVisitor;
 
     public function setUp(): void
     {

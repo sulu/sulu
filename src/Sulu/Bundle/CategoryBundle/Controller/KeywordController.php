@@ -43,45 +43,27 @@ class KeywordController extends AbstractRestController implements ClassResourceI
 
     public const FORCE_MERGE = 'merge';
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
+    private \Sulu\Component\Rest\RestHelperInterface $restHelper;
 
     /**
      * @var DoctrineListBuilderFactory
      */
-    private $listBuilderFactory;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface $listBuilderFactory;
 
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
+    private \Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface $fieldDescriptorFactory;
 
-    /**
-     * @var KeywordManagerInterface
-     */
-    private $keywordManager;
+    private \Sulu\Bundle\CategoryBundle\Category\KeywordManagerInterface $keywordManager;
 
-    /**
-     * @var KeywordRepositoryInterface
-     */
-    private $keywordRepository;
+    private \Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface $keywordRepository;
 
-    /**
-     * @var CategoryRepositoryInterface
-     */
-    private $categoryRepository;
+    private \Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface $categoryRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
     /**
      * @var class-string
      */
-    private $keywordClass;
+    private string $keywordClass;
 
     protected static $entityKey = 'category_keywords';
 

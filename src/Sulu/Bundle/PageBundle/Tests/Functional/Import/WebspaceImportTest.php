@@ -14,8 +14,6 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Import;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Import\WebspaceImport;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -24,22 +22,16 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class WebspaceImportTest extends SuluTestCase
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
     /**
      * @var object
      */
     private $homeDocument;
 
-    private $pages = [];
+    private array $pages = [];
 
-    /**
-     * @var WebspaceImport
-     */
-    private $webspaceImporter;
+    private ?object $webspaceImporter = null;
 
     protected $distPath = __DIR__ . '/../../fixtures/import/export.xliff.dist';
 

@@ -21,10 +21,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * @var bool
-     */
-    private $debug;
+    private bool $debug;
 
     public function __construct(bool $debug)
     {

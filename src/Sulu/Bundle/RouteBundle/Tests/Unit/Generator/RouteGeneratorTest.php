@@ -27,17 +27,14 @@ class RouteGeneratorTest extends TestCase
     /**
      * @var ObjectProphecy<TokenProviderInterface>
      */
-    private $tokenProvider;
+    private ObjectProphecy $tokenProvider;
 
     /**
      * @var ObjectProphecy<SlugifierInterface>
      */
-    private $slugifier;
+    private ObjectProphecy $slugifier;
 
-    /**
-     * @var RouteGenerator
-     */
-    private $generator;
+    private \Sulu\Bundle\RouteBundle\Generator\RouteGenerator $generator;
 
     public function setUp(): void
     {

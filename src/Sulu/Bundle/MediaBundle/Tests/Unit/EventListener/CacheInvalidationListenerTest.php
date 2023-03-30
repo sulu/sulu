@@ -33,12 +33,9 @@ class CacheInvalidationListenerTest extends TestCase
     /**
      * @var ObjectProphecy<CacheManager>
      */
-    private $cacheManager;
+    private ObjectProphecy $cacheManager;
 
-    /**
-     * @var CacheInvalidationListener
-     */
-    private $listener;
+    private \Sulu\Bundle\MediaBundle\EventListener\CacheInvalidationListener $listener;
 
     protected function setUp(): void
     {

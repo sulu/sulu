@@ -37,35 +37,17 @@ class WebspaceCopyCommand extends Command
 {
     protected static $defaultName = 'sulu:webspaces:copy';
 
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
+    private ?\Symfony\Component\Console\Style\SymfonyStyle $io = null;
 
-    /**
-     * @var OutputInterface
-     */
-    private $output;
+    private ?\Symfony\Component\Console\Output\OutputInterface $output = null;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private \Sulu\Component\PHPCR\SessionManager\SessionManagerInterface $sessionManager;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $documentInspector;
 
-    /**
-     * @var HtmlTagExtractor
-     */
-    private $htmlTagExtractor;
+    private \Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor $htmlTagExtractor;
 
     /**
      * @var string

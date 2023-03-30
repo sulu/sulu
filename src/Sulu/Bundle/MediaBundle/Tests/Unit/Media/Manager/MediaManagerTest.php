@@ -55,95 +55,92 @@ class MediaManagerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var MediaManager
-     */
-    private $mediaManager;
+    private \Sulu\Bundle\MediaBundle\Media\Manager\MediaManager $mediaManager;
 
     /**
      * @var ObjectProphecy<MediaRepositoryInterface>
      */
-    private $mediaRepository;
+    private ObjectProphecy $mediaRepository;
 
     /**
      * @var ObjectProphecy<CollectionRepository>
      */
-    private $collectionRepository;
+    private ObjectProphecy $collectionRepository;
 
     /**
      * @var ObjectProphecy<UserRepositoryInterface>
      */
-    private $userRepository;
+    private ObjectProphecy $userRepository;
 
     /**
      * @var ObjectProphecy<CategoryRepositoryInterface>
      */
-    private $categoryRepository;
+    private ObjectProphecy $categoryRepository;
 
     /**
      * @var ObjectProphecy<TargetGroupRepositoryInterface>
      */
-    private $targetGroupRepository;
+    private ObjectProphecy $targetGroupRepository;
 
     /**
      * @var ObjectProphecy<EntityManager>
      */
-    private $em;
+    private ObjectProphecy $em;
 
     /**
      * @var ObjectProphecy<StorageInterface>
      */
-    private $storage;
+    private ObjectProphecy $storage;
 
     /**
      * @var ObjectProphecy<FileValidatorInterface>
      */
-    private $validator;
+    private ObjectProphecy $validator;
 
     /**
      * @var ObjectProphecy<FormatManagerInterface>
      */
-    private $formatManager;
+    private ObjectProphecy $formatManager;
 
     /**
      * @var ObjectProphecy<TagManagerInterface>
      */
-    private $tagManager;
+    private ObjectProphecy $tagManager;
 
     /**
      * @var ObjectProphecy<TypeManagerInterface>
      */
-    private $typeManager;
+    private ObjectProphecy $typeManager;
 
     /**
      * @var ObjectProphecy<PathCleanupInterface>
      */
-    private $pathCleaner;
+    private ObjectProphecy $pathCleaner;
 
     /**
      * @var ObjectProphecy<DomainEventCollectorInterface>
      */
-    private $domainEventCollector;
+    private ObjectProphecy $domainEventCollector;
 
     /**
      * @var ObjectProphecy<TokenStorageInterface>
      */
-    private $tokenStorage;
+    private ObjectProphecy $tokenStorage;
 
     /**
      * @var ObjectProphecy<SecurityCheckerInterface>
      */
-    private $securityChecker;
+    private ObjectProphecy $securityChecker;
 
     /**
      * @var ObjectProphecy<MediaPropertiesProviderInterface>
      */
-    private $mediaPropertiesProvider;
+    private ObjectProphecy $mediaPropertiesProvider;
 
     /**
      * @var ObjectProphecy<CategoryManagerInterface>
      */
-    private $categoryManager;
+    private ObjectProphecy $categoryManager;
 
     public function setUp(): void
     {

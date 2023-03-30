@@ -19,12 +19,12 @@ class Navigation
     /**
      * @var NavigationContext[]
      */
-    private $contexts = [];
+    private array $contexts = [];
 
     /**
      * @var string[]
      */
-    private $keys = [];
+    private array $keys = [];
 
     public function __construct($contexts = [])
     {

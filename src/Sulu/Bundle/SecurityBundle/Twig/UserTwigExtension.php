@@ -22,15 +22,9 @@ use Twig\TwigFunction;
  */
 class UserTwigExtension extends AbstractExtension
 {
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
+    private \Sulu\Bundle\SecurityBundle\Entity\UserRepository $userRepository;
 
-    /**
-     * @var Cache
-     */
-    private $cache;
+    private \Doctrine\Common\Cache\Cache $cache;
 
     public function __construct(Cache $cache, UserRepository $userRepository)
     {

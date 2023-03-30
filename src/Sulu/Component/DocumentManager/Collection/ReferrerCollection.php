@@ -22,25 +22,16 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class ReferrerCollection extends AbstractLazyCollection
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher;
 
-    /**
-     * @var NodeInterface
-     */
-    private $node;
+    private \PHPCR\NodeInterface $node;
 
     /**
      * @var string
      */
     private $locale;
 
-    /**
-     * @var bool
-     */
-    private $initialized = false;
+    private bool $initialized = false;
 
     public function __construct(NodeInterface $node, EventDispatcherInterface $dispatcher, $locale)
     {

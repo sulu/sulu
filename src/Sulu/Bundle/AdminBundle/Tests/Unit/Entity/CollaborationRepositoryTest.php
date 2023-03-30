@@ -27,7 +27,7 @@ class CollaborationRepositoryTest extends TestCase
     /**
      * @var ObjectProphecy<CacheItemPoolInterface>
      */
-    private $cache;
+    private ObjectProphecy $cache;
 
     public static function setUpBeforeClass(): void
     {

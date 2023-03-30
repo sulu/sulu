@@ -28,30 +28,27 @@ class DoctrineAccessControlProviderTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var DoctrineAccessControlProvider
-     */
-    private $doctrineAccessControlProvider;
+    private \Sulu\Component\Security\Authorization\AccessControl\DoctrineAccessControlProvider $doctrineAccessControlProvider;
 
     /**
      * @var ObjectProphecy<ObjectManager>
      */
-    private $objectManager;
+    private ObjectProphecy $objectManager;
 
     /**
      * @var ObjectProphecy<RoleRepositoryInterface>
      */
-    private $roleRepository;
+    private ObjectProphecy $roleRepository;
 
     /**
      * @var ObjectProphecy<AccessControlRepositoryInterface>
      */
-    private $accessControlRepository;
+    private ObjectProphecy $accessControlRepository;
 
     /**
      * @var ObjectProphecy<MaskConverterInterface>
      */
-    private $maskConverter;
+    private ObjectProphecy $maskConverter;
 
     public function setUp(): void
     {

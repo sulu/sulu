@@ -33,62 +33,53 @@ class ParentSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<HydrateEvent>
      */
-    private $hydrateEvent;
+    private ObjectProphecy $hydrateEvent;
 
     /**
      * @var ObjectProphecy<MoveEvent>
      */
-    private $moveEvent;
+    private ObjectProphecy $moveEvent;
 
     /**
      * @var ObjectProphecy<ParentBehavior>
      */
-    private $document;
+    private ObjectProphecy $document;
 
-    /**
-     * @var \stdClass
-     */
-    private $notImplementing;
+    private \stdClass $notImplementing;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<NodeTypeInterface>
      */
-    private $primaryNodeType;
+    private ObjectProphecy $primaryNodeType;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $parentNode;
+    private ObjectProphecy $parentNode;
 
-    /**
-     * @var \stdClass
-     */
-    private $parentDocument;
+    private \stdClass $parentDocument;
 
     /**
      * @var ObjectProphecy<ProxyFactory>
      */
-    private $proxyFactory;
+    private ObjectProphecy $proxyFactory;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $inspector;
+    private ObjectProphecy $inspector;
 
     /**
      * @var ObjectProphecy<DocumentManager>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
-    /**
-     * @var ParentSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\ParentSubscriber $subscriber;
 
     public function setUp(): void
     {

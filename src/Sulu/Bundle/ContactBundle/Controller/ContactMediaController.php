@@ -40,20 +40,11 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
 {
     protected static $mediaEntityKey = 'contact_media';
 
-    /**
-     * @var AbstractContactManager
-     */
-    private $contactManager;
+    private \Sulu\Bundle\ContactBundle\Contact\AbstractContactManager $contactManager;
 
-    /**
-     * @var string
-     */
-    private $contactClass;
+    private string $contactClass;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

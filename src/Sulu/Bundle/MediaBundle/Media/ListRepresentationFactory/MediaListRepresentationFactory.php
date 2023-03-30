@@ -18,15 +18,9 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 
 class MediaListRepresentationFactory
 {
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
+    private \Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface $mediaManager;
 
-    /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
+    private \Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface $formatManager;
 
     public function __construct(MediaManagerInterface $mediaManager, FormatManagerInterface $formatManager)
     {

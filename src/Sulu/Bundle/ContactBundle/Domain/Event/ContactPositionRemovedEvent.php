@@ -17,15 +17,9 @@ use Sulu\Bundle\ContactBundle\Entity\Position;
 
 class ContactPositionRemovedEvent extends DomainEvent
 {
-    /**
-     * @var int
-     */
-    private $positionId;
+    private int $positionId;
 
-    /**
-     * @var string
-     */
-    private $positionName;
+    private string $positionName;
 
     public function __construct(
         int $positionId,

@@ -24,25 +24,22 @@ class NavigationContextSubscriberTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var NavigationContextSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\Content\Document\Subscriber\NavigationContextSubscriber $subscriber;
 
     /**
      * @var ObjectProphecy<NavigationContextBehavior>
      */
-    private $document;
+    private ObjectProphecy $document;
 
     /**
      * @var ObjectProphecy<Metadata>
      */
-    private $metadata;
+    private ObjectProphecy $metadata;
 
     /**
      * @var ObjectProphecy<MetadataLoadEvent>
      */
-    private $event;
+    private ObjectProphecy $event;
 
     public function setUp(): void
     {

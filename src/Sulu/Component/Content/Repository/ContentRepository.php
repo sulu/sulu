@@ -15,8 +15,6 @@ use Jackalope\Query\QOM\PropertyValue;
 use Jackalope\Query\Row;
 use PHPCR\ItemNotFoundException;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
-use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
-use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
 use PHPCR\Util\QOM\QueryBuilder;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
@@ -42,7 +40,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
  */
 class ContentRepository implements ContentRepositoryInterface, DescendantProviderInterface
 {
-    private static $nonFallbackProperties = [
+    private static array $nonFallbackProperties = [
         'uuid',
         'state',
         'order',
@@ -55,55 +53,25 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         'shadowBase',
     ];
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private \Sulu\Component\PHPCR\SessionManager\SessionManagerInterface $sessionManager;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private \Sulu\Component\DocumentManager\PropertyEncoder $propertyEncoder;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private \PHPCR\SessionInterface $session;
 
-    /**
-     * @var QueryObjectModelFactoryInterface
-     */
-    private $qomFactory;
+    private \PHPCR\Query\QOM\QueryObjectModelFactoryInterface $qomFactory;
 
-    /**
-     * @var LocalizationFinderInterface
-     */
-    private $localizationFinder;
+    private \Sulu\Component\Content\Compat\LocalizationFinderInterface $localizationFinder;
 
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
+    private \Sulu\Component\Content\Compat\StructureManagerInterface $structureManager;
 
-    /**
-     * @var SuluNodeHelper
-     */
-    private $nodeHelper;
+    private \Sulu\Component\Util\SuluNodeHelper $nodeHelper;
 
-    /**
-     * @var array
-     */
-    private $permissions;
+    private array $permissions;
 
-    /**
-     * @var SystemStoreInterface
-     */
-    private $systemStore;
+    private \Sulu\Bundle\SecurityBundle\System\SystemStoreInterface $systemStore;
 
     public function __construct(
         SessionManagerInterface $sessionManager,

@@ -50,30 +50,18 @@ class StructureProvider implements ProviderInterface
 
     public const FIELD_WEBSPACE_KEY = 'webspace_key';
 
-    /**
-     * @var Factory
-     */
-    private $factory;
+    private \Massive\Bundle\SearchBundle\Search\Factory $factory;
 
     /**
      * @var string
      */
-    private $mapping;
+    private array $mapping;
 
-    /**
-     * @var StructureMetadataFactory
-     */
-    private $structureFactory;
+    private \Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory $structureFactory;
 
-    /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
+    private \Sulu\Component\Content\Extension\ExtensionManagerInterface $extensionManager;
 
-    /**
-     * @var MetadataFactory
-     */
-    private $metadataFactory;
+    private \Sulu\Component\DocumentManager\Metadata\MetadataFactory $metadataFactory;
 
     public function __construct(
         Factory $factory,

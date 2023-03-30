@@ -23,20 +23,12 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
 {
     /**
      * The field descriptor which will be group concatenated.
-     *
-     * @var DoctrineFieldDescriptorInterface
      */
-    private $fieldDescriptor;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface $fieldDescriptor;
 
-    /**
-     * @var string
-     */
-    private $glue;
+    private string $glue;
 
-    /**
-     * @var bool
-     */
-    private $distinct;
+    private bool $distinct;
 
     public function __construct(
         DoctrineFieldDescriptorInterface $fieldDescriptor,

@@ -26,15 +26,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DocumentExecutor
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var Initializer
-     */
-    private $initializer;
+    private \Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer $initializer;
 
     public function __construct(
         DocumentManagerInterface $documentManager,

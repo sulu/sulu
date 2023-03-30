@@ -17,10 +17,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 class UserEnabledEvent extends DomainEvent
 {
-    /**
-     * @var UserInterface
-     */
-    private $resourceUser;
+    private \Sulu\Component\Security\Authentication\UserInterface $resourceUser;
 
     public function __construct(UserInterface $resourceUser)
     {

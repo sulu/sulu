@@ -16,10 +16,7 @@ namespace Sulu\Bundle\AdminBundle\Exception;
  */
 class ResourceNotFoundException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $resourceKey;
+    private string $resourceKey;
 
     public function __construct(string $resourceKey)
     {

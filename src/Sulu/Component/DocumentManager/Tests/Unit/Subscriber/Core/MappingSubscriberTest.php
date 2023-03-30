@@ -32,57 +32,51 @@ class MappingSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<MetadataFactoryInterface>
      */
-    private $metadataFactory;
+    private ObjectProphecy $metadataFactory;
 
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $encoder;
+    private ObjectProphecy $encoder;
 
     /**
      * @var ObjectProphecy<Metadata>
      */
-    private $metadata;
+    private ObjectProphecy $metadata;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
-    /**
-     * @var \stdClass
-     */
-    private $document;
+    private \stdClass $document;
 
     /**
      * @var ObjectProphecy<DocumentAccessor>
      */
-    private $accessor;
+    private ObjectProphecy $accessor;
 
     /**
      * @var ObjectProphecy<PersistEvent>
      */
-    private $persistEvent;
+    private ObjectProphecy $persistEvent;
 
     /**
      * @var ObjectProphecy<HydrateEvent>
      */
-    private $hydrateEvent;
+    private ObjectProphecy $hydrateEvent;
 
     /**
      * @var ObjectProphecy<ProxyFactory>
      */
-    private $proxyFactory;
+    private ObjectProphecy $proxyFactory;
 
     /**
      * @var ObjectProphecy<DocumentRegistry>
      */
-    private $documentRegistry;
+    private ObjectProphecy $documentRegistry;
 
-    /**
-     * @var MappingSubscriber
-     */
-    private $mappingSubscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Core\MappingSubscriber $mappingSubscriber;
 
     public function setUp(): void
     {

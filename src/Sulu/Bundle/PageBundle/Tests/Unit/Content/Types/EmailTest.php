@@ -17,10 +17,7 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 
 class EmailTest extends TestCase
 {
-    /**
-     * @var Email
-     */
-    private $contentType;
+    private \Sulu\Bundle\PageBundle\Content\Types\Email $contentType;
 
     protected function setUp(): void
     {

@@ -29,20 +29,11 @@ class ShadowLocaleSubscriber implements EventSubscriberInterface
 
     public const SHADOW_LOCALE_FIELD = 'shadow-base';
 
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $inspector;
 
-    /**
-     * @var DocumentRegistry
-     */
-    private $registry;
+    private \Sulu\Component\DocumentManager\DocumentRegistry $registry;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder $encoder;
 
     public function __construct(
         PropertyEncoder $encoder,

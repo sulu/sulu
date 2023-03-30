@@ -13,40 +13,22 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Rule\Type;
 
 class SingleSelection implements RuleTypeInterface
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $resourceKey;
+    private string $resourceKey;
 
-    /**
-     * @var string
-     */
-    private $adapter;
+    private string $adapter;
 
-    /**
-     * @var string
-     */
-    private $icon;
+    private string $icon;
 
     /**
      * @var string[]
      */
-    private $displayProperties;
+    private array $displayProperties;
 
-    /**
-     * @var string
-     */
-    private $emptyText;
+    private string $emptyText;
 
-    /**
-     * @var string
-     */
-    private $overlayTitle;
+    private string $overlayTitle;
 
     public function __construct(
         string $name,

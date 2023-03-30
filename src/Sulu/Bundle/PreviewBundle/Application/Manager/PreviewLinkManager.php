@@ -21,25 +21,13 @@ use Symfony\Component\Routing\RouterInterface;
 
 class PreviewLinkManager implements PreviewLinkManagerInterface
 {
-    /**
-     * @var PreviewLinkRepositoryInterface
-     */
-    private $previewLinkRepository;
+    private \Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface $previewLinkRepository;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
-    /**
-     * @var PreviewObjectProviderRegistryInterface
-     */
-    private $previewObjectProviderRegistry;
+    private \Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry;
 
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private \Symfony\Component\Routing\RouterInterface $router;
 
     public function __construct(
         PreviewLinkRepositoryInterface $previewLinkRepository,

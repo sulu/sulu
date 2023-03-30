@@ -18,10 +18,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
  */
 class ExpressionFormMetadataVisitor implements FormMetadataVisitorInterface, TypedFormMetadataVisitorInterface
 {
-    /**
-     * @var ExpressionLanguage
-     */
-    private $expressionLanguage;
+    private \Symfony\Component\ExpressionLanguage\ExpressionLanguage $expressionLanguage;
 
     public function __construct(
         ExpressionLanguage $expressionLanguage

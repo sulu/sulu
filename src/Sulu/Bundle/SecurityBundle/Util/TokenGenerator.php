@@ -20,7 +20,7 @@ namespace Sulu\Bundle\SecurityBundle\Util;
  */
 class TokenGenerator implements TokenGeneratorInterface
 {
-    private $useOpenSsl;
+    private ?bool $useOpenSsl = null;
 
     public function __construct()
     {

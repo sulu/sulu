@@ -28,22 +28,19 @@ class RouterListenerTest extends TestCase
     /**
      * @var ObjectProphecy<BaseRouteListener>
      */
-    private $baseRouteListener;
+    private ObjectProphecy $baseRouteListener;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
-    /**
-     * @var RouterListener
-     */
-    private $routerListener;
+    private \Sulu\Bundle\WebsiteBundle\EventListener\RouterListener $routerListener;
 
     /**
      * @var ObjectProphecy<HttpKernelInterface>
      */
-    private $kernel;
+    private ObjectProphecy $kernel;
 
     public function setUp(): void
     {

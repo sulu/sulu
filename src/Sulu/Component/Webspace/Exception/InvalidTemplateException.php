@@ -15,15 +15,9 @@ use Sulu\Component\Webspace\Webspace;
 
 class InvalidTemplateException extends \Exception
 {
-    /**
-     * @var Webspace
-     */
-    private $webspace;
+    private \Sulu\Component\Webspace\Webspace $webspace;
 
-    /**
-     * @var string
-     */
-    private $template;
+    private string $template;
 
     public function __construct(Webspace $webspace, string $template)
     {

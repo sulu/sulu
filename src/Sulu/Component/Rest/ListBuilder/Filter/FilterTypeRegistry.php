@@ -16,7 +16,7 @@ class FilterTypeRegistry
     /**
      * @var FilterTypeInterface[]
      */
-    private $filterTypes;
+    private array $filterTypes;
 
     public function __construct(iterable $filterTypes)
     {

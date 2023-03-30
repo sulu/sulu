@@ -27,40 +27,37 @@ class ContactSelectionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ContactSelection
-     */
-    private $contactSelection;
+    private \Sulu\Bundle\ContactBundle\Content\Types\ContactSelection $contactSelection;
 
     /**
      * @var ObjectProphecy<ContactRepositoryInterface>
      */
-    private $contactRepository;
+    private ObjectProphecy $contactRepository;
 
     /**
      * @var ObjectProphecy<ReferenceStore>
      */
-    private $contactReferenceStore;
+    private ObjectProphecy $contactReferenceStore;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<PropertyInterface>
      */
-    private $property;
+    private ObjectProphecy $property;
 
     /**
      * @var ObjectProphecy<ContactInterface>
      */
-    private $contact1;
+    private ObjectProphecy $contact1;
 
     /**
      * @var ObjectProphecy<ContactInterface>
      */
-    private $contact2;
+    private ObjectProphecy $contact2;
 
     protected function setUp(): void
     {

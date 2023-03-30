@@ -22,10 +22,7 @@ class PreviewKernel extends Kernel
 {
     public const CONTEXT_PREVIEW = 'preview';
 
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private ?string $projectDir = null;
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {

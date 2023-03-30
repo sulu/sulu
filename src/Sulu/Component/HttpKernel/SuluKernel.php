@@ -30,25 +30,19 @@ abstract class SuluKernel extends Kernel
 
     public const CONTEXT_WEBSITE = 'website';
 
-    /**
-     * @var string
-     */
-    private $context = self::CONTEXT_ADMIN;
+    private string $context = self::CONTEXT_ADMIN;
 
-    /**
-     * @var string
-     */
-    private $reversedContext = self::CONTEXT_WEBSITE;
+    private string $reversedContext = self::CONTEXT_WEBSITE;
 
     /**
      * @var string[]
      */
-    private $loadedFiles = [];
+    private array $loadedFiles = [];
 
     /**
      * @var string[]
      */
-    private $importedFiles = [];
+    private array $importedFiles = [];
 
     /**
      * Overload the parent constructor method to add an additional

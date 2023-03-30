@@ -27,30 +27,15 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PermissionController implements ClassResourceInterface
 {
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
+    private \Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface $accessControlManager;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
+    private \Sulu\Component\Security\Authentication\RoleRepositoryInterface $roleRepository;
 
-    /**
-     * @var ViewHandlerInterface
-     */
-    private $viewHandler;
+    private \FOS\RestBundle\View\ViewHandlerInterface $viewHandler;
 
-    /**
-     * @var array
-     */
-    private $resources;
+    private array $resources;
 
     public function __construct(
         AccessControlManagerInterface $accessControlManager,

@@ -28,17 +28,12 @@ class ContactAddress
      */
     private $id;
 
-    /**
-     * @var Address
-     */
-    private $address;
+    private ?\Sulu\Bundle\ContactBundle\Entity\Address $address = null;
 
     /**
-     * @var ContactInterface
-     *
      * @Exclude
      */
-    private $contact;
+    private ?\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contact = null;
 
     /**
      * Set main.

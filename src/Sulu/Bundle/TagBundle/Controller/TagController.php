@@ -51,40 +51,19 @@ class TagController extends AbstractRestController implements ClassResourceInter
 
     protected $bundlePrefix = 'tags.';
 
-    /**
-     * @var TagManagerInterface
-     */
-    private $tagManager;
+    private \Sulu\Bundle\TagBundle\Tag\TagManagerInterface $tagManager;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $listBuilderFactory;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface $listBuilderFactory;
 
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
+    private \Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface $fieldDescriptorFactory;
 
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
+    private \Symfony\Component\Routing\Generator\UrlGeneratorInterface $router;
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
+    private \Sulu\Component\Rest\RestHelperInterface $restHelper;
 
-    /**
-     * @var string
-     */
-    private $tagClass;
+    private string $tagClass;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

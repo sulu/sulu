@@ -25,19 +25,16 @@ class Environment
      *
      * @var Url[]
      */
-    private $urls = [];
+    private array $urls = [];
 
     /**
      * The custom-urls for this environment.
      *
      * @var CustomUrl[]
      */
-    private $customUrls = [];
+    private array $customUrls = [];
 
-    /**
-     * @var Url
-     */
-    private $mainUrl;
+    private ?\Sulu\Component\Webspace\Url $mainUrl = null;
 
     /**
      * Sets the tye of this environment.

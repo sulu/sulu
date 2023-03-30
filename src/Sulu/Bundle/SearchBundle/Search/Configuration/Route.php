@@ -13,15 +13,12 @@ namespace Sulu\Bundle\SearchBundle\Search\Configuration;
 
 class Route
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
     /**
      * @var string[]
      */
-    private $resultToRoute;
+    private array $resultToRoute;
 
     public function __construct(
         string $name,

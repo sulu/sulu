@@ -33,10 +33,7 @@ class Segment implements ArrayableInterface
      */
     private $default;
 
-    /**
-     * @var Metadata
-     */
-    private $metadata;
+    private ?\Sulu\Component\Content\Compat\Metadata $metadata = null;
 
     /**
      * Sets the key of the segment.

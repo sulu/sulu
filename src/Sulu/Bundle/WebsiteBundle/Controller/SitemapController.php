@@ -28,40 +28,19 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class SitemapController
 {
-    /**
-     * @var XmlSitemapRendererInterface
-     */
-    private $xmlSitemapRenderer;
+    private \Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapRendererInterface $xmlSitemapRenderer;
 
-    /**
-     * @var SitemapProviderPoolInterface
-     */
-    private $sitemapProviderPool;
+    private \Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPoolInterface $sitemapProviderPool;
 
-    /**
-     * @var XmlSitemapDumperInterface
-     */
-    private $xmlSitemapDumper;
+    private \Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumperInterface $xmlSitemapDumper;
 
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private \Symfony\Component\Filesystem\Filesystem $filesystem;
 
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
+    private \Symfony\Component\Routing\Generator\UrlGeneratorInterface $router;
 
-    /**
-     * @var int
-     */
-    private $cacheLifeTime;
+    private int $cacheLifeTime;
 
-    /**
-     * @var bool
-     */
-    private $debug;
+    private bool $debug;
 
     public function __construct(
         XmlSitemapRendererInterface $xmlSitemapRenderer,

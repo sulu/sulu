@@ -25,10 +25,7 @@ class SingleContactSelection extends SimpleContentType implements PreResolvableC
      */
     protected $contactRepository;
 
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $contactReferenceStore;
+    private \Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface $contactReferenceStore;
 
     public function __construct(
         ContactRepositoryInterface $contactRepository,

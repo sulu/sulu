@@ -18,10 +18,7 @@ use Sulu\Component\Content\Types\Block\HiddenBlockVisitor;
 
 class HiddenBlockVisitorTest extends TestCase
 {
-    /**
-     * @var HiddenBlockVisitor
-     */
-    private $hiddenBlockVisitor;
+    private \Sulu\Component\Content\Types\Block\HiddenBlockVisitor $hiddenBlockVisitor;
 
     public function setUp(): void
     {

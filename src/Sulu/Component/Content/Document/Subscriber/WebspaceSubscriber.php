@@ -23,25 +23,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class WebspaceSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private \Sulu\Component\DocumentManager\PropertyEncoder $propertyEncoder;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $documentInspector;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
     public function __construct(
         PropertyEncoder $propertyEncoder,

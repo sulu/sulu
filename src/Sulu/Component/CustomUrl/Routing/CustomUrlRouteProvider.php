@@ -27,25 +27,16 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class CustomUrlRouteProvider implements RouteProviderInterface
 {
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var PathBuilder
-     */
-    private $pathBuilder;
+    private \Sulu\Component\DocumentManager\PathBuilder $pathBuilder;
 
     /**
      * @var string
      */
     private $environment;
 
-    /**
-     * @var array
-     */
-    private $defaultOptions;
+    private array $defaultOptions;
 
     public function __construct(
         RequestAnalyzerInterface $requestAnalyzer,

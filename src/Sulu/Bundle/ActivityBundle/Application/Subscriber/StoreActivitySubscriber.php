@@ -17,10 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class StoreActivitySubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var ActivityRepositoryInterface
-     */
-    private $activityRepository;
+    private \Sulu\Bundle\ActivityBundle\Domain\Repository\ActivityRepositoryInterface $activityRepository;
 
     public function __construct(
         ActivityRepositoryInterface $activityRepository

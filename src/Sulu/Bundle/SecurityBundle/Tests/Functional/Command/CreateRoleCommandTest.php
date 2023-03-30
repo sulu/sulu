@@ -18,10 +18,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class CreateRoleCommandTest extends SuluTestCase
 {
-    /**
-     * @var CommandTester
-     */
-    private $tester;
+    private \Symfony\Component\Console\Tester\CommandTester $tester;
 
     public function setUp(): void
     {

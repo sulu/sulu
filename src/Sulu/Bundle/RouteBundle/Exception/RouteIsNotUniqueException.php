@@ -19,15 +19,9 @@ use Sulu\Bundle\RouteBundle\Model\RouteInterface;
  */
 class RouteIsNotUniqueException extends \DomainException
 {
-    /**
-     * @var RouteInterface
-     */
-    private $route;
+    private \Sulu\Bundle\RouteBundle\Model\RouteInterface $route;
 
-    /**
-     * @var RoutableInterface
-     */
-    private $entity;
+    private \Sulu\Bundle\RouteBundle\Model\RoutableInterface $entity;
 
     public function __construct(RouteInterface $route, RoutableInterface $entity)
     {

@@ -19,10 +19,7 @@ class PortalInformationTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var PortalInformation
-     */
-    private $portalInformation;
+    private \Sulu\Component\Webspace\PortalInformation $portalInformation;
 
     public function setUp(): void
     {

@@ -26,12 +26,12 @@ class TeaserProviderPoolTest extends TestCase
     /**
      * @var TeaserProviderInterface[]
      */
-    private $providers;
+    private array $providers;
 
     /**
      * @var TeaserProviderPoolInterface
      */
-    private $teaserProviderPool;
+    private \Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPool $teaserProviderPool;
 
     public function setUp(): void
     {

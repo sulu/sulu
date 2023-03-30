@@ -13,10 +13,7 @@ namespace Sulu\Bundle\AdminBundle\FieldType;
 
 class FieldTypeOptionRegistry implements FieldTypeOptionRegistryInterface
 {
-    /**
-     * @var array
-     */
-    private $options = [];
+    private array $options = [];
 
     public function add(string $name, string $baseFieldType, array $fieldTypeOptions): void
     {

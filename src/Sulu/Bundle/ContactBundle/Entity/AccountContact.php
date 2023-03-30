@@ -28,20 +28,11 @@ class AccountContact
      */
     private $id;
 
-    /**
-     * @var ContactInterface
-     */
-    private $contact;
+    private ?\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contact = null;
 
-    /**
-     * @var AccountInterface
-     */
-    private $account;
+    private ?\Sulu\Bundle\ContactBundle\Entity\AccountInterface $account = null;
 
-    /**
-     * @var Position|null
-     */
-    private $position;
+    private ?\Sulu\Bundle\ContactBundle\Entity\Position $position = null;
 
     /**
      * Set main.

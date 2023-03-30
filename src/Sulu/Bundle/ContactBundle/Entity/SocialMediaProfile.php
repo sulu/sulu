@@ -31,25 +31,19 @@ class SocialMediaProfile
      */
     private $id;
 
-    /**
-     * @var string
-     */
-    private $username;
+    private ?string $username = null;
 
-    /**
-     * @var SocialMediaProfileType
-     */
-    private $socialMediaProfileType;
+    private ?\Sulu\Bundle\ContactBundle\Entity\SocialMediaProfileType $socialMediaProfileType = null;
 
     /**
      * @var Collection<int, ContactInterface>
      */
-    private $contacts;
+    private \Doctrine\Common\Collections\ArrayCollection|array $contacts;
 
     /**
      * @var Collection<int, AccountInterface>
      */
-    private $accounts;
+    private \Doctrine\Common\Collections\ArrayCollection|array $accounts;
 
     /**
      * Constructor.

@@ -27,7 +27,7 @@ class InstantiatorSubscriberTest extends TestCase
 
     public const ALIAS = 'alias';
 
-    private $subscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Core\InstantiatorSubscriber $subscriber;
 
     public function setUp(): void
     {

@@ -17,10 +17,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class DispatchSpecificDomainEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
         EventDispatcherInterface $eventDispatcher

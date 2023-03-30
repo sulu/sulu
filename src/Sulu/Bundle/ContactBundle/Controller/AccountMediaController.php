@@ -40,20 +40,11 @@ class AccountMediaController extends AbstractMediaController implements ClassRes
 {
     protected static $mediaEntityKey = 'account_media';
 
-    /**
-     * @var AbstractContactManager
-     */
-    private $accountManager;
+    private \Sulu\Bundle\ContactBundle\Contact\AbstractContactManager $accountManager;
 
-    /**
-     * @var string
-     */
-    private $accountClass;
+    private string $accountClass;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

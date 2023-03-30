@@ -40,30 +40,18 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
  */
 class MediaSelectionContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, PropertyMetadataMapperInterface
 {
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
+    private \Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface $mediaManager;
 
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $referenceStore;
+    private \Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface $referenceStore;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private ?\Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer = null;
 
     /**
      * @var ?array
      */
     private $permissions;
 
-    /**
-     * @var PropertyMetadataMinMaxValueResolver|null
-     */
-    private $propertyMetadataMinMaxValueResolver;
+    private ?\Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver = null;
 
     public function __construct(
         MediaManagerInterface $mediaManager,

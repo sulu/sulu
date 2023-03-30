@@ -23,22 +23,16 @@ class RowsIterator extends \IteratorIterator
     /**
      * @var string[]
      */
-    private $columns;
+    private array $columns;
 
     /**
      * @var Content[]
      */
-    private $targets;
+    private array $targets;
 
-    /**
-     * @var GeneratorInterface
-     */
-    private $generator;
+    private \Sulu\Component\CustomUrl\Generator\GeneratorInterface $generator;
 
-    /**
-     * @var UserManagerInterface
-     */
-    private $userManager;
+    private \Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface $userManager;
 
     public function __construct(
         \Traversable $iterator,

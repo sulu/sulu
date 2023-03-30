@@ -27,12 +27,12 @@ class TeaserManagerTest extends TestCase
     /**
      * @var ObjectProphecy<TeaserProviderPoolInterface>
      */
-    private $providerPool;
+    private ObjectProphecy $providerPool;
 
     /**
      * @var TeaserManagerInterface
      */
-    private $teaserManager;
+    private \Sulu\Bundle\PageBundle\Teaser\TeaserManager $teaserManager;
 
     public function setUp(): void
     {

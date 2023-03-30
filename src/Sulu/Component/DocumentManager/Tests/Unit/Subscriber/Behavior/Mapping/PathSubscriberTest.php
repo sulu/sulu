@@ -29,42 +29,36 @@ class PathSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<AbstractMappingEvent>
      */
-    private $abstractMappingEvent;
+    private ObjectProphecy $abstractMappingEvent;
 
     /**
      * @var ObjectProphecy<PathBehavior>
      */
-    private $document;
+    private ObjectProphecy $document;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $pathNode;
+    private ObjectProphecy $pathNode;
 
-    /**
-     * @var \stdClass
-     */
-    private $pathDocument;
+    private \stdClass $pathDocument;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $inspector;
+    private ObjectProphecy $inspector;
 
     /**
      * @var ObjectProphecy<DocumentAccessor>
      */
-    private $accessor;
+    private ObjectProphecy $accessor;
 
-    /**
-     * @var PathSubscriber
-     */
-    private $pathSubscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\PathSubscriber $pathSubscriber;
 
     public function setUp(): void
     {

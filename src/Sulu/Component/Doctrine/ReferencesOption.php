@@ -50,22 +50,16 @@ class ReferencesOption implements EventSubscriber
     /**
      * The supported options.
      */
-    private static $knownOptions = [
+    private static array $knownOptions = [
         'entity',
         'field',
         'onDelete',
         'onUpdate',
     ];
 
-    /**
-     * @var ManagerRegistry
-     */
-    private $managerRegistry;
+    private \Doctrine\Persistence\ManagerRegistry $managerRegistry;
 
-    /**
-     * @var array
-     */
-    private $targetEntityMapping;
+    private array $targetEntityMapping;
 
     public function __construct(ManagerRegistry $managerRegistry, array $targetEntityMapping)
     {

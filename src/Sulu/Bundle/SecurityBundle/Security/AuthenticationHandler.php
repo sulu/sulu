@@ -31,10 +31,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
  */
 class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private \Symfony\Component\Routing\RouterInterface $router;
 
     /**
      * @var string[]

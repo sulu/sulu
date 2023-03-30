@@ -36,11 +36,9 @@ class PhoneType implements \JsonSerializable
     private $id;
 
     /**
-     * @var Collection
-     *
      * @Exclude
      */
-    private $phones;
+    private \Doctrine\Common\Collections\ArrayCollection|array $phones;
 
     /**
      * Constructor.

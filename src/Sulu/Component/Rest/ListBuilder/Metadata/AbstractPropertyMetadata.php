@@ -23,30 +23,15 @@ abstract class AbstractPropertyMetadata
      */
     private $name;
 
-    /**
-     * @var string
-     */
-    private $translation;
+    private string $translation;
 
-    /**
-     * @var string
-     */
-    private $visibility = FieldDescriptorInterface::VISIBILITY_NEVER;
+    private string $visibility = FieldDescriptorInterface::VISIBILITY_NEVER;
 
-    /**
-     * @var string
-     */
-    private $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER;
+    private string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER;
 
-    /**
-     * @var string
-     */
-    private $type = 'string';
+    private string $type = 'string';
 
-    /**
-     * @var bool
-     */
-    private $sortable = true;
+    private bool $sortable = true;
 
     /**
      * @var array<mixed>|null
@@ -63,10 +48,7 @@ abstract class AbstractPropertyMetadata
      */
     private $filterTypeParameters = null;
 
-    /**
-     * @var string
-     */
-    private $width;
+    private ?string $width = null;
 
     /**
      * @param string $name

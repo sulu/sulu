@@ -22,27 +22,15 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class CollaborationController implements ClassResourceInterface
 {
-    private static $resourceKey = 'collaborations';
+    private static string $resourceKey = 'collaborations';
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage;
 
-    /**
-     * @var CollaborationRepository
-     */
-    private $collaborationRepository;
+    private \Sulu\Bundle\AdminBundle\Entity\CollaborationRepository $collaborationRepository;
 
-    /**
-     * @var ViewHandler
-     */
-    private $viewHandler;
+    private \FOS\RestBundle\View\ViewHandler $viewHandler;
 
-    /**
-     * @var string
-     */
-    private $secret;
+    private string $secret;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,

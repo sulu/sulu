@@ -24,12 +24,9 @@ class NodeNameSlugifierTest extends TestCase
     /**
      * @var ObjectProphecy<SlugifierInterface>
      */
-    private $slugifier;
+    private ObjectProphecy $slugifier;
 
-    /**
-     * @var NodeNameSlugifier
-     */
-    private $nodeNameSlugifier;
+    private \Sulu\Component\DocumentManager\Slugifier\NodeNameSlugifier $nodeNameSlugifier;
 
     protected function setUp(): void
     {

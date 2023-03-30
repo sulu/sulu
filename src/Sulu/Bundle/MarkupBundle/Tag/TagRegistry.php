@@ -19,7 +19,7 @@ class TagRegistry implements TagRegistryInterface
     /**
      * @var TagInterface[]
      */
-    private $tags;
+    private array $tags;
 
     /**
      * @param TagInterface[] $tags

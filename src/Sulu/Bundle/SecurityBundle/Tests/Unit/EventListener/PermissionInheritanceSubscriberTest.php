@@ -28,14 +28,14 @@ class PermissionInheritanceSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<AccessControlManagerInterface>
      */
-    private $accessControlManager;
+    private ObjectProphecy $accessControlManager;
 
     /**
      * @var ObjectProphecy<EntityManagerInterface>
      */
-    private $entityManager;
+    private ObjectProphecy $entityManager;
 
-    private $permissionInheritanceSubscriber;
+    private \Sulu\Bundle\SecurityBundle\EventListener\PermissionInheritanceSubscriber $permissionInheritanceSubscriber;
 
     public function setUp(): void
     {

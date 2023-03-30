@@ -21,7 +21,7 @@ class FormatCacheClearer implements FormatCacheClearerInterface
     /**
      * @var FormatCacheInterface[]
      */
-    private $caches = [];
+    private array $caches = [];
 
     /**
      * Clear all or the given cache.

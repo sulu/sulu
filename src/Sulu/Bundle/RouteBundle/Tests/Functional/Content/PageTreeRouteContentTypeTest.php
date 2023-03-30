@@ -37,82 +37,67 @@ class PageTreeRouteContentTypeTest extends TestCase
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $documentInspector;
+    private ObjectProphecy $documentInspector;
 
     /**
      * @var ObjectProphecy<DocumentRegistry>
      */
-    private $documentRegistry;
+    private ObjectProphecy $documentRegistry;
 
     /**
      * @var ObjectProphecy<ChainRouteGeneratorInterface>
      */
-    private $chainRouteGenerator;
+    private ObjectProphecy $chainRouteGenerator;
 
     /**
      * @var ObjectProphecy<ConflictResolverInterface>
      */
-    private $conflictResolver;
+    private ObjectProphecy $conflictResolver;
 
     /**
      * @var ObjectProphecy<EntityManagerInterface>
      */
-    private $entityManager;
+    private ObjectProphecy $entityManager;
 
     /**
      * @var ObjectProphecy<RouteRepositoryInterface>
      */
-    private $routeRepository;
+    private ObjectProphecy $routeRepository;
 
     /**
      * @var RouteInterface
      */
-    private $route;
+    private \Sulu\Bundle\RouteBundle\Entity\Route $route;
 
-    /**
-     * @var PageTreeRouteContentType
-     */
-    private $contentType;
+    private \Sulu\Bundle\RouteBundle\Content\Type\PageTreeRouteContentType $contentType;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<PropertyInterface>
      */
-    private $property;
+    private ObjectProphecy $property;
 
     /**
      * @var ObjectProphecy<BasePageDocument>
      */
-    private $document;
+    private ObjectProphecy $document;
 
-    /**
-     * @var string
-     */
-    private $propertyName = 'i18n:de-routePath';
+    private string $propertyName = 'i18n:de-routePath';
 
-    /**
-     * @var string
-     */
-    private $webspaceKey = 'sulu_io';
+    private string $webspaceKey = 'sulu_io';
 
-    /**
-     * @var string
-     */
-    private $locale = 'de';
+    private string $locale = 'de';
 
-    /**
-     * @var string
-     */
-    private $uuid = '123-123-123';
+    private string $uuid = '123-123-123';
 
     public function setUp(): void
     {

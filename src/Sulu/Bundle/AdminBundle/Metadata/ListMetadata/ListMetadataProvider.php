@@ -24,12 +24,12 @@ class ListMetadataProvider implements MetadataProviderInterface
     /**
      * @var iterable<ListMetadataLoaderInterface>
      */
-    private $listMetadataLoaders;
+    private iterable $listMetadataLoaders;
 
     /**
      * @var iterable<ListMetadataVisitorInterface>
      */
-    private $listMetadataVisitors;
+    private iterable $listMetadataVisitors;
 
     /**
      * @param iterable<ListMetadataLoaderInterface> $listMetadataLoaders

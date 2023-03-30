@@ -12,22 +12,14 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Trash;
 
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
-use Sulu\Bundle\SnippetBundle\Trash\SnippetTrashItemHandler;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class SnippetTrashItemHandlerTest extends SuluTestCase
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var SnippetTrashItemHandler
-     */
-    private $snippetTrashItemHandler;
+    private ?object $snippetTrashItemHandler = null;
 
     public function setUp(): void
     {

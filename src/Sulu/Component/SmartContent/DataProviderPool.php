@@ -22,7 +22,7 @@ class DataProviderPool implements DataProviderPoolInterface
     /**
      * @var DataProviderInterface[]
      */
-    private $providers = [];
+    private array $providers = [];
 
     public function add($alias, DataProviderInterface $provider)
     {

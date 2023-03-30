@@ -21,30 +21,15 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class DoctrineListBuilderFactory implements DoctrineListBuilderFactoryInterface
 {
-    /**
-     * @var EntityManager
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManager $em;
 
-    /**
-     * @var FilterTypeRegistry
-     */
-    private $filterTypeRegistry;
+    private \Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry $filterTypeRegistry;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @var array
-     */
-    private $permissions;
+    private array $permissions;
 
-    /**
-     * @var AccessControlQueryEnhancer
-     */
-    private $accessControlQueryEnhancer;
+    private \Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer $accessControlQueryEnhancer;
 
     public function __construct(
         EntityManager $em,

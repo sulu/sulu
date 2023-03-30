@@ -18,29 +18,19 @@ use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class RoleControllerTest extends SuluTestCase
 {
     /**
      * @var ObjectManager
      */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var Role
-     */
-    private $role1;
+    private \Sulu\Bundle\SecurityBundle\Entity\Role $role1;
 
-    /**
-     * @var Role
-     */
-    private $role2;
+    private \Sulu\Bundle\SecurityBundle\Entity\Role $role2;
 
-    /**
-     * @var Role
-     */
-    private $role3;
+    private \Sulu\Bundle\SecurityBundle\Entity\Role $role3;
 
     /**
      * @var SecurityType
@@ -52,15 +42,12 @@ class RoleControllerTest extends SuluTestCase
      */
     protected $securityType2;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     /**
      * @var ObjectRepository<ActivityInterface>
      */
-    private $activityRepository;
+    private \Doctrine\ORM\EntityRepository $activityRepository;
 
     public function setUp(): void
     {

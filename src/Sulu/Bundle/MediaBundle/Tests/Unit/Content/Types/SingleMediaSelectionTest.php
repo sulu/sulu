@@ -37,50 +37,44 @@ class SingleMediaSelectionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var SingleMediaSelection
-     */
-    private $singleMediaSelection;
+    private \Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection $singleMediaSelection;
 
     /**
      * @var ObjectProphecy<MediaManager>
      */
-    private $mediaManager;
+    private ObjectProphecy $mediaManager;
 
     /**
      * @var ObjectProphecy<ReferenceStore>
      */
-    private $mediaReferenceStore;
+    private ObjectProphecy $mediaReferenceStore;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<SecurityCheckerInterface>
      */
-    private $securityChecker;
+    private ObjectProphecy $securityChecker;
 
-    /**
-     * @var Webspace
-     */
-    private $webspace;
+    private \Sulu\Component\Webspace\Webspace $webspace;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<PropertyInterface>
      */
-    private $nodeProperty;
+    private ObjectProphecy $nodeProperty;
 
     /**
      * @var ObjectProphecy<Media>
      */
-    private $media;
+    private ObjectProphecy $media;
 
     protected function setUp(): void
     {

@@ -22,7 +22,7 @@ use Twig\Environment;
  */
 class AppendAnalyticsListener
 {
-    private static $positions = [
+    private static array $positions = [
         'head-open' => [
             'regex' => '/(<head [^>]*>|<head>)/',
             'sprintf' => '$1%s',
@@ -41,30 +41,18 @@ class AppendAnalyticsListener
         ],
     ];
 
-    /**
-     * @var Environment
-     */
-    private $engine;
+    private \Twig\Environment $engine;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var AnalyticsRepositoryInterface
-     */
-    private $analyticsRepository;
+    private \Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepositoryInterface $analyticsRepository;
 
     /**
      * @var string
      */
     private $environment;
 
-    /**
-     * @var bool
-     */
-    private $preview;
+    private bool $preview;
 
     public function __construct(
         Environment $engine,

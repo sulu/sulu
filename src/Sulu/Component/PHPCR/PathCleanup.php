@@ -38,10 +38,8 @@ class PathCleanup implements PathCleanupInterface
      *  + trailing slash
      *  + one or more sign (a-z, 0-9, -, _)
      *  + repeat.
-     *
-     * @var string
      */
-    private $pattern = '/^(\/[a-z0-9][a-z0-9-_]*)+$/';
+    private string $pattern = '/^(\/[a-z0-9][a-z0-9-_]*)+$/';
 
     public function __construct(array $replacers, SluggerInterface $slugger = null)
     {

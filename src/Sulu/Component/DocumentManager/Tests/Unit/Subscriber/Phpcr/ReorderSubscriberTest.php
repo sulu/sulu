@@ -26,12 +26,9 @@ class ReorderSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<NodeHelperInterface>
      */
-    private $nodeHelper;
+    private ObjectProphecy $nodeHelper;
 
-    /**
-     * @var ReorderSubscriber
-     */
-    private $reorderSubscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Phpcr\ReorderSubscriber $reorderSubscriber;
 
     public function setUp(): void
     {

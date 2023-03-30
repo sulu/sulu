@@ -26,15 +26,9 @@ class WebspaceImportCommand extends Command
 {
     protected static $defaultName = 'sulu:webspaces:import';
 
-    /**
-     * @var WebspaceImportInterface
-     */
-    private $webspaceImporter;
+    private \Sulu\Component\Content\Import\WebspaceImportInterface $webspaceImporter;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private \Psr\Log\LoggerInterface|\Psr\Log\NullLogger $logger;
 
     public function __construct(WebspaceImportInterface $webspaceImporter, LoggerInterface $logger = null)
     {

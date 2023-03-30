@@ -23,15 +23,12 @@ class TextFilterTypeTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var TextFilterType
-     */
-    private $textFilterType;
+    private \Sulu\Component\Rest\ListBuilder\Filter\TextFilterType $textFilterType;
 
     /**
      * @var ObjectProphecy<ListBuilderInterface>
      */
-    private $listBuilder;
+    private ObjectProphecy $listBuilder;
 
     public function setUp(): void
     {

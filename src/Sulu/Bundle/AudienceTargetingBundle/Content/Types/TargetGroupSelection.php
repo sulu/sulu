@@ -24,10 +24,8 @@ class TargetGroupSelection extends ComplexContentType implements ContentTypeExpo
 {
     /**
      * Responsible for persisting the categories in the database.
-     *
-     * @var TargetGroupRepositoryInterface
      */
-    private $targetGroupRepository;
+    private \Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface $targetGroupRepository;
 
     public function __construct(TargetGroupRepositoryInterface $targetGroupRepository)
     {

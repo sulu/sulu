@@ -22,12 +22,12 @@ class AccountRepositoryTest extends SuluTestCase
     /**
      * @var EntityManager
      */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
     /**
      * @var AccountRepository
      */
-    private $accountRepository;
+    private \Doctrine\ORM\EntityRepository $accountRepository;
 
     public function setUp(): void
     {

@@ -36,12 +36,9 @@ class File implements AuditableInterface
     /**
      * @var DoctrineCollection<int, FileVersion>
      */
-    private $fileVersions;
+    private \Doctrine\Common\Collections\ArrayCollection|array $fileVersions;
 
-    /**
-     * @var MediaInterface
-     */
-    private $media;
+    private ?\Sulu\Bundle\MediaBundle\Entity\MediaInterface $media = null;
 
     /**
      * Constructor.

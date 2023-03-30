@@ -27,30 +27,18 @@ use Twig\Environment;
 
 class TargetGroupSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var Environment
-     */
-    private $twig;
+    private \Twig\Environment $twig;
 
     /**
      * @var bool
      */
     private $preview;
 
-    /**
-     * @var TargetGroupStoreInterface
-     */
-    private $targetGroupStore;
+    private \Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface $targetGroupStore;
 
-    /**
-     * @var TargetGroupEvaluatorInterface
-     */
-    private $targetGroupEvaluator;
+    private \Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluatorInterface $targetGroupEvaluator;
 
-    /**
-     * @var TargetGroupRepositoryInterface
-     */
-    private $targetGroupRepository;
+    private \Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface $targetGroupRepository;
 
     /**
      * @var string

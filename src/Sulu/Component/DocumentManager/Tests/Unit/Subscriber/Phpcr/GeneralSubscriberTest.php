@@ -38,57 +38,51 @@ class GeneralSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<NodeManager>
      */
-    private $nodeManager;
+    private ObjectProphecy $nodeManager;
 
     /**
      * @var ObjectProphecy<DocumentRegistry>
      */
-    private $documentRegistry;
+    private ObjectProphecy $documentRegistry;
 
     /**
      * @var ObjectProphecy<NodeHelperInterface>
      */
-    private $nodeHelper;
+    private ObjectProphecy $nodeHelper;
 
     /**
      * @var ObjectProphecy<MoveEvent>
      */
-    private $moveEvent;
+    private ObjectProphecy $moveEvent;
 
     /**
      * @var ObjectProphecy<CopyEvent>
      */
-    private $copyEvent;
+    private ObjectProphecy $copyEvent;
 
     /**
      * @var ObjectProphecy<ClearEvent>
      */
-    private $clearEvent;
+    private ObjectProphecy $clearEvent;
 
     /**
      * @var ObjectProphecy<FlushEvent>
      */
-    private $flushEvent;
+    private ObjectProphecy $flushEvent;
 
     /**
      * @var ObjectProphecy<RefreshEvent>
      */
-    private $refreshEvent;
+    private ObjectProphecy $refreshEvent;
 
-    /**
-     * @var \stdClass
-     */
-    private $document;
+    private \stdClass $document;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
-    /**
-     * @var GeneralSubscriber
-     */
-    private $generalSubscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Phpcr\GeneralSubscriber $generalSubscriber;
 
     public function setUp(): void
     {

@@ -35,20 +35,11 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
 {
     use RequestParametersTrait;
 
-    /**
-     * @var CustomUrlManagerInterface
-     */
-    private $customUrlManager;
+    private \Sulu\Component\CustomUrl\Manager\CustomUrlManagerInterface $customUrlManager;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

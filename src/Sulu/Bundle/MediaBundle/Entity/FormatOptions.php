@@ -16,35 +16,20 @@ namespace Sulu\Bundle\MediaBundle\Entity;
  */
 class FormatOptions
 {
-    /**
-     * @var int
-     */
-    private $cropX;
+    private ?int $cropX = null;
 
-    /**
-     * @var int
-     */
-    private $cropY;
+    private ?int $cropY = null;
 
-    /**
-     * @var int
-     */
-    private $cropWidth;
+    private ?int $cropWidth = null;
 
-    /**
-     * @var int
-     */
-    private $cropHeight;
+    private ?int $cropHeight = null;
 
     /**
      * @var string
      */
     private $formatKey;
 
-    /**
-     * @var FileVersion
-     */
-    private $fileVersion;
+    private ?\Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion = null;
 
     /**
      * Set cropX.

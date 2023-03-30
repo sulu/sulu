@@ -31,17 +31,14 @@ class RefreshSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<EventDispatcherInterface>
      */
-    private $eventDispatcher;
+    private ObjectProphecy $eventDispatcher;
 
     /**
      * @var ObjectProphecy<DocumentRegistry>
      */
-    private $documentRegistry;
+    private ObjectProphecy $documentRegistry;
 
-    /**
-     * @var RefreshSubscriber
-     */
-    private $refreshSubscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Phpcr\RefreshSubscriber $refreshSubscriber;
 
     public function setUp(): void
     {

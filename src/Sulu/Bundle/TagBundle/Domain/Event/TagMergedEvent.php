@@ -17,20 +17,11 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
 class TagMergedEvent extends DomainEvent
 {
-    /**
-     * @var int
-     */
-    private $sourceTagId;
+    private int $sourceTagId;
 
-    /**
-     * @var string
-     */
-    private $sourceTagName;
+    private string $sourceTagName;
 
-    /**
-     * @var TagInterface
-     */
-    private $destinationTag;
+    private \Sulu\Bundle\TagBundle\Tag\TagInterface $destinationTag;
 
     public function __construct(
         TagInterface $destinationTag,

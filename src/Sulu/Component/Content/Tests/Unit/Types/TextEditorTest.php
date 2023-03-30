@@ -31,27 +31,24 @@ class TextEditorTest extends TestCase
     /**
      * @var ObjectProphecy<MarkupParserInterface>
      */
-    private $markupParser;
+    private ObjectProphecy $markupParser;
 
-    /**
-     * @var TextEditor
-     */
-    private $textEditor;
+    private \Sulu\Component\Content\Types\TextEditor $textEditor;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<PropertyInterface>
      */
-    private $property;
+    private ObjectProphecy $property;
 
     /**
      * @var ObjectProphecy<NodePropertyInterface>
      */
-    private $nodeProperty;
+    private ObjectProphecy $nodeProperty;
 
     public function setUp(): void
     {

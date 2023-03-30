@@ -38,42 +38,36 @@ class LinkTagTest extends TestCase
     /**
      * @var ObjectProphecy<ContentRepositoryInterface>
      */
-    private $contentRepository;
+    private ObjectProphecy $contentRepository;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     /**
      * @var ObjectProphecy<Request>
      */
-    private $request;
+    private ObjectProphecy $request;
 
     /**
      * @var ObjectProphecy<TranslatorInterface>
      */
-    private $translator;
+    private ObjectProphecy $translator;
 
-    /**
-     * @var string
-     */
-    private $environment;
+    private string $environment;
 
     /**
      * @var LinkProviderPoolInterface
      */
-    private $linkProviderPool;
+    private \Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPool $linkProviderPool;
 
-    /**
-     * @var LinkTag
-     */
-    private $linkTag;
+    private \Sulu\Bundle\MarkupBundle\Markup\LinkTag $linkTag;
 
     protected function setUp(): void
     {

@@ -26,9 +26,9 @@ class DoctrineConcatenationFieldDescriptor extends AbstractDoctrineFieldDescript
      *
      * @var DoctrineFieldDescriptorInterface[]
      */
-    private $fieldDescriptors;
+    private array $fieldDescriptors;
 
-    private $glue;
+    private string $glue;
 
     public function __construct(
         array $fieldDescriptors,

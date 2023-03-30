@@ -24,7 +24,7 @@ class ScalerTest extends SuluTestCase
     /**
      * @var ScalerInterface
      */
-    private $scaler;
+    private \Sulu\Bundle\MediaBundle\Media\ImageConverter\Scaler\Scaler $scaler;
 
     public function setUp(): void
     {

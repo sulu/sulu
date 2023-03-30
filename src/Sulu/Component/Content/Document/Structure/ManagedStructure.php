@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Document\Structure;
 
-use PHPCR\NodeInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
@@ -25,45 +24,30 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
  */
 class ManagedStructure extends Structure
 {
-    /**
-     * @var ContentTypeManagerInterface
-     */
-    private $contentTypeManager;
+    private \Sulu\Component\Content\ContentTypeManagerInterface $contentTypeManager;
 
     /**
      * @var StructureBehavior
      */
     private $document;
 
-    /**
-     * @var LegacyPropertyFactory
-     */
-    private $legacyPropertyFactory;
+    private \Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory $legacyPropertyFactory;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $inspector;
 
-    /**
-     * @var StructureMetadata
-     */
-    private $structureMetadata;
+    private ?\Sulu\Component\Content\Metadata\StructureMetadata $structureMetadata = null;
 
-    /**
-     * @var NodeInterface
-     */
-    private $node;
+    private ?\PHPCR\NodeInterface $node = null;
 
     /**
      * @var PropertyInterface[]
      */
-    private $legacyProperties = [];
+    private array $legacyProperties = [];
 
     /**
      * @var PropertyValue[]
      */
-    private $propertyValues = [];
+    private array $propertyValues = [];
 
     /**
      * @param object $document

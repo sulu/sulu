@@ -20,10 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class WorkspaceInitializer implements InitializerInterface
 {
-    /**
-     * @var ConnectionRegistry
-     */
-    private $registry;
+    private \Doctrine\Persistence\ConnectionRegistry $registry;
 
     public function __construct(ConnectionRegistry $registry)
     {

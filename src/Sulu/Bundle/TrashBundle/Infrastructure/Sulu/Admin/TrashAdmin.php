@@ -32,25 +32,16 @@ final class TrashAdmin extends Admin
 
     public const LIST_VIEW = 'sulu_trash.trash_items.list';
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
+    private \Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface $viewBuilderFactory;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
+    private \Sulu\Component\Localization\Manager\LocalizationManagerInterface $localizationManager;
 
     /**
      * @var iterable<string, RestoreConfigurationProviderInterface>
      */
-    private $restoreConfigurationProviders;
+    private iterable $restoreConfigurationProviders;
 
     /**
      * @param iterable<string, RestoreConfigurationProviderInterface> $restoreConfigurationProviders

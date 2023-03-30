@@ -30,22 +30,19 @@ class HashSerializeEventSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<HasherInterface>
      */
-    private $hasher;
+    private ObjectProphecy $hasher;
 
-    /**
-     * @var HashSerializeEventSubscriber
-     */
-    private $hashSerializeEventSubscriber;
+    private \Sulu\Component\Hash\Serializer\Subscriber\HashSerializeEventSubscriber $hashSerializeEventSubscriber;
 
     /**
      * @var ObjectProphecy<SerializationVisitorInterface>
      */
-    private $visitor;
+    private ObjectProphecy $visitor;
 
     /**
      * @var ObjectProphecy<ObjectEvent>
      */
-    private $objectEvent;
+    private ObjectProphecy $objectEvent;
 
     public function setUp(): void
     {

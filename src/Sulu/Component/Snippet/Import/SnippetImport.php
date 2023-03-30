@@ -33,10 +33,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SnippetImport extends Import implements SnippetImportInterface
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
     /**
      * @var StructureManagerInterface

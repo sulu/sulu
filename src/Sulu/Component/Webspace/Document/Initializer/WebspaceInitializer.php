@@ -24,30 +24,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class WebspaceInitializer implements InitializerInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var PathBuilder
-     */
-    private $pathBuilder;
+    private \Sulu\Component\DocumentManager\PathBuilder $pathBuilder;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
+    private \Sulu\Component\DocumentManager\DocumentInspector $inspector;
 
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
+    private \Sulu\Component\DocumentManager\NodeManager $nodeManager;
 
     public function __construct(
         WebspaceManagerInterface $webspaceManager,

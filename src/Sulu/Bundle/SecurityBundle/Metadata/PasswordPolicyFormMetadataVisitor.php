@@ -24,20 +24,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class PasswordPolicyFormMetadataVisitor implements FormMetadataVisitorInterface
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
-    /**
-     * @var string|null
-     */
-    private $passwordPattern;
+    private ?string $passwordPattern = null;
 
-    /**
-     * @var string|null
-     */
-    private $passwordInformationTranslationKey;
+    private ?string $passwordInformationTranslationKey = null;
 
     public function __construct(
         TranslatorInterface $translator,

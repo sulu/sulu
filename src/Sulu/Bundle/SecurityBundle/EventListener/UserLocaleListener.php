@@ -24,10 +24,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class UserLocaleListener implements EventSubscriberInterface
 {
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage;
 
     /**
      * @var TranslatorInterface|LocaleAwareInterface

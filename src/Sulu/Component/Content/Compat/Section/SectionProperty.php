@@ -27,7 +27,7 @@ class SectionProperty extends Property implements SectionPropertyInterface
      *
      * @Type("array<Sulu\Component\Content\Compat\Property>")
      */
-    private $childProperties = [];
+    private array $childProperties = [];
 
     /**
      * @param string $name

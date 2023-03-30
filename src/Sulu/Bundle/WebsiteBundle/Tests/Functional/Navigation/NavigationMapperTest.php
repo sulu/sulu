@@ -24,15 +24,10 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\AbstractExtension;
-use Sulu\Component\Content\Extension\ExtensionManagerInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Query\ContentQueryExecutor;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class NavigationMapperTest extends SuluTestCase
@@ -40,42 +35,24 @@ class NavigationMapperTest extends SuluTestCase
     /**
      * @var StructureInterface[]
      */
-    private $data;
+    private array $data;
 
     /**
      * @var NavigationMapperInterface
      */
-    private $navigationMapper;
+    private \Sulu\Bundle\WebsiteBundle\Navigation\NavigationMapper $navigationMapper;
 
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
+    private ?object $contentMapper = null;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
+    private ?object $structureManager = null;
 
-    /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
+    private ?object $extensionManager = null;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private ?object $sessionManager = null;
 
-    /**
-     * @var string
-     */
-    private $languageNamespace;
+    private string $languageNamespace;
 
     private $homeDocument;
 
@@ -89,10 +66,7 @@ class NavigationMapperTest extends SuluTestCase
      */
     private $grantedRole;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private ?object $tokenStorage = null;
 
     /**
      * @var UserInterface
@@ -737,10 +711,7 @@ class ExcerptStructureExtension extends AbstractExtension
      */
     protected $structureManager;
 
-    /**
-     * @var string
-     */
-    private $languageNamespace;
+    private ?string $languageNamespace = null;
 
     public function __construct(
         StructureManagerInterface $structureManager,

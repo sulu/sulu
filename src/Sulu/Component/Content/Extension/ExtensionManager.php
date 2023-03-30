@@ -16,7 +16,7 @@ namespace Sulu\Component\Content\Extension;
  */
 class ExtensionManager implements ExtensionManagerInterface
 {
-    private $extensions = [];
+    private array $extensions = [];
 
     public function getExtensions($structureType)
     {

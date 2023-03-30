@@ -13,20 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
 class SchemaMetadata implements SchemaMetadataInterface
 {
-    /**
-     * @var PropertiesMetadata
-     */
-    private $propertiesMetadata;
+    private \Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertiesMetadata $propertiesMetadata;
 
-    /**
-     * @var AnyOfsMetadata
-     */
-    private $anyOfsMetadata;
+    private \Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AnyOfsMetadata $anyOfsMetadata;
 
-    /**
-     * @var AllOfsMetadata
-     */
-    private $allOfsMetadata;
+    private \Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AllOfsMetadata $allOfsMetadata;
 
     /**
      * @param PropertyMetadata[] $properties

@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\SearchBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\EntityManager;
-use Massive\Bundle\SearchBundle\Search\SearchManager;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SearchBundle\Tests\Resources\TestBundle\Entity\Product;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -21,25 +19,16 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class SearchControllerTest extends SuluTestCase
 {
-    /**
-     * @var SearchManager
-     */
-    private $searchManager;
+    private ?object $searchManager = null;
 
     /**
      * @var KernelBrowser
      */
     protected $client;
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private ?object $entityManager = null;
 
-    /**
-     * @var User
-     */
-    private $user;
+    private ?\Sulu\Bundle\SecurityBundle\Entity\User $user = null;
 
     protected static function getKernelConfiguration(): array
     {

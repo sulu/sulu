@@ -17,20 +17,11 @@ use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 
 class CustomUrlRemovedEvent extends DomainEvent
 {
-    /**
-     * @var string
-     */
-    private $customUrlUuid;
+    private string $customUrlUuid;
 
-    /**
-     * @var string
-     */
-    private $customUrlTitle;
+    private string $customUrlTitle;
 
-    /**
-     * @var string
-     */
-    private $webspaceKey;
+    private string $webspaceKey;
 
     public function __construct(
         string $customUrlUuid,

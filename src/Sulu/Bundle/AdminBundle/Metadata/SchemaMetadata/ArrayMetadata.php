@@ -13,25 +13,13 @@ namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
 class ArrayMetadata implements SchemaMetadataInterface
 {
-    /**
-     * @var SchemaMetadataInterface
-     */
-    private $schemaMetadata;
+    private \Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadataInterface $schemaMetadata;
 
-    /**
-     * @var int|null
-     */
-    private $minItems;
+    private ?int $minItems = null;
 
-    /**
-     * @var int|null
-     */
-    private $maxItems;
+    private ?int $maxItems = null;
 
-    /**
-     * @var bool|null
-     */
-    private $uniqueItems;
+    private ?bool $uniqueItems = null;
 
     public function __construct(
         SchemaMetadataInterface $schemaMetadata,

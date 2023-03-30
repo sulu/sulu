@@ -18,15 +18,9 @@ use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 
 class AccountContactRemovedEvent extends DomainEvent
 {
-    /**
-     * @var AccountInterface
-     */
-    private $account;
+    private \Sulu\Bundle\ContactBundle\Entity\AccountInterface $account;
 
-    /**
-     * @var ContactInterface
-     */
-    private $contact;
+    private \Sulu\Bundle\ContactBundle\Entity\ContactInterface $contact;
 
     public function __construct(AccountInterface $account, ContactInterface $contact)
     {

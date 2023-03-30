@@ -14,16 +14,11 @@ namespace Sulu\Bundle\PageBundle;
 use PHPCR\Migrations\VersionInterface;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Metadata\BlockMetadata;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -32,35 +27,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class Version201511240844 implements VersionInterface, ContainerAwareInterface
 {
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private ?\PHPCR\SessionInterface $session = null;
 
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $structureMetadataFactory;
+    private ?object $structureMetadataFactory = null;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private ?object $propertyEncoder = null;
 
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
+    private ?object $localizationManager = null;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private ?object $documentInspector = null;
 
     public function setContainer(ContainerInterface $container = null)
     {

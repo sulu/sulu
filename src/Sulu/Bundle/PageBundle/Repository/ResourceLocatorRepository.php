@@ -22,20 +22,14 @@ use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrateg
  */
 class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
 {
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
+    private \Sulu\Component\Content\Compat\StructureManagerInterface $structureManager;
 
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
+    private \Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool;
 
     /**
      * @var string[]
      */
-    private $apiBasePath = [
+    private array $apiBasePath = [
         '/admin/api/node/resourcelocator',
         '/admin/api/nodes/resourcelocators',
         '/admin/api/nodes/{uuid}/resourcelocators',

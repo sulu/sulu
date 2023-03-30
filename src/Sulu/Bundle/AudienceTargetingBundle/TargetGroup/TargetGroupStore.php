@@ -16,20 +16,11 @@ namespace Sulu\Bundle\AudienceTargetingBundle\TargetGroup;
  */
 class TargetGroupStore implements TargetGroupStoreInterface
 {
-    /**
-     * @var string
-     */
-    private $targetGroupId;
+    private ?string $targetGroupId = null;
 
-    /**
-     * @var bool
-     */
-    private $changedTargetGroup = false;
+    private bool $changedTargetGroup = false;
 
-    /**
-     * @var bool
-     */
-    private $influencedContent = false;
+    private bool $influencedContent = false;
 
     public function setTargetGroupId($targetGroupId)
     {

@@ -25,20 +25,17 @@ class XmlListMetadataLoaderTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var XmlListMetadataLoader
-     */
-    private $xmlListMetadataLoader;
+    private \Sulu\Bundle\AdminBundle\Metadata\ListMetadata\XmlListMetadataLoader $xmlListMetadataLoader;
 
     /**
      * @var ObjectProphecy<TranslatorInterface>
      */
-    private $translator;
+    private ObjectProphecy $translator;
 
     /**
      * @var ObjectProphecy<FieldDescriptorFactoryInterface>
      */
-    private $fieldDescriptorFactory;
+    private ObjectProphecy $fieldDescriptorFactory;
 
     public function setUp(): void
     {

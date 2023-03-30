@@ -24,7 +24,7 @@ class IndexConfigurationProviderTest extends TestCase
     /**
      * @var ObjectProphecy<TranslatorInterface>
      */
-    private $translator;
+    private ObjectProphecy $translator;
 
     public function setUp(): void
     {

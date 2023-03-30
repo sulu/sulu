@@ -11,14 +11,12 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Mapper;
 
-use Jackalope\Session;
 use PHPCR\NodeInterface;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
@@ -27,12 +25,8 @@ use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExtensionInterface;
-use Sulu\Component\Content\Extension\ExtensionManager;
-use Sulu\Component\Content\Mapper\ContentMapper;
-use Sulu\Component\DocumentManager\DocumentManager;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\HttpKernel\SuluKernel;
-use Sulu\Component\PHPCR\SessionManager\SessionManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -44,47 +38,26 @@ class ContentMapperTest extends SuluTestCase
     /**
      * @var ExtensionInterface[]
      */
-    private $extensions = [];
+    private array $extensions = [];
 
-    /**
-     * @var string
-     */
-    private $languageNamespace = 'i18n';
+    private string $languageNamespace = 'i18n';
 
-    /**
-     * @var ContentMapper
-     */
-    private $mapper;
+    private ?object $mapper = null;
 
-    /**
-     * @var DocumentManager
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var Session
-     */
-    private $session;
+    private ?object $session = null;
 
-    /**
-     * @var SessionManager
-     */
-    private $sessionManager;
+    private ?object $sessionManager = null;
 
-    /**
-     * @var ExtensionManager
-     */
-    private $extensionManager;
+    private ?object $extensionManager = null;
 
     /**
      * @var TokenStorageInterface|null
      */
-    private $tokenStorage = null;
+    private ?object $tokenStorage = null;
 
-    /**
-     * @var ContentTypeManager
-     */
-    private $contentTypeManager;
+    private ?object $contentTypeManager = null;
 
     public function setUp(): void
     {

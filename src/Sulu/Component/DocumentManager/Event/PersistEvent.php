@@ -16,10 +16,7 @@ use Sulu\Component\DocumentManager\DocumentHelper;
 
 class PersistEvent extends AbstractMappingEvent
 {
-    /**
-     * @var NodeInterface
-     */
-    private $parentNode;
+    private ?\PHPCR\NodeInterface $parentNode = null;
 
     /**
      * @param object $document

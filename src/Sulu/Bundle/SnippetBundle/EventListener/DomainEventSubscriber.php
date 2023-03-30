@@ -41,35 +41,26 @@ class DomainEventSubscriber implements EventSubscriberInterface
 {
     public const TITLE_FIELD = 'title';
 
-    /**
-     * @var DocumentDomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface $domainEventCollector;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private \Sulu\Component\DocumentManager\PropertyEncoder $propertyEncoder;
 
     /**
      * @var array<array<string, mixed>>
      */
-    private $eventsToBeDispatchedAfterFlush = [];
+    private array $eventsToBeDispatchedAfterFlush = [];
 
     /**
      * @var array<string, bool>
      */
-    private $persistEventsWithNewDocument = [];
+    private array $persistEventsWithNewDocument = [];
 
     /**
      * @var array<string, bool>
      */
-    private $persistEventsWithNewLocale = [];
+    private array $persistEventsWithNewLocale = [];
 
     public function __construct(
         DocumentDomainEventCollectorInterface $domainEventCollector,

@@ -18,7 +18,6 @@ use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Types\ResourceLocator;
 use Sulu\Component\Content\Types\ResourceLocator\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\ResourceLocator\Mapper\ResourceLocatorMapperInterface;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 class ResourceLocatorTest extends SuluTestCase
 {
@@ -27,10 +26,7 @@ class ResourceLocatorTest extends SuluTestCase
      */
     private $em;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private ?object $sessionManager = null;
 
     /**
      * @var SessionInterface
@@ -40,12 +36,9 @@ class ResourceLocatorTest extends SuluTestCase
     /**
      * @var ResourceLocatorMapperInterface
      */
-    private $resourceLocatorMapper;
+    private \Sulu\Component\Content\Types\ResourceLocator\Mapper\PhpcrMapper $resourceLocatorMapper;
 
-    /**
-     * @var ResourceLocator
-     */
-    private $resourceLocator;
+    private \Sulu\Component\Content\Types\ResourceLocator $resourceLocator;
 
     protected function setUp(): void
     {

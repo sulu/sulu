@@ -18,40 +18,22 @@ class PreviewLink implements PreviewLinkInterface
      */
     private $id;
 
-    /**
-     * @var string
-     */
-    private $token;
+    private string $token;
 
-    /**
-     * @var string
-     */
-    private $resourceKey;
+    private string $resourceKey;
 
-    /**
-     * @var string
-     */
-    private $resourceId;
+    private string $resourceId;
 
-    /**
-     * @var string
-     */
-    private $locale;
+    private string $locale;
 
     /**
      * @var array<string, mixed>
      */
-    private $options;
+    private array $options;
 
-    /**
-     * @var int
-     */
-    private $visitCount = 0;
+    private int $visitCount = 0;
 
-    /**
-     * @var \DateTimeImmutable|null
-     */
-    private $lastVisit;
+    private ?\DateTimeImmutable $lastVisit = null;
 
     public function __construct(string $token, string $resourceKey, string $resourceId, string $locale, array $options)
     {

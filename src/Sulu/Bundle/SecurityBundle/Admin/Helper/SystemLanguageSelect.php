@@ -13,10 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Admin\Helper;
 
 class SystemLanguageSelect
 {
-    /**
-     * @var array
-     */
-    private $translatedLocales;
+    private array $translatedLocales;
 
     public function __construct(array $translatedLocales)
     {

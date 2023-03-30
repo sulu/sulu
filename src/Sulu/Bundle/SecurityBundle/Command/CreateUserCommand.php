@@ -35,35 +35,17 @@ class CreateUserCommand extends Command
 {
     protected static $defaultName = 'sulu:security:user:create';
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
+    private \Sulu\Bundle\SecurityBundle\Entity\UserRepository $userRepository;
 
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
+    private \Sulu\Component\Security\Authentication\RoleRepositoryInterface $roleRepository;
 
-    /**
-     * @var ContactRepositoryInterface
-     */
-    private $contactRepository;
+    private \Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface $contactRepository;
 
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
+    private \Sulu\Component\Localization\Manager\LocalizationManagerInterface $localizationManager;
 
-    /**
-     * @var SaltGenerator
-     */
-    private $saltGenerator;
+    private \Sulu\Component\Security\Authentication\SaltGenerator $saltGenerator;
 
     /**
      * @var PasswordHasherFactoryInterface|EncoderFactoryInterface
@@ -73,7 +55,7 @@ class CreateUserCommand extends Command
     /**
      * @var string[]
      */
-    private $locales;
+    private array $locales;
 
     /**
      * @param PasswordHasherFactoryInterface|EncoderFactoryInterface $passwordHasherFactory

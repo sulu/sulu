@@ -30,12 +30,12 @@ class InitializeCommandTest extends TestCase
     /**
      * @var ObjectProphecy<QuestionHelper>
      */
-    private $questionHelper;
+    private ObjectProphecy $questionHelper;
 
     /**
      * @var ObjectProphecy<Initializer>
      */
-    private $initializer;
+    private ObjectProphecy $initializer;
 
     public function setUp(): void
     {

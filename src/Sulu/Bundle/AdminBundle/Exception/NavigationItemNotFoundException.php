@@ -13,10 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Exception;
 
 class NavigationItemNotFoundException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $navigationItem;
+    private string $navigationItem;
 
     public function __construct(string $navigationItem)
     {

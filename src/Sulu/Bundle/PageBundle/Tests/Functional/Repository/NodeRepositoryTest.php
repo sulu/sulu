@@ -11,9 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Repository;
 
-use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\NodeInterface;
-use Sulu\Bundle\PageBundle\Repository\NodeRepositoryInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
@@ -26,49 +24,27 @@ use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExtensionInterface;
-use Sulu\Component\Content\Extension\ExtensionManagerInterface;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class NodeRepositoryTest extends SuluTestCase
 {
-    /**
-     * @var NodeRepositoryInterface
-     */
-    private $nodeRepository;
+    private ?object $nodeRepository = null;
 
-    /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
+    private ?object $extensionManager = null;
 
     /**
      * @var ExtensionInterface[]
      */
-    private $extensions;
+    private array $extensions;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private ?object $sessionManager = null;
 
-    /**
-     * @var ContentMapperInterface
-     */
-    private $mapper;
+    private ?object $mapper = null;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
     protected function setUp(): void
     {

@@ -21,12 +21,12 @@ class ContactRepositoryTest extends SuluTestCase
     /**
      * @var EntityManager
      */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
     /**
      * @var ContactRepository
      */
-    private $contactRepository;
+    private \Doctrine\ORM\EntityRepository $contactRepository;
 
     public function setUp(): void
     {

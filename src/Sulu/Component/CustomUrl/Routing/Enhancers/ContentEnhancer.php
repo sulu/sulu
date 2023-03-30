@@ -24,15 +24,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ContentEnhancer extends AbstractEnhancer
 {
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $inspector;
 
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
+    private \Sulu\Component\Content\Compat\StructureManagerInterface $structureManager;
 
     public function __construct(DocumentInspector $inspector, StructureManagerInterface $structureManager)
     {

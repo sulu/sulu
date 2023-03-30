@@ -11,22 +11,14 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\Position;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class PositionControllerTest extends SuluTestCase
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

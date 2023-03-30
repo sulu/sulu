@@ -16,7 +16,7 @@ class AllOfsMetadata implements SchemaMetadataInterface
     /**
      * @var SchemaMetadataInterface[]
      */
-    private $allOfs;
+    private array $allOfs;
 
     /**
      * @param SchemaMetadataInterface[] $allOfs

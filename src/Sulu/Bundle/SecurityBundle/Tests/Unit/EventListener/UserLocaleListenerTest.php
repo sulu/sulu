@@ -31,37 +31,31 @@ class UserLocaleListenerTest extends TestCase
     /**
      * @var ObjectProphecy<TokenInterface>
      */
-    private $token;
+    private ObjectProphecy $token;
 
     /**
      * @var ObjectProphecy<TokenStorageInterface>
      */
-    private $tokenStorage;
+    private ObjectProphecy $tokenStorage;
 
     /**
      * @var ObjectProphecy<Translator>
      */
-    private $translator;
+    private ObjectProphecy $translator;
 
     /**
      * @var ObjectProphecy<Request>
      */
-    private $request;
+    private ObjectProphecy $request;
 
-    /**
-     * @var RequestEvent
-     */
-    private $event;
+    private \Symfony\Component\HttpKernel\Event\RequestEvent $event;
 
-    /**
-     * @var UserLocaleListener
-     */
-    private $userLocaleListener;
+    private \Sulu\Bundle\SecurityBundle\EventListener\UserLocaleListener $userLocaleListener;
 
     /**
      * @var ObjectProphecy<HttpKernelInterface>
      */
-    private $kernel;
+    private ObjectProphecy $kernel;
 
     public function setUp(): void
     {

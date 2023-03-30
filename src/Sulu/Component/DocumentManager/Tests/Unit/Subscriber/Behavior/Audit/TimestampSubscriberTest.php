@@ -34,17 +34,14 @@ class TimestampSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $propertyEncoder;
+    private ObjectProphecy $propertyEncoder;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $documentInspector;
+    private ObjectProphecy $documentInspector;
 
-    /**
-     * @var TimestampSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Behavior\Audit\TimestampSubscriber $subscriber;
 
     public function setUp(): void
     {

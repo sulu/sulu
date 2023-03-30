@@ -26,40 +26,25 @@ class TargetGroup implements TargetGroupInterface
      */
     private $id;
 
-    /**
-     * @var string
-     */
-    private $title;
+    private ?string $title = null;
 
-    /**
-     * @var string|null
-     */
-    private $description;
+    private ?string $description = null;
 
-    /**
-     * @var int
-     */
-    private $priority;
+    private ?int $priority = null;
 
-    /**
-     * @var bool
-     */
-    private $allWebspaces = false;
+    private bool $allWebspaces = false;
 
-    /**
-     * @var bool
-     */
-    private $active = false;
+    private bool $active = false;
 
     /**
      * @var Collection<int, TargetGroupWebspaceInterface>
      */
-    private $webspaces;
+    private \Doctrine\Common\Collections\ArrayCollection|array $webspaces;
 
     /**
      * @var Collection<int, TargetGroupRuleInterface>
      */
-    private $rules;
+    private \Doctrine\Common\Collections\ArrayCollection|array $rules;
 
     /**
      * Initialization of collections.

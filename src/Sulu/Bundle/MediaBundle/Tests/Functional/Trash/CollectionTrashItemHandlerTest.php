@@ -39,32 +39,29 @@ class CollectionTrashItemHandlerTest extends TestCase
     /**
      * @var ObjectProphecy<TrashItemRepositoryInterface>
      */
-    private $trashItemRepository;
+    private ObjectProphecy $trashItemRepository;
 
     /**
      * @var ObjectProphecy<CollectionRepositoryInterface>
      */
-    private $collectionRepository;
+    private ObjectProphecy $collectionRepository;
 
     /**
      * @var ObjectProphecy<DoctrineRestoreHelperInterface>
      */
-    private $doctrineRestoreHelper;
+    private ObjectProphecy $doctrineRestoreHelper;
 
     /**
      * @var ObjectProphecy<EntityManagerInterface>
      */
-    private $entityManager;
+    private ObjectProphecy $entityManager;
 
     /**
      * @var ObjectProphecy<DomainEventCollectorInterface>
      */
-    private $domainEventCollector;
+    private ObjectProphecy $domainEventCollector;
 
-    /**
-     * @var CollectionTrashItemHandler
-     */
-    private $collectionTrashItemHandler;
+    private \Sulu\Bundle\MediaBundle\Trash\CollectionTrashItemHandler $collectionTrashItemHandler;
 
     public function setUp(): void
     {

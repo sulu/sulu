@@ -17,10 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class SegmentRequestProcessor implements RequestProcessorInterface
 {
-    /**
-     * @var string
-     */
-    private $segmentCookieName;
+    private string $segmentCookieName;
 
     public function __construct(string $segmentCookieName)
     {

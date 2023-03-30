@@ -49,35 +49,17 @@ final class MediaTrashItemHandler implements
     RemoveTrashItemHandlerInterface,
     RestoreConfigurationProviderInterface
 {
-    /**
-     * @var TrashItemRepositoryInterface
-     */
-    private $trashItemRepository;
+    private \Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface $trashItemRepository;
 
-    /**
-     * @var MediaRepositoryInterface
-     */
-    private $mediaRepository;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface $mediaRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var DoctrineRestoreHelperInterface
-     */
-    private $doctrineRestoreHelper;
+    private \Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelperInterface $doctrineRestoreHelper;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
-    /**
-     * @var StorageInterface
-     */
-    private $storage;
+    private \Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface $storage;
 
     public function __construct(
         TrashItemRepositoryInterface $trashItemRepository,

@@ -22,40 +22,22 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 class NavigationMapper implements NavigationMapperInterface
 {
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
+    private \Sulu\Component\Content\Mapper\ContentMapperInterface $contentMapper;
 
-    /**
-     * @var ContentQueryExecutorInterface
-     */
-    private $contentQueryExecutor;
+    private \Sulu\Component\Content\Query\ContentQueryExecutorInterface $contentQueryExecutor;
 
-    /**
-     * @var ContentQueryBuilderInterface
-     */
-    private $queryBuilder;
+    private \Sulu\Component\Content\Query\ContentQueryBuilderInterface $queryBuilder;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private \Sulu\Component\PHPCR\SessionManager\SessionManagerInterface $sessionManager;
 
-    /**
-     * @var Stopwatch
-     */
-    private $stopwatch;
+    private ?\Symfony\Component\Stopwatch\Stopwatch $stopwatch = null;
 
     /**
      * @var array
      */
     private $permissions;
 
-    /**
-     * @var array
-     */
-    private $enabledTwigAttributes = [];
+    private array $enabledTwigAttributes = [];
 
     public function __construct(
         ContentMapperInterface $contentMapper,

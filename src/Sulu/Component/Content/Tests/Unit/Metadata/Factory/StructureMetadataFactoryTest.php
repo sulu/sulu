@@ -60,17 +60,14 @@ class StructureMetadataFactoryTest extends TestCase
     /**
      * @var ObjectProphecy<TranslatorInterface>
      */
-    private $translator;
+    private ObjectProphecy $translator;
 
     /**
      * @var ObjectProphecy<LoaderInterface>
      */
-    private $loader;
+    private ObjectProphecy $loader;
 
-    /**
-     * @var StructureMetadataFactory
-     */
-    private $factory;
+    private \Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory $factory;
 
     public function setUp(): void
     {

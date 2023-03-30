@@ -13,26 +13,19 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\SmartContent;
 
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupCondition;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRule;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspace;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
-use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure;
 use Sulu\Component\Content\Compat\StructureInterface;
-use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Extension\ExtensionManagerInterface;
-use Sulu\Component\Content\Query\ContentQueryExecutor;
 use Sulu\Component\Content\SmartContent\QueryBuilder;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Webspace;
@@ -40,40 +33,19 @@ use Symfony\Component\HttpFoundation\Request;
 
 class QueryBuilderTest extends SuluTestCase
 {
-    /**
-     * @var ContentQueryExecutor
-     */
-    private $contentQuery;
+    private ?object $contentQuery = null;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
+    private ?object $structureManager = null;
 
-    /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
+    private ?object $extensionManager = null;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private ?object $sessionManager = null;
 
-    /**
-     * @var string
-     */
-    private $languageNamespace;
+    private bool|string|int|float|\UnitEnum|array|null $languageNamespace = null;
 
-    /**
-     * @var TagRepositoryInterface
-     */
-    private $tagRepository;
+    private ?object $tagRepository = null;
 
     /**
      * @var TagInterface
@@ -90,10 +62,7 @@ class QueryBuilderTest extends SuluTestCase
      */
     private $tag3;
 
-    /**
-     * @var TargetGroupRepositoryInterface
-     */
-    private $audienceTargetGroupRepository;
+    private ?object $audienceTargetGroupRepository = null;
 
     /**
      * @var RoleInterface

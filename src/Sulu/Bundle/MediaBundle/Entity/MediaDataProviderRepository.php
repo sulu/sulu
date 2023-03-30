@@ -30,15 +30,9 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         findByFilters as parentFindByFilters;
     }
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
+    private \Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface $mediaManager;
 
     /**
      * @var string

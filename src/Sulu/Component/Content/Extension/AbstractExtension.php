@@ -38,10 +38,7 @@ abstract class AbstractExtension implements ExtensionInterface
      */
     protected $name;
 
-    /**
-     * @var MultipleTranslatedProperties
-     */
-    private $translatedProperties;
+    private ?\Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties $translatedProperties = null;
 
     /**
      * returns translated property name.
@@ -55,7 +52,7 @@ abstract class AbstractExtension implements ExtensionInterface
         return $this->translatedProperties->getName($propertyName);
     }
 
-    public function setLanguageCode($languageCode, $languageNamespace, $namespace)
+    public function setLanguageCode($languageCode, $languageNamespace, $namespace): void
     {
         // build namespace
         $namespaces = [];

@@ -39,37 +39,34 @@ class SnippetDataProviderTest extends TestCase
     /**
      * @var ObjectProphecy<ContentQueryExecutorInterface>
      */
-    private $contentQueryExecutor;
+    private ObjectProphecy $contentQueryExecutor;
 
     /**
      * @var ObjectProphecy<ContentQueryBuilderInterface>
      */
-    private $snippetQueryBuilder;
+    private ObjectProphecy $snippetQueryBuilder;
 
     /**
      * @var ObjectProphecy<SuluNodeHelper>
      */
-    private $nodeHelper;
+    private ObjectProphecy $nodeHelper;
 
     /**
      * @var ObjectProphecy<LazyLoadingValueHolderFactory>
      */
-    private $proxyFactory;
+    private ObjectProphecy $proxyFactory;
 
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
      */
-    private $referenceStore;
+    private ObjectProphecy $referenceStore;
 
-    /**
-     * @var SnippetDataProvider
-     */
-    private $snippetDataProvider;
+    private \Sulu\Bundle\SnippetBundle\Content\SnippetDataProvider $snippetDataProvider;
 
     public function setUp(): void
     {

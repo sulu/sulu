@@ -18,7 +18,7 @@ class PreviewObjectProviderRegistry implements PreviewObjectProviderRegistryInte
     /**
      * @var PreviewObjectProviderInterface[]
      */
-    private $previewObjectProviders;
+    private array $previewObjectProviders;
 
     /**
      * @param PreviewObjectProviderInterface[] $previewObjectProviders

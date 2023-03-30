@@ -52,57 +52,54 @@ class ContentRepositoryTest extends TestCase
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $session;
+    private ObjectProphecy $session;
 
     /**
      * @var ObjectProphecy<SessionManagerInterface>
      */
-    private $sessionManager;
+    private ObjectProphecy $sessionManager;
 
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $propertyEncoder;
+    private ObjectProphecy $propertyEncoder;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<LocalizationFinderInterface>
      */
-    private $localizationFinder;
+    private ObjectProphecy $localizationFinder;
 
     /**
      * @var ObjectProphecy<StructureManagerInterface>
      */
-    private $structureManager;
+    private ObjectProphecy $structureManager;
 
     /**
      * @var ObjectProphecy<SuluNodeHelper>
      */
-    private $nodeHelper;
+    private ObjectProphecy $nodeHelper;
 
-    /**
-     * @var ContentRepository
-     */
-    private $contentRepository;
+    private \Sulu\Component\Content\Repository\ContentRepository $contentRepository;
 
     /**
      * @var ObjectProphecy<SystemStoreInterface>
      */
-    private $systemStore;
+    private ObjectProphecy $systemStore;
 
     /**
      * @var ObjectProphecy<QueryInterface>
      */
-    private $query;
+    private ObjectProphecy $query;
 
     public function setUp(): void
     {

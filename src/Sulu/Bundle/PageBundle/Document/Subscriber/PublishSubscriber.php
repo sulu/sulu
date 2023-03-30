@@ -36,25 +36,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class PublishSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
+    private \PHPCR\SessionInterface $liveSession;
 
-    /**
-     * @var NodeHelperInterface
-     */
-    private $nodeHelper;
+    private \Sulu\Component\DocumentManager\NodeHelperInterface $nodeHelper;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder $propertyEncoder;
 
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
+    private \Sulu\Component\DocumentManager\MetadataFactoryInterface $metadataFactory;
 
     public function __construct(
         SessionInterface $liveSession,

@@ -24,7 +24,7 @@ class TagMergedEventTest extends TestCase
     /**
      * @var ObjectProphecy<TagInterface>
      */
-    private $destinationTag;
+    private ObjectProphecy $destinationTag;
 
     public function setUp(): void
     {

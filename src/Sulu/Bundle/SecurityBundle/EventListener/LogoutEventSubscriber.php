@@ -24,10 +24,7 @@ use Symfony\Component\Security\Http\Event\LogoutEvent;
  */
 final class LogoutEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
+    private \Symfony\Component\Routing\Generator\UrlGeneratorInterface $urlGenerator;
 
     public function __construct(UrlGeneratorInterface $urlGenerator)
     {

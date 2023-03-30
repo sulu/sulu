@@ -21,10 +21,7 @@ use Sulu\Component\Content\Exception\ReservedPropertyNameException;
 
 class ImageMapFieldMetadataValidatorTest extends TestCase
 {
-    /**
-     * @var ImageMapFieldMetadataValidator
-     */
-    private $imageMapFieldMetadataValidator;
+    private \Sulu\Bundle\MediaBundle\Metadata\ImageMapFieldMetadataValidator $imageMapFieldMetadataValidator;
 
     protected function setUp(): void
     {

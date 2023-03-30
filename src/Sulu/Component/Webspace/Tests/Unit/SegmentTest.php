@@ -16,7 +16,7 @@ use Sulu\Component\Webspace\Segment;
 
 class SegmentTest extends TestCase
 {
-    private $segment;
+    private \Sulu\Component\Webspace\Segment $segment;
 
     public function setUp(): void
     {

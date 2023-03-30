@@ -11,18 +11,13 @@
 
 namespace Sulu\Bundle\CategoryBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class KeywordControllerTest extends SuluTestCase
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
     /**
      * @var CategoryInterface
@@ -34,10 +29,7 @@ class KeywordControllerTest extends SuluTestCase
      */
     private $category2;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

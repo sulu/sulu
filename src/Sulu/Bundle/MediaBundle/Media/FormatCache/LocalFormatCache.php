@@ -18,10 +18,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class LocalFormatCache implements FormatCacheInterface
 {
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private \Symfony\Component\Filesystem\Filesystem $filesystem;
 
     /**
      * @var string

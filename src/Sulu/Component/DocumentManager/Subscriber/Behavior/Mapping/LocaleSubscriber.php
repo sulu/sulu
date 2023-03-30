@@ -23,10 +23,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class LocaleSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentRegistry
-     */
-    private $registry;
+    private \Sulu\Component\DocumentManager\DocumentRegistry $registry;
 
     public function __construct(DocumentRegistry $registry)
     {

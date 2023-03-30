@@ -74,82 +74,40 @@ class ContentMapper implements ContentMapperInterface
     /**
      * @var ContentTypeManager
      */
-    private $contentTypeManager;
+    private \Sulu\Component\Content\ContentTypeManagerInterface $contentTypeManager;
 
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
+    private \Sulu\Component\Content\Compat\StructureManagerInterface $structureManager;
 
-    /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
+    private \Sulu\Component\Content\Extension\ExtensionManagerInterface $extensionManager;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private \Sulu\Component\PHPCR\SessionManager\SessionManagerInterface $sessionManager;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var Cache
-     */
-    private $extensionDataCache;
+    private ?\Doctrine\Common\Cache\ArrayCache $extensionDataCache = null;
 
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
+    private \Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
+    private \Symfony\Component\Form\FormFactoryInterface $formFactory;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $inspector;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder $encoder;
 
-    /**
-     * @var NamespaceRegistry
-     */
-    private $namespaceRegistry;
+    private \Sulu\Component\DocumentManager\NamespaceRegistry $namespaceRegistry;
 
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
+    private \Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface $accessControlManager;
 
     /**
      * @var array
      */
     private $permissions;
 
-    /**
-     * @var ?Security
-     */
-    private $security;
+    private ?\Symfony\Component\Security\Core\Security $security = null;
 
     public function __construct(
         DocumentManagerInterface $documentManager,

@@ -30,47 +30,47 @@ class DefaultControllerTest extends TestCase
 {
     use ProphecyTrait;
 
-    private $defaultController;
+    private \Sulu\Bundle\WebsiteBundle\Controller\DefaultController $defaultController;
 
     /**
      * @var ObjectProphecy<ContainerInterface>
      */
-    private $container;
+    private ObjectProphecy $container;
 
     /**
      * @var ObjectProphecy<Environment>
      */
-    private $twig;
+    private ObjectProphecy $twig;
 
     /**
      * @var ObjectProphecy<FilesystemLoader>
      */
-    private $twigLoader;
+    private ObjectProphecy $twigLoader;
 
     /**
      * @var ObjectProphecy<Request>
      */
-    private $request;
+    private ObjectProphecy $request;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     /**
      * @var ObjectProphecy<PageBridge>
      */
-    private $structure;
+    private ObjectProphecy $structure;
 
     /**
      * @var ObjectProphecy<ParameterResolverInterface>
      */
-    private $parameterResolver;
+    private ObjectProphecy $parameterResolver;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     public function setUp(): void
     {

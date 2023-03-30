@@ -26,12 +26,9 @@ class TargetGroupBlockVisitorTest extends TestCase
     /**
      * @var ObjectProphecy<TargetGroupStoreInterface>
      */
-    private $targetGroupStore;
+    private ObjectProphecy $targetGroupStore;
 
-    /**
-     * @var TargetGroupBlockVisitor
-     */
-    private $targetGroupBlockVisitor;
+    private \Sulu\Bundle\AudienceTargetingBundle\Content\Types\Block\TargetGroupBlockVisitor $targetGroupBlockVisitor;
 
     public function setUp(): void
     {

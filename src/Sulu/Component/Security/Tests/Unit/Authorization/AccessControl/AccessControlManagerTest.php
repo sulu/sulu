@@ -42,60 +42,57 @@ class AccessControlManagerTest extends TestCase
     use ProphecyTrait;
     use ReadObjectAttributeTrait;
 
-    /**
-     * @var AccessControlManager
-     */
-    private $accessControlManager;
+    private \Sulu\Component\Security\Authorization\AccessControl\AccessControlManager $accessControlManager;
 
     /**
      * @var ObjectProphecy<MaskConverterInterface>
      */
-    private $maskConverter;
+    private ObjectProphecy $maskConverter;
 
     /**
      * @var ObjectProphecy<EventDispatcherInterface>
      */
-    private $eventDispatcher;
+    private ObjectProphecy $eventDispatcher;
 
     /**
      * @var ObjectProphecy<DescendantProviderInterface>
      */
-    private $descendantProvider1;
+    private ObjectProphecy $descendantProvider1;
 
     /**
      * @var ObjectProphecy<DescendantProviderInterface>
      */
-    private $descendantProvider2;
+    private ObjectProphecy $descendantProvider2;
 
     /**
      * @var ObjectProphecy<SystemStoreInterface>
      */
-    private $systemStore;
+    private ObjectProphecy $systemStore;
 
     /**
      * @var ObjectProphecy<RoleRepositoryInterface>
      */
-    private $roleRepository;
+    private ObjectProphecy $roleRepository;
 
     /**
      * @var ObjectProphecy<AccessControlRepositoryInterface>
      */
-    private $accessControlRepository;
+    private ObjectProphecy $accessControlRepository;
 
     /**
      * @var ObjectProphecy<Security>
      */
-    private $security;
+    private ObjectProphecy $security;
 
     /**
      * @var ObjectProphecy<UserInterface>
      */
-    private $user;
+    private ObjectProphecy $user;
 
     /**
      * @var array<string, int>
      */
-    private $permissions = [
+    private array $permissions = [
         'view' => 64,
         'add' => 32,
         'edit' => 16,

@@ -46,40 +46,31 @@ class DocumentManagerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var EventDispatcher
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcher $eventDispatcher;
 
     /**
      * @var ObjectProphecy<NodeManager>
      */
-    private $nodeManager;
+    private ObjectProphecy $nodeManager;
 
-    /**
-     * @var DocumentManager
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManager $documentManager;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
-    /**
-     * @var \stdClass
-     */
-    private $document;
+    private \stdClass $document;
 
     /**
      * @var ObjectProphecy<Query>
      */
-    private $query;
+    private ObjectProphecy $query;
 
     /**
      * @var ObjectProphecy<QueryResultCollection>
      */
-    private $queryResultCollection;
+    private ObjectProphecy $queryResultCollection;
 
     public function setUp(): void
     {
@@ -314,9 +305,9 @@ class TestDocumentManagerSubscriber implements EventSubscriberInterface
 
     public $reorder = false;
 
-    private $query;
+    private \Sulu\Component\DocumentManager\Query\Query $query;
 
-    private $resultCollection;
+    private \Sulu\Component\DocumentManager\Collection\QueryResultCollection $resultCollection;
 
     public function __construct(Query $query, QueryResultCollection $resultCollection)
     {

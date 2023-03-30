@@ -12,14 +12,10 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Routing;
 
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class PortalLoaderTest extends WebsiteTestCase
 {
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

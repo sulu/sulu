@@ -26,25 +26,22 @@ class LinkTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var Link
-     */
-    private $link;
+    private \Sulu\Component\Content\Types\Link $link;
 
     /**
      * @var ObjectProphecy<LinkProviderPoolInterface>
      */
-    private $providerPool;
+    private ObjectProphecy $providerPool;
 
     /**
      * @var ObjectProphecy<LinkProviderInterface>
      */
-    private $provider;
+    private ObjectProphecy $provider;
 
     /**
      * @var ObjectProphecy<PropertyInterface>
      */
-    private $property;
+    private ObjectProphecy $property;
 
     public function setUp(): void
     {

@@ -20,20 +20,14 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 
 class PageModifiedEvent extends DomainEvent
 {
-    /**
-     * @var BasePageDocument
-     */
-    private $pageDocument;
+    private \Sulu\Bundle\PageBundle\Document\BasePageDocument $pageDocument;
 
-    /**
-     * @var string
-     */
-    private $locale;
+    private string $locale;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

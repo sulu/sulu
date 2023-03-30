@@ -27,45 +27,42 @@ class UserManagerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var UserManager
-     */
-    private $userManager;
+    private \Sulu\Bundle\SecurityBundle\UserManager\UserManager $userManager;
 
     /**
      * @var ObjectProphecy<UserRepositoryInterface>
      */
-    private $userRepository;
+    private ObjectProphecy $userRepository;
 
     /**
      * @var ObjectProphecy<DomainEventCollectorInterface>
      */
-    private $eventCollector;
+    private ObjectProphecy $eventCollector;
 
     /**
      * @var ObjectProphecy<ObjectManager>
      */
-    private $objectManager;
+    private ObjectProphecy $objectManager;
 
     /**
      * @var ObjectProphecy<RoleRepositoryInterface>
      */
-    private $roleRepository;
+    private ObjectProphecy $roleRepository;
 
     /**
      * @var ObjectProphecy<GroupRepository>
      */
-    private $groupRepository;
+    private ObjectProphecy $groupRepository;
 
     /**
      * @var ObjectProphecy<SaltGenerator>
      */
-    private $saltGenerator;
+    private ObjectProphecy $saltGenerator;
 
     /**
      * @var ObjectProphecy<ContactManager>
      */
-    private $contactManager;
+    private ObjectProphecy $contactManager;
 
     public function setUp(): void
     {

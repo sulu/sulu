@@ -24,25 +24,16 @@ class TargetGroupRule implements TargetGroupRuleInterface
      */
     private $id;
 
-    /**
-     * @var string
-     */
-    private $title;
+    private ?string $title = null;
 
-    /**
-     * @var int
-     */
-    private $frequency;
+    private ?int $frequency = null;
 
-    /**
-     * @var TargetGroupInterface
-     */
-    private $targetGroup;
+    private ?\Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface $targetGroup = null;
 
     /**
      * @var Collection<int, TargetGroupConditionInterface>
      */
-    private $conditions;
+    private \Doctrine\Common\Collections\ArrayCollection|array $conditions;
 
     /**
      * Initialize collections.

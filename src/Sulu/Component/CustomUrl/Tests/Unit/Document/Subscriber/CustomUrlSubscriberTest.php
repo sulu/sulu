@@ -33,35 +33,32 @@ class CustomUrlSubscriberTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var CustomUrlSubscriber
-     */
-    private $customUrlSubscriber;
+    private \Sulu\Component\CustomUrl\Document\Subscriber\CustomUrlSubscriber $customUrlSubscriber;
 
     /**
      * @var ObjectProphecy<GeneratorInterface>
      */
-    private $generator;
+    private ObjectProphecy $generator;
 
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<PathBuilder>
      */
-    private $pathBuilder;
+    private ObjectProphecy $pathBuilder;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $inspector;
+    private ObjectProphecy $inspector;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     public function setUp(): void
     {

@@ -34,40 +34,25 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ContentMapperSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $documentInspector;
 
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
+    private \Sulu\Component\Content\Mapper\ContentMapperInterface $contentMapper;
 
-    /**
-     * @var SuluNodeHelper
-     */
-    private $nodeHelper;
+    private \Sulu\Component\Util\SuluNodeHelper $nodeHelper;
 
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
+    private \Sulu\Component\Content\Compat\StructureManagerInterface $structureManager;
 
     /**
      * @var ContentNodeDeleteEvent[]
      */
-    private $deleteEvents;
+    private ?array $deleteEvents = null;
 
     /**
      * @var PersistEvent[]
      */
-    private $persistEvents = [];
+    private array $persistEvents = [];
 
     public function __construct(
         DocumentInspector $inspector,

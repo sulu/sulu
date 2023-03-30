@@ -15,23 +15,15 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\Snippet\Export\SnippetExportInterface;
 
 /**
  * Tests for the Webspace Export class.
  */
 class SnippetTest extends SuluTestCase
 {
-    /**
-     * @var SnippetExportInterface
-     */
-    private $snippetExporter;
+    private ?object $snippetExporter = null;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
     /**
      * @var ExtensionManagerInterface

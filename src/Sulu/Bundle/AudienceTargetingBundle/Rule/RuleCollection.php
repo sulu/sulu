@@ -19,7 +19,7 @@ class RuleCollection implements RuleCollectionInterface
     /**
      * @var RuleInterface[]
      */
-    private $rules;
+    private array $rules;
 
     public function __construct(array $rules)
     {

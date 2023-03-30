@@ -19,15 +19,9 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class MediaVersionAddedEvent extends DomainEvent
 {
-    /**
-     * @var MediaInterface
-     */
-    private $media;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaInterface $media;
 
-    /**
-     * @var int
-     */
-    private $version;
+    private int $version;
 
     public function __construct(
         MediaInterface $media,

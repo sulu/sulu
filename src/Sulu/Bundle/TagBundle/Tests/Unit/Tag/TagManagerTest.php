@@ -53,17 +53,17 @@ class TagManagerTest extends TestCase
     /**
      * @var DomainEventCollectorInterface
      */
-    private $domainEventCollector;
+    private \PHPUnit\Framework\MockObject\MockObject $domainEventCollector;
 
     /**
      * @var TrashManagerInterface
      */
-    private $trashManager;
+    private \PHPUnit\Framework\MockObject\MockObject $trashManager;
 
     /**
      * @var TagManagerInterface
      */
-    private $tagManager;
+    private \Sulu\Bundle\TagBundle\Tag\TagManager $tagManager;
 
     public function setUp(): void
     {

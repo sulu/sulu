@@ -47,15 +47,9 @@ class StructureBridge implements StructureInterface
      */
     protected $inspector;
 
-    /**
-     * @var LegacyPropertyFactory
-     */
-    private $propertyFactory;
+    private \Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory $propertyFactory;
 
-    /**
-     * @var array
-     */
-    private $loadedProperties = [];
+    private array $loadedProperties = [];
 
     /**
      * Needed by structure extensions when the document has not been set..

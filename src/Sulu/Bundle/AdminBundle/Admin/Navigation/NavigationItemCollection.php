@@ -18,7 +18,7 @@ class NavigationItemCollection
     /**
      * @var NavigationItem[]
      */
-    private $navigationItems = [];
+    private array $navigationItems = [];
 
     public function add(NavigationItem $navigationItem): void
     {

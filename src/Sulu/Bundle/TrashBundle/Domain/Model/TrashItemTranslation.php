@@ -27,26 +27,19 @@ class TrashItemTranslation
      */
     private $id;
 
-    /**
-     * @var TrashItemInterface
-     */
-    private $trashItem;
+    private \Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface $trashItem;
 
     /**
      * @Expose
      * @Groups({"trash_item_admin_api"})
-     *
-     * @var string|null
      */
-    private $locale;
+    private ?string $locale = null;
 
     /**
      * @Expose
      * @Groups({"trash_item_admin_api"})
-     *
-     * @var string
      */
-    private $title;
+    private string $title;
 
     public function __construct(TrashItemInterface $trashItem, ?string $locale, string $title)
     {

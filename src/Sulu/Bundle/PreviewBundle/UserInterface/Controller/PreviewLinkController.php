@@ -30,15 +30,9 @@ class PreviewLinkController extends AbstractRestController implements ClassResou
 {
     use RequestParametersTrait;
 
-    /**
-     * @var PreviewLinkRepositoryInterface
-     */
-    private $previewLinkRepository;
+    private \Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface $previewLinkRepository;
 
-    /**
-     * @var PreviewLinkManagerInterface
-     */
-    private $previewLinkManager;
+    private \Sulu\Bundle\PreviewBundle\Application\Manager\PreviewLinkManagerInterface $previewLinkManager;
 
     public function __construct(
         PreviewLinkRepositoryInterface $previewLinkRepository,

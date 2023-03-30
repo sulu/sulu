@@ -17,15 +17,12 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 
 class RoleCreatedEvent extends DomainEvent
 {
-    /**
-     * @var RoleInterface
-     */
-    private $role;
+    private \Sulu\Component\Security\Authentication\RoleInterface $role;
 
     /**
      * @var mixed[]|null
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

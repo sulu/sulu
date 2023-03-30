@@ -19,15 +19,12 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class MediaRestoredEvent extends DomainEvent
 {
-    /**
-     * @var MediaInterface
-     */
-    private $media;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaInterface $media;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

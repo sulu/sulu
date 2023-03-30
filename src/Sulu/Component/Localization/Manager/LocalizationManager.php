@@ -24,7 +24,7 @@ class LocalizationManager implements LocalizationManagerInterface
      *
      * @var LocalizationProviderInterface[]
      */
-    private $localizationProviders = [];
+    private array $localizationProviders = [];
 
     public function getLocalizations(): array
     {

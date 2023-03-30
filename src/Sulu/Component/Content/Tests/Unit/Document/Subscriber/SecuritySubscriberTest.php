@@ -31,22 +31,19 @@ class SecuritySubscriberTest extends SubscriberTestCase
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $liveSession;
+    private ObjectProphecy $liveSession;
 
-    /**
-     * @var SecuritySubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\Content\Document\Subscriber\SecuritySubscriber $subscriber;
 
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $propertyEncoder;
+    private ObjectProphecy $propertyEncoder;
 
     /**
      * @var ObjectProphecy<AccessControlManagerInterface>
      */
-    private $accessControlManager;
+    private ObjectProphecy $accessControlManager;
 
     public function setUp(): void
     {

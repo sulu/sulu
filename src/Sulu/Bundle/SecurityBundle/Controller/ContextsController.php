@@ -34,10 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ContextsController extends AbstractRestController implements ClassResourceInterface
 {
-    /**
-     * @var AdminPool
-     */
-    private $adminPool;
+    private \Sulu\Bundle\AdminBundle\Admin\AdminPool $adminPool;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

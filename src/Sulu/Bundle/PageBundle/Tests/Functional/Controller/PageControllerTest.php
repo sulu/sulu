@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
@@ -26,45 +25,25 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class PageControllerTest extends SuluTestCase
 {
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private ?object $session = null;
 
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
+    private ?object $liveSession = null;
 
     /**
      * @var DocumentManagerInterface
      */
     private $documentManager;
 
-    /**
-     * @var PHPCRImporter
-     */
-    private $importer;
+    private \Sulu\Bundle\TestBundle\Testing\PHPCRImporter $importer;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private ?object $em = null;
 
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
+    private ?object $accessControlManager = null;
 
     public function setUp(): void
     {

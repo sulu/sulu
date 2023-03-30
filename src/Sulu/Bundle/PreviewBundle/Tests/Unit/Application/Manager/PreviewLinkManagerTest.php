@@ -33,37 +33,31 @@ class PreviewLinkManagerTest extends TestCase
     /**
      * @var ObjectProphecy<PreviewLinkRepositoryInterface>
      */
-    private $previewLinkRepository;
+    private ObjectProphecy $previewLinkRepository;
 
     /**
      * @var ObjectProphecy<DomainEventCollectorInterface>
      */
-    private $domainEventCollector;
+    private ObjectProphecy $domainEventCollector;
 
     /**
      * @var ObjectProphecy<PreviewObjectProviderRegistryInterface>
      */
-    private $previewObjectProviderRegistry;
+    private ObjectProphecy $previewObjectProviderRegistry;
 
     /**
      * @var ObjectProphecy<PreviewObjectProviderInterface>
      */
-    private $previewObjectProvider;
+    private ObjectProphecy $previewObjectProvider;
 
     /**
      * @var ObjectProphecy<RouterInterface>
      */
-    private $router;
+    private ObjectProphecy $router;
 
-    /**
-     * @var PreviewLinkManager
-     */
-    private $previewLinkManager;
+    private \Sulu\Bundle\PreviewBundle\Application\Manager\PreviewLinkManager $previewLinkManager;
 
-    /**
-     * @var string
-     */
-    private $resourceKey = 'pages';
+    private string $resourceKey = 'pages';
 
     protected function setUp(): void
     {

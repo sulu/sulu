@@ -16,15 +16,12 @@ use Sulu\Component\Content\Compat\PropertyTag;
 
 class BlockPropertyWrapper implements PropertyInterface
 {
-    /**
-     * @var PropertyInterface
-     */
-    private $property;
+    private \Sulu\Component\Content\Compat\PropertyInterface $property;
 
     /**
      * @var BlockPropertyInterface
      */
-    private $block;
+    private \Sulu\Component\Content\Compat\PropertyInterface $block;
 
     /**
      * @var int

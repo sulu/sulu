@@ -23,40 +23,22 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class SystemCollectionManager implements SystemCollectionManagerInterface
 {
-    /**
-     * @var array
-     */
-    private $config;
+    private array $config;
 
-    /**
-     * @var CollectionManagerInterface
-     */
-    private $collectionManager;
+    private \Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface $collectionManager;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenProvider;
+    private ?\Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenProvider = null;
 
     /**
      * @var string
      */
     private $locale;
 
-    /**
-     * @var CacheInterface
-     */
-    private $cache;
+    private \Sulu\Component\Cache\CacheInterface $cache;
 
-    /**
-     * @var array
-     */
-    private $systemCollections;
+    private ?\Serializable $systemCollections = null;
 
     public function __construct(
         array $config,

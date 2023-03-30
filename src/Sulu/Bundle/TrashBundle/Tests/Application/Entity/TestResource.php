@@ -16,16 +16,12 @@ use JMS\Serializer\Annotation\Groups;
 class TestResource
 {
     /**
-     * @var string
-     *
      * @Groups({"restoreSerializationGroup"})
      */
-    private $property1 = 'value-1';
+    private string $property1 = 'value-1';
 
     /**
-     * @var string
-     *
      * @Groups({"otherSerializationGroup"})
      */
-    private $property2 = 'value-2';
+    private string $property2 = 'value-2';
 }

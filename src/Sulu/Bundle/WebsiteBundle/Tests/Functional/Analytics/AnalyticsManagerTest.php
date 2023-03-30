@@ -22,7 +22,7 @@ class AnalyticsManagerTest extends BaseFunctional
     /**
      * @var AnalyticsInterface[]
      */
-    private $entities = [];
+    private array $entities = [];
 
     public function setUp(): void
     {

@@ -40,14 +40,14 @@ class Note
      *
      * @Exclude
      */
-    private $contacts;
+    private \Doctrine\Common\Collections\ArrayCollection|array $contacts;
 
     /**
      * @var Collection<int, AccountInterface>
      *
      * @Exclude
      */
-    private $accounts;
+    private \Doctrine\Common\Collections\ArrayCollection|array $accounts;
 
     /**
      * Constructor.

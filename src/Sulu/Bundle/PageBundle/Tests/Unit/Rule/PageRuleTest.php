@@ -33,22 +33,22 @@ class PageRuleTest extends TestCase
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<TranslatorInterface>
      */
-    private $translator;
+    private ObjectProphecy $translator;
 
     /**
      * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
-    private $resourceLocatorStrategyPool;
+    private ObjectProphecy $resourceLocatorStrategyPool;
 
     public function setUp(): void
     {

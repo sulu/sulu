@@ -28,10 +28,7 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
  */
 class StructureSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $inspector;
 
     public function __construct(DocumentInspector $inspector)
     {

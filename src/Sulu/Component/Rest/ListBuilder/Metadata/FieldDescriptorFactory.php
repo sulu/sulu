@@ -30,25 +30,16 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
  */
 class FieldDescriptorFactory implements FieldDescriptorFactoryInterface, CacheWarmerInterface
 {
-    /**
-     * @var ListXmlLoader
-     */
-    private $listXmlLoader;
+    private \Sulu\Component\Rest\ListBuilder\Metadata\ListXmlLoader $listXmlLoader;
 
     /**
      * @var string[]
      */
-    private $listDirectories;
+    private array $listDirectories;
 
-    /**
-     * @var string
-     */
-    private $cachePath;
+    private string $cachePath;
 
-    /**
-     * @var bool
-     */
-    private $debug;
+    private bool $debug;
 
     public function __construct(
         ListXmlLoader $listXmlLoader,

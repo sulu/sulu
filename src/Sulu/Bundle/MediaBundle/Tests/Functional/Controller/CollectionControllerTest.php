@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Id\AssignedGenerator;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
@@ -20,21 +19,14 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
-use Sulu\Bundle\SecurityBundle\Entity\RoleRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
-use Sulu\Component\Cache\CacheInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
-use Sulu\Component\Security\Authorization\AccessControl\AccessControlManager;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class CollectionControllerTest extends SuluTestCase
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
     /**
      * @var Collection
@@ -56,30 +48,15 @@ class CollectionControllerTest extends SuluTestCase
      */
     private $mediaType;
 
-    /**
-     * @var CacheInterface
-     */
-    private $systemCollectionCache;
+    private ?object $systemCollectionCache = null;
 
-    /**
-     * @var array
-     */
-    private $systemCollectionConfig;
+    private bool|string|int|float|\UnitEnum|array|null $systemCollectionConfig = null;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
-    /**
-     * @var RoleRepository
-     */
-    private $roleRepository;
+    private ?object $roleRepository = null;
 
-    /**
-     * @var AccessControlManager
-     */
-    private $accessControlManager;
+    private ?object $accessControlManager = null;
 
     public function setUp(): void
     {

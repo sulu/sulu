@@ -19,10 +19,7 @@ use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInte
 
 class PermissionInheritanceSubscriber implements EventSubscriber
 {
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
+    private \Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface $accessControlManager;
 
     public function __construct(AccessControlManagerInterface $accessControlManager)
     {

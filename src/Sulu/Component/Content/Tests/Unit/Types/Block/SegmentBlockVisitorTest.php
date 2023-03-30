@@ -28,12 +28,9 @@ class SegmentBlockVisitorTest extends TestCase
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
-    /**
-     * @var SegmentBlockVisitor
-     */
-    private $segmentBlockVisitor;
+    private \Sulu\Component\Content\Types\Block\SegmentBlockVisitor $segmentBlockVisitor;
 
     public function setUp(): void
     {

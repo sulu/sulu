@@ -37,27 +37,24 @@ class RouteSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $documentInspector;
+    private ObjectProphecy $documentInspector;
 
     /**
      * @var ObjectProphecy<SessionManagerInterface>
      */
-    private $sessionManager;
+    private ObjectProphecy $sessionManager;
 
     /**
      * @var ObjectProphecy<NodeManager>
      */
-    private $nodeManager;
+    private ObjectProphecy $nodeManager;
 
-    /**
-     * @var RouteSubscriber
-     */
-    private $routeSubscriber;
+    private \Sulu\Component\Content\Document\Subscriber\RouteSubscriber $routeSubscriber;
 
     public function setUp(): void
     {

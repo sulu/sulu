@@ -30,37 +30,31 @@ class MarkupListenerTest extends TestCase
     /**
      * @var ObjectProphecy<MarkupParserInterface>
      */
-    private $markupParser;
+    private ObjectProphecy $markupParser;
 
-    /**
-     * @var ResponseEvent
-     */
-    private $event;
+    private \Symfony\Component\HttpKernel\Event\ResponseEvent $event;
 
     /**
      * @var ObjectProphecy<Response>
      */
-    private $response;
+    private ObjectProphecy $response;
 
     /**
      * @var ObjectProphecy<HeaderBag>
      */
-    private $responseHeaders;
+    private ObjectProphecy $responseHeaders;
 
     /**
      * @var ObjectProphecy<Request>
      */
-    private $request;
+    private ObjectProphecy $request;
 
-    /**
-     * @var MarkupListener
-     */
-    private $listener;
+    private \Sulu\Bundle\MarkupBundle\Listener\MarkupListener $listener;
 
     /**
      * @var ObjectProphecy<HttpKernelInterface>
      */
-    private $kernel;
+    private ObjectProphecy $kernel;
 
     protected function setUp(): void
     {

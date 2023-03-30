@@ -23,10 +23,7 @@ class WebspaceExportCommand extends Command
 {
     protected static $defaultName = 'sulu:webspaces:export';
 
-    /**
-     * @var WebspaceExportInterface
-     */
-    private $webspaceExporter;
+    private \Sulu\Component\Content\Export\WebspaceExportInterface $webspaceExporter;
 
     public function __construct(WebspaceExportInterface $webspaceExporter)
     {

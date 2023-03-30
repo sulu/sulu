@@ -20,17 +20,11 @@ class OperatingSystemRule implements RuleInterface
 {
     public const OPERATING_SYSTEM = 'os';
 
-    private static $operatingSystems = ['Android', 'iOS', 'GNU/Linux', 'Mac', 'Windows'];
+    private static array $operatingSystems = ['Android', 'iOS', 'GNU/Linux', 'Mac', 'Windows'];
 
-    /**
-     * @var DeviceDetector
-     */
-    private $deviceDetector;
+    private \DeviceDetector\DeviceDetector $deviceDetector;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
     public function __construct(DeviceDetector $deviceDetector, TranslatorInterface $translator)
     {

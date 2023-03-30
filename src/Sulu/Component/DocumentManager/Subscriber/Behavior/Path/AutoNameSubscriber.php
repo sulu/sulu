@@ -37,40 +37,19 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class AutoNameSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentRegistry
-     */
-    private $registry;
+    private \Sulu\Component\DocumentManager\DocumentRegistry $registry;
 
-    /**
-     * @var SlugifierInterface
-     */
-    private $slugifier;
+    private \Symfony\Cmf\Api\Slugifier\SlugifierInterface $slugifier;
 
-    /**
-     * @var NameResolver
-     */
-    private $resolver;
+    private \Sulu\Component\DocumentManager\NameResolver $resolver;
 
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
+    private \Sulu\Component\DocumentManager\NodeManager $nodeManager;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private \PHPCR\SessionInterface $session;
 
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
+    private \PHPCR\SessionInterface $liveSession;
 
-    /**
-     * @var array
-     */
-    private $scheduledRename = [];
+    private array $scheduledRename = [];
 
     public function __construct(
         DocumentRegistry $registry,

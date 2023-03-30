@@ -16,10 +16,7 @@ use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStore;
 
 class TargetGroupStoreTest extends TestCase
 {
-    /**
-     * @var TargetGroupStore
-     */
-    private $targetGroupStore;
+    private \Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStore $targetGroupStore;
 
     public function setUp(): void
     {

@@ -14,26 +14,14 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Controller;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\RedirectType;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class PageControllerFieldsTest extends SuluTestCase
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private ?object $sessionManager = null;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

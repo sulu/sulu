@@ -20,9 +20,6 @@ use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Export\WebspaceExportInterface;
-use Sulu\Component\Content\Extension\ExtensionManagerInterface;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\DocumentManager\Exception\MetadataNotFoundException;
@@ -32,20 +29,11 @@ use Sulu\Component\DocumentManager\Exception\MetadataNotFoundException;
  */
 class WebspaceExportTest extends SuluTestCase
 {
-    /**
-     * @var WebspaceExportInterface
-     */
-    private $webspaceExporter;
+    private ?object $webspaceExporter = null;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
+    private ?object $extensionManager = null;
 
     /**
      * @var int

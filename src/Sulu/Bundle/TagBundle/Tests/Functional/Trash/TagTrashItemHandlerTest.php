@@ -11,29 +11,18 @@
 
 namespace Sulu\Bundle\TagBundle\Tests\Functional\Trash;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
-use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Bundle\TagBundle\Trash\TagTrashItemHandler;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class TagTrashItemHandlerTest extends SuluTestCase
 {
-    /**
-     * @var TagTrashItemHandler
-     */
-    private $tagTrashItemHandler;
+    private ?object $tagTrashItemHandler = null;
 
-    /**
-     * @var TagRepositoryInterface
-     */
-    private $tagRepository;
+    private ?object $tagRepository = null;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private ?\Doctrine\ORM\EntityManagerInterface $entityManager = null;
 
     public function setUp(): void
     {

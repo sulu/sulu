@@ -23,10 +23,7 @@ class MissingDomainPartException extends RestException
      */
     private $baseDomain;
 
-    /**
-     * @var array
-     */
-    private $domainParts;
+    private array $domainParts;
 
     /**
      * @var string

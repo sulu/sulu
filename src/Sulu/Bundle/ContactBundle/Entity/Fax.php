@@ -36,25 +36,23 @@ class Fax
     private $id;
 
     /**
-     * @var FaxType
-     *
      * @Groups({"fullAccount", "fullContact"})
      */
-    private $faxType;
+    private ?\Sulu\Bundle\ContactBundle\Entity\FaxType $faxType = null;
 
     /**
      * @var Collection<int, ContactInterface>
      *
      * @Exclude
      */
-    private $contacts;
+    private \Doctrine\Common\Collections\ArrayCollection|array $contacts;
 
     /**
      * @var Collection<int, AccountInterface>
      *
      * @Exclude
      */
-    private $accounts;
+    private \Doctrine\Common\Collections\ArrayCollection|array $accounts;
 
     /**
      * Constructor.

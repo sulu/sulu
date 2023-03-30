@@ -52,50 +52,23 @@ abstract class AbstractMediaController extends AbstractRestController
 
     protected $fieldDescriptors = null;
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
+    private \Sulu\Component\Rest\RestHelperInterface $restHelper;
 
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $listBuilderFactory;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface $listBuilderFactory;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var MediaRepositoryInterface
-     */
-    private $mediaRepository;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface $mediaRepository;
 
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
+    private \Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface $mediaManager;
 
-    /**
-     * @var string
-     */
-    private $mediaClass;
+    private string $mediaClass;
 
-    /**
-     * @var MediaListBuilderFactory|null
-     */
-    private $mediaListBuilderFactory;
+    private ?\Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory $mediaListBuilderFactory = null;
 
-    /**
-     * @var MediaListRepresentationFactory|null
-     */
-    private $mediaListRepresentationFactory;
+    private ?\Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory $mediaListRepresentationFactory = null;
 
-    /**
-     * @var FieldDescriptorFactoryInterface|null
-     */
-    private $fieldDescriptorFactory;
+    private ?\Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface $fieldDescriptorFactory = null;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

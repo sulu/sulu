@@ -24,17 +24,14 @@ class NameResolverTest extends TestCase
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $parentNode;
+    private ObjectProphecy $parentNode;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
-    /**
-     * @var NameResolver
-     */
-    private $nameResolver;
+    private \Sulu\Component\DocumentManager\NameResolver $nameResolver;
 
     public function setUp(): void
     {

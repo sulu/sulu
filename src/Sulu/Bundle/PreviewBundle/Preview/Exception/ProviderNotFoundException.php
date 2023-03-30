@@ -16,10 +16,7 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Exception;
  */
 class ProviderNotFoundException extends PreviewException
 {
-    /**
-     * @var string
-     */
-    private $providerKey;
+    private string $providerKey;
 
     public function __construct(string $providerKey)
     {

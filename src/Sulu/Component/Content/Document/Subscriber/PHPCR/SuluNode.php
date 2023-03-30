@@ -21,10 +21,7 @@ use PHPCR\PropertyType;
  */
 class SuluNode implements \IteratorAggregate, NodeInterface
 {
-    /**
-     * @var NodeInterface
-     */
-    private $node;
+    private \PHPCR\NodeInterface $node;
 
     public function __construct(NodeInterface $node)
     {

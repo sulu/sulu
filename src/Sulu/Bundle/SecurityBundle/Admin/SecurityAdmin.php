@@ -52,37 +52,20 @@ class SecurityAdmin extends Admin
         return -1024;
     }
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
+    private \Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface $viewBuilderFactory;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
+    private \Symfony\Component\Routing\Generator\UrlGeneratorInterface $urlGenerator;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
     /**
      * TODO: Instead of getting the security contexts from the admin pool, that should be closer to the SecurityBundle.
-     *
-     * @var AdminPool
      */
-    private $adminPool;
+    private \Sulu\Bundle\AdminBundle\Admin\AdminPool $adminPool;
 
-    /**
-     * @var array
-     */
-    private $resources;
+    private array $resources;
 
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,

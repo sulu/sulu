@@ -18,10 +18,7 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class ReferenceStore implements ReferenceStoreInterface, ResetInterface
 {
-    /**
-     * @var array
-     */
-    private $ids = [];
+    private array $ids = [];
 
     public function add($id)
     {

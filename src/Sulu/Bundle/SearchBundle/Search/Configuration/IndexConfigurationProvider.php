@@ -18,20 +18,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class IndexConfigurationProvider implements IndexConfigurationProviderInterface
 {
-    /**
-     * @var array|null
-     */
-    private $indexConfigurations = null;
+    private ?array $indexConfigurations = null;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
-    /**
-     * @var array
-     */
-    private $searchIndexes;
+    private array $searchIndexes;
 
     public function __construct(TranslatorInterface $translator, array $searchIndexes)
     {

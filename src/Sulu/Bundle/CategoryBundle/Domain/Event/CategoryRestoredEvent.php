@@ -18,15 +18,12 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 
 class CategoryRestoredEvent extends DomainEvent
 {
-    /**
-     * @var CategoryInterface
-     */
-    private $category;
+    private \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface $category;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

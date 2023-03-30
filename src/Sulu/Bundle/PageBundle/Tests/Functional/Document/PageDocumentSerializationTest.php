@@ -11,34 +11,19 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Document;
 
-use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\Structure\Structure;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\DocumentManager\DocumentRegistry;
 
 class PageDocumentSerializationTest extends SuluTestCase
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var object
-     */
-    private $parent;
+    private object $parent;
 
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
+    private ?object $serializer = null;
 
-    /**
-     * @var DocumentRegistry
-     */
-    private $registry;
+    private ?object $registry = null;
 
     public function setUp(): void
     {

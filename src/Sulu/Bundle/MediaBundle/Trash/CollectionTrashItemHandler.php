@@ -37,30 +37,15 @@ final class CollectionTrashItemHandler implements
     RestoreTrashItemHandlerInterface,
     RestoreConfigurationProviderInterface
 {
-    /**
-     * @var TrashItemRepositoryInterface
-     */
-    private $trashItemRepository;
+    private \Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface $trashItemRepository;
 
-    /**
-     * @var CollectionRepositoryInterface
-     */
-    private $collectionRepository;
+    private \Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface $collectionRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var DoctrineRestoreHelperInterface
-     */
-    private $doctrineRestoreHelper;
+    private \Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelperInterface $doctrineRestoreHelper;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
     public function __construct(
         TrashItemRepositoryInterface $trashItemRepository,

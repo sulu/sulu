@@ -31,10 +31,7 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
 
     public const TAG_NAME = 'sulu_route.route_path';
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
     /**
      * @var StructureMetadataFactoryInterface

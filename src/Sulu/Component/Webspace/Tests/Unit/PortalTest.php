@@ -24,25 +24,22 @@ class PortalTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var Portal
-     */
-    private $portal;
+    private \Sulu\Component\Webspace\Portal $portal;
 
     /**
      * @var ObjectProphecy<Environment>
      */
-    private $environment;
+    private ObjectProphecy $environment;
 
     /**
      * @var ObjectProphecy<Localization>
      */
-    private $localization;
+    private ObjectProphecy $localization;
 
     /**
      * @var ObjectProphecy<Url>
      */
-    private $url;
+    private ObjectProphecy $url;
 
     public function setUp(): void
     {

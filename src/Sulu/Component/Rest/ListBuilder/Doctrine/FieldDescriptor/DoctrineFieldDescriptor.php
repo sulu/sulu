@@ -26,24 +26,20 @@ class DoctrineFieldDescriptor extends AbstractDoctrineFieldDescriptor
 
     /**
      * The name of the field in the database.
-     *
-     * @var string
      */
-    private $fieldName;
+    private string $fieldName;
 
     /**
      * The name of the entity.
-     *
-     * @var string
      */
-    private $entityName;
+    private string $entityName;
 
     /**
      * The joins, which have to be made to get to the result.
      *
      * @var DoctrineJoinDescriptor[]
      */
-    private $joins;
+    private array $joins;
 
     public function __construct(
         string $fieldName,

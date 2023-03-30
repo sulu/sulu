@@ -16,10 +16,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class WebsiteControllerTest extends WebsiteTestCase
 {
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

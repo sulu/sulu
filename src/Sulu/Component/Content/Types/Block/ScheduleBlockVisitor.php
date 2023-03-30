@@ -17,15 +17,9 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class ScheduleBlockVisitor implements BlockVisitorInterface
 {
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var CacheLifetimeRequestStore
-     */
-    private $cacheLifetimeRequestStore;
+    private \Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore $cacheLifetimeRequestStore;
 
     public function __construct(
         RequestAnalyzerInterface $requestAnalyzer,

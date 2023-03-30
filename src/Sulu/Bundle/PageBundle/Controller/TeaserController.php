@@ -22,10 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TeaserController extends AbstractRestController implements ClassResourceInterface
 {
-    /**
-     * @var TeaserManagerInterface
-     */
-    private $teaserManager;
+    private \Sulu\Bundle\PageBundle\Teaser\TeaserManagerInterface $teaserManager;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

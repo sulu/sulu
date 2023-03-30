@@ -20,15 +20,9 @@ class InfoCommand extends Command
 {
     protected static $defaultName = 'sulu:admin:info';
 
-    /**
-     * @var string string
-     */
-    private $suluVersion;
-
-    public function __construct(string $suluVersion)
+    public function __construct(private string $suluVersion)
     {
         parent::__construct();
-        $this->suluVersion = $suluVersion;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

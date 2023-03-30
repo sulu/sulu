@@ -49,10 +49,7 @@ class CsvHandler
         '\\t' => "\t",
     ];
 
-    /**
-     * @var ArraySerializerInterface
-     */
-    private $serializer;
+    private \Sulu\Component\Serializer\ArraySerializerInterface $serializer;
 
     public function __construct(ArraySerializerInterface $serializer)
     {

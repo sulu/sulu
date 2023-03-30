@@ -17,20 +17,11 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class SystemStore implements SystemStoreInterface, ResetInterface
 {
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
+    private \Sulu\Component\Security\Authentication\RoleRepositoryInterface $roleRepository;
 
-    /**
-     * @var string|null
-     */
-    private $system;
+    private ?string $system = null;
 
-    /**
-     * @var RoleInterface|null
-     */
-    private $anonymousRole;
+    private ?\Sulu\Component\Security\Authentication\RoleInterface $anonymousRole = null;
 
     public function __construct(RoleRepositoryInterface $roleRepository)
     {

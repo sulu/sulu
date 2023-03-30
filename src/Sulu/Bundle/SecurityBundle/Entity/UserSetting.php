@@ -36,11 +36,9 @@ class UserSetting
     /**
      * The user for which this setting is applying.
      *
-     * @var UserInterface
-     *
      * @Exclude
      */
-    private $user;
+    private ?\Sulu\Component\Security\Authentication\UserInterface $user = null;
 
     /**
      * Sets the value for this user setting.

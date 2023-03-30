@@ -27,14 +27,14 @@ class DocumentToUuidTransformerTest extends TestCase
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<UuidBehavior>
      */
-    private $document;
+    private ObjectProphecy $document;
 
-    private $transformer;
+    private \Sulu\Component\Content\Form\DataTransformer\DocumentToUuidTransformer $transformer;
 
     public function setUp(): void
     {

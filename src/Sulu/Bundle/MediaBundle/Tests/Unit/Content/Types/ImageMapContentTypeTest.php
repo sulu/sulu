@@ -31,25 +31,22 @@ class ImageMapContentTypeTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ImageMapContentType
-     */
-    private $imageMapContentType;
+    private \Sulu\Bundle\MediaBundle\Content\Types\ImageMapContentType $imageMapContentType;
 
     /**
      * @var ObjectProphecy<TextLine>
      */
-    private $textLineContentType;
+    private ObjectProphecy $textLineContentType;
 
     /**
      * @var ObjectProphecy<SingleMediaSelection>
      */
-    private $singleMediaSelectionContentType;
+    private ObjectProphecy $singleMediaSelectionContentType;
 
     /**
      * @var ObjectProphecy<ContentTypeManagerInterface>
      */
-    private $contentTypeManager;
+    private ObjectProphecy $contentTypeManager;
 
     protected function setUp(): void
     {

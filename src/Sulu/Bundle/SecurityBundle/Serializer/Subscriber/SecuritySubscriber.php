@@ -30,15 +30,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class SecuritySubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
+    private \Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface $accessControlManager;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private ?\Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage = null;
 
     public function __construct(
         AccessControlManagerInterface $accessControlManager,

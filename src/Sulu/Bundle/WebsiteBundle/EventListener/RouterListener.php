@@ -27,15 +27,9 @@ class RouterListener implements EventSubscriberInterface
 {
     public const REQUEST_ANALYZER = '_requestAnalyzer';
 
-    /**
-     * @var BaseRouterListener
-     */
-    private $baseRouteListener;
+    private BaseRouterListener $baseRouteListener;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
     public function __construct(BaseRouterListener $baseRouterListener, RequestAnalyzerInterface $requestAnalyzer)
     {

@@ -23,15 +23,12 @@ class DateTimeFilterTypeTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var DateTimeFilterType
-     */
-    private $dateTimeFilterType;
+    private \Sulu\Component\Rest\ListBuilder\Filter\DateTimeFilterType $dateTimeFilterType;
 
     /**
      * @var ObjectProphecy<ListBuilderInterface>
      */
-    private $listBuilder;
+    private ObjectProphecy $listBuilder;
 
     public function setUp(): void
     {

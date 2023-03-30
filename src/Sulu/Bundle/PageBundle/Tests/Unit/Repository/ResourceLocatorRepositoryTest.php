@@ -32,27 +32,27 @@ class ResourceLocatorRepositoryTest extends TestCase
     /**
      * @var ResourceLocatorRepositoryInterface
      */
-    private $repository;
+    private \Sulu\Bundle\PageBundle\Repository\ResourceLocatorRepository $repository;
 
     /**
      * @var ObjectProphecy<StructureManagerInterface>
      */
-    private $structureManager;
+    private ObjectProphecy $structureManager;
 
     /**
      * @var ObjectProphecy<ResourceLocatorStrategyInterface>
      */
-    private $resourceLocatorStrategy;
+    private ObjectProphecy $resourceLocatorStrategy;
 
     /**
      * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
-    private $resourceLocatorStrategyPool;
+    private ObjectProphecy $resourceLocatorStrategyPool;
 
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     protected function setUp(): void
     {

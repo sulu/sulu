@@ -48,25 +48,13 @@ class GroupController extends AbstractRestController implements ClassResourceInt
      */
     protected $fieldDescriptors;
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
+    private \Sulu\Component\Rest\RestHelperInterface $restHelper;
 
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $doctrineListBuilderFactory;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory;
 
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
+    private \Sulu\Component\Security\Authentication\RoleRepositoryInterface $roleRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
     public const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
 

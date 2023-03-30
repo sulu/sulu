@@ -21,30 +21,15 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 
 class PageMovedEvent extends DomainEvent
 {
-    /**
-     * @var PageDocument
-     */
-    private $pageDocument;
+    private \Sulu\Bundle\PageBundle\Document\PageDocument $pageDocument;
 
-    /**
-     * @var string|null
-     */
-    private $previousParentId;
+    private ?string $previousParentId = null;
 
-    /**
-     * @var string|null
-     */
-    private $previousParentWebspaceKey;
+    private ?string $previousParentWebspaceKey = null;
 
-    /**
-     * @var string|null
-     */
-    private $previousParentTitle;
+    private ?string $previousParentTitle = null;
 
-    /**
-     * @var string|null
-     */
-    private $previousParentTitleLocale;
+    private ?string $previousParentTitleLocale = null;
 
     public function __construct(
         PageDocument $pageDocument,

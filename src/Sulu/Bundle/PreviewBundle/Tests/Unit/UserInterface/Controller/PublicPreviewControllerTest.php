@@ -30,27 +30,24 @@ class PublicPreviewControllerTest extends TestCase
     /**
      * @var ObjectProphecy<PreviewRendererInterface>
      */
-    private $previewRenderer;
+    private ObjectProphecy $previewRenderer;
 
     /**
      * @var ObjectProphecy<PreviewObjectProviderRegistryInterface>
      */
-    private $previewObjectProviderRegistry;
+    private ObjectProphecy $previewObjectProviderRegistry;
 
     /**
      * @var ObjectProphecy<PreviewLinkRepositoryInterface>
      */
-    private $previewLinkRepository;
+    private ObjectProphecy $previewLinkRepository;
 
     /**
      * @var ObjectProphecy<Environment>
      */
-    private $twig;
+    private ObjectProphecy $twig;
 
-    /**
-     * @var PublicPreviewController
-     */
-    private $publicPreviewController;
+    private \Sulu\Bundle\PreviewBundle\UserInterface\Controller\PublicPreviewController $publicPreviewController;
 
     protected function setUp(): void
     {

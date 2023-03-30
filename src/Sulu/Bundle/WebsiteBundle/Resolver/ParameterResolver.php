@@ -22,35 +22,20 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class ParameterResolver implements ParameterResolverInterface
 {
-    /**
-     * @var StructureResolverInterface
-     */
-    private $structureResolver;
+    private \Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface $structureResolver;
 
-    /**
-     * @var RequestAnalyzerResolverInterface
-     */
-    private $requestAnalyzerResolver;
+    private \Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolverInterface $requestAnalyzerResolver;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
     /**
      * @var string
      */
     private $segmentSwitchUrl;
 
-    /**
-     * @var array
-     */
-    private $enabledTwigAttributes;
+    private array $enabledTwigAttributes;
 
     /**
      * ParameterResolver constructor.

@@ -28,30 +28,18 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class BaseMetadataFactory implements MetadataFactoryInterface
 {
-    /**
-     * @var array
-     */
-    private $aliasMap = [];
+    private array $aliasMap = [];
 
-    /**
-     * @var array
-     */
-    private $classMap = [];
+    private array $classMap = [];
 
-    /**
-     * @var array
-     */
-    private $phpcrTypeMap = [];
+    private array $phpcrTypeMap = [];
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher;
 
     /**
      * @var Metadata[]
      */
-    private $metadata = [];
+    private array $metadata = [];
 
     public function __construct(EventDispatcherInterface $dispatcher, array $mapping)
     {

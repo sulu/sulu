@@ -23,10 +23,7 @@ class Security
      */
     private $system;
 
-    /**
-     * @var bool
-     */
-    private $permissionCheck = false;
+    private bool $permissionCheck = false;
 
     /**
      * Sets the key of the segment.

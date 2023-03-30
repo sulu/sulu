@@ -35,17 +35,17 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<ContentTypeManagerInterface>
      */
-    private $contentTypeManager;
+    private ObjectProphecy $contentTypeManager;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     /**
      * @var ReplacerInterface
@@ -53,12 +53,12 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
     /**
      * @var ObjectProphecy<LoggerInterface>
      */
-    private $logger;
+    private ObjectProphecy $logger;
 
     /**
      * @var ObjectProphecy<ReferenceStorePoolInterface>
      */
-    private $referenceStore;
+    private ObjectProphecy $referenceStore;
 
     public function setUp(): void
     {

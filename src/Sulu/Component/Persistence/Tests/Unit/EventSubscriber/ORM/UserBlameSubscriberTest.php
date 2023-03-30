@@ -34,57 +34,54 @@ class UserBlameSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<LoadClassMetadataEventArgs>
      */
-    private $loadClassMetadataEvent;
+    private ObjectProphecy $loadClassMetadataEvent;
 
     /**
      * @var ObjectProphecy<OnFlushEventArgs>
      */
-    private $onFlushEvent;
+    private ObjectProphecy $onFlushEvent;
 
     /**
      * @var \stdClass
      */
-    private $userBlameObject;
+    private ObjectProphecy $userBlameObject;
 
     /**
      * @var ObjectProphecy<ClassMetadata>
      */
-    private $classMetadata;
+    private ObjectProphecy $classMetadata;
 
     /**
      * @var ObjectProphecy<\ReflectionClass>
      */
-    private $refl;
+    private ObjectProphecy $refl;
 
     /**
      * @var ObjectProphecy<EntityManager>
      */
-    private $entityManager;
+    private ObjectProphecy $entityManager;
 
     /**
      * @var UnitOfWork
      */
-    private $unitOfWork;
+    private \PHPUnit\Framework\MockObject\MockObject $unitOfWork;
 
     /**
      * @var ObjectProphecy<UserInterface>
      */
-    private $user;
+    private ObjectProphecy $user;
 
     /**
      * @var ObjectProphecy<TokenInterface>
      */
-    private $token;
+    private ObjectProphecy $token;
 
     /**
      * @var ObjectProphecy<TokenStorageInterface>
      */
-    private $tokenStorage;
+    private ObjectProphecy $tokenStorage;
 
-    /**
-     * @var UserBlameSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\Persistence\EventSubscriber\ORM\UserBlameSubscriber $subscriber;
 
     public function setUp(): void
     {

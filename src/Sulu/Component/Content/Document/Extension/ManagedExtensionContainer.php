@@ -27,15 +27,9 @@ use Sulu\Component\Content\Extension\ExtensionManagerInterface;
  */
 class ManagedExtensionContainer extends ExtensionContainer
 {
-    /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
+    private \Sulu\Component\Content\Extension\ExtensionManagerInterface $extensionManager;
 
-    /**
-     * @var NodeInterface
-     */
-    private $node;
+    private \PHPCR\NodeInterface $node;
 
     /**
      * @var string

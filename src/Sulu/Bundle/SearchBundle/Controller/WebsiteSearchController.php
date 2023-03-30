@@ -28,35 +28,20 @@ class WebsiteSearchController
 {
     use RequestParametersTrait;
 
-    /**
-     * @var SearchManagerInterface
-     */
-    private $searchManager;
+    private \Massive\Bundle\SearchBundle\Search\SearchManagerInterface $searchManager;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var ParameterResolverInterface
-     */
-    private $parameterResolver;
+    private \Sulu\Bundle\WebsiteBundle\Resolver\ParameterResolverInterface $parameterResolver;
 
-    /**
-     * @var Environment
-     */
-    private $twig;
+    private \Twig\Environment $twig;
 
     /**
      * @var string[]
      */
-    private $indexes;
+    private array $indexes;
 
-    /**
-     * @var TemplateAttributeResolverInterface|null
-     */
-    private $templateAttributeResolver;
+    private ?\Sulu\Bundle\WebsiteBundle\Resolver\TemplateAttributeResolverInterface $templateAttributeResolver = null;
 
     public function __construct(
         SearchManagerInterface $searchManager,

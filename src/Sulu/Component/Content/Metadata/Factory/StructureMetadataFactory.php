@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content\Metadata\Factory;
 
-use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\InflectorFactory;
 use Sulu\Component\Content\Metadata\Factory\Exception\DocumentTypeNotFoundException;
 use Sulu\Component\Content\Metadata\Factory\Exception\StructureTypeNotFoundException;
@@ -25,40 +24,25 @@ use Symfony\Component\Config\Resource\FileResource;
  */
 class StructureMetadataFactory implements StructureMetadataFactoryInterface
 {
-    /**
-     * @var array
-     */
-    private $typePaths = [];
+    private array $typePaths = [];
 
     /**
      * @var string
      */
     private $cachePath;
 
-    /**
-     * @var LoaderInterface
-     */
-    private $loader;
+    private \Symfony\Component\Config\Loader\LoaderInterface $loader;
 
     /**
      * @var bool
      */
     private $debug;
 
-    /**
-     * @var array
-     */
-    private $defaultTypes;
+    private array $defaultTypes;
 
-    /**
-     * @var array
-     */
-    private $cache = [];
+    private array $cache = [];
 
-    /**
-     * @var Inflector
-     */
-    private $inflector;
+    private \Doctrine\Inflector\Inflector $inflector;
 
     public function __construct(
         LoaderInterface $loader,

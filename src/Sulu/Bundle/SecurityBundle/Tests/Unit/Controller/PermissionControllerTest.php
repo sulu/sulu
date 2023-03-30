@@ -28,35 +28,29 @@ class PermissionControllerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var PermissionController
-     */
-    private $permissionController;
+    private \Sulu\Bundle\SecurityBundle\Controller\PermissionController $permissionController;
 
     /**
      * @var ObjectProphecy<AccessControlManagerInterface>
      */
-    private $accessControlManager;
+    private ObjectProphecy $accessControlManager;
 
     /**
      * @var ObjectProphecy<SecurityCheckerInterface>
      */
-    private $securityChecker;
+    private ObjectProphecy $securityChecker;
 
     /**
      * @var ObjectProphecy<RoleRepositoryInterface>
      */
-    private $roleRepository;
+    private ObjectProphecy $roleRepository;
 
     /**
      * @var ObjectProphecy<ViewHandlerInterface>
      */
-    private $viewHandler;
+    private ObjectProphecy $viewHandler;
 
-    /**
-     * @var array
-     */
-    private $resources;
+    private array $resources;
 
     public function setUp(): void
     {

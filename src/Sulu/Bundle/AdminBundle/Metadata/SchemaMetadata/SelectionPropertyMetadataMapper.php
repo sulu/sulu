@@ -15,10 +15,7 @@ use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 
 class SelectionPropertyMetadataMapper implements PropertyMetadataMapperInterface
 {
-    /**
-     * @var PropertyMetadataMinMaxValueResolver
-     */
-    private $propertyMetadataMinMaxValueResolver;
+    private \Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver;
 
     public function __construct(PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver)
     {

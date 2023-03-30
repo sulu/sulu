@@ -18,17 +18,14 @@ class ReferencingResourcesFoundException extends \Exception implements Referenci
     /**
      * @var array{id: int|string, resourceKey: string}
      */
-    private $resource;
+    private array $resource;
 
     /**
      * @var array<array{id: int|string, resourceKey: string, title: string|null}>
      */
-    private $referencingResources;
+    private array $referencingResources;
 
-    /**
-     * @var int
-     */
-    private $referencingResourcesCount;
+    private int $referencingResourcesCount;
 
     /**
      * @param array{id: int|string, resourceKey: string} $resource

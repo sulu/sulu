@@ -20,17 +20,11 @@ class BrowserRule implements RuleInterface
 {
     public const BROWSER = 'browser';
 
-    private static $browsers = ['Chrome', 'Firefox', 'Internet Explorer', 'Opera', 'Safari'];
+    private static array $browsers = ['Chrome', 'Firefox', 'Internet Explorer', 'Opera', 'Safari'];
 
-    /**
-     * @var DeviceDetector
-     */
-    private $deviceDetector;
+    private \DeviceDetector\DeviceDetector $deviceDetector;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
     public function __construct(DeviceDetector $deviceDetector, TranslatorInterface $translator)
     {

@@ -15,47 +15,24 @@ use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Twig\SnippetTwigExtension;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class SnippetTwigExtensionTest extends SuluTestCase
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
+    private ?object $contentMapper = null;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private ?object $requestAnalyzer = null;
 
-    /**
-     * @var StructureResolverInterface
-     */
-    private $structureResolver;
+    private ?object $structureResolver = null;
 
-    /**
-     * @var SnippetTwigExtension
-     */
-    private $extension;
+    private \Sulu\Bundle\SnippetBundle\Twig\SnippetTwigExtension $extension;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private ?object $requestStack = null;
 
     protected function setUp(): void
     {

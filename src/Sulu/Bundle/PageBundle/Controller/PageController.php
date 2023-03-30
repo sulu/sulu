@@ -66,55 +66,25 @@ class PageController extends AbstractRestController implements ClassResourceInte
      */
     protected static $relationName = BasePageDocument::RESOURCE_KEY;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
+    private \Sulu\Component\Content\Mapper\ContentMapperInterface $contentMapper;
 
-    /**
-     * @var ContentRepositoryInterface
-     */
-    private $contentRepository;
+    private \Sulu\Component\Content\Repository\ContentRepositoryInterface $contentRepository;
 
-    /**
-     * @var RequestHashCheckerInterface
-     */
-    private $requestHashChecker;
+    private \Sulu\Component\Hash\RequestHashCheckerInterface $requestHashChecker;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private \Sulu\Component\PHPCR\SessionManager\SessionManagerInterface $sessionManager;
 
-    /**
-     * @var NodeRepositoryInterface
-     */
-    private $nodeRepository;
+    private \Sulu\Bundle\PageBundle\Repository\NodeRepositoryInterface $nodeRepository;
 
-    /**
-     * @var BaseMetadataFactory
-     */
-    private $metadataFactory;
+    private \Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory $metadataFactory;
 
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
+    private \Symfony\Component\Form\FormFactoryInterface $formFactory;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

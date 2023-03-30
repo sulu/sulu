@@ -20,10 +20,7 @@ use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
  */
 class DoctrineCountFieldDescriptor extends DoctrineFieldDescriptor
 {
-    /**
-     * @var bool
-     */
-    private $distinct;
+    private bool $distinct;
 
     public function __construct(
         string $fieldName,

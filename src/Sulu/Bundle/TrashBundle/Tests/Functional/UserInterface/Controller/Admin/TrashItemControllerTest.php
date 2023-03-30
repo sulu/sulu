@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\TrashBundle\Tests\Functional\UserInterface\Controller\Admin;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
@@ -32,20 +31,11 @@ class TrashItemControllerTest extends SuluTestCase
     public const GRANTED_CONTEXT = 'sulu.context.granted';
     public const NOT_GRANTED_CONTEXT = 'sulu.context.not_granted';
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var TrashItemRepositoryInterface
-     */
-    private $repository;
+    private \Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface $repository;
 
-    /**
-     * @var SuluKernelBrowser
-     */
-    private $client;
+    private \Sulu\Bundle\TestBundle\Kernel\SuluKernelBrowser $client;
 
     public function setUp(): void
     {

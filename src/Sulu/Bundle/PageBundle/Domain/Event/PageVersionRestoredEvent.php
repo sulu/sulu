@@ -20,20 +20,11 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 
 class PageVersionRestoredEvent extends DomainEvent
 {
-    /**
-     * @var BasePageDocument
-     */
-    private $pageDocument;
+    private \Sulu\Bundle\PageBundle\Document\BasePageDocument $pageDocument;
 
-    /**
-     * @var string
-     */
-    private $locale;
+    private string $locale;
 
-    /**
-     * @var string
-     */
-    private $version;
+    private string $version;
 
     public function __construct(
         BasePageDocument $pageDocument,

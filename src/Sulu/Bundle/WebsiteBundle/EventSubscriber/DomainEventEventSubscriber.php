@@ -25,15 +25,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class DomainEventEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DomainEventDispatcherInterface
-     */
-    private $domainEventDispatcher;
+    private \Sulu\Bundle\ActivityBundle\Application\Dispatcher\DomainEventDispatcherInterface $domainEventDispatcher;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
     public function __construct(
         DomainEventDispatcherInterface $domainEventDispatcher,

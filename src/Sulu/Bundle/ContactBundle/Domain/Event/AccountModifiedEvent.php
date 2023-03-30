@@ -17,15 +17,12 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 
 class AccountModifiedEvent extends DomainEvent
 {
-    /**
-     * @var AccountInterface
-     */
-    private $account;
+    private \Sulu\Bundle\ContactBundle\Entity\AccountInterface $account;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

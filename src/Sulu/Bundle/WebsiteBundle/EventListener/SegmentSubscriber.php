@@ -19,20 +19,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class SegmentSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var string
-     */
-    private $segmentHeader;
+    private string $segmentHeader;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var string
-     */
-    private $segmentCookieName;
+    private string $segmentCookieName;
 
     public function __construct(
         string $segmentHeader,

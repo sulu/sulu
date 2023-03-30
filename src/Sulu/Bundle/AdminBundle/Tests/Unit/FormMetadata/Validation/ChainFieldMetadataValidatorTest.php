@@ -25,17 +25,14 @@ class ChainFieldMetadataValidatorTest extends TestCase
     /**
      * @var ObjectProphecy<FieldMetadataValidatorInterface>
      */
-    private $fieldMetadataValidator1;
+    private ObjectProphecy $fieldMetadataValidator1;
 
     /**
      * @var ObjectProphecy<FieldMetadataValidatorInterface>
      */
-    private $fieldMetadataValidator2;
+    private ObjectProphecy $fieldMetadataValidator2;
 
-    /**
-     * @var ChainFieldMetadataValidator
-     */
-    private $chainFieldMetadataValidator;
+    private \Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\ChainFieldMetadataValidator $chainFieldMetadataValidator;
 
     protected function setUp(): void
     {

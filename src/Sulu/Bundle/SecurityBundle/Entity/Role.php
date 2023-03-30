@@ -31,39 +31,27 @@ class Role implements RoleInterface
      */
     private $id;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private ?string $name = null;
 
-    /**
-     * @var string|null
-     */
-    private $key;
+    private ?string $key = null;
 
-    /**
-     * @var string
-     */
-    private $system;
+    private ?string $system = null;
 
-    /**
-     * @var SecurityType|null
-     */
-    private $securityType;
+    private ?\Sulu\Bundle\SecurityBundle\Entity\SecurityType $securityType = null;
 
     /**
      * @var Collection<int, Permission>
      *
      * @Groups({"fullRole"})
      */
-    private $permissions;
+    private \Doctrine\Common\Collections\ArrayCollection|array $permissions;
 
     /**
      * @var Collection<int, UserRole>
      *
      * @Exclude
      */
-    private $userRoles;
+    private \Doctrine\Common\Collections\ArrayCollection|array $userRoles;
 
     /**
      * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
@@ -72,17 +60,14 @@ class Role implements RoleInterface
      *
      * @Exclude
      */
-    private $groups;
+    private \Doctrine\Common\Collections\ArrayCollection|array $groups;
 
     /**
      * @var Collection<string, RoleSettingInterface>
      */
-    private $settings;
+    private \Doctrine\Common\Collections\ArrayCollection $settings;
 
-    /**
-     * @var bool
-     */
-    private $anonymous = false;
+    private bool $anonymous = false;
 
     /**
      * Constructor.

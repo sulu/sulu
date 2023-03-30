@@ -25,17 +25,14 @@ class SessionManagerTest extends TestCase
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $defaultSession;
+    private ObjectProphecy $defaultSession;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $liveSession;
+    private ObjectProphecy $liveSession;
 
-    /**
-     * @var SessionManager
-     */
-    private $sessionManager;
+    private \Sulu\Bundle\DocumentManagerBundle\Session\SessionManager $sessionManager;
 
     public function setUp(): void
     {

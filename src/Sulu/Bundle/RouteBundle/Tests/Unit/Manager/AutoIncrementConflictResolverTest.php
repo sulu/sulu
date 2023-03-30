@@ -25,12 +25,9 @@ class AutoIncrementConflictResolverTest extends TestCase
     /**
      * @var ObjectProphecy<RouteRepositoryInterface>
      */
-    private $routeRepository;
+    private ObjectProphecy $routeRepository;
 
-    /**
-     * @var AutoIncrementConflictResolver
-     */
-    private $resolver;
+    private \Sulu\Bundle\RouteBundle\Manager\AutoIncrementConflictResolver $resolver;
 
     protected function setUp(): void
     {

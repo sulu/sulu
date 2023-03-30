@@ -28,17 +28,11 @@ class DeviceTypeRule implements RuleInterface
 
     public const DESKTOP = 'desktop';
 
-    private static $deviceTypes = [self::SMARTPHONE, self::TABLET, self::DESKTOP];
+    private static array $deviceTypes = [self::SMARTPHONE, self::TABLET, self::DESKTOP];
 
-    /**
-     * @var DeviceDetector
-     */
-    private $deviceDetector;
+    private \DeviceDetector\DeviceDetector $deviceDetector;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
     public function __construct(DeviceDetector $deviceDetector, TranslatorInterface $translator)
     {

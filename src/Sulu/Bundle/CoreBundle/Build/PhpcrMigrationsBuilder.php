@@ -22,15 +22,9 @@ use PHPCR\Migrations\VersionStorage;
  */
 class PhpcrMigrationsBuilder extends SuluBuilder
 {
-    /**
-     * @var MigratorFactory
-     */
-    private $migratorFactory;
+    private \PHPCR\Migrations\MigratorFactory $migratorFactory;
 
-    /**
-     * @var VersionStorage
-     */
-    private $versionStorage;
+    private \PHPCR\Migrations\VersionStorage $versionStorage;
 
     public function __construct(MigratorFactory $migratorFactory, VersionStorage $versionStorage)
     {

@@ -17,35 +17,27 @@ use Sulu\Bundle\DocumentManagerBundle\Slugifier\Urlizer;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class CustomUrlControllerTest extends SuluTestCase
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
     /**
      * @var ObjectRepository<ActivityInterface>
      */
-    private $activityRepository;
+    private \Doctrine\ORM\EntityRepository $activityRepository;
 
     /**
      * @var ObjectRepository<TrashItemInterface>
      */
-    private $trashItemRepository;
+    private \Doctrine\ORM\EntityRepository $trashItemRepository;
 
     /**
      * @var PageDocument
      */
     private $contentDocument;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

@@ -37,27 +37,24 @@ class CategoryConverterTest extends TestCase
     /**
      * @var ObjectProphecy<CategoryManagerInterface>
      */
-    private $categoryManager;
+    private ObjectProphecy $categoryManager;
 
     /**
      * @var ObjectProphecy<SearchManagerInterface>
      */
-    private $searchManager;
+    private ObjectProphecy $searchManager;
 
     /**
      * @var ObjectProphecy<ObjectToDocumentConverter>
      */
-    private $objectToDocumentConverter;
+    private ObjectProphecy $objectToDocumentConverter;
 
     /**
      * @var ObjectProphecy<EventDispatcherInterface>
      */
-    private $eventDispatcher;
+    private ObjectProphecy $eventDispatcher;
 
-    /**
-     * @var CategoryConverter
-     */
-    private $categoryConverter;
+    private \Sulu\Bundle\CategoryBundle\Search\Converter\CategoryConverter $categoryConverter;
 
     protected function setUp(): void
     {

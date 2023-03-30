@@ -15,15 +15,9 @@ namespace Sulu\Component\Rest\Exception;
 
 class InsufficientDescendantPermissionsException extends \Exception implements RestExceptionInterface, TranslationErrorMessageExceptionInterface
 {
-    /**
-     * @var int
-     */
-    private $unauthorizedDescendantsCount;
+    private int $unauthorizedDescendantsCount;
 
-    /**
-     * @var string
-     */
-    private $permissionType;
+    private string $permissionType;
 
     public function __construct(int $unauthorizedDescendantsCount, string $permissionType)
     {

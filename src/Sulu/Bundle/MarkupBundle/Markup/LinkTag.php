@@ -24,25 +24,13 @@ class LinkTag implements TagInterface
 
     public const DEFAULT_PROVIDER = 'page';
 
-    /**
-     * @var LinkProviderPoolInterface
-     */
-    private $linkProviderPool;
+    private \Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface $linkProviderPool;
 
-    /**
-     * @var bool
-     */
-    private $isPreview;
+    private bool $isPreview;
 
-    /**
-     * @var UrlHelper
-     */
-    private $urlHelper;
+    private ?\Symfony\Component\HttpFoundation\UrlHelper $urlHelper = null;
 
-    /**
-     * @var ?string
-     */
-    private $providerAttribute;
+    private ?string $providerAttribute = null;
 
     public function __construct(
         LinkProviderPoolInterface $linkProviderPool,

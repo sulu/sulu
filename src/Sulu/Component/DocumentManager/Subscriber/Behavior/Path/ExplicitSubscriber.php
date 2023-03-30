@@ -29,10 +29,7 @@ use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
  */
 class ExplicitSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
+    private \Sulu\Component\DocumentManager\NodeManager $nodeManager;
 
     public function __construct(NodeManager $nodeManager)
     {

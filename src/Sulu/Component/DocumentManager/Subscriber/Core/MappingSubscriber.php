@@ -28,25 +28,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class MappingSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $factory;
+    private \Sulu\Component\DocumentManager\MetadataFactoryInterface $factory;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
+    private \Sulu\Component\DocumentManager\PropertyEncoder $encoder;
 
-    /**
-     * @var ProxyFactory
-     */
-    private $proxyFactory;
+    private \Sulu\Component\DocumentManager\ProxyFactory $proxyFactory;
 
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
+    private \Sulu\Component\DocumentManager\DocumentRegistry $documentRegistry;
 
     public function __construct(
         MetadataFactoryInterface $factory,

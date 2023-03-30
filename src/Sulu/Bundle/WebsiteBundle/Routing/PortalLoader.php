@@ -26,10 +26,7 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class PortalLoader extends FileLoader
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
     public function __construct(
         WebspaceManagerInterface $webspaceManager,

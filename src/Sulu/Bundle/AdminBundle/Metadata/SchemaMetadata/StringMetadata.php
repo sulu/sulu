@@ -13,25 +13,13 @@ namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
 class StringMetadata implements SchemaMetadataInterface
 {
-    /**
-     * @var int|null
-     */
-    private $minLength;
+    private ?int $minLength = null;
 
-    /**
-     * @var int|null
-     */
-    private $maxLength;
+    private ?int $maxLength = null;
 
-    /**
-     * @var string|null
-     */
-    private $pattern;
+    private ?string $pattern = null;
 
-    /**
-     * @var string|null
-     */
-    private $format;
+    private ?string $format = null;
 
     public function __construct(
         ?int $minLength = null,

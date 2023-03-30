@@ -55,30 +55,15 @@ final class ContactTrashItemHandler implements
     RestoreTrashItemHandlerInterface,
     RestoreConfigurationProviderInterface
 {
-    /**
-     * @var TrashItemRepositoryInterface
-     */
-    private $trashItemRepository;
+    private \Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface $trashItemRepository;
 
-    /**
-     * @var ContactRepositoryInterface
-     */
-    private $contactRepository;
+    private \Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface $contactRepository;
 
-    /**
-     * @var DoctrineRestoreHelperInterface
-     */
-    private $doctrineRestoreHelper;
+    private \Sulu\Bundle\TrashBundle\Application\DoctrineRestoreHelper\DoctrineRestoreHelperInterface $doctrineRestoreHelper;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
     public function __construct(
         TrashItemRepositoryInterface $trashItemRepository,

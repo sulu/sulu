@@ -16,10 +16,7 @@ namespace Sulu\Component\Webspace\Analyzer\Attributes;
  */
 class RequestAttributes
 {
-    /**
-     * @var array
-     */
-    private $attributes;
+    private array $attributes;
 
     public function __construct(array $attributes = [])
     {

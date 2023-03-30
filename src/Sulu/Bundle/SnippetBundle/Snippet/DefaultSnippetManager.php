@@ -26,35 +26,17 @@ use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
  */
 class DefaultSnippetManager implements DefaultSnippetManagerInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var SettingsManagerInterface
-     */
-    private $settingsManager;
+    private \Sulu\Component\Webspace\Settings\SettingsManagerInterface $settingsManager;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var DocumentRegistry
-     */
-    private $registry;
+    private \Sulu\Component\DocumentManager\DocumentRegistry $registry;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
-    /**
-     * @var FrozenParameterBag
-     */
-    private $areas;
+    private \Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag $areas;
 
     public function __construct(
         SettingsManagerInterface $settingsManager,

@@ -32,27 +32,27 @@ class PageSelectionTest extends TestCase
     /**
      * @var ObjectProphecy<ContentQueryExecutorInterface>
      */
-    private $contentQueryExecutor;
+    private ObjectProphecy $contentQueryExecutor;
 
     /**
      * @var ObjectProphecy<ContentQueryBuilderInterface>
      */
-    private $contentQueryBuilder;
+    private ObjectProphecy $contentQueryBuilder;
 
     /**
      * @var ObjectProphecy<LoggerInterface>
      */
-    private $logger;
+    private ObjectProphecy $logger;
 
     /**
      * @var ObjectProphecy<PropertyInterface>
      */
-    private $property;
+    private ObjectProphecy $property;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
      */
-    private $referenceStore;
+    private ObjectProphecy $referenceStore;
 
     public function setUp(): void
     {

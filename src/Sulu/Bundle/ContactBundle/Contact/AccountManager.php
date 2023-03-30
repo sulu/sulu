@@ -39,20 +39,11 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
 {
     protected $addressEntity = 'SuluContactBundle:Address';
 
-    /**
-     * @var AccountFactory
-     */
-    private $accountFactory;
+    private \Sulu\Bundle\ContactBundle\Contact\AccountFactory $accountFactory;
 
-    /**
-     * @var AccountRepositoryInterface
-     */
-    private $accountRepository;
+    private \Sulu\Bundle\ContactBundle\Entity\AccountRepositoryInterface $accountRepository;
 
-    /**
-     * @var ContactRepository
-     */
-    private $contactRepository;
+    private \Sulu\Bundle\ContactBundle\Entity\ContactRepository $contactRepository;
 
     /**
      * @var MediaRepositoryInterface

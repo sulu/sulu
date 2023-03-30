@@ -22,20 +22,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PageDocumentType extends BasePageDocumentType
 {
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private \Sulu\Component\PHPCR\SessionManager\SessionManagerInterface $sessionManager;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var MetadataFactory
-     */
-    private $metadataFactory;
+    private \Sulu\Component\DocumentManager\Metadata\MetadataFactory $metadataFactory;
 
     public function __construct(
         SessionManagerInterface $sessionManager,

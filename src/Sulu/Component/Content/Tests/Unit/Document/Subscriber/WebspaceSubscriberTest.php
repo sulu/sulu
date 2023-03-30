@@ -33,22 +33,19 @@ class WebspaceSubscriberTest extends SubscriberTestCase
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $inspector;
+    private ObjectProphecy $inspector;
 
-    /**
-     * @var WebspaceSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\Content\Document\Subscriber\WebspaceSubscriber $subscriber;
 
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     public function setUp(): void
     {

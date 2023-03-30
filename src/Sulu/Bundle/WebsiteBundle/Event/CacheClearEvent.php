@@ -18,7 +18,7 @@ class CacheClearEvent extends Event
     /**
      * @var string[]|null
      */
-    private $tags;
+    private ?array $tags = null;
 
     /**
      * @param string[]|null $tags

@@ -38,7 +38,7 @@ class Webspace implements ArrayableInterface
      *
      * @var Localization[]
      */
-    private $localizations = [];
+    private array $localizations = [];
 
     /**
      * The default localization defined for this webspace.
@@ -49,17 +49,15 @@ class Webspace implements ArrayableInterface
 
     /**
      * The x-default localization defined for this webspace.
-     *
-     * @var Localization
      */
-    private $xDefaultLocalization;
+    private ?\Sulu\Component\Localization\Localization $xDefaultLocalization = null;
 
     /**
      * The segments defined for this webspace.
      *
      * @var Segment[]
      */
-    private $segments = [];
+    private array $segments = [];
 
     /**
      * The default segment defined for this webspace.
@@ -80,7 +78,7 @@ class Webspace implements ArrayableInterface
      *
      * @var Portal[]
      */
-    private $portals = [];
+    private array $portals = [];
 
     /**
      * The security system for this webspace.
@@ -98,22 +96,20 @@ class Webspace implements ArrayableInterface
 
     /**
      * A list of twig templates.
-     *
-     * @var array
      */
-    private $templates = [];
+    private array $templates = [];
 
     /**
      * Template which is selected by default if no other template is chosen.
      *
      * @var string[]
      */
-    private $defaultTemplates = [];
+    private array $defaultTemplates = [];
 
     /**
      * @var string[]
      */
-    private $excludedTemplates = [];
+    private array $excludedTemplates = [];
 
     /**
      * The url generation strategy for this portal.

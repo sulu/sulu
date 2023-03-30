@@ -33,27 +33,21 @@ class FixturesLoadCommandTest extends TestCase
     /**
      * @var ObjectProphecy<DocumentExecutor>
      */
-    private $executor;
+    private ObjectProphecy $executor;
 
     /**
      * @var ObjectProphecy<DocumentFixtureInterface>
      */
-    private $fixture1;
+    private ObjectProphecy $fixture1;
 
     /**
      * @var FixturesLoadCommand
      */
-    private $command;
+    private \Symfony\Component\Console\Command\Command $command;
 
-    /**
-     * @var CommandTester
-     */
-    private $commandTester;
+    private \Symfony\Component\Console\Tester\CommandTester $commandTester;
 
-    /**
-     * @var \ArrayObject
-     */
-    private $fixtures;
+    private \ArrayObject $fixtures;
 
     public function setUp(): void
     {

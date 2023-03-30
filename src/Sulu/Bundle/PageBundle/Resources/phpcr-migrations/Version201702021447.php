@@ -15,7 +15,6 @@ use Jackalope\Query\Row;
 use PHPCR\Migrations\VersionInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Localization\Localization;
-use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
@@ -26,10 +25,7 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
+    private ?object $userRepository = null;
 
     public function up(SessionInterface $session)
     {

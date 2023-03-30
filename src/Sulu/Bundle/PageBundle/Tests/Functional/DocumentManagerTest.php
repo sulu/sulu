@@ -11,28 +11,17 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional;
 
-use PHPCR\SessionInterface;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class DocumentManagerTest extends SuluTestCase
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
+    private ?object $defaultSession = null;
 
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
+    private ?object $liveSession = null;
 
     /**
      * @var HomeDocument

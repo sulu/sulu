@@ -25,25 +25,16 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class ContentNodeDeleteEvent extends Event
 {
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
+    private \Sulu\Component\Content\Mapper\ContentMapperInterface $contentMapper;
 
-    /**
-     * @var NodeInterface
-     */
-    private $node;
+    private \PHPCR\NodeInterface $node;
 
     /**
      * @var string
      */
     private $webspace;
 
-    /**
-     * @var SuluNodeHelper
-     */
-    private $nodeHelper;
+    private \Sulu\Component\Util\SuluNodeHelper $nodeHelper;
 
     /**
      * @param string $webspace

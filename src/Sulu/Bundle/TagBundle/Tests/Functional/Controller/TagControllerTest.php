@@ -15,7 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class TagControllerTest extends SuluTestCase
 {
@@ -34,10 +33,7 @@ class TagControllerTest extends SuluTestCase
      */
     protected $tagRepository;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

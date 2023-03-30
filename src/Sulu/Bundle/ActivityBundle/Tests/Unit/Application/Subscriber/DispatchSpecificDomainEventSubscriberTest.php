@@ -25,7 +25,7 @@ class DispatchSpecificDomainEventSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<EventDispatcherInterface>
      */
-    private $eventDispatcher;
+    private ObjectProphecy $eventDispatcher;
 
     public function setUp(): void
     {

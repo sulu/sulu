@@ -26,15 +26,9 @@ class AccountAddress
      */
     private $id;
 
-    /**
-     * @var Address
-     */
-    private $address;
+    private ?\Sulu\Bundle\ContactBundle\Entity\Address $address = null;
 
-    /**
-     * @var AccountInterface
-     */
-    private $account;
+    private ?\Sulu\Bundle\ContactBundle\Entity\AccountInterface $account = null;
 
     /**
      * Set main.

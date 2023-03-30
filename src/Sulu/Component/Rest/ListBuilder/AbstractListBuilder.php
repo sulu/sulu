@@ -19,10 +19,7 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 abstract class AbstractListBuilder implements ListBuilderInterface
 {
-    /**
-     * @var FilterTypeRegistry
-     */
-    private $filterTypeRegistry;
+    private \Sulu\Component\Rest\ListBuilder\Filter\FilterTypeRegistry $filterTypeRegistry;
 
     /**
      * The field descriptors for the current list.

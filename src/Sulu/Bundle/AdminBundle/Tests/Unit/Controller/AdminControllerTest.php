@@ -51,104 +51,95 @@ class AdminControllerTest extends TestCase
     /**
      * @var ObjectProphecy<UrlGeneratorInterface>
      */
-    private $urlGenerator;
+    private ObjectProphecy $urlGenerator;
 
     /**
      * @var ObjectProphecy<TokenStorageInterface>
      */
-    private $tokenStorage;
+    private ObjectProphecy $tokenStorage;
 
     /**
      * @var ObjectProphecy<TokenInterface>
      */
-    private $token;
+    private ObjectProphecy $token;
 
     /**
      * @var ObjectProphecy<User>
      */
-    private $user;
+    private ObjectProphecy $user;
 
     /**
      * @var ObjectProphecy<AdminPool>
      */
-    private $adminPool;
+    private ObjectProphecy $adminPool;
 
     /**
      * @var ObjectProphecy<SerializerInterface>
      */
-    private $serializer;
+    private ObjectProphecy $serializer;
 
     /**
      * @var ObjectProphecy<ViewHandlerInterface>
      */
-    private $viewHandler;
+    private ObjectProphecy $viewHandler;
 
     /**
      * @var ObjectProphecy<Environment>
      */
-    private $engine;
+    private ObjectProphecy $engine;
 
     /**
      * @var ObjectProphecy<TranslatorBagInterface>
      */
-    private $translatorBag;
+    private ObjectProphecy $translatorBag;
 
     /**
      * @var ObjectProphecy<MetadataProviderRegistry>
      */
-    private $metadataProviderRegistry;
+    private ObjectProphecy $metadataProviderRegistry;
 
     /**
      * @var ObjectProphecy<ViewRegistry>
      */
-    private $viewRegistry;
+    private ObjectProphecy $viewRegistry;
 
     /**
      * @var ObjectProphecy<NavigationRegistry>
      */
-    private $navigationRegistry;
+    private ObjectProphecy $navigationRegistry;
 
     /**
      * @var ObjectProphecy<FieldTypeOptionRegistryInterface>
      */
-    private $fieldTypeOptionRegistry;
+    private ObjectProphecy $fieldTypeOptionRegistry;
 
     /**
      * @var ObjectProphecy<ContactManagerInterface>
      */
-    private $contactManager;
+    private ObjectProphecy $contactManager;
 
     /**
      * @var ObjectProphecy<DataProviderPoolInterface>
      */
-    private $dataProviderPool;
+    private ObjectProphecy $dataProviderPool;
 
     /**
      * @var ObjectProphecy<LinkProviderPoolInterface>
      */
-    private $linkProviderPool;
+    private ObjectProphecy $linkProviderPool;
 
     /**
      * @var ObjectProphecy<LocalizationManagerInterface>
      */
-    private $localizationManager;
+    private ObjectProphecy $localizationManager;
 
-    /**
-     * @var string
-     */
-    private $environment = 'prod';
+    private string $environment = 'prod';
 
-    /**
-     * @var string
-     */
-    private $suluVersion = '2.0.0-RC1';
+    private string $suluVersion = '2.0.0-RC1';
 
-    /**
-     * @var string
-     */
-    private $appVersion = '666';
+    private string $appVersion = '666';
 
-    private $resources = [
+    private array $resources = [
         'tags' => [
             'endpoint' => [
                 'list' => 'sulu_tag.get_tags',
@@ -157,25 +148,13 @@ class AdminControllerTest extends TestCase
         ],
     ];
 
-    /**
-     * @var array
-     */
-    private $locales = ['de', 'en'];
+    private array $locales = ['de', 'en'];
 
-    /**
-     * @var array
-     */
-    private $translations = ['de', 'en'];
+    private array $translations = ['de', 'en'];
 
-    /**
-     * @var string
-     */
-    private $fallbackLocale = 'de';
+    private string $fallbackLocale = 'de';
 
-    /**
-     * @var AdminController
-     */
-    private $adminController;
+    private \Sulu\Bundle\AdminBundle\Controller\AdminController $adminController;
 
     public function setUp(): void
     {

@@ -24,22 +24,19 @@ class FormMetadataProvider implements MetadataProviderInterface
     /**
      * @var iterable<FormMetadataLoaderInterface>
      */
-    private $formMetadataLoaders;
+    private iterable $formMetadataLoaders;
 
     /**
      * @var iterable<FormMetadataVisitorInterface>
      */
-    private $formMetadataVisitors;
+    private iterable $formMetadataVisitors;
 
     /**
      * @var iterable<TypedFormMetadataVisitorInterface>
      */
-    private $typedFormMetadataVisitors;
+    private iterable $typedFormMetadataVisitors;
 
-    /**
-     * @var string
-     */
-    private $fallbackLocale;
+    private string $fallbackLocale;
 
     /**
      * @param iterable<FormMetadataLoaderInterface> $formMetadataLoaders

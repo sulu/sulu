@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\Entity;
 
-use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlInterface;
 
 class AccessControl implements AccessControlInterface
@@ -23,31 +22,23 @@ class AccessControl implements AccessControlInterface
 
     /**
      * The role this access control rule is valid for.
-     *
-     * @var RoleInterface
      */
-    private $role;
+    private ?\Sulu\Component\Security\Authentication\RoleInterface $role = null;
 
     /**
      * Holds the permissions as a bitmask.
-     *
-     * @var int
      */
-    private $permissions;
+    private ?int $permissions = null;
 
     /**
      * The id of the model this access control rule applies to.
-     *
-     * @var string
      */
-    private $entityId;
+    private ?string $entityId = null;
 
     /**
      * The id as integer representation of the model this access control rule applies to.
-     *
-     * @var int|null
      */
-    private $entityIdInteger;
+    private ?int $entityIdInteger = null;
 
     /**
      * The class of the model this access control rule applies to.

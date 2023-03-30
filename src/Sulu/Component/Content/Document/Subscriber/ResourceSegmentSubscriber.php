@@ -37,35 +37,17 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ResourceSegmentSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
+    private \Sulu\Component\DocumentManager\PropertyEncoder $encoder;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $documentInspector;
 
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
+    private \Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool;
 
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
+    private \PHPCR\SessionInterface $defaultSession;
 
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
+    private \PHPCR\SessionInterface $liveSession;
 
     public function __construct(
         PropertyEncoder $encoder,

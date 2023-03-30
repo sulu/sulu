@@ -35,27 +35,24 @@ class StructureFormMetadataLoaderTest extends TestCase
     /**
      * @var ObjectProphecy<StructureMetadataFactoryInterface>
      */
-    private $structureMetadataFactory;
+    private ObjectProphecy $structureMetadataFactory;
 
     /**
      * @var ObjectProphecy<FormMetadataMapper>
      */
-    private $formMetadataMapper;
+    private ObjectProphecy $formMetadataMapper;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<FieldMetadataValidatorInterface>
      */
-    private $fieldMetadataValidator;
+    private ObjectProphecy $fieldMetadataValidator;
 
-    /**
-     * @var StructureFormMetadataLoader
-     */
-    private $structureFormMetadataLoader;
+    private \Sulu\Bundle\AdminBundle\Metadata\FormMetadata\StructureFormMetadataLoader $structureFormMetadataLoader;
 
     protected function setUp(): void
     {

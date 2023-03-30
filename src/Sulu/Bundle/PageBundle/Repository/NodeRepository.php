@@ -46,52 +46,26 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class NodeRepository implements NodeRepositoryInterface
 {
-    /**
-     * @var ContentMapperInterface
-     */
-    private $mapper;
+    private \Sulu\Component\Content\Mapper\ContentMapperInterface $mapper;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private \Sulu\Component\PHPCR\SessionManager\SessionManagerInterface $sessionManager;
 
     /**
      * for returning self link in get action.
-     *
-     * @var string
      */
-    private $apiBasePath = '/admin/api/nodes';
+    private string $apiBasePath = '/admin/api/nodes';
 
-    /**
-     * @var UserManagerInterface
-     */
-    private $userManager;
+    private \Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface $userManager;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var ContentQueryBuilderInterface
-     */
-    private $queryBuilder;
+    private \Sulu\Component\Content\Query\ContentQueryBuilderInterface $queryBuilder;
 
-    /**
-     * @var ContentQueryExecutorInterface
-     */
-    private $queryExecutor;
+    private \Sulu\Component\Content\Query\ContentQueryExecutorInterface $queryExecutor;
 
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
+    private \Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface $accessControlManager;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private ?\Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage = null;
 
     public function __construct(
         ContentMapperInterface $mapper,

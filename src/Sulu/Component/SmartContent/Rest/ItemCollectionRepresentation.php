@@ -22,15 +22,9 @@ use Sulu\Component\SmartContent\DatasourceItemInterface;
  */
 class ItemCollectionRepresentation extends CollectionRepresentation
 {
-    /**
-     * @var DatasourceItemInterface|null
-     */
-    private $datasource;
+    private ?\Sulu\Component\SmartContent\DatasourceItemInterface $datasource = null;
 
-    /**
-     * @var int
-     */
-    private $total;
+    private int $total;
 
     public function __construct(array $items, ?DatasourceItemInterface $datasource)
     {

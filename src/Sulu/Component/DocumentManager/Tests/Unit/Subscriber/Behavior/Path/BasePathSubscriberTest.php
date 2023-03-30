@@ -31,52 +31,46 @@ class BasePathSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<PersistEvent>
      */
-    private $persistEvent;
+    private ObjectProphecy $persistEvent;
 
-    /**
-     * @var \stdClass
-     */
-    private $notImplementing;
+    private \stdClass $notImplementing;
 
     /**
      * @var ObjectProphecy<BasePathBehavior>
      */
-    private $document;
+    private ObjectProphecy $document;
 
-    /**
-     * @var \stdClass
-     */
-    private $parentDocument;
+    private \stdClass $parentDocument;
 
     /**
      * @var ObjectProphecy<NodeManager>
      */
-    private $nodeManager;
+    private ObjectProphecy $nodeManager;
 
     /**
      * @var ObjectProphecy<DocumentManager>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<MetadataFactoryInterface>
      */
-    private $metadataFactory;
+    private ObjectProphecy $metadataFactory;
 
     /**
      * @var ObjectProphecy<Metadata>
      */
-    private $metadata;
+    private ObjectProphecy $metadata;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $parentNode;
+    private ObjectProphecy $parentNode;
 
     /**
      * @var AliasFilingSubscriber
      */
-    private $subscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Behavior\Path\BasePathSubscriber $subscriber;
 
     public function setUp(): void
     {

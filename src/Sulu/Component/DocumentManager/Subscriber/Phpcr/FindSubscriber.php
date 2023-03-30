@@ -27,20 +27,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class FindSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
+    private \Sulu\Component\DocumentManager\MetadataFactoryInterface $metadataFactory;
 
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
+    private \Sulu\Component\DocumentManager\NodeManager $nodeManager;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
         MetadataFactoryInterface $metadataFactory,

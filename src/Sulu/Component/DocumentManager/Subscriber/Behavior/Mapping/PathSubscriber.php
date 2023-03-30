@@ -22,10 +22,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class PathSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Component\DocumentManager\DocumentInspector $documentInspector;
 
     public function __construct(DocumentInspector $documentInspector)
     {

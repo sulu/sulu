@@ -28,22 +28,19 @@ class OrderSubscriberTest extends SubscriberTestCase
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $documentInspector;
+    private ObjectProphecy $documentInspector;
 
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $propertyEncoder;
+    private ObjectProphecy $propertyEncoder;
 
-    /**
-     * @var OrderSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\Content\Document\Subscriber\OrderSubscriber $subscriber;
 
     /**
      * @var ObjectProphecy<OrderBehavior>
      */
-    private $document;
+    private ObjectProphecy $document;
 
     public function setUp(): void
     {

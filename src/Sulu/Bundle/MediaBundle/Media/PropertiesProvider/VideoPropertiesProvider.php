@@ -17,10 +17,7 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class VideoPropertiesProvider implements MediaPropertiesProviderInterface
 {
-    /**
-     * @var FFProbe
-     */
-    private $ffprobe;
+    private \FFMpeg\FFProbe $ffprobe;
 
     public function __construct(FFProbe $ffprobe)
     {

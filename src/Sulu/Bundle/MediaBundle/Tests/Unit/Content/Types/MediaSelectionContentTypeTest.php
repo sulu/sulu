@@ -30,30 +30,24 @@ class MediaSelectionContentTypeTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var MediaSelectionContentType
-     */
-    private $mediaSelection;
+    private \Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType $mediaSelection;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
      */
-    private $mediaReferenceStore;
+    private ObjectProphecy $mediaReferenceStore;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
-    /**
-     * @var Webspace
-     */
-    private $webspace;
+    private \Sulu\Component\Webspace\Webspace $webspace;
 
     /**
      * @var ObjectProphecy<MediaManagerInterface>
      */
-    private $mediaManager;
+    private ObjectProphecy $mediaManager;
 
     protected function setUp(): void
     {

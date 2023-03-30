@@ -42,14 +42,14 @@ class JoinMetadata
     /**
      * @var 'ON'|'WITH'
      */
-    private $conditionMethod = self::JOIN_CONDITION_METHOD_WITH;
+    private string $conditionMethod = self::JOIN_CONDITION_METHOD_WITH;
 
     /**
      * Defines the join method (left, right or inner join).
      *
      * @var 'LEFT'|'INNER'|'RIGHT'
      */
-    private $method = self::JOIN_METHOD_LEFT;
+    private string $method = self::JOIN_METHOD_LEFT;
 
     /**
      * The name of the entity to join.

@@ -17,10 +17,7 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 
 class SingleSelectionPropertyMetadataMapperTest extends TestCase
 {
-    /**
-     * @var SingleSelectionPropertyMetadataMapper
-     */
-    private $singleSelectionPropertyMetadataMapper;
+    private \Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SingleSelectionPropertyMetadataMapper $singleSelectionPropertyMetadataMapper;
 
     protected function setUp(): void
     {

@@ -31,20 +31,17 @@ class WebsiteRequestProcessorTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var WebsiteRequestProcessor
-     */
-    private $provider;
+    private \Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor $provider;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<ContentMapperInterface>
      */
-    private $contentMapper;
+    private ObjectProphecy $contentMapper;
 
     public function setUp(): void
     {

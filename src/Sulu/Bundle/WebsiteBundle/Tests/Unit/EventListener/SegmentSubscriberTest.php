@@ -28,7 +28,7 @@ class SegmentSubscriberTest extends TestCase
     /*
      * @var SegmentSubscriber
      */
-    private $segmentSubscriber;
+    private \Sulu\Bundle\WebsiteBundle\EventListener\SegmentSubscriber $segmentSubscriber;
 
     public function setUp(): void
     {

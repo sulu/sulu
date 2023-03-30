@@ -15,15 +15,9 @@ use Psr\Cache\CacheItemPoolInterface;
 
 class CollaborationRepository
 {
-    /**
-     * @var CacheItemPoolInterface
-     */
-    private $cache;
+    private \Psr\Cache\CacheItemPoolInterface $cache;
 
-    /**
-     * @var int
-     */
-    private $threshold;
+    private int $threshold;
 
     public function __construct(CacheItemPoolInterface $cache, int $threshold)
     {

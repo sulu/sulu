@@ -16,32 +16,28 @@ use JMS\Serializer\Annotation\Groups;
 class RestoreConfiguration
 {
     /**
-     * @var string|null
-     *
      * @Groups({"frontend"})
      */
-    private $form;
+    private ?string $form = null;
 
     /**
-     * @var string|null
-     *
      * @Groups({"frontend"})
      */
-    private $view;
+    private ?string $view = null;
 
     /**
      * @var array<string, string>|null
      *
      * @Groups({"frontend"})
      */
-    private $resultToView;
+    private ?array $resultToView = null;
 
     /**
      * @var array<string>|null
      *
      * @Groups({"frontend"})
      */
-    private $resultSerializationGroups;
+    private ?array $resultSerializationGroups = null;
 
     /**
      * @param array<string, string>|null $resultToView

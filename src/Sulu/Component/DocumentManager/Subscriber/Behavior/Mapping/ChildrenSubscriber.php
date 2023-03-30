@@ -22,10 +22,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ChildrenSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var ProxyFactory
-     */
-    private $proxyFactory;
+    private \Sulu\Component\DocumentManager\ProxyFactory $proxyFactory;
 
     public function __construct(ProxyFactory $proxyFactory)
     {

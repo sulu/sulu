@@ -21,10 +21,7 @@ class SessionManager implements SessionManagerInterface
      */
     private $nodeNames;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private \PHPCR\SessionInterface $session;
 
     public function __construct(SessionInterface $session, $nodeNames)
     {

@@ -20,15 +20,9 @@ class InitCommand extends Command
 {
     protected static $defaultName = 'sulu:media:init';
 
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private \Symfony\Component\Filesystem\Filesystem $filesystem;
 
-    /**
-     * @var string
-     */
-    private $formatCacheDir;
+    private string $formatCacheDir;
 
     public function __construct(Filesystem $filesystem, string $formatCacheDir)
     {

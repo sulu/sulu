@@ -36,11 +36,9 @@ class UrlType implements \JsonSerializable
     private $id;
 
     /**
-     * @var Collection
-     *
      * @Exclude
      */
-    private $urls;
+    private \Doctrine\Common\Collections\ArrayCollection|array $urls;
 
     /**
      * Constructor.

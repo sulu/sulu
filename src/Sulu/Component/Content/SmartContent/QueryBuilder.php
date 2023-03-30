@@ -59,10 +59,7 @@ class QueryBuilder extends ContentQueryBuilder
      */
     private $excluded = [];
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private \Sulu\Component\PHPCR\SessionManager\SessionManagerInterface $sessionManager;
 
     /**
      * @var string

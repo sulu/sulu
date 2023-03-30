@@ -26,17 +26,14 @@ class SitemapProviderPoolTest extends TestCase
     /**
      * @var ObjectProphecy<SitemapProviderInterface>
      */
-    public $pagesSitemapProvider;
+    public ObjectProphecy $pagesSitemapProvider;
 
     /**
      * @var ObjectProphecy<SitemapProviderInterface>
      */
-    public $articlesSitemapProvider;
+    public ObjectProphecy $articlesSitemapProvider;
 
-    /**
-     * @var SitemapProviderPool
-     */
-    public $pool;
+    public SitemapProviderPool $pool;
 
     public function setUp(): void
     {

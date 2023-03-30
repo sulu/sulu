@@ -22,10 +22,7 @@ class ActivitiesListMetadataVisitorTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ActivitiesListMetadataVisitor
-     */
-    private $activitiesListMetadataVisitor;
+    private ActivitiesListMetadataVisitor $activitiesListMetadataVisitor;
 
     protected function setUp(): void
     {

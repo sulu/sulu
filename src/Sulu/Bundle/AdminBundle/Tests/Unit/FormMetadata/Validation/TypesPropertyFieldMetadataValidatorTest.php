@@ -21,10 +21,7 @@ use Sulu\Component\Content\Exception\ReservedPropertyNameException;
 
 class TypesPropertyFieldMetadataValidatorTest extends TestCase
 {
-    /**
-     * @var TypesPropertyFieldMetadataValidator
-     */
-    private $propertyFieldMetadataValidator;
+    private \Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\TypesPropertyFieldMetadataValidator $propertyFieldMetadataValidator;
 
     protected function setUp(): void
     {

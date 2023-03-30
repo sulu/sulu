@@ -30,20 +30,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class GeneralSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
+    private \Sulu\Component\DocumentManager\DocumentRegistry $documentRegistry;
 
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
+    private \Sulu\Component\DocumentManager\NodeManager $nodeManager;
 
-    /**
-     * @var NodeHelperInterface
-     */
-    private $nodeHelper;
+    private \Sulu\Component\DocumentManager\NodeHelperInterface $nodeHelper;
 
     public function __construct(
         DocumentRegistry $documentRegistry,

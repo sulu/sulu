@@ -30,17 +30,17 @@ class SecurityCheckerTest extends TestCase
     /**
      * @var SecurityCheckerInterface
      */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityChecker $securityChecker;
 
     /**
      * @var ObjectProphecy<TokenStorageInterface>
      */
-    private $tokenStorage;
+    private ObjectProphecy $tokenStorage;
 
     /**
      * @var ObjectProphecy<AuthorizationCheckerInterface>
      */
-    private $authorizationChecker;
+    private ObjectProphecy $authorizationChecker;
 
     public function setUp(): void
     {

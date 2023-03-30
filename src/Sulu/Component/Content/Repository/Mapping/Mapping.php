@@ -12,47 +12,28 @@
 namespace Sulu\Component\Content\Repository\Mapping;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 
 /**
  * Mapping definition for content-repository.
  */
 class Mapping implements MappingInterface
 {
-    /**
-     * @var bool
-     */
-    private $hydrateShadow = true;
+    private bool $hydrateShadow = true;
 
-    /**
-     * @var bool
-     */
-    private $followInternalLink = true;
+    private bool $followInternalLink = true;
 
-    /**
-     * @var bool
-     */
-    private $hydrateGhost = true;
+    private bool $hydrateGhost = true;
 
-    /**
-     * @var bool
-     */
-    private $resolveUrl = false;
+    private bool $resolveUrl = false;
 
-    /**
-     * @var bool
-     */
-    private $onlyPublished = false;
+    private bool $onlyPublished = false;
 
     /**
      * @var bool
      */
     private $resolveConcreteLocales;
 
-    /**
-     * @var Collection
-     */
-    private $properties;
+    private \Doctrine\Common\Collections\ArrayCollection|array $properties;
 
     public function __construct()
     {

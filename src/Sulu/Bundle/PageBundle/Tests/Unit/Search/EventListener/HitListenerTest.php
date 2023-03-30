@@ -30,22 +30,19 @@ class HitListenerTest extends TestCase
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
-    /**
-     * @var HitListener
-     */
-    private $listener;
+    private \Sulu\Bundle\PageBundle\Search\EventListener\HitListener $listener;
 
     /**
      * @var ObjectProphecy<Document>
      */
-    private $document;
+    private ObjectProphecy $document;
 
     /**
      * @var ObjectProphecy<HitEvent>
      */
-    private $event;
+    private ObjectProphecy $event;
 
     protected function setUp(): void
     {

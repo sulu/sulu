@@ -24,7 +24,7 @@ class MissingClassMappingConfigurationException extends \Exception
     /**
      * @var string[]
      */
-    private $available;
+    private array $available;
 
     /**
      * @param string $className

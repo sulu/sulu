@@ -20,20 +20,11 @@ use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
  */
 class SnippetResolver implements SnippetResolverInterface
 {
-    /**
-     * @var array
-     */
-    private $snippetCache = [];
+    private array $snippetCache = [];
 
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
+    private \Sulu\Component\Content\Mapper\ContentMapperInterface $contentMapper;
 
-    /**
-     * @var StructureResolverInterface
-     */
-    private $structureResolver;
+    private \Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface $structureResolver;
 
     public function __construct(
         ContentMapperInterface $contentMapper,

@@ -19,7 +19,7 @@ class DelegatingTagExtractor implements TagExtractorInterface
     /**
      * @var TagExtractorInterface[]
      */
-    private $pool;
+    private array $pool;
 
     /**
      * @param TagExtractorInterface[] $pool

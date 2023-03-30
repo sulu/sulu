@@ -25,10 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class WebspaceLocalizationController extends AbstractRestController implements ClassResourceInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

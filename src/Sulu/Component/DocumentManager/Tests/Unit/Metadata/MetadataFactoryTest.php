@@ -27,12 +27,9 @@ class MetadataFactoryTest extends TestCase
     /**
      * @var ObjectProphecy<MetadataFactoryInterface>
      */
-    private $baseMetadataFactory;
+    private ObjectProphecy $baseMetadataFactory;
 
-    /**
-     * @var MetadataFactory
-     */
-    private $metadataFactory;
+    private \Sulu\Component\DocumentManager\Metadata\MetadataFactory $metadataFactory;
 
     public function setUp(): void
     {

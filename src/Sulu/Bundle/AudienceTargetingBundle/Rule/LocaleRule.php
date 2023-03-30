@@ -22,15 +22,9 @@ class LocaleRule implements RuleInterface
 {
     public const LOCALE = 'locale';
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
     public function __construct(RequestStack $requestStack, TranslatorInterface $translator)
     {

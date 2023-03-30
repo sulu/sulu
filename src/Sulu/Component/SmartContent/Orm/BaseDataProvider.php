@@ -52,25 +52,13 @@ abstract class BaseDataProvider implements DataProviderInterface
      */
     protected $configuration;
 
-    /**
-     * @var ArraySerializerInterface
-     */
-    private $serializer;
+    private \Sulu\Component\Serializer\ArraySerializerInterface $serializer;
 
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $referenceStore;
+    private ?\Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface $referenceStore = null;
 
-    /**
-     * @var ?Security
-     */
-    private $security;
+    private ?\Symfony\Component\Security\Core\Security $security = null;
 
-    /**
-     * @var ?RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private ?\Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer = null;
 
     /**
      * @var ?array

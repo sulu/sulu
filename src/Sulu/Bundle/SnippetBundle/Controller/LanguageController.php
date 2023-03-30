@@ -22,10 +22,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  */
 class LanguageController implements ClassResourceInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
     public function __construct(
         WebspaceManagerInterface $webspaceManager

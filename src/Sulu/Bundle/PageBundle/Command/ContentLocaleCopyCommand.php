@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle\Command;
 
-use Jackalope\Query\QueryManager;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
@@ -28,30 +27,16 @@ class ContentLocaleCopyCommand extends Command
 
     /**
      * The namespace for languages.
-     *
-     * @var string
      */
-    private $languageNamespace;
+    private string $languageNamespace;
 
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
+    private \Sulu\Component\Content\Mapper\ContentMapperInterface $contentMapper;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private \PHPCR\SessionInterface $session;
 
-    /**
-     * @var QueryManager
-     */
-    private $queryManager;
+    private ?\PHPCR\Query\QueryManagerInterface $queryManager = null;
 
-    /**
-     * @var OutputInterface
-     */
-    private $output;
+    private ?\Symfony\Component\Console\Output\OutputInterface $output = null;
 
     public function __construct(ContentMapperInterface $contentMapper, SessionInterface $session, string $languageNamespace)
     {

@@ -36,25 +36,23 @@ class Email
     private $id;
 
     /**
-     * @var EmailType
-     *
      * @Groups({"fullAccount", "fullContact"})
      */
-    private $emailType;
+    private ?\Sulu\Bundle\ContactBundle\Entity\EmailType $emailType = null;
 
     /**
      * @var Collection<int, ContactInterface>
      *
      * @Exclude
      */
-    private $contacts;
+    private \Doctrine\Common\Collections\ArrayCollection|array $contacts;
 
     /**
      * @var Collection<int, AccountInterface>
      *
      * @Exclude
      */
-    private $accounts;
+    private \Doctrine\Common\Collections\ArrayCollection|array $accounts;
 
     /**
      * Constructor.

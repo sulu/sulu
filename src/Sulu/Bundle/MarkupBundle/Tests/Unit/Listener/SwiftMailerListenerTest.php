@@ -26,32 +26,26 @@ class SwiftMailerListenerTest extends TestCase
     /**
      * @var ObjectProphecy<MarkupParserInterface>
      */
-    private $markupParser;
+    private ObjectProphecy $markupParser;
 
     /**
      * @var ObjectProphecy<\Swift_Events_SendEvent>
      */
-    private $event;
+    private ObjectProphecy $event;
 
     /**
      * @var ObjectProphecy<\Swift_Mime_SimpleMessage>
      */
-    private $simpleMessage;
+    private ObjectProphecy $simpleMessage;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
-    /**
-     * @var string
-     */
-    private $defaultLocale;
+    private string $defaultLocale;
 
-    /**
-     * @var SwiftMailerListener
-     */
-    private $listener;
+    private \Sulu\Bundle\MarkupBundle\Listener\SwiftMailerListener $listener;
 
     protected function setUp(): void
     {

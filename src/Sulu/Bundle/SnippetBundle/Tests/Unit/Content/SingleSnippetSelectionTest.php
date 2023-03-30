@@ -31,22 +31,19 @@ class SingleSnippetSelectionTest extends TestCase
     /**
      * @var ObjectProphecy<DefaultSnippetManagerInterface>
      */
-    private $defaultSnippetManager;
+    private ObjectProphecy $defaultSnippetManager;
 
     /**
      * @var ObjectProphecy<SnippetResolverInterface>
      */
-    private $snippetResolver;
+    private ObjectProphecy $snippetResolver;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
      */
-    private $referenceStore;
+    private ObjectProphecy $referenceStore;
 
-    /**
-     * @var SingleSnippetSelection
-     */
-    private $singleSnippetSelection;
+    private \Sulu\Bundle\SnippetBundle\Content\SingleSnippetSelection $singleSnippetSelection;
 
     protected function setUp(): void
     {

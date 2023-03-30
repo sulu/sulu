@@ -31,15 +31,9 @@ class TagAdmin extends Admin
 
     public const EDIT_FORM_VIEW = 'sulu_tag.edit_form';
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
+    private \Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface $viewBuilderFactory;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,

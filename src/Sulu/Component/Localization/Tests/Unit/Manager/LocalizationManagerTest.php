@@ -24,7 +24,7 @@ class LocalizationManagerTest extends TestCase
     /**
      * @var LocalizationManagerInterface
      */
-    private $localizationManager;
+    private \Sulu\Component\Localization\Manager\LocalizationManager $localizationManager;
 
     public function setUp(): void
     {

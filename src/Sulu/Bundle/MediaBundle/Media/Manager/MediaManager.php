@@ -93,20 +93,11 @@ class MediaManager implements MediaManagerInterface
      */
     protected $targetGroupRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var FileValidatorInterface
-     */
-    private $validator;
+    private \Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface $validator;
 
-    /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
+    private \Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface $formatManager;
 
     /**
      * @var TypeManagerInterface
@@ -118,35 +109,17 @@ class MediaManager implements MediaManagerInterface
      */
     protected $storage;
 
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
+    private \Sulu\Component\Security\Authentication\UserRepositoryInterface $userRepository;
 
-    /**
-     * @var TagManagerInterface
-     */
-    private $tagManager;
+    private \Sulu\Bundle\TagBundle\Tag\TagManagerInterface $tagManager;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private ?\Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage = null;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private ?\Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker = null;
 
-    /**
-     * @var PathCleanupInterface
-     */
-    private $pathCleaner;
+    private \Sulu\Component\PHPCR\PathCleanupInterface $pathCleaner;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
     /**
      * @var string
@@ -158,20 +131,14 @@ class MediaManager implements MediaManagerInterface
      */
     public $count;
 
-    /**
-     * @var string
-     */
-    private $adminDownloadPath;
+    private string $adminDownloadPath;
 
     /**
      * @var MediaPropertiesProviderInterface[]
      */
     private $mediaPropertiesProviders;
 
-    /**
-     * @var TrashManagerInterface|null
-     */
-    private $trashManager;
+    private ?\Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface $trashManager = null;
 
     /**
      * @param CollectionRepository $collectionRepository

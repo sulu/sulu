@@ -16,7 +16,7 @@ class AnyOfsMetadata implements SchemaMetadataInterface
     /**
      * @var SchemaMetadataInterface[]
      */
-    private $anyOfs;
+    private array $anyOfs;
 
     /**
      * @param SchemaMetadataInterface[] $anyOfs

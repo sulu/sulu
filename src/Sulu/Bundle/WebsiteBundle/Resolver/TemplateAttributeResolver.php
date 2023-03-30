@@ -52,10 +52,7 @@ class TemplateAttributeResolver implements TemplateAttributeResolverInterface
      */
     protected $environment;
 
-    /**
-     * @var array
-     */
-    private $enabledTwigAttributes;
+    private array $enabledTwigAttributes;
 
     /**
      * TemplateAttributeResolver constructor.

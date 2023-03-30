@@ -37,82 +37,73 @@ class AutoNameSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<DocumentRegistry>
      */
-    private $documentRegistry;
+    private ObjectProphecy $documentRegistry;
 
     /**
      * @var ObjectProphecy<SlugifierInterface>
      */
-    private $slugifier;
+    private ObjectProphecy $slugifier;
 
     /**
      * @var ObjectProphecy<PersistEvent>
      */
-    private $persistEvent;
+    private ObjectProphecy $persistEvent;
 
     /**
      * @var ObjectProphecy<MoveEvent>
      */
-    private $moveEvent;
+    private ObjectProphecy $moveEvent;
 
     /**
      * @var ObjectProphecy<AutoNameBehavior>
      */
-    private $document;
+    private ObjectProphecy $document;
 
-    /**
-     * @var \stdClass
-     */
-    private $parentDocument;
+    private \stdClass $parentDocument;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $newNode;
+    private ObjectProphecy $newNode;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $parentNode;
+    private ObjectProphecy $parentNode;
 
     /**
      * @var ObjectProphecy<Metadata>
      */
-    private $metadata;
+    private ObjectProphecy $metadata;
 
-    /**
-     * @var \stdClass
-     */
-    private $parent;
+    private \stdClass $parent;
 
     /**
      * @var ObjectProphecy<NameResolver>
      */
-    private $resolver;
+    private ObjectProphecy $resolver;
 
     /**
      * @var ObjectProphecy<NodeManager>
      */
-    private $nodeManager;
+    private ObjectProphecy $nodeManager;
 
-    /**
-     * @var AutoNameSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Behavior\Path\AutoNameSubscriber $subscriber;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $session;
+    private ObjectProphecy $session;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $liveSession;
+    private ObjectProphecy $liveSession;
 
     public function setUp(): void
     {

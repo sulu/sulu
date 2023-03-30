@@ -21,7 +21,7 @@ class TransformationPool implements TransformationPoolInterface
     /**
      * @var TransformationInterface[]
      */
-    private $transformations = [];
+    private array $transformations = [];
 
     /**
      * @param string $alias

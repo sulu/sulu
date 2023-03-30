@@ -27,7 +27,6 @@ use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaControllerTest extends SuluTestCase
@@ -35,42 +34,24 @@ class MediaControllerTest extends SuluTestCase
     /**
      * @var EntityManager
      */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
     /**
      * @var CollectionType
      */
     private $systemCollectionType;
 
-    /**
-     * @var Collection
-     */
-    private $collection;
+    private ?\Sulu\Bundle\MediaBundle\Entity\Collection $collection = null;
 
-    /**
-     * @var CollectionMeta
-     */
-    private $collectionMeta;
+    private ?\Sulu\Bundle\MediaBundle\Entity\CollectionMeta $collectionMeta = null;
 
-    /**
-     * @var MediaType
-     */
-    private $documentType;
+    private ?\Sulu\Bundle\MediaBundle\Entity\MediaType $documentType = null;
 
-    /**
-     * @var MediaType
-     */
-    private $imageType;
+    private ?\Sulu\Bundle\MediaBundle\Entity\MediaType $imageType = null;
 
-    /**
-     * @var MediaType
-     */
-    private $videoType;
+    private ?\Sulu\Bundle\MediaBundle\Entity\MediaType $videoType = null;
 
-    /**
-     * @var MediaType
-     */
-    private $audioType;
+    private ?\Sulu\Bundle\MediaBundle\Entity\MediaType $audioType = null;
 
     /**
      * @var CategoryInterface
@@ -112,10 +93,7 @@ class MediaControllerTest extends SuluTestCase
      */
     protected $mediaDefaultCredits = 'credits';
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

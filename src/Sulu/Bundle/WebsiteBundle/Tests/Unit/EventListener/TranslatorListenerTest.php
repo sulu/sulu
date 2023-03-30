@@ -29,7 +29,7 @@ class TranslatorListenerTest extends TestCase
     /**
      * @var ObjectProphecy<HttpKernelInterface>
      */
-    private $kernel;
+    private ObjectProphecy $kernel;
 
     public function setUp(): void
     {

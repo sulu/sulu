@@ -36,25 +36,23 @@ class Phone
     private $id;
 
     /**
-     * @var PhoneType
-     *
      * @Groups({"fullAccount", "fullContact"})
      */
-    private $phoneType;
+    private ?\Sulu\Bundle\ContactBundle\Entity\PhoneType $phoneType = null;
 
     /**
      * @var Collection<int, ContactInterface>
      *
      * @Exclude
      */
-    private $contacts;
+    private \Doctrine\Common\Collections\ArrayCollection|array $contacts;
 
     /**
      * @var Collection<int, AccountInterface>
      *
      * @Exclude
      */
-    private $accounts;
+    private \Doctrine\Common\Collections\ArrayCollection|array $accounts;
 
     /**
      * Constructor.

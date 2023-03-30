@@ -17,25 +17,13 @@ use Symfony\Component\Routing\RouterInterface;
 
 class PreviewAdmin extends Admin
 {
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
+    private \Symfony\Component\Routing\Generator\UrlGeneratorInterface $urlGenerator;
 
-    /**
-     * @var int
-     */
-    private $previewDelay;
+    private int $previewDelay;
 
-    /**
-     * @var string
-     */
-    private $previewMode;
+    private string $previewMode;
 
-    /**
-     * @var array
-     */
-    private $bundles;
+    private array $bundles;
 
     public function __construct(
         UrlGeneratorInterface $urlGenerator,

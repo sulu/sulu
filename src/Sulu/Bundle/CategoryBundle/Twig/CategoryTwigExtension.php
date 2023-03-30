@@ -25,25 +25,13 @@ use Twig\TwigFunction;
  */
 class CategoryTwigExtension extends AbstractExtension
 {
-    /**
-     * @var CategoryManagerInterface
-     */
-    private $categoryManager;
+    private \Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface $categoryManager;
 
-    /**
-     * @var CategoryRequestHandlerInterface
-     */
-    private $categoryRequestHandler;
+    private \Sulu\Component\Category\Request\CategoryRequestHandlerInterface $categoryRequestHandler;
 
-    /**
-     * @var ArraySerializerInterface
-     */
-    private $serializer;
+    private \Sulu\Component\Serializer\ArraySerializerInterface $serializer;
 
-    /**
-     * @var MemoizeInterface
-     */
-    private $memoizeCache;
+    private \Sulu\Component\Cache\MemoizeInterface $memoizeCache;
 
     public function __construct(
         CategoryManagerInterface $categoryManager,

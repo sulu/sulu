@@ -23,20 +23,11 @@ use Twig\TwigFunction;
  */
 class SnippetTwigExtension extends AbstractExtension implements SnippetTwigExtensionInterface
 {
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
+    private \Sulu\Component\Content\Mapper\ContentMapperInterface $contentMapper;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var StructureResolverInterface
-     */
-    private $structureResolver;
+    private \Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface $structureResolver;
 
     /**
      * Constructor.

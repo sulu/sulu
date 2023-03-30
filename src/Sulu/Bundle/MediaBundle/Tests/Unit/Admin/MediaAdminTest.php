@@ -32,37 +32,34 @@ class MediaAdminTest extends TestCase
     /**
      * @var ObjectProphecy<ViewBuilderFactoryInterface>
      */
-    private $viewBuilderFactory;
+    private ObjectProphecy $viewBuilderFactory;
 
     /**
      * @var ObjectProphecy<SecurityCheckerInterface>
      */
-    private $securityChecker;
+    private ObjectProphecy $securityChecker;
 
     /**
      * @var ObjectProphecy<LocalizationManagerInterface>
      */
-    private $localizationManager;
+    private ObjectProphecy $localizationManager;
 
     /**
      * @var ObjectProphecy<UrlGeneratorInterface>
      */
-    private $urlGenerator;
+    private ObjectProphecy $urlGenerator;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<ActivityViewBuilderFactoryInterface>
      */
-    private $activityViewBuilderFactory;
+    private ObjectProphecy $activityViewBuilderFactory;
 
-    /**
-     * @var MediaAdmin
-     */
-    private $mediaAdmin;
+    private \Sulu\Bundle\MediaBundle\Admin\MediaAdmin $mediaAdmin;
 
     public function setUp(): void
     {

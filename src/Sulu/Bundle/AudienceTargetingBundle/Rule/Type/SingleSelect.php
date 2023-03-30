@@ -13,15 +13,12 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Rule\Type;
 
 class SingleSelect implements RuleTypeInterface
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
     /**
      * @var string[]
      */
-    private $options;
+    private array $options;
 
     public function __construct(string $name, array $options)
     {

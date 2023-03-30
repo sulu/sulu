@@ -21,12 +21,9 @@ class TypedFormMetadata extends AbstractMetadata
      *
      * @SerializedName("types")
      */
-    private $forms = [];
+    private array $forms = [];
 
-    /**
-     * @var string
-     */
-    private $defaultType;
+    private ?string $defaultType = null;
 
     public function addForm($key, FormMetadata $form): void
     {

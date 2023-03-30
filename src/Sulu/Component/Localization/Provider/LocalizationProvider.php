@@ -18,7 +18,7 @@ class LocalizationProvider implements LocalizationProviderInterface
     /**
      * @var string[]
      */
-    private $locales;
+    private array $locales;
 
     /**
      * @param string[] $locales

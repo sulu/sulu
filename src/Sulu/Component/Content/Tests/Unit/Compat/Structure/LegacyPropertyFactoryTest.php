@@ -35,42 +35,39 @@ class LegacyPropertyFactoryTest extends TestCase
     /**
      * @var ObjectProphecy<NamespaceRegistry>
      */
-    private $namespaceRegistry;
+    private ObjectProphecy $namespaceRegistry;
 
-    /**
-     * @var LegacyPropertyFactory
-     */
-    private $factory;
+    private \Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory $factory;
 
     /**
      * @var ObjectProphecy<PropertyMetadata>
      */
-    private $property1;
+    private ObjectProphecy $property1;
 
     /**
      * @var ObjectProphecy<PropertyMetadata>
      */
-    private $property2;
+    private ObjectProphecy $property2;
 
     /**
      * @var ObjectProphecy<SectionMetadata>
      */
-    private $section;
+    private ObjectProphecy $section;
 
     /**
      * @var ObjectProphecy<BlockMetadata>
      */
-    private $block;
+    private ObjectProphecy $block;
 
     /**
      * @var ObjectProphecy<ComponentMetadata>
      */
-    private $component;
+    private ObjectProphecy $component;
 
     /**
      * @var ObjectProphecy<ComponentMetadata>
      */
-    private $component2;
+    private ObjectProphecy $component2;
 
     public function setUp(): void
     {

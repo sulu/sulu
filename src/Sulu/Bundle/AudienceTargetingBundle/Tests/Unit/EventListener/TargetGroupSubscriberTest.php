@@ -39,27 +39,27 @@ class TargetGroupSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<Environment>
      */
-    private $twig;
+    private ObjectProphecy $twig;
 
     /**
      * @var ObjectProphecy<TargetGroupStoreInterface>
      */
-    private $targetGroupStore;
+    private ObjectProphecy $targetGroupStore;
 
     /**
      * @var ObjectProphecy<TargetGroupEvaluatorInterface>
      */
-    private $targetGroupEvaluator;
+    private ObjectProphecy $targetGroupEvaluator;
 
     /**
      * @var ObjectProphecy<TargetGroupRepositoryInterface>
      */
-    private $targetGroupRepository;
+    private ObjectProphecy $targetGroupRepository;
 
     /**
      * @var ObjectProphecy<HttpKernelInterface>
      */
-    private $kernel;
+    private ObjectProphecy $kernel;
 
     public function setUp(): void
     {

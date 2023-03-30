@@ -33,22 +33,19 @@ class HtmlMarkupParserTest extends TestCase
     /**
      * @var ObjectProphecy<TagInterface>
      */
-    private $linkTag;
+    private ObjectProphecy $linkTag;
 
     /**
      * @var ObjectProphecy<TagInterface>
      */
-    private $mediaTag;
+    private ObjectProphecy $mediaTag;
 
     /**
      * @var ObjectProphecy<TagRegistryInterface>
      */
-    private $tagRegistry;
+    private ObjectProphecy $tagRegistry;
 
-    /**
-     * @var HtmlMarkupParser
-     */
-    private $parser;
+    private \Sulu\Bundle\MarkupBundle\Markup\HtmlMarkupParser $parser;
 
     protected function setUp(): void
     {

@@ -24,15 +24,9 @@ class SecuredDocument implements AutoNameBehavior, NodeNameBehavior, PathBehavio
      */
     private $uuid;
 
-    /**
-     * @var string
-     */
-    private $title;
+    private ?string $title = null;
 
-    /**
-     * @var object
-     */
-    private $parent;
+    private ?object $parent = null;
 
     /**
      * @var array

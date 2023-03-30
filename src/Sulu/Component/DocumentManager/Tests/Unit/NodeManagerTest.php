@@ -33,30 +33,27 @@ class NodeManagerTest extends TestCase
 
     public const PATH2 = '/path/to/this';
 
-    /**
-     * @var NodeManager
-     */
-    private $manager;
+    private \Sulu\Component\DocumentManager\NodeManager $manager;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $session;
+    private ObjectProphecy $session;
 
     /**
      * @var ObjectProphecy<WorkspaceInterface>
      */
-    private $workspace;
+    private ObjectProphecy $workspace;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node1;
+    private ObjectProphecy $node1;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node2;
+    private ObjectProphecy $node2;
 
     public function setUp(): void
     {

@@ -11,28 +11,16 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Entity;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class RoleRepositoryTest extends SuluTestCase
 {
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
+    private ?object $roleRepository = null;
 
     public function setUp(): void
     {

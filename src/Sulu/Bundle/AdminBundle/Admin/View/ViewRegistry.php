@@ -20,12 +20,9 @@ class ViewRegistry
     /**
      * @var View[]
      */
-    private $views;
+    private ?array $views = null;
 
-    /**
-     * @var AdminPool
-     */
-    private $adminPool;
+    private \Sulu\Bundle\AdminBundle\Admin\AdminPool $adminPool;
 
     public function __construct(AdminPool $adminPool)
     {

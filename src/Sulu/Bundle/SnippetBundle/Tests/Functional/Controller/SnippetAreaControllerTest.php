@@ -13,7 +13,6 @@ namespace Sulu\Bundle\SnippetBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
  * Handles snippet types and defaults.
@@ -25,10 +24,7 @@ class SnippetAreaControllerTest extends BaseFunctionalTestCase
      */
     protected $contentMapper;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

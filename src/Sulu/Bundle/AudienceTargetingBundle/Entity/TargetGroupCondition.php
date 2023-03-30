@@ -23,22 +23,16 @@ class TargetGroupCondition implements TargetGroupConditionInterface
      */
     private $id;
 
-    /**
-     * @var string
-     */
-    private $type;
+    private ?string $type = null;
 
     /**
      * @var mixed[]
      *
      * @Type("array")
      */
-    private $condition;
+    private ?array $condition = null;
 
-    /**
-     * @var TargetGroupRuleInterface
-     */
-    private $rule;
+    private ?\Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface $rule = null;
 
     public function getId()
     {

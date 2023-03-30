@@ -19,15 +19,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class RouteGenerator implements RouteGeneratorInterface
 {
-    /**
-     * @var TokenProviderInterface
-     */
-    private $tokenProvider;
+    private \Sulu\Bundle\RouteBundle\Generator\TokenProviderInterface $tokenProvider;
 
-    /**
-     * @var SlugifierInterface
-     */
-    private $slugifier;
+    private \Symfony\Cmf\Api\Slugifier\SlugifierInterface $slugifier;
 
     /**
      * RouteGenerator constructor.

@@ -26,27 +26,24 @@ class InitializerTest extends TestCase
     /**
      * @var ObjectProphecy<ContainerInterface>
      */
-    private $container;
+    private ObjectProphecy $container;
 
     /**
      * @var ObjectProphecy<InitializerInterface>
      */
-    private $initializer1;
+    private ObjectProphecy $initializer1;
 
     /**
      * @var ObjectProphecy<InitializerInterface>
      */
-    private $initializer2;
+    private ObjectProphecy $initializer2;
 
     /**
      * @var ObjectProphecy<InitializerInterface>
      */
-    private $initializer3;
+    private ObjectProphecy $initializer3;
 
-    /**
-     * @var Initializer
-     */
-    private $initializer;
+    private \Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer $initializer;
 
     public function setUp(): void
     {

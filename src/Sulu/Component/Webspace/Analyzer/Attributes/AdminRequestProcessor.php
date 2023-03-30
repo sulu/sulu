@@ -20,10 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class AdminRequestProcessor implements RequestProcessorInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
     /**
      * @var string

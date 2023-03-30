@@ -24,63 +24,49 @@ class FieldDescriptor implements FieldDescriptorInterface
     /**
      * The name of the field in the database.
      *
-     * @var string
-     *
      * @Expose
      */
-    private $name;
+    private string $name;
 
     /**
      * The translation name.
      *
-     * @var string
-     *
      * @Expose
      */
-    private $translation;
+    private string $translation;
 
     /**
      * Defines the visibility of the field.
      *
-     * @var string
-     *
      * @Expose
      */
-    private $visibility;
+    private string $visibility;
 
     /**
      * Defines the searchability of the field.
      *
-     * @var string
-     *
      * @Expose
      */
-    private $searchability;
+    private string $searchability;
 
     /**
      * Defines if this field is sortable.
      *
-     * @var bool
-     *
      * @Expose
      */
-    private $sortable;
+    private bool $sortable;
 
     /**
-     * @var string
-     *
      * @Expose
      */
-    private $width;
+    private string $width;
 
     /**
      * The type of the field (only used for special fields like dates).
      *
-     * @var string
-     *
      * @Expose
      */
-    private $type;
+    private string $type;
 
     /**
      * @var AbstractPropertyMetadata

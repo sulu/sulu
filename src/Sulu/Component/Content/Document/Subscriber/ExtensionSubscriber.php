@@ -23,32 +23,18 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ExtensionSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
+    private \Sulu\Component\Content\Extension\ExtensionManagerInterface $extensionManager;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $inspector;
 
-    /**
-     * @var NamespaceRegistry
-     */
-    private $namespaceRegistry;
+    private \Sulu\Component\DocumentManager\NamespaceRegistry $namespaceRegistry;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder $encoder;
 
     /**
      * TODO: Remove this: Use a dedicated namespace instead.
-     *
-     * @var string
      */
-    private $internalPrefix = '';
+    private string $internalPrefix = '';
 
     public function __construct(
         PropertyEncoder $encoder,

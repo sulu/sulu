@@ -11,7 +11,6 @@
 
 namespace Functional\Entity;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepository;
@@ -23,20 +22,11 @@ use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 
 class CollectionRepositoryTest extends SuluTestCase
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var MediaType
-     */
-    private $mediaType;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaType $mediaType;
 
-    /**
-     * @var array
-     */
-    private $collectionData = [
+    private array $collectionData = [
         ['1', null, false, 0],
         ['2', 0, false, 0],
         ['3', 1, false, 0],
@@ -63,12 +53,9 @@ class CollectionRepositoryTest extends SuluTestCase
     /**
      * @var Collection[]
      */
-    private $collections;
+    private ?array $collections = null;
 
-    /**
-     * @var CollectionRepository
-     */
-    private $collectionRepository;
+    private ?object $collectionRepository = null;
 
     protected function setUp(): void
     {

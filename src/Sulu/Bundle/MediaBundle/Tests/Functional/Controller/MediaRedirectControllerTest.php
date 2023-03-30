@@ -22,7 +22,6 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\Response;
 
 class MediaRedirectControllerTest extends SuluTestCase
@@ -30,37 +29,19 @@ class MediaRedirectControllerTest extends SuluTestCase
     /**
      * @var EntityManager
      */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var CollectionType
-     */
-    private $collectionType;
+    private ?\Sulu\Bundle\MediaBundle\Entity\CollectionType $collectionType = null;
 
-    /**
-     * @var Collection
-     */
-    private $collection;
+    private ?\Sulu\Bundle\MediaBundle\Entity\Collection $collection = null;
 
-    /**
-     * @var CollectionMeta
-     */
-    private $collectionMeta;
+    private ?\Sulu\Bundle\MediaBundle\Entity\CollectionMeta $collectionMeta = null;
 
-    /**
-     * @var MediaType
-     */
-    private $documentType;
+    private ?\Sulu\Bundle\MediaBundle\Entity\MediaType $documentType = null;
 
-    /**
-     * @var MediaType
-     */
-    private $imageType;
+    private ?\Sulu\Bundle\MediaBundle\Entity\MediaType $imageType = null;
 
-    /**
-     * @var MediaType
-     */
-    private $videoType;
+    private ?\Sulu\Bundle\MediaBundle\Entity\MediaType $videoType = null;
 
     /**
      * @var CategoryInterface
@@ -82,10 +63,7 @@ class MediaRedirectControllerTest extends SuluTestCase
      */
     protected $mediaDefaultDescription = 'description';
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

@@ -16,10 +16,7 @@ use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 
 class NullActivityRepository implements ActivityRepositoryInterface
 {
-    /**
-     * @var string
-     */
-    private $activityClass;
+    private string $activityClass;
 
     public function __construct(string $activityClass)
     {

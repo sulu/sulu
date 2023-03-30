@@ -40,15 +40,15 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
  */
 class DocumentInspector extends BaseDocumentInspector
 {
-    private $metadataFactory;
+    private \Sulu\Component\DocumentManager\MetadataFactoryInterface $metadataFactory;
 
-    private $structureFactory;
+    private \Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface $structureFactory;
 
-    private $namespaceRegistry;
+    private \Sulu\Component\DocumentManager\NamespaceRegistry $namespaceRegistry;
 
-    private $encoder;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder $encoder;
 
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
     public function __construct(
         DocumentRegistry $documentRegistry,

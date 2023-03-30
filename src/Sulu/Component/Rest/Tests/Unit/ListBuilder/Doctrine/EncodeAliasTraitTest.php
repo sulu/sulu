@@ -19,7 +19,7 @@ class EncodeAliasTraitTest extends TestCase
     /**
      * @var EncodeAliasTrait
      */
-    private $encodeAlias;
+    private \PHPUnit\Framework\MockObject\MockObject $encodeAlias;
 
     public function setup(): void
     {

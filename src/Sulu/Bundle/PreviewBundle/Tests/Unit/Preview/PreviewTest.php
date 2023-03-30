@@ -31,47 +31,35 @@ class PreviewTest extends TestCase
     /**
      * @var ObjectProphecy<Cache>
      */
-    private $cache;
+    private ObjectProphecy $cache;
 
     /**
      * @var ObjectProphecy<PreviewRendererInterface>
      */
-    private $renderer;
+    private ObjectProphecy $renderer;
 
-    /**
-     * @var int
-     */
-    private $cacheLifeTime = 3600;
+    private int $cacheLifeTime = 3600;
 
     /**
      * @var PreviewInterface
      */
-    private $preview;
+    private \Sulu\Bundle\PreviewBundle\Preview\Preview $preview;
 
     /**
      * @var ObjectProphecy<PreviewObjectProviderInterface>
      */
-    private $provider;
+    private ObjectProphecy $provider;
 
-    /**
-     * @var string
-     */
-    private $providerKey = 'test-provider';
+    private string $providerKey = 'test-provider';
 
-    /**
-     * @var string
-     */
-    private $locale = 'de';
+    private string $locale = 'de';
 
-    /**
-     * @var string
-     */
-    private $webspaceKey = 'sulu_io';
+    private string $webspaceKey = 'sulu_io';
 
     /**
      * @var ObjectProphecy<\stdClass>
      */
-    private $object;
+    private ObjectProphecy $object;
 
     protected function setUp(): void
     {

@@ -43,50 +43,23 @@ class CategoryManager implements CategoryManagerInterface
 
     public static $catTranslationEntityName = CategoryTranslationInterface::class;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
+    private \Sulu\Component\Security\Authentication\UserRepositoryInterface $userRepository;
 
-    /**
-     * @var CategoryRepositoryInterface
-     */
-    private $categoryRepository;
+    private \Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface $categoryRepository;
 
-    /**
-     * @var CategoryMetaRepositoryInterface
-     */
-    private $categoryMetaRepository;
+    private \Sulu\Bundle\CategoryBundle\Entity\CategoryMetaRepositoryInterface $categoryMetaRepository;
 
-    /**
-     * @var CategoryTranslationRepositoryInterface
-     */
-    private $categoryTranslationRepository;
+    private \Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface $categoryTranslationRepository;
 
-    /**
-     * @var KeywordManagerInterface
-     */
-    private $keywordManager;
+    private \Sulu\Bundle\CategoryBundle\Category\KeywordManagerInterface $keywordManager;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
-    /**
-     * @var TrashManagerInterface|null
-     */
-    private $trashManager;
+    private ?\Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface $trashManager = null;
 
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,

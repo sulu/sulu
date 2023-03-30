@@ -19,15 +19,9 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class CreateUserCommandTest extends SuluTestCase
 {
-    /**
-     * @var CommandTester
-     */
-    private $tester;
+    private \Symfony\Component\Console\Tester\CommandTester $tester;
 
-    /**
-     * @var CreateUserCommand
-     */
-    private $command;
+    private \Sulu\Bundle\SecurityBundle\Command\CreateUserCommand $command;
 
     public function setUp(): void
     {

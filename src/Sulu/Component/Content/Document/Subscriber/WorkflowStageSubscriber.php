@@ -35,25 +35,13 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
 
     public const PUBLISHED_FIELD = 'published';
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Component\DocumentManager\DocumentInspector $documentInspector;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private \Sulu\Component\DocumentManager\PropertyEncoder $propertyEncoder;
 
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
+    private \PHPCR\SessionInterface $defaultSession;
 
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
+    private \PHPCR\SessionInterface $liveSession;
 
     public function __construct(
         PropertyEncoder $propertyEncoder,

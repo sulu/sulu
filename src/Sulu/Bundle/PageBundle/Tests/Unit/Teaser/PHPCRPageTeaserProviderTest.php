@@ -34,27 +34,24 @@ class PHPCRPageTeaserProviderTest extends TestCase
     /**
      * @var ObjectProphecy<ContentQueryExecutorInterface>
      */
-    private $contentQueryExecutor;
+    private ObjectProphecy $contentQueryExecutor;
 
     /**
      * @var ObjectProphecy<ContentQueryBuilderInterface>
      */
-    private $contentQueryBuilder;
+    private ObjectProphecy $contentQueryBuilder;
 
     /**
      * @var ObjectProphecy<StructureMetadataFactoryInterface>
      */
-    private $structureMetadataFactory;
+    private ObjectProphecy $structureMetadataFactory;
 
     /**
      * @var ObjectProphecy<TranslatorInterface>
      */
-    private $translator;
+    private ObjectProphecy $translator;
 
-    /**
-     * @var PHPCRPageTeaserProvider
-     */
-    private $phpcrPageTeaserProvider;
+    private \Sulu\Bundle\PageBundle\Teaser\PHPCRPageTeaserProvider $phpcrPageTeaserProvider;
 
     protected function setUp(): void
     {

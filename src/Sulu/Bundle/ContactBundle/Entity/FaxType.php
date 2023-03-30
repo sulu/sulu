@@ -36,11 +36,9 @@ class FaxType implements \JsonSerializable
     private $id;
 
     /**
-     * @var Collection
-     *
      * @Exclude
      */
-    private $faxes;
+    private \Doctrine\Common\Collections\ArrayCollection|array $faxes;
 
     /**
      * Constructor.

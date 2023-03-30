@@ -35,10 +35,7 @@ class BankAccount
      */
     private $iban;
 
-    /**
-     * @var bool
-     */
-    private $public = false;
+    private bool $public = false;
 
     /**
      * @var int
@@ -50,12 +47,12 @@ class BankAccount
      *
      * @Exclude
      */
-    private $accounts;
+    private \Doctrine\Common\Collections\ArrayCollection|array $accounts;
 
     /**
      * @var Collection<int, ContactInterface>
      */
-    private $contacts;
+    private \Doctrine\Common\Collections\ArrayCollection|array $contacts;
 
     /**
      * Constructor.

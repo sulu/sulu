@@ -26,13 +26,13 @@ class StructureManager implements StructureManagerInterface
 {
     use ContainerAwareTrait;
 
-    private $structureFactory;
+    private \Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory $structureFactory;
 
-    private $inspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $inspector;
 
-    private $propertyFactory;
+    private \Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory $propertyFactory;
 
-    private $typeMap;
+    private array $typeMap;
 
     public function __construct(
         StructureMetadataFactory $structureFactory,

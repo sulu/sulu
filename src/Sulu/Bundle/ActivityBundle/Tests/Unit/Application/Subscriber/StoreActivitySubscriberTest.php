@@ -26,7 +26,7 @@ class StoreActivitySubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<ActivityRepositoryInterface>
      */
-    private $activityRepository;
+    private ObjectProphecy $activityRepository;
 
     public function setUp(): void
     {

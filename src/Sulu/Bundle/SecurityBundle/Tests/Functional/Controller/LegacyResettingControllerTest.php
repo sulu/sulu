@@ -19,7 +19,6 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\Routing\Router;
 
 class LegacyResettingControllerTest extends SuluTestCase
@@ -27,27 +26,24 @@ class LegacyResettingControllerTest extends SuluTestCase
     /**
      * @var ObjectManager
      */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
     /**
      * @var User[]
      */
-    private $users = [];
+    private array $users = [];
 
     /**
      * @var Role
      */
     private $role;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     /**
      * @var ObjectRepository<ActivityInterface>
      */
-    private $activityRepository;
+    private \Doctrine\ORM\EntityRepository $activityRepository;
 
     public function setUp(): void
     {

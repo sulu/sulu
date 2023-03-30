@@ -15,10 +15,7 @@ namespace Sulu\Bundle\TrashBundle\Domain\Exception;
 
 class RestoreTrashItemHandlerNotFoundException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $resourceKey;
+    private string $resourceKey;
 
     public function __construct(string $resourceKey)
     {

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\Trash;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
@@ -29,9 +28,7 @@ use Sulu\Bundle\MediaBundle\Entity\FormatOptions;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
-use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Tests\Functional\Traits\CreateUploadedFileTrait;
-use Sulu\Bundle\MediaBundle\Trash\MediaTrashItemHandler;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
@@ -41,25 +38,13 @@ class MediaTrashItemHandlerTest extends SuluTestCase
 {
     use CreateUploadedFileTrait;
 
-    /**
-     * @var MediaTrashItemHandler
-     */
-    private $mediaTrashItemHandler;
+    private ?object $mediaTrashItemHandler = null;
 
-    /**
-     * @var StorageInterface
-     */
-    private $storage;
+    private ?object $storage = null;
 
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private ?\Symfony\Component\Filesystem\Filesystem $filesystem = null;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private ?\Doctrine\ORM\EntityManagerInterface $entityManager = null;
 
     public function setUp(): void
     {

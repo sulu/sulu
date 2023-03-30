@@ -33,15 +33,9 @@ class TimestampSubscriber implements EventSubscriberInterface
 
     public const CHANGED = 'changed';
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private \Sulu\Component\DocumentManager\PropertyEncoder $propertyEncoder;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $documentInspector;
 
     public function __construct(PropertyEncoder $propertyEncoder, DocumentInspector $documentInspector)
     {

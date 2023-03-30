@@ -19,10 +19,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TogglerToolbarActionSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
     public function __construct(TranslatorInterface $translator)
     {

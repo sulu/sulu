@@ -19,15 +19,9 @@ use Symfony\Component\Routing\RouterInterface;
 
 class RequestListener implements EventSubscriberInterface
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private \Symfony\Component\Routing\RouterInterface $router;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
     public function __construct(RouterInterface $router, RequestAnalyzerInterface $requestAnalyzer)
     {

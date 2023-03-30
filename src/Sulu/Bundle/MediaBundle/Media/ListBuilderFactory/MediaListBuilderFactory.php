@@ -24,35 +24,17 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class MediaListBuilderFactory
 {
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
+    private \Sulu\Component\Rest\RestHelperInterface $restHelper;
 
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $doctrineListBuilderFactory;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory;
 
-    /**
-     * @var CollectionRepositoryInterface
-     */
-    private $collectionRepository;
+    private \Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface $collectionRepository;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
-    /**
-     * @var string
-     */
-    private $mediaClass;
+    private string $mediaClass;
 
-    /**
-     * @var string
-     */
-    private $collectionClass;
+    private string $collectionClass;
 
     public function __construct(
         RestHelperInterface $restHelper,

@@ -19,7 +19,6 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\Mailer\DataCollector\MessageDataCollector;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
@@ -30,27 +29,21 @@ class ResettingControllerTest extends SuluTestCase
     /**
      * @var ObjectManager
      */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
     /**
      * @var User[]
      */
-    private $users = [];
+    private array $users = [];
 
-    /**
-     * @var Role
-     */
-    private $role;
+    private \Sulu\Bundle\SecurityBundle\Entity\Role $role;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     /**
      * @var ObjectRepository<ActivityInterface>
      */
-    private $activityRepository;
+    private \Doctrine\ORM\EntityRepository $activityRepository;
 
     public function setUp(): void
     {

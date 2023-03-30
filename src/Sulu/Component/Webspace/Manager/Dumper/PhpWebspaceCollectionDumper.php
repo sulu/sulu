@@ -15,10 +15,7 @@ use Sulu\Component\Webspace\Manager\WebspaceCollection;
 
 class PhpWebspaceCollectionDumper extends WebspaceCollectionDumper
 {
-    /**
-     * @var WebspaceCollection
-     */
-    private $webspaceCollection;
+    private \Sulu\Component\Webspace\Manager\WebspaceCollection $webspaceCollection;
 
     public function __construct(WebspaceCollection $webspaceCollection)
     {

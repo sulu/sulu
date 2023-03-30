@@ -13,10 +13,7 @@ namespace Sulu\Bundle\AudienceTargetingBundle\Rule\Type;
 
 class Input implements RuleTypeInterface
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
     public function __construct(string $name)
     {

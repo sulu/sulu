@@ -33,47 +33,38 @@ class PagesSitemapProviderTest extends TestCase
     /**
      * @var ObjectProphecy<ContentRepositoryInterface>
      */
-    private $contentRepository;
+    private ObjectProphecy $contentRepository;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<AccessControlManagerInterface>
      */
-    private $accessControlManager;
+    private ObjectProphecy $accessControlManager;
 
-    /**
-     * @var PagesSitemapProvider
-     */
-    private $sitemapProvider;
+    private \Sulu\Bundle\PageBundle\Sitemap\PagesSitemapProvider $sitemapProvider;
 
     /**
      * @var ObjectProphecy<PortalInformation>
      */
-    private $portalInformation;
+    private ObjectProphecy $portalInformation;
 
     /**
      * @var ObjectProphecy<PortalInformation>
      */
-    private $portalInformationEn;
+    private ObjectProphecy $portalInformationEn;
 
     /**
      * @var ObjectProphecy<Webspace>
      */
-    private $webspace;
+    private ObjectProphecy $webspace;
 
-    /**
-     * @var string
-     */
-    private $webspaceKey = 'sulu_io';
+    private string $webspaceKey = 'sulu_io';
 
-    /**
-     * @var string
-     */
-    private $portalKey = 'sulu_io';
+    private string $portalKey = 'sulu_io';
 
     protected function setUp(): void
     {

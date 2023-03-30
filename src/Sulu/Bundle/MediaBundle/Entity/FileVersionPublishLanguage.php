@@ -26,10 +26,7 @@ class FileVersionPublishLanguage
      */
     private $id;
 
-    /**
-     * @var FileVersion
-     */
-    private $fileVersion;
+    private ?\Sulu\Bundle\MediaBundle\Entity\FileVersion $fileVersion = null;
 
     /**
      * Set locale.

@@ -13,10 +13,7 @@ namespace Sulu\Component\Rest\Exception;
 
 class SearchFieldNotFoundException extends RestException
 {
-    /**
-     * @var string
-     */
-    private $field;
+    private string $field;
 
     public function __construct(string $field)
     {

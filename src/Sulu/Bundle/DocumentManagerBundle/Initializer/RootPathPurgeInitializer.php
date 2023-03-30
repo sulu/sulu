@@ -30,12 +30,9 @@ class RootPathPurgeInitializer implements InitializerInterface
     /**
      * @var SessionInterface[]
      */
-    private $connections;
+    private \Doctrine\Persistence\ConnectionRegistry $connections;
 
-    /**
-     * @var PathSegmentRegistry
-     */
-    private $pathSegments;
+    private \Sulu\Component\DocumentManager\PathSegmentRegistry $pathSegments;
 
     public function __construct(ConnectionRegistry $connections, PathSegmentRegistry $pathSegments, $rootRole = 'root')
     {

@@ -25,17 +25,14 @@ class MemoizeTest extends TestCase
     /**
      * @var MemoizeInterface
      */
-    private $mem;
+    private \Sulu\Component\Cache\Memoize $mem;
 
     /**
      * @var ObjectProphecy<CacheProvider>
      */
-    private $cache;
+    private ObjectProphecy $cache;
 
-    /**
-     * @var int
-     */
-    private $defaultLifeTime = 600;
+    private int $defaultLifeTime = 600;
 
     protected function setUp(): void
     {

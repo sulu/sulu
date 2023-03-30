@@ -45,7 +45,7 @@ class CollectionType
      *
      * @Exclude
      */
-    private $collections;
+    private \Doctrine\Common\Collections\ArrayCollection $collections;
 
     /**
      * Constructor.

@@ -33,12 +33,9 @@ class StructureSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<SearchManagerInterface>
      */
-    private $searchManager;
+    private ObjectProphecy $searchManager;
 
-    /**
-     * @var StructureSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Bundle\PageBundle\Search\EventSubscriber\StructureSubscriber $subscriber;
 
     public function setUp(): void
     {

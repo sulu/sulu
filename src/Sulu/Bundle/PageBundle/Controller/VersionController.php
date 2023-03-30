@@ -39,25 +39,13 @@ class VersionController extends AbstractRestController implements
 {
     use RequestParametersTrait;
 
-    /**
-     * @var ListRestHelperInterface
-     */
-    private $listRestHelper;
+    private \Sulu\Component\Rest\ListBuilder\ListRestHelperInterface $listRestHelper;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
+    private \Sulu\Component\Security\Authentication\UserRepositoryInterface $userRepository;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

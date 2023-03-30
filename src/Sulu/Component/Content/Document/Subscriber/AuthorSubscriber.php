@@ -30,20 +30,11 @@ class AuthorSubscriber implements EventSubscriberInterface
 
     public const AUTHOR_PROPERTY_NAME = 'author';
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private \Sulu\Component\DocumentManager\PropertyEncoder $propertyEncoder;
 
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
+    private \Sulu\Component\Security\Authentication\UserRepositoryInterface $userRepository;
 
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
+    private \Sulu\Component\DocumentManager\MetadataFactoryInterface $metadataFactory;
 
     public function __construct(
         PropertyEncoder $propertyEncoder,

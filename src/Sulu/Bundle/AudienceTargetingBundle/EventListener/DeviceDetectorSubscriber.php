@@ -18,10 +18,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class DeviceDetectorSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DeviceDetector
-     */
-    private $deviceDetector;
+    private \DeviceDetector\DeviceDetector $deviceDetector;
 
     public function __construct(DeviceDetector $deviceDetector)
     {

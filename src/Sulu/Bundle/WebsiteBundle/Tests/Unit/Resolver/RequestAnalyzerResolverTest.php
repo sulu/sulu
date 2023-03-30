@@ -26,20 +26,17 @@ class RequestAnalyzerResolverTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var RequestAnalyzerResolver
-     */
-    private $resolver;
+    private \Sulu\Bundle\WebsiteBundle\Resolver\RequestAnalyzerResolver $resolver;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ?ObjectProphecy $webspaceManager = null;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     protected function setUp(): void
     {

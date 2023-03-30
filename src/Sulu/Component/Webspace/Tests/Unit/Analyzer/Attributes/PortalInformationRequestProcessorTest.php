@@ -23,10 +23,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PortalInformationRequestProcessorTest extends TestCase
 {
-    /**
-     * @var PortalInformationRequestProcessor
-     */
-    private $portalInformationRequestProcessor;
+    private \Sulu\Component\Webspace\Analyzer\Attributes\PortalInformationRequestProcessor $portalInformationRequestProcessor;
 
     public function setUp(): void
     {

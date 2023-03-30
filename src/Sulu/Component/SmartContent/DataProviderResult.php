@@ -24,7 +24,7 @@ class DataProviderResult
     /**
      * @var ResourceItemInterface[]
      */
-    private $items;
+    private array $items;
 
     /**
      * @param bool $hasNextPage

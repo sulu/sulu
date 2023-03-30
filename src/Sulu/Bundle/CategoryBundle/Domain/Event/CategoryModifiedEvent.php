@@ -18,20 +18,14 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 
 class CategoryModifiedEvent extends DomainEvent
 {
-    /**
-     * @var CategoryInterface
-     */
-    private $category;
+    private \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface $category;
 
-    /**
-     * @var string
-     */
-    private $locale;
+    private string $locale;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

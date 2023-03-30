@@ -28,35 +28,17 @@ class CacheClearer implements CacheClearerInterface
      */
     private $kernelEnvironment;
 
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private \Symfony\Component\Filesystem\Filesystem $filesystem;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
-    /**
-     * @var string
-     */
-    private $varDir;
+    private string $varDir;
 
-    /**
-     * @var null|CacheManager
-     */
-    private $cacheManager;
+    private ?\Sulu\Bundle\HttpCacheBundle\Cache\CacheManager $cacheManager = null;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @var bool
-     */
-    private $tagsEnabled;
+    private bool $tagsEnabled;
 
     public function __construct(
         Filesystem $filesystem,

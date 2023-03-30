@@ -28,15 +28,9 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class UserProvider implements UserProviderInterface
 {
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
+    private \Sulu\Component\Security\Authentication\UserRepositoryInterface $userRepository;
 
-    /**
-     * @var SystemStoreInterface
-     */
-    private $systemStore;
+    private \Sulu\Bundle\SecurityBundle\System\SystemStoreInterface $systemStore;
 
     public function __construct(UserRepositoryInterface $userRepository, SystemStoreInterface $systemStore)
     {

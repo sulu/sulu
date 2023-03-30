@@ -22,10 +22,7 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
  */
 class SuluTestKernel extends SuluKernel
 {
-    /**
-     * @var string
-     */
-    private $projectDir;
+    private ?string $projectDir = null;
 
     public function __construct(string $environment, bool $debug, string $suluContext = SuluKernel::CONTEXT_ADMIN)
     {

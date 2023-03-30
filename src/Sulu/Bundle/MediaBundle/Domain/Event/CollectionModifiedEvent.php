@@ -19,20 +19,14 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 
 class CollectionModifiedEvent extends DomainEvent
 {
-    /**
-     * @var CollectionInterface
-     */
-    private $collection;
+    private \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $collection;
 
-    /**
-     * @var string
-     */
-    private $locale;
+    private string $locale;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

@@ -48,7 +48,7 @@ class MediaSelectionContainer implements ArrayableInterface
      *
      * @var Media[]
      */
-    private $data;
+    private ?array $data = null;
 
     /**
      * @Exclude

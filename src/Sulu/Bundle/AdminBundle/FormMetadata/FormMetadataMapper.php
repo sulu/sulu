@@ -34,10 +34,7 @@ use Sulu\Component\Content\Metadata\SectionMetadata as ContentSectionMetadata;
  */
 class FormMetadataMapper
 {
-    /**
-     * @var PropertyMetadataMapperRegistry
-     */
-    private $propertyMetadataMapperRegistry;
+    private \Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry $propertyMetadataMapperRegistry;
 
     public function __construct(PropertyMetadataMapperRegistry $propertyMetadataMapperRegistry)
     {

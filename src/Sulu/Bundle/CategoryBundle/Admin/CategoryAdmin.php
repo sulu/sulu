@@ -32,20 +32,11 @@ class CategoryAdmin extends Admin
 
     public const EDIT_FORM_VIEW = 'sulu_category.edit_form';
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
+    private \Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface $viewBuilderFactory;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
+    private \Sulu\Component\Localization\Manager\LocalizationManagerInterface $localizationManager;
 
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,

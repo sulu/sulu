@@ -24,30 +24,24 @@ use JMS\Serializer\Annotation\VirtualProperty;
 class RootCollection
 {
     /**
-     * @var string
-     *
      * @Expose
      */
-    private $id = 'root';
+    private string $id = 'root';
 
     /**
-     * @var string
-     *
      * @Expose
      */
-    private $title;
+    private string $title;
 
     /**
-     * @var bool
-     *
      * @Expose
      */
-    private $hasSub = true;
+    private bool $hasSub = true;
 
     /**
      * @var Collection[]
      */
-    private $collections;
+    private array $collections;
 
     public function __construct(string $title, array $collections)
     {

@@ -13,36 +13,24 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Compat;
 
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class StructureBridgeSerializationTest extends SuluTestCase
 {
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
+    private ?object $serializer = null;
 
     /**
      * @var PageDocument
      */
     private $contentDocument;
 
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
+    private ?object $contentMapper = null;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
     public function setUp(): void
     {

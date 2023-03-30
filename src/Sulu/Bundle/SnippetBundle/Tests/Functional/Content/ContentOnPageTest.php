@@ -17,7 +17,6 @@ use Sulu\Bundle\SnippetBundle\Tests\Functional\BaseFunctionalTestCase;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class ContentOnPageTest extends BaseFunctionalTestCase
 {
@@ -26,15 +25,9 @@ class ContentOnPageTest extends BaseFunctionalTestCase
      */
     protected $contentMapper;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var SnippetDocument
-     */
-    private $snippet1;
+    private ?object $snippet1 = null;
 
     /**
      * @var SnippetDocument

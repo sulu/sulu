@@ -21,14 +21,10 @@ use Sulu\Bundle\ContactBundle\Entity\SocialMediaProfileType;
 use Sulu\Bundle\ContactBundle\Entity\UrlType;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class AdminControllerTest extends SuluTestCase
 {
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

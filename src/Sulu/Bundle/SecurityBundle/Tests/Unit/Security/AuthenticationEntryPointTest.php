@@ -18,10 +18,7 @@ class AuthenticationEntryPointTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var AuthenticationEntryPoint
-     */
-    private $authenticationEntryPoint;
+    private \Sulu\Bundle\SecurityBundle\Security\AuthenticationEntryPoint $authenticationEntryPoint;
 
     public function setUp(): void
     {

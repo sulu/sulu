@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionType;
@@ -20,29 +19,16 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class ContactMediaControllerTest extends SuluTestCase
 {
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var Contact
-     */
-    private $contact;
+    private \Sulu\Bundle\ContactBundle\Entity\Contact $contact;
 
-    /**
-     * @var MediaType
-     */
-    private $imageType;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaType $imageType;
 
     /**
      * @var Collection

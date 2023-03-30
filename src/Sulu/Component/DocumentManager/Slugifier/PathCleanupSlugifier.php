@@ -16,10 +16,7 @@ use Symfony\Cmf\Api\Slugifier\SlugifierInterface;
 
 class PathCleanupSlugifier implements SlugifierInterface
 {
-    /**
-     * @var PathCleanupInterface
-     */
-    private $pathCleanup;
+    private \Sulu\Component\PHPCR\PathCleanupInterface $pathCleanup;
 
     public function __construct(PathCleanupInterface $pathCleanup)
     {

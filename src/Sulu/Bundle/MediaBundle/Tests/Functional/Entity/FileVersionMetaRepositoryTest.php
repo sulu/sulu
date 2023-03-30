@@ -27,27 +27,18 @@ class FileVersionMetaRepositoryTest extends SuluTestCase
     /**
      * @var FileVersionMetaRepository
      */
-    private $fileVersionMetaRepository;
+    private \Doctrine\ORM\EntityRepository $fileVersionMetaRepository;
 
     /**
      * @var EntityManager
      */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var MediaType
-     */
-    private $mediaType;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaType $mediaType;
 
-    /**
-     * @var Collection
-     */
-    private $collection;
+    private \Sulu\Bundle\MediaBundle\Entity\Collection $collection;
 
-    /**
-     * @var CollectionType
-     */
-    private $collectionType;
+    private \Sulu\Bundle\MediaBundle\Entity\CollectionType $collectionType;
 
     protected function setUp(): void
     {

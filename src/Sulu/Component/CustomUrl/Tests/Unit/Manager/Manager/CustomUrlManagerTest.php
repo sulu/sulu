@@ -46,32 +46,32 @@ class CustomUrlManagerTest extends TestCase
     /**
      * @var ObjectProphecy<DocumentManagerInterface>
      */
-    private $documentManager;
+    private ObjectProphecy $documentManager;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $documentInspector;
+    private ObjectProphecy $documentInspector;
 
     /**
      * @var ObjectProphecy<CustomUrlRepository>
      */
-    private $customUrlRepository;
+    private ObjectProphecy $customUrlRepository;
 
     /**
      * @var ObjectProphecy<MetadataFactoryInterface>
      */
-    private $metadataFactory;
+    private ObjectProphecy $metadataFactory;
 
     /**
      * @var ObjectProphecy<PathBuilder>
      */
-    private $pathBuilder;
+    private ObjectProphecy $pathBuilder;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var string
@@ -81,22 +81,19 @@ class CustomUrlManagerTest extends TestCase
     /**
      * @var ObjectProphecy<DocumentDomainEventCollectorInterface>
      */
-    private $documentDomainEventCollector;
+    private ObjectProphecy $documentDomainEventCollector;
 
     /**
      * @var PageDocument
      */
-    private $targetDocument;
+    private object $targetDocument;
 
     /**
      * @var ObjectProphecy<Metadata>
      */
-    private $metadata;
+    private ObjectProphecy $metadata;
 
-    /**
-     * @var CustomUrlManager
-     */
-    private $manager;
+    private \Sulu\Component\CustomUrl\Manager\CustomUrlManager $manager;
 
     protected function setUp(): void
     {

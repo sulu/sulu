@@ -11,29 +11,18 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Trash;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
-use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepositoryInterface;
 use Sulu\Bundle\WebsiteBundle\Trash\AnalyticsTrashItemHandler;
 
 class AnalyticsTrashItemHandlerTest extends SuluTestCase
 {
-    /**
-     * @var AnalyticsTrashItemHandler
-     */
-    private $analyticsTrashItemHandler;
+    private ?object $analyticsTrashItemHandler = null;
 
-    /**
-     * @var AnalyticsRepositoryInterface
-     */
-    private $analyticsRepository;
+    private ?object $analyticsRepository = null;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private ?\Doctrine\ORM\EntityManagerInterface $entityManager = null;
 
     public function setUp(): void
     {

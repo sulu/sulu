@@ -28,10 +28,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
 {
     use SecuredEntityRepositoryTrait;
 
-    /**
-     * @var AccessControlQueryEnhancer|null
-     */
-    private $accessControlQueryEnhancer;
+    private ?\Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer $accessControlQueryEnhancer = null;
 
     public function findMediaById($id, $asArray = false)
     {

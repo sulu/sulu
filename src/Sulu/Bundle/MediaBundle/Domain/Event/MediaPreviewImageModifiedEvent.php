@@ -19,20 +19,11 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class MediaPreviewImageModifiedEvent extends DomainEvent
 {
-    /**
-     * @var MediaInterface
-     */
-    private $media;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaInterface $media;
 
-    /**
-     * @var MediaInterface
-     */
-    private $newPreviewImage;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaInterface $newPreviewImage;
 
-    /**
-     * @var int|null
-     */
-    private $previousPreviewImageId;
+    private ?int $previousPreviewImageId = null;
 
     public function __construct(
         MediaInterface $media,

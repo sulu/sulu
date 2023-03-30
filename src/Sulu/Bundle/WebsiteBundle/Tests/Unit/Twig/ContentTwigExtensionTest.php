@@ -47,67 +47,64 @@ class ContentTwigExtensionTest extends TestCase
     /**
      * @var ObjectProphecy<StructureResolverInterface>
      */
-    private $structureResolver;
+    private ObjectProphecy $structureResolver;
 
     /**
      * @var ObjectProphecy<ContentMapperInterface>
      */
-    private $contentMapper;
+    private ObjectProphecy $contentMapper;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<SessionManagerInterface>
      */
-    private $sessionManager;
+    private ObjectProphecy $sessionManager;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $session;
+    private ObjectProphecy $session;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $parentNode;
+    private ObjectProphecy $parentNode;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $startPageNode;
+    private ObjectProphecy $startPageNode;
 
     /**
      * @var ObjectProphecy<LoggerInterface>
      */
-    private $logger;
+    private ObjectProphecy $logger;
 
-    /**
-     * @var ContentTwigExtension
-     */
-    private $extension;
+    private \Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension $extension;
 
     /**
      * @var ObjectProphecy<SecurityCheckerInterface>
      */
-    private $securityChecker;
+    private ObjectProphecy $securityChecker;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<Webspace>
      */
-    private $webspace;
+    private ObjectProphecy $webspace;
 
     protected function setUp(): void
     {

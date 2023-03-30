@@ -20,15 +20,9 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class ContactMediaAddedEvent extends DomainEvent
 {
-    /**
-     * @var ContactInterface
-     */
-    private $contact;
+    private \Sulu\Bundle\ContactBundle\Entity\ContactInterface $contact;
 
-    /**
-     * @var MediaInterface
-     */
-    private $media;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaInterface $media;
 
     public function __construct(
         ContactInterface $contact,

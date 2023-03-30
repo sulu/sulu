@@ -30,57 +30,28 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class ContentType extends ComplexContentType implements ContentTypeExportInterface
 {
-    /**
-     * @var TagManagerInterface
-     */
-    private $tagManager;
+    private \Sulu\Bundle\TagBundle\Tag\TagManagerInterface $tagManager;
 
-    /**
-     * @var DataProviderPoolInterface
-     */
-    private $dataProviderPool;
+    private \Sulu\Component\SmartContent\DataProviderPoolInterface $dataProviderPool;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
     /**
      * Contains cached values.
-     *
-     * @var array
      */
-    private $cache = [];
+    private array $cache = [];
 
-    /**
-     * @var TagRequestHandlerInterface
-     */
-    private $tagRequestHandler;
+    private \Sulu\Component\Tag\Request\TagRequestHandlerInterface $tagRequestHandler;
 
-    /**
-     * @var CategoryRequestHandlerInterface
-     */
-    private $categoryRequestHandler;
+    private \Sulu\Component\Category\Request\CategoryRequestHandlerInterface $categoryRequestHandler;
 
-    /**
-     * @var TargetGroupStoreInterface
-     */
-    private $targetGroupStore;
+    private ?\Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface $targetGroupStore = null;
 
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $tagReferenceStore;
+    private \Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface $tagReferenceStore;
 
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $categoryReferenceStore;
+    private \Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface $categoryReferenceStore;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
     public function __construct(
         DataProviderPoolInterface $dataProviderPool,

@@ -33,17 +33,14 @@ class XmlFormMetadataLoaderTest extends TestCase
     /**
      * @var ObjectProphecy<FormXmlLoader>
      */
-    private $formXmlLoader;
+    private ObjectProphecy $formXmlLoader;
 
     /**
      * @var ObjectProphecy<FieldMetadataValidatorInterface>
      */
-    private $fieldMetadataValidator;
+    private ObjectProphecy $fieldMetadataValidator;
 
-    /**
-     * @var XmlFormMetadataLoader
-     */
-    private $xmlFormMetadataLoader;
+    private \Sulu\Bundle\AdminBundle\Metadata\FormMetadata\XmlFormMetadataLoader $xmlFormMetadataLoader;
 
     protected function setUp(): void
     {

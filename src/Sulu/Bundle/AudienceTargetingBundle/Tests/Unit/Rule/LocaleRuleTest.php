@@ -26,22 +26,19 @@ class LocaleRuleTest extends TestCase
     /**
      * @var ObjectProphecy<Request>
      */
-    private $request;
+    private ObjectProphecy $request;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     /**
      * @var ObjectProphecy<TranslatorInterface>
      */
-    private $translator;
+    private ObjectProphecy $translator;
 
-    /**
-     * @var LocaleRule
-     */
-    private $localeRule;
+    private \Sulu\Bundle\AudienceTargetingBundle\Rule\LocaleRule $localeRule;
 
     public function setUp(): void
     {

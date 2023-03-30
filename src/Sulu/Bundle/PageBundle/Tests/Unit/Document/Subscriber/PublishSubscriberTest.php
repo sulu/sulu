@@ -41,32 +41,29 @@ class PublishSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $liveSession;
+    private ObjectProphecy $liveSession;
 
     /**
      * @var ObjectProphecy<NodeHelperInterface>
      */
-    private $nodeHelper;
+    private ObjectProphecy $nodeHelper;
 
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $propertyEncoder;
+    private ObjectProphecy $propertyEncoder;
 
     /**
      * @var ObjectProphecy<MetadataFactoryInterface>
      */
-    private $metadataFactory;
+    private ObjectProphecy $metadataFactory;
 
-    /**
-     * @var PublishSubscriber
-     */
-    private $publishSubscriber;
+    private \Sulu\Bundle\PageBundle\Document\Subscriber\PublishSubscriber $publishSubscriber;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     public function setUp(): void
     {

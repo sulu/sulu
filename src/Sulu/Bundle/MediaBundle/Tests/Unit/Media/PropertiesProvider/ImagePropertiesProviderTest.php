@@ -30,12 +30,9 @@ class ImagePropertiesProviderTest extends TestCase
     /**
      * @var ObjectProphecy<ImagineInterface>
      */
-    private $imagine;
+    private ObjectProphecy $imagine;
 
-    /**
-     * @var ImagePropertiesProvider
-     */
-    private $imagePropertiesProvider;
+    private \Sulu\Bundle\MediaBundle\Media\PropertiesProvider\ImagePropertiesProvider $imagePropertiesProvider;
 
     protected function setUp(): void
     {

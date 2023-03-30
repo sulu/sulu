@@ -23,15 +23,12 @@ class CacheManagerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var CacheManager
-     */
-    private $cacheManager;
+    private \Sulu\Bundle\HttpCacheBundle\Cache\CacheManager $cacheManager;
 
     /**
      * @var ObjectProphecy<FOSCacheManager>
      */
-    private $fosCacheManager;
+    private ObjectProphecy $fosCacheManager;
 
     public function setUp(): void
     {

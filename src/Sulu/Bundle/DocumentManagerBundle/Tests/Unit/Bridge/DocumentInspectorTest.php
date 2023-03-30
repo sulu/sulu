@@ -38,62 +38,56 @@ class DocumentInspectorTest extends TestCase
     /**
      * @var ObjectProphecy<DocumentRegistry>
      */
-    private $documentRegistry;
+    private ObjectProphecy $documentRegistry;
 
     /**
      * @var ObjectProphecy<PathSegmentRegistry>
      */
-    private $pathSegmentRegistry;
+    private ObjectProphecy $pathSegmentRegistry;
 
     /**
      * @var ObjectProphecy<NamespaceRegistry>
      */
-    private $namespaceRegistry;
+    private ObjectProphecy $namespaceRegistry;
 
-    /**
-     * @var \stdClass
-     */
-    private $document;
+    private \stdClass $document;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<MetadataFactoryInterface>
      */
-    private $metadataFactory;
+    private ObjectProphecy $metadataFactory;
 
     /**
      * @var ObjectProphecy<StructureMetadataFactoryInterface>
      */
-    private $structureMetadataFactory;
+    private ObjectProphecy $structureMetadataFactory;
 
     /**
      * @var ObjectProphecy<Metadata>
      */
-    private $metadata;
+    private ObjectProphecy $metadata;
 
     /**
      * @var ObjectProphecy<ProxyFactory>
      */
-    private $proxyFactory;
+    private ObjectProphecy $proxyFactory;
 
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $propertyEncoder;
+    private ObjectProphecy $propertyEncoder;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $documentInspector;
 
     public function setUp(): void
     {

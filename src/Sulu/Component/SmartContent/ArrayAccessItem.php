@@ -28,10 +28,7 @@ class ArrayAccessItem implements ResourceItemInterface, \ArrayAccess, \JsonSeria
      */
     private $id;
 
-    /**
-     * @var array
-     */
-    private $data = [];
+    private array $data = [];
 
     /**
      * @var object

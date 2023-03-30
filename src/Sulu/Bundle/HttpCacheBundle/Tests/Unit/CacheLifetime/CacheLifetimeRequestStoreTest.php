@@ -25,12 +25,9 @@ class CacheLifetimeRequestStoreTest extends TestCase
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
-    /**
-     * @var CacheLifetimeRequestStore
-     */
-    private $cacheLifetimeRequestStore;
+    private \Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeRequestStore $cacheLifetimeRequestStore;
 
     public function setUp(): void
     {

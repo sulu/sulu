@@ -14,15 +14,11 @@ namespace Sulu\Bundle\SearchBundle\Tests\Functional\Controller;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\DomCrawler\Crawler;
 
 class WebsiteSearchControllerTest extends SuluTestCase
 {
-    /**
-     * @var KernelBrowser
-     */
-    private $websiteClient;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $websiteClient;
 
     public static function setUpBeforeClass(): void
     {

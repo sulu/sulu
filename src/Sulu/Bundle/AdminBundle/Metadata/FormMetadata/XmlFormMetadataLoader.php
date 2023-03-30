@@ -21,30 +21,18 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerInterface
 {
-    /**
-     * @var FormXmlLoader
-     */
-    private $formXmlLoader;
+    private \Sulu\Bundle\AdminBundle\FormMetadata\FormXmlLoader $formXmlLoader;
 
-    /**
-     * @var FieldMetadataValidatorInterface
-     */
-    private $fieldMetadataValidator;
+    private \Sulu\Bundle\AdminBundle\Metadata\FormMetadata\Validation\FieldMetadataValidatorInterface $fieldMetadataValidator;
 
     /**
      * @var string[]
      */
-    private $formDirectories;
+    private array $formDirectories;
 
-    /**
-     * @var string
-     */
-    private $cacheDir;
+    private string $cacheDir;
 
-    /**
-     * @var bool
-     */
-    private $debug;
+    private bool $debug;
 
     public function __construct(
         FormXmlLoader $formXmlLoader,

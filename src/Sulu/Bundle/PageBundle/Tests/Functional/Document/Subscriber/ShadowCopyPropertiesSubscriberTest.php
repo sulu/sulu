@@ -11,23 +11,15 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Document\Subscriber;
 
-use PHPCR\SessionInterface;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class ShadowCopyPropertiesSubscriberTest extends SuluTestCase
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private ?object $session = null;
 
     /**
      * @var HomeDocument

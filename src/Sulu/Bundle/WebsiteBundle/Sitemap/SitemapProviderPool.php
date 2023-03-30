@@ -21,12 +21,12 @@ class SitemapProviderPool implements SitemapProviderPoolInterface
     /**
      * @var SitemapProviderInterface[]
      */
-    private $providers;
+    private ?array $providers = null;
 
     /**
      * @var Sitemap[]
      */
-    private $index;
+    private ?array $index = null;
 
     /**
      * @param SitemapProviderInterface[] $providers

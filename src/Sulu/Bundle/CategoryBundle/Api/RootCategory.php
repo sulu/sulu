@@ -16,20 +16,14 @@ use JMS\Serializer\Annotation\VirtualProperty;
 
 class RootCategory
 {
-    /**
-     * @var int
-     */
-    private $id = 'root';
+    private string $id = 'root';
 
-    /**
-     * @var string
-     */
-    private $title;
+    private string $title;
 
     /**
      * @var Category[]
      */
-    private $categories;
+    private array $categories;
 
     public function __construct(string $title, array $categories = [])
     {

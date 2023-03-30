@@ -40,7 +40,7 @@ class MediaType
      *
      * @Exclude
      */
-    private $media;
+    private \Doctrine\Common\Collections\ArrayCollection|array $media;
 
     /**
      * Constructor.

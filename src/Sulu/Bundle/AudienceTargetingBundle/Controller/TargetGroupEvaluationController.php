@@ -23,20 +23,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TargetGroupEvaluationController
 {
-    /**
-     * @var TargetGroupEvaluatorInterface
-     */
-    private $targetGroupEvaluator;
+    private \Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluatorInterface $targetGroupEvaluator;
 
-    /**
-     * @var TargetGroupRepositoryInterface
-     */
-    private $targetGroupRepository;
+    private \Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface $targetGroupRepository;
 
-    /**
-     * @var TargetGroupStoreInterface
-     */
-    private $targetGroupStore;
+    private \Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface $targetGroupStore;
 
     /**
      * @var string

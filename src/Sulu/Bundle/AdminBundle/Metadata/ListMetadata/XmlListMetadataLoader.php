@@ -16,15 +16,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class XmlListMetadataLoader implements ListMetadataLoaderInterface
 {
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
+    private \Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface $fieldDescriptorFactory;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
     public function __construct(
         FieldDescriptorFactoryInterface $fieldDescriptorFactory,

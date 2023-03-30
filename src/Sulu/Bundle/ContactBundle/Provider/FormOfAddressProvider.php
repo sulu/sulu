@@ -17,10 +17,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class FormOfAddressProvider implements FormOfAddressProviderInterface
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
     public function __construct(TranslatorInterface $translator)
     {

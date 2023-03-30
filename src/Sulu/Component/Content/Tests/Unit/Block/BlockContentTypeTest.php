@@ -22,7 +22,6 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
 use Sulu\Component\Content\Compat\Property;
-use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
@@ -36,55 +35,46 @@ class BlockContentTypeTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var BlockContentType
-     */
-    private $blockContentType;
+    private \Sulu\Component\Content\Types\BlockContentType $blockContentType;
 
-    /**
-     * @var PropertyInterface
-     */
-    private $blockProperty;
+    private ?\Sulu\Component\Content\Compat\Block\BlockProperty $blockProperty = null;
 
-    /**
-     * @var PropertyInterface
-     */
-    private $subBlockProperty;
+    private ?\Sulu\Component\Content\Compat\Block\BlockProperty $subBlockProperty = null;
 
     /**
      * @var ObjectProphecy<Node>
      */
-    private $node;
+    private ?ObjectProphecy $node = null;
 
     /**
      * @var ContentTypeManagerInterface
      */
-    private $contentTypeValueMap;
+    private array $contentTypeValueMap;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<TargetGroupStoreInterface>
      */
-    private $targetGroupStore;
+    private ObjectProphecy $targetGroupStore;
 
     /**
      * @var ObjectProphecy<ContentTypeManager>
      */
-    private $contentTypeManager;
+    private ObjectProphecy $contentTypeManager;
 
     /**
      * @var ObjectProphecy<BlockVisitorInterface>
      */
-    private $blockVisitor1;
+    private ObjectProphecy $blockVisitor1;
 
     /**
      * @var ObjectProphecy<BlockVisitorInterface>
      */
-    private $blockVisitor2;
+    private ObjectProphecy $blockVisitor2;
 
     protected function setUp(): void
     {

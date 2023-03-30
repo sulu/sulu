@@ -22,15 +22,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class WebsiteRequestProcessor implements RequestProcessorInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
+    private \Sulu\Component\Content\Mapper\ContentMapperInterface $contentMapper;
 
     /**
      * @var string

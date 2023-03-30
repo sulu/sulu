@@ -44,32 +44,29 @@ class WebspaceSerializeEventSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<WebspaceUrlProviderInterface>
      */
-    private $webspaceUrlProvider;
+    private ObjectProphecy $webspaceUrlProvider;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<ResourceLocatorStrategyPoolInterface>
      */
-    private $resourceLocatorStrategyPool;
+    private ObjectProphecy $resourceLocatorStrategyPool;
 
     /**
      * @var ObjectProphecy<AccessControlManagerInterface>
      */
-    private $accessControlManager;
+    private ObjectProphecy $accessControlManager;
 
     /**
      * @var ObjectProphecy<TokenStorageInterface>
      */
-    private $tokenStorage;
+    private ObjectProphecy $tokenStorage;
 
-    /**
-     * @var WebspaceSerializeEventSubscriber
-     */
-    private $webspaceSerializeEventSubscriber;
+    private \Sulu\Bundle\PageBundle\EventListener\WebspaceSerializeEventSubscriber $webspaceSerializeEventSubscriber;
 
     public function setUp(): void
     {

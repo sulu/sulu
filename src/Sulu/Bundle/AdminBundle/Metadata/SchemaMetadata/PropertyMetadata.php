@@ -13,20 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
 class PropertyMetadata
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var bool
-     */
-    private $mandatory;
+    private bool $mandatory;
 
-    /**
-     * @var SchemaMetadataInterface|null
-     */
-    private $schemaMetadata;
+    private ?\Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadataInterface $schemaMetadata = null;
 
     public function __construct(string $name, bool $mandatory, ?SchemaMetadataInterface $schemaMetadata = null)
     {

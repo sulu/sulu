@@ -41,35 +41,17 @@ class MediaAdmin extends Admin
 
     public const EDIT_FORM_HISTORY_VIEW = 'sulu_media.form.history';
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
+    private \Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface $viewBuilderFactory;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
+    private \Sulu\Component\Localization\Manager\LocalizationManagerInterface $localizationManager;
 
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
+    private \Symfony\Component\Routing\Generator\UrlGeneratorInterface $urlGenerator;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var ActivityViewBuilderFactoryInterface
-     */
-    private $activityViewBuilderFactory;
+    private \Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\View\ActivityViewBuilderFactoryInterface $activityViewBuilderFactory;
 
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,

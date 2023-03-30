@@ -11,94 +11,51 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Repository;
 
-use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\ItemNotFoundException;
-use PHPCR\SessionInterface;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
-use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Compat\LocalizationFinderInterface;
-use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Repository\Content;
 use Sulu\Component\Content\Repository\ContentRepository;
 use Sulu\Component\Content\Repository\Mapping\MappingBuilder;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\DocumentManager\PropertyEncoder;
 use Sulu\Component\HttpKernel\SuluKernel;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Sulu\Component\Util\SuluNodeHelper;
-use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 class ContentRepositoryTest extends SuluTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private ?object $session = null;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private ?object $sessionManager = null;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private ?object $em = null;
 
-    /**
-     * @var ContentRepository
-     */
-    private $contentRepository;
+    private \Sulu\Component\Content\Repository\ContentRepository $contentRepository;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private ?object $propertyEncoder = null;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private ?object $webspaceManager = null;
 
-    /**
-     * @var LocalizationFinderInterface
-     */
-    private $localizationFinder;
+    private ?object $localizationFinder = null;
 
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
+    private ?object $structureManager = null;
 
-    /**
-     * @var SuluNodeHelper
-     */
-    private $nodeHelper;
+    private ?object $nodeHelper = null;
 
     /**
      * @var HomeDocument
      */
-    private $homeDocument;
+    private object $homeDocument;
 
-    /**
-     * @var SystemStoreInterface
-     */
-    private $systemStore;
+    private ?object $systemStore = null;
 
     public function setUp(): void
     {

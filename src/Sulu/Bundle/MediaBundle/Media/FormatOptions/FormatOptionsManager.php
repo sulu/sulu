@@ -31,35 +31,20 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
  */
 class FormatOptionsManager implements FormatOptionsManagerInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var EntityRepository
-     */
-    private $formatOptionsRepository;
+    private \Doctrine\ORM\EntityRepository $formatOptionsRepository;
 
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
+    private \Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface $mediaManager;
 
-    /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
+    private \Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface $formatManager;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
     /**
      * @var array<string, mixed>
      */
-    private $formats;
+    private array $formats;
 
     /**
      * @param array<string, mixed> $formats

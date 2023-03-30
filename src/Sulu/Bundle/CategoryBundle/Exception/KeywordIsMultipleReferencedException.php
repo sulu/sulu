@@ -19,10 +19,7 @@ use Sulu\Component\Rest\Exception\RestException;
  */
 class KeywordIsMultipleReferencedException extends RestException
 {
-    /**
-     * @var KeywordInterface
-     */
-    private $keyword;
+    private \Sulu\Bundle\CategoryBundle\Entity\KeywordInterface $keyword;
 
     public function __construct(KeywordInterface $keyword)
     {

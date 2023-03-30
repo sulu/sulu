@@ -27,12 +27,9 @@ class ParameterRequestProcessorTest extends TestCase
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
-    /**
-     * @var ParameterRequestProcessor
-     */
-    private $parameterRequestProcessor;
+    private \Sulu\Component\Webspace\Analyzer\Attributes\ParameterRequestProcessor $parameterRequestProcessor;
 
     public function setUp(): void
     {

@@ -33,10 +33,7 @@ class UserBlameSubscriber implements EventSubscriber
 
     public const CREATOR_FIELD = 'creator';
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private ?\Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage = null;
 
     /**
      * @param TokenStorageInterface $tokenStorage

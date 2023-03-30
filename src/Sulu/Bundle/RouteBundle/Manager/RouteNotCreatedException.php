@@ -18,10 +18,7 @@ use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
  */
 class RouteNotCreatedException extends \Exception
 {
-    /**
-     * @var RoutableInterface
-     */
-    private $entity;
+    private \Sulu\Bundle\RouteBundle\Model\RoutableInterface $entity;
 
     public function __construct(RoutableInterface $entity)
     {

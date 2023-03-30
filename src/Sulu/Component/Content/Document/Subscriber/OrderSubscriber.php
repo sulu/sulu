@@ -28,15 +28,9 @@ class OrderSubscriber implements EventSubscriberInterface
 {
     public const FIELD = 'order';
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $documentInspector;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder $propertyEncoder;
 
     public function __construct(DocumentInspector $documentInspector, PropertyEncoder $propertyEncoder)
     {

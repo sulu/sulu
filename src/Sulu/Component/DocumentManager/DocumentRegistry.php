@@ -20,40 +20,22 @@ use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
  */
 class DocumentRegistry
 {
-    /**
-     * @var array
-     */
-    private $documentMap = [];
+    private array $documentMap = [];
 
-    /**
-     * @var array
-     */
-    private $documentNodeMap = [];
+    private array $documentNodeMap = [];
 
-    /**
-     * @var array
-     */
-    private $nodeMap = [];
+    private array $nodeMap = [];
 
-    /**
-     * @var array
-     */
-    private $nodeDocumentMap = [];
+    private array $nodeDocumentMap = [];
 
-    /**
-     * @var array
-     */
-    private $documentLocaleMap = [];
+    private array $documentLocaleMap = [];
 
     /**
      * @var string
      */
     private $defaultLocale;
 
-    /**
-     * @var array
-     */
-    private $hydrationState = [];
+    private array $hydrationState = [];
 
     /**
      * @param string $defaultLocale

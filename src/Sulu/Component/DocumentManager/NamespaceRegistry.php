@@ -18,7 +18,7 @@ use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
  */
 class NamespaceRegistry
 {
-    private $roleMap = [];
+    private array $roleMap = [];
 
     public function __construct(array $roleMap)
     {

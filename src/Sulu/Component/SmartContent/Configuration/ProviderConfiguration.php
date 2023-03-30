@@ -18,70 +18,40 @@ use Sulu\Component\Content\Compat\PropertyParameter;
  */
 class ProviderConfiguration implements ProviderConfigurationInterface
 {
-    /**
-     * @var string
-     */
-    private $datasourceResourceKey;
+    private ?string $datasourceResourceKey = null;
 
-    /**
-     * @var string
-     */
-    private $datasourceListKey;
+    private ?string $datasourceListKey = null;
 
-    /**
-     * @var string
-     */
-    private $datasourceAdapter;
+    private ?string $datasourceAdapter = null;
 
-    /**
-     * @var bool
-     */
-    private $audienceTargeting = false;
+    private bool $audienceTargeting = false;
 
-    /**
-     * @var bool
-     */
-    private $tags = false;
+    private bool $tags = false;
 
     /**
      * @var PropertyParameter[]
      */
-    private $types = [];
+    private array $types = [];
 
-    /**
-     * @var bool
-     */
-    private $categories = false;
+    private bool $categories = false;
 
     /**
      * @var PropertyParameter[]
      */
-    private $sorting = [];
+    private array $sorting = [];
 
-    /**
-     * @var bool
-     */
-    private $limit = false;
+    private bool $limit = false;
 
-    /**
-     * @var bool
-     */
-    private $presentAs = false;
+    private bool $presentAs = false;
 
-    /**
-     * @var bool
-     */
-    private $paginated = false;
+    private bool $paginated = false;
 
-    /**
-     * @var string|null
-     */
-    private $view;
+    private ?string $view = null;
 
     /**
      * @var array<string, string>|null
      */
-    private $resultToView;
+    private ?array $resultToView = null;
 
     public function hasDatasource(): bool
     {

@@ -28,32 +28,29 @@ class WorkspaceInitializerTest extends TestCase
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $session1;
+    private ObjectProphecy $session1;
 
     /**
      * @var ObjectProphecy<SessionInterface>
      */
-    private $session2;
+    private ObjectProphecy $session2;
 
     /**
      * @var ObjectProphecy<ConnectionRegistry>
      */
-    private $connectionRegistry;
+    private ObjectProphecy $connectionRegistry;
 
-    /**
-     * @var WorkspaceInitializer
-     */
-    private $initializer;
+    private \Sulu\Bundle\DocumentManagerBundle\Initializer\WorkspaceInitializer $initializer;
 
     /**
      * @var ObjectProphecy<WorkspaceInterface>
      */
-    private $workspace1;
+    private ObjectProphecy $workspace1;
 
     /**
      * @var ObjectProphecy<WorkspaceInterface>
      */
-    private $workspace2;
+    private ObjectProphecy $workspace2;
 
     public function setUp(): void
     {

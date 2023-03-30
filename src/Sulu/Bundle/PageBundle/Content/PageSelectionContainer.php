@@ -26,19 +26,15 @@ class PageSelectionContainer implements ArrayableInterface
      * The content mapper, which is needed for lazy loading.
      *
      * @Exclude
-     *
-     * @var ContentQueryExecutorInterface
      */
-    private $contentQueryExecutor;
+    private \Sulu\Component\Content\Query\ContentQueryExecutorInterface $contentQueryExecutor;
 
     /**
      * The content mapper, which is needed for lazy loading.
      *
      * @Exclude
-     *
-     * @var ContentQueryBuilderInterface
      */
-    private $contentQueryBuilder;
+    private \Sulu\Component\Content\Query\ContentQueryBuilderInterface $contentQueryBuilder;
 
     /**
      * The params to load.
@@ -89,10 +85,7 @@ class PageSelectionContainer implements ArrayableInterface
      */
     private $permission;
 
-    /**
-     * @var array
-     */
-    private $enabledTwigAttributes = [];
+    private array $enabledTwigAttributes = [];
 
     public function __construct(
         $ids,

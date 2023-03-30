@@ -23,10 +23,7 @@ class WebspaceReferenceStore implements ReferenceStoreInterface
         return \sprintf('%s-%s', self::WEBSPACE_REFERENCE_ALIAS, $webspaceKey);
     }
 
-    /**
-     * @var RequestAnalyzerInterface|null
-     */
-    private $requestAnalyzer;
+    private ?\Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer = null;
 
     public function __construct(?RequestAnalyzerInterface $requestAnalyzer = null)
     {

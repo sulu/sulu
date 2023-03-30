@@ -24,15 +24,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
 {
-    /**
-     * @var NormalizerInterface
-     */
-    private $decoratedNormalizer;
+    private \Symfony\Component\Serializer\Normalizer\NormalizerInterface $decoratedNormalizer;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
     public function __construct(
         NormalizerInterface $decoratedNormalizer,

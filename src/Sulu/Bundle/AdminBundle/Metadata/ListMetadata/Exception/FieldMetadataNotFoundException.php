@@ -13,10 +13,7 @@ namespace Sulu\Bundle\AdminBundle\Metadata\ListMetadata\Exception;
 
 class FieldMetadataNotFoundException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
     public function __construct(string $name)
     {

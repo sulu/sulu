@@ -30,12 +30,9 @@ class SecuritySubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<TokenStorageInterface>
      */
-    private $tokenStorage;
+    private ObjectProphecy $tokenStorage;
 
-    /**
-     * @var SecuritySubscriber
-     */
-    private $securitySubscriber;
+    private \Sulu\Bundle\DocumentManagerBundle\Document\Subscriber\SecuritySubscriber $securitySubscriber;
 
     public function setUp(): void
     {

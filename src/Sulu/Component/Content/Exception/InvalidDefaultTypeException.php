@@ -13,20 +13,14 @@ namespace Sulu\Component\Content\Exception;
 
 class InvalidDefaultTypeException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $defaultType;
+    private string $defaultType;
 
     /**
      * @var string[]
      */
-    private $availableTypes;
+    private array $availableTypes;
 
     /**
      * @param string[] $availableTypes

@@ -21,10 +21,7 @@ class ComponentConfiguration implements ComponentConfigurationInterface
      */
     private $component;
 
-    /**
-     * @var array
-     */
-    private $componentOptions;
+    private array $componentOptions;
 
     public function __construct($component, array $componentOptions)
     {

@@ -17,15 +17,12 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 
 class SnippetRestoredEvent extends DomainEvent
 {
-    /**
-     * @var SnippetDocument
-     */
-    private $snippetDocument;
+    private \Sulu\Bundle\SnippetBundle\Document\SnippetDocument $snippetDocument;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

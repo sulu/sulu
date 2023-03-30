@@ -40,10 +40,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 {
     use PersistenceExtensionTrait;
 
-    /**
-     * @var ExecutableFinder
-     */
-    private $executableFinder;
+    private \Symfony\Component\Process\ExecutableFinder $executableFinder;
 
     public function __construct(?ExecutableFinder $executableFinder = null)
     {

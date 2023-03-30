@@ -13,20 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata;
 
 class NumberMetadata implements SchemaMetadataInterface
 {
-    /**
-     * @var float|null
-     */
-    private $minimum;
+    private ?float $minimum = null;
 
-    /**
-     * @var float|null
-     */
-    private $maximum;
+    private ?float $maximum = null;
 
-    /**
-     * @var float|null
-     */
-    private $multipleOf;
+    private ?float $multipleOf = null;
 
     public function __construct(
         ?float $minimum = null,

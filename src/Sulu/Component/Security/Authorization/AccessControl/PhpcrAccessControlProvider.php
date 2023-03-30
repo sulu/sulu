@@ -21,20 +21,11 @@ use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
  */
 class PhpcrAccessControlProvider implements AccessControlProviderInterface
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
+    private \Sulu\Component\Security\Authentication\RoleRepositoryInterface $roleRepository;
 
-    /**
-     * @var array
-     */
-    private $permissions;
+    private array $permissions;
 
     public function __construct(
         DocumentManagerInterface $documentManager,

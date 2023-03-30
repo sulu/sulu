@@ -17,15 +17,12 @@ use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
 
 class ContactTitleModifiedEvent extends DomainEvent
 {
-    /**
-     * @var ContactTitle
-     */
-    private $contactTitle;
+    private \Sulu\Bundle\ContactBundle\Entity\ContactTitle $contactTitle;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

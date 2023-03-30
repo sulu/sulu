@@ -25,7 +25,7 @@ class RequestParametersTraitTest extends TestCase
     /**
      * @var RequestParametersTrait
      */
-    private $requestParametersTrait;
+    private object $requestParametersTrait;
 
     public function setUp(): void
     {

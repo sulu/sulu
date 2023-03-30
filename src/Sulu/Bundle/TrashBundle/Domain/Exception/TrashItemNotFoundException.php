@@ -18,7 +18,7 @@ class TrashItemNotFoundException extends \Exception
     /**
      * @var mixed[]
      */
-    private $criteria;
+    private array $criteria;
 
     /**
      * @param mixed[] $criteria

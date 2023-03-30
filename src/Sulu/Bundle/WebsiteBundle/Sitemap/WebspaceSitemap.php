@@ -17,25 +17,13 @@ namespace Sulu\Bundle\WebsiteBundle\Sitemap;
  */
 class WebspaceSitemap implements WebspaceSitemapInterface
 {
-    /**
-     * @var array
-     */
-    private $localizations;
+    private ?array $localizations = null;
 
-    /**
-     * @var string
-     */
-    private $defaultLocalization;
+    private ?string $defaultLocalization = null;
 
-    /**
-     * @var string
-     */
-    private $webspaceKey;
+    private ?string $webspaceKey = null;
 
-    /**
-     * @var array
-     */
-    private $sitemap = [];
+    private array $sitemap = [];
 
     public function getWebspaceKey()
     {

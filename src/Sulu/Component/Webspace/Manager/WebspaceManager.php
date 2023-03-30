@@ -31,55 +31,31 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class WebspaceManager implements WebspaceManagerInterface
 {
-    /**
-     * @var WebspaceCollection
-     */
-    private $webspaceCollection;
+    private ?\Sulu\Component\Webspace\Manager\WebspaceCollection $webspaceCollection = null;
 
-    /**
-     * @var LoaderInterface
-     */
-    private $loader;
+    private \Symfony\Component\Config\Loader\LoaderInterface $loader;
 
-    /**
-     * @var ReplacerInterface
-     */
-    private $urlReplacer;
+    private \Sulu\Component\Webspace\Url\ReplacerInterface $urlReplacer;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
     /**
      * @var array
      */
     private $options;
 
-    /**
-     * @var string
-     */
-    private $environment;
+    private string $environment;
 
-    /**
-     * @var string
-     */
-    private $defaultHost;
+    private string $defaultHost;
 
-    /**
-     * @var string
-     */
-    private $defaultScheme;
+    private string $defaultScheme;
 
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $structureMetadataFactory;
+    private \Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface $structureMetadataFactory;
 
     /**
      * @var mixed[]
      */
-    private $portalUrlCache = [];
+    private array $portalUrlCache = [];
 
     public function __construct(
         LoaderInterface $loader,

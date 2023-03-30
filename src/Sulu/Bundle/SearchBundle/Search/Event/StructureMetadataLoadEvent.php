@@ -23,17 +23,13 @@ class StructureMetadataLoadEvent extends Event
 {
     /**
      * The structure, which has been loaded for indexing.
-     *
-     * @var StructureInterface
      */
-    private $structure;
+    private \Sulu\Component\Content\Compat\StructureInterface $structure;
 
     /**
      * The metadata based on which the data has been loaded.
-     *
-     * @var IndexMetadata
      */
-    private $indexMetadata;
+    private \Massive\Bundle\SearchBundle\Search\Metadata\IndexMetadata $indexMetadata;
 
     public function __construct(StructureInterface $structure, IndexMetadata $indexMetadata)
     {

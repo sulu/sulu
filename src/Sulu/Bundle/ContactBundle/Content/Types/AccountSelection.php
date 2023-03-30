@@ -25,10 +25,7 @@ class AccountSelection extends SimpleContentType implements PreResolvableContent
      */
     protected $accountManager;
 
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $accountReferenceStore;
+    private \Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface $accountReferenceStore;
 
     public function __construct(
         AccountManager $accountManager,

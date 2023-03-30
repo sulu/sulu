@@ -24,7 +24,7 @@ class TagCreatedEventTest extends TestCase
     /**
      * @var ObjectProphecy<TagInterface>
      */
-    private $tag;
+    private ObjectProphecy $tag;
 
     public function setUp(): void
     {

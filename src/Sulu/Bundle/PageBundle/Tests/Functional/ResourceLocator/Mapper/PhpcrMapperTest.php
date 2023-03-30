@@ -12,16 +12,12 @@
 namespace Sulu\Bundle\PageBundle\Tests\Functional\ResourceLocator\Mapper;
 
 use PHPCR\SessionInterface;
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Content\Types\ResourceLocator\Mapper\PhpcrMapper;
 use Sulu\Component\Content\Types\ResourceLocator\Mapper\ResourceLocatorMapperInterface;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
 
 class PhpcrMapperTest extends SuluTestCase
 {
@@ -38,37 +34,19 @@ class PhpcrMapperTest extends SuluTestCase
     /**
      * @var ResourceLocatorMapperInterface
      */
-    private $phpcrMapper;
+    private \Sulu\Component\Content\Types\ResourceLocator\Mapper\PhpcrMapper $phpcrMapper;
 
-    /**
-     * @var ContentMapperInterface
-     */
-    private $mapper;
+    private ?object $mapper = null;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
+    private ?object $documentInspector = null;
 
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
+    private ?object $defaultSession = null;
 
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
+    private ?object $liveSession = null;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private ?object $sessionManager = null;
 
     /**
      * @var HomeDocument

@@ -13,7 +13,6 @@ namespace Sulu\Bundle\CustomUrlBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class CustomUrlRouteControllerTest extends SuluTestCase
 {
@@ -22,10 +21,7 @@ class CustomUrlRouteControllerTest extends SuluTestCase
      */
     private $contentDocument;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

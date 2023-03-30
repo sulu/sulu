@@ -22,7 +22,6 @@ use Sulu\Bundle\MediaBundle\Tests\Application\SecuredKernel;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
@@ -31,10 +30,7 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
  */
 class MediaStreamControllerWebsiteSecuredTest extends WebsiteTestCase
 {
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     protected static function getKernelClass(): string
     {

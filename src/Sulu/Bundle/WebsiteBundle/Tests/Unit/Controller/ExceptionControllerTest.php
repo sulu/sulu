@@ -31,30 +31,27 @@ class ExceptionControllerTest extends TestCase
      */
     private $exceptionController;
 
-    /**
-     * @var BaseExceptionController
-     */
-    private $innerExceptionController;
+    private BaseExceptionController $innerExceptionController;
 
     /**
      * @var ObjectProphecy<Environment>
      */
-    private $twig;
+    private ObjectProphecy $twig;
 
     /**
      * @var ObjectProphecy<FilesystemLoader>
      */
-    private $loader;
+    private ObjectProphecy $loader;
 
     /**
      * @var ObjectProphecy<ParameterResolverInterface>
      */
-    private $parameterResolver;
+    private ObjectProphecy $parameterResolver;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     public function setUp(): void
     {

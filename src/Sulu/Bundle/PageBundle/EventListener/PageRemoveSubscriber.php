@@ -35,30 +35,18 @@ class PageRemoveSubscriber implements EventSubscriberInterface
 {
     public const FORCE_REMOVE_CHILDREN_OPTION = 'force_remove_children';
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private \Sulu\Component\PHPCR\SessionManager\SessionManagerInterface $sessionManager;
 
-    /**
-     * @var AccessControlRepositoryInterface
-     */
-    private $accessControlRepository;
+    private \Sulu\Component\Security\Authorization\AccessControl\AccessControlRepositoryInterface $accessControlRepository;
 
-    /**
-     * @var SystemStoreInterface
-     */
-    private $systemStore;
+    private \Sulu\Bundle\SecurityBundle\System\SystemStoreInterface $systemStore;
 
-    /**
-     * @var Security|null
-     */
-    private $security;
+    private ?\Symfony\Component\Security\Core\Security $security = null;
 
     /**
      * @var array<string, int>
      */
-    private $permissions;
+    private array $permissions;
 
     /**
      * @param array<string, int> $permissions

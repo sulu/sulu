@@ -23,15 +23,12 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ShadowCopyPropertiesSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\Content\Document\Subscriber\ShadowCopyPropertiesSubscriber $subscriber;
 
     /**
      * @var ObjectProphecy<TestShadowDocumentInterface>
      */
-    private $document;
+    private ObjectProphecy $document;
 
     public function setUp(): void
     {

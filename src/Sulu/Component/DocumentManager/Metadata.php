@@ -33,25 +33,13 @@ class Metadata
      */
     private $formType;
 
-    /**
-     * @var \ReflectionClass
-     */
-    private $reflection;
+    private ?\ReflectionClass $reflection = null;
 
-    /**
-     * @var array
-     */
-    private $fieldMappings = [];
+    private array $fieldMappings = [];
 
-    /**
-     * @var bool
-     */
-    private $syncRemoveLive = true;
+    private bool $syncRemoveLive = true;
 
-    /**
-     * @var bool
-     */
-    private $setDefaultAuthor = true;
+    private bool $setDefaultAuthor = true;
 
     /**
      * Add a field mapping for field with given name, for example.

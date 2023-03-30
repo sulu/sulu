@@ -26,25 +26,13 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class FallbackLocalizationSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
+    private \Sulu\Component\DocumentManager\PropertyEncoder $encoder;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
+    private \Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector $inspector;
 
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
+    private \Sulu\Component\DocumentManager\DocumentRegistry $documentRegistry;
 
-    /**
-     * @var LocalizationFinderInterface
-     */
-    private $localizationFinder;
+    private \Sulu\Component\Content\Compat\LocalizationFinderInterface $localizationFinder;
 
     public function __construct(
         PropertyEncoder $encoder,

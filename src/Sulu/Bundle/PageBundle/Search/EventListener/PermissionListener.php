@@ -23,15 +23,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class PermissionListener implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var SearchManagerInterface
-     */
-    private $searchManager;
+    private \Massive\Bundle\SearchBundle\Search\SearchManagerInterface $searchManager;
 
     public function __construct(DocumentManagerInterface $documentManager, SearchManagerInterface $searchManager)
     {

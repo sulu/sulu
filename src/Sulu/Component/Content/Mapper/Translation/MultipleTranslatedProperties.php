@@ -24,22 +24,19 @@ class MultipleTranslatedProperties
     /**
      * @var PropertyInterface[]
      */
-    private $properties = [];
+    private array $properties = [];
 
     /**
      * @var PropertyInterface[]
      */
-    private $translatedProperties;
+    private ?array $translatedProperties = null;
 
     /**
      * @var string
      */
     private $languageNamespace;
 
-    /**
-     * @var string
-     */
-    private $structureType = Structure::TYPE_PAGE;
+    private string $structureType = Structure::TYPE_PAGE;
 
     public function __construct(
         $names,

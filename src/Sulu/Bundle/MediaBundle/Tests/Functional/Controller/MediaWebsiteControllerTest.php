@@ -22,34 +22,21 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class MediaWebsiteControllerTest extends WebsiteTestCase
 {
     /**
      * @var EntityManager
      */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var CollectionType
-     */
-    private $collectionType;
+    private ?\Sulu\Bundle\MediaBundle\Entity\CollectionType $collectionType = null;
 
-    /**
-     * @var Collection
-     */
-    private $collection;
+    private ?\Sulu\Bundle\MediaBundle\Entity\Collection $collection = null;
 
-    /**
-     * @var CollectionMeta
-     */
-    private $collectionMeta;
+    private ?\Sulu\Bundle\MediaBundle\Entity\CollectionMeta $collectionMeta = null;
 
-    /**
-     * @var MediaType
-     */
-    private $imageType;
+    private ?\Sulu\Bundle\MediaBundle\Entity\MediaType $imageType = null;
 
     /**
      * @var CategoryInterface
@@ -71,10 +58,7 @@ class MediaWebsiteControllerTest extends WebsiteTestCase
      */
     protected $mediaDefaultDescription = 'description';
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

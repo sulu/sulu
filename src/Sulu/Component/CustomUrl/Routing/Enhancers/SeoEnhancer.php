@@ -21,10 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SeoEnhancer extends AbstractEnhancer
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
     public function __construct(WebspaceManagerInterface $webspaceManager)
     {

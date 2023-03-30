@@ -19,15 +19,9 @@ use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 
 class CategoryKeywordAddedEvent extends DomainEvent
 {
-    /**
-     * @var CategoryInterface
-     */
-    private $category;
+    private \Sulu\Bundle\CategoryBundle\Entity\CategoryInterface $category;
 
-    /**
-     * @var KeywordInterface
-     */
-    private $keyword;
+    private \Sulu\Bundle\CategoryBundle\Entity\KeywordInterface $keyword;
 
     public function __construct(
         CategoryInterface $category,

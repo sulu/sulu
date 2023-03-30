@@ -27,15 +27,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class QuerySubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var SessionInterface
-     */
-    private $session;
+    private \PHPCR\SessionInterface $session;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
     public function __construct(SessionInterface $session, EventDispatcherInterface $eventDispatcher)
     {

@@ -16,10 +16,7 @@ use Sulu\Component\Rest\DoctrineRestHelper;
 
 class DoctrineRestHelperTest extends TestCase
 {
-    /**
-     * @var DoctrineRestHelper
-     */
-    private $restHelper;
+    private \Sulu\Component\Rest\DoctrineRestHelper $restHelper;
 
     /**
      * @var \PHPUnit\Framework\MockObject_MockObject

@@ -36,25 +36,13 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class SingleMediaSelection extends SimpleContentType implements PreResolvableContentTypeInterface, PropertyMetadataMapperInterface
 {
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
+    private \Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface $mediaManager;
 
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $mediaReferenceStore;
+    private \Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface $mediaReferenceStore;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var ?SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private ?\Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker = null;
 
     public function __construct(
         MediaManagerInterface $mediaManager,

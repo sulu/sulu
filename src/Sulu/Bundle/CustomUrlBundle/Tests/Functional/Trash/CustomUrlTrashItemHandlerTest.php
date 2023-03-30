@@ -11,30 +11,18 @@
 
 namespace Sulu\Bundle\CustomUrlBundle\Tests\Functional\Trash;
 
-use Sulu\Bundle\CustomUrlBundle\Trash\CustomUrlTrashItemHandler;
 use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 use Sulu\Component\DocumentManager\Document\UnknownDocument;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\DocumentManager\PathBuilder;
 
 class CustomUrlTrashItemHandlerTest extends SuluTestCase
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var CustomUrlTrashItemHandler
-     */
-    private $customUrlTrashItemHandler;
+    private ?object $customUrlTrashItemHandler = null;
 
-    /**
-     * @var PathBuilder
-     */
-    private $pathBuilder;
+    private ?object $pathBuilder = null;
 
     public function setUp(): void
     {

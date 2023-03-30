@@ -16,10 +16,7 @@ use Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistry;
 
 class FieldTypeOptionRegistryTest extends TestCase
 {
-    /**
-     * @var FieldTypeOptionRegistry
-     */
-    private $fieldTypeOptionRegistry;
+    private \Sulu\Bundle\AdminBundle\FieldType\FieldTypeOptionRegistry $fieldTypeOptionRegistry;
 
     public function setUp(): void
     {

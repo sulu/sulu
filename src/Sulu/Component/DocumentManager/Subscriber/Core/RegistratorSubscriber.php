@@ -29,10 +29,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class RegistratorSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
+    private \Sulu\Component\DocumentManager\DocumentRegistry $documentRegistry;
 
     public function __construct(
         DocumentRegistry $documentRegistry

@@ -57,45 +57,21 @@ class CollectionController extends AbstractRestController implements ClassResour
      */
     protected static $entityKey = CollectionInterface::RESOURCE_KEY;
 
-    /**
-     * @var ListRestHelperInterface
-     */
-    private $listRestHelper;
+    private \Sulu\Component\Rest\ListBuilder\ListRestHelperInterface $listRestHelper;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
-    /**
-     * @var SystemCollectionManagerInterface
-     */
-    private $systemCollectionManager;
+    private \Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface $systemCollectionManager;
 
-    /**
-     * @var CollectionManagerInterface
-     */
-    private $collectionManager;
+    private \Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface $collectionManager;
 
-    /**
-     * @var array
-     */
-    private $defaultCollectionType;
+    private array $defaultCollectionType;
 
-    /**
-     * @var array
-     */
-    private $permissions;
+    private array $permissions;
 
-    /**
-     * @var string
-     */
-    private $collectionClass;
+    private ?string $collectionClass = null;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

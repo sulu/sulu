@@ -17,10 +17,7 @@ use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
 
 class TargetGroupBlockVisitor implements BlockVisitorInterface
 {
-    /**
-     * @var TargetGroupStoreInterface
-     */
-    private $targetGroupStore;
+    private \Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface $targetGroupStore;
 
     public function __construct(TargetGroupStoreInterface $targetGroupStore)
     {

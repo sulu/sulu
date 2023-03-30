@@ -20,10 +20,7 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
  */
 class StructureWarmer implements CacheWarmerInterface
 {
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
+    private \Sulu\Component\Content\Compat\StructureManagerInterface $structureManager;
 
     public function __construct(StructureManagerInterface $structureManager)
     {

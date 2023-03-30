@@ -19,25 +19,13 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 
 class CollectionMovedEvent extends DomainEvent
 {
-    /**
-     * @var CollectionInterface
-     */
-    private $collection;
+    private \Sulu\Bundle\MediaBundle\Entity\CollectionInterface $collection;
 
-    /**
-     * @var int|null
-     */
-    private $previousParentId;
+    private ?int $previousParentId = null;
 
-    /**
-     * @var string|null
-     */
-    private $previousParentTitle;
+    private ?string $previousParentTitle = null;
 
-    /**
-     * @var string|null
-     */
-    private $previousParentTitleLocale;
+    private ?string $previousParentTitleLocale = null;
 
     public function __construct(
         CollectionInterface $collection,

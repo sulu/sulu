@@ -19,20 +19,14 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class MediaModifiedEvent extends DomainEvent
 {
-    /**
-     * @var MediaInterface
-     */
-    private $media;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaInterface $media;
 
-    /**
-     * @var string
-     */
-    private $locale;
+    private string $locale;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

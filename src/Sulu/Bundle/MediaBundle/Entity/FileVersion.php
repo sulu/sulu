@@ -38,10 +38,7 @@ class FileVersion implements AuditableInterface
      */
     private $version;
 
-    /**
-     * @var int
-     */
-    private $subVersion = 0;
+    private int $subVersion = 0;
 
     /**
      * @var int
@@ -53,15 +50,9 @@ class FileVersion implements AuditableInterface
      */
     private $mimeType;
 
-    /**
-     * @var string|null
-     */
-    private $storageOptions;
+    private ?string $storageOptions = null;
 
-    /**
-     * @var int
-     */
-    private $downloadCounter = 0;
+    private int $downloadCounter = 0;
 
     /**
      * @var int
@@ -71,54 +62,49 @@ class FileVersion implements AuditableInterface
     /**
      * @var DoctrineCollection<int, FileVersionContentLanguage>
      */
-    private $contentLanguages;
+    private \Doctrine\Common\Collections\ArrayCollection|array $contentLanguages;
 
     /**
      * @var DoctrineCollection<int, FileVersionPublishLanguage>
      */
-    private $publishLanguages;
+    private \Doctrine\Common\Collections\ArrayCollection|array $publishLanguages;
 
     /**
      * @var DoctrineCollection<int, FileVersionMeta>
      */
-    private $meta;
+    private \Doctrine\Common\Collections\ArrayCollection|array $meta;
 
     /**
      * @var DoctrineCollection<string, FormatOptions>
      */
-    private $formatOptions;
+    private \Doctrine\Common\Collections\ArrayCollection|array $formatOptions;
 
     /**
-     * @var File
-     *
      * @Exclude
      */
-    private $file;
+    private ?\Sulu\Bundle\MediaBundle\Entity\File $file = null;
 
     /**
      * @var DoctrineCollection<int, TagInterface>
      */
-    private $tags;
+    private \Doctrine\Common\Collections\ArrayCollection|array $tags;
 
-    /**
-     * @var FileVersionMeta
-     */
-    private $defaultMeta;
+    private ?\Sulu\Bundle\MediaBundle\Entity\FileVersionMeta $defaultMeta = null;
 
     /**
      * @var string|null
      */
-    private $properties = '{}';
+    private string $properties = '{}';
 
     /**
      * @var DoctrineCollection<int, CategoryInterface>
      */
-    private $categories;
+    private \Doctrine\Common\Collections\ArrayCollection|array $categories;
 
     /**
      * @var DoctrineCollection<int, TargetGroupInterface>
      */
-    private $targetGroups;
+    private \Doctrine\Common\Collections\ArrayCollection|array $targetGroups;
 
     /**
      * @var int|null

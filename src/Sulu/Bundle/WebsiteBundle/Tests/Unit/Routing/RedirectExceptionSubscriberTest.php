@@ -41,47 +41,41 @@ class RedirectExceptionSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<RequestMatcherInterface>
      */
-    private $router;
+    private ObjectProphecy $router;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<DefaultLocaleProviderInterface>
      */
-    private $defaultLocaleProvider;
+    private ObjectProphecy $defaultLocaleProvider;
 
     /**
      * @var ObjectProphecy<ReplacerInterface>
      */
-    private $urlReplacer;
+    private ObjectProphecy $urlReplacer;
 
-    /**
-     * @var RedirectExceptionSubscriber
-     */
-    private $exceptionListener;
+    private \Sulu\Bundle\WebsiteBundle\EventListener\RedirectExceptionSubscriber $exceptionListener;
 
     /**
      * @var ObjectProphecy<RequestAttributes>
      */
-    private $attributes;
+    private ObjectProphecy $attributes;
 
     /**
      * @var ObjectProphecy<Request>
      */
-    private $request;
+    private ObjectProphecy $request;
 
-    /**
-     * @var ExceptionEvent
-     */
-    private $event;
+    private \Symfony\Component\HttpKernel\Event\ExceptionEvent $event;
 
     /**
      * @var ObjectProphecy<HttpKernelInterface>
      */
-    private $kernel;
+    private ObjectProphecy $kernel;
 
     protected function setUp(): void
     {

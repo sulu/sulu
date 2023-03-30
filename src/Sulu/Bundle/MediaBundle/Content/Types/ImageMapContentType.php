@@ -26,10 +26,7 @@ use Sulu\Component\Content\PreResolvableContentTypeInterface;
 
 class ImageMapContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
-    /**
-     * @var ContentTypeManagerInterface
-     */
-    private $contentTypeManager;
+    private \Sulu\Component\Content\ContentTypeManagerInterface $contentTypeManager;
 
     public function __construct(ContentTypeManagerInterface $contentTypeManager)
     {

@@ -17,28 +17,22 @@ use JMS\Serializer\Annotation\Groups;
 class Badge
 {
     /**
-     * @var string
-     *
      * @Expose()
      * @Groups({"fullView"})
      */
-    private $routeName;
+    private string $routeName;
 
     /**
-     * @var string|null
-     *
      * @Expose()
      * @Groups({"fullView"})
      */
-    private $dataPath;
+    private ?string $dataPath = null;
 
     /**
-     * @var string|null
-     *
      * @Expose()
      * @Groups({"fullView"})
      */
-    private $visibleCondition;
+    private ?string $visibleCondition = null;
 
     /**
      * @var array<string, mixed>
@@ -46,7 +40,7 @@ class Badge
      * @Expose()
      * @Groups({"fullView"})
      */
-    private $requestParameters = [];
+    private array $requestParameters = [];
 
     /**
      * @var array<string, mixed>
@@ -54,7 +48,7 @@ class Badge
      * @Expose()
      * @Groups({"fullView"})
      */
-    private $routerAttributesToRequest = [];
+    private array $routerAttributesToRequest = [];
 
     public function __construct(string $routeName, ?string $dataPath = null, ?string $visibleCondition = null)
     {

@@ -25,17 +25,14 @@ class DeviceTypeRuleTest extends TestCase
     /**
      * @var ObjectProphecy<DeviceDetector>
      */
-    private $deviceDetector;
+    private ObjectProphecy $deviceDetector;
 
     /**
      * @var ObjectProphecy<TranslatorInterface>
      */
-    private $translator;
+    private ObjectProphecy $translator;
 
-    /**
-     * @var DeviceTypeRule
-     */
-    private $deviceTypeRule;
+    private \Sulu\Bundle\AudienceTargetingBundle\Rule\DeviceTypeRule $deviceTypeRule;
 
     public function setUp(): void
     {

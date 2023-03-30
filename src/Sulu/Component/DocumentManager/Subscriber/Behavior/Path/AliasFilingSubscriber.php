@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\DocumentManager\Subscriber\Behavior\Path;
 
-use Doctrine\Inflector\Inflector;
 use Doctrine\Inflector\InflectorFactory;
 use PHPCR\SessionInterface;
 use Sulu\Component\DocumentManager\Behavior\Path\AliasFilingBehavior;
@@ -24,15 +23,9 @@ use Sulu\Component\DocumentManager\MetadataFactoryInterface;
  */
 class AliasFilingSubscriber extends AbstractFilingSubscriber
 {
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
+    private \Sulu\Component\DocumentManager\MetadataFactoryInterface $metadataFactory;
 
-    /**
-     * @var Inflector
-     */
-    private $inflector;
+    private \Doctrine\Inflector\Inflector $inflector;
 
     public function __construct(
         SessionInterface $defaultSession,

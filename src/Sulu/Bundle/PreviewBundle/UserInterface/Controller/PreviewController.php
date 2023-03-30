@@ -25,20 +25,11 @@ class PreviewController
 {
     use RequestParametersTrait;
 
-    /**
-     * @var PreviewInterface
-     */
-    private $preview;
+    private \Sulu\Bundle\PreviewBundle\Preview\PreviewInterface $preview;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage;
 
-    /**
-     * @var Profiler|null
-     */
-    private $profiler;
+    private ?\Symfony\Component\HttpKernel\Profiler\Profiler $profiler = null;
 
     public function __construct(
         PreviewInterface $preview,

@@ -23,60 +23,46 @@ use JMS\Serializer\Annotation\Groups;
 class View
 {
     /**
-     * @var string
-     *
      * @Expose()
      * @Groups({"fullView"})
      */
-    private $name;
+    private string $name;
 
     /**
-     * @var string
-     *
      * @Expose()
      * @Groups({"fullView"})
      */
-    private $type;
+    private string $type;
 
     /**
-     * @var string
-     *
      * @Expose()
      * @Groups({"fullView"})
      */
-    private $path;
+    private string $path;
 
     /**
-     * @var array
-     *
      * @Expose()
      * @Groups({"fullView"})
      */
-    private $options = [];
+    private array $options = [];
 
     /**
-     * @var array
-     *
      * @Expose()
      * @Groups({"fullView"})
      */
-    private $attributeDefaults = [];
+    private array $attributeDefaults = [];
 
     /**
-     * @var string
-     *
      * @Expose()
      * @Groups({"fullView"})
      */
-    private $parent;
+    private ?string $parent = null;
 
     /**
-     * @var array
-     *
      * @Expose()
      * @Groups({"fullView"})
      */
-    private $rerenderAttributes;
+    private ?array $rerenderAttributes = null;
 
     public function __construct(string $name, string $path, string $type)
     {

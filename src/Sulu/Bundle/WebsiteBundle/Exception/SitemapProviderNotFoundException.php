@@ -24,7 +24,7 @@ class SitemapProviderNotFoundException extends \Exception
     /**
      * @var string[]
      */
-    private $available;
+    private array $available;
 
     /**
      * @param string $requested

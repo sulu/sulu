@@ -21,12 +21,9 @@ class PathCleanupTest extends TestCase
     /**
      * @var PathCleanupInterface
      */
-    private $cleaner;
+    private \Sulu\Component\PHPCR\PathCleanup $cleaner;
 
-    /**
-     * @var bool
-     */
-    private $hasEmojiSupport = false;
+    private bool $hasEmojiSupport = false;
 
     protected function setUp(): void
     {

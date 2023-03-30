@@ -20,15 +20,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class RequestDefaultLocaleProvider implements DefaultLocaleProviderInterface
 {
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
     public function __construct(RequestAnalyzerInterface $requestAnalyzer, RequestStack $requestStack)
     {

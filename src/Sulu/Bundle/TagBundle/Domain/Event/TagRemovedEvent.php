@@ -17,20 +17,14 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 
 class TagRemovedEvent extends DomainEvent
 {
-    /**
-     * @var int
-     */
-    private $tagId;
+    private int $tagId;
 
-    /**
-     * @var string
-     */
-    private $tagName;
+    private string $tagName;
 
     /**
      * @var mixed[]
      */
-    private $context;
+    private array $context;
 
     /**
      * @param mixed[] $context

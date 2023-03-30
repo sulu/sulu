@@ -22,10 +22,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class BasePathSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
+    private \Sulu\Component\DocumentManager\NodeManager $nodeManager;
 
     /**
      * @var string

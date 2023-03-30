@@ -15,7 +15,6 @@ use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Compat\Structure\Snippet;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 abstract class BaseFunctionalTestCase extends SuluTestCase
 {
@@ -34,10 +33,7 @@ abstract class BaseFunctionalTestCase extends SuluTestCase
      */
     protected $car1;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $manager;
+    private ?object $manager = null;
 
     protected function createSnippet($type, array $localizedData)
     {

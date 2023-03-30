@@ -31,22 +31,19 @@ class ShadowLocaleSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $propertyEncoder;
+    private ObjectProphecy $propertyEncoder;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $documentInspector;
+    private ObjectProphecy $documentInspector;
 
     /**
      * @var ObjectProphecy<DocumentRegistry>
      */
-    private $documentRegistry;
+    private ObjectProphecy $documentRegistry;
 
-    /**
-     * @var ShadowLocaleSubscriber
-     */
-    private $shadowLocaleSubscriber;
+    private \Sulu\Component\Content\Document\Subscriber\ShadowLocaleSubscriber $shadowLocaleSubscriber;
 
     public function setUp(): void
     {

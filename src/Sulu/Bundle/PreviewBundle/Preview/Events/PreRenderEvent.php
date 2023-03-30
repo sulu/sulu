@@ -19,10 +19,7 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class PreRenderEvent extends Event
 {
-    /**
-     * @var RequestAttributes
-     */
-    private $requestAttributes;
+    private \Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes $requestAttributes;
 
     public function __construct(RequestAttributes $requestAttributes)
     {

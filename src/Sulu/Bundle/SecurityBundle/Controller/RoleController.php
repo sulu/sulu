@@ -58,45 +58,21 @@ class RoleController extends AbstractRestController implements ClassResourceInte
      */
     protected $fieldDescriptors = [];
 
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
+    private \Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface $fieldDescriptorFactory;
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
+    private \Sulu\Component\Rest\RestHelperInterface $restHelper;
 
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $doctrineListBuilderFactory;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory;
 
-    /**
-     * @var MaskConverterInterface
-     */
-    private $maskConverter;
+    private \Sulu\Component\Security\Authorization\MaskConverterInterface $maskConverter;
 
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
+    private \Sulu\Component\Security\Authentication\RoleRepositoryInterface $roleRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $eventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $eventCollector;
 
-    /**
-     * @var string
-     */
-    private $roleClass;
+    private string $roleClass;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

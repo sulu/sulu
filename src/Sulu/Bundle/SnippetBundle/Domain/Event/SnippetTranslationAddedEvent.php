@@ -17,20 +17,14 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 
 class SnippetTranslationAddedEvent extends DomainEvent
 {
-    /**
-     * @var SnippetDocument
-     */
-    private $snippetDocument;
+    private \Sulu\Bundle\SnippetBundle\Document\SnippetDocument $snippetDocument;
 
-    /**
-     * @var string
-     */
-    private $locale;
+    private string $locale;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

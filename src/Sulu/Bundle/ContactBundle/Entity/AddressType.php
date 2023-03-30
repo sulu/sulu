@@ -40,7 +40,7 @@ class AddressType implements \JsonSerializable
      *
      * @Exclude
      */
-    private $addresses;
+    private \Doctrine\Common\Collections\ArrayCollection|array $addresses;
 
     /**
      * Constructor.

@@ -18,10 +18,7 @@ use Sulu\Component\Content\SimpleContentType;
 
 class SingleCategorySelection extends SimpleContentType implements ContentTypeExportInterface
 {
-    /**
-     * @var CategoryManagerInterface
-     */
-    private $categoryManager;
+    private \Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface $categoryManager;
 
     public function __construct(CategoryManagerInterface $categoryManager)
     {

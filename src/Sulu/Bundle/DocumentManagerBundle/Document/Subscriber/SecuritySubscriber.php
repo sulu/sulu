@@ -25,10 +25,7 @@ class SecuritySubscriber implements EventSubscriberInterface
 {
     public const USER_OPTION = 'user';
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private ?\Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage = null;
 
     public function __construct(TokenStorageInterface $tokenStorage = null)
     {

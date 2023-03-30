@@ -32,7 +32,7 @@ class Kernel extends SuluKernel implements HttpCacheProvider
     /**
      * @var HttpKernelInterface|null
      */
-    private $httpCache;
+    private ?SuluHttpCache $httpCache = null;
 
     /**
      * @return void

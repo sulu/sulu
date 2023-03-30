@@ -29,10 +29,7 @@ class AuhenticationFailureListener implements EventSubscriberInterface
      */
     private $passwordHasherFactory;
 
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
+    private \Sulu\Component\Security\Authentication\UserRepositoryInterface $userRepository;
 
     /**
      * @param PasswordHasherFactoryInterface|EncoderFactoryInterface $passwordHasherFactory

@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
@@ -39,31 +38,24 @@ use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class AccountControllerTest extends SuluTestCase
 {
-    private $accountCount = 1;
+    private int $accountCount = 1;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     /**
      * @var ObjectRepository<ActivityInterface>
      */
-    private $activityRepository;
+    private \Doctrine\ORM\EntityRepository $activityRepository;
 
     /**
      * @var ObjectRepository<TrashItemInterface>
      */
-    private $trashItemRepository;
+    private \Doctrine\ORM\EntityRepository $trashItemRepository;
 
     public function setUp(): void
     {

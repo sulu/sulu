@@ -20,11 +20,6 @@ use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\Content\Compat\StructureManagerInterface;
-use Sulu\Component\DocumentManager\DocumentInspector;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Component\Form\FormFactoryInterface;
 
 class SmartContentItemControllerTest extends SuluTestCase
 {
@@ -38,55 +33,28 @@ class SmartContentItemControllerTest extends SuluTestCase
      */
     private $session;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
+    private ?object $formFactory = null;
 
-    /**
-     * @var PageDocument
-     */
-    private $team;
+    private ?\Sulu\Bundle\PageBundle\Document\PageDocument $team = null;
 
-    /**
-     * @var PageDocument
-     */
-    private $johannes;
+    private ?\Sulu\Bundle\PageBundle\Document\PageDocument $johannes = null;
 
-    /**
-     * @var PageDocument
-     */
-    private $daniel;
+    private ?\Sulu\Bundle\PageBundle\Document\PageDocument $daniel = null;
 
-    /**
-     * @var PageDocument
-     */
-    private $thomas;
+    private ?\Sulu\Bundle\PageBundle\Document\PageDocument $thomas = null;
 
     /**
      * @var TagInterface
      */
     private $tag1;
 
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
+    private ?object $structureManager = null;
 
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
+    private ?object $inspector = null;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

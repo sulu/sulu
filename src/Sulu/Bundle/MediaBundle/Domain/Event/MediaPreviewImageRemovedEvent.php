@@ -19,15 +19,9 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class MediaPreviewImageRemovedEvent extends DomainEvent
 {
-    /**
-     * @var MediaInterface
-     */
-    private $media;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaInterface $media;
 
-    /**
-     * @var int
-     */
-    private $previewImageId;
+    private int $previewImageId;
 
     public function __construct(
         MediaInterface $media,

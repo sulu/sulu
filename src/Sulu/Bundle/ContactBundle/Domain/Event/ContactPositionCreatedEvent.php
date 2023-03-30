@@ -17,15 +17,12 @@ use Sulu\Bundle\ContactBundle\Entity\Position;
 
 class ContactPositionCreatedEvent extends DomainEvent
 {
-    /**
-     * @var Position
-     */
-    private $position;
+    private \Sulu\Bundle\ContactBundle\Entity\Position $position;
 
     /**
      * @var mixed[]
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

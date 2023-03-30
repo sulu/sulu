@@ -23,15 +23,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class PermissionListener implements EventSubscriberInterface
 {
-    /**
-     * @var FileVersionMetaRepository
-     */
-    private $fileVersionMetaRepository;
+    private \Sulu\Bundle\MediaBundle\Entity\FileVersionMetaRepository $fileVersionMetaRepository;
 
-    /**
-     * @var SearchManagerInterface
-     */
-    private $searchManager;
+    private \Massive\Bundle\SearchBundle\Search\SearchManagerInterface $searchManager;
 
     public function __construct(
         FileVersionMetaRepository $fileVersionMetaRepository,

@@ -20,80 +20,41 @@ class Activity implements ActivityInterface
      */
     private $id;
 
-    /**
-     * @var string
-     */
-    private $type;
+    private ?string $type = null;
 
     /**
      * @var mixed[]
      */
-    private $context = [];
+    private array $context = [];
 
     /**
      * @var mixed[]|null
      */
-    private $payload;
+    private ?array $payload = null;
 
-    /**
-     * @var \DateTimeImmutable
-     */
-    private $timestamp;
+    private ?\DateTimeImmutable $timestamp = null;
 
-    /**
-     * @var string|null
-     */
-    private $batch;
+    private ?string $batch = null;
 
-    /**
-     * @var UserInterface|null
-     */
-    private $user;
+    private ?\Sulu\Component\Security\Authentication\UserInterface $user = null;
 
-    /**
-     * @var string
-     */
-    private $resourceKey;
+    private ?string $resourceKey = null;
 
-    /**
-     * @var string
-     */
-    private $resourceId;
+    private ?string $resourceId = null;
 
-    /**
-     * @var string|null
-     */
-    private $resourceLocale;
+    private ?string $resourceLocale = null;
 
-    /**
-     * @var string|null
-     */
-    private $resourceWebspaceKey;
+    private ?string $resourceWebspaceKey = null;
 
-    /**
-     * @var string|null
-     */
-    private $resourceTitle;
+    private ?string $resourceTitle = null;
 
-    /**
-     * @var string|null
-     */
-    private $resourceTitleLocale;
+    private ?string $resourceTitleLocale = null;
 
-    /**
-     * @var string|null
-     */
-    private $resourceSecurityContext;
+    private ?string $resourceSecurityContext = null;
 
-    /**
-     * @var string|null
-     */
-    private $resourceSecurityObjectType;
+    private ?string $resourceSecurityObjectType = null;
 
-    /**
-     * @var string|null
-     */
-    private $resourceSecurityObjectId;
+    private ?string $resourceSecurityObjectId = null;
 
     public function getType(): string
     {

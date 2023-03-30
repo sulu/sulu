@@ -24,25 +24,13 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CategoryConverter implements ConverterInterface
 {
-    /**
-     * @var CategoryManagerInterface
-     */
-    private $categoryManager;
+    private \Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface $categoryManager;
 
-    /**
-     * @var SearchManagerInterface
-     */
-    private $searchManager;
+    private \Massive\Bundle\SearchBundle\Search\SearchManagerInterface $searchManager;
 
-    /**
-     * @var ObjectToDocumentConverter
-     */
-    private $objectToDocumentConverter;
+    private \Massive\Bundle\SearchBundle\Search\ObjectToDocumentConverter $objectToDocumentConverter;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
         CategoryManagerInterface $categoryManager,

@@ -34,10 +34,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 {
     use SecuredEntityRepositoryTrait;
 
-    /**
-     * @var AccessControlQueryEnhancer
-     */
-    private $accessControlQueryEnhancer;
+    private ?\Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer $accessControlQueryEnhancer = null;
 
     public function findCollectionById($id)
     {

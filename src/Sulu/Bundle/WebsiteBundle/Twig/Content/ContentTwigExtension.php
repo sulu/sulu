@@ -36,50 +36,29 @@ use Twig\TwigFunction;
  */
 class ContentTwigExtension extends AbstractExtension implements ContentTwigExtensionInterface
 {
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
+    private \Sulu\Component\Content\Mapper\ContentMapperInterface $contentMapper;
 
-    /**
-     * @var StructureResolverInterface
-     */
-    private $structureResolver;
+    private \Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface $structureResolver;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
+    private \Sulu\Component\PHPCR\SessionManager\SessionManagerInterface $sessionManager;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private \Psr\Log\LoggerInterface|\Psr\Log\NullLogger $logger;
 
     /**
      * @var SecurityCheckerInterface|null
      */
     private $securityChecker;
 
-    /**
-     * @var WebspaceManagerInterface|null
-     */
-    private $webspaceManager;
+    private ?\Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager = null;
 
-    /**
-     * @var RequestStack|null
-     */
-    private $requestStack;
+    private ?\Symfony\Component\HttpFoundation\RequestStack $requestStack = null;
 
     /**
      * @var array{urls?: boolean}
      */
-    private $enabledTwigAttributes;
+    private array $enabledTwigAttributes;
 
     /**
      * @param array{urls?: boolean} $enabledTwigAttributes

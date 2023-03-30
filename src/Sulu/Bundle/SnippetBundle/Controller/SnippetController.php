@@ -48,70 +48,31 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
 {
     use RequestParametersTrait;
 
-    /**
-     * @var ContentMapper
-     */
-    private $contentMapper;
+    private \Sulu\Component\Content\Mapper\ContentMapper $contentMapper;
 
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
+    private \Sulu\Component\Content\Compat\StructureManagerInterface $structureManager;
 
-    /**
-     * @var ViewHandler
-     */
-    private $viewHandler;
+    private \FOS\RestBundle\View\ViewHandler $viewHandler;
 
-    /**
-     * @var SnippetRepository
-     */
-    private $snippetRepository;
+    private \Sulu\Bundle\SnippetBundle\Snippet\SnippetRepository $snippetRepository;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage;
 
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
+    private \Symfony\Component\Routing\Generator\UrlGeneratorInterface $urlGenerator;
 
-    /**
-     * @var DefaultSnippetManagerInterface
-     */
-    private $defaultSnippetManager;
+    private \Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface $defaultSnippetManager;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var FormFactory
-     */
-    private $formFactory;
+    private \Symfony\Component\Form\FormFactory $formFactory;
 
-    /**
-     * @var RequestHashChecker
-     */
-    private $requestHashChecker;
+    private \Sulu\Component\Hash\RequestHashChecker $requestHashChecker;
 
-    /**
-     * @var ListRestHelper
-     */
-    private $listRestHelper;
+    private \Sulu\Component\Rest\ListBuilder\ListRestHelper $listRestHelper;
 
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
+    private \Sulu\Component\DocumentManager\MetadataFactoryInterface $metadataFactory;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    private \Symfony\Contracts\Translation\TranslatorInterface $translator;
 
     public function __construct(
         ViewHandler $viewHandler,

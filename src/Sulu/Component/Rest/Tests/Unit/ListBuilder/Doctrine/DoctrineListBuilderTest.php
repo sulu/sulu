@@ -50,61 +50,53 @@ class DoctrineListBuilderTest extends TestCase
     /**
      * @var ObjectProphecy<EventDispatcherInterface>
      */
-    private $eventDispatcher;
+    private ObjectProphecy $eventDispatcher;
 
     /**
      * @var ObjectProphecy<FilterTypeRegistry>
      */
-    private $filterTypeRegistry;
+    private ObjectProphecy $filterTypeRegistry;
 
-    /**
-     * @var DoctrineListBuilder
-     */
-    private $doctrineListBuilder;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder $doctrineListBuilder;
 
     /**
      * @var ObjectProphecy<EntityManager>
      */
-    private $entityManager;
+    private ObjectProphecy $entityManager;
 
     /**
      * @var ObjectProphecy<ClassMetadata>
      */
-    private $classMetadata;
+    private ObjectProphecy $classMetadata;
 
     /**
      * @var ObjectProphecy<QueryBuilder>
      */
-    private $queryBuilder;
+    private ObjectProphecy $queryBuilder;
 
     /**
      * @var ObjectProphecy<AbstractQuery>
      */
-    private $query;
+    private ObjectProphecy $query;
 
-    /**
-     * @var \ReflectionMethod
-     */
-    private $findIdsByGivenCriteria;
+    private \ReflectionMethod $findIdsByGivenCriteria;
 
     /**
      * Result of id subquery.
-     *
-     * @var array
      */
-    private $idResult = [
+    private array $idResult = [
         ['id' => '1'],
         ['id' => '2'],
         ['id' => '3'],
     ];
 
-    private static $entityName = 'SuluCoreBundle:Example';
+    private static string $entityName = 'SuluCoreBundle:Example';
 
-    private static $entityNameAlias = 'SuluCoreBundle_Example';
+    private static string $entityNameAlias = 'SuluCoreBundle_Example';
 
-    private static $translationEntityName = 'SuluCoreBundle:ExampleTranslation';
+    private static string $translationEntityName = 'SuluCoreBundle:ExampleTranslation';
 
-    private static $translationEntityNameAlias = 'SuluCoreBundle_ExampleTranslation';
+    private static string $translationEntityNameAlias = 'SuluCoreBundle_ExampleTranslation';
 
     public function setUp(): void
     {

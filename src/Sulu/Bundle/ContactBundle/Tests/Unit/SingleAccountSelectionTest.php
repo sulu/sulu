@@ -29,35 +29,32 @@ class SingleAccountSelectionTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var SingleAccountSelection
-     */
-    private $singleAccountSelection;
+    private \Sulu\Bundle\ContactBundle\Content\Types\SingleAccountSelection $singleAccountSelection;
 
     /**
      * @var ObjectProphecy<AccountManager>
      */
-    private $accountManager;
+    private ObjectProphecy $accountManager;
 
     /**
      * @var ObjectProphecy<ReferenceStore>
      */
-    private $accountReferenceStore;
+    private ObjectProphecy $accountReferenceStore;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<PropertyInterface>
      */
-    private $property;
+    private ObjectProphecy $property;
 
     /**
      * @var ObjectProphecy<Account>
      */
-    private $account;
+    private ObjectProphecy $account;
 
     protected function setUp(): void
     {

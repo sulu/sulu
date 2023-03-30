@@ -17,10 +17,7 @@ class CacheLifetimeRequestStore
 {
     public const ATTRIBUTE_KEY = '_cacheLifetime';
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
     public function __construct(RequestStack $requestStack)
     {

@@ -32,15 +32,9 @@ class Query
 
     public const HYDRATE_PHPCR = 'phpcr_node';
 
-    /**
-     * @var QueryInterface
-     */
-    private $phpcrQuery;
+    private \PHPCR\Query\QueryInterface $phpcrQuery;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher;
 
     /**
      * @var null|string
@@ -52,10 +46,7 @@ class Query
      */
     private $locale;
 
-    /**
-     * @var array
-     */
-    private $options;
+    private array $options;
 
     /**
      * @var int

@@ -33,7 +33,7 @@ class DefaultSnippetManagerTest extends TestCase
 {
     use ProphecyTrait;
 
-    private $defaultTypes = [
+    private array $defaultTypes = [
         'test' => [
             'key' => 'test',
             'template' => 'test',

@@ -25,12 +25,9 @@ class SeoStructureExtensionTest extends TestCase
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
-    /**
-     * @var SeoStructureExtension
-     */
-    private $extension;
+    private \Sulu\Bundle\PageBundle\Content\Structure\SeoStructureExtension $extension;
 
     protected function setUp(): void
     {

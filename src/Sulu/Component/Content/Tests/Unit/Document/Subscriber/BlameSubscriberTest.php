@@ -33,32 +33,29 @@ class BlameSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<PersistEvent>
      */
-    private $persistEvent;
+    private ObjectProphecy $persistEvent;
 
     /**
      * @var ObjectProphecy<HydrateEvent>
      */
-    private $hydrateEvent;
+    private ObjectProphecy $hydrateEvent;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<DocumentAccessor>
      */
-    private $accessor;
+    private ObjectProphecy $accessor;
 
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $propertyEncoder;
+    private ObjectProphecy $propertyEncoder;
 
-    /**
-     * @var BlameSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\Content\Document\Subscriber\BlameSubscriber $subscriber;
 
     public function setUp(): void
     {

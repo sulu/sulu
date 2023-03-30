@@ -21,10 +21,7 @@ class DelegatingTagExtractorTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var string
-     */
-    private $html = '<html><body><h1>Test</h1></body></html>';
+    private string $html = '<html><body><h1>Test</h1></body></html>';
 
     public function testCount(): void
     {

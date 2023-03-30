@@ -20,20 +20,11 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
  */
 class SitemapGenerator implements SitemapGeneratorInterface
 {
-    /**
-     * @var ContentQueryExecutorInterface
-     */
-    private $contentQuery;
+    private \Sulu\Component\Content\Query\ContentQueryExecutorInterface $contentQuery;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var ContentQueryBuilderInterface
-     */
-    private $contentQueryBuilder;
+    private \Sulu\Component\Content\Query\ContentQueryBuilderInterface $contentQueryBuilder;
 
     public function __construct(
         ContentQueryExecutorInterface $contentQuery,

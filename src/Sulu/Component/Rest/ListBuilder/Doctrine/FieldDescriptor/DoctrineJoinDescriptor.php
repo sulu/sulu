@@ -30,38 +30,32 @@ class DoctrineJoinDescriptor
 
     /**
      * The name of the entity to join.
-     *
-     * @var string
      */
-    private $entityName;
+    private string $entityName;
 
     /**
      * The field, which should be joined.
-     *
-     * @var string
      */
-    private $join;
+    private ?string $join = null;
 
     /**
      * The additional condition which should apply to the join.
-     *
-     * @var string
      */
-    private $joinCondition;
+    private ?string $joinCondition = null;
 
     /**
      * The method for the condition to apply.
      *
      * @var 'ON'|'WITH'
      */
-    private $joinConditionMethod;
+    private string $joinConditionMethod;
 
     /**
      * Defines the join method (left, right or inner join).
      *
      * @var 'LEFT'|'INNER'|'RIGHT'
      */
-    private $joinMethod;
+    private string $joinMethod;
 
     /**
      * @param 'LEFT'|'INNER'|'RIGHT' $joinMethod

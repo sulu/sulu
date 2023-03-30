@@ -15,7 +15,6 @@ use Doctrine\Persistence\ObjectRepository;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
-use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -51,20 +50,17 @@ class SnippetControllerTest extends SuluTestCase
      */
     private $phpcrSession;
 
-    /**
-     * @var DefaultSnippetManagerInterface
-     */
-    private $defaultSnippetManager;
+    private ?object $defaultSnippetManager = null;
 
     /**
      * @var ObjectRepository<ActivityInterface>
      */
-    private $activityRepository;
+    private \Doctrine\ORM\EntityRepository $activityRepository;
 
     /**
      * @var ObjectRepository<TrashItemInterface>
      */
-    private $trashItemRepository;
+    private \Doctrine\ORM\EntityRepository $trashItemRepository;
 
     public function setUp(): void
     {

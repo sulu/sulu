@@ -19,20 +19,11 @@ use Symfony\Component\Mime\Email;
 
 class MailerListener implements EventSubscriberInterface
 {
-    /**
-     * @var MarkupParserInterface
-     */
-    private $markupParser;
+    private \Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface $markupParser;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
-    /**
-     * @var string
-     */
-    private $defaultLocale;
+    private string $defaultLocale;
 
     public function __construct(MarkupParserInterface $markupParser, RequestStack $requestStack, string $defaultLocale)
     {

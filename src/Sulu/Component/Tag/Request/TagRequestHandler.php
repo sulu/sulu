@@ -18,10 +18,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class TagRequestHandler implements TagRequestHandlerInterface
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
     public function __construct(RequestStack $requestStack)
     {

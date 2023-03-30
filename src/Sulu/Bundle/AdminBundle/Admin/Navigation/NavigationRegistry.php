@@ -21,28 +21,13 @@ class NavigationRegistry
     /**
      * @var NavigationItem[]
      */
-    private $navigationItems;
+    private ?array $navigationItems = null;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var AdminPool
-     */
-    private $adminPool;
-
-    /**
-     * @var ViewRegistry
-     */
-    private $viewRegistry;
-
-    public function __construct(TranslatorInterface $translator, AdminPool $adminPool, ViewRegistry $viewRegistry)
-    {
-        $this->translator = $translator;
-        $this->adminPool = $adminPool;
-        $this->viewRegistry = $viewRegistry;
+    public function __construct(
+        private TranslatorInterface $translator,
+        private AdminPool $adminPool,
+        private ViewRegistry $viewRegistry
+    ) {
     }
 
     /**

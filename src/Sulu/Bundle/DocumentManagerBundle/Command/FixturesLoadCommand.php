@@ -26,15 +26,12 @@ class FixturesLoadCommand extends Command
 {
     protected static $defaultName = 'sulu:document:fixtures:load';
 
-    /**
-     * @var DocumentExecutor
-     */
-    private $executor;
+    private \Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor $executor;
 
     /**
      * @var \Traversable<DocumentFixtureInterface>
      */
-    private $fixtures;
+    private \Traversable|\ArrayObject $fixtures;
 
     public function __construct(
         DocumentExecutor $executor,

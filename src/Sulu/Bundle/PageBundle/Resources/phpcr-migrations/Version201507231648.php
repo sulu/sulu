@@ -30,10 +30,7 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
 
     public const NAVIGATION_CONTEXT_PROPERTY = 'i18n:%s-navContexts';
 
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null;
 
     public function setContainer(ContainerInterface $container = null)
     {

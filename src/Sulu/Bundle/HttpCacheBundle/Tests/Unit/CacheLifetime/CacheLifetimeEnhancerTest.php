@@ -29,50 +29,41 @@ class CacheLifetimeEnhancerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var CacheLifetimeEnhancer
-     */
-    private $cacheLifetimeEnhancer;
+    private \Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeEnhancer $cacheLifetimeEnhancer;
 
     /**
      * @var ObjectProphecy<CacheLifetimeRequestStore>
      */
-    private $cacheLifetimeRequestStore;
+    private ObjectProphecy $cacheLifetimeRequestStore;
 
     /**
      * @var ObjectProphecy<CacheLifetimeResolver>
      */
-    private $cacheLifetimeResolver;
+    private ObjectProphecy $cacheLifetimeResolver;
 
     /**
      * @var ObjectProphecy<PageBridge>
      */
-    private $page;
+    private ObjectProphecy $page;
 
     /**
      * @var ObjectProphecy<SnippetBridge>
      */
-    private $snippet;
+    private ObjectProphecy $snippet;
 
     /**
      * @var ObjectProphecy<Response>
      */
-    private $response;
+    private ObjectProphecy $response;
 
     /**
      * @var ObjectProphecy<ResponseHeaderBag>
      */
-    private $responseHeaderBag;
+    private ObjectProphecy $responseHeaderBag;
 
-    /**
-     * @var int
-     */
-    private $maxAge = 200;
+    private int $maxAge = 200;
 
-    /**
-     * @var int
-     */
-    private $sharedMaxAge = 300;
+    private int $sharedMaxAge = 300;
 
     public function setUp(): void
     {

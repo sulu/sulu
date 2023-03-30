@@ -46,60 +46,39 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class CollectionManager implements CollectionManagerInterface
 {
-    private static $entityName = 'SuluMediaBundle:Collection';
+    private static string $entityName = 'SuluMediaBundle:Collection';
 
-    private static $entityCollectionType = 'SuluMediaBundle:Collection';
+    private static string $entityCollectionType = 'SuluMediaBundle:Collection';
 
-    private static $entityCollectionMeta = 'SuluMediaBUndle:CollectionMeta';
+    private static string $entityCollectionMeta = 'SuluMediaBUndle:CollectionMeta';
 
-    private static $entityUser = 'Sulu\Component\Security\Authentication\UserInterface';
+    private static string $entityUser = 'Sulu\Component\Security\Authentication\UserInterface';
 
-    private static $entityContact = 'Sulu\Bundle\ContactBundle\Entity\ContactInterface';
+    private static string $entityContact = 'Sulu\Bundle\ContactBundle\Entity\ContactInterface';
 
-    /**
-     * @var CollectionRepositoryInterface
-     */
-    private $collectionRepository;
+    private \Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface $collectionRepository;
 
-    /**
-     * @var MediaRepositoryInterface
-     */
-    private $mediaRepository;
+    private \Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface $mediaRepository;
 
-    /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
+    private \Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface $formatManager;
 
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
+    private \Sulu\Component\Security\Authentication\UserRepositoryInterface $userRepository;
 
     /**
      * @var EntityManager
      */
     protected $em;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
-    /**
-     * @var TokenStorageInterface|null
-     */
-    private $tokenStorage;
+    private ?\Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage = null;
 
-    /**
-     * @var TrashManagerInterface|null
-     */
-    private $trashManager;
+    private ?\Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface $trashManager = null;
 
     /**
      * @var DoctrineFieldDescriptor[]
      */
-    private $fieldDescriptors;
+    private ?array $fieldDescriptors = null;
 
     /**
      * @var int

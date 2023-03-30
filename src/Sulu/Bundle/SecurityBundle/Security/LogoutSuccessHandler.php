@@ -22,10 +22,7 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
+    private \Symfony\Component\Routing\RouterInterface $router;
 
     public function __construct(RouterInterface $router)
     {

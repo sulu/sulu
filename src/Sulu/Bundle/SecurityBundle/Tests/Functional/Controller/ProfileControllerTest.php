@@ -14,14 +14,10 @@ namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Controller;
 use Sulu\Bundle\ContactBundle\Entity\Contact;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class ProfileControllerTest extends SuluTestCase
 {
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

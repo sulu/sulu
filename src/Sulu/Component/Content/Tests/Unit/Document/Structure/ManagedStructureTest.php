@@ -36,57 +36,54 @@ class ManagedStructureTest extends TestCase
     /**
      * @var ObjectProphecy<ContentTypeManagerInterface>
      */
-    private $contentTypeManager;
+    private ObjectProphecy $contentTypeManager;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<StructureMetadata>
      */
-    private $structureMetadata;
+    private ObjectProphecy $structureMetadata;
 
     /**
      * @var ObjectProphecy<StructureBehavior>
      */
-    private $document;
+    private ObjectProphecy $document;
 
     /**
      * @var ObjectProphecy<ContentTypeInterface>
      */
-    private $contentType;
+    private ObjectProphecy $contentType;
 
     /**
      * @var ObjectProphecy<PropertyEncoder>
      */
-    private $encoder;
+    private ObjectProphecy $encoder;
 
     /**
      * @var ObjectProphecy<PropertyMetadata>
      */
-    private $propertyMetadata;
+    private ObjectProphecy $propertyMetadata;
 
     /**
      * @var ObjectProphecy<LegacyPropertyFactory>
      */
-    private $propertyFactory;
+    private ObjectProphecy $propertyFactory;
 
     /**
      * @var ObjectProphecy<DocumentInspector>
      */
-    private $inspector;
+    private ObjectProphecy $inspector;
 
     /**
      * @var ObjectProphecy<PropertyInterface>
      */
-    private $legacyProperty;
+    private ObjectProphecy $legacyProperty;
 
-    /**
-     * @var ManagedStructure
-     */
-    private $structure;
+    private \Sulu\Component\Content\Document\Structure\ManagedStructure $structure;
 
     public function setUp(): void
     {

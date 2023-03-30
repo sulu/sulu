@@ -11,29 +11,17 @@
 
 namespace Sulu\Bundle\SecurityBundle\Tests\Functional\Entity;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
-use Sulu\Bundle\SecurityBundle\Entity\AccessControlRepository;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class AccessControlRepositoryTest extends SuluTestCase
 {
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
+    private \Doctrine\ORM\EntityManagerInterface $em;
 
-    /**
-     * @var AccessControlRepository
-     */
-    private $accessControlRepository;
+    private ?object $accessControlRepository = null;
 
     public function setUp(): void
     {

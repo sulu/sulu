@@ -37,32 +37,32 @@ class TrashManagerTest extends TestCase
     /**
      * @var ObjectProphecy<TrashItemRepositoryInterface>
      */
-    private $trashItemRepository;
+    private ObjectProphecy $trashItemRepository;
 
     /**
      * @var ObjectProphecy<DomainEventCollectorInterface>
      */
-    private $domainEventCollector;
+    private ObjectProphecy $domainEventCollector;
 
     /**
      * @var ObjectProphecy<ServiceLocator>
      */
-    private $storeTrashItemHandlerLocator;
+    private ObjectProphecy $storeTrashItemHandlerLocator;
 
     /**
      * @var ObjectProphecy<ServiceLocator>
      */
-    private $restoreTrashItemHandlerLocator;
+    private ObjectProphecy $restoreTrashItemHandlerLocator;
 
     /**
      * @var ObjectProphecy<ServiceLocator>
      */
-    private $removeTrashItemHandlerLocator;
+    private ObjectProphecy $removeTrashItemHandlerLocator;
 
     /**
      * @var TrashManagerInterface
      */
-    private $trashManager;
+    private \Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManager $trashManager;
 
     public function setUp(): void
     {

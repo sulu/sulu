@@ -64,20 +64,11 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
      */
     protected $importManager;
 
-    /**
-     * @var string
-     */
-    private $languageNamespace;
+    private ?string $languageNamespace = null;
 
-    /**
-     * @var string
-     */
-    private $languageCode;
+    private ?string $languageCode = null;
 
-    /**
-     * @var Factory
-     */
-    private $factory;
+    private \Sulu\Bundle\SearchBundle\Search\Factory $factory;
 
     public function __construct(
         StructureManagerInterface $structureManager,
@@ -147,7 +138,7 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
         return $data;
     }
 
-    public function setLanguageCode($languageCode, $languageNamespace, $namespace)
+    public function setLanguageCode($languageCode, $languageNamespace, $namespace): void
     {
         // lazy load excerpt structure to avoid redeclaration of classes
         // should be done before parent::setLanguageCode because it uses the $thi<->properties

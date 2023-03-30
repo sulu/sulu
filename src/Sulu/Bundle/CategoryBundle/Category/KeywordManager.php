@@ -29,25 +29,13 @@ use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
  */
 class KeywordManager implements KeywordManagerInterface
 {
-    /**
-     * @var KeywordRepositoryInterface
-     */
-    private $keywordRepository;
+    private \Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface $keywordRepository;
 
-    /**
-     * @var CategoryTranslationRepositoryInterface
-     */
-    private $categoryTranslationRepository;
+    private \Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationRepositoryInterface $categoryTranslationRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
     public function __construct(
         KeywordRepositoryInterface $keywordRepository,

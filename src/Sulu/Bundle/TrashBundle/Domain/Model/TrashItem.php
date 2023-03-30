@@ -39,18 +39,14 @@ class TrashItem implements TrashItemInterface
     /**
      * @Expose
      * @Groups({"trash_item_admin_api"})
-     *
-     * @var string
      */
-    private $resourceKey;
+    private ?string $resourceKey = null;
 
     /**
      * @Expose
      * @Groups({"trash_item_admin_api"})
-     *
-     * @var string
      */
-    private $resourceId;
+    private ?string $resourceId = null;
 
     /**
      * @Expose
@@ -58,7 +54,7 @@ class TrashItem implements TrashItemInterface
      *
      * @var mixed[]
      */
-    private $restoreData = [];
+    private array $restoreData = [];
 
     /**
      * The restoreType can be used to indicate a sub entity.
@@ -67,10 +63,8 @@ class TrashItem implements TrashItemInterface
      *
      * @Expose
      * @Groups({"trash_item_admin_api"})
-     *
-     * @var string|null
      */
-    private $restoreType;
+    private ?string $restoreType = null;
 
     /**
      * The restoreOptions are used to change behaviour of store and restore handler.
@@ -82,53 +76,39 @@ class TrashItem implements TrashItemInterface
      *
      * @var mixed[]
      */
-    private $restoreOptions = [];
+    private array $restoreOptions = [];
 
     /**
      * @Expose
      * @Groups({"trash_item_admin_api"})
-     *
-     * @var string|null
      */
-    private $resourceSecurityContext;
+    private ?string $resourceSecurityContext = null;
 
     /**
      * @Expose
-     *
-     * @var string|null
      */
-    private $resourceSecurityObjectType;
+    private ?string $resourceSecurityObjectType = null;
 
     /**
      * @Expose
      * @Groups({"trash_item_admin_api"})
-     *
-     * @var string|null
      */
-    private $resourceSecurityObjectId;
+    private ?string $resourceSecurityObjectId = null;
 
     /**
      * @Expose
      * @Groups({"trash_item_admin_api"})
-     *
-     * @var \DateTimeImmutable
      */
-    private $storeTimestamp;
+    private \DateTimeImmutable $storeTimestamp;
 
-    /**
-     * @var UserInterface|null
-     */
-    private $user;
+    private ?\Sulu\Component\Security\Authentication\UserInterface $user = null;
 
     /**
      * @var Collection<int, TrashItemTranslation>
      */
-    private $translations;
+    private \Doctrine\Common\Collections\ArrayCollection $translations;
 
-    /**
-     * @var string|null
-     */
-    private $defaultLocale;
+    private ?string $defaultLocale = null;
 
     public function __construct()
     {

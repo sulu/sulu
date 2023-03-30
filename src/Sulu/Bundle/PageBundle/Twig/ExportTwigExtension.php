@@ -20,15 +20,9 @@ use Twig\TwigFunction;
  */
 class ExportTwigExtension extends AbstractExtension
 {
-    /**
-     * @var ExportManagerInterface
-     */
-    private $exportManager;
+    private \Sulu\Component\Export\Manager\ExportManagerInterface $exportManager;
 
-    /**
-     * @var int
-     */
-    private $counter = 0;
+    private int $counter = 0;
 
     public function __construct(ExportManagerInterface $exportManager)
     {

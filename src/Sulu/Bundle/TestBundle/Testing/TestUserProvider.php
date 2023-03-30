@@ -34,30 +34,18 @@ class TestUserProvider implements UserProviderInterface, ResetInterface
      */
     private $user = null;
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManager $entityManager;
 
-    /**
-     * @var ContactRepositoryInterface
-     */
-    private $contactRepository;
+    private \Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface $contactRepository;
 
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
+    private \Sulu\Component\Security\Authentication\UserRepositoryInterface $userRepository;
 
     /**
      * @var PasswordHasherFactoryInterface|EncoderFactoryInterface
      */
     private $passwordHasherFactory;
 
-    /**
-     * @var UserProviderInterface
-     */
-    private $userProvider;
+    private \Symfony\Component\Security\Core\User\UserProviderInterface $userProvider;
 
     /**
      * @param PasswordHasherFactoryInterface|EncoderFactoryInterface $passwordHasherFactory

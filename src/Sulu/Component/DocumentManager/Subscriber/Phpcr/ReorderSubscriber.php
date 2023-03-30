@@ -22,10 +22,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ReorderSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var NodeHelperInterface
-     */
-    private $nodeHelper;
+    private \Sulu\Component\DocumentManager\NodeHelperInterface $nodeHelper;
 
     public function __construct(NodeHelperInterface $nodeHelper)
     {

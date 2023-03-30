@@ -52,44 +52,28 @@ class UserManager implements UserManagerInterface
      */
     protected $em;
 
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
+    private \Sulu\Component\Security\Authentication\RoleRepositoryInterface $roleRepository;
 
-    /**
-     * @var GroupRepository
-     */
-    private $groupRepository;
+    private \Sulu\Bundle\SecurityBundle\Entity\GroupRepository $groupRepository;
 
     /**
      * @var ContactManager
      */
     protected $contactManager;
 
-    /**
-     * @var SaltGenerator
-     */
-    private $saltGenerator;
+    private \Sulu\Component\Security\Authentication\SaltGenerator $saltGenerator;
 
     /**
      * @var PasswordHasherFactoryInterface|EncoderFactoryInterface|null
      */
     private $passwordHasherFactory;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
     /**
      * @param PasswordHasherFactoryInterface|EncoderFactoryInterface|null $passwordHasherFactory
      */
-
-    /**
-     * @var string|null
-     */
-    private $passwordPattern;
+    private ?string $passwordPattern = null;
 
     /**
      * @param PasswordHasherFactoryInterface|EncoderFactoryInterface|null $passwordHasherFactory

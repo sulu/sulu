@@ -48,47 +48,41 @@ class PreviewRendererTest extends TestCase
     /**
      * @var ObjectProphecy<RouteDefaultsProviderInterface>
      */
-    private $routeDefaultsProvider;
+    private ObjectProphecy $routeDefaultsProvider;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     /**
      * @var ObjectProphecy<KernelFactoryInterface>
      */
-    private $kernelFactory;
+    private ObjectProphecy $kernelFactory;
 
     /**
      * @var ObjectProphecy<HttpKernelInterface>
      */
-    private $httpKernel;
+    private ObjectProphecy $httpKernel;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
      */
-    private $webspaceManager;
+    private ObjectProphecy $webspaceManager;
 
     /**
      * @var ObjectProphecy<EventDispatcherInterface>
      */
-    private $eventDispatcher;
+    private ObjectProphecy $eventDispatcher;
 
     /**
      * @var PreviewRendererInterface
      */
-    private $renderer;
+    private \Sulu\Bundle\PreviewBundle\Preview\Renderer\PreviewRenderer $renderer;
 
-    /**
-     * @var array
-     */
-    private $previewDefault = [];
+    private array $previewDefault = [];
 
-    /**
-     * @var string
-     */
-    private $environment = 'prod';
+    private string $environment = 'prod';
 
     public function setUp(): void
     {

@@ -32,10 +32,8 @@ class Sitemap
 
     /**
      * Datetime of last modification.
-     *
-     * @var \DateTime
      */
-    private $lastmod;
+    private ?\DateTime $lastmod = null;
 
     /**
      * @param string $alias

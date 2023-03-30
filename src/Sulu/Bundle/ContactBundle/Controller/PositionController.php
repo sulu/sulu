@@ -44,20 +44,11 @@ class PositionController extends AbstractRestController implements ClassResource
      */
     protected static $entityKey = Position::RESOURCE_KEY;
 
-    /**
-     * @var PositionRepository
-     */
-    private $positionRepository;
+    private \Sulu\Bundle\ContactBundle\Entity\PositionRepository $positionRepository;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
+    private \Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface $domainEventCollector;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

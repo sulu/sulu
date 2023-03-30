@@ -24,25 +24,13 @@ use Symfony\Component\Mime\RawMessage;
 
 class MailerListenerTest extends TestCase
 {
-    /**
-     * @var MarkupParserInterface
-     */
-    private $markupParser;
+    private \Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface $markupParser;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
-    /**
-     * @var string
-     */
-    private $defaultLocale;
+    private string $defaultLocale;
 
-    /**
-     * @var MailerListener
-     */
-    private $mailerListener;
+    private \Sulu\Bundle\MarkupBundle\Listener\MailerListener $mailerListener;
 
     public function setUp(): void
     {

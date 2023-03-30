@@ -27,20 +27,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 final class CustomUrlTrashSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var TrashManagerInterface
-     */
-    private $trashManager;
+    private \Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface $trashManager;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var bool
-     */
-    private $hasPendingTrashItem = false;
+    private bool $hasPendingTrashItem = false;
 
     public function __construct(
         TrashManagerInterface $trashManager,

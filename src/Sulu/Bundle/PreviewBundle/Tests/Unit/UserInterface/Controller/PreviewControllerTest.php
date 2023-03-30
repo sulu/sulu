@@ -29,22 +29,16 @@ class PreviewControllerTest extends TestCase
     /**
      * @var ObjectProphecy<PreviewInterface>
      */
-    private $preview;
+    private ObjectProphecy $preview;
 
     /**
      * @var ObjectProphecy<TokenStorageInterface>
      */
-    private $tokenStorage;
+    private ObjectProphecy $tokenStorage;
 
-    /**
-     * @var PreviewController
-     */
-    private $previewController;
+    private \Sulu\Bundle\PreviewBundle\UserInterface\Controller\PreviewController $previewController;
 
-    /**
-     * @var int
-     */
-    private $encodingOptions = JsonResponse::DEFAULT_ENCODING_OPTIONS;
+    private int $encodingOptions = JsonResponse::DEFAULT_ENCODING_OPTIONS;
 
     protected function setUp(): void
     {

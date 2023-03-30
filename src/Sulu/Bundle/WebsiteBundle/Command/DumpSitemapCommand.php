@@ -23,45 +23,21 @@ class DumpSitemapCommand extends Command
 {
     protected static $defaultName = 'sulu:website:dump-sitemap';
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var XmlSitemapDumperInterface
-     */
-    private $sitemapDumper;
+    private \Sulu\Bundle\WebsiteBundle\Sitemap\XmlSitemapDumperInterface $sitemapDumper;
 
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
+    private \Symfony\Component\Filesystem\Filesystem $filesystem;
 
-    /**
-     * @var OutputInterface
-     */
-    private $output;
+    private ?\Symfony\Component\Console\Output\OutputInterface $output = null;
 
-    /**
-     * @var string
-     */
-    private $environment;
+    private string $environment;
 
-    /**
-     * @var string
-     */
-    private $baseDirectory;
+    private string $baseDirectory;
 
-    /**
-     * @var string
-     */
-    private $defaultHost;
+    private string $defaultHost;
 
-    /**
-     * @var string
-     */
-    private $scheme;
+    private string $scheme;
 
     public function __construct(
         WebspaceManagerInterface $webspaceManager,

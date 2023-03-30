@@ -33,22 +33,19 @@ class PageTeaserProviderTest extends TestCase
     /**
      * @var ObjectProphecy<SearchManagerInterface>
      */
-    private $searchManager;
+    private ObjectProphecy $searchManager;
 
     /**
      * @var ObjectProphecy<SearchQueryBuilder>
      */
-    private $search;
+    private ObjectProphecy $search;
 
-    /**
-     * @var PageTeaserProvider
-     */
-    private $pageTeaserProvider;
+    private \Sulu\Bundle\PageBundle\Teaser\PageTeaserProvider $pageTeaserProvider;
 
     /**
      * @var ObjectProphecy<TranslatorInterface>
      */
-    private $translator;
+    private ObjectProphecy $translator;
 
     protected function setUp(): void
     {

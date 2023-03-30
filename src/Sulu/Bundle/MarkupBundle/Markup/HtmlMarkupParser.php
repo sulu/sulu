@@ -18,15 +18,9 @@ use Sulu\Bundle\MarkupBundle\Tag\TagRegistryInterface;
  */
 class HtmlMarkupParser implements MarkupParserInterface
 {
-    /**
-     * @var TagRegistryInterface
-     */
-    private $tagRegistry;
+    private \Sulu\Bundle\MarkupBundle\Tag\TagRegistryInterface $tagRegistry;
 
-    /**
-     * @var TagExtractorInterface
-     */
-    private $tagExtractor;
+    private \Sulu\Bundle\MarkupBundle\Markup\TagExtractorInterface $tagExtractor;
 
     public function __construct(TagRegistryInterface $tagRegistry, TagExtractorInterface $tagExtractor)
     {

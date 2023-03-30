@@ -34,37 +34,34 @@ class SearchControllerTest extends TestCase
     /**
      * @var ObjectProphecy<SearchManagerInterface>
      */
-    private $searchManager;
+    private ObjectProphecy $searchManager;
 
     /**
      * @var ObjectProphecy<ProviderInterface>
      */
-    private $metadataProvider;
+    private ObjectProphecy $metadataProvider;
 
     /**
      * @var ObjectProphecy<SecurityCheckerInterface>
      */
-    private $securityChecker;
+    private ObjectProphecy $securityChecker;
 
     /**
      * @var ObjectProphecy<ViewHandlerInterface>
      */
-    private $viewHandler;
+    private ObjectProphecy $viewHandler;
 
     /**
      * @var ObjectProphecy<ListRestHelperInterface>
      */
-    private $listRestHelper;
+    private ObjectProphecy $listRestHelper;
 
     /**
      * @var ObjectProphecy<IndexConfigurationProviderInterface>
      */
-    private $indexConfigurationProvider;
+    private ObjectProphecy $indexConfigurationProvider;
 
-    /**
-     * @var SearchController
-     */
-    private $searchController;
+    private \Sulu\Bundle\SearchBundle\Controller\SearchController $searchController;
 
     public function setUp(): void
     {

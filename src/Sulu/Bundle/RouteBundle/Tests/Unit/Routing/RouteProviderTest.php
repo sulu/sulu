@@ -33,30 +33,27 @@ class RouteProviderTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var RouteProvider
-     */
-    private $routeProvider;
+    private \Sulu\Bundle\RouteBundle\Routing\RouteProvider $routeProvider;
 
     /**
      * @var ObjectProphecy<RouteRepositoryInterface>
      */
-    private $routeRepository;
+    private ObjectProphecy $routeRepository;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     /**
      * @var ObjectProphecy<RouteDefaultsProviderInterface>
      */
-    private $defaultsProvider;
+    private ObjectProphecy $defaultsProvider;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
-    private $requestStack;
+    private ObjectProphecy $requestStack;
 
     protected function setUp(): void
     {

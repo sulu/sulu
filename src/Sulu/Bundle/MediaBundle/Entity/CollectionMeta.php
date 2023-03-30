@@ -36,10 +36,7 @@ class CollectionMeta
      */
     private $id;
 
-    /**
-     * @var CollectionInterface
-     */
-    private $collection;
+    private ?\Sulu\Bundle\MediaBundle\Entity\CollectionInterface $collection = null;
 
     /**
      * Get id.

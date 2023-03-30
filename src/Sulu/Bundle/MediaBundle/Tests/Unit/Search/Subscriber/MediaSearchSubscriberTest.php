@@ -37,56 +37,56 @@ class MediaSearchSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<MediaManagerInterface>
      */
-    private $mediaManager;
+    private ObjectProphecy $mediaManager;
 
-    private $subscriber;
+    private \Sulu\Bundle\MediaBundle\Search\Subscriber\MediaSearchSubscriber $subscriber;
 
     /**
      * @var ObjectProphecy<ClassMetadata>
      */
-    private $metadata;
+    private ObjectProphecy $metadata;
 
     /**
      * @var ObjectProphecy<IndexMetadata>
      */
-    private $indexMetadata;
+    private ObjectProphecy $indexMetadata;
 
     /**
      * @var ObjectProphecy<FileVersionMeta>
      */
-    private $fileVersionMeta;
+    private ObjectProphecy $fileVersionMeta;
 
     /**
      * @var ObjectProphecy<FileVersion>
      */
-    private $fileVersion;
+    private ObjectProphecy $fileVersion;
 
     /**
      * @var ObjectProphecy<File>
      */
-    private $file;
+    private ObjectProphecy $file;
 
     /**
      * @var ObjectProphecy<Media>
      */
-    private $media;
+    private ObjectProphecy $media;
 
     /**
      * @var ObjectProphecy<PreIndexEvent>
      */
-    private $event;
+    private ObjectProphecy $event;
 
     /**
      * @var ObjectProphecy<Document>
      */
-    private $document;
+    private ObjectProphecy $document;
 
     private $reflection;
 
     /**
      * @var ObjectProphecy<Factory>
      */
-    private $factory;
+    private ObjectProphecy $factory;
 
     public function setUp(): void
     {

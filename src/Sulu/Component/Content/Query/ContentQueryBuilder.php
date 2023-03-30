@@ -39,15 +39,12 @@ abstract class ContentQueryBuilder implements ContentQueryBuilderInterface
      */
     protected $languageNamespace;
 
-    /**
-     * @var MultipleTranslatedProperties
-     */
-    private $translatedProperties;
+    private \Sulu\Component\Content\Mapper\Translation\MultipleTranslatedProperties $translatedProperties;
 
     /**
      * @var string[]
      */
-    private $defaultProperties = [
+    private array $defaultProperties = [
         'template',
         'changed',
         'changer',

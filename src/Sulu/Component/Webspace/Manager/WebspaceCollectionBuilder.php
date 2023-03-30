@@ -29,15 +29,10 @@ class WebspaceCollectionBuilder
 {
     /**
      * The loader for the xml config files.
-     *
-     * @var LoaderInterface
      */
-    private $loader;
+    private \Symfony\Component\Config\Loader\LoaderInterface $loader;
 
-    /**
-     * @var ReplacerInterface
-     */
-    private $urlReplacer;
+    private \Sulu\Component\Webspace\Url\ReplacerInterface $urlReplacer;
 
     /**
      * The path to the xml config files.
@@ -51,31 +46,28 @@ class WebspaceCollectionBuilder
      *
      * @var Webspace[]
      */
-    private $webspaces;
+    private ?array $webspaces = null;
 
     /**
      * The portals for the configured path.
      *
      * @var Portal[]
      */
-    private $portals;
+    private ?array $portals = null;
 
     /**
      * The portal informations for the configured path.
      *
      * @var PortalInformation[][]
      */
-    private $portalInformations;
+    private ?array $portalInformations = null;
 
     /**
      * @var TypedFormMetadata
      */
     private $typedFormMetadata;
 
-    /**
-     * @var array
-     */
-    private $availableTemplates;
+    private array $availableTemplates;
 
     public function __construct(
         LoaderInterface $loader,

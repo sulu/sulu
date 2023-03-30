@@ -28,30 +28,27 @@ class ChainRouteGeneratorTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var array
-     */
-    private $mappings;
+    private array $mappings;
 
     /**
      * @var ObjectProphecy<RouteGeneratorInterface>
      */
-    private $routeGenerator;
+    private ObjectProphecy $routeGenerator;
 
     /**
      * @var ObjectProphecy<RouteRepositoryInterface>
      */
-    private $routeRepository;
+    private ObjectProphecy $routeRepository;
 
     /**
      * @var ChainRouteGeneratorInterface
      */
-    private $chainRouteGenerator;
+    private \Sulu\Bundle\RouteBundle\Generator\ChainRouteGenerator $chainRouteGenerator;
 
     /**
      * @var RoutableInterface
      */
-    private $entity;
+    private \Sulu\Bundle\RouteBundle\Tests\Unit\Generator\TestRoutable $entity;
 
     public function setUp(): void
     {
@@ -130,10 +127,7 @@ class ChainRouteGeneratorTest extends TestCase
 
 class TestRoutable implements RoutableInterface
 {
-    /**
-     * @var RouteInterface
-     */
-    private $route;
+    private ?\Sulu\Bundle\RouteBundle\Model\RouteInterface $route = null;
 
     /**
      * @param RouteInterface $route

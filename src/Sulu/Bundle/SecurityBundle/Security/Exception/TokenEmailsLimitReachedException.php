@@ -23,10 +23,7 @@ class TokenEmailsLimitReachedException extends SecurityException
      */
     private $limit;
 
-    /**
-     * @var UserInterface
-     */
-    private $user;
+    private \Sulu\Component\Security\Authentication\UserInterface $user;
 
     public function __construct($limit, UserInterface $user)
     {

@@ -24,7 +24,7 @@ class UnrecognizedSystemCollection extends \Exception
     /**
      * @var string []
      */
-    private $recognizedSystemCollections;
+    private array $recognizedSystemCollections;
 
     public function __construct($key, array $recognizedSystemCollections)
     {

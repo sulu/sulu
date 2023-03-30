@@ -13,27 +13,16 @@ namespace Sulu\Bundle\PageBundle\Tests\Functional\Command;
 
 use Sulu\Bundle\PageBundle\Command\ContentLocaleCopyCommand;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Sulu\Component\DocumentManager\DocumentManager;
-use Sulu\Component\DocumentManager\DocumentRegistry;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class ContentLocaleCopyCommandTest extends SuluTestCase
 {
-    /**
-     * @var CommandTester
-     */
-    private $tester;
+    private \Symfony\Component\Console\Tester\CommandTester $tester;
 
-    /**
-     * @var DocumentManager
-     */
-    private $documentManager;
+    private ?object $documentManager = null;
 
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
+    private ?object $documentRegistry = null;
 
     public function setUp(): void
     {

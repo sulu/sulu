@@ -29,12 +29,9 @@ class MixinSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<MetadataFactoryInterface>
      */
-    private $metadataFactory;
+    private ObjectProphecy $metadataFactory;
 
-    /**
-     * @var MixinSubscriber
-     */
-    private $mixinSubscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\MixinSubscriber $mixinSubscriber;
 
     public function setUp(): void
     {

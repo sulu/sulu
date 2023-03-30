@@ -16,21 +16,14 @@ use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Security\Authentication\RoleInterface;
-use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class InitCommandTest extends SuluTestCase
 {
-    /**
-     * @var CommandTester
-     */
-    private $tester;
+    private \Symfony\Component\Console\Tester\CommandTester $tester;
 
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
+    private ?object $roleRepository = null;
 
     public function setUp(): void
     {

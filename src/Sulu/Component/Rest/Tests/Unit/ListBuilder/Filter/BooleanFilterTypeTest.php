@@ -23,15 +23,12 @@ class BooleanFilterTypeTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var BooleanFilterType
-     */
-    private $booleanFilterType;
+    private \Sulu\Component\Rest\ListBuilder\Filter\BooleanFilterType $booleanFilterType;
 
     /**
      * @var ObjectProphecy<ListBuilderInterface>
      */
-    private $listBuilder;
+    private ObjectProphecy $listBuilder;
 
     public function setUp(): void
     {

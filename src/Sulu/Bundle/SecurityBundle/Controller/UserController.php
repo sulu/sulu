@@ -48,27 +48,21 @@ class UserController extends AbstractRestController implements ClassResourceInte
     /**
      * @var FormatOptionsManagerInterface
      */
-    private $restHelper;
+    private \Sulu\Component\Rest\RestHelperInterface $restHelper;
 
     /**
      * @var EntityManagerInterface
      */
-    private $doctrineListBuilderFactory;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory;
 
     /**
      * @var EntityManagerInterface
      */
-    private $userManager;
+    private \Sulu\Bundle\AdminBundle\UserManager\UserManagerInterface $userManager;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var string
-     */
-    private $userClass;
+    private string $userClass;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

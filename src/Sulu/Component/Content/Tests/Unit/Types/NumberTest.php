@@ -31,25 +31,22 @@ class NumberTest extends TestCase
      */
     private $template;
 
-    /**
-     * @var Number
-     */
-    private $number;
+    private \Sulu\Component\Content\Types\Number $number;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
     /**
      * @var ObjectProphecy<PropertyInterface>
      */
-    private $property;
+    private ObjectProphecy $property;
 
     /**
      * @var ObjectProphecy<NodePropertyInterface>
      */
-    private $nodeProperty;
+    private ObjectProphecy $nodeProperty;
 
     public function setUp(): void
     {

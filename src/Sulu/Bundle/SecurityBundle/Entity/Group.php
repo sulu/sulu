@@ -61,22 +61,19 @@ class Group extends ApiEntity implements AuditableInterface
     /**
      * @var Collection<int, self>
      */
-    private $children;
+    private \Doctrine\Common\Collections\ArrayCollection|array $children;
 
     /**
      * @var Collection<int, UserGroup>
      */
-    private $userGroups;
+    private \Doctrine\Common\Collections\ArrayCollection|array $userGroups;
 
-    /**
-     * @var Group|null
-     */
-    private $parent;
+    private ?\Sulu\Bundle\SecurityBundle\Entity\Group $parent = null;
 
     /**
      * @var Collection<int, RoleInterface>
      */
-    private $roles;
+    private \Doctrine\Common\Collections\ArrayCollection|array $roles;
 
     /**
      * @var UserInterface|null

@@ -35,27 +35,24 @@ class TeaserContentTypeTest extends TestCase
     /**
      * @var ObjectProphecy<TeaserProviderPoolInterface>
      */
-    private $teaserProviderPool;
+    private ObjectProphecy $teaserProviderPool;
 
     /**
      * @var ObjectProphecy<TeaserManagerInterface>
      */
-    private $teaserManager;
+    private ObjectProphecy $teaserManager;
 
     /**
      * @var ObjectProphecy<ReferenceStorePoolInterface>
      */
-    private $referenceStorePool;
+    private ObjectProphecy $referenceStorePool;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
      */
-    private $mediaReferenceStore;
+    private ObjectProphecy $mediaReferenceStore;
 
-    /**
-     * @var TeaserContentType
-     */
-    private $contentType;
+    private \Sulu\Bundle\PageBundle\Teaser\TeaserContentType $contentType;
 
     protected function setUp(): void
     {

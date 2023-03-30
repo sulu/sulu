@@ -18,10 +18,7 @@ use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
  */
 class TeaserManager implements TeaserManagerInterface
 {
-    /**
-     * @var TeaserProviderPoolInterface
-     */
-    private $providerPool;
+    private \Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface $providerPool;
 
     public function __construct(TeaserProviderPoolInterface $providerPool)
     {

@@ -23,15 +23,9 @@ class DeviceDetectorSubscriberTest extends SuluTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var DeviceDetector
-     */
-    private $deviceDetector;
+    private \DeviceDetector\DeviceDetector $deviceDetector;
 
-    /**
-     * @var DeviceDetectorSubscriber
-     */
-    private $deviceDetectorSubscriber;
+    private \Sulu\Bundle\AudienceTargetingBundle\EventListener\DeviceDetectorSubscriber $deviceDetectorSubscriber;
 
     protected function setUp(): void
     {

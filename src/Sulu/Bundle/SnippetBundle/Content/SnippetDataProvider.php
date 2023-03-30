@@ -41,50 +41,23 @@ class SnippetDataProvider implements DataProviderInterface
      */
     private $configuration;
 
-    /**
-     * @var ContentQueryExecutorInterface
-     */
-    private $contentQueryExecutor;
+    private \Sulu\Component\Content\Query\ContentQueryExecutorInterface $contentQueryExecutor;
 
-    /**
-     * @var ContentQueryBuilderInterface
-     */
-    private $snippetQueryBuilder;
+    private \Sulu\Component\Content\Query\ContentQueryBuilderInterface $snippetQueryBuilder;
 
-    /**
-     * @var SuluNodeHelper
-     */
-    private $nodeHelper;
+    private \Sulu\Component\Util\SuluNodeHelper $nodeHelper;
 
-    /**
-     * @var LazyLoadingValueHolderFactory
-     */
-    private $proxyFactory;
+    private \ProxyManager\Factory\LazyLoadingValueHolderFactory $proxyFactory;
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $referenceStore;
+    private \Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface $referenceStore;
 
-    /**
-     * @var bool
-     */
-    private $hasAudienceTargeting;
+    private bool $hasAudienceTargeting;
 
-    /**
-     * @var MetadataProviderInterface|null
-     */
-    private $formMetadataProvider;
+    private ?\Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface $formMetadataProvider = null;
 
-    /**
-     * @var TokenStorageInterface|null
-     */
-    private $tokenStorage;
+    private ?\Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage = null;
 
     public function __construct(
         ContentQueryExecutorInterface $contentQueryExecutor,

@@ -31,15 +31,9 @@ class UserGroup extends ApiEntity
      */
     private $id;
 
-    /**
-     * @var UserInterface|null
-     */
-    private $user;
+    private ?\Sulu\Component\Security\Authentication\UserInterface $user = null;
 
-    /**
-     * @var Group|null
-     */
-    private $group;
+    private ?\Sulu\Bundle\SecurityBundle\Entity\Group $group = null;
 
     /**
      * Set locale.

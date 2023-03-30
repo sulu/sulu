@@ -18,10 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class UrlRequestProcessorTest extends TestCase
 {
-    /**
-     * @var UrlRequestProcessor
-     */
-    private $urlRequestProcessor;
+    private \Sulu\Component\Webspace\Analyzer\Attributes\UrlRequestProcessor $urlRequestProcessor;
 
     public function setUp(): void
     {

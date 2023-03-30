@@ -26,15 +26,9 @@ class RecoverCommand extends Command
 {
     protected static $defaultName = 'sulu:categories:recover';
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var CategoryRepositoryInterface
-     */
-    private $categoryRepository;
+    private \Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface $categoryRepository;
 
     public function __construct(EntityManagerInterface $entityManager, CategoryRepositoryInterface $categoryRepository)
     {

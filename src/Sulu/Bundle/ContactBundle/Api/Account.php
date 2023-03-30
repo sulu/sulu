@@ -42,10 +42,7 @@ class Account extends ApiWrapper
 {
     public const TYPE = 'account';
 
-    /**
-     * @var Media
-     */
-    private $logo = null;
+    private ?\Sulu\Bundle\MediaBundle\Api\Media $logo = null;
 
     /**
      * @param string $locale The locale of this product

@@ -20,10 +20,7 @@ class DocumentRegistryTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var DocumentRegistry
-     */
-    private $registry;
+    private \Sulu\Component\DocumentManager\DocumentRegistry $registry;
 
     public function setUp(): void
     {

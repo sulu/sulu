@@ -26,7 +26,7 @@ class DomainEventDispatcherTest extends TestCase
     /**
      * @var ObjectProphecy<EventDispatcherInterface>
      */
-    private $innerEventDispatcher;
+    private ObjectProphecy $innerEventDispatcher;
 
     public function setUp(): void
     {

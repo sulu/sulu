@@ -25,20 +25,11 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CacheController
 {
-    /**
-     * @var CacheClearerInterface
-     */
-    private $cacheClearer;
+    private \Sulu\Bundle\WebsiteBundle\Cache\CacheClearerInterface $cacheClearer;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
     public function __construct(
         CacheClearerInterface $cacheClearer,

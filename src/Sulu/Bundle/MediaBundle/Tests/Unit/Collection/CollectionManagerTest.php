@@ -37,42 +37,42 @@ class CollectionManagerTest extends TestCase
     /**
      * @var ObjectProphecy<CollectionRepository>
      */
-    private $collectionRepository;
+    private ObjectProphecy $collectionRepository;
 
     /**
      * @var ObjectProphecy<MediaRepository>
      */
-    private $mediaRepository;
+    private ObjectProphecy $mediaRepository;
 
     /**
      * @var ObjectProphecy<FormatManagerInterface>
      */
-    private $formatManager;
+    private ObjectProphecy $formatManager;
 
     /**
      * @var ObjectProphecy<UserRepositoryInterface>
      */
-    private $userRepository;
+    private ObjectProphecy $userRepository;
 
     /**
      * @var ObjectProphecy<EntityManager>
      */
-    private $entityManager;
+    private ObjectProphecy $entityManager;
 
     /**
      * @var ObjectProphecy<DomainEventCollectorInterface>
      */
-    private $domainEventCollector;
+    private ObjectProphecy $domainEventCollector;
 
     /**
      * @var ObjectProphecy<TrashManagerInterface>
      */
-    private $trashManager;
+    private ObjectProphecy $trashManager;
 
     /**
      * @var CollectionManagerInterface
      */
-    private $collectionManager;
+    private \Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManager $collectionManager;
 
     public function setUp(): void
     {

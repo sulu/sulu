@@ -26,10 +26,7 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
  */
 class CacheInvalidationListener
 {
-    /**
-     * @var null|CacheManagerInterface
-     */
-    private $cacheManager;
+    private ?\Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface $cacheManager = null;
 
     public function __construct(?CacheManagerInterface $cacheManager)
     {

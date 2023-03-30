@@ -34,30 +34,24 @@ class VersionSubscriber implements EventSubscriberInterface
 {
     public const VERSION_PROPERTY = 'sulu:versions';
 
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
+    private \PHPCR\SessionInterface $defaultSession;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
+    private \Sulu\Component\DocumentManager\PropertyEncoder $propertyEncoder;
 
     /**
      * @var VersionManager
      */
-    private $versionManager;
+    private \PHPCR\Version\VersionManagerInterface $versionManager;
 
     /**
      * @var string[]
      */
-    private $checkoutUuids = [];
+    private array $checkoutUuids = [];
 
     /**
      * @var string[]
      */
-    private $checkpointUuids = [];
+    private array $checkpointUuids = [];
 
     public function __construct(SessionInterface $defaultSession, PropertyEncoder $propertyEncoder)
     {

@@ -38,45 +38,27 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  */
 class CustomUrlManager implements CustomUrlManagerInterface
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
     /**
      * @var DocumentInspector
      */
     protected $documentInspector;
 
-    /**
-     * @var CustomUrlRepository
-     */
-    private $customUrlRepository;
+    private \Sulu\Component\CustomUrl\Repository\CustomUrlRepository $customUrlRepository;
 
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
+    private \Sulu\Component\DocumentManager\MetadataFactoryInterface $metadataFactory;
 
-    /**
-     * @var PathBuilder
-     */
-    private $pathBuilder;
+    private \Sulu\Component\DocumentManager\PathBuilder $pathBuilder;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
+    private \Sulu\Component\Webspace\Manager\WebspaceManagerInterface $webspaceManager;
 
     /**
      * @var string
      */
     private $environment;
 
-    /**
-     * @var DocumentDomainEventCollectorInterface
-     */
-    private $documentDomainEventCollector;
+    private \Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface $documentDomainEventCollector;
 
     public function __construct(
         DocumentManagerInterface $documentManager,

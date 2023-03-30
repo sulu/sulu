@@ -26,10 +26,7 @@ class ContactLocale
      */
     private $id;
 
-    /**
-     * @var ContactInterface
-     */
-    private $contact;
+    private ?\Sulu\Bundle\ContactBundle\Entity\ContactInterface $contact = null;
 
     /**
      * Set locale.

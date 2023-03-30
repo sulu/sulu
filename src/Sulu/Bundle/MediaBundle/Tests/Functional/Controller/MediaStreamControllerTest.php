@@ -17,15 +17,11 @@ use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadCollectionTypes;
 use Sulu\Bundle\MediaBundle\DataFixtures\ORM\LoadMediaTypes;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MediaStreamControllerTest extends WebsiteTestCase
 {
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

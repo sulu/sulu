@@ -15,15 +15,9 @@ use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 
 class SecuritySystemsSelect
 {
-    /**
-     * @var AdminPool
-     */
-    private $adminPool;
+    private \Sulu\Bundle\AdminBundle\Admin\AdminPool $adminPool;
 
-    /**
-     * @var string
-     */
-    private $suluSecuritySystem;
+    private string $suluSecuritySystem;
 
     public function __construct(AdminPool $adminPool, string $suluSecuritySystem)
     {

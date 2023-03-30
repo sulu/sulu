@@ -32,30 +32,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class MediaDataProvider extends BaseDataProvider
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private \Symfony\Component\HttpFoundation\RequestStack $requestStack;
 
-    /**
-     * @var CollectionManagerInterface
-     */
-    private $collectionManager;
+    private \Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface $collectionManager;
 
-    /**
-     * @var bool
-     */
-    private $hasAudienceTargeting;
+    private bool $hasAudienceTargeting;
 
-    /**
-     * @var EntityManagerInterface|null
-     */
-    private $entityManager;
+    private ?\Doctrine\ORM\EntityManagerInterface $entityManager = null;
 
-    /**
-     * @var TranslatorInterface|null
-     */
-    private $translator;
+    private ?\Symfony\Contracts\Translation\TranslatorInterface $translator = null;
 
     public function __construct(
         DataProviderRepositoryInterface $repository,

@@ -29,22 +29,19 @@ class SnippetContentTest extends TestCase
     /**
      * @var ObjectProphecy<DefaultSnippetManagerInterface>
      */
-    private $defaultSnippetManager;
+    private ObjectProphecy $defaultSnippetManager;
 
     /**
      * @var ObjectProphecy<SnippetResolverInterface>
      */
-    private $snippetResolver;
+    private ObjectProphecy $snippetResolver;
 
     /**
      * @var ObjectProphecy<ReferenceStoreInterface>
      */
-    private $referenceStore;
+    private ObjectProphecy $referenceStore;
 
-    /**
-     * @var SnippetContent
-     */
-    private $contentType;
+    private \Sulu\Bundle\SnippetBundle\Content\SnippetContent $contentType;
 
     protected function setUp(): void
     {

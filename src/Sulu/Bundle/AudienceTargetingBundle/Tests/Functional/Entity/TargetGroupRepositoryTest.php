@@ -24,7 +24,7 @@ class TargetGroupRepositoryTest extends SuluTestCase
     /**
      * @var TargetGroupRepository
      */
-    private $targetGroupRepository;
+    private \Doctrine\ORM\EntityRepository $targetGroupRepository;
 
     public function setUp(): void
     {

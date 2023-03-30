@@ -17,15 +17,12 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 class UserCreatedEvent extends DomainEvent
 {
-    /**
-     * @var UserInterface
-     */
-    private $resourceUser;
+    private \Sulu\Component\Security\Authentication\UserInterface $resourceUser;
 
     /**
      * @var mixed[]|null
      */
-    private $payload;
+    private array $payload;
 
     /**
      * @param mixed[] $payload

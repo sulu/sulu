@@ -19,10 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class RequestHashChecker implements RequestHashCheckerInterface
 {
-    /**
-     * @var HasherInterface
-     */
-    private $hasher;
+    private \Sulu\Component\Hash\HasherInterface $hasher;
 
     /**
      * @var string

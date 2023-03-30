@@ -18,20 +18,11 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 
 class CollectionRemovedEvent extends DomainEvent
 {
-    /**
-     * @var int
-     */
-    private $collectionId;
+    private int $collectionId;
 
-    /**
-     * @var string|null
-     */
-    private $collectionTitle;
+    private ?string $collectionTitle = null;
 
-    /**
-     * @var string|null
-     */
-    private $collectionTitleLocale;
+    private ?string $collectionTitleLocale = null;
 
     public function __construct(
         int $collectionId,

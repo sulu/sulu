@@ -36,45 +36,27 @@ class AccessControlManager implements AccessControlManagerInterface
      */
     protected $accessControlProviders = [];
 
-    /**
-     * @var MaskConverterInterface
-     */
-    private $maskConverter;
+    private \Sulu\Component\Security\Authorization\MaskConverterInterface $maskConverter;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private \Symfony\Component\EventDispatcher\EventDispatcherInterface $eventDispatcher;
 
-    /**
-     * @var SystemStoreInterface
-     */
-    private $systemStore;
+    private \Sulu\Bundle\SecurityBundle\System\SystemStoreInterface $systemStore;
 
     /**
      * @var DescendantProviderInterface[]
      */
-    private $descendantProviders = [];
+    private iterable $descendantProviders = [];
 
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
+    private \Sulu\Component\Security\Authentication\RoleRepositoryInterface $roleRepository;
 
-    /**
-     * @var AccessControlRepositoryInterface
-     */
-    private $accessControlRepository;
+    private \Sulu\Component\Security\Authorization\AccessControl\AccessControlRepositoryInterface $accessControlRepository;
 
-    /**
-     * @var Security|null
-     */
-    private $security;
+    private ?\Symfony\Component\Security\Core\Security $security = null;
 
     /**
      * @var array<string, int>
      */
-    private $permissions;
+    private array $permissions;
 
     /**
      * @param array<string, int> $permissions

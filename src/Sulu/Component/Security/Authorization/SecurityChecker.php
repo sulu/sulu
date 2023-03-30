@@ -20,15 +20,9 @@ use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundE
  */
 class SecurityChecker extends AbstractSecurityChecker
 {
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
+    private \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenStorage;
 
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorizationChecker;
+    private \Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface $authorizationChecker;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,

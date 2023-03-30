@@ -21,10 +21,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  */
 class ListXmlLoader
 {
-    /**
-     * @var ParameterBagInterface
-     */
-    private $parameterBag;
+    private \Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface $parameterBag;
 
     public function __construct(ParameterBagInterface $parameterBag)
     {

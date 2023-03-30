@@ -12,15 +12,11 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class SegmentControllerTest extends WebsiteTestCase
 {
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

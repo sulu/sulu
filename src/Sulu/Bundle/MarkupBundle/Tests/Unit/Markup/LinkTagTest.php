@@ -30,22 +30,16 @@ class LinkTagTest extends TestCase
     /**
      * @var ObjectProphecy<LinkProviderInterface>[]
      */
-    private $providers;
+    private ?array $providers = null;
 
     /**
      * @var ObjectProphecy<LinkProviderPoolInterface>
      */
-    private $providerPool;
+    private ObjectProphecy $providerPool;
 
-    /**
-     * @var UrlHelper
-     */
-    private $urlHelper;
+    private \Symfony\Component\HttpFoundation\UrlHelper $urlHelper;
 
-    /**
-     * @var LinkTag
-     */
-    private $linkTag;
+    private \Sulu\Bundle\MarkupBundle\Markup\LinkTag $linkTag;
 
     protected function setUp(): void
     {

@@ -18,15 +18,12 @@ class ListMetadata
      */
     private $resource;
 
-    /**
-     * @var string
-     */
-    private $key;
+    private ?string $key = null;
 
     /**
      * @var AbstractPropertyMetadata[]
      */
-    private $propertiesMetadata = [];
+    private array $propertiesMetadata = [];
 
     /**
      * @param string $resource

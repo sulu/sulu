@@ -38,18 +38,14 @@ class StructureXmlLoader extends AbstractLoader
 
     /**
      * Tags that are required in template.
-     *
-     * @var array
      */
-    private $requiredTagNames = [];
+    private array $requiredTagNames = [];
 
     /**
      * reserved names for sulu internals
      * TODO should be possible to inject from config.
-     *
-     * @var array
      */
-    private $reservedPropertyNames = [
+    private array $reservedPropertyNames = [
         'template',
         'changer',
         'changed',
@@ -71,40 +67,23 @@ class StructureXmlLoader extends AbstractLoader
 
     /**
      * Properties that are required in template.
-     *
-     * @var array
      */
-    private $requiredPropertyNames = [];
+    private array $requiredPropertyNames = [];
 
     /**
      * @var array<int, string>
      */
-    private $locales;
+    private array $locales;
 
-    /**
-     * @var CacheLifetimeResolverInterface
-     */
-    private $cacheLifetimeResolver;
+    private \Sulu\Bundle\HttpCacheBundle\CacheLifetime\CacheLifetimeResolverInterface $cacheLifetimeResolver;
 
-    /**
-     * @var PropertiesXmlParser
-     */
-    private $propertiesXmlParser;
+    private \Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser $propertiesXmlParser;
 
-    /**
-     * @var SchemaXmlParser
-     */
-    private $schemaXmlParser;
+    private \Sulu\Component\Content\Metadata\Parser\SchemaXmlParser $schemaXmlParser;
 
-    /**
-     * @var ContentTypeManagerInterface
-     */
-    private $contentTypeManager;
+    private \Sulu\Component\Content\ContentTypeManagerInterface $contentTypeManager;
 
-    /**
-     * @var TranslatorInterface|null
-     */
-    private $translator;
+    private ?\Symfony\Contracts\Translation\TranslatorInterface $translator = null;
 
     /**
      * @param array<string, string> $locales

@@ -31,37 +31,31 @@ class ExplicitSubscriberTest extends TestCase
     /**
      * @var ObjectProphecy<PersistEvent>
      */
-    private $persistEvent;
+    private ObjectProphecy $persistEvent;
 
-    /**
-     * @var \stdClass
-     */
-    private $document;
+    private \stdClass $document;
 
     /**
      * @var ObjectProphecy<NodeManager>
      */
-    private $nodeManager;
+    private ObjectProphecy $nodeManager;
 
     /**
      * @var ObjectProphecy<ConfigureOptionsEvent>
      */
-    private $configureEvent;
+    private ObjectProphecy $configureEvent;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $parentNode;
+    private ObjectProphecy $parentNode;
 
     /**
      * @var ObjectProphecy<NodeInterface>
      */
-    private $node;
+    private ObjectProphecy $node;
 
-    /**
-     * @var ExplicitSubscriber
-     */
-    private $subscriber;
+    private \Sulu\Component\DocumentManager\Subscriber\Behavior\Path\ExplicitSubscriber $subscriber;
 
     public function setUp(): void
     {

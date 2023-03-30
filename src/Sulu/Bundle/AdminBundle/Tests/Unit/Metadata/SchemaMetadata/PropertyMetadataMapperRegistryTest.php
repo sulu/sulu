@@ -27,12 +27,9 @@ class PropertyMetadataMapperRegistryTest extends TestCase
     /**
      * @var ObjectProphecy<ServiceLocator>
      */
-    private $serviceLocator;
+    private ObjectProphecy $serviceLocator;
 
-    /**
-     * @var PropertyMetadataMapperRegistry
-     */
-    private $propertyMetadataMapperRegistry;
+    private \Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry $propertyMetadataMapperRegistry;
 
     protected function setUp(): void
     {

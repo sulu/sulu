@@ -83,55 +83,25 @@ class ContactController extends AbstractRestController implements ClassResourceI
 
     protected $accountContactFieldDescriptors;
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
+    private \Sulu\Component\Rest\RestHelperInterface $restHelper;
 
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
+    private \Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface $fieldDescriptorFactory;
 
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $listBuilderFactory;
+    private \Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface $listBuilderFactory;
 
-    /**
-     * @var ContactManagerInterface
-     */
-    private $contactManager;
+    private \Sulu\Bundle\ContactBundle\Contact\ContactManagerInterface $contactManager;
 
-    /**
-     * @var ContactRepositoryInterface
-     */
-    private $contactRepository;
+    private \Sulu\Bundle\ContactBundle\Entity\ContactRepositoryInterface $contactRepository;
 
-    /**
-     * @var IndexComparatorInterface
-     */
-    private $indexComparator;
+    private \Sulu\Bundle\ContactBundle\Util\IndexComparatorInterface $indexComparator;
 
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
+    private \Sulu\Component\Security\Authentication\UserRepositoryInterface $userRepository;
 
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
+    private \Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface $mediaManager;
 
-    /**
-     * @var string
-     */
-    private $contactClass;
+    private string $contactClass;
 
-    /**
-     * @var string
-     */
-    private $suluSecuritySystem;
+    private string $suluSecuritySystem;
 
     public function __construct(
         ViewHandlerInterface $viewHandler,

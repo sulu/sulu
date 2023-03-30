@@ -13,7 +13,6 @@ namespace Sulu\Bundle\AdminBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\AdminBundle\Entity\Collaboration;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -22,10 +21,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class CollaborationControllerTest extends SuluTestCase
 {
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {

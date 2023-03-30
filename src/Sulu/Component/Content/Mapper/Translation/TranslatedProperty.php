@@ -19,10 +19,7 @@ use Sulu\Component\Content\Compat\PropertyTag;
  */
 class TranslatedProperty implements PropertyInterface
 {
-    /**
-     * @var PropertyInterface
-     */
-    private $property;
+    private \Sulu\Component\Content\Compat\PropertyInterface $property;
 
     /**
      * @var string

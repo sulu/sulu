@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\CategoryBundle\Tests\Functional\Trash;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryMeta;
@@ -32,15 +31,9 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class CategoryTrashItemHandlerTest extends SuluTestCase
 {
-    /**
-     * @var CategoryTrashItemHandler
-     */
-    private $categoryTrashItemHandler;
+    private ?object $categoryTrashItemHandler = null;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private ?\Doctrine\ORM\EntityManagerInterface $entityManager = null;
 
     public function setUp(): void
     {

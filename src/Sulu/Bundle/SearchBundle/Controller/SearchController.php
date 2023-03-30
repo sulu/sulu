@@ -27,35 +27,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SearchController
 {
-    /**
-     * @var SearchManagerInterface
-     */
-    private $searchManager;
+    private \Massive\Bundle\SearchBundle\Search\SearchManagerInterface $searchManager;
 
-    /**
-     * @var ProviderInterface
-     */
-    private $metadataProvider;
+    private \Massive\Bundle\SearchBundle\Search\Metadata\ProviderInterface $metadataProvider;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
+    private \Sulu\Component\Security\Authorization\SecurityCheckerInterface $securityChecker;
 
-    /**
-     * @var ViewHandlerInterface
-     */
-    private $viewHandler;
+    private \FOS\RestBundle\View\ViewHandlerInterface $viewHandler;
 
-    /**
-     * @var ListRestHelperInterface
-     */
-    private $listRestHelper;
+    private \Sulu\Component\Rest\ListBuilder\ListRestHelperInterface $listRestHelper;
 
-    /**
-     * @var IndexConfigurationProviderInterface
-     */
-    private $indexConfigurationProvider;
+    private \Sulu\Bundle\SearchBundle\Search\Configuration\IndexConfigurationProviderInterface $indexConfigurationProvider;
 
     public function __construct(
         SearchManagerInterface $searchManager,

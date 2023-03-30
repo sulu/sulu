@@ -20,12 +20,9 @@ class RouteRepositoryTest extends SuluTestCase
     /**
      * @var Route
      */
-    private $route;
+    private \Sulu\Bundle\RouteBundle\Model\RouteInterface $route;
 
-    /**
-     * @var int
-     */
-    private $routeId;
+    private int $routeId;
 
     public function setUp(): void
     {

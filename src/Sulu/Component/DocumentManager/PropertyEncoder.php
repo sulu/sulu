@@ -18,10 +18,7 @@ use Sulu\Component\DocumentManager\Exception\InvalidLocaleException;
  */
 class PropertyEncoder
 {
-    /**
-     * @var NamespaceRegistry
-     */
-    private $namespaceRegistry;
+    private \Sulu\Component\DocumentManager\NamespaceRegistry $namespaceRegistry;
 
     public function __construct(NamespaceRegistry $namespaceRegistry)
     {

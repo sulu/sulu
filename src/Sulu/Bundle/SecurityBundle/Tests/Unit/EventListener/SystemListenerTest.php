@@ -27,12 +27,12 @@ class SystemListenerTest extends TestCase
     /**
      * @var ObjectProphecy<SystemStoreInterface>
      */
-    private $systemStore;
+    private ObjectProphecy $systemStore;
 
     /**
      * @var ObjectProphecy<RequestAnalyzerInterface>
      */
-    private $requestAnalyzer;
+    private ObjectProphecy $requestAnalyzer;
 
     public function setUp(): void
     {

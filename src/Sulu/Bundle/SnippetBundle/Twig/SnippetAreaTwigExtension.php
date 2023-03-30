@@ -24,20 +24,11 @@ use Twig\TwigFunction;
  */
 class SnippetAreaTwigExtension extends AbstractExtension
 {
-    /**
-     * @var DefaultSnippetManagerInterface
-     */
-    private $defaultSnippetManager;
+    private \Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface $defaultSnippetManager;
 
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
+    private \Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface $requestAnalyzer;
 
-    /**
-     * @var SnippetResolverInterface
-     */
-    private $snippetResolver;
+    private \Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface $snippetResolver;
 
     public function __construct(
         DefaultSnippetManagerInterface $defaultSnippetManager,

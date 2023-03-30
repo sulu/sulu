@@ -18,10 +18,7 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 
 class AccountContactAddedEvent extends DomainEvent
 {
-    /**
-     * @var AccountContact
-     */
-    private $accountContact;
+    private \Sulu\Bundle\ContactBundle\Entity\AccountContact $accountContact;
 
     public function __construct(AccountContact $accountContact)
     {

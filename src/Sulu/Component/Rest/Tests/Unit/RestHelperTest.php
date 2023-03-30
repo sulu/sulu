@@ -26,20 +26,17 @@ class RestHelperTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var RestHelper
-     */
-    private $restHelper;
+    private \Sulu\Component\Rest\RestHelper $restHelper;
 
     /**
      * @var ObjectProphecy<ListRestHelper>
      */
-    private $listRestHelper;
+    private ObjectProphecy $listRestHelper;
 
     /**
      * @var ObjectProphecy<ListBuilderInterface>
      */
-    private $listBuilder;
+    private ObjectProphecy $listBuilder;
 
     public function setUp(): void
     {

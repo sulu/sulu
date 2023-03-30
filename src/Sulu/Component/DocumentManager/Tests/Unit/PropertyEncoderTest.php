@@ -22,15 +22,12 @@ class PropertyEncoderTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var PropertyEncoder
-     */
-    private $encoder;
+    private \Sulu\Component\DocumentManager\PropertyEncoder $encoder;
 
     /**
      * @var ObjectProphecy<NamespaceRegistry>
      */
-    private $namespaceRegistry;
+    private ObjectProphecy $namespaceRegistry;
 
     public function setUp(): void
     {

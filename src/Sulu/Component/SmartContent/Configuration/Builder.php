@@ -28,10 +28,7 @@ class Builder implements BuilderInterface
         return new self();
     }
 
-    /**
-     * @var ProviderConfiguration
-     */
-    private $configuration;
+    private \Sulu\Component\SmartContent\Configuration\ProviderConfiguration $configuration;
 
     public function __construct()
     {

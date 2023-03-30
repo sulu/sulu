@@ -21,10 +21,7 @@ namespace Sulu\Component\DocumentManager;
  */
 class PathSegmentRegistry
 {
-    /**
-     * @var array
-     */
-    private $pathSegments;
+    private array $pathSegments;
 
     /**
      * @param array $pathSegments Array of roles to pathSegments

@@ -20,10 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Version201507281529 implements VersionInterface, ContainerAwareInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
+    private ?\Symfony\Component\DependencyInjection\ContainerInterface $container = null;
 
     public function setContainer(ContainerInterface $container = null)
     {

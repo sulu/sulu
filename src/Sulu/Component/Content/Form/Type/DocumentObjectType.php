@@ -22,10 +22,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class DocumentObjectType extends AbstractType
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
+    private \Sulu\Component\DocumentManager\DocumentManagerInterface $documentManager;
 
     public function __construct(DocumentManagerInterface $documentManager)
     {

@@ -28,25 +28,16 @@ class FormXmlLoader extends AbstractLoader
 
     public const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
 
-    /**
-     * @var PropertiesXmlParser
-     */
-    private $propertiesXmlParser;
+    private \Sulu\Component\Content\Metadata\Parser\PropertiesXmlParser $propertiesXmlParser;
 
-    /**
-     * @var SchemaXmlParser
-     */
-    private $schemaXmlParser;
+    private \Sulu\Component\Content\Metadata\Parser\SchemaXmlParser $schemaXmlParser;
 
     /**
      * @var string[]
      */
-    private $locales;
+    private array $locales;
 
-    /**
-     * @var FormMetadataMapper
-     */
-    private $formMetadataMapper;
+    private \Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper $formMetadataMapper;
 
     public function __construct(
         PropertiesXmlParser $propertiesXmlParser,

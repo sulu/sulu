@@ -35,12 +35,9 @@ class ListXmlLoaderTest extends TestCase
     /**
      * @var ObjectProphecy<ParameterBagInterface>
      */
-    private $parameterBag;
+    private ObjectProphecy $parameterBag;
 
-    /**
-     * @var ListXmlLoader
-     */
-    private $listXmlLoader;
+    private \Sulu\Component\Rest\ListBuilder\Metadata\ListXmlLoader $listXmlLoader;
 
     protected function setUp(): void
     {

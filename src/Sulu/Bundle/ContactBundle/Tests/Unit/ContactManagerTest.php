@@ -33,60 +33,57 @@ class ContactManagerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ContactManager
-     */
-    private $contactManager;
+    private \Sulu\Bundle\ContactBundle\Contact\ContactManager $contactManager;
 
     /**
      * @var ObjectProphecy<ObjectManager>
      */
-    private $em;
+    private ObjectProphecy $em;
 
     /**
      * @var ObjectProphecy<TagManagerInterface>
      */
-    private $tagManager;
+    private ObjectProphecy $tagManager;
 
     /**
      * @var ObjectProphecy<MediaManagerInterface>
      */
-    private $mediaManager;
+    private ObjectProphecy $mediaManager;
 
     /**
      * @var ObjectProphecy<AccountRepositoryInterface>
      */
-    private $accountRepository;
+    private ObjectProphecy $accountRepository;
 
     /**
      * @var ObjectProphecy<ContactTitleRepository>
      */
-    private $contactTitleRepository;
+    private ObjectProphecy $contactTitleRepository;
 
     /**
      * @var ObjectProphecy<ContactRepository>
      */
-    private $contactRepository;
+    private ObjectProphecy $contactRepository;
 
     /**
      * @var ObjectProphecy<MediaRepositoryInterface>
      */
-    private $mediaRepository;
+    private ObjectProphecy $mediaRepository;
 
     /**
      * @var ObjectProphecy<DomainEventCollectorInterface>
      */
-    private $eventCollector;
+    private ObjectProphecy $eventCollector;
 
     /**
      * @var ObjectProphecy<TrashManagerInterface>
      */
-    private $trashManager;
+    private ObjectProphecy $trashManager;
 
     /**
      * @var ObjectProphecy<UserRepository>
      */
-    private $userRepository;
+    private ObjectProphecy $userRepository;
 
     protected function setUp(): void
     {

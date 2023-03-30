@@ -11,10 +11,8 @@
 
 namespace Sulu\Bundle\RouteBundle\Tests\Functional\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\RouteBundle\Entity\Route;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class RouteControllerTest extends SuluTestCase
 {
@@ -26,15 +24,9 @@ class RouteControllerTest extends SuluTestCase
 
     public const TEST_LOCALE = 'de';
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private \Doctrine\ORM\EntityManagerInterface $entityManager;
 
-    /**
-     * @var KernelBrowser
-     */
-    private $client;
+    private \Symfony\Bundle\FrameworkBundle\KernelBrowser $client;
 
     public function setUp(): void
     {
