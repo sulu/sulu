@@ -28,6 +28,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  */
 class Configuration implements ConfigurationInterface
 {
+    /**
+     * @return TreeBuilder
+     */
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder('sulu_security');
@@ -128,6 +131,8 @@ class Configuration implements ConfigurationInterface
 
     /**
      * Adds `objects` section.
+     *
+     * @return void
      */
     private function addObjectsSection(ArrayNodeDefinition $node)
     {

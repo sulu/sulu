@@ -20,6 +20,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SnippetType extends AbstractStructureBehaviorType
 {
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $options)
     {
         $options->setDefaults([

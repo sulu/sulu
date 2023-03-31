@@ -59,24 +59,29 @@ class SearchIntegrationTest extends SuluTestCase
         $this->media = new ApiMedia($mediaEntity, 'de', null, $tagManager);
     }
 
-    public function provideIndex()
+    /**
+     * @return array<array{string, class-string<\Throwable>|null}>
+     */
+    public function provideIndex(): array
     {
         return [
             ['sulu-100x100', null],
-            ['invalid', '\InvalidArgumentException'],
+            ['invalid', \InvalidArgumentException::class],
         ];
     }
 
     /**
      * @dataProvider provideIndex
+     *
+     * @param class-string<\Throwable> $expectException
      */
-    public function testIndex($format, $expectException): void
+    public function testIndex(string $format, ?string $expectException): void
     {
         $mediaSelectionContainer = $this->prophesize(MediaSelectionContainer::class);
         $mediaSelectionContainer->getData()->willReturn([$this->media]);
         $mediaSelectionContainer->toArray()->willReturn(null);
 
-        if ($expectException) {
+        if ($expectException !== null) {
             $this->expectException($expectException);
         }
 

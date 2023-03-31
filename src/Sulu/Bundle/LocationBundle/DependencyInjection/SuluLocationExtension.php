@@ -20,6 +20,9 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SuluLocationExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * @return void
+     */
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('sulu_admin')) {
@@ -49,6 +52,9 @@ class SuluLocationExtension extends Extension implements PrependExtensionInterfa
         }
     }
 
+    /**
+     * @return void
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
@@ -60,6 +66,9 @@ class SuluLocationExtension extends Extension implements PrependExtensionInterfa
         $this->configureGeolocators($config, $container, $loader);
     }
 
+    /**
+     * @return void
+     */
     private function configureGeolocators(array $config, ContainerBuilder $container, XmlFileLoader $loader)
     {
         $geolocatorName = $config['geolocator'] ?? null;

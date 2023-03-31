@@ -3781,11 +3781,6 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Rule/ReferrerRuleTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\TestCase\\:\\:expectException\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Rule/RuleCollectionTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\Rule\\\\TargetGroupEvaluatorTest\\:\\:provideEvaluationData\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Rule/TargetGroupEvaluatorTest.php
@@ -4654,11 +4649,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\KeywordController\\:\\:\\$listBuilderFactory \\(Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderFactory\\) does not accept Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderFactoryInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\DependencyInjection\\\\Configuration\\:\\:addObjectsSection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/Configuration.php
 
 		-
 			message: "#^If condition is always true\\.$#"
@@ -11676,17 +11666,7 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/Configuration.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\DependencyInjection\\\\SuluCoreExtension\\:\\:initCache\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\DependencyInjection\\\\SuluCoreExtension\\:\\:initCache\\(\\) has parameter \\$cache with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\DependencyInjection\\\\SuluCoreExtension\\:\\:initContent\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
 
@@ -11696,32 +11676,12 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\DependencyInjection\\\\SuluCoreExtension\\:\\:initFields\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\DependencyInjection\\\\SuluCoreExtension\\:\\:initFields\\(\\) has parameter \\$fieldsConfig with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\DependencyInjection\\\\SuluCoreExtension\\:\\:initListBuilder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\DependencyInjection\\\\SuluCoreExtension\\:\\:initWebspace\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\DependencyInjection\\\\SuluCoreExtension\\:\\:initWebspace\\(\\) has parameter \\$webspaceConfig with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\DependencyInjection\\\\SuluCoreExtension\\:\\:load\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
 
@@ -12881,32 +12841,12 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/SuluDocumentManagerExtension.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\SuluDocumentManagerExtension\\:\\:configureDocumentManager\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/SuluDocumentManagerExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\SuluDocumentManagerExtension\\:\\:configureDocumentManager\\(\\) has parameter \\$config with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/SuluDocumentManagerExtension.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\SuluDocumentManagerExtension\\:\\:configurePathSegmentRegistry\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/SuluDocumentManagerExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\SuluDocumentManagerExtension\\:\\:configurePathSegmentRegistry\\(\\) has parameter \\$config with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/SuluDocumentManagerExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\SuluDocumentManagerExtension\\:\\:load\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/SuluDocumentManagerExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\SuluDocumentManagerExtension\\:\\:prepend\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/SuluDocumentManagerExtension.php
 
@@ -13911,22 +13851,7 @@ parameters:
 			path: src/Sulu/Bundle/LocationBundle/Controller/GeolocatorController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\LocationBundle\\\\DependencyInjection\\\\SuluLocationExtension\\:\\:configureGeolocators\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/LocationBundle/DependencyInjection/SuluLocationExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\LocationBundle\\\\DependencyInjection\\\\SuluLocationExtension\\:\\:configureGeolocators\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/LocationBundle/DependencyInjection/SuluLocationExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\LocationBundle\\\\DependencyInjection\\\\SuluLocationExtension\\:\\:load\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/LocationBundle/DependencyInjection/SuluLocationExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\LocationBundle\\\\DependencyInjection\\\\SuluLocationExtension\\:\\:prepend\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/LocationBundle/DependencyInjection/SuluLocationExtension.php
 
@@ -19672,21 +19597,6 @@ parameters:
 
 		-
 			message: "#^Class Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media constructor invoked with 4 parameters, 2\\-3 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/SearchIntegration/SearchIntegrationTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\SearchIntegration\\\\SearchIntegrationTest\\:\\:provideIndex\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/SearchIntegration/SearchIntegrationTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\SearchIntegration\\\\SearchIntegrationTest\\:\\:testIndex\\(\\) has parameter \\$expectException with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/SearchIntegration/SearchIntegrationTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\SearchIntegration\\\\SearchIntegrationTest\\:\\:testIndex\\(\\) has parameter \\$format with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/SearchIntegration/SearchIntegrationTest.php
 
@@ -26846,11 +26756,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\TestCase\\:\\:expectException\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Mapper\\\\ContentMapperTest\\:\\:getHomeUuid\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperTest.php
@@ -29111,11 +29016,6 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/Renderer/PreviewRendererTest.php
 
 		-
-			message: "#^Method PHPUnit\\\\Framework\\\\TestCase\\:\\:expectException\\(\\) invoked with 3 parameters, 1 required\\.$#"
-			count: 5
-			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/Renderer/PreviewRendererTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Tests\\\\Unit\\\\Preview\\\\Renderer\\\\PreviewRendererTest\\:\\:portalDataProvider\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/Renderer/PreviewRendererTest.php
@@ -31249,11 +31149,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between 0 and int\\<1, 2\\> will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/Compiler/TwoFactorCompilerPass.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\DependencyInjection\\\\Configuration\\:\\:addObjectsSection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/Configuration.php
 
 		-
 			message: "#^If condition is always true\\.$#"
@@ -33787,11 +33682,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Form\\\\SnippetType\\:\\:buildForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Form/SnippetType.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Form\\\\SnippetType\\:\\:configureOptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Form/SnippetType.php
 
@@ -38263,11 +38153,6 @@ parameters:
 		-
 			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with array will always evaluate to false\\.$#"
 			count: 2
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Twig/ContentTwigExtensionTest.php
-
-		-
-			message: "#^Method PHPUnit\\\\Framework\\\\TestCase\\:\\:expectException\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Twig/ContentTwigExtensionTest.php
 
 		-

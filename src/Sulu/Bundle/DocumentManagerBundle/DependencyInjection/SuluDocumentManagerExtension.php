@@ -28,6 +28,9 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class SuluDocumentManagerExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * @return void
+     */
     public function prepend(ContainerBuilder $container)
     {
         $preview = $container->hasParameter('sulu.preview') ? $container->getParameter('sulu.preview') : false;
@@ -116,6 +119,9 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         }
     }
 
+    /**
+     * @return void
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
@@ -137,6 +143,9 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         }
     }
 
+    /**
+     * @return void
+     */
     private function configureDocumentManager($config, ContainerBuilder $container)
     {
         $debug = $config['debug'];
@@ -191,6 +200,9 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
             ->addTag('sulu_document_manager.event_subscriber');
     }
 
+    /**
+     * @return void
+     */
     private function configurePathSegmentRegistry($config, ContainerBuilder $container)
     {
         $pathSegments = \array_merge(
