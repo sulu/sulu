@@ -13,6 +13,8 @@ namespace Sulu\Bundle\SecurityBundle\Security;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class AuthenticationEntryPointTest extends TestCase
 {
@@ -27,14 +29,14 @@ class AuthenticationEntryPointTest extends TestCase
     {
         parent::setUp();
 
-        $urlGenerator = $this->prophesize('Symfony\Component\Routing\Generator\UrlGeneratorInterface');
+        $urlGenerator = $this->prophesize(UrlGeneratorInterface::class);
         $urlGenerator->generate('sulu_admin')->willReturn('/admin');
         $this->authenticationEntryPoint = new AuthenticationEntryPoint($urlGenerator->reveal());
     }
 
     public function testStart(): void
     {
-        $request = $this->prophesize('Symfony\Component\HttpFoundation\Request');
+        $request = $this->prophesize(Request::class);
         $result = $this->authenticationEntryPoint->start($request->reveal());
 
         $this->assertEquals(401, $result->getStatusCode());

@@ -29,7 +29,7 @@ class RequestParametersTraitTest extends TestCase
 
     public function setUp(): void
     {
-        $this->requestParametersTrait = $this->getObjectForTrait('Sulu\Component\Rest\RequestParametersTrait');
+        $this->requestParametersTrait = $this->getObjectForTrait(RequestParametersTrait::class);
     }
 
     private function getGetRequestParameterReflection()

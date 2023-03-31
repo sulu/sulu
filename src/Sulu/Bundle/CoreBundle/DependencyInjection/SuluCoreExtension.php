@@ -14,6 +14,7 @@ namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 use Gedmo\Exception;
 use Oro\ORM\Query\AST\Functions\Cast;
 use Oro\ORM\Query\AST\Functions\String\GroupConcat;
+use Sulu\Bundle\CoreBundle\CommandOptional\SuluBuildCommand;
 use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
 use Sulu\Component\Rest\Exception\InsufficientDescendantPermissionsException;
@@ -80,7 +81,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         if ($container->hasExtension('massive_build')) {
             $container->prependExtensionConfig('massive_build', [
-                'command_class' => 'Sulu\Bundle\CoreBundle\CommandOptional\SuluBuildCommand',
+                'command_class' => SuluBuildCommand::class,
             ]);
         }
 
@@ -255,6 +256,9 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         }
     }
 
+    /**
+     * @return void
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
@@ -331,6 +335,9 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             ->addTag('sulu_content.block_visitor');
     }
 
+    /**
+     * @return void
+     */
     private function initWebspace(array $webspaceConfig, ContainerBuilder $container, XmlFileLoader $loader)
     {
         $container->setParameter('sulu_core.webspace.config_dir', $webspaceConfig['config_dir']);
@@ -338,12 +345,18 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('webspace.xml');
     }
 
+    /**
+     * @return void
+     */
     private function initFields(array $fieldsConfig, ContainerBuilder $container)
     {
         $container->setParameter('sulu.fields_defaults.translations', $fieldsConfig['translations']);
         $container->setParameter('sulu.fields_defaults.widths', $fieldsConfig['widths']);
     }
 
+    /**
+     * @return void
+     */
     private function initContent(array $contentConfig, ContainerBuilder $container, XmlFileLoader $loader)
     {
         // Default Language
@@ -401,6 +414,9 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('content.xml');
     }
 
+    /**
+     * @return void
+     */
     private function initCache(array $cache, ContainerBuilder $container, XmlFileLoader $loader)
     {
         $container->setParameter('sulu_core.cache.memoize.default_lifetime', $cache['memoize']['default_lifetime']);
@@ -410,6 +426,8 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
     /**
      * Initializes list builder.
+     *
+     * @return void
      */
     private function initListBuilder(ContainerBuilder $container, XmlFileLoader $loader)
     {

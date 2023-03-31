@@ -82,7 +82,7 @@ class RequestAnalyzerResolverTest extends TestCase
             $webspace->addLocalization($de);
             $webspace->addLocalization($es);
 
-            $this->webspaceManager = $this->prophesize('Sulu\Component\Webspace\Manager\WebspaceManagerInterface');
+            $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
             $this->webspaceManager->findWebspaceByKey('sulu_io')->willReturn($webspace);
         }
     }

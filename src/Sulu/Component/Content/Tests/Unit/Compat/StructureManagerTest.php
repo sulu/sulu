@@ -16,6 +16,8 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Compat\StructureManager;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -66,9 +68,9 @@ class StructureManagerTest extends TestCase
         $this->propertyFactory = $this->prophesize(LegacyPropertyFactory::class);
 
         $typemap = [
-            'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
-            'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
-            'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
+            'page' => '\\' . PageBridge::class,
+            'home' => '\\' . PageBridge::class,
+            'snippet' => '\\' . SnippetBridge::class,
         ];
 
         $this->structureManager = new StructureManager(

@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\Form\Type;
 
+use Sulu\Bundle\PageBundle\Document\HomeDocument;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class HomeDocumentType extends BasePageDocumentType
@@ -18,7 +19,7 @@ class HomeDocumentType extends BasePageDocumentType
     public function configureOptions(OptionsResolver $options)
     {
         $options->setDefaults([
-            'data_class' => 'Sulu\Bundle\PageBundle\Document\HomeDocument',
+            'data_class' => HomeDocument::class,
         ]);
 
         parent::configureOptions($options);

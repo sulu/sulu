@@ -164,7 +164,7 @@ class SitemapGeneratorTest extends SuluTestCase
             )
         );
 
-        $this->webspaceManager = $this->getMockBuilder('Sulu\Component\Webspace\Manager\WebspaceManagerInterface')->getMock();
+        $this->webspaceManager = $this->getMockBuilder(WebspaceManagerInterface::class)->getMock();
         $this->webspaceManager
             ->expects($this->any())
             ->method('findWebspaceByKey')

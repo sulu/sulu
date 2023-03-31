@@ -27,6 +27,7 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProviderInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Sulu\Bundle\SearchBundle\SuluSearchBundle;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -348,7 +349,7 @@ class SuluMediaExtension extends Extension implements PrependExtensionInterface
 
         // enable search
         if (true === $config['search']['enabled']) {
-            if (!\class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
+            if (!\class_exists(SuluSearchBundle::class)) {
                 throw new \InvalidArgumentException(
                     'You have enabled sulu search integration for the SuluMediaBundle, but the SuluSearchBundle must be installed'
                 );

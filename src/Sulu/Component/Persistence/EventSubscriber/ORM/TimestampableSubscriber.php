@@ -45,7 +45,7 @@ class TimestampableSubscriber implements EventSubscriber
         $metadata = $event->getClassMetadata();
         $reflection = $metadata->getReflectionClass();
 
-        if (null !== $reflection && $reflection->implementsInterface('Sulu\Component\Persistence\Model\TimestampableInterface')) {
+        if (null !== $reflection && $reflection->implementsInterface(TimestampableInterface::class)) {
             if (!$metadata->hasField(self::CREATED_FIELD)) {
                 $metadata->mapField([
                     'fieldName' => self::CREATED_FIELD,
