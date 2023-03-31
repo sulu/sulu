@@ -33,6 +33,9 @@ abstract class ComplexContentType implements ContentTypeInterface
         }
     }
 
+    /**
+     * @return bool
+     */
     public function hasValue(
         NodeInterface $node,
         PropertyInterface $property,
@@ -45,7 +48,7 @@ abstract class ComplexContentType implements ContentTypeInterface
 
     public function getDefaultValue()
     {
-        return;
+        return null;
     }
 
     public function getViewData(PropertyInterface $property)

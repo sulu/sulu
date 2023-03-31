@@ -96,6 +96,8 @@ class NavigationItem implements \Iterator
      * Sets the id of the NavigationItem.
      *
      * @param string $id
+     *
+     * @return void
      */
     public function setId($id)
     {
@@ -116,6 +118,8 @@ class NavigationItem implements \Iterator
      * Sets the name being displayed in the navigation.
      *
      * @param string $name The name being displayed in the navigation
+     *
+     * @return void
      */
     public function setName($name)
     {
@@ -146,6 +150,8 @@ class NavigationItem implements \Iterator
      * Set the icon of the NavigaitonItem.
      *
      * @param string $icon The icon of the NavigationItem
+     *
+     * @return void
      */
     public function setIcon($icon)
     {
@@ -192,6 +198,8 @@ class NavigationItem implements \Iterator
 
     /**
      * Adds a child to the navigation item.
+     *
+     * @return void
      */
     public function addChild(self $child)
     {
@@ -210,6 +218,8 @@ class NavigationItem implements \Iterator
 
     /**
      * @param int $position
+     *
+     * @return void
      */
     public function setPosition($position)
     {
@@ -236,6 +246,8 @@ class NavigationItem implements \Iterator
 
     /**
      * @param bool $disabled
+     *
+     * @return void
      */
     public function setDisabled($disabled)
     {
@@ -252,6 +264,8 @@ class NavigationItem implements \Iterator
 
     /**
      * @param bool $visible
+     *
+     * @return void
      */
     public function setVisible($visible)
     {

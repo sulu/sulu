@@ -117,7 +117,10 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
      * for each website the default locale is provided. The default locales of
      * the webspaces are always on the first position.
      *
-     * @return Localization[]
+     * The first dimension is the webspace key, the second dimension is the locale code. Using it like this:
+     * $webspaceLocalesByCode['webspace-key']['en_us'] will return you the localization for that.
+     *
+     * @return array<string, array<string, Localization>>
      */
     public function getAllLocalesByWebspaces(): array;
 }
