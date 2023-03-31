@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\WebsiteBundle\DependencyInjection\Compiler;
 
+use Sulu\Bundle\WebsiteBundle\Routing\ContentRouteProvider;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -27,7 +28,7 @@ class RouteProviderCompilerPass implements CompilerPassInterface
         if (SuluKernel::CONTEXT_WEBSITE === $container->getParameter('sulu.context')) {
             $container->setDefinition(
                 'sulu_website.provider.content',
-                new Definition('Sulu\Bundle\WebsiteBundle\Routing\ContentRouteProvider', [
+                new Definition(ContentRouteProvider::class, [
                     new Reference('sulu.content.mapper'),
                     new Reference('sulu_core.webspace.request_analyzer'),
                 ])

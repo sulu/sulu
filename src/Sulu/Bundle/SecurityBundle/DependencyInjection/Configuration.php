@@ -11,6 +11,14 @@
 
 namespace Sulu\Bundle\SecurityBundle\DependencyInjection;
 
+use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
+use Sulu\Bundle\SecurityBundle\Entity\AccessControlRepository;
+use Sulu\Bundle\SecurityBundle\Entity\Role;
+use Sulu\Bundle\SecurityBundle\Entity\RoleRepository;
+use Sulu\Bundle\SecurityBundle\Entity\RoleSetting;
+use Sulu\Bundle\SecurityBundle\Entity\RoleSettingRepository;
+use Sulu\Bundle\SecurityBundle\Entity\User;
+use Sulu\Bundle\SecurityBundle\Entity\UserRepository;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -131,29 +139,29 @@ class Configuration implements ConfigurationInterface
                         ->arrayNode('user')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('model')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\User')->end()
-                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\UserRepository')->end()
+                                ->scalarNode('model')->defaultValue(User::class)->end()
+                                ->scalarNode('repository')->defaultValue(UserRepository::class)->end()
                             ->end()
                         ->end()
                         ->arrayNode('role')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('model')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\Role')->end()
-                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\RoleRepository')->end()
+                                ->scalarNode('model')->defaultValue(Role::class)->end()
+                                ->scalarNode('repository')->defaultValue(RoleRepository::class)->end()
                             ->end()
                         ->end()
                         ->arrayNode('role_setting')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('model')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\RoleSetting')->end()
-                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\RoleSettingRepository')->end()
+                                ->scalarNode('model')->defaultValue(RoleSetting::class)->end()
+                                ->scalarNode('repository')->defaultValue(RoleSettingRepository::class)->end()
                             ->end()
                         ->end()
                         ->arrayNode('access_control')
                             ->addDefaultsIfNotSet()
                             ->children()
-                                ->scalarNode('model')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\AccessControl')->end()
-                                ->scalarNode('repository')->defaultValue('Sulu\Bundle\SecurityBundle\Entity\AccessControlRepository')->end()
+                                ->scalarNode('model')->defaultValue(AccessControl::class)->end()
+                                ->scalarNode('repository')->defaultValue(AccessControlRepository::class)->end()
                             ->end()
                         ->end()
                     ->end()

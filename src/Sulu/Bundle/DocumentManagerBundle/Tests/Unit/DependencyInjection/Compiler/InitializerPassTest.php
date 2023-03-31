@@ -13,6 +13,7 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\DependencyInjection\Compi
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\DocumentManagerBundle\DependencyInjection\Compiler\InitializerPass;
+use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class InitializerPassTest extends TestCase
@@ -21,7 +22,7 @@ class InitializerPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $initializer = $container->register('sulu_document_manager.initializer', 'Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer');
+        $initializer = $container->register('sulu_document_manager.initializer', Initializer::class);
         $initializer->addArgument('one');
         $initializer->addArgument('two');
         $initializer->addArgument('three');

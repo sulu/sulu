@@ -250,7 +250,7 @@ class SuluNodeHelperTest extends TestCase
     public function testSiblingNodes(): void
     {
         for ($i = 1; $i <= 3; ++$i) {
-            ${'node' . $i} = $this->getMockBuilder('Jackalope\Node')->disableOriginalConstructor()->getMock();
+            ${'node' . $i} = $this->getMockBuilder(Node::class)->disableOriginalConstructor()->getMock();
             ${'node' . $i}->expects($this->any())
                 ->method('getPath')
                 ->will($this->returnValue('/foobar/foobar-' . $i));

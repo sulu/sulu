@@ -13,6 +13,8 @@ namespace Sulu\Bundle\CoreBundle\Tests\Unit\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Sulu\Bundle\CoreBundle\DependencyInjection\SuluCoreExtension;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
+use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 
 class SuluCoreExtensionTest extends AbstractExtensionTestCase
 {
@@ -44,9 +46,9 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
                     ],
                     'paths' => [],
                     'type_map' => [
-                        'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
-                        'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
-                        'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
+                        'page' => '\\' . PageBridge::class,
+                        'home' => '\\' . PageBridge::class,
+                        'snippet' => '\\' . SnippetBridge::class,
                     ],
                 ],
             ],
@@ -79,9 +81,9 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
                     ],
                     'paths' => [],
                     'type_map' => [
-                        'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
-                        'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
-                        'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
+                        'page' => '\\' . PageBridge::class,
+                        'home' => '\\' . PageBridge::class,
+                        'snippet' => '\\' . SnippetBridge::class,
                     ],
                 ],
             ],
@@ -107,9 +109,9 @@ class SuluCoreExtensionTest extends AbstractExtensionTestCase
                         ],
                         'paths' => [],
                         'type_map' => [
-                            'page' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
-                            'home' => '\Sulu\Component\Content\Compat\Structure\PageBridge',
-                            'snippet' => '\Sulu\Component\Content\Compat\Structure\SnippetBridge',
+                            'page' => '\\' . PageBridge::class,
+                            'home' => '\\' . PageBridge::class,
+                            'snippet' => '\\' . SnippetBridge::class,
                         ],
                     ],
                 ],

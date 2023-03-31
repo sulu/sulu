@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
+use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -47,11 +48,14 @@ class ChildrenCollectionTest extends TestCase
         ]);
         $this->parentNode->getNodes()->willReturn($children);
 
-        $this->dispatcher->dispatch(Argument::type('Sulu\Component\DocumentManager\Event\HydrateEvent'), Events::HYDRATE)->will(function($args) {
-            $args[0]->setDocument(new \stdClass());
+        $this->dispatcher
+            ->dispatch(Argument::type(HydrateEvent::class), Events::HYDRATE)
+            ->will(function($args) {
+                $args[0]->setDocument(new \stdClass());
 
-            return $args[0];
-        });
+                return $args[0];
+            })
+        ;
 
         $results = [];
 

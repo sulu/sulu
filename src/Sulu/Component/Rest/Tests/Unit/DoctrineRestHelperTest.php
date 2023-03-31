@@ -11,8 +11,10 @@
 
 namespace Sulu\Component\Rest\Tests\Unit;
 
+use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Rest\DoctrineRestHelper;
+use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 
 class DoctrineRestHelperTest extends TestCase
 {
@@ -28,7 +30,7 @@ class DoctrineRestHelperTest extends TestCase
 
     public function setUp(): void
     {
-        $this->listRestHelper = $this->getMockBuilder('Sulu\Component\Rest\ListBuilder\ListRestHelper')
+        $this->listRestHelper = $this->getMockBuilder(ListRestHelper::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -37,8 +39,7 @@ class DoctrineRestHelperTest extends TestCase
 
     public function testProcessSubEntities(): void
     {
-        $entities = $this->getMockBuilder('Doctrine\Common\Collections\Collection')
-            ->getMockForAbstractClass();
+        $entities = $this->getMockBuilder(Collection::class)->getMockForAbstractClass();
 
         $entities->expects($this->once())->method('count')->willReturn(2);
         $entities->expects($this->once())->method('getValues')->willReturn([null, null]);

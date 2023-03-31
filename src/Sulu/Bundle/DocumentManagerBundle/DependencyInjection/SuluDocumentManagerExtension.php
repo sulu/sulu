@@ -13,6 +13,9 @@ namespace Sulu\Bundle\DocumentManagerBundle\DependencyInjection;
 
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
 use Sulu\Bundle\DocumentManagerBundle\Session\Session;
+use Sulu\Component\Content\Exception\MandatoryPropertyException;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\DocumentManager\Exception\VersionNotFoundException;
 use Sulu\Component\DocumentManager\Subscriber\EventSubscriberInterface;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
@@ -103,9 +106,9 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
                 [
                     'exception' => [
                         'codes' => [
-                            'Sulu\Component\DocumentManager\Exception\DocumentNotFoundException' => 404,
-                            'Sulu\Component\DocumentManager\Exception\VersionNotFoundException' => 404,
-                            'Sulu\Component\Content\Exception\MandatoryPropertyException' => 400,
+                            DocumentNotFoundException::class => 404,
+                            VersionNotFoundException::class => 404,
+                            MandatoryPropertyException::class => 400,
                         ],
                     ],
                 ]

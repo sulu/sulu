@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Application;
 
+use Sulu\Bundle\SearchBundle\SuluSearchBundle;
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -26,7 +27,7 @@ class Kernel extends SuluTestKernel
             $loader->load(__DIR__ . '/config/versioning.yml');
         }
 
-        if (\class_exists('Sulu\Bundle\SearchBundle\SuluSearchBundle')) {
+        if (\class_exists(SuluSearchBundle::class)) {
             $loader->load(__DIR__ . '/config/search.yml');
         }
     }

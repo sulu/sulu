@@ -12,6 +12,8 @@
 namespace Sulu\Bundle\PersistenceBundle\DependencyInjection;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
@@ -73,7 +75,7 @@ trait PersistenceExtensionTrait
         $repositoryKey = $this->getContainerKey('repository', $object, '.class');
 
         // default repository
-        $repositoryClass = 'Sulu\Component\Persistence\Repository\ORM\EntityRepository';
+        $repositoryClass = EntityRepository::class;
 
         if ($container->hasParameter($repositoryKey)) {
             /** @var class-string $repositoryClass */
@@ -111,7 +113,7 @@ trait PersistenceExtensionTrait
      */
     private function getClassMetadataDefinition($model)
     {
-        $definition = new Definition('Doctrine\ORM\Mapping\ClassMetadata');
+        $definition = new Definition(ClassMetadata::class);
         $definition
             ->setFactory([
                 new Reference($this->getEntityManagerServiceKey()),

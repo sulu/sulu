@@ -21,6 +21,7 @@ use Psr\Log\LoggerInterface;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Bundle\WebsiteBundle\Twig\Content\ContentTwigExtension;
+use Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
@@ -709,10 +710,8 @@ class ContentTwigExtensionTest extends TestCase
 
     public function testLoadParentStartPage(): void
     {
-        $this->expectException(
-            'Sulu\Bundle\WebsiteBundle\Twig\Exception\ParentNotFoundException',
-            'Parent for "321-321-321" not found (perhaps it is the startpage?)'
-        );
+        $this->expectException(ParentNotFoundException::class);
+        $this->expectExceptionMessage('Parent for "321-321-321" not found (perhaps it is the startpage?)');
 
         $this->extension->loadParent('321-321-321');
     }
