@@ -115,7 +115,7 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('massiveart', $webspace->getSecurity()?->getSystem());
 
         $webspaceLocalizations = $webspace->getLocalizations();
-        $this->assertCount(2, $webspaceLocalizations);
+        $this->assertCount(3, $webspaceLocalizations);
         $this->assertEquals('en', $webspaceLocalizations[0]->getLanguage());
         $this->assertEquals('us', $webspaceLocalizations[0]->getCountry());
         $this->assertEquals('auto', $webspaceLocalizations[0]->getShadow());
