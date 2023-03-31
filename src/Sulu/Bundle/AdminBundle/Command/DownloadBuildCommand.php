@@ -14,6 +14,7 @@ namespace Sulu\Bundle\AdminBundle\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 @trigger_deprecation(
     'sulu/sulu',
@@ -37,7 +38,14 @@ class DownloadBuildCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $command = $this->getApplication()->find('sulu:admin:update-build');
+        $application = $this->getApplication();
+        if (null === $application) {
+            $ui = new SymfonyStyle($input, $output);
+            $ui->error('Could not find application');
+
+            return 1;
+        }
+        $command = $application->find('sulu:admin:update-build');
 
         return $command->run($input, $output);
     }

@@ -141,42 +141,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:addChild\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setChildViews\\(\\) has parameter \\$childViews with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setDisabled\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setIcon\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setPosition\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setVisible\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
 
@@ -669,11 +634,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ViewRegistry\\:\\:mergeViewOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/ViewRegistry.php
-
-		-
-			message: "#^Cannot call method find\\(\\) on Symfony\\\\Component\\\\Console\\\\Application\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadBuildCommand.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\DownloadBuildCommand\\:\\:configure\\(\\) has no return type specified\\.$#"
