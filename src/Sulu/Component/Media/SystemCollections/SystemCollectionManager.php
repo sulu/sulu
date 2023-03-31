@@ -23,37 +23,16 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class SystemCollectionManager implements SystemCollectionManagerInterface
 {
-    private array $config;
-
-    private \Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface $collectionManager;
-
-    private \Doctrine\ORM\EntityManagerInterface $entityManager;
-
-    private ?\Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface $tokenProvider = null;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    private \Sulu\Component\Cache\CacheInterface $cache;
-
     private ?\Serializable $systemCollections = null;
 
     public function __construct(
-        array $config,
-        CollectionManagerInterface $collectionManager,
-        EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenProvider = null,
-        CacheInterface $cache,
-        $locale
+       private array $config,
+       private CollectionManagerInterface $collectionManager,
+       private EntityManagerInterface $entityManager,
+       private TokenStorageInterface $tokenProvider = null,
+       private CacheInterface $cache,
+       private string $locale
     ) {
-        $this->config = $config;
-        $this->collectionManager = $collectionManager;
-        $this->entityManager = $entityManager;
-        $this->tokenProvider = $tokenProvider;
-        $this->cache = $cache;
-        $this->locale = $locale;
     }
 
     public function warmUp()
