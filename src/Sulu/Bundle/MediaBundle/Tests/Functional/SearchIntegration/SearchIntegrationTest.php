@@ -81,7 +81,7 @@ class SearchIntegrationTest extends SuluTestCase
         $mediaSelectionContainer->getData()->willReturn([$this->media]);
         $mediaSelectionContainer->toArray()->willReturn(null);
 
-        if ($expectException !== null) {
+        if (null !== $expectException) {
             $this->expectException($expectException);
         }
 

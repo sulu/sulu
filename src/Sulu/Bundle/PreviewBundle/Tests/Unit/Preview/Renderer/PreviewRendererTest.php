@@ -488,7 +488,7 @@ class PreviewRendererTest extends TestCase
     public function testRenderInvalidArgumentException(): void
     {
         $this->expectException(TemplateNotFoundException::class);
-       $this->expectExceptionCode( 9904);
+        $this->expectExceptionCode(9904);
 
         $object = $this->prophesize(\stdClass::class);
 
@@ -523,7 +523,7 @@ class PreviewRendererTest extends TestCase
     public function testRenderHttpExceptionWithPreviousException(): void
     {
         $this->expectException(TemplateNotFoundException::class);
-       $this->expectExceptionCode(9904);
+        $this->expectExceptionCode(9904);
 
         $object = $this->prophesize(\stdClass::class);
 
@@ -560,7 +560,7 @@ class PreviewRendererTest extends TestCase
     public function testRenderHttpExceptionWithoutPreviousException(): void
     {
         $this->expectException(UnexpectedException::class);
-       $this->expectExceptionCode( 9905);
+        $this->expectExceptionCode(9905);
 
         $object = $this->prophesize(\stdClass::class);
 
