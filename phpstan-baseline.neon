@@ -141,42 +141,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:addChild\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setChildViews\\(\\) has parameter \\$childViews with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setDisabled\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setIcon\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setPosition\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setVisible\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
 
@@ -671,7 +636,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/ViewRegistry.php
 
 		-
-			message: "#^Cannot call method find\\(\\) on Symfony\\\\Component\\\\Console\\\\Application\\|null\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\DownloadBuildCommand\\:\\:configure\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Command/DownloadBuildCommand.php
 
@@ -8216,12 +8181,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Content\\\\Types\\\\ContactAccountSelection\\:\\:exportData\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Content\\\\Types\\\\ContactAccountSelection\\:\\:getDefaultParams\\(\\) return type has no value type specified in iterable type array\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Content\\\\Types\\\\ContactAccountSelection\\:\\:getContentData\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
 
@@ -8236,32 +8196,12 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Content\\\\Types\\\\ContactAccountSelection\\:\\:preResolve\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Content\\\\Types\\\\ContactAccountSelection\\:\\:read\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Content\\\\Types\\\\ContactAccountSelection\\:\\:read\\(\\) has parameter \\$node with no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Content\\\\Types\\\\ContactAccountSelection\\:\\:remove\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Content\\\\Types\\\\ContactAccountSelection\\:\\:remove\\(\\) has parameter \\$node with no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Content\\\\Types\\\\ContactAccountSelection\\:\\:write\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
 
@@ -11076,26 +11016,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/CacheInvalidationListenerTest.php
 
 		-
-			message: "#^Cannot access offset 0 on mixed\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/ContactAccountSelectionTest.php
-
-		-
-			message: "#^Cannot access offset 1 on mixed\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/ContactAccountSelectionTest.php
-
-		-
-			message: "#^Cannot access offset 2 on mixed\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/ContactAccountSelectionTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, mixed given\\.$#"
-			count: 6
-			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/ContactAccountSelectionTest.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Tests\\\\Unit\\\\ContactAccountSelectionTest\\:\\:\\$accountManager with generic interface Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface does not specify its types\\: DoctrineEntity, ApiEntity, AddressRelationEntity$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/ContactAccountSelectionTest.php
@@ -11121,13 +11041,8 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/ContactSelectionTest.php
 
 		-
-			message: "#^Call to an undefined method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface\\:\\:getFullName\\(\\)\\.$#"
+			message: "#^Cannot call method getFullName\\(\\) on Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface\\|null\\.$#"
 			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/ContactTwigExtensionTest.php
-
-		-
-			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface will always evaluate to false\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/ContactTwigExtensionTest.php
 
 		-
@@ -11141,17 +11056,17 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/CustomerIdConverterTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Util\\\\CustomerIdConverterTest\\:\\:testConvertGroupedIdsToIds\\(\\) has parameter \\$expected with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Util\\\\CustomerIdConverterTest\\:\\:testConvertGroupedIdsToIds\\(\\) has parameter \\$expected with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/CustomerIdConverterTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Util\\\\CustomerIdConverterTest\\:\\:testConvertGroupedIdsToIds\\(\\) has parameter \\$groupedIds with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Util\\\\CustomerIdConverterTest\\:\\:testConvertGroupedIdsToIds\\(\\) has parameter \\$groupedIds with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/CustomerIdConverterTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Util\\\\CustomerIdConverterTest\\:\\:testConvertIdsToGroupedIds\\(\\) has parameter \\$default with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Util\\\\CustomerIdConverterTest\\:\\:testConvertIdsToGroupedIds\\(\\) has parameter \\$default with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/CustomerIdConverterTest.php
 
@@ -11161,12 +11076,12 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/CustomerIdConverterTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Util\\\\CustomerIdConverterTest\\:\\:testConvertIdsToGroupedIds\\(\\) has parameter \\$ids with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Util\\\\CustomerIdConverterTest\\:\\:testConvertIdsToGroupedIds\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/CustomerIdConverterTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Util\\\\IndexComparatorTest\\:\\:testUsortCallback\\(\\) has parameter \\$array with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Util\\\\IndexComparatorTest\\:\\:testUsortCallback\\(\\) has parameter \\$array with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/IndexComparatorTest.php
 
@@ -11176,7 +11091,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/IndexComparatorTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Util\\\\IndexComparatorTest\\:\\:testUsortCallback\\(\\) has parameter \\$ids with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Util\\\\IndexComparatorTest\\:\\:testUsortCallback\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/IndexComparatorTest.php
 
@@ -11186,7 +11101,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/IndexComparatorTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Util\\\\IndexComparatorTest\\:\\:usortProvider\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Util\\\\IndexComparatorTest\\:\\:usortProvider\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Unit/IndexComparatorTest.php
 
@@ -11251,12 +11166,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Trash/ContactTrashItemHandler.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Twig\\\\ContactTwigExtension\\:\\:resolveContactFunction\\(\\) should return Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Twig/ContactTwigExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Twig\\\\ContactTwigExtension\\:\\:resolveContactFunction\\(\\) should return Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface but returns mixed\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Twig\\\\ContactTwigExtension\\:\\:resolveContactFunction\\(\\) should return Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface\\|null but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Twig/ContactTwigExtension.php
 
@@ -15062,11 +14972,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Content\\\\Types\\\\ImageMapContentType\\:\\:exportData\\(\\) should return string but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Content/Types/ImageMapContentType.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Content\\\\Types\\\\ImageMapContentType\\:\\:hasValue\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Content/Types/ImageMapContentType.php
 
@@ -40466,11 +40371,6 @@ parameters:
 			path: src/Sulu/Component/Content/ComplexContentType.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\ComplexContentType\\:\\:hasValue\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/ComplexContentType.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\ComplexContentType\\:\\:hasValue\\(\\) has parameter \\$node with no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/ComplexContentType.php
@@ -46887,11 +46787,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\BlockContentType\\:\\:exportData\\(\\) should return string but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/BlockContentType.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\BlockContentType\\:\\:hasValue\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Types/BlockContentType.php
 
@@ -58701,11 +58596,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceManager\\:\\:getAllLocalesByWebspaces\\(\\) should return array\\<Sulu\\\\Component\\\\Localization\\\\Localization\\> but returns array\\<string, array\\<string, Sulu\\\\Component\\\\Localization\\\\Localization\\>\\>\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceManager\\:\\:setOptions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
@@ -59411,181 +59301,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceCollectionBuilderTest.php
 
 		-
-			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayHasKey\\(\\) with 'en_us' and Sulu\\\\Component\\\\Localization\\\\Localization will always evaluate to false\\.$#"
-			count: 2
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with Sulu\\\\Component\\\\Webspace\\\\Segment will always evaluate to false\\.$#"
-			count: 4
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getAllLocalizations\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Webspace\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getEnvironment\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Portal\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getEnvironments\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Portal\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getKey\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Portal\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getKey\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Webspace\\|null\\.$#"
-			count: 4
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getLocale\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|false\\.$#"
-			count: 2
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getLocalization\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getLocalization\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|null\\.$#"
-			count: 3
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getLocalizations\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Portal\\|null\\.$#"
-			count: 7
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getLocalizations\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Webspace\\|null\\.$#"
-			count: 18
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getName\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Portal\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getName\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Webspace\\|null\\.$#"
-			count: 4
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getNavigation\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Webspace\\|null\\.$#"
-			count: 9
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getPortal\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|false\\.$#"
-			count: 2
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getPortal\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|null\\.$#"
-			count: 3
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getPortals\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Webspace\\|null\\.$#"
-			count: 3
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getRedirect\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getSecurity\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Webspace\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getSegment\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getSegment\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|null\\.$#"
-			count: 3
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getSystem\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Security\\|null\\.$#"
-			count: 7
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getTheme\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Webspace\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getUrl\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getWebspace\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|false\\.$#"
-			count: 2
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getWebspace\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|null\\.$#"
-			count: 4
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\WebspaceManagerTest\\:\\:provideFindPortalInformationByUrl\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\WebspaceManagerTest\\:\\:testFindPortalInformationByUrlWithInvalidSuffix\\(\\) has parameter \\$shouldFind with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\WebspaceManagerTest\\:\\:testFindPortalInformationByUrlWithInvalidSuffix\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayHasKey\\(\\) expects array\\|ArrayAccess, Sulu\\\\Component\\\\Localization\\\\Localization given\\.$#"
-			count: 2
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\PortalInformationTest\\:\\:\\$localization\\.$#"
-			count: 3
-			path: src/Sulu/Component/Webspace/Tests/Unit/PortalInformationTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\PortalInformationTest\\:\\:\\$portal\\.$#"
-			count: 3
-			path: src/Sulu/Component/Webspace/Tests/Unit/PortalInformationTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\PortalInformationTest\\:\\:\\$webspace\\.$#"
-			count: 3
-			path: src/Sulu/Component/Webspace/Tests/Unit/PortalInformationTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\PortalInformationTest\\:\\:provideUrl\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/PortalInformationTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\PortalInformationTest\\:\\:testGetHostAndPrefix\\(\\) has parameter \\$host with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Unit/PortalInformationTest.php
@@ -59881,112 +59596,7 @@ parameters:
 			path: src/Sulu/Component/Webspace/Webspace.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:addDefaultTemplate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:addExcludedTemplate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:addLocalization\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:addPortal\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:addSegment\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:addTemplate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:getDefaultTemplate\\(\\) should return string\\|null but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:getLocalization\\(\\) should return Sulu\\\\Component\\\\Localization\\\\Localization\\|null but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:getTemplate\\(\\) should return string\\|null but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:hasWebsiteSecurity\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:setDefaultLocalization\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:setDefaultSegment\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:setKey\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:setLocalizations\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:setName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:setNavigation\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:setPortals\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:setResourceLocatorStrategy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:setSecurity\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:setSegments\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:setTheme\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:toArray\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Webspace.php
 

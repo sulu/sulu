@@ -15,6 +15,9 @@ use PHPUnit\Framework\TestCase;
 
 class IndexComparatorTest extends TestCase
 {
+    /**
+     * @return array
+     */
     public function usortProvider()
     {
         return [
@@ -36,7 +39,7 @@ class IndexComparatorTest extends TestCase
     /**
      * @dataProvider usortProvider
      */
-    public function testUsortCallback($array, $ids, $startsWith, $contains): void
+    public function testUsortCallback(array $array, array $ids, $startsWith, $contains): void
     {
         $comparator = new IndexComparator();
         // the @ is necessary in case of a PHP bug https://bugs.php.net/bug.php?id=50688
