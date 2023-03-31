@@ -126,6 +126,8 @@ class Webspace implements ArrayableInterface
      * Sets the key of the webspace.
      *
      * @param string $key
+     *
+     * @return void
      */
     public function setKey($key)
     {
@@ -144,6 +146,8 @@ class Webspace implements ArrayableInterface
 
     /**
      * Adds a localization to the webspace.
+     *
+     * @return void
      */
     public function addLocalization(Localization $localization)
     {
@@ -162,6 +166,8 @@ class Webspace implements ArrayableInterface
      * Returns the localizations of this webspace.
      *
      * @param Localization[] $localizations
+     *
+     * @return void
      */
     public function setLocalizations($localizations)
     {
@@ -214,13 +220,15 @@ class Webspace implements ArrayableInterface
             }
         }
 
-        return;
+        return null;
     }
 
     /**
      * Sets the default localization for this webspace.
      *
      * @param Localization $defaultLocalization
+     *
+     * @return void
      */
     public function setDefaultLocalization($defaultLocalization)
     {
@@ -263,6 +271,8 @@ class Webspace implements ArrayableInterface
      * Sets the name of the webspace.
      *
      * @param string $name
+     *
+     * @return void
      */
     public function setName($name)
     {
@@ -281,6 +291,8 @@ class Webspace implements ArrayableInterface
 
     /**
      * Adds a portal to the webspace.
+     *
+     * @return void
      */
     public function addPortal(Portal $portal)
     {
@@ -291,6 +303,8 @@ class Webspace implements ArrayableInterface
      * Sets the portals of this webspace.
      *
      * @param Portal[] $portals
+     *
+     * @return void
      */
     public function setPortals($portals)
     {
@@ -309,6 +323,8 @@ class Webspace implements ArrayableInterface
 
     /**
      * Adds a segment to the webspace.
+     *
+     * @return void
      */
     public function addSegment(Segment $segment)
     {
@@ -323,6 +339,8 @@ class Webspace implements ArrayableInterface
      * Sets the segments of this webspace.
      *
      * @param Segment[] $segments
+     *
+     * @return void
      */
     public function setSegments($segments)
     {
@@ -354,6 +372,8 @@ class Webspace implements ArrayableInterface
      * Sets the default segment of this webspace.
      *
      * @param Segment $defaultSegment
+     *
+     * @return void
      */
     public function setDefaultSegment($defaultSegment)
     {
@@ -374,6 +394,8 @@ class Webspace implements ArrayableInterface
      * Sets the theme for this portal.
      *
      * @param string|null $theme this parameter is options
+     *
+     * @return void
      */
     public function setTheme($theme = null)
     {
@@ -394,6 +416,8 @@ class Webspace implements ArrayableInterface
      * Sets the security system.
      *
      * @param Security|null $security
+     *
+     * @return void
      */
     public function setSecurity($security)
     {
@@ -410,6 +434,9 @@ class Webspace implements ArrayableInterface
         return $this->security;
     }
 
+    /**
+     * @return bool
+     */
     public function hasWebsiteSecurity()
     {
         $security = $this->getSecurity();
@@ -431,6 +458,8 @@ class Webspace implements ArrayableInterface
 
     /**
      * @param Navigation $navigation
+     *
+     * @return void
      */
     public function setNavigation($navigation)
     {
@@ -473,6 +502,8 @@ class Webspace implements ArrayableInterface
      *
      * @param string $type
      * @param string $template
+     *
+     * @return void
      */
     public function addTemplate($type, $template)
     {
@@ -493,7 +524,7 @@ class Webspace implements ArrayableInterface
             return $this->templates[$type] . '.' . $format . '.twig';
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -511,6 +542,8 @@ class Webspace implements ArrayableInterface
      *
      * @param string $type
      * @param string $template
+     *
+     * @return void
      */
     public function addDefaultTemplate($type, $template)
     {
@@ -530,7 +563,7 @@ class Webspace implements ArrayableInterface
             return $this->defaultTemplates[$type];
         }
 
-        return;
+        return null;
     }
 
     /**
@@ -547,6 +580,8 @@ class Webspace implements ArrayableInterface
      * Add a new template for given type.
      *
      * @param string $excludedTemplate
+     *
+     * @return void
      */
     public function addExcludedTemplate($excludedTemplate)
     {
@@ -565,6 +600,8 @@ class Webspace implements ArrayableInterface
      * Set resource-locator strategy.
      *
      * @param string $resourceLocatorStrategy
+     *
+     * @return void
      */
     public function setResourceLocatorStrategy($resourceLocatorStrategy)
     {
@@ -581,6 +618,9 @@ class Webspace implements ArrayableInterface
         return $this->resourceLocatorStrategy;
     }
 
+    /**
+     * @return array
+     */
     public function toArray($depth = null)
     {
         $res = [];
