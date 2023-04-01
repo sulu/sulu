@@ -49,15 +49,6 @@ class Portal
     private $defaultLocalization;
 
     /**
-     * The x-default localization for this portal.
-     *
-     * @deprecated use $defaultLocalization instead
-     *
-     * @var Localization
-     */
-    private $xDefaultLocalization;
-
-    /**
      * @var Environment[]
      */
     private $environments;
@@ -113,10 +104,6 @@ class Portal
         if ($localization->isDefault()) {
             $this->setDefaultLocalization($localization);
         }
-
-        if ($localization->isXDefault(false)) {
-            $this->setXDefaultLocalization($localization, false);
-        }
     }
 
     /**
@@ -156,10 +143,6 @@ class Portal
     public function setDefaultLocalization($defaultLocalization)
     {
         $this->defaultLocalization = $defaultLocalization;
-
-        if (!$this->getXDefaultLocalization()) {
-            $this->setXDefaultLocalization($defaultLocalization);
-        }
     }
 
     /**
@@ -168,32 +151,6 @@ class Portal
     public function getDefaultLocalization()
     {
         return $this->defaultLocalization;
-    }
-
-    /**
-     * @param Localization $xDefaultLocalization
-     *
-     * @deprecated use setDefaultLocalization instead
-     */
-    public function setXDefaultLocalization($xDefaultLocalization)
-    {
-        if (\func_num_args() < 2 || \func_get_arg(1)) {
-            @trigger_deprecation('sulu/sulu', '2.3', 'The "%s" method is deprecated on "%s" use "setDefaultLocalization" instead.', __METHOD__, __CLASS__);
-        }
-
-        $this->xDefaultLocalization = $xDefaultLocalization;
-    }
-
-    /**
-     * @return Localization
-     *
-     * @deprecated use getDefaultLocalization instead
-     */
-    public function getXDefaultLocalization()
-    {
-        @trigger_deprecation('sulu/sulu', '2.3', 'The "%s" method is deprecated on "%s" use "getDefaultLocalization" instead.', __METHOD__, __CLASS__);
-
-        return $this->xDefaultLocalization;
     }
 
     /**

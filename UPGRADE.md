@@ -1,5 +1,13 @@
 # Upgrade
 
+## 3.0.0
+
+Removing deprecated functions:
+- `Sulu\Component\Security\Event\PermissionUpdateEvent::getSecurityIdentity`
+- `Sulu\Component\Webspace\Portal::getXDefaultLocalization`
+- `Sulu\Component\Webspace\Portal::setXDefaultLocalization`
+- `Sulu\Component\Localization\Localization::isXDefault`
+
 ## 2.6.0
 
 ### Webpack 5 upgrade

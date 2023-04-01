@@ -58701,22 +58701,12 @@ parameters:
 			path: src/Sulu/Component/Webspace/Portal.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Portal\\:\\:setXDefaultLocalization\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Portal.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Portal\\:\\:toArray\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Portal.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Portal\\:\\:toArray\\(\\) has parameter \\$depth with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Portal.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Portal.php
 

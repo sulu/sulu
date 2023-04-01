@@ -108,18 +108,6 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     private $default;
 
-    /**
-     * Defines whether this localization is the x-default one or not.
-     * This will be used to determine the default hreflang tag.
-     *
-     * @var bool
-     *
-     * @Groups({"frontend", "Default"})
-     *
-     * @deprecated use $default instead
-     */
-    private $xDefault;
-
     public function __construct($language = null, $country = null)
     {
         $this->language = $language;
@@ -328,22 +316,6 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Returns if this localization is the x-default one.
-     *
-     * @return bool True if this is the x-default localization, otherwise false
-     *
-     * @deprecated use getDefault to get the default Localization
-     */
-    public function isXDefault()
-    {
-        if (\func_num_args() < 1 || \func_get_arg(0)) {
-            @trigger_deprecation('sulu/sulu', '2.4', 'The "%s" method is deprecated on "%s" use "isDefault" instead.', __METHOD__, __CLASS__);
-        }
-
-        return $this->xDefault;
-    }
-
-    /**
      * @param string $localization
      *
      * @return Localization|null
@@ -409,7 +381,6 @@ class Localization implements \JsonSerializable, ArrayableInterface
         $res['language'] = $this->getLanguage();
         $res['localization'] = $this->getLocale();
         $res['default'] = $this->isDefault();
-        $res['xDefault'] = $this->isXDefault(false);
         $res['children'] = [];
 
         $children = $this->getChildren();
