@@ -175,6 +175,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
             $snippets = $this->snippetRepository->getSnippetsByUuids($ids, $locale, true);
             $total = \count($snippets);
         } else {
+            $locale = $locale ?? 'de_de';
             $snippets = $this->snippetRepository->getSnippets(
                 $locale,
                 $types ? $types[0] : null,
@@ -274,7 +275,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
      */
     public function deleteAction(Request $request, $id)
     {
-        $locale = $this->getLocale($request);
+        $locale = $this->getLocale($request) ?? 'de_de';
         $webspaceKey = (string) $request->query->get('webspace');
 
         $references = $this->snippetRepository->getReferences($id);
@@ -398,7 +399,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getLocale(Request $request)
     {
@@ -413,6 +414,9 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         return $request->query->get('language', null);
     }
 
+    /**
+     * @return string
+     */
     public function getSecurityContext()
     {
         return 'sulu.global.snippets';

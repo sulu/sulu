@@ -77,7 +77,7 @@ class SnippetRepository
      *
      * UUIDs which fail to resolve to a snippet will be ignored.
      *
-     * @param string $locale
+     * @param ?string $locale
      * @param bool $loadGhostContent
      *
      * @return array<SnippetDocument>
@@ -107,12 +107,12 @@ class SnippetRepository
      * If $type is given then only return the snippets of that type.
      *
      * @param string $locale
-     * @param string $type Optional snippet type
-     * @param int $offset Optional offset
-     * @param int $max Optional max
-     * @param string $search
-     * @param string $sortBy
-     * @param string $sortOrder
+     * @param ?string $type Optional snippet type
+     * @param ?int $offset Optional offset
+     * @param ?int $max Optional max
+     * @param ?string $search
+     * @param ?string $sortBy
+     * @param ?string $sortOrder
      *
      * @return SnippetDocument[]
      *
@@ -141,10 +141,10 @@ class SnippetRepository
      * If $type is given then only return the snippets of that type.
      *
      * @param string $locale
-     * @param string $type Optional snippet type
-     * @param string $search
-     * @param string $sortBy
-     * @param string $sortOrder
+     * @param ?string $type Optional snippet type
+     * @param ?string $search
+     * @param ?string $sortBy
+     * @param ?string $sortOrder
      *
      * @return int
      *

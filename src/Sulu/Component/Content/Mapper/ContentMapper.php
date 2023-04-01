@@ -618,6 +618,7 @@ class ContentMapper implements ContentMapperInterface
      * Return the content document (aka the home page).
      *
      * @param string $webspaceKey
+     * @param string|string $locale
      *
      * @return BasePageDocument|SnippetDocument
      */
@@ -679,6 +680,14 @@ class ContentMapper implements ContentMapperInterface
 
     /**
      * converts a query row to an array.
+     *
+     * @param string $locale
+     * @param string $webspaceKey
+     * @param array $fields
+     * @param bool $onlyPublished
+     * @param array|null $permission
+     *
+     * @return array|false
      */
     private function rowToArray(
         Row $row,

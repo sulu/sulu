@@ -141,14 +141,13 @@ class RouteController extends AbstractRestController implements ClassResourceInt
     /**
      * Find routes with given parameters.
      *
-     * @param bool $history
      * @param string $entityClass
      * @param string $entityId
      * @param string $locale
      *
      * @return RouteInterface|RouteInterface[]
      */
-    private function findRoutes($history, $entityClass, $entityId, $locale)
+    private function findRoutes(bool $history, $entityClass, $entityId, $locale)
     {
         if ($history) {
             return $this->routeRepository->findHistoryByEntity($entityClass, $entityId, $locale);

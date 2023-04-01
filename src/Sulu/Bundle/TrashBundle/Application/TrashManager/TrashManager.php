@@ -37,17 +37,17 @@ final class TrashManager implements TrashManagerInterface
     private $domainEventCollector;
 
     /**
-     * @var ServiceLocator
+     * @var ServiceLocator<StoreTrashItemHandlerInterface>
      */
     private $storeTrashItemHandlerLocator;
 
     /**
-     * @var ServiceLocator
+     * @var ServiceLocator<RestoreTrashItemHandlerInterface>
      */
     private $restoreTrashItemHandlerLocator;
 
     /**
-     * @var ServiceLocator
+     * @var ServiceLocator<RemoveTrashItemHandlerInterface>
      */
     private $removeTrashItemHandlerLocator;
 
@@ -71,7 +71,6 @@ final class TrashManager implements TrashManagerInterface
             throw new StoreTrashItemHandlerNotFoundException($resourceKey);
         }
 
-        /** @var StoreTrashItemHandlerInterface $storeTrashItemHandler */
         $storeTrashItemHandler = $this->storeTrashItemHandlerLocator->get($resourceKey);
 
         $trashItem = $storeTrashItemHandler->store($object, $options);
@@ -89,7 +88,6 @@ final class TrashManager implements TrashManagerInterface
             throw new RestoreTrashItemHandlerNotFoundException($resourceKey);
         }
 
-        /** @var RestoreTrashItemHandlerInterface $restoreTrashItemHandler */
         $restoreTrashItemHandler = $this->restoreTrashItemHandlerLocator->get($resourceKey);
 
         $object = $restoreTrashItemHandler->restore($trashItem, $restoreFormData);
@@ -104,7 +102,6 @@ final class TrashManager implements TrashManagerInterface
         $resourceKey = $trashItem->getResourceKey();
 
         if ($this->removeTrashItemHandlerLocator->has($resourceKey)) {
-            /** @var RemoveTrashItemHandlerInterface $removeTrashItemHandler */
             $removeTrashItemHandler = $this->removeTrashItemHandlerLocator->get($resourceKey);
 
             $removeTrashItemHandler->remove($trashItem);

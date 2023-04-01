@@ -45,17 +45,17 @@ class TrashManagerTest extends TestCase
     private $domainEventCollector;
 
     /**
-     * @var ObjectProphecy<ServiceLocator>
+     * @var ObjectProphecy<ServiceLocator<StoreTrashItemHandlerInterface>>
      */
     private $storeTrashItemHandlerLocator;
 
     /**
-     * @var ObjectProphecy<ServiceLocator>
+     * @var ObjectProphecy<ServiceLocator<RestoreTrashItemHandlerInterface>>
      */
     private $restoreTrashItemHandlerLocator;
 
     /**
-     * @var ObjectProphecy<ServiceLocator>
+     * @var ObjectProphecy<ServiceLocator<RemoveTrashItemHandlerInterface>>
      */
     private $removeTrashItemHandlerLocator;
 
@@ -68,6 +68,7 @@ class TrashManagerTest extends TestCase
     {
         $this->trashItemRepository = $this->prophesize(TrashItemRepositoryInterface::class);
         $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
+
         $this->storeTrashItemHandlerLocator = $this->prophesize(ServiceLocator::class);
         $this->restoreTrashItemHandlerLocator = $this->prophesize(ServiceLocator::class);
         $this->removeTrashItemHandlerLocator = $this->prophesize(ServiceLocator::class);

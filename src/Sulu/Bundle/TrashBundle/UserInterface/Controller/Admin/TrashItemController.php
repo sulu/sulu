@@ -97,7 +97,7 @@ class TrashItemController extends AbstractRestController implements ClassResourc
     private $securityChecker;
 
     /**
-     * @var ServiceLocator
+     * @var ServiceLocator<RestoreConfigurationProviderInterface>
      */
     private $restoreConfigurationProviderLocator;
 
@@ -113,6 +113,7 @@ class TrashItemController extends AbstractRestController implements ClassResourc
 
     /**
      * @param array<string, int> $permissions Inject `sulu_security.permissions` parameter
+     * @param ServiceLocator<RestoreConfigurationProviderInterface> $restoreConfigurationProviderLocator
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -307,7 +308,6 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         $viewContext = new Context();
 
         if ($this->restoreConfigurationProviderLocator->has($trashItem->getResourceKey())) {
-            /** @var RestoreConfigurationProviderInterface $restoreConfigurationProvider */
             $restoreConfigurationProvider = $this->restoreConfigurationProviderLocator->get($trashItem->getResourceKey());
             $restoreConfiguration = $restoreConfigurationProvider->getConfiguration();
 

@@ -19,7 +19,7 @@ interface DocumentManagerInterface
      * Find a document by path or UUID in the given locale, optionally enforcing the given type.
      *
      * @param string $identifier Path or UUID
-     * @param string $locale Locale
+     * @param string|null $locale Locale
      *
      * @return object
      *

@@ -11,9 +11,6 @@
 
 namespace Sulu\Component\Content;
 
-/**
- * content type manager interface.
- */
 interface ContentTypeManagerInterface
 {
     /**
@@ -26,7 +23,7 @@ interface ContentTypeManagerInterface
     public function get($contentTypeName);
 
     /**
-     * checks if contentType exists.
+     * Checks if contentType exists.
      *
      * @param string $contentTypeName
      *

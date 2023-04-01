@@ -51,11 +51,6 @@ parameters:
 			path: src/Sulu/Bundle/ActivityBundle/UserInterface/Controller/ActivityController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ActivityBundle\\\\UserInterface\\\\Controller\\\\ActivityController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/UserInterface/Controller/ActivityController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ActivityBundle\\\\UserInterface\\\\Controller\\\\ActivityController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ActivityBundle/UserInterface/Controller/ActivityController.php
@@ -3917,11 +3912,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\CategoryController\\:\\:getAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\CategoryController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
@@ -10941,11 +10931,6 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CustomUrlBundle\\\\Controller\\\\CustomUrlController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CustomUrlBundle\\\\Controller\\\\CustomUrlController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
@@ -14316,11 +14301,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\CollectionController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\CollectionController\\:\\:getOffset\\(\\) has parameter \\$limit with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
@@ -14411,11 +14391,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\FormatController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\FormatController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
@@ -14437,16 +14412,6 @@ parameters:
 
 		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaController\\:\\:deleteVersionAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
@@ -14556,11 +14521,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaFormatController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaFormatController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
@@ -14579,11 +14539,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaRedirectController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaRedirectController.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaRedirectController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
@@ -20031,11 +19986,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\PageController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\PageController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
@@ -20156,11 +20106,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\PageResourcelocatorController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageResourcelocatorController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\PageResourcelocatorController\\:\\:getLocale\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageResourcelocatorController.php
@@ -20196,11 +20141,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/ResourcelocatorController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\ResourcelocatorController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/ResourcelocatorController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\ResourcelocatorController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/ResourcelocatorController.php
@@ -20229,11 +20169,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/ResourcelocatorController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\SmartContentItemController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/SmartContentItemController.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\SmartContentItemController\\:\\:getLocale\\(\\) has no return type specified\\.$#"
@@ -20306,11 +20241,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\VersionController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\VersionController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
@@ -20349,11 +20279,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\WebspaceController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/WebspaceController.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\WebspaceController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
@@ -26621,11 +26546,6 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/Renderer/PreviewRendererTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\UserInterface\\\\Controller\\\\PreviewController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\UserInterface\\\\Controller\\\\PreviewController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewController.php
@@ -26641,11 +26561,6 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\UserInterface\\\\Controller\\\\PreviewLinkController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewLinkController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\UserInterface\\\\Controller\\\\PreviewLinkController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewLinkController.php
@@ -26659,11 +26574,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewLinkController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\UserInterface\\\\Controller\\\\PublicPreviewController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PublicPreviewController.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\UserInterface\\\\Controller\\\\PublicPreviewController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
@@ -26797,11 +26707,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Controller\\\\RouteController\\:\\:generateUrlResponse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Controller\\\\RouteController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
 
@@ -27392,11 +27297,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Controller\\\\WebsiteSearchController\\:\\:__construct\\(\\) has parameter \\$indexes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Controller/WebsiteSearchController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Controller\\\\WebsiteSearchController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SearchBundle/Controller/WebsiteSearchController.php
 
@@ -28472,11 +28372,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\UserController\\:\\:checkArguments\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\UserController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
@@ -30661,11 +30556,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetAreaController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetAreaController\\:\\:getLocalizedAreas\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
@@ -30747,16 +30637,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetController\\:\\:findDocument\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetController\\:\\:getLocale\\(\\) should return string but returns string\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
 
@@ -32936,19 +32816,9 @@ parameters:
 			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Application\\\\TrashManager\\\\TrashManager\\:\\:\\$removeTrashItemHandlerLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
+			message: "#^If condition is always true\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Application\\\\TrashManager\\\\TrashManager\\:\\:\\$restoreTrashItemHandlerLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Application\\\\TrashManager\\\\TrashManager\\:\\:\\$storeTrashItemHandlerLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
+			path: src/Sulu/Bundle/TrashBundle/Infrastructure/Symfony/DependencyInjection/SuluTrashExtension.php
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Tests\\\\Application\\\\Entity\\\\TestResource\\:\\:\\$property1 is never read, only written\\.$#"
@@ -33021,37 +32891,22 @@ parameters:
 			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Tests\\\\Unit\\\\Application\\\\TrashManager\\\\TrashManagerTest\\:\\:\\$removeTrashItemHandlerLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
+			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Tests\\\\Unit\\\\Application\\\\TrashManager\\\\TrashManagerTest\\:\\:\\$removeTrashItemHandlerLocator \\(Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator\\<Sulu\\\\Bundle\\\\TrashBundle\\\\Application\\\\TrashItemHandler\\\\RemoveTrashItemHandlerInterface\\>\\>\\) does not accept Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/Tests/Unit/Application/TrashManager/TrashManagerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Tests\\\\Unit\\\\Application\\\\TrashManager\\\\TrashManagerTest\\:\\:\\$restoreTrashItemHandlerLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
+			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Tests\\\\Unit\\\\Application\\\\TrashManager\\\\TrashManagerTest\\:\\:\\$restoreTrashItemHandlerLocator \\(Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator\\<Sulu\\\\Bundle\\\\TrashBundle\\\\Application\\\\TrashItemHandler\\\\RestoreTrashItemHandlerInterface\\>\\>\\) does not accept Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/Tests/Unit/Application/TrashManager/TrashManagerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Tests\\\\Unit\\\\Application\\\\TrashManager\\\\TrashManagerTest\\:\\:\\$storeTrashItemHandlerLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
+			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Tests\\\\Unit\\\\Application\\\\TrashManager\\\\TrashManagerTest\\:\\:\\$storeTrashItemHandlerLocator \\(Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator\\<Sulu\\\\Bundle\\\\TrashBundle\\\\Application\\\\TrashItemHandler\\\\StoreTrashItemHandlerInterface\\>\\>\\) does not accept Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/Tests/Unit/Application/TrashManager/TrashManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\TrashBundle\\\\UserInterface\\\\Controller\\\\Admin\\\\TrashItemController\\:\\:__construct\\(\\) has parameter \\$restoreConfigurationProviderLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator but does not specify its types\\: T$#"
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\TrashBundle\\\\UserInterface\\\\Controller\\\\Admin\\\\TrashItemController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\TrashBundle\\\\UserInterface\\\\Controller\\\\Admin\\\\TrashItemController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\UserInterface\\\\Controller\\\\Admin\\\\TrashItemController\\:\\:\\$restoreConfigurationProviderLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
 
@@ -40061,11 +39916,6 @@ parameters:
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:convertQueryResultToArray\\(\\) has parameter \\$onlyPublished with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:convertQueryResultToArray\\(\\) has parameter \\$permission with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
@@ -40081,11 +39931,6 @@ parameters:
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:documentToStructure\\(\\) should return Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureInterface but empty return statement found\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
@@ -40097,11 +39942,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:documentsToStructureCollection\\(\\) has parameter \\$filterOptions with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:getContentDocument\\(\\) has parameter \\$locale with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
@@ -40311,32 +40151,17 @@ parameters:
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:rowToArray\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:rowToArray\\(\\) has parameter \\$fields with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:rowToArray\\(\\) has parameter \\$fields with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:rowToArray\\(\\) has parameter \\$permission with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:rowToArray\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:rowToArray\\(\\) has parameter \\$onlyPublished with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:rowToArray\\(\\) has parameter \\$permission with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:rowToArray\\(\\) has parameter \\$webspaceKey with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:rowToArray\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
@@ -40446,17 +40271,12 @@ parameters:
 			path: src/Sulu/Component/Content/Mapper/ContentMapperInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapperInterface\\:\\:convertQueryResultToArray\\(\\) has parameter \\$onlyPublished with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapperInterface\\:\\:convertQueryResultToArray\\(\\) has parameter \\$queryResult with no value type specified in iterable type PHPCR\\\\Query\\\\QueryResultInterface\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/ContentMapperInterface.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapperInterface\\:\\:convertQueryResultToArray\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Mapper/ContentMapperInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapperInterface\\:\\:delete\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/ContentMapperInterface.php
 
@@ -49881,11 +49701,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRepresentation.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:getCurrentRequest\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListRestHelper\\:\\:getExcludedIds\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
@@ -49953,11 +49768,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, mixed given\\.$#"
 			count: 4
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListRestHelper\\:\\:\\$requestStack \\(Symfony\\\\Component\\\\HttpFoundation\\\\Request\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack\\.$#"
-			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
 		-
@@ -51266,22 +51076,17 @@ parameters:
 			path: src/Sulu/Component/Rest/Tests/Unit/Listing/ListQueryBuilderTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\RequestParametersTraitTest\\:\\:getGetBooleanRequestParameterReflection\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\RequestParametersTraitTest\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/RequestParametersTraitTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\RequestParametersTraitTest\\:\\:getGetRequestParameterReflection\\(\\) has no return type specified\\.$#"
+			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/RequestParametersTraitTest.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\RequestParametersTraitTest\\:\\:\\$requestParametersTrait \\(Sulu\\\\Component\\\\Rest\\\\RequestParametersTrait\\) does not accept object\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/RequestParametersTraitTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\RequestParametersTraitTest\\:\\:\\$requestParametersTrait has invalid type Sulu\\\\Component\\\\Rest\\\\RequestParametersTrait\\.$#"
+			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/RequestParametersTraitTest.php
 

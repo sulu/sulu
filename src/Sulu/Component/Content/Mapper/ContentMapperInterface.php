@@ -91,6 +91,8 @@ interface ContentMapperInterface
      * @param bool $excludeGhost Do not return Ghost structures (return null instead)
      * @param bool $loadGhostContent Load ghost content
      * @param bool $excludeShadow Do not return shadow structures (return null instead)
+     *
+     * @return StructureInterface
      */
     public function loadByNode(
         NodeInterface $contentNode,
@@ -154,6 +156,8 @@ interface ContentMapperInterface
      *
      * @param string $uuid UUID of content
      * @param string $webspaceKey Key of webspace
+     *
+     * @return void
      */
     public function delete($uuid, $webspaceKey/*, bool $forceRemoveChildren = false*/);
 
@@ -211,6 +215,7 @@ interface ContentMapperInterface
      * @param string[] $locales
      * @param array $fields
      * @param int $maxDepth
+     * @param bool $onlyPublished
      *
      * @return array
      */

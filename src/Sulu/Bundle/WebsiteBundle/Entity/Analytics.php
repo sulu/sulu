@@ -51,7 +51,7 @@ class Analytics implements AnalyticsInterface
     private $webspaceKey;
 
     /**
-     * @var Collection|Domain[]
+     * @var Collection<Domain>
      *
      * @Exclude
      */
