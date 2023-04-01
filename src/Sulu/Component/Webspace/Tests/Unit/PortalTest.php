@@ -93,7 +93,6 @@ class PortalTest extends TestCase
         $this->environment->getType()->willReturn('d');
         $this->localization->toArray()->willReturn($expected['localizations'][0]);
         $this->localization->isDefault()->willReturn(true);
-        $this->localization->isXDefault(false)->willReturn(false);
         $this->environment->getUrls()->willReturn([]);
 
         $this->portal->addEnvironment($this->environment->reveal());

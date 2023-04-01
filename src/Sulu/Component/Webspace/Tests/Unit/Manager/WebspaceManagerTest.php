@@ -942,7 +942,6 @@ class WebspaceManagerTest extends WebspaceTestCase
                 unset($localization['localization']);
                 unset($localization['shadow']);
                 unset($localization['default']);
-                unset($localization['xDefault']);
             }
         );
 
@@ -1014,7 +1013,6 @@ class WebspaceManagerTest extends WebspaceTestCase
                     unset($webspaceLocale['localization']);
                     unset($webspaceLocale['shadow']);
                     unset($webspaceLocale['default']);
-                    unset($webspaceLocale['xDefault']);
                 }
             );
         }

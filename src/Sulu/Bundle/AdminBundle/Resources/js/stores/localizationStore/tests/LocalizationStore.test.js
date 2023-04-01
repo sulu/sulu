@@ -15,7 +15,6 @@ test('Load localizations', () => {
             locale: 'en',
             localization: 'en',
             shadow: '',
-            xDefault: '',
         },
         {
             country: '',
@@ -24,7 +23,6 @@ test('Load localizations', () => {
             locale: 'de',
             localization: 'de',
             shadow: '',
-            xDefault: '',
         },
     ];
 

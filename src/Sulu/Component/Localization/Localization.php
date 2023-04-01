@@ -292,20 +292,6 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Sets if this localization is the x-default one.
-     *
-     * @param bool $xDefault
-     *
-     * @deprecated use setDefault to set the default Localization
-     */
-    public function setXDefault($xDefault)
-    {
-        @trigger_deprecation('sulu/sulu', '2.3', 'The "%s" method is deprecated on "%s" use "setDefault" instead.', __METHOD__, __CLASS__);
-
-        $this->xDefault = $xDefault;
-    }
-
-    /**
      * Returns if this localization is the default one.
      *
      * @return bool True if this is the default localization, otherwise false

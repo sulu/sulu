@@ -43,16 +43,9 @@ class Webspace implements ArrayableInterface
     /**
      * The default localization defined for this webspace.
      *
-     * @var Localization
+     * @var Localization|null
      */
     private $defaultLocalization;
-
-    /**
-     * The x-default localization defined for this webspace.
-     *
-     * @var Localization
-     */
-    private $xDefaultLocalization;
 
     /**
      * The segments defined for this webspace.
@@ -156,10 +149,6 @@ class Webspace implements ArrayableInterface
         if ($localization->isDefault()) {
             $this->setDefaultLocalization($localization);
         }
-
-        if ($localization->isXDefault(false)) {
-            $this->xDefaultLocalization = $localization;
-        }
     }
 
     /**
@@ -233,10 +222,6 @@ class Webspace implements ArrayableInterface
     public function setDefaultLocalization($defaultLocalization)
     {
         $this->defaultLocalization = $defaultLocalization;
-
-        if (!$this->getXDefaultLocalization()) {
-            $this->xDefaultLocalization = $defaultLocalization;
-        }
     }
 
     /**
@@ -251,20 +236,6 @@ class Webspace implements ArrayableInterface
         }
 
         return $this->defaultLocalization;
-    }
-
-    /**
-     * Returns the x-default localization for this webspace.
-     *
-     * @return Localization
-     */
-    public function getXDefaultLocalization()
-    {
-        if (!$this->xDefaultLocalization) {
-            return $this->localizations[0];
-        }
-
-        return $this->xDefaultLocalization;
     }
 
     /**

@@ -6,5 +6,4 @@ export type Localization = {
     language: string,
     locale: string,
     shadow: string,
-    xDefault: string,
 };

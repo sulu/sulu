@@ -307,7 +307,6 @@ class PreviewRenderer implements PreviewRendererInterface
         }
 
         $localization = clone $localization;
-        $localization->setXDefault(true);
         $portal = new Portal();
         $portal->setName($webspace->getName());
         $portal->setKey($webspace->getKey());

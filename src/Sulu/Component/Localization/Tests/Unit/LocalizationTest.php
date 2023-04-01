@@ -25,7 +25,6 @@ class LocalizationTest extends TestCase
     {
         $this->localization = new Localization('de', 'at');
         $this->localization->setDefault(true);
-        $this->localization->setXDefault(true);
     }
 
     public function testToArray(): void
@@ -35,7 +34,6 @@ class LocalizationTest extends TestCase
             'localization' => 'de_at',
             'country' => 'at',
             'default' => true,
-            'xDefault' => true,
             'children' => [],
             'shadow' => null,
         ];

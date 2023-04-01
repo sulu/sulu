@@ -37631,11 +37631,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Twig/Seo/SeoTwigExtensionTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\Twig\\\\Seo\\\\SeoTwigExtensionTest\\:\\:testRenderSeoTags\\(\\) has parameter \\$xDefaultLocale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Twig/Seo/SeoTwigExtensionTest.php
-
-		-
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Twig/Seo/SeoTwigExtensionTest.php
@@ -51876,11 +51871,6 @@ parameters:
 			path: src/Sulu/Component/Localization/Localization.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Localization\\\\Localization\\:\\:setXDefault\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Localization/Localization.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Localization\\\\Localization\\:\\:toArray\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Localization/Localization.php
@@ -59583,11 +59573,6 @@ parameters:
 		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Sulu/Component/Webspace/Webspace.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 3
 			path: src/Sulu/Component/Webspace/Webspace.php
 
 		-

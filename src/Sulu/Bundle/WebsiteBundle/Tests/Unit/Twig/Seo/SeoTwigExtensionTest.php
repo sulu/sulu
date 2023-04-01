@@ -92,7 +92,6 @@ class SeoTwigExtensionTest extends TestCase
         $urls,
         $defaultLocale,
         $shadowBaseLocale,
-        $xDefaultLocale,
         $expectedResults,
         $unexpectedResults = [],
         $resourceLocator = '/test',
@@ -104,7 +103,7 @@ class SeoTwigExtensionTest extends TestCase
 
         /** @var Localization $localization */
         $localization = $this->prophesize(Localization::class);
-        $localization->getLocale()->willReturn($xDefaultLocale ?: $defaultLocale);
+        $localization->getLocale()->willReturn($defaultLocale);
 
         /** @var Portal $portal */
         $portal = $this->prophesize(Portal::class);
@@ -174,7 +173,6 @@ class SeoTwigExtensionTest extends TestCase
                 ],
                 'en',
                 'en',
-                null,
                 [
                     '<title>SEO title</title>',
                     '<meta name="description" content="SEO description"/>',
@@ -204,7 +202,6 @@ class SeoTwigExtensionTest extends TestCase
                 ],
                 'de',
                 'en',
-                null,
                 [
                     '<title>Content title</title>',
                     '<meta name="robots" content="index,follow"/>',
@@ -235,7 +232,6 @@ class SeoTwigExtensionTest extends TestCase
                     'de' => '/url-de',
                 ],
                 'de',
-                null,
                 null,
                 [
                     '<title>Content title</title>',
@@ -269,7 +265,6 @@ class SeoTwigExtensionTest extends TestCase
                 ],
                 'de',
                 null,
-                null,
                 [
                     '<title>Content title</title>',
                     '<meta name="robots" content="index,follow"/>',
@@ -292,7 +287,6 @@ class SeoTwigExtensionTest extends TestCase
                 ],
                 'en',
                 'en',
-                'de',
                 [
                     '<link rel="alternate" href="/en/url-en" hreflang="en"/>',
                     '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
@@ -308,7 +302,6 @@ class SeoTwigExtensionTest extends TestCase
                 ],
                 'en',
                 'en',
-                null,
                 [
                     '<link rel="alternate" href="/en/url-en" hreflang="en"/>',
                     '<link rel="alternate" href="/de/url-de" hreflang="de"/>',
@@ -326,7 +319,6 @@ class SeoTwigExtensionTest extends TestCase
                 ],
                 'en',
                 'en',
-                null,
                 [
                     // no alternate link if translation is the only one
                 ],
@@ -343,7 +335,6 @@ class SeoTwigExtensionTest extends TestCase
                     'de' => '/url-de',
                 ],
                 'de',
-                'en',
                 'en',
                 [
                     // no alternate link if translation is the only one
@@ -362,7 +353,6 @@ class SeoTwigExtensionTest extends TestCase
                 ],
                 'en',
                 'en',
-                null,
                 [
                     '<link rel="alternate" href="/en" hreflang="en"/>',
                     '<link rel="alternate" href="/de" hreflang="de"/>',
@@ -389,7 +379,6 @@ class SeoTwigExtensionTest extends TestCase
                 ],
                 'en',
                 'en',
-                null,
                 [
                     '<title>SEO title</title>',
                     '<meta name="description" content="SEO description"/>',
@@ -419,7 +408,6 @@ class SeoTwigExtensionTest extends TestCase
                 ],
                 'en',
                 'en',
-                null,
                 [
                     '<title>&quot;SEO title&quot;</title>',
                     '<meta name="description" content="&quot;SEO description&quot;"/>',
@@ -439,7 +427,6 @@ class SeoTwigExtensionTest extends TestCase
                 ],
                 'en',
                 'en',
-                null,
                 [
                     '<title>&quot;Content title&quot;</title>',
                     '<meta name="description" content="&quot;SEO description&quot;"/>',
