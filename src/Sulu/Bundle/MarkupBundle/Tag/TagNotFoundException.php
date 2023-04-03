@@ -19,7 +19,7 @@ class TagNotFoundException extends \Exception
     /**
      * @param string $namespace
      * @param string $tagName
-     * @param int $type
+     * @param string $type
      */
     public function __construct(
         private $namespace,
@@ -44,7 +44,7 @@ class TagNotFoundException extends \Exception
     /**
      * Returns type of content.
      *
-     * @return int
+     * @return string
      */
     public function getType()
     {
