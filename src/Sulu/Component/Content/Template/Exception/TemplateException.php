@@ -17,18 +17,11 @@ namespace Sulu\Component\Content\Template\Exception;
 class TemplateException extends \Exception
 {
     /**
-     * The template causing the error.
-     *
-     * @var string
-     */
-    protected $template;
-
-    /**
      * @param string $template The template causing the error
+     * @param string $message
      */
-    public function __construct($template, $message = '')
+    public function __construct(protected $template, $message = '')
     {
-        $this->template = $template;
         parent::__construct($message);
     }
 

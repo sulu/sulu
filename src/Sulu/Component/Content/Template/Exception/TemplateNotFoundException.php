@@ -17,20 +17,16 @@ namespace Sulu\Component\Content\Template\Exception;
 class TemplateNotFoundException extends \Exception
 {
     /**
-     * @var string
+     * @param string $path
+     * @param string $templateKey
+     * @param ?\Throwable $originalException
      */
-    private $templateKey;
-
-    /**
-     * @var string
-     */
-    private $path;
-
-    public function __construct($path, $templateKey, $originalException = null)
+    public function __construct(private $path, private $templateKey, $originalException = null)
     {
-        parent::__construct(\sprintf('a valid template with key "%s" and file "%s" cannot be found', $templateKey, $path), null, $originalException);
-
-        $this->path = $path;
-        $this->templateKey = $templateKey;
+        parent::__construct(\sprintf(
+            'a valid template with key "%s" and file "%s" cannot be found', $this->templateKey, $this->path),
+            null,
+            $originalException
+        );
     }
 }

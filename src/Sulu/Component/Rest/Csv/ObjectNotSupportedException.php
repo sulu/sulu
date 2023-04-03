@@ -18,16 +18,9 @@ use FOS\RestBundle\View\View;
  */
 class ObjectNotSupportedException extends \Exception
 {
-    /**
-     * @var View
-     */
-    private $view;
-
-    public function __construct(View $view)
+    public function __construct(private View $view)
     {
         parent::__construct('The view is not supported to create a csv-response.');
-
-        $this->view = $view;
     }
 
     /**

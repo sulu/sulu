@@ -17,41 +17,24 @@ namespace Sulu\Component\Content\Exception;
 class InvalidBlockDefaultTypeException extends \Exception
 {
     /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $defaultType;
-
-    /**
-     * @var string[]
-     */
-    private $availableTypes;
-
-    /**
      * @param string[] $availableTypes
      */
-    public function __construct(string $name, string $defaultType, array $availableTypes)
-    {
+    public function __construct(
+        private string $name,
+        private string $defaultType,
+        private array $availableTypes
+    ) {
         @trigger_deprecation('sulu/sulu', '2.2', 'The InvalidBlockDefaultTypeException is deprecated and will be removed in version 3.0. Use InvalidDefaultTypeException instead.');
 
         parent::__construct(\sprintf(
             'Block "%s" has invalid default-type "%s". Available types are %s',
-            $name,
-            $defaultType,
+            $this->name,
+            $this->defaultType,
             \implode(
                 ', ',
-                \array_map(function($availableType) {
-                    return '"' . $availableType . '"';
-                }, $availableTypes)
+                \array_map(fn ($availableType) => '"' . $availableType . '"', $this->availableTypes)
             )
         ));
-        $this->name = $name;
-        $this->defaultType = $defaultType;
-        $this->availableTypes = $availableTypes;
     }
 
     public function getName(): string

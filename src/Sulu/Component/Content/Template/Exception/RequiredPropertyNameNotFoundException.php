@@ -17,13 +17,10 @@ namespace Sulu\Component\Content\Template\Exception;
 class RequiredPropertyNameNotFoundException extends InvalidXmlException
 {
     /**
-     * The name of the property, which is required, but not found.
-     *
-     * @var string
+     * @param string $template
+     * @param string $propertyName the name of the property, which is required, but not found
      */
-    protected $propertyName;
-
-    public function __construct($template, $propertyName)
+    public function __construct($template, protected $propertyName)
     {
         $this->propertyName = $propertyName;
         parent::__construct(
