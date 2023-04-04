@@ -28,7 +28,7 @@ class ConstraintViolationException extends RestException
         protected $field,
         protected $entity,
         protected $type,
-       $code
+        $code
     ) {
         parent::__construct(
             \sprintf('%s constraint for field "%s" of entity "%s" violated', \ucfirst($this->type), $this->field, $this->entity),

@@ -15,9 +15,12 @@ class NoSuchPropertyException extends \Exception
 {
     /**
      * @param string $propertyName
+     * @param string $message
      */
-    public function __construct(private $propertyName, $message = '')
-    {
+    public function __construct(
+        private $propertyName,
+        $message = ''
+    ) {
         parent::__construct($message);
     }
 

@@ -14,14 +14,14 @@ namespace Sulu\Component\Content\Exception;
 class StateNotFoundException extends StateException
 {
     /**
-     * @var int
+     * @param int $state
+     * @param ?string $message
+     * @param ?int $code
+     * @param ?\Throwable $previous
      */
-    private $state;
-
-    public function __construct($state, $message = null, $code = null, $previous = null)
+    public function __construct(private $state, $message = null, $code = null, $previous = null)
     {
-        parent::__construct($message, $code, $previous);
-        $this->state = $state;
+        parent::__construct($message ?? '', $code ?? 0, $previous);
     }
 
     /**
