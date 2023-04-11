@@ -80,7 +80,7 @@ class SnippetRepository
      * @param string $locale
      * @param bool $loadGhostContent
      *
-     * @return SnippetDocument
+     * @return array<SnippetDocument>
      */
     public function getSnippetsByUuids(array $uuids, $locale, $loadGhostContent = false)
     {

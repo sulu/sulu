@@ -46,7 +46,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     private $debug;
 
     /**
-     * @var array
+     * @var array<string, string>
      */
     private $defaultTypes;
 
@@ -90,7 +90,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
         }
 
         if (!$structureType) {
-            return;
+            return null;
         }
 
         $cachePath = \sprintf(
@@ -201,6 +201,8 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
      * Assert type exists.
      *
      * @param string $type
+     *
+     * @return void
      */
     private function assertExists($type)
     {
@@ -220,7 +222,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
      *
      * @param string $type
      *
-     * @return array
+     * @return array<string>
      */
     private function getPaths($type)
     {
@@ -244,7 +246,7 @@ class StructureMetadataFactory implements StructureMetadataFactoryInterface
     private function getDefaultStructureType($type)
     {
         if (!isset($this->defaultTypes[$type])) {
-            return;
+            return null;
         }
 
         return $this->defaultTypes[$type];
