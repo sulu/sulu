@@ -112,7 +112,7 @@ class RoutableSubscriberTest extends TestCase
 
         $copyEvent = new CopyEvent(
             $document->reveal(),
-            'destId',
+            'destId'
         );
 
         $this->documentInspector->getLocales($document->reveal())
