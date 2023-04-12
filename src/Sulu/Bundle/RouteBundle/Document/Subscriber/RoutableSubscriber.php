@@ -275,7 +275,9 @@ class RoutableSubscriber implements EventSubscriberInterface
                 return;
             }
 
-            $route = $this->conflictResolver->resolve($this->chainRouteGenerator->generate($localizedDocument));
+            $route = $this->conflictResolver->resolve(
+                $this->chainRouteGenerator->generate($localizedDocument, $localizedDocument->getRoutePath())
+            );
             $localizedDocument->setRoutePath($route->getPath());
 
             $node = $this->documentInspector->getNode($localizedDocument);

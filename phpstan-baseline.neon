@@ -1526,11 +1526,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
 
 		-
-			message: "#^Cannot call method merge\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\XmlFormMetadataLoader\\:\\:__construct\\(\\) has parameter \\$formDirectories with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
@@ -3926,7 +3921,7 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Api\\\\Category\\:\\:getMediasRawData\\(\\) should return string but returns array\\<string, array\\<int, int\\>\\>\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Api\\\\Category\\:\\:getMediasRawData\\(\\) should return string but returns array\\<string, array\\<int\\<0, max\\>, int\\>\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
 
@@ -5936,7 +5931,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Account\\:\\:getBankAccounts\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\BankAccount\\> but returns array\\<int, Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\BankAccount\\>\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Account\\:\\:getBankAccounts\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\BankAccount\\> but returns array\\<int\\<0, max\\>, Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\BankAccount\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
@@ -5946,12 +5941,12 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Account\\:\\:getEmails\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Email\\> but returns array\\<int, Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Email\\>\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Account\\:\\:getEmails\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Email\\> but returns array\\<int\\<0, max\\>, Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Email\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Account\\:\\:getFaxes\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Fax\\> but returns array\\<int, Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Fax\\>\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Account\\:\\:getFaxes\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Fax\\> but returns array\\<int\\<0, max\\>, Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Fax\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
@@ -5986,17 +5981,17 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Account\\:\\:getPhones\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Phone\\> but returns array\\<int, Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Phone\\>\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Account\\:\\:getPhones\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Phone\\> but returns array\\<int\\<0, max\\>, Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Phone\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Account\\:\\:getSocialMediaProfiles\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\SocialMediaProfile\\> but returns array\\<int, Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\SocialMediaProfile\\>\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Account\\:\\:getSocialMediaProfiles\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\SocialMediaProfile\\> but returns array\\<int\\<0, max\\>, Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\SocialMediaProfile\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Account\\:\\:getUrls\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Url\\> but returns array\\<int, Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Url\\>\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Account\\:\\:getUrls\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Url\\> but returns array\\<int\\<0, max\\>, Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Url\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
@@ -6856,7 +6851,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact\\:\\:getSocialMediaProfiles\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\SocialMediaProfile\\> but returns array\\<int, Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\SocialMediaProfile\\>\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact\\:\\:getSocialMediaProfiles\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\SocialMediaProfile\\> but returns array\\<int\\<0, max\\>, Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\SocialMediaProfile\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Contact.php
 
@@ -14916,7 +14911,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManager\\:\\:get\\(\\) should return Doctrine\\\\ORM\\\\Tools\\\\Pagination\\\\Paginator but returns array\\<int, Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Collection\\>\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManager\\:\\:get\\(\\) should return Doctrine\\\\ORM\\\\Tools\\\\Pagination\\\\Paginator but returns array\\<int\\<0, max\\>, Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Collection\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
@@ -15016,7 +15011,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$children of method Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Collection\\:\\:setChildren\\(\\) expects array\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Collection\\>, array\\<int, Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Collection\\>\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$children of method Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Collection\\:\\:setChildren\\(\\) expects array\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Collection\\>, array\\<int\\<0, max\\>, Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Collection\\>\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
@@ -22681,7 +22676,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/EventListener/DomainEventSubscriber.php
 
 		-
-			message: "#^Parameter \\#1 \\$resources of method Sulu\\\\Bundle\\\\PageBundle\\\\EventListener\\\\PageRemoveSubscriber\\:\\:groupResourcesByDepth\\(\\) expects array\\<array\\{id\\: string, resourceKey\\: string, depth\\: int\\}\\>, non\\-empty\\-array\\<int, array\\{id\\: mixed, depth\\: int\\<0, max\\>, resourceKey\\: 'pages'\\}\\> given\\.$#"
+			message: "#^Parameter \\#1 \\$resources of method Sulu\\\\Bundle\\\\PageBundle\\\\EventListener\\\\PageRemoveSubscriber\\:\\:groupResourcesByDepth\\(\\) expects array\\<array\\{id\\: string, resourceKey\\: string, depth\\: int\\}\\>, non\\-empty\\-array\\<int\\<0, max\\>, array\\{id\\: mixed, depth\\: int\\<0, max\\>, resourceKey\\: 'pages'\\}\\> given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/EventListener/PageRemoveSubscriber.php
 
@@ -31291,7 +31286,7 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Entity/RoleRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\RoleRepository\\:\\:getRoleNames\\(\\) should return array\\<string\\> but returns array\\<int, mixed\\>\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\RoleRepository\\:\\:getRoleNames\\(\\) should return array\\<string\\> but returns array\\<int\\<0, max\\>, mixed\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/RoleRepository.php
 
@@ -33761,7 +33756,7 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\SnippetRepository\\:\\:getSnippetsByUuids\\(\\) should return Sulu\\\\Bundle\\\\SnippetBundle\\\\Document\\\\SnippetDocument but returns array\\<int, object\\>\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\SnippetRepository\\:\\:getSnippetsByUuids\\(\\) should return Sulu\\\\Bundle\\\\SnippetBundle\\\\Document\\\\SnippetDocument but returns array\\<int\\<0, max\\>, object\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
 
@@ -43011,7 +43006,7 @@ parameters:
 			path: src/Sulu/Component/Content/Export/WebspaceExport.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Export\\\\WebspaceExport\\:\\:getExportData\\(\\) should return string but returns array\\<string, array\\<int, array\\<string, array\\|string\\>\\>\\|string\\>\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Content\\\\Export\\\\WebspaceExport\\:\\:getExportData\\(\\) should return string but returns array\\<string, array\\<int\\<0, max\\>, array\\<string, array\\|string\\>\\>\\|string\\>\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Export/WebspaceExport.php
 
@@ -43936,7 +43931,7 @@ parameters:
 			path: src/Sulu/Component/Content/Mapper/Event/ContentNodeDeleteEvent.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\Event\\\\ContentNodeDeleteEvent\\:\\:getStructures\\(\\) should return array\\<Symfony\\\\Component\\\\Validator\\\\Mapping\\\\MetadataInterface\\> but returns array\\<int, Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureInterface\\>\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Content\\\\Mapper\\\\Event\\\\ContentNodeDeleteEvent\\:\\:getStructures\\(\\) should return array\\<Symfony\\\\Component\\\\Validator\\\\Mapping\\\\MetadataInterface\\> but returns array\\<int\\<0, max\\>, Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureInterface\\>\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/Event/ContentNodeDeleteEvent.php
 
@@ -44121,7 +44116,7 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:getStructures\\(\\) should return array\\<Sulu\\\\Component\\\\Content\\\\Metadata\\\\StructureMetadata\\> but returns array\\<int, Sulu\\\\Component\\\\Content\\\\Metadata\\\\StructureMetadata\\|null\\>\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:getStructures\\(\\) should return array\\<Sulu\\\\Component\\\\Content\\\\Metadata\\\\StructureMetadata\\> but returns array\\<int\\<0, max\\>, Sulu\\\\Component\\\\Content\\\\Metadata\\\\StructureMetadata\\|null\\>\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
 
@@ -52666,7 +52661,7 @@ parameters:
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:getTypes\\(\\) should return array\\<int, array\\<string, string\\>\\> but returns array\\<int, array\\<string, int\\|string\\>\\>\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:getTypes\\(\\) should return array\\<int, array\\<string, string\\>\\> but returns array\\<int\\<0, max\\>, array\\<string, int\\|string\\>\\>\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
@@ -58326,7 +58321,7 @@ parameters:
 			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$values of static method Sulu\\\\Component\\\\Util\\\\SortUtils\\:\\:multisort\\(\\) expects array, ArrayObject\\<int, stdClass\\> given\\.$#"
+			message: "#^Parameter \\#1 \\$values of static method Sulu\\\\Component\\\\Util\\\\SortUtils\\:\\:multisort\\(\\) expects array, ArrayObject\\<int, object\\{\\}&stdClass\\> given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Util/Tests/Unit/SortUtilsTest.php
 
