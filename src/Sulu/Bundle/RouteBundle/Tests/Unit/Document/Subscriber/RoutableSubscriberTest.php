@@ -102,7 +102,7 @@ class RoutableSubscriberTest extends TestCase
             $this->documentInspector->reveal(),
             $this->propertyEncoder->reveal(),
             $this->metadataFactory->reveal(),
-            $this->conflictResolver->reveal(),
+            $this->conflictResolver->reveal()
         );
     }
 
