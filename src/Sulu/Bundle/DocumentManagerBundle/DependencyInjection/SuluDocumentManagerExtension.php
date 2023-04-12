@@ -13,6 +13,9 @@ namespace Sulu\Bundle\DocumentManagerBundle\DependencyInjection;
 
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
 use Sulu\Bundle\DocumentManagerBundle\Session\Session;
+use Sulu\Component\Content\Exception\MandatoryPropertyException;
+use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Sulu\Component\DocumentManager\Exception\VersionNotFoundException;
 use Sulu\Component\DocumentManager\Subscriber\EventSubscriberInterface;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\FileLocator;
@@ -25,6 +28,9 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class SuluDocumentManagerExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * @return void
+     */
     public function prepend(ContainerBuilder $container)
     {
         $preview = $container->hasParameter('sulu.preview') ? $container->getParameter('sulu.preview') : false;
@@ -103,9 +109,9 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
                 [
                     'exception' => [
                         'codes' => [
-                            'Sulu\Component\DocumentManager\Exception\DocumentNotFoundException' => 404,
-                            'Sulu\Component\DocumentManager\Exception\VersionNotFoundException' => 404,
-                            'Sulu\Component\Content\Exception\MandatoryPropertyException' => 400,
+                            DocumentNotFoundException::class => 404,
+                            VersionNotFoundException::class => 404,
+                            MandatoryPropertyException::class => 400,
                         ],
                     ],
                 ]
@@ -113,6 +119,9 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         }
     }
 
+    /**
+     * @return void
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
@@ -134,6 +143,9 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
         }
     }
 
+    /**
+     * @return void
+     */
     private function configureDocumentManager($config, ContainerBuilder $container)
     {
         $debug = $config['debug'];
@@ -188,6 +200,9 @@ class SuluDocumentManagerExtension extends Extension implements PrependExtension
             ->addTag('sulu_document_manager.event_subscriber');
     }
 
+    /**
+     * @return void
+     */
     private function configurePathSegmentRegistry($config, ContainerBuilder $container)
     {
         $pathSegments = \array_merge(

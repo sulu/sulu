@@ -417,7 +417,8 @@ class PreviewRendererTest extends TestCase
 
     public function testRenderRouteDefaultsProviderNotFound(): void
     {
-        $this->expectException(RouteDefaultsProviderNotFoundException::class, '', 9902);
+        $this->expectException(RouteDefaultsProviderNotFoundException::class);
+        $this->expectExceptionCode(9902);
 
         $object = $this->prophesize(\stdClass::class);
 
@@ -451,7 +452,8 @@ class PreviewRendererTest extends TestCase
 
     public function testRenderTwigError(): void
     {
-        $this->expectException(TwigException::class, '', 9903);
+        $this->expectException(TwigException::class);
+        $this->expectExceptionCode(9903);
 
         $object = $this->prophesize(\stdClass::class);
 
@@ -485,7 +487,8 @@ class PreviewRendererTest extends TestCase
 
     public function testRenderInvalidArgumentException(): void
     {
-        $this->expectException(TemplateNotFoundException::class, '', 9904);
+        $this->expectException(TemplateNotFoundException::class);
+        $this->expectExceptionCode(9904);
 
         $object = $this->prophesize(\stdClass::class);
 
@@ -519,7 +522,8 @@ class PreviewRendererTest extends TestCase
 
     public function testRenderHttpExceptionWithPreviousException(): void
     {
-        $this->expectException(TemplateNotFoundException::class, '', 9904);
+        $this->expectException(TemplateNotFoundException::class);
+        $this->expectExceptionCode(9904);
 
         $object = $this->prophesize(\stdClass::class);
 
@@ -555,7 +559,8 @@ class PreviewRendererTest extends TestCase
 
     public function testRenderHttpExceptionWithoutPreviousException(): void
     {
-        $this->expectException(UnexpectedException::class, '', 9905);
+        $this->expectException(UnexpectedException::class);
+        $this->expectExceptionCode(9905);
 
         $object = $this->prophesize(\stdClass::class);
 

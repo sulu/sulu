@@ -153,7 +153,7 @@ class BaseMetadataFactoryTest extends TestCase
     {
         $metadatas = $this->factory->getAllMetadata();
         $this->assertCount(2, $metadatas);
-        $this->assertContainsOnlyInstancesOf('Sulu\Component\DocumentManager\Metadata', $metadatas);
+        $this->assertContainsOnlyInstancesOf(Metadata::class, $metadatas);
         $metadata = \reset($metadatas);
         $this->assertEquals('Class\Page', $metadata->getClass());
     }

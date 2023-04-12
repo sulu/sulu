@@ -13,6 +13,8 @@ namespace Sulu\Bundle\MediaBundle\DependencyInjection;
 
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 use League\Flysystem\AzureBlobStorage\AzureBlobStorageAdapter;
+use Sulu\Bundle\MediaBundle\Entity\Media;
+use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Superbalist\Flysystem\GoogleStorage\GoogleStorageAdapter;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -272,10 +274,10 @@ class Configuration implements ConfigurationInterface
                             ->addDefaultsIfNotSet()
                             ->children()
                                 ->scalarNode('model')
-                                    ->defaultValue('Sulu\Bundle\MediaBundle\Entity\Media')
+                                    ->defaultValue(Media::class)
                                 ->end()
                                 ->scalarNode('repository')
-                                    ->defaultValue('Sulu\Bundle\MediaBundle\Entity\MediaRepository')
+                                    ->defaultValue(MediaRepository::class)
                                 ->end()
                             ->end()
                         ->end()

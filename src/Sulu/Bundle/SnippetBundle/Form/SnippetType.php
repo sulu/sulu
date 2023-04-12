@@ -13,16 +13,20 @@ namespace Sulu\Bundle\SnippetBundle\Form;
 
 use Sulu\Bundle\PageBundle\Form\Type\AbstractStructureBehaviorType;
 use Sulu\Bundle\PageBundle\Form\Type\UnstructuredType;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SnippetType extends AbstractStructureBehaviorType
 {
+    /**
+     * @return void
+     */
     public function configureOptions(OptionsResolver $options)
     {
         $options->setDefaults([
-            'data_class' => 'Sulu\Bundle\SnippetBundle\Document\SnippetDocument',
+            'data_class' => SnippetDocument::class,
         ]);
 
         parent::configureOptions($options);

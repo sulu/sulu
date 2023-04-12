@@ -16,6 +16,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Manager\LocalizationManager;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
+use Sulu\Component\Localization\Provider\LocalizationProviderInterface;
 
 class LocalizationManagerTest extends TestCase
 {
@@ -72,9 +73,7 @@ class LocalizationManagerTest extends TestCase
 
     private function addLocalizationProvider($localizations)
     {
-        $localizationProvider1 = $this->prophesize(
-            'Sulu\Component\Localization\Provider\LocalizationProviderInterface'
-        );
+        $localizationProvider1 = $this->prophesize(LocalizationProviderInterface::class);
         $localizationProvider1->getAllLocalizations()->willReturn($localizations);
 
         $this->localizationManager->addLocalizationProvider($localizationProvider1->reveal());

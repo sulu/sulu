@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\LocationBundle\DependencyInjection;
 
+use GuzzleHttp\Client;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -19,6 +20,9 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class SuluLocationExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * @return void
+     */
     public function prepend(ContainerBuilder $container)
     {
         if ($container->hasExtension('sulu_admin')) {
@@ -37,6 +41,9 @@ class SuluLocationExtension extends Extension implements PrependExtensionInterfa
         }
     }
 
+    /**
+     * @return void
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = new Configuration();
@@ -48,6 +55,9 @@ class SuluLocationExtension extends Extension implements PrependExtensionInterfa
         $this->configureGeolocators($config, $container, $loader);
     }
 
+    /**
+     * @return void
+     */
     private function configureGeolocators(array $config, ContainerBuilder $container, XmlFileLoader $loader)
     {
         $geolocatorName = $config['geolocator'] ?? null;
@@ -55,7 +65,7 @@ class SuluLocationExtension extends Extension implements PrependExtensionInterfa
 
         $loader->load('geolocator.xml');
 
-        if (\class_exists('GuzzleHttp\Client')) {
+        if (\class_exists(Client::class)) {
             $loader->load('guzzle.xml');
         }
 

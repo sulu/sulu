@@ -34,7 +34,8 @@ class RuleCollectionTest extends TestCase
 
     public function testGetNotExistingName(): void
     {
-        $this->expectException(RuleNotFoundException::class, 'The rule with the name "rule" could not be found.');
+        $this->expectException(RuleNotFoundException::class);
+        $this->expectExceptionMessage('The rule with the name "rule" could not be found.');
         $ruleCollection = new RuleCollection([]);
 
         $ruleCollection->getRule('rule');

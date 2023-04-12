@@ -17,11 +17,14 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolver;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
+use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
+use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 
 class StructureResolverTest extends TestCase
@@ -68,19 +71,19 @@ class StructureResolverTest extends TestCase
         $this->contentType->getViewData(Argument::any())->willReturn('view');
         $this->contentType->getContentData(Argument::any())->willReturn('content');
 
-        $excerptExtension = $this->prophesize('Sulu\Component\Content\Extension\ExtensionInterface');
+        $excerptExtension = $this->prophesize(ExtensionInterface::class);
         $excerptExtension->getContentData(['test1' => 'test1'])->willReturn(['test1' => 'test1']);
         $this->extensionManager->getExtension('test', 'excerpt')->willReturn($excerptExtension);
 
-        $property1 = $this->prophesize('Sulu\Component\Content\Compat\PropertyInterface');
+        $property1 = $this->prophesize(PropertyInterface::class);
         $property1->getName()->willReturn('property-1');
         $property1->getContentTypeName()->willReturn('content_type');
 
-        $property2 = $this->prophesize('Sulu\Component\Content\Compat\PropertyInterface');
+        $property2 = $this->prophesize(PropertyInterface::class);
         $property2->getName()->willReturn('property-2');
         $property2->getContentTypeName()->willReturn('content_type');
 
-        $structure = $this->prophesize('Sulu\Component\Content\Compat\Structure\PageBridge');
+        $structure = $this->prophesize(PageBridge::class);
         $structure->getKey()->willReturn('test');
         $structure->getExt()->willReturn(new ExtensionContainer(['excerpt' => ['test1' => 'test1']]));
         $structure->getUuid()->willReturn('some-uuid');
@@ -141,15 +144,15 @@ class StructureResolverTest extends TestCase
         $this->contentType->getViewData(Argument::any())->willReturn('view');
         $this->contentType->getContentData(Argument::any())->willReturn('content');
 
-        $excerptExtension = $this->prophesize('Sulu\Component\Content\Extension\ExtensionInterface');
+        $excerptExtension = $this->prophesize(ExtensionInterface::class);
         $excerptExtension->getContentData(['test1' => 'test1'])->willReturn(['test1' => 'test1']);
         $this->extensionManager->getExtension('test', 'excerpt')->willReturn($excerptExtension);
 
-        $property = $this->prophesize('Sulu\Component\Content\Compat\PropertyInterface');
+        $property = $this->prophesize(PropertyInterface::class);
         $property->getName()->willReturn('property');
         $property->getContentTypeName()->willReturn('content_type');
 
-        $structure = $this->prophesize('Sulu\Component\Content\Compat\Structure\PageBridge');
+        $structure = $this->prophesize(PageBridge::class);
         $structure->getKey()->willReturn('test');
         $structure->getExt()->willReturn(new ExtensionContainer(['excerpt' => ['test1' => 'test1']]));
         $structure->getUuid()->willReturn('some-uuid');
@@ -212,15 +215,15 @@ class StructureResolverTest extends TestCase
         $this->contentType->getViewData(Argument::any())->willReturn('view');
         $this->contentType->getContentData(Argument::any())->willReturn('content');
 
-        $excerptExtension = $this->prophesize('Sulu\Component\Content\Extension\ExtensionInterface');
+        $excerptExtension = $this->prophesize(ExtensionInterface::class);
         $excerptExtension->getContentData(['test1' => 'test1'])->willReturn(['test1' => 'test1']);
         $this->extensionManager->getExtension('test', 'excerpt')->willReturn($excerptExtension);
 
-        $property = $this->prophesize('Sulu\Component\Content\Compat\PropertyInterface');
+        $property = $this->prophesize(PropertyInterface::class);
         $property->getName()->willReturn('property');
         $property->getContentTypeName()->willReturn('content_type');
 
-        $structure = $this->prophesize('Sulu\Component\Content\Compat\Structure\PageBridge');
+        $structure = $this->prophesize(PageBridge::class);
         $structure->getKey()->willReturn('test');
         $structure->getExt()->willReturn(new ExtensionContainer(['excerpt' => ['test1' => 'test1']]));
         $structure->getUuid()->willReturn('some-uuid');
@@ -275,19 +278,19 @@ class StructureResolverTest extends TestCase
         $this->contentType->getViewData(Argument::any())->willReturn('view');
         $this->contentType->getContentData(Argument::any())->willReturn('content');
 
-        $excerptExtension = $this->prophesize('Sulu\Component\Content\Extension\ExtensionInterface');
+        $excerptExtension = $this->prophesize(ExtensionInterface::class);
         $excerptExtension->getContentData(['test1' => 'test1'])->willReturn(['test1' => 'test1']);
         $this->extensionManager->getExtension('test', 'excerpt')->willReturn($excerptExtension);
 
-        $property1 = $this->prophesize('Sulu\Component\Content\Compat\PropertyInterface');
+        $property1 = $this->prophesize(PropertyInterface::class);
         $property1->getName()->willReturn('property-1');
         $property1->getContentTypeName()->willReturn('content_type');
 
-        $property2 = $this->prophesize('Sulu\Component\Content\Compat\PropertyInterface');
+        $property2 = $this->prophesize(PropertyInterface::class);
         $property2->getName()->willReturn('property-2');
         $property2->getContentTypeName()->willReturn('content_type');
 
-        $structure = $this->prophesize('Sulu\Component\Content\Compat\Structure\PageBridge');
+        $structure = $this->prophesize(PageBridge::class);
         $structure->getKey()->willReturn('test');
         $structure->getExt()->willReturn(new ExtensionContainer(['excerpt' => ['test1' => 'test1']]));
         $structure->getUuid()->willReturn('some-uuid');

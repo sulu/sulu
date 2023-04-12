@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\MediaBundle\Tests\Functional\SearchIntegration;
 
+use Massive\Bundle\SearchBundle\Search\Document;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\MediaBundle\Api\Media as ApiMedia;
 use Sulu\Bundle\MediaBundle\Content\MediaSelectionContainer;
@@ -58,24 +59,29 @@ class SearchIntegrationTest extends SuluTestCase
         $this->media = new ApiMedia($mediaEntity, 'de', null, $tagManager);
     }
 
-    public function provideIndex()
+    /**
+     * @return array<array{string, class-string<\Throwable>|null}>
+     */
+    public function provideIndex(): array
     {
         return [
             ['sulu-100x100', null],
-            ['invalid', '\InvalidArgumentException'],
+            ['invalid', \InvalidArgumentException::class],
         ];
     }
 
     /**
      * @dataProvider provideIndex
+     *
+     * @param class-string<\Throwable> $expectException
      */
-    public function testIndex($format, $expectException): void
+    public function testIndex(string $format, ?string $expectException): void
     {
         $mediaSelectionContainer = $this->prophesize(MediaSelectionContainer::class);
         $mediaSelectionContainer->getData()->willReturn([$this->media]);
         $mediaSelectionContainer->toArray()->willReturn(null);
 
-        if ($expectException) {
+        if (null !== $expectException) {
             $this->expectException($expectException);
         }
 
@@ -105,7 +111,7 @@ class SearchIntegrationTest extends SuluTestCase
         $documents = $testAdapter->getDocuments();
         $this->assertCount(1, $documents);
         $document = \end($documents);
-        $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $document);
+        $this->assertInstanceOf(Document::class, $document);
         $this->assertEquals('myimage.jpg', $document->getImageUrl());
     }
 
@@ -139,7 +145,7 @@ class SearchIntegrationTest extends SuluTestCase
         $documents = $testAdapter->getDocuments();
         $this->assertCount(1, $documents);
         $document = \end($documents);
-        $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $document);
+        $this->assertInstanceOf(Document::class, $document);
         $this->assertNull($document->getImageUrl());
     }
 
@@ -167,7 +173,7 @@ class SearchIntegrationTest extends SuluTestCase
         $documents = $testAdapter->getDocuments();
         $this->assertCount(1, $documents);
         $document = \end($documents);
-        $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $document);
+        $this->assertInstanceOf(Document::class, $document);
         $this->assertNull($document->getImageUrl());
     }
 
@@ -195,7 +201,7 @@ class SearchIntegrationTest extends SuluTestCase
         $documents = $testAdapter->getDocuments();
         $this->assertCount(1, $documents);
         $document = \end($documents);
-        $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $document);
+        $this->assertInstanceOf(Document::class, $document);
         $this->assertNull($document->getImageUrl());
     }
 
@@ -214,7 +220,7 @@ class SearchIntegrationTest extends SuluTestCase
 
         $documents = $testAdapter->getDocuments();
         $document = \end($documents);
-        $this->assertInstanceOf('Massive\Bundle\SearchBundle\Search\Document', $document);
+        $this->assertInstanceOf(Document::class, $document);
         $this->assertNull($document->getImageUrl());
     }
 }

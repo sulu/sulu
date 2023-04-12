@@ -25,6 +25,7 @@ use Sulu\Component\Content\Document\Behavior\ShadowLocaleBehavior;
 use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Exception\MandatoryPropertyException;
+use Sulu\Component\Content\Exception\TranslatedNodeNotFoundException;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManager;
@@ -1284,10 +1285,8 @@ class ContentMapperTest extends SuluTestCase
             'url' => '/news/test',
         ];
 
-        $this->expectException(
-            MandatoryPropertyException::class,
-            'Property "mandatory" in structure "mandatory" is required but no value was given.'
-        );
+        $this->expectException(MandatoryPropertyException::class);
+        $this->expectExceptionMessage('Property "mandatory" in structure "mandatory" is required but no value was given.');
 
         $this->save($data, 'mandatory', 'sulu_io', 'de', 1);
     }
@@ -1987,10 +1986,8 @@ class ContentMapperTest extends SuluTestCase
             'b' => 'de test2 b',
         ];
 
-        $this->expectException(
-            'Sulu\Component\Content\Exception\TranslatedNodeNotFoundException',
-            'Node "' . $structure->getUuid() . '" not found in localization "de"'
-        );
+        $this->expectException(TranslatedNodeNotFoundException::class);
+        $this->expectExceptionMessage('Node "' . $structure->getUuid() . '" not found in localization "de"');
 
         $this->mapper->saveExtension($structure->getUuid(), $dataTest2DE, 'test2', 'sulu_io', 'de', 1);
     }

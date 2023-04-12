@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Collection\Manager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionCreatedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\CollectionModifiedEvent;
@@ -52,9 +53,9 @@ class CollectionManager implements CollectionManagerInterface
 
     private static $entityCollectionMeta = 'SuluMediaBUndle:CollectionMeta';
 
-    private static $entityUser = 'Sulu\Component\Security\Authentication\UserInterface';
+    private static $entityUser = UserInterface::class;
 
-    private static $entityContact = 'Sulu\Bundle\ContactBundle\Entity\ContactInterface';
+    private static $entityContact = ContactInterface::class;
 
     /**
      * @var CollectionRepositoryInterface
