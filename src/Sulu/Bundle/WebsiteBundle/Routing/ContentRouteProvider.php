@@ -248,10 +248,15 @@ class ContentRouteProvider implements RouteProviderInterface
         } catch (ResourceLocatorNotFoundException $exc) {
             // just do not add any routes to the collection
         } catch (ResourceLocatorMovedException $exc) {
+            $url = $prefix . $exc->getNewResourceLocator();
+            if ($request->getQueryString()) {
+                $url .= '?' . $request->getQueryString();
+            }
+
             // old url resource was moved
             $collection->add(
                 $exc->getNewResourceLocatorUuid() . '_' . \uniqid(),
-                $this->getRedirectRoute($request, $prefix . $exc->getNewResourceLocator())
+                $this->getRedirectRoute($request, $url)
             );
         } catch (RepositoryException $exc) {
             // just do not add any routes to the collection
