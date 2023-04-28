@@ -636,11 +636,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/ViewRegistry.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\DownloadBuildCommand\\:\\:configure\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadBuildCommand.php
-
-		-
 			message: "#^Cannot access offset 'require' on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
@@ -14086,11 +14081,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Tag/TagRegistry.php
 
 		-
-			message: "#^Parameter \\#3 \\$type of class Sulu\\\\Bundle\\\\MarkupBundle\\\\Tag\\\\TagNotFoundException constructor expects int, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tag/TagRegistry.php
-
-		-
 			message: "#^Class Sulu\\\\Bundle\\\\MarkupBundle\\\\Listener\\\\MarkupListener constructor invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Listener/MarkupListenerTest.php
@@ -14099,11 +14089,6 @@ parameters:
 			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Response\\:\\:\\$headers \\(Symfony\\\\Component\\\\HttpFoundation\\\\ResponseHeaderBag\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\HeaderBag\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Listener/MarkupListenerTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$type of class Sulu\\\\Bundle\\\\MarkupBundle\\\\Tag\\\\TagNotFoundException constructor expects int, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlMarkupParserTest.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\Tests\\\\Unit\\\\Markup\\\\HtmlTagExtractorTest\\:\\:provideMultipleTags\\(\\) has no return type specified\\.$#"
