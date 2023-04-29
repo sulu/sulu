@@ -3,11 +3,11 @@
 ## 3.0.0
 
 Removing deprecated functions and properties:
+
 - `Sulu\Component\Security\Event\PermissionUpdateEvent::getSecurityIdentity`
 - `Sulu\Component\Webspace\Portal::getXDefaultLocalization`
 - `Sulu\Component\Webspace\Portal::setXDefaultLocalization`
 - `Sulu\Component\Localization\Localization::isXDefault`
-
 - `Sulu\Bundle\MediaBundle\Controller\MediaController::$entityKey`
 
 ## 2.6.0
