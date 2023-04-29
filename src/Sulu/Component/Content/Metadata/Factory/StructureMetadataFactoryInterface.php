@@ -33,7 +33,7 @@ interface StructureMetadataFactoryInterface
      *
      * @param string $type
      *
-     * @return StructureMetadata[]
+     * @return array<StructureMetadata>
      */
     public function getStructures($type);
 

@@ -91,6 +91,14 @@ class WebspaceExport extends Export implements WebspaceExportInterface
         );
     }
 
+    /**
+     * @return array{
+     *  webspaceKey: string,
+     *  locale: string,
+     *  format: string,
+     *  documents: array<mixed>
+     * }
+     */
     public function getExportData($webspaceKey, $uuid = null, $nodes = null, $ignoredNodes = null)
     {
         /** @var PageDocument[] $documents */
