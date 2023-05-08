@@ -340,8 +340,15 @@ class AdminController
         $metadata = $this->metadataProviderRegistry->getMetadataProvider($type)
             ->getMetadata($key, $user->getLocale(), $metadataOptions);
 
+        $context = new Context();
+        $context->addGroup('Default');
+        if (filter_var($metadataOptions['onlyKeys'] ?? 'false', FILTER_VALIDATE_BOOLEAN) === true) {
+            $context->addGroup('admin_form_metadata_keys_only');
+        }
+
         $view = View::create($metadata);
         $view->setFormat('json');
+        $view->setContext($context);
 
         $response = $this->viewHandler->handle($view);
 

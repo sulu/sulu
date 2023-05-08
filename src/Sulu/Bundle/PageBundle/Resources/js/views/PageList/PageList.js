@@ -136,7 +136,7 @@ class PageList extends React.Component<Props> {
         );
         router.bind('active', this.listStore.active);
 
-        formMetadataStore.getSchemaTypes('page', {webspace}).then(action((schemaTypes: Object) => {
+        formMetadataStore.getSchemaTypes('page', {webspace, onlyKeys: true}).then(action((schemaTypes: Object) => {
             this.availablePageTypes = Object.keys(schemaTypes.types);
             this.availablePageTypesLoading = false;
         }));
