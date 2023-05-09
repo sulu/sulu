@@ -84,7 +84,7 @@ class DocumentReferenceProvider implements DocumentReferenceProviderInterface
                 continue;
             }
 
-            $contentType->getReferences($structure->getProperty($property->getName()), $referenceCollector);
+            $contentType->getReferences($property, $structure->getProperty($property->getName()), $referenceCollector);
         }
 
         $referenceCollector->persistReferences();

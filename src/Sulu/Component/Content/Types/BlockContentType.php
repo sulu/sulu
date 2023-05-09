@@ -13,6 +13,8 @@ namespace Sulu\Component\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
+use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollector;
+use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyWrapper;
 use Sulu\Component\Content\Compat\Property;
@@ -21,6 +23,7 @@ use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
@@ -30,7 +33,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 /**
  * content type for block.
  */
-class BlockContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
+class BlockContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, ReferenceContentTypeInterface
 {
     /**
      * @var ContentTypeManagerInterface
@@ -463,5 +466,19 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
             },
             false
         );
+    }
+
+    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollector $referenceCollector): void
+    {
+        foreach ($property->getTypes() as $propertyType) {
+            foreach ($propertyValue->getValue() as $value) {
+                $child = $propertyType->getChild($value['type']);
+                $contentType = $this->contentTypeManager->get($child->getContentTypeName());
+
+                if ($contentType instanceof ReferenceContentTypeInterface) {
+                    $contentType->getReferences($child, new PropertyValue($child->getName(), $value[$child->getName()]), $referenceCollector);
+                }
+            }
+        }
     }
 }
