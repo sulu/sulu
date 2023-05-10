@@ -462,9 +462,13 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function assignGroupBy($queryBuilder)
     {
-        if (!empty($this->groupByFields)) {
-            foreach ($this->groupByFields as $fields) {
-                $queryBuilder->groupBy($fields->getSelect());
+        $groupByFields = array_merge($this->groupByFields, $this->sortFields);
+
+        if (!empty($groupByFields)) {
+            foreach ($groupByFields as $field) {
+                if ($field instanceof DoctrineFieldDescriptor) {
+                    $queryBuilder->addGroupBy($field->getSelect());
+                }
             }
         }
     }
@@ -490,13 +494,16 @@ class DoctrineListBuilder extends AbstractListBuilder
     protected function getGroupJoins()
     {
         $joins = [];
-        /** @var DoctrineFieldDescriptorInterface[] $fields */
-        $fields = \array_merge($this->sortFields, $this->selectFields);
 
-        foreach ($fields as $field) {
+        foreach ($this->selectFields as $field) {
             if ($this->isGroupingFieldDescriptor($field)) {
-                $joins = \array_merge($joins, $field->getJoins());
+                $joins = array_merge($joins, $field->getJoins());
             }
+        }
+
+        /** @var DoctrineFieldDescriptorInterface $field */
+        foreach ($this->sortFields as $field) {
+            $joins = array_merge($joins, $field->getJoins());
         }
 
         return $joins;
@@ -698,8 +705,6 @@ class DoctrineListBuilder extends AbstractListBuilder
                 $this->queryBuilder->andWhere('(' . $expression->getStatement($this->queryBuilder) . ')');
             }
         }
-
-        $this->assignGroupBy($this->queryBuilder);
 
         if (null !== $this->search) {
             $searchParts = [];
