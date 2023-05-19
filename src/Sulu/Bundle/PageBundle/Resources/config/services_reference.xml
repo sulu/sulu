@@ -9,7 +9,7 @@
             <argument type="service" id="sulu_document_manager.document_inspector"/>
             <argument type="constant">Sulu\Component\Content\Compat\Structure::TYPE_PAGE</argument>
 
-            <tag name="sulu_document_manager.reference_provider" alias="page" />
+            <tag name="sulu_document_manager.reference_provider" alias="pages" />
         </service>
     </services>
 </container>

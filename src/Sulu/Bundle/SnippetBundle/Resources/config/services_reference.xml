@@ -10,7 +10,7 @@
             <argument type="constant">Sulu\Component\Content\Compat\Structure::TYPE_SNIPPET</argument>
             <argument type="constant">Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin::SECURITY_CONTEXT</argument>
 
-            <tag name="sulu_document_manager.reference_provider" alias="snippet" />
+            <tag name="sulu_document_manager.reference_provider" alias="snippets" />
         </service>
     </services>
 </container>

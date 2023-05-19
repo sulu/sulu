@@ -16,10 +16,7 @@ use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Component\Content\Document\WorkflowStage;
 
-/**
- * @internal
- */
-class ReferenceCollector
+class ReferenceCollector implements ReferenceCollectorInterface
 {
     /**
      * @var ArrayCollection<int, ReferenceInterface>

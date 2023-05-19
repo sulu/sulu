@@ -22,6 +22,9 @@ use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * @internal
+ */
 class DocumentReferenceSubscriber implements EventSubscriberInterface
 {
     /**
@@ -86,13 +89,10 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface
 
     private function getProvider(StructureBehavior $document): ?DocumentReferenceProviderInterface
     {
-        // TODO get type from Document
-        $type = match (\get_class($document)) {
-            PageDocument::class, HomeDocument::class => 'page',
-            SnippetDocument::class => 'snippet',
-            default => null,
-        };
+        $documentResourcesKey = defined(get_class($document) . '::RESOURCE_KEY')
+            ? $document::RESOURCE_KEY
+            : '';
 
-        return $this->documentReferenceProviders[$type] ?? null;
+        return $this->documentReferenceProviders[$documentResourcesKey] ?? null;
     }
 }

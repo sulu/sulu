@@ -25,15 +25,15 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 
 class DocumentReferenceProvider implements DocumentReferenceProviderInterface
 {
-    protected ContentTypeManagerInterface $contentTypeManager;
+    private ContentTypeManagerInterface $contentTypeManager;
 
-    protected StructureManagerInterface $structureManager;
+    private StructureManagerInterface $structureManager;
 
-    protected ReferenceRepositoryInterface $referenceRepository;
+    private ReferenceRepositoryInterface $referenceRepository;
 
-    protected DocumentInspector $documentInspector;
+    private DocumentInspector $documentInspector;
 
-    protected string $structureType;
+    private string $structureType;
 
     protected string $referenceSecurityContext;
 
