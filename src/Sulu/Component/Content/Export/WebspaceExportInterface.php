@@ -49,7 +49,7 @@ interface WebspaceExportInterface
      * @param array $nodes
      * @param array $ignoredNodes
      *
-     * @return string
+     * @return array<mixed>
      */
     public function getExportData(
         $webspaceKey,

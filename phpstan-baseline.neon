@@ -3881,16 +3881,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Api\\\\Category\\:\\:getMediasRawData\\(\\) should return string but returns array\\<string, array\\<int\\<0, max\\>, int\\>\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Api\\\\Category\\:\\:getMediasRawData\\(\\) should return string but returns array\\<string, array\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Api\\\\Category\\:\\:getMeta\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
@@ -34331,11 +34321,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
 
 		-
-			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, Sulu\\\\Bundle\\\\SnippetBundle\\\\Document\\\\SnippetDocument given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Content\\\\SnippetRepositoryTest\\:\\:\\$phpcrSession \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
@@ -43981,31 +43966,6 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:assertExists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:getDefaultStructureType\\(\\) never returns null so it can be removed from the return type\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:getDefaultStructureType\\(\\) should return string\\|null but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:getPaths\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:getStructureMetadata\\(\\) should return Sulu\\\\Component\\\\Content\\\\Metadata\\\\StructureMetadata\\|null but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:getStructureMetadata\\(\\) should return Sulu\\\\Component\\\\Content\\\\Metadata\\\\StructureMetadata\\|null but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
@@ -44067,11 +44027,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:\\$cache type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:\\$defaultTypes type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
 

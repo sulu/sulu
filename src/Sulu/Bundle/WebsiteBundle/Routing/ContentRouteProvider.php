@@ -302,13 +302,18 @@ class ContentRouteProvider implements RouteProviderInterface
     {
         $requestFormat = $request->getRequestFormat(null);
         $formatSuffix = $requestFormat ? '.' . $requestFormat : '';
+        $urlParts = \explode('?', $url, 2);
+        $url = $urlParts[0] . $formatSuffix;
+        if ($urlParts[1] ?? null) {
+            $url .= '?' . $urlParts[1];
+        }
 
         // redirect to linked page
         return new Route(
             $this->decodePathInfo($request->getPathInfo()),
             [
                 '_controller' => 'sulu_website.redirect_controller::redirectAction',
-                'url' => $url . $formatSuffix,
+                'url' => $url,
             ],
             [],
             $this->defaultOptions

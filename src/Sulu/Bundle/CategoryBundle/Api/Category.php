@@ -116,7 +116,7 @@ class Category extends ApiEntityWrapper
      * @SerializedName("medias")
      * @Groups({"fullCategory","partialCategory"})
      *
-     * @return string
+     * @return array{ids: array<int>}
      */
     public function getMediasRawData()
     {

@@ -80,7 +80,7 @@ class SnippetRepository
      * @param string $locale
      * @param bool $loadGhostContent
      *
-     * @return SnippetDocument
+     * @return array<SnippetDocument>
      */
     public function getSnippetsByUuids(array $uuids, $locale, $loadGhostContent = false)
     {
@@ -88,6 +88,7 @@ class SnippetRepository
 
         foreach ($uuids as $uuid) {
             try {
+                /** @var SnippetDocument $snippet */
                 $snippet = $this->documentManager->find($uuid, $locale, [
                     'load_ghost_content' => $loadGhostContent,
                 ]);
@@ -145,7 +146,7 @@ class SnippetRepository
      * @param string $sortBy
      * @param string $sortOrder
      *
-     * @return SnippetBridge[]
+     * @return int
      *
      * @throws \InvalidArgumentException
      */
