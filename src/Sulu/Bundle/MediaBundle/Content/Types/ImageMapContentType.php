@@ -21,6 +21,8 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\RefSchemaMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
+use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
+use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyWrapper;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -34,7 +36,7 @@ use Sulu\Component\Content\Exception\UnexpectedPropertyType;
 use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 
-class ImageMapContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, PropertyMetadataMapperInterface
+class ImageMapContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, PropertyMetadataMapperInterface, ReferenceContentTypeInterface
 {
     /**
      * @var ContentTypeManagerInterface
@@ -499,5 +501,41 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
                     )),
             ])
         );
+    }
+
+    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector): void
+    {
+        $value = $propertyValue->getValue();
+
+        if (!$value) {
+            return;
+        }
+
+        $imageId = $value['imageId'] ?? null;
+        if ($imageId) {
+            $imageProperty = new Property('image', '', 'single_media_selection');
+            $imageProperty->setValue(['id' => $imageId]);
+            $imageProperty->setStructure($property->getStructure());
+            $contentType = $this->contentTypeManager->get($imageProperty->getContentTypeName());
+
+            $contentType->getReferences(
+                $imageProperty,
+                new PropertyValue('image', $imageProperty->getValue()),
+                $referenceCollector
+            );
+        }
+
+        $hotspots = $value['hotspots'] ?? [];
+
+        foreach ($property->getTypes() as $propertyType) {
+            foreach ($hotspots as $value) {
+                $child = $propertyType->getChild($value['type']);
+                $contentType = $this->contentTypeManager->get($child->getContentTypeName());
+
+                if ($contentType instanceof ReferenceContentTypeInterface) {
+                    $contentType->getReferences($child, new PropertyValue($child->getName(), $value[$child->getName()]), $referenceCollector);
+                }
+            }
+        }
     }
 }

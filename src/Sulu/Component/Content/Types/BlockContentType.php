@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Types;
 
 use PHPCR\NodeInterface;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
-use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollector;
+use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyInterface;
 use Sulu\Component\Content\Compat\Block\BlockPropertyWrapper;
@@ -468,7 +468,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         );
     }
 
-    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollector $referenceCollector): void
+    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector): void
     {
         foreach ($property->getTypes() as $propertyType) {
             foreach ($propertyValue->getValue() as $value) {
