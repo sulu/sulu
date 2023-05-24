@@ -35,7 +35,7 @@ class CannotEvaluateTokenException extends \Exception
             \sprintf(
                 'Cannot evaluate token "%s" for entity with type "%s"',
                 $token,
-                \is_object($entity) ? \get_class($entity) : \gettype($entity),
+                \is_object($entity) ? \get_class($entity) : \gettype($entity)
             ),
             0,
             $previous
