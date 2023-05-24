@@ -32,7 +32,11 @@ class CannotEvaluateTokenException extends \Exception
     public function __construct($token, $entity, \Exception $previous)
     {
         parent::__construct(
-            \sprintf('Cannot evaluate token "%s" for entity with type "%s"', $token, \get_class($entity)),
+            \sprintf(
+                'Cannot evaluate token "%s" for entity with type "%s"',
+                $token,
+                \is_object($entity) ? \get_class($entity) : \gettype($entity)
+            ),
             0,
             $previous
         );
