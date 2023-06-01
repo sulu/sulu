@@ -20,6 +20,11 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 
+/**
+ * @final
+ *
+ * @internal
+ */
 class PageReferenceProvider extends DocumentReferenceProvider
 {
     public function __construct(
@@ -36,7 +41,10 @@ class PageReferenceProvider extends DocumentReferenceProvider
     protected function getReferenceSecurityContext(WebspaceBehavior|StructureBehavior $document): string
     {
         if (!$document instanceof WebspaceBehavior) {
-            throw new \Exception('Document must implement WebspaceBehavior');
+            throw new \RuntimeException(\sprintf(
+                'Document "%s" must implement WebspaceBehavior',
+                \get_class($document)
+            ));
         }
 
         return PageAdmin::getPageSecurityContext($document->getWebspaceName());

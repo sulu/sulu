@@ -12,10 +12,9 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Reference\Subscriber;
 
 use Sulu\Bundle\DocumentManagerBundle\Reference\Provider\DocumentReferenceProviderInterface;
-use Sulu\Bundle\PageBundle\Document\HomeDocument;
-use Sulu\Bundle\PageBundle\Document\PageDocument;
-use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
@@ -57,7 +56,10 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface
         $document = $event->getDocument();
         $locale = $event->getLocale();
 
-        if (!$document instanceof StructureBehavior) {
+        if (!$document instanceof StructureBehavior
+            || !$document instanceof TitleBehavior
+            || !$document instanceof UuidBehavior
+        ) {
             return;
         }
 
@@ -69,7 +71,10 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface
         $document = $event->getDocument();
         $locale = $event->getLocale();
 
-        if (!$document instanceof StructureBehavior) {
+        if (!$document instanceof StructureBehavior
+            || !$document instanceof TitleBehavior
+            || !$document instanceof UuidBehavior
+        ) {
             return;
         }
 
@@ -80,7 +85,9 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
 
-        if (!$document instanceof StructureBehavior) {
+        if (!$document instanceof StructureBehavior
+            || !$document instanceof UuidBehavior
+        ) {
             return;
         }
 
@@ -90,6 +97,7 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface
     private function getProvider(StructureBehavior $document): ?DocumentReferenceProviderInterface
     {
         $documentResourcesKey = defined(get_class($document) . '::RESOURCE_KEY')
+            // @phpstan-ignore-next-line PHPStan does not detect the `defined` call
             ? $document::RESOURCE_KEY
             : '';
 

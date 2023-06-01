@@ -518,11 +518,13 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
             $imageProperty->setStructure($property->getStructure());
             $contentType = $this->contentTypeManager->get($imageProperty->getContentTypeName());
 
-            $contentType->getReferences(
-                $imageProperty,
-                new PropertyValue('image', $imageProperty->getValue()),
-                $referenceCollector
-            );
+            if ($contentType instanceof ReferenceContentTypeInterface) {
+                $contentType->getReferences(
+                    $imageProperty,
+                    new PropertyValue('image', $imageProperty->getValue()),
+                    $referenceCollector
+                );
+            }
         }
 
         $hotspots = $value['hotspots'] ?? [];

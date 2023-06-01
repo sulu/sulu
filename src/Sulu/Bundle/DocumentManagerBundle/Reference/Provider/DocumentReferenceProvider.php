@@ -23,6 +23,13 @@ use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 
+/**
+ * This class is also extended by:
+ *
+ * @see \Sulu\Bundle\PageBundle\Reference\Provider\PageReferenceProvider
+ *
+ * @internal
+ */
 class DocumentReferenceProvider implements DocumentReferenceProviderInterface
 {
     private ContentTypeManagerInterface $contentTypeManager;
@@ -57,11 +64,7 @@ class DocumentReferenceProvider implements DocumentReferenceProviderInterface
     {
         $referenceResourceKey = $this->getReferenceResourceKey($document);
 
-        if (!$referenceResourceKey) {
-            throw new \Exception('ReferenceResourceKey must be defined');
-        }
-
-        $workflowStage = $document instanceof WorkflowStageBehavior ? $document->getWorkflowStage() : 0;
+        $workflowStage = $document instanceof WorkflowStageBehavior ? (int) $document->getWorkflowStage() : 0;
 
         $referenceCollector = new ReferenceCollector(
             $this->referenceRepository,
@@ -105,26 +108,29 @@ class DocumentReferenceProvider implements DocumentReferenceProviderInterface
         }
     }
 
-    protected function getReferenceResourceKey(UuidBehavior $document): ?string
+    /**
+     * @throws \RuntimeException
+     */
+    private function getReferenceResourceKey(UuidBehavior $document): string
     {
         if (\defined(\get_class($document) . '::RESOURCE_KEY')) {
-            return $document::RESOURCE_KEY;
+            return $document::RESOURCE_KEY; // @phpstan-ignore-line PHPStan does not detect the `defined` call
         }
 
-        return null;
+        throw new \RuntimeException('ReferenceResourceKey must be defined');
     }
 
-    protected function getReferenceSecurityObjectType(): string
+    private function getReferenceSecurityObjectType(): string
     {
         return SecurityBehavior::class;
     }
 
-    protected function getReferenceSecurityContext(StructureBehavior $document): string
+    private function getReferenceSecurityContext(StructureBehavior $document): string
     {
         return $this->referenceSecurityContext;
     }
 
-    protected function getStructureType(): string
+    private function getStructureType(): string
     {
         return $this->structureType;
     }

@@ -16,6 +16,8 @@ use Jackalope\Query\RowIterator;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Reference\Provider\DocumentReferenceProviderInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -25,7 +27,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class DocumentReferencesCommand extends Command
+/**
+ * @internal
+ */
+final class DocumentReferencesCommand extends Command
 {
     protected static $defaultName = 'sulu:document:update-references';
 
@@ -81,7 +86,7 @@ class DocumentReferencesCommand extends Command
         $provider = $this->documentReferenceProviders[$type] ?? null;
 
         if (!$provider) {
-            throw new \Exception(\sprintf('No provider found for type "%s"', $type));
+            throw new \RuntimeException(\sprintf('No provider found for type "%s"', $type));
         }
 
         $sql2 = \sprintf("SELECT jcr:uuid FROM [nt:unstructured] as document WHERE document.[jcr:mixinTypes] = 'sulu:%s'", $type);
@@ -106,7 +111,7 @@ class DocumentReferencesCommand extends Command
             foreach ($rows as $row) {
                 /** @var string $uuid */
                 $uuid = $row->getValue('jcr:uuid');
-                /** @var StructureBehavior|null $document */
+                /** @var (UuidBehavior&TitleBehavior&StructureBehavior)|null $document */
                 $document = $this->documentManager->find($uuid, $locale);
 
                 if (!$document) {

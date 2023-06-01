@@ -11,10 +11,7 @@
 
 namespace Sulu\Bundle\ReferenceBundle\Application\Collector;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
-use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
-use Sulu\Component\Content\Document\WorkflowStage;
 
 interface ReferenceCollectorInterface
 {
@@ -27,4 +24,6 @@ interface ReferenceCollectorInterface
         ?string $securityObjectType = null,
         ?string $securityObjectId = null
     ): ReferenceInterface;
+
+    public function getReferenceLocale(): string;
 }

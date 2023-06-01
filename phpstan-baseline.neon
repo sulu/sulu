@@ -26101,6 +26101,31 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PublicPreviewController.php
 
 		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ReferenceBundle/Infrastructure/Symfony/DependencyInjection/SuluReferenceExtension.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\ReferenceBundle\\\\UserInterface\\\\Controller\\\\Admin\\\\ReferenceController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ReferenceBundle/UserInterface/Controller/Admin/ReferenceController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\ReferenceBundle\\\\UserInterface\\\\Controller\\\\Admin\\\\ReferenceController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ReferenceBundle/UserInterface/Controller/Admin/ReferenceController.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ReferenceBundle/UserInterface/Controller/Admin/ReferenceController.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ReferenceBundle/UserInterface/Controller/Admin/ReferenceController.php
+
+		-
 			message: "#^Parameter \\#2 \\$destination of method Sulu\\\\Bundle\\\\RouteBundle\\\\PageTree\\\\PageTreeMoverInterface\\:\\:move\\(\\) expects Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument, object given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Command/MovePageTreeCommand.php
@@ -30112,6 +30137,11 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetController\\:\\:processForm\\(\\) has parameter \\$document with no type specified\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetController\\:\\:throwReferentialIntegrityException\\(\\) has parameter \\$references with no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
 
