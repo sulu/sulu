@@ -157,7 +157,7 @@ abstract class AbstractLoader implements LoaderInterface
         return $result;
     }
 
-    protected function loadMeta($path, \DOMXPath $xpath, \DOMNode $context = null)
+    protected function loadMeta($path, \DOMXPath $xpath, ?\DOMNode $context = null)
     {
         $result = [];
 

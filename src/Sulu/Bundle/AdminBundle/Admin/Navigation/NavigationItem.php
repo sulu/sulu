@@ -136,7 +136,7 @@ class NavigationItem implements \Iterator
         return $this->name;
     }
 
-    public function setLabel(string $label = null): void
+    public function setLabel(?string $label = null): void
     {
         $this->label = $label;
     }
@@ -168,7 +168,7 @@ class NavigationItem implements \Iterator
         return $this->icon;
     }
 
-    public function setView(string $view = null): void
+    public function setView(?string $view = null): void
     {
         $this->view = $view;
     }

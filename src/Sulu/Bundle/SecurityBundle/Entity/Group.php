@@ -274,7 +274,7 @@ class Group extends ApiEntity implements AuditableInterface
      *
      * @return Group
      */
-    public function setParent(self $parent = null)
+    public function setParent(?self $parent = null)
     {
         $this->parent = $parent;
 

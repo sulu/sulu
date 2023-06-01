@@ -68,7 +68,7 @@ class RoleSetting implements RoleSettingInterface
         return $this->value;
     }
 
-    public function setRole(RoleInterface $role = null)
+    public function setRole(?RoleInterface $role = null)
     {
         $this->role = $role;
 

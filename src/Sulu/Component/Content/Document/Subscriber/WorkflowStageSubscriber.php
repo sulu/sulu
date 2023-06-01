@@ -260,7 +260,7 @@ class WorkflowStageSubscriber implements EventSubscriberInterface
      * @param int $workflowStage
      * @param \DateTime $publishDate
      */
-    private function setWorkflowStageOnNode(NodeInterface $node, $locale, $workflowStage, \DateTime $publishDate = null)
+    private function setWorkflowStageOnNode(NodeInterface $node, $locale, $workflowStage, ?\DateTime $publishDate = null)
     {
         $node->setProperty(
             $this->propertyEncoder->localizedSystemName(self::WORKFLOW_STAGE_FIELD, $locale),

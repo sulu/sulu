@@ -36,7 +36,7 @@ class SnippetImportCommand extends Command
      */
     private $logger;
 
-    public function __construct(SnippetImportInterface $snippetImporter, LoggerInterface $logger = null)
+    public function __construct(SnippetImportInterface $snippetImporter, ?LoggerInterface $logger = null)
     {
         parent::__construct();
 

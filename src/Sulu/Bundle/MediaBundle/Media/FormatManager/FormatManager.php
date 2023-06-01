@@ -94,7 +94,7 @@ class FormatManager implements FormatManagerInterface
         $saveImage,
         $responseHeaders,
         $formats,
-        LoggerInterface $logger = null
+        ?LoggerInterface $logger = null
     ) {
         $this->mediaRepository = $mediaRepository;
         $this->formatCache = $formatCache;

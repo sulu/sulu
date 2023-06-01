@@ -107,7 +107,7 @@ class CollectionController extends AbstractRestController implements ClassResour
         CollectionManagerInterface $collectionManager,
         array $defaultCollectionType,
         array $permissions,
-        string $collectionClass = null
+        ?string $collectionClass = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 
@@ -415,8 +415,8 @@ class CollectionController extends AbstractRestController implements ClassResour
 
     private function checkSystemCollection($id, $parent)
     {
-        if ((null !== $id && $this->systemCollectionManager->isSystemCollection(\intval($id))) ||
-            (null !== $parent && $this->systemCollectionManager->isSystemCollection(\intval($parent)))
+        if ((null !== $id && $this->systemCollectionManager->isSystemCollection(\intval($id)))
+            || (null !== $parent && $this->systemCollectionManager->isSystemCollection(\intval($parent)))
         ) {
             throw new AccessDeniedException('Permission "update" or "create" is not granted for system collections');
         }

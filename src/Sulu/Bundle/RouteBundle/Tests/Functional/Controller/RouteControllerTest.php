@@ -379,7 +379,7 @@ class RouteControllerTest extends SuluTestCase
 
     private function createRoute(
         $path,
-        Route $target = null,
+        ?Route $target = null,
         $entityClass = self::TEST_ENTITY,
         $entityId = self::TEST_ID
     ): Route {

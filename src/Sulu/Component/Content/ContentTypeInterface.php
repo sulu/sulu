@@ -86,7 +86,7 @@ interface ContentTypeInterface
      *
      * @return array
      */
-    public function getDefaultParams(PropertyInterface $property = null);
+    public function getDefaultParams(?PropertyInterface $property = null);
 
     /**
      * returns default value of content type.

@@ -43,7 +43,7 @@ class PreviewController
     public function __construct(
         PreviewInterface $preview,
         TokenStorageInterface $tokenStorage,
-        Profiler $profiler = null
+        ?Profiler $profiler = null
     ) {
         $this->preview = $preview;
         $this->tokenStorage = $tokenStorage;

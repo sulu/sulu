@@ -66,7 +66,7 @@ class CustomUrlRepository
      *
      * @return \Iterator
      */
-    public function findList($path, array $baseDomains = null)
+    public function findList($path, ?array $baseDomains = null)
     {
         // TODO pagination
 

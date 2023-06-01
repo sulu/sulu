@@ -109,7 +109,7 @@ abstract class WebsiteController extends AbstractController
      *
      * @return mixed[]
      */
-    protected function getAttributes($attributes, StructureInterface $structure = null, $preview = false)
+    protected function getAttributes($attributes, ?StructureInterface $structure = null, $preview = false)
     {
         return $this->container->get('sulu_website.resolver.parameter')->resolve(
             $attributes,

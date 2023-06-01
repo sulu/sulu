@@ -90,7 +90,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         CategoryRequestHandlerInterface $categoryRequestHandler,
         ReferenceStoreInterface $tagReferenceStore,
         ReferenceStoreInterface $categoryReferenceStore,
-        TargetGroupStoreInterface $targetGroupStore = null,
+        ?TargetGroupStoreInterface $targetGroupStore = null,
         RequestAnalyzerInterface $requestAnalyzer
     ) {
         $this->dataProviderPool = $dataProviderPool;
@@ -154,7 +154,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         }
     }
 
-    public function getDefaultParams(PropertyInterface $property = null)
+    public function getDefaultParams(?PropertyInterface $property = null)
     {
         $provider = $this->getProvider($property);
         $configuration = $provider->getConfiguration();

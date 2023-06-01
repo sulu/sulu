@@ -87,7 +87,7 @@ class Replacer implements ReplacerInterface
         return \str_replace($replacer, $value, $url);
     }
 
-    public function cleanup($url, array $replacers = null)
+    public function cleanup($url, ?array $replacers = null)
     {
         if (!$replacers) {
             $replacers = $this->replacers;

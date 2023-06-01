@@ -102,7 +102,7 @@ class PropertyMetadata extends ItemMetadata
         return $this->cssClass;
     }
 
-    public function setCssClass(string $cssClass = null): self
+    public function setCssClass(?string $cssClass = null): self
     {
         $this->cssClass = $cssClass;
 
@@ -126,7 +126,7 @@ class PropertyMetadata extends ItemMetadata
         return $this->minOccurs;
     }
 
-    public function setMinOccurs(int $minOccurs = null): self
+    public function setMinOccurs(?int $minOccurs = null): self
     {
         if ($minOccurs) {
             $this->minOccurs = $minOccurs;
@@ -140,7 +140,7 @@ class PropertyMetadata extends ItemMetadata
         return $this->maxOccurs;
     }
 
-    public function setMaxOccurs(int $maxOccurs = null): self
+    public function setMaxOccurs(?int $maxOccurs = null): self
     {
         if ($maxOccurs) {
             $this->maxOccurs = $maxOccurs;
@@ -182,7 +182,7 @@ class PropertyMetadata extends ItemMetadata
         return $this->spaceAfter;
     }
 
-    public function setSpaceAfter(int $spaceAfter = null): self
+    public function setSpaceAfter(?int $spaceAfter = null): self
     {
         $this->spaceAfter = $spaceAfter;
 

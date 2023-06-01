@@ -173,7 +173,7 @@ interface RoleInterface extends AuditableInterface, SecurityIdentityInterface
      *
      * @return RoleInterface
      */
-    public function setSecurityType(SecurityType $securityType = null);
+    public function setSecurityType(?SecurityType $securityType = null);
 
     /**
      * Get securityType.

@@ -89,10 +89,10 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         StructureResolverInterface $structureResolver,
         SessionManagerInterface $sessionManager,
         RequestAnalyzerInterface $requestAnalyzer,
-        LoggerInterface $logger = null,
+        ?LoggerInterface $logger = null,
         $securityChecker = null,
-        WebspaceManagerInterface $webspaceManager = null,
-        RequestStack $requestStack = null,
+        ?WebspaceManagerInterface $webspaceManager = null,
+        ?RequestStack $requestStack = null,
         array $enabledTwigAttributes = [
             'urls' => true,
         ]
@@ -129,7 +129,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         ];
     }
 
-    public function load($uuid, array $properties = null)
+    public function load($uuid, ?array $properties = null)
     {
         if (!$uuid) {
             return;
@@ -181,7 +181,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
         return $this->resolveProperties($contentStructure, $properties);
     }
 
-    public function loadParent($uuid, array $properties = null)
+    public function loadParent($uuid, ?array $properties = null)
     {
         $session = $this->sessionManager->getSession();
         $contentsNode = $this->sessionManager->getContentNode($this->requestAnalyzer->getWebspace()->getKey());
@@ -197,7 +197,7 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
     private function resolveStructure(
         StructureInterface $structure,
         bool $loadExcerpt = true,
-        array $includedProperties = null
+        ?array $includedProperties = null
     ) {
         if (null === $this->requestStack) {
             $structureData = $this->structureResolver->resolve($structure, $loadExcerpt, $includedProperties);

@@ -69,9 +69,9 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
     public function findCollectionSet(
         $depth = 0,
         $filter = [],
-        CollectionInterface $collection = null,
+        ?CollectionInterface $collection = null,
         $sortBy = [],
-        UserInterface $user = null,
+        ?UserInterface $user = null,
         $permission = null
     ) {
         $ids = $this->getIdsQuery($depth, $filter, $sortBy, $collection)->getScalarResult();
@@ -124,7 +124,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         return $queryBuilder->getQuery()->getResult();
     }
 
-    public function countCollections($depth = 0, $filter = [], CollectionInterface $collection = null)
+    public function countCollections($depth = 0, $filter = [], ?CollectionInterface $collection = null)
     {
         $ids = $this->getIdsQuery($depth, $filter, [], $collection, 'DISTINCT collection.id')->getScalarResult();
 
@@ -311,7 +311,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
         $depth = 0,
         $filter = [],
         $sortBy = [],
-        CollectionInterface $collection = null,
+        ?CollectionInterface $collection = null,
         $select = 'collection.id'
     ) {
         $queryBuilder = $this->createQueryBuilder('collection')
@@ -328,9 +328,9 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             $queryBuilder->setParameter('id', $collection->getId());
         }
 
-        if (\array_key_exists('search', $filter) && null !== $filter['search'] ||
-            \array_key_exists('locale', $filter) ||
-            \count($sortBy) > 0
+        if (\array_key_exists('search', $filter) && null !== $filter['search']
+            || \array_key_exists('locale', $filter)
+            || \count($sortBy) > 0
         ) {
             $queryBuilder->leftJoin('collection.meta', 'collectionMeta');
             $queryBuilder->leftJoin('collection.defaultMeta', 'defaultMeta');

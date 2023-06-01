@@ -25,7 +25,7 @@ class RouteContentType extends SimpleContentType
         parent::__construct('Route', '');
     }
 
-    public function getDefaultParams(PropertyInterface $property = null)
+    public function getDefaultParams(?PropertyInterface $property = null)
     {
         return [
             'inputType' => new PropertyParameter('inputType', 'full'),

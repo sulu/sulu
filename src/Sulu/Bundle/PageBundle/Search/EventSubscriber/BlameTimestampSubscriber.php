@@ -110,7 +110,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
      * @param \DateTime $created
      * @param \DateTime $changed
      */
-    private function mapTimestamp(Document $document, \DateTime $created = null, \DateTime $changed = null)
+    private function mapTimestamp(Document $document, ?\DateTime $created = null, ?\DateTime $changed = null)
     {
         $document->addField(
             $this->factory->createField('created', $created ? $created->format('c') : null, 'string')
@@ -127,7 +127,7 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
      * @param UserInterface $creator
      * @param UserInterface $changer
      */
-    private function mapCreatorAndChanger(Document $document, UserInterface $creator = null, UserInterface $changer = null)
+    private function mapCreatorAndChanger(Document $document, ?UserInterface $creator = null, ?UserInterface $changer = null)
     {
         $document->addField(
             $this->factory->createField('changer', $changer ? $changer->getUserIdentifier() : null, 'string')

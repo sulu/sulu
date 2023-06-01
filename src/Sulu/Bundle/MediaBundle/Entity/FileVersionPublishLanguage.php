@@ -86,7 +86,7 @@ class FileVersionPublishLanguage
      *
      * @return FileVersionPublishLanguage
      */
-    public function setFileVersion(FileVersion $fileVersion = null)
+    public function setFileVersion(?FileVersion $fileVersion = null)
     {
         $this->fileVersion = $fileVersion;
 

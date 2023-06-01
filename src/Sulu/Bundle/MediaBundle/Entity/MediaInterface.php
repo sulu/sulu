@@ -119,7 +119,7 @@ interface MediaInterface extends AuditableInterface
      *
      * @return MediaInterface|null
      */
-    public function setPreviewImage(self $previewImage = null);
+    public function setPreviewImage(?self $previewImage = null);
 
     /**
      * Get preview image.

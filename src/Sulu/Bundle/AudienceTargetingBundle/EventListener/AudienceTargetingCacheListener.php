@@ -108,7 +108,7 @@ class AudienceTargetingCacheListener implements EventSubscriberInterface
      *
      * @return ?string
      */
-    private function requestTargetGroup(Request $request, CacheInvalidation $kernel, int $currentTargetGroup = null)
+    private function requestTargetGroup(Request $request, CacheInvalidation $kernel, ?int $currentTargetGroup = null)
     {
         $targetGroupRequest = Request::create(
             static::TARGET_GROUP_URL,

@@ -53,7 +53,7 @@ class PagesSitemapProvider extends AbstractSitemapProvider
         ContentRepositoryInterface $contentRepository,
         WebspaceManagerInterface $webspaceManager,
         string $environment,
-        AccessControlManagerInterface $accessControlManager = null
+        ?AccessControlManagerInterface $accessControlManager = null
     ) {
         $this->contentRepository = $contentRepository;
         $this->webspaceManager = $webspaceManager;

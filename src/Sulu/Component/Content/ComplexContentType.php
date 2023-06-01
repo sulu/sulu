@@ -19,7 +19,7 @@ use Sulu\Component\Content\Compat\PropertyInterface;
  */
 abstract class ComplexContentType implements ContentTypeInterface
 {
-    public function getDefaultParams(PropertyInterface $property = null)
+    public function getDefaultParams(?PropertyInterface $property = null)
     {
         return [];
     }

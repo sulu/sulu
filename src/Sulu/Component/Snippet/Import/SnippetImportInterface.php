@@ -31,5 +31,5 @@ interface SnippetImportInterface
      *
      * @throws FormatImporterNotFoundException
      */
-    public function import($locale, $filePath, OutputInterface $output = null, $format = '1.2.xliff');
+    public function import($locale, $filePath, ?OutputInterface $output = null, $format = '1.2.xliff');
 }

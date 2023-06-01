@@ -67,8 +67,8 @@ class MediaDataProvider extends BaseDataProvider
         RequestAnalyzerInterface $requestAnalyzer,
         $permissions,
         bool $hasAudienceTargeting = false,
-        EntityManagerInterface $entityManager = null,
-        TranslatorInterface $translator = null
+        ?EntityManagerInterface $entityManager = null,
+        ?TranslatorInterface $translator = null
     ) {
         parent::__construct($repository, $serializer, $referenceStore, $security, $requestAnalyzer, $permissions);
 

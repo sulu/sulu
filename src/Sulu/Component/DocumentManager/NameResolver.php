@@ -27,7 +27,7 @@ class NameResolver
      *
      * @throws NodeNameAlreadyExistsException
      */
-    public function resolveName(NodeInterface $parentNode, $name, NodeInterface $forNode = null, $autoRename = true)
+    public function resolveName(NodeInterface $parentNode, $name, ?NodeInterface $forNode = null, $autoRename = true)
     {
         $index = 0;
         $baseName = $name;
@@ -49,7 +49,7 @@ class NameResolver
      *
      * @return bool
      */
-    private function hasNameConflict(NodeInterface $parentNode, $name, NodeInterface $forNode = null)
+    private function hasNameConflict(NodeInterface $parentNode, $name, ?NodeInterface $forNode = null)
     {
         return $parentNode->hasNode($name) && (!$forNode || $parentNode->getNode($name) !== $forNode);
     }

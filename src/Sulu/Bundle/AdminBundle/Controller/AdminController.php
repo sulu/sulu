@@ -193,7 +193,7 @@ class AdminController
         array $translations,
         string $fallbackLocale,
         string $collaborationInterval,
-        bool $collaborationEnabled = null,
+        ?bool $collaborationEnabled = null,
         ?string $passwordPattern = null,
         ?string $passwordInfoTranslationKey = null
     ) {

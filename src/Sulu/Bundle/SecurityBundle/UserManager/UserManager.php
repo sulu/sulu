@@ -730,9 +730,9 @@ class UserManager implements UserManagerInterface
     {
         if ($contact) {
             // if no email passed try to use the contact's first email
-            if (null === $email &&
-                \array_key_exists('emails', $contact) && \count($contact['emails']) > 0 &&
-                $this->isEmailUnique($contact['emails'][0]['email'])
+            if (null === $email
+                && \array_key_exists('emails', $contact) && \count($contact['emails']) > 0
+                && $this->isEmailUnique($contact['emails'][0]['email'])
             ) {
                 $email = $contact['emails'][0]['email'];
             }

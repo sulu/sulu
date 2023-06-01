@@ -43,7 +43,7 @@ class PathCleanup implements PathCleanupInterface
      */
     private $pattern = '/^(\/[a-z0-9][a-z0-9-_]*)+$/';
 
-    public function __construct(array $replacers, SluggerInterface $slugger = null)
+    public function __construct(array $replacers, ?SluggerInterface $slugger = null)
     {
         if (null === $slugger) {
             @trigger_deprecation(

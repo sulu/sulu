@@ -25,7 +25,7 @@ class Version201507281529 implements VersionInterface, ContainerAwareInterface
      */
     private $container;
 
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(?ContainerInterface $container = null)
     {
         $this->container = $container;
     }

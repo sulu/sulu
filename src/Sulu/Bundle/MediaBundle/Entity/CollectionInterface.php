@@ -52,7 +52,7 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
      *
      * @return CollectionInterface
      */
-    public function setChanger(UserInterface $changer = null);
+    public function setChanger(?UserInterface $changer = null);
 
     /**
      * Get changer.
@@ -66,7 +66,7 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
      *
      * @return CollectionInterface
      */
-    public function setCreator(UserInterface $creator = null);
+    public function setCreator(?UserInterface $creator = null);
 
     /**
      * Get creator.
@@ -158,7 +158,7 @@ interface CollectionInterface extends AuditableInterface, SecuredEntityInterface
      *
      * @return CollectionInterface
      */
-    public function setParent(self $parent = null);
+    public function setParent(?self $parent = null);
 
     /**
      * Get parent.

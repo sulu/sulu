@@ -13,7 +13,7 @@ namespace Sulu\Component\Content\Metadata;
 
 trait XmlParserTrait
 {
-    private function getValueFromXPath($path, \DOMXPath $xpath, \DOMNode $context = null, $default = null)
+    private function getValueFromXPath($path, \DOMXPath $xpath, ?\DOMNode $context = null, $default = null)
     {
         try {
             $result = $xpath->query($path, $context);

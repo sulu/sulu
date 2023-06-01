@@ -189,7 +189,7 @@ class Account extends ApiWrapper
      *
      * @return Account
      */
-    public function setParent(AccountInterface $parent = null)
+    public function setParent(?AccountInterface $parent = null)
     {
         $this->entity->setParent($parent);
 
@@ -764,7 +764,7 @@ class Account extends ApiWrapper
      *
      * @return Account
      */
-    public function setMainContact(ContactEntity $mainContact = null)
+    public function setMainContact(?ContactEntity $mainContact = null)
     {
         $this->entity->setMainContact($mainContact);
 
