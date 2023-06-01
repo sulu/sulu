@@ -45,10 +45,10 @@ class Memoize implements MemoizeInterface, ResetInterface
         $callers = \debug_backtrace();
 
         if (
-            !isset($callers[1]) ||
-            !isset($callers[1]['class']) ||
-            !isset($callers[1]['function']) ||
-            !isset($callers[1]['args'])
+            !isset($callers[1])
+            || !isset($callers[1]['class'])
+            || !isset($callers[1]['function'])
+            || !isset($callers[1]['args'])
         ) {
             throw new \InvalidArgumentException();
         }

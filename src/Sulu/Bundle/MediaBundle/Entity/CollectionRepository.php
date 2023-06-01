@@ -328,9 +328,9 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             $queryBuilder->setParameter('id', $collection->getId());
         }
 
-        if (\array_key_exists('search', $filter) && null !== $filter['search'] ||
-            \array_key_exists('locale', $filter) ||
-            \count($sortBy) > 0
+        if (\array_key_exists('search', $filter) && null !== $filter['search']
+            || \array_key_exists('locale', $filter)
+            || \count($sortBy) > 0
         ) {
             $queryBuilder->leftJoin('collection.meta', 'collectionMeta');
             $queryBuilder->leftJoin('collection.defaultMeta', 'defaultMeta');

@@ -402,10 +402,10 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
 
         if (!$id) {
             $parentData = $this->getProperty($data, 'account');
-            if (null != $parentData &&
-                null != $parentData['id'] &&
-                'null' != $parentData['id'] &&
-                '' != $parentData['id']
+            if (null != $parentData
+                && null != $parentData['id']
+                && 'null' != $parentData['id']
+                && '' != $parentData['id']
             ) {
                 /** @var AccountInterface $parent */
                 $parent = $this->accountRepository->findAccountById($parentData['id']);
@@ -577,9 +577,9 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
     public function setMainAccount(ContactInterface $contact, $data)
     {
         // set account relation
-        if (isset($data['account']) &&
-            isset($data['account']['id']) &&
-            'null' != $data['account']['id']
+        if (isset($data['account'])
+            && isset($data['account']['id'])
+            && 'null' != $data['account']['id']
         ) {
             $accountId = $data['account']['id'];
 

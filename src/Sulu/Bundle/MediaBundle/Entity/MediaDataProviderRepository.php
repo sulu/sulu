@@ -79,9 +79,9 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         UserInterface $user = null,
         $permission = null
     ) {
-        if (!\array_key_exists('dataSource', $filters) ||
-            '' === $filters['dataSource'] ||
-            (null !== $limit && $limit < 1)
+        if (!\array_key_exists('dataSource', $filters)
+            || '' === $filters['dataSource']
+            || (null !== $limit && $limit < 1)
         ) {
             return [];
         }

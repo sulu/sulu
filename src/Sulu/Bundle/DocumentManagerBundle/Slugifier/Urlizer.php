@@ -547,14 +547,14 @@ class Urlizer
                         * Check for illegal sequences and codepoints.
                         */
                         // From Unicode 3.1, non-shortest form is illegal
-                        if (((2 == $mBytes) && ($mUcs4 < 0x0080)) ||
-                            ((3 == $mBytes) && ($mUcs4 < 0x0800)) ||
-                            ((4 == $mBytes) && ($mUcs4 < 0x10000)) ||
-                            (4 < $mBytes) ||
+                        if (((2 == $mBytes) && ($mUcs4 < 0x0080))
+                            || ((3 == $mBytes) && ($mUcs4 < 0x0800))
+                            || ((4 == $mBytes) && ($mUcs4 < 0x10000))
+                            || (4 < $mBytes)
                             // From Unicode 3.2, surrogate characters are illegal
-                            (0xD800 == ($mUcs4 & 0xFFFFF800)) ||
+                            || (0xD800 == ($mUcs4 & 0xFFFFF800))
                             // Codepoints outside the Unicode range are illegal
-                            ($mUcs4 > 0x10FFFF)
+                            || ($mUcs4 > 0x10FFFF)
                         ) {
                             return false;
                         }

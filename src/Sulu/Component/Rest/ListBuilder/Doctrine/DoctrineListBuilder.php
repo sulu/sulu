@@ -607,16 +607,16 @@ class DoctrineListBuilder extends AbstractListBuilder
         // iterate through all field descriptors to find necessary joins
         foreach ($this->getAllFields() as $key => $field) {
             // if field is in any conditional clause -> add join
-            if (($field instanceof DoctrineFieldDescriptor || $field instanceof DoctrineJoinDescriptor) &&
-                false !== \array_search($field->getEntityName(), $necessaryEntityNames)
+            if (($field instanceof DoctrineFieldDescriptor || $field instanceof DoctrineJoinDescriptor)
+                && false !== \array_search($field->getEntityName(), $necessaryEntityNames)
                 && $field->getEntityName() !== $this->entityName
             ) {
                 $addJoins = \array_merge($addJoins, $field->getJoins());
             } else {
                 // include inner joins
                 foreach ($field->getJoins() as $entityName => $join) {
-                    if (DoctrineJoinDescriptor::JOIN_METHOD_INNER !== $join->getJoinMethod() &&
-                        false === \array_search($entityName, $necessaryEntityNames)
+                    if (DoctrineJoinDescriptor::JOIN_METHOD_INNER !== $join->getJoinMethod()
+                        && false === \array_search($entityName, $necessaryEntityNames)
                     ) {
                         break;
                     }

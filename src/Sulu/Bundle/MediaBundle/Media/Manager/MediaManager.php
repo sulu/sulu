@@ -591,16 +591,16 @@ class MediaManager implements MediaManagerInterface
     protected function setDataToMedia(Media $media, $data, $user)
     {
         foreach ($data as $attribute => $value) {
-            if ($value ||
-                'tags' === $attribute ||
-                'size' === $attribute ||
-                'description' === $attribute ||
-                'copyright' === $attribute ||
-                'credits' === $attribute ||
-                'categories' === $attribute ||
-                'targetGroups' === $attribute ||
-                'focusPointX' === $attribute ||
-                'focusPointY' === $attribute
+            if ($value
+                || 'tags' === $attribute
+                || 'size' === $attribute
+                || 'description' === $attribute
+                || 'copyright' === $attribute
+                || 'credits' === $attribute
+                || 'categories' === $attribute
+                || 'targetGroups' === $attribute
+                || 'focusPointX' === $attribute
+                || 'focusPointY' === $attribute
             ) {
                 switch ($attribute) {
                     case 'size':

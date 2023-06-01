@@ -415,8 +415,8 @@ class CollectionController extends AbstractRestController implements ClassResour
 
     private function checkSystemCollection($id, $parent)
     {
-        if ((null !== $id && $this->systemCollectionManager->isSystemCollection(\intval($id))) ||
-            (null !== $parent && $this->systemCollectionManager->isSystemCollection(\intval($parent)))
+        if ((null !== $id && $this->systemCollectionManager->isSystemCollection(\intval($id)))
+            || (null !== $parent && $this->systemCollectionManager->isSystemCollection(\intval($parent)))
         ) {
             throw new AccessDeniedException('Permission "update" or "create" is not granted for system collections');
         }

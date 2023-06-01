@@ -100,8 +100,8 @@ class MetaTwigExtension extends AbstractExtension
 
         // fallback for seo description
         if (
-            (!\array_key_exists('description', $seo) || '' === $seo['description']) &&
-            \array_key_exists('description', $excerpt) && '' !== $excerpt['description']
+            (!\array_key_exists('description', $seo) || '' === $seo['description'])
+            && \array_key_exists('description', $excerpt) && '' !== $excerpt['description']
         ) {
             $seo['description'] = \strip_tags($excerpt['description']);
         }

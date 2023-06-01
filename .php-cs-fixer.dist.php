@@ -40,6 +40,9 @@ $config->setRiskyAllowed(true)
                 ['Serializer\\*', 'VirtualProperty', 'Accessor', 'Type', 'Groups', 'Expose', 'Exclude', 'SerializedName', 'Inline', 'ExclusionPolicy'],
             ],
         ],
+        'get_class_to_class_keyword' => false, // should be enabled as soon as support for php < 8 is dropped
+        'nullable_type_declaration_for_default_null_value' => false, // should be enabled in future currently effect to many files
+        'no_null_property_initialization' => false,
     ])
     ->setFinder($finder);
 
