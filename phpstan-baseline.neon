@@ -15756,6 +15756,11 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
 		-
+			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
+
+		-
 			message: "#^Parameter \\#2 \\$collections of class Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\RootCollection constructor expects array, array\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Collection\\>\\|Doctrine\\\\ORM\\\\Tools\\\\Pagination\\\\Paginator given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
@@ -16406,6 +16411,11 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
+			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
+
+		-
 			message: "#^Parameter \\#2 \\$user of method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionRepository\\:\\:addAccessControl\\(\\) expects Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface, Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
@@ -16922,6 +16932,11 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:setAccessControlQueryEnhancer\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
 
@@ -21409,11 +21424,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between 0 and bool will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceImportCommand.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Command\\\\WorkspaceImportCommand\\:\\:configure\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Command/WorkspaceImportCommand.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\PageSelectionContainer\\:\\:__construct\\(\\) has parameter \\$enabledTwigAttributes with no value type specified in iterable type array\\.$#"
@@ -33787,6 +33797,11 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetController\\:\\:throwReferentialIntegrityException\\(\\) has parameter \\$references with no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of method Symfony\\\\Component\\\\Form\\\\FormFactory\\:\\:create\\(\\) expects class\\-string\\<TFormType of Symfony\\\\Component\\\\Form\\\\FormTypeInterface\\<mixed\\>\\>, string given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
 
@@ -56078,6 +56093,11 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|null given\\.$#"
 			count: 2
+			path: src/Sulu/Component/Rest/Listing/ListRepository.php
+
+		-
+			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
+			count: 1
 			path: src/Sulu/Component/Rest/Listing/ListRepository.php
 
 		-
