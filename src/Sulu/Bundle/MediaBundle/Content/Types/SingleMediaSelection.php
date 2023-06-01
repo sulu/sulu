@@ -198,16 +198,13 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
             return;
         }
 
-        $media = $this->mediaManager->getById($data['id'], $referenceCollector->getReferenceLocale());
-
         $referenceCollector->addReference(
             MediaInterface::RESOURCE_KEY,
             $data['id'],
-            $media->getName(),
             'id',
             MediaAdmin::SECURITY_CONTEXT,
             Collection::class,
-            (string) $media->getCollection()
+            null // TODO collection id over a doctrine listener
         );
     }
 }

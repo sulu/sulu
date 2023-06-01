@@ -21,11 +21,6 @@ class Reference implements ReferenceInterface
     /**
      * @var string
      */
-    private $title;
-
-    /**
-     * @var string
-     */
     private $resourceKey;
 
     /**
@@ -123,18 +118,6 @@ class Reference implements ReferenceInterface
     public function setResourceId(string $resourceId): ReferenceInterface
     {
         $this->resourceId = $resourceId;
-
-        return $this;
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): ReferenceInterface
-    {
-        $this->title = $title;
 
         return $this;
     }

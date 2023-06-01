@@ -41,7 +41,6 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
     public function create(
         string $resourceKey,
         string $resourceId,
-        string $title,
         string $locale,
         string $property,
         string $referenceResourceKey,
@@ -63,7 +62,6 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
         $reference
             ->setResourceKey($resourceKey)
             ->setResourceId($resourceId)
-            ->setTitle($title)
             ->setLocale($locale)
             ->setSecurityContext($securityContext)
             ->setSecurityObjectType($securityObjectType)

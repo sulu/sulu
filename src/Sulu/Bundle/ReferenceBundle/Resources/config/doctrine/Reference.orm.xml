@@ -13,7 +13,6 @@
 
         <field name="resourceKey" column="resourceKey" type="string" nullable="false" length="191"/>
         <field name="resourceId" column="resourceId" type="string" nullable="false" length="191"/>
-        <field name="title" column="title" type="string" nullable="false" length="191"/>
         <field name="locale" column="locale" type="string" nullable="false" length="5"/>
         <field name="property" column="property" type="string" nullable="false" length="191"/>
         <field name="securityContext" column="sourceSecurityContext" type="string" nullable="true" length="191"/>

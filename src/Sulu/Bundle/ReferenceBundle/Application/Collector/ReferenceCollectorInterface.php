@@ -18,12 +18,9 @@ interface ReferenceCollectorInterface
     public function addReference(
         string $resourceKey,
         string $resourceId,
-        string $title,
         string $property,
         ?string $securityContext = null,
         ?string $securityObjectType = null,
         ?string $securityObjectId = null
     ): ReferenceInterface;
-
-    public function getReferenceLocale(): string;
 }

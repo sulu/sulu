@@ -18,7 +18,6 @@ interface ReferenceRepositoryInterface
     public function create(
         string $resourceKey,
         string $resourceId,
-        string $title,
         string $locale,
         string $property,
         string $referenceResourceKey,

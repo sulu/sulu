@@ -264,15 +264,13 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         }
 
         foreach ($data['ids'] as $id) {
-            $media = $this->mediaManager->getById($id, $referenceCollector->getReferenceLocale());
             $referenceCollector->addReference(
                 MediaInterface::RESOURCE_KEY,
                 $id,
-                $media->getName(),
                 'id',
                 MediaAdmin::SECURITY_CONTEXT,
                 Collection::class,
-                (string) $media->getCollection()
+                null // TODO collection id over a doctrine listener
             );
         }
     }
