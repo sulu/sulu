@@ -120,7 +120,7 @@ class Permission
      *
      * @return Permission
      */
-    public function setRole(RoleInterface $role = null)
+    public function setRole(?RoleInterface $role = null)
     {
         $this->role = $role;
 

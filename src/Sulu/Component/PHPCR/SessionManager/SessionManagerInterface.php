@@ -77,7 +77,7 @@ interface SessionManagerInterface
     /**
      * Returns the webspace node for given webspace.
      *
-     * @param string$webspaceKey
+     * @param string $webspaceKey
      *
      * @return NodeInterface
      *
@@ -89,7 +89,7 @@ interface SessionManagerInterface
     /**
      * Returns the webspace path for given webspace.
      *
-     * @param string$webspaceKey
+     * @param string $webspaceKey
      *
      * @return string
      */

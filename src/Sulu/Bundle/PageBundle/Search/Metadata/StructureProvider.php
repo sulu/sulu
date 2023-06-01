@@ -125,9 +125,9 @@ class StructureProvider implements ProviderInterface
 
         // See if the mapping overrides the default index and category name
         foreach ($this->mapping as $className => $mapping) {
-            if ($documentMetadata->getAlias() !== $className &&
-                $class->name !== $className &&
-                false === $class->isSubclassOf($className)
+            if ($documentMetadata->getAlias() !== $className
+                && $class->name !== $className
+                && false === $class->isSubclassOf($className)
             ) {
                 continue;
             }

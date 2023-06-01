@@ -47,7 +47,7 @@ class LinkTag implements TagInterface
     public function __construct(
         LinkProviderPoolInterface $linkProviderPool,
         bool $isPreview = false,
-        UrlHelper $urlHelper = null,
+        ?UrlHelper $urlHelper = null,
         ?string $providerAttribute = null
     ) {
         $this->linkProviderPool = $linkProviderPool;

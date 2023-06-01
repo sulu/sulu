@@ -68,7 +68,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     public function __construct(
         MediaManagerInterface $mediaManager,
         ReferenceStoreInterface $referenceStore,
-        RequestAnalyzerInterface $requestAnalyzer = null,
+        ?RequestAnalyzerInterface $requestAnalyzer = null,
         $permissions = null,
         ?PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver = null
     ) {
@@ -79,7 +79,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         $this->propertyMetadataMinMaxValueResolver = $propertyMetadataMinMaxValueResolver;
     }
 
-    public function getDefaultParams(PropertyInterface $property = null)
+    public function getDefaultParams(?PropertyInterface $property = null)
     {
         return [
             'types' => new PropertyParameter('types', null),

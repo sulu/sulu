@@ -93,7 +93,7 @@ class UserGroup extends ApiEntity
      *
      * @return UserGroup
      */
-    public function setUser(UserInterface $user = null)
+    public function setUser(?UserInterface $user = null)
     {
         $this->user = $user;
 
@@ -115,7 +115,7 @@ class UserGroup extends ApiEntity
      *
      * @return UserGroup
      */
-    public function setGroup(Group $group = null)
+    public function setGroup(?Group $group = null)
     {
         $this->group = $group;
 

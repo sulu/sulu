@@ -69,7 +69,7 @@ class PageLinkProvider implements LinkProviderInterface
         TranslatorInterface $translator,
         string $environment,
         AccessControlManagerInterface $accessControlManager,
-        TokenStorageInterface $tokenStorage = null
+        ?TokenStorageInterface $tokenStorage = null
     ) {
         $this->contentRepository = $contentRepository;
         $this->webspaceManager = $webspaceManager;

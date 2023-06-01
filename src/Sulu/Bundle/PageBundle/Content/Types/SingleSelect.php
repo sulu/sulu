@@ -25,7 +25,7 @@ class SingleSelect extends SimpleContentType
         parent::__construct('SingleSelect');
     }
 
-    public function getDefaultParams(PropertyInterface $property = null)
+    public function getDefaultParams(?PropertyInterface $property = null)
     {
         return [
             'values' => new PropertyParameter('values', [], 'collection'),

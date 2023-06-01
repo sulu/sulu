@@ -115,8 +115,8 @@ class PageDataProvider implements DataProviderInterface, DataProviderAliasInterf
         $showDrafts,
         $permissions,
         bool $hasAudienceTargeting = false,
-        MetadataProviderInterface $formMetadataProvider = null,
-        TokenStorageInterface $tokenStorage = null,
+        ?MetadataProviderInterface $formMetadataProvider = null,
+        ?TokenStorageInterface $tokenStorage = null,
         array $enabledTwigAttributes = [
             'path' => true,
         ]

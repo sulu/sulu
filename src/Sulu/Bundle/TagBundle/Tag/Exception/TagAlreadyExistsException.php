@@ -28,7 +28,7 @@ class TagAlreadyExistsException extends \Exception implements TranslationErrorMe
     /**
      * @param string $name The name of the tag which already exists
      */
-    public function __construct($name, \Throwable $previous = null)
+    public function __construct($name, ?\Throwable $previous = null)
     {
         $this->name = $name;
         $message = 'The tag with the name "' . $this->name . '" already exists.';

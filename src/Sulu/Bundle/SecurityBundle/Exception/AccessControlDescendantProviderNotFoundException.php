@@ -13,7 +13,7 @@ namespace Sulu\Bundle\SecurityBundle\Exception;
 
 class AccessControlDescendantProviderNotFoundException extends \Exception
 {
-    public function __construct($type, $code = 0, \Throwable $previous = null)
+    public function __construct($type, $code = 0, ?\Throwable $previous = null)
     {
         parent::__construct(
             \sprintf('AccessControlDescendantProvider not found for type "%s".', $type),

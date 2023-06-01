@@ -48,7 +48,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
      */
     public function __construct(
         MediaManagerInterface $mediaManager,
-        RequestAnalyzerInterface $requestAnalyzer = null,
+        ?RequestAnalyzerInterface $requestAnalyzer = null,
         $searchImageFormat
     ) {
         $this->mediaManager = $mediaManager;
@@ -118,7 +118,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
         // new structures will container an instance of MediaSelectionContainer
         if ($data instanceof MediaSelectionContainer) {
             $medias = $data->getData();
-        // old ones an array ...
+            // old ones an array ...
         } else {
             $ids = [];
 

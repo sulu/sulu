@@ -45,7 +45,7 @@ class SmartContentItemController extends AbstractRestController
         ViewHandlerInterface $viewHandler,
         TagManagerInterface $tagManager,
         DataProviderPoolInterface $dataProviderPool,
-        TokenStorageInterface $tokenStorage = null
+        ?TokenStorageInterface $tokenStorage = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
         $this->tagManager = $tagManager;

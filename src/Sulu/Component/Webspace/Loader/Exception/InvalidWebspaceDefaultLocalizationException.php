@@ -15,7 +15,7 @@ use Sulu\Component\Webspace\Webspace;
 
 class InvalidWebspaceDefaultLocalizationException extends WebspaceException
 {
-    public function __construct(Webspace $webspace, \Throwable $previous = null)
+    public function __construct(Webspace $webspace, ?\Throwable $previous = null)
     {
         $this->webspace = $webspace;
         $message = 'The webspace definition for "' . $webspace->getKey() . '" has has multiple default localization';

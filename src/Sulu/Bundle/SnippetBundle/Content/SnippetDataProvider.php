@@ -94,8 +94,8 @@ class SnippetDataProvider implements DataProviderInterface
         DocumentManagerInterface $documentManager,
         ReferenceStoreInterface $referenceStore,
         bool $hasAudienceTargeting = false,
-        MetadataProviderInterface $formMetadataProvider = null,
-        TokenStorageInterface $tokenStorage = null
+        ?MetadataProviderInterface $formMetadataProvider = null,
+        ?TokenStorageInterface $tokenStorage = null
     ) {
         $this->contentQueryExecutor = $contentQueryExecutor;
         $this->snippetQueryBuilder = $snippetQueryBuilder;

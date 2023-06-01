@@ -20,7 +20,7 @@ class UploadFileException extends MediaException
      * @param string $message
      * @param int $code
      */
-    public function __construct($message, $code, \Throwable $previous = null)
+    public function __construct($message, $code, ?\Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

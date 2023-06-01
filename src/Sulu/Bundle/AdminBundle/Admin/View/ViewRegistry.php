@@ -112,7 +112,7 @@ class ViewRegistry
         }
     }
 
-    private function mergeViewOptions(array $views, string $parent = null): array
+    private function mergeViewOptions(array $views, ?string $parent = null): array
     {
         /** @var View[] $childViews */
         $childViews = \array_filter($views, function(View $view) use ($parent) {

@@ -38,7 +38,7 @@ class FixturesLoadCommand extends Command
 
     public function __construct(
         DocumentExecutor $executor,
-        \Traversable $fixtures = null
+        ?\Traversable $fixtures = null
     ) {
         parent::__construct();
 

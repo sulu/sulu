@@ -19,7 +19,7 @@ class InvalidTokenException extends SecurityException
     /** @var string */
     private $token;
 
-    public function __construct($token, \Throwable $previous = null)
+    public function __construct($token, ?\Throwable $previous = null)
     {
         $this->token = $token;
         parent::__construct(\sprintf('The token "%s" does not exist!', $token), 1005, $previous);

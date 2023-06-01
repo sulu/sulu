@@ -56,7 +56,7 @@ class CategoryConverter implements ConverterInterface
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function convert($value, Document $document = null)
+    public function convert($value, ?Document $document = null)
     {
         if (null === $value) {
             return null;

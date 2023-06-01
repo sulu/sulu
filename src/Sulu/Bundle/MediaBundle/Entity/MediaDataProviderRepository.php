@@ -60,7 +60,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         MediaManagerInterface $mediaManager,
         $mediaEntityName,
         $collectionEntityName,
-        AccessControlQueryEnhancer $accessControlQueryEnhancer = null
+        ?AccessControlQueryEnhancer $accessControlQueryEnhancer = null
     ) {
         $this->entityManager = $entityManager;
         $this->mediaEntityName = $mediaEntityName;
@@ -76,12 +76,12 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         $limit,
         $locale,
         $options = [],
-        UserInterface $user = null,
+        ?UserInterface $user = null,
         $permission = null
     ) {
-        if (!\array_key_exists('dataSource', $filters) ||
-            '' === $filters['dataSource'] ||
-            (null !== $limit && $limit < 1)
+        if (!\array_key_exists('dataSource', $filters)
+            || '' === $filters['dataSource']
+            || (null !== $limit && $limit < 1)
         ) {
             return [];
         }

@@ -79,8 +79,8 @@ class ExportManager implements ExportManagerInterface
     protected function existOptions($contentTypeName, $format)
     {
         if (
-            isset($this->contentTypeOptions[$contentTypeName]) &&
-            isset($this->contentTypeOptions[$contentTypeName][$format])
+            isset($this->contentTypeOptions[$contentTypeName])
+            && isset($this->contentTypeOptions[$contentTypeName][$format])
         ) {
             return true;
         }

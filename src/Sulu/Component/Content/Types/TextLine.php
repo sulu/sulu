@@ -25,7 +25,7 @@ class TextLine extends SimpleContentType
         parent::__construct('TextLine', '');
     }
 
-    public function getDefaultParams(PropertyInterface $property = null)
+    public function getDefaultParams(?PropertyInterface $property = null)
     {
         return [
             'headline' => new PropertyParameter('headline', false),

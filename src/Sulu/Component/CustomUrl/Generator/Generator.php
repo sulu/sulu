@@ -33,7 +33,7 @@ class Generator implements GeneratorInterface
         $this->urlReplacer = $urlReplacer;
     }
 
-    public function generate($baseDomain, $domainParts, Localization $locale = null)
+    public function generate($baseDomain, $domainParts, ?Localization $locale = null)
     {
         $domain = $baseDomain;
 

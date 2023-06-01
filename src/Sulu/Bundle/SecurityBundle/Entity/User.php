@@ -682,7 +682,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
      *
      * @return self
      */
-    public function setContact(ContactInterface $contact = null)
+    public function setContact(?ContactInterface $contact = null)
     {
         $this->contact = $contact;
 

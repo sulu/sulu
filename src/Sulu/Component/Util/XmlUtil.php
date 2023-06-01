@@ -26,7 +26,7 @@ class XmlUtil
      *
      * @return bool|float|int|string|null
      */
-    public static function getValueFromXPath($path, \DOMXPath $xpath, \DOMNode $context = null, $default = null)
+    public static function getValueFromXPath($path, \DOMXPath $xpath, ?\DOMNode $context = null, $default = null)
     {
         $result = $xpath->query($path, $context);
         Assert::object($result, \sprintf('XPath Expression "%s" is invalid.', $path));
@@ -51,7 +51,7 @@ class XmlUtil
      *
      * @return bool|null
      */
-    public static function getBooleanValueFromXPath($path, \DOMXPath $xpath, \DOMNode $context = null, $default = null)
+    public static function getBooleanValueFromXPath($path, \DOMXPath $xpath, ?\DOMNode $context = null, $default = null)
     {
         $value = self::getValueFromXPath($path, $xpath, $context, $default);
 

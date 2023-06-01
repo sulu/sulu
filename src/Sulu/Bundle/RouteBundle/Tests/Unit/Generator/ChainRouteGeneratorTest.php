@@ -138,7 +138,7 @@ class TestRoutable implements RoutableInterface
     /**
      * @param RouteInterface $route
      */
-    public function __construct(RouteInterface $route = null)
+    public function __construct(?RouteInterface $route = null)
     {
         $this->route = $route;
     }

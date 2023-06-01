@@ -162,7 +162,7 @@ class Route implements RouteInterface, AuditableInterface
         return $this->target;
     }
 
-    public function setTarget(RouteInterface $target = null)
+    public function setTarget(?RouteInterface $target = null)
     {
         $this->target = $target;
 

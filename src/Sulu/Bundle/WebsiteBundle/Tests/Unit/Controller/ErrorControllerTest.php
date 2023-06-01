@@ -187,7 +187,7 @@ class ErrorControllerTest extends TestCase
         );
     }
 
-    private function createRequest(Webspace $webspace = null): Request
+    private function createRequest(?Webspace $webspace = null): Request
     {
         $requestAttributes = new RequestAttributes(['webspace' => $webspace]);
 

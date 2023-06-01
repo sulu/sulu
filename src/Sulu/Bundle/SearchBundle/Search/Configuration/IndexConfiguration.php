@@ -48,7 +48,7 @@ class IndexConfiguration
         string $icon,
         string $name,
         Route $route,
-        string $securityContext = null,
+        ?string $securityContext = null,
         array $contexts = []
     ) {
         $this->indexName = $indexName;

@@ -60,7 +60,7 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         MediaManagerInterface $mediaManager,
         ReferenceStoreInterface $referenceStore,
         RequestAnalyzerInterface $requestAnalyzer,
-        SecurityCheckerInterface $securityChecker = null
+        ?SecurityCheckerInterface $securityChecker = null
     ) {
         $this->mediaManager = $mediaManager;
         $this->mediaReferenceStore = $referenceStore;

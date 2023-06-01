@@ -62,7 +62,7 @@ class Version201511240844 implements VersionInterface, ContainerAwareInterface
      */
     private $documentInspector;
 
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(?ContainerInterface $container = null)
     {
         $this->structureMetadataFactory = $container->get('sulu_page.structure.factory');
         $this->propertyEncoder = $container->get('sulu_document_manager.property_encoder');

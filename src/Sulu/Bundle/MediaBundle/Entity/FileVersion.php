@@ -459,7 +459,7 @@ class FileVersion implements AuditableInterface
      *
      * @return FileVersion
      */
-    public function setFile(File $file = null)
+    public function setFile(?File $file = null)
     {
         $this->file = $file;
 
@@ -521,7 +521,7 @@ class FileVersion implements AuditableInterface
      *
      * @return FileVersion
      */
-    public function setDefaultMeta(FileVersionMeta $defaultMeta = null)
+    public function setDefaultMeta(?FileVersionMeta $defaultMeta = null)
     {
         $this->defaultMeta = $defaultMeta;
 

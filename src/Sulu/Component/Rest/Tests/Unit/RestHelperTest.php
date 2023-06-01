@@ -368,8 +368,8 @@ class RestHelperTest extends TestCase
 
         $get = function($entity, $data) {
             return
-                (isset($data['id']) && $data['id'] === $entity->getId()) ||
-                (isset($data['value']) && $data['value'] === $entity->getValue());
+                (isset($data['id']) && $data['id'] === $entity->getId())
+                || (isset($data['value']) && $data['value'] === $entity->getValue());
         };
 
         $delete = function() use ($mock) {

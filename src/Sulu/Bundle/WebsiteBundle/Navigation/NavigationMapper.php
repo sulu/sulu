@@ -62,7 +62,7 @@ class NavigationMapper implements NavigationMapperInterface
         ContentQueryExecutorInterface $contentQueryExecutor,
         ContentQueryBuilderInterface $queryBuilder,
         SessionManagerInterface $sessionManager,
-        Stopwatch $stopwatch = null,
+        ?Stopwatch $stopwatch = null,
         $permissions = null,
         array $enabledTwigAttributes = [
             'path' => true,

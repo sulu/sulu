@@ -36,7 +36,7 @@ class WebspaceImportCommand extends Command
      */
     private $logger;
 
-    public function __construct(WebspaceImportInterface $webspaceImporter, LoggerInterface $logger = null)
+    public function __construct(WebspaceImportInterface $webspaceImporter, ?LoggerInterface $logger = null)
     {
         parent::__construct();
 

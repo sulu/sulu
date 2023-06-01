@@ -117,7 +117,7 @@ class Tag implements TagInterface
     /**
      * @return $this
      */
-    public function setChanger(UserInterface $changer = null)
+    public function setChanger(?UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -132,7 +132,7 @@ class Tag implements TagInterface
     /**
      * @return $this
      */
-    public function setCreator(UserInterface $creator = null)
+    public function setCreator(?UserInterface $creator = null)
     {
         $this->creator = $creator;
 

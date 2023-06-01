@@ -140,7 +140,7 @@ interface ReplacerInterface
      *
      * @return string
      */
-    public function cleanup($url, array $replacers = null);
+    public function cleanup($url, ?array $replacers = null);
 
     /**
      * Appends localization replacer to url.

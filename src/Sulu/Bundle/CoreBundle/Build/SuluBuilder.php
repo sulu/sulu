@@ -40,7 +40,7 @@ abstract class SuluBuilder implements ContainerAwareInterface, BuilderInterface
         $this->output->getFormatter()->setStyle('section', $style);
     }
 
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(?ContainerInterface $container = null)
     {
         $this->container = $container;
     }

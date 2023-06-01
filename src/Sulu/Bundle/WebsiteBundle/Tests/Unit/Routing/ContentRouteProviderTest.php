@@ -1282,7 +1282,7 @@ class ContentRouteProviderTest extends TestCase
         $this->assertCount(0, $routes);
     }
 
-    private function createContentRouteProvider(SecurityCheckerInterface $securityChecker = null): ContentRouteProvider
+    private function createContentRouteProvider(?SecurityCheckerInterface $securityChecker = null): ContentRouteProvider
     {
         return new ContentRouteProvider(
             $this->documentManager->reveal(),

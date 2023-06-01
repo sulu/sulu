@@ -169,7 +169,7 @@ class Role implements RoleInterface
         return $this->system;
     }
 
-    public function setSecurityType(SecurityType $securityType = null)
+    public function setSecurityType(?SecurityType $securityType = null)
     {
         $this->securityType = $securityType;
 

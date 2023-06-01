@@ -136,7 +136,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
      *
      * @return CollectionInterface
      */
-    public function setChanger(UserInterface $changer = null)
+    public function setChanger(?UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -158,7 +158,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
      *
      * @return CollectionInterface
      */
-    public function setCreator(UserInterface $creator = null)
+    public function setCreator(?UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -375,7 +375,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
      *
      * @return CollectionInterface
      */
-    public function setParent(CollectionInterface $parent = null)
+    public function setParent(?CollectionInterface $parent = null)
     {
         $this->parent = $parent;
 
@@ -497,7 +497,7 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
      *
      * @return Collection
      */
-    public function setDefaultMeta(CollectionMeta $defaultMeta = null)
+    public function setDefaultMeta(?CollectionMeta $defaultMeta = null)
     {
         $this->defaultMeta = $defaultMeta;
 

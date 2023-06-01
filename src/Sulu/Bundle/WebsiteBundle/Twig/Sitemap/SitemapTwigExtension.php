@@ -46,7 +46,7 @@ class SitemapTwigExtension extends AbstractExtension implements SitemapTwigExten
         SitemapGeneratorInterface $sitemapGenerator,
         WebspaceManagerInterface $webspaceManager,
         $environment,
-        RequestAnalyzerInterface $requestAnalyzer = null
+        ?RequestAnalyzerInterface $requestAnalyzer = null
     ) {
         $this->environment = $environment;
         $this->sitemapGenerator = $sitemapGenerator;

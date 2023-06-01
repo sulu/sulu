@@ -88,7 +88,7 @@ class ContentRouteProvider implements RouteProviderInterface
         StructureManagerInterface $structureManager,
         WebspaceManagerInterface $webspaceManager,
         RequestAnalyzerInterface $requestAnalyzer,
-        SecurityCheckerInterface $securityChecker = null,
+        ?SecurityCheckerInterface $securityChecker = null,
         array $defaultOptions = []
     ) {
         $this->documentManager = $documentManager;
