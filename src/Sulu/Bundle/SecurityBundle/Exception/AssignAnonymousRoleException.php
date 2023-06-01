@@ -15,7 +15,7 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 
 class AssignAnonymousRoleException extends \LogicException
 {
-    public function __construct(RoleInterface $role, $code = 0, \Throwable $previous = null)
+    public function __construct(RoleInterface $role, $code = 0, ?\Throwable $previous = null)
     {
         parent::__construct(
             \sprintf(

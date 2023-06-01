@@ -41,7 +41,7 @@ class DoctrineGroupConcatFieldDescriptor extends AbstractDoctrineFieldDescriptor
     public function __construct(
         DoctrineFieldDescriptorInterface $fieldDescriptor,
         string $name,
-        string $translation = null,
+        ?string $translation = null,
         string $glue = ',',
         string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,

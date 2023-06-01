@@ -208,7 +208,7 @@ class AutoNameSubscriber implements EventSubscriberInterface
         AutoNameBehavior $document,
         NodeInterface $parentNode,
         $autoRename = true,
-        NodeInterface $node = null
+        ?NodeInterface $node = null
     ) {
         $title = $document->getTitle();
 

@@ -30,7 +30,7 @@ interface ContentRepositoryInterface
      *
      * @return Content
      */
-    public function find($uuid, $locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null);
+    public function find($uuid, $locale, $webspaceKey, MappingInterface $mapping, ?UserInterface $user = null);
 
     /**
      * Find content which are children of parent uuid.
@@ -48,7 +48,7 @@ interface ContentRepositoryInterface
         $locale,
         $webspaceKey,
         MappingInterface $mapping,
-        UserInterface $user = null
+        ?UserInterface $user = null
     );
 
     /**
@@ -61,7 +61,7 @@ interface ContentRepositoryInterface
      *
      * @return Content[]
      */
-    public function findByWebspaceRoot($locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null);
+    public function findByWebspaceRoot($locale, $webspaceKey, MappingInterface $mapping, ?UserInterface $user = null);
 
     /**
      * Find content with uuid inclusive his parents and their siblings.
@@ -78,7 +78,7 @@ interface ContentRepositoryInterface
         $locale,
         $webspaceKey,
         MappingInterface $mapping,
-        UserInterface $user = null
+        ?UserInterface $user = null
     );
 
     /**
@@ -95,7 +95,7 @@ interface ContentRepositoryInterface
         array $paths,
         $locale,
         MappingInterface $mapping,
-        UserInterface $user = null
+        ?UserInterface $user = null
     );
 
     /**
@@ -112,7 +112,7 @@ interface ContentRepositoryInterface
         array $uuids,
         $locale,
         MappingInterface $mapping,
-        UserInterface $user = null
+        ?UserInterface $user = null
     );
 
     /**
@@ -123,7 +123,7 @@ interface ContentRepositoryInterface
      *
      * @return Content[]
      */
-    public function findAll($locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null);
+    public function findAll($locale, $webspaceKey, MappingInterface $mapping, ?UserInterface $user = null);
 
     /**
      * Find all pages and returns an array of content.
@@ -133,5 +133,5 @@ interface ContentRepositoryInterface
      *
      * @return Content[]
      */
-    public function findAllByPortal($locale, $portalKey, MappingInterface $mapping, UserInterface $user = null);
+    public function findAllByPortal($locale, $portalKey, MappingInterface $mapping, ?UserInterface $user = null);
 }

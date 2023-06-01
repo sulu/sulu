@@ -106,9 +106,9 @@ abstract class AbstractMediaController extends AbstractRestController
         MediaRepositoryInterface $mediaRepository,
         MediaManagerInterface $mediaManager,
         string $mediaClass,
-        MediaListBuilderFactory $mediaListBuilderFactory = null,
-        MediaListRepresentationFactory $mediaListRepresentationFactory = null,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory = null
+        ?MediaListBuilderFactory $mediaListBuilderFactory = null,
+        ?MediaListRepresentationFactory $mediaListRepresentationFactory = null,
+        ?FieldDescriptorFactoryInterface $fieldDescriptorFactory = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
         $this->restHelper = $restHelper;

@@ -28,5 +28,5 @@ interface GeneratorInterface
      *
      * @return string
      */
-    public function generate($baseDomain, $domainParts, Localization $locale = null);
+    public function generate($baseDomain, $domainParts, ?Localization $locale = null);
 }

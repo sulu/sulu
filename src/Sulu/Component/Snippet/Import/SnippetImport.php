@@ -60,7 +60,7 @@ class SnippetImport extends Import implements SnippetImportInterface
         ImportManagerInterface $importManager,
         LegacyPropertyFactory $legacyPropertyFactory,
         FormatImportInterface $xliff12,
-        LoggerInterface $logger = null
+        ?LoggerInterface $logger = null
     ) {
         parent::__construct($importManager, $legacyPropertyFactory, ['1.2.xliff' => $xliff12]);
 
@@ -82,7 +82,7 @@ class SnippetImport extends Import implements SnippetImportInterface
      *
      * @throws FormatImporterNotFoundException
      */
-    public function import($locale, $filePath, OutputInterface $output = null, $format = '1.2.xliff')
+    public function import($locale, $filePath, ?OutputInterface $output = null, $format = '1.2.xliff')
     {
         $parsedDataList = $this->getParser($format)->parse($filePath, $locale);
         $failedImports = [];

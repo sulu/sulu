@@ -30,7 +30,7 @@ class SecuritySubscriber implements EventSubscriberInterface
      */
     private $tokenStorage;
 
-    public function __construct(TokenStorageInterface $tokenStorage = null)
+    public function __construct(?TokenStorageInterface $tokenStorage = null)
     {
         $this->tokenStorage = $tokenStorage;
     }

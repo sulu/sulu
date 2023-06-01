@@ -39,7 +39,7 @@ class ContentPathTwigExtension extends AbstractExtension implements ContentPathI
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
         $environment,
-        RequestAnalyzerInterface $requestAnalyzer = null
+        ?RequestAnalyzerInterface $requestAnalyzer = null
     ) {
         $this->webspaceManager = $webspaceManager;
         $this->environment = $environment;

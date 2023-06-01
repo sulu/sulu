@@ -49,7 +49,7 @@ class DoctrineIdentityFieldDescriptor extends AbstractDoctrineFieldDescriptor
         string $fieldName,
         string $name,
         string $entityName,
-        string $translation = null,
+        ?string $translation = null,
         array $joins = [],
         string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,

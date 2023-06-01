@@ -213,7 +213,7 @@ interface CategoryInterface extends AuditableInterface
      *
      * @return CategoryInterface
      */
-    public function setParent(self $parent = null);
+    public function setParent(?self $parent = null);
 
     /**
      * Get parent.
@@ -228,7 +228,7 @@ interface CategoryInterface extends AuditableInterface
      *
      * @return CategoryInterface
      */
-    public function setCreator(UserInterface $creator = null);
+    public function setCreator(?UserInterface $creator = null);
 
     /**
      * Set created.
@@ -244,7 +244,7 @@ interface CategoryInterface extends AuditableInterface
      *
      * @return CategoryInterface
      */
-    public function setChanger(UserInterface $changer = null);
+    public function setChanger(?UserInterface $changer = null);
 
     /**
      * Set changed.

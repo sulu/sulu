@@ -91,7 +91,7 @@ class FieldDescriptor implements FieldDescriptorInterface
 
     public function __construct(
         string $name,
-        string $translation = null,
+        ?string $translation = null,
         string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',

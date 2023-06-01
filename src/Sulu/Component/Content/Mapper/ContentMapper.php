@@ -166,7 +166,7 @@ class ContentMapper implements ContentMapperInterface
         NamespaceRegistry $namespaceRegistry,
         AccessControlManagerInterface $accessControlManager,
         $permissions,
-        Security $security = null
+        ?Security $security = null
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
@@ -961,7 +961,7 @@ class ContentMapper implements ContentMapperInterface
         return $document;
     }
 
-    private function optionsShouldExcludeDocument($document, array $options = null)
+    private function optionsShouldExcludeDocument($document, ?array $options = null)
     {
         if (null === $options) {
             return false;

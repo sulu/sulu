@@ -96,7 +96,7 @@ class SitemapUrl
         $loc,
         $locale,
         $defaultLocale,
-        \DateTime $lastmod = null,
+        ?\DateTime $lastmod = null,
         $changefreq = null,
         $priority = null,
         $attributes = []

@@ -613,8 +613,8 @@ class Address
      */
     public function hasRelations()
     {
-        if (!$this->getContactAddresses()->isEmpty() ||
-            !$this->getAccountAddresses()->isEmpty()
+        if (!$this->getContactAddresses()->isEmpty()
+            || !$this->getAccountAddresses()->isEmpty()
         ) {
             return true;
         }

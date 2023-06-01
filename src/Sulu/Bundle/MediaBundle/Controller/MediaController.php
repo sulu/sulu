@@ -142,8 +142,8 @@ class MediaController extends AbstractMediaController implements
         FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         string $mediaClass,
         string $collectionClass,
-        MediaListBuilderFactory $mediaListBuilderFactory = null,
-        MediaListRepresentationFactory $mediaListRepresentationFactory = null
+        ?MediaListBuilderFactory $mediaListBuilderFactory = null,
+        ?MediaListRepresentationFactory $mediaListRepresentationFactory = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 

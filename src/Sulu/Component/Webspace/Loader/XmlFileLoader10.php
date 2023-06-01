@@ -468,7 +468,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
      *
      * @return mixed[]
      */
-    protected function loadMeta($path, \DOMNode $context = null)
+    protected function loadMeta($path, ?\DOMNode $context = null)
     {
         $result = [];
 

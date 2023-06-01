@@ -393,7 +393,7 @@ class Contact extends ApiWrapper
      *
      * @return Contact
      */
-    public function setChanger(UserInterface $changer = null)
+    public function setChanger(?UserInterface $changer = null)
     {
         $this->entity->setChanger($changer);
 
@@ -407,7 +407,7 @@ class Contact extends ApiWrapper
      *
      * @return Contact
      */
-    public function setCreator(UserInterface $creator = null)
+    public function setCreator(?UserInterface $creator = null)
     {
         $this->entity->setCreator($creator);
 

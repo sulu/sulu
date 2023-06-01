@@ -105,7 +105,7 @@ abstract class SimpleContentType implements ContentTypeInterface, ContentTypeExp
         }
     }
 
-    public function getDefaultParams(PropertyInterface $property = null)
+    public function getDefaultParams(?PropertyInterface $property = null)
     {
         return [];
     }

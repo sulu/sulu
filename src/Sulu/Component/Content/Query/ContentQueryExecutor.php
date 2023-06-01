@@ -39,7 +39,7 @@ class ContentQueryExecutor implements ContentQueryExecutorInterface
     public function __construct(
         SessionManagerInterface $sessionManager,
         ContentMapperInterface $contentMapper,
-        Stopwatch $stopwatch = null
+        ?Stopwatch $stopwatch = null
     ) {
         $this->sessionManager = $sessionManager;
         $this->contentMapper = $contentMapper;

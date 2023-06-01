@@ -127,8 +127,8 @@ class RegistratorSubscriber implements EventSubscriberInterface
         $originalLocale = $this->documentRegistry->getOriginalLocaleForDocument($document);
 
         if (
-            (!isset($options['rehydrate']) || false === $options['rehydrate']) &&
-            (true === $this->documentRegistry->isHydrated($document) && $originalLocale === $locale)
+            (!isset($options['rehydrate']) || false === $options['rehydrate'])
+            && (true === $this->documentRegistry->isHydrated($document) && $originalLocale === $locale)
         ) {
             $event->stopPropagation();
         }

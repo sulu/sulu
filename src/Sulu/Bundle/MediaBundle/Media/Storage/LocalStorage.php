@@ -43,7 +43,7 @@ class LocalStorage implements StorageInterface
         string $uploadPath,
         string $segments,
         Filesystem $filesystem,
-        LoggerInterface $logger = null
+        ?LoggerInterface $logger = null
     ) {
         $this->uploadPath = $uploadPath;
         $this->segments = $segments;

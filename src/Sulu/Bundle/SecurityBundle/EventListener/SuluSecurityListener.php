@@ -62,8 +62,8 @@ class SuluSecurityListener implements EventSubscriberInterface
         }
 
         if (
-            !$controller instanceof SecuredControllerInterface &&
-            !$controller instanceof SecuredObjectControllerInterface
+            !$controller instanceof SecuredControllerInterface
+            && !$controller instanceof SecuredObjectControllerInterface
         ) {
             return;
         }

@@ -42,7 +42,7 @@ class SerializerEventListener implements EventSubscriberInterface
 
     public function __construct(
         AccessControlManagerInterface $accessControlManager,
-        TokenStorageInterface $tokenStorage = null
+        ?TokenStorageInterface $tokenStorage = null
     ) {
         $this->accessControlManager = $accessControlManager;
         $this->tokenStorage = $tokenStorage;

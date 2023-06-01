@@ -118,7 +118,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         $filter = [],
         $limit = null,
         $offset = null,
-        UserInterface $user = null,
+        ?UserInterface $user = null,
         $permission = null
     ) {
         list(

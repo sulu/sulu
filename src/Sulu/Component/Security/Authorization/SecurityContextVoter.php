@@ -54,8 +54,8 @@ class SecurityContextVoter implements VoterInterface
         /** @var User $user */
         $user = $token->getUser();
 
-        if (!\is_object($object) ||
-            !$this->supportsClass(\get_class($object))
+        if (!\is_object($object)
+            || !$this->supportsClass(\get_class($object))
         ) {
             return VoterInterface::ACCESS_ABSTAIN;
         }

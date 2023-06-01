@@ -98,7 +98,7 @@ class PageSelection extends ComplexContentType implements ContentTypeExportInter
         $property->setValue($refs);
     }
 
-    public function getDefaultParams(PropertyInterface $property = null)
+    public function getDefaultParams(?PropertyInterface $property = null)
     {
         return ['properties' => new PropertyParameter('properties', [], 'collection')];
     }

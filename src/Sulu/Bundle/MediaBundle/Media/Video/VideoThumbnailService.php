@@ -25,7 +25,7 @@ class VideoThumbnailService implements VideoThumbnailServiceInterface
      */
     protected $ffmpeg;
 
-    public function __construct(FFMpeg $ffmpeg = null)
+    public function __construct(?FFMpeg $ffmpeg = null)
     {
         $this->ffmpeg = $ffmpeg;
     }

@@ -67,9 +67,9 @@ class AccountMediaController extends AbstractMediaController implements ClassRes
         DomainEventCollectorInterface $domainEventCollector,
         string $accountClass,
         string $mediaClass,
-        MediaListBuilderFactory $mediaListBuilderFactory = null,
-        MediaListRepresentationFactory $mediaListRepresentationFactory = null,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory = null
+        ?MediaListBuilderFactory $mediaListBuilderFactory = null,
+        ?MediaListRepresentationFactory $mediaListRepresentationFactory = null,
+        ?FieldDescriptorFactoryInterface $fieldDescriptorFactory = null
     ) {
         parent::__construct(
             $viewHandler,

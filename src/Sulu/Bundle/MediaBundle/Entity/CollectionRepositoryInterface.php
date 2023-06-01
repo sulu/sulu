@@ -33,9 +33,9 @@ interface CollectionRepositoryInterface
     public function findCollectionSet(
         $depth = 0,
         $filter = [],
-        CollectionInterface $collection = null,
+        ?CollectionInterface $collection = null,
         $sortBy = [],
-        UserInterface $user = null,
+        ?UserInterface $user = null,
         $permission = null
     );
 
@@ -47,7 +47,7 @@ interface CollectionRepositoryInterface
      *
      * @return int The number of matched collections
      */
-    public function countCollections($depth = 0, $filter = [], CollectionInterface $collection = null);
+    public function countCollections($depth = 0, $filter = [], ?CollectionInterface $collection = null);
 
     /**
      * Returns the number of media contained in a given collection.

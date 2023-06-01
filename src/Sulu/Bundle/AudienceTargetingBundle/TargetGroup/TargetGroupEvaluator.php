@@ -50,7 +50,7 @@ class TargetGroupEvaluator implements TargetGroupEvaluatorInterface
 
     public function evaluate(
         $maxFrequency = TargetGroupRuleInterface::FREQUENCY_VISITOR,
-        TargetGroupInterface $currentTargetGroup = null
+        ?TargetGroupInterface $currentTargetGroup = null
     ) {
         $webspace = $this->requestAnalyzer->getWebspace();
         if (!$webspace) {

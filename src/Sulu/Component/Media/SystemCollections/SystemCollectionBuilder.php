@@ -56,7 +56,7 @@ class SystemCollectionBuilder implements BuilderInterface
         $this->output = $context->getOutput();
     }
 
-    public function setContainer(ContainerInterface $container = null)
+    public function setContainer(?ContainerInterface $container = null)
     {
         $this->container = $container;
     }

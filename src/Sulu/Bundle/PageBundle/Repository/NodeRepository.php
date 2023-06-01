@@ -101,7 +101,7 @@ class NodeRepository implements NodeRepositoryInterface
         ContentQueryBuilderInterface $queryBuilder,
         ContentQueryExecutorInterface $queryExecutor,
         AccessControlManagerInterface $accessControlManager,
-        TokenStorageInterface $tokenStorage = null
+        ?TokenStorageInterface $tokenStorage = null
     ) {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;
@@ -481,10 +481,10 @@ class NodeRepository implements NodeRepositoryInterface
         $results = [];
         foreach ($nodes as $node) {
             $result = $this->prepareNode($node, $webspaceKey, $languageCode, 1, $complete, $excludeGhosts);
-            if (null !== $maxDepth &&
-                $currentDepth < $maxDepth &&
-                $node->getHasChildren() &&
-                null != $node->getChildren()
+            if (null !== $maxDepth
+                && $currentDepth < $maxDepth
+                && $node->getHasChildren()
+                && null != $node->getChildren()
             ) {
                 $result['_embedded']['pages'] = $this->prepareNodesTree(
                     $node->getChildren(),

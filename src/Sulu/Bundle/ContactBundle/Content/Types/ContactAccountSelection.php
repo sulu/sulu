@@ -179,7 +179,7 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
         return [];
     }
 
-    public function getDefaultParams(PropertyInterface $property = null)
+    public function getDefaultParams(?PropertyInterface $property = null)
     {
         return [
             'contact' => new PropertyParameter('contact', true),
