@@ -75,8 +75,8 @@ class ParameterResolver implements ParameterResolverInterface
 
     public function resolve(
         array $parameter,
-        RequestAnalyzerInterface $requestAnalyzer = null,
-        StructureInterface $structure = null,
+        ?RequestAnalyzerInterface $requestAnalyzer = null,
+        ?StructureInterface $structure = null,
         $preview = false
     ) {
         if (null !== $structure) {

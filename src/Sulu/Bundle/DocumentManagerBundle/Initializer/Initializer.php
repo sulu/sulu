@@ -49,7 +49,7 @@ class Initializer
      * @param OutputInterface $output
      * @param bool $purge
      */
-    public function initialize(OutputInterface $output = null, $purge = false)
+    public function initialize(?OutputInterface $output = null, $purge = false)
     {
         $output = $output ?: new NullOutput();
 

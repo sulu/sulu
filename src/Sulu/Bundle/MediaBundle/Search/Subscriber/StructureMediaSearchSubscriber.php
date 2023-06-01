@@ -48,7 +48,7 @@ class StructureMediaSearchSubscriber implements EventSubscriberInterface
      */
     public function __construct(
         MediaManagerInterface $mediaManager,
-        RequestAnalyzerInterface $requestAnalyzer = null,
+        ?RequestAnalyzerInterface $requestAnalyzer = null,
         $searchImageFormat
     ) {
         $this->mediaManager = $mediaManager;

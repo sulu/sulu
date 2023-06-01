@@ -23,7 +23,7 @@ class InvalidPortalDefaultLocalizationException extends WebspaceException
      */
     private $portal;
 
-    public function __construct(Webspace $webspace, Portal $portal, \Throwable $previous = null)
+    public function __construct(Webspace $webspace, Portal $portal, ?\Throwable $previous = null)
     {
         $this->webspace = $webspace;
         $this->portal = $portal;

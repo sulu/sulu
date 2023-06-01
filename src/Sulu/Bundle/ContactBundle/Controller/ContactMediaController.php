@@ -67,9 +67,9 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
         DomainEventCollectorInterface $domainEventCollector,
         string $contactClass,
         string $mediaClass,
-        MediaListBuilderFactory $mediaListBuilderFactory = null,
-        MediaListRepresentationFactory $mediaListRepresentationFactory = null,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory = null
+        ?MediaListBuilderFactory $mediaListBuilderFactory = null,
+        ?MediaListRepresentationFactory $mediaListRepresentationFactory = null,
+        ?FieldDescriptorFactoryInterface $fieldDescriptorFactory = null
     ) {
         parent::__construct(
             $viewHandler,

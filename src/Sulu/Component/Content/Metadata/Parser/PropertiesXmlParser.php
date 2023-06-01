@@ -172,7 +172,7 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function loadTags(&$tags, \DOMXPath $xpath, \DOMNode $context = null)
+    private function loadTags(&$tags, \DOMXPath $xpath, ?\DOMNode $context = null)
     {
         $result = [];
 
@@ -187,7 +187,7 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function loadTypes(&$tags, \DOMXPath $xpath, \DOMNode $context = null, $formKey)
+    private function loadTypes(&$tags, \DOMXPath $xpath, ?\DOMNode $context = null, $formKey)
     {
         $result = [];
 
@@ -223,7 +223,7 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function loadMeta(\DOMXPath $xpath, \DOMNode $context = null)
+    private function loadMeta(\DOMXPath $xpath, ?\DOMNode $context = null)
     {
         $result = [];
         $metaNode = $xpath->query('x:meta', $context)->item(0);
@@ -239,7 +239,7 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function loadMetaTag($path, \DOMXPath $xpath, \DOMNode $context = null)
+    private function loadMetaTag($path, \DOMXPath $xpath, ?\DOMNode $context = null)
     {
         $result = [];
 
@@ -270,7 +270,7 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function loadParams($path, \DOMXPath $xpath, \DOMNode $context = null)
+    private function loadParams($path, \DOMXPath $xpath, ?\DOMNode $context = null)
     {
         $result = [];
 

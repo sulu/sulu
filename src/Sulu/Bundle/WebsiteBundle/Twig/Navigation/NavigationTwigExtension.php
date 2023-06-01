@@ -41,7 +41,7 @@ class NavigationTwigExtension extends AbstractExtension implements NavigationTwi
     public function __construct(
         ContentMapperInterface $contentMapper,
         NavigationMapperInterface $navigationMapper,
-        RequestAnalyzerInterface $requestAnalyzer = null
+        ?RequestAnalyzerInterface $requestAnalyzer = null
     ) {
         $this->contentMapper = $contentMapper;
         $this->navigationMapper = $navigationMapper;

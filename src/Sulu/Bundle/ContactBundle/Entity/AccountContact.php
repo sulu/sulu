@@ -126,7 +126,7 @@ class AccountContact
      *
      * @return AccountContact
      */
-    public function setPosition(Position $position = null)
+    public function setPosition(?Position $position = null)
     {
         $this->position = $position;
 

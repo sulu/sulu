@@ -65,7 +65,7 @@ class MediaSearchSubscriber implements EventSubscriberInterface
         Factory $factory,
         $thumbnailMimeTypes,
         $searchImageFormat,
-        LoggerInterface $logger = null
+        ?LoggerInterface $logger = null
     ) {
         $this->mediaManager = $mediaManager;
         $this->factory = $factory;

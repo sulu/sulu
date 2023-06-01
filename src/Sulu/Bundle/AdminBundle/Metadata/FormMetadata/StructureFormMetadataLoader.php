@@ -84,7 +84,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
         $this->debug = $debug;
     }
 
-    public function getMetadata(string $key, string $locale = null, array $metadataOptions = []): ?MetadataInterface
+    public function getMetadata(string $key, ?string $locale = null, array $metadataOptions = []): ?MetadataInterface
     {
         if (!$locale) {
             $locale = $this->locales[0];

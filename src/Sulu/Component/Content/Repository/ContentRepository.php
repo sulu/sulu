@@ -139,7 +139,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      *
      * @return Content|null
      */
-    public function find($uuid, $locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null)
+    public function find($uuid, $locale, $webspaceKey, MappingInterface $mapping, ?UserInterface $user = null)
     {
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale, $locales, $user);
@@ -170,7 +170,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         $locale,
         $webspaceKey,
         MappingInterface $mapping,
-        UserInterface $user = null
+        ?UserInterface $user = null
     ) {
         $path = $this->resolvePathByUuid($uuid);
 
@@ -187,7 +187,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
-    public function findByWebspaceRoot($locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null)
+    public function findByWebspaceRoot($locale, $webspaceKey, MappingInterface $mapping, ?UserInterface $user = null)
     {
         $locales = $this->getLocalesByWebspaceKey($webspaceKey);
         $queryBuilder = $this->getQueryBuilder($locale, $locales, $user);
@@ -204,7 +204,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         $locale,
         $webspaceKey,
         MappingInterface $mapping,
-        UserInterface $user = null
+        ?UserInterface $user = null
     ) {
         $path = $this->resolvePathByUuid($uuid);
         if (empty($webspaceKey)) {
@@ -235,7 +235,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         array $paths,
         $locale,
         MappingInterface $mapping,
-        UserInterface $user = null
+        ?UserInterface $user = null
     ) {
         $locales = $this->getLocales();
         $queryBuilder = $this->getQueryBuilder($locale, $locales, $user);
@@ -254,7 +254,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         array $uuids,
         $locale,
         MappingInterface $mapping,
-        UserInterface $user = null
+        ?UserInterface $user = null
     ) {
         if (0 === \count($uuids)) {
             return [];
@@ -283,7 +283,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         return $result;
     }
 
-    public function findAll($locale, $webspaceKey, MappingInterface $mapping, UserInterface $user = null)
+    public function findAll($locale, $webspaceKey, MappingInterface $mapping, ?UserInterface $user = null)
     {
         $contentPath = $this->sessionManager->getContentPath($webspaceKey);
 
@@ -297,7 +297,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         return $this->resolveQueryBuilder($queryBuilder, $locale, $locales, $mapping, $user);
     }
 
-    public function findAllByPortal($locale, $portalKey, MappingInterface $mapping, UserInterface $user = null)
+    public function findAllByPortal($locale, $portalKey, MappingInterface $mapping, ?UserInterface $user = null)
     {
         $webspaceKey = $this->webspaceManager->findPortalByKey($portalKey)->getWebspace()->getKey();
 
@@ -437,7 +437,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         $locale,
         $locales,
         MappingInterface $mapping,
-        UserInterface $user = null
+        ?UserInterface $user = null
     ) {
         $result = \iterator_to_array($queryBuilder->execute());
 
@@ -463,7 +463,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         );
     }
 
-    private function resolveResultPermissions(array $result, UserInterface $user = null)
+    private function resolveResultPermissions(array $result, ?UserInterface $user = null)
     {
         $permissions = [];
 
@@ -501,7 +501,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      *
      * @return QueryBuilder
      */
-    private function getQueryBuilder($locale = null, $locales = [], UserInterface $user = null)
+    private function getQueryBuilder($locale = null, $locales = [], ?UserInterface $user = null)
     {
         $queryBuilder = new QueryBuilder($this->qomFactory);
 
@@ -674,7 +674,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         $locale,
         $locales,
         MappingInterface $mapping,
-        UserInterface $user = null,
+        ?UserInterface $user = null,
         array $permissions
     ) {
         $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($row->getPath());
@@ -801,8 +801,8 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         $locale,
         $webspaceKey,
         MappingInterface $mapping,
-        StructureType $type = null,
-        UserInterface $user = null
+        ?StructureType $type = null,
+        ?UserInterface $user = null
     ) {
         $linkedContent = $this->find($row->getValue('internalLink'), $locale, $webspaceKey, $mapping);
         if (null === $linkedContent) {

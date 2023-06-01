@@ -67,7 +67,7 @@ class StructureMetadata extends PropertiesMetadata
         return $this->controller;
     }
 
-    public function setController(string $controller = null): self
+    public function setController(?string $controller = null): self
     {
         $this->controller = $controller;
 
@@ -79,7 +79,7 @@ class StructureMetadata extends PropertiesMetadata
         return $this->view;
     }
 
-    public function setView(string $view = null): self
+    public function setView(?string $view = null): self
     {
         $this->view = $view;
 

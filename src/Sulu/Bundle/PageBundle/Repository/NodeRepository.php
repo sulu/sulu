@@ -101,7 +101,7 @@ class NodeRepository implements NodeRepositoryInterface
         ContentQueryBuilderInterface $queryBuilder,
         ContentQueryExecutorInterface $queryExecutor,
         AccessControlManagerInterface $accessControlManager,
-        TokenStorageInterface $tokenStorage = null
+        ?TokenStorageInterface $tokenStorage = null
     ) {
         $this->mapper = $mapper;
         $this->sessionManager = $sessionManager;

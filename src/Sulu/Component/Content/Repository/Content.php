@@ -136,7 +136,7 @@ class Content implements \ArrayAccess
         $template,
         array $data,
         array $permissions,
-        StructureType $localizationType = null
+        ?StructureType $localizationType = null
     ) {
         $this->locale = $locale;
         $this->webspaceKey = $webspaceKey;

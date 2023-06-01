@@ -182,7 +182,7 @@ class AdminController
         array $translations,
         string $fallbackLocale,
         string $collaborationInterval,
-        bool $collaborationEnabled = null
+        ?bool $collaborationEnabled = null
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->tokenStorage = $tokenStorage;

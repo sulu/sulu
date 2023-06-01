@@ -53,7 +53,7 @@ class PublicPreviewController
         PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry,
         PreviewLinkRepositoryInterface $previewLinkRepository,
         Environment $twig,
-        Profiler $profiler = null
+        ?Profiler $profiler = null
     ) {
         $this->previewRenderer = $previewRenderer;
         $this->previewObjectProviderRegistry = $previewObjectProviderRegistry;

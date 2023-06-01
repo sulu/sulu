@@ -35,9 +35,9 @@ class ArrayMetadata implements SchemaMetadataInterface
 
     public function __construct(
         SchemaMetadataInterface $schemaMetadata,
-        int $minItems = null,
-        int $maxItems = null,
-        bool $uniqueItems = null
+        ?int $minItems = null,
+        ?int $maxItems = null,
+        ?bool $uniqueItems = null
     ) {
         $this->schemaMetadata = $schemaMetadata;
         $this->minItems = $minItems;

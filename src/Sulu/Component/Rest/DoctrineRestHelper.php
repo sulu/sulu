@@ -28,9 +28,9 @@ class DoctrineRestHelper extends RestHelper implements RestHelperInterface
         $entities,
         array $requestEntities,
         callable $get,
-        callable $add = null,
-        callable $update = null,
-        callable $delete = null
+        ?callable $add = null,
+        ?callable $update = null,
+        ?callable $delete = null
     ) {
         /* @var Collection $entities */
         $success = parent::processSubEntities($entities, $requestEntities, $get, $add, $update, $delete);

@@ -71,7 +71,7 @@ class TeaserContentType extends SimpleContentType implements PreResolvableConten
         $this->propertyMetadataMinMaxValueResolver = $propertyMetadataMinMaxValueResolver;
     }
 
-    public function getDefaultParams(PropertyInterface $property = null)
+    public function getDefaultParams(?PropertyInterface $property = null)
     {
         return [
             'providerConfiguration' => $this->teaserProviderPool->getConfiguration(),

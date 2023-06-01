@@ -35,7 +35,7 @@ class DoctrineCaseFieldDescriptor extends AbstractDoctrineFieldDescriptor
         string $name,
         DoctrineDescriptor $case1,
         DoctrineDescriptor $case2,
-        string $translation = null,
+        ?string $translation = null,
         string $visibility = FieldDescriptorInterface::VISIBILITY_YES,
         string $searchability = FieldDescriptorInterface::SEARCHABILITY_NEVER,
         string $type = '',

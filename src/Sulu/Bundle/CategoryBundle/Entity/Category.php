@@ -182,7 +182,7 @@ class Category implements CategoryInterface
         return $this->id;
     }
 
-    public function setParent(CategoryInterface $parent = null)
+    public function setParent(?CategoryInterface $parent = null)
     {
         $this->parent = $parent;
 
@@ -194,7 +194,7 @@ class Category implements CategoryInterface
         return $this->parent;
     }
 
-    public function setCreator(UserInterface $creator = null)
+    public function setCreator(?UserInterface $creator = null)
     {
         $this->creator = $creator;
 
@@ -213,7 +213,7 @@ class Category implements CategoryInterface
         return $this->creator;
     }
 
-    public function setChanger(UserInterface $changer = null)
+    public function setChanger(?UserInterface $changer = null)
     {
         $this->changer = $changer;
 

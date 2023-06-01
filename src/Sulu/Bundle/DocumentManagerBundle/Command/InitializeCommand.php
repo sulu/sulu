@@ -35,7 +35,7 @@ class InitializeCommand extends Command
 
     public function __construct(
         Initializer $initializer,
-        QuestionHelper $questionHelper = null
+        ?QuestionHelper $questionHelper = null
     ) {
         parent::__construct();
 

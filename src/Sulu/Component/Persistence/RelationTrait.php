@@ -33,9 +33,9 @@ trait RelationTrait
         $entities,
         array $requestEntities,
         callable $get,
-        callable $add = null,
-        callable $update = null,
-        callable $delete = null
+        ?callable $add = null,
+        ?callable $update = null,
+        ?callable $delete = null
     ) {
         // compare id with with $get callback
         $compareFunction = function($entity, $data) use ($get) {
@@ -65,9 +65,9 @@ trait RelationTrait
         $entities,
         array $requestEntities,
         callable $compare,
-        callable $add = null,
-        callable $update = null,
-        callable $delete = null
+        ?callable $add = null,
+        ?callable $update = null,
+        ?callable $delete = null
     ) {
         // define a matching function
         $matchFunction = function($entity, $requestEntities, &$matchedEntry, &$matchedKey) use ($compare) {
@@ -116,10 +116,10 @@ trait RelationTrait
     public function compareData(
         $entities,
         array $requestEntities,
-        callable $compare = null,
-        callable $add = null,
-        callable $update = null,
-        callable $delete = null
+        ?callable $compare = null,
+        ?callable $add = null,
+        ?callable $update = null,
+        ?callable $delete = null
     ) {
         $success = true;
 

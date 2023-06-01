@@ -105,7 +105,7 @@ class TextEditor extends SimpleContentType
         return \preg_replace('/ sulu-validation-state="[a-zA-Z ]*"/', '', $content);
     }
 
-    public function getDefaultParams(PropertyInterface $property = null)
+    public function getDefaultParams(?PropertyInterface $property = null)
     {
         return [
             'table' => new PropertyParameter('table', true),

@@ -25,7 +25,7 @@ class Url extends SimpleContentType
         parent::__construct('Url', '');
     }
 
-    public function getDefaultParams(PropertyInterface $property = null)
+    public function getDefaultParams(?PropertyInterface $property = null)
     {
         return [
             'defaults' => new PropertyParameter(

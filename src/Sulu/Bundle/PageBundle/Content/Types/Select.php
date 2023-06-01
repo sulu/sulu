@@ -26,7 +26,7 @@ class Select extends SimpleContentType
         parent::__construct('MultipleSelect', []);
     }
 
-    public function getDefaultParams(PropertyInterface $property = null)
+    public function getDefaultParams(?PropertyInterface $property = null)
     {
         return [
             'values' => new PropertyParameter('values', [], 'collection'),

@@ -147,7 +147,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         FilterTypeRegistry $filterTypeRegistry,
         EventDispatcherInterface $eventDispatcher,
         array $permissions,
-        AccessControlQueryEnhancer $accessControlQueryEnhancer = null
+        ?AccessControlQueryEnhancer $accessControlQueryEnhancer = null
     ) {
         parent::__construct($filterTypeRegistry);
         $this->em = $em;
@@ -719,7 +719,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param DoctrineJoinDescriptor[]|null $joins
      */
-    protected function assignJoins(QueryBuilder $queryBuilder, array $joins = null)
+    protected function assignJoins(QueryBuilder $queryBuilder, ?array $joins = null)
     {
         if (null === $joins) {
             $joins = $this->getJoins();

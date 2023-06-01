@@ -58,7 +58,7 @@ interface MediaRepositoryInterface extends RepositoryInterface
         $filter = [],
         $limit = null,
         $offset = null,
-        UserInterface $user = null,
+        ?UserInterface $user = null,
         $permission = null
     );
 

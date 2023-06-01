@@ -69,8 +69,8 @@ class DoctrineJoinDescriptor
      */
     public function __construct(
         string $entityName,
-        string $join = null,
-        string $joinCondition = null,
+        ?string $join = null,
+        ?string $joinCondition = null,
         string $joinMethod = self::JOIN_METHOD_LEFT,
         string $joinConditionMethod = self::JOIN_CONDITION_METHOD_WITH
     ) {

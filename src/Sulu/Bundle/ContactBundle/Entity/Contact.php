@@ -408,7 +408,7 @@ class Contact extends ApiEntity implements ContactInterface
      *
      * @return Contact
      */
-    public function setChanger(UserInterface $changer = null)
+    public function setChanger(?UserInterface $changer = null)
     {
         $this->changer = $changer;
 
@@ -427,7 +427,7 @@ class Contact extends ApiEntity implements ContactInterface
      *
      * @return Contact
      */
-    public function setCreator(UserInterface $creator = null)
+    public function setCreator(?UserInterface $creator = null)
     {
         $this->creator = $creator;
 

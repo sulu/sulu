@@ -629,7 +629,7 @@ class StructureBridge implements StructureInterface
         );
     }
 
-    private function normalizeData(array $data = null)
+    private function normalizeData(?array $data = null)
     {
         if (null === $data) {
             return;

@@ -42,7 +42,7 @@ class Sitemap
      * @param int $maxPage
      * @param \DateTime $lastmod
      */
-    public function __construct($alias, $maxPage, \DateTime $lastmod = null)
+    public function __construct($alias, $maxPage, ?\DateTime $lastmod = null)
     {
         $this->alias = $alias;
         $this->maxPage = $maxPage;

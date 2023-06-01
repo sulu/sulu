@@ -79,7 +79,7 @@ class ExceptionController
     public function showAction(
         Request $request,
         $exception,
-        DebugLoggerInterface $logger = null
+        ?DebugLoggerInterface $logger = null
     ) {
         $code = $exception->getStatusCode();
         $template = null;

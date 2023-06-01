@@ -62,7 +62,7 @@ class SystemCollectionManager implements SystemCollectionManagerInterface
         array $config,
         CollectionManagerInterface $collectionManager,
         EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenProvider = null,
+        ?TokenStorageInterface $tokenProvider = null,
         CacheInterface $cache,
         $locale
     ) {

@@ -107,7 +107,7 @@ class CollectionController extends AbstractRestController implements ClassResour
         CollectionManagerInterface $collectionManager,
         array $defaultCollectionType,
         array $permissions,
-        string $collectionClass = null
+        ?string $collectionClass = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 

@@ -233,7 +233,7 @@ class PreviewRenderer implements PreviewRendererInterface
      *
      * @return array
      */
-    private function createServerAttributes(PortalInformation $portalInformation, Request $currentRequest = null)
+    private function createServerAttributes(PortalInformation $portalInformation, ?Request $currentRequest = null)
     {
         // get server parameters
         $server = [];

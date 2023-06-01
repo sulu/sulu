@@ -80,9 +80,9 @@ abstract class BaseDataProvider implements DataProviderInterface
     public function __construct(
         DataProviderRepositoryInterface $repository,
         ArraySerializerInterface $serializer,
-        ReferenceStoreInterface $referenceStore = null,
-        Security $security = null,
-        RequestAnalyzerInterface $requestAnalyzer = null,
+        ?ReferenceStoreInterface $referenceStore = null,
+        ?Security $security = null,
+        ?RequestAnalyzerInterface $requestAnalyzer = null,
         $permissions = null
     ) {
         $this->repository = $repository;

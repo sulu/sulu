@@ -41,8 +41,8 @@ interface RestHelperInterface
         $entities,
         array $requestEntities,
         callable $get,
-        callable $add = null,
-        callable $update = null,
-        callable $delete = null
+        ?callable $add = null,
+        ?callable $update = null,
+        ?callable $delete = null
     );
 }

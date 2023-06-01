@@ -32,6 +32,6 @@ interface TargetGroupEvaluatorInterface
      */
     public function evaluate(
         $maxFrequency = TargetGroupRuleInterface::FREQUENCY_VISITOR,
-        TargetGroupInterface $currentTargetGroup = null
+        ?TargetGroupInterface $currentTargetGroup = null
     );
 }

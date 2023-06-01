@@ -62,7 +62,7 @@ interface RoleSettingInterface
      *
      * @return RoleSettingInterface
      */
-    public function setRole(RoleInterface $role = null);
+    public function setRole(?RoleInterface $role = null);
 
     /**
      * Get role.

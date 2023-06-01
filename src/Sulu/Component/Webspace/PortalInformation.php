@@ -85,11 +85,11 @@ class PortalInformation implements ArrayableInterface
 
     public function __construct(
         $type,
-        Webspace $webspace = null,
-        Portal $portal = null,
-        Localization $localization = null,
+        ?Webspace $webspace = null,
+        ?Portal $portal = null,
+        ?Localization $localization = null,
         $url = null,
-        Segment $segment = null,
+        ?Segment $segment = null,
         $redirect = null,
         $main = false,
         $urlExpression = null,

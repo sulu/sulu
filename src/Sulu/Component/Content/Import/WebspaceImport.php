@@ -98,7 +98,7 @@ class WebspaceImport extends Import implements WebspaceImportInterface
         ExtensionManagerInterface $extensionManager,
         ImportManagerInterface $importManager,
         FormatImportInterface $xliff12,
-        LoggerInterface $logger = null
+        ?LoggerInterface $logger = null
     ) {
         parent::__construct($importManager, $legacyPropertyFactory, ['1.2.xliff' => $xliff12]);
 

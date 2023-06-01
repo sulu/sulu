@@ -65,7 +65,7 @@ class RouteController extends AbstractRestController implements ClassResourceInt
         EntityManagerInterface $entityManager,
         RouteGeneratorInterface $routeGenerator,
         array $resourceKeyMappings,
-        ConflictResolverInterface $conflictResolver = null
+        ?ConflictResolverInterface $conflictResolver = null
     ) {
         parent::__construct($viewHandler);
 

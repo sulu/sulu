@@ -105,7 +105,7 @@ class OptionMetadata
         return $this->title;
     }
 
-    public function setTitle(string $title = null): void
+    public function setTitle(?string $title = null): void
     {
         $this->title = $title;
     }
@@ -115,7 +115,7 @@ class OptionMetadata
         return $this->placeholder;
     }
 
-    public function setPlaceholder(string $placeholder = null): void
+    public function setPlaceholder(?string $placeholder = null): void
     {
         $this->placeholder = $placeholder;
     }
@@ -125,7 +125,7 @@ class OptionMetadata
         return $this->infoText;
     }
 
-    public function setInfotext(string $infoText = null): void
+    public function setInfotext(?string $infoText = null): void
     {
         $this->infoText = $infoText;
     }

@@ -80,7 +80,7 @@ class RouteProvider implements RouteProviderInterface
         RequestAnalyzerInterface $requestAnalyzer,
         RouteDefaultsProviderInterface $routeDefaultsProvider,
         RequestStack $requestStack,
-        LazyLoadingValueHolderFactory $proxyFactory = null,
+        ?LazyLoadingValueHolderFactory $proxyFactory = null,
         array $defaultOptions = []
     ) {
         $this->routeRepository = $routeRepository;

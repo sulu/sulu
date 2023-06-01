@@ -215,7 +215,7 @@ class MediaRepositoryTest extends SuluTestCase
         return $media;
     }
 
-    private function createUser(RoleInterface $role = null)
+    private function createUser(?RoleInterface $role = null)
     {
         $user = new User();
         $user->setUsername('test');
