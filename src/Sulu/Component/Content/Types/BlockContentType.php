@@ -470,8 +470,14 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
 
     public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector): void
     {
+        $values = $propertyValue->getValue();
+
+        if (!is_array($values)) {
+            return;
+        }
+
         foreach ($property->getTypes() as $propertyType) {
-            foreach ($propertyValue->getValue() as $value) {
+            foreach ($values as $value) {
                 $child = $propertyType->getChild($value['type']);
                 $contentType = $this->contentTypeManager->get($child->getContentTypeName());
 
