@@ -17,14 +17,17 @@ use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
+use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 
 /**
- * This class is also extended by:
+ * This class is also extended by the PageBundle.
  *
  * @see \Sulu\Bundle\PageBundle\Reference\Provider\PageReferenceProvider
  *
@@ -35,6 +38,8 @@ class DocumentReferenceProvider implements DocumentReferenceProviderInterface
     private ContentTypeManagerInterface $contentTypeManager;
 
     private StructureManagerInterface $structureManager;
+
+    private ExtensionManagerInterface $extensionManager;
 
     private ReferenceRepositoryInterface $referenceRepository;
 
@@ -47,6 +52,7 @@ class DocumentReferenceProvider implements DocumentReferenceProviderInterface
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
         StructureManagerInterface $structureManager,
+        ExtensionManagerInterface $extensionManager,
         ReferenceRepositoryInterface $referenceRepository,
         DocumentInspector $documentInspector,
         string $structureType,
@@ -54,6 +60,7 @@ class DocumentReferenceProvider implements DocumentReferenceProviderInterface
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
+        $this->extensionManager = $extensionManager;
         $this->referenceRepository = $referenceRepository;
         $this->documentInspector = $documentInspector;
         $this->structureType = $structureType;
@@ -80,6 +87,7 @@ class DocumentReferenceProvider implements DocumentReferenceProviderInterface
 
         $structure = $document->getStructure();
         $templateStructure = $this->structureManager->getStructure($document->getStructureType(), $this->getStructureType());
+
         foreach ($templateStructure->getProperties(true) as $property) {
             $contentType = $this->contentTypeManager->get($property->getContentTypeName());
 
@@ -88,6 +96,24 @@ class DocumentReferenceProvider implements DocumentReferenceProviderInterface
             }
 
             $contentType->getReferences($property, $structure->getProperty($property->getName()), $referenceCollector);
+        }
+
+        if ($document instanceof ExtensionBehavior) {
+            $extensionData = $document->getExtensionsData();
+
+            if ($extensionData instanceof ExtensionContainer) {
+                $extensionData = $extensionData->toArray();
+            }
+
+            foreach ($extensionData as $key => $value) {
+                $extension = $this->extensionManager->getExtension($templateStructure->getKey(), $key);
+
+                // TODO add references for extension providing
+
+                $contentType->getReferences($property, $structure->getProperty($property->getName()), $referenceCollector);
+
+                // $extension->getReferences($value);
+            }
         }
 
         $referenceCollector->persistReferences();

@@ -42,10 +42,10 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
         string $resourceKey,
         string $resourceId,
         string $locale,
-        string $property,
         string $referenceResourceKey,
         string $referenceResourceId,
         string $referenceTitle,
+        string $referenceProperty,
         ?string $referenceSecurityContext = null,
         ?string $referenceSecurityObjectType = null,
         ?string $referenceSecurityObjectId = null
@@ -66,7 +66,7 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
             ->setReferenceSecurityContext($referenceSecurityContext)
             ->setReferenceSecurityObjectType($referenceSecurityObjectType)
             ->setReferenceSecurityObjectId($referenceSecurityObjectId)
-            ->setProperty($property)
+            ->setReferenceProperty($referenceProperty)
             ->setReferenceCount(1)
             ->setReferenceLiveCount(1);
 

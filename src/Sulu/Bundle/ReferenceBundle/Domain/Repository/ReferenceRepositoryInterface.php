@@ -19,10 +19,10 @@ interface ReferenceRepositoryInterface
         string $resourceKey,
         string $resourceId,
         string $locale,
-        string $property,
         string $referenceResourceKey,
         string $referenceResourceId,
         string $referenceTitle,
+        string $referenceProperty,
         ?string $referenceSecurityContext = null,
         ?string $referenceSecurityObjectType = null,
         ?string $referenceSecurityObjectId = null

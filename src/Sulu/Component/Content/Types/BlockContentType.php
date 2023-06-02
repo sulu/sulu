@@ -468,7 +468,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         );
     }
 
-    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector): void
+    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
     {
         $values = $propertyValue->getValue();
 
@@ -476,13 +476,20 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
             return;
         }
 
-        foreach ($property->getTypes() as $propertyType) {
-            foreach ($values as $value) {
-                $child = $propertyType->getChild($value['type']);
-                $contentType = $this->contentTypeManager->get($child->getContentTypeName());
+        foreach ($values as $value) {
+            $propertyType = $property->getType($value['type']);
 
-                if ($contentType instanceof ReferenceContentTypeInterface) {
-                    $contentType->getReferences($child, new PropertyValue($child->getName(), $value[$child->getName()]), $referenceCollector);
+            foreach ($propertyType->getChildProperties() as $child) {
+                $contentType = $this->contentTypeManager->get($child->getContentTypeName());
+                $childName = $child->getName();
+
+                if ($contentType instanceof ReferenceContentTypeInterface && isset($value[$childName])) {
+                    $contentType->getReferences(
+                        $child,
+                        new PropertyValue($childName, $value[$childName]),
+                        $referenceCollector,
+                        $propertyPrefix . $property->getName() . '.'
+                    );
                 }
             }
         }

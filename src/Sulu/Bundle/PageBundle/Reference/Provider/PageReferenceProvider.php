@@ -19,6 +19,7 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
+use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 
 /**
  * @final
@@ -30,12 +31,13 @@ class PageReferenceProvider extends DocumentReferenceProvider
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
         StructureManagerInterface $structureManager,
+        ExtensionManagerInterface $extensionManager,
         ReferenceRepositoryInterface $referenceRepository,
         DocumentInspector $documentInspector,
         string $structureType,
         string $referenceSecurityContext = ''
     ) {
-        parent::__construct($contentTypeManager, $structureManager, $referenceRepository, $documentInspector, $structureType, $referenceSecurityContext);
+        parent::__construct($contentTypeManager, $structureManager, $extensionManager, $referenceRepository, $documentInspector, $structureType, $referenceSecurityContext);
     }
 
     protected function getReferenceSecurityContext(WebspaceBehavior|StructureBehavior $document): string

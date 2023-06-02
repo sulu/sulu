@@ -503,7 +503,7 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
         );
     }
 
-    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector): void
+    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
     {
         $value = $propertyValue->getValue();
 
@@ -516,26 +516,34 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
             $imageProperty = new Property('image', '', 'single_media_selection');
             $imageProperty->setValue(['id' => $imageId]);
             $imageProperty->setStructure($property->getStructure());
+            /** @var SingleMediaSelection $contentType */
             $contentType = $this->contentTypeManager->get($imageProperty->getContentTypeName());
 
             if ($contentType instanceof ReferenceContentTypeInterface) {
                 $contentType->getReferences(
                     $imageProperty,
-                    new PropertyValue('image', $imageProperty->getValue()),
-                    $referenceCollector
+                    new PropertyValue($property->getName(), $imageProperty->getValue()),
+                    $referenceCollector,
+                    $propertyPrefix . $property->getName() . '.'
                 );
             }
         }
 
         $hotspots = $value['hotspots'] ?? [];
+        foreach ($hotspots as $value) {
+            $propertyType = $property->getType($value['type']);
 
-        foreach ($property->getTypes() as $propertyType) {
-            foreach ($hotspots as $value) {
-                $child = $propertyType->getChild($value['type']);
+            foreach ($propertyType->getChildProperties() as $child) {
                 $contentType = $this->contentTypeManager->get($child->getContentTypeName());
+                $childName = $child->getName();
 
-                if ($contentType instanceof ReferenceContentTypeInterface) {
-                    $contentType->getReferences($child, new PropertyValue($child->getName(), $value[$child->getName()]), $referenceCollector);
+                if ($contentType instanceof ReferenceContentTypeInterface && isset($value[$childName])) {
+                    $contentType->getReferences(
+                        $child,
+                        new PropertyValue($childName, $value[$childName]),
+                        $referenceCollector,
+                        $propertyPrefix . $property->getName() . '.hotspots.'
+                    );
                 }
             }
         }

@@ -17,5 +17,5 @@ use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 interface ReferenceContentTypeInterface
 {
-    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector): void;
+    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void;
 }

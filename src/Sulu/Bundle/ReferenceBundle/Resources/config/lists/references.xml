@@ -37,16 +37,15 @@
         />
 
         <property
-            name="referenceCount"
-            translation="sulu_admin.reference.count"
+            name="referenceProperty"
+            translation="sulu_reference.reference_property"
             visibility="yes"
-            searchability="yes"
-            sortable="true"
+            searchability="no"
+            sortable="false"
             width="auto"
         >
-            <field-name>referenceCount</field-name>
+            <field-name>referenceProperty</field-name>
             <entity-name>%sulu.model.reference.class%</entity-name>
         </property>
-
     </properties>
 </list>

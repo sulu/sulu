@@ -51,7 +51,7 @@ class ReferenceViewBuilderFactory implements ReferenceViewBuilderFactoryInterfac
             ->createListViewBuilder($name, $path)
             ->setResourceKey(ReferenceInterface::RESOURCE_KEY)
             ->setListKey(ReferenceInterface::LIST_KEY)
-            ->setTabTitle('sulu_admin.references')
+            ->setTabTitle('sulu_reference.references')
             ->addListAdapters(['table'])
             ->disableSelection()
             ->addRouterAttributesToListRequest([$resourceIdRouterAttribute => 'resourceId'])

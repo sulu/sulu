@@ -95,16 +95,16 @@ class ReferenceCollector implements ReferenceCollectorInterface
     public function addReference(
         string $resourceKey,
         string $resourceId,
-        string $property,
+        string $referenceProperty,
     ): ReferenceInterface {
         $reference = $this->referenceRepository->create(
             $resourceKey,
             $resourceId,
             $this->referenceLocale,
-            $property,
             $this->referenceResourceKey,
             $this->referenceResourceId,
             $this->referenceTitle,
+            $referenceProperty,
             $this->referenceSecurityContext,
             $this->referenceSecurityObjectType,
             $this->referenceSecurityObjectId

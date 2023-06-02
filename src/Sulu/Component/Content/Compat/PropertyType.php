@@ -105,13 +105,16 @@ class PropertyType
      */
     public function getChild($name)
     {
+        $propertyNames = [];
         foreach ($this->childProperties as $child) {
             if ($child->getName() === $name) {
                 return $child;
             }
+
+            $propertyNames[] = $child->getName();
         }
 
-        throw new NoSuchPropertyException();
+        throw new NoSuchPropertyException($name, $propertyNames);
     }
 
     public function __clone()

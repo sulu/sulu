@@ -5,6 +5,7 @@
         <service id="sulu_snippet.reference_provider" class="Sulu\Bundle\DocumentManagerBundle\Reference\Provider\DocumentReferenceProvider">
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu_page.extension.manager"/>
             <argument type="service" id="sulu_reference.reference_repository"/>
             <argument type="service" id="sulu_document_manager.document_inspector"/>
             <argument type="constant">Sulu\Component\Content\Compat\Structure::TYPE_SNIPPET</argument>

@@ -191,9 +191,12 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         return new PropertyMetadata($propertyMetadata->getName(), $mandatory, $singleMediaSelectionMetadata);
     }
 
-    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector): void
+    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
     {
         $data = $propertyValue->getValue();
+        dump('single');
+        dump($property->getName());
+        dump($data);
         if (!isset($data['id'])) {
             return;
         }
@@ -201,7 +204,7 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         $referenceCollector->addReference(
             MediaInterface::RESOURCE_KEY,
             $data['id'],
-            $property->getName()
+            $propertyPrefix . $property->getName()
         );
     }
 }

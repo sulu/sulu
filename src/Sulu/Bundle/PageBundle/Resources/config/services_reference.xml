@@ -5,6 +5,7 @@
         <service id="sulu_page.reference_provider" class="Sulu\Bundle\PageBundle\Reference\Provider\PageReferenceProvider">
             <argument type="service" id="sulu.content.type_manager"/>
             <argument type="service" id="sulu.content.structure_manager"/>
+            <argument type="service" id="sulu_page.extension.manager"/>
             <argument type="service" id="sulu_reference.reference_repository"/>
             <argument type="service" id="sulu_document_manager.document_inspector"/>
             <argument type="constant">Sulu\Component\Content\Compat\Structure::TYPE_PAGE</argument>

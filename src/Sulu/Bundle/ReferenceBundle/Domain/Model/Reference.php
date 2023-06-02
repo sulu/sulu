@@ -76,7 +76,7 @@ class Reference implements ReferenceInterface
     /**
      * @var string
      */
-    private $property;
+    private $referenceProperty;
 
     public function getId(): int
     {
@@ -191,14 +191,14 @@ class Reference implements ReferenceInterface
         return $this;
     }
 
-    public function getProperty(): string
+    public function getReferenceProperty(): string
     {
-        return $this->property;
+        return $this->referenceProperty;
     }
 
-    public function setProperty(string $property): ReferenceInterface
+    public function setReferenceProperty(string $referenceProperty): ReferenceInterface
     {
-        $this->property = $property;
+        $this->referenceProperty = $referenceProperty;
 
         return $this;
     }
@@ -240,14 +240,14 @@ class Reference implements ReferenceInterface
     public function equals(ReferenceInterface $reference): bool
     {
         return
-            $this->resourceKey === $reference->getResourceKey() &&
-            $this->resourceId === $reference->getResourceId() &&
-            $this->locale === $reference->getLocale() &&
-            $this->referenceResourceKey === $reference->getReferenceResourceKey() &&
-            $this->referenceResourceId === $reference->getReferenceResourceId() &&
-            $this->referenceSecurityContext === $reference->getReferenceSecurityContext() &&
-            $this->referenceSecurityObjectType === $reference->getReferenceSecurityObjectType() &&
-            $this->referenceSecurityObjectId === $reference->getReferenceSecurityObjectId() &&
-            $this->property === $reference->getProperty();
+            $this->resourceKey === $reference->getResourceKey()
+            && $this->resourceId === $reference->getResourceId()
+            && $this->locale === $reference->getLocale()
+            && $this->referenceResourceKey === $reference->getReferenceResourceKey()
+            && $this->referenceResourceId === $reference->getReferenceResourceId()
+            && $this->referenceSecurityContext === $reference->getReferenceSecurityContext()
+            && $this->referenceSecurityObjectType === $reference->getReferenceSecurityObjectType()
+            && $this->referenceSecurityObjectId === $reference->getReferenceSecurityObjectId()
+            && $this->referenceProperty === $reference->getReferenceProperty();
     }
 }

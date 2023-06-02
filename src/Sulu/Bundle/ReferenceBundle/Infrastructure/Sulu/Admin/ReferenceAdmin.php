@@ -14,15 +14,12 @@ namespace Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin;
 use Sulu\Bundle\AdminBundle\Admin\Admin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 
+/**
+ * @final
+ */
 class ReferenceAdmin extends Admin
 {
     public const SECURITY_CONTEXT = 'sulu.references.references';
-
-    public const LIST_VIEW = 'sulu_reference.references.list';
-
-    public function __construct()
-    {
-    }
 
     public function getSecurityContexts()
     {

@@ -1,5 +1,6 @@
 {
-    "sulu_admin.reference": "Reference",
-    "sulu_admin.references": "References",
-    "sulu_admin.reference.count": "Count"
+    "sulu_reference.reference": "Reference",
+    "sulu_reference.references": "References",
+    "sulu_reference.reference_count": "Count",
+    "sulu_reference.reference_property": "Property"
 }

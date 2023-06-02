@@ -18,6 +18,6 @@ interface ReferenceCollectorInterface
     public function addReference(
         string $resourceKey,
         string $resourceId,
-        string $property,
+        string $referenceProperty,
     ): ReferenceInterface;
 }

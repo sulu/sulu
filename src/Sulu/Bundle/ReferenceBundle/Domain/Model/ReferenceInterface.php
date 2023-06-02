@@ -54,9 +54,9 @@ interface ReferenceInterface
 
     public function setReferenceSecurityObjectId(?string $referenceSecurityObjectId): ReferenceInterface;
 
-    public function getProperty(): string;
+    public function getReferenceProperty(): string;
 
-    public function setProperty(string $property): ReferenceInterface;
+    public function setReferenceProperty(string $referenceProperty): ReferenceInterface;
 
     public function getReferenceCount(): int;
 
