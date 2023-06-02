@@ -15,9 +15,6 @@
         <field name="resourceId" column="resourceId" type="string" nullable="false" length="191"/>
         <field name="locale" column="locale" type="string" nullable="false" length="5"/>
         <field name="property" column="property" type="string" nullable="false" length="191"/>
-        <field name="securityContext" column="sourceSecurityContext" type="string" nullable="true" length="191"/>
-        <field name="securityObjectType" column="sourceSecurityObjectType" type="string" nullable="true" length="191"/>
-        <field name="securityObjectId" column="sourceSecurityObjectId" type="string" nullable="true" length="191"/>
         <field name="referenceResourceKey" column="referenceResourceKey" type="string" nullable="false" length="191"/>
         <field name="referenceResourceId" column="referenceResourceId" type="string" nullable="false" length="191"/>
         <field name="referenceTitle" column="referenceTitle" type="string" nullable="false" length="191"/>

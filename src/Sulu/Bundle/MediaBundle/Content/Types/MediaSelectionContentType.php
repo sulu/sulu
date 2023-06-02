@@ -258,7 +258,6 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
 
     public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector): void
     {
-        $data = $propertyValue->getValue();
         if (!isset($data['ids']) || !\is_array($data['ids'])) {
             return;
         }
@@ -267,10 +266,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
             $referenceCollector->addReference(
                 MediaInterface::RESOURCE_KEY,
                 $id,
-                'id',
-                MediaAdmin::SECURITY_CONTEXT,
-                Collection::class,
-                null // TODO collection id over a doctrine listener
+                $property->getName()
             );
         }
     }

@@ -142,9 +142,6 @@ class ReferenceController extends AbstractRestController implements ClassResourc
             $listBuilder->addSelectField($fieldDescriptor);
         }
 
-        $this->addResourceSecurityContextCondition($listBuilder, $fieldDescriptors, $user);
-        $this->addResourceObjectSecurityCondition($listBuilder, $fieldDescriptors, $user);
-
         if (null !== $locale) {
             $this->addLocaleCondition($listBuilder, $fieldDescriptors, $locale);
         }

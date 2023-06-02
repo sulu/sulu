@@ -77,7 +77,7 @@ class ReferenceCollector implements ReferenceCollectorInterface
         ?string $referenceSecurityContext = null,
         ?string $referenceSecurityObjectId = null,
         ?string $referenceSecurityObjectType = null,
-        ?int $referenceWorkflowStage = null
+        ?int $referenceWorkflowStage = null // TODO check where used should probably be a string to be more flexible
     ) {
         $this->referenceRepository = $referenceRepository;
         $this->referenceCollection = new ArrayCollection();
@@ -96,9 +96,6 @@ class ReferenceCollector implements ReferenceCollectorInterface
         string $resourceKey,
         string $resourceId,
         string $property,
-        ?string $securityContext = null,
-        ?string $securityObjectType = null,
-        ?string $securityObjectId = null
     ): ReferenceInterface {
         $reference = $this->referenceRepository->create(
             $resourceKey,
@@ -108,9 +105,6 @@ class ReferenceCollector implements ReferenceCollectorInterface
             $this->referenceResourceKey,
             $this->referenceResourceId,
             $this->referenceTitle,
-            $securityContext,
-            $securityObjectType,
-            $securityObjectId,
             $this->referenceSecurityContext,
             $this->referenceSecurityObjectType,
             $this->referenceSecurityObjectId

@@ -30,18 +30,6 @@ interface ReferenceInterface
 
     public function setLocale(string $locale): ReferenceInterface;
 
-    public function getSecurityContext(): ?string;
-
-    public function setSecurityContext(?string $securityContext): ReferenceInterface;
-
-    public function getSecurityObjectType(): ?string;
-
-    public function setSecurityObjectType(?string $securityObjectType): ReferenceInterface;
-
-    public function getSecurityObjectId(): ?string;
-
-    public function setSecurityObjectId(?string $securityObjectId): ReferenceInterface;
-
     public function getReferenceResourceKey(): string;
 
     public function setReferenceResourceKey(string $referenceResourceKey): ReferenceInterface;

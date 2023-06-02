@@ -201,10 +201,7 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         $referenceCollector->addReference(
             MediaInterface::RESOURCE_KEY,
             $data['id'],
-            'id',
-            MediaAdmin::SECURITY_CONTEXT,
-            Collection::class,
-            null // TODO collection id over a doctrine listener
+            $property->getName()
         );
     }
 }

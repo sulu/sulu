@@ -23,9 +23,6 @@ interface ReferenceRepositoryInterface
         string $referenceResourceKey,
         string $referenceResourceId,
         string $referenceTitle,
-        ?string $securityContext = null,
-        ?string $securityObjectType = null,
-        ?string $securityObjectId = null,
         ?string $referenceSecurityContext = null,
         ?string $referenceSecurityObjectType = null,
         ?string $referenceSecurityObjectId = null

@@ -18,6 +18,9 @@ use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
+/**
+ * @final
+ */
 class ReferenceViewBuilderFactory implements ReferenceViewBuilderFactoryInterface
 {
     /**
@@ -48,7 +51,7 @@ class ReferenceViewBuilderFactory implements ReferenceViewBuilderFactoryInterfac
             ->createListViewBuilder($name, $path)
             ->setResourceKey(ReferenceInterface::RESOURCE_KEY)
             ->setListKey(ReferenceInterface::LIST_KEY)
-            ->setTabTitle('sulu_admin.reference')
+            ->setTabTitle('sulu_admin.references')
             ->addListAdapters(['table'])
             ->disableSelection()
             ->addRouterAttributesToListRequest([$resourceIdRouterAttribute => 'resourceId'])

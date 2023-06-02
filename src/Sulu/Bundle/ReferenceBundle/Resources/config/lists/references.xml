@@ -4,21 +4,12 @@
 
     <properties>
         <property
-            name="referenceResourceId"
-            translation="sulu_admin.id"
-            visibility="yes"
-            searchability="yes"
-            sortable="false"
-            width="shrink"
-        />
-
-        <property
             name="referenceTitle"
             translation="sulu_admin.title"
             visibility="yes"
             searchability="yes"
             sortable="true"
-            width="auto"
+            width="shrink"
         >
             <field-name>referenceTitle</field-name>
             <entity-name>%sulu.model.reference.class%</entity-name>
@@ -35,6 +26,15 @@
             <field-name>referenceResourceKey</field-name>
             <entity-name>%sulu.model.reference.class%</entity-name>
         </property>
+
+        <property
+            name="referenceResourceId"
+            translation="sulu_admin.id"
+            visibility="yes"
+            searchability="yes"
+            sortable="false"
+            width="auto"
+        />
 
         <property
             name="referenceCount"

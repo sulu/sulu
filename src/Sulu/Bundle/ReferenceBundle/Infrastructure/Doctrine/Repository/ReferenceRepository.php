@@ -46,9 +46,6 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
         string $referenceResourceKey,
         string $referenceResourceId,
         string $referenceTitle,
-        ?string $securityContext = null,
-        ?string $securityObjectType = null,
-        ?string $securityObjectId = null,
         ?string $referenceSecurityContext = null,
         ?string $referenceSecurityObjectType = null,
         ?string $referenceSecurityObjectId = null
@@ -63,9 +60,6 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
             ->setResourceKey($resourceKey)
             ->setResourceId($resourceId)
             ->setLocale($locale)
-            ->setSecurityContext($securityContext)
-            ->setSecurityObjectType($securityObjectType)
-            ->setSecurityObjectId($securityObjectId)
             ->setReferenceResourceKey($referenceResourceKey)
             ->setReferenceResourceId($referenceResourceId)
             ->setReferenceTitle($referenceTitle)

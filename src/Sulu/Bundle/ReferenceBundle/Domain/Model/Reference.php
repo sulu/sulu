@@ -14,7 +14,7 @@ namespace Sulu\Bundle\ReferenceBundle\Domain\Model;
 class Reference implements ReferenceInterface
 {
     /**
-     * @var ?int
+     * @var int
      */
     private $id;
 
@@ -32,21 +32,6 @@ class Reference implements ReferenceInterface
      * @var string
      */
     private $locale;
-
-    /**
-     * @var string|null
-     */
-    private $securityContext;
-
-    /**
-     * @var string|null
-     */
-    private $securityObjectType;
-
-    /**
-     * @var string|null
-     */
-    private $securityObjectId;
 
     /**
      * @var string
@@ -93,7 +78,7 @@ class Reference implements ReferenceInterface
      */
     private $property;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -130,42 +115,6 @@ class Reference implements ReferenceInterface
     public function setLocale(string $locale): ReferenceInterface
     {
         $this->locale = $locale;
-
-        return $this;
-    }
-
-    public function getSecurityContext(): ?string
-    {
-        return $this->securityContext;
-    }
-
-    public function setSecurityContext(?string $securityContext): ReferenceInterface
-    {
-        $this->securityContext = $securityContext;
-
-        return $this;
-    }
-
-    public function getSecurityObjectType(): ?string
-    {
-        return $this->securityObjectType;
-    }
-
-    public function setSecurityObjectType(?string $securityObjectType): ReferenceInterface
-    {
-        $this->securityObjectType = $securityObjectType;
-
-        return $this;
-    }
-
-    public function getSecurityObjectId(): ?string
-    {
-        return $this->securityObjectId;
-    }
-
-    public function setSecurityObjectId(?string $securityObjectId): ReferenceInterface
-    {
-        $this->securityObjectId = $securityObjectId;
 
         return $this;
     }
@@ -294,9 +243,6 @@ class Reference implements ReferenceInterface
             $this->resourceKey === $reference->getResourceKey() &&
             $this->resourceId === $reference->getResourceId() &&
             $this->locale === $reference->getLocale() &&
-            $this->securityContext === $reference->getSecurityContext() &&
-            $this->securityObjectType === $reference->getSecurityObjectType() &&
-            $this->securityObjectId === $reference->getSecurityObjectId() &&
             $this->referenceResourceKey === $reference->getReferenceResourceKey() &&
             $this->referenceResourceId === $reference->getReferenceResourceId() &&
             $this->referenceSecurityContext === $reference->getReferenceSecurityContext() &&

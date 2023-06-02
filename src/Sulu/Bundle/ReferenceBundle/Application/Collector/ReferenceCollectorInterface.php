@@ -19,8 +19,5 @@ interface ReferenceCollectorInterface
         string $resourceKey,
         string $resourceId,
         string $property,
-        ?string $securityContext = null,
-        ?string $securityObjectType = null,
-        ?string $securityObjectId = null
     ): ReferenceInterface;
 }
