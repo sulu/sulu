@@ -279,7 +279,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             $filters['limitResult'] : null;
         $options = [
             'webspaceKey' => $this->requestAnalyzer->getWebspace()->getKey(),
-            'locale' => $property->getStructure()->getLanguageCode(),
+            'locale' => $property->getStructure()->getDocument()->getOriginalLocale() ?? $property->getStructure()->getLanguageCode(),
         ];
 
         if (isset($params['max_per_page']) && $configuration->hasPagination()) {
