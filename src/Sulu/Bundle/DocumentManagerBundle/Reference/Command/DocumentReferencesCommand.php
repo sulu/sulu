@@ -26,6 +26,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\String\Inflector\EnglishInflector;
 
 /**
  * @internal
@@ -89,7 +90,11 @@ final class DocumentReferencesCommand extends Command
             throw new \RuntimeException(\sprintf('No provider found for type "%s"', $type));
         }
 
-        $sql2 = \sprintf("SELECT jcr:uuid FROM [nt:unstructured] as document WHERE document.[jcr:mixinTypes] = 'sulu:%s'", $type);
+        $inflector = new EnglishInflector();
+        $singularType = $inflector->singularize($type);
+        $singularType = $singularType[1] ?? $singularType[0];
+
+        $sql2 = \sprintf("SELECT jcr:uuid FROM [nt:unstructured] as document WHERE document.[jcr:mixinTypes] = 'sulu:%s'", $singularType);
 
         $webspaceKey = $input->getArgument('webspaceKey');
         /** @var Webspace $webspace */
@@ -105,6 +110,7 @@ final class DocumentReferencesCommand extends Command
         /** @var RowIterator $rows */
         $rows = $queryResult->getRows();
         $ui->progressStart(\count($webspace->getAllLocalizations()) * $rows->count());
+
         foreach ($webspace->getAllLocalizations() as $localization) {
             $locale = $localization->getLocale();
             /** @var Row $row */

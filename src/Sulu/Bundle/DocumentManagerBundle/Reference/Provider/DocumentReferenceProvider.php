@@ -23,6 +23,7 @@ use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
+use Sulu\Component\Content\Extension\ReferenceExtensionInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 
@@ -108,11 +109,11 @@ class DocumentReferenceProvider implements DocumentReferenceProviderInterface
             foreach ($extensionData as $key => $value) {
                 $extension = $this->extensionManager->getExtension($templateStructure->getKey(), $key);
 
-                // TODO add references for extension providing
+                if (!$extension instanceof ReferenceExtensionInterface) {
+                    continue;
+                }
 
-                $contentType->getReferences($property, $structure->getProperty($property->getName()), $referenceCollector);
-
-                // $extension->getReferences($value);
+                $extension->getReferences($value, $referenceCollector, $key . '.');
             }
         }
 
