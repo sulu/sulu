@@ -24,7 +24,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
 /**
- * @internal Your code should not depend on this class.
+ * @internal your code should not depend on this class
  *
  * @final
  */

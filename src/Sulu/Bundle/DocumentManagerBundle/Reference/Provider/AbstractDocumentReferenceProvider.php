@@ -31,10 +31,11 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
  * This class is also extended by the PageBundle.
  *
  * @see \Sulu\Bundle\PageBundle\Reference\Provider\PageReferenceProvider
+ * @see \Sulu\Bundle\SnippetBundle\Reference\Provider\SnippetReferenceProvider
  *
  * @internal
  */
-class DocumentReferenceProvider implements DocumentReferenceProviderInterface
+abstract class AbstractDocumentReferenceProvider implements DocumentReferenceProviderInterface
 {
     private ContentTypeManagerInterface $contentTypeManager;
 
@@ -67,6 +68,8 @@ class DocumentReferenceProvider implements DocumentReferenceProviderInterface
         $this->structureType = $structureType;
         $this->referenceSecurityContext = $referenceSecurityContext;
     }
+
+    abstract public static function getResourceKey(): string;
 
     public function updateReferences(UuidBehavior&TitleBehavior&StructureBehavior $document, string $locale): ReferenceCollector
     {

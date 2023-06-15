@@ -8,9 +8,8 @@
             <argument type="service" id="sulu_page.extension.manager"/>
             <argument type="service" id="sulu_reference.reference_repository"/>
             <argument type="service" id="sulu_document_manager.document_inspector"/>
-            <argument type="constant">Sulu\Component\Content\Compat\Structure::TYPE_PAGE</argument>
 
-            <tag name="sulu_document_manager.reference_provider" alias="pages" />
+            <tag name="sulu_document_manager.reference_provider" />
         </service>
 
         <service id="sulu_page.page_reference_refresher" class="Sulu\Bundle\PageBundle\Reference\Refresh\PageReferenceRefresher">
