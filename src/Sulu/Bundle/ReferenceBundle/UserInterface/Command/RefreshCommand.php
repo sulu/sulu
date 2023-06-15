@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\ReferenceBundle\UserInterface\Command;
 
 use Sulu\Bundle\ReferenceBundle\Application\Refresh\ReferenceRefresherInterface;
@@ -10,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * @internal Your code should not depend on anything in this class but the `sulu:reference:refresh` command can be used by your project to refresh references.
+ * @internal your code should not depend on anything in this class but the `sulu:reference:refresh` command can be used by your project to refresh references
  *
  * @final
  */
@@ -43,7 +52,7 @@ class RefreshCommand extends Command
 
         foreach ($this->referenceRefreshers as $referenceRefresher) {
             $resourceKey = $referenceRefresher::getResourceKey();
-            if ($resourceKeyFilter !== null && $resourceKeyFilter !== $resourceKey) {
+            if (null !== $resourceKeyFilter && $resourceKeyFilter !== $resourceKey) {
                 continue;
             }
 

@@ -472,7 +472,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
     {
         $values = $propertyValue->getValue();
 
-        if (!is_array($values)) {
+        if (!\is_array($values)) {
             return;
         }
 

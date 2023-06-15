@@ -96,7 +96,7 @@ class SuluReferenceExtension extends Extension implements PrependExtensionInterf
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../../../Resources/config'));
         $loader->load('services.xml');
 
-         $container->registerForAutoconfiguration(ReferenceRefresherInterface::class)
-            ->addTag('sulu_reference.refresher');
+        $container->registerForAutoconfiguration(ReferenceRefresherInterface::class)
+           ->addTag('sulu_reference.refresher');
     }
 }

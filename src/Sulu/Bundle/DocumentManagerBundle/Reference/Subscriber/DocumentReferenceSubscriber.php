@@ -96,7 +96,7 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface
 
     private function getProvider(StructureBehavior $document): ?DocumentReferenceProviderInterface
     {
-        $documentResourcesKey = defined(get_class($document) . '::RESOURCE_KEY')
+        $documentResourcesKey = \defined(\get_class($document) . '::RESOURCE_KEY')
             // @phpstan-ignore-next-line PHPStan does not detect the `defined` call
             ? $document::RESOURCE_KEY
             : '';
