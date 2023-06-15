@@ -36,6 +36,7 @@
         <service id="Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\View\ReferenceViewBuilderFactoryInterface"
                  alias="sulu_reference.reference_list_view_builder_factory"/>
 
+        <!-- Controller -->
         <service id="sulu_reference.reference_controller"
                  class="Sulu\Bundle\ReferenceBundle\UserInterface\Controller\Admin\ReferenceController"
                  public="true">
@@ -50,6 +51,14 @@
             <argument type="service" id="security.token_storage"/>
 
             <tag name="sulu.context" context="admin"/>
+        </service>
+
+        <!-- Command -->
+        <service id="sulu_reference.refresh_command"
+                 class="Sulu\Bundle\ReferenceBundle\UserInterface\Command\RefreshCommand">
+            <argument type="tagged_iterator" tag="sulu_reference.refresher"/>
+
+            <tag name="console.command"/>
         </service>
     </services>
 </container>

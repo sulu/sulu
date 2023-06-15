@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Bundle\ReferenceBundle\Infrastructure\Symfony\DependencyInjection;
 
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\PersistenceExtensionTrait;
+use Sulu\Bundle\ReferenceBundle\Application\Refresh\ReferenceRefresherInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Exception\ReferenceNotFoundException;
 use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
 use Symfony\Component\Config\FileLocator;
@@ -94,5 +95,8 @@ class SuluReferenceExtension extends Extension implements PrependExtensionInterf
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../../../Resources/config'));
         $loader->load('services.xml');
+
+         $container->registerForAutoconfiguration(ReferenceRefresherInterface::class)
+            ->addTag('sulu_reference.refresher');
     }
 }
