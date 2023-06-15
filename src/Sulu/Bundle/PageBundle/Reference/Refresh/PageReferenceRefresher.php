@@ -23,6 +23,11 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 
+/**
+ * @internal Your code should not depend on this class.
+ *
+ * @final
+ */
 class PageReferenceRefresher implements ReferenceRefresherInterface
 {
     public function __construct(
