@@ -13,13 +13,17 @@ namespace Sulu\Bundle\ReferenceBundle\Tests\Unit\Domain\Model;
 
 use PHPUnit\Framework\TestCase;
 use Sulu\Bundle\ReferenceBundle\Domain\Model\Reference;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 
 class ReferenceTest extends TestCase
 {
+    use SetGetPrivatePropertyTrait;
+
     public function testGetId(): void
     {
         $reference = new Reference();
-        static::assertNull($reference->getId());
+        static::setPrivateProperty($reference, 'id', 1);
+        static::assertSame(1, $reference->getId());
     }
 
     public function testGetSetResourceKey(): void
@@ -41,27 +45,6 @@ class ReferenceTest extends TestCase
         $reference = new Reference();
         $reference->setLocale('de');
         static::assertSame('de', $reference->getLocale());
-    }
-
-    public function testGetSetSecurityContext(): void
-    {
-        $reference = new Reference();
-        $reference->setSecurityContext('security-context');
-        static::assertSame('security-context', $reference->getSecurityContext());
-    }
-
-    public function testGetSetSecurityObjectType(): void
-    {
-        $reference = new Reference();
-        $reference->setSecurityObjectType('security-type');
-        static::assertSame('security-type', $reference->getSecurityObjectType());
-    }
-
-    public function testGetSetSecurityObjectId(): void
-    {
-        $reference = new Reference();
-        $reference->setSecurityObjectId('security-id');
-        static::assertSame('security-id', $reference->getSecurityObjectId());
     }
 
     public function testGetSetReferenceResourceKey(): void
@@ -99,11 +82,11 @@ class ReferenceTest extends TestCase
         static::assertSame('security-id', $reference->getReferenceSecurityObjectId());
     }
 
-    public function testGetSetProperty(): void
+    public function testGetSetReferenceProperty(): void
     {
         $reference = new Reference();
-        $reference->setProperty('id');
-        static::assertSame('id', $reference->getProperty());
+        $reference->setReferenceProperty('id');
+        static::assertSame('id', $reference->getReferenceProperty());
     }
 
     public function testGetSetReferenceCount(): void

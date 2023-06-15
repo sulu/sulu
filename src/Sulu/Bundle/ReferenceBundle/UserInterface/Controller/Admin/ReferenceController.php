@@ -70,14 +70,6 @@ class ReferenceController extends AbstractRestController implements ClassResourc
      */
     private $referenceClass;
 
-    /**
-     * @var array<string, int>
-     */
-    private $permissions;
-
-    /**
-     * @param array<string, int> $permissions Inject `sulu_security.permissions` parameter
-     */
     public function __construct(
         FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         DoctrineListBuilderFactoryInterface $listBuilderFactory,
@@ -85,7 +77,6 @@ class ReferenceController extends AbstractRestController implements ClassResourc
         TranslatorInterface $translator,
         SecurityCheckerInterface $securityChecker,
         string $referenceClass,
-        array $permissions,
         ViewHandlerInterface $viewHandler,
         ?TokenStorageInterface $tokenStorage = null
     ) {
@@ -97,7 +88,6 @@ class ReferenceController extends AbstractRestController implements ClassResourc
         $this->translator = $translator;
         $this->securityChecker = $securityChecker;
         $this->referenceClass = $referenceClass;
-        $this->permissions = $permissions;
     }
 
     public function cgetAction(Request $request): Response
@@ -245,72 +235,6 @@ class ReferenceController extends AbstractRestController implements ClassResourc
             'referenceResourceId' => $this->createFieldDescriptor('referenceResourceId'),
             'referenceResourceKey' => $this->createFieldDescriptor('referenceResourceKey'),
         ];
-    }
-
-    /**
-     * @param array<string, FieldDescriptorInterface> $fieldDescriptors
-     */
-    private function addResourceSecurityContextCondition(
-        DoctrineListBuilder $listBuilder,
-        array $fieldDescriptors,
-        UserInterface $user
-    ): void {
-        /** @var DoctrineFieldDescriptor $resourceSecurityContextFieldDescriptor */
-        $resourceSecurityContextFieldDescriptor = $fieldDescriptors['referenceSecurityContext'];
-        $listBuilder->addPermissionCheckField($resourceSecurityContextFieldDescriptor);
-
-        $securityContexts = [];
-        $viewPermission = $this->permissions[PermissionTypes::VIEW];
-
-        foreach ($user->getRoleObjects() as $role) {
-            foreach ($role->getPermissions() as $permission) {
-                if (($permission->getPermissions() & $viewPermission) === $viewPermission) {
-                    $securityContexts[] = $permission->getContext();
-                }
-            }
-        }
-
-        $securityContexts = \array_unique($securityContexts);
-
-        $listBuilder->addExpression(
-            $listBuilder->createOrExpression(
-                [
-                    $listBuilder->createInExpression(
-                        $fieldDescriptors['referenceSecurityContext'],
-                        $securityContexts
-                    ),
-                    $listBuilder->createWhereExpression(
-                        $fieldDescriptors['referenceSecurityContext'],
-                        null,
-                        ListBuilderInterface::WHERE_COMPARATOR_EQUAL
-                    ),
-                ]
-            )
-        );
-    }
-
-    /**
-     * @param array<string, FieldDescriptorInterface> $fieldDescriptors
-     */
-    private function addResourceObjectSecurityCondition(
-        DoctrineListBuilder $listBuilder,
-        array $fieldDescriptors,
-        UserInterface $user
-    ): void {
-        /** @var DoctrineFieldDescriptor $resourceSecurityObjectIdFieldDescriptor */
-        $resourceSecurityObjectIdFieldDescriptor = $fieldDescriptors['referenceSecurityObjectId'];
-        $listBuilder->addPermissionCheckField($resourceSecurityObjectIdFieldDescriptor);
-
-        /** @var DoctrineFieldDescriptor $resourceSecurityObjectTypeFieldDescriptor */
-        $resourceSecurityObjectTypeFieldDescriptor = $fieldDescriptors['referenceSecurityObjectType'];
-        $listBuilder->addPermissionCheckField($resourceSecurityObjectTypeFieldDescriptor);
-
-        $listBuilder->setPermissionCheckWithDynamicEntityClass(
-            $user,
-            PermissionTypes::VIEW,
-            'referenceSecurityObjectType',
-            'referenceSecurityObjectId'
-        );
     }
 
     /**
