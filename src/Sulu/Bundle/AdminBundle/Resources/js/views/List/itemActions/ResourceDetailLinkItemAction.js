@@ -29,7 +29,9 @@ export default class ResourceDetailLinkItemAction extends AbstractListItemAction
         }
 
         if (typeof resourceViewAttributesProperty !== 'string') {
-            throw new Error('The "resource_view_attributes_property" option cannot be null and must contain a string value!');
+            throw new Error(
+                'The "resource_view_attributes_property" option cannot be null and must contain a string value!'
+            );
         }
 
         const resourceKey = item ? item[resourceKeyProperty] : null;
@@ -41,16 +43,24 @@ export default class ResourceDetailLinkItemAction extends AbstractListItemAction
         }
 
         if (resourceId && (typeof resourceId !== 'string' && typeof resourceId !== 'number')) {
-            throw new Error('The value of the property given via "resource_id_property" must have a string or number value!');
+            throw new Error(
+                'The value of the property given via "resource_id_property" must have a string or number value!'
+            );
         }
 
         if (typeof resourceViewAttributes !== 'object') {
-            throw new Error('The value of the property given via "resource_view_attributes_property" must have a object value!');
+            throw new Error(
+                'The value of the property given via "resource_view_attributes_property" must have a object value!'
+            );
         }
 
         return {
             icon,
-            onClick: (resourceKey && resourceId) ? () => this.handleClick(resourceKey, resourceId.toString(), resourceViewAttributes) : null,
+            onClick: (resourceKey && resourceId) ? () => this.handleClick(
+                resourceKey,
+                resourceId.toString(),
+                resourceViewAttributes
+            ) : null,
             disabled: !(resourceKey && resourceId && this.router.hasResourceView('detail', resourceKey)),
         };
     }

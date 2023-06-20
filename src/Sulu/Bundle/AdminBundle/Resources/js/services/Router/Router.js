@@ -290,7 +290,7 @@ export default class Router {
         this.navigate(route, attributes, this.navigate);
     };
 
-    @action hasResourceView = (view: string, resourceKey: string): bool => {
+    @action hasResourceView = (view: string, resourceKey: string): boolean => {
         return resourceViewRegistry.has(view, resourceKey);
     };
 

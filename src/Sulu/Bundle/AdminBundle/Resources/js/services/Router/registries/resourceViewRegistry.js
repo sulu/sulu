@@ -1,5 +1,5 @@
 // @flow
-import type {ResourceViews, ResourceViewsMap} from '../types';
+import type {ResourceViewsMap} from '../types';
 
 class ResourceViewRegistry {
     resourceViews: ResourceViewsMap;
@@ -22,7 +22,7 @@ class ResourceViewRegistry {
         });
     }
 
-    has(view: string, resourceKey: string): bool {
+    has(view: string, resourceKey: string): boolean {
         if (!this.resourceViews[resourceKey]) {
             return false;
         }
@@ -30,7 +30,7 @@ class ResourceViewRegistry {
         return this.resourceViews[resourceKey].views[view] !== undefined;
     }
 
-    get(view: string, resourceKey: string): bool {
+    get(view: string, resourceKey: string): boolean {
         if (!this.resourceViews[resourceKey] && !this.resourceViews[resourceKey][view]) {
             throw new Error('The resource view "' + view + '" for "' + resourceKey + '" was not found.');
         }
