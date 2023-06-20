@@ -10,7 +10,7 @@ initializer.addUpdateConfigHook('sulu_admin', (config: Object, initialized: bool
         return;
     }
 
-    const routeGenerationUrl = resourceRouteRegistry.getListUrl('routes', {action: 'generate'});
+    const routeGenerationUrl = resourceRouteRegistry.getUrl('list', 'routes', {action: 'generate'});
 
     fieldRegistry.add(
         'route',

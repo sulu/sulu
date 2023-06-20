@@ -110,7 +110,7 @@ test('Export current result with applied filter and search when button is clicke
     // $FlowFixMe
     exportToolbarAction.listStore.filterQueryOption = {test: {eq: 'Test'}};
 
-    resourceRouteRegistry.getListUrl.mockReturnValue('/list');
+    resourceRouteRegistry.getUrl.mockReturnValue('/list');
 
     const toolbarItemConfig = exportToolbarAction.getToolbarItemConfig();
     toolbarItemConfig.onClick();
@@ -119,7 +119,8 @@ test('Export current result with applied filter and search when button is clicke
 
     element.find('Button[skin="primary"]').simulate('click');
 
-    expect(resourceRouteRegistry.getListUrl).toBeCalledWith(
+    expect(resourceRouteRegistry.getUrl).toBeCalledWith(
+        'list',
         'test',
         {
             _format: 'csv',
