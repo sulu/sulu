@@ -2,7 +2,7 @@
 import AbstractListItemAction from './AbstractListItemAction';
 
 export default class ResourceDetailLinkItemAction extends AbstractListItemAction {
-    handleClick = (resourceKey: string, resourceId: string, viewAttributes: object) => {
+    handleClick = (resourceKey: string, resourceId: string, viewAttributes: Object = {}) => {
         const attributes = Object.assign({id: resourceId, ...viewAttributes}, viewAttributes);
 
         this.router.navigateToResourceView('detail', resourceKey, attributes);

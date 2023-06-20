@@ -287,7 +287,7 @@ export default class Router {
     @action navigateToResourceView = (view: string, resourceKey: string, attributes: Object = {}): void => {
         const route = resourceViewRegistry.get(view, resourceKey);
 
-        this.navigate(route, attributes, this.navigate);
+        this.navigate(route, attributes);
     };
 
     @action hasResourceView = (view: string, resourceKey: string): boolean => {

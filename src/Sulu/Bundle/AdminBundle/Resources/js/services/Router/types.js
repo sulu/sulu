@@ -32,6 +32,6 @@ export type ResourceViews = {
     },
 };
 
-export type ResourceViewMap = {
+export type ResourceViewsMap = {
     [string]: ResourceViews,
 };
