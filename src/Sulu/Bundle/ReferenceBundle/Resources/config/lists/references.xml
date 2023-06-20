@@ -16,7 +16,7 @@
         </property>
 
         <property
-            name="referenceResourceKey"
+            name="referenceResourceKeyTitle"
             translation="sulu_admin.resource"
             visibility="yes"
             searchability="yes"

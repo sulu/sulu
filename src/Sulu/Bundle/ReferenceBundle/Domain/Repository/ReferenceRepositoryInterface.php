@@ -15,6 +15,9 @@ use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
 
 interface ReferenceRepositoryInterface
 {
+    /**
+     * @param array<string, string> $referenceViewAttributes
+     */
     public function create(
         string $resourceKey,
         string $resourceId,
@@ -23,6 +26,7 @@ interface ReferenceRepositoryInterface
         string $referenceResourceId,
         string $referenceTitle,
         string $referenceProperty,
+        array $referenceViewAttributes = [],
         ?string $referenceSecurityContext = null,
         ?string $referenceSecurityObjectType = null,
         ?string $referenceSecurityObjectId = null

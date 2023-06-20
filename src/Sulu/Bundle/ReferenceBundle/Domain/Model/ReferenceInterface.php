@@ -26,6 +26,16 @@ interface ReferenceInterface
 
     public function setResourceId(string $resourceId): ReferenceInterface;
 
+    /**
+     * @return array<string, string>
+     */
+    public function getReferenceViewAttributes(): array;
+
+    /**
+     * @param array<string, string> $referenceViewAttributes
+     */
+    public function setReferenceViewAttributes(array $referenceViewAttributes): ReferenceInterface;
+
     public function getLocale(): string;
 
     public function setLocale(string $locale): ReferenceInterface;

@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\View;
 
 use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\ActivityAdmin;
+use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ListViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
@@ -55,6 +56,16 @@ class ReferenceViewBuilderFactory implements ReferenceViewBuilderFactoryInterfac
             ->addListAdapters(['table'])
             ->disableSelection()
             ->addRouterAttributesToListRequest([$resourceIdRouterAttribute => 'resourceId'])
+            ->addItemActions([
+                new ListItemAction(
+                    'resource_detail_link',
+                    [
+                        'resource_key_property' => 'referenceResourceKey',
+                        'resource_id_property' => 'referenceResourceId',
+                        'resource_view_attributes_property' => 'referenceViewAttributes',
+                    ],
+                ),
+            ])
             ->addRequestParameters(['resourceKey' => $resourceKey]);
     }
 

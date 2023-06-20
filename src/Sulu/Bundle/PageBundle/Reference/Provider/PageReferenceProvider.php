@@ -22,6 +22,8 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
+use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 
 /**
  * @final
@@ -51,6 +53,22 @@ class PageReferenceProvider extends AbstractDocumentReferenceProvider
     public static function getResourceKey(): string
     {
         return BasePageDocument::RESOURCE_KEY;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function getReferenceViewAttributes(UuidBehavior&TitleBehavior&StructureBehavior $document, string $locale): array
+    {
+        $referenceViewAttributes = parent::getReferenceViewAttributes($document, $locale);
+
+        if (!$document instanceof WebspaceBehavior) {
+            return $referenceViewAttributes;
+        }
+
+        return \array_merge($referenceViewAttributes, [
+            'webspace' => $document->getWebspaceName(),
+        ]);
     }
 
     protected function getReferenceSecurityContext(WebspaceBehavior|StructureBehavior $document): string

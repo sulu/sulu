@@ -148,10 +148,10 @@ class ReferenceController extends AbstractRestController implements ClassResourc
         $translationLocale = $user->getLocale();
         $references = \array_map(
             function(array $reference) use ($translationLocale) {
-                $referenceResourceKey = $this->translator->trans(
+                $referenceResourceKeyTitle = $this->translator->trans(
                     \sprintf(
                         'sulu_reference.resource.%s',
-                        $reference['referenceResourceKey']
+                        $reference['referenceResourceKey'],
                     ),
                     [],
                     'admin',
@@ -161,7 +161,8 @@ class ReferenceController extends AbstractRestController implements ClassResourc
                 return \array_merge(
                     $reference,
                     [
-                        'referenceResourceKey' => $referenceResourceKey,
+                        'referenceResourceKey' => $reference['referenceResourceKey'],
+                        'referenceResourceKeyTitle' => $referenceResourceKeyTitle,
                     ]
                 );
             },
@@ -234,6 +235,7 @@ class ReferenceController extends AbstractRestController implements ClassResourc
             'locale' => $this->createFieldDescriptor('locale'),
             'referenceResourceId' => $this->createFieldDescriptor('referenceResourceId'),
             'referenceResourceKey' => $this->createFieldDescriptor('referenceResourceKey'),
+            'referenceViewAttributes' => $this->createFieldDescriptor('referenceViewAttributes'),
         ];
     }
 

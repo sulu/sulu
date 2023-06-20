@@ -39,6 +39,11 @@ class ReferenceCollector implements ReferenceCollectorInterface
     private $referenceResourceKey;
 
     /**
+     * @var array<string, string>
+     */
+    private $referenceViewAttributes;
+
+    /**
      * @var string
      */
     private $referenceTitle;
@@ -74,6 +79,7 @@ class ReferenceCollector implements ReferenceCollectorInterface
         string $referenceResourceId,
         string $referenceLocale,
         string $referenceTitle,
+        array $referenceViewAttributes = [],
         ?string $referenceSecurityContext = null,
         ?string $referenceSecurityObjectId = null,
         ?string $referenceSecurityObjectType = null,
@@ -84,8 +90,10 @@ class ReferenceCollector implements ReferenceCollectorInterface
 
         $this->referenceResourceKey = $referenceResourceKey;
         $this->referenceResourceId = $referenceResourceId;
+        $this->referenceViewAttributes = $referenceViewAttributes;
         $this->referenceLocale = $referenceLocale;
         $this->referenceTitle = $referenceTitle;
+        $this->referenceViewAttributes = $referenceViewAttributes;
         $this->referenceSecurityContext = $referenceSecurityContext;
         $this->referenceSecurityObjectType = $referenceSecurityObjectType;
         $this->referenceSecurityObjectId = $referenceSecurityObjectId;
@@ -105,6 +113,7 @@ class ReferenceCollector implements ReferenceCollectorInterface
             $this->referenceResourceId,
             $this->referenceTitle,
             $referenceProperty,
+            $this->referenceViewAttributes,
             $this->referenceSecurityContext,
             $this->referenceSecurityObjectType,
             $this->referenceSecurityObjectId

@@ -44,6 +44,11 @@ class Reference implements ReferenceInterface
     private $referenceResourceId;
 
     /**
+     * @var array<string, string>
+     */
+    private $referenceViewAttributes = [];
+
+    /**
      * @var string
      */
     private $referenceTitle;
@@ -103,6 +108,18 @@ class Reference implements ReferenceInterface
     public function setResourceId(string $resourceId): ReferenceInterface
     {
         $this->resourceId = $resourceId;
+
+        return $this;
+    }
+
+    public function getReferenceViewAttributes(): array
+    {
+        return $this->referenceViewAttributes;
+    }
+
+    public function setReferenceViewAttributes(array $referenceViewAttributes): ReferenceInterface
+    {
+        $this->referenceViewAttributes = $referenceViewAttributes;
 
         return $this;
     }

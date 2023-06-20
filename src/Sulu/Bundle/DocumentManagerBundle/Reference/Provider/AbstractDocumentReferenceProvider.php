@@ -83,6 +83,7 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
             $document->getUuid(),
             $locale,
             $document->getTitle(),
+            $this->getReferenceViewAttributes($document, $locale),
             $this->getReferenceSecurityContext($document),
             $document->getUuid(),
             $this->getReferenceSecurityObjectType(),
@@ -136,6 +137,16 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
                 $locale
             );
         }
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    protected function getReferenceViewAttributes(UuidBehavior&TitleBehavior&StructureBehavior $document, string $locale): array
+    {
+        return [
+            'locale' => $locale,
+        ];
     }
 
     /**
