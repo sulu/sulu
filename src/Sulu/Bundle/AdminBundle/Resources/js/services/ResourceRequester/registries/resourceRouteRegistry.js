@@ -1,6 +1,7 @@
 // @flow
 import {isArrayLike, toJS} from 'mobx';
 import symfonyRouting from 'fos-jsrouting/router';
+import log from 'loglevel';
 import {transformDateForUrl} from '../../../utils/Date';
 import type {EndpointConfiguration} from '../types';
 
