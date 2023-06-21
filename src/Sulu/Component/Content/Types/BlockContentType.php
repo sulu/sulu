@@ -347,7 +347,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         $languageCode,
         $segmentKey
     ) {
-        foreach ($node->getProperties($property->getName() . '-*')  as $nodeProperty) {
+        foreach ($node->getProperties($property->getName() . '-*') as $nodeProperty) {
             $node->getProperty($nodeProperty->getName())->remove();
         }
     }

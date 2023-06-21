@@ -399,23 +399,6 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
     }
 
     /**
-     * Returns the abspath.
-     *
-     * @param string $relPath
-     * @param string $webspaceKey
-     * @param string $languageCode
-     * @param string $segmentKey
-     *
-     * @return string
-     */
-    private function getPath($relPath, $webspaceKey, $languageCode, $segmentKey)
-    {
-        $basePath = $this->getWebspaceRouteNodeBasePath($webspaceKey, $languageCode, $segmentKey);
-
-        return '/' . \ltrim($basePath, '/') . ('' !== $relPath ? '/' . \ltrim($relPath, '/') : '');
-    }
-
-    /**
      * Returns resource-locator.
      *
      * @param string $path
