@@ -20,14 +20,15 @@ jest.mock('../../../../views/List/List', () => jest.fn(function() {
     this.requestSelectionDelete = jest.fn();
 }));
 
-jest.mock('../../../../services/Router', () => jest.fn(function() {
-    this.navigateToResourceView = jest.fn();
-    this.hasResourceView = jest.fn();
-}));
-
-const router = new Router({});
+jest.mock('../../../../services/Router/Router', () => (
+    class {
+        navigateToResourceView = jest.fn();
+        hasResourceView = jest.fn();
+    }
+));
 
 function createLinkItemAction(options = {}) {
+    const router = new Router({});
     const listStore = new ListStore('test', 'test', 'test', {page: observable.box(1)});
     const list = new List({
         route: router.route,
@@ -47,7 +48,7 @@ test('Return correct icon action config for given item', () => {
         resource_view_attributes_property: 'customResourceViewAttributes',
     });
 
-    router.hasResourceView.mockReturnValue(true);
+    (linkItemAction.router.hasResourceView: any).mockReturnValue(true);
 
     const item = {
         customResourceKey: 'resource-key',
@@ -76,7 +77,7 @@ test('Return disabled icon action config if no item is given', () => {
 test('Return disabled icon action config if link_property of given icon is not set', () => {
     const linkItemAction = createLinkItemAction();
 
-    router.hasResourceView.mockReturnValue(false);
+    (linkItemAction.router.hasResourceView: any).mockReturnValue(false);
 
     const item = {
         resourceKey: 'resource-key',
@@ -94,7 +95,7 @@ test('Return disabled icon action config if link_property of given icon is not s
 test('On click route to correct resource view', () => {
     const linkItemAction = createLinkItemAction();
 
-    router.hasResourceView.mockReturnValue(false);
+    (linkItemAction.router.hasResourceView: any).mockReturnValue(false);
 
     const item = {
         resourceKey: 'resource-key',
@@ -107,8 +108,11 @@ test('On click route to correct resource view', () => {
     const clickCallback = itemActionConfig.onClick;
     expect(clickCallback).toBeInstanceOf(Function);
 
-    clickCallback('resource-key', '1', {});
-    expect(router.navigateToResourceView).toHaveBeenCalledWith('detail', 'resource-key', {id: '1'});
+    if (clickCallback) {
+        clickCallback(1, 1);
+    }
+
+    expect(linkItemAction.router.navigateToResourceView).toHaveBeenCalledWith('detail', 'resource-key', {id: '1'});
 });
 
 test('Throw error if "resource_key_property" option is not correctly set', () => {
