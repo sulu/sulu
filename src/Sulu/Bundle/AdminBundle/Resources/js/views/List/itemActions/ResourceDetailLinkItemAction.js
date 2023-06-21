@@ -36,7 +36,9 @@ export default class ResourceDetailLinkItemAction extends AbstractListItemAction
 
         const resourceKey = item ? item[resourceKeyProperty] : null;
         const resourceId = item ? item[resourceIdProperty] : null;
-        const resourceViewAttributes = item ? item[resourceViewAttributesProperty] : {};
+        const resourceViewAttributes = item && item[resourceViewAttributesProperty]
+            ? item[resourceViewAttributesProperty]
+            : {};
 
         if (resourceKey && typeof resourceKey !== 'string') {
             throw new Error('The value of the property given via "resource_key_property" must have a string value!');
