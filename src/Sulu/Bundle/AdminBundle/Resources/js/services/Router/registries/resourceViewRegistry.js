@@ -31,8 +31,12 @@ class ResourceViewRegistry {
     }
 
     get(view: string, resourceKey: string): string {
-        if (!this.resourceViews[resourceKey] && !this.resourceViews[resourceKey][view]) {
-            throw new Error('The resource view "' + view + '" for "' + resourceKey + '" was not found.');
+        if (typeof this.resourceViews[resourceKey] !== 'object') {
+            throw new Error('The resource "' + resourceKey + '" was not found.');
+        }
+
+        if (typeof this.resourceViews[resourceKey].views[view] !== 'string') {
+            throw new Error('The resource view "' + view + '" for resource "' + resourceKey + '" was not found.');
         }
 
         return this.resourceViews[resourceKey].views[view];
