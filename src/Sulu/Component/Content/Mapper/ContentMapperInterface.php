@@ -17,7 +17,6 @@ use PHPCR\Query\QueryResultInterface;
 use Sulu\Component\Content\BreadcrumbItemInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\Localization\Localization;
 
 /**
  * Interface of ContentMapper.
