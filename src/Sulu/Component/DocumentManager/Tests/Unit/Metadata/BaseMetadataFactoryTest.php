@@ -13,7 +13,6 @@ namespace Sulu\Component\DocumentManager\tests\Unit\Metadata;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Sulu\Component\DocumentManager\DocumentStrategyInterface;
 use Sulu\Component\DocumentManager\Exception\MetadataNotFoundException;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory;
@@ -23,7 +22,6 @@ class BaseMetadataFactoryTest extends TestCase
 {
     public function setUp(): void
     {
-        $this->strategy = $this->prophesize(DocumentStrategyInterface::class);
         $this->dispatcher = $this->prophesize(EventDispatcherInterface::class);
         $this->dispatcher
             ->dispatch(Argument::any(), Argument::any())
@@ -41,8 +39,7 @@ class BaseMetadataFactoryTest extends TestCase
                     'class' => 'Class\Snippet',
                     'phpcr_type' => 'sulu:snippet',
                 ],
-            ],
-            $this->strategy->reveal()
+            ]
         );
     }
 
