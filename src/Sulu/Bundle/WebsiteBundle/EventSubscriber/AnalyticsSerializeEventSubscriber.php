@@ -16,7 +16,6 @@ use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use JMS\Serializer\Metadata\StaticPropertyMetadata;
 use JMS\Serializer\Visitor\SerializationVisitorInterface;
-use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 
 /**

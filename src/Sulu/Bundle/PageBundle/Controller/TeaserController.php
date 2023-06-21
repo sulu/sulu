@@ -13,7 +13,6 @@ namespace Sulu\Bundle\PageBundle\Controller;
 
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
-use Sulu\Bundle\PageBundle\Teaser\Teaser;
 use Sulu\Bundle\PageBundle\Teaser\TeaserManagerInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;

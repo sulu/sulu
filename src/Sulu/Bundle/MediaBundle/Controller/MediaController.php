@@ -17,7 +17,6 @@ use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
 use Sulu\Bundle\MediaBundle\Entity\CollectionRepositoryInterface;
-use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\MediaNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;

@@ -15,7 +15,6 @@ use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileException;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidFileTypeException;
 use Sulu\Bundle\MediaBundle\Media\Exception\MaxFileSizeExceededException;
 use Sulu\Bundle\MediaBundle\Media\Exception\UploadFileNotSetException;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**

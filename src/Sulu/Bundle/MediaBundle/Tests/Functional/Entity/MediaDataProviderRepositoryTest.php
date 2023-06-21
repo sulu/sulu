@@ -26,7 +26,6 @@ use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\SecurityBundle\Entity\AccessControl;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
-use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 

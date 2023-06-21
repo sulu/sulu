@@ -23,7 +23,6 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ItemMetadata;
-use Sulu\Component\Content\Metadata\Property;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
