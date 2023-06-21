@@ -39,7 +39,7 @@ class BaseMetadataFactoryTest extends TestCase
                     'class' => 'Class\Snippet',
                     'phpcr_type' => 'sulu:snippet',
                 ],
-            ],
+            ]
         );
     }
 
