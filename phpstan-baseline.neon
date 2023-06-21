@@ -46696,11 +46696,6 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
 
 		-
-			message: "#^Class Sulu\\\\Bundle\\\\ContentBundle\\\\Document\\\\BasePageDocument not found\\.$#"
-			count: 13
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\SmartContent\\\\PageDataProviderTest\\:\\:getContentQueryBuilder\\(\\) has parameter \\$initValue with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/PageDataProviderTest.php
@@ -50868,21 +50863,6 @@ parameters:
 		-
 			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\Metadata\\\\BaseMetadataFactoryTest\\:\\:\\$factory\\.$#"
 			count: 14
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Metadata/BaseMetadataFactoryTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\Metadata\\\\BaseMetadataFactoryTest\\:\\:\\$strategy\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Metadata/BaseMetadataFactoryTest.php
-
-		-
-			message: "#^Class Sulu\\\\Component\\\\DocumentManager\\\\DocumentStrategyInterface not found\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Metadata/BaseMetadataFactoryTest.php
-
-		-
-			message: "#^Class Sulu\\\\Component\\\\DocumentManager\\\\Metadata\\\\BaseMetadataFactory constructor invoked with 3 parameters, 2 required\\.$#"
-			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Metadata/BaseMetadataFactoryTest.php
 
 		-
