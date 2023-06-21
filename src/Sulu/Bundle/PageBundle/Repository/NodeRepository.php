@@ -724,23 +724,4 @@ class NodeRepository implements NodeRepositoryInterface
 
         return $this->prepareNode($structure, $webspaceKey, $srcLocale);
     }
-
-    private function getUser(): ?UserInterface
-    {
-        if (!$this->tokenStorage) {
-            return null;
-        }
-
-        $token = $this->tokenStorage->getToken();
-        if (!$token) {
-            return null;
-        }
-
-        $user = $token->getUser();
-        if ($user instanceof UserInterface) {
-            return $user;
-        }
-
-        return null;
-    }
 }
