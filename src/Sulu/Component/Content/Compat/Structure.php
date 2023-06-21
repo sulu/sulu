@@ -823,7 +823,7 @@ abstract class Structure implements StructureInterface
     public function __set($property, $value)
     {
         if (isset($this->properties[$property])) {
-            return $this->getProperty($property)->setValue($value);
+            $this->getProperty($property)->setValue($value);
         } else {
             throw new NoSuchPropertyException($property);
         }

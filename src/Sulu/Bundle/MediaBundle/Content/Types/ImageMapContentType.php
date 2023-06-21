@@ -333,7 +333,7 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
         $languageCode,
         $segmentKey
     ) {
-        foreach ($node->getProperties($property->getName() . '-*')  as $nodeProperty) {
+        foreach ($node->getProperties($property->getName() . '-*') as $nodeProperty) {
             $node->getProperty($nodeProperty->getName())->remove();
         }
     }

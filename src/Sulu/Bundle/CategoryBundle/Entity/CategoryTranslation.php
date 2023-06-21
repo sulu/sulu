@@ -31,7 +31,7 @@ class CategoryTranslation implements CategoryTranslationInterface
     protected $description;
 
     /**
-     * @var CategoryTranslationMedia[]
+     * @var Collection<int, CategoryTranslationMedia>
      */
     protected $medias;
 
@@ -71,7 +71,7 @@ class CategoryTranslation implements CategoryTranslationInterface
     protected $changed;
 
     /**
-     * @var Collection|KeywordInterface[]
+     * @var Collection<int, KeywordInterface>
      */
     protected $keywords;
 
@@ -230,7 +230,7 @@ class CategoryTranslation implements CategoryTranslationInterface
 
     public function hasKeyword(KeywordInterface $keyword)
     {
-        return $this->getKeywords()->exists(
+        return $this->keywords->exists(
             function($key, KeywordInterface $element) use ($keyword) {
                 return $element->equals($keyword);
             }

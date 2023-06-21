@@ -109,7 +109,7 @@ abstract class ItemMetadata
             __CLASS__
         );
 
-        return $this[$name] = $value;
+        $this[$name] = $value;
     }
 
     /**

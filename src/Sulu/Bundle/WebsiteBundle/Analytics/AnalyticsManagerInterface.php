@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\WebsiteBundle\Analytics;
 
-use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 
 /**

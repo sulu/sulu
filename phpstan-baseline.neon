@@ -4681,16 +4681,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryRepositoryInterface.php
 
 		-
-			message: "#^Cannot call method add\\(\\) on array\\<Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslationMedia\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
-
-		-
-			message: "#^Cannot call method removeElement\\(\\) on array\\<Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslationMedia\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslation\\:\\:addKeyword\\(\\) should return Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryInterface but returns \\$this\\(Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslation\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
@@ -4732,31 +4722,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslation\\:\\:setMedias\\(\\) should return Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslationInterface but return statement is missing\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
-
-		-
-			message: "#^Parameter \\#1 \\$p of method Doctrine\\\\Common\\\\Collections\\\\ReadableCollection\\<\\(int\\|string\\),mixed\\>\\:\\:exists\\(\\) expects Closure\\(\\(int\\|string\\), mixed\\)\\: bool, Closure\\(mixed, Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\KeywordInterface\\)\\: bool given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslation\\:\\:\\$keywords with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslation\\:\\:\\$medias \\(array\\<Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslationMedia\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\<\\*NEVER\\*, \\*NEVER\\*\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslation\\:\\:\\$medias type mapping mismatch\\: database can contain Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslationMedia\\> but property expects array\\<Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslationMedia\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslation\\:\\:\\$medias type mapping mismatch\\: property can contain array\\<Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslationMedia\\> but database expects Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryTranslationMedia\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryTranslation.php
 
@@ -22801,11 +22766,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
-
-		-
 			message: "#^Parameter \\#1 \\$uuid of method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapperInterface\\:\\:loadByParent\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
@@ -25103,6 +25063,11 @@ parameters:
 		-
 			message: "#^Cannot access offset 'id' on mixed\\.$#"
 			count: 48
+			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
+
+		-
+			message: "#^Cannot access offset 'internalLinks' on mixed\\.$#"
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -39461,11 +39426,6 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Structure.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Structure\\:\\:__set\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Structure.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Compat\\\\Structure\\:\\:addChild\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Structure.php
@@ -40777,11 +40737,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Structure\\\\Structure\\:\\:__get\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Structure/Structure.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Structure\\\\Structure\\:\\:__set\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Structure/Structure.php
 
@@ -43577,11 +43532,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\ItemMetadata\\:\\:__get\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/ItemMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\ItemMetadata\\:\\:__set\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/ItemMetadata.php
 
@@ -58642,12 +58592,12 @@ parameters:
 
 		-
 			message: "#^Cannot access offset string on mixed\\.$#"
-			count: 5
+			count: 6
 			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
 
 		-
 			message: "#^Cannot access offset string\\|null on mixed\\.$#"
-			count: 2
+			count: 3
 			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
 
 		-
