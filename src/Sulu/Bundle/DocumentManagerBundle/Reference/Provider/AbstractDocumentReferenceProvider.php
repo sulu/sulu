@@ -70,7 +70,10 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
 
     abstract public static function getResourceKey(): string;
 
-    public function updateReferences(UuidBehavior&TitleBehavior&StructureBehavior $document, string $locale): ReferenceCollector
+    /**
+     * @param UuidBehavior&TitleBehavior&StructureBehavior $document
+     */
+    public function updateReferences($document, string $locale): ReferenceCollector
     {
         $referenceResourceKey = $this->getReferenceResourceKey($document);
 
@@ -136,9 +139,11 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
     }
 
     /**
+     * @param UuidBehavior&TitleBehavior&StructureBehavior $document
+     *
      * @return array<string, string>
      */
-    protected function getReferenceViewAttributes(UuidBehavior&TitleBehavior&StructureBehavior $document, string $locale): array
+    protected function getReferenceViewAttributes($document, string $locale): array
     {
         return [
             'locale' => $locale,
