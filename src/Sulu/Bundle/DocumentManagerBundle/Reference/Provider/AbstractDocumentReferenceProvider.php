@@ -18,7 +18,6 @@ use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContent
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
-use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
@@ -128,11 +127,11 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
         $locales = $locale ? [$locale] : $this->documentInspector->getLocales($document);
 
         foreach ($locales as $locale) {
-            $this->referenceRepository->removeByReferenceResourceKeyAndId(
-                $this->getReferenceResourceKey($document),
-                $document->getUuid(),
-                $locale
-            );
+            $this->referenceRepository->removeBy([
+                'referenceResourceKey' => $this->getReferenceResourceKey($document),
+                'referenceResourceId' => $document->getUuid(),
+                'locale' => $locale,
+            ]);
         }
     }
 

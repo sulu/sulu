@@ -15,7 +15,7 @@ namespace Sulu\Bundle\ReferenceBundle\Infrastructure\Doctrine\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Sulu\Bundle\ReferenceBundle\Domain\Exception\ReferenceNotFoundException;
+use Doctrine\ORM\QueryBuilder;
 use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 
@@ -41,9 +41,9 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
     public function create(
         string $resourceKey,
         string $resourceId,
-        string $locale,
         string $referenceResourceKey,
         string $referenceResourceId,
+        string $referenceLocale,
         string $referenceTitle,
         string $referenceProperty,
         array $referenceViewAttributes = [],
@@ -57,7 +57,7 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
         $reference
             ->setResourceKey($resourceKey)
             ->setResourceId($resourceId)
-            ->setLocale($locale)
+            ->setReferenceLocale($referenceLocale)
             ->setReferenceResourceKey($referenceResourceKey)
             ->setReferenceResourceId($referenceResourceId)
             ->setReferenceTitle($referenceTitle)
@@ -79,39 +79,50 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
         $this->entityManager->remove($reference);
     }
 
-    public function removeByReferenceResourceKeyAndId(string $referenceResourceKey, string $referenceResourceId, string $locale): void
+    public function removeBy(array $filters): void
     {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder = $this->createQueryBuilder($filters);
+
         $queryBuilder
-            ->delete(ReferenceInterface::class, 'reference')
-            ->where('reference.referenceResourceKey = :resourceKey')
-            ->andWhere('reference.referenceResourceId = :resourceId')
-            ->andWhere('reference.locale = :locale')
-            ->setParameter('resourceKey', $referenceResourceKey)
-            ->setParameter('resourceId', $referenceResourceId)
-            ->setParameter('locale', $locale);
+            ->delete(ReferenceInterface::class, 'reference');
 
         $queryBuilder->getQuery()->execute();
-    }
-
-    public function getOneBy(array $criteria): ReferenceInterface
-    {
-        $reference = $this->findOneBy($criteria);
-
-        if (null === $reference) {
-            throw new ReferenceNotFoundException($criteria);
-        }
-
-        return $reference;
-    }
-
-    public function findOneBy(array $criteria): ?ReferenceInterface
-    {
-        return $this->entityRepository->findOneBy($criteria);
     }
 
     public function flush(): void
     {
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param array{
+     *     referenceResourceKey?: string,
+     *     referenceResourceId?: string,
+     *     referenceLocale?: string,
+     * } $filters
+     */
+    private function createQueryBuilder(array $filters = []): QueryBuilder
+    {
+        $queryBuilder = $this->entityRepository->createQueryBuilder('reference');
+
+        $referenceResourceKey = $filters['referenceResourceKey'] ?? null;
+        if (null !== $referenceResourceKey) {
+            $queryBuilder->andWhere('reference.referenceResourceKey = :referenceResourceKey')
+                ->setParameter('referenceResourceKey', $referenceResourceKey);
+        }
+
+        $referenceResourceId = $filters['referenceResourceId'] ?? null;
+        if (null !== $referenceResourceId) {
+            $queryBuilder->andWhere('reference.referenceResourceId = :referenceResourceId')
+                ->setParameter('referenceResourceId', $referenceResourceId);
+        }
+
+        $referenceLocale = $filters['referenceLocale'] ?? null;
+        if (null !== $referenceLocale) {
+            $queryBuilder->andWhere('reference.referenceLocale = :referenceLocale')
+                ->setParameter('referenceLocale', $referenceLocale);
+        }
+
+        return $queryBuilder;
     }
 }

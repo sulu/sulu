@@ -50,17 +50,17 @@ class DoctrineReferenceSubscriber implements EventSubscriber
             $references[] = [
                 'resourceKey' => $entity->getResourceKey(),
                 'resourceId' => $entity->getResourceId(),
-                'locale' => $entity->getLocale(),
+                'referenceLocale' => $entity->getReferenceLocale(),
             ];
         }
 
         $references = \array_unique($references, \SORT_REGULAR);
         foreach ($references as $referenceEntry) {
-            $this->referenceRepository->removeByReferenceResourceKeyAndId(
-                $referenceEntry['resourceKey'],
-                $referenceEntry['resourceId'],
-                $referenceEntry['locale']
-            );
+            $this->referenceRepository->removeBy([
+                'referenceResourceKey' => $referenceEntry['resourceKey'],
+                'referenceResourceId' => $referenceEntry['resourceId'],
+                'referenceResourceLocale' => $referenceEntry['referenceLocale'],
+            ]);
         }
     }
 }

@@ -31,17 +31,17 @@ class Reference implements ReferenceInterface
     /**
      * @var string
      */
-    private $locale;
-
-    /**
-     * @var string
-     */
     private $referenceResourceKey;
 
     /**
      * @var string
      */
     private $referenceResourceId;
+
+    /**
+     * @var string
+     */
+    private $referenceLocale;
 
     /**
      * @var array<string, string>
@@ -97,6 +97,18 @@ class Reference implements ReferenceInterface
         return $this;
     }
 
+    public function getReferenceLocale(): string
+    {
+        return $this->referenceLocale;
+    }
+
+    public function setReferenceLocale(string $referenceLocale): static
+    {
+        $this->referenceLocale = $referenceLocale;
+
+        return $this;
+    }
+
     public function getReferenceViewAttributes(): array
     {
         return $this->referenceViewAttributes;
@@ -105,18 +117,6 @@ class Reference implements ReferenceInterface
     public function setReferenceViewAttributes(array $referenceViewAttributes): static
     {
         $this->referenceViewAttributes = $referenceViewAttributes;
-
-        return $this;
-    }
-
-    public function getLocale(): string
-    {
-        return $this->locale;
-    }
-
-    public function setLocale(string $locale): static
-    {
-        $this->locale = $locale;
 
         return $this;
     }
@@ -208,7 +208,7 @@ class Reference implements ReferenceInterface
         return
             $this->resourceKey === $reference->resourceKey
             && $this->resourceId === $reference->resourceId
-            && $this->locale === $reference->locale
+            && $this->referenceLocale === $reference->referenceLocale
             && $this->referenceResourceKey === $reference->referenceResourceKey
             && $this->referenceResourceId === $reference->referenceResourceId
             && $this->referenceProperty === $reference->referenceProperty

@@ -43,8 +43,8 @@ class ReferenceTest extends TestCase
     public function testGetSetLocale(): void
     {
         $reference = new Reference();
-        $reference->setLocale('de');
-        static::assertSame('de', $reference->getLocale());
+        $reference->setReferenceLocale('de');
+        static::assertSame('de', $reference->getReferenceLocale());
     }
 
     public function testGetSetReferenceResourceKey(): void

@@ -89,9 +89,9 @@ class ReferenceCollector implements ReferenceCollectorInterface
         $reference = $this->referenceRepository->create(
             $resourceKey,
             $resourceId,
-            $this->referenceLocale,
             $this->referenceResourceKey,
             $this->referenceResourceId,
+            $this->referenceLocale,
             $this->referenceTitle,
             $referenceProperty,
             $this->referenceViewAttributes
@@ -115,11 +115,11 @@ class ReferenceCollector implements ReferenceCollectorInterface
 
     public function persistReferences(): void
     {
-        $this->referenceRepository->removeByReferenceResourceKeyAndId(
-            $this->referenceResourceKey,
-            $this->referenceResourceId,
-            $this->referenceLocale
-        );
+        $this->referenceRepository->removeBy([
+            'referenceResourceKey' => $this->referenceResourceKey,
+            'referenceResourceId' => $this->referenceResourceId,
+            'referenceResourceLocale' => $this->referenceLocale,
+        ]);
 
         $this->referenceRepository->flush();
     }

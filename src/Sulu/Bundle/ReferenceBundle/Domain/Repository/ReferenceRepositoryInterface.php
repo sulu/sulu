@@ -21,9 +21,9 @@ interface ReferenceRepositoryInterface
     public function create(
         string $resourceKey,
         string $resourceId,
-        string $locale,
         string $referenceResourceKey,
         string $referenceResourceId,
+        string $referenceLocale,
         string $referenceTitle,
         string $referenceProperty,
         array $referenceViewAttributes = []
@@ -33,17 +33,14 @@ interface ReferenceRepositoryInterface
 
     public function remove(ReferenceInterface $reference): void;
 
-    public function removeByReferenceResourceKeyAndId(string $referenceResourceKey, string $referenceResourceId, string $locale): void;
-
     /**
-     * @param mixed[] $criteria
+     * @param array{
+     *     referenceResourceKey?: string,
+     *     referenceResourceId?: string,
+     *     referenceLocale?: string,
+     * } $filters
      */
-    public function getOneBy(array $criteria): ReferenceInterface;
-
-    /**
-     * @param mixed[] $criteria
-     */
-    public function findOneBy(array $criteria): ?ReferenceInterface;
+    public function removeBy(array $filters): void;
 
     public function flush(): void;
 }

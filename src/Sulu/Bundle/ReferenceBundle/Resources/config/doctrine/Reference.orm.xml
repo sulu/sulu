@@ -13,9 +13,9 @@
 
         <field name="resourceKey" column="resourceKey" type="string" nullable="false" length="191"/>
         <field name="resourceId" column="resourceId" type="string" nullable="false" length="191"/>
-        <field name="locale" column="locale" type="string" nullable="false" length="5"/>
         <field name="referenceResourceKey" column="referenceResourceKey" type="string" nullable="false" length="191"/>
         <field name="referenceResourceId" column="referenceResourceId" type="string" nullable="false" length="191"/>
+        <field name="referenceLocale" column="referenceLocale" type="string" nullable="false" length="5"/>
         <field name="referenceViewAttributes" column="referenceViewAttributes" type="json"/>
         <field name="referenceTitle" column="referenceTitle" type="string" nullable="false" length="191"/>
         <field name="referenceProperty" column="referenceProperty" type="string" nullable="false" length="191"/>

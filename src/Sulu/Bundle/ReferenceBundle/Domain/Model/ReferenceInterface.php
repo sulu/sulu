@@ -26,6 +26,10 @@ interface ReferenceInterface
 
     public function setResourceId(string $resourceId): static;
 
+    public function getReferenceLocale(): string;
+
+    public function setReferenceLocale(string $referenceLocale): static;
+
     /**
      * @return array<string, string>
      */
@@ -35,10 +39,6 @@ interface ReferenceInterface
      * @param array<string, string> $referenceViewAttributes
      */
     public function setReferenceViewAttributes(array $referenceViewAttributes): static;
-
-    public function getLocale(): string;
-
-    public function setLocale(string $locale): static;
 
     public function getReferenceResourceKey(): string;
 
