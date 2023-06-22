@@ -13,6 +13,7 @@ namespace Sulu\Bundle\DocumentManagerBundle\Reference\Provider;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollector;
+use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -70,10 +71,7 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
 
     abstract public static function getResourceKey(): string;
 
-    /**
-     * @param UuidBehavior&TitleBehavior&StructureBehavior $document
-     */
-    public function updateReferences($document, string $locale): ReferenceCollector
+    public function updateReferences($document, string $locale): ReferenceCollectorInterface
     {
         $referenceResourceKey = $this->getReferenceResourceKey($document);
 
