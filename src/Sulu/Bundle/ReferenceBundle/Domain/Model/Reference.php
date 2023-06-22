@@ -54,21 +54,6 @@ class Reference implements ReferenceInterface
     private $referenceTitle;
 
     /**
-     * @var string|null
-     */
-    private $referenceSecurityContext;
-
-    /**
-     * @var string|null
-     */
-    private $referenceSecurityObjectType;
-
-    /**
-     * @var string|null
-     */
-    private $referenceSecurityObjectId;
-
-    /**
      * @var int
      */
     private $referenceCount;
@@ -93,7 +78,7 @@ class Reference implements ReferenceInterface
         return $this->resourceKey;
     }
 
-    public function setResourceKey(string $resourceKey): ReferenceInterface
+    public function setResourceKey(string $resourceKey): static
     {
         $this->resourceKey = $resourceKey;
 
@@ -105,7 +90,7 @@ class Reference implements ReferenceInterface
         return $this->resourceId;
     }
 
-    public function setResourceId(string $resourceId): ReferenceInterface
+    public function setResourceId(string $resourceId): static
     {
         $this->resourceId = $resourceId;
 
@@ -117,7 +102,7 @@ class Reference implements ReferenceInterface
         return $this->referenceViewAttributes;
     }
 
-    public function setReferenceViewAttributes(array $referenceViewAttributes): ReferenceInterface
+    public function setReferenceViewAttributes(array $referenceViewAttributes): static
     {
         $this->referenceViewAttributes = $referenceViewAttributes;
 
@@ -129,7 +114,7 @@ class Reference implements ReferenceInterface
         return $this->locale;
     }
 
-    public function setLocale(string $locale): ReferenceInterface
+    public function setLocale(string $locale): static
     {
         $this->locale = $locale;
 
@@ -141,7 +126,7 @@ class Reference implements ReferenceInterface
         return $this->referenceResourceKey;
     }
 
-    public function setReferenceResourceKey(string $referenceResourceKey): ReferenceInterface
+    public function setReferenceResourceKey(string $referenceResourceKey): static
     {
         $this->referenceResourceKey = $referenceResourceKey;
 
@@ -153,7 +138,7 @@ class Reference implements ReferenceInterface
         return $this->referenceResourceId;
     }
 
-    public function setReferenceResourceId(string $referenceResourceId): ReferenceInterface
+    public function setReferenceResourceId(string $referenceResourceId): static
     {
         $this->referenceResourceId = $referenceResourceId;
 
@@ -165,45 +150,9 @@ class Reference implements ReferenceInterface
         return $this->referenceTitle;
     }
 
-    public function setReferenceTitle(string $referenceTitle): ReferenceInterface
+    public function setReferenceTitle(string $referenceTitle): static
     {
         $this->referenceTitle = $referenceTitle;
-
-        return $this;
-    }
-
-    public function getReferenceSecurityContext(): ?string
-    {
-        return $this->referenceSecurityContext;
-    }
-
-    public function setReferenceSecurityContext(?string $referenceSecurityContext): ReferenceInterface
-    {
-        $this->referenceSecurityContext = $referenceSecurityContext;
-
-        return $this;
-    }
-
-    public function getReferenceSecurityObjectType(): ?string
-    {
-        return $this->referenceSecurityObjectType;
-    }
-
-    public function setReferenceSecurityObjectType(?string $referenceSecurityObjectType): ReferenceInterface
-    {
-        $this->referenceSecurityObjectType = $referenceSecurityObjectType;
-
-        return $this;
-    }
-
-    public function getReferenceSecurityObjectId(): ?string
-    {
-        return $this->referenceSecurityObjectId;
-    }
-
-    public function setReferenceSecurityObjectId(?string $referenceSecurityObjectId): ReferenceInterface
-    {
-        $this->referenceSecurityObjectId = $referenceSecurityObjectId;
 
         return $this;
     }
@@ -213,7 +162,7 @@ class Reference implements ReferenceInterface
         return $this->referenceProperty;
     }
 
-    public function setReferenceProperty(string $referenceProperty): ReferenceInterface
+    public function setReferenceProperty(string $referenceProperty): static
     {
         $this->referenceProperty = $referenceProperty;
 
@@ -225,7 +174,7 @@ class Reference implements ReferenceInterface
         return $this->referenceCount;
     }
 
-    public function setReferenceCount(int $referenceCount): ReferenceInterface
+    public function setReferenceCount(int $referenceCount): static
     {
         $this->referenceCount = $referenceCount;
 
@@ -237,7 +186,7 @@ class Reference implements ReferenceInterface
         return $this->referenceLiveCount;
     }
 
-    public function setReferenceLiveCount(int $referenceLiveCount): ReferenceInterface
+    public function setReferenceLiveCount(int $referenceLiveCount): static
     {
         $this->referenceLiveCount = $referenceLiveCount;
 
@@ -257,14 +206,12 @@ class Reference implements ReferenceInterface
     public function equals(ReferenceInterface $reference): bool
     {
         return
-            $this->resourceKey === $reference->getResourceKey()
-            && $this->resourceId === $reference->getResourceId()
-            && $this->locale === $reference->getLocale()
-            && $this->referenceResourceKey === $reference->getReferenceResourceKey()
-            && $this->referenceResourceId === $reference->getReferenceResourceId()
-            && $this->referenceSecurityContext === $reference->getReferenceSecurityContext()
-            && $this->referenceSecurityObjectType === $reference->getReferenceSecurityObjectType()
-            && $this->referenceSecurityObjectId === $reference->getReferenceSecurityObjectId()
-            && $this->referenceProperty === $reference->getReferenceProperty();
+            $this->resourceKey === $reference->resourceKey
+            && $this->resourceId === $reference->resourceId
+            && $this->locale === $reference->locale
+            && $this->referenceResourceKey === $reference->referenceResourceKey
+            && $this->referenceResourceId === $reference->referenceResourceId
+            && $this->referenceProperty === $reference->referenceProperty
+            && $this->referenceViewAttributes === $reference->referenceViewAttributes;
     }
 }

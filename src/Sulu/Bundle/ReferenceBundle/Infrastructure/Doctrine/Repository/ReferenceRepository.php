@@ -47,9 +47,6 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
         string $referenceTitle,
         string $referenceProperty,
         array $referenceViewAttributes = [],
-        ?string $referenceSecurityContext = null,
-        ?string $referenceSecurityObjectType = null,
-        ?string $referenceSecurityObjectId = null
     ): ReferenceInterface {
         /** @var class-string<ReferenceInterface> $className */
         $className = $this->entityRepository->getClassName();
@@ -65,9 +62,6 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
             ->setReferenceResourceId($referenceResourceId)
             ->setReferenceTitle($referenceTitle)
             ->setReferenceViewAttributes($referenceViewAttributes)
-            ->setReferenceSecurityContext($referenceSecurityContext)
-            ->setReferenceSecurityObjectType($referenceSecurityObjectType)
-            ->setReferenceSecurityObjectId($referenceSecurityObjectId)
             ->setReferenceProperty($referenceProperty)
             ->setReferenceCount(1)
             ->setReferenceLiveCount(1);

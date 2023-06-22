@@ -84,9 +84,6 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
             $locale,
             $document->getTitle(),
             $this->getReferenceViewAttributes($document, $locale),
-            $this->getReferenceSecurityContext($document),
-            $document->getUuid(),
-            $this->getReferenceSecurityObjectType(),
             $workflowStage
         );
 
@@ -159,16 +156,6 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
         }
 
         throw new \RuntimeException('ReferenceResourceKey must be defined');
-    }
-
-    private function getReferenceSecurityObjectType(): string
-    {
-        return SecurityBehavior::class;
-    }
-
-    private function getReferenceSecurityContext(StructureBehavior $document): string
-    {
-        return $this->referenceSecurityContext;
     }
 
     private function getStructureType(): string

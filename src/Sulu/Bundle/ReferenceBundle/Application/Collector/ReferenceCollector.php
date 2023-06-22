@@ -54,25 +54,13 @@ class ReferenceCollector implements ReferenceCollectorInterface
     private $referenceLocale;
 
     /**
-     * @var string|null
-     */
-    private $referenceSecurityContext;
-
-    /**
-     * @var string|null
-     */
-    private $referenceSecurityObjectType;
-
-    /**
-     * @var string|null
-     */
-    private $referenceSecurityObjectId;
-
-    /**
      * @var int
      */
     private $referenceWorkflowStage;
 
+    /**
+     * @param array<string, string> $referenceViewAttributes
+     */
     public function __construct(
         ReferenceRepositoryInterface $referenceRepository,
         string $referenceResourceKey,
@@ -80,23 +68,16 @@ class ReferenceCollector implements ReferenceCollectorInterface
         string $referenceLocale,
         string $referenceTitle,
         array $referenceViewAttributes = [],
-        ?string $referenceSecurityContext = null,
-        ?string $referenceSecurityObjectId = null,
-        ?string $referenceSecurityObjectType = null,
-        ?int $referenceWorkflowStage = null // TODO check where used should probably be a string to be more flexible
+        ?int $referenceWorkflowStage = null
     ) {
         $this->referenceRepository = $referenceRepository;
         $this->referenceCollection = new ArrayCollection();
 
         $this->referenceResourceKey = $referenceResourceKey;
         $this->referenceResourceId = $referenceResourceId;
-        $this->referenceViewAttributes = $referenceViewAttributes;
         $this->referenceLocale = $referenceLocale;
         $this->referenceTitle = $referenceTitle;
         $this->referenceViewAttributes = $referenceViewAttributes;
-        $this->referenceSecurityContext = $referenceSecurityContext;
-        $this->referenceSecurityObjectType = $referenceSecurityObjectType;
-        $this->referenceSecurityObjectId = $referenceSecurityObjectId;
         $this->referenceWorkflowStage = $referenceWorkflowStage ?? WorkflowStage::TEST;
     }
 
@@ -113,10 +94,7 @@ class ReferenceCollector implements ReferenceCollectorInterface
             $this->referenceResourceId,
             $this->referenceTitle,
             $referenceProperty,
-            $this->referenceViewAttributes,
-            $this->referenceSecurityContext,
-            $this->referenceSecurityObjectType,
-            $this->referenceSecurityObjectId
+            $this->referenceViewAttributes
         );
 
         $existingReference = $this->getReference($reference);
@@ -149,113 +127,5 @@ class ReferenceCollector implements ReferenceCollectorInterface
     public function getReference(ReferenceInterface $reference): ?ReferenceInterface
     {
         return $this->referenceCollection->filter(fn (ReferenceInterface $ref) => $ref->equals($reference))->first() ?: null;
-    }
-
-    public function getReferenceRepository(): ReferenceRepositoryInterface
-    {
-        return $this->referenceRepository;
-    }
-
-    public function setReferenceRepository(ReferenceRepositoryInterface $referenceRepository): ReferenceCollector
-    {
-        $this->referenceRepository = $referenceRepository;
-
-        return $this;
-    }
-
-    public function getReferenceResourceId(): string
-    {
-        return $this->referenceResourceId;
-    }
-
-    public function setReferenceResourceId(string $referenceResourceId): ReferenceCollector
-    {
-        $this->referenceResourceId = $referenceResourceId;
-
-        return $this;
-    }
-
-    public function getReferenceResourceKey(): string
-    {
-        return $this->referenceResourceKey;
-    }
-
-    public function setReferenceResourceKey(string $referenceResourceKey): ReferenceCollector
-    {
-        $this->referenceResourceKey = $referenceResourceKey;
-
-        return $this;
-    }
-
-    public function getReferenceTitle(): string
-    {
-        return $this->referenceTitle;
-    }
-
-    public function setReferenceTitle(string $referenceTitle): ReferenceCollector
-    {
-        $this->referenceTitle = $referenceTitle;
-
-        return $this;
-    }
-
-    public function getReferenceLocale(): string
-    {
-        return $this->referenceLocale;
-    }
-
-    public function setReferenceLocale(string $referenceLocale): ReferenceCollector
-    {
-        $this->referenceLocale = $referenceLocale;
-
-        return $this;
-    }
-
-    public function getReferenceSecurityContext(): ?string
-    {
-        return $this->referenceSecurityContext;
-    }
-
-    public function setReferenceSecurityContext(?string $referenceSecurityContext): ReferenceCollector
-    {
-        $this->referenceSecurityContext = $referenceSecurityContext;
-
-        return $this;
-    }
-
-    public function getReferenceSecurityObjectType(): ?string
-    {
-        return $this->referenceSecurityObjectType;
-    }
-
-    public function setReferenceSecurityObjectType(?string $referenceSecurityObjectType): ReferenceCollector
-    {
-        $this->referenceSecurityObjectType = $referenceSecurityObjectType;
-
-        return $this;
-    }
-
-    public function getReferenceSecurityObjectId(): ?string
-    {
-        return $this->referenceSecurityObjectId;
-    }
-
-    public function setReferenceSecurityObjectId(?string $referenceSecurityObjectId): ReferenceCollector
-    {
-        $this->referenceSecurityObjectId = $referenceSecurityObjectId;
-
-        return $this;
-    }
-
-    public function getReferenceWorkflowStage(): int
-    {
-        return $this->referenceWorkflowStage;
-    }
-
-    public function setReferenceWorkflowStage(int $referenceWorkflowStage): ReferenceCollector
-    {
-        $this->referenceWorkflowStage = $referenceWorkflowStage;
-
-        return $this;
     }
 }

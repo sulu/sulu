@@ -19,9 +19,6 @@
         <field name="referenceViewAttributes" column="referenceViewAttributes" type="json"/>
         <field name="referenceTitle" column="referenceTitle" type="string" nullable="false" length="191"/>
         <field name="referenceProperty" column="referenceProperty" type="string" nullable="false" length="191"/>
-        <field name="referenceSecurityContext" column="referenceSecurityContext" type="string" nullable="true" length="191"/>
-        <field name="referenceSecurityObjectType" column="referenceSecurityObjectType" type="string" nullable="true" length="191"/>
-        <field name="referenceSecurityObjectId" column="referenceSecurityObjectId" type="string" nullable="true" length="191"/>
         <field name="referenceCount" column="referenceCount" type="integer" nullable="false"/>
         <field name="referenceLiveCount" column="referenceLiveCount" type="integer" nullable="false"/>
     </mapped-superclass>

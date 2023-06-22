@@ -61,25 +61,12 @@ class ReferenceTest extends TestCase
         static::assertSame('321-123', $reference->getReferenceResourceId());
     }
 
-    public function testGetSetReferenceSecurityContext(): void
+    public function testGetSetReferenceViewAttributes(): void
     {
         $reference = new Reference();
-        $reference->setReferenceSecurityContext('security-context');
-        static::assertSame('security-context', $reference->getReferenceSecurityContext());
-    }
-
-    public function testGetSetReferenceSecurityObjectType(): void
-    {
-        $reference = new Reference();
-        $reference->setReferenceSecurityObjectType('security-type');
-        static::assertSame('security-type', $reference->getReferenceSecurityObjectType());
-    }
-
-    public function testGetSetReferenceSecurityObjectId(): void
-    {
-        $reference = new Reference();
-        $reference->setReferenceSecurityObjectId('security-id');
-        static::assertSame('security-id', $reference->getReferenceSecurityObjectId());
+        static::assertSame([], $reference->getReferenceViewAttributes());
+        $reference->setReferenceViewAttributes(['locale' => 'en']);
+        static::assertSame(['locale' => 'en'], $reference->getReferenceViewAttributes());
     }
 
     public function testGetSetReferenceProperty(): void

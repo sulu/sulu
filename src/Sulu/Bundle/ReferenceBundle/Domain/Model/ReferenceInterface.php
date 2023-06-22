@@ -20,11 +20,11 @@ interface ReferenceInterface
 
     public function getResourceKey(): string;
 
-    public function setResourceKey(string $resourceKey): ReferenceInterface;
+    public function setResourceKey(string $resourceKey): static;
 
     public function getResourceId(): string;
 
-    public function setResourceId(string $resourceId): ReferenceInterface;
+    public function setResourceId(string $resourceId): static;
 
     /**
      * @return array<string, string>
@@ -34,51 +34,42 @@ interface ReferenceInterface
     /**
      * @param array<string, string> $referenceViewAttributes
      */
-    public function setReferenceViewAttributes(array $referenceViewAttributes): ReferenceInterface;
+    public function setReferenceViewAttributes(array $referenceViewAttributes): static;
 
     public function getLocale(): string;
 
-    public function setLocale(string $locale): ReferenceInterface;
+    public function setLocale(string $locale): static;
 
     public function getReferenceResourceKey(): string;
 
-    public function setReferenceResourceKey(string $referenceResourceKey): ReferenceInterface;
+    public function setReferenceResourceKey(string $referenceResourceKey): static;
 
     public function getReferenceResourceId(): string;
 
-    public function setReferenceResourceId(string $referenceResourceId): ReferenceInterface;
+    public function setReferenceResourceId(string $referenceResourceId): static;
 
     public function getReferenceTitle(): string;
 
-    public function setReferenceTitle(string $referenceTitle): ReferenceInterface;
-
-    public function getReferenceSecurityContext(): ?string;
-
-    public function setReferenceSecurityContext(?string $referenceSecurityContext): ReferenceInterface;
-
-    public function getReferenceSecurityObjectType(): ?string;
-
-    public function setReferenceSecurityObjectType(?string $referenceSecurityObjectType): ReferenceInterface;
-
-    public function getReferenceSecurityObjectId(): ?string;
-
-    public function setReferenceSecurityObjectId(?string $referenceSecurityObjectId): ReferenceInterface;
+    public function setReferenceTitle(string $referenceTitle): static;
 
     public function getReferenceProperty(): string;
 
-    public function setReferenceProperty(string $referenceProperty): ReferenceInterface;
+    public function setReferenceProperty(string $referenceProperty): static;
 
     public function getReferenceCount(): int;
 
-    public function setReferenceCount(int $referenceCount): ReferenceInterface;
+    public function setReferenceCount(int $referenceCount): static;
 
     public function getReferenceLiveCount(): int;
 
-    public function setReferenceLiveCount(int $referenceLiveCount): ReferenceInterface;
+    public function setReferenceLiveCount(int $referenceLiveCount): static;
 
     public function increaseReferenceCounter(): int;
 
     public function increaseReferenceLiveCounter(): int;
 
+    /**
+     * @param static $reference
+     */
     public function equals(ReferenceInterface $reference): bool;
 }

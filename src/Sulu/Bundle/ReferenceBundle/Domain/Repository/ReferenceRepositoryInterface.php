@@ -26,10 +26,7 @@ interface ReferenceRepositoryInterface
         string $referenceResourceId,
         string $referenceTitle,
         string $referenceProperty,
-        array $referenceViewAttributes = [],
-        ?string $referenceSecurityContext = null,
-        ?string $referenceSecurityObjectType = null,
-        ?string $referenceSecurityObjectId = null
+        array $referenceViewAttributes = []
     ): ReferenceInterface;
 
     public function add(ReferenceInterface $reference): void;
