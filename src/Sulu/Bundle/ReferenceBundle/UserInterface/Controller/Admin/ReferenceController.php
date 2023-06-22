@@ -97,8 +97,6 @@ class ReferenceController extends AbstractRestController implements ClassResourc
             PermissionTypes::VIEW
         );
 
-        /** @var string|null $locale */
-        $locale = $this->getRequestParameter($request, 'locale');
         /** @var string|null $resourceId */
         $resourceId = $this->getRequestParameter($request, 'resourceId');
         /** @var string|null $resourceKey */
@@ -112,28 +110,18 @@ class ReferenceController extends AbstractRestController implements ClassResourc
             ReferenceInterface::LIST_KEY
         );
 
-        $hiddenFieldDescriptors = $this->getHiddenFieldDescriptors();
         $requiredFieldDescriptors = $this->getRequiredFieldDescriptors();
         $fieldDescriptors = \array_merge(
-            $hiddenFieldDescriptors,
-            $requiredFieldDescriptors,
-            $configurationFieldDescriptors
+            $configurationFieldDescriptors,
+            $requiredFieldDescriptors
         );
 
         /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create($this->referenceClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
-        foreach ($hiddenFieldDescriptors as $fieldDescriptor) {
-            $listBuilder->addSelectField($fieldDescriptor);
-        }
-
         foreach ($requiredFieldDescriptors as $fieldDescriptor) {
             $listBuilder->addSelectField($fieldDescriptor);
-        }
-
-        if (null !== $locale) {
-            $this->addLocaleCondition($listBuilder, $fieldDescriptors, $locale);
         }
 
         if (null !== $resourceKey) {
@@ -185,18 +173,6 @@ class ReferenceController extends AbstractRestController implements ClassResourc
     }
 
     /**
-     * @return array<string, FieldDescriptorInterface>
-     */
-    private function getHiddenFieldDescriptors(): array
-    {
-        return [
-            'referenceSecurityContext' => $this->createFieldDescriptor('referenceSecurityContext'),
-            'referenceSecurityObjectType' => $this->createFieldDescriptor('referenceSecurityObjectType'),
-            'referenceSecurityObjectId' => $this->createFieldDescriptor('referenceSecurityObjectId'),
-        ];
-    }
-
-    /**
      * @param DoctrineJoinDescriptor[]|null $joins
      */
     private function createFieldDescriptor(
@@ -232,37 +208,10 @@ class ReferenceController extends AbstractRestController implements ClassResourc
         return [
             'resourceId' => $this->createFieldDescriptor('resourceId'),
             'resourceKey' => $this->createFieldDescriptor('resourceKey'),
-            'locale' => $this->createFieldDescriptor('locale'),
             'referenceResourceId' => $this->createFieldDescriptor('referenceResourceId'),
             'referenceResourceKey' => $this->createFieldDescriptor('referenceResourceKey'),
             'referenceViewAttributes' => $this->createFieldDescriptor('referenceViewAttributes'),
         ];
-    }
-
-    /**
-     * @param array<string, FieldDescriptorInterface> $fieldDescriptors
-     */
-    private function addLocaleCondition(
-        DoctrineListBuilder $listBuilder,
-        array $fieldDescriptors,
-        string $resourceLocale
-    ): void {
-        $listBuilder->addExpression(
-            $listBuilder->createOrExpression(
-                [
-                    $listBuilder->createWhereExpression(
-                        $fieldDescriptors['locale'],
-                        $resourceLocale,
-                        ListBuilderInterface::WHERE_COMPARATOR_EQUAL
-                    ),
-                    $listBuilder->createWhereExpression(
-                        $fieldDescriptors['locale'],
-                        null,
-                        ListBuilderInterface::WHERE_COMPARATOR_EQUAL
-                    ),
-                ]
-            )
-        );
     }
 
     /**
