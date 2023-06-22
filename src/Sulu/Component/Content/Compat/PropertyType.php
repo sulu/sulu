@@ -114,7 +114,12 @@ class PropertyType
             $propertyNames[] = $child->getName();
         }
 
-        throw new NoSuchPropertyException($name, $propertyNames);
+        throw new NoSuchPropertyException(\sprintf(
+            'Property "%s" not found in "%s". Available properties: "%s"',
+            $name,
+            $this->getName(),
+            \implode('", "', $propertyNames)
+        ));
     }
 
     public function __clone()
