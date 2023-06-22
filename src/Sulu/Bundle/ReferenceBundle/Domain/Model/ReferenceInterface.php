@@ -16,7 +16,7 @@ interface ReferenceInterface
     public const RESOURCE_KEY = 'references';
     public const LIST_KEY = 'references';
 
-    public function getId(): ?int;
+    public function getId(): int;
 
     public function getResourceKey(): string;
 

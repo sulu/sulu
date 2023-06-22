@@ -11,8 +11,17 @@
 
 namespace Sulu\Bundle\ReferenceBundle\Domain\Repository;
 
+use Sulu\Bundle\ReferenceBundle\Domain\Exception\ReferenceNotFoundException;
 use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
 
+/**
+ * @phpstan-type ReferenceFilters array{
+ *     id?: int,
+ *     referenceResourceKey?: string,
+ *     referenceResourceId?: string,
+ *     referenceLocale?: string,
+ * }
+ */
 interface ReferenceRepositoryInterface
 {
     /**
@@ -29,16 +38,24 @@ interface ReferenceRepositoryInterface
         array $referenceViewAttributes = []
     ): ReferenceInterface;
 
+    /**
+     * @param ReferenceFilters $filters
+     *
+     * @throws ReferenceNotFoundException
+     */
+    public function getOneBy(array $filters): ReferenceInterface;
+
+    /**
+     * @param ReferenceFilters $filters
+     */
+    public function findOneBy(array $filters): ?ReferenceInterface;
+
     public function add(ReferenceInterface $reference): void;
 
     public function remove(ReferenceInterface $reference): void;
 
     /**
-     * @param array{
-     *     referenceResourceKey?: string,
-     *     referenceResourceId?: string,
-     *     referenceLocale?: string,
-     * } $filters
+     * @param ReferenceFilters $filters
      */
     public function removeBy(array $filters): void;
 

@@ -40,13 +40,6 @@ class ReferenceTest extends TestCase
         static::assertSame('123-123', $reference->getResourceId());
     }
 
-    public function testGetSetLocale(): void
-    {
-        $reference = new Reference();
-        $reference->setReferenceLocale('de');
-        static::assertSame('de', $reference->getReferenceLocale());
-    }
-
     public function testGetSetReferenceResourceKey(): void
     {
         $reference = new Reference();
@@ -59,6 +52,13 @@ class ReferenceTest extends TestCase
         $reference = new Reference();
         $reference->setReferenceResourceId('321-123');
         static::assertSame('321-123', $reference->getReferenceResourceId());
+    }
+
+    public function testGetSetReferenceLocale(): void
+    {
+        $reference = new Reference();
+        $reference->setReferenceLocale('de');
+        static::assertSame('de', $reference->getReferenceLocale());
     }
 
     public function testGetSetReferenceViewAttributes(): void

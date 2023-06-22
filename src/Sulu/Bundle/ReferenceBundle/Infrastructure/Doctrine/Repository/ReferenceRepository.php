@@ -15,10 +15,15 @@ namespace Sulu\Bundle\ReferenceBundle\Infrastructure\Doctrine\Repository;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
+use Sulu\Bundle\ReferenceBundle\Domain\Exception\ReferenceNotFoundException;
 use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 
+/**
+ * @phpstan-import-type ReferenceFilters from ReferenceRepositoryInterface
+ */
 final class ReferenceRepository implements ReferenceRepositoryInterface
 {
     /**
@@ -89,21 +94,47 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
         $queryBuilder->getQuery()->execute();
     }
 
+    public function getOneBy(array $filters): ReferenceInterface
+    {
+        $queryBuilder = $this->createQueryBuilder($filters);
+
+        try {
+            /** @var ReferenceInterface */
+            return $queryBuilder->getQuery()->getSingleResult();
+        } catch (NoResultException $exception) {
+            throw new ReferenceNotFoundException($filters, $exception);
+        }
+    }
+
+    public function findOneBy(array $filters): ?ReferenceInterface
+    {
+        $queryBuilder = $this->createQueryBuilder($filters);
+
+        try {
+            /** @var ReferenceInterface */
+            return $queryBuilder->getQuery()->getSingleResult();
+        } catch (\Doctrine\ORM\NoResultException $exception) {
+            return null;
+        }
+    }
+
     public function flush(): void
     {
         $this->entityManager->flush();
     }
 
     /**
-     * @param array{
-     *     referenceResourceKey?: string,
-     *     referenceResourceId?: string,
-     *     referenceLocale?: string,
-     * } $filters
+     * @param ReferenceFilters $filters
      */
     private function createQueryBuilder(array $filters = []): QueryBuilder
     {
         $queryBuilder = $this->entityRepository->createQueryBuilder('reference');
+
+        $id = $filters['id'] ?? null;
+        if (null !== $id) {
+            $queryBuilder->andWhere('reference.id = :id')
+                ->setParameter('id', $id);
+        }
 
         $referenceResourceKey = $filters['referenceResourceKey'] ?? null;
         if (null !== $referenceResourceKey) {

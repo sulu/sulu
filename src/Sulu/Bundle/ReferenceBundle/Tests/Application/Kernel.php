@@ -25,7 +25,5 @@ class Kernel extends SuluTestKernel
         if (\file_exists($envSpecificFile)) {
             $loader->load($envSpecificFile);
         }
-
-        $loader->load(__DIR__ . '/config/services.xml');
     }
 }

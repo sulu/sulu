@@ -18,25 +18,27 @@ class ReferenceNotFoundException extends \Exception
     /**
      * @var mixed[]
      */
-    private $criteria;
+    private $filters;
 
     /**
-     * @param mixed[] $criteria
+     * @param array<string, mixed> $filters
      */
-    public function __construct(array $criteria)
+    public function __construct(array $filters, ?\Throwable $previous = null)
     {
-        $this->criteria = $criteria;
+        $this->filters = $filters;
 
         parent::__construct(
-            \sprintf('Reference with criteria (%s) not found.', \json_encode($this->criteria))
+            \sprintf('Reference with filters (%s) not found.', \json_encode($this->filters)),
+            0,
+            $previous
         );
     }
 
     /**
-     * @return mixed[]
+     * @return array<string, mixed>
      */
     public function getCriteria(): array
     {
-        return $this->criteria;
+        return $this->filters;
     }
 }
