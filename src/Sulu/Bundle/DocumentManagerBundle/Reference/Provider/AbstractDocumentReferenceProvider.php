@@ -45,8 +45,6 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
 
     private ReferenceRepositoryInterface $referenceRepository;
 
-    private DocumentInspector $documentInspector;
-
     private string $structureType;
 
     protected string $referenceSecurityContext;
@@ -56,7 +54,6 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
         ReferenceRepositoryInterface $referenceRepository,
-        DocumentInspector $documentInspector,
         string $structureType,
         string $referenceSecurityContext
     ) {
@@ -64,7 +61,6 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
         $this->structureManager = $structureManager;
         $this->extensionManager = $extensionManager;
         $this->referenceRepository = $referenceRepository;
-        $this->documentInspector = $documentInspector;
         $this->structureType = $structureType;
         $this->referenceSecurityContext = $referenceSecurityContext;
     }

@@ -7,7 +7,6 @@
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu_page.extension.manager"/>
             <argument type="service" id="sulu_reference.reference_repository"/>
-            <argument type="service" id="sulu_document_manager.document_inspector"/>
 
             <tag name="sulu_document_manager.reference_provider" />
         </service>

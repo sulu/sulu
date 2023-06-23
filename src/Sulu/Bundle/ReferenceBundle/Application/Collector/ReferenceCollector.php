@@ -108,7 +108,6 @@ class ReferenceCollector implements ReferenceCollectorInterface
         }
 
         $this->referenceCollection->add($reference);
-        $this->referenceRepository->add($reference);
 
         return $reference;
     }
@@ -120,6 +119,12 @@ class ReferenceCollector implements ReferenceCollectorInterface
             'referenceResourceId' => $this->referenceResourceId,
             'referenceResourceLocale' => $this->referenceLocale,
         ]);
+
+        foreach ($this->referenceCollection as $reference) {
+            $this->referenceRepository->add($reference);
+        }
+
+        $this->referenceCollection->clear();
 
         $this->referenceRepository->flush();
     }
