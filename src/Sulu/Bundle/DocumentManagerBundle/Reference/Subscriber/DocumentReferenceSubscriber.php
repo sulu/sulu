@@ -18,6 +18,7 @@ use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
+use Sulu\Component\DocumentManager\Event\RemoveLocaleEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -48,6 +49,7 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface
             Events::PUBLISH => 'onPublish',
             Events::PERSIST => 'onPersist',
             Events::REMOVE => 'onRemove',
+            Events::REMOVE_LOCALE => 'onRemoveLocale',
         ];
     }
 
@@ -92,6 +94,19 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface
         }
 
         $this->getProvider($document)?->removeReferences($document);
+    }
+
+    public function onRemoveLocale(RemoveLocaleEvent $event): void
+    {
+        $document = $event->getDocument();
+
+        if (!$document instanceof StructureBehavior
+            || !$document instanceof UuidBehavior
+        ) {
+            return;
+        }
+
+        $this->getProvider($document)?->removeReferences($document, $event->getLocale());
     }
 
     private function getProvider(StructureBehavior $document): ?DocumentReferenceProviderInterface
