@@ -194,7 +194,7 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
     public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
     {
         $data = $propertyValue->getValue();
-        if (!\is_array($data) && !isset($data['id'])) {
+        if (!\is_array($data) || !isset($data['id'])) {
             return;
         }
 
