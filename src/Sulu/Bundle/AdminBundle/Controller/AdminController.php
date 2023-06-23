@@ -342,7 +342,7 @@ class AdminController
 
         $context = new Context();
         $context->addGroup('Default');
-        if (filter_var($metadataOptions['onlyKeys'] ?? 'false', FILTER_VALIDATE_BOOLEAN) === true) {
+        if (true === \filter_var($metadataOptions['onlyKeys'] ?? 'false', \FILTER_VALIDATE_BOOLEAN)) {
             $context->addGroup('admin_form_metadata_keys_only');
         }
 
