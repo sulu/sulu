@@ -125,11 +125,11 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
 
     public function removeReferences(UuidBehavior $document, ?string $locale = null): void
     {
-        $this->referenceRepository->removeBy([
+        $this->referenceRepository->removeBy(\array_filter([
             'referenceResourceKey' => $this->getReferenceResourceKey($document),
             'referenceResourceId' => $document->getUuid(),
             'referenceLocale' => $locale,
-        ]);
+        ]));
     }
 
     /**
