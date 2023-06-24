@@ -59,5 +59,8 @@ interface ReferenceRepositoryInterface
      */
     public function removeBy(array $filters): void;
 
+    /**
+     * @internal
+     */
     public function flush(): void;
 }

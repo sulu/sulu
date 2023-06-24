@@ -49,6 +49,7 @@
         <service id="sulu_reference.refresh_command"
                  class="Sulu\Bundle\ReferenceBundle\UserInterface\Command\RefreshCommand">
             <argument type="tagged_iterator" tag="sulu_reference.refresher"/>
+            <argument type="service" id="sulu_reference.reference_repository"/>
 
             <tag name="console.command"/>
         </service>

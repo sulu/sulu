@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ReferenceBundle\UserInterface\Command;
 
 use Sulu\Bundle\ReferenceBundle\Application\Refresh\ReferenceRefresherInterface;
+use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,6 +33,7 @@ class RefreshCommand extends Command
      */
     public function __construct(
         private iterable $referenceRefreshers,
+        private ReferenceRepositoryInterface $referenceRepository
     ) {
         parent::__construct();
     }
@@ -63,12 +65,18 @@ class RefreshCommand extends Command
             $ui->section('Refresh ' . $resourceKey);
             $ui->progressStart();
 
+            $counter = 0;
             foreach ($referenceRefreshers as $referenceRefresher) {
                 foreach ($referenceRefresher->refresh() as $object) {
+                    if (0 === $counter % 100) {
+                        $this->referenceRepository->flush();
+                    }
+
                     $ui->progressAdvance();
                 }
             }
 
+            $this->referenceRepository->flush();
             $ui->progressFinish();
         }
 
