@@ -43,6 +43,16 @@ class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
     }
 
     /**
+     * @return array<class-string, bool>
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [
+            FlattenException::class => false,
+        ];
+    }
+
+    /**
      * @return array<int|string, mixed>
      */
     public function normalize($exception, $format = null, array $context = [])
