@@ -200,7 +200,7 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
         return $this->documentReferenceProviders[$documentResourcesKey] ?? null;
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->persistDocuments = [];
         $this->publishDocuments = [];
