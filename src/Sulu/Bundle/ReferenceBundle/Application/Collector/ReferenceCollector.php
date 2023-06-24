@@ -125,8 +125,6 @@ class ReferenceCollector implements ReferenceCollectorInterface
         }
 
         $this->referenceCollection->clear();
-
-        $this->referenceRepository->flush();
     }
 
     public function getReference(ReferenceInterface $reference): ?ReferenceInterface

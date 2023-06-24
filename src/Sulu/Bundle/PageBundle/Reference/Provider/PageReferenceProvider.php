@@ -33,14 +33,12 @@ class PageReferenceProvider extends AbstractDocumentReferenceProvider
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
         ReferenceRepositoryInterface $referenceRepository,
-        DocumentInspector $documentInspector,
     ) {
         parent::__construct(
             $contentTypeManager,
             $structureManager,
             $extensionManager,
             $referenceRepository,
-            $documentInspector,
             Structure::TYPE_PAGE,
             '' // TODO check what we need here
         );
