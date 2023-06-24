@@ -65,7 +65,7 @@ class TrashItemControllerTest extends SuluTestCase
 
     public function testCgetAction(): void
     {
-        static::setUpUserRole();
+        self::setUpUserRole();
 
         static::createTrashItem(
             'pages',
@@ -106,7 +106,7 @@ class TrashItemControllerTest extends SuluTestCase
     {
         $accessControlManager = static::getContainer()->get('sulu_security.access_control_manager');
 
-        $role = static::setUpUserRole();
+        $role = self::setUpUserRole();
 
         $count = 0;
         foreach ([null, self::GRANTED_CONTEXT, self::NOT_GRANTED_CONTEXT] as $resourceSecurityContext) {
@@ -162,9 +162,9 @@ class TrashItemControllerTest extends SuluTestCase
 
     public function testGetActionWithPermissionCheck(): void
     {
-        static::setUpUserRole();
+        self::setUpUserRole();
         // Needed to rename the username to bypass TestVoter.
-        static::renameUserUsername(self::ALT_USER_USERNAME);
+        self::renameUserUsername(self::ALT_USER_USERNAME);
 
         $trashItem = static::createTrashItem();
         $id = $trashItem->getId();
@@ -215,9 +215,9 @@ class TrashItemControllerTest extends SuluTestCase
 
     public function testPostTriggerActionRestoreWithPermissionCheck(): void
     {
-        static::setUpUserRole();
+        self::setUpUserRole();
         // Needed to rename the username to bypass TestVoter.
-        static::renameUserUsername(self::ALT_USER_USERNAME);
+        self::renameUserUsername(self::ALT_USER_USERNAME);
 
         $trashItem = static::createTrashItem();
         $id = $trashItem->getId();
@@ -282,7 +282,7 @@ class TrashItemControllerTest extends SuluTestCase
         return $role;
     }
 
-    public static function renameUserUsername(string $username)
+    private static function renameUserUsername(string $username): void
     {
         $entityManager = static::getEntityManager();
         $user = static::getTestUser();
