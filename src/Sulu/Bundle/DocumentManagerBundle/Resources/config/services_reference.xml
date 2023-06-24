@@ -8,6 +8,7 @@
             <argument type="service" id="sulu_reference.reference_repository"/>
 
             <tag name="sulu_document_manager.event_subscriber" />
+            <tag name="kernel.reset" method="reset" />
         </service>
     </services>
 </container>

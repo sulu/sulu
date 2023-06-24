@@ -24,11 +24,14 @@ use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\RemoveLocaleEvent;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
+ * @final
+ *
  * @internal
  */
-class DocumentReferenceSubscriber implements EventSubscriberInterface
+class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInterface
 {
     /**
      * @var array<string, DocumentReferenceProviderInterface>
@@ -156,9 +159,7 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface
 
     public function onClear(ClearEvent $event): void
     {
-        $this->persistDocuments = [];
-        $this->removeDocuments = [];
-        $this->publishDocuments = [];
+        $this->reset();
     }
 
     public function onFlush(FlushEvent $event): void
@@ -184,9 +185,7 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface
             );
         }
 
-        $this->persistDocuments = [];
-        $this->publishDocuments = [];
-        $this->removeDocuments = [];
+        $this->reset();
 
         $this->referenceRepository->flush();
     }
@@ -199,5 +198,12 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface
             : '';
 
         return $this->documentReferenceProviders[$documentResourcesKey] ?? null;
+    }
+
+    public function reset()
+    {
+        $this->persistDocuments = [];
+        $this->publishDocuments = [];
+        $this->removeDocuments = [];
     }
 }
