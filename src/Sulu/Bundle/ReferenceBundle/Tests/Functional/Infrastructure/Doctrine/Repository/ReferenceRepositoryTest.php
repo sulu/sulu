@@ -54,7 +54,7 @@ class ReferenceRepositoryTest extends SuluTestCase
 
     public function testFindOneByNotExist(): void
     {
-        $this->assertNull($this->referenceRepository->findOneBy(['id' => \PHP_INT_MAX]));
+        $this->assertNull($this->referenceRepository->findOneBy(['id' => 2147483647]));
     }
 
     public function testFindOneByExist(): void
