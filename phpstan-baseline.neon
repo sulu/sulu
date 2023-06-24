@@ -36131,11 +36131,6 @@ parameters:
 			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
 
 		-
-			message: "#^Unsafe call to private method Sulu\\\\Bundle\\\\TrashBundle\\\\Tests\\\\Functional\\\\UserInterface\\\\Controller\\\\Admin\\\\TrashItemControllerTest\\:\\:setUpUserRole\\(\\) through static\\:\\:\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\TrashBundle\\\\UserInterface\\\\Controller\\\\Admin\\\\TrashItemController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
