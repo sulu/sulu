@@ -42,6 +42,9 @@ class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
         $this->translator = $translator;
     }
 
+    /**
+     * @return array<class-string, bool>  
+     */
     public function getSupportedTypes(?string $format): array
     {
         return [
