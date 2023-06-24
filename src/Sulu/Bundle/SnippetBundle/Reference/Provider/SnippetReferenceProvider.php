@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\SnippetBundle\Reference\Provider;
 
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Reference\Provider\AbstractDocumentReferenceProvider;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;

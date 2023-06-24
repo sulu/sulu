@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Reference\Provider;
 
-use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollector;
 use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
