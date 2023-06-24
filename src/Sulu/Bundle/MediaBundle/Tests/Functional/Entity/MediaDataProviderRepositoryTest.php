@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Functional\Entity;
+namespace Sulu\Bundle\MediaBundle\Tests\Functional\Entity;
 
 use Doctrine\ORM\EntityManager;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
@@ -171,7 +171,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
 
     private function createTag($name)
     {
-        $tag = $this->em->getRepository(Tag::class)->createNew();
+        $tag = $this->em->getRepository(TagInterface::class)->createNew();
         $tag->setName($name);
 
         $this->em->persist($tag);
