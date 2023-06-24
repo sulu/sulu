@@ -87,9 +87,9 @@ test('Should return the fallback-locale as content-locale if the user is not set
 
 test('Should load and set first default-localization as content-locale when user is set', () => {
     localizationStore.localizations = [
-        {locale: 'cz', country: '', language: 'cz', default: '', shadow: '', xDefault: ''},
-        {locale: 'ru', country: '', language: 'ru', default: 'true', shadow: '', xDefault: ''},
-        {locale: 'de', country: '', language: 'de', default: '', shadow: '', xDefault: ''},
+        {locale: 'cz', country: '', language: 'cz', default: '', shadow: ''},
+        {locale: 'ru', country: '', language: 'ru', default: 'true', shadow: ''},
+        {locale: 'de', country: '', language: 'de', default: '', shadow: ''},
     ];
 
     userStore.setUser({
@@ -105,9 +105,9 @@ test('Should load and set first default-localization as content-locale when user
 
 test('Should load and set first localization as content-locale if there is no default-localiztion', () => {
     localizationStore.localizations = [
-        {locale: 'cz', country: '', language: 'cz', default: '', shadow: '', xDefault: ''},
-        {locale: 'ru', country: '', language: 'ru', default: '', shadow: '', xDefault: ''},
-        {locale: 'de', country: '', language: 'de', default: '', shadow: '', xDefault: ''},
+        {locale: 'cz', country: '', language: 'cz', default: '', shadow: ''},
+        {locale: 'ru', country: '', language: 'ru', default: '', shadow: ''},
+        {locale: 'de', country: '', language: 'de', default: '', shadow: ''},
     ];
 
     userStore.setUser({

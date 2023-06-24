@@ -54,7 +54,6 @@ class MetaTwigExtensionTest extends TestCase
 
         $this->portal = new Portal();
         $this->portal->setDefaultLocalization($locale);
-        $this->portal->setXDefaultLocalization($locale);
 
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
         $this->requestAnalyzer->getPortal()->willReturn($this->portal);
@@ -105,7 +104,7 @@ class MetaTwigExtensionTest extends TestCase
         $locale = new Localization();
         $locale->setLanguage('de');
 
-        $this->portal->setXDefaultLocalization($locale);
+        $this->portal->setDefaultLocalization($locale);
 
         $extension = new MetaTwigExtension(
             $this->requestAnalyzer->reveal(),

@@ -163,7 +163,7 @@ class XmlSitemapRendererTest extends TestCase
         $portal = $this->prophesize(Portal::class);
         $portal->getKey()->willReturn('sulu_io');
         $portal->getWebspace()->willReturn($webspace->reveal());
-        $portal->getXDefaultLocalization()->willReturn(new Localization('de'));
+        $portal->getDefaultLocalization()->willReturn(new Localization('de'));
 
         $this->engine->render(
             '@SuluWebsite/Sitemap/sitemap.xml.twig',

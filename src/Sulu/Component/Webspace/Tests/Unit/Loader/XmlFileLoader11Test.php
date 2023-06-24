@@ -487,26 +487,6 @@ class XmlFileLoader11Test extends WebspaceTestCase
         $this->assertEquals('sulu-with-slash.lo', $environmentDev->getUrls()[1]->getUrl());
     }
 
-    public function testXDefaulLocale(): void
-    {
-        $webspace = $this->loader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Webspace/xdefault/sulu.io_xdefault_locale.xml'
-        );
-
-        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocale());
-        $this->assertEquals('en_us', $webspace->getPortals()[0]->getXDefaultLocalization()->getLocale());
-    }
-
-    public function testXDefaulLocaleNotExists(): void
-    {
-        $webspace = $this->loader->load(
-            $this->getResourceDirectory() . '/DataFixtures/Webspace/xdefault/sulu.io_no_xdefault_locale.xml'
-        );
-
-        $this->assertEquals('de_at', $webspace->getPortals()[0]->getDefaultLocalization()->getLocale());
-        $this->assertEquals('de_at', $webspace->getPortals()[0]->getXDefaultLocalization()->getLocale());
-    }
-
     public function testInvalidCustomUrl(): void
     {
         $this->expectException(InvalidCustomUrlException::class);

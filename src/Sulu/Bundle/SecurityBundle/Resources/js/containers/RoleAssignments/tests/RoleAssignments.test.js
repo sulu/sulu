@@ -52,7 +52,6 @@ test('Render component without data', () => {
             locale: 'en',
             localization: 'en',
             shadow: '',
-            xDefault: '',
         },
         {
             country: '',
@@ -61,7 +60,6 @@ test('Render component without data', () => {
             locale: 'de',
             localization: 'de',
             shadow: '',
-            xDefault: '',
         },
     ];
     const roleAssignments = mount(
@@ -104,7 +102,6 @@ test('Render component', () => {
             locale: 'en',
             localization: 'en',
             shadow: '',
-            xDefault: '',
         },
         {
             country: '',
@@ -113,7 +110,6 @@ test('Render component', () => {
             locale: 'de',
             localization: 'de',
             shadow: '',
-            xDefault: '',
         },
     ];
 
@@ -157,7 +153,6 @@ test('Render component in disabled state', () => {
             locale: 'en',
             localization: 'en',
             shadow: '',
-            xDefault: '',
         },
         {
             country: '',
@@ -166,7 +161,6 @@ test('Render component in disabled state', () => {
             locale: 'de',
             localization: 'de',
             shadow: '',
-            xDefault: '',
         },
     ];
 
@@ -211,7 +205,6 @@ test('Should trigger onChange correctly when MultiSelect for roles changes', () 
             locale: 'en',
             localization: 'en',
             shadow: '',
-            xDefault: '',
         },
         {
             country: '',
@@ -220,7 +213,6 @@ test('Should trigger onChange correctly when MultiSelect for roles changes', () 
             locale: 'de',
             localization: 'de',
             shadow: '',
-            xDefault: '',
         },
     ];
 
@@ -315,7 +307,6 @@ test('Should trigger onChange correctly when RoleAssignment changes', () => {
             locale: 'en',
             localization: 'en',
             shadow: '',
-            xDefault: '',
         },
         {
             country: '',
@@ -324,7 +315,6 @@ test('Should trigger onChange correctly when RoleAssignment changes', () => {
             locale: 'de',
             localization: 'de',
             shadow: '',
-            xDefault: '',
         },
     ];
 

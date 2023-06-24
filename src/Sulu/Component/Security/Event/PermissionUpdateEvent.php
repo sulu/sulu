@@ -66,20 +66,6 @@ class PermissionUpdateEvent extends Event
     }
 
     /**
-     * @deprecated
-     *
-     * @see PermissionUpdateEvent::getPermissions()
-     *
-     * Returns the security identifier for which the permissions have been updated.
-     *
-     * @return mixed[]
-     */
-    public function getSecurityIdentity()
-    {
-        return $this->permissions;
-    }
-
-    /**
      * @return mixed[]
      */
     public function getPermissions()

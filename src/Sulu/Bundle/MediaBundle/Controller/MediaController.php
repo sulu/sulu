@@ -58,13 +58,6 @@ class MediaController extends AbstractMediaController implements
     use RequestParametersTrait;
 
     /**
-     * @deprecated Use the MediaInterface::RESOURCE_KEY constant instead
-     *
-     * @var string
-     */
-    protected static $entityKey = MediaInterface::RESOURCE_KEY;
-
-    /**
      * @var MediaManagerInterface
      */
     private $mediaManager;

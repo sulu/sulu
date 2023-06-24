@@ -28,7 +28,6 @@ test('Render component', () => {
             locale: 'en',
             localization: 'en',
             shadow: '',
-            xDefault: '',
         },
         {
             country: '',
@@ -37,7 +36,6 @@ test('Render component', () => {
             locale: 'de',
             localization: 'de',
             shadow: '',
-            xDefault: '',
         },
     ];
 
@@ -69,7 +67,6 @@ test('Render component in disabled state', () => {
             locale: 'en',
             localization: 'en',
             shadow: '',
-            xDefault: '',
         },
         {
             country: '',
@@ -78,7 +75,6 @@ test('Render component in disabled state', () => {
             locale: 'de',
             localization: 'de',
             shadow: '',
-            xDefault: '',
         },
     ];
 
@@ -111,7 +107,6 @@ test('The component should trigger the change callback', () => {
             locale: 'en',
             localization: 'en',
             shadow: '',
-            xDefault: '',
         },
         {
             country: '',
@@ -120,7 +115,6 @@ test('The component should trigger the change callback', () => {
             locale: 'de',
             localization: 'de',
             shadow: '',
-            xDefault: '',
         },
     ];
 
