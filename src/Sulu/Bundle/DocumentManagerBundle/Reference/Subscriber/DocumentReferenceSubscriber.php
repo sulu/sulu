@@ -86,6 +86,7 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
             Events::REMOVE => 'onRemove',
             Events::REMOVE_LOCALE => 'onRemoveLocale',
             Events::CLEAR => 'onClear',
+            Events::FLUSH => 'onFlush'
         ];
     }
 
