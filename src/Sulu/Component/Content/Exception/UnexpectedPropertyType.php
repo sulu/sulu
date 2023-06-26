@@ -23,12 +23,18 @@ class UnexpectedPropertyType extends \Exception
         );
     }
 
-    public function getProperty(): PropertyInterface
+    /**
+     * @return PropertyInterface
+     */
+    public function getProperty()
     {
         return $this->property;
     }
 
-    public function getContentType(): ContentTypeInterface
+    /**
+     * @return ContentTypeInterface
+     */
+    public function getContentType()
     {
         return $this->contentType;
     }
