@@ -45,7 +45,7 @@ class UpdateBuildCommand extends Command
 
     public const ASSETS_DIR = \DIRECTORY_SEPARATOR . 'assets' . \DIRECTORY_SEPARATOR . 'admin' . \DIRECTORY_SEPARATOR;
 
-    public const BUILD_DIR = \DIRECTORY_SEPARATOR . 'public' . \DIRECTORY_SEPARATOR . 'build' . \DIRECTORY_SEPARATOR . 'admin';
+    public const BUILD_DIR = \DIRECTORY_SEPARATOR . 'public' . \DIRECTORY_SEPARATOR . 'dist' . \DIRECTORY_SEPARATOR . 'admin';
 
     public const REPOSITORY_NAME = 'skeleton';
 
@@ -203,6 +203,30 @@ class UpdateBuildCommand extends Command
 
         $ui->section('Cleanup previously installed "node_modules" folders');
         $this->cleanupPreviouslyInstalledDependencies();
+
+        $ui->section('Checking: old build directories');
+
+        $oldBuildDirs = [
+            \DIRECTORY_SEPARATOR . 'public' . \DIRECTORY_SEPARATOR . 'build' . \DIRECTORY_SEPARATOR . 'admin',
+        ];
+
+        foreach ($oldBuildDirs as $oldBuildDir) {
+            if (!$filesystem->exists($this->projectDir . $oldBuildDir)) {
+                continue;
+            }
+
+            if ('y' === \strtolower(
+                $ui->ask(\sprintf('Old admin build directory (%s) detected, move to new directory (%s))?', $oldBuildDir, static::BUILD_DIR), 'y')
+            )) {
+                if ($filesystem->exists($this->projectDir . static::BUILD_DIR)) {
+                    $filesystem->remove($this->projectDir . $oldBuildDir);
+
+                    continue;
+                }
+
+                $filesystem->rename($this->projectDir . $oldBuildDir, $this->projectDir . static::BUILD_DIR);
+            }
+        }
 
         if ($needManualBuild) {
             if ($isTaggedVersion) {

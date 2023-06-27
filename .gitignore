@@ -17,6 +17,7 @@ phpunit.stdout
 /public/bundles
 /public/uploads
 /public/build
+/public/dist
 
 # composer
 /composer.phar

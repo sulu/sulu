@@ -8,7 +8,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
     env = env ? env : {};
     argv = argv ? argv : {};
 
-    const outputPath = env && env.output_path ? env.output_path : path.join('build', 'admin');
+    const outputPath = env && env.output_path ? env.output_path : path.join('dist', 'admin');
     // eslint-disable-next-line no-undef
     const projectRootPath = env && env.project_root_path ? env.project_root_path : __dirname;
     const nodeModulesPath = env && env.node_modules_path

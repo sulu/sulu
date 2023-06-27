@@ -2,7 +2,7 @@
 **/vendor/
 **/flow-typed/
 styleguide/
-**/build/admin/
+**/dist/admin/
 
 .git/
 .github/
