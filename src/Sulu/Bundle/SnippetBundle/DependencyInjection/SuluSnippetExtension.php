@@ -45,6 +45,10 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
                                 'list' => 'sulu_snippet.get_snippets',
                                 'detail' => 'sulu_snippet.get_snippet',
                             ],
+                            'views' => [
+                                'list' => SnippetAdmin::LIST_VIEW,
+                                'detail' => SnippetAdmin::EDIT_FORM_VIEW,
+                            ],
                         ],
                         'snippet_areas' => [
                             'routes' => [
