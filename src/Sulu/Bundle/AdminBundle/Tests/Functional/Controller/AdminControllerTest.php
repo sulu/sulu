@@ -141,4 +141,28 @@ class AdminControllerTest extends SuluTestCase
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
+
+    public function testGetMetaDataKeysOnly(): void
+    {
+        $this->initPhpcr();
+        $collectionType = new LoadCollectionTypes();
+        $collectionType->load($this->getEntityManager());
+
+        $this->client->request('GET', '/admin/metadata/form/page?onlyKeys=true');
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $json = $response->getContent();
+        $this->assertIsString($json);
+
+        $metaData = \json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
+
+        $this->assertEquals([
+            'types' => [
+                'default' => [],
+                'overview' => [],
+            ],
+            'defaultType' => null,
+        ], $metaData);
+    }
 }
