@@ -227,15 +227,17 @@ class TrashItemController extends AbstractRestController implements ClassResourc
 
         $trashItem = $this->trashItemRepository->getOneBy(['id' => $id]);
 
-        $this->securityChecker->checkPermission(
-            new SecurityCondition(
-                $trashItem->getResourceSecurityContext(),
-                null,
-                $trashItem->getResourceSecurityObjectType(),
-                $trashItem->getResourceSecurityObjectId()
-            ),
-            PermissionTypes::VIEW
-        );
+        if (null !== $trashItem->getResourceSecurityContext()) {
+            $this->securityChecker->checkPermission(
+                new SecurityCondition(
+                    $trashItem->getResourceSecurityContext(),
+                    null,
+                    $trashItem->getResourceSecurityObjectType(),
+                    $trashItem->getResourceSecurityObjectId()
+                ),
+                PermissionTypes::VIEW
+            );
+        }
 
         $context = new Context();
         $context->setGroups(['trash_item_admin_api']);
@@ -287,15 +289,17 @@ class TrashItemController extends AbstractRestController implements ClassResourc
     {
         $trashItem = $this->trashItemRepository->getOneBy(['id' => $id]);
 
-        $this->securityChecker->checkPermission(
-            new SecurityCondition(
-                $trashItem->getResourceSecurityContext(),
-                null,
-                $trashItem->getResourceSecurityObjectType(),
-                $trashItem->getResourceSecurityObjectId()
-            ),
-            PermissionTypes::ADD
-        );
+        if (null !== $trashItem->getResourceSecurityContext()) {
+            $this->securityChecker->checkPermission(
+                new SecurityCondition(
+                    $trashItem->getResourceSecurityContext(),
+                    null,
+                    $trashItem->getResourceSecurityObjectType(),
+                    $trashItem->getResourceSecurityObjectId()
+                ),
+                PermissionTypes::ADD
+            );
+        }
 
         $restoredObject = $this->trashManager->restore($trashItem, $restoreFormData);
         $this->entityManager->flush();
