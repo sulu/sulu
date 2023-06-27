@@ -132,7 +132,6 @@ class ReferenceCollectorTest extends TestCase
     ): ReferenceCollector {
         return new ReferenceCollector(
             $this->referenceRepository->reveal(),
-
             $referenceResourceKey,
             $referenceResourceId,
             $referenceLocale,
