@@ -14,17 +14,15 @@ namespace Sulu\Component\Content\Exception;
 class ReservedPropertyNameException extends InvalidFieldMetadataException
 {
     /**
-     * @var string
+     * @param string $blockPropertyName
+     * @param string $propertyName
+     * @param string $formKey
      */
-    private $blockPropertyName;
-
-    /**
-     * @var string
-     */
-    private $propertyName;
-
-    public function __construct($blockPropertyName, $propertyName, $formKey)
-    {
+    public function __construct(
+        private $blockPropertyName,
+        private $propertyName,
+        $formKey
+    ) {
         $this->blockPropertyName = $blockPropertyName;
         $this->propertyName = $propertyName;
 
@@ -39,11 +37,17 @@ class ReservedPropertyNameException extends InvalidFieldMetadataException
         );
     }
 
+    /**
+     * @return string
+     */
     public function getBlockPropertyName()
     {
         return $this->blockPropertyName;
     }
 
+    /**
+     * @return string
+     */
     public function getPropertyName()
     {
         return $this->propertyName;

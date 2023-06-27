@@ -17,17 +17,14 @@ use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 class ResourceLocatorAlreadyExistsException extends \Exception implements RestExceptionInterface, TranslationErrorMessageExceptionInterface
 {
     /**
-     * @var string
+     * @param string $resourceLocator
+     * @param string $path
      */
-    private $resourceLocator;
-
-    /**
-     * @var string
-     */
-    private $path;
-
-    public function __construct($resourceLocator, $path, ?\Throwable $previous = null)
-    {
+    public function __construct(
+        private $resourceLocator,
+        private $path,
+        ?\Throwable $previous = null
+    ) {
         $this->resourceLocator = $resourceLocator;
         $this->path = $path;
 

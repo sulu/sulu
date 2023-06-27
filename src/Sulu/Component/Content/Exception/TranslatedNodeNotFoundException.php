@@ -14,20 +14,12 @@ namespace Sulu\Component\Content\Exception;
 class TranslatedNodeNotFoundException extends \Exception
 {
     /**
-     * @var string
+     * @param string $uuid
+     * @param string $languageCode
      */
-    private $uuid;
-
-    /**
-     * @var string
-     */
-    private $languageCode;
-
-    public function __construct($uuid, $languageCode)
+    public function __construct(private $uuid, private $languageCode)
     {
         parent::__construct(\sprintf('Node "%s" not found in localization "%s"', $uuid, $languageCode));
-        $this->uuid = $uuid;
-        $this->languageCode = $languageCode;
     }
 
     /**

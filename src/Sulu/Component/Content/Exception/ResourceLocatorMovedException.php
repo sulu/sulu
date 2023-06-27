@@ -16,25 +16,13 @@ use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 class ResourceLocatorMovedException extends \Exception implements TranslationErrorMessageExceptionInterface
 {
     /**
-     * new resource locator after move.
-     *
-     * @var string
+     * @param string $newResourceLocator new resource locator after move
+     * @param string $newResourceLocatorUuid uuid of new path node
      */
-    private $newResourceLocator;
-
-    /**
-     * uuid of new path node.
-     *
-     * @var string
-     */
-    private $newResourceLocatorUuid;
-
-    public function __construct($newResourceLocator, $newResourceLocatorUuid)
+    public function __construct(private $newResourceLocator, private $newResourceLocatorUuid)
     {
-        $this->newResourceLocator = $newResourceLocator;
-        $this->newResourceLocatorUuid = $newResourceLocatorUuid;
         parent::__construct(
-            \sprintf('Resource Locator was moved to "%s" (%s)', $newResourceLocator, $newResourceLocatorUuid)
+            \sprintf('Resource Locator was moved to "%s" (%s)', $this->newResourceLocator, $this->newResourceLocatorUuid)
         );
     }
 

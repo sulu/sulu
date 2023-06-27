@@ -17,28 +17,15 @@ namespace Sulu\Component\Rest\Exception;
 class InvalidArgumentException extends RestException
 {
     /**
-     * The type of the entity, which was concerned.
-     *
-     * @var string
-     */
-    protected $entity;
-
-    /**
-     * The argument of the entity, which was not passed.
-     *
-     * @var string
-     */
-    protected $argument;
-
-    /**
      * @param string $entity The type of the entity
      * @param string $argument The argument of the entity, which was invalid
      * @param null|string $customMessage
      */
-    public function __construct($entity, $argument, $customMessage = null)
-    {
-        $this->entity = $entity;
-        $this->argument = $argument;
+    public function __construct(
+        protected $entity,
+        protected $argument,
+        $customMessage = null
+    ) {
         $message = 'The "' . $entity . '"-entity requires a valid "' . $argument . '"-argument. ';
         if (null != $customMessage) {
             $message .= $customMessage;

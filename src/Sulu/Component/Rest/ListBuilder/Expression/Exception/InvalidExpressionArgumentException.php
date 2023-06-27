@@ -17,28 +17,15 @@ namespace Sulu\Component\Rest\ListBuilder\Expression\Exception;
 class InvalidExpressionArgumentException extends ExpressionException
 {
     /**
-     * The argument of the expression, which was invalid.
-     *
-     * @var string
-     */
-    protected $argument;
-
-    /**
-     * The expression type.
-     *
-     * @var string
-     */
-    protected $expression;
-
-    /**
      * @param string $expression The type of the expression
      * @param string $argument The argument of the expression, which was invalid
      * @param null|string $customMessage
      */
-    public function __construct($expression, $argument, $customMessage = null)
-    {
-        $this->expression = $expression;
-        $this->argument = $argument;
+    public function __construct(
+        protected $expression,
+        protected $argument,
+        $customMessage = null
+    ) {
         $message = 'The "' . $expression . '"-expression requires a valid "' . $argument . '"-argument';
         if (null != $customMessage) {
             $message .= $customMessage;

@@ -17,15 +17,11 @@ namespace Sulu\Component\Content\Exception;
 class ResourceLocatorNotValidException extends \Exception
 {
     /**
-     * @var string
+     * @param string $resourceLocator
      */
-    private $resourceLocator;
-
-    public function __construct($resourceLocator)
+    public function __construct(private $resourceLocator)
     {
         parent::__construct(\sprintf("ResourceLocator '%s' is not valid", $resourceLocator));
-
-        $this->resourceLocator = $resourceLocator;
     }
 
     /**

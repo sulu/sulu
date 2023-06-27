@@ -16,6 +16,9 @@ namespace Sulu\Component\Content\Exception;
  */
 class InvalidOrderPositionException extends \Exception
 {
+    /**
+     * @param string $message
+     */
     public function __construct($message = 'The position at which a node should get arranged must exist')
     {
         parent::__construct($message);

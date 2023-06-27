@@ -16,30 +16,14 @@ namespace Sulu\Component\Rest\Exception;
 class ReferencingResourcesFoundException extends \Exception implements ReferencingResourcesFoundExceptionInterface
 {
     /**
-     * @var array{id: int|string, resourceKey: string}
-     */
-    private $resource;
-
-    /**
-     * @var array<array{id: int|string, resourceKey: string, title: string|null}>
-     */
-    private $referencingResources;
-
-    /**
-     * @var int
-     */
-    private $referencingResourcesCount;
-
-    /**
      * @param array{id: int|string, resourceKey: string} $resource
      * @param array<array{id: int|string, resourceKey: string, title: string|null}> $referencingResources
      */
-    public function __construct(array $resource, array $referencingResources, int $referencingResourcesCount)
-    {
-        $this->resource = $resource;
-        $this->referencingResources = $referencingResources;
-        $this->referencingResourcesCount = $referencingResourcesCount;
-
+    public function __construct(
+        private array $resource,
+        private array $referencingResources,
+        private int $referencingResourcesCount
+    ) {
         parent::__construct(
             \sprintf(
                 'Found %d referencing resources.',

@@ -17,24 +17,10 @@ namespace Sulu\Component\Rest\Exception;
 class EntityNotFoundException extends RestException
 {
     /**
-     * The type of the entity, which was not found.
-     *
-     * @var string
-     */
-    protected $entity;
-
-    /**
-     * The id of the entity, which was not found.
-     *
-     * @var int|string
-     */
-    protected $id;
-
-    /**
      * @param string $entity The type of the entity, which was not found
      * @param int|string $id The id of the entity, which was not found
      */
-    public function __construct($entity, $id, $previous = null)
+    public function __construct(protected $entity, protected $id, $previous = null)
     {
         $this->entity = $entity;
         $this->id = $id;
