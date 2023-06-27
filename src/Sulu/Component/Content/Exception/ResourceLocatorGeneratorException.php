@@ -14,21 +14,12 @@ namespace Sulu\Component\Content\Exception;
 class ResourceLocatorGeneratorException extends \Exception
 {
     /**
-     * @var string
+     * @param string $title
+     * @param string $parentPath
      */
-    private $title;
-
-    /**
-     * @var string
-     */
-    private $parentPath;
-
-    public function __construct($title, $parentPath)
+    public function __construct(private $title, private $parentPath)
     {
         parent::__construct(\sprintf("Could not generate ResourceLocator for given title '%s'", $title));
-
-        $this->title = $title;
-        $this->parentPath = $parentPath;
     }
 
     /**

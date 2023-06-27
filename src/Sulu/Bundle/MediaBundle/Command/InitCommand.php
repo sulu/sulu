@@ -15,11 +15,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:media:init', description: 'Init Sulu Media Bundle')]
 class InitCommand extends Command
 {
-    protected static $defaultName = 'sulu:media:init';
-
     /**
      * @var Filesystem
      */
@@ -36,11 +36,6 @@ class InitCommand extends Command
 
         $this->filesystem = $filesystem;
         $this->formatCacheDir = $formatCacheDir;
-    }
-
-    protected function configure()
-    {
-        $this->setDescription('Init Sulu Media Bundle');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

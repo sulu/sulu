@@ -40,6 +40,11 @@ Additionally, the following packages where upgraded:
 
 This update is also handled normally by the update build command automatically.
 
+### Static protected $defaultName property of commands removed
+
+As deprecated in Symfony 6.1 the `$defaultName` of Sulu Commands where replaced with the new
+`Symfony\Component\Console\Attribute\AsCommand` annotation.
+
 ### Deprecated urls variable in return value of sulu_content_load
 
 The `urls` variable in the return value of the `sulu_content_load` function was deprecated.

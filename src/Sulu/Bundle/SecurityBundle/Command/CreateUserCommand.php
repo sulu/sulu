@@ -30,11 +30,11 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:security:user:create', description: 'Create a user.')]
 class CreateUserCommand extends Command
 {
-    protected static $defaultName = 'sulu:security:user:create';
-
     /**
      * @var EntityManagerInterface
      */
@@ -102,7 +102,7 @@ class CreateUserCommand extends Command
 
     protected function configure()
     {
-        $this->setDescription('Create a user.')
+        $this
             ->setDefinition(
                 [
                     new InputArgument('username', InputArgument::REQUIRED, 'The username'),

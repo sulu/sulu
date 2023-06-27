@@ -17,21 +17,13 @@ namespace Sulu\Bundle\MarkupBundle\Markup\Link;
 class ProviderNotFoundException extends \Exception
 {
     /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string[]
-     */
-    private $available;
-
-    /**
      * @param string $name
      * @param string[] $available
      */
-    public function __construct($name, array $available)
-    {
+    public function __construct(
+        private $name,
+        private array $available
+    ) {
         parent::__construct(
             \sprintf(
                 'Provider "%s" does not exists. Available providers are: ["%s"]',

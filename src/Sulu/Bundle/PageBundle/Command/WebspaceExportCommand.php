@@ -18,11 +18,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:webspaces:export', description: 'Export webspace page translations from given language into xliff file for translating into a new language.')]
 class WebspaceExportCommand extends Command
 {
-    protected static $defaultName = 'sulu:webspaces:export';
-
     /**
      * @var WebspaceExportInterface
      */
@@ -43,8 +43,7 @@ class WebspaceExportCommand extends Command
             ->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff')
             ->addOption('nodes', 'm', InputOption::VALUE_REQUIRED)
             ->addOption('ignored-nodes', 'i', InputOption::VALUE_REQUIRED)
-            ->addOption('uuid', 'u', InputOption::VALUE_REQUIRED)
-            ->setDescription('Export webspace page translations from given language into xliff file for translating into a new language.');
+            ->addOption('uuid', 'u', InputOption::VALUE_REQUIRED);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

@@ -19,14 +19,11 @@ use Sulu\Component\Rest\ListBuilder\Expression\Doctrine\AbstractDoctrineExpressi
 class InsufficientExpressionsException extends ExpressionException
 {
     /**
-     * @var AbstractDoctrineExpression[]
+     * @param AbstractDoctrineExpression[] $expressions
      */
-    protected $expressions;
-
-    public function __construct($expressions)
+    public function __construct(protected $expressions)
     {
         $this->message = 'An insufficient number of expressions has been provided';
-        $this->expressions = $expressions;
         parent::__construct($this->message);
     }
 

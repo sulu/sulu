@@ -17,15 +17,11 @@ namespace Sulu\Bundle\SnippetBundle\Snippet;
 class SnippetNotFoundException extends \Exception
 {
     /**
-     * @var string
+     * @param string $uuid
      */
-    private $uuid;
-
-    public function __construct($uuid)
+    public function __construct(private $uuid)
     {
-        parent::__construct(\sprintf('Snippet with uuid "%s" not found.', $uuid));
-
-        $this->uuid = $uuid;
+        parent::__construct(\sprintf('Snippet with uuid "%s" not found.', $this->uuid));
     }
 
     /**

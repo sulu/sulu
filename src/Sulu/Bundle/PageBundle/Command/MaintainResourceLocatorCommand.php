@@ -24,15 +24,15 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 
 /**
  * Writes the current resource locator on the cached property of the node in the live workspace.
  * The default workspace should not be touched, because these might represent changes already entered by a user.
  */
+#[AsCommand(name: 'sulu:content:resource-locator:maintain', description: 'Resets the cached url value on every node in the live workspace')]
 class MaintainResourceLocatorCommand extends Command
 {
-    protected static $defaultName = 'sulu:content:resource-locator:maintain';
-
     /**
      * @var WebspaceManagerInterface
      */
@@ -79,11 +79,6 @@ class MaintainResourceLocatorCommand extends Command
         $this->metadataFactory = $metadataFactory;
         $this->structureMetadataFactory = $structureMetadataFactory;
         $this->propertyEncoder = $propertyEncoder;
-    }
-
-    protected function configure()
-    {
-        $this->setDescription('Resets the cached url value on every node in the live workspace');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

@@ -17,25 +17,14 @@ namespace Sulu\Component\Content\Types\ResourceLocator\Strategy;
 class ResourceLocatorStrategyNotFoundException extends \Exception
 {
     /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string[]
-     */
-    private $available;
-
-    /**
      * @param string $name
      * @param string[] $available
      */
-    public function __construct($name, $available)
+    public function __construct(private $name, private $available)
     {
-        parent::__construct(\sprintf('Strategy "%s" not found. Available: ["%s"]', $name, \implode('", "', $available)));
-
-        $this->name = $name;
-        $this->available = $available;
+        parent::__construct(
+            \sprintf('Strategy "%s" not found. Available: ["%s"]', $this->name, \implode('", "', $this->available))
+        );
     }
 
     /**

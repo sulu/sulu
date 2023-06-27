@@ -14,14 +14,14 @@ namespace Sulu\Component\Content\Exception;
 class NoSuchPropertyException extends \Exception
 {
     /**
-     * @var string
+     * @param string $propertyName
+     * @param string $message
      */
-    private $propertyName;
-
-    public function __construct($propertyName, $message = '')
-    {
+    public function __construct(
+        private $propertyName,
+        $message = ''
+    ) {
         parent::__construct($message);
-        $this->propertyName = $propertyName;
     }
 
     /**

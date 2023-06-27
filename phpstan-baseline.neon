@@ -14071,27 +14071,12 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Tag/TagInterface.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MarkupBundle\\\\Tag\\\\TagNotFoundException\\:\\:\\$namespace is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tag/TagNotFoundException.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MarkupBundle\\\\Tag\\\\TagNotFoundException\\:\\:\\$type \\(string\\) does not accept int\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tag/TagNotFoundException.php
-
-		-
 			message: "#^Cannot access offset string on Sulu\\\\Bundle\\\\MarkupBundle\\\\Tag\\\\TagInterface\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/MarkupBundle/Tag/TagRegistry.php
 
 		-
 			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, Sulu\\\\Bundle\\\\MarkupBundle\\\\Tag\\\\TagInterface given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tag/TagRegistry.php
-
-		-
-			message: "#^Parameter \\#3 \\$type of class Sulu\\\\Bundle\\\\MarkupBundle\\\\Tag\\\\TagNotFoundException constructor expects int, string given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Tag/TagRegistry.php
 
@@ -14104,11 +14089,6 @@ parameters:
 			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Response\\:\\:\\$headers \\(Symfony\\\\Component\\\\HttpFoundation\\\\ResponseHeaderBag\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\HeaderBag\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Listener/MarkupListenerTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$type of class Sulu\\\\Bundle\\\\MarkupBundle\\\\Tag\\\\TagNotFoundException constructor expects int, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlMarkupParserTest.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\Tests\\\\Unit\\\\Markup\\\\HtmlTagExtractorTest\\:\\:provideMultipleTags\\(\\) has no return type specified\\.$#"
@@ -33111,11 +33091,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/DefaultSnippetManagerInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\SnippetNotFoundException\\:\\:__construct\\(\\) has parameter \\$uuid with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetNotFoundException.php
-
-		-
 			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
@@ -34339,11 +34314,6 @@ parameters:
 			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\TagBundle\\\\Content\\\\Types\\\\TagSelection\\:\\:write\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Content/Types/TagSelection.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\TagBundle\\\\Controller\\\\Exception\\\\ConstraintViolationException\\:\\:toArray\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Controller/Exception/ConstraintViolationException.php
 
 		-
 			message: "#^Cannot access offset 'id' on mixed\\.$#"
@@ -42166,136 +42136,6 @@ parameters:
 			path: src/Sulu/Component/Content/Exception/InvalidNavigationContextExtension.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\InvalidOrderPositionException\\:\\:__construct\\(\\) has parameter \\$message with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/InvalidOrderPositionException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\NoSuchPropertyException\\:\\:__construct\\(\\) has parameter \\$message with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/NoSuchPropertyException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\NoSuchPropertyException\\:\\:__construct\\(\\) has parameter \\$propertyName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/NoSuchPropertyException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\ReservedPropertyNameException\\:\\:__construct\\(\\) has parameter \\$blockPropertyName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/ReservedPropertyNameException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\ReservedPropertyNameException\\:\\:__construct\\(\\) has parameter \\$formKey with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/ReservedPropertyNameException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\ReservedPropertyNameException\\:\\:__construct\\(\\) has parameter \\$propertyName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/ReservedPropertyNameException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\ReservedPropertyNameException\\:\\:getBlockPropertyName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/ReservedPropertyNameException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\ReservedPropertyNameException\\:\\:getPropertyName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/ReservedPropertyNameException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\ResourceLocatorAlreadyExistsException\\:\\:__construct\\(\\) has parameter \\$path with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/ResourceLocatorAlreadyExistsException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\ResourceLocatorAlreadyExistsException\\:\\:__construct\\(\\) has parameter \\$resourceLocator with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/ResourceLocatorAlreadyExistsException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\ResourceLocatorGeneratorException\\:\\:__construct\\(\\) has parameter \\$parentPath with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/ResourceLocatorGeneratorException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\ResourceLocatorGeneratorException\\:\\:__construct\\(\\) has parameter \\$title with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/ResourceLocatorGeneratorException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\ResourceLocatorMovedException\\:\\:__construct\\(\\) has parameter \\$newResourceLocator with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/ResourceLocatorMovedException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\ResourceLocatorMovedException\\:\\:__construct\\(\\) has parameter \\$newResourceLocatorUuid with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/ResourceLocatorMovedException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\ResourceLocatorNotValidException\\:\\:__construct\\(\\) has parameter \\$resourceLocator with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/ResourceLocatorNotValidException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\StateNotFoundException\\:\\:__construct\\(\\) has parameter \\$code with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/StateNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\StateNotFoundException\\:\\:__construct\\(\\) has parameter \\$message with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/StateNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\StateNotFoundException\\:\\:__construct\\(\\) has parameter \\$previous with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/StateNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\StateNotFoundException\\:\\:__construct\\(\\) has parameter \\$state with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/StateNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\StateTransitionException\\:\\:__construct\\(\\) has parameter \\$code with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/StateTransitionException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\StateTransitionException\\:\\:__construct\\(\\) has parameter \\$from with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/StateTransitionException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\StateTransitionException\\:\\:__construct\\(\\) has parameter \\$message with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/StateTransitionException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\StateTransitionException\\:\\:__construct\\(\\) has parameter \\$previous with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/StateTransitionException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\StateTransitionException\\:\\:__construct\\(\\) has parameter \\$to with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/StateTransitionException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\TranslatedNodeNotFoundException\\:\\:__construct\\(\\) has parameter \\$languageCode with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/TranslatedNodeNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Exception\\\\TranslatedNodeNotFoundException\\:\\:__construct\\(\\) has parameter \\$uuid with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Exception/TranslatedNodeNotFoundException.php
-
-		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Export/WebspaceExport.php
@@ -45616,47 +45456,7 @@ parameters:
 			path: src/Sulu/Component/Content/SmartContent/QueryBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Template\\\\Exception\\\\InvalidXmlException\\:\\:__construct\\(\\) has parameter \\$message with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Template/Exception/InvalidXmlException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Template\\\\Exception\\\\RequiredPropertyNameNotFoundException\\:\\:__construct\\(\\) has parameter \\$propertyName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Template/Exception/RequiredPropertyNameNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Template\\\\Exception\\\\TemplateException\\:\\:__construct\\(\\) has parameter \\$message with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Template/Exception/TemplateException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Template\\\\Exception\\\\TemplateNotFoundException\\:\\:__construct\\(\\) has parameter \\$originalException with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Template/Exception/TemplateNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Template\\\\Exception\\\\TemplateNotFoundException\\:\\:__construct\\(\\) has parameter \\$path with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Template/Exception/TemplateNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Template\\\\Exception\\\\TemplateNotFoundException\\:\\:__construct\\(\\) has parameter \\$templateKey with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Template/Exception/TemplateNotFoundException.php
-
-		-
 			message: "#^Parameter \\#2 \\$code of method Exception\\:\\:__construct\\(\\) expects int, null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Template/Exception/TemplateNotFoundException.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Template\\\\Exception\\\\TemplateNotFoundException\\:\\:\\$path is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Template/Exception/TemplateNotFoundException.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Template\\\\Exception\\\\TemplateNotFoundException\\:\\:\\$templateKey is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Template/Exception/TemplateNotFoundException.php
 
@@ -53096,94 +52896,19 @@ parameters:
 			path: src/Sulu/Component/Rest/DoctrineRestHelper.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Exception\\\\ConstraintViolationException\\:\\:__construct\\(\\) has parameter \\$code with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/ConstraintViolationException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Exception\\\\ConstraintViolationException\\:\\:__construct\\(\\) has parameter \\$entity with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/ConstraintViolationException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Exception\\\\ConstraintViolationException\\:\\:__construct\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/ConstraintViolationException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Exception\\\\ConstraintViolationException\\:\\:toArray\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/ConstraintViolationException.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Exception\\\\EntityNotFoundException\\:\\:__construct\\(\\) has parameter \\$previous with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Exception/EntityNotFoundException.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Exception\\\\InvalidHashException\\:\\:__construct\\(\\) has parameter \\$entity with no type specified\\.$#"
+			message: "#^Parameter \\#3 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Exception/InvalidHashException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Exception\\\\InvalidHashException\\:\\:__construct\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/InvalidHashException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Exception\\\\InvalidHashException\\:\\:getId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/InvalidHashException.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Exception\\\\InvalidHashException\\:\\:\\$entity is never written, only read\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/InvalidHashException.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Exception\\\\InvalidHashException\\:\\:\\$id is never written, only read\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/InvalidHashException.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Exception\\\\MissingParameterChoiceException\\:\\:\\$names \\(string\\) does not accept array\\<string\\>\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/MissingParameterChoiceException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Exception\\\\MissingParameterException\\:\\:__construct\\(\\) has parameter \\$controller with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/MissingParameterException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Exception\\\\MissingParameterException\\:\\:__construct\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/MissingParameterException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Exception\\\\ParameterDataTypeException\\:\\:__construct\\(\\) has parameter \\$controller with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/ParameterDataTypeException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Exception\\\\ParameterDataTypeException\\:\\:__construct\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/ParameterDataTypeException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Exception\\\\RestException\\:\\:toArray\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/RestException.php
 
 		-
 			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Exception\\\\SearchFieldNotFoundException\\:\\:\\$field is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Exception/SearchFieldNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Exception\\\\UniqueConstraintViolationException\\:\\:__construct\\(\\) has parameter \\$entity with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Exception/UniqueConstraintViolationException.php
 
 		-
 			message: "#^Cannot call method getCode\\(\\) on mixed\\.$#"
@@ -53781,11 +53506,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Expression/Doctrine/DoctrineWhereExpression.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Expression\\\\Exception\\\\InsufficientExpressionsException\\:\\:__construct\\(\\) has parameter \\$expressions with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Expression/Exception/InsufficientExpressionsException.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Expression\\\\InExpressionInterface\\:\\:getValues\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Expression/InExpressionInterface.php
@@ -53829,11 +53549,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Filter\\\\FilterTypeInterface\\:\\:filter\\(\\) has parameter \\$options with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/FilterTypeInterface.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Filter\\\\FilterTypeNotFoundException\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Filter/FilterTypeNotFoundException.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Filter\\\\FilterTypeRegistry\\:\\:__construct\\(\\) has parameter \\$filterTypes with no value type specified in iterable type iterable\\.$#"

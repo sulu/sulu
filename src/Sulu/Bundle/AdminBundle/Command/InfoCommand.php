@@ -15,11 +15,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:admin:info')]
 class InfoCommand extends Command
 {
-    protected static $defaultName = 'sulu:admin:info';
-
     /**
      * @var string string
      */

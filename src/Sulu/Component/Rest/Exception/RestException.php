@@ -13,6 +13,9 @@ namespace Sulu\Component\Rest\Exception;
 
 class RestException extends \Exception implements RestExceptionInterface
 {
+    /**
+     * @return array{code: int, message: string}
+     */
     public function toArray()
     {
         return [

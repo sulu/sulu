@@ -32,11 +32,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:webspaces:copy', description: 'Copies a given webspace with given locale to a destination webspace with a destination locale.')]
 class WebspaceCopyCommand extends Command
 {
-    protected static $defaultName = 'sulu:webspaces:copy';
-
     /**
      * @var SymfonyStyle
      */
@@ -97,10 +97,7 @@ class WebspaceCopyCommand extends Command
             ->addArgument('source-locale', InputArgument::REQUIRED)
             ->addArgument('destination-webspace', InputArgument::REQUIRED)
             ->addArgument('destination-locale', InputArgument::REQUIRED)
-            ->addOption('clear-destination-webspace')
-            ->setDescription(
-                'Copies a given webspace with given locale to a destination webspace with a destination locale.'
-            );
+            ->addOption('clear-destination-webspace');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

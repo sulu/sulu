@@ -21,11 +21,11 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:snippet:import', description: 'Import snippet translations from xliff file into a specific language.')]
 class SnippetImportCommand extends Command
 {
-    protected static $defaultName = 'sulu:snippet:import';
-
     /**
      * @var SnippetImportInterface
      */
@@ -48,8 +48,7 @@ class SnippetImportCommand extends Command
     {
         $this->addArgument('file', InputArgument::REQUIRED, 'test.xliff')
             ->addArgument('locale', InputArgument::REQUIRED)
-            ->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff')
-            ->setDescription('Import snippet translations from xliff file into a specific language.');
+            ->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

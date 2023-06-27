@@ -23,11 +23,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:security:sync-phpcr-permissions', description: 'Sync existing object permissions from phpcr into database to make them usable in database queries')]
 class SyncPhpcrPermissionsCommand extends Command
 {
-    protected static $defaultName = 'sulu:security:sync-phpcr-permissions';
-
     /**
      * @var EntityManagerInterface
      */
@@ -57,7 +57,6 @@ class SyncPhpcrPermissionsCommand extends Command
 
     public function configure(): void
     {
-        $this->setDescription('Sync existing object permissions from phpcr into database to make them usable in database queries');
         $this->setHelp(
             'The <info>%command.name%</info> command syncs the object permissions of phpcr documents into the database.'
         );
