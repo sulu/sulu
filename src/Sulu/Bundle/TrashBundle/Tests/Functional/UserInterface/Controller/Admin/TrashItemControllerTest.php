@@ -21,6 +21,7 @@ use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Kernel\SuluKernelBrowser;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
+use Sulu\Bundle\TrashBundle\Infrastructure\Sulu\Admin\TrashAdmin;
 use Sulu\Bundle\TrashBundle\Tests\Functional\Traits\CreateTrashItemTrait;
 use Sulu\Component\Security\Authorization\AccessControl\SecuredEntityInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -31,6 +32,8 @@ class TrashItemControllerTest extends SuluTestCase
 
     public const GRANTED_CONTEXT = 'sulu.context.granted';
     public const NOT_GRANTED_CONTEXT = 'sulu.context.not_granted';
+
+    public const ALT_USER_USERNAME = 'test_alt';
 
     /**
      * @var EntityManagerInterface
@@ -62,7 +65,7 @@ class TrashItemControllerTest extends SuluTestCase
 
     public function testCgetAction(): void
     {
-        static::setUpUserRole();
+        self::setUpUserRole();
 
         static::createTrashItem(
             'pages',
@@ -103,7 +106,7 @@ class TrashItemControllerTest extends SuluTestCase
     {
         $accessControlManager = static::getContainer()->get('sulu_security.access_control_manager');
 
-        $role = static::setUpUserRole();
+        $role = self::setUpUserRole();
 
         $count = 0;
         foreach ([null, self::GRANTED_CONTEXT, self::NOT_GRANTED_CONTEXT] as $resourceSecurityContext) {
@@ -157,6 +160,22 @@ class TrashItemControllerTest extends SuluTestCase
         static::assertSame($id, $content->id);
     }
 
+    public function testGetActionWithPermissionCheck(): void
+    {
+        self::setUpUserRole();
+        // Needed to rename the username to bypass TestVoter.
+        self::renameUserUsername(self::ALT_USER_USERNAME);
+
+        $trashItem = static::createTrashItem();
+        $id = $trashItem->getId();
+
+        $this->client->jsonRequest('GET', '/api/trash-items/' . $id, [], [
+            'PHP_AUTH_USER' => self::ALT_USER_USERNAME,
+            'PHP_AUTH_PW' => 'test',
+        ]);
+        static::assertHttpStatusCode(200, $this->client->getResponse());
+    }
+
     public function testDeleteAction(): void
     {
         $trashItem = static::createTrashItem();
@@ -194,6 +213,22 @@ class TrashItemControllerTest extends SuluTestCase
         static::assertHttpStatusCode(404, $this->client->getResponse());
     }
 
+    public function testPostTriggerActionRestoreWithPermissionCheck(): void
+    {
+        self::setUpUserRole();
+        // Needed to rename the username to bypass TestVoter.
+        self::renameUserUsername(self::ALT_USER_USERNAME);
+
+        $trashItem = static::createTrashItem();
+        $id = $trashItem->getId();
+
+        $this->client->jsonRequest('POST', '/api/trash-items/' . $id, ['action' => 'restore'], [
+            'PHP_AUTH_USER' => self::ALT_USER_USERNAME,
+            'PHP_AUTH_PW' => 'test',
+        ]);
+        static::assertHttpStatusCode(200, $this->client->getResponse());
+    }
+
     private static function setUpUserRole(): Role
     {
         $entityManager = static::getEntityManager();
@@ -225,6 +260,15 @@ class TrashItemControllerTest extends SuluTestCase
 
         $role->addPermission($notGrantedPermission);
 
+        $trashPermission = new Permission();
+        $trashPermission->setContext(TrashAdmin::SECURITY_CONTEXT);
+        $trashPermission->setPermissions(127);
+        $trashPermission->setRole($role);
+
+        $entityManager->persist($trashPermission);
+
+        $role->addPermission($trashPermission);
+
         $userRole = new UserRole();
         $userRole->setRole($role);
         $userRole->setLocale('["en"]');
@@ -236,6 +280,16 @@ class TrashItemControllerTest extends SuluTestCase
         $entityManager->flush();
 
         return $role;
+    }
+
+    private static function renameUserUsername(string $username): void
+    {
+        $entityManager = static::getEntityManager();
+        $user = static::getTestUser();
+
+        $user->setUsername($username);
+
+        $entityManager->flush();
     }
 
     protected static function getTrashItemRepository(): TrashItemRepositoryInterface

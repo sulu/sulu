@@ -20671,6 +20671,11 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
 
 		-
+			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:remove\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
+
+		-
 			message: "#^Parameter \\#1 \\$document of method Sulu\\\\Bundle\\\\PageBundle\\\\Command\\\\WebspaceCopyCommand\\:\\:saveDocument\\(\\) expects Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument, object given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
@@ -35163,11 +35168,6 @@ parameters:
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Tests\\\\Functional\\\\UserInterface\\\\Controller\\\\Admin\\\\TrashItemControllerTest\\:\\:\\$repository is never read, only written\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
-
-		-
-			message: "#^Unsafe call to private method Sulu\\\\Bundle\\\\TrashBundle\\\\Tests\\\\Functional\\\\UserInterface\\\\Controller\\\\Admin\\\\TrashItemControllerTest\\:\\:setUpUserRole\\(\\) through static\\:\\:\\.$#"
-			count: 2
 			path: src/Sulu/Bundle/TrashBundle/Tests/Functional/UserInterface/Controller/Admin/TrashItemControllerTest.php
 
 		-
