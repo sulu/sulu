@@ -32776,11 +32776,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/PermissionInheritanceSubscriberTest.php
 
 		-
-			message: "#^Class Symfony\\\\Bundle\\\\FrameworkBundle\\\\Controller\\\\Controller not found\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SuluSecurityListenerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SuluSecurityListenerTest\\:\\:createControllerEvent\\(\\) has parameter \\$controller with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SuluSecurityListenerTest.php
