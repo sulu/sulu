@@ -117,7 +117,7 @@ class ReferenceCollector implements ReferenceCollectorInterface
         $this->referenceRepository->removeBy([
             'referenceResourceKey' => $this->referenceResourceKey,
             'referenceResourceId' => $this->referenceResourceId,
-            'referenceResourceLocale' => $this->referenceLocale,
+            'referenceLocale' => $this->referenceLocale,
         ]);
 
         foreach ($this->referenceCollection as $reference) {
@@ -127,7 +127,7 @@ class ReferenceCollector implements ReferenceCollectorInterface
         $this->referenceCollection->clear();
     }
 
-    public function getReference(ReferenceInterface $reference): ?ReferenceInterface
+    private function getReference(ReferenceInterface $reference): ?ReferenceInterface
     {
         return $this->referenceCollection->filter(fn (ReferenceInterface $ref) => $ref->equals($reference))->first() ?: null;
     }

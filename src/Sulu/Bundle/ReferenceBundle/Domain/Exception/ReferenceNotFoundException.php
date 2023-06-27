@@ -16,7 +16,7 @@ namespace Sulu\Bundle\ReferenceBundle\Domain\Exception;
 class ReferenceNotFoundException extends \Exception
 {
     /**
-     * @var mixed[]
+     * @var array<string, mixed>
      */
     private $filters;
 
@@ -37,7 +37,7 @@ class ReferenceNotFoundException extends \Exception
     /**
      * @return array<string, mixed>
      */
-    public function getCriteria(): array
+    public function getFilters(): array
     {
         return $this->filters;
     }
