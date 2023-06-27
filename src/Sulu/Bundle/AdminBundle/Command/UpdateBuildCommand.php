@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\AdminBundle\Command;
 
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,7 +20,6 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\Process\Process;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'sulu:admin:update-build', description: 'Updates the administration application JavaScript build by downloading the official build from the sulu/skeleton repository or building the assets via npm.')]
 class UpdateBuildCommand extends Command

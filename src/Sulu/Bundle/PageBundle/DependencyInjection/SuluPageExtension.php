@@ -56,6 +56,10 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
                                 'list' => 'sulu_page.get_pages',
                                 'detail' => 'sulu_page.get_page',
                             ],
+                            'views' => [
+                                'list' => PageAdmin::PAGES_VIEW,
+                                'detail' => PageAdmin::EDIT_FORM_VIEW,
+                            ],
                             'security_context' => PageAdmin::SECURITY_CONTEXT_PREFIX . '#webspace#',
                             'security_class' => SecurityBehavior::class,
                         ],

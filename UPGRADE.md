@@ -12,6 +12,18 @@ Removing deprecated functions and properties:
 
 ## 2.6.0
 
+### Admin JS ResourceRouteRegistry getDetailUrl and getListUrl deprecated
+
+The `getDetailUrl` and `getListUrl` methods of the `routeRegistry` were deprecated.  
+Use the newly added `getUrl` method:
+
+```diff
+-routeRegistry.getDetailUrl(/* ... */)
++routeRegistry.getUrl('detail', (/* ... */)
+-routeRegistry.getListUrl(/* ... */)
++routeRegistry.getUrl('list', (/* ... */)
+```
+
 ### Webpack 5 upgrade
 
 Sulu now uses Webpack 5 to build the administration interface application. To enable this, the following JavaScript dependencies were updated/changed:

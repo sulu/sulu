@@ -6,7 +6,7 @@ import {render} from 'react-dom';
 import {configure} from 'mobx';
 import ResizeObserver from 'resize-observer-polyfill';
 import Requester from './services/Requester';
-import Router, {routeRegistry} from './services/Router';
+import Router, {routeRegistry, resourceViewRegistry} from './services/Router';
 import Application from './containers/Application';
 import {updateRouterAttributesFromView, viewRegistry} from './containers/ViewRenderer';
 import CollaborationStore from './stores/CollaborationStore';
@@ -23,6 +23,7 @@ import List, {
     listItemActionRegistry,
     listToolbarActionRegistry,
     LinkItemAction as ListLinkItemAction,
+    DetailLinkItemAction as ListDetailLinkItemAction,
     AddToolbarAction as ListAddToolbarAction,
     DeleteToolbarAction as ListDeleteToolbarAction,
     MoveToolbarAction as ListMoveToolbarAction,
@@ -232,6 +233,7 @@ function registerListFieldTransformers() {
 
 function registerListItemActions() {
     listItemActionRegistry.add('link', ListLinkItemAction);
+    listItemActionRegistry.add('detail_link', ListDetailLinkItemAction);
 }
 
 function registerFieldTypes(fieldTypeOptions) {
@@ -342,12 +344,15 @@ function registerListToolbarActions() {
 
 function processConfig(config: Object) {
     routeRegistry.clear();
+    resourceViewRegistry.clear();
     navigationRegistry.clear();
     resourceRouteRegistry.clear();
 
     routeRegistry.addCollection(config.routes);
+    resourceViewRegistry.addResourceViews(config.resources);
     localizationStore.setLocalizations(config.localizations);
     navigationRegistry.set(config.navigation);
+
     resourceRouteRegistry.setEndpoints(config.resources);
     smartContentConfigStore.setConfig(config.smartContent);
     CollaborationStore.enabled = config.collaborationEnabled;

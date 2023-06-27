@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Command;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Component\Snippet\Import\SnippetImportInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,7 +22,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'sulu:snippet:import', description: 'Import snippet translations from xliff file into a specific language.')]
 class SnippetImportCommand extends Command

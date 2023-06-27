@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\CoreBundle\CommandOptional;
 
 use Massive\Bundle\BuildBundle\Command\BuildCommand;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * This command extends the Massive BuildCommand and
