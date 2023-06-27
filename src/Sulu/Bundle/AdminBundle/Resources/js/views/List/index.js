@@ -4,7 +4,7 @@ import listItemActionRegistry from './registries/listItemActionRegistry';
 import listToolbarActionRegistry from './registries/listToolbarActionRegistry';
 import AbstractListItemAction from './itemActions/AbstractListItemAction';
 import LinkItemAction from './itemActions/LinkItemAction';
-import ResourceDetailLinkItemAction from './itemActions/ResourceDetailLinkItemAction';
+import DetailLinkItemAction from './itemActions/DetailLinkItemAction';
 import AbstractListToolbarAction from './toolbarActions/AbstractListToolbarAction';
 import AddToolbarAction from './toolbarActions/AddToolbarAction';
 import DeleteToolbarAction from './toolbarActions/DeleteToolbarAction';
@@ -22,7 +22,7 @@ export {
     AddToolbarAction,
     DeleteToolbarAction,
     LinkItemAction,
-    ResourceDetailLinkItemAction,
+    DetailLinkItemAction,
     MoveToolbarAction,
     ExportToolbarAction,
     UploadToolbarAction,

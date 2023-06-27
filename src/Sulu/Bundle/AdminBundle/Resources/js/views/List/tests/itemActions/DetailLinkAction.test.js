@@ -4,7 +4,7 @@ import ListStore from '../../../../containers/List/stores/ListStore';
 import Router from '../../../../services/Router';
 import ResourceStore from '../../../../stores/ResourceStore';
 import List from '../../../../views/List';
-import ResourceDetailLinkItemAction from '../../itemActions/ResourceDetailLinkItemAction';
+import DetailLinkItemAction from '../../itemActions/DetailLinkItemAction';
 
 jest.mock('../../../../utils/Translator', () => ({
     translate: jest.fn((key) => key),
@@ -37,7 +37,7 @@ function createLinkItemAction(options = {}) {
     const locales = [];
     const resourceStore = new ResourceStore('test');
 
-    return new ResourceDetailLinkItemAction(listStore, list, router, locales, resourceStore, options);
+    return new DetailLinkItemAction(listStore, list, router, locales, resourceStore, options);
 }
 
 test('Return correct icon action config for given item', () => {

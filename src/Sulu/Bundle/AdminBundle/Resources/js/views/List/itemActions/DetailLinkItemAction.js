@@ -1,7 +1,7 @@
 // @flow
 import AbstractListItemAction from './AbstractListItemAction';
 
-export default class ResourceDetailLinkItemAction extends AbstractListItemAction {
+export default class DetailLinkItemAction extends AbstractListItemAction {
     handleClick = (resourceKey: string, resourceId: string, viewAttributes: Object = {}) => {
         const attributes = Object.assign({id: resourceId, ...viewAttributes}, viewAttributes);
 

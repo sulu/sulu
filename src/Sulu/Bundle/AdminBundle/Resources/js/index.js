@@ -23,7 +23,7 @@ import List, {
     listItemActionRegistry,
     listToolbarActionRegistry,
     LinkItemAction as ListLinkItemAction,
-    ResourceDetailLinkItemAction as ListResourceDetailLinkItemAction,
+    DetailLinkItemAction as ListDetailLinkItemAction,
     AddToolbarAction as ListAddToolbarAction,
     DeleteToolbarAction as ListDeleteToolbarAction,
     MoveToolbarAction as ListMoveToolbarAction,
@@ -233,7 +233,7 @@ function registerListFieldTransformers() {
 
 function registerListItemActions() {
     listItemActionRegistry.add('link', ListLinkItemAction);
-    listItemActionRegistry.add('resource_detail_link', ListResourceDetailLinkItemAction);
+    listItemActionRegistry.add('detail_link', ListDetailLinkItemAction);
 }
 
 function registerFieldTypes(fieldTypeOptions) {
