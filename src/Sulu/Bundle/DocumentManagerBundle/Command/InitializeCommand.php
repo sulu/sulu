@@ -12,13 +12,13 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'sulu:document:initialize', description: 'Initialize the content repository/repositories.')]
 class InitializeCommand extends Command

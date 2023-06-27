@@ -12,13 +12,13 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
 use Sulu\Component\DocumentManager\Events;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'sulu:document:subscriber:debug', description: 'Show event listeners associated with the document manager')]
 class SubscriberDebugCommand extends Command

@@ -12,13 +12,13 @@
 namespace Sulu\Bundle\PageBundle\Command;
 
 use Sulu\Component\Content\Export\WebspaceExportInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'sulu:webspaces:export', description: 'Export webspace page translations from given language into xliff file for translating into a new language.')]
 class WebspaceExportCommand extends Command
