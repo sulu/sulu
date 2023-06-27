@@ -75,7 +75,7 @@ class ReferenceRepositoryTest extends SuluTestCase
     {
         $this->expectException(ReferenceNotFoundException::class);
 
-        $this->referenceRepository->getOneBy(['id' => \PHP_INT_MAX]);
+        $this->referenceRepository->getOneBy(['id' => 2147483647]);
     }
 
     public function testGetOneByExist(): void
