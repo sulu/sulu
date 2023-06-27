@@ -16,14 +16,14 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:content:types:dump', description: 'Dumps all ContentTypes registered in the system')]
 class ContentTypesDumpCommand extends Command
 {
-    protected static $defaultName = 'sulu:content:types:dump';
-
     protected function configure()
     {
-        $this->setDescription('Dumps all ContentTypes registered in the system')
+        $this
             ->setDefinition([
                 new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, xml, json, or md)', 'txt'),
             ]);

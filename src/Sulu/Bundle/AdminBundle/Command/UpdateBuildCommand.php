@@ -19,14 +19,14 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\Process\Process;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:admin:update-build', description: 'Updates the administration application JavaScript build by downloading the official build from the sulu/skeleton repository or building the assets via npm.')]
 class UpdateBuildCommand extends Command
 {
     public const EXIT_CODE_ABORTED_MANUAL_BUILD = 1;
     public const EXIT_CODE_COULD_NOT_INSTALL_NPM_PACKAGES = 2;
     public const EXIT_CODE_COULD_NOT_BUILD_ADMIN_ASSETS = 3;
-
-    protected static $defaultName = 'sulu:admin:update-build';
 
     /**
      * @var HttpClientInterface
@@ -58,14 +58,6 @@ class UpdateBuildCommand extends Command
         $this->httpClient = $httpClient;
         $this->projectDir = $projectDir;
         $this->suluVersion = $suluVersion;
-    }
-
-    protected function configure()
-    {
-        $this->setDescription(
-            'Updates the administration application JavaScript build by downloading the official build '
-            . 'from the sulu/skeleton repository or building the assets via npm.'
-        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

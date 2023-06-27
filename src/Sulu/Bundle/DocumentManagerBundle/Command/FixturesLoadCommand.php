@@ -21,11 +21,11 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:document:fixtures:load', description: 'Loads data fixtures services tagged with "sulu.document_manager_fixture".')]
 class FixturesLoadCommand extends Command
 {
-    protected static $defaultName = 'sulu:document:fixtures:load';
-
     /**
      * @var DocumentExecutor
      */
@@ -49,7 +49,6 @@ class FixturesLoadCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Loads data fixtures services tagged with "sulu.document_manager_fixture".')
             ->addOption('group', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The group which should be loaded.')
             ->addOption('append', null, InputOption::VALUE_NONE, 'Append the data fixtures to the existing data - will not purge the workspace.')
             ->addOption('no-initialize', null, InputOption::VALUE_NONE, 'Do not run the repository initializers after purging the repository.')

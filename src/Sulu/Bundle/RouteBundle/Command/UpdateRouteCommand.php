@@ -22,11 +22,11 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:route:update', description: 'Update the routes for all entities.')]
 class UpdateRouteCommand extends Command
 {
-    protected static $defaultName = 'sulu:route:update';
-
     /**
      * @var TranslatorInterface|LocaleAwareInterface
      */
@@ -68,7 +68,6 @@ class UpdateRouteCommand extends Command
         $this->addArgument('entity', InputArgument::REQUIRED)
             ->addArgument('locale', InputArgument::REQUIRED)
             ->addOption('batch-size', null, InputOption::VALUE_REQUIRED, '', '1000')
-            ->setDescription('Update the routes for all entities.')
             ->setHelp(
                 <<<'EOT'
 Update the routes for all entities which will be returned by the repository of given entity service:

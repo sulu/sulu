@@ -23,11 +23,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:snippet:locale-copy', description: 'Copy snippet nodes from one locale to another')]
 class SnippetLocaleCopyCommand extends Command
 {
-    protected static $defaultName = 'sulu:snippet:locale-copy';
-
     /**
      * The namespace for languages.
      *
@@ -83,7 +83,6 @@ class SnippetLocaleCopyCommand extends Command
 
     public function configure()
     {
-        $this->setDescription('Copy snippet nodes from one locale to another');
         $this->setHelp(
             <<<'EOT'
             The <info>%command.name%</info> command copies the internationalized properties matching <info>srcLocale</info>

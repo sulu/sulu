@@ -23,11 +23,11 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:content:validate', description: 'Dumps pages without valid templates')]
 class ValidatePagesCommand extends Command
 {
-    protected static $defaultName = 'sulu:content:validate';
-
     /**
      * @var SessionInterface
      */
@@ -64,8 +64,7 @@ class ValidatePagesCommand extends Command
 
     protected function configure()
     {
-        $this->addArgument('webspaceKey', InputArgument::REQUIRED, 'Which webspace to search')
-            ->setDescription('Dumps pages without valid templates');
+        $this->addArgument('webspaceKey', InputArgument::REQUIRED, 'Which webspace to search');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
