@@ -21291,6 +21291,11 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
 
 		-
+			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:remove\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
+
+		-
 			message: "#^Parameter \\#1 \\$document of method Sulu\\\\Bundle\\\\PageBundle\\\\Command\\\\WebspaceCopyCommand\\:\\:saveDocument\\(\\) expects Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument, object given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/WebspaceCopyCommand.php
