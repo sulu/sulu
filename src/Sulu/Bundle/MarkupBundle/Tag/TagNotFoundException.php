@@ -17,32 +17,18 @@ namespace Sulu\Bundle\MarkupBundle\Tag;
 class TagNotFoundException extends \Exception
 {
     /**
-     * @var string
-     */
-    private $namespace;
-
-    /**
-     * @var string
-     */
-    private $tagName;
-
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
      * @param string $namespace
      * @param string $tagName
-     * @param int $type
+     * @param string $type
      */
-    public function __construct($namespace, $tagName, $type)
-    {
-        parent::__construct(\sprintf('Tag "%s:%s" for type "%s" not found', $namespace, $tagName, $type));
-
-        $this->namespace = $namespace;
-        $this->tagName = $tagName;
-        $this->type = $type;
+    public function __construct(
+        private $namespace,
+        private $tagName,
+        private $type
+    ) {
+        parent::__construct(
+            \sprintf('Tag "%s:%s" for type "%s" not found', $this->namespace, $this->tagName, $this->type)
+        );
     }
 
     /**

@@ -17,20 +17,12 @@ namespace Sulu\Component\Rest\Exception;
 class ParameterDataTypeException extends RestException
 {
     /**
-     * @var string
+     * @param string $controller
+     * @param string $name
      */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $controller;
-
-    public function __construct($controller, $name)
+    public function __construct(private $controller, private $name)
     {
         parent::__construct(\sprintf('Parameter %s has wrong data type in %s', $name, $controller), 0);
-        $this->controller = $controller;
-        $this->name = $name;
     }
 
     /**

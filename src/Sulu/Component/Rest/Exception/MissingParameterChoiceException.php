@@ -17,25 +17,12 @@ namespace Sulu\Component\Rest\Exception;
 class MissingParameterChoiceException extends RestException
 {
     /**
-     * @var string
-     */
-    private $names;
-
-    /**
-     * @var string
-     */
-    private $controller;
-
-    /**
      * @param string $controller
      * @param string[] $names
      */
-    public function __construct($controller, $names)
+    public function __construct(private $controller, private $names)
     {
         parent::__construct(\sprintf('Missing parameter "%s" in %s', \implode('" or "', $names), $controller), 0);
-
-        $this->controller = $controller;
-        $this->names = $names;
     }
 
     /**
@@ -47,7 +34,7 @@ class MissingParameterChoiceException extends RestException
     }
 
     /**
-     * @return string
+     * @return string[]
      */
     public function getNames()
     {

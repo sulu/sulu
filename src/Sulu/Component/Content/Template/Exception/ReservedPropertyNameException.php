@@ -14,20 +14,11 @@ namespace Sulu\Component\Content\Template\Exception;
 class ReservedPropertyNameException extends InvalidXmlException
 {
     /**
-     * The reserved property name, which has been used.
-     *
-     * @var string
-     */
-    protected $propertyName;
-
-    /**
      * @param string $template The template causing the problem
      * @param string $propertyName The name of the property, which has been used
      */
-    public function __construct($template, $propertyName)
+    public function __construct($template, protected $propertyName)
     {
-        $this->propertyName = $propertyName;
-
         parent::__construct(
             $template,
             \sprintf(

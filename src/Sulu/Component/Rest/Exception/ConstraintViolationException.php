@@ -19,35 +19,26 @@ class ConstraintViolationException extends RestException
     public const UNIQUE = 'unique';
 
     /**
-     * @var string
-     */
-    protected $field;
-
-    /**
-     * @var string
-     */
-    protected $entity;
-
-    /**
-     * @var string
-     */
-    protected $type;
-
-    /**
      * @param string $field
+     * @param string $entity
+     * @param string $type
+     * @param int $code
      */
-    public function __construct($field, $entity, $type, $code)
-    {
-        $this->field = $field;
-        $this->entity = $entity;
-        $this->type = $type;
-
+    public function __construct(
+        protected $field,
+        protected $entity,
+        protected $type,
+        $code
+    ) {
         parent::__construct(
-            \sprintf('%s constraint for field "%s" of entity "%s" violated', \ucfirst($type), $field, $entity),
+            \sprintf('%s constraint for field "%s" of entity "%s" violated', \ucfirst($this->type), $this->field, $this->entity),
             $code
         );
     }
 
+    /**
+     * @return array<string, string|int>
+     */
     public function toArray()
     {
         return [

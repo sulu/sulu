@@ -14,20 +14,20 @@ namespace Sulu\Component\Content\Exception;
 class StateTransitionException extends StateException
 {
     /**
-     * @var int
+     * @param int $from
+     * @param int $to
+     * @param ?string $message
+     * @param ?int $code
+     * @param ?\Throwable $previous
      */
-    private $from;
-
-    /**
-     * @var int
-     */
-    private $to;
-
-    public function __construct($from, $to, $message = null, $code = null, $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-        $this->from = $from;
-        $this->to = $to;
+    public function __construct(
+        private $from,
+        private $to,
+        $message = null,
+        $code = null,
+        $previous = null
+    ) {
+        parent::__construct($message ?? '', $code ?? 0, $previous);
     }
 
     /**

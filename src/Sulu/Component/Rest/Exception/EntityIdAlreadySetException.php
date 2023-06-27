@@ -17,27 +17,13 @@ namespace Sulu\Component\Rest\Exception;
 class EntityIdAlreadySetException extends RestException
 {
     /**
-     * The type of the entity, which was not found.
-     *
-     * @var string
-     */
-    protected $entity;
-
-    /**
-     * The id of the entity, which was not found.
-     *
-     * @var int
-     */
-    protected $id;
-
-    /**
      * @param string $entity The type of the entity, which was not found
      * @param int $id The id of the entity, which was not found
      */
-    public function __construct($entity, $id)
-    {
-        $this->entity = $entity;
-        $this->id = $id;
+    public function __construct(
+        protected $entity,
+        protected $id
+    ) {
         $message = 'The id-field of the  "' . $entity . '"-Entity already has an id with the value "' . $id . '" .';
         parent::__construct($message, 0);
     }

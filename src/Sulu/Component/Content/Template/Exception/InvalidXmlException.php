@@ -16,6 +16,10 @@ namespace Sulu\Component\Content\Template\Exception;
  */
 class InvalidXmlException extends TemplateException
 {
+    /**
+     * @param string $template
+     * @param string $message
+     */
     public function __construct($template, $message = 'The given XML is invalid.')
     {
         parent::__construct($template, $message);

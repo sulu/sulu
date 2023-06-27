@@ -38,6 +38,9 @@ class ContactTwigExtension extends AbstractExtension
         $this->contactRepository = $contactRepository;
     }
 
+    /**
+     * @return array<TwigFunction>
+     */
     public function getFunctions()
     {
         return [
@@ -48,7 +51,7 @@ class ContactTwigExtension extends AbstractExtension
     /**
      * @param int $id id to resolve
      *
-     * @return ContactInterface
+     * @return ContactInterface|null
      */
     public function resolveContactFunction($id)
     {
@@ -58,7 +61,7 @@ class ContactTwigExtension extends AbstractExtension
 
         $contact = $this->contactRepository->find($id);
         if (null === $contact) {
-            return;
+            return null;
         }
 
         $this->cache->save($id, $contact);

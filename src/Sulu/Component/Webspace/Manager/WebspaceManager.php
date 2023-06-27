@@ -406,6 +406,9 @@ class WebspaceManager implements WebspaceManagerInterface
         );
     }
 
+    /**
+     * @return array<string, array<string, Localization>>
+     */
     public function getAllLocalesByWebspaces(): array
     {
         $webspaces = [];
