@@ -86,7 +86,7 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
             Events::REMOVE => 'onRemove',
             Events::REMOVE_LOCALE => 'onRemoveLocale',
             Events::CLEAR => 'onClear',
-            Events::FLUSH => 'onFlush'
+            Events::FLUSH => 'onFlush',
         ];
     }
 
@@ -99,6 +99,13 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
             || !$document instanceof TitleBehavior
             || !$document instanceof UuidBehavior
         ) {
+            return;
+        }
+
+        if (!$locale) {
+            // Ignore documents for permission changes
+            // https://github.com/sulu/sulu/blob/2.5.9/src/Sulu/Component/Security/Authorization/AccessControl/PhpcrAccessControlProvider.php#L51
+
             return;
         }
 
@@ -117,6 +124,13 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
             || !$document instanceof TitleBehavior
             || !$document instanceof UuidBehavior
         ) {
+            return;
+        }
+
+        if (!$locale) {
+            // Ignore documents for permission changes
+            // https://github.com/sulu/sulu/blob/2.5.9/src/Sulu/Component/Security/Authorization/AccessControl/PhpcrAccessControlProvider.php#L51
+
             return;
         }
 
