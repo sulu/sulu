@@ -19,11 +19,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:content:cleanup-history', description: 'Cleanup resource-locator history')]
 class CleanupHistoryCommand extends Command
 {
-    protected static $defaultName = 'sulu:content:cleanup-history';
-
     /**
      * @var SessionManagerInterface
      */
@@ -53,7 +53,6 @@ class CleanupHistoryCommand extends Command
 
     public function configure()
     {
-        $this->setDescription('Cleanup resource-locator history');
         $this->setHelp(
             <<<'EOT'
 The <info>%command.name%</info> command cleanup the history of the resource-locator of a <info>locale</info>.

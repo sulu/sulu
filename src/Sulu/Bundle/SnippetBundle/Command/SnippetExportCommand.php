@@ -18,11 +18,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:snippet:export', description: 'Export snippet translations from given language into xliff file for translating into a new language.')]
 class SnippetExportCommand extends Command
 {
-    protected static $defaultName = 'sulu:snippet:export';
-
     /**
      * @var SnippetExportInterface
      */
@@ -37,7 +37,6 @@ class SnippetExportCommand extends Command
 
     public function configure()
     {
-        $this->setDescription('Export snippet translations from given language into xliff file for translating into a new language.');
         $this->addArgument('target', InputArgument::REQUIRED, 'Target for export (e.g. export_de.xliff)');
         $this->addArgument('locale', InputArgument::REQUIRED, 'Locale to export (e.g. de, en)');
         $this->addOption('format', 'f', InputOption::VALUE_REQUIRED, '', '1.2.xliff');

@@ -21,11 +21,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:media:format:cache:cleanup', description: 'Remove media formats which medias not longer exist in the database')]
 class FormatCacheCleanupCommand extends Command
 {
-    protected static $defaultName = 'sulu:media:format:cache:cleanup';
-
     /**
      * @var EntityRepository
      */
@@ -55,8 +55,7 @@ class FormatCacheCleanupCommand extends Command
 
     protected function configure()
     {
-        $this->setDescription('Remove media formats which medias not longer exist in the database')
-            ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do nothing')
+        $this->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do nothing')
         ;
     }
 

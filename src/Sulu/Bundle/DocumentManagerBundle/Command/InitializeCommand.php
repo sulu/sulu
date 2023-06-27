@@ -18,11 +18,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:document:initialize', description: 'Initialize the content repository/repositories.')]
 class InitializeCommand extends Command
 {
-    protected static $defaultName = 'sulu:document:initialize';
-
     /**
      * @var Initializer
      */
@@ -46,7 +46,6 @@ class InitializeCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Initialize the content repository/repositories.')
             ->addOption('purge', null, InputOption::VALUE_NONE, 'Purge the content repository before initialization.')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Do not ask for confirmation.')
             ->setHelp(<<<'EOT'

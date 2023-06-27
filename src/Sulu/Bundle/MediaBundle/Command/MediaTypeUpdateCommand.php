@@ -19,11 +19,11 @@ use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:media:type:update', description: 'Update all media type by the set configuration')]
 class MediaTypeUpdateCommand extends Command
 {
-    protected static $defaultName = 'sulu:media:type:update';
-
     /**
      * @var TypeManagerInterface
      */
@@ -40,11 +40,6 @@ class MediaTypeUpdateCommand extends Command
 
         $this->mediaTypeManager = $mediaTypeManager;
         $this->entityManager = $entityManager;
-    }
-
-    protected function configure()
-    {
-        $this->setDescription('Update all media type by the set configuration');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

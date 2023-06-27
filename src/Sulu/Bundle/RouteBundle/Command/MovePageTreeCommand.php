@@ -18,14 +18,14 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 
 /**
  * Move documents from given parent-page to another.
  */
+#[AsCommand(name: 'sulu:route:page-tree:move')]
 class MovePageTreeCommand extends Command
 {
-    protected static $defaultName = 'sulu:route:page-tree:move';
-
     /**
      * @var PageTreeMoverInterface
      */

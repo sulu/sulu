@@ -18,11 +18,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:document:subscriber:debug', description: 'Show event listeners associated with the document manager')]
 class SubscriberDebugCommand extends Command
 {
-    protected static $defaultName = 'sulu:document:subscriber:debug';
-
     public const PREFIX = 'sulu_document_manager.';
 
     /**
@@ -40,7 +40,6 @@ class SubscriberDebugCommand extends Command
     public function configure()
     {
         $this->addArgument('event_name', InputArgument::OPTIONAL, 'Event name, without the sulu_document_manager. prefix');
-        $this->setDescription('Show event listeners associated with the document manager');
     }
 
     public function execute(InputInterface $input, OutputInterface $output): int

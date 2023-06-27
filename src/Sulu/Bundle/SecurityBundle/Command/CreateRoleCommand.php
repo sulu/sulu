@@ -22,11 +22,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Attribute\AsCommand;
 
+#[AsCommand(name: 'sulu:security:role:create', description: 'Create a role.')]
 class CreateRoleCommand extends Command
 {
-    protected static $defaultName = 'sulu:security:role:create';
-
     /**
      * @var EntityManagerInterface
      */
@@ -56,7 +56,7 @@ class CreateRoleCommand extends Command
 
     protected function configure()
     {
-        $this->setDescription('Create a role.')
+        $this
             ->setDefinition(
                 [
                     new InputArgument('name', InputArgument::REQUIRED, 'Name of role'),
