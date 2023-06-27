@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Command;
 
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,7 +20,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'sulu:media:regenerate-formats', description: 'Loops over sulu image cache, and regenerates the existing images')]
 class FormatCacheRegenerateCommand extends Command

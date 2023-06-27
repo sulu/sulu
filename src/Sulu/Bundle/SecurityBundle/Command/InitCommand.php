@@ -17,11 +17,11 @@ use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Component\Security\Authentication\RoleInterface;
 use Sulu\Component\Security\Authentication\RoleRepositoryInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 /**
  * @internal

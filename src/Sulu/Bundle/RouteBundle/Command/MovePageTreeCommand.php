@@ -14,11 +14,11 @@ namespace Sulu\Bundle\RouteBundle\Command;
 use Sulu\Bundle\RouteBundle\PageTree\PageTreeMoverInterface;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 /**
  * Move documents from given parent-page to another.

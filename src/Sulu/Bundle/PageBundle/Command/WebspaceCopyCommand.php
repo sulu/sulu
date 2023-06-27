@@ -27,12 +27,12 @@ use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'sulu:webspaces:copy', description: 'Copies a given webspace with given locale to a destination webspace with a destination locale.')]
 class WebspaceCopyCommand extends Command

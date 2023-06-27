@@ -14,6 +14,7 @@ namespace Sulu\Bundle\RouteBundle\Command;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Sulu\Bundle\RouteBundle\Manager\RouteManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -22,7 +23,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'sulu:route:update', description: 'Update the routes for all entities.')]
 class UpdateRouteCommand extends Command
