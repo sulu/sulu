@@ -58,7 +58,7 @@ class ReferenceViewBuilderFactory implements ReferenceViewBuilderFactoryInterfac
             ->addRouterAttributesToListRequest([$resourceIdRouterAttribute => 'resourceId'])
             ->addItemActions([
                 new ListItemAction(
-                    'resource_detail_link',
+                    'detail_link',
                     [
                         'resource_key_property' => 'referenceResourceKey',
                         'resource_id_property' => 'referenceResourceId',
