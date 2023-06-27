@@ -210,7 +210,9 @@ class WebspaceCopyCommand extends Command
         );
         foreach ($homeDocument->getChildren() as $child) {
             $this->output->writeln('<info>Processing: </info>' . $child->getPath());
-            $this->documentManager->remove($child);
+            $this->documentManager->remove($child, [
+                PageRemoveSubscriber::FORCE_REMOVE_CHILDREN_OPTION => true,
+            ]);
             $this->documentManager->flush();
         }
     }
