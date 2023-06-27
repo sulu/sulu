@@ -23,6 +23,9 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
+/**
+ * @internal this class should not be used or instanced by project code
+ */
 class SuluReferenceExtension extends Extension implements PrependExtensionInterface
 {
     use PersistenceExtensionTrait;
