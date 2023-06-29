@@ -59,14 +59,9 @@ class Reference implements ReferenceInterface, TimestampableInterface
     private $referenceTitle;
 
     /**
-     * @var int
+     * @var string
      */
-    private $referenceCount;
-
-    /**
-     * @var int
-     */
-    private $referenceLiveCount;
+    private $referenceContext;
 
     /**
      * @var string
@@ -174,38 +169,16 @@ class Reference implements ReferenceInterface, TimestampableInterface
         return $this;
     }
 
-    public function getReferenceCount(): int
+    public function getReferenceContext(): string
     {
-        return $this->referenceCount;
+        return $this->referenceContext;
     }
 
-    public function setReferenceCount(int $referenceCount): static
+    public function setReferenceContext(string $referenceContext): static
     {
-        $this->referenceCount = $referenceCount;
+        $this->referenceContext = $referenceContext;
 
         return $this;
-    }
-
-    public function getReferenceLiveCount(): int
-    {
-        return $this->referenceLiveCount;
-    }
-
-    public function setReferenceLiveCount(int $referenceLiveCount): static
-    {
-        $this->referenceLiveCount = $referenceLiveCount;
-
-        return $this;
-    }
-
-    public function increaseReferenceCounter(): int
-    {
-        return ++$this->referenceCount;
-    }
-
-    public function increaseReferenceLiveCounter(): int
-    {
-        return ++$this->referenceLiveCount;
     }
 
     public function equals(ReferenceInterface $reference): bool
@@ -217,6 +190,7 @@ class Reference implements ReferenceInterface, TimestampableInterface
             && $this->referenceResourceKey === $reference->referenceResourceKey
             && $this->referenceResourceId === $reference->referenceResourceId
             && $this->referenceProperty === $reference->referenceProperty
+            && $this->referenceContext === $reference->referenceContext
             && $this->referenceViewAttributes === $reference->referenceViewAttributes;
     }
 }

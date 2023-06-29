@@ -19,7 +19,6 @@
         <field name="referenceViewAttributes" column="referenceViewAttributes" type="json"/>
         <field name="referenceTitle" column="referenceTitle" type="string" nullable="false" length="191"/>
         <field name="referenceProperty" column="referenceProperty" type="string" nullable="false" length="191"/>
-        <field name="referenceCount" column="referenceCount" type="integer" nullable="false"/>
-        <field name="referenceLiveCount" column="referenceLiveCount" type="integer" nullable="false"/>
+        <field name="referenceContext" column="referenceContext" type="string" nullable="false" length="16"/>
     </mapped-superclass>
 </doctrine-mapping>

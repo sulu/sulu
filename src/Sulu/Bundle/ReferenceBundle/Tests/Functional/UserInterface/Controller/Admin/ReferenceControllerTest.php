@@ -84,6 +84,7 @@ class ReferenceControllerTest extends SuluTestCase
                             'referenceTitle' => 'Title',
                             'referenceResourceKeyTitle' => 'Page',
                             'referenceResourceId' => '123-123',
+                            'referenceContext' => 'default',
                             'referenceProperty' => 'image',
                             'resourceId' => '1',
                             'resourceKey' => 'media',
@@ -95,6 +96,7 @@ class ReferenceControllerTest extends SuluTestCase
                             'referenceTitle' => 'Title',
                             'referenceResourceKeyTitle' => 'Page',
                             'referenceResourceId' => '456-789',
+                            'referenceContext' => 'default',
                             'referenceProperty' => 'image',
                             'resourceId' => '1',
                             'resourceKey' => 'media',
@@ -127,8 +129,7 @@ class ReferenceControllerTest extends SuluTestCase
         $reference->setReferenceLocale('en');
         $reference->setReferenceTitle('Title');
         $reference->setReferenceProperty('image');
-        $reference->setReferenceCount(1);
-        $reference->setReferenceLiveCount(1);
+        $reference->setReferenceContext('default');
         $reference->setReferenceViewAttributes(['webspace' => 'sulu']);
 
         self::getEntityManager()->persist($reference);

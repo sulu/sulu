@@ -14,7 +14,6 @@ namespace Sulu\Bundle\ReferenceBundle\Application\Collector;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
-use Sulu\Component\Content\Document\WorkflowStage;
 
 class ReferenceCollector implements ReferenceCollectorInterface
 {
@@ -54,9 +53,9 @@ class ReferenceCollector implements ReferenceCollectorInterface
     private $referenceLocale;
 
     /**
-     * @var int
+     * @var string
      */
-    private $referenceWorkflowStage;
+    private $referenceContext;
 
     /**
      * @param array<string, string> $referenceViewAttributes
@@ -67,8 +66,8 @@ class ReferenceCollector implements ReferenceCollectorInterface
         string $referenceResourceId,
         string $referenceLocale,
         string $referenceTitle,
+        string $referenceContext,
         array $referenceViewAttributes = [],
-        ?int $referenceWorkflowStage = null
     ) {
         $this->referenceRepository = $referenceRepository;
         $this->referenceCollection = new ArrayCollection();
@@ -77,8 +76,8 @@ class ReferenceCollector implements ReferenceCollectorInterface
         $this->referenceResourceId = $referenceResourceId;
         $this->referenceLocale = $referenceLocale;
         $this->referenceTitle = $referenceTitle;
+        $this->referenceContext = $referenceContext;
         $this->referenceViewAttributes = $referenceViewAttributes;
-        $this->referenceWorkflowStage = $referenceWorkflowStage ?? WorkflowStage::TEST;
     }
 
     public function addReference(
@@ -93,19 +92,12 @@ class ReferenceCollector implements ReferenceCollectorInterface
             $this->referenceResourceId,
             $this->referenceLocale,
             $this->referenceTitle,
+            $this->referenceContext,
             $referenceProperty,
-            $this->referenceViewAttributes
+            $this->referenceViewAttributes,
         );
 
-        $existingReference = $this->getReference($reference);
-
-        $reference = $existingReference ?? $reference;
-        if ($existingReference) {
-            $reference->increaseReferenceCounter();
-            if (WorkflowStage::PUBLISHED === $this->referenceWorkflowStage) {
-                $reference->increaseReferenceLiveCounter();
-            }
-        }
+        $reference = $this->getReference($reference) ?? $reference;
 
         $this->referenceCollection->add($reference);
 
@@ -118,6 +110,7 @@ class ReferenceCollector implements ReferenceCollectorInterface
             'referenceResourceKey' => $this->referenceResourceKey,
             'referenceResourceId' => $this->referenceResourceId,
             'referenceLocale' => $this->referenceLocale,
+            'referenceContext' => $this->referenceContext,
         ]);
 
         foreach ($this->referenceCollection as $reference) {

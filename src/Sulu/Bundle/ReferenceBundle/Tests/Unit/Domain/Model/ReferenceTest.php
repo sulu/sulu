@@ -84,22 +84,11 @@ class ReferenceTest extends TestCase
         static::assertSame('id', $reference->getReferenceProperty());
     }
 
-    public function testGetSetReferenceCount(): void
+    public function testGetSetReferenceContext(): void
     {
         $reference = $this->createReference();
-        $reference->setReferenceCount(1);
-        static::assertSame(1, $reference->getReferenceCount());
-        $reference->increaseReferenceCounter();
-        static::assertSame(2, $reference->getReferenceCount());
-    }
-
-    public function testGetSetReferenceLiveCount(): void
-    {
-        $reference = $this->createReference();
-        $reference->setReferenceLiveCount(1);
-        static::assertSame(1, $reference->getReferenceLiveCount());
-        $reference->increaseReferenceLiveCounter();
-        static::assertSame(2, $reference->getReferenceLiveCount());
+        $reference->setReferenceContext('default');
+        static::assertSame('default', $reference->getReferenceContext());
     }
 
     public function testEqualsTrue(): void

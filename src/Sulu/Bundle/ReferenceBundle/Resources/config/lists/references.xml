@@ -37,6 +37,18 @@
         />
 
         <property
+            name="referenceContext"
+            translation="sulu_reference.reference_context"
+            visibility="yes"
+            searchability="no"
+            sortable="false"
+            width="auto"
+        >
+            <field-name>referenceContext</field-name>
+            <entity-name>%sulu.model.reference.class%</entity-name>
+        </property>
+
+        <property
             name="referenceProperty"
             translation="sulu_reference.reference_property"
             visibility="yes"

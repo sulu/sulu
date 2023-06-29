@@ -19,7 +19,6 @@ use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
-use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Extension\ReferenceExtensionInterface;
@@ -66,11 +65,9 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
 
     abstract public static function getResourceKey(): string;
 
-    public function updateReferences($document, string $locale): ReferenceCollectorInterface
+    public function updateReferences($document, string $locale, string $context): ReferenceCollectorInterface
     {
         $referenceResourceKey = $this->getReferenceResourceKey($document);
-
-        $workflowStage = $document instanceof WorkflowStageBehavior ? (int) $document->getWorkflowStage() : 0;
 
         $referenceCollector = new ReferenceCollector(
             $this->referenceRepository,
@@ -78,8 +75,8 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
             $document->getUuid(),
             $locale,
             $document->getTitle(),
+            $context,
             $this->getReferenceViewAttributes($document, $locale),
-            $workflowStage
         );
 
         $structure = $document->getStructure();
@@ -118,12 +115,13 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
         return $referenceCollector;
     }
 
-    public function removeReferences(UuidBehavior $document, ?string $locale = null): void
+    public function removeReferences(UuidBehavior $document, ?string $locale, string $context): void
     {
         $this->referenceRepository->removeBy(\array_filter([
             'referenceResourceKey' => $this->getReferenceResourceKey($document),
             'referenceResourceId' => $document->getUuid(),
             'referenceLocale' => $locale,
+            'referenceContext' => $context,
         ]));
     }
 

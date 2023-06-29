@@ -46,10 +46,12 @@ class ReferenceCollectorTest extends TestCase
                 $referenceLocale = $args[4];
                 /** @var string $referenceTitle */
                 $referenceTitle = $args[5];
+                /** @var string $referenceContext */
+                $referenceContext = $args[6];
                 /** @var string $referenceProperty */
-                $referenceProperty = $args[6];
+                $referenceProperty = $args[7];
                 /** @var array<string, string> $referenceViewAttributes */
-                $referenceViewAttributes = [];
+                $referenceViewAttributes = $args[8] ?? [];
 
                 $reference = new Reference();
 
@@ -60,10 +62,9 @@ class ReferenceCollectorTest extends TestCase
                     ->setReferenceResourceKey($referenceResourceKey)
                     ->setReferenceResourceId($referenceResourceId)
                     ->setReferenceTitle($referenceTitle)
-                    ->setReferenceViewAttributes($referenceViewAttributes)
+                    ->setReferenceContext($referenceContext)
                     ->setReferenceProperty($referenceProperty)
-                    ->setReferenceCount(1)
-                    ->setReferenceLiveCount(1);
+                    ->setReferenceViewAttributes($referenceViewAttributes);
 
                 return $reference;
             });
@@ -85,9 +86,8 @@ class ReferenceCollectorTest extends TestCase
         $this->assertSame('79041d83-8229-472d-9ada-01c50915de1e', $reference->getReferenceResourceId());
         $this->assertSame('en', $reference->getReferenceLocale());
         $this->assertSame('Title', $reference->getReferenceTitle());
+        $this->assertSame('default', $reference->getReferenceContext());
         $this->assertSame('headerImage', $reference->getReferenceProperty());
-        $this->assertSame(1, $reference->getReferenceCount());
-        $this->assertSame(1, $reference->getReferenceLiveCount());
     }
 
     public function testAddReferenceSame(): void
@@ -97,8 +97,6 @@ class ReferenceCollectorTest extends TestCase
         $referenceB = $referenceCollector->addReference('media', '1', 'headerImage');
 
         $this->assertSame($referenceA, $referenceB);
-        $this->assertSame(2, $referenceB->getReferenceCount());
-        $this->assertSame(1, $referenceB->getReferenceLiveCount());
     }
 
     public function testPersistReferences(): void
@@ -110,6 +108,7 @@ class ReferenceCollectorTest extends TestCase
         $this->referenceRepository->removeBy([
             'referenceResourceKey' => 'pages',
             'referenceResourceId' => '79041d83-8229-472d-9ada-01c50915de1e',
+            'referenceContext' => 'default',
             'referenceLocale' => 'en',
         ])->shouldBeCalled();
 
@@ -127,6 +126,7 @@ class ReferenceCollectorTest extends TestCase
         string $referenceResourceId = '79041d83-8229-472d-9ada-01c50915de1e',
         string $referenceLocale = 'en',
         string $referenceTitle = 'Title',
+        string $referenceContext = 'default',
         array $referenceViewAttributes = [],
         ?int $referenceWorkflowStage = null
     ): ReferenceCollector {
@@ -136,8 +136,8 @@ class ReferenceCollectorTest extends TestCase
             $referenceResourceId,
             $referenceLocale,
             $referenceTitle,
+            $referenceContext,
             $referenceViewAttributes,
-            $referenceWorkflowStage
         );
     }
 }

@@ -6,6 +6,7 @@
                  class="Sulu\Bundle\DocumentManagerBundle\Reference\Subscriber\DocumentReferenceSubscriber">
             <argument type="tagged_iterator" tag="sulu_document_manager.reference_provider" default-index-method="getResourceKey"/>
             <argument type="service" id="sulu_reference.reference_repository"/>
+            <argument>%sulu.context%</argument>
 
             <tag name="sulu_document_manager.event_subscriber" />
             <tag name="kernel.reset" method="reset" />

@@ -24,7 +24,7 @@ interface DocumentReferenceProviderInterface
     /**
      * @param UuidBehavior&TitleBehavior&StructureBehavior $document
      */
-    public function updateReferences($document, string $locale): ReferenceCollectorInterface;
+    public function updateReferences($document, string $locale, string $context): ReferenceCollectorInterface;
 
-    public function removeReferences(UuidBehavior $document, ?string $locale = null): void;
+    public function removeReferences(UuidBehavior $document, ?string $locale, string $context): void;
 }

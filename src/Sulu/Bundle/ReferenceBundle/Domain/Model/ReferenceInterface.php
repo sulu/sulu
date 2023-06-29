@@ -56,17 +56,9 @@ interface ReferenceInterface
 
     public function setReferenceProperty(string $referenceProperty): static;
 
-    public function getReferenceCount(): int;
+    public function getReferenceContext(): string;
 
-    public function setReferenceCount(int $referenceCount): static;
-
-    public function getReferenceLiveCount(): int;
-
-    public function setReferenceLiveCount(int $referenceLiveCount): static;
-
-    public function increaseReferenceCounter(): int;
-
-    public function increaseReferenceLiveCounter(): int;
+    public function setReferenceContext(string $referenceContext): static;
 
     /**
      * @param static $reference

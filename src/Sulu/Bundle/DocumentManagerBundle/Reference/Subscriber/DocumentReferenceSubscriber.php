@@ -62,17 +62,15 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
      */
     private array $removeDocuments = [];
 
-    private ReferenceRepositoryInterface $referenceRepository;
-
     /**
      * @param iterable<DocumentReferenceProviderInterface> $documentReferenceProviders
      */
     public function __construct(
         iterable $documentReferenceProviders,
-        ReferenceRepositoryInterface $referenceRepository,
+        private ReferenceRepositoryInterface $referenceRepository,
+        private string $suluContext
     ) {
         $this->documentReferenceProviders = $documentReferenceProviders instanceof \Traversable ? \iterator_to_array($documentReferenceProviders) : $documentReferenceProviders;
-        $this->referenceRepository = $referenceRepository;
     }
 
     /**
@@ -183,6 +181,7 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
             $this->getProvider($documentData['document'])?->updateReferences(
                 $documentData['document'],
                 $documentData['locale'],
+                $this->suluContext,
             );
         }
 
@@ -190,6 +189,7 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
             $this->getProvider($documentData['document'])?->updateReferences(
                 $documentData['document'],
                 $documentData['locale'],
+                $this->suluContext,
             );
         }
 
@@ -199,6 +199,7 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
             $this->getProvider($documentData['document'])?->removeReferences(
                 $documentData['document'],
                 $documentData['locale'],
+                $this->suluContext,
             );
         }
 

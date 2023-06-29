@@ -34,7 +34,8 @@ class SnippetReferenceRefresher implements ReferenceRefresherInterface
         private SessionInterface $session,
         private WebspaceManagerInterface $webspaceManager,
         private DocumentManagerInterface $documentManager,
-        private DocumentReferenceProviderInterface $documentReferenceProvider
+        private DocumentReferenceProviderInterface $documentReferenceProvider,
+        private string $suluContext
     ) {
     }
 
@@ -67,7 +68,7 @@ class SnippetReferenceRefresher implements ReferenceRefresherInterface
                     continue;
                 }
 
-                $this->documentReferenceProvider->updateReferences($document, $locale);
+                $this->documentReferenceProvider->updateReferences($document, $locale, $this->suluContext);
 
                 yield $document;
             }

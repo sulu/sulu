@@ -38,6 +38,7 @@ class ReferenceRepositoryTest extends SuluTestCase
             '434fb6f3-b64e-45e8-8287-fc9667bd3d50',
             'en',
             'Page Title',
+            'default',
             'headerImage',
             ['locale' => 'en']
         );
@@ -162,6 +163,7 @@ class ReferenceRepositoryTest extends SuluTestCase
             Uuid::uuid4()->toString(),
             'en',
             'Page Title',
+            'default',
             'headerImage',
             ['locale' => 'en']
         );

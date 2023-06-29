@@ -20,6 +20,7 @@ use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
  *     referenceResourceKey?: string,
  *     referenceResourceId?: string,
  *     referenceLocale?: string,
+ *     referenceContext?: string,
  *     changedOlderThan?: \DateTimeInterface
  * }
  */
@@ -35,6 +36,7 @@ interface ReferenceRepositoryInterface
         string $referenceResourceId,
         string $referenceLocale,
         string $referenceTitle,
+        string $referenceContext,
         string $referenceProperty,
         array $referenceViewAttributes = []
     ): ReferenceInterface;

@@ -50,6 +50,7 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
         string $referenceResourceId,
         string $referenceLocale,
         string $referenceTitle,
+        string $referenceContext,
         string $referenceProperty,
         array $referenceViewAttributes = [],
     ): ReferenceInterface {
@@ -66,10 +67,9 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
             ->setReferenceResourceKey($referenceResourceKey)
             ->setReferenceResourceId($referenceResourceId)
             ->setReferenceTitle($referenceTitle)
+            ->setReferenceContext($referenceContext)
             ->setReferenceViewAttributes($referenceViewAttributes)
-            ->setReferenceProperty($referenceProperty)
-            ->setReferenceCount(1)
-            ->setReferenceLiveCount(1);
+            ->setReferenceProperty($referenceProperty);
 
         return $reference;
     }
@@ -152,6 +152,12 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
         if (null !== $referenceLocale) {
             $queryBuilder->andWhere('reference.referenceLocale = :referenceLocale')
                 ->setParameter('referenceLocale', $referenceLocale);
+        }
+
+        $referenceContext = $filters['referenceContext'] ?? null;
+        if (null !== $referenceContext) {
+            $queryBuilder->andWhere('reference.referenceContext = :referenceContext')
+                ->setParameter('referenceContext', $referenceContext);
         }
 
         $changedOlderThan = $filters['changedOlderThan'] ?? null;

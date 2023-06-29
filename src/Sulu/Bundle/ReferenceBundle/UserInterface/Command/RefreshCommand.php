@@ -33,7 +33,8 @@ class RefreshCommand extends Command
      */
     public function __construct(
         private iterable $referenceRefreshers,
-        private ReferenceRepositoryInterface $referenceRepository
+        private ReferenceRepositoryInterface $referenceRepository,
+        private string $suluContext,
     ) {
         parent::__construct();
     }
@@ -80,6 +81,7 @@ class RefreshCommand extends Command
             $this->referenceRepository->flush();
             $this->referenceRepository->removeBy([
                 'referenceResourceKey' => $resourceKey,
+                'referenceContext' => $this->suluContext,
                 'changedOlderThan' => $now,
             ]);
             $ui->progressFinish();
