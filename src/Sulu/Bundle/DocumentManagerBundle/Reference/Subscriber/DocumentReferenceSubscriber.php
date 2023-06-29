@@ -193,6 +193,8 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
             );
         }
 
+        $this->referenceRepository->flush();
+
         foreach ($this->removeDocuments as $documentData) {
             $this->getProvider($documentData['document'])?->removeReferences(
                 $documentData['document'],
@@ -200,9 +202,9 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
             );
         }
 
-        $this->reset();
-
         $this->referenceRepository->flush();
+
+        $this->reset();
     }
 
     private function getProvider(StructureBehavior $document): ?DocumentReferenceProviderInterface

@@ -154,6 +154,12 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
                 ->setParameter('referenceLocale', $referenceLocale);
         }
 
+        $changedOlderThan = $filters['changedOlderThan'] ?? null;
+        if (null !== $changedOlderThan) {
+            $queryBuilder->andWhere('reference.changed < :changedOlderThan')
+                ->setParameter('changedOlderThan', $changedOlderThan);
+        }
+
         return $queryBuilder;
     }
 }

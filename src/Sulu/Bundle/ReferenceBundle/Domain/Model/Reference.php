@@ -11,8 +11,13 @@
 
 namespace Sulu\Bundle\ReferenceBundle\Domain\Model;
 
-class Reference implements ReferenceInterface
+use Sulu\Component\Persistence\Model\TimestampableInterface;
+use Sulu\Component\Persistence\Model\TimestampableTrait;
+
+class Reference implements ReferenceInterface, TimestampableInterface
 {
+    use TimestampableTrait;
+
     /**
      * @var int
      */

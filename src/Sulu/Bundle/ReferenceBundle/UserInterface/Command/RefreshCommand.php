@@ -64,6 +64,7 @@ class RefreshCommand extends Command
         foreach ($referenceRefresherPerResourceKey as $resourceKey => $referenceRefreshers) {
             $ui->section('Refresh ' . $resourceKey);
             $ui->progressStart();
+            $now = new \DateTimeImmutable();
 
             $counter = 0;
             foreach ($referenceRefreshers as $referenceRefresher) {
@@ -77,6 +78,10 @@ class RefreshCommand extends Command
             }
 
             $this->referenceRepository->flush();
+            $this->referenceRepository->removeBy([
+                'referenceResourceKey' => $resourceKey,
+                'changedOlderThan' => $now,
+            ]);
             $ui->progressFinish();
         }
 
