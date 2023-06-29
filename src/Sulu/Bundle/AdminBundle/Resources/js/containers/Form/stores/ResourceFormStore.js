@@ -310,6 +310,14 @@ export default class ResourceFormStore extends AbstractFormStore implements Form
         return this.resourceStore.forbidden;
     }
 
+    @computed get notFound(): boolean {
+        return this.resourceStore.notFound;
+    }
+
+    @computed get unexpectedError(): boolean {
+        return this.resourceStore.unexpectedError;
+    }
+
     @computed get dirty(): boolean {
         return this.resourceStore.dirty;
     }
