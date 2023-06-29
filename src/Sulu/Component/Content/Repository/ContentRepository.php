@@ -675,7 +675,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         $locales,
         MappingInterface $mapping,
         ?UserInterface $user = null,
-        array $permissions
+        array $permissions = []
     ) {
         $webspaceKey = $this->nodeHelper->extractWebspaceFromPath($row->getPath());
 
