@@ -105,10 +105,12 @@ export interface FormStoreInterface {
     +loading: boolean,
     +locale: ?IObservableValue<string>,
     +metadataOptions: ?{[string]: any},
+    +notFound: boolean,
     +options: SchemaOptions,
     +resourceKey: ?string,
     +schema: Object,
     +types: {[key: string]: SchemaType},
+    +unexpectedError: boolean,
     +validate: () => boolean,
 }
 

@@ -13,7 +13,7 @@ exports[`Render PermissionHint 1`] = `
         class="su-lock"
       />
     </div>
-    sulu_admin.no_permissions
+    Hint Text
   </div>
 </div>
 `;
