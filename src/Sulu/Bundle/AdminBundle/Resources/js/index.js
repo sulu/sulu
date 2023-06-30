@@ -57,6 +57,7 @@ import {
     TextFieldFilterType,
     ThumbnailFieldTransformer,
     TimeFieldTransformer,
+    TranslationFieldTransformer,
     TreeTableAdapter,
 } from './containers/List';
 import FieldBlocks, {
@@ -226,6 +227,7 @@ function registerListFieldTransformers() {
     listFieldTransformerRegistry.add('color', new ColorFieldTransformer());
     listFieldTransformerRegistry.add('icon', new IconFieldTransformer());
     listFieldTransformerRegistry.add('html', new HtmlFieldTransformer());
+    listFieldTransformerRegistry.add('translation', new TranslationFieldTransformer());
 
     // TODO: Remove this type when not needed anymore
     listFieldTransformerRegistry.add('title', new StringFieldTransformer());
