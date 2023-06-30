@@ -17,12 +17,19 @@ use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
 /**
  * @phpstan-type ReferenceFilters array{
  *     id?: int,
+ *     resourceId?: string,
+ *     resourceKey?: string,
  *     referenceResourceKey?: string,
  *     referenceResourceId?: string,
  *     referenceLocale?: string,
  *     referenceContext?: string,
- *     changedOlderThan?: \DateTimeInterface
+ *     changedOlderThan?: \DateTimeInterface,
+ *     limit: int,
+ *     offset: int,
  * }
+ * @phpstan-type ReferenceSortBys array<string, 'asc'|'desc'>
+ * @phpstan-type ReferenceFields string[]
+ * @phpstan-type ReferenceGroupByFields string[]
  */
 interface ReferenceRepositoryInterface
 {
@@ -52,6 +59,30 @@ interface ReferenceRepositoryInterface
      * @param ReferenceFilters $filters
      */
     public function findOneBy(array $filters): ?ReferenceInterface;
+
+    /**
+     * @param ReferenceFilters $filters
+     * @param ReferenceSortBys $sortBys
+     * @param ReferenceFields $fields
+     * @param ReferenceGroupByFields $groupByFields
+     *
+     * @return iterable<array{
+     *     referenceTitle?: string,
+     *     referenceResourceKey?: string,
+     *     referenceResourceId?: string,
+     *     referenceViewAttributes?: array<string, string>,
+     *     referenceContext?: string,
+     *     referenceProperty?: string,
+     * }>
+     */
+    public function findFlatBy(array $filters = [], array $sortBys = [], array $fields = [], array $groupByFields = [], bool $distinct = false): iterable;
+
+    /**
+     * @param ReferenceFilters $filters
+     * @param ReferenceFields $fields
+     * @param ReferenceGroupByFields $groupByFields
+     */
+    public function count(array $filters = [], array $groupByFields = [], bool $distinct = false): int;
 
     public function add(ReferenceInterface $reference): void;
 

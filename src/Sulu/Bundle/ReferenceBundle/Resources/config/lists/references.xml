@@ -10,21 +10,21 @@
             searchability="yes"
             sortable="true"
             width="shrink"
-        >
-            <field-name>referenceTitle</field-name>
-            <entity-name>%sulu.model.reference.class%</entity-name>
-        </property>
+        />
 
         <property
-            name="referenceResourceKeyTitle"
+            name="referenceResourceKey"
             translation="sulu_admin.resource"
             visibility="yes"
             searchability="yes"
             sortable="false"
             width="auto"
         >
-            <field-name>referenceResourceKey</field-name>
-            <entity-name>%sulu.model.reference.class%</entity-name>
+            <transformer type="translation">
+                <params>
+                    <param name="prefix" value="sulu_reference.resource."/>
+                </params>
+            </transformer>
         </property>
 
         <property
@@ -36,6 +36,8 @@
             width="auto"
         />
 
+
+
         <property
             name="referenceContext"
             translation="sulu_reference.reference_context"
@@ -43,10 +45,7 @@
             searchability="no"
             sortable="false"
             width="auto"
-        >
-            <field-name>referenceContext</field-name>
-            <entity-name>%sulu.model.reference.class%</entity-name>
-        </property>
+        />
 
         <property
             name="referenceProperty"
@@ -55,9 +54,13 @@
             searchability="no"
             sortable="false"
             width="auto"
-        >
-            <field-name>referenceProperty</field-name>
-            <entity-name>%sulu.model.reference.class%</entity-name>
-        </property>
+        />
+
+        <property
+            name="referenceViewAttributes"
+            visibility="never"
+            searchability="no"
+            sortable="false"
+        />
     </properties>
 </list>
