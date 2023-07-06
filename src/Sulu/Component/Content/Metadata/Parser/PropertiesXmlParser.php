@@ -187,7 +187,7 @@ class PropertiesXmlParser
         return $result;
     }
 
-    private function loadTypes(&$tags, \DOMXPath $xpath, ?\DOMNode $context = null, $formKey)
+    private function loadTypes(&$tags, \DOMXPath $xpath, ?\DOMNode $context, $formKey)
     {
         $result = [];
 
