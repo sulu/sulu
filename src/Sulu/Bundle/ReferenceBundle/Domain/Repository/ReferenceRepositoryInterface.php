@@ -24,12 +24,11 @@ use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
  *     referenceLocale?: string,
  *     referenceContext?: string,
  *     changedOlderThan?: \DateTimeInterface,
- *     limit: int,
- *     offset: int,
+ *     limit?: int,
+ *     offset?: int,
  * }
  * @phpstan-type ReferenceSortBys array<string, 'asc'|'desc'>
  * @phpstan-type ReferenceFields string[]
- * @phpstan-type ReferenceGroupByFields string[]
  */
 interface ReferenceRepositoryInterface
 {
@@ -64,7 +63,6 @@ interface ReferenceRepositoryInterface
      * @param ReferenceFilters $filters
      * @param ReferenceSortBys $sortBys
      * @param ReferenceFields $fields
-     * @param ReferenceGroupByFields $groupByFields
      *
      * @return iterable<array{
      *     referenceTitle?: string,
@@ -75,14 +73,13 @@ interface ReferenceRepositoryInterface
      *     referenceProperty?: string,
      * }>
      */
-    public function findFlatBy(array $filters = [], array $sortBys = [], array $fields = [], array $groupByFields = [], bool $distinct = false): iterable;
+    public function findFlatBy(array $filters = [], array $sortBys = [], array $fields = [], bool $distinct = false): iterable;
 
     /**
      * @param ReferenceFilters $filters
-     * @param ReferenceFields $fields
-     * @param ReferenceGroupByFields $groupByFields
+     * @param ReferenceFields $distinctFields
      */
-    public function count(array $filters = [], array $groupByFields = [], bool $distinct = false): int;
+    public function count(array $filters = [], array $distinctFields = []): int;
 
     public function add(ReferenceInterface $reference): void;
 

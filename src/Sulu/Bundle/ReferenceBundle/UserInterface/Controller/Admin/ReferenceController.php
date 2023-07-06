@@ -19,24 +19,24 @@ use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\ReferenceAdmin;
 use Sulu\Component\Rest\AbstractRestController;
-use Sulu\Component\Rest\ListBuilder\ListRepresentation;
+use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
+use Sulu\Component\Rest\ListBuilder\PaginatedRepresentation;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @final
+ *
+ * @internal there should be no need to extend this class
+ */
 class ReferenceController extends AbstractRestController implements ClassResourceInterface
 {
-    /**
-     * @param class-string $referenceClass
-     */
     public function __construct(
         private ReferenceRepositoryInterface $referenceRepository,
-        private TranslatorInterface $translator,
         private SecurityCheckerInterface $securityChecker,
-        private string $referenceClass,
         ViewHandlerInterface $viewHandler,
         ?TokenStorageInterface $tokenStorage = null
     ) {
@@ -54,57 +54,112 @@ class ReferenceController extends AbstractRestController implements ClassResourc
         $resourceId = $request->query->get('resourceId');
         /** @var string|null $resourceKey */
         $resourceKey = $request->query->get('resourceKey');
-
+        $parentId = $request->query->get('parentId');
         $limit = $request->query->getInt('limit', 10);
         $page = $request->query->getInt('page', 1);
         $offset = ($page - 1) * $limit;
 
+        $referenceResourceKey = null;
+        $referenceResourceId = null;
+        $referenceResourceLocale = null;
+
+        $rootLevel = true;
+        if ($parentId) {
+            $rootLevel = false;
+            list(
+                $referenceResourceKey,
+                $referenceResourceId,
+                $referenceResourceLocale,
+            ) = \explode('__', $parentId); // see expandItems method about the implode
+            $limit = null;
+            $offset = null;
+        }
+
+        $filters = \array_filter([
+            'resourceId' => $resourceId,
+            'resourceKey' => $resourceKey,
+            'referenceResourceKey' => $referenceResourceKey,
+            'referenceResourceId' => $referenceResourceId,
+            'referenceResourceLocale' => $referenceResourceLocale,
+            'limit' => $limit,
+            'offset' => $offset,
+        ]);
+
         /** @var string|null $sortBy */
         $sortBy = $request->query->get('sortBy');
-        /** @var string|null $sortOrder */
-        $sortOrder = $request->query->get('sortOrder');
+        /** @var 'asc'|'desc' $sortOrder */
+        $sortOrder = $request->query->get('sortOrder', 'asc');
+        $sortBys = $sortBy ? [
+            $sortBy => $sortOrder,
+        ] : [];
 
         $fields = \explode(',', $request->query->get('fields', ''));
+        $removeFields = ['id']; // the frontend always add the id field, but we don't need it in this case as we group by other fields
+        $fields = [...$fields, 'referenceResourceKey', 'referenceResourceId', 'referenceLocale', 'referenceViewAttributes'];
 
-        // the frontend always add the id field, but we don't need it in this case as we group by other fields
-        $removeFields = ['id'];
-        $removeFields[] = 'referenceContext';
-        $removeFields[] = 'referenceProperty';
+        if ($rootLevel) {
+            $removeFields[] = 'referenceContext';
+            $removeFields[] = 'referenceProperty';
+        }
+
         foreach ($removeFields as $removeField) {
             $fieldIndex = \array_search($removeField, $fields, true);
             if (false !== $fieldIndex) {
                 unset($fields[$fieldIndex]);
             }
         }
+        $fields = \array_filter(\array_unique($fields));
 
-        $rows = $this->referenceRepository->findFlatBy([
-            'resourceId' => $resourceId,
-            'resourceKey' => $resourceKey,
-            'limit' => $limit,
-            'offset' => $offset,
-        ], \array_filter([
-            $sortBy => $sortOrder,
-        ]), \array_filter($fields), [], distinct: true);
-
-        $total = $this->referenceRepository->count([
-            'resourceId' => $resourceId,
-            'resourceKey' => $resourceKey,
-            'limit' => $limit,
-            'offset' => $offset,
-        ]);
-
-        $listRepresentation = new ListRepresentation(
-            $rows,
-            ReferenceInterface::RESOURCE_KEY,
-            'sulu_reference.get_references',
-            $request->query->all(),
-            $page,
-            $limit,
-            $total
+        $rows = $this->expandItems(
+            $this->referenceRepository->findFlatBy($filters, $sortBys, $fields, distinct: $rootLevel),
+            $rootLevel
         );
+        $total = $this->referenceRepository->count($filters, $rootLevel ? $fields : []);
+
+        $listRepresentation = $limit
+            ? new PaginatedRepresentation(
+                $rows,
+                ReferenceInterface::RESOURCE_KEY,
+                $page,
+                $limit,
+                $total
+            ) : new CollectionRepresentation(
+                $rows,
+                ReferenceInterface::RESOURCE_KEY
+            )
+        ;
 
         return $this->handleView(
             $this->view($listRepresentation, 200)
         );
+    }
+
+    /**
+     * @param iterable<array<string, mixed>> $rows
+     *
+     * @return iterable<array<string, mixed>>
+     */
+    private function expandItems(iterable $rows, bool $rootLevel): iterable
+    {
+        $count = 0;
+        foreach ($rows as $row) {
+            // without a unique identifier the frontend currently has a problem with the list component
+            $row['id'] = \implode('__', [$row['referenceResourceKey'], $row['referenceResourceId'], $row['referenceLocale']]);
+
+            if ($rootLevel) {
+                $row['hasChildren'] = $rootLevel;
+            }
+
+            if (!$rootLevel) {
+                $row['id'] .= '__' . (++$count);
+                unset($row['referenceResourceKey']);
+                unset($row['referenceResourceId']);
+                unset($row['referenceLocale']);
+                unset($row['referenceTitle']);
+                unset($row['resourceViewAttributes']);
+            }
+
+            yield $row;
+        }
     }
 }

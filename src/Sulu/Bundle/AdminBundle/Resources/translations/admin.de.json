@@ -31,6 +31,7 @@
     "sulu_admin.no": "Nein",
     "sulu_admin.type": "Typ",
     "sulu_admin.default": "Standard",
+    "sulu_admin.locale": "Locale",
     "sulu_admin.error_required": "Dieses Feld muss ausgefüllt werden",
     "sulu_admin.error_minlength": "Die minimale Länge dieses Feldes wurde unterschritten",
     "sulu_admin.error_maxlength": "Die maximale Länge dieses Feldes wurde überschritten",

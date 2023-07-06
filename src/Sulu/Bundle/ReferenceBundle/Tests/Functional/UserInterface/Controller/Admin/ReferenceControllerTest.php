@@ -45,19 +45,79 @@ class ReferenceControllerTest extends SuluTestCase
         );
     }
 
-    public function testCgetActionFilters(): void
+    public function testCgetActionFiltersAndFields(): void
     {
         $client = $this->createAuthenticatedClient();
 
         self::purgeDatabase();
 
         $this->createReference('media', '1', 'pages', '123-123');
+        $reference2 = $this->createReference('media', '1', 'pages', '123-123');
+        $reference2->setReferenceContext('excerpt');
+        $reference2->setReferenceProperty('icon');
         $this->createReference('media', '1', 'pages', '456-789');
         $this->createReference('media', '2', 'pages', '890-123');
 
         self::getEntityManager()->flush();
 
-        $client->request('GET', '/admin/api/references?resourceKey=media&resourceId=1');
+        // represents a real request of the admin list UI
+        $client->request('GET', '/admin/api/references?resourceKey=media&resourceId=1&fields=referenceTitle,referenceLocale,referenceResourceKey,referenceContext,referenceProperty,id');
+        $response = $client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $json */
+        $json = \json_decode($response->getContent() ?: '', true, \JSON_THROW_ON_ERROR);
+
+        $this->assertSame(
+            [
+                '_embedded' => [
+                    'references' => [
+                        [
+                            'referenceTitle' => 'Title',
+                            'referenceLocale' => 'en',
+                            'referenceResourceKey' => 'pages',
+                            'referenceResourceId' => '123-123',
+                            'referenceViewAttributes' => ['webspace' => 'sulu'],
+                            'id' => 'pages__123-123__en',
+                            'hasChildren' => true,
+                        ],
+                        [
+                            'referenceTitle' => 'Title',
+                            'referenceLocale' => 'en',
+                            'referenceResourceKey' => 'pages',
+                            'referenceResourceId' => '456-789',
+                            'referenceViewAttributes' => ['webspace' => 'sulu'],
+                            'id' => 'pages__456-789__en',
+                            'hasChildren' => true,
+                        ],
+                    ],
+                ],
+                'limit' => 10,
+                'total' => 2,
+                'page' => 1,
+                'pages' => 1,
+            ],
+            $json,
+        );
+    }
+
+    public function testCgetActionChild(): void
+    {
+        $client = $this->createAuthenticatedClient();
+
+        self::purgeDatabase();
+
+        $this->createReference('media', '1', 'pages', '123-123');
+        $reference2 = $this->createReference('media', '1', 'pages', '123-123');
+        $reference2->setReferenceContext('excerpt');
+        $reference2->setReferenceProperty('icon');
+        $this->createReference('media', '1', 'pages', '456-789');
+
+        self::getEntityManager()->flush();
+
+        // represents a real request of the admin list UI
+        $client->request('GET', '/admin/api/references?resourceKey=media&resourceId=1&fields=referenceTitle,referenceLocale,referenceResourceKey,referenceContext,referenceProperty,id');
         $response = $client->getResponse();
 
         $this->assertHttpStatusCode(200, $response);
@@ -70,46 +130,35 @@ class ReferenceControllerTest extends SuluTestCase
         $this->assertTrue(isset($json['_embedded']['references']));
         $this->assertIsArray($json['_embedded']['references']);
         $this->assertTrue(isset($json['_embedded']['references'][0]['id']));
-        $this->assertTrue(isset($json['_embedded']['references'][1]['id']));
-        // replace ids with fixed values
-        foreach ($json['_embedded']['references'] as $key => &$reference) {
-            $reference['id'] = $key + 1;
-        }
+        $parentId = $json['_embedded']['references'][0]['id'];
+        $this->assertIsString($parentId);
+
+        $client->request('GET', '/admin/api/references?resourceKey=media&resourceId=1&fields=referenceTitle,referenceLocale,referenceResourceKey,referenceContext,referenceProperty,id&parentId=' . $parentId);
+        $response = $client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
+
+        /** @var array<string, mixed> $json */
+        $json = \json_decode($response->getContent() ?: '', true, \JSON_THROW_ON_ERROR);
 
         $this->assertSame(
             [
                 '_embedded' => [
                     'references' => [
                         [
-                            'referenceTitle' => 'Title',
-                            'referenceResourceKeyTitle' => 'Page',
-                            'referenceResourceId' => '123-123',
                             'referenceContext' => 'default',
                             'referenceProperty' => 'image',
-                            'resourceId' => '1',
-                            'resourceKey' => 'media',
-                            'referenceResourceKey' => 'pages',
                             'referenceViewAttributes' => ['webspace' => 'sulu'],
-                            'id' => 1,
+                            'id' => 'pages__123-123__en__1',
                         ],
                         [
-                            'referenceTitle' => 'Title',
-                            'referenceResourceKeyTitle' => 'Page',
-                            'referenceResourceId' => '456-789',
-                            'referenceContext' => 'default',
-                            'referenceProperty' => 'image',
-                            'resourceId' => '1',
-                            'resourceKey' => 'media',
-                            'referenceResourceKey' => 'pages',
+                            'referenceContext' => 'excerpt',
+                            'referenceProperty' => 'icon',
                             'referenceViewAttributes' => ['webspace' => 'sulu'],
-                            'id' => 2,
+                            'id' => 'pages__123-123__en__2',
                         ],
                     ],
                 ],
-                'limit' => 10,
-                'total' => 2,
-                'page' => 1,
-                'pages' => 1,
             ],
             $json,
         );

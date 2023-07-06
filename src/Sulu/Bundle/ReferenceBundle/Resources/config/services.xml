@@ -9,6 +9,7 @@
         >
             <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
+
         <service id="Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface"
                  alias="sulu_reference.reference_repository"/>
 
@@ -34,9 +35,7 @@
                  class="Sulu\Bundle\ReferenceBundle\UserInterface\Controller\Admin\ReferenceController"
                  public="true">
             <argument type="service" id="sulu_reference.reference_repository"/>
-            <argument type="service" id="translator"/>
             <argument type="service" id="sulu_security.security_checker"/>
-            <argument>%sulu.model.reference.class%</argument>
             <argument type="service" id="fos_rest.view_handler"/>
             <argument type="service" id="security.token_storage"/>
 

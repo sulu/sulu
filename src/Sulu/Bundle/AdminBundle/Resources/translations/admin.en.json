@@ -31,6 +31,7 @@
     "sulu_admin.no": "No",
     "sulu_admin.type": "Type",
     "sulu_admin.default": "Default",
+    "sulu_admin.locale": "Sprache",
     "sulu_admin.error_required": "This field must have a value",
     "sulu_admin.error_minlength": "The minimal length of this field was not reached",
     "sulu_admin.error_maxlength": "The maximum length of this field has been exceeded",

@@ -24,7 +24,6 @@ use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 /**
  * @phpstan-import-type ReferenceFilters from ReferenceRepositoryInterface
  * @phpstan-import-type ReferenceSortBys from ReferenceRepositoryInterface
- * @phpstan-import-type ReferenceGroupByFields from ReferenceRepositoryInterface
  * @phpstan-import-type ReferenceFields from ReferenceRepositoryInterface
  */
 final class ReferenceRepository implements ReferenceRepositoryInterface
@@ -36,11 +35,17 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
      */
     private EntityRepository $entityRepository;
 
+    /**
+     * @var class-string<ReferenceInterface>
+     */
+    private string $className;
+
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
 
         $this->entityRepository = $this->entityManager->getRepository(ReferenceInterface::class);
+        $this->className = $this->entityRepository->getClassName();
     }
 
     public function create(
@@ -54,11 +59,8 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
         string $referenceProperty,
         array $referenceViewAttributes = [],
     ): ReferenceInterface {
-        /** @var class-string<ReferenceInterface> $className */
-        $className = $this->entityRepository->getClassName();
-
         /** @var ReferenceInterface $reference */
-        $reference = new $className();
+        $reference = new $this->className();
 
         $reference
             ->setResourceKey($resourceKey)
@@ -118,23 +120,43 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
         }
     }
 
-    public function findFlatBy(array $filters = [], array $sortBys = [], array $fields = [], array $groupByFields = [], bool $distinct = false): iterable
+    public function findFlatBy(array $filters = [], array $sortBys = [], array $fields = [], bool $distinct = false): iterable
     {
-        $queryBuilder = $this->createQueryBuilder($filters, $sortBys, $groupByFields, $distinct);
+        $queryBuilder = $this->createQueryBuilder($filters, $sortBys, $distinct);
         $this->addSelectFields($queryBuilder, $fields);
 
+        /**
+         * @var array{
+         *     referenceTitle?: string,
+         *     referenceResourceKey?: string,
+         *     referenceResourceId?: string,
+         *     referenceViewAttributes?: array<string, string>,
+         *     referenceContext?: string,
+         *     referenceProperty?: string,
+         * } $row
+         */
         foreach ($queryBuilder->getQuery()->toIterable() as $row) {
             yield $row;
         }
     }
 
-    public function count(array $filters = [], array $groupByFields = [], bool $distinct = false): int
+    public function count(array $filters = [], array $distinctFields = []): int
     {
-        $queryBuilder = $this->createQueryBuilder($filters, [], $groupByFields, $distinct);
+        $queryBuilder = $this->createQueryBuilder($filters);
 
-        $queryBuilder->select('COUNT(reference.id)');
+        if (0 === \count($distinctFields)) {
+            $queryBuilder->select('COUNT(reference)');
 
-        return (int) $queryBuilder->getQuery()->getSingleScalarResult();
+            /** @var int */
+            return $queryBuilder->getQuery()->getSingleScalarResult();
+        }
+
+        $this->addSelectFields($queryBuilder, $distinctFields);
+        $this->addGroupByFields($queryBuilder, $distinctFields);
+
+        // currently counted in PHP else we would need to create a distinctField
+        //     as COUNT(DISTINCT CONCAT(field1, field2, ...)) is would also be slow
+        return \count($queryBuilder->getQuery()->getArrayResult());
     }
 
     public function flush(): void
@@ -145,17 +167,33 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
     /**
      * @param ReferenceFilters $filters
      * @param ReferenceSortBys $sortBys
-     * @param ReferenceGroupByFields $sortBys
      */
-    private function createQueryBuilder(array $filters = [], array $sortBys = [], array $groupByFields = [], bool $distinct = false): QueryBuilder
+    private function createQueryBuilder(array $filters = [], array $sortBys = [], bool $distinct = false): QueryBuilder
     {
         $queryBuilder = $this->entityRepository->createQueryBuilder('reference');
-        $queryBuilder->distinct($distinct);
 
         $id = $filters['id'] ?? null;
         if (null !== $id) {
             $queryBuilder->andWhere('reference.id = :id')
                 ->setParameter('id', $id);
+        }
+
+        $referenceResourceKey = $filters['referenceResourceKey'] ?? null;
+        if (null !== $referenceResourceKey) {
+            $queryBuilder->andWhere('reference.referenceResourceKey = :referenceResourceKey')
+                ->setParameter('referenceResourceKey', $referenceResourceKey);
+        }
+
+        $resourceId = $filters['resourceId'] ?? null;
+        if (null !== $resourceId) {
+            $queryBuilder->andWhere('reference.resourceId = :resourceId')
+                ->setParameter('resourceId', $resourceId);
+        }
+
+        $resourceKey = $filters['resourceKey'] ?? null;
+        if (null !== $resourceKey) {
+            $queryBuilder->andWhere('reference.resourceKey = :resourceKey')
+                ->setParameter('resourceKey', $resourceKey);
         }
 
         $referenceResourceKey = $filters['referenceResourceKey'] ?? null;
@@ -188,13 +226,21 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
                 ->setParameter('changedOlderThan', $changedOlderThan);
         }
 
+        $limit = $filters['limit'] ?? null;
+        if (null !== $limit) {
+            $queryBuilder->setMaxResults($limit);
+        }
+
+        $offset = $filters['offset'] ?? null;
+        if (null !== $offset) {
+            $queryBuilder->setFirstResult($offset);
+        }
+
         foreach ($sortBys as $field => $direction) {
             $queryBuilder->addOrderBy('reference.' . $field, $direction);
         }
 
-        foreach ($groupByFields as $field) {
-            $queryBuilder->addGroupBy('reference.' . $field);
-        }
+        $queryBuilder->distinct($distinct);
 
         return $queryBuilder;
     }
@@ -206,11 +252,8 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
     {
         $isFirst = true;
         foreach ($fields as $field) {
-            if ('referenceResourceKeyTitle' === $field) {
-                $field = 'referenceResourceKey';
-            }
-
             if (true === $isFirst) {
+                // doctrine automatically calls `select` so we need to overwrite it
                 $queryBuilder->select('reference.' . $field);
                 $isFirst = false;
 
@@ -218,6 +261,16 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
             }
 
             $queryBuilder->addSelect('reference.' . $field);
+        }
+    }
+
+    /**
+     * @param ReferenceFields $fields
+     */
+    private function addGroupByFields(QueryBuilder $queryBuilder, array $fields): void
+    {
+        foreach ($fields as $field) {
+            $queryBuilder->addGroupBy('reference.' . $field);
         }
     }
 }
