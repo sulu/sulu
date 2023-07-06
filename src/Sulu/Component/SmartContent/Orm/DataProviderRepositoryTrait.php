@@ -26,9 +26,17 @@ trait DataProviderRepositoryTrait
     private $accessControlQueryEnhancer = null;
 
     /**
+     * @param array $filters
+     * @param int $page
+     * @param int $pageSize
+     * @param int $limit
+     * @param string $locale
+     * @param array $options
      * @param string|null $entityClass
      * @param string|null $entityAlias
      * @param int|null $permission
+     *
+     * @return mixed
      *
      * @see DataProviderRepositoryInterface::findByFilters
      */

@@ -17,6 +17,8 @@ use Sulu\Component\Security\Authentication\RoleInterface;
 
 /**
  * SecurityType.
+ *
+ * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
  */
 class SecurityType
 {
