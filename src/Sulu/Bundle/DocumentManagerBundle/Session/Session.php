@@ -173,7 +173,9 @@ class Session implements SessionInterface
         $xpath->registerNamespace('sv', 'http://www.jcp.org/jcr/sv/1.0');
 
         foreach ($xpath->query('//sv:property[@sv:name="sulu:versions" or @sv:name="jcr:versionHistory" or @sv:name="jcr:baseVersion" or @sv:name="jcr:predecessors" or @sv:name="jcr:isCheckedOut"]') as $element) {
-            $element->parentNode->removeChild($element);
+            if ($element->parentNode) {
+                $element->parentNode->removeChild($element);
+            }
         }
 
         \fwrite($stream, $document->saveXML());
