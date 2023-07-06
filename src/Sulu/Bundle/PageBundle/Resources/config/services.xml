@@ -191,6 +191,7 @@
         <!-- reference-store -->
         <service id="sulu_page.reference_store.content"
                  class="Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore">
+            <tag name="sulu_website.reference_store" alias="pages"/>
             <tag name="sulu_website.reference_store" alias="content"/>
             <tag name="kernel.reset" method="reset"/>
         </service>
