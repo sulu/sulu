@@ -20,6 +20,8 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * Load security-types from xml to database.
+ *
+ * @deprecated
  */
 class LoadSecurityTypes implements FixtureInterface, OrderedFixtureInterface, ContainerAwareInterface
 {
@@ -57,6 +59,10 @@ class LoadSecurityTypes implements FixtureInterface, OrderedFixtureInterface, Co
                             $typeName = $child->nodeValue;
                         }
                     }
+                }
+
+                if (!$typeId || !$typeName) {
+                    continue;
                 }
 
                 $securityType = (\array_key_exists($typeId, $present)) ? $present[$typeId] : new SecurityType();

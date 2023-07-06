@@ -8151,7 +8151,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$contact of method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManager\\:\\:getApiObject\\(\\) expects Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface, object given\\.$#"
+			message: "#^Parameter \\#1 \\$contact of method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManager\\:\\:getApiObject\\(\\) expects Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
@@ -8192,6 +8192,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$addresses of method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface,Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact,Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactAddress\\>\\:\\:processAddresses\\(\\) expects array, string\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_map expects array, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
@@ -9596,7 +9601,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFilters\\(\\) should return array\\<object\\> but returns mixed\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFilters\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
@@ -9892,6 +9897,11 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByFilters\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByFilters\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
@@ -11492,11 +11502,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Util\\\\IndexComparator\\:\\:compare\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Util/IndexComparator.php
-
-		-
-			message: "#^Parameter \\#2 \\$string2 of function strnatcmp expects string, int\\<0, max\\>\\|string given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Util/IndexComparator.php
 
@@ -16806,6 +16811,26 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:parentFindByFilters\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:parentFindByFilters\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
+
+		-
+			message: "#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(mixed\\)\\: mixed\\)\\|null, Closure\\(Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media\\)\\: Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_map expects array, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
+
+		-
 			message: "#^Cannot access offset 1 on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
@@ -17581,16 +17606,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/Focus/Focus.php
 
 		-
-			message: "#^Cannot call method layers\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
-
-		-
-			message: "#^Cannot clone non\\-object variable \\$layer of type mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
-
-		-
 			message: "#^Empty catch block\\. If you are sure this is meant to be empty, please add a \"// @ignoreException\" comment in the catch block\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
@@ -17657,11 +17672,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ImageConverter\\\\ImagineImageConverter\\:\\:getOptionsFromImage\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ImageConverter\\\\ImagineImageConverter\\:\\:modifyAllLayers\\(\\) should return Imagine\\\\Image\\\\ImageInterface but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
 
@@ -31326,11 +31336,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
 		-
-			message: "#^Access to an undefined property object\\:\\:\\$nodeValue\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
 			message: "#^Argument of an invalid type DOMNodeList\\<DOMNode\\>\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
@@ -43066,11 +43071,6 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Subscriber/WorkflowStageSubscriber.php
 
 		-
-			message: "#^Cannot call method setValue\\(\\) on mixed\\.$#"
-			count: 2
-			path: src/Sulu/Component/Content/Document/Subscriber/WorkflowStageSubscriber.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\WorkflowStageSubscriber\\:\\:setNodeWorkflowStageToTestForCopy\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/WorkflowStageSubscriber.php
@@ -44696,6 +44696,11 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/ItemMetadata.php
 
 		-
+			message: "#^Argument of an invalid type DOMNamedNodeMap\\|null supplied for foreach, only iterables are supported\\.$#"
+			count: 2
+			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
+
+		-
 			message: "#^Argument of an invalid type DOMNodeList\\<DOMNode\\>\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 3
 			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
@@ -44703,6 +44708,11 @@ parameters:
 		-
 			message: "#^Cannot access property \\$length on DOMNodeList\\<DOMNode\\>\\|false\\.$#"
 			count: 1
+			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
+
+		-
+			message: "#^Cannot access property \\$value on mixed\\.$#"
+			count: 4
 			path: src/Sulu/Component/Content/Metadata/Loader/AbstractLoader.php
 
 		-
@@ -45033,6 +45043,11 @@ parameters:
 		-
 			message: "#^Cannot access property \\$length on DOMNodeList\\<DOMNode\\>\\|false\\.$#"
 			count: 1
+			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
+
+		-
+			message: "#^Cannot access property \\$value on mixed\\.$#"
+			count: 2
 			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
 
 		-
@@ -55772,7 +55787,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$fieldNode of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ListXmlLoader\\:\\:getField\\(\\) expects DOMElement, DOMNode given\\.$#"
-			count: 2
+			count: 4
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListXmlLoader.php
 
 		-
@@ -55783,6 +55798,11 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$filterNode of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ListXmlLoader\\:\\:getParameters\\(\\) expects DOMNode, DOMNode\\|null given\\.$#"
 			count: 2
+			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListXmlLoader.php
+
+		-
+			message: "#^Parameter \\#2 \\$joinNode of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\ListXmlLoader\\:\\:getJoinMetadata\\(\\) expects DOMElement, DOMNode given\\.$#"
+			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/ListXmlLoader.php
 
 		-
@@ -58366,37 +58386,12 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:103\\:\\:findByFilters\\(\\) has no return type specified\\.$#"
+			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:103\\:\\:findByFilters\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:103\\:\\:findByFilters\\(\\) has parameter \\$filters with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:103\\:\\:findByFilters\\(\\) has parameter \\$limit with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:103\\:\\:findByFilters\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:103\\:\\:findByFilters\\(\\) has parameter \\$options with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:103\\:\\:findByFilters\\(\\) has parameter \\$page with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:103\\:\\:findByFilters\\(\\) has parameter \\$pageSize with no type specified\\.$#"
+			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:103\\:\\:findByFilters\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
@@ -59602,12 +59597,12 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$nodeValue on DOMNode\\|null\\.$#"
-			count: 11
+			count: 13
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
 			message: "#^Cannot call method getNamedItem\\(\\) on DOMNamedNodeMap\\|null\\.$#"
-			count: 8
+			count: 12
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
@@ -59747,7 +59742,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$localizationNode of method Sulu\\\\Component\\\\Webspace\\\\Loader\\\\XmlFileLoader10\\:\\:generateLocalizationFromNode\\(\\) expects DOMElement, DOMNode given\\.$#"
-			count: 1
+			count: 3
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
@@ -59791,12 +59786,42 @@ parameters:
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
+			message: "#^Parameter \\#1 \\$template of class Sulu\\\\Component\\\\Webspace\\\\Loader\\\\Exception\\\\InvalidDefaultErrorTemplateException constructor expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
+
+		-
+			message: "#^Parameter \\#1 \\$template of class Sulu\\\\Component\\\\Webspace\\\\Loader\\\\Exception\\\\InvalidErrorTemplateException constructor expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
+
+		-
 			message: "#^Parameter \\#1 \\$type of method Sulu\\\\Component\\\\Webspace\\\\Environment\\:\\:setType\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
+			message: "#^Parameter \\#1 \\$type of method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:addDefaultTemplate\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
+
+		-
 			message: "#^Parameter \\#2 \\$code of class Sulu\\\\Component\\\\Webspace\\\\Exception\\\\InvalidWebspaceException constructor expects int, null given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
+
+		-
+			message: "#^Parameter \\#2 \\$template of method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:addDefaultTemplate\\(\\) expects string, string\\|null given\\.$#"
+			count: 2
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
+
+		-
+			message: "#^Parameter \\#2 \\$template of method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:addTemplate\\(\\) expects string, string\\|null given\\.$#"
+			count: 2
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
+
+		-
+			message: "#^Parameter \\#2 \\$urlPattern of class Sulu\\\\Component\\\\Webspace\\\\Loader\\\\Exception\\\\InvalidUrlDefinitionException constructor expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
@@ -59816,12 +59841,47 @@ parameters:
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader11.php
 
 		-
+			message: "#^Cannot access property \\$nodeValue on DOMNode\\|null\\.$#"
+			count: 2
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader11.php
+
+		-
+			message: "#^Cannot call method getNamedItem\\(\\) on DOMNamedNodeMap\\|null\\.$#"
+			count: 2
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader11.php
+
+		-
 			message: "#^Cannot call method item\\(\\) on DOMNodeList\\<DOMNode\\>\\|false\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader11.php
 
 		-
+			message: "#^Parameter \\#1 \\$excludedTemplate of method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:addExcludedTemplate\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader11.php
+
+		-
 			message: "#^Parameter \\#1 \\$resourceLocatorStrategy of method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:setResourceLocatorStrategy\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader11.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:addDefaultTemplate\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader11.php
+
+		-
+			message: "#^Parameter \\#1 \\$type of method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:addTemplate\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader11.php
+
+		-
+			message: "#^Parameter \\#2 \\$template of method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:addDefaultTemplate\\(\\) expects string, string\\|null given\\.$#"
+			count: 2
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader11.php
+
+		-
+			message: "#^Parameter \\#2 \\$template of method Sulu\\\\Component\\\\Webspace\\\\Webspace\\:\\:addTemplate\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader11.php
 
