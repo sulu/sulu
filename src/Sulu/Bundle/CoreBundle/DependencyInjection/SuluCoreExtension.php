@@ -14,7 +14,9 @@ namespace Sulu\Bundle\CoreBundle\DependencyInjection;
 use Gedmo\Exception;
 use Oro\ORM\Query\AST\Functions\Cast;
 use Oro\ORM\Query\AST\Functions\String\GroupConcat;
+use Sulu\Bundle\CoreBundle\Attribute\AsSuluContext;
 use Sulu\Bundle\CoreBundle\CommandOptional\SuluBuildCommand;
+use Sulu\Bundle\CoreBundle\DependencyInjection\Compiler\RemoveForeignContextServicesPass;
 use Sulu\Component\Content\Types\Block\BlockVisitorInterface;
 use Sulu\Component\Rest\Csv\ObjectNotSupportedException;
 use Sulu\Component\Rest\Exception\InsufficientDescendantPermissionsException;
@@ -26,6 +28,7 @@ use Sulu\Component\Rest\ListBuilder\Filter\InvalidFilterTypeOptionsException;
 use Symfony\Bundle\TwigBundle\Controller\ExceptionController;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -333,6 +336,17 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         $container->registerForAutoconfiguration(BlockVisitorInterface::class)
             ->addTag('sulu_content.block_visitor');
+        $container->registerAttributeForAutoconfiguration(
+            AsSuluContext::class,
+            static function(
+                ChildDefinition $definition,
+                AsSuluContext $attribute
+            ): void {
+                $definition->addTag(RemoveForeignContextServicesPass::SULU_CONTEXT_TAG, [
+                    'context' => $attribute->context,
+                ]);
+            }
+        );
     }
 
     /**
