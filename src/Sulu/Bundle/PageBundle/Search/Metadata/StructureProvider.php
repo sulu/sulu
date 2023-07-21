@@ -30,7 +30,7 @@ use Sulu\Component\Content\Document\RedirectType;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Extension\ExtensionManagerInterface;
 use Sulu\Component\Content\Metadata\BlockMetadata;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\ItemMetadata;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
@@ -61,7 +61,7 @@ class StructureProvider implements ProviderInterface
     private $mapping;
 
     /**
-     * @var StructureMetadataFactory
+     * @var StructureMetadataFactoryInterface
      */
     private $structureFactory;
 
@@ -78,7 +78,7 @@ class StructureProvider implements ProviderInterface
     public function __construct(
         Factory $factory,
         MetadataFactory $metadataFactory,
-        StructureMetadataFactory $structureFactory,
+        StructureMetadataFactoryInterface $structureFactory,
         ExtensionManagerInterface $extensionManager,
         array $mapping = []
     ) {
