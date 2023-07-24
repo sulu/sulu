@@ -15,7 +15,7 @@ use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Component\Content\Compat\Structure;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
@@ -54,7 +54,7 @@ class MaintainResourceLocatorCommand extends Command
     private $metadataFactory;
 
     /**
-     * @var StructureMetadataFactory
+     * @var StructureMetadataFactoryInterface
      */
     private $structureMetadataFactory;
 
@@ -68,7 +68,7 @@ class MaintainResourceLocatorCommand extends Command
         SessionManagerInterface $sessionManager,
         SessionInterface $liveSession,
         MetadataFactoryInterface $metadataFactory,
-        StructureMetadataFactory $structureMetadataFactory,
+        StructureMetadataFactoryInterface $structureMetadataFactory,
         PropertyEncoder $propertyEncoder
     ) {
         parent::__construct();
