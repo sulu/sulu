@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content;
 
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
