@@ -83,7 +83,7 @@ class UserManager implements UserManagerInterface
 
     public function __construct(
         ObjectManager $em,
-        ?EncoderFactory $encoderFactory = null,
+        ?EncoderFactory $encoderFactory,
         RoleRepositoryInterface $roleRepository,
         GroupRepository $groupRepository,
         ContactManager $contactManager,
