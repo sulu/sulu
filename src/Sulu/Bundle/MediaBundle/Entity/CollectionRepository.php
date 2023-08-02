@@ -147,7 +147,10 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->where('collection.id = :id')
             ->setParameter('id', $collection->getId());
 
-        return \intval($queryBuilder->getQuery()->getSingleScalarResult());
+        /** @var numeric-string $value */
+        $value = $queryBuilder->getQuery()->getSingleScalarResult();
+
+        return \intval($value);
     }
 
     public function countSubCollections(CollectionInterface $collection)
@@ -162,7 +165,10 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->where('collection.id = :id')
             ->setParameter('id', $collection->getId());
 
-        return \intval($queryBuilder->getQuery()->getSingleScalarResult());
+        /** @var numeric-string $value */
+        $value = $queryBuilder->getQuery()->getSingleScalarResult();
+
+        return \intval($value);
     }
 
     public function findCollections($filter = [], $limit = null, $offset = null, $sortBy = [])
@@ -293,6 +299,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->where('collection.id = :id')
             ->setParameter('id', $id);
 
+        /** @var string */
         return $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
@@ -402,9 +409,12 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->andWhere('subCollection.lft > collection.lft AND subCollection.rgt < collection.rgt')
             ->setParameter('id', $id);
 
+        /** @var array<array{id: numeric-string}> $result */
+        $result = $queryBuilder->getQuery()->getScalarResult();
+
         return \array_map(function($collection) {
             return (int) $collection['id'];
-        }, $queryBuilder->getQuery()->getScalarResult());
+        }, $result);
     }
 
     public function supportsDescendantType(string $type): bool
@@ -484,6 +494,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 
     public function countUnauthorizedDescendantCollections(int $ancestorId, UserInterface $user, int $permission): int
     {
+        /** @var int */
         return $this
             ->createUnauthorizedDescendantCollectionsQueryBuilder('collection', $ancestorId, $user, $permission)
             ->select('COUNT(collection.id)')
