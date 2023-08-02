@@ -38,6 +38,7 @@ trait MemoizeTwigExtensionTrait
     {
         $result = [];
         foreach ($this->extension->getFunctions() as $function) {
+            /** @var callable $callable */
             $callable = $function->getCallable();
             $name = $function->getName();
 
