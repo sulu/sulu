@@ -22,7 +22,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ContentTypeManager implements ContentTypeManagerInterface
 {
-    use ContainerAwareTrait;
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
 
     /**
      * @var array
@@ -31,7 +34,7 @@ class ContentTypeManager implements ContentTypeManagerInterface
 
     public function __construct(ContainerInterface $container)
     {
-        $this->setContainer($container);
+        $this->container = $container;
     }
 
     /**

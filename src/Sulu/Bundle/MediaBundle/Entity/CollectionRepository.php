@@ -293,6 +293,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->where('collection.id = :id')
             ->setParameter('id', $id);
 
+        /** @var string */
         return $queryBuilder->getQuery()->getSingleScalarResult();
     }
 
@@ -484,6 +485,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
 
     public function countUnauthorizedDescendantCollections(int $ancestorId, UserInterface $user, int $permission): int
     {
+        /** @var int */
         return $this
             ->createUnauthorizedDescendantCollectionsQueryBuilder('collection', $ancestorId, $user, $permission)
             ->select('COUNT(collection.id)')

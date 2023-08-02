@@ -12061,6 +12061,11 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
 
 		-
+			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\CustomUrlBundle\\\\Version201904110902\\:\\:down\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
@@ -16252,7 +16257,7 @@ parameters:
 
 		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
@@ -16272,11 +16277,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionRepository\\:\\:countCollections\\(\\) should return int but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionRepository\\:\\:countUnauthorizedDescendantCollections\\(\\) should return int but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
@@ -16312,11 +16312,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionRepository\\:\\:findCollectionSet\\(\\) should return array\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\> but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionRepository\\:\\:findCollectionTypeById\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
@@ -16378,11 +16373,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
-			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
@@ -24396,6 +24386,11 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
 
 		-
+			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
+			count: 6
+			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
+
+		-
 			message: "#^Cannot call method getProperty\\(\\) on PHPCR\\\\NodeInterface\\|null\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
@@ -24446,6 +24441,11 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
 
 		-
+			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201903271333\\:\\:down\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
@@ -24476,6 +24476,11 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
 
 		-
+			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201905071542\\:\\:down\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
@@ -24494,6 +24499,11 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201905071542\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
+
+		-
+			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005191116.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version202005191116\\:\\:down\\(\\) has no return type specified\\.$#"
@@ -24516,6 +24526,11 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005191116.php
 
 		-
+			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version202005250917\\:\\:down\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
@@ -24534,6 +24549,11 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version202005250917\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
+
+		-
+			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202105311447.php
 
 		-
 			message: "#^Cannot call method getName\\(\\) on mixed\\.$#"
@@ -31351,6 +31371,11 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
 
 		-
+			message: "#^Cannot call method getParameter\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\DataFixtures\\\\ORM\\\\LoadSecurityTypes\\:\\:load\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
@@ -31567,11 +31592,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\RoleSettingRepository\\:\\:findSetting\\(\\) should return Sulu\\\\Component\\\\Security\\\\Authentication\\\\RoleSettingInterface\\|null but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/RoleSettingRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/RoleSettingRepository.php
 
@@ -35184,11 +35204,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Twig\\\\DefaultSnippetTwigExtension\\:\\:getDefault\\(\\) has parameter \\$webspaceKey with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Twig/DefaultSnippetTwigExtension.php
-
-		-
-			message: "#^Parameter \\#3 \\$compute of method Sulu\\\\Component\\\\Cache\\\\MemoizeInterface\\:\\:memoizeById\\(\\) expects callable\\(\\)\\: mixed, \\(callable\\(\\)\\: mixed\\)\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Twig/MemoizedSnippetTwigExtension.php
 
 		-
 			message: "#^Dead catch \\- Sulu\\\\Component\\\\DocumentManager\\\\Exception\\\\DocumentNotFoundException is never thrown in the try block\\.$#"
@@ -38806,11 +38821,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Content/ContentTwigExtensionInterface.php
 
 		-
-			message: "#^Parameter \\#3 \\$compute of method Sulu\\\\Component\\\\Cache\\\\MemoizeInterface\\:\\:memoizeById\\(\\) expects callable\\(\\)\\: mixed, \\(callable\\(\\)\\: mixed\\)\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Content/MemoizedContentTwigExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Core\\\\UtilTwigExtension\\:\\:extract\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Core/UtilTwigExtension.php
@@ -38844,11 +38854,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Meta\\\\MetaTwigExtension\\:\\:getSeoMetaTags\\(\\) has parameter \\$extension with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Meta/MetaTwigExtension.php
-
-		-
-			message: "#^Parameter \\#3 \\$compute of method Sulu\\\\Component\\\\Cache\\\\MemoizeInterface\\:\\:memoizeById\\(\\) expects callable\\(\\)\\: mixed, \\(callable\\(\\)\\: mixed\\)\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Navigation/MemoizedNavigationTwigExtension.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Navigation\\\\NavigationTwigExtension\\:\\:navigationIsActiveFunction\\(\\) should return bool but returns int\\|false\\.$#"
@@ -38909,11 +38914,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Seo\\\\SeoTwigExtension\\:\\:\\$requestStack is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Twig/Seo/SeoTwigExtension.php
-
-		-
-			message: "#^Parameter \\#3 \\$compute of method Sulu\\\\Component\\\\Cache\\\\MemoizeInterface\\:\\:memoizeById\\(\\) expects callable\\(\\)\\: mixed, \\(callable\\(\\)\\: mixed\\)\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Twig/Sitemap/MemoizedSitemapTwigExtension.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Twig\\\\Sitemap\\\\SitemapTwigExtension\\:\\:__construct\\(\\) has parameter \\$environment with no type specified\\.$#"
@@ -39126,7 +39126,7 @@ parameters:
 			path: src/Sulu/Component/Cache/Tests/Unit/Cache/MemoizeTwigExtensionTraitTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, \\(callable\\(\\)\\: mixed\\)\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\<class\\-string, string\\>\\|\\(callable\\(\\)\\: mixed\\)\\|null given\\.$#"
 			count: 2
 			path: src/Sulu/Component/Cache/Tests/Unit/Cache/MemoizeTwigExtensionTraitTest.php
 
