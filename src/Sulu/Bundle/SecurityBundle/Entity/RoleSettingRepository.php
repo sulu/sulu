@@ -41,7 +41,10 @@ class RoleSettingRepository extends EntityRepository implements RoleSettingRepos
             ->setParameters(['roleId' => $roleId, 'key' => $key]);
 
         try {
-            return \json_decode($queryBuilder->getQuery()->getSingleScalarResult(), true);
+            /** @var string $value */
+            $value = $queryBuilder->getQuery()->getSingleScalarResult();
+
+            return \json_decode($value, true);
         } catch (NoResultException $e) {
             return;
         }
