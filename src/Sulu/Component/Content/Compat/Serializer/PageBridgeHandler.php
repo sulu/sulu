@@ -18,7 +18,7 @@ use JMS\Serializer\Visitor\DeserializationVisitorInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Compat\Structure\PageBridge;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 
 /**
  * Handle serialization and deserialization of the PageBridge.
@@ -26,7 +26,7 @@ use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 class PageBridgeHandler implements SubscribingHandlerInterface
 {
     /**
-     * @var StructureMetadataFactory
+     * @var StructureMetadataFactoryInterface
      */
     private $structureFactory;
 
@@ -43,7 +43,7 @@ class PageBridgeHandler implements SubscribingHandlerInterface
     public function __construct(
         DocumentInspector $inspector,
         LegacyPropertyFactory $propertyFactory,
-        StructureMetadataFactory $structureFactory
+        StructureMetadataFactoryInterface $structureFactory
     ) {
         $this->structureFactory = $structureFactory;
         $this->inspector = $inspector;

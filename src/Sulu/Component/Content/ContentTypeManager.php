@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Content;
 
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -22,7 +21,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class ContentTypeManager implements ContentTypeManagerInterface
 {
-    use ContainerAwareTrait;
+    /**
+     * @var ContainerInterface
+     */
+    protected $container;
 
     /**
      * @var array
@@ -31,7 +33,7 @@ class ContentTypeManager implements ContentTypeManagerInterface
 
     public function __construct(ContainerInterface $container)
     {
-        $this->setContainer($container);
+        $this->container = $container;
     }
 
     /**
