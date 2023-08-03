@@ -104,7 +104,7 @@ class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, Au
     {
         if ($request->isXmlHttpRequest()) {
             // if AJAX login
-            $array = ['message' => $exception->getMessage()];
+            $array = ['message' => $exception->getMessageKey()];
             $response = new JsonResponse($array, 401);
         } else {
             // if form login
