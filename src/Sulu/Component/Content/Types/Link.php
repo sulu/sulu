@@ -93,6 +93,7 @@ class Link extends SimpleContentType
     public function getContentData(PropertyInterface $property): ?string
     {
         $value = $property->getValue();
+        $locale = $property->getStructure()->getLanguageCode();
 
         if (!$value || !isset($value['provider'])) {
             return null;
@@ -104,7 +105,7 @@ class Link extends SimpleContentType
 
         $provider = $this->providerPool->getProvider($value['provider']);
 
-        $linkItems = $provider->preload([$value['href']], $value['locale'], true);
+        $linkItems = $provider->preload([$value['href']], $locale, true);
 
         if (0 === \count($linkItems)) {
             return null;
