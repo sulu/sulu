@@ -19,6 +19,7 @@ use Sulu\Bundle\MarkupBundle\Markup\Link\LinkItem;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderInterface;
 use Sulu\Bundle\MarkupBundle\Markup\Link\LinkProviderPoolInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Types\Link;
 
 class LinkTest extends TestCase
@@ -43,10 +44,16 @@ class LinkTest extends TestCase
      */
     private $property;
 
+    /**
+     * @var ObjectProphecy<StructureInterface>
+     */
+    private $structure;
+
     public function setUp(): void
     {
         $this->providerPool = $this->prophesize(LinkProviderPoolInterface::class);
         $this->property = $this->prophesize(PropertyInterface::class);
+        $this->structure = $this->prophesize(StructureInterface::class);
         $this->provider = $this->prophesize(LinkProviderInterface::class);
 
         $this->link = new Link($this->providerPool->reveal());
@@ -119,6 +126,14 @@ class LinkTest extends TestCase
             ->shouldBeCalled()
             ->willReturn($this->provider->reveal());
 
+        $this->structure->getLanguageCode()
+            ->shouldBeCalled()
+            ->willReturn('de');
+
+        $this->property->getStructure()
+            ->shouldBeCalled()
+            ->willReturn($this->structure->reveal());
+
         $linkItem = $this->prophesize(LinkItem::class);
         $linkItem->getUrl()
             ->shouldBeCalled()
@@ -143,6 +158,14 @@ class LinkTest extends TestCase
                 'locale' => 'de',
                 'target' => 'testTarget',
             ]);
+
+        $this->structure->getLanguageCode()
+            ->shouldBeCalled()
+            ->willReturn('de');
+
+        $this->property->getStructure()
+            ->shouldBeCalled()
+            ->willReturn($this->structure->reveal());
 
         $this->providerPool->getProvider(Argument::type('string'))
             ->shouldBeCalled()
@@ -173,6 +196,14 @@ class LinkTest extends TestCase
                 'anchor' => 'testAnchor',
             ]);
 
+        $this->structure->getLanguageCode()
+            ->shouldBeCalled()
+            ->willReturn('de');
+
+        $this->property->getStructure()
+            ->shouldBeCalled()
+            ->willReturn($this->structure->reveal());
+
         $result = $this->link->getContentData($this->property->reveal());
 
         $this->assertNull($result);
@@ -188,6 +219,14 @@ class LinkTest extends TestCase
                 'locale' => 'de',
                 'target' => 'testTarget',
             ]);
+
+        $this->structure->getLanguageCode()
+            ->shouldBeCalled()
+            ->willReturn('de');
+
+        $this->property->getStructure()
+            ->shouldBeCalled()
+            ->willReturn($this->structure->reveal());
 
         $result = $this->link->getContentData($this->property->reveal());
 
@@ -205,6 +244,14 @@ class LinkTest extends TestCase
                 'target' => 'testTarget',
                 'anchor' => 'testAnchor',
             ]);
+
+        $this->structure->getLanguageCode()
+            ->shouldBeCalled()
+            ->willReturn('de');
+
+        $this->property->getStructure()
+            ->shouldBeCalled()
+            ->willReturn($this->structure->reveal());
 
         $this->providerPool->getProvider(Argument::type('string'))
             ->shouldBeCalled()
