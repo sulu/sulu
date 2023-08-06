@@ -15811,11 +15811,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
-			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
@@ -31419,11 +31414,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
 			count: 7
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
-
-		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Response\\:\\:getTargetUrl\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/LoginControllerTest.php
 
 		-
 			message: "#^Array has 2 duplicate keys with value 'archive' \\('archive', 'archive'\\)\\.$#"
