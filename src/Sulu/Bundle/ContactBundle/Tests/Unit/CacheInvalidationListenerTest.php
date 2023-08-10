@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Unit;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;

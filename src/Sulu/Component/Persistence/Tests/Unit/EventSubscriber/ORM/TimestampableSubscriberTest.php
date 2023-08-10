@@ -12,9 +12,9 @@
 namespace Sulu\Component\Persistence\Tests\Unit\EventSubscriber\ORM;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;

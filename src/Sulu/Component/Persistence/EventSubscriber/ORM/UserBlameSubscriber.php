@@ -120,6 +120,8 @@ class UserBlameSubscriber implements EventSubscriber
 
     private function handleUserBlame(OnFlushEventArgs $event, UserInterface $user, bool $insertions)
     {
+        // TODO: calling getEntityManager on the event is deprecated, but access to the UnitOfWork is not
+        // guaranteed for an ObjectManager. So we need to get an EntityManager somehow different.
         $manager = $event->getEntityManager();
         $unitOfWork = $manager->getUnitOfWork();
 

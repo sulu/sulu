@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\Tests\Unit\EventListener;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -47,7 +47,7 @@ class CacheInvalidationListenerTest extends TestCase
         $this->listener = new CacheInvalidationListener($this->cacheManager->reveal());
     }
 
-    public function provideFunctionName()
+    public function provideFunctionName(): array
     {
         return [
             ['postPersist'],
