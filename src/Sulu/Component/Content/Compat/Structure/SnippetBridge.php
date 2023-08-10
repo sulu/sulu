@@ -48,4 +48,18 @@ class SnippetBridge extends StructureBridge
     {
         $this->shadowBaseLanguage = $shadowBaseLanguage;
     }
+
+    public function getLanguageCode()
+    {
+        if (!$this->document) {
+            return $this->locale;
+        }
+
+        // return original locale for shadow or ghost pages
+        if ($this->getIsShadow() || ($this->getType() && 'ghost' === $this->getType()->getName())) {
+            return $this->inspector->getOriginalLocale($this->getDocument());
+        }
+
+        return parent::getLanguageCode();
+    }
 }
