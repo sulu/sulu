@@ -16,7 +16,7 @@
     <a href="https://github.com/sulu/sulu/actions" target="_blank">
         <img src="https://img.shields.io/github/actions/workflow/status/sulu/sulu/test-application.yaml" alt="Test workflow status">
     </a>
-    <a href="https://github.com/sulu/sulu/commits/2.x" target="_blank">
+    <a href="https://github.com/sulu/sulu/commits" target="_blank">
         <img src="https://img.shields.io/github/commit-activity/y/sulu/sulu.svg" alt="GitHub commit activity">
     </a>
     <a href="https://github.com/sulu/sulu/graphs/contributors" target="_blank">
