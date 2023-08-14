@@ -15,6 +15,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
@@ -31,6 +32,8 @@ use Sulu\Component\Route\Document\Behavior\RoutableBehavior;
 
 class RoutableSubscriberTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy<ChainRouteGeneratorInterface>
      */

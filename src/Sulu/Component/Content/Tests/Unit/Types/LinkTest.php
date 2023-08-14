@@ -127,6 +127,14 @@ class LinkTest extends TestCase
                 'query' => 'testQuery',
             ]);
 
+        $this->property->getStructure()
+            ->shouldBeCalled()
+            ->willReturn($this->structure->reveal());
+
+        $this->structure->getLanguageCode()
+            ->shouldBeCalled()
+            ->willReturn('de');
+
         $this->providerPool->getProvider(Argument::type('string'))
             ->shouldBeCalled()
             ->willReturn($this->provider->reveal());
@@ -157,17 +165,17 @@ class LinkTest extends TestCase
                 'anchor' => 'testAnchor',
             ]);
 
-        $this->providerPool->getProvider(Argument::type('string'))
+        $this->property->getStructure()
             ->shouldBeCalled()
-            ->willReturn($this->provider->reveal());
+            ->willReturn($this->structure->reveal());
 
         $this->structure->getLanguageCode()
             ->shouldBeCalled()
             ->willReturn('de');
 
-        $this->property->getStructure()
+        $this->providerPool->getProvider(Argument::type('string'))
             ->shouldBeCalled()
-            ->willReturn($this->structure->reveal());
+            ->willReturn($this->provider->reveal());
 
         $linkItem = $this->prophesize(LinkItem::class);
         $linkItem->getUrl()
@@ -195,6 +203,14 @@ class LinkTest extends TestCase
                 'query' => 'testQuery',
                 'anchor' => 'testAnchor',
             ]);
+
+        $this->property->getStructure()
+            ->shouldBeCalled()
+            ->willReturn($this->structure->reveal());
+
+        $this->structure->getLanguageCode()
+            ->shouldBeCalled()
+            ->willReturn('de');
 
         $this->providerPool->getProvider(Argument::type('string'))
             ->shouldBeCalled()

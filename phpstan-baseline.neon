@@ -31421,11 +31421,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Response\\:\\:getTargetUrl\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/LoginControllerTest.php
-
-		-
 			message: "#^Array has 2 duplicate keys with value 'archive' \\('archive', 'archive'\\)\\.$#"
 			count: 6
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/PermissionControllerTest.php
