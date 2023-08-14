@@ -31,9 +31,9 @@ class AuthCodeMailerTest extends SuluTestCase
         $this->getEntityManager()->flush();
         $client->enableProfiler();
 
-        $client->request('POST', '/admin/login', [
-            '_username' => 'test',
-            '_password' => 'test',
+        $client->jsonRequest('POST', '/admin/login', [
+            'username' => 'test',
+            'password' => 'test',
         ]);
 
         $this->assertHttpStatusCode(302, $client->getResponse());
