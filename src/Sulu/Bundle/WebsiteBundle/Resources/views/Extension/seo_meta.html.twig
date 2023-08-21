@@ -5,40 +5,48 @@
     "shadowBaseLocale": shadowBaseLocale|default(),
 } %}
 
-{% set domain = app.request.host %}
-{% set language = app.request.locale|split("_")[0] %}
-{% set url = app.request.uri %}
+{% apply spaceless %}
+    {% set audience = meta.default.audience ?? "all" %}
+    {% set author = meta.default.author ?? null %}
+    {% set copyright = meta.default.copyright ?? null %}
+    {% set distribution = meta.default.distribution ?? "global" %}
+    {% set publisher = meta.default.publisher ?? null %}
 
-{% set title = extension.seo.title|default(content.title|default()) %}
-{% set description = extension.seo.description|default() %}
-{% set image = null %}
+    {% set domain = meta.default.domain ?? app.request.host %}
+    {% set language = meta.default.language ?? app.request.locale|split("_")[0] %}
+    {% set url = meta.default.url ?? app.request.uri %}
 
-{% set defaultTags = {
-    "audience": "all",
-    "author": null,
-    "copyright": null,
-    "distribution": "global",
-    "image": image,
-    "language": language,
-    "publisher": null,
-} %}
+    {% set title = meta.default.title ?? extension.seo.title|default(content.title|default()) %}
+    {% set description = meta.default.description ?? extension.seo.description|default() %}
+    {% set image = meta.default.image ?? null %}
 
-{% set facebookTags = {
-    "og:url": url,
-    "og:type": "website",
-    "og:title": title,
-    "og:description": description,
-    "og:image": image
-} %}
+    {% set defaultTags = {
+        "audience": audience,
+        "author": author,
+        "copyright": copyright,
+        "distribution": distribution,
+        "image": image,
+        "language": language,
+        "publisher": publisher,
+    } %}
 
-{% set twitterTags = {
-    "twitter:card": "summary",
-    "twitter:domain": domain,
-    "twitter:url": url,
-    "twitter:title": title,
-    "twitter:description": description,
-    "twitter:image": image
-} %}
+    {% set facebookTags = {
+        "og:url": meta.facebook.url ?? url,
+        "og:type": meta.facebook.type ?? "website",
+        "og:title": meta.facebook.title ?? title,
+        "og:description": meta.facebook.description ?? description,
+        "og:image": meta.facebook.image ?? image
+    } %}
+
+    {% set twitterTags = {
+        "twitter:card": meta.twitter.card ?? "summary",
+        "twitter:domain": meta.twitter.domain ?? domain,
+        "twitter:url": meta.twitter.url ?? url,
+        "twitter:title": meta.twitter.title ?? title,
+        "twitter:description": meta.twitter.description ?? description,
+        "twitter:image": meta.twitter.image ?? image
+    } %}
+{% endapply %}
 
 {% block defaultTags %}
     {% for name, content in defaultTags|filter(value => value) %}
