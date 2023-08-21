@@ -6,11 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {% block meta %}
-        {% include "@SuluWebsite/Extension/seo.html.twig" with {
+        {% include "@SuluWebsite/Extension/seo_meta.html.twig" with {
             "seo": extension.seo|default([]),
             "content": content|default([]),
             "localizations": localizations|default([]),
             "shadowBaseLocale": shadowBaseLocale|default(),
+            "meta": {
+                "default": { "audience": false, "distribution": false },
+                "facebook": { "title": "Custom title for facebook" },
+                "twitter": {
+                    "fallbackImage": "/website/images/logo_for_twitter.svg",
+                    "card": "summary_large_image"
+                }
+            }
         } %}
     {% endblock %}
 
