@@ -1,0 +1,59 @@
+{% include "@SuluWebsite/Extension/seo.html.twig" with {
+    "seo": extension.seo|default([]),
+    "content": content|default([]),
+    "localizations": localizations|default([]),
+    "shadowBaseLocale": shadowBaseLocale|default(),
+} %}
+
+{% set domain = app.request.host %}
+{% set language = app.request.locale|split("_")[0] %}
+{% set url = app.request.uri %}
+
+{% set title = extension.seo.title|default(content.title|default()) %}
+{% set description = extension.seo.description|default() %}
+{% set image = null %}
+
+{% set defaultTags = {
+    "audience": "all",
+    "author": null,
+    "copyright": null,
+    "distribution": "global",
+    "image": image,
+    "language": language,
+    "publisher": null,
+} %}
+
+{% set facebookTags = {
+    "og:url": url,
+    "og:type": "website",
+    "og:title": title,
+    "og:description": description,
+    "og:image": image
+} %}
+
+{% set twitterTags = {
+    "twitter:card": "summary",
+    "twitter:domain": domain,
+    "twitter:url": url,
+    "twitter:title": title,
+    "twitter:description": description,
+    "twitter:image": image
+} %}
+
+{% block defaultTags %}
+    {% for name, content in defaultTags|filter(value => value) %}
+        <meta name="{{ name }}" content="{{ content }}">
+    {% endfor %}
+{% endblock %}
+
+{% block facebookTags %}
+    {% for name, content in facebookTags|filter(value => value) %}
+        <meta name="{{ name }}" content="{{ content }}">
+    {% endfor %}
+{% endblock %}
+
+{% block twitterTags %}
+    {% for name, content in twitterTags|filter(value => value) %}
+        <meta name="{{ name }}" content="{{ content }}">
+    {% endfor %}
+{% endblock %}
