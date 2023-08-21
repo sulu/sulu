@@ -1,3 +1,5 @@
+{% use "@SuluWebsite/Extension/blocks.html.twig" %}
+
 {% include "@SuluWebsite/Extension/seo.html.twig" with {
     "seo": extension.seo|default([]),
     "content": content|default([]),
@@ -18,25 +20,31 @@
 
     {% set title = meta.default.title ?? extension.seo.title|default(content.title|default()) %}
     {% set description = meta.default.description ?? extension.seo.description|default() %}
-    {% set image = meta.default.image ?? null %}
+
+    {% set imageFormat = meta.default.imageFormat|default("sulu-400x400-inset") %}
+    {% set fallbackImage = meta.default.fallbackImage|default() %}
 
     {% set defaultTags = {
         "audience": audience,
         "author": author,
         "copyright": copyright,
         "distribution": distribution,
-        "image": image,
+        "image": block("determineImage"),
         "language": language,
         "publisher": publisher,
     } %}
+
+    {% set fallbackImage = meta.facebook.fallbackImage|default(meta.default.fallbackImage|default()) %}
 
     {% set facebookTags = {
         "og:url": meta.facebook.url ?? url,
         "og:type": meta.facebook.type ?? "website",
         "og:title": meta.facebook.title ?? title,
         "og:description": meta.facebook.description ?? description,
-        "og:image": meta.facebook.image ?? image
+        "og:image": block("determineImage")
     } %}
+
+    {% set fallbackImage = meta.twitter.fallbackImage|default(meta.default.fallbackImage|default()) %}
 
     {% set twitterTags = {
         "twitter:card": meta.twitter.card ?? "summary",
@@ -44,7 +52,7 @@
         "twitter:url": meta.twitter.url ?? url,
         "twitter:title": meta.twitter.title ?? title,
         "twitter:description": meta.twitter.description ?? description,
-        "twitter:image": meta.twitter.image ?? image
+        "twitter:image": block("determineImage")
     } %}
 {% endapply %}
 
