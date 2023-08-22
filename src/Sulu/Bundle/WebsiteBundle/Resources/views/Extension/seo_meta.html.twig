@@ -14,14 +14,13 @@
     {% set distribution = meta.default.distribution ?? "global" %}
     {% set publisher = meta.default.publisher ?? null %}
 
-    {% set domain = meta.default.domain ?? app.request.host %}
     {% set language = meta.default.language ?? app.request.locale|split("_")[0] %}
     {% set url = meta.default.url ?? app.request.uri %}
 
     {% set title = meta.default.title ?? extension.seo.title|default(content.title|default()) %}
     {% set description = meta.default.description ?? extension.seo.description|default() %}
 
-    {% set imageFormat = meta.default.imageFormat|default("sulu-400x400-inset") %}
+    {% set imageFormat = meta.default.imageFormat ?? "sulu-400x400-inset" %}
     {% set fallbackImage = meta.default.fallbackImage|default() %}
 
     {% set defaultTags = {
@@ -34,6 +33,7 @@
         "publisher": publisher,
     } %}
 
+    {% set imageFormat = meta.facebook.imageFormat ?? imageFormat %}
     {% set fallbackImage = meta.facebook.fallbackImage|default(meta.default.fallbackImage|default()) %}
 
     {% set facebookTags = {
@@ -44,11 +44,11 @@
         "og:image": block("determineImage")
     } %}
 
+    {% set imageFormat = meta.twitter.imageFormat ?? imageFormat %}
     {% set fallbackImage = meta.twitter.fallbackImage|default(meta.default.fallbackImage|default()) %}
 
     {% set twitterTags = {
         "twitter:card": meta.twitter.card ?? "summary",
-        "twitter:domain": meta.twitter.domain ?? domain,
         "twitter:url": meta.twitter.url ?? url,
         "twitter:title": meta.twitter.title ?? title,
         "twitter:description": meta.twitter.description ?? description,
