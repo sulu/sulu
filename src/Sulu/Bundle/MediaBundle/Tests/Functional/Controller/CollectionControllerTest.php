@@ -118,8 +118,6 @@ class CollectionControllerTest extends SuluTestCase
     /**
      * Loops thru all system collections until reach the depth.
      *
-     * @param null $depth
-     *
      * @return int
      */
     protected function iterateOverSystemCollections($config, $depth = null)

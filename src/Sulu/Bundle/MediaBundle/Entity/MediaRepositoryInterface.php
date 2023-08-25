@@ -50,7 +50,6 @@ interface MediaRepositoryInterface extends RepositoryInterface
      * @param int $limit
      * @param int $offset
      * @param UserInterface $user
-     * @param null $permission
      *
      * @return Media[]
      */
