@@ -6,16 +6,6 @@ parameters:
 			path: bin/console.php
 
 		-
-			message: "#^Cannot call method handle\\(\\) on Symfony\\\\Component\\\\HttpKernel\\\\HttpKernelInterface\\|null\\.$#"
-			count: 1
-			path: public/index.php
-
-		-
-			message: "#^Cannot call method terminate\\(\\) on Symfony\\\\Component\\\\HttpKernel\\\\HttpKernelInterface\\|null\\.$#"
-			count: 1
-			path: public/index.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ActivityBundle\\\\Domain\\\\Repository\\\\NullActivityRepository\\:\\:createFromDomainEvent\\(\\) should return Sulu\\\\Bundle\\\\ActivityBundle\\\\Domain\\\\Model\\\\ActivityInterface but returns object\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ActivityBundle/Domain/Repository/NullActivityRepository.php
