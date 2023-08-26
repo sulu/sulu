@@ -320,6 +320,7 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
      * Returns all accounts.
      *
      * @param string $locale
+     * @param array<string, mixed>|null $filter
      *
      * @return array|null
      */

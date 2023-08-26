@@ -117,7 +117,7 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
      * for each website the default locale is provided. The default locales of
      * the webspaces are always on the first position.
      *
-     * @return Localization[]
+     * @return array<string, Localization[]>
      */
     public function getAllLocalesByWebspaces(): array;
 }

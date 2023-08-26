@@ -73,6 +73,8 @@ interface CategoryManagerInterface
      * Returns the whole category graph.
      * If parentId is set, only the sub-graph below the category which is assigned to the given id is returned.
      *
+     * @param int|null $parentId
+     *
      * @return array
      *
      * @throws CategoryIdNotFoundException if the parentId is not assigned to an existing category
