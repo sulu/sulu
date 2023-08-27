@@ -929,7 +929,7 @@ class WebspaceManagerTest extends WebspaceTestCase
 
                 return $localization;
             },
-            $localizations,
+            $localizations
         );
 
         // check for duplicates
@@ -1002,7 +1002,7 @@ class WebspaceManagerTest extends WebspaceTestCase
 
                     return $webspaceLocale;
                 },
-                $webspaceLocales,
+                $webspaceLocales
             );
         }
 
