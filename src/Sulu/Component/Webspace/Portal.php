@@ -248,9 +248,6 @@ class Portal
         return $this->environments[$type];
     }
 
-    /**
-     * @param \Sulu\Component\Webspace\Webspace $webspace
-     */
     public function setWebspace(Webspace $webspace)
     {
         $this->webspace = $webspace;
