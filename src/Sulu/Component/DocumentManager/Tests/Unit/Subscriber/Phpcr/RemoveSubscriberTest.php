@@ -12,8 +12,8 @@
 namespace Sulu\Comonent\DocumentManager\Tests\Unit\Subscriber;
 
 use PHPCR\NodeInterface;
-use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\NodeManager;
@@ -21,6 +21,36 @@ use Sulu\Component\DocumentManager\Subscriber\Phpcr\RemoveSubscriber;
 
 class RemoveSubscriberTest extends TestCase
 {
+    /**
+     * @var ObjectProphecy<NodeManager>
+     */
+    private $nodeManager;
+
+    /**
+     * @var ObjectProphecy<DocumentRegistry>
+     */
+    private $documentRegistry;
+
+    /**
+     * @var ObjectProphecy<RemoveEvent>
+     */
+    private $removeEvent;
+
+    /**
+     * @var object
+     */
+    private $document;
+
+    /**
+     * @var ObjectProphecy<NodeInterface>
+     */
+    private $node;
+
+    /**
+     * @var RemoveSubscriber
+     */
+    private $subscriber;
+
     public function setUp(): void
     {
         $this->nodeManager = $this->prophesize(NodeManager::class);
@@ -28,10 +58,6 @@ class RemoveSubscriberTest extends TestCase
         $this->removeEvent = $this->prophesize(RemoveEvent::class);
         $this->document = new \stdClass();
         $this->node = $this->prophesize(NodeInterface::class);
-        $this->node1 = $this->prophesize(NodeInterface::class);
-        $this->node2 = $this->prophesize(NodeInterface::class);
-        $this->property1 = $this->prophesize(PropertyInterface::class);
-        $this->property2 = $this->prophesize(PropertyInterface::class);
 
         $this->subscriber = new RemoveSubscriber(
             $this->documentRegistry->reveal(),

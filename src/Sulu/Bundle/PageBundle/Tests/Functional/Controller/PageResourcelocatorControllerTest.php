@@ -12,7 +12,9 @@
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Controller;
 
 use PHPCR\SessionInterface;
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
@@ -29,6 +31,11 @@ class PageResourcelocatorControllerTest extends SuluTestCase
      * @var KernelBrowser
      */
     protected $client;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
 
     /**
      * @var array
@@ -100,6 +107,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
             ],
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(

@@ -21,6 +21,11 @@ use Sulu\Bundle\WebsiteBundle\Sitemap\SitemapProviderPool;
 class SitemapProviderPoolTest extends TestCase
 {
     /**
+     * @var mixed[]
+     */
+    public $providers;
+
+    /**
      * @var ObjectProphecy<SitemapProviderInterface>
      */
     public $pagesSitemapProvider;

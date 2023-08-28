@@ -45,10 +45,13 @@ class FieldDescriptorFactoryTest extends TestCase
      */
     private $chain;
 
+    /**
+     * @var FieldDescriptorFactory
+     */
+    private $fieldDescriptorFactory;
+
     public function setup(): void
     {
-        parent::setUp();
-
         $parameterBag = $this->prophesize(ParameterBagInterface::class);
         $parameterBag->resolveValue('%sulu.model.contact.class%')->willReturn('SuluContactBundle:Contact');
         $parameterBag->resolveValue('%sulu.model.contact.class%.avatar')->willReturn(
@@ -76,6 +79,7 @@ class FieldDescriptorFactoryTest extends TestCase
 
     public function testGetFieldDescriptors(): void
     {
+        /** @var FieldDescriptorInterface[] $fieldDescriptor */
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('complete');
 
         $expectedFieldDescriptors = ['extension', 'id', 'firstName', 'lastName', 'avatar', 'fullName', 'city'];
@@ -114,6 +118,7 @@ class FieldDescriptorFactoryTest extends TestCase
 
     public function testGetFieldDescriptorsMinimal(): void
     {
+        /** @var FieldDescriptorInterface[] $fieldDescriptor */
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('minimal');
 
         $this->assertEquals(['id', 'firstName', 'lastName'], \array_keys($fieldDescriptor));
@@ -129,6 +134,7 @@ class FieldDescriptorFactoryTest extends TestCase
 
     public function testGetFieldDescriptorsGroupConcat(): void
     {
+        /** @var FieldDescriptorInterface[] $fieldDescriptor */
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('group-concat');
 
         $this->assertEquals(['tags'], \array_keys($fieldDescriptor));
@@ -148,6 +154,7 @@ class FieldDescriptorFactoryTest extends TestCase
 
     public function testGetFieldDescriptorsCase(): void
     {
+        /** @var FieldDescriptorInterface[] $fieldDescriptor */
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('case');
 
         $this->assertEquals(['tag'], \array_keys($fieldDescriptor));
@@ -164,14 +171,18 @@ class FieldDescriptorFactoryTest extends TestCase
 
         $this->assertFieldDescriptors($expected, $fieldDescriptor);
 
+        $tagFieldDescriptor = $fieldDescriptor['tag'] ?? null;
+        $this->assertInstanceOf(DoctrineCaseFieldDescriptor::class, $tagFieldDescriptor);
+
         $this->assertEquals(
             '(CASE WHEN SuluTagBundle_Tag.name IS NOT NULL THEN SuluTagBundle_Tag.name ELSE SuluTagBundle_Tag.name END)',
-            $fieldDescriptor['tag']->getSelect()
+            $tagFieldDescriptor->getSelect()
         );
     }
 
     public function testGetFieldDescriptorsIdentity(): void
     {
+        /** @var FieldDescriptorInterface[] $fieldDescriptor */
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('identity');
 
         $this->assertEquals(['tags'], \array_keys($fieldDescriptor));
@@ -191,6 +202,7 @@ class FieldDescriptorFactoryTest extends TestCase
 
     public function testGetFieldDescriptorsOptions(): void
     {
+        /** @var FieldDescriptorInterface[] $fieldDescriptor */
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('options');
 
         $this->assertEquals(['city'], \array_keys($fieldDescriptor));
@@ -222,6 +234,7 @@ class FieldDescriptorFactoryTest extends TestCase
 
     public function testGetFieldDescriptorsCount(): void
     {
+        /** @var FieldDescriptorInterface[] $fieldDescriptor */
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('count');
 
         $this->assertEquals(['tags'], \array_keys($fieldDescriptor));
@@ -241,6 +254,7 @@ class FieldDescriptorFactoryTest extends TestCase
 
     public function testGetFieldDescriptorsMixed(): void
     {
+        /** @var FieldDescriptorInterface[] $fieldDescriptor */
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('mixed');
 
         $this->assertCount(2, $fieldDescriptor);
@@ -259,8 +273,10 @@ class FieldDescriptorFactoryTest extends TestCase
         $this->assertNull($this->fieldDescriptorFactory->getFieldDescriptors('not-existing'));
     }
 
-    private function assertFieldDescriptors(array $expected, array $fieldDescriptors)
+    private function assertFieldDescriptors(array $expected, ?array $fieldDescriptors)
     {
+        $this->assertNotNull($fieldDescriptors);
+
         foreach ($expected as $name => $expectedData) {
             $this->assertFieldDescriptor($expectedData, $fieldDescriptors[$name]);
         }

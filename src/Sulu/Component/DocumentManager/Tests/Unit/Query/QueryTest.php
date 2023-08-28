@@ -14,6 +14,7 @@ namespace Sulu\Comonent\DocumentManager\tests\Unit\Query;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Collection\QueryResultCollection;
 use Sulu\Component\DocumentManager\Event\QueryExecuteEvent;
 use Sulu\Component\DocumentManager\Events;
@@ -22,6 +23,26 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class QueryTest extends TestCase
 {
+    /**
+     * @var ObjectProphecy<QueryInterface>
+     */
+    private $phpcrQuery;
+
+    /**
+     * @var ObjectProphecy<QueryResultInterface>
+     */
+    private $phpcrResult;
+
+    /**
+     * @var ObjectProphecy<EventDispatcherInterface>
+     */
+    private $dispatcher;
+
+    /**
+     * @var Query
+     */
+    private $query;
+
     public function setUp(): void
     {
         $this->phpcrQuery = $this->prophesize(QueryInterface::class);

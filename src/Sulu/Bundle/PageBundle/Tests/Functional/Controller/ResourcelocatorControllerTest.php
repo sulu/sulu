@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Controller;
 
+use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class ResourcelocatorControllerTest extends SuluTestCase
@@ -20,6 +22,11 @@ class ResourcelocatorControllerTest extends SuluTestCase
      * @var KernelBrowser
      */
     private $client;
+
+    /**
+     * @var DocumentManagerInterface
+     */
+    private $documentManager;
 
     public function setUp(): void
     {
@@ -43,6 +50,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
 
     public function testGenerateWithParent(): void
     {
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(
@@ -69,6 +77,7 @@ class ResourcelocatorControllerTest extends SuluTestCase
 
     public function testGenerateWithConflict(): void
     {
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(

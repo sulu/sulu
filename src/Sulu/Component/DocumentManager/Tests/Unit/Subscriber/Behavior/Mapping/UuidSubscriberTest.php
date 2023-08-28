@@ -13,6 +13,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior\Mapping;
 
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
@@ -20,6 +21,36 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\UuidSubscriber;
 
 class UuidSubscriberTest extends TestCase
 {
+    /**
+     * @var ObjectProphecy<HydrateEvent>
+     */
+    private $hydrateEvent;
+
+    /**
+     * @var object
+     */
+    private $notImplementing;
+
+    /**
+     * @var ObjectProphecy<NodeInterface>
+     */
+    private $node;
+
+    /**
+     * @var TestUuidDocument
+     */
+    private $document;
+
+    /**
+     * @var DocumentAccessor
+     */
+    private $accessor;
+
+    /**
+     * @var UuidSubscriber
+     */
+    private $subscriber;
+
     public function setUp(): void
     {
         $this->hydrateEvent = $this->prophesize(HydrateEvent::class);

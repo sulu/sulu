@@ -34,6 +34,16 @@ class SnippetTest extends SuluTestCase
     private $documentManager;
 
     /**
+     * @var SnippetDocument
+     */
+    private $snippet1;
+
+    /**
+     * @var SnippetDocument
+     */
+    private $snippet2;
+
+    /**
      * @var ExtensionManagerInterface
      */
     private $extensionManager;
@@ -76,7 +86,9 @@ class SnippetTest extends SuluTestCase
      */
     protected function prepareData()
     {
-        $this->snippet1 = $this->documentManager->create('snippet');
+        /** @var SnippetDocument $snippet1 */
+        $snippet1 = $this->documentManager->create('snippet');
+        $this->snippet1 = $snippet1;
         $this->snippet1->setStructureType('hotel');
         $this->snippet1->setTitle('ElePHPant1');
         $this->snippet1->getStructure()->bind([
@@ -86,7 +98,9 @@ class SnippetTest extends SuluTestCase
         $this->documentManager->persist($this->snippet1, 'en');
         $this->documentManager->flush();
 
-        $this->snippet2 = $this->documentManager->create('snippet');
+        /** @var SnippetDocument $snippet2 */
+        $snippet2 = $this->documentManager->create('snippet');
+        $this->snippet2 = $snippet2;
         $this->snippet2->setStructureType('hotel');
         $this->snippet2->setTitle('ElePHPant2');
         $this->snippet2->getStructure()->bind([

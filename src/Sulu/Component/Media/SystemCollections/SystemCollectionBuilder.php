@@ -14,7 +14,6 @@ namespace Sulu\Component\Media\SystemCollections;
 use Massive\Bundle\BuildBundle\Build\BuilderContext;
 use Massive\Bundle\BuildBundle\Build\BuilderInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Build task to initialize system collections.
@@ -54,10 +53,5 @@ class SystemCollectionBuilder implements BuilderInterface
     public function setContext(BuilderContext $context)
     {
         $this->output = $context->getOutput();
-    }
-
-    public function setContainer(?ContainerInterface $container = null)
-    {
-        $this->container = $container;
     }
 }

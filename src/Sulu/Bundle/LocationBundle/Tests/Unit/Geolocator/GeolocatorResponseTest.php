@@ -11,17 +11,27 @@
 
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Geolocator;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
 
 class GeolocatorResponseTest extends TestCase
 {
-    protected $geolocatorResponse;
+    /**
+     * @var GeolocatorResponse
+     */
+    private $response;
+
+    /**
+     * @var MockObject
+     */
+    private $location;
 
     public function setUp(): void
     {
         $this->response = new GeolocatorResponse();
-        $this->location = $this->getMockBuilder('Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation')->getMock();
+        $this->location = $this->getMockBuilder(GeolocatorLocation::class)->getMock();
     }
 
     public function testToArray(): void

@@ -38,11 +38,6 @@ class WorkspaceInitializerTest extends TestCase
     private $connectionRegistry;
 
     /**
-     * @var WorkspaceInitializer
-     */
-    private $initializer;
-
-    /**
      * @var ObjectProphecy<WorkspaceInterface>
      */
     private $workspace1;
@@ -51,6 +46,16 @@ class WorkspaceInitializerTest extends TestCase
      * @var ObjectProphecy<WorkspaceInterface>
      */
     private $workspace2;
+
+    /**
+     * @var BufferedOutput
+     */
+    private $output;
+
+    /**
+     * @var WorkspaceInitializer
+     */
+    private $initializer;
 
     public function setUp(): void
     {
