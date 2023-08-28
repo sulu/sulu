@@ -24,6 +24,11 @@ class SitemapProviderPoolTest extends TestCase
     use ProphecyTrait;
 
     /**
+     * @var mixed[]
+     */
+    public $providers;
+
+    /**
      * @var ObjectProphecy<SitemapProviderInterface>
      */
     public $pagesSitemapProvider;

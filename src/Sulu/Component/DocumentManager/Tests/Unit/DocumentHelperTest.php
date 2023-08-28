@@ -13,12 +13,23 @@ namespace Sulu\Component\DocumentManager\tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\DocumentHelper;
 
 class DocumentHelperTest extends TestCase
 {
     use ProphecyTrait;
+
+    /**
+     * @var object
+     */
+    private $document;
+
+    /**
+     * @var ObjectProphecy<TitleBehavior>
+     */
+    private $titleDocument;
 
     public function setUp(): void
     {

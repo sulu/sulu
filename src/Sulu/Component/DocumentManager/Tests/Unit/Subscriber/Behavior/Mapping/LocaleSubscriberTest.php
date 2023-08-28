@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\Tests\Unit\Subscriber\Behavior;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
 use Sulu\Component\DocumentManager\DocumentRegistry;
@@ -23,6 +24,41 @@ use Sulu\Component\DocumentManager\Subscriber\Behavior\Mapping\LocaleSubscriber;
 class LocaleSubscriberTest extends TestCase
 {
     use ProphecyTrait;
+
+    /**
+     * @var ObjectProphecy<HydrateEvent>
+     */
+    private $hydrateEvent;
+
+    /**
+     * @var object
+     */
+    private $notImplementing;
+
+    /**
+     * @var ObjectProphecy<NodeInterface>
+     */
+    private $node;
+
+    /**
+     * @var TestLocaleDocument
+     */
+    private $document;
+
+    /**
+     * @var DocumentAccessor
+     */
+    private $accessor;
+
+    /**
+     * @var ObjectProphecy<DocumentRegistry>
+     */
+    private $registry;
+
+    /**
+     * @var LocaleSubscriber
+     */
+    private $subscriber;
 
     public function setUp(): void
     {

@@ -83,6 +83,11 @@ class DoctrineListBuilderTest extends TestCase
     private $query;
 
     /**
+     * @var ObjectProphecy<SystemStoreInterface>
+     */
+    private $systemStore;
+
+    /**
      * @var \ReflectionMethod
      */
     private $findIdsByGivenCriteria;

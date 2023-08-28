@@ -88,6 +88,31 @@ class MediaSearchSubscriberTest extends TestCase
      */
     private $factory;
 
+    /**
+     * @var ObjectProphecy<LoggerInterface>
+     */
+    private $logger;
+
+    /**
+     * @var ObjectProphecy<Collection>
+     */
+    private $collection;
+
+    /**
+     * @var ObjectProphecy<Field>
+     */
+    private $field1;
+
+    /**
+     * @var ObjectProphecy<Field>
+     */
+    private $field2;
+
+    /**
+     * @var ObjectProphecy<Field>
+     */
+    private $field3;
+
     public function setUp(): void
     {
         $this->mediaManager = $this->prophesize(MediaManagerInterface::class);

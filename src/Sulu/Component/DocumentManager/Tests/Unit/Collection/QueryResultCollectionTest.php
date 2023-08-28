@@ -17,6 +17,7 @@ use PHPCR\Query\RowInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Collection\QueryResultCollection;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Events;
@@ -25,6 +26,41 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class QueryResultCollectionTest extends TestCase
 {
     use ProphecyTrait;
+
+    /**
+     * @var ObjectProphecy<QueryResultInterface>
+     */
+    private $queryResult;
+
+    /**
+     * @var ObjectProphecy<EventDispatcherInterface>
+     */
+    private $dispatcher;
+
+    /**
+     * @var QueryResultCollection
+     */
+    private $collection;
+
+    /**
+     * @var ObjectProphecy<RowInterface>
+     */
+    private $row1;
+
+    /**
+     * @var ObjectProphecy<RowInterface>
+     */
+    private $row2;
+
+    /**
+     * @var ObjectProphecy<NodeInterface>
+     */
+    private $node1;
+
+    /**
+     * @var ObjectProphecy<NodeInterface>
+     */
+    private $node2;
 
     public function setUp(): void
     {

@@ -11,13 +11,22 @@
 
 namespace Sulu\Component\Content\Tests\Unit;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\Content\ContentTypeManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ContentTypeManagerTest extends TestCase
 {
-    protected $container;
+    /**
+     * @var ContentTypeManager
+     */
+    private $manager;
+
+    /**
+     * @var MockObject
+     */
+    private $container;
 
     public function setUp(): void
     {
