@@ -11,6 +11,7 @@
 
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 use Sulu\Bundle\ContactBundle\Entity\Account;
@@ -59,6 +60,11 @@ class AccountMediaControllerTest extends SuluTestCase
      * @var ObjectRepository<ActivityInterface>
      */
     private $activityRepository;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
 
     public function setUp(): void
     {

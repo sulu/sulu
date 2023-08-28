@@ -2417,8 +2417,6 @@ class AccountControllerTest extends SuluTestCase
         $category->setKey($name);
         $category->setDefaultLocale($locale);
 
-        $this->category = $category;
-
         // name for first category
         $categoryTrans = $this->getContainer()->get('sulu.repository.category_translation')->createNew();
         $categoryTrans->setLocale($locale);

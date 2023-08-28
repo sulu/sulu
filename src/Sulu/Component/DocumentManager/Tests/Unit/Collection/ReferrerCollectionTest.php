@@ -15,12 +15,38 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Collection\ReferrerCollection;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ReferrerCollectionTest extends TestCase
 {
+    /**
+     * @var ObjectProphecy<PropertyInterface>
+     */
+    private $reference;
+
+    /**
+     * @var ObjectProphecy<NodeInterface>
+     */
+    private $referrerNode;
+
+    /**
+     * @var ObjectProphecy<NodeInterface>
+     */
+    private $node;
+
+    /**
+     * @var ObjectProphecy<EventDispatcherInterface>
+     */
+    private $dispatcher;
+
+    /**
+     * @var ReferrerCollection
+     */
+    private $collection;
+
     public function setUp(): void
     {
         $this->reference = $this->prophesize(PropertyInterface::class);

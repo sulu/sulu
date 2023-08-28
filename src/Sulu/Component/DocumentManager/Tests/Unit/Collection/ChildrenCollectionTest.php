@@ -14,12 +14,33 @@ namespace Sulu\Comonent\DocumentManager\tests\Unit\Collection;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
 use Sulu\Component\DocumentManager\Events;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ChildrenCollectionTest extends TestCase
 {
+    /**
+     * @var ObjectProphecy<NodeInterface>
+     */
+    private $childNode;
+
+    /**
+     * @var ObjectProphecy<NodeInterface>
+     */
+    private $parentNode;
+
+    /**
+     * @var ObjectProphecy<EventDispatcherInterface>
+     */
+    private $dispatcher;
+
+    /**
+     * @var ChildrenCollection
+     */
+    private $collection;
+
     public function setUp(): void
     {
         $this->childNode = $this->prophesize(NodeInterface::class);

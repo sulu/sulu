@@ -33,6 +33,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class LinkTagTest extends TestCase
 {
     /**
+     * @var ObjectProphecy<AccessControlManagerInterface>
+     */
+    private $accessControlManager;
+
+    /**
+     * @var ObjectProphecy<TokenStorageInterface>
+     */
+    private $tokenStorage;
+
+    /**
      * @var ObjectProphecy<ContentRepositoryInterface>
      */
     private $contentRepository;

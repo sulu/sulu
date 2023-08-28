@@ -13,10 +13,16 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Functional\Controller;
 
 use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\TestBundle\Testing\WebsiteTestCase;
+use Sulu\Component\Security\Authentication\RoleInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class SitemapControllerTest extends WebsiteTestCase
 {
+    /**
+     * @var RoleInterface
+     */
+    private $anonymousRole;
+
     /**
      * @var KernelBrowser
      */

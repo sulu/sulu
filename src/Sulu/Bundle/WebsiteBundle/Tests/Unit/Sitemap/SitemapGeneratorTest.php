@@ -86,6 +86,11 @@ class SitemapGeneratorTest extends SuluTestCase
     private $languageNamespace;
 
     /**
+     * @var ContentTypeManagerInterface
+     */
+    private $contentTypeManager;
+
+    /**
      * @var NodeInterface
      */
     private $contents;
@@ -106,6 +111,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->extensionManager = $this->getContainer()->get('sulu_page.extension.manager');
         $this->languageNamespace = $this->getContainer()->getParameter('sulu.content.language.namespace');
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->contentTypeManager = $this->getContainer()->get('sulu.content.type_manager');
 
         $this->getContainer()->get('sulu_security.system_store')->setSystem('sulu_io');
 

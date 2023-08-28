@@ -14,6 +14,7 @@ namespace Sulu\Comonent\DocumentManager\tests\Unit\Subscriber\Phpcr;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Event\FindEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Events;
@@ -26,6 +27,36 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class FindSubscriberTest extends TestCase
 {
+    /**
+     * @var ObjectProphecy<EventDispatcherInterface>
+     */
+    private $eventDispatcher;
+
+    /**
+     * @var ObjectProphecy<NodeManager>
+     */
+    private $nodeManager;
+
+    /**
+     * @var ObjectProphecy<NodeInterface>
+     */
+    private $node;
+
+    /**
+     * @var ObjectProphecy<MetadataFactoryInterface>
+     */
+    private $metadataFactory;
+
+    /**
+     * @var ObjectProphecy<Metadata>
+     */
+    private $metadata;
+
+    /**
+     * @var FindSubscriber
+     */
+    private $subscriber;
+
     public function setUp(): void
     {
         $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
@@ -33,7 +64,6 @@ class FindSubscriberTest extends TestCase
         $this->node = $this->prophesize(NodeInterface::class);
         $this->metadataFactory = $this->prophesize(MetadataFactoryInterface::class);
         $this->metadata = $this->prophesize(Metadata::class);
-        $this->document = new \stdClass();
         $this->subscriber = new FindSubscriber(
             $this->metadataFactory->reveal(),
             $this->nodeManager->reveal(),

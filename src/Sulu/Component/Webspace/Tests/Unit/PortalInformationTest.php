@@ -12,10 +12,29 @@
 namespace Sulu\Component\Webspace\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Component\Localization\Localization;
+use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Webspace;
 
 class PortalInformationTest extends TestCase
 {
+    /**
+     * @var ObjectProphecy<Webspace>
+     */
+    private $webspace;
+
+    /**
+     * @var ObjectProphecy<Portal>
+     */
+    private $portal;
+
+    /**
+     * @var ObjectProphecy<Localization>
+     */
+    private $localization;
+
     /**
      * @var PortalInformation
      */
@@ -23,11 +42,10 @@ class PortalInformationTest extends TestCase
 
     public function setUp(): void
     {
-        parent::setUp();
         $this->portalInformation = new PortalInformation(null, null, null, null, null);
-        $this->webspace = $this->prophesize('Sulu\Component\Webspace\Webspace');
-        $this->portal = $this->prophesize('Sulu\Component\Webspace\Portal');
-        $this->localization = $this->prophesize('Sulu\Component\Localization\Localization');
+        $this->webspace = $this->prophesize(Webspace::class);
+        $this->portal = $this->prophesize(Portal::class);
+        $this->localization = $this->prophesize(Localization::class);
     }
 
     public function provideUrl()

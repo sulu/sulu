@@ -17,6 +17,16 @@ use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 
 class DocumentAccessorTest extends TestCase
 {
+    /**
+     * @var TestAccessObject
+     */
+    private $object;
+
+    /**
+     * @var DocumentAccessor
+     */
+    private $accessor;
+
     public function setUp(): void
     {
         $this->object = new TestAccessObject();
