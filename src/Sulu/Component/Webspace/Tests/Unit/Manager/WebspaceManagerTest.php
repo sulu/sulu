@@ -934,16 +934,18 @@ class WebspaceManagerTest extends WebspaceTestCase
     {
         $localizations = $this->webspaceManager->getAllLocalizations();
 
-        \array_walk(
-            $localizations,
-            function(&$localization) {
+        $localizations = \array_map(
+            function($localization) {
                 $localization = $localization->toArray();
                 unset($localization['children']);
                 unset($localization['localization']);
                 unset($localization['shadow']);
                 unset($localization['default']);
                 unset($localization['xDefault']);
-            }
+
+                return $localization;
+            },
+            $localizations
         );
 
         // check for duplicates
@@ -1006,16 +1008,18 @@ class WebspaceManagerTest extends WebspaceTestCase
         $webspacesLocales = $this->webspaceManager->getAllLocalesByWebspaces();
 
         foreach ($webspacesLocales as &$webspaceLocales) {
-            \array_walk(
-                $webspaceLocales,
-                function(&$webspaceLocale) {
+            $webspaceLocales = \array_map(
+                function($webspaceLocale) {
                     $webspaceLocale = $webspaceLocale->toArray();
                     unset($webspaceLocale['children']);
                     unset($webspaceLocale['localization']);
                     unset($webspaceLocale['shadow']);
                     unset($webspaceLocale['default']);
                     unset($webspaceLocale['xDefault']);
-                }
+
+                    return $webspaceLocale;
+                },
+                $webspaceLocales
             );
         }
 
