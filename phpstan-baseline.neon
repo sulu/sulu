@@ -1,16 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot call method handle\\(\\) on Symfony\\\\Component\\\\HttpKernel\\\\HttpKernelInterface\\|null\\.$#"
-			count: 1
-			path: public/index.php
-
-		-
-			message: "#^Cannot call method terminate\\(\\) on Symfony\\\\Component\\\\HttpKernel\\\\HttpKernelInterface\\|null\\.$#"
-			count: 1
-			path: public/index.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ActivityBundle\\\\Domain\\\\Repository\\\\NullActivityRepository\\:\\:createFromDomainEvent\\(\\) should return Sulu\\\\Bundle\\\\ActivityBundle\\\\Domain\\\\Model\\\\ActivityInterface but returns object\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ActivityBundle/Domain/Repository/NullActivityRepository.php
@@ -4006,11 +3996,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Category/CategoryManager.php
 
 		-
-			message: "#^Left side of && is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Category/CategoryManager.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Category\\\\CategoryManager\\:\\:delete\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Category/CategoryManager.php
@@ -7746,11 +7731,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
@@ -8716,11 +8696,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: "#^Parameter \\#2 \\$filter of method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AccountManager\\:\\:findAll\\(\\) expects null, array given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mediaId of method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AccountManager\\:\\:setLogo\\(\\) expects int, mixed given\\.$#"
 			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
@@ -9396,11 +9371,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFilter\\(\\) has parameter \\$filter with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFilter\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountInterface\\>\\|null but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
@@ -9482,11 +9452,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepositoryInterface\\:\\:findAllSelect\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepositoryInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepositoryInterface\\:\\:findByFilter\\(\\) has parameter \\$filter with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepositoryInterface.php
 
@@ -15811,11 +15776,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
-			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
@@ -16432,11 +16392,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$user of method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:addAccessControl\\(\\) expects Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface, Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
-
-		-
-			message: "#^Strict comparison using \\!\\=\\= between null and null will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
 
@@ -17911,11 +17866,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
-			message: "#^Comparison operation \"\\>\" between null and 0 is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\CollectionControllerTest\\:\\:addMedia\\(\\) has parameter \\$numberOfMedia with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
@@ -18016,16 +17966,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
-			message: "#^Parameter \\#2 \\$depth of method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\CollectionControllerTest\\:\\:iterateOverSystemCollections\\(\\) expects null, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$depth of method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\CollectionControllerTest\\:\\:iterateOverSystemCollections\\(\\) expects null, int\\<1, max\\>\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
@@ -18046,11 +17986,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
-			message: "#^Result of \\|\\| is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
 			message: "#^Cannot access property \\$_embedded on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/FormatControllerTest.php
@@ -18067,7 +18002,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$categories\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
@@ -18377,7 +18312,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertContains\\(\\) expects iterable, mixed given\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
@@ -19143,11 +19078,6 @@ parameters:
 		-
 			message: "#^Method Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:setUpMedia\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
-
-		-
-			message: "#^Parameter \\#5 \\$permission of method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMedia\\(\\) expects null, int given\\.$#"
-			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
@@ -22137,11 +22067,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$node of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\Subscriber\\\\PublishSubscriber\\:\\:copyNodeWithChildrenInPublicWorkspace\\(\\) expects PHPCR\\\\NodeInterface, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Document/Subscriber/PublishSubscriber.php
-
-		-
-			message: "#^Parameter \\#3 \\$destinationName of method Sulu\\\\Component\\\\DocumentManager\\\\NodeHelperInterface\\:\\:move\\(\\) expects null, string given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Document/Subscriber/PublishSubscriber.php
 
@@ -25307,7 +25232,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertContains\\(\\) expects iterable, mixed given\\.$#"
-			count: 16
+			count: 8
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -49051,11 +48976,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/NodeHelper.php
 
 		-
-			message: "#^Negated boolean expression is always true\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/NodeHelper.php
-
-		-
 			message: "#^Parameter \\#2 \\$destChildRelPath of method PHPCR\\\\NodeInterface\\:\\:orderBefore\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/NodeHelper.php
@@ -50091,16 +50011,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/GeneralSubscriber.php
 
 		-
-			message: "#^Parameter \\#3 \\$destinationName of method Sulu\\\\Component\\\\DocumentManager\\\\NodeHelperInterface\\:\\:copy\\(\\) expects null, string given\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/GeneralSubscriber.php
-
-		-
-			message: "#^Parameter \\#3 \\$destinationName of method Sulu\\\\Component\\\\DocumentManager\\\\NodeHelperInterface\\:\\:move\\(\\) expects null, string given\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/GeneralSubscriber.php
-
-		-
 			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/QuerySubscriber.php
@@ -50551,13 +50461,8 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentRegistryTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\Metadata\\\\BaseMetadataFactoryTest\\:\\:\\$dispatcher\\.$#"
+			message: "#^Cannot call method getClass\\(\\) on Sulu\\\\Component\\\\DocumentManager\\\\Metadata\\|false\\.$#"
 			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Metadata/BaseMetadataFactoryTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\Metadata\\\\BaseMetadataFactoryTest\\:\\:\\$factory\\.$#"
-			count: 14
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Metadata/BaseMetadataFactoryTest.php
 
 		-
@@ -50582,16 +50487,6 @@ parameters:
 
 		-
 			message: "#^Method PHPUnit\\\\Framework\\\\TestCase\\:\\:expectException\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/NodeHelperTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$destinationName of method Sulu\\\\Component\\\\DocumentManager\\\\NodeHelperInterface\\:\\:copy\\(\\) expects null, string given\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/NodeHelperTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$destinationName of method Sulu\\\\Component\\\\DocumentManager\\\\NodeHelperInterface\\:\\:move\\(\\) expects null, string given\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/NodeHelperTest.php
 

@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\tests\Unit\Metadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Exception\MetadataNotFoundException;
 use Sulu\Component\DocumentManager\Metadata;
 use Sulu\Component\DocumentManager\Metadata\BaseMetadataFactory;
@@ -22,6 +23,16 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class BaseMetadataFactoryTest extends TestCase
 {
     use ProphecyTrait;
+
+    /**
+     * @var ObjectProphecy<EventDispatcherInterface>
+     */
+    private $dispatcher;
+
+    /**
+     * @var BaseMetadataFactory
+     */
+    private $factory;
 
     public function setUp(): void
     {

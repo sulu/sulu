@@ -37,6 +37,8 @@ interface AccountRepositoryInterface extends RepositoryInterface
     public function findByIds(array $ids): array;
 
     /**
+     * @param array<string, mixed> $filter
+     *
      * @return AccountInterface[]
      */
     public function findByFilter(array $filter): ?array;

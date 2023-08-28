@@ -26,18 +26,16 @@ use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\TerminableInterface;
 
 class Kernel extends SuluKernel implements HttpCacheProvider
 {
     /**
-     * @var HttpKernelInterface|null
+     * @var (HttpKernelInterface&TerminableInterface)|null
      */
     private $httpCache;
 
-    /**
-     * @return void
-     */
-    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader)
+    protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
         // Feel free to remove the "container.autowiring.strict_mode" parameter
         // if you are using symfony/dependency-injection 4.0+ as it's the default behavior
@@ -47,7 +45,10 @@ class Kernel extends SuluKernel implements HttpCacheProvider
         parent::configureContainer($container, $loader);
     }
 
-    public function getHttpCache()
+    /**
+     * @return HttpKernelInterface&TerminableInterface
+     */
+    public function getHttpCache(): HttpKernelInterface
     {
         if (!$this->httpCache) {
             $this->httpCache = new SuluHttpCache($this);
