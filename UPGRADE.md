@@ -1,5 +1,13 @@
 # Upgrade
 
+## 2.4.15
+
+### Remove Node 12 Support for Custm Admin Builds
+
+Changes in the JS ecosystem not longer allows us to test Sulu Admin
+against Node 12. With this release so Sulu custom build may not longer
+work on Node 12, we recommend updating your CI to atleast Node 14.
+
 ## 2.4.6
 
 ### Add indexes to route table
