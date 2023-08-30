@@ -23,9 +23,6 @@ trait RelationTrait
      * @param \Traversable $entities The list of entities to work on
      * @param array $requestEntities The entities as retrieved from the request
      * @param callable $get Return id of entity
-     * @param callable $add
-     * @param callable $update
-     * @param callable $delete
      *
      * @return bool
      */
@@ -55,9 +52,6 @@ trait RelationTrait
      * @param \Traversable $entities The list of entities to work on
      * @param array $requestEntities The entities as retrieved from the request
      * @param callable $compare return true if data matches entity
-     * @param callable $add
-     * @param callable $update
-     * @param callable $delete
      *
      * @return bool
      */
@@ -106,10 +100,6 @@ trait RelationTrait
      * function compares entities with data of array and makes callback.
      *
      * @param \Traversable $entities
-     * @param callable $compare
-     * @param callable $add
-     * @param callable $update
-     * @param callable $delete
      *
      * @return bool
      */

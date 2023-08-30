@@ -46,8 +46,6 @@ class DocumentExecutor
 
     /**
      * Load the given fixture classes.
-     *
-     * @param OutputInterface $output
      */
     public function execute(array $fixtures, $purge = true, $initialize = true, ?OutputInterface $output = null)
     {

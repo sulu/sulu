@@ -26,7 +26,6 @@ interface TargetGroupEvaluatorInterface
      * the highest frequency which will be taken into account when evaluating.
      *
      * @param int $maxFrequency
-     * @param TargetGroupInterface $currentTargetGroup
      *
      * @return TargetGroupInterface
      */

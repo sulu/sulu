@@ -87,7 +87,6 @@ class SitemapUrl
      * @param string $loc
      * @param string $locale
      * @param string|null $defaultLocale
-     * @param \DateTime $lastmod
      * @param string $changefreq
      * @param float $priority
      * @param array $attributes

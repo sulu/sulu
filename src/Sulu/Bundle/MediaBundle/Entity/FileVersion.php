@@ -455,8 +455,6 @@ class FileVersion implements AuditableInterface
     /**
      * Set file.
      *
-     * @param File $file
-     *
      * @return FileVersion
      */
     public function setFile(?File $file = null)
@@ -516,8 +514,6 @@ class FileVersion implements AuditableInterface
 
     /**
      * Set defaultMeta.
-     *
-     * @param FileVersionMeta $defaultMeta
      *
      * @return FileVersion
      */

@@ -22,7 +22,6 @@ class XmlUtil
      * Returns value of path.
      *
      * @param string $path
-     * @param \DOMNode $context
      *
      * @return bool|float|int|string|null
      */
@@ -47,7 +46,6 @@ class XmlUtil
      * Returns boolean value of path.
      *
      * @param string $path
-     * @param \DOMNode $context
      *
      * @return bool|null
      */

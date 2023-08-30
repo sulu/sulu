@@ -40,7 +40,6 @@ class Sitemap
     /**
      * @param string $alias
      * @param int $maxPage
-     * @param \DateTime $lastmod
      */
     public function __construct($alias, $maxPage, ?\DateTime $lastmod = null)
     {
