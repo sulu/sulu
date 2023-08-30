@@ -136,7 +136,6 @@ interface ReplacerInterface
      * Removes all replacers.
      *
      * @param string $url
-     * @param array $replacers
      *
      * @return string
      */

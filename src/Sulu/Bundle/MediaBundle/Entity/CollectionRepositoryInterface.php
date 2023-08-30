@@ -23,7 +23,6 @@ interface CollectionRepositoryInterface
      *
      * @param int $depth
      * @param array $filter
-     * @param CollectionInterface $collection
      * @param array $sortBy
      * @param UserInterface $user The user for which the additional access control should be checked
      * @param int $permission The permission mask the user requires, if it is passed for the access control check

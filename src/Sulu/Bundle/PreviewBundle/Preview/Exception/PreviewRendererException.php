@@ -44,7 +44,6 @@ abstract class PreviewRendererException extends PreviewException
      * @param int|string $id
      * @param string $webspaceKey
      * @param string $locale
-     * @param \Exception $previous
      */
     public function __construct($message, $code, $object, $id, $webspaceKey, $locale, ?\Exception $previous = null)
     {

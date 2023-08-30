@@ -45,7 +45,6 @@ class NameResolver
 
     /**
      * @param string $name
-     * @param NodeInterface $forNode
      *
      * @return bool
      */

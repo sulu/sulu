@@ -227,8 +227,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * Get password.
-     *
-     * @return string
      */
     public function getPassword(): ?string
     {
@@ -672,8 +670,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
 
     /**
      * Set contact.
-     *
-     * @param ContactInterface $contact
      *
      * @return self
      */
