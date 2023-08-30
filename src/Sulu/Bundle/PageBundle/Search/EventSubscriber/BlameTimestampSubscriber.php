@@ -106,9 +106,6 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
 
     /**
      * Map timestamps to the search document.
-     *
-     * @param \DateTime $created
-     * @param \DateTime $changed
      */
     private function mapTimestamp(Document $document, ?\DateTime $created = null, ?\DateTime $changed = null)
     {
@@ -123,9 +120,6 @@ class BlameTimestampSubscriber implements EventSubscriberInterface
 
     /**
      * Map the creator and changer to the document.
-     *
-     * @param UserInterface $creator
-     * @param UserInterface $changer
      */
     private function mapCreatorAndChanger(Document $document, ?UserInterface $creator = null, ?UserInterface $changer = null)
     {

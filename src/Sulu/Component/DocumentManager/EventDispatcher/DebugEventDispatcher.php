@@ -31,9 +31,6 @@ class DebugEventDispatcher extends EventDispatcher
      */
     private $logger;
 
-    /**
-     * @param LoggerInterface $logger
-     */
     public function __construct(
         Stopwatch $stopwatch,
         ?LoggerInterface $logger = null

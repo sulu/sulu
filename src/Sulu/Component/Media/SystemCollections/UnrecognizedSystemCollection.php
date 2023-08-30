@@ -22,7 +22,7 @@ class UnrecognizedSystemCollection extends \Exception
     private $key;
 
     /**
-     * @var string []
+     * @var string[]
      */
     private $recognizedSystemCollections;
 

@@ -407,8 +407,6 @@ class Contact extends ApiEntity implements ContactInterface
     /**
      * Set changer.
      *
-     * @param UserInterface $changer
-     *
      * @return Contact
      */
     public function setChanger(?UserInterface $changer = null)
@@ -425,8 +423,6 @@ class Contact extends ApiEntity implements ContactInterface
 
     /**
      * Set creator.
-     *
-     * @param UserInterface $creator
      *
      * @return Contact
      */

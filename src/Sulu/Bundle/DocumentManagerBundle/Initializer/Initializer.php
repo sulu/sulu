@@ -46,7 +46,6 @@ class Initializer
     /**
      * Initialize the content repository, optionally purging it before-hand.
      *
-     * @param OutputInterface $output
      * @param bool $purge
      */
     public function initialize(?OutputInterface $output = null, $purge = false)

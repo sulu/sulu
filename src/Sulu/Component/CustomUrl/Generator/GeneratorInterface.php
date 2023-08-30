@@ -24,7 +24,6 @@ interface GeneratorInterface
      *
      * @param string $baseDomain
      * @param string[] $domainParts
-     * @param Localization $locale
      *
      * @return string
      */

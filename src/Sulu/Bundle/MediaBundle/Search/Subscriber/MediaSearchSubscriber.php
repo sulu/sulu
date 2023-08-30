@@ -56,7 +56,6 @@ class MediaSearchSubscriber implements EventSubscriberInterface
 
     /**
      * @param Factory $factory Massive search factory
-     * @param LoggerInterface $logger
      * @param array $thumbnailMimeTypes
      * @param string $searchImageFormat
      */
