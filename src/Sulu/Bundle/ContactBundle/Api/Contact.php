@@ -389,8 +389,6 @@ class Contact extends ApiWrapper
     /**
      * Set changer.
      *
-     * @param UserInterface $changer
-     *
      * @return Contact
      */
     public function setChanger(?UserInterface $changer = null)
@@ -402,8 +400,6 @@ class Contact extends ApiWrapper
 
     /**
      * Set creator.
-     *
-     * @param UserInterface $creator
      *
      * @return Contact
      */

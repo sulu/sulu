@@ -22,8 +22,6 @@ interface ParameterResolverInterface
     /**
      * Resolves parameter for website controller.
      *
-     * @param RequestAnalyzerInterface $requestAnalyzer
-     * @param StructureInterface $structure
      * @param bool $preview
      */
     public function resolve(

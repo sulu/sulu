@@ -493,8 +493,6 @@ class Collection implements CollectionInterface, PermissionInheritanceInterface
     /**
      * Set defaultMeta.
      *
-     * @param CollectionMeta $defaultMeta
-     *
      * @return Collection
      */
     public function setDefaultMeta(?CollectionMeta $defaultMeta = null)

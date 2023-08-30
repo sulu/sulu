@@ -38,9 +38,6 @@ class UserBlameSubscriber implements EventSubscriber
      */
     private $tokenStorage;
 
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     */
     public function __construct(?TokenStorageInterface $tokenStorage = null)
     {
         $this->tokenStorage = $tokenStorage;

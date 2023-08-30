@@ -374,8 +374,6 @@ class Address
     /**
      * Set countryCode.
      *
-     * @param string $countryCode
-     *
      * @return Address
      */
     public function setCountryCode(?string $countryCode)

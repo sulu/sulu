@@ -75,7 +75,6 @@ class SnippetImport extends Import implements SnippetImportInterface
      *
      * @param string $locale
      * @param string $filePath
-     * @param OutputInterface $output
      * @param string $format
      *
      * @return \stdClass
