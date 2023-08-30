@@ -13,6 +13,7 @@ namespace Sulu\Bundle\WebsiteBundle\Tests\Unit\EventListener;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\WebsiteBundle\EventListener\SegmentSubscriber;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Segment;
@@ -25,10 +26,16 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class SegmentSubscriberTest extends TestCase
 {
     use ProphecyTrait;
-    /*
+
+    /**
      * @var SegmentSubscriber
      */
     private $segmentSubscriber;
+
+    /**
+     * @var ObjectProphecy<RequestAnalyzerInterface>
+     */
+    private $requestAnalyzer;
 
     public function setUp(): void
     {

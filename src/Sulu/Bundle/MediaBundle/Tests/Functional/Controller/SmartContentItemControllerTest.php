@@ -142,7 +142,7 @@ class SmartContentItemControllerTest extends SuluTestCase
         return $media;
     }
 
-    private function createCollection($name, $parent = null)
+    private function createCollection($name)
     {
         $collection = new Collection();
         $collectionType = new CollectionType();
@@ -156,11 +156,6 @@ class SmartContentItemControllerTest extends SuluTestCase
         $collection->setType($collectionType);
         $collectionMeta->setCollection($collection);
         $collection->addMeta($collectionMeta);
-
-        if (null !== $parent) {
-            $collection->setParent($this->collections[$parent]);
-            $this->collections[$parent]->addChildren($collection);
-        }
 
         $this->em->persist($collection);
         $this->em->persist($collectionMeta);

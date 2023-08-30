@@ -23,7 +23,7 @@ interface NodeHelperInterface
      * Move the given node to the given parent node. Additionally a new name can also be passed.
      *
      * @param string $parentUuid
-     * @param null $destinationName
+     * @param string|null $destinationName
      */
     public function move(NodeInterface $node, $parentUuid, $destinationName = null);
 
@@ -31,7 +31,7 @@ interface NodeHelperInterface
      * Copies the given node to the given parent node. Additionally a new name can also be passed.
      *
      * @param string $parentUuid
-     * @param null $destinationName
+     * @param string|null $destinationName
      *
      * @return string The path of the new node
      */

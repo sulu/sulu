@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Collection\ChildrenCollection;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Events;
@@ -23,6 +24,26 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class ChildrenCollectionTest extends TestCase
 {
     use ProphecyTrait;
+
+    /**
+     * @var ObjectProphecy<NodeInterface>
+     */
+    private $childNode;
+
+    /**
+     * @var ObjectProphecy<NodeInterface>
+     */
+    private $parentNode;
+
+    /**
+     * @var ObjectProphecy<EventDispatcherInterface>
+     */
+    private $dispatcher;
+
+    /**
+     * @var ChildrenCollection
+     */
+    private $collection;
 
     public function setUp(): void
     {

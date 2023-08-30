@@ -15,6 +15,7 @@ use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Event\CreateEvent;
 use Sulu\Component\DocumentManager\Event\HydrateEvent;
 use Sulu\Component\DocumentManager\Metadata;
@@ -25,8 +26,35 @@ class InstantiatorSubscriberTest extends TestCase
 {
     use ProphecyTrait;
 
-    public const ALIAS = 'alias';
+    private const ALIAS = 'alias';
 
+    /**
+     * @var ObjectProphecy<MetadataFactoryInterface>
+     */
+    private $metadataFactory;
+
+    /**
+     * @var ObjectProphecy<Metadata>
+     */
+    private $metadata;
+
+    /**
+     * @var ObjectProphecy<HydrateEvent>
+     */
+    private $hydrateEvent;
+    /**
+     * @var ObjectProphecy<CreateEvent>
+     */
+    private $createEvent;
+
+    /**
+     * @var ObjectProphecy<NodeInterface>
+     */
+    private $node;
+
+    /**
+     * @var InstantiatorSubscriber
+     */
     private $subscriber;
 
     public function setUp(): void

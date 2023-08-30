@@ -48,6 +48,11 @@ class SuluHttpCacheExtensionTest extends AbstractExtensionTestCase
     private $requestStack;
 
     /**
+     * @var ObjectProphecy<ReplacerInterface>
+     */
+    private $replacer;
+
+    /**
      * @var ReplacerInterface
      */
     /**

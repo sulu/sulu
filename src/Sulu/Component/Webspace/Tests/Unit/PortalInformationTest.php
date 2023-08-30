@@ -24,28 +24,27 @@ class PortalInformationTest extends TestCase
     use ProphecyTrait;
 
     /**
-     * @var PortalInformation
-     */
-    private $portalInformation;
-
-    /**
      * @var ObjectProphecy<Webspace>
      */
-    private ObjectProphecy $webspace;
+    private $webspace;
 
     /**
      * @var ObjectProphecy<Portal>
      */
-    private ObjectProphecy $portal;
+    private $portal;
 
     /**
      * @var ObjectProphecy<Localization>
      */
-    private ObjectProphecy $localization;
+    private $localization;
+
+    /**
+     * @var PortalInformation
+     */
+    private $portalInformation;
 
     public function setUp(): void
     {
-        parent::setUp();
         $this->portalInformation = new PortalInformation(null, null, null, null, null);
         $this->webspace = $this->prophesize(Webspace::class);
         $this->portal = $this->prophesize(Portal::class);

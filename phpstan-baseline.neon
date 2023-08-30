@@ -1,16 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot call method handle\\(\\) on Symfony\\\\Component\\\\HttpKernel\\\\HttpKernelInterface\\|null\\.$#"
-			count: 1
-			path: public/index.php
-
-		-
-			message: "#^Cannot call method terminate\\(\\) on Symfony\\\\Component\\\\HttpKernel\\\\HttpKernelInterface\\|null\\.$#"
-			count: 1
-			path: public/index.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ActivityBundle\\\\Domain\\\\Repository\\\\NullActivityRepository\\:\\:createFromDomainEvent\\(\\) should return Sulu\\\\Bundle\\\\ActivityBundle\\\\Domain\\\\Model\\\\ActivityInterface but returns object\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ActivityBundle/Domain/Repository/NullActivityRepository.php
@@ -4006,11 +3996,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Category/CategoryManager.php
 
 		-
-			message: "#^Left side of && is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Category/CategoryManager.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Category\\\\CategoryManager\\:\\:delete\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Category/CategoryManager.php
@@ -7746,11 +7731,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
@@ -8716,11 +8696,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: "#^Parameter \\#2 \\$filter of method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AccountManager\\:\\:findAll\\(\\) expects null, array given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mediaId of method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AccountManager\\:\\:setLogo\\(\\) expects int, mixed given\\.$#"
 			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
@@ -9396,11 +9371,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFilter\\(\\) has parameter \\$filter with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFilter\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountInterface\\>\\|null but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
@@ -9482,11 +9452,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepositoryInterface\\:\\:findAllSelect\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepositoryInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepositoryInterface\\:\\:findByFilter\\(\\) has parameter \\$filter with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepositoryInterface.php
 
@@ -9986,11 +9951,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/EventListener/AccountListener.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\ContactBundle\\\\Tests\\\\Functional\\\\Controller\\\\AccountControllerTest\\:\\:\\$category\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
 			message: "#^Array has 2 duplicate keys with value 'id' \\('id', 'id'\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
@@ -10346,11 +10306,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\ContactBundle\\\\Tests\\\\Functional\\\\Controller\\\\AccountMediaControllerTest\\:\\:\\$em\\.$#"
-			count: 14
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountMediaControllerTest.php
-
-		-
 			message: "#^Cannot access property \\$_embedded on mixed\\.$#"
 			count: 4
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountMediaControllerTest.php
@@ -10409,11 +10364,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$object of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertObjectHasAttribute\\(\\) expects object, mixed given\\.$#"
 			count: 4
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\ContactBundle\\\\Tests\\\\Functional\\\\Controller\\\\ContactControllerTest\\:\\:\\$category\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: "#^Cannot access offset 'account' on mixed\\.$#"
@@ -11529,16 +11479,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/Tests/Functional/Controller/LocalizationControllerTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\CoreBundle\\\\Tests\\\\Unit\\\\Cache\\\\StructureWarmerTest\\:\\:\\$structureManager\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/CoreBundle/Tests/Unit/Cache/StructureWarmerTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\CoreBundle\\\\Tests\\\\Unit\\\\Cache\\\\StructureWarmerTest\\:\\:\\$warmer\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/CoreBundle/Tests/Unit/Cache/StructureWarmerTest.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\Tests\\\\Unit\\\\DependencyInjection\\\\Compiler\\\\ListBuilderMetadataProviderCompilerPassTest\\:\\:dataProcessProvider\\(\\) has no return type specified\\.$#"
@@ -13181,11 +13121,6 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Tests/Unit/Command/FixturesLoadCommandTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Tests\\\\Unit\\\\Command\\\\InitializeCommandTest\\:\\:\\$command\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/DocumentManagerBundle/Tests/Unit/Command/InitializeCommandTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Tests\\\\Unit\\\\Command\\\\InitializeCommandTest\\:\\:exec\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Tests/Unit/Command/InitializeCommandTest.php
@@ -13194,31 +13129,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Tests\\\\Unit\\\\Command\\\\InitializeCommandTest\\:\\:exec\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Tests/Unit/Command/InitializeCommandTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Tests\\\\Unit\\\\DataFixtures\\\\DocumentExecutorTest\\:\\:\\$documentManager\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/DocumentManagerBundle/Tests/Unit/DataFixtures/DocumentExecutorTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Tests\\\\Unit\\\\DataFixtures\\\\DocumentExecutorTest\\:\\:\\$executer\\.$#"
-			count: 4
-			path: src/Sulu/Bundle/DocumentManagerBundle/Tests/Unit/DataFixtures/DocumentExecutorTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Tests\\\\Unit\\\\DataFixtures\\\\DocumentExecutorTest\\:\\:\\$fixture1\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/DocumentManagerBundle/Tests/Unit/DataFixtures/DocumentExecutorTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Tests\\\\Unit\\\\DataFixtures\\\\DocumentExecutorTest\\:\\:\\$initializer\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/DocumentManagerBundle/Tests/Unit/DataFixtures/DocumentExecutorTest.php
-
-		-
-			message: "#^Access to private property \\$output of parent class PHPUnit\\\\Framework\\\\TestCase\\.$#"
-			count: 6
-			path: src/Sulu/Bundle/DocumentManagerBundle/Tests/Unit/DataFixtures/DocumentExecutorTest.php
 
 		-
 			message: "#^Class Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DataFixtures\\\\DocumentExecutor constructor invoked with 3 parameters, 2 required\\.$#"
@@ -13239,11 +13149,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Tests\\\\Unit\\\\Initialalizer\\\\RootPathPurgeInitializerTest\\:\\:\\$node type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Tests/Unit/Initialalizer/RootPathPurgeInitializerTest.php
-
-		-
-			message: "#^Access to private property \\$output of parent class PHPUnit\\\\Framework\\\\TestCase\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/DocumentManagerBundle/Tests/Unit/Initialalizer/WorkspaceInitializerTest.php
 
 		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, mixed given\\.$#"
@@ -13474,11 +13379,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\CacheLifetime\\\\CacheLifetimeRequestStoreTest\\:\\:testSetCacheLifetime\\(\\) has parameter \\$previousCacheLifetime with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/CacheLifetime/CacheLifetimeRequestStoreTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\DependencyInjection\\\\SuluHttpCacheExtensionTest\\:\\:\\$replacer\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/DependencyInjection/SuluHttpCacheExtensionTest.php
 
 		-
 			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) with false will always evaluate to false\\.$#"
@@ -13796,17 +13696,7 @@ parameters:
 			path: src/Sulu/Bundle/LocationBundle/Tests/Unit/Controller/GeolocatorControllerTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\LocationBundle\\\\Tests\\\\Unit\\\\Geolocator\\\\GeolocatorResponseTest\\:\\:\\$location\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/LocationBundle/Tests/Unit/Geolocator/GeolocatorResponseTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\LocationBundle\\\\Tests\\\\Unit\\\\Geolocator\\\\GeolocatorResponseTest\\:\\:\\$response\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/LocationBundle/Tests/Unit/Geolocator/GeolocatorResponseTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\LocationBundle\\\\Tests\\\\Unit\\\\Geolocator\\\\GeolocatorResponseTest\\:\\:\\$geolocatorResponse has no type specified\\.$#"
+			message: "#^Parameter \\#1 \\$location of method Sulu\\\\Bundle\\\\LocationBundle\\\\Geolocator\\\\GeolocatorResponse\\:\\:addLocation\\(\\) expects Sulu\\\\Bundle\\\\LocationBundle\\\\Geolocator\\\\GeolocatorLocation, PHPUnit\\\\Framework\\\\MockObject\\\\MockObject given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/LocationBundle/Tests/Unit/Geolocator/GeolocatorResponseTest.php
 
@@ -15811,11 +15701,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
 
 		-
-			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/CollectionRepository.php
@@ -16432,11 +16317,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$user of method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:addAccessControl\\(\\) expects Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface, Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
-
-		-
-			message: "#^Strict comparison using \\!\\=\\= between null and null will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
 
@@ -17911,11 +17791,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
-			message: "#^Comparison operation \"\\>\" between null and 0 is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\CollectionControllerTest\\:\\:addMedia\\(\\) has parameter \\$numberOfMedia with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
@@ -18016,16 +17891,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
-			message: "#^Parameter \\#2 \\$depth of method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\CollectionControllerTest\\:\\:iterateOverSystemCollections\\(\\) expects null, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$depth of method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\CollectionControllerTest\\:\\:iterateOverSystemCollections\\(\\) expects null, int\\<1, max\\>\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
@@ -18046,11 +17911,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
-			message: "#^Result of \\|\\| is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
 			message: "#^Cannot access property \\$_embedded on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/FormatControllerTest.php
@@ -18067,7 +17927,7 @@ parameters:
 
 		-
 			message: "#^Access to an undefined property object\\:\\:\\$categories\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
@@ -18377,7 +18237,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertContains\\(\\) expects iterable, mixed given\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
@@ -18596,21 +18456,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerWebsiteSecuredTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\MediaWebsiteControllerTest\\:\\:\\$audioType\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\MediaWebsiteControllerTest\\:\\:\\$documentType\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\MediaWebsiteControllerTest\\:\\:\\$videoType\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
-
-		-
 			message: "#^Argument of an invalid type array\\<int, string\\>\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
@@ -18637,11 +18482,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\MediaWebsiteControllerTest\\:\\:createMedia\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\MediaWebsiteControllerTest\\:\\:createMedia\\(\\) has parameter \\$type with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
 
@@ -18691,11 +18531,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaWebsiteControllerTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\SmartContentItemControllerTest\\:\\:\\$collections\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
 			message: "#^Cannot access offset '_embedded' on mixed\\.$#"
 			count: 10
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
@@ -18737,11 +18572,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\SmartContentItemControllerTest\\:\\:createCollection\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Controller\\\\SmartContentItemControllerTest\\:\\:createCollection\\(\\) has parameter \\$parent with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
 
@@ -19143,11 +18973,6 @@ parameters:
 		-
 			message: "#^Method Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:setUpMedia\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
-
-		-
-			message: "#^Parameter \\#5 \\$permission of method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMedia\\(\\) expects null, int given\\.$#"
-			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
@@ -19649,31 +19474,6 @@ parameters:
 			message: "#^Parameter \\#3 \\$permissions of class Sulu\\\\Component\\\\Security\\\\Event\\\\PermissionUpdateEvent constructor expects array, null given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Search/EventListener/PermissionListenerTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Search\\\\Subscriber\\\\MediaSearchSubscriberTest\\:\\:\\$collection\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Search/Subscriber/MediaSearchSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Search\\\\Subscriber\\\\MediaSearchSubscriberTest\\:\\:\\$field1\\.$#"
-			count: 5
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Search/Subscriber/MediaSearchSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Search\\\\Subscriber\\\\MediaSearchSubscriberTest\\:\\:\\$field2\\.$#"
-			count: 5
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Search/Subscriber/MediaSearchSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Search\\\\Subscriber\\\\MediaSearchSubscriberTest\\:\\:\\$field3\\.$#"
-			count: 5
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Search/Subscriber/MediaSearchSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Search\\\\Subscriber\\\\MediaSearchSubscriberTest\\:\\:\\$logger\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Search/Subscriber/MediaSearchSubscriberTest.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Search\\\\Subscriber\\\\MediaSearchSubscriberTest\\:\\:setupSubscriber\\(\\) has parameter \\$collectionId with no type specified\\.$#"
@@ -22141,11 +21941,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Document/Subscriber/PublishSubscriber.php
 
 		-
-			message: "#^Parameter \\#3 \\$destinationName of method Sulu\\\\Component\\\\DocumentManager\\\\NodeHelperInterface\\:\\:move\\(\\) expects null, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Document/Subscriber/PublishSubscriber.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getWorkspace\\(\\)\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/PageBundle/DocumentManager/ContentInitializer.php
@@ -23346,11 +23141,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\PageBundle\\\\Version201511240843\\:\\:\\$propertyFactory\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Content\\\\Metadata\\\\ItemMetadata\\:\\:getType\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
@@ -23358,11 +23148,6 @@ parameters:
 		-
 			message: "#^Cannot call method format\\(\\) on string\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 6
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
 
 		-
@@ -25307,7 +25092,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertContains\\(\\) expects iterable, mixed given\\.$#"
-			count: 16
+			count: 8
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -25329,11 +25114,6 @@ parameters:
 			message: "#^Variable \\$content in PHPDoc tag @var does not match assigned variable \\$liveContent\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Controller\\\\PageResourcelocatorControllerTest\\:\\:\\$documentManager\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageResourcelocatorControllerTest.php
 
 		-
 			message: "#^Cannot access offset 'id' on mixed\\.$#"
@@ -25399,11 +25179,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Controller\\\\PageResourcelocatorControllerTest\\:\\:\\$session is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageResourcelocatorControllerTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Controller\\\\ResourcelocatorControllerTest\\:\\:\\$documentManager\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/ResourcelocatorControllerTest.php
 
 		-
 			message: "#^Cannot access offset 'id' on mixed\\.$#"
@@ -26459,16 +26234,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Mapper\\\\ContentMapperTest\\:\\:\\$session \\(Jackalope\\\\Session\\) does not accept Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Markup\\\\LinkTagTest\\:\\:\\$accessControlManager\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Markup/LinkTagTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Markup\\\\LinkTagTest\\:\\:\\$tokenStorage\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Markup/LinkTagTest.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Markup\\\\LinkTagTest\\:\\:createContent\\(\\) has no return type specified\\.$#"
@@ -31381,11 +31146,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Command/CreateUserCommandTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\SecurityBundle\\\\Tests\\\\Functional\\\\Controller\\\\GroupControllerTest\\:\\:\\$em\\.$#"
-			count: 7
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
-
-		-
 			message: "#^Cannot access property \\$_embedded on mixed\\.$#"
 			count: 4
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
@@ -31524,16 +31284,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$locale of method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\UserRole\\:\\:setLocale\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\SecurityBundle\\\\Tests\\\\Functional\\\\Controller\\\\RoleControllerTest\\:\\:\\$permission1\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\SecurityBundle\\\\Tests\\\\Functional\\\\Controller\\\\RoleControllerTest\\:\\:\\$permission2\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$_embedded on mixed\\.$#"
@@ -33661,38 +33411,8 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Export\\\\SnippetTest\\:\\:\\$snippet1\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Export\\\\SnippetTest\\:\\:\\$snippet2\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
-
-		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Snippet\\\\Export\\\\SnippetExportInterface\\:\\:getExportData\\(\\)\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getStructure\\(\\)\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setStructureType\\(\\)\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setTitle\\(\\)\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setWorkflowStage\\(\\)\\.$#"
-			count: 2
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Export/SnippetTest.php
 
 		-
@@ -36641,11 +36361,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/AppCache.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Application\\\\Kernel\\:\\:\\$name\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/Kernel.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Application\\\\TestController\\:\\:index\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/TestController.php
@@ -36859,11 +36574,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringContainsString\\(\\) expects string, string\\|false given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Controller/ErrorControllerTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Functional\\\\Controller\\\\SitemapControllerTest\\:\\:\\$anonymousRole\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Controller/SitemapControllerTest.php
 
 		-
 			message: "#^Parameter \\#2 \\$string of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertStringStartsWith\\(\\) expects string, string\\|null given\\.$#"
@@ -37271,11 +36981,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentCacheListenerTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\EventListener\\\\SegmentSubscriberTest\\:\\:\\$requestAnalyzer\\.$#"
-			count: 5
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentSubscriberTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\EventListener\\\\SegmentSubscriberTest\\:\\:provideAddCookieHeader\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentSubscriberTest.php
@@ -37307,11 +37012,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\EventListener\\\\SegmentSubscriberTest\\:\\:testAddCookieHeader\\(\\) has parameter \\$segmentKeys with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentSubscriberTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\EventListener\\\\SegmentSubscriberTest\\:\\:\\$segmentSubscriber has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentSubscriberTest.php
 
@@ -37379,11 +37079,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\Routing\\\\RedirectExceptionSubscriberTest\\:\\:testRedirectPartialMatchResolve\\(\\) has parameter \\$requestUri with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Routing/RedirectExceptionSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\Sitemap\\\\SitemapGeneratorTest\\:\\:\\$contentTypeManager\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Sitemap/SitemapGeneratorTest.php
 
 		-
 			message: "#^Call to an undefined method object\\:\\:setExtension\\(\\)\\.$#"
@@ -37499,11 +37194,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\Sitemap\\\\SitemapGeneratorTest\\:\\:\\$contents type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Sitemap/SitemapGeneratorTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\Sitemap\\\\SitemapProviderPoolTest\\:\\:\\$providers\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Sitemap/SitemapProviderPoolTest.php
 
 		-
 			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with DateTime will always evaluate to false\\.$#"
@@ -38068,11 +37758,6 @@ parameters:
 		-
 			message: "#^Call to method getFunctions\\(\\) on an unknown class Sulu\\\\Component\\\\Cache\\\\MemoizeTwigExtensionTrait\\.$#"
 			count: 1
-			path: src/Sulu/Component/Cache/Tests/Unit/Cache/MemoizeTwigExtensionTraitTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func expects callable\\(\\)\\: mixed, array\\<class\\-string, string\\>\\|\\(callable\\(\\)\\: mixed\\)\\|null given\\.$#"
-			count: 2
 			path: src/Sulu/Component/Cache/Tests/Unit/Cache/MemoizeTwigExtensionTraitTest.php
 
 		-
@@ -45581,11 +45266,6 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Compat/StructureManagerTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\ContentTypeManagerTest\\:\\:\\$manager\\.$#"
-			count: 5
-			path: src/Sulu/Component/Content/Tests/Unit/ContentTypeManagerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\ContentTypeManagerTest\\:\\:provideHas\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/ContentTypeManagerTest.php
@@ -45597,11 +45277,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\ContentTypeManagerTest\\:\\:testHas\\(\\) has parameter \\$expected with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/ContentTypeManagerTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\ContentTypeManagerTest\\:\\:\\$container has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/ContentTypeManagerTest.php
 
@@ -49046,11 +48721,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/NodeHelper.php
 
 		-
-			message: "#^Negated boolean expression is always true\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/NodeHelper.php
-
-		-
 			message: "#^Parameter \\#2 \\$destChildRelPath of method PHPCR\\\\NodeInterface\\:\\:orderBefore\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/NodeHelper.php
@@ -50086,16 +49756,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/GeneralSubscriber.php
 
 		-
-			message: "#^Parameter \\#3 \\$destinationName of method Sulu\\\\Component\\\\DocumentManager\\\\NodeHelperInterface\\:\\:copy\\(\\) expects null, string given\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/GeneralSubscriber.php
-
-		-
-			message: "#^Parameter \\#3 \\$destinationName of method Sulu\\\\Component\\\\DocumentManager\\\\NodeHelperInterface\\:\\:move\\(\\) expects null, string given\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/GeneralSubscriber.php
-
-		-
 			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/QuerySubscriber.php
@@ -50176,94 +49836,54 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/ReorderSubscriber.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\ChildrenCollectionTest\\:\\:\\$childNode\\.$#"
-			count: 2
+			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\ChildrenCollectionTest\\:\\:\\$childNode type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
+			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/ChildrenCollectionTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\ChildrenCollectionTest\\:\\:\\$collection\\.$#"
-			count: 2
+			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\ChildrenCollectionTest\\:\\:\\$parentNode type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
+			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/ChildrenCollectionTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\ChildrenCollectionTest\\:\\:\\$dispatcher\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/ChildrenCollectionTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\ChildrenCollectionTest\\:\\:\\$parentNode\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/ChildrenCollectionTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\QueryResultCollectionTest\\:\\:\\$collection\\.$#"
-			count: 2
+			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\QueryResultCollectionTest\\:\\:\\$node1 type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
+			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/QueryResultCollectionTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\QueryResultCollectionTest\\:\\:\\$dispatcher\\.$#"
-			count: 2
+			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\QueryResultCollectionTest\\:\\:\\$node2 type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
+			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/QueryResultCollectionTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\QueryResultCollectionTest\\:\\:\\$node1\\.$#"
-			count: 2
+			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\QueryResultCollectionTest\\:\\:\\$queryResult type has no value type specified in iterable type PHPCR\\\\Query\\\\QueryResultInterface\\.$#"
+			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/QueryResultCollectionTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\QueryResultCollectionTest\\:\\:\\$node2\\.$#"
-			count: 2
+			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\QueryResultCollectionTest\\:\\:\\$row1 type has no value type specified in iterable type PHPCR\\\\Query\\\\RowInterface\\.$#"
+			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/QueryResultCollectionTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\QueryResultCollectionTest\\:\\:\\$queryResult\\.$#"
-			count: 2
+			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\QueryResultCollectionTest\\:\\:\\$row2 type has no value type specified in iterable type PHPCR\\\\Query\\\\RowInterface\\.$#"
+			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/QueryResultCollectionTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\QueryResultCollectionTest\\:\\:\\$row1\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/QueryResultCollectionTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\QueryResultCollectionTest\\:\\:\\$row2\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/QueryResultCollectionTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\ReferrerCollectionTest\\:\\:\\$collection\\.$#"
-			count: 2
+			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\ReferrerCollectionTest\\:\\:\\$node type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
+			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/ReferrerCollectionTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\ReferrerCollectionTest\\:\\:\\$dispatcher\\.$#"
-			count: 2
+			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\ReferrerCollectionTest\\:\\:\\$reference type has no value type specified in iterable type PHPCR\\\\PropertyInterface\\.$#"
+			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/ReferrerCollectionTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\ReferrerCollectionTest\\:\\:\\$node\\.$#"
-			count: 2
+			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\ReferrerCollectionTest\\:\\:\\$referrerNode type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
+			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/ReferrerCollectionTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\ReferrerCollectionTest\\:\\:\\$reference\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/ReferrerCollectionTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Collection\\\\ReferrerCollectionTest\\:\\:\\$referrerNode\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Collection/ReferrerCollectionTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\DocumentAccessorTest\\:\\:\\$accessor\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentAccessorTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\DocumentAccessorTest\\:\\:\\$object\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentAccessorTest.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\TestAccessObject\\:\\:getPrivateProperty\\(\\) has no return type specified\\.$#"
@@ -50281,43 +49901,8 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentAccessorTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\DocumentHelperTest\\:\\:\\$document\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentHelperTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\DocumentHelperTest\\:\\:\\$titleDocument\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentHelperTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\DocumentInspectorTest\\:\\:\\$document\\.$#"
-			count: 15
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentInspectorTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\DocumentInspectorTest\\:\\:\\$documentInspector\\.$#"
-			count: 8
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentInspectorTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\DocumentInspectorTest\\:\\:\\$documentRegistry\\.$#"
-			count: 7
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentInspectorTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\DocumentInspectorTest\\:\\:\\$node\\.$#"
-			count: 11
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentInspectorTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\DocumentInspectorTest\\:\\:\\$pathRegistry\\.$#"
+			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\DocumentInspectorTest\\:\\:\\$node type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
 			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentInspectorTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\DocumentInspectorTest\\:\\:\\$proxyFactory\\.$#"
-			count: 2
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentInspectorTest.php
 
 		-
@@ -50536,23 +50121,13 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\DocumentRegistryTest\\:\\:\\$document\\.$#"
-			count: 17
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentRegistryTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\DocumentRegistryTest\\:\\:\\$node\\.$#"
-			count: 14
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentRegistryTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\Metadata\\\\BaseMetadataFactoryTest\\:\\:\\$dispatcher\\.$#"
+			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\DocumentRegistryTest\\:\\:\\$node type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
 			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Metadata/BaseMetadataFactoryTest.php
+			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentRegistryTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\Metadata\\\\BaseMetadataFactoryTest\\:\\:\\$factory\\.$#"
-			count: 14
+			message: "#^Cannot call method getClass\\(\\) on Sulu\\\\Component\\\\DocumentManager\\\\Metadata\\|false\\.$#"
+			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Metadata/BaseMetadataFactoryTest.php
 
 		-
@@ -50566,27 +50141,12 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/NameResolverTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\NamespaceRegistryTest\\:\\:\\$registry\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/NamespaceRegistryTest.php
-
-		-
 			message: "#^Call to an undefined method Jackalope\\\\Workspace\\:\\:reveal\\(\\)\\.$#"
 			count: 2
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/NodeHelperTest.php
 
 		-
 			message: "#^Method PHPUnit\\\\Framework\\\\TestCase\\:\\:expectException\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/NodeHelperTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$destinationName of method Sulu\\\\Component\\\\DocumentManager\\\\NodeHelperInterface\\:\\:copy\\(\\) expects null, string given\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/NodeHelperTest.php
-
-		-
-			message: "#^Parameter \\#3 \\$destinationName of method Sulu\\\\Component\\\\DocumentManager\\\\NodeHelperInterface\\:\\:move\\(\\) expects null, string given\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/NodeHelperTest.php
 
@@ -50661,23 +50221,8 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/ProxyFactoryTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Query\\\\QueryTest\\:\\:\\$dispatcher\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Query/QueryTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Query\\\\QueryTest\\:\\:\\$phpcrQuery\\.$#"
-			count: 5
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Query/QueryTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Query\\\\QueryTest\\:\\:\\$phpcrResult\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Query/QueryTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Query\\\\QueryTest\\:\\:\\$query\\.$#"
-			count: 6
+			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Query\\\\QueryTest\\:\\:\\$phpcrResult type has no value type specified in iterable type PHPCR\\\\Query\\\\QueryResultInterface\\.$#"
+			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Query/QueryTest.php
 
 		-
@@ -50696,47 +50241,22 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Slugifier/NodeNameSlugifierTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\LocaleSubscriberTest\\:\\:\\$accessor\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\LocaleSubscriberTest\\:\\:\\$document\\.$#"
-			count: 4
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\LocaleSubscriberTest\\:\\:\\$hydrateEvent\\.$#"
-			count: 6
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\LocaleSubscriberTest\\:\\:\\$node\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\LocaleSubscriberTest\\:\\:\\$notImplementing\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\LocaleSubscriberTest\\:\\:\\$registry\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\LocaleSubscriberTest\\:\\:\\$subscriber\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\TestLocaleDocument\\:\\:setLocale\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\TestLocaleDocument\\:\\:setOriginalLocale\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
+
+		-
+			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\LocaleSubscriberTest\\:\\:\\$node is never read, only written\\.$#"
+			count: 1
+			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
+
+		-
+			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\LocaleSubscriberTest\\:\\:\\$node type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/LocaleSubscriberTest.php
 
@@ -50801,42 +50321,17 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/PathSubscriberTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\Mapping\\\\UuidSubscriberTest\\:\\:\\$accessor\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/UuidSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\Mapping\\\\UuidSubscriberTest\\:\\:\\$document\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/UuidSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\Mapping\\\\UuidSubscriberTest\\:\\:\\$hydrateEvent\\.$#"
-			count: 7
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/UuidSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\Mapping\\\\UuidSubscriberTest\\:\\:\\$node\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/UuidSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\Mapping\\\\UuidSubscriberTest\\:\\:\\$notImplementing\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/UuidSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\Mapping\\\\UuidSubscriberTest\\:\\:\\$subscriber\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/UuidSubscriberTest.php
-
-		-
 			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\Mapping\\\\TestUuidDocument\\:\\:\\$uuid has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/UuidSubscriberTest.php
 
 		-
 			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\Mapping\\\\TestUuidDocument\\:\\:\\$uuid is never written, only read\\.$#"
+			count: 1
+			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/UuidSubscriberTest.php
+
+		-
+			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\Behavior\\\\Mapping\\\\UuidSubscriberTest\\:\\:\\$node type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/Mapping/UuidSubscriberTest.php
 
@@ -50966,32 +50461,7 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Behavior/VersionSubscriberTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Core\\\\InstantiatorSubscriberTest\\:\\:\\$createEvent\\.$#"
-			count: 4
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Core/InstantiatorSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Core\\\\InstantiatorSubscriberTest\\:\\:\\$hydrateEvent\\.$#"
-			count: 7
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Core/InstantiatorSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Core\\\\InstantiatorSubscriberTest\\:\\:\\$metadata\\.$#"
-			count: 5
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Core/InstantiatorSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Core\\\\InstantiatorSubscriberTest\\:\\:\\$metadataFactory\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Core/InstantiatorSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Core\\\\InstantiatorSubscriberTest\\:\\:\\$node\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Core/InstantiatorSubscriberTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Core\\\\InstantiatorSubscriberTest\\:\\:\\$subscriber has no type specified\\.$#"
+			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Core\\\\InstantiatorSubscriberTest\\:\\:\\$node type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Core/InstantiatorSubscriberTest.php
 
@@ -51004,41 +50474,6 @@ parameters:
 			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Core\\\\RegistratorSubscriberTest\\:\\:\\$node type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Core/RegistratorSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Phpcr\\\\FindSubscriberTest\\:\\:\\$document\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Phpcr\\\\FindSubscriberTest\\:\\:\\$eventDispatcher\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Phpcr\\\\FindSubscriberTest\\:\\:\\$metadata\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Phpcr\\\\FindSubscriberTest\\:\\:\\$metadataFactory\\.$#"
-			count: 5
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Phpcr\\\\FindSubscriberTest\\:\\:\\$node\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Phpcr\\\\FindSubscriberTest\\:\\:\\$nodeManager\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Phpcr\\\\FindSubscriberTest\\:\\:\\$subscriber\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
 
 		-
 			message: "#^Method Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Phpcr\\\\FindSubscriberTest\\:\\:doTestFind\\(\\) has no return type specified\\.$#"
@@ -51071,6 +50506,11 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
 
 		-
+			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\tests\\\\Unit\\\\Subscriber\\\\Phpcr\\\\FindSubscriberTest\\:\\:\\$node type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
+			count: 1
+			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/FindSubscriberTest.php
+
+		-
 			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\GeneralSubscriberTest\\:\\:\\$node type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/GeneralSubscriberTest.php
@@ -51086,53 +50526,8 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/QuerySubscriberTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\RemoveSubscriberTest\\:\\:\\$document\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/RemoveSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\RemoveSubscriberTest\\:\\:\\$documentRegistry\\.$#"
+			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\RemoveSubscriberTest\\:\\:\\$node type has no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
 			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/RemoveSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\RemoveSubscriberTest\\:\\:\\$node\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/RemoveSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\RemoveSubscriberTest\\:\\:\\$node1\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/RemoveSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\RemoveSubscriberTest\\:\\:\\$node2\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/RemoveSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\RemoveSubscriberTest\\:\\:\\$nodeManager\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/RemoveSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\RemoveSubscriberTest\\:\\:\\$property1\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/RemoveSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\RemoveSubscriberTest\\:\\:\\$property2\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/RemoveSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\RemoveSubscriberTest\\:\\:\\$removeEvent\\.$#"
-			count: 3
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/RemoveSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Comonent\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\RemoveSubscriberTest\\:\\:\\$subscriber\\.$#"
-			count: 2
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/RemoveSubscriberTest.php
 
 		-
@@ -51796,17 +51191,7 @@ parameters:
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\Media\\\\SystemCollections\\\\SystemCollectionBuilder\\:\\:\\$container\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Media\\\\SystemCollections\\\\SystemCollectionBuilder\\:\\:getDependencies\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Media\\\\SystemCollections\\\\SystemCollectionBuilder\\:\\:setContainer\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionBuilder.php
 
@@ -52661,47 +52046,22 @@ parameters:
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/OrderByTraitTest.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\TimestampableSubscriberTest\\:\\:\\$classMetadata\\.$#"
-			count: 11
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\TimestampableSubscriberTest\\:\\:\\$entityManager\\.$#"
-			count: 3
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\TimestampableSubscriberTest\\:\\:\\$lifecycleEvent\\.$#"
-			count: 4
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\TimestampableSubscriberTest\\:\\:\\$loadClassMetadataEvent\\.$#"
-			count: 3
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\TimestampableSubscriberTest\\:\\:\\$refl\\.$#"
-			count: 3
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\TimestampableSubscriberTest\\:\\:\\$subscriber\\.$#"
-			count: 3
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\TimestampableSubscriberTest\\:\\:\\$timestampableObject\\.$#"
-			count: 3
-			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\TimestampableSubscriberTest\\:\\:provideOnPreUpdate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\TimestampableSubscriberTest\\:\\:testOnPreUpdate\\(\\) has parameter \\$created with no type specified\\.$#"
+			count: 1
+			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
+
+		-
+			message: "#^Property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\TimestampableSubscriberTest\\:\\:\\$refl with generic class ReflectionClass does not specify its types\\: T$#"
+			count: 1
+			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
+
+		-
+			message: "#^Property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\TimestampableSubscriberTest\\:\\:\\$timestampableObject \\(Prophecy\\\\Prophecy\\\\ObjectProphecy\\<stdClass\\>\\) does not accept Prophecy\\\\Prophecy\\\\ObjectProphecy\\<stdClass&Sulu\\\\Component\\\\Persistence\\\\Model\\\\TimestampableInterface\\>\\.$#"
 			count: 1
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
 
@@ -54571,11 +53931,6 @@ parameters:
 			path: src/Sulu/Component/Rest/RestHelperInterface.php
 
 		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\Rest\\\\Tests\\\\Functional\\\\ListBuilder\\\\Metadata\\\\FieldDescriptorFactoryTest\\:\\:\\$fieldDescriptorFactory\\.$#"
-			count: 10
-			path: src/Sulu/Component/Rest/Tests/Functional/ListBuilder/Metadata/FieldDescriptorFactoryTest.php
-
-		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\FieldDescriptorInterface\\:\\:getJoins\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Functional/ListBuilder/Metadata/FieldDescriptorFactoryTest.php
@@ -54634,11 +53989,6 @@ parameters:
 			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\DoctrineRestHelperTest\\:\\:\\$listRestHelper has unknown class PHPUnit\\\\Framework\\\\MockObject_MockObject as its type\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/DoctrineRestHelperTest.php
-
-		-
-			message: "#^Access to an undefined property Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderTest\\:\\:\\$systemStore\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/DoctrineListBuilderTest.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderTest\\:\\:readObjectAttribute\\(\\) has no return type specified\\.$#"

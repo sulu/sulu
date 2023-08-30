@@ -51,6 +51,12 @@ jobs:
               with:
                   useLockFile: false
 
+            - name: Output versions and installed dependencies
+              run: |
+                  node --version
+                  npm --version
+                  npm list || true # ignore peer dependency errors
+
             - name: Test JavaScript code
               run: npm test -- --maxWorkers=4
 
@@ -218,6 +224,12 @@ jobs:
               uses: ramsey/composer-install@v1
               with:
                   dependency-versions: ${{matrix.dependency-versions}}
+
+            - name: Output versions and installed dependencies
+              run: |
+                  php --version
+                  php -m
+                  composer info
 
             - name: Bootstrap test environment
               run: composer bootstrap-test-environment

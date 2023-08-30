@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Persistence\EventSubscriber\ORM\TimestampableSubscriber;
 use Sulu\Component\Persistence\Model\TimestampableInterface;
 
@@ -25,9 +26,43 @@ class TimestampableSubscriberTest extends TestCase
 {
     use ProphecyTrait;
 
+    /**
+     * @var ObjectProphecy<LoadClassMetadataEventArgs>
+     */
+    private $loadClassMetadataEvent;
+
+    /**
+     * @var ObjectProphecy<LifecycleEventArgs>
+     */
+    private $lifecycleEvent;
+
+    /**
+     * @var ObjectProphecy<\stdClass>
+     */
+    private $timestampableObject;
+
+    /**
+     * @var ObjectProphecy<ClassMetadata>
+     */
+    private $classMetadata;
+
+    /**
+     * @var ObjectProphecy<\ReflectionClass>
+     */
+    private $refl;
+
+    /**
+     * @var ObjectProphecy<EntityManager>
+     */
+    private $entityManager;
+
+    /**
+     * @var TimestampableSubscriber
+     */
+    private $subscriber;
+
     public function setUp(): void
     {
-        parent::setUp();
         $this->loadClassMetadataEvent = $this->prophesize(LoadClassMetadataEventArgs::class);
         $this->lifecycleEvent = $this->prophesize(LifecycleEventArgs::class);
         $this->timestampableObject = $this->prophesize(\stdClass::class)

@@ -13,6 +13,7 @@ namespace Sulu\Bundle\CoreBundle\Tests\Unit\Cache;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\CoreBundle\Cache\StructureWarmer;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 
@@ -20,9 +21,18 @@ class StructureWarmerTest extends TestCase
 {
     use ProphecyTrait;
 
+    /**
+     * @var ObjectProphecy<StructureManagerInterface>
+     */
+    private $structureManager;
+
+    /**
+     * @var StructureWarmer
+     */
+    private $warmer;
+
     public function setUp(): void
     {
-        parent::setUp();
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
         $this->warmer = new StructureWarmer($this->structureManager->reveal());
     }
