@@ -115,8 +115,6 @@ interface RouteInterface
     /**
      * Set target.
      *
-     * @param RouteInterface $target
-     *
      * @return RouteInterface
      */
     public function setTarget(?self $target = null);

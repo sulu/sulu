@@ -82,8 +82,6 @@ class FileVersionContentLanguage
     /**
      * Set fileVersion.
      *
-     * @param FileVersion $fileVersion
-     *
      * @return FileVersionContentLanguage
      */
     public function setFileVersion(?FileVersion $fileVersion = null)

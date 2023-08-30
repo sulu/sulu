@@ -35276,26 +35276,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Controller/WebsiteController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Controller\\\\WebsiteController\\:\\:renderBlock\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/WebsiteController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Controller\\\\WebsiteController\\:\\:renderBlock\\(\\) has parameter \\$attributes with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/WebsiteController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Controller\\\\WebsiteController\\:\\:renderBlock\\(\\) has parameter \\$block with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/WebsiteController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Controller\\\\WebsiteController\\:\\:renderBlock\\(\\) has parameter \\$template with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/WebsiteController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Controller\\\\WebsiteController\\:\\:renderPreview\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Controller/WebsiteController.php

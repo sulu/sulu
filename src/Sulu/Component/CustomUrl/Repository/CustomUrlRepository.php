@@ -62,7 +62,6 @@ class CustomUrlRepository
      * Returns list of custom-url data-arrays.
      *
      * @param string $path
-     * @param array $baseDomains
      *
      * @return \Iterator
      */

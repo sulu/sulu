@@ -66,7 +66,7 @@ abstract class WebsiteController extends AbstractController
 
         // if partial render only content block else full page
         if ($partial) {
-            $content = $this->renderBlock(
+            $content = $this->renderBlockView(
                 $viewTemplate,
                 'content',
                 $data
@@ -121,19 +121,23 @@ abstract class WebsiteController extends AbstractController
 
     /**
      * Returns rendered part of template specified by block.
+     *
+     * @param string $view
+     * @param string $block
+     * @param array<string, mixed> $parameters
      */
-    protected function renderBlock($template, $block, $attributes = [])
+    protected function renderBlockView($view, $block, $parameters = []): string
     {
         $twig = $this->container->get('twig');
-        $attributes = $twig->mergeGlobals($attributes);
+        $parameters = $twig->mergeGlobals($parameters);
 
-        $template = $twig->load($template);
+        $template = $twig->load($view);
 
         $level = \ob_get_level();
         \ob_start();
 
         try {
-            $rendered = $template->renderBlock($block, $attributes);
+            $rendered = $template->renderBlock($block, $parameters);
             \ob_end_clean();
 
             return $rendered;

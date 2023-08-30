@@ -82,6 +82,14 @@ sulu_website:
             urls: true
 ```
 
+## 2.5.11
+
+### Rename WebsiteController::renderBlock to WebsiteController::renderBlockView
+
+In Symfony 6.4, an independent `renderBlock` method was introduced to its `AbstractController`.
+This change poses issues for projects upgrading to Symfony 6.4, as the `renderBlock` method in Sulu is incompatible with Symfony's `renderBlock` method.
+To address this issue, we have to rename the Sulu `renderBlock` method to `renderBlockView`.
+
 ## 2.5.7
 
 ### Constructor of ValidateWebspacesCommand changed

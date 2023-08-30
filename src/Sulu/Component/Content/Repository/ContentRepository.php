@@ -135,7 +135,6 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      * @param string $locale
      * @param string $webspaceKey
      * @param MappingInterface $mapping Includes array of property names
-     * @param UserInterface $user
      *
      * @return Content|null
      */
@@ -428,7 +427,6 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      * Resolves query results to content.
      *
      * @param string $locale
-     * @param UserInterface $user
      *
      * @return Content[]
      */
@@ -497,7 +495,6 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      *
      * @param string $locale
      * @param string[] $locales
-     * @param UserInterface $user
      *
      * @return QueryBuilder
      */
@@ -791,8 +788,6 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      * @param string $locale
      * @param string $webspaceKey
      * @param MappingInterface $mapping Includes array of property names
-     * @param StructureType $type
-     * @param UserInterface $user
      *
      * @return Content|null
      */

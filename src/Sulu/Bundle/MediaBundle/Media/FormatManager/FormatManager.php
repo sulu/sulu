@@ -85,7 +85,6 @@ class FormatManager implements FormatManagerInterface
      * @param string $saveImage
      * @param array $responseHeaders
      * @param array $formats
-     * @param LoggerInterface $logger
      */
     public function __construct(
         MediaRepositoryInterface $mediaRepository,
