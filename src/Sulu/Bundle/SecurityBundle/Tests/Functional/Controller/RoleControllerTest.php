@@ -53,6 +53,16 @@ class RoleControllerTest extends SuluTestCase
     protected $securityType2;
 
     /**
+     * @var Permission
+     */
+    private $permission1;
+
+    /**
+     * @var Permission
+     */
+    private $permission2;
+
+    /**
      * @var KernelBrowser
      */
     private $client;

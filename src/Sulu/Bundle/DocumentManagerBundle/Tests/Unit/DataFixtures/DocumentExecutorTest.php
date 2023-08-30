@@ -13,6 +13,7 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\DataFixtures;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentExecutor;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
 use Sulu\Bundle\DocumentManagerBundle\Initializer\Initializer;
@@ -22,6 +23,31 @@ use Symfony\Component\Console\Output\BufferedOutput;
 class DocumentExecutorTest extends TestCase
 {
     use ProphecyTrait;
+
+    /**
+     * @var ObjectProphecy<DocumentManager>
+     */
+    private $documentManager;
+
+    /**
+     * @var ObjectProphecy<Initializer>
+     */
+    private $initializer;
+
+    /**
+     * @var BufferedOutput
+     */
+    private $output;
+
+    /**
+     * @var ObjectProphecy<DocumentFixtureInterface>
+     */
+    private $fixture1;
+
+    /**
+     * @var DocumentExecutor
+     */
+    private $executer;
 
     public function setUp(): void
     {

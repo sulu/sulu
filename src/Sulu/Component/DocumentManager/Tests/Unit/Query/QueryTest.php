@@ -15,6 +15,7 @@ use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\Collection\QueryResultCollection;
 use Sulu\Component\DocumentManager\Event\QueryExecuteEvent;
 use Sulu\Component\DocumentManager\Events;
@@ -24,6 +25,26 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class QueryTest extends TestCase
 {
     use ProphecyTrait;
+
+    /**
+     * @var ObjectProphecy<QueryInterface>
+     */
+    private $phpcrQuery;
+
+    /**
+     * @var ObjectProphecy<QueryResultInterface>
+     */
+    private $phpcrResult;
+
+    /**
+     * @var ObjectProphecy<EventDispatcherInterface>
+     */
+    private $dispatcher;
+
+    /**
+     * @var Query
+     */
+    private $query;
 
     public function setUp(): void
     {

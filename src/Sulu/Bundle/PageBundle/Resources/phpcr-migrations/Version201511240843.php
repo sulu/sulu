@@ -65,12 +65,15 @@ class Version201511240843 implements VersionInterface, ContainerAwareInterface
 
     public function setContainer(?ContainerInterface $container = null)
     {
+        if (null === $container) {
+            throw new \RuntimeException('Expected "container" to be set.');
+        }
+
         $this->structureMetadataFactory = $container->get('sulu_page.structure.factory');
         $this->propertyEncoder = $container->get('sulu_document_manager.property_encoder');
         $this->localizationManager = $container->get('sulu.core.localization_manager');
         $this->documentManager = $container->get('sulu_document_manager.document_manager');
         $this->documentInspector = $container->get('sulu_document_manager.document_inspector');
-        $this->propertyFactory = $container->get('sulu_page.compat.structure.legacy_property_factory');
     }
 
     /**

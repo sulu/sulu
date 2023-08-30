@@ -24,8 +24,6 @@ class Kernel extends SuluTestKernel
     public function __construct($environment, $debug, $suluContext = self::CONTEXT_ADMIN)
     {
         parent::__construct($environment, $debug, $suluContext);
-
-        $this->name = $suluContext;
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader): void

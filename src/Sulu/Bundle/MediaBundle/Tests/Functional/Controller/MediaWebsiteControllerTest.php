@@ -123,27 +123,13 @@ class MediaWebsiteControllerTest extends WebsiteTestCase
         $this->em->flush();
     }
 
-    protected function createMedia($name, $locale = 'en-gb', $type = 'image')
+    protected function createMedia($name, $locale = 'en-gb')
     {
         $media = new Media();
 
-        if ('image' === $type) {
-            $media->setType($this->imageType);
-            $extension = 'jpeg';
-            $mimeType = 'image/jpg';
-        } elseif ('audio' === $type) {
-            $media->setType($this->audioType);
-            $extension = 'mp3';
-            $mimeType = 'audio/mp3';
-        } elseif ('video' === $type) {
-            $media->setType($this->videoType);
-            $extension = 'mp4';
-            $mimeType = 'video/mp4';
-        } else {
-            $media->setType($this->documentType);
-            $extension = 'txt';
-            $mimeType = 'text/plain';
-        }
+        $media->setType($this->imageType);
+        $extension = 'jpeg';
+        $mimeType = 'image/jpg';
 
         // create file
         $file = new File();

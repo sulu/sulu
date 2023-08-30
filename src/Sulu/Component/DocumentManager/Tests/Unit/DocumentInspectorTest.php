@@ -14,6 +14,7 @@ namespace Sulu\Component\DocumentManager\tests\Unit;
 use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\DocumentRegistry;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
@@ -22,6 +23,36 @@ use Sulu\Component\DocumentManager\ProxyFactory;
 class DocumentInspectorTest extends TestCase
 {
     use ProphecyTrait;
+
+    /**
+     * @var ObjectProphecy<DocumentRegistry>
+     */
+    private $documentRegistry;
+
+    /**
+     * @var ObjectProphecy<PathSegmentRegistry>
+     */
+    private $pathRegistry;
+
+    /**
+     * @var object
+     */
+    private $document;
+
+    /**
+     * @var ObjectProphecy<NodeInterface>
+     */
+    private $node;
+
+    /**
+     * @var ObjectProphecy<ProxyFactory>
+     */
+    private $proxyFactory;
+
+    /**
+     * @var DocumentInspector
+     */
+    private $documentInspector;
 
     public function setUp(): void
     {

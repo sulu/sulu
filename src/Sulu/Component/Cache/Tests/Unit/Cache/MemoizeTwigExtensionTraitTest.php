@@ -115,11 +115,14 @@ class MemoizeTwigExtensionTraitTest extends TestCase
 
         $this->assertInstanceOf(TwigFunction::class, $result[0]);
         $this->assertEquals('sulu_content_load', $result[0]->getName());
+        $callable1 = $result[0]->getCallable();
+        $this->assertIsCallable($callable1);
+        $this->assertEquals(1, $callable1());
 
         $this->assertInstanceOf(TwigFunction::class, $result[1]);
         $this->assertEquals('sulu_content_load_parent', $result[1]->getName());
-
-        $this->assertEquals(1, \call_user_func($result[0]->getCallable()));
-        $this->assertEquals(2, \call_user_func($result[1]->getCallable()));
+        $callable2 = $result[1]->getCallable();
+        $this->assertIsCallable($callable2);
+        $this->assertEquals(2, $callable2());
     }
 }
