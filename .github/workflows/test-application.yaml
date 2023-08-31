@@ -21,9 +21,10 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                    - node-version: '12'
-                      styleguide: false
                     - node-version: '14'
+                      styleguide: false
+                    - node-version: '16'
+                      npm-version: '6'
                       styleguide: true
 
         env:
@@ -37,6 +38,10 @@ jobs:
               uses: actions/setup-node@v2-beta
               with:
                   node-version: ${{ matrix.node-version }}
+
+            - name: Install npm
+              if: ${{ matrix.npm-version }}
+              run: npm install --global npm@${{ matrix.npm-version }}
 
             - name: Assert error when using yarn
               run: tests/js/check-yarn-warning.sh
