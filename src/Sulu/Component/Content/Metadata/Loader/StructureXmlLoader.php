@@ -36,20 +36,7 @@ class StructureXmlLoader extends AbstractLoader
 
     public const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
 
-    /**
-     * Tags that are required in template.
-     *
-     * @var array
-     */
-    private $requiredTagNames = [];
-
-    /**
-     * reserved names for sulu internals
-     * TODO should be possible to inject from config.
-     *
-     * @var array
-     */
-    private $reservedPropertyNames = [
+public const RESERVED_KEYS =[
         'template',
         'changer',
         'changed',
@@ -68,6 +55,22 @@ class StructureXmlLoader extends AbstractLoader
         'id',
         'webspace',
     ];
+
+
+    /**
+     * Tags that are required in template.
+     *
+     * @var array
+     */
+    private $requiredTagNames = [];
+
+    /**
+     * reserved names for sulu internals
+     * TODO should be possible to inject from config.
+     *
+     * @var array
+     */
+    private $reservedPropertyNames = self::RESERVED_KEYS;
 
     /**
      * Properties that are required in template.

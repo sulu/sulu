@@ -25,6 +25,7 @@
         <service id="Sulu\Bundle\DocumentManagerBundle\Command\PhpCRCleanerCommand">
             <argument type="service" id="Sulu\Component\PHPCR\PropertyParser\PropertyParserInterface" />
             <argument type="service" id="doctrine_phpcr.live_session" />
+            <argument type="service" id="sulu_page.structure.factory" />
 
             <tag name="console.command" />
         </service>
