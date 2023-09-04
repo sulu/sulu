@@ -11891,26 +11891,6 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
 
 		-
-			message: "#^Cannot call method getProperty\\(\\) on PHPCR\\\\NodeInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
-
-		-
-			message: "#^Cannot call method setProperty\\(\\) on PHPCR\\\\NodeInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
-
-		-
-			message: "#^Method PHPCR\\\\ItemInterface\\:\\:remove\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
-
-		-
-			message: "#^Method PHPCR\\\\PropertyInterface\\:\\:getValue\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CustomUrlBundle\\\\Version201904110902\\:\\:down\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
@@ -21421,11 +21401,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
 		-
-			message: "#^Parameter \\#2 \\$callback of function array_filter expects callable\\(PHPCR\\\\NodeInterface\\)\\: mixed, Closure\\(PHPCR\\\\PropertyInterface\\)\\: bool given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
-
-		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
@@ -22526,11 +22501,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Repository\\\\NodeRepository\\:\\:createWebspaceNode\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Repository\\\\NodeRepository\\:\\:createWebspaceNode\\(\\) has parameter \\$depth with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
@@ -22592,11 +22562,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Repository\\\\NodeRepository\\:\\:getNodesTree\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Repository\\\\NodeRepository\\:\\:getReferences\\(\\) should return array\\<PHPCR\\\\NodeInterface\\> but returns array\\<string, PHPCR\\\\PropertyInterface\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
@@ -22821,11 +22786,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Repository/ResourceLocatorRepositoryInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201504271608\\:\\:down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504271608.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201504271608\\:\\:migrateHome\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504271608.php
@@ -22851,11 +22811,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504271608.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201504271608\\:\\:up\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504271608.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Version201504271608\\:\\:\\$container has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504271608.php
@@ -22866,22 +22821,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
 
 		-
-			message: "#^Cannot call method getPropertyValue\\(\\) on PHPCR\\\\NodeInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
-
-		-
-			message: "#^Cannot call method setProperty\\(\\) on PHPCR\\\\NodeInterface\\|null\\.$#"
-			count: 4
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
-
-		-
 			message: "#^In method \"Sulu\\\\Bundle\\\\PageBundle\\\\Version201504281842\\:\\:migrateInternalLinks\", caught \"Exception\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201504281842\\:\\:down\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
 
@@ -22901,11 +22841,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201504281842\\:\\:up\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
-
-		-
 			message: "#^Parameter \\#1 \\$id of method PHPCR\\\\SessionInterface\\:\\:getNodeByIdentifier\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
@@ -22914,11 +22849,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Version201504281842\\:\\:\\$container has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201507231648\\:\\:down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201507231648\\:\\:getCategories\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -22952,11 +22882,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201507231648\\:\\:setContainer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201507231648\\:\\:up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
 
@@ -22996,11 +22921,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507281529.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201507281529\\:\\:down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507281529.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201507281529\\:\\:migrateExternalLinks\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507281529.php
@@ -23012,11 +22932,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201507281529\\:\\:setContainer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507281529.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201507281529\\:\\:up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507281529.php
 
@@ -23033,11 +22948,6 @@ parameters:
 		-
 			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
 			count: 5
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201510210733\\:\\:down\\(\\) has no return type specified\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
 
 		-
@@ -23082,11 +22992,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201510210733\\:\\:setContainer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201510210733\\:\\:up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201510210733.php
 
@@ -23146,11 +23051,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201511171538\\:\\:down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201511171538\\:\\:downgradeDate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
@@ -23192,11 +23092,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201511171538\\:\\:setContainer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201511171538\\:\\:up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
 
@@ -23271,11 +23166,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201511240843\\:\\:down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201511240843\\:\\:findDateBlockProperties\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
@@ -23312,11 +23202,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201511240843\\:\\:setContainer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201511240843\\:\\:up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240843.php
 
@@ -23376,11 +23261,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201511240844\\:\\:down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201511240844\\:\\:findUrlBlockProperties\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
@@ -23417,11 +23297,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201511240844\\:\\:setContainer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201511240844\\:\\:up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
 
@@ -23466,32 +23341,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201512090753\\:\\:down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201512090753.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201512090753\\:\\:up\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201512090753.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201512090753\\:\\:upgradeNode\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201512090753.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201607181533\\:\\:down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201607181533.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201607181533\\:\\:setContainer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201607181533.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201607181533\\:\\:up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201607181533.php
 
@@ -23531,42 +23386,12 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
 
 		-
-			message: "#^Cannot call method getProperty\\(\\) on PHPCR\\\\NodeInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
-			message: "#^Cannot call method getPropertyValue\\(\\) on PHPCR\\\\NodeInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
-			message: "#^Cannot call method hasProperty\\(\\) on PHPCR\\\\NodeInterface\\|null\\.$#"
-			count: 4
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
-			message: "#^Cannot call method setProperty\\(\\) on PHPCR\\\\NodeInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201702021447\\:\\:down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201702021447\\:\\:downgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201702021447\\:\\:up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
 
@@ -23586,22 +23411,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
 
 		-
-			message: "#^Cannot call method getProperties\\(\\) on PHPCR\\\\NodeInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201903271333\\:\\:down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201903271333\\:\\:downgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201903271333\\:\\:up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
 
@@ -23626,22 +23436,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
 
 		-
-			message: "#^Cannot call method getProperties\\(\\) on PHPCR\\\\NodeInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201905071542\\:\\:down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201905071542\\:\\:downgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201905071542\\:\\:up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
 
@@ -23656,22 +23451,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005191116.php
 
 		-
-			message: "#^Cannot call method getProperties\\(\\) on PHPCR\\\\NodeInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005191116.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version202005191116\\:\\:down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005191116.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version202005191116\\:\\:downgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005191116.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version202005191116\\:\\:up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005191116.php
 
@@ -23686,22 +23466,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
 
 		-
-			message: "#^Cannot call method getProperties\\(\\) on PHPCR\\\\NodeInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version202005250917\\:\\:down\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version202005250917\\:\\:downgrade\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version202005250917\\:\\:up\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
 

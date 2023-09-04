@@ -28,6 +28,9 @@ class Version201504271608 implements VersionInterface, ContainerAwareInterface
         $this->container = $container;
     }
 
+    /**
+     * @return void
+     */
     public function up(SessionInterface $session)
     {
         $workspace = $session->getWorkspace();
@@ -40,6 +43,9 @@ class Version201504271608 implements VersionInterface, ContainerAwareInterface
         $this->migrateHome($session, 'sulu:page', 'sulu:home', true);
     }
 
+    /**
+     * @return void
+     */
     public function down(SessionInterface $session)
     {
         $this->migrateHome($session, 'sulu:home', 'sulu:page', false);

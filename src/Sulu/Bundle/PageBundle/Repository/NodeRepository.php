@@ -144,7 +144,20 @@ class NodeRepository implements NodeRepositoryInterface
      * @param bool $excludeGhosts
      * @param string|null $extension
      *
-     * @return array
+     * @return array{
+     *     _embedded: array{
+     *         pages: array
+     *     },
+     *     _links: array{
+     *         self: array{
+     *             href: string
+     *         },
+     *         children: array{
+     *             href: string
+     *         },
+     *     },
+     *     _permissions?: mixed[],
+     * }
      *
      * @deprecated This part should be split into a serialization handler and using the hateoas bundle
      */
@@ -350,6 +363,20 @@ class NodeRepository implements NodeRepositoryInterface
 
     /**
      * Creates a webspace node.
+     *
+     * @return array{
+     *     id: string,
+     *     path: string,
+     *     title: string,
+     *     hasSub: true,
+     *     publishedState: true,
+     *     _embedded: array<string, mixed>,
+     *     _links: array{
+     *         children: array{
+     *             href: string
+     *         },
+     *     },
+     * }
      */
     private function createWebspaceNode(
         $webspaceKey,

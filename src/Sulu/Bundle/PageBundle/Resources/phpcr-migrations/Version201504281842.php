@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle;
 
 use PHPCR\Migrations\VersionInterface;
+use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -25,11 +26,17 @@ class Version201504281842 implements VersionInterface, ContainerAwareInterface
         $this->container = $container;
     }
 
+    /**
+     * @return void
+     */
     public function up(SessionInterface $session)
     {
         $this->migrateInternalLinks($session);
     }
 
+    /**
+     * @return void
+     */
     public function down(SessionInterface $session)
     {
         $this->migrateInternalLinks($session, false);
@@ -56,6 +63,7 @@ EOT;
                 $rows = $query->execute();
 
                 foreach ($rows as $row) {
+                    /** @var NodeInterface $node */
                     $node = $row->getNode();
                     $internalLinkName = $propertyEncoder->localizedSystemName('internal_link', $locale);
 
