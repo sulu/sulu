@@ -12831,11 +12831,6 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\:\\:hasCapability\\(\\) has parameter \\$arguments with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\:\\:importXML\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
@@ -20221,16 +20216,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Admin/PageAdmin.php
 
 		-
-			message: "#^Call to an undefined method PHPCR\\\\NodeType\\\\NodeTypeInterface\\:\\:getPath\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Build/NodeOrderBuilder.php
-
-		-
-			message: "#^Call to an undefined method PHPCR\\\\NodeType\\\\NodeTypeInterface\\:\\:setProperty\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Build/NodeOrderBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Build\\\\NodeOrderBuilder\\:\\:getDependencies\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Build/NodeOrderBuilder.php
@@ -20242,11 +20227,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Build\\\\NodeOrderBuilder\\:\\:traverse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Build/NodeOrderBuilder.php
-
-		-
-			message: "#^Parameter \\#1 \\$node of method Sulu\\\\Bundle\\\\PageBundle\\\\Build\\\\NodeOrderBuilder\\:\\:traverse\\(\\) expects PHPCR\\\\NodeInterface, PHPCR\\\\NodeType\\\\NodeTypeInterface given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Build/NodeOrderBuilder.php
 
@@ -20272,11 +20252,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Command\\\\CleanupHistoryCommand\\:\\:configure\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Command/CleanupHistoryCommand.php
-
-		-
-			message: "#^Parameter \\#2 \\$node of method Sulu\\\\Bundle\\\\PageBundle\\\\Command\\\\CleanupHistoryCommand\\:\\:cleanup\\(\\) expects PHPCR\\\\NodeInterface, PHPCR\\\\NodeType\\\\NodeTypeInterface given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/CleanupHistoryCommand.php
 
@@ -20401,11 +20376,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/ContentTypesDumpCommand.php
 
 		-
-			message: "#^Call to an undefined method PHPCR\\\\NodeType\\\\NodeTypeInterface\\:\\:getPath\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Command/MaintainResourceLocatorCommand.php
-
-		-
 			message: "#^Cannot call method getPropertyByTagName\\(\\) on Sulu\\\\Component\\\\Content\\\\Metadata\\\\StructureMetadata\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/MaintainResourceLocatorCommand.php
@@ -20447,16 +20417,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$name of method Sulu\\\\Component\\\\DocumentManager\\\\PropertyEncoder\\:\\:localizedContentName\\(\\) expects string, float\\|int\\|string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Command/MaintainResourceLocatorCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$node of method Sulu\\\\Bundle\\\\PageBundle\\\\Command\\\\MaintainResourceLocatorCommand\\:\\:upgradeNode\\(\\) expects PHPCR\\\\NodeInterface, PHPCR\\\\NodeType\\\\NodeTypeInterface given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Command/MaintainResourceLocatorCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$parentNode of method Sulu\\\\Bundle\\\\PageBundle\\\\Command\\\\MaintainResourceLocatorCommand\\:\\:upgradeByParent\\(\\) expects PHPCR\\\\NodeInterface, PHPCR\\\\NodeType\\\\NodeTypeInterface given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/MaintainResourceLocatorCommand.php
 
@@ -22026,11 +21986,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Document/RouteDocument.php
 
 		-
-			message: "#^Call to an undefined method PHPCR\\\\NodeType\\\\NodeTypeInterface\\:\\:setProperty\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Document/Subscriber/PublishSubscriber.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\Subscriber\\\\PublishSubscriber\\:\\:copyNodeInPublicWorkspace\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Document/Subscriber/PublishSubscriber.php
@@ -22108,11 +22063,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$document of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\Subscriber\\\\PublishSubscriber\\:\\:getLiveNode\\(\\) expects Sulu\\\\Component\\\\DocumentManager\\\\Behavior\\\\Mapping\\\\PathBehavior, object given\\.$#"
 			count: 7
-			path: src/Sulu/Bundle/PageBundle/Document/Subscriber/PublishSubscriber.php
-
-		-
-			message: "#^Parameter \\#1 \\$node of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\Subscriber\\\\PublishSubscriber\\:\\:copyNodeWithChildrenInPublicWorkspace\\(\\) expects PHPCR\\\\NodeInterface, PHPCR\\\\NodeType\\\\NodeTypeInterface given\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/PageBundle/Document/Subscriber/PublishSubscriber.php
 
 		-
@@ -23021,11 +22971,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
 
 		-
-			message: "#^Parameter \\#1 \\$node of method Sulu\\\\Bundle\\\\PageBundle\\\\Version201507231648\\:\\:upgradeNode\\(\\) expects PHPCR\\\\NodeInterface, PHPCR\\\\NodeType\\\\NodeTypeInterface given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
-
-		-
 			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Bundle\\\\PageBundle\\\\Version201507231648\\:\\:getCategories\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
@@ -23532,11 +23477,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201512090753\\:\\:upgradeNode\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201512090753.php
-
-		-
-			message: "#^Parameter \\#1 \\$node of method Sulu\\\\Bundle\\\\PageBundle\\\\Version201512090753\\:\\:upgradeNode\\(\\) expects PHPCR\\\\NodeInterface, PHPCR\\\\NodeType\\\\NodeTypeInterface given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201512090753.php
 
@@ -26331,7 +26271,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, Iterator\\<string, PHPCR\\\\NodeType\\\\NodeTypeInterface\\> given\\.$#"
+			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, Iterator\\<string, PHPCR\\\\NodeInterface\\> given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperTest.php
 
@@ -40981,7 +40921,7 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Subscriber/OrderSubscriber.php
 
 		-
-			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, Iterator\\<string, PHPCR\\\\NodeType\\\\NodeTypeInterface\\> given\\.$#"
+			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, Iterator\\<string, PHPCR\\\\NodeInterface\\> given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/OrderSubscriber.php
 
@@ -41007,36 +40947,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:getIterator\\(\\) should return Traversable\\<mixed, mixed\\> but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:getNodeNames\\(\\) has parameter \\$nameFilter with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:getNodeNames\\(\\) has parameter \\$typeFilter with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:getNodes\\(\\) has parameter \\$nameFilter with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:getNodes\\(\\) has parameter \\$typeFilter with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:getProperties\\(\\) has parameter \\$nameFilter with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:getPropertiesValues\\(\\) has parameter \\$nameFilter with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
 
@@ -41077,11 +40987,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:setMixins\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:setMixins\\(\\) has parameter \\$mixinNames with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
 
@@ -56181,11 +56086,6 @@ parameters:
 			path: src/Sulu/Component/Util/SortUtils.php
 
 		-
-			message: "#^Call to an undefined method PHPCR\\\\NodeType\\\\NodeTypeInterface\\:\\:getPath\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Util\\\\SuluNodeHelper\\:\\:__construct\\(\\) has parameter \\$paths with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Util/SuluNodeHelper.php
@@ -56217,11 +56117,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Util\\\\SuluNodeHelper\\:\\:getPreviousNode\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Util\\\\SuluNodeHelper\\:\\:getSiblingNode\\(\\) should return PHPCR\\\\NodeInterface\\|null but returns PHPCR\\\\NodeType\\\\NodeTypeInterface\\|false\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Component/Util/SuluNodeHelper.php
 
@@ -57736,12 +57631,12 @@ parameters:
 			path: src/Sulu/Component/Webspace/Settings/SettingsManager.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Settings\\\\SettingsManager\\:\\:loadString\\(\\) should return string but returns array\\|string\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Settings\\\\SettingsManager\\:\\:loadString\\(\\) should return string but returns array\\<string\\>\\|string\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Settings/SettingsManager.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Settings\\\\SettingsManager\\:\\:loadStringByWildcard\\(\\) should return array\\<string\\> but returns array\\<string, array\\|string\\>\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Settings\\\\SettingsManager\\:\\:loadStringByWildcard\\(\\) should return array\\<string\\> but returns array\\<string, array\\<string\\>\\|string\\>\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Settings/SettingsManager.php
 
