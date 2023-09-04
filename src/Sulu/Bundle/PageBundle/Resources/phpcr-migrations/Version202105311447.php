@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle;
 
-use Jackalope\Node;
-use Jackalope\Query\Row;
 use PHPCR\Migrations\VersionInterface;
 use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;

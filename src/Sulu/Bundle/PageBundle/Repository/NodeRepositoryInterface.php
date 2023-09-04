@@ -127,7 +127,7 @@ interface NodeRepositoryInterface
      *
      * @param string $uuid
      *
-     * @return \PHPCR\PropertyInterface[]
+     * @return PropertyInterface[]
      */
     public function getReferences($uuid);
 
