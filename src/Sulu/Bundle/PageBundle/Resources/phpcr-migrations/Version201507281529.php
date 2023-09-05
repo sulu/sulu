@@ -30,11 +30,17 @@ class Version201507281529 implements VersionInterface, ContainerAwareInterface
         $this->container = $container;
     }
 
+    /**
+     * @return void
+     */
     public function up(SessionInterface $session)
     {
         $this->migrateExternalLinks($session);
     }
 
+    /**
+     * @return void
+     */
     public function down(SessionInterface $session)
     {
         $this->migrateExternalLinks($session, false);

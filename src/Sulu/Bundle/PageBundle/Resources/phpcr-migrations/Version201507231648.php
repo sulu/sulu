@@ -40,6 +40,9 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
         $this->container = $container;
     }
 
+    /**
+     * @return void
+     */
     public function up(SessionInterface $session)
     {
         $webspaceManager = $this->container->get('sulu_core.webspace.webspace_manager');
@@ -48,6 +51,9 @@ class Version201507231648 implements VersionInterface, ContainerAwareInterface
         }
     }
 
+    /**
+     * @return void
+     */
     public function down(SessionInterface $session)
     {
     }

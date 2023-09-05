@@ -11,9 +11,8 @@
 
 namespace Sulu\Bundle\PageBundle;
 
-use Jackalope\Node;
-use Jackalope\Query\Row;
 use PHPCR\Migrations\VersionInterface;
+use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -59,9 +58,8 @@ class Version202105311447 implements VersionInterface, ContainerAwareInterface
         $query = 'SELECT * FROM [nt:unstructured] WHERE ([jcr:mixinTypes] = "sulu:page") OR [jcr:mixinTypes] = "sulu:home"';
         $rows = $queryManager->createQuery($query, 'JCR-SQL2')->execute();
 
-        /** @var Row<mixed> $row */
         foreach ($rows as $row) {
-            /** @var Node<mixed> $node */
+            /** @var NodeInterface $node */
             $node = $row->getNode();
 
             $permissions = [];
@@ -90,9 +88,8 @@ class Version202105311447 implements VersionInterface, ContainerAwareInterface
         $query = 'SELECT * FROM [nt:unstructured] WHERE ([jcr:mixinTypes] = "sulu:page") OR [jcr:mixinTypes] = "sulu:home"';
         $rows = $queryManager->createQuery($query, 'JCR-SQL2')->execute();
 
-        /** @var Row<mixed> $row */
         foreach ($rows as $row) {
-            /** @var Node<mixed> $node */
+            /** @var NodeInterface $node */
             $node = $row->getNode();
 
             if (!$node->hasProperty('sec:permissions')) {
