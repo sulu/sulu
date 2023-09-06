@@ -19,7 +19,7 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotAcceptableHttpException;
 
 /**
  * Basic class to render Website from phpcr content.
@@ -55,10 +55,7 @@ abstract class WebsiteController extends AbstractController
         $viewTemplate = $structure->getView() . '.' . $requestFormat . '.twig';
 
         if (!$this->get('twig')->getLoader()->exists($viewTemplate)) {
-            throw new HttpException(
-                406,
-                \sprintf('Page does not exist in "%s" format.', $requestFormat)
-            );
+            throw new NotAcceptableHttpException(\sprintf('Page does not exist in "%s" format.', $requestFormat));
         }
 
         // get attributes to render template
