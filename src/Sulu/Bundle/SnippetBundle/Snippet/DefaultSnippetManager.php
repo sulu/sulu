@@ -151,6 +151,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
                 continue;
             }
 
+            /** @var string $index */
             $index = \array_search($uuid, $settings);
 
             return \substr($index, 9);
@@ -185,6 +186,7 @@ class DefaultSnippetManager implements DefaultSnippetManagerInterface
             return null;
         }
 
+        /** @var string|null */
         return $this->settingsManager->loadString($webspaceKey, 'snippets-' . $area['key']);
     }
 

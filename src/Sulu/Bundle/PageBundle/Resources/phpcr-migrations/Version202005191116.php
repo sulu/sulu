@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle;
 
 use PHPCR\Migrations\VersionInterface;
+use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -20,6 +21,9 @@ class Version202005191116 implements VersionInterface, ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
+    /**
+     * @return void
+     */
     public function up(SessionInterface $session)
     {
         $liveSession = $this->container->get('sulu_document_manager.live_session');
@@ -30,6 +34,9 @@ class Version202005191116 implements VersionInterface, ContainerAwareInterface
         $session->save();
     }
 
+    /**
+     * @return void
+     */
     public function down(SessionInterface $session)
     {
         $liveSession = $this->container->get('sulu_document_manager.live_session');
@@ -49,6 +56,7 @@ class Version202005191116 implements VersionInterface, ContainerAwareInterface
         $rows = $queryManager->createQuery($query, 'JCR-SQL2')->execute();
 
         foreach ($rows as $row) {
+            /** @var NodeInterface $node */
             $node = $row->getNode();
 
             foreach ($node->getProperties() as $property) {
@@ -76,6 +84,7 @@ class Version202005191116 implements VersionInterface, ContainerAwareInterface
         $rows = $queryManager->createQuery($query, 'JCR-SQL2')->execute();
 
         foreach ($rows as $row) {
+            /** @var NodeInterface $node */
             $node = $row->getNode();
 
             foreach ($node->getProperties() as $property) {
