@@ -13,6 +13,7 @@ namespace Sulu\Bundle\PageBundle;
 
 use Jackalope\Query\Row;
 use PHPCR\Migrations\VersionInterface;
+use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -31,6 +32,9 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
      */
     private $userRepository;
 
+    /**
+     * @return void
+     */
     public function up(SessionInterface $session)
     {
         $liveSession = $this->container->get('sulu_document_manager.live_session');
@@ -43,6 +47,9 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
         $session->save();
     }
 
+    /**
+     * @return void
+     */
     public function down(SessionInterface $session)
     {
         $liveSession = $this->container->get('sulu_document_manager.live_session');
@@ -68,6 +75,7 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
 
         /** @var Row $row */
         foreach ($rows as $row) {
+            /** @var NodeInterface $node */
             $node = $row->getNode();
 
             /** @var Localization $localization */
@@ -108,6 +116,7 @@ class Version201702021447 implements VersionInterface, ContainerAwareInterface
 
         /** @var Row $row */
         foreach ($rows as $row) {
+            /** @var NodeInterface $node */
             $node = $row->getNode();
 
             /** @var Localization $localization */

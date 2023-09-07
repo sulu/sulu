@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CustomUrlBundle;
 
 use PHPCR\Migrations\VersionInterface;
+use PHPCR\NodeInterface;
 use PHPCR\SessionInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -42,10 +43,11 @@ class Version201904110902 implements VersionInterface, ContainerAwareInterface
         $rows = $queryManager->createQuery($query, 'JCR-SQL2')->execute();
 
         foreach ($rows as $row) {
+            /** @var NodeInterface $node */
             $node = $row->getNode();
 
             $property = $node->getProperty('domainParts');
-            $oldDomainParts = \json_decode($property->getValue('domainParts'), true);
+            $oldDomainParts = \json_decode($property->getValue(), true);
             $newDomainParts = [];
 
             if ($oldDomainParts['prefix']) {
@@ -54,7 +56,7 @@ class Version201904110902 implements VersionInterface, ContainerAwareInterface
 
             $newDomainParts = \array_merge($newDomainParts, $oldDomainParts['suffix']);
 
-            $property->remove('domainParts');
+            $property->remove();
             $node->setProperty('domainParts', \json_encode($newDomainParts));
         }
     }
