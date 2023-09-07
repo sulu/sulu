@@ -46,7 +46,7 @@ interface SettingsManagerInterface
      * @param string $webspaceKey
      * @param string $key
      *
-     * @return string
+     * @return string|string[]|null
      */
     public function loadString($webspaceKey, $key);
 
@@ -56,7 +56,7 @@ interface SettingsManagerInterface
      * @param string $webspaceKey
      * @param string $wildcard
      *
-     * @return mixed[]
+     * @return array<string, string|string[]>
      */
     public function loadByWildcard($webspaceKey, $wildcard);
 
@@ -66,7 +66,7 @@ interface SettingsManagerInterface
      * @param string $webspaceKey
      * @param string $wildcard
      *
-     * @return string[]
+     * @return array<string, string|string[]>
      */
     public function loadStringByWildcard($webspaceKey, $wildcard);
 }

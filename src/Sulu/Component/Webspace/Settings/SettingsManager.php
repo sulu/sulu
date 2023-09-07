@@ -86,7 +86,7 @@ class SettingsManager implements SettingsManagerInterface
         $propertyName = $this->getPropertyName($key);
         $webspaceNode = $this->deprecatedSessionManager->getWebspaceNode($webspaceKey);
         if (!$webspaceNode->hasProperty($propertyName)) {
-            return;
+            return null;
         }
 
         return $webspaceNode->getProperty($propertyName)->getString();
