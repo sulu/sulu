@@ -11,7 +11,9 @@
 
 namespace Sulu\Bundle\SnippetBundle\Snippet;
 
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
+use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 
@@ -55,7 +57,12 @@ class SnippetResolver implements SnippetResolverInterface
                 }
 
                 if (!$snippet->getHasTranslation() && null !== $shadowLocale) {
+                    /** @var SnippetBridge $snippet */
                     $snippet = $this->contentMapper->load($uuid, $webspaceKey, $shadowLocale);
+                    /** @var SnippetDocument $document */
+                    $document = $snippet->getDocument();
+                    $document->setLocale($shadowLocale);
+                    $document->setOriginalLocale($locale);
                 }
 
                 $snippet->setIsShadow(null !== $shadowLocale);
