@@ -18,6 +18,8 @@ use Doctrine\Common\Collections\Collection;
  */
 interface RouteInterface
 {
+    public const RESOURCE_KEY = 'routes';
+
     /**
      * Get id.
      *

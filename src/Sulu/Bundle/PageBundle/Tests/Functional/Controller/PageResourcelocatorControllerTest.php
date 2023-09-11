@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Controller;
 
 use PHPCR\SessionInterface;
+use Sulu\Bundle\ActivityBundle\Domain\Repository\ActivityRepositoryInterface;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
@@ -38,6 +39,11 @@ class PageResourcelocatorControllerTest extends SuluTestCase
     private $documentManager;
 
     /**
+     * @var ActivityRepositoryInterface
+     */
+    private $activityRepository;
+
+    /**
      * @var array
      */
     private $data;
@@ -50,6 +56,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
         $this->session = $this->getContainer()->get('doctrine')->getConnection();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
         $this->data = $this->prepareRepositoryContent();
+        $this->activityRepository = $this->getContainer()->get('sulu.repository.activity');
     }
 
     private function prepareRepositoryContent()
@@ -255,6 +262,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
             )
         );
         $this->assertHttpStatusCode(204, $this->client->getResponse());
+        self::assertNotNull($this->activityRepository->findOneBy(['resourceKey' => 'pages', 'resoureceId' => $history['_embedded']['page_resourcelocators'][0]['id']]));
 
         $this->client->jsonRequest(
             'GET',
