@@ -181,7 +181,8 @@ class RouteController extends AbstractRestController implements ClassResourceInt
                     $route->getPath(),
                     $route->getLocale(),
                     $route->getEntityId(),
-                    $route->getEntityClass()
+                    $route->getEntityClass(),
+                    \defined($route->getEntityClass() . '::RESOURCE_KEY') ? \constant($route->getEntityClass() . '::RESOURCE_KEY') : RouteInterface::RESOURCE_KEY
                 )
             );
         }

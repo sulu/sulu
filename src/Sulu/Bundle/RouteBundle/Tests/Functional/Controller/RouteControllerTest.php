@@ -14,6 +14,7 @@ namespace Sulu\Bundle\RouteBundle\Tests\Functional\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use Sulu\Bundle\ActivityBundle\Domain\Repository\ActivityRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Entity\Route;
+use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
@@ -325,7 +326,7 @@ class RouteControllerTest extends SuluTestCase
 
         $this->client->jsonRequest('DELETE', '/api/routes?ids=' . $targetRouteId);
         $this->assertHttpStatusCode(204, $this->client->getResponse());
-        self::assertNotNull($this->activityRepository->findOneBy(['resourceKey' => 'routes', 'resourceId' => $targetRouteId]));
+        self::assertNotNull($this->activityRepository->findOneBy(['resourceKey' => RouteInterface::RESOURCE_KEY, 'resourceId' => self::TEST_ID]));
 
         $this->client->jsonRequest(
             'GET',

@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\RouteBundle\Domain\Event;
 
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
-use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 
 class RouteRemovedEvent extends DomainEvent
 {
@@ -21,6 +20,7 @@ class RouteRemovedEvent extends DomainEvent
     private string $entityClass;
     private string $locale;
     private string $entityId;
+    private string $resourceKey;
 
     public function __construct(
         int $routeId,
@@ -28,6 +28,7 @@ class RouteRemovedEvent extends DomainEvent
         string $locale,
         string $entityId,
         string $entityClass,
+        string $resourceKey
     ) {
         parent::__construct();
         $this->routeId = $routeId;
@@ -35,6 +36,7 @@ class RouteRemovedEvent extends DomainEvent
         $this->locale = $locale;
         $this->entityId = $entityId;
         $this->entityClass = $entityClass;
+        $this->resourceKey = $resourceKey;
     }
 
     public function getEventType(): string
@@ -45,6 +47,7 @@ class RouteRemovedEvent extends DomainEvent
     public function getEventContext(): array
     {
         return [
+            'id' => $this->routeId,
             'entityId' => $this->entityId,
             'entityClass' => $this->entityClass,
             'path' => $this->path,
@@ -53,7 +56,7 @@ class RouteRemovedEvent extends DomainEvent
 
     public function getResourceKey(): string
     {
-        return RouteInterface::RESOURCE_KEY;
+        return $this->resourceKey;
     }
 
     public function getResourceId(): string

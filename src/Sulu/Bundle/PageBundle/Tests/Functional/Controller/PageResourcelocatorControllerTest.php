@@ -262,7 +262,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
             )
         );
         $this->assertHttpStatusCode(204, $this->client->getResponse());
-        self::assertNotNull($this->activityRepository->findOneBy(['resourceKey' => 'pages', 'resoureceId' => $history['_embedded']['page_resourcelocators'][0]['id']]));
+        self::assertNotNull($this->activityRepository->findOneBy(['type' => 'route_removed', 'resourceKey' => BasePageDocument::RESOURCE_KEY, 'resourceId' => $newsData['id']]));
 
         $this->client->jsonRequest(
             'GET',

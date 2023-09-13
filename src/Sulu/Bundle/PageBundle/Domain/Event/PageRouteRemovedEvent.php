@@ -47,6 +47,13 @@ class PageRouteRemovedEvent extends DomainEvent
         return 'route_removed';
     }
 
+    public function getEventContext(): array
+    {
+        return [
+            'route' => $this->route,
+        ];
+    }
+
     public function getResourceKey(): string
     {
         return BasePageDocument::RESOURCE_KEY;
@@ -70,18 +77,6 @@ class PageRouteRemovedEvent extends DomainEvent
     public function getResourceTitleLocale(): ?string
     {
         return $this->pageTitleLocale;
-    }
-
-    public function getRoute(): ?string
-    {
-        return $this->route;
-    }
-
-    public function setRoute(string $route): self
-    {
-        $this->route = $route;
-
-        return $this;
     }
 
     public function getResourceSecurityContext(): ?string
