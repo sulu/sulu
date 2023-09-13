@@ -12,10 +12,11 @@
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Controller;
 
 use PHPCR\SessionInterface;
-use Sulu\Bundle\ActivityBundle\Domain\Repository\ActivityRepositoryInterface;
+use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 /**
@@ -39,7 +40,7 @@ class PageResourcelocatorControllerTest extends SuluTestCase
     private $documentManager;
 
     /**
-     * @var ActivityRepositoryInterface
+     * @var EntityRepository<Activity>
      */
     private $activityRepository;
 

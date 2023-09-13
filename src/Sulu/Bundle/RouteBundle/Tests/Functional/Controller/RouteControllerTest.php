@@ -12,10 +12,11 @@
 namespace Sulu\Bundle\RouteBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Sulu\Bundle\ActivityBundle\Domain\Repository\ActivityRepositoryInterface;
+use Sulu\Bundle\ActivityBundle\Domain\Model\Activity;
 use Sulu\Bundle\RouteBundle\Entity\Route;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class RouteControllerTest extends SuluTestCase
@@ -39,7 +40,7 @@ class RouteControllerTest extends SuluTestCase
     private $client;
 
     /**
-     * @var ActivityRepositoryInterface
+     * @var EntityRepository<Activity>
      */
     private $activityRepository;
 

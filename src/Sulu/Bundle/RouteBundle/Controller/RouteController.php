@@ -175,6 +175,8 @@ class RouteController extends AbstractRestController implements ClassResourceInt
             }
 
             $this->entityManager->remove($route);
+            /** @var string $resourceKey */
+            $resourceKey = \defined($route->getEntityClass() . '::RESOURCE_KEY') ? \constant($route->getEntityClass() . '::RESOURCE_KEY') : RouteInterface::RESOURCE_KEY;
             $this->domainEventCollector?->collect(
                 new RouteRemovedEvent(
                     $route->getId(),
@@ -182,7 +184,7 @@ class RouteController extends AbstractRestController implements ClassResourceInt
                     $route->getLocale(),
                     $route->getEntityId(),
                     $route->getEntityClass(),
-                    \defined($route->getEntityClass() . '::RESOURCE_KEY') ? \constant($route->getEntityClass() . '::RESOURCE_KEY') : RouteInterface::RESOURCE_KEY
+                    $resourceKey
                 )
             );
         }
