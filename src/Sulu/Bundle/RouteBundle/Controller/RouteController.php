@@ -14,6 +14,8 @@ namespace Sulu\Bundle\RouteBundle\Controller;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
+use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
+use Sulu\Bundle\RouteBundle\Domain\Event\RouteRemovedEvent;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface;
@@ -59,13 +61,19 @@ class RouteController extends AbstractRestController implements ClassResourceInt
      */
     private $conflictResolver;
 
+    /**
+     * @var DomainEventCollectorInterface|null
+     */
+    private $domainEventCollector;
+
     public function __construct(
         ViewHandlerInterface $viewHandler,
         RouteRepositoryInterface $routeRepository,
         EntityManagerInterface $entityManager,
         RouteGeneratorInterface $routeGenerator,
         array $resourceKeyMappings,
-        ?ConflictResolverInterface $conflictResolver = null
+        ?ConflictResolverInterface $conflictResolver = null,
+        ?DomainEventCollectorInterface $domainEventCollector = null
     ) {
         parent::__construct($viewHandler);
 
@@ -74,12 +82,21 @@ class RouteController extends AbstractRestController implements ClassResourceInt
         $this->routeGenerator = $routeGenerator;
         $this->resourceKeyMappings = $resourceKeyMappings;
         $this->conflictResolver = $conflictResolver;
+        $this->domainEventCollector = $domainEventCollector;
 
         if (null === $this->conflictResolver) {
             @trigger_deprecation(
                 'sulu/sulu',
                 '2.3',
                 'Instantiating RouteController without the $conflictResolver argument is deprecated.'
+            );
+        }
+
+        if (null == $this->domainEventCollector) {
+            @trigger_deprecation(
+                'sulu/sulu',
+                '2.5',
+                'Instantiating RouteController without the $domainEventCollector argument is deprecated.'
             );
         }
     }
@@ -158,6 +175,20 @@ class RouteController extends AbstractRestController implements ClassResourceInt
             }
 
             $this->entityManager->remove($route);
+            /** @var string $resourceKey */
+            $resourceKey = \defined($route->getEntityClass() . '::RESOURCE_KEY') ? \constant($route->getEntityClass() . '::RESOURCE_KEY') : RouteInterface::RESOURCE_KEY;
+            if ($this->domainEventCollector instanceof DomainEventCollectorInterface) {
+                $this->domainEventCollector->collect(
+                    new RouteRemovedEvent(
+                        $route->getId(),
+                        $route->getPath(),
+                        $route->getLocale(),
+                        $route->getEntityId(),
+                        $route->getEntityClass(),
+                        $resourceKey
+                    )
+                );
+            }
         }
 
         $this->entityManager->flush();

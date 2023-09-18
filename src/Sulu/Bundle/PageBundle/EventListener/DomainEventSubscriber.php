@@ -17,6 +17,7 @@ use PHPCR\NodeInterface;
 use Sulu\Bundle\DocumentManagerBundle\Collector\DocumentDomainEventCollectorInterface;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
+use Sulu\Bundle\PageBundle\Document\RouteDocument;
 use Sulu\Bundle\PageBundle\Domain\Event\PageChildrenReorderedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageCopiedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageCreatedEvent;
@@ -25,6 +26,7 @@ use Sulu\Bundle\PageBundle\Domain\Event\PageModifiedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageMovedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PagePublishedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageRemovedEvent;
+use Sulu\Bundle\PageBundle\Domain\Event\PageRouteRemovedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageTranslationAddedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageTranslationCopiedEvent;
 use Sulu\Bundle\PageBundle\Domain\Event\PageTranslationRemovedEvent;
@@ -114,7 +116,10 @@ class DomainEventSubscriber implements EventSubscriberInterface
                 ['handlePrePersist', 479], // Priority needs to be lower than AutoNameSubscriber::handlePersist (480)
                 ['handlePersist', -10000],
             ],
-            Events::REMOVE => ['handleRemove', -10000],
+            Events::REMOVE => [
+                ['handleRemove', -10000],
+                ['handleRouteRemove', -10000],
+            ],
             Events::REMOVE_LOCALE => ['handleRemoveLocale', -10000],
             Events::COPY_LOCALE => ['handleCopyLocale', -10000],
             Events::COPY => ['handleCopy', -10000],
@@ -272,6 +277,34 @@ class DomainEventSubscriber implements EventSubscriberInterface
                 $document->getWebspaceName(),
                 $document->getTitle(),
                 $document->getLocale()
+            )
+        );
+    }
+
+    public function handleRouteRemove(RemoveEvent $event): void
+    {
+        $document = $event->getDocument();
+
+        if (!$document instanceof RouteDocument) {
+            return;
+        }
+
+        $basePageDocument = $document->getTargetDocument();
+        while ($basePageDocument instanceof RouteDocument) {
+            $basePageDocument = $basePageDocument->getTargetDocument();
+        }
+
+        if (!$basePageDocument instanceof BasePageDocument) {
+            return;
+        }
+
+        $this->domainEventCollector->collect(
+            new PageRouteRemovedEvent(
+                $basePageDocument->getUuid(),
+                $basePageDocument->getWebspaceName(),
+                $basePageDocument->getTitle(),
+                $basePageDocument->getLocale(),
+                $document->getPath()
             )
         );
     }
