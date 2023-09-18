@@ -15,12 +15,35 @@ use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 
 class RouteRemovedEvent extends DomainEvent
 {
-    private int $routeId;
-    private string $path;
-    private string $entityClass;
-    private string $locale;
-    private string $entityId;
-    private string $resourceKey;
+    /**
+     * @var int
+     */
+    private $routeId;
+
+    /**
+     * @var string
+     */
+    private $path;
+
+    /**
+     * @var string
+     */
+    private $entityClass;
+
+    /**
+     * @var string
+     */
+    private $locale;
+
+    /**
+     * @var string
+     */
+    private $entityId;
+
+    /**
+     * @var string
+     */
+    private $resourceKey;
 
     public function __construct(
         int $routeId,
