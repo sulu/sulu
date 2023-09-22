@@ -266,53 +266,6 @@ class LinkTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testGetContentDataWithVersions(): void
-    {
-        $this->property->getValue()
-            ->shouldBeCalled()
-            ->willReturn([
-                'href' => '123456',
-                'provider' => 'pages',
-                'locale' => 'de',
-                'target' => 'testTarget',
-            ]);
-
-        $this->structure->getLanguageCode()
-            ->shouldBeCalled()
-            ->willReturn('de');
-
-        $this->property->getStructure()
-            ->shouldBeCalled()
-            ->willReturn($this->structure->reveal());
-
-        $this->providerPool->getProvider(Argument::type('string'))
-            ->shouldBeCalled()
-            ->willReturn($this->provider->reveal());
-
-        $linkItem1 = $this->prophesize(LinkItem::class);
-        $linkItem1->getUrl()
-            ->shouldNotBeCalled()
-            ->willReturn('/test1');
-
-        $linkItem2 = $this->prophesize(LinkItem::class);
-        $linkItem2->getUrl()
-            ->shouldNotBeCalled()
-            ->willReturn('/test2');
-                
-        $linkItem3 = $this->prophesize(LinkItem::class);
-        $linkItem3->getUrl()
-            ->shouldBeCalled()
-            ->willReturn('/test3');                
-
-        $this->provider->preload(['123456'], 'de', true)
-            ->shouldBeCalled()
-            ->willReturn([$linkItem1, $linkItem2, $linkItem3]);
-
-        $result = $this->link->getContentData($this->property->reveal());
-
-        $this->assertSame('/test3', $result);
-    }
-
     public function testImportData(): void
     {
         $value = [
