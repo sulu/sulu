@@ -50,7 +50,7 @@ class ListRepository extends EntityRepository
 
         // if search string is set, but search fields are not, take all fields into account
         if (!\is_null($searchPattern) && '' != $searchPattern && (\is_null($searchFields) || 0 == \count($searchFields))) {
-            $searchFields = $this->getEntityManager()->getClassMetadata($this->getEntityName())->getFieldNames();
+            $searchFields = $this->getObjectManager()->getClassMetadata($this->getEntityName())->getFieldNames();
         }
 
         $textFields = $this->getFieldsWitTypes(['text', 'string', 'guid'], $searchFields);
