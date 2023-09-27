@@ -2370,6 +2370,43 @@ class PageControllerTest extends SuluTestCase
         $this->assertContains('en', $result['contentLocales']);
     }
 
+
+    public function testCopyLocaleWithNoDest(): void
+    {
+        $data = [
+            'title' => 'test1',
+            'template' => 'default',
+            'url' => '/test1',
+            'article' => 'Test',
+        ];
+
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $this->client->jsonRequest(
+            'POST',
+            '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en&action=publish',
+            $data
+        );
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->client->jsonRequest(
+            'POST',
+            '/api/pages/' . $data['id'] . '?action=copy-locale&webspace=sulu_io&locale=en&dest='
+        );
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertEquals($data['id'], $result['id']);
+        $this->assertEquals($data['title'], $result['title']);
+        $this->assertEquals($data['url'], $result['url']);
+        $this->assertEquals($data['article'], $result['article']);
+        $this->assertTrue($result['publishedState']);
+        $this->assertContains('en', $result['contentLocales']);
+        $this->assertCount(1, $result['contentLocales']);
+    }
+
+
+
     public function testCopyMultipleLocales(): void
     {
         $data = [
