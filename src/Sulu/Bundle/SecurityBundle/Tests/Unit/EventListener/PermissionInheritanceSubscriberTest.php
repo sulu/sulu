@@ -93,6 +93,9 @@ class PermissionInheritanceSubscriberTest extends TestCase
         $this->permissionInheritanceSubscriber->postPersist($event);
     }
 
+    /**
+     * @return LifecycleEventArgs<EntityManagerInterface>
+     */
     private function createPostPersistEvent($entity): LifecycleEventArgs
     {
         $event = new LifecycleEventArgs($entity, $this->entityManager->reveal());

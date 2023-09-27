@@ -32,7 +32,7 @@ class TimestampableSubscriberTest extends TestCase
     private $loadClassMetadataEvent;
 
     /**
-     * @var ObjectProphecy<LifecycleEventArgs>
+     * @var ObjectProphecy<LifecycleEventArgs<EntityManager>>
      */
     private $lifecycleEvent;
 

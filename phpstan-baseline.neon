@@ -18836,11 +18836,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Content/Types/SingleMediaSelectionTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\EventListener\\\\CacheInvalidationListenerTest\\:\\:provideFunctionName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/EventListener/CacheInvalidationListenerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\EventListener\\\\CacheInvalidationListenerTest\\:\\:testPostUpdate\\(\\) has parameter \\$functionName with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/EventListener/CacheInvalidationListenerTest.php
@@ -30644,11 +30639,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Tests\\\\Unit\\\\Controller\\\\PermissionControllerTest\\:\\:\\$resources type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/Controller/PermissionControllerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Tests\\\\Unit\\\\EventListener\\\\PermissionInheritanceSubscriberTest\\:\\:createPostPersistEvent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/PermissionInheritanceSubscriberTest.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Tests\\\\Unit\\\\EventListener\\\\PermissionInheritanceSubscriberTest\\:\\:createPostPersistEvent\\(\\) has parameter \\$entity with no type specified\\.$#"
@@ -49826,6 +49816,11 @@ parameters:
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
 
 		-
+			message: "#^Property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\TimestampableSubscriberTest\\:\\:\\$lifecycleEvent \\(Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Doctrine\\\\Persistence\\\\Event\\\\LifecycleEventArgs\\<Doctrine\\\\ORM\\\\EntityManager\\>\\>\\) does not accept Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Doctrine\\\\Persistence\\\\Event\\\\LifecycleEventArgs\\>\\.$#"
+			count: 1
+			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
+
+		-
 			message: "#^Property Sulu\\\\Component\\\\Persistence\\\\Tests\\\\Unit\\\\EventSubscriber\\\\ORM\\\\TimestampableSubscriberTest\\:\\:\\$refl with generic class ReflectionClass does not specify its types\\: T$#"
 			count: 1
 			path: src/Sulu/Component/Persistence/Tests/Unit/EventSubscriber/ORM/TimestampableSubscriberTest.php
@@ -51477,22 +51472,12 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|null given\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Rest/Listing/ListRepository.php
 
 		-
 			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
 			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListRepository.php
-
-		-
-			message: "#^Parameter \\#2 \\$haystack of function array_search expects array, array\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListRepository.php
-
-		-
-			message: "#^Parameter \\#2 \\$intersectArray of method Sulu\\\\Component\\\\Rest\\\\Listing\\\\ListRepository\\:\\:getFieldsWitTypes\\(\\) expects null, array\\|null given\\.$#"
-			count: 2
 			path: src/Sulu/Component/Rest/Listing/ListRepository.php
 
 		-

@@ -19,6 +19,9 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
  */
 class AccountListener
 {
+    /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $args
+     */
     public function postPersist(LifecycleEventArgs $args)
     {
         $entity = $args->getObject();

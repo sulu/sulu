@@ -110,6 +110,9 @@ class ForceTwoFactorSubscriberTest extends TestCase
         $this->assertSame('other', $userTwoFactor->getMethod());
     }
 
+    /**
+     * @return LifecycleEventArgs<EntityManagerInterface>
+     */
     private function createEvent(object $object): LifecycleEventArgs
     {
         return new LifecycleEventArgs($object, $this->entityManager->reveal());

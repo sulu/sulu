@@ -37,6 +37,8 @@ class CacheInvalidationListener
     }
 
     /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $eventArgs
+     *
      * @return void
      */
     public function postPersist(LifecycleEventArgs $eventArgs)
@@ -45,6 +47,8 @@ class CacheInvalidationListener
     }
 
     /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $eventArgs
+     *
      * @return void
      */
     public function postUpdate(LifecycleEventArgs $eventArgs)
@@ -53,6 +57,8 @@ class CacheInvalidationListener
     }
 
     /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $eventArgs
+     *
      * @return void
      */
     public function preRemove(LifecycleEventArgs $eventArgs)

@@ -38,6 +38,9 @@ class PermissionInheritanceSubscriber implements EventSubscriber
         return $events;
     }
 
+    /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $event
+     */
     public function postPersist(LifecycleEventArgs $event)
     {
         $entity = $event->getObject();

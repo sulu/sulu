@@ -47,6 +47,9 @@ class CacheInvalidationListenerTest extends TestCase
         $this->listener = new CacheInvalidationListener($this->cacheManager->reveal());
     }
 
+    /**
+     * @return string[][]
+     */
     public function provideFunctionName(): array
     {
         return [

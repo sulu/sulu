@@ -37,16 +37,25 @@ class ForceTwoFactorSubscriber implements EventSubscriber
         ];
     }
 
+    /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $event
+     */
     public function preUpdate(LifecycleEventArgs $event): void
     {
         $this->handleTwoFactorForce($event);
     }
 
+    /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $event
+     */
     public function prePersist(LifecycleEventArgs $event): void
     {
         $this->handleTwoFactorForce($event);
     }
 
+    /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $event
+     */
     private function handleTwoFactorForce(LifecycleEventArgs $event): void
     {
         $entity = $event->getObject();
