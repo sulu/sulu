@@ -76,7 +76,7 @@ class MediaRepositoryTest extends SuluTestCase
         $this->mediaRepository = $this->getContainer()->get('sulu.repository.media');
     }
 
-    protected function setUpMedia()
+    protected function setUpMedia(): void
     {
         // Create Media Type
         $documentType = new MediaType();
