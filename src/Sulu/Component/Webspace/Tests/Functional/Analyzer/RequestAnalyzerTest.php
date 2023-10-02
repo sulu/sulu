@@ -15,7 +15,6 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\Attributes\PortalInformationRequestProcessor;
 use Sulu\Component\Webspace\Analyzer\Attributes\UrlRequestProcessor;
@@ -46,11 +45,6 @@ class RequestAnalyzerTest extends TestCase
     private $webspaceManager;
 
     /**
-     * @var ObjectProphecy<ContentMapperInterface>
-     */
-    private $contentMapper;
-
-    /**
      * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
@@ -58,7 +52,6 @@ class RequestAnalyzerTest extends TestCase
     public function setUp(): void
     {
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
-        $this->contentMapper = $this->prophesize(ContentMapperInterface::class);
         $this->requestStack = $this->prophesize(RequestStack::class);
 
         $this->requestAnalyzer = new RequestAnalyzer(
@@ -66,7 +59,7 @@ class RequestAnalyzerTest extends TestCase
             [
                 new UrlRequestProcessor(),
                 new WebsiteRequestProcessor(
-                    $this->webspaceManager->reveal(), $this->contentMapper->reveal(), 'prod'
+                    $this->webspaceManager->reveal(), 'prod'
                 ),
                 new PortalInformationRequestProcessor(),
             ]

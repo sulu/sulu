@@ -54591,16 +54591,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Analyzer/Attributes/RequestAttributes.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\Attributes\\\\WebsiteRequestProcessor\\:\\:__construct\\(\\) has parameter \\$environment with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Analyzer/Attributes/WebsiteRequestProcessor.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\Attributes\\\\WebsiteRequestProcessor\\:\\:\\$contentMapper is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Analyzer/Attributes/WebsiteRequestProcessor.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\Exception\\\\UrlMatchNotFoundException\\:\\:__construct\\(\\) has parameter \\$url with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/Exception/UrlMatchNotFoundException.php
