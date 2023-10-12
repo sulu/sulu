@@ -50,8 +50,8 @@ class ReferenceCollectorTest extends TestCase
                 $referenceContext = $args[6];
                 /** @var string $referenceProperty */
                 $referenceProperty = $args[7];
-                /** @var array<string, string> $referenceViewAttributes */
-                $referenceViewAttributes = $args[8] ?? [];
+                /** @var array<string, string> $referenceRouterAttributes */
+                $referenceRouterAttributes = $args[8] ?? [];
 
                 $reference = new Reference();
 
@@ -64,7 +64,7 @@ class ReferenceCollectorTest extends TestCase
                     ->setReferenceTitle($referenceTitle)
                     ->setReferenceContext($referenceContext)
                     ->setReferenceProperty($referenceProperty)
-                    ->setReferenceViewAttributes($referenceViewAttributes);
+                    ->setReferenceRouterAttributes($referenceRouterAttributes);
 
                 return $reference;
             });
@@ -73,7 +73,7 @@ class ReferenceCollectorTest extends TestCase
     public function testAddReference(): void
     {
         $referenceCollector = $this->createReferenceCollector(
-            referenceViewAttributes: [
+            referenceRouterAttributes: [
                 'webspace' => 'sulu',
             ],
             referenceWorkflowStage: WorkflowStage::PUBLISHED,
@@ -119,7 +119,7 @@ class ReferenceCollectorTest extends TestCase
     }
 
     /**
-     * @param array<string, string> $referenceViewAttributes
+     * @param array<string, string> $referenceRouterAttributes
      */
     public function createReferenceCollector(
         string $referenceResourceKey = 'pages',
@@ -127,7 +127,7 @@ class ReferenceCollectorTest extends TestCase
         string $referenceLocale = 'en',
         string $referenceTitle = 'Title',
         string $referenceContext = 'default',
-        array $referenceViewAttributes = [],
+        array $referenceRouterAttributes = [],
         ?int $referenceWorkflowStage = null
     ): ReferenceCollector {
         return new ReferenceCollector(
@@ -137,7 +137,7 @@ class ReferenceCollectorTest extends TestCase
             $referenceLocale,
             $referenceTitle,
             $referenceContext,
-            $referenceViewAttributes,
+            $referenceRouterAttributes,
         );
     }
 }

@@ -95,7 +95,7 @@ class ReferenceController extends AbstractRestController implements ClassResourc
 
         $fields = \explode(',', $request->query->get('fields', ''));
         $removeFields = ['id']; // the frontend always add the id field, but we don't need it in this case as we group by other fields
-        $fields = [...$fields, 'referenceResourceKey', 'referenceResourceId', 'referenceLocale', 'referenceViewAttributes'];
+        $fields = [...$fields, 'referenceResourceKey', 'referenceResourceId', 'referenceLocale', 'referenceRouterAttributes'];
 
         if ($rootLevel) {
             $removeFields[] = 'referenceContext';

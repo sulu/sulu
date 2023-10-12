@@ -62,7 +62,7 @@ class ReferenceViewBuilderFactory implements ReferenceViewBuilderFactoryInterfac
                     [
                         'resource_key_property' => 'referenceResourceKey',
                         'resource_id_property' => 'referenceResourceId',
-                        'resource_view_attributes_property' => 'referenceViewAttributes',
+                        'resource_view_attributes_property' => 'referenceRouterAttributes',
                     ],
                 ),
             ])

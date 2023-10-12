@@ -76,7 +76,7 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
             $locale,
             $document->getTitle(),
             $context,
-            $this->getReferenceViewAttributes($document, $locale),
+            $this->getReferenceRouterAttributes($document, $locale),
         );
 
         $structure = $document->getStructure();
@@ -130,7 +130,7 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
      *
      * @return array<string, string>
      */
-    protected function getReferenceViewAttributes($document, string $locale): array
+    protected function getReferenceRouterAttributes($document, string $locale): array
     {
         return [
             'locale' => $locale,

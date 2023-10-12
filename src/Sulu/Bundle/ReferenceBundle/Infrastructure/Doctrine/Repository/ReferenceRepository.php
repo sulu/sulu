@@ -57,7 +57,7 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
         string $referenceTitle,
         string $referenceContext,
         string $referenceProperty,
-        array $referenceViewAttributes = [],
+        array $referenceRouterAttributes = [],
     ): ReferenceInterface {
         /** @var ReferenceInterface $reference */
         $reference = new $this->className();
@@ -70,7 +70,7 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
             ->setReferenceResourceId($referenceResourceId)
             ->setReferenceTitle($referenceTitle)
             ->setReferenceContext($referenceContext)
-            ->setReferenceViewAttributes($referenceViewAttributes)
+            ->setReferenceRouterAttributes($referenceRouterAttributes)
             ->setReferenceProperty($referenceProperty);
 
         return $reference;
@@ -130,7 +130,7 @@ final class ReferenceRepository implements ReferenceRepositoryInterface
          *     referenceTitle?: string,
          *     referenceResourceKey?: string,
          *     referenceResourceId?: string,
-         *     referenceViewAttributes?: array<string, string>,
+         *     referenceRouterAttributes?: array<string, string>,
          *     referenceContext?: string,
          *     referenceProperty?: string,
          * } $row

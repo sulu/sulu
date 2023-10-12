@@ -69,12 +69,12 @@ class ReferenceTest extends TestCase
         static::assertSame('de', $reference->getReferenceLocale());
     }
 
-    public function testGetSetReferenceViewAttributes(): void
+    public function testGetSetReferenceRouterAttributes(): void
     {
         $reference = $this->createReference();
-        static::assertSame([], $reference->getReferenceViewAttributes());
-        $reference->setReferenceViewAttributes(['locale' => 'en']);
-        static::assertSame(['locale' => 'en'], $reference->getReferenceViewAttributes());
+        static::assertSame([], $reference->getReferenceRouterAttributes());
+        $reference->setReferenceRouterAttributes(['locale' => 'en']);
+        static::assertSame(['locale' => 'en'], $reference->getReferenceRouterAttributes());
     }
 
     public function testGetSetReferenceProperty(): void
@@ -101,7 +101,7 @@ class ReferenceTest extends TestCase
         $reference1->setReferenceResourceKey('pages');
         $reference1->setReferenceResourceId($uuid);
         $reference1->setReferenceProperty('image');
-        $reference1->setReferenceViewAttributes(['webspace' => 'default']);
+        $reference1->setReferenceRouterAttributes(['webspace' => 'default']);
         $reference2 = $this->createReference();
         $reference2->setResourceKey('media');
         $reference2->setResourceId('1');
@@ -109,7 +109,7 @@ class ReferenceTest extends TestCase
         $reference2->setReferenceResourceKey('pages');
         $reference2->setReferenceResourceId($uuid);
         $reference2->setReferenceProperty('image');
-        $reference2->setReferenceViewAttributes(['webspace' => 'default']);
+        $reference2->setReferenceRouterAttributes(['webspace' => 'default']);
 
         $this->assertTrue(
             $reference1->equals($reference2)

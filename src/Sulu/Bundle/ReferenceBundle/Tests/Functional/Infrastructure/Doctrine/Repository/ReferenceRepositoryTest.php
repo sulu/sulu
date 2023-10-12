@@ -50,7 +50,7 @@ class ReferenceRepositoryTest extends SuluTestCase
         static::assertSame('en', $reference->getReferenceLocale());
         static::assertSame('Page Title', $reference->getReferenceTitle());
         static::assertSame('headerImage', $reference->getReferenceProperty());
-        static::assertSame(['locale' => 'en'], $reference->getReferenceViewAttributes());
+        static::assertSame(['locale' => 'en'], $reference->getReferenceRouterAttributes());
     }
 
     public function testFindOneByNotExist(): void

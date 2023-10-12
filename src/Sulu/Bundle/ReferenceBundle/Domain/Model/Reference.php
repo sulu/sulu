@@ -44,14 +44,14 @@ class Reference implements ReferenceInterface, TimestampableInterface
     private $referenceResourceId;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $referenceLocale;
 
     /**
      * @var array<string, string>
      */
-    private $referenceViewAttributes = [];
+    private $referenceRouterAttributes = [];
 
     /**
      * @var string
@@ -97,7 +97,7 @@ class Reference implements ReferenceInterface, TimestampableInterface
         return $this;
     }
 
-    public function getReferenceLocale(): string
+    public function getReferenceLocale(): ?string
     {
         return $this->referenceLocale;
     }
@@ -109,14 +109,14 @@ class Reference implements ReferenceInterface, TimestampableInterface
         return $this;
     }
 
-    public function getReferenceViewAttributes(): array
+    public function getReferenceRouterAttributes(): array
     {
-        return $this->referenceViewAttributes;
+        return $this->referenceRouterAttributes;
     }
 
-    public function setReferenceViewAttributes(array $referenceViewAttributes): static
+    public function setReferenceRouterAttributes(array $referenceRouterAttributes): static
     {
-        $this->referenceViewAttributes = $referenceViewAttributes;
+        $this->referenceRouterAttributes = $referenceRouterAttributes;
 
         return $this;
     }
@@ -191,6 +191,6 @@ class Reference implements ReferenceInterface, TimestampableInterface
             && $this->referenceResourceId === $reference->referenceResourceId
             && $this->referenceProperty === $reference->referenceProperty
             && $this->referenceContext === $reference->referenceContext
-            && $this->referenceViewAttributes === $reference->referenceViewAttributes;
+            && $this->referenceRouterAttributes === $reference->referenceRouterAttributes;
     }
 }

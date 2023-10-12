@@ -26,19 +26,19 @@ interface ReferenceInterface
 
     public function setResourceId(string $resourceId): static;
 
-    public function getReferenceLocale(): string;
+    public function getReferenceLocale(): ?string;
 
     public function setReferenceLocale(string $referenceLocale): static;
 
     /**
      * @return array<string, string>
      */
-    public function getReferenceViewAttributes(): array;
+    public function getReferenceRouterAttributes(): array;
 
     /**
-     * @param array<string, string> $referenceViewAttributes
+     * @param array<string, string> $referenceRouterAttributes
      */
-    public function setReferenceViewAttributes(array $referenceViewAttributes): static;
+    public function setReferenceRouterAttributes(array $referenceRouterAttributes): static;
 
     public function getReferenceResourceKey(): string;
 

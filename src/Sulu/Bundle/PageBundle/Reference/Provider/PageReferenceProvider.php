@@ -48,15 +48,15 @@ class PageReferenceProvider extends AbstractDocumentReferenceProvider
         return BasePageDocument::RESOURCE_KEY;
     }
 
-    protected function getReferenceViewAttributes($document, string $locale): array
+    protected function getReferenceRouterAttributes($document, string $locale): array
     {
-        $referenceViewAttributes = parent::getReferenceViewAttributes($document, $locale);
+        $referenceRouterAttributes = parent::getReferenceRouterAttributes($document, $locale);
 
         if (!$document instanceof WebspaceBehavior) {
-            return $referenceViewAttributes;
+            return $referenceRouterAttributes;
         }
 
-        return \array_merge($referenceViewAttributes, [
+        return \array_merge($referenceRouterAttributes, [
             'webspace' => $document->getWebspaceName(),
         ]);
     }

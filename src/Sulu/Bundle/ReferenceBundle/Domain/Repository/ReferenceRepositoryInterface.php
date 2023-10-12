@@ -33,7 +33,7 @@ use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
 interface ReferenceRepositoryInterface
 {
     /**
-     * @param array<string, string> $referenceViewAttributes
+     * @param array<string, string> $referenceRouterAttributes
      */
     public function create(
         string $resourceKey,
@@ -44,7 +44,7 @@ interface ReferenceRepositoryInterface
         string $referenceTitle,
         string $referenceContext,
         string $referenceProperty,
-        array $referenceViewAttributes = []
+        array $referenceRouterAttributes = []
     ): ReferenceInterface;
 
     /**
@@ -68,7 +68,7 @@ interface ReferenceRepositoryInterface
      *     referenceTitle?: string,
      *     referenceResourceKey?: string,
      *     referenceResourceId?: string,
-     *     referenceViewAttributes?: array<string, string>,
+     *     referenceRouterAttributes?: array<string, string>,
      *     referenceContext?: string,
      *     referenceProperty?: string,
      * }>

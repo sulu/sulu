@@ -78,7 +78,7 @@ class ReferenceControllerTest extends SuluTestCase
                             'referenceLocale' => 'en',
                             'referenceResourceKey' => 'pages',
                             'referenceResourceId' => '123-123',
-                            'referenceViewAttributes' => ['webspace' => 'sulu'],
+                            'referenceRouterAttributes' => ['webspace' => 'sulu'],
                             'id' => 'pages__123-123__en',
                             'hasChildren' => true,
                         ],
@@ -87,7 +87,7 @@ class ReferenceControllerTest extends SuluTestCase
                             'referenceLocale' => 'en',
                             'referenceResourceKey' => 'pages',
                             'referenceResourceId' => '456-789',
-                            'referenceViewAttributes' => ['webspace' => 'sulu'],
+                            'referenceRouterAttributes' => ['webspace' => 'sulu'],
                             'id' => 'pages__456-789__en',
                             'hasChildren' => true,
                         ],
@@ -148,13 +148,13 @@ class ReferenceControllerTest extends SuluTestCase
                         [
                             'referenceContext' => 'default',
                             'referenceProperty' => 'image',
-                            'referenceViewAttributes' => ['webspace' => 'sulu'],
+                            'referenceRouterAttributes' => ['webspace' => 'sulu'],
                             'id' => 'pages__123-123__en__1',
                         ],
                         [
                             'referenceContext' => 'excerpt',
                             'referenceProperty' => 'icon',
-                            'referenceViewAttributes' => ['webspace' => 'sulu'],
+                            'referenceRouterAttributes' => ['webspace' => 'sulu'],
                             'id' => 'pages__123-123__en__2',
                         ],
                     ],
@@ -179,7 +179,7 @@ class ReferenceControllerTest extends SuluTestCase
         $reference->setReferenceTitle('Title');
         $reference->setReferenceProperty('image');
         $reference->setReferenceContext('default');
-        $reference->setReferenceViewAttributes(['webspace' => 'sulu']);
+        $reference->setReferenceRouterAttributes(['webspace' => 'sulu']);
 
         self::getEntityManager()->persist($reference);
 

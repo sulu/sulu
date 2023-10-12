@@ -40,7 +40,7 @@ class ReferenceCollector implements ReferenceCollectorInterface
     /**
      * @var array<string, string>
      */
-    private $referenceViewAttributes;
+    private $referenceRouterAttributes;
 
     /**
      * @var string
@@ -58,7 +58,7 @@ class ReferenceCollector implements ReferenceCollectorInterface
     private $referenceContext;
 
     /**
-     * @param array<string, string> $referenceViewAttributes
+     * @param array<string, string> $referenceRouterAttributes
      */
     public function __construct(
         ReferenceRepositoryInterface $referenceRepository,
@@ -67,7 +67,7 @@ class ReferenceCollector implements ReferenceCollectorInterface
         string $referenceLocale,
         string $referenceTitle,
         string $referenceContext,
-        array $referenceViewAttributes = [],
+        array $referenceRouterAttributes = [],
     ) {
         $this->referenceRepository = $referenceRepository;
         $this->referenceCollection = new ArrayCollection();
@@ -77,7 +77,7 @@ class ReferenceCollector implements ReferenceCollectorInterface
         $this->referenceLocale = $referenceLocale;
         $this->referenceTitle = $referenceTitle;
         $this->referenceContext = $referenceContext;
-        $this->referenceViewAttributes = $referenceViewAttributes;
+        $this->referenceRouterAttributes = $referenceRouterAttributes;
     }
 
     public function addReference(
@@ -94,7 +94,7 @@ class ReferenceCollector implements ReferenceCollectorInterface
             $this->referenceTitle,
             $this->referenceContext,
             $referenceProperty,
-            $this->referenceViewAttributes,
+            $this->referenceRouterAttributes,
         );
 
         $reference = $this->getReference($reference) ?? $reference;

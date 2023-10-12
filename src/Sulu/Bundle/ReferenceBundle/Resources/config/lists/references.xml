@@ -60,7 +60,7 @@
         />
 
         <property
-            name="referenceViewAttributes"
+            name="referenceRouterAttributes"
             visibility="never"
             searchability="no"
             sortable="false"
