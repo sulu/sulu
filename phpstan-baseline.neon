@@ -30121,16 +30121,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetController\\:\\:throwReferentialIntegrityException\\(\\) has parameter \\$references with no value type specified in iterable type PHPCR\\\\NodeInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
-
-		-
-			message: "#^Parameter \\#1 \\$type of method Symfony\\\\Component\\\\Form\\\\FormFactory\\:\\:create\\(\\) expects class\\-string\\<TFormType of Symfony\\\\Component\\\\Form\\\\FormTypeInterface\\<mixed\\>\\>, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
-
-		-
 			message: "#^Parameter \\#2 \\$default of method Symfony\\\\Component\\\\HttpFoundation\\\\HeaderBag\\:\\:get\\(\\) expects string\\|null, false given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
