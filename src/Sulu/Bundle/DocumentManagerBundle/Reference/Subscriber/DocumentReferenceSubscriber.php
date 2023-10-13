@@ -23,6 +23,7 @@ use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\RemoveLocaleEvent;
 use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -189,7 +190,7 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
             $this->getProvider($documentData['document'])?->updateReferences(
                 $documentData['document'],
                 $documentData['locale'],
-                $this->suluContext,
+                SuluKernel::CONTEXT_WEBSITE,
             );
         }
 
