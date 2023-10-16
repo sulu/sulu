@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\SecurityBundle\Tests\Unit\EventListener;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -93,7 +93,10 @@ class PermissionInheritanceSubscriberTest extends TestCase
         $this->permissionInheritanceSubscriber->postPersist($event);
     }
 
-    private function createPostPersistEvent($entity)
+    /**
+     * @return LifecycleEventArgs<EntityManagerInterface>
+     */
+    private function createPostPersistEvent($entity): LifecycleEventArgs
     {
         $event = new LifecycleEventArgs($entity, $this->entityManager->reveal());
 

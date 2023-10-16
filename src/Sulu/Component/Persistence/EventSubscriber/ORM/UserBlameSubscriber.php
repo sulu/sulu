@@ -12,6 +12,7 @@
 namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
 use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
@@ -120,7 +121,12 @@ class UserBlameSubscriber implements EventSubscriber
 
     private function handleUserBlame(OnFlushEventArgs $event, UserInterface $user, bool $insertions)
     {
-        $manager = $event->getEntityManager();
+        $manager = $event->getObjectManager();
+
+        if (!$manager instanceof EntityManagerInterface) {
+            return;
+        }
+
         $unitOfWork = $manager->getUnitOfWork();
 
         $entities = $insertions ? $unitOfWork->getScheduledEntityInsertions() :

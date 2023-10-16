@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\MediaBundle\EventListener;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\HttpCacheBundle\Cache\CacheManagerInterface;
 use Sulu\Bundle\MediaBundle\Entity\File;
@@ -37,6 +37,8 @@ class CacheInvalidationListener
     }
 
     /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $eventArgs
+     *
      * @return void
      */
     public function postPersist(LifecycleEventArgs $eventArgs)
@@ -45,6 +47,8 @@ class CacheInvalidationListener
     }
 
     /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $eventArgs
+     *
      * @return void
      */
     public function postUpdate(LifecycleEventArgs $eventArgs)
@@ -53,6 +57,8 @@ class CacheInvalidationListener
     }
 
     /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $eventArgs
+     *
      * @return void
      */
     public function preRemove(LifecycleEventArgs $eventArgs)
