@@ -109,7 +109,7 @@ class UserBlameSubscriberTest extends TestCase
 
         $this->tokenStorage->getToken()->willReturn($this->token->reveal());
         $this->token->getUser()->willReturn($this->user->reveal());
-        $this->onFlushEvent->getEntityManager()->willReturn($this->entityManager);
+        $this->onFlushEvent->getObjectManager()->willReturn($this->entityManager);
         $this->entityManager->getUnitOfWork()->willReturn($this->unitOfWork);
     }
 

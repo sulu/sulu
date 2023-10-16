@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\EventListener;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
@@ -35,6 +35,8 @@ class CacheInvalidationListener
     }
 
     /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $eventArgs
+     *
      * @return void
      */
     public function postPersist(LifecycleEventArgs $eventArgs)
@@ -43,6 +45,8 @@ class CacheInvalidationListener
     }
 
     /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $eventArgs
+     *
      * @return void
      */
     public function postUpdate(LifecycleEventArgs $eventArgs)
@@ -51,6 +55,8 @@ class CacheInvalidationListener
     }
 
     /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $eventArgs
+     *
      * @return void
      */
     public function preRemove(LifecycleEventArgs $eventArgs)

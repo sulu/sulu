@@ -2,8 +2,8 @@
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="sulu_contact.contact_title.entity">SuluContactBundle:ContactTitle</parameter>
-        <parameter key="sulu_contact.position.entity">SuluContactBundle:Position</parameter>
+        <parameter key="sulu_contact.contact_title.entity">Sulu\Bundle\ContactBundle\Entity\ContactTitle</parameter>
+        <parameter key="sulu_contact.position.entity">Sulu\Bundle\ContactBundle\Entity\Position</parameter>
     </parameters>
     <services>
         <service id="sulu_contact.admin" class="Sulu\Bundle\ContactBundle\Admin\ContactAdmin">

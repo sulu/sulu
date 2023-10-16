@@ -413,7 +413,7 @@ class TagControllerTest extends SuluTestCase
 
         $response = \json_decode($this->client->getResponse()->getContent());
 
-        $this->assertEquals('Entity with the type "SuluTagBundle:Tag" and the id "1233" not found.', $response->message);
+        $this->assertEquals('Entity with the type "Sulu\Bundle\TagBundle\Entity\Tag" and the id "1233" not found.', $response->message);
     }
 
     public function testPatch(): void

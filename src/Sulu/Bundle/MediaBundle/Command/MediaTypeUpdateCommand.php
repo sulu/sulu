@@ -45,7 +45,7 @@ class MediaTypeUpdateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $em = $this->entityManager;
-        $repo = $em->getRepository('SuluMediaBundle:Media');
+        $repo = $em->getRepository(\Sulu\Bundle\MediaBundle\Entity\Media::class);
         $medias = $repo->findAll();
         $counter = 0;
         /** @var MediaInterface $media */

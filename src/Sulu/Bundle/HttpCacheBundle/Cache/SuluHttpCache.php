@@ -61,7 +61,7 @@ class SuluHttpCache extends HttpCache implements CacheInvalidation
     protected function getSubscribers(): array
     {
         $subscribers = [
-            CustomTtlListener::class => new CustomTtlListener(static::HEADER_REVERSE_PROXY_TTL),
+            CustomTtlListener::class => new CustomTtlListener(static::HEADER_REVERSE_PROXY_TTL, $this->kernel->isDebug()),
             PurgeListener::class => new PurgeListener(),
             PurgeTagsListener::class => new PurgeTagsListener(),
             SegmentCacheListener::class => new SegmentCacheListener(),

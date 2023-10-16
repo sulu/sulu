@@ -12,8 +12,8 @@
 namespace Sulu\Bundle\SecurityBundle\EventListener;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
 
@@ -37,16 +37,25 @@ class ForceTwoFactorSubscriber implements EventSubscriber
         ];
     }
 
+    /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $event
+     */
     public function preUpdate(LifecycleEventArgs $event): void
     {
         $this->handleTwoFactorForce($event);
     }
 
+    /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $event
+     */
     public function prePersist(LifecycleEventArgs $event): void
     {
         $this->handleTwoFactorForce($event);
     }
 
+    /**
+     * @param LifecycleEventArgs<\Doctrine\Persistence\ObjectManager> $event
+     */
     private function handleTwoFactorForce(LifecycleEventArgs $event): void
     {
         $entity = $event->getObject();
@@ -63,7 +72,7 @@ class ForceTwoFactorSubscriber implements EventSubscriber
 
         if (!$twoFactor) {
             $twoFactor = new UserTwoFactor($entity);
-            $event->getEntityManager()->persist($twoFactor);
+            $event->getObjectManager()->persist($twoFactor);
         }
 
         if (!$twoFactor->getMethod()) {

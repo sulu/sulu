@@ -71,6 +71,7 @@
     "sulu_activity.description.pages.created": "{userFullName} has created the page \"{resourceTitle}\"",
     "sulu_activity.description.pages.modified": "{userFullName} has changed the page \"{resourceTitle}\"",
     "sulu_activity.description.pages.removed": "{userFullName} has removed the page \"{resourceTitle}\"",
+    "sulu_activity.description.pages.route_removed": "{userFullName} has removed a route from the page \"{resourceTitle}\"",
     "sulu_activity.description.pages.published": "{userFullName} has published the page \"{resourceTitle}\"",
     "sulu_activity.description.pages.unpublished": "{userFullName} has unpublished the page \"{resourceTitle}\"",
     "sulu_activity.description.pages.draft_removed": "{userFullName} has discarded the draft of the page \"{resourceTitle}\"",
