@@ -36,7 +36,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class GroupController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface
 {
-    protected static $entityName = 'SuluSecurityBundle:Group';
+    protected static $entityName = Group::class;
 
     protected static $entityKey = 'groups';
 
@@ -67,7 +67,7 @@ class GroupController extends AbstractRestController implements ClassResourceInt
      */
     private $entityManager;
 
-    public const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
+    public const ENTITY_NAME_ROLE = RoleInterface::class;
 
     // TODO: move the field descriptors to a manager
     public function __construct(

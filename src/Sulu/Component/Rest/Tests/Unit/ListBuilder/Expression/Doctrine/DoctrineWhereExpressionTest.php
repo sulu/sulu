@@ -27,7 +27,7 @@ class DoctrineWhereExpressionTest extends TestCase
     /**
      * @var string
      */
-    private static $entityName = 'SuluCoreBundle:Example';
+    private static $entityName = 'Sulu\Bundle\CoreBundle\Entity\Example';
 
     /**
      * http://php.net/manual/en/function.uniqid.php
@@ -58,7 +58,7 @@ class DoctrineWhereExpressionTest extends TestCase
         // parameter names will be generated (combined with unique ids with length of 23 characters)
         $statement = $whereExpression->getStatement($this->queryBuilder->reveal());
         $result = \preg_match(
-            \sprintf('/^SuluCoreBundle_Example\.name = :name[\S]{%s}/', $this->uniqueIdLength),
+            \sprintf('/^Sulu_Bundle_CoreBundle_Entity_Example\.name = :name[\S]{%s}/', $this->uniqueIdLength),
             $statement
         );
         $this->assertEquals(1, $result);
@@ -81,7 +81,7 @@ class DoctrineWhereExpressionTest extends TestCase
         $whereExpression = new DoctrineWhereExpression($fieldDescriptor, null, $comparator);
 
         $this->assertEquals(
-            'SuluCoreBundle_Example.name ' . $expected,
+            'Sulu_Bundle_CoreBundle_Entity_Example.name ' . $expected,
             $whereExpression->getStatement($this->queryBuilder->reveal())
         );
     }
@@ -97,7 +97,7 @@ class DoctrineWhereExpressionTest extends TestCase
         // parameter names will be generated (combined with unique ids with length of 23 characters)
         $statement = $whereExpression->getStatement($this->queryBuilder->reveal());
         $result = \preg_match(
-            \sprintf('/^SuluCoreBundle_Example\.name LIKE :name[\S]{%s}/', $this->uniqueIdLength),
+            \sprintf('/^Sulu_Bundle_CoreBundle_Entity_Example\.name LIKE :name[\S]{%s}/', $this->uniqueIdLength),
             $statement
         );
         $this->assertEquals(1, $result);
@@ -124,7 +124,7 @@ class DoctrineWhereExpressionTest extends TestCase
         $statement = $whereExpression->getStatement($this->queryBuilder->reveal());
         $result = \preg_match(
             \sprintf(
-                '/^(SuluCoreBundle_Example\.name = :name[\S]{%s}[\S]{1}( %s )?){3}/',
+                '/^(Sulu_Bundle_CoreBundle_Entity_Example\.name = :name[\S]{%s}[\S]{1}( %s )?){3}/',
                 $this->uniqueIdLength,
                 $comparator
             ),

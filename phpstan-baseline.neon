@@ -5361,36 +5361,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Admin/ContactAdmin.php
 
 		-
-			message: "#^Parameter \\#1 \\$persistentObject of method Doctrine\\\\Persistence\\\\ManagerRegistry\\:\\:getRepository\\(\\) expects class\\-string\\<SuluContactBundle\\:AddressType\\>, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Admin/ContactAdmin.php
-
-		-
-			message: "#^Parameter \\#1 \\$persistentObject of method Doctrine\\\\Persistence\\\\ManagerRegistry\\:\\:getRepository\\(\\) expects class\\-string\\<SuluContactBundle\\:EmailType\\>, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Admin/ContactAdmin.php
-
-		-
-			message: "#^Parameter \\#1 \\$persistentObject of method Doctrine\\\\Persistence\\\\ManagerRegistry\\:\\:getRepository\\(\\) expects class\\-string\\<SuluContactBundle\\:FaxType\\>, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Admin/ContactAdmin.php
-
-		-
-			message: "#^Parameter \\#1 \\$persistentObject of method Doctrine\\\\Persistence\\\\ManagerRegistry\\:\\:getRepository\\(\\) expects class\\-string\\<SuluContactBundle\\:PhoneType\\>, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Admin/ContactAdmin.php
-
-		-
-			message: "#^Parameter \\#1 \\$persistentObject of method Doctrine\\\\Persistence\\\\ManagerRegistry\\:\\:getRepository\\(\\) expects class\\-string\\<SuluContactBundle\\:SocialMediaProfileType\\>, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Admin/ContactAdmin.php
-
-		-
-			message: "#^Parameter \\#1 \\$persistentObject of method Doctrine\\\\Persistence\\\\ManagerRegistry\\:\\:getRepository\\(\\) expects class\\-string\\<SuluContactBundle\\:UrlType\\>, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Admin/ContactAdmin.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:GetExternalId\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
@@ -7671,11 +7641,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountFactory.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<SuluContactBundle\\:Address\\>\\:\\:findById\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: "#^Call to an undefined method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepositoryInterface\\:\\:findByFilters\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
@@ -7776,11 +7741,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:getRepository\\(\\) expects class\\-string\\<SuluContactBundle\\:Address\\>, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: "#^Parameter \\#1 \\$contact of class Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact constructor expects Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact, Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
@@ -7804,11 +7764,6 @@ parameters:
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<SuluContactBundle\\:Address\\>\\:\\:findById\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
 		-
 			message: "#^Call to an undefined method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepositoryInterface\\:\\:findById\\(\\)\\.$#"
@@ -7912,11 +7867,6 @@ parameters:
 
 		-
 			message: "#^Offset 'id' does not exist on non\\-falsy\\-string\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:getRepository\\(\\) expects class\\-string\\<SuluContactBundle\\:Address\\>, string given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
@@ -14381,11 +14331,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$entityName of method Doctrine\\\\ORM\\\\EntityManager\\:\\:getRepository\\(\\) expects class\\-string\\<SuluMediaBundle\\:CollectionType\\>, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
-
-		-
 			message: "#^Parameter \\#1 \\$userId of method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManager\\:\\:getUser\\(\\) expects int, int\\|null given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
@@ -14514,11 +14459,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Command\\\\FormatCacheRegenerateCommand\\:\\:\\$fileSystem is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Command/FormatCacheRegenerateCommand.php
-
-		-
-			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:getRepository\\(\\) expects class\\-string\\<SuluMediaBundle\\:Media\\>, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Command/MediaTypeUpdateCommand.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Content\\\\MediaSelectionContainer\\:\\:__construct\\(\\) has parameter \\$config with no type specified\\.$#"
@@ -17131,11 +17071,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:getRepository\\(\\) expects class\\-string\\<SuluMediaBundle\\:MediaType\\>, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\TypeManager\\\\TypeManager\\:\\:\\$blockedMimeTypes is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
@@ -18326,97 +18261,87 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:addMedia\\(\\) has parameter \\$numberMedia with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:addMedia\\(\\) has parameter \\$numberMedia with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:createCollection\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:createCollection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:createCollection\\(\\) has parameter \\$collectionType with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:createCollection\\(\\) has parameter \\$collectionType with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:createCollection\\(\\) has parameter \\$name with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:createCollection\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:createCollection\\(\\) has parameter \\$numberMedia with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:createCollection\\(\\) has parameter \\$numberMedia with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:createCollection\\(\\) has parameter \\$parent with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:createCollection\\(\\) has parameter \\$parent with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:provideTreeData\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:provideTreeData\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:testTree\\(\\) has parameter \\$expectedIndexes with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:testTree\\(\\) has parameter \\$expectedIndexes with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:testTree\\(\\) has parameter \\$index with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:testTree\\(\\) has parameter \\$index with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
 
 		-
-			message: "#^Property Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:\\$collectionData type has no value type specified in iterable type array\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\CollectionRepositoryTest\\:\\:\\$collectionData type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/CollectionRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\FileVersionMetaRepositoryTest\\:\\:createFile\\(\\) has parameter \\$collection with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\FileVersionMetaRepositoryTest\\:\\:createFile\\(\\) has parameter \\$collection with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/FileVersionMetaRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\FileVersionMetaRepositoryTest\\:\\:createFile\\(\\) has parameter \\$newTitle with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\FileVersionMetaRepositoryTest\\:\\:createFile\\(\\) has parameter \\$newTitle with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/FileVersionMetaRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\FileVersionMetaRepositoryTest\\:\\:createFile\\(\\) has parameter \\$oldTitle with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\FileVersionMetaRepositoryTest\\:\\:createFile\\(\\) has parameter \\$oldTitle with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/FileVersionMetaRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\FileVersionMetaRepositoryTest\\:\\:createFileVersion\\(\\) has parameter \\$title with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\FileVersionMetaRepositoryTest\\:\\:createFileVersion\\(\\) has parameter \\$title with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/FileVersionMetaRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\FileVersionMetaRepositoryTest\\:\\:createFileVersion\\(\\) has parameter \\$version with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\FileVersionMetaRepositoryTest\\:\\:createFileVersion\\(\\) has parameter \\$version with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/FileVersionMetaRepositoryTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:getRepository\\(\\) expects class\\-string\\<SuluMediaBundle\\:FileVersionMeta\\>, string given\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\FileVersionMetaRepositoryTest\\:\\:\\$em \\(Doctrine\\\\ORM\\\\EntityManager\\) does not accept Doctrine\\\\ORM\\\\EntityManagerInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/FileVersionMetaRepositoryTest.php
 
 		-
-			message: "#^Property Functional\\\\Entity\\\\FileVersionMetaRepositoryTest\\:\\:\\$em \\(Doctrine\\\\ORM\\\\EntityManager\\) does not accept Doctrine\\\\ORM\\\\EntityManagerInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/FileVersionMetaRepositoryTest.php
-
-		-
-			message: "#^Property Functional\\\\Entity\\\\FileVersionMetaRepositoryTest\\:\\:\\$fileVersionMetaRepository \\(Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\FileVersionMetaRepository\\) does not accept Doctrine\\\\ORM\\\\EntityRepository\\<SuluMediaBundle\\:FileVersionMeta\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/FileVersionMetaRepositoryTest.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<SuluTagBundle\\:Tag\\>\\:\\:createNew\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagInterface\\>\\:\\:createNew\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
@@ -18426,167 +18351,162 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createAccessControl\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createAccessControl\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createAccessControl\\(\\) has parameter \\$entityClass with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createAccessControl\\(\\) has parameter \\$entityClass with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createAccessControl\\(\\) has parameter \\$id with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createAccessControl\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createAccessControl\\(\\) has parameter \\$permissions with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createAccessControl\\(\\) has parameter \\$permissions with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createCollection\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createCollection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createCollection\\(\\) has parameter \\$name with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createCollection\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createCollection\\(\\) has parameter \\$parent with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createCollection\\(\\) has parameter \\$parent with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createMedia\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createMedia\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$collection with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$collection with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$mimeType with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$mimeType with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$tags with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$tags with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$targetGroups with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$targetGroups with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$title with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$title with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$type with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$type with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createRole\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createRole\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createRole\\(\\) has parameter \\$name with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createRole\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createRole\\(\\) has parameter \\$system with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createRole\\(\\) has parameter \\$system with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createTag\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createTag\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createTag\\(\\) has parameter \\$name with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createTag\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createType\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createType\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createType\\(\\) has parameter \\$name with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:createType\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:findByProvider\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:findByProvider\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:provideFindByFiltersWithAudienceTargeting\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:provideFindByFiltersWithAudienceTargeting\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFilters\\(\\) has parameter \\$expected with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFilters\\(\\) has parameter \\$expected with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFilters\\(\\) has parameter \\$filters with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFilters\\(\\) has parameter \\$filters with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFilters\\(\\) has parameter \\$limit with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFilters\\(\\) has parameter \\$limit with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFilters\\(\\) has parameter \\$options with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFilters\\(\\) has parameter \\$options with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFilters\\(\\) has parameter \\$page with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFilters\\(\\) has parameter \\$page with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFilters\\(\\) has parameter \\$pageSize with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFilters\\(\\) has parameter \\$pageSize with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFilters\\(\\) has parameter \\$tags with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFilters\\(\\) has parameter \\$tags with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFiltersWithAudienceTargeting\\(\\) has parameter \\$expectedIndexes with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFiltersWithAudienceTargeting\\(\\) has parameter \\$expectedIndexes with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFiltersWithAudienceTargeting\\(\\) has parameter \\$targetGroupIndex with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$entityName of method Doctrine\\\\ORM\\\\EntityManager\\:\\:getRepository\\(\\) expects class\\-string\\<SuluTagBundle\\:Tag\\>, string given\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:testFindByFiltersWithAudienceTargeting\\(\\) has parameter \\$targetGroupIndex with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
@@ -18596,32 +18516,32 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Property Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:\\$collectionData type has no value type specified in iterable type array\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:\\$collectionData type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Property Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:\\$em \\(Doctrine\\\\ORM\\\\EntityManager\\) does not accept Doctrine\\\\ORM\\\\EntityManagerInterface\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:\\$em \\(Doctrine\\\\ORM\\\\EntityManager\\) does not accept Doctrine\\\\ORM\\\\EntityManagerInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Property Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:\\$mediaData type has no value type specified in iterable type array\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:\\$mediaData type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Property Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:\\$mediaTypeData type has no value type specified in iterable type array\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:\\$mediaTypeData type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Property Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:\\$medias is never read, only written\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:\\$medias is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
 		-
-			message: "#^Property Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:\\$tagData type has no value type specified in iterable type array\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaDataProviderRepositoryTest\\:\\:\\$tagData type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaDataProviderRepositoryTest.php
 
@@ -18631,62 +18551,57 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createAccessControl\\(\\) has parameter \\$entity with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createAccessControl\\(\\) has parameter \\$entity with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createCollection\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createCollection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createMedia\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createMedia\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$collection with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$collection with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$name with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$name with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$title with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$title with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$type with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createMedia\\(\\) has parameter \\$type with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createRole\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createRole\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createUser\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:createUser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
-			message: "#^Method Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:setUpMedia\\(\\) has no return type specified\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:\\$collections is unused\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
 		-
-			message: "#^Property Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:\\$collections is unused\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
-
-		-
-			message: "#^Property Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:\\$em \\(Doctrine\\\\ORM\\\\EntityManager\\) does not accept Doctrine\\\\ORM\\\\EntityManagerInterface\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Functional\\\\Entity\\\\MediaRepositoryTest\\:\\:\\$em \\(Doctrine\\\\ORM\\\\EntityManager\\) does not accept Doctrine\\\\ORM\\\\EntityManagerInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Entity/MediaRepositoryTest.php
 
@@ -29061,11 +28976,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<SuluSecurityBundle\\:SecurityType\\>\\:\\:findSecurityTypeById\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:setRole\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
@@ -29133,11 +29043,6 @@ parameters:
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
 			count: 2
-			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
-
-		-
-			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:getRepository\\(\\) expects class\\-string\\<SuluSecurityBundle\\:SecurityType\\>, string given\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
@@ -30471,17 +30376,12 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
-			message: "#^Cannot call method getSalt\\(\\) on SuluSecurityBundle\\:User\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
-
-		-
 			message: "#^Cannot call method getSalt\\(\\) on Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\User\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$entityName of method Doctrine\\\\ORM\\\\EntityManager\\:\\:getRepository\\(\\) expects class\\-string\\<SuluSecurityBundle\\:User\\>, string given\\.$#"
+			message: "#^Cannot call method getSalt\\(\\) on Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 

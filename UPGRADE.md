@@ -47,6 +47,45 @@ This update is also handled normally by the update build command automatically.
 As deprecated in Symfony 6.1 the `$defaultName` of Sulu Commands where replaced with the new
 `Symfony\Component\Console\Attribute\AsCommand` annotation.
 
+### ListBuilder Doctrine Changes
+
+Bundle aliases where deprecated by [`doctrine/persistence` 3.0](https://github.com/doctrine/persistence/blob/3.2.0/UPGRADE.md#bc-break-removed-support-for-short-namespace-aliases) the full FQCN need to be used when upgrading to `doctrine/persistence:^3.0`:
+
+```diff
+    <joins name="address">
+        <join>
+-            <entity-name>SuluContactBundle:AccountAddress</entity-name>
++            <entity-name>Sulu\Bundle\ContactBundle\Entity\AccountAddress</entity-name>
+            <field-name>%sulu.model.account.class%.accountAddresses</field-name>
+            <method>LEFT</method>
+-            <condition>SuluContactBundle:AccountAddress.main = TRUE</condition>
++            <condition>Sulu\Bundle\ContactBundle\Entity\AccountAddress.main = TRUE</condition>
+        </join>
+
+        <join>
+-            <entity-name>SuluContactBundle:Address</entity-name>
++            <entity-name>Sulu\Bundle\ContactBundle\Entity\Address</entity-name>
+-            <field-name>SuluContactBundle:AccountAddress.address</field-name>
++            <field-name>Sulu\Bundle\ContactBundle\Entity\AccountAddress.address</field-name>
+        </join>
+    </joins>
+
+    <properties>
+        <property
+            name="state"
+            visibility="no"
+            translation="sulu_contact.state"
+        >
+            <field-name>state</field-name>
+-            <entity-name>SuluContactBundle:Address</entity-name>
++            <entity-name>Sulu\Bundle\ContactBundle\Entity\Address</entity-name>
+
+            <joins ref="address"/>
+
+            <filter type="text" />
+        </property>
+```
+
 ### Deprecated urls variable in return value of sulu_content_load
 
 The `urls` variable in the return value of the `sulu_content_load` function was deprecated.
