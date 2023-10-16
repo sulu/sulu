@@ -57,7 +57,7 @@ class ForceTwoFactorSubscriberTest extends TestCase
         $user->setEmail('other@localhost');
         $event = $this->createEvent($user);
 
-        $this->forceTwoFactorSubscriber->preUpdate($event);
+        $this->forceTwoFactorSubscriber->prePersist($event);
 
         $this->entityManager->persist(Argument::cetera())->shouldNotBeCalled();
     }
@@ -68,7 +68,7 @@ class ForceTwoFactorSubscriberTest extends TestCase
         $user->setEmail('other@sulu.io');
         $event = $this->createEvent($user);
 
-        $this->forceTwoFactorSubscriber->preUpdate($event);
+        $this->forceTwoFactorSubscriber->prePersist($event);
 
         $this->entityManager->persist(Argument::that(function(UserTwoFactor $userTwoFactor) {
             $this->assertSame('email', $userTwoFactor->getMethod());
