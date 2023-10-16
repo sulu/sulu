@@ -2370,7 +2370,6 @@ class PageControllerTest extends SuluTestCase
         $this->assertContains('en', $result['contentLocales']);
     }
 
-
     public function testCopyLocaleWithNoDest(): void
     {
         $data = [
@@ -2404,8 +2403,6 @@ class PageControllerTest extends SuluTestCase
         $this->assertContains('en', $result['contentLocales']);
         $this->assertCount(1, $result['contentLocales']);
     }
-
-
 
     public function testCopyMultipleLocales(): void
     {
