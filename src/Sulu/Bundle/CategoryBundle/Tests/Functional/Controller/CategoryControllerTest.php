@@ -321,12 +321,12 @@ class CategoryControllerTest extends SuluTestCase
         $this->assertEquals('en', $categories[0]->locale);
         $this->assertEquals('first-category-key', $categories[0]->key);
         $this->assertTrue($categories[0]->hasChildren);
-        $this->assertObjectNotHasAttribute('ghostLocale', $categories[0]);
+        $this->assertNull($categories[0]->ghostLocale);
 
         $this->assertEquals('second-category-key', $categories[1]->key);
         $this->assertEquals('en', $categories[1]->defaultLocale);
         $this->assertFalse($categories[1]->hasChildren);
-        $this->assertObjectNotHasAttribute('ghostLocale', $categories[1]);
+        $this->assertNull($categories[1]->ghostLocale);
 
         $this->assertEquals('Vierte Kategorie', $categories[2]->name);
         $this->assertEquals('de', $categories[2]->locale);
