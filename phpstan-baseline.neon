@@ -4256,7 +4256,7 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
 		-
-			message: "#^If condition is always true\\.$#"
+			message: "#^Cannot call method rowCount\\(\\) on true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
@@ -4267,11 +4267,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Command\\\\RecoverCommand\\:\\:fixCategoriesWithoutParents\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
@@ -7106,7 +7101,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
 		-
-			message: "#^If condition is always true\\.$#"
+			message: "#^Cannot call method rowCount\\(\\) on true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
@@ -7117,11 +7112,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Command\\\\AccountRecoverCommand\\:\\:fixNodesWithoutParents\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
