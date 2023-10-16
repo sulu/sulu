@@ -52,7 +52,7 @@
         <service id="sulu.content.template_resolver" public="false" class="%sulu.content.template_resolver.class%"/>
 
         <!-- content mapper -->
-        <service id="sulu.content.mapper" class="%sulu.content.mapper.class%" public="true">
+        <service id="sulu.content.mapper" class="%sulu.content.mapper.class%" public="true" lazy="true">
             <argument type="service" id="sulu_document_manager.document_manager" />
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="form.factory" />
