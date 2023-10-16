@@ -4256,7 +4256,7 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
 		-
-			message: "#^If condition is always true\\.$#"
+			message: "#^Cannot call method rowCount\\(\\) on true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
@@ -4267,11 +4267,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Command\\\\RecoverCommand\\:\\:fixCategoriesWithoutParents\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
@@ -7106,7 +7101,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
 		-
-			message: "#^If condition is always true\\.$#"
+			message: "#^Cannot call method rowCount\\(\\) on true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
@@ -7117,11 +7112,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Command\\\\AccountRecoverCommand\\:\\:fixNodesWithoutParents\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
@@ -46196,18 +46186,8 @@ parameters:
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\Mapper\\\\PhpcrMapper\\:\\:getResourceLocator\\(\\) should return string but returns false\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\Mapper\\\\PhpcrMapper\\:\\:isUnique\\(\\) has parameter \\$uuid with no type specified\\.$#"
 			count: 1
-			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\Mapper\\\\PhpcrMapper\\:\\:iterateRouteNodes\\(\\) should return PHPCR\\\\NodeInterface but returns null\\.$#"
-			count: 2
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
 
 		-
@@ -46217,11 +46197,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\Mapper\\\\PhpcrMapper\\:\\:save\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
 
@@ -46253,11 +46228,6 @@ parameters:
 		-
 			message: "#^Parameter \\#4 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\Mapper\\\\PhpcrMapper\\:\\:getResourceLocator\\(\\) expects string, string\\|null given\\.$#"
 			count: 2
-			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
 
 		-

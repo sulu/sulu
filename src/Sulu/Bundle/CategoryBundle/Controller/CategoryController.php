@@ -292,7 +292,7 @@ class CategoryController extends AbstractRestController implements ClassResource
 
         foreach ($categories as &$category) {
             $category['hasChildren'] = ($category['lft'] + 1) !== $category['rgt'];
-            
+
             $category['ghostLocale'] = null; // need always be set as the csv requires all columns have the same count
             if ($category['locale'] !== $locale) {
                 $category['ghostLocale'] = $category['locale'];
