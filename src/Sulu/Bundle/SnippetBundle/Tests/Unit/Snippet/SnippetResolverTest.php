@@ -14,6 +14,8 @@ namespace Sulu\Bundle\SnippetBundle\Snippet;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
@@ -135,6 +137,12 @@ class SnippetResolverTest extends TestCase
         $structure2->getHasTranslation()->willReturn(false);
         $structure2->setIsShadow(true)->shouldBeCalled();
         $structure2->setShadowBaseLanguage('en')->shouldBeCalled();
+
+        /** @var SnippetDocument|ObjectProphecy $snippetDocument */
+        $snippetDocument = $this->prophesize(SnippetDocument::class);
+        $structure2->getDocument()->willReturn($snippetDocument->reveal());
+        $snippetDocument->setLocale('en')->shouldBeCalled();
+        $snippetDocument->setOriginalLocale('de')->shouldBeCalled();
 
         $resolver = new SnippetResolver($contentMapper->reveal(), $structureResolver->reveal());
 
