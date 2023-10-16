@@ -24,6 +24,7 @@ class SuluBuildCommand extends BuildCommand
 {
     public function configure()
     {
+        parent::configure();
         $this->addOption('destroy', null, InputOption::VALUE_NONE, 'Destroy existing data');
     }
 }
