@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Webspace\Analyzer\Attributes;
 
-use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\Webspace\Analyzer\Exception\UrlMatchNotFoundException;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\PortalInformation;
@@ -28,22 +27,15 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
     private $webspaceManager;
 
     /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
-
-    /**
      * @var string
      */
     private $environment;
 
     public function __construct(
         WebspaceManagerInterface $webspaceManager,
-        ContentMapperInterface $contentMapper,
-        $environment
+        string $environment
     ) {
         $this->webspaceManager = $webspaceManager;
-        $this->contentMapper = $contentMapper;
         $this->environment = $environment;
     }
 

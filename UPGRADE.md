@@ -10,6 +10,10 @@ Removing deprecated functions and properties:
 - `Sulu\Component\Localization\Localization::isXDefault`
 - `Sulu\Bundle\MediaBundle\Controller\MediaController::$entityKey`
 
+Removing unused arguments:
+
+- `Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor::__construct` `$contentMapper` (2nd argument) removed
+
 ## 2.6.0
 
 ### Admin JS ResourceRouteRegistry getDetailUrl and getListUrl deprecated
