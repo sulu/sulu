@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\AdminBundle\Admin\Navigation;
 
 /**
- * @implements \Iterator<int|null, self>
+ * @implements \Iterator<int, self>
  */
 class NavigationItem implements \Iterator
 {
@@ -62,9 +62,9 @@ class NavigationItem implements \Iterator
     /**
      * The current position of the iterator.
      *
-     * @var int|null
+     * @var int
      */
-    protected $position;
+    protected $position = 0;
 
     /**
      * Describes how the navigation item should be shown in husky.
@@ -223,7 +223,7 @@ class NavigationItem implements \Iterator
     }
 
     /**
-     * @param int|null $position
+     * @param int $position
      *
      * @return void
      */
@@ -233,7 +233,7 @@ class NavigationItem implements \Iterator
     }
 
     /**
-     * @return int|null
+     * @return int
      */
     public function getPosition()
     {
