@@ -30,7 +30,9 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Webmozart\Assert\Assert;
 
 /**
  * Makes categories available through a REST API.
@@ -214,6 +216,9 @@ class CategoryController extends AbstractRestController implements ClassResource
         return $this->handleView($view);
     }
 
+    /**
+     * @return Response
+     */
     protected function saveCategory(Request $request, $id = null, $patch = false)
     {
         $mediasData = $request->get('medias');
@@ -269,8 +274,11 @@ class CategoryController extends AbstractRestController implements ClassResource
         // generate expressions for collected parent-categories
         $parentExpressions = [];
         foreach ($idsToExpand as $idToExpand) {
+            $fieldDescriptor = $listBuilder->getFieldDescriptor('parent');
+            Assert::notNull($fieldDescriptor, 'There is no field descriptor for field "parent"');
+
             $parentExpressions[] = $listBuilder->createWhereExpression(
-                $listBuilder->getFieldDescriptor('parent'),
+                $fieldDescriptor,
                 $idToExpand,
                 ListBuilderInterface::WHERE_COMPARATOR_EQUAL
             );
@@ -342,7 +350,7 @@ class CategoryController extends AbstractRestController implements ClassResource
         );
     }
 
-    private function initializeListBuilder($locale, bool $defaultSort = false)
+    private function initializeListBuilder($locale, bool $defaultSort = false): ListBuilderInterface
     {
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(CategoryInterface::RESOURCE_KEY);
 
