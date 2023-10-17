@@ -273,10 +273,9 @@ class CategoryController extends AbstractRestController implements ClassResource
 
         // generate expressions for collected parent-categories
         $parentExpressions = [];
+        /** @var FieldDescriptorInterface $parentFieldDescriptor */
+        $parentFieldDescriptor = $listBuilder->getFieldDescriptor('parent');
         foreach ($idsToExpand as $idToExpand) {
-            $fieldDescriptor = $listBuilder->getFieldDescriptor('parent');
-            Assert::notNull($fieldDescriptor, 'There is no field descriptor for field "parent"');
-
             $parentExpressions[] = $listBuilder->createWhereExpression(
                 $fieldDescriptor,
                 $idToExpand,
