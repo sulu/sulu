@@ -455,15 +455,9 @@ class NavigationItem implements \Iterator
 
         $children = $this->getChildren();
 
-        \usort(
-            $children,
-            function(NavigationItem $a, NavigationItem $b) {
-                $aPosition = $a->getPosition() ?? \PHP_INT_MAX;
-                $bPosition = $b->getPosition() ?? \PHP_INT_MAX;
-
-                return $aPosition - $bPosition;
-            }
-        );
+        \usort($children, function(NavigationItem $a, NavigationItem $b) {
+            return $a->getPosition() <=> $b->getPosition();
+        });
 
         foreach ($children as $key => $child) {
             /* @var NavigationItem $child */
