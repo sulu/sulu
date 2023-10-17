@@ -121,79 +121,9 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/AdminPool.php
 
 		-
-			message: "#^Class Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem implements generic interface Iterator but does not specify its types\\: TKey, TValue$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:addChild\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setChildViews\\(\\) has parameter \\$childViews with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setDisabled\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setIcon\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setPosition\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setVisible\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:\\$children type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:\\$label \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:\\$view \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationRegistry.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\Badge\\:\\:getRouterAttributesToRequest\\(\\) should return array\\<int\\|string, string\\> but returns array\\<string, mixed\\>\\.$#"
@@ -2373,11 +2303,6 @@ parameters:
 		-
 			message: "#^Cannot call method getName\\(\\) on Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\|null\\.$#"
 			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Navigation/NavigationItemTest.php
-
-		-
-			message: "#^Cannot call method getName\\(\\) on mixed\\.$#"
-			count: 3
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Navigation/NavigationItemTest.php
 
 		-

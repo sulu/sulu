@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\Navigation;
 
+/**
+ * @implements \Iterator<int|null, self>
+ */
 class NavigationItem implements \Iterator
 {
     /**
@@ -28,7 +31,7 @@ class NavigationItem implements \Iterator
     protected $name;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $label;
 
@@ -40,7 +43,7 @@ class NavigationItem implements \Iterator
     protected $icon;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $view;
 
@@ -52,14 +55,14 @@ class NavigationItem implements \Iterator
     /**
      * Contains the children of this item, which are other NavigationItems.
      *
-     * @var array
+     * @var array<self>
      */
     protected $children = [];
 
     /**
      * The current position of the iterator.
      *
-     * @var int
+     * @var int|null
      */
     protected $position;
 
@@ -96,6 +99,8 @@ class NavigationItem implements \Iterator
      * Sets the id of the NavigationItem.
      *
      * @param string $id
+     *
+     * @return void
      */
     public function setId($id)
     {
@@ -116,6 +121,8 @@ class NavigationItem implements \Iterator
      * Sets the name being displayed in the navigation.
      *
      * @param string $name The name being displayed in the navigation
+     *
+     * @return void
      */
     public function setName($name)
     {
@@ -146,6 +153,8 @@ class NavigationItem implements \Iterator
      * Set the icon of the NavigaitonItem.
      *
      * @param string $icon The icon of the NavigationItem
+     *
+     * @return void
      */
     public function setIcon($icon)
     {
@@ -172,6 +181,9 @@ class NavigationItem implements \Iterator
         return $this->view;
     }
 
+    /**
+     * @param string[] $childViews
+     */
     public function setChildViews(array $childViews): void
     {
         $this->childViews = $childViews;
@@ -192,6 +204,8 @@ class NavigationItem implements \Iterator
 
     /**
      * Adds a child to the navigation item.
+     *
+     * @return void
      */
     public function addChild(self $child)
     {
@@ -209,7 +223,9 @@ class NavigationItem implements \Iterator
     }
 
     /**
-     * @param int $position
+     * @param int|null $position
+     *
+     * @return void
      */
     public function setPosition($position)
     {
@@ -217,7 +233,7 @@ class NavigationItem implements \Iterator
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getPosition()
     {
@@ -236,6 +252,8 @@ class NavigationItem implements \Iterator
 
     /**
      * @param bool $disabled
+     *
+     * @return void
      */
     public function setDisabled($disabled)
     {
@@ -252,6 +270,8 @@ class NavigationItem implements \Iterator
 
     /**
      * @param bool $visible
+     *
+     * @return void
      */
     public function setVisible($visible)
     {
