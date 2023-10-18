@@ -27,8 +27,8 @@ parameters:
         # RestController extends FOSRestController which was removed in friendsofsymfony/rest-bundle:3.0
         - %currentWorkingDirectory%/src/Sulu/Component/Rest/RestController.php
     symfony:
-        container_xml_path: %currentWorkingDirectory%/var/cache/admin/dev/App_KernelDevDebugContainer.xml
-        console_application_loader: tests/phpstan/console-application.php
-        constant_hassers: false
+        containerXmlPath: %currentWorkingDirectory%/var/cache/admin/dev/App_KernelDevDebugContainer.xml
+        consoleApplicationLoader: tests/phpstan/console-application.php
+        constantHassers: false
     doctrine:
         objectManagerLoader: tests/phpstan/object-manager.php
