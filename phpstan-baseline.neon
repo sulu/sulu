@@ -54721,11 +54721,6 @@ parameters:
 			path: src/Sulu/Component/SmartContent/ContentType.php
 
 		-
-			message: "#^Cannot access offset 'tags' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
 			message: "#^Cannot cast mixed to int\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/ContentType.php
