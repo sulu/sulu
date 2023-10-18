@@ -4361,11 +4361,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\CategoryController\\:\\:initializeListBuilder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\CategoryController\\:\\:initializeListBuilder\\(\\) has parameter \\$locale with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
@@ -4412,11 +4407,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\CategoryController\\:\\:putAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\CategoryController\\:\\:saveCategory\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
@@ -53186,11 +53176,6 @@ parameters:
 			path: src/Sulu/Component/Rest/RestHelper.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:initializeListBuilder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:processSubEntities\\(\\) has parameter \\$entities with no value type specified in iterable type Traversable\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
@@ -53219,11 +53204,6 @@ parameters:
 			message: "#^Variable \\$entities in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelperInterface\\:\\:initializeListBuilder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelperInterface.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelperInterface\\:\\:processSubEntities\\(\\) has parameter \\$entities with no value type specified in iterable type Traversable\\.$#"
@@ -54737,11 +54717,6 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
-			message: "#^Cannot access offset 'tags' on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/ContentType.php
 

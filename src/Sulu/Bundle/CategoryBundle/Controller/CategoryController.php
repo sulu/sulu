@@ -23,6 +23,7 @@ use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
+use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
@@ -30,6 +31,7 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -214,6 +216,9 @@ class CategoryController extends AbstractRestController implements ClassResource
         return $this->handleView($view);
     }
 
+    /**
+     * @return Response
+     */
     protected function saveCategory(Request $request, $id = null, $patch = false)
     {
         $mediasData = $request->get('medias');
@@ -268,9 +273,11 @@ class CategoryController extends AbstractRestController implements ClassResource
 
         // generate expressions for collected parent-categories
         $parentExpressions = [];
+        /** @var FieldDescriptorInterface $parentFieldDescriptor */
+        $parentFieldDescriptor = $listBuilder->getFieldDescriptor('parent');
         foreach ($idsToExpand as $idToExpand) {
             $parentExpressions[] = $listBuilder->createWhereExpression(
-                $listBuilder->getFieldDescriptor('parent'),
+                $parentFieldDescriptor,
                 $idToExpand,
                 ListBuilderInterface::WHERE_COMPARATOR_EQUAL
             );
@@ -342,7 +349,7 @@ class CategoryController extends AbstractRestController implements ClassResource
         );
     }
 
-    private function initializeListBuilder($locale, bool $defaultSort = false)
+    private function initializeListBuilder($locale, bool $defaultSort = false): ListBuilderInterface
     {
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors(CategoryInterface::RESOURCE_KEY);
 
