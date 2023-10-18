@@ -44,22 +44,29 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
     private $referenceStore;
 
     /**
+     * @var ReferenceStoreInterface
+     */
+    private $snippetAreaReferenceStore;
+
+    /**
      * @var bool
      */
     protected $defaultEnabled;
 
     /**
-     * @param true $defaultEnabled
+     * @param bool $defaultEnabled
      */
     public function __construct(
         DefaultSnippetManagerInterface $defaultSnippetManager,
         SnippetResolverInterface $snippetResolver,
         ReferenceStoreInterface $referenceStore,
+        ReferenceStoreInterface $snippetAreaReferenceStore,
         $defaultEnabled
     ) {
         $this->snippetResolver = $snippetResolver;
         $this->defaultSnippetManager = $defaultSnippetManager;
         $this->referenceStore = $referenceStore;
+        $this->snippetAreaReferenceStore = $snippetAreaReferenceStore;
         $this->defaultEnabled = $defaultEnabled;
     }
 
@@ -172,6 +179,7 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
     {
         try {
             $snippet = $this->defaultSnippetManager->load($webspaceKey, $snippetArea, $locale);
+            $this->snippetAreaReferenceStore->add($snippetArea);
         } catch (WrongSnippetTypeException $exception) {
             return [];
         }

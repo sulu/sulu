@@ -20,6 +20,7 @@ use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
 use Sulu\Bundle\SnippetBundle\Twig\SnippetAreaTwigExtension;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -55,9 +56,15 @@ class SnippetAreaTwigExtensionTest extends TestCase
     private $snippetResolver;
 
     /**
-     * @var ObjectProphecy<ReferenceStoreInterface>
+     * @var ReferenceStoreInterface
      */
     private $snippetAreaReferenceStore;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->snippetAreaReferenceStore = new ReferenceStore();
+    }
 
     public function testLoadByArea(): void
     {
@@ -70,7 +77,6 @@ class SnippetAreaTwigExtensionTest extends TestCase
         $this->requestAnalyzer->getWebspace()->willReturn($this->webspace->reveal());
         $this->requestAnalyzer->getCurrentLocalization()->willReturn($this->localization);
         $this->snippetResolver = $this->prophesize(SnippetResolverInterface::class);
-        $this->snippetAreaReferenceStore = $this->prophesize(ReferenceStoreInterface::class);
 
         $snippet = $this->prophesize(SnippetDocument::class);
         $snippet->getUuid()->willReturn('1234');
@@ -82,13 +88,17 @@ class SnippetAreaTwigExtensionTest extends TestCase
             $this->defaultSnippetManager->reveal(),
             $this->requestAnalyzer->reveal(),
             $this->snippetResolver->reveal(),
-            $this->snippetAreaReferenceStore->reveal()
+            $this->snippetAreaReferenceStore
         );
+
+        self::assertNotContains('test', $this->snippetAreaReferenceStore->getAll());
 
         $this->assertEquals(
             ['title' => 'Test Snippet'],
             $twigExtension->loadByArea('test')
         );
+
+        self::assertContains('test', $this->snippetAreaReferenceStore->getAll());
     }
 
     public function testLoadByAreaWrongType(): void
@@ -116,7 +126,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
             $this->defaultSnippetManager->reveal(),
             $this->requestAnalyzer->reveal(),
             $this->snippetResolver->reveal(),
-            $this->snippetAreaReferenceStore->reveal()
+            $this->snippetAreaReferenceStore
         );
 
         $this->assertEquals(null, $twigExtension->loadByArea('test'));
@@ -141,7 +151,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
             $this->defaultSnippetManager->reveal(),
             $this->requestAnalyzer->reveal(),
             $this->snippetResolver->reveal(),
-            $this->snippetAreaReferenceStore->reveal()
+            $this->snippetAreaReferenceStore
         );
 
         $this->assertEquals(
@@ -172,7 +182,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
             $this->defaultSnippetManager->reveal(),
             $this->requestAnalyzer->reveal(),
             $this->snippetResolver->reveal(),
-            $this->snippetAreaReferenceStore->reveal()
+            $this->snippetAreaReferenceStore
         );
 
         $this->assertEquals(
@@ -203,7 +213,7 @@ class SnippetAreaTwigExtensionTest extends TestCase
             $this->defaultSnippetManager->reveal(),
             $this->requestAnalyzer->reveal(),
             $this->snippetResolver->reveal(),
-            $this->snippetAreaReferenceStore->reveal()
+            $this->snippetAreaReferenceStore
         );
 
         $this->assertEquals(

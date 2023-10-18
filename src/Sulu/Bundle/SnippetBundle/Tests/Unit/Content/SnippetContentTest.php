@@ -17,6 +17,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
@@ -42,6 +43,11 @@ class SnippetContentTest extends TestCase
     private $referenceStore;
 
     /**
+     * @var ReferenceStoreInterface
+     */
+    private $snippetAreaReferenceStore;
+
+    /**
      * @var SnippetContent
      */
     private $contentType;
@@ -51,13 +57,14 @@ class SnippetContentTest extends TestCase
         $this->defaultSnippetManager = $this->prophesize(DefaultSnippetManagerInterface::class);
         $this->snippetResolver = $this->prophesize(SnippetResolverInterface::class);
         $this->referenceStore = $this->prophesize(ReferenceStoreInterface::class);
+        $this->snippetAreaReferenceStore = new ReferenceStore();
 
         $this->contentType = new SnippetContent(
             $this->defaultSnippetManager->reveal(),
             $this->snippetResolver->reveal(),
             $this->referenceStore->reveal(),
+            $this->snippetAreaReferenceStore,
             false,
-            ''
         );
     }
 
