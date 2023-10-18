@@ -132,7 +132,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
      * @param string $languageCode
      * @param string $segmentKey
      *
-     * @return NodeInterface
+     * @return NodeInterface|null
      */
     private function iterateRouteNodes(
         NodeInterface $node,
@@ -276,10 +276,15 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
                 /** @var NodeInterface $realPath */
                 $realPath = $route->getPropertyValue('sulu:content');
 
-                throw new ResourceLocatorMovedException(
-                    $this->getResourceLocator($realPath->getPath(), $webspaceKey, $languageCode, $segmentKey),
-                    $realPath->getIdentifier()
-                );
+                $locator = $this->getResourceLocator($realPath->getPath(), $webspaceKey, $languageCode, $segmentKey);
+                if (false === $locator) {
+                    throw new ResourceLocatorNotFoundException(\sprintf(
+                        'Couldn\'t generate resource locator for path: %s',
+                        $realPath->getPath()
+                    ));
+                }
+
+                throw new ResourceLocatorMovedException($locator, $realPath->getIdentifier());
             }
         } else {
             throw new ResourceLocatorNotFoundException(\sprintf(
@@ -406,7 +411,7 @@ class PhpcrMapper implements ResourceLocatorMapperInterface
      * @param string $languageCode
      * @param string $segmentKey
      *
-     * @return string
+     * @return string|false
      */
     private function getResourceLocator($path, $webspaceKey, $languageCode, $segmentKey)
     {

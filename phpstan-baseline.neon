@@ -21,11 +21,6 @@ parameters:
 			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Doctrine/Repository/ActivityRepository.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Symfony/DependencyInjection/SuluActivityExtension.php
-
-		-
 			message: "#^Parameter \\#2 \\$value of method Symfony\\\\Component\\\\DependencyInjection\\\\Container\\:\\:setParameter\\(\\) expects array\\|bool\\|float\\|int\\|string\\|UnitEnum\\|null, mixed given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/ActivityBundle/Infrastructure/Symfony/DependencyInjection/SuluActivityExtension.php
@@ -2431,11 +2426,6 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/DependencyInjection/Configuration.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/DependencyInjection/SuluAudienceTargetingExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\DependencyInjection\\\\SuluAudienceTargetingExtension\\:\\:load\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/DependencyInjection/SuluAudienceTargetingExtension.php
@@ -4511,16 +4501,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/DeprecationCompilerPass.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/SuluCategoryExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\DependencyInjection\\\\SuluCategoryExtension\\:\\:load\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/DependencyInjection/SuluCategoryExtension.php
@@ -4892,7 +4872,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'id' on mixed\\.$#"
-			count: 14
+			count: 12
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Functional/Controller/KeywordControllerTest.php
 
 		-
@@ -6952,7 +6932,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'addition' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
@@ -6962,82 +6942,82 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'billingAddress' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Cannot access offset 'city' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Cannot access offset 'countryCode' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Cannot access offset 'deliveryAddress' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Cannot access offset 'latitude' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Cannot access offset 'longitude' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Cannot access offset 'note' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Cannot access offset 'number' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Cannot access offset 'postboxCity' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Cannot access offset 'postboxNumber' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Cannot access offset 'postboxPostcode' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Cannot access offset 'primaryAddress' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Cannot access offset 'state' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Cannot access offset 'street' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Cannot access offset 'title' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
 			message: "#^Cannot access offset 'zip' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AbstractContactManager.php
 
 		-
@@ -9084,11 +9064,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\DependencyInjection\\\\Configuration\\:\\:addObjectsSection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/Configuration.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/DependencyInjection/SuluContactExtension.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\DependencyInjection\\\\SuluContactExtension\\:\\:load\\(\\) has no return type specified\\.$#"
@@ -11171,11 +11146,6 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/DataFixtures/ReplacerXmlLoader.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/Compiler/RemoveForeignContextServicesPass.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\DependencyInjection\\\\Configuration\\:\\:getCacheConfiguration\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/Configuration.php
@@ -11507,7 +11477,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'prefix' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
 
 		-
@@ -12341,11 +12311,6 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
 
 		-
-			message: "#^Left side of && is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/SuluDocumentManagerExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\SuluDocumentManagerExtension\\:\\:configureDocumentManager\\(\\) has parameter \\$config with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/SuluDocumentManagerExtension.php
@@ -12356,17 +12321,7 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/SuluDocumentManagerExtension.php
 
 		-
-			message: "#^Negated boolean expression is always true\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/SuluDocumentManagerExtension.php
-
-		-
 			message: "#^Parameter \\#2 \\$configs of method Symfony\\\\Component\\\\DependencyInjection\\\\Extension\\\\Extension\\:\\:processConfiguration\\(\\) expects array, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/SuluDocumentManagerExtension.php
-
-		-
-			message: "#^Ternary operator condition is always false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/SuluDocumentManagerExtension.php
 
@@ -13126,11 +13081,6 @@ parameters:
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/CacheLifetime/CacheLifetimeRequestStoreTest.php
 
 		-
-			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertTrue\\(\\) with false will always evaluate to false\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/DependencyInjection/SuluHttpCacheExtensionTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventListener\\\\InvalidationSubscriberTest\\:\\:provideRequest\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
@@ -13322,12 +13272,12 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'address' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/LocationBundle/Geolocator/Service/NominatimGeolocator.php
 
 		-
 			message: "#^Cannot access offset 'city'\\|'country_code'\\|'house_number'\\|'postcode'\\|'road' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/LocationBundle/Geolocator/Service/NominatimGeolocator.php
 
 		-
@@ -13504,11 +13454,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\DependencyInjection\\\\SuluMarkupExtension\\:\\:load\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/DependencyInjection/SuluMarkupExtension.php
-
-		-
-			message: "#^Cannot access offset string\\|null on Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\MarkupParserInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Listener/MarkupListener.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\Listener\\\\MarkupListener\\:\\:replaceMarkup\\(\\) has no return type specified\\.$#"
@@ -13689,11 +13634,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\Tag\\\\TagInterface\\:\\:validateAll\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Tag/TagInterface.php
-
-		-
-			message: "#^Cannot access offset string on Sulu\\\\Bundle\\\\MarkupBundle\\\\Tag\\\\TagInterface\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/MarkupBundle/Tag/TagRegistry.php
 
 		-
 			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, Sulu\\\\Bundle\\\\MarkupBundle\\\\Tag\\\\TagInterface given\\.$#"
@@ -15202,12 +15142,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'key' on mixed\\.$#"
-			count: 4
-			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/AbstractImageFormatCompilerPass.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
+			count: 2
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/AbstractImageFormatCompilerPass.php
 
 		-
@@ -15244,11 +15179,6 @@ parameters:
 			message: "#^Parameter \\#1 \\.\\.\\.\\$arrays of function array_merge expects array, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/S3ClientCompilerPass.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/DependencyInjection/SuluMediaExtension.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\DependencyInjection\\\\SuluMediaExtension\\:\\:checkCommandAvailability\\(\\) has no return type specified\\.$#"
@@ -17612,7 +17542,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'categories' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
@@ -19122,12 +19052,12 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 0 on Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media\\.$#"
-			count: 4
+			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/MediaTwigExtensionTest.php
 
 		-
 			message: "#^Cannot access offset 1 on Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media\\.$#"
-			count: 4
+			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/MediaTwigExtensionTest.php
 
 		-
@@ -21026,11 +20956,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/DependencyInjection/Compiler/WebspacesPass.php
 
 		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/DependencyInjection/SuluPageExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\DependencyInjection\\\\SuluPageExtension\\:\\:appendDefaultAuthor\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/DependencyInjection/SuluPageExtension.php
@@ -21052,11 +20977,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\DependencyInjection\\\\SuluPageExtension\\:\\:processSearch\\(\\) has parameter \\$config with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/DependencyInjection/SuluPageExtension.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/DependencyInjection/SuluPageExtension.php
 
@@ -23496,11 +23416,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/ValidatePagesCommandTest.php
 
 		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/ValidateWebspacesCommandTest.php
-
-		-
 			message: "#^PHPDoc tag @var for variable \\$controllerNameParser contains unknown class Symfony\\\\Bundle\\\\FrameworkBundle\\\\Controller\\\\ControllerNameParser\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Command/ValidateWebspacesCommandTest.php
@@ -23862,7 +23777,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'availableLocales' on mixed\\.$#"
-			count: 7
+			count: 5
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -23877,7 +23792,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'contentLocales' on mixed\\.$#"
-			count: 17
+			count: 11
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -26592,7 +26507,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'redirectTargetUuid' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
 
 		-
@@ -26796,11 +26711,6 @@ parameters:
 			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/Bundle/UsingPersistenceBundleTrait.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/DependencyInjection/UsingPersistenceExtensionTrait.php
-
-		-
 			message: "#^Parameter \\#1 \\$objects of method Sulu\\\\Bundle\\\\PersistenceBundle\\\\Tests\\\\Unit\\\\Fixture\\\\DependencyInjection\\\\UsingPersistenceExtensionTrait\\:\\:configurePersistence\\(\\) expects array\\<string, array\\{model\\: class\\-string, repository\\?\\: class\\-string\\}\\>, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/Fixture/DependencyInjection/UsingPersistenceExtensionTrait.php
@@ -26824,11 +26734,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Domain\\\\Model\\\\PreviewLink\\:\\:__construct\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Domain/Model/PreviewLink.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Infrastructure/Symfony/DependencyInjection/SuluPreviewExtension.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Events\\\\PreRenderEvent\\:\\:getAttribute\\(\\) has no return type specified\\.$#"
@@ -26927,7 +26832,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'html' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
 
 		-
@@ -27561,16 +27466,6 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/DependencyInjection/RouteGeneratorCompilerPass.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/DependencyInjection/RouteGeneratorCompilerPass.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/DependencyInjection/SuluRouteExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\DependencyInjection\\\\SuluRouteExtension\\:\\:load\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/DependencyInjection/SuluRouteExtension.php
@@ -27767,7 +27662,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'locale' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Generator/SymfonyExpressionTokenProvider.php
 
 		-
@@ -28667,7 +28562,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'id' on mixed\\.$#"
-			count: 3
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
 
 		-
@@ -29284,26 +29179,6 @@ parameters:
 			message: "#^PHPDoc tag @var has invalid value \\(\\$element \\\\DOMNode\\)\\: Unexpected token \"\\$element\", expected type at offset 9$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/Compiler/TwoFactorCompilerPass.php
-
-		-
-			message: "#^Left side of && is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/Compiler/TwoFactorCompilerPass.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between 0 and int\\<1, 2\\> will always evaluate to false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/Compiler/TwoFactorCompilerPass.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DependencyInjection/SuluSecurityExtension.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\AccessControl\\:\\:getEntityClass\\(\\) has no return type specified\\.$#"
@@ -32927,7 +32802,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'id' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/TagBundle/Controller/TagController.php
 
 		-
@@ -32989,11 +32864,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\TagBundle\\\\Controller\\\\TagController\\:\\:\\$unsortable type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Controller/TagController.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/DependencyInjection/SuluTagExtension.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\TagBundle\\\\DependencyInjection\\\\SuluTagExtension\\:\\:load\\(\\) has no return type specified\\.$#"
@@ -33701,11 +33571,6 @@ parameters:
 			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Infrastructure/Symfony/DependencyInjection/SuluTrashExtension.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Tests\\\\Application\\\\Entity\\\\TestResource\\:\\:\\$property1 is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/Tests/Application/Entity/TestResource.php
@@ -34161,11 +34026,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Controller/WebsiteController.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Controller/WebsiteController.php
-
-		-
 			message: "#^Parameter \\#1 \\$format of method Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:getMimeType\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Controller/WebsiteController.php
@@ -34207,7 +34067,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'structure' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
 
 		-
@@ -34219,11 +34079,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\DataCollector\\\\SuluCollector\\:\\:data\\(\\) has parameter \\$key with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/DataCollector/SuluCollector.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/DependencyInjection/SuluWebsiteExtension.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\DependencyInjection\\\\SuluWebsiteExtension\\:\\:load\\(\\) has no return type specified\\.$#"
@@ -34847,12 +34702,12 @@ parameters:
 
 		-
 			message: "#^Cannot access offset '_locale' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Resolver/TemplateAttributeResolver.php
 
 		-
 			message: "#^Cannot access offset 'prefix' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Resolver/TemplateAttributeResolver.php
 
 		-
@@ -40822,7 +40677,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset mixed on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
 		-
@@ -44776,18 +44631,8 @@ parameters:
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\Mapper\\\\PhpcrMapper\\:\\:getResourceLocator\\(\\) should return string but returns false\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\Mapper\\\\PhpcrMapper\\:\\:isUnique\\(\\) has parameter \\$uuid with no type specified\\.$#"
 			count: 1
-			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\Mapper\\\\PhpcrMapper\\:\\:iterateRouteNodes\\(\\) should return PHPCR\\\\NodeInterface but returns null\\.$#"
-			count: 2
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
 
 		-
@@ -44797,11 +44642,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\Mapper\\\\PhpcrMapper\\:\\:save\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
 
@@ -44833,11 +44673,6 @@ parameters:
 		-
 			message: "#^Parameter \\#4 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\Types\\\\ResourceLocator\\\\Mapper\\\\PhpcrMapper\\:\\:getResourceLocator\\(\\) expects string, string\\|null given\\.$#"
 			count: 2
-			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Mapper/PhpcrMapper.php
 
 		-
@@ -53087,7 +52922,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'tags' on mixed\\.$#"
-			count: 3
+			count: 1
 			path: src/Sulu/Component/SmartContent/ContentType.php
 
 		-
@@ -55212,12 +55047,12 @@ parameters:
 
 		-
 			message: "#^Cannot access offset string on mixed\\.$#"
-			count: 6
+			count: 4
 			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
 
 		-
 			message: "#^Cannot access offset string\\|null on mixed\\.$#"
-			count: 3
+			count: 2
 			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
 
 		-
