@@ -27,10 +27,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MediaAdmin extends Admin
 {
-    /** @var string */
     public const SECURITY_CONTEXT = 'sulu.media.collections';
 
-    /** @var string */
     public const SECURITY_CONTEXT_GROUP = 'Media';
 
     public const MEDIA_OVERVIEW_VIEW = 'sulu_media.overview';
@@ -185,8 +183,8 @@ class MediaAdmin extends Admin
     {
         $securityContexts = [
             self::SULU_ADMIN_SECURITY_SYSTEM => [
-                static::SECURITY_CONTEXT_GROUP => [
-                    static::SECURITY_CONTEXT => [
+                self::SECURITY_CONTEXT_GROUP => [
+                    self::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,
@@ -212,8 +210,8 @@ class MediaAdmin extends Admin
             }
 
             $securityContexts[$webspaceSystem] = [
-                static::SECURITY_CONTEXT_GROUP => [
-                    static::SECURITY_CONTEXT => [
+                self::SECURITY_CONTEXT_GROUP => [
+                    self::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                     ],
                 ],

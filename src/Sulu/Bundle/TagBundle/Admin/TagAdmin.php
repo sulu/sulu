@@ -23,7 +23,6 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class TagAdmin extends Admin
 {
-    /** @var string */
     public const SECURITY_CONTEXT = 'sulu.settings.tags';
 
     public const LIST_VIEW = 'sulu_tag.list';
@@ -130,7 +129,7 @@ class TagAdmin extends Admin
         return [
             self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Settings' => [
-                    static::SECURITY_CONTEXT => [
+                    self::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,

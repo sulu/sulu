@@ -24,7 +24,6 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class CategoryAdmin extends Admin
 {
-    /** @var string */
     public const SECURITY_CONTEXT = 'sulu.settings.categories';
 
     public const LIST_VIEW = 'sulu_category.list';
@@ -169,7 +168,7 @@ class CategoryAdmin extends Admin
         return [
             self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Settings' => [
-                    static::SECURITY_CONTEXT => [
+                    self::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,

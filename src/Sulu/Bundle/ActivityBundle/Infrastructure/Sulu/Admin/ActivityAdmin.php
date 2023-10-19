@@ -22,7 +22,6 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class ActivityAdmin extends Admin
 {
-    /** @var string */
     public const SECURITY_CONTEXT = 'sulu.activities.activities';
 
     public const LIST_VIEW = 'sulu_activity.activities.list';
@@ -80,7 +79,7 @@ class ActivityAdmin extends Admin
         return [
             self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Activities' => [
-                    static::SECURITY_CONTEXT => [
+                    self::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                     ],
                 ],

@@ -28,10 +28,8 @@ use Symfony\Component\Intl\Countries;
 
 class ContactAdmin extends Admin
 {
-    /** @var string */
     public const CONTACT_SECURITY_CONTEXT = 'sulu.contact.people';
 
-    /** @var string */
     public const ACCOUNT_SECURITY_CONTEXT = 'sulu.contact.organizations';
 
     public const CONTACT_LIST_VIEW = 'sulu_contact.contacts_list';
@@ -304,13 +302,13 @@ class ContactAdmin extends Admin
         return [
             self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Contacts' => [
-                    static::CONTACT_SECURITY_CONTEXT => [
+                    self::CONTACT_SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,
                         PermissionTypes::DELETE,
                     ],
-                    static::ACCOUNT_SECURITY_CONTEXT => [
+                    self::ACCOUNT_SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,

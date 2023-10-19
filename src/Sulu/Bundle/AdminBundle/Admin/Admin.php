@@ -21,10 +21,8 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewProviderInterface;
  */
 abstract class Admin implements ViewProviderInterface, NavigationProviderInterface
 {
-    /** @var string */
     public const SULU_ADMIN_SECURITY_SYSTEM = 'Sulu';
 
-    /** @var string */
     public const SETTINGS_NAVIGATION_ITEM = 'sulu_admin.settings';
 
     public static function getPriority(): int
