@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\PageBundle\Command;
 
-use Jackalope\Query\QueryManager;
 use PHPCR\SessionInterface;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Exception\ResourceLocatorAlreadyExistsException;
@@ -27,13 +26,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ContentLocaleCopyCommand extends Command
 {
     /**
-     * The namespace for languages.
-     *
-     * @var string
-     */
-    private $languageNamespace;
-
-    /**
      * @var ContentMapperInterface
      */
     private $contentMapper;
@@ -44,20 +36,14 @@ class ContentLocaleCopyCommand extends Command
     private $session;
 
     /**
-     * @var QueryManager
-     */
-    private $queryManager;
-
-    /**
      * @var OutputInterface
      */
     private $output;
 
-    public function __construct(ContentMapperInterface $contentMapper, SessionInterface $session, string $languageNamespace)
+    public function __construct(ContentMapperInterface $contentMapper, SessionInterface $session)
     {
         parent::__construct();
 
-        $this->languageNamespace = $languageNamespace;
         $this->contentMapper = $contentMapper;
         $this->session = $session;
     }
@@ -92,8 +78,6 @@ EOT
         $destLocale = $input->getArgument('destLocale');
         $overwrite = $input->getOption('overwrite');
         $dryRun = $input->getOption('dry-run');
-
-        $this->queryManager = $this->session->getWorkspace()->getQueryManager();
 
         $this->output = $output;
 

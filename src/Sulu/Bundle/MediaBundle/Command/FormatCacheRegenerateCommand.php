@@ -17,18 +17,12 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 #[AsCommand(name: 'sulu:media:regenerate-formats', description: 'Loops over sulu image cache, and regenerates the existing images')]
 class FormatCacheRegenerateCommand extends Command
 {
-    /**
-     * @var Filesystem
-     */
-    private $fileSystem;
-
     /**
      * @var FormatManagerInterface
      */
@@ -40,13 +34,11 @@ class FormatCacheRegenerateCommand extends Command
     private $localFormatCachePath;
 
     public function __construct(
-        Filesystem $filesystem,
         FormatManagerInterface $formatManager,
         string $localFormatCachePath
     ) {
         parent::__construct();
 
-        $this->fileSystem = $filesystem;
         $this->formatManager = $formatManager;
         $this->localFormatCachePath = $localFormatCachePath;
     }

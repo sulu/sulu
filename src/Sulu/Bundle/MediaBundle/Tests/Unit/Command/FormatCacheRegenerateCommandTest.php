@@ -18,7 +18,6 @@ use Sulu\Bundle\MediaBundle\Command\FormatCacheRegenerateCommand;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\Filesystem\Filesystem;
 
 class FormatCacheRegenerateCommandTest extends TestCase
 {
@@ -50,11 +49,8 @@ class FormatCacheRegenerateCommandTest extends TestCase
 
     private function executeCommand(string $localFormatCachePath): void
     {
-        $fileSystem = new Filesystem();
-
         $application = new Application();
         $command = new FormatCacheRegenerateCommand(
-            $fileSystem,
             $this->formatManager->reveal(),
             $localFormatCachePath
         );

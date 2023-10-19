@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
@@ -24,7 +23,6 @@ use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
 use Sulu\Bundle\MediaBundle\Media\ListBuilderFactory\MediaListBuilderFactory;
 use Sulu\Bundle\MediaBundle\Media\ListRepresentationFactory\MediaListRepresentationFactory;
 use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
-use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\MissingParameterException;
@@ -78,16 +76,6 @@ class MediaController extends AbstractMediaController implements
     private $doctrineListBuilderFactory;
 
     /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var StorageInterface
-     */
-    private $storage;
-
-    /**
      * @var CollectionRepositoryInterface
      */
     private $collectionRepository;
@@ -129,8 +117,6 @@ class MediaController extends AbstractMediaController implements
         FormatManagerInterface $formatManager,
         RestHelperInterface $restHelper,
         DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
-        EntityManagerInterface $entityManager,
-        StorageInterface $storage,
         CollectionRepositoryInterface $collectionRepository,
         SecurityCheckerInterface $securityChecker,
         FieldDescriptorFactoryInterface $fieldDescriptorFactory,
@@ -145,8 +131,6 @@ class MediaController extends AbstractMediaController implements
         $this->formatManager = $formatManager;
         $this->restHelper = $restHelper;
         $this->doctrineListBuilderFactory = $doctrineListBuilderFactory;
-        $this->entityManager = $entityManager;
-        $this->storage = $storage;
         $this->collectionRepository = $collectionRepository;
         $this->securityChecker = $securityChecker;
         $this->fieldDescriptorFactory = $fieldDescriptorFactory;

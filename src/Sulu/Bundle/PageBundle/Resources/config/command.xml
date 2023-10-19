@@ -26,7 +26,6 @@
                  class="Sulu\Bundle\PageBundle\Command\ContentLocaleCopyCommand">
             <argument type="service" id="sulu.content.mapper"/>
             <argument type="service" id="doctrine_phpcr.session"/>
-            <argument>%sulu.content.language.namespace%</argument>
 
             <tag name="console.command"/>
         </service>

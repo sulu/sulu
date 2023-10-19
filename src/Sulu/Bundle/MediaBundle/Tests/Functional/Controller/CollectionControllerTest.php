@@ -20,7 +20,6 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionType;
 use Sulu\Bundle\MediaBundle\Entity\Media;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
-use Sulu\Bundle\SecurityBundle\Entity\RoleRepository;
 use Sulu\Bundle\SecurityBundle\Entity\UserRole;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
@@ -72,11 +71,6 @@ class CollectionControllerTest extends SuluTestCase
     private $client;
 
     /**
-     * @var RoleRepository
-     */
-    private $roleRepository;
-
-    /**
      * @var AccessControlManager
      */
     private $accessControlManager;
@@ -91,7 +85,6 @@ class CollectionControllerTest extends SuluTestCase
 
         $this->systemCollectionCache = $this->getContainer()->get('sulu_media_test.system_collections.cache');
         $this->systemCollectionConfig = $this->getContainer()->getParameter('sulu_media.system_collections');
-        $this->roleRepository = $this->getContainer()->get('sulu.repository.role');
         $this->accessControlManager = $this->getContainer()->get('sulu_security.access_control_manager');
 
         // to be sure that the system collections will rebuild after purge database

@@ -18,7 +18,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
-use Sulu\Bundle\CategoryBundle\Category\CategoryManagerInterface;
 use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaCreatedEvent;
 use Sulu\Bundle\MediaBundle\Domain\Event\MediaModifiedEvent;
@@ -140,11 +139,6 @@ class MediaManagerTest extends TestCase
      */
     private $mediaPropertiesProvider;
 
-    /**
-     * @var ObjectProphecy<CategoryManagerInterface>
-     */
-    private $categoryManager;
-
     public function setUp(): void
     {
         parent::setUp();
@@ -159,7 +153,6 @@ class MediaManagerTest extends TestCase
         $this->validator = $this->prophesize(FileValidatorInterface::class);
         $this->formatManager = $this->prophesize(FormatManagerInterface::class);
         $this->tagManager = $this->prophesize(TagManagerInterface::class);
-        $this->categoryManager = $this->prophesize(CategoryManagerInterface::class);
         $this->typeManager = $this->prophesize(TypeManagerInterface::class);
         $this->pathCleaner = $this->prophesize(PathCleanupInterface::class);
         $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);

@@ -21,7 +21,6 @@ use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\DocumentManager\NodeManager;
 
 class SearchIntegrationTest extends SuluTestCase
 {
@@ -31,11 +30,6 @@ class SearchIntegrationTest extends SuluTestCase
      * @var DocumentManagerInterface
      */
     private $documentManager;
-
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
 
     /**
      * @var HomeDocument
@@ -51,7 +45,6 @@ class SearchIntegrationTest extends SuluTestCase
     {
         $this->initPhpcr();
         $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
-        $this->nodeManager = $this->getContainer()->get('sulu_document_manager_test.node_manager');
         $this->webspaceDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $mediaEntity = new Media();

@@ -13,6 +13,11 @@ Removing deprecated functions and properties:
 Removing unused arguments:
 
 - `Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor::__construct` `$contentMapper` (2nd argument) removed
+- `Sulu\Bundle\ActivityBundle\UserInterface\Controller\ActivityController::__construct` `$securityChecker` (4th argument) removed
+- `Sulu\Bundle\MediaBundle\Command\FormatCacheRegenerateCommand::__construct` `$fileSystem (1st argument) removed
+- `Sulu\Bundle\MediaBundle\Controller\MediaController::__construct` `$entityManager` (7th element) removed
+- `Sulu\Bundle\MediaBundle\Controller\MediaController::__construct` `$entityManager` (8th element) removed
+- `Sulu\Bundle\PageBundle\Command\ContentLocaleCopyCommand::__construct` `$languageNamespace` (3rd element) removed
 
 ## 2.6.0
 

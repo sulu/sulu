@@ -42,11 +42,6 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     private $tags = [];
 
     /**
-     * @var Media[]
-     */
-    private $medias = [];
-
-    /**
      * @var array
      */
     private $tagData = [
@@ -590,7 +585,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         }
 
         foreach ($this->mediaData as $media) {
-            $this->medias[] = $this->createMedia(
+            $this->createMedia(
                 $media[0],
                 $this->collections[$media[1]],
                 $media[2],

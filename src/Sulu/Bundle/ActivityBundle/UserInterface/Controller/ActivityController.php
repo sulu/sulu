@@ -29,7 +29,6 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Rest\RestHelperInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
-use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,11 +53,6 @@ class ActivityController extends AbstractRestController implements ClassResource
      * @var RestHelperInterface
      */
     private $restHelper;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
 
     /**
      * @var TranslatorInterface
@@ -92,7 +86,6 @@ class ActivityController extends AbstractRestController implements ClassResource
         FieldDescriptorFactoryInterface $fieldDescriptorFactory,
         DoctrineListBuilderFactoryInterface $listBuilderFactory,
         RestHelperInterface $restHelper,
-        SecurityCheckerInterface $securityChecker,
         TranslatorInterface $translator,
         string $activityClass,
         string $contactClass,
@@ -106,7 +99,6 @@ class ActivityController extends AbstractRestController implements ClassResource
         $this->fieldDescriptorFactory = $fieldDescriptorFactory;
         $this->listBuilderFactory = $listBuilderFactory;
         $this->restHelper = $restHelper;
-        $this->securityChecker = $securityChecker;
         $this->translator = $translator;
         $this->activityClass = $activityClass;
         $this->contactClass = $contactClass;
