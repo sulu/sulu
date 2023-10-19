@@ -29,13 +29,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SecurityAdmin extends Admin
 {
+    /** @var string */
     public const ROLE_SECURITY_CONTEXT = 'sulu.security.roles';
 
     /**
      * @deprecated The group functionality was deprecated in Sulu 2.1 and will be removed in Sulu 3.0
+     *
+     * @var string
      */
     public const GROUP_SECURITY_CONTEXT = 'sulu.security.groups';
 
+    /** @var string */
     public const USER_SECURITY_CONTEXT = 'sulu.security.users';
 
     public const LIST_VIEW = 'sulu_security.roles_list';

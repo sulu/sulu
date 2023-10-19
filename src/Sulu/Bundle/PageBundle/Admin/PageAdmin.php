@@ -38,6 +38,7 @@ class PageAdmin extends Admin
      */
     public const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
 
+    /** @var string */
     public const SECURITY_CONTEXT_GROUP = 'Webspaces';
 
     public const WEBSPACE_TABS_VIEW = 'sulu_page.webspaces';
@@ -409,6 +410,7 @@ class PageAdmin extends Admin
 
     public function getSecurityContexts()
     {
+        /** @var array<string, array<string, array<string, array<string>>>> */
         $webspaceSecuritySystemContexts = [];
 
         /** @var Webspace $webspace */
@@ -432,6 +434,7 @@ class PageAdmin extends Admin
             ];
         }
 
+        /** @var array<string, array<string>> $webspaceContexts */
         $webspaceContexts = [];
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             /* @var Webspace $webspace */

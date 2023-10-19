@@ -27,8 +27,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class MediaAdmin extends Admin
 {
+    /** @var string */
     public const SECURITY_CONTEXT = 'sulu.media.collections';
 
+    /** @var string */
     public const SECURITY_CONTEXT_GROUP = 'Media';
 
     public const MEDIA_OVERVIEW_VIEW = 'sulu_media.overview';

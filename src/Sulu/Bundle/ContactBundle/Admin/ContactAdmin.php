@@ -28,8 +28,10 @@ use Symfony\Component\Intl\Countries;
 
 class ContactAdmin extends Admin
 {
+    /** @var string */
     public const CONTACT_SECURITY_CONTEXT = 'sulu.contact.people';
 
+    /** @var string */
     public const ACCOUNT_SECURITY_CONTEXT = 'sulu.contact.organizations';
 
     public const CONTACT_LIST_VIEW = 'sulu_contact.contacts_list';

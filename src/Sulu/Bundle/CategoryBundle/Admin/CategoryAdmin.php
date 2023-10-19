@@ -24,6 +24,7 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class CategoryAdmin extends Admin
 {
+    /** @var string */
     public const SECURITY_CONTEXT = 'sulu.settings.categories';
 
     public const LIST_VIEW = 'sulu_category.list';

@@ -19,9 +19,12 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewProviderInterface;
 /**
  * Defines all the required information from a bundle's admin class.
  */
-abstract class Admin implements ViewProviderInterface, NavigationProviderInterface
+abstract class Admin implements ViewProviderInterface, NavigationProviderInterface, SecurityContextAwareInterface
 {
+    /** @var string */
     public const SULU_ADMIN_SECURITY_SYSTEM = 'Sulu';
+
+    /** @var string */
     public const SETTINGS_NAVIGATION_ITEM = 'sulu_admin.settings';
 
     public static function getPriority(): int
@@ -37,21 +40,11 @@ abstract class Admin implements ViewProviderInterface, NavigationProviderInterfa
     {
     }
 
-    /**
-     * Returns all the security contexts, which are available in the concrete bundle.
-     *
-     * @return mixed[]
-     */
     public function getSecurityContexts()
     {
         return [];
     }
 
-    /**
-     * Returns all the security contexts, which are available in the concrete bundle.
-     *
-     * @return array
-     */
     public function getSecurityContextsWithPlaceholder()
     {
         return $this->getSecurityContexts();

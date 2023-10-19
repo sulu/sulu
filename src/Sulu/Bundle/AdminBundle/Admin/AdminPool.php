@@ -14,7 +14,7 @@ namespace Sulu\Bundle\AdminBundle\Admin;
 /**
  * The AdminPool is a container for all the registered admin-objects.
  */
-class AdminPool
+class AdminPool implements SecurityContextAwareInterface
 {
     /**
      * The array for all the admin-objects.
@@ -43,11 +43,6 @@ class AdminPool
         return $this->pool;
     }
 
-    /**
-     * Returns the combined security contexts from all Admin objects.
-     *
-     * @return array
-     */
     public function getSecurityContexts()
     {
         $contexts = [];
