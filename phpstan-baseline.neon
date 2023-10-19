@@ -5241,116 +5241,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Search/Converter/CategoryConverterTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:appendProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:clearProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:createCategoryApi\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:createCategoryApi\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:createCategoryEntity\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:getProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:setProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testAppendUrl\\(\\) has parameter \\$expected with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testAppendUrl\\(\\) has parameter \\$parameter with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testAppendUrl\\(\\) has parameter \\$string with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testAppendUrl\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testClearUrl\\(\\) has parameter \\$parameter with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testClearUrl\\(\\) has parameter \\$string with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testClearUrl\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testGet\\(\\) has parameter \\$categoryData with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testGet\\(\\) has parameter \\$depth with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testGet\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testGet\\(\\) has parameter \\$parent with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testSetUrl\\(\\) has parameter \\$expected with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testSetUrl\\(\\) has parameter \\$parameter with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testSetUrl\\(\\) has parameter \\$string with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testSetUrl\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
 			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:\\$query \\(Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<string\\>\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
 			count: 3
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
@@ -19621,21 +19511,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/DispositionTypeTwigExtensionTest.php
 
 		-
-			message: "#^Cannot access offset 0 on Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/MediaTwigExtensionTest.php
-
-		-
-			message: "#^Cannot access offset 1 on Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/MediaTwigExtensionTest.php
-
-		-
-			message: "#^Cannot access offset 2 on Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/MediaTwigExtensionTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Twig\\\\MediaTwigExtensionTest\\:\\:testResolveNotExistMedia\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/MediaTwigExtensionTest.php
@@ -19658,11 +19533,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$medias of method Sulu\\\\Bundle\\\\MediaBundle\\\\Twig\\\\MediaTwigExtension\\:\\:resolveMediasFunction\\(\\) expects array\\<int\\|Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaInterface\\>, array\\<int, int\\|Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media\\|Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media\\> given\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/MediaTwigExtensionTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media given\\.$#"
-			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/MediaTwigExtensionTest.php
 
 		-
@@ -19997,16 +19867,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Twig\\\\MediaTwigExtension\\:\\:resolveMediaObject\\(\\) has parameter \\$media with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Twig/MediaTwigExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Twig\\\\MediaTwigExtension\\:\\:resolveMediasFunction\\(\\) should return Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media but returns array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Twig/MediaTwigExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Twig\\\\MediaTwigExtension\\:\\:resolveMediasFunction\\(\\) should return Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media but returns array\\<int, mixed\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Twig/MediaTwigExtension.php
 

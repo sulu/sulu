@@ -74,7 +74,7 @@ class CategoryTwigExtension extends AbstractExtension
      * If parentKey is set, only the children of the category which is assigned to the given key are returned.
      *
      * @param string $locale
-     * @param string $parentKey key of parent category
+     * @param ?string $parentKey key of parent category
      *
      * @return array
      */
