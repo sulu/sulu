@@ -92,10 +92,7 @@ class WebsiteRequestProcessor implements RequestProcessorInterface
                 . (!\in_array($attributes->getAttribute('port'), ['80', '443'], true) ? ':' . $attributes->getAttribute('port') : '')
                     . $attributes->getAttribute('path');
 
-            throw new UrlMatchNotFoundException(
-                $fullUrl,
-                $portalUrls
-            );
+            throw new UrlMatchNotFoundException($fullUrl, $portalUrls);
         }
 
         return true;
