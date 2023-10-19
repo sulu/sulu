@@ -19,7 +19,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewProviderInterface;
 /**
  * Defines all the required information from a bundle's admin class.
  */
-abstract class Admin implements ViewProviderInterface, NavigationProviderInterface, SecurityContextAwareInterface
+abstract class Admin implements ViewProviderInterface, NavigationProviderInterface
 {
     /** @var string */
     public const SULU_ADMIN_SECURITY_SYSTEM = 'Sulu';
@@ -40,11 +40,21 @@ abstract class Admin implements ViewProviderInterface, NavigationProviderInterfa
     {
     }
 
+    /**
+     * Returns all the security contexts, which are available in the concrete bundle.
+     *
+     * @return array<string, array<string, array<string, string[]>>>
+     */
     public function getSecurityContexts()
     {
         return [];
     }
 
+    /**
+     * Returns all the security contexts, which are available in the concrete bundle.
+     *
+     * @return array<string, array<string, array<string, string[]>>>
+     */
     public function getSecurityContextsWithPlaceholder()
     {
         return $this->getSecurityContexts();

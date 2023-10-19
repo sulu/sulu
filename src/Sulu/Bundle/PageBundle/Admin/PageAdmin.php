@@ -410,7 +410,6 @@ class PageAdmin extends Admin
 
     public function getSecurityContexts()
     {
-        /** @var array<string, array<string, array<string, array<string>>>> */
         $webspaceSecuritySystemContexts = [];
 
         /** @var Webspace $webspace */
