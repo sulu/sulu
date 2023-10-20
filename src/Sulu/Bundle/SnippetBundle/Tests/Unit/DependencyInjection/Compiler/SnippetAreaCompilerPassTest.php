@@ -146,7 +146,7 @@ class SnippetAreaCompilerPassTest extends TestCase
         );
 
         $this->structureFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
-        $this->structureFactory->getStructures('snippet')->willReturn([ $structureMetaData->reveal() ]);
+        $this->structureFactory->getStructures('snippet')->willReturn([$structureMetaData->reveal()]);
 
         $translator = $this->prophesize(TranslatorInterface::class);
         $translator->trans('sulu_snippet.areas.article.title', [], 'admin', 'en')->willReturn('Article Test');

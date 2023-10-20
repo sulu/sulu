@@ -76,7 +76,6 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
     }
 
     /**
-     * @param string $template
      * @param array{key: string, title: array<string>} $area
      * @param array<string> $locales
      * @param array<string, string> $templateTitles
