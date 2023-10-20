@@ -106,21 +106,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/Admin.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Admin\\:\\:getSecurityContextsWithPlaceholder\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Admin.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\AdminPool\\:\\:getSecurityContexts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/AdminPool.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\AdminPool\\:\\:getSecurityContextsWithPlaceholder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/AdminPool.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
@@ -11506,11 +11491,6 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Admin/CustomUrlAdmin.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CustomUrlBundle\\\\Admin\\\\CustomUrlAdmin\\:\\:getSecurityContextsWithPlaceholder\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Admin/CustomUrlAdmin.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getTitle\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
@@ -19877,11 +19857,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Admin\\\\PageAdmin\\:\\:getConfig\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Admin/PageAdmin.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Admin\\\\PageAdmin\\:\\:getSecurityContextsWithPlaceholder\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Admin/PageAdmin.php
 
@@ -29101,6 +29076,11 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Command/CreateRoleCommand.php
 
 		-
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Command/CreateRoleCommand.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Command\\\\CreateRoleCommand\\:\\:configure\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Command/CreateRoleCommand.php
@@ -29184,6 +29164,11 @@ parameters:
 			message: "#^Parameter \\#1 \\$locale of method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\UserRole\\:\\:setLocale\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
+
+		-
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Command/InitCommand.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Command\\\\InitCommand\\:\\:configure\\(\\) has no return type specified\\.$#"
@@ -31747,11 +31732,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Admin\\\\SnippetAdmin\\:\\:getGlobalSnippetsSecurityContext\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Admin/SnippetAdmin.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Admin\\\\SnippetAdmin\\:\\:getSecurityContextsWithPlaceholder\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Admin/SnippetAdmin.php
 
@@ -34527,11 +34507,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Admin\\\\WebsiteAdmin\\:\\:getSecurityContextPermissions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Admin/WebsiteAdmin.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Admin\\\\WebsiteAdmin\\:\\:getSecurityContextsWithPlaceholder\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Admin/WebsiteAdmin.php
 
