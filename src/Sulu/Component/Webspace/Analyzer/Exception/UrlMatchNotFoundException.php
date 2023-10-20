@@ -19,10 +19,16 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class UrlMatchNotFoundException extends HttpException
 {
     /**
-     * @param string   $url         The url for which no portal exists.
+     * The url for which no portal exists.
+     *
+     * @var string
+     */
+    private $url;
+
+    /**
      * @param string[] $portalUrls
      */
-    public function __construct(private $url, array $portalUrls = [])
+    public function __construct($url, array $portalUrls = [])
     {
         $this->url = $url;
         $message = 'There exists no portal for the URL "' . $url . '"';
