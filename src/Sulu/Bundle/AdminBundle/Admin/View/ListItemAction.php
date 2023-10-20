@@ -23,23 +23,32 @@ class ListItemAction
     private $type;
 
     /**
-     * @var array
+     * @var array<string, mixed>
      *
      * @Groups({"frontend"})
      */
     private $options;
 
+    /**
+     * @param array<string, mixed> $options
+     */
     public function __construct(string $type, array $options = [])
     {
         $this->type = $type;
         $this->options = $options;
     }
 
+    /**
+     * @return string
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getOptions()
     {
         return $this->options;
