@@ -2,6 +2,18 @@
 
 ## 2.6.0
 
+### DocumentToUuidTransformer return type changed
+
+For compatibility to Symfony 7 the `DocumentToUuidTransformer` methods return types changed:
+
+```diff
+-    public function transform($document)
++    public function transform($document): ?string
+
+-    public function reverseTransform($uuid)
++    public function reverseTransform($uuid): ?object
+```
+
 ### Admin JS ResourceRouteRegistry getDetailUrl and getListUrl deprecated
 
 The `getDetailUrl` and `getListUrl` methods of the `routeRegistry` were deprecated.  
