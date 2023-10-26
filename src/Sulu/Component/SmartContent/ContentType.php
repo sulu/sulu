@@ -90,7 +90,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         CategoryRequestHandlerInterface $categoryRequestHandler,
         ReferenceStoreInterface $tagReferenceStore,
         ReferenceStoreInterface $categoryReferenceStore,
-        ?TargetGroupStoreInterface $targetGroupStore = null,
+        ?TargetGroupStoreInterface $targetGroupStore,
         RequestAnalyzerInterface $requestAnalyzer
     ) {
         $this->dataProviderPool = $dataProviderPool;

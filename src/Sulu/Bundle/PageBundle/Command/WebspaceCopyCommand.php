@@ -292,7 +292,7 @@ class WebspaceCopyCommand extends Command
      */
     protected function recursiveCopy(
         BasePageDocument $documentSource,
-        ?BasePageDocument $parentDocumentDestination = null,
+        ?BasePageDocument $parentDocumentDestination,
         $localeDestination
     ) {
         if (LocalizationState::GHOST === $this->documentInspector->getLocalizationState($documentSource)) {
