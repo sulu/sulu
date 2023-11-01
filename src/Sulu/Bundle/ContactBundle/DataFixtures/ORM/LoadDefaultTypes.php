@@ -34,17 +34,17 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
 
         $phoneType1 = new PhoneType();
         $phoneType1->setId(1);
-        $phoneType1 = $manager->merge($phoneType1);
+        $manager->persist($phoneType1);
         $phoneType1->setName('sulu_contact.work');
 
         $phoneType2 = new PhoneType();
         $phoneType2->setId(2);
-        $phoneType2 = $manager->merge($phoneType2);
+        $manager->persist($phoneType2);
         $phoneType2->setName('sulu_contact.private');
 
         $phoneType3 = new PhoneType();
         $phoneType3->setId(3);
-        $phoneType3 = $manager->merge($phoneType3);
+        $manager->persist($phoneType3);
         $phoneType3->setName('sulu_contact.mobile');
 
         // Email types.
@@ -54,14 +54,14 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
 
         $emailType1 = new EmailType();
         $emailType1->setId(1);
-        $emailType1 = $manager->merge($emailType1);
+        $manager->persist($emailType1);
         $emailType1->setName('sulu_contact.work');
 
         $this->addReference('email.type.work', $emailType1);
 
         $emailType2 = new EmailType();
         $emailType2->setId(2);
-        $emailType2 = $manager->merge($emailType2);
+        $manager->persist($emailType2);
         $emailType2->setName('sulu_contact.private');
 
         $this->addReference('email.type.private', $emailType2);
@@ -73,12 +73,12 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
 
         $addressType1 = new AddressType();
         $addressType1->setId(1);
-        $addressType1 = $manager->merge($addressType1);
+        $manager->persist($addressType1);
         $addressType1->setName('sulu_contact.work');
 
         $addressType2 = new AddressType();
         $addressType2->setId(2);
-        $addressType2 = $manager->merge($addressType2);
+        $manager->persist($addressType2);
         $addressType2->setName('sulu_contact.private');
 
         // Url types.
@@ -88,12 +88,12 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
 
         $urlType1 = new UrlType();
         $urlType1->setId(1);
-        $urlType1 = $manager->merge($urlType1);
+        $manager->persist($urlType1);
         $urlType1->setName('sulu_contact.work');
 
         $urlType2 = new UrlType();
         $urlType2->setId(2);
-        $urlType2 = $manager->merge($urlType2);
+        $manager->persist($urlType2);
         $urlType2->setName('sulu_contact.private');
 
         // Fax types.
@@ -103,12 +103,12 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
 
         $faxType1 = new FaxType();
         $faxType1->setId(1);
-        $faxType1 = $manager->merge($faxType1);
+        $manager->persist($faxType1);
         $faxType1->setName('sulu_contact.work');
 
         $faxType2 = new FaxType();
         $faxType2->setId(2);
-        $faxType2 = $manager->merge($faxType2);
+        $manager->persist($faxType2);
         $faxType2->setName('sulu_contact.private');
 
         // Social media profile types.
@@ -118,17 +118,17 @@ class LoadDefaultTypes extends AbstractFixture implements OrderedFixtureInterfac
 
         $socialMediaProfileType1 = new SocialMediaProfileType();
         $socialMediaProfileType1->setId(1);
-        $socialMediaProfileType1 = $manager->merge($socialMediaProfileType1);
+        $manager->persist($socialMediaProfileType1);
         $socialMediaProfileType1->setName('Facebook');
 
         $socialMediaProfileType2 = new SocialMediaProfileType();
         $socialMediaProfileType2->setId(2);
-        $socialMediaProfileType2 = $manager->merge($socialMediaProfileType2);
+        $manager->persist($socialMediaProfileType2);
         $socialMediaProfileType2->setName('Twitter');
 
         $socialMediaProfileType3 = new SocialMediaProfileType();
         $socialMediaProfileType3->setId(3);
-        $socialMediaProfileType3 = $manager->merge($socialMediaProfileType3);
+        $manager->persist($socialMediaProfileType3);
         $socialMediaProfileType3->setName('Instagram');
 
         $manager->flush();

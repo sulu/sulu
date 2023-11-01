@@ -31,14 +31,14 @@ class LoadCollectionTypes extends AbstractFixture implements OrderedFixtureInter
         // create or update collectiontype with id 1
         $defaultCollectionType = new CollectionType();
         $defaultCollectionType->setId(1);
-        $defaultCollectionType = $manager->merge($defaultCollectionType);
+        $manager->persist($defaultCollectionType);
         $defaultCollectionType->setKey('collection.default');
         $defaultCollectionType->setName('Default');
 
         // create or update collectiontype with id 2
         $systemCollectionType = new CollectionType();
         $systemCollectionType->setId(2);
-        $systemCollectionType = $manager->merge($systemCollectionType);
+        $manager->persist($systemCollectionType);
         $systemCollectionType->setKey(SystemCollectionManagerInterface::COLLECTION_TYPE);
         $systemCollectionType->setName('System Collections');
 

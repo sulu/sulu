@@ -29,22 +29,22 @@ class LoadMediaTypes extends AbstractFixture implements OrderedFixtureInterface
 
         $mediaDocument = new MediaType();
         $mediaDocument->setId(1);
-        $mediaDocument = $manager->merge($mediaDocument);
+        $manager->persist($mediaDocument);
         $mediaDocument->setName('document');
 
         $mediaImage = new MediaType();
         $mediaImage->setId(2);
-        $mediaImage = $manager->merge($mediaImage);
+        $manager->persist($mediaImage);
         $mediaImage->setName('image');
 
         $mediaVideo = new MediaType();
         $mediaVideo->setId(3);
-        $mediaVideo = $manager->merge($mediaVideo);
+        $manager->persist($mediaVideo);
         $mediaVideo->setName('video');
 
         $mediaAudio = new MediaType();
         $mediaAudio->setId(4);
-        $mediaAudio = $manager->merge($mediaAudio);
+        $manager->persist($mediaAudio);
         $mediaAudio->setName('audio');
 
         $manager->flush();
