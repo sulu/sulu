@@ -31,7 +31,7 @@ class Configuration implements ConfigurationInterface
         $this->debug = $debug;
     }
 
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('sulu_admin');
 
