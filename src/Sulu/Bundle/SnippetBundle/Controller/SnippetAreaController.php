@@ -21,6 +21,7 @@ use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 use Sulu\Component\Security\Authorization\SecurityCondition;
+use Sulu\Component\Util\SortUtils;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -130,11 +131,11 @@ class SnippetAreaController implements ClassResourceInterface
             $dataList[$key] = $areaData;
         }
 
-        \ksort($dataList);
+        $dataList = SortUtils::sortLocaleAware($dataList, $this->getUser()->getLocale(), fn ($a) => $a['title']);
 
         $data = [
             '_embedded' => [
-                'areas' => \array_values($dataList),
+                'areas' => $dataList,
             ],
             'total' => \count($dataList),
         ];
