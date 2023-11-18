@@ -14,6 +14,7 @@ namespace Sulu\Bundle\WebsiteBundle\DependencyInjection;
 use Sulu\Bundle\WebsiteBundle\Entity\Analytics;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsRepository;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -105,6 +106,7 @@ class Configuration implements ConfigurationInterface
             ->end();
 
         $this->addObjectsSection($rootNode);
+        $this->addWebspaceSection($rootNode);
 
         return $treeBuilder;
     }
@@ -126,5 +128,124 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
+    }
+
+    private function addWebspaceSection(ArrayNodeDefinition $node): void
+    {
+        $node
+            ->fixXmlConfig('webspace')
+            ->children()
+                ->arrayNode('webspaces')
+                ->useAttributeAsKey('code', false)
+                ->requiresAtLeastOneElement()
+                ->arrayPrototype()
+                    ->children()
+                        ->scalarNode('name')->isRequired()->example('John\'s Blog')->end()
+                        ->scalarNode('code')->isRequired()->example('blog')->end()
+                        ->arrayNode('navigation')
+                            ->fixXmlConfig('context')
+                            ->children()
+                                ->arrayNode('contexts')
+                                    ->requiresAtLeastOneElement()
+                                    ->useAttributeAsKey('key', false)
+                                    ->arrayPrototype()
+                                       ->children()
+                                            ->scalarNode('key')->isRequired()->example('main')->end()
+                                        ->end()
+                                        ->fixXmlConfig('title')
+                                        ->children()
+                                            ->arrayNode('titles')
+                                                ->useAttributeAsKey('language', false)
+                                                ->arrayPrototype()
+                                                    ->children()
+                                                        ->scalarNode('language')->isRequired()->end()
+                                                        ->scalarNode('value')->isRequired()->end()
+                                                    ->end()
+                                                ->end()
+                                            ->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+
+                    ->fixXmlConfig('localization')
+                    ->children()
+                        ->arrayNode('localizations')
+                            ->info('List of languages enabled in this webspace.')
+                            ->example(['language' => 'de', 'default' => true])
+                            ->arrayPrototype()
+                                ->children()
+                                    ->scalarNode('language')->isRequired()->end()
+                                    ->booleanNode('default')->defaultValue(false)->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+
+                    ->fixXmlConfig('default_template')
+                    ->children()
+                        ->arrayNode('default_templates')
+                            ->arrayPrototype()
+                                ->children()
+                                    ->scalarNode('type')->isRequired()->example('page')->end()
+                                    ->scalarNode('value')->isRequired()->example('default')->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+
+                    ->fixXmlConfig('template')
+                    ->children()
+                        ->arrayNode('templates')
+                            ->arrayPrototype()
+                                ->children()
+                                    ->scalarNode('type')->isRequired()->end()
+                                    ->scalarNode('value')->isRequired()->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+
+                    ->fixXmlConfig('portal')
+                    ->children()
+                        ->arrayNode('portals')
+                            ->arrayPrototype()
+                                ->children()
+                                    ->scalarNode('name')->isRequired()->end()
+                                    ->scalarNode('key')->isRequired()->end()
+                                ->end()
+
+                                ->fixXmlConfig('environment')
+                                ->children()
+                                    ->arrayNode('environments')
+                                        ->useAttributeAsKey('type', false)
+                                        ->arrayPrototype()
+                                            ->children()
+                                                ->scalarNode('type')->isRequired()->example('prod')->end()
+                                            ->end()
+                                            ->fixXmlConfig('url')
+                                            ->children()
+                                                ->arrayNode('urls')
+                                                    ->useAttributeAsKey('language', false)
+                                                    ->arrayPrototype()
+                                                        ->children()
+                                                            ->scalarNode('language')->isRequired()->end()
+                                                            ->scalarNode('value')->isRequired()->end()
+                                                        ->end()
+                                                    ->end()
+                                                ->end()
+                                            ->end()
+                                        ->end()
+                                    ->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+
+                ->end()
+            ->end()
+        ;
     }
 }

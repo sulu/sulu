@@ -1,0 +1,40 @@
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:sulu_website="http://example.org/schema/dic/sulu_website"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd"
+>
+    <sulu_website:config>
+        <sulu_website:webspace code="testing" name="Testing website">
+            <sulu_website:localization language="de" default="true" />
+
+            <sulu_website:default-template type="page">default</sulu_website:default-template>
+            <sulu_website:default-template type="home">homepage</sulu_website:default-template>
+
+            <sulu_website:template type="search">search/search</sulu_website:template>
+            <sulu_website:template type="error">error/error</sulu_website:template>
+
+            <sulu_website:navigation>
+                <sulu_website:context key="main">
+                    <sulu_website:title language="en" value="Main Navigation" />
+                    <sulu_website:title language="de" value="Hauptnavigation" />
+                </sulu_website:context>
+            </sulu_website:navigation>
+
+                <sulu_website:portal name="example.com" key="example">
+                    <sulu_website:environment type="prod">
+                        <sulu_website:url language="en">{host}</sulu_website:url>
+                    </sulu_website:environment>
+                    <sulu_website:environment type="stage">
+                        <sulu_website:url language="en">{host}</sulu_website:url>
+                    </sulu_website:environment>
+                    <sulu_website:environment type="test">
+                        <sulu_website:url language="en">{host}</sulu_website:url>
+                    </sulu_website:environment>
+                    <sulu_website:environment type="dev">
+                        <sulu_website:url language="en">{host}</sulu_website:url>
+                    </sulu_website:environment>
+                </sulu_website:portal>
+        </sulu_website:webspace>
+    </sulu_website:config>
+</container>
