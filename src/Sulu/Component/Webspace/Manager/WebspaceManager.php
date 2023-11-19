@@ -83,7 +83,7 @@ class WebspaceManager implements WebspaceManagerInterface
         $this->structureMetadataFactory = $structureMetadataFactory;
     }
 
-    /** If you only want to load the webspace by key using WebspaceCollection::getWebspace is cheaper. */
+    /** @deprecated Use WebspaceCollection::getWebspace is cheaper. */
     public function findWebspaceByKey(?string $key): ?Webspace
     {
         if (!$key) {
@@ -93,6 +93,7 @@ class WebspaceManager implements WebspaceManagerInterface
         return $this->webspaceCollection->getWebspace($key);
     }
 
+    /** @deprecated Use WebspaceCollection::getPortal is cheaper. */
     public function findPortalByKey(?string $key): ?Portal
     {
         if (!$key) {

@@ -142,6 +142,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('name')->isRequired()->example('John\'s Blog')->end()
                         ->scalarNode('code')->isRequired()->example('blog')->end()
+                        ->scalarNode('theme')->defaultValue(null)->end()
                         ->arrayNode('navigation')
                             ->fixXmlConfig('context')
                             ->children()

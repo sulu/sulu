@@ -21,59 +21,28 @@ use Symfony\Component\Config\Resource\FileResource;
  *
  * @implements \IteratorAggregate<Webspace>
  */
-class WebspaceCollection implements \IteratorAggregate
+class WebspaceCollection implements \IteratorAggregate, \Countable
 {
-    /**
-     * All the webspaces in a specific sulu installation.
-     *
-     * @var Webspace[]
-     */
-    private $webspaces;
-
     /**
      * All the portals in a specific sulu installation.
      *
-     * @var Portal[]
+     * @var array<string, Portal>
      */
-    private $portals;
+    private $portals = [];
 
     /**
      * The portals of this specific sulu installation, prefiltered by the environment and url.
      *
-     * @var array
+     * @var array<string, PortalInformation>
      */
-    private $portalInformations;
+    private $portalInformations = [];
 
     /**
-     * Contains all the resources, which where used to build this collection.
-     * Is required by the Symfony CacheConfig-Component.
-     *
-     * @var FileResource[]
+     * @param array<string, Webspace> $webspaces     All the webspaces in a specific sulu installation (indexed by key)
      */
-    private $resources;
-
-    public function __construct(array $webspaces = [])
-    {
-        $this->webspaces = $webspaces;
-    }
-
-    /**
-     * Adds a new FileResource, which is required to determine if the cache is fresh.
-     */
-    public function addResource(FileResource $resource)
-    {
-        $this->resources[] = $resource;
-    }
-
-    /**
-     * Returns the resources used to build this collection.
-     *
-     * @return array The resources build to use this collection
-     */
-    public function getResources()
-    {
-        return $this->resources;
-    }
+    public function __construct(
+        private array $webspaces = [],
+    ) { }
 
     /**
      * Returns the portal with the given index.
@@ -84,7 +53,7 @@ class WebspaceCollection implements \IteratorAggregate
      */
     public function getPortal($key)
     {
-        return \array_key_exists($key, $this->portals) ? $this->portals[$key] : null;
+        return $this->portals[$key] ?? null;
     }
 
     /**
@@ -123,7 +92,7 @@ class WebspaceCollection implements \IteratorAggregate
      */
     public function getWebspace($key)
     {
-        return \array_key_exists($key, $this->webspaces) ? $this->webspaces[$key] : null;
+        return $this->webspaces[$key] ?? null;
     }
 
     /**
@@ -131,9 +100,21 @@ class WebspaceCollection implements \IteratorAggregate
      *
      * @return int
      */
-    public function length()
+    public function count()
     {
         return \count($this->webspaces);
+    }
+
+    /**
+     * Returns the length of the collection.
+     * 
+     * @deprecated Use the count function instead.
+     *
+     * @return int
+     */
+    public function length()
+    {
+        return count($this);
     }
 
     #[\ReturnTypeWillChange]
@@ -169,14 +150,6 @@ class WebspaceCollection implements \IteratorAggregate
         $collection['portalInformations'] = $portalInformations;
 
         return $collection;
-    }
-
-    /**
-     * @param Webspace[] $webspaces
-     */
-    public function setWebspaces($webspaces)
-    {
-        $this->webspaces = $webspaces;
     }
 
     /**
