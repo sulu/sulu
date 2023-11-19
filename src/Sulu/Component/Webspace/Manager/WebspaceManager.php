@@ -32,16 +32,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class WebspaceManager implements WebspaceManagerInterface
 {
     /**
-     * @var WebspaceCollection
-     */
-    private $webspaceCollection;
-
-    /**
-     * @var LoaderInterface
-     */
-    private $loader;
-
-    /**
      * @var ReplacerInterface
      */
     private $urlReplacer;
@@ -50,11 +40,6 @@ class WebspaceManager implements WebspaceManagerInterface
      * @var RequestStack
      */
     private $requestStack;
-
-    /**
-     * @var array
-     */
-    private $options;
 
     /**
      * @var string
@@ -82,32 +67,30 @@ class WebspaceManager implements WebspaceManagerInterface
     private $portalUrlCache = [];
 
     public function __construct(
-        LoaderInterface $loader,
+        private WebspaceCollection $webspaceCollection,
         ReplacerInterface $urlReplacer,
         RequestStack $requestStack,
-        array $options,
         string $environment,
         string $defaultHost,
         string $defaultScheme,
         StructureMetadataFactoryInterface $structureMetadataFactory
     ) {
-        $this->loader = $loader;
         $this->urlReplacer = $urlReplacer;
         $this->requestStack = $requestStack;
-        $this->setOptions($options);
         $this->environment = $environment;
         $this->defaultHost = $defaultHost;
         $this->defaultScheme = $defaultScheme;
         $this->structureMetadataFactory = $structureMetadataFactory;
     }
 
+    /** If you only want to load the webspace by key using WebspaceCollection::getWebspace is cheaper. */
     public function findWebspaceByKey(?string $key): ?Webspace
     {
         if (!$key) {
             return null;
         }
 
-        return $this->getWebspaceCollection()->getWebspace($key);
+        return $this->webspaceCollection->getWebspace($key);
     }
 
     public function findPortalByKey(?string $key): ?Portal
@@ -116,7 +99,7 @@ class WebspaceManager implements WebspaceManagerInterface
             return null;
         }
 
-        return $this->getWebspaceCollection()->getPortal($key);
+        return $this->webspaceCollection->getPortal($key);
     }
 
     public function findPortalInformationByUrl(string $url, ?string $environment = null): ?PortalInformation
@@ -125,7 +108,7 @@ class WebspaceManager implements WebspaceManagerInterface
             $environment = $this->environment;
         }
 
-        $portalInformations = $this->getWebspaceCollection()->getPortalInformations($environment);
+        $portalInformations = $this->webspaceCollection->getPortalInformations($environment);
         foreach ($portalInformations as $portalInformation) {
             if ($this->matchUrl($url, $portalInformation->getUrl())) {
                 return $portalInformation;
@@ -142,7 +125,7 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return \array_filter(
-            $this->getWebspaceCollection()->getPortalInformations($environment),
+            $this->webspaceCollection->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($host) {
                 $portalHost = $portalInformation->getHost();
 
@@ -159,7 +142,7 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return \array_filter(
-            $this->getWebspaceCollection()->getPortalInformations($environment),
+            $this->webspaceCollection->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($url) {
                 return $this->matchUrl($url, $portalInformation->getUrl());
             }
@@ -176,7 +159,7 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return \array_filter(
-            $this->getWebspaceCollection()->getPortalInformations($environment),
+            $this->webspaceCollection->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($webspaceKey, $locale) {
                 return $portalInformation->getWebspace()->getKey() === $webspaceKey
                     && $portalInformation->getLocale() === $locale;
@@ -194,7 +177,7 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return \array_filter(
-            $this->getWebspaceCollection()->getPortalInformations($environment),
+            $this->webspaceCollection->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($portalKey, $locale) {
                 return $portalInformation->getPortal()
                     && $portalInformation->getPortal()->getKey() === $portalKey
@@ -220,7 +203,7 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         $urls = [];
-        $portals = $this->getWebspaceCollection()->getPortalInformations(
+        $portals = $this->webspaceCollection->getPortalInformations(
             $environment,
             [RequestAnalyzerInterface::MATCH_TYPE_FULL]
         );
@@ -266,7 +249,7 @@ class WebspaceManager implements WebspaceManagerInterface
         $fullMatchedUrl = null;
         $partialMatchedUrl = null;
 
-        $portals = $this->getWebspaceCollection()->getPortalInformations(
+        $portals = $this->webspaceCollection->getPortalInformations(
             $environment
         );
 
@@ -339,7 +322,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
     public function getPortals(): array
     {
-        return $this->getWebspaceCollection()->getPortals();
+        return $this->webspaceCollection->getPortals();
     }
 
     public function getUrls(?string $environment = null): array
@@ -350,7 +333,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
         $urls = [];
 
-        foreach ($this->getWebspaceCollection()->getPortalInformations($environment) as $portalInformation) {
+        foreach ($this->webspaceCollection->getPortalInformations($environment) as $portalInformation) {
             $urls[] = $portalInformation->getUrl();
         }
 
@@ -363,7 +346,7 @@ class WebspaceManager implements WebspaceManagerInterface
             $environment = $this->environment;
         }
 
-        return $this->getWebspaceCollection()->getPortalInformations($environment);
+        return $this->webspaceCollection->getPortalInformations($environment);
     }
 
     public function getPortalInformationsByWebspaceKey(?string $environment, string $webspaceKey): array
@@ -373,7 +356,7 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return \array_filter(
-            $this->getWebspaceCollection()->getPortalInformations($environment),
+            $this->webspaceCollection->getPortalInformations($environment),
             function(PortalInformation $portal) use ($webspaceKey) {
                 return $portal->getWebspaceKey() === $webspaceKey;
             }
@@ -385,7 +368,7 @@ class WebspaceManager implements WebspaceManagerInterface
         $localizations = [];
 
         /** @var Webspace $webspace */
-        foreach ($this->getWebspaceCollection() as $webspace) {
+        foreach ($this->webspaceCollection as $webspace) {
             foreach ($webspace->getAllLocalizations() as $localization) {
                 $localizations[$localization->getLocale()] = $localization;
             }
@@ -412,7 +395,7 @@ class WebspaceManager implements WebspaceManagerInterface
     public function getAllLocalesByWebspaces(): array
     {
         $webspaces = [];
-        foreach ($this->getWebspaceCollection() as $webspace) {
+        foreach ($this->webspaceCollection as $webspace) {
             /** @var Webspace $webspace */
             $locales = [];
             $defaultLocale = $webspace->getDefaultLocalization();
@@ -426,82 +409,6 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return $webspaces;
-    }
-
-    public function getWebspaceCollection(): WebspaceCollection
-    {
-        if (null === $this->webspaceCollection) {
-            /** @var class-string<WebspaceCollection> $class */
-            $class = $this->options['cache_class'];
-            $cache = new ConfigCache(
-                $this->options['cache_dir'] . '/' . $class . '.php',
-                $this->options['debug']
-            );
-
-            if (!$cache->isFresh()) {
-                $availableTemplates = \array_map(
-                    function(StructureMetadata $structure) {
-                        return $structure->getName();
-                    },
-                    $this->structureMetadataFactory->getStructures('page')
-                );
-                $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-                    $this->loader,
-                    $this->urlReplacer,
-                    $this->options['config_dir'],
-                    $availableTemplates
-                );
-                $webspaceCollection = $webspaceCollectionBuilder->build();
-                $dumper = new PhpWebspaceCollectionDumper($webspaceCollection);
-                $cache->write(
-                    $dumper->dump(
-                        [
-                            'cache_class' => $class,
-                            'base_class' => $this->options['base_class'],
-                        ]
-                    ),
-                    $webspaceCollection->getResources()
-                );
-            }
-
-            require_once $cache->getPath();
-
-            $this->webspaceCollection = new $class();
-
-            $currentRequest = $this->requestStack->getCurrentRequest();
-
-            $host = $currentRequest ? $currentRequest->getHost() : $this->defaultHost;
-            foreach ($this->getPortalInformations() as $portalInformation) {
-                $portalInformation->setUrl($this->urlReplacer->replaceHost($portalInformation->getUrl(), $host));
-                $portalInformation->setUrlExpression(
-                    $this->urlReplacer->replaceHost($portalInformation->getUrlExpression(), $host)
-                );
-                $portalInformation->setRedirect(
-                    $this->urlReplacer->replaceHost($portalInformation->getRedirect(), $host)
-                );
-            }
-        }
-
-        return $this->webspaceCollection;
-    }
-
-    /**
-     * Sets the options for the manager.
-     *
-     * @param mixed[] $options
-     */
-    public function setOptions($options)
-    {
-        $this->options = [
-            'config_dir' => null,
-            'cache_dir' => null,
-            'debug' => false,
-            'cache_class' => 'WebspaceCollectionCache',
-            'base_class' => 'WebspaceCollection',
-        ];
-
-        // overwrite the default values with the given options
-        $this->options = \array_merge($this->options, $options);
     }
 
     /**

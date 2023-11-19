@@ -2,44 +2,21 @@
 <container xmlns="http://symfony.com/schema/dic/services"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-    <parameters>
-        <parameter key="sulu_core.webspace.cache_class">%sulu.context%WebspaceCollectionCache</parameter>
-        <parameter key="sulu_core.webspace.base_class">WebspaceCollection</parameter>
-    </parameters>
-
     <services>
-        <service id="sulu_core.webspace.loader.resolver" class="Symfony\Component\Config\Loader\LoaderResolver">
-            <argument type="collection">
-                <argument type="service" id="sulu_core.webspace.loader.xml.1.1"/>
-                <argument type="service" id="sulu_core.webspace.loader.xml.1.0"/>
-            </argument>
-        </service>
-
-        <service id="sulu_core.webspace.loader.delegator" class="Symfony\Component\Config\Loader\DelegatingLoader">
-            <argument type="service" id="sulu_core.webspace.loader.resolver"/>
-        </service>
-
-        <service id="sulu_core.webspace.loader.xml.1.0" class="Sulu\Component\Webspace\Loader\XmlFileLoader10">
-            <argument type="service" id="file_locator"/>
-        </service>
-
-        <service id="sulu_core.webspace.loader.xml.1.1" class="Sulu\Component\Webspace\Loader\XmlFileLoader11">
-            <argument type="service" id="file_locator"/>
-        </service>
-
         <service id="sulu_core.webspace.webspace_manager.url_replacer" class="Sulu\Component\Webspace\Url\Replacer"/>
 
+        <service id="sulu_core.webspace.collection_builder" class="Sulu\Component\Webspace\Manager\WebspaceColletionBuilder">
+            <argument>%sulu_core.webspace.configuration%</argument>
+        </service>
+
+        <service id="sulu_core.webspace.collection" class="Sulu\Component\Webspace\Manager\WebspaceColletion">
+            <factory service="sulu_core.webspace.collection_builder" method="build"/>
+        </service>
+
         <service id="sulu_core.webspace.webspace_manager" class="Sulu\Component\Webspace\Manager\WebspaceManager" public="true">
-            <argument type="service" id="sulu_core.webspace.loader.delegator"/>
+            <argument type="service" id="sulu_core.webspace.collection"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager.url_replacer"/>
             <argument type="service" id="request_stack"/>
-            <argument type="collection">
-                <argument key="config_dir">%sulu_core.webspace.config_dir%</argument>
-                <argument key="cache_dir">%sulu.cache_dir%</argument>
-                <argument key="debug">%kernel.debug%</argument>
-                <argument key="cache_class">%sulu_core.webspace.cache_class%</argument>
-                <argument key="base_class">%sulu_core.webspace.base_class%</argument>
-            </argument>
             <argument>%kernel.environment%</argument>
             <argument>%router.request_context.host%</argument>
             <argument>%router.request_context.scheme%</argument>
