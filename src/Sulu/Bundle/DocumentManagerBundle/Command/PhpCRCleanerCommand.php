@@ -14,16 +14,22 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
+use Ds\Set;
 use PHPCR\NodeInterface;
 use PHPCR\PathNotFoundException;
 use PHPCR\SessionInterface;
+use Sulu\Component\Content\Metadata\BlockMetadata;
+use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\Loader\StructureXmlLoader;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\PHPCR\PropertyParser\PropertyParserInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Webmozart\Assert\Assert;
 
 class PhpCRCleanerCommand extends Command
 {
@@ -31,12 +37,15 @@ class PhpCRCleanerCommand extends Command
 
     private OutputInterface $output;
 
+    private Set $nodesToDelete;
+
     public function __construct(
         private PropertyParserInterface $phpcrPropertyParser,
         private SessionInterface $session,
         private StructureMetadataFactoryInterface $structureMetaDataFactory
     ) {
         parent::__construct();
+        $this->nodesToDelete = new Set();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -53,7 +62,7 @@ class PhpCRCleanerCommand extends Command
             $propertyData = $this->phpcrPropertyParser->parse($node->getPropertiesValues('i18n:*'));
             foreach($propertyData as $locale => $contentData) {
 
-            $output->writeln('======'.$locale.'======');
+                $output->writeln('======'.$locale.'======');
 
                 /** @var string $template */
                 $template = $contentData['template']->getValue();
@@ -72,38 +81,122 @@ class PhpCRCleanerCommand extends Command
                     continue;
                 }
 
-                $this->recursiveRemove($contentData, $node, $metaData->getProperties(), 0);
+                $this->migrate('', $contentData, $metaData->getProperties(), 0);
             }
 
-            $this->session->save();
+            $paths = $this->propertyParser->keyIterator($this->nodesToDelete->toArray());
+            $i = 0;
+            foreach($paths  as $propertyPath) {
+                try {
+                    $node->getProperty($propertyPath)->remove();
+                    $i++;
+                } catch (PathNotFoundException ) {
+                    continue;
+                }
+            }
+
+            $this->nodesToDelete->clear();
         }
         $this->session->save();
 
         return 0;
     }
 
-    /**
-     * Iterates through the tree-like structure that the properties are now and removes excessive nodes.
-     * @param array<int,mixed> $propertyData
-     * @param array<int,mixed> $metaData
-     */
-    private function recursiveRemove(array $propertyData, NodeInterface $node, array $metaData, int $depth): void
+    private function ddump(string $message, int $depth, int $verbosity = OutputInterface::VERBOSITY_NORMAL): void
     {
-        foreach ($propertyData as $key => $value) {
-            if ($depth === 0 && in_array($key, StructureXmlLoader::RESERVED_KEYS)) {
+        $this->output->writeln(str_repeat('  ', $depth).$message, $verbosity);
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    public function migrate(string|int $key, $data, object $metaData, int $depth): void
+    {
+        // If we are at the top of the metadata run we don't want to mess with that as it contains extra properties like seo and other extension data
+        if ($metaData instanceof StructureMetadata) {
+            foreach ($metaData->getProperties() as $subKey => $value) {
+                $this->ddump('Iterating over: '. $subKey, $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
+                $this->migrate($subKey, $data[$subKey] ?? null, $value, $depth);
+            }
+
+            return;
+        }
+
+        if ($metaData instanceof BlockMetadata) {
+            if ($data === null) {
+                Assert::eq(0, $depth, 'Empty arrays are only allowed at the root');
+                $this->ddump('Empty page? '.$metaData->getName(), $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
+            } else {
+                $this->handleBlockMetadata($data, $metaData, $depth);
+            }
+        } elseif ($metaData instanceof ComponentMetadata) {
+            $this->handleComponentMetadata($data, $metaData, $depth);
+        } elseif ($metaData instanceof PropertyMetadata) {
+            Assert::eq($metaData->getName(), $key);
+            $this->ddump('Property: '.$metaData->getName(), $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
+        } else {
+            Assert::false(true, 'Unable to handle meta data of class: '.get_class($metaData));
+        }
+    }
+
+    private function handleBlockMetadata(array $data, BlockMetadata $metadata, int $depth): void
+    {
+        $this->ddump('============ '.$metadata->getName().' =============', $depth, OutputInterface::VERBOSITY_QUIET);
+
+        if (!array_key_exists('length', $data)) {
+            trigger_error('Expected length to exists: '.join(',', array_keys($data)), E_USER_WARNING);
+            return;            return;
+        }
+
+        $length = $data['length']->value;
+        Assert::greaterThan($length, 0);
+
+        foreach ($data as $index => $value) {
+            if ($index === 'length') {
                 continue;
             }
 
-            if (\is_array($value)) {
-                if (!array_key_exists($key, $metaData)) {
-                    $this->output->writeln('Skipping property: '. $key .' at depth '.$depth);
-                    continue;
+            if ($index < $length) {
+                $type = $value['type']->value;
+                $component = $metadata->getComponentByName($type);
+                if ( $component !== null) {
+                    $this->handleComponentMetadata($value, $component, $depth + 1);
+                } else {
+                    $this->nodesToDelete->add($value);
                 }
-                $this->recursiveRemove($value, $node, $metaData[$key]->getChildren(), $depth + 1);
             } else {
-                dump(get_class($metaData[$key]), (string) $value);
+                $this->nodesToDelete->add($value);
             }
         }
+    }
+
+    private function handleComponentMetadata(array $data, ComponentMetadata $metaData, int $depth): void
+    {
+        $this->ddump('Found component with name: '.$metaData->getName(), $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
+        $unusedPropeties = new Set(array_keys($data));
+        $unusedPropeties->remove('type');
+        $unusedPropeties->remove('settings');
+
+        foreach ($metaData->getChildren() as $propertyName => $child) {
+            if (!array_key_exists($propertyName, $data)) {
+                $this->ddump('Found unconfigured property: '.$propertyName, $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
+
+                continue;
+            }
+
+            $this->migrate($propertyName, $data[$propertyName], $child, $depth + 1);
+            $unusedPropeties->remove($propertyName);
+        }
+
+        if (count($unusedPropeties) > 0) {
+            $this->ddump(
+                'Found dead propety: '.join(', ', $unusedPropeties->toArray()),
+                $depth,
+                OutputInterface::VERBOSITY_VERY_VERBOSE
+            );
+        }
+
+        $this->nodesToDelete->add($unusedPropeties->map(fn (string $x) => $data[$x])->toArray());
     }
 
     /**

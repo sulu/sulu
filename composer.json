@@ -29,6 +29,7 @@
         "ext-dom": "*",
         "ext-json": "*",
         "ext-simplexml": "*",
+        "php-ds/php-ds": "^1.4",
         "composer/package-versions-deprecated": "^1.8",
         "contao/imagine-svg": "^1.0",
         "dantleech/phpcr-migrations-bundle": "^1.3",
