@@ -12,18 +12,14 @@
 namespace Sulu\Component\Webspace\Manager;
 
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
-use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Util\WildcardUrlUtil;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Manager\Dumper\PhpWebspaceCollectionDumper;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\Config\ConfigCache;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -506,5 +502,10 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return $url;
+    }
+
+    public function getWebspaceCollection(): WebspaceCollection
+    {
+        return $this->webspaceCollection;
     }
 }

@@ -88,6 +88,8 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $container->setParameter('sulu_website.webspace.configuration', $config['webspaces']);
+
         $container->setParameter(
             'sulu_website.navigation.cache.lifetime',
             $config['twig']['navigation']['cache_lifetime']

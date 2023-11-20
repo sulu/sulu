@@ -36,7 +36,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @return Localization
      */
-    public static function createFromString($locale, $format = self::UNDERSCORE)
+    public static function createFromString($locale, $format = self::UNDERSCORE): self
     {
         $delimiter = '-';
         if (\in_array($format, [self::UNDERSCORE, self::LCID])) {
@@ -45,8 +45,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
 
         $parts = \explode($delimiter, $locale);
 
-        $localization = new self();
-        $localization->setLanguage(\strtolower($parts[0]));
+        $localization = new self(\strtolower($parts[0]));
         if (\count($parts) > 1) {
             $localization->setCountry(\strtolower($parts[1]));
         }
@@ -61,12 +60,12 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @Groups({"frontend", "Default"})
      */
-    private $language;
+    private string $language;
 
     /**
      * The country of the localization.
      *
-     * @var string
+     * @var string|null
      *
      * @Groups({"frontend", "Default"})
      */
@@ -106,9 +105,9 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @Groups({"frontend", "Default"})
      */
-    private $default;
+    private $default = false;
 
-    public function __construct($language = null, $country = null)
+    public function __construct(string $language, ?string $country = null)
     {
         $this->language = $language;
         $this->country = $country;
@@ -117,7 +116,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     /**
      * Sets the country of this localization.
      *
-     * @param string $country
+     * @param string|null $country
      */
     public function setCountry($country)
     {
@@ -127,7 +126,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     /**
      * Returns the country of this localization.
      *
-     * @return string
+     * @return string|null
      */
     public function getCountry()
     {
@@ -137,7 +136,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     /**
      * Sets the language of this localization.
      *
-     * @param string $language
+     * @param string|null $language
      */
     public function setLanguage($language)
     {
@@ -147,7 +146,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     /**
      * Returns the language of this localization.
      *
-     * @return string
+     * @return string|null
      */
     public function getLanguage()
     {

@@ -110,6 +110,7 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
      */
     public function getPortalInformationsByWebspaceKey(?string $environment, string $webspaceKey): array;
 
+    /** @deprecated Use the WebspaceCollection service instead. */
     public function getWebspaceCollection(): WebspaceCollection;
 
     /**

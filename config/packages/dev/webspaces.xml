@@ -5,7 +5,7 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd"
 >
     <sulu_website:config>
-        <sulu_website:webspace code="testing" name="Testing website">
+        <sulu_website:webspace key="testing" name="Testing website">
             <sulu_website:localization language="de" default="true" />
 
             <sulu_website:default-template type="page">default</sulu_website:default-template>
@@ -22,6 +22,10 @@
                     <sulu_website:title language="de">Hauptnavigation</sulu_website:title>
                 </sulu_website:context>
             </sulu_website:navigation>
+
+            <sulu_website:resourceLocator>
+                <sulu_website:strategy>leave-first-edit</sulu_website:strategy>
+            </sulu_website:resourceLocator>
 
             <sulu_website:portal name="example.com" key="example">
                 <sulu_website:environment type="prod">

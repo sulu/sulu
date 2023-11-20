@@ -107,7 +107,7 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
 
     /**
      * Returns the length of the collection.
-     * 
+     *
      * @deprecated Use the count function instead.
      *
      * @return int

@@ -5,11 +5,11 @@
     <services>
         <service id="sulu_core.webspace.webspace_manager.url_replacer" class="Sulu\Component\Webspace\Url\Replacer"/>
 
-        <service id="sulu_core.webspace.collection_builder" class="Sulu\Component\Webspace\Manager\WebspaceColletionBuilder">
-            <argument>%sulu_core.webspace.configuration%</argument>
+        <service id="sulu_core.webspace.collection_builder" class="Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder">
+            <argument>%sulu_website.webspace.configuration%</argument>
         </service>
 
-        <service id="sulu_core.webspace.collection" class="Sulu\Component\Webspace\Manager\WebspaceColletion">
+        <service id="sulu_core.webspace.collection" class="Sulu\Component\Webspace\Manager\WebspaceCollection">
             <factory service="sulu_core.webspace.collection_builder" method="build"/>
         </service>
 
