@@ -40,7 +40,7 @@ class PhpCRCleanerCommand extends Command
     private Set $nodesToDelete;
 
     public function __construct(
-        private PropertyParserInterface $phpcrPropertyParser,
+        private PropertyParserInterface $propertyParser,
         private SessionInterface $session,
         private StructureMetadataFactoryInterface $structureMetaDataFactory
     ) {
@@ -54,38 +54,35 @@ class PhpCRCleanerCommand extends Command
         $queryManager = $this->session->getWorkspace()->getQueryManager();
         $rows = $queryManager->createQuery('SELECT * FROM [nt:unstructured]', 'JCR-SQL2')->execute();
 
-        $structureTypeMappings = [
-            1 => 'home',
-        ];
-
+        $i = 0;
         foreach ($rows->getNodes() as $node) {
-            $propertyData = $this->phpcrPropertyParser->parse($node->getPropertiesValues('i18n:*'));
-            foreach($propertyData as $locale => $contentData) {
+            $this->nodesToDelete->clear();
+            $propertyData = $this->propertyParser->parse($node->getPropertiesValues('i18n:*'));
 
+            foreach($propertyData as $locale => $contentData) {
                 $output->writeln('======'.$locale.'======');
 
                 /** @var string $template */
                 $template = $contentData['template']->getValue();
-                $structureType = $contentData['nodeType']->getValue();
-                assert($structureType === 1);
 
-                $metaData = $this->structureMetaDataFactory
-                ->getStructureMetadata($structureTypeMappings[$structureType], $template);
+                try {
+                    $metaData = $this->structureMetaDataFactory->getStructureMetadata('page', $template);
+                } catch(\Throwable) {
+                    $metaData = null;
+                }
 
                 if ($metaData === null) {
                     $output->writeln(sprintf(
-                        '[Skipping] Unable to load metaData for structure with type "%s" and "%s"',
-                        $structureTypeMappings[$structureType],
+                        '[Skipping] Unable to load metaData for structure with type "page" and "%s"',
                         $template
                     ));
                     continue;
                 }
 
-                $this->migrate('', $contentData, $metaData->getProperties(), 0);
+                $this->migrate('', $contentData, $metaData, 0);
             }
 
             $paths = $this->propertyParser->keyIterator($this->nodesToDelete->toArray());
-            $i = 0;
             foreach($paths  as $propertyPath) {
                 try {
                     $node->getProperty($propertyPath)->remove();
@@ -94,10 +91,10 @@ class PhpCRCleanerCommand extends Command
                     continue;
                 }
             }
-
-            $this->nodesToDelete->clear();
         }
         $this->session->save();
+
+        $this->output->writeln('Deleted properties: ' . $i);
 
         return 0;
     }
@@ -197,19 +194,5 @@ class PhpCRCleanerCommand extends Command
         }
 
         $this->nodesToDelete->add($unusedPropeties->map(fn (string $x) => $data[$x])->toArray());
-    }
-
-    /**
-     * Iterates over all keys under a given node and removes them from phpcr.
-     * @param array<int,mixed> $data
-     */
-    private function deleteProperties(array $data, NodeInterface $node): void
-    {
-        foreach ($this->phpcrPropertyParser->keyIterator($data) as $key) {
-            try {
-                $node->getProperty($key)->remove();
-            } catch (PathNotFoundException) {
-            }
-        }
     }
 }
