@@ -173,6 +173,50 @@ class SnippetAreaCompilerPassTest extends TestCase
         $compiler->process($this->container->reveal());
     }
 
+    public function testWithTranslatedAreaButNoTranslation(): void
+    {
+        $compiler = new SnippetAreaCompilerPass();
+
+        $structureMetaData = $this->createStructureMetaData(
+            'test',
+            [
+                'article' => [
+                    'key' => 'article',
+                    'title' => [
+                        'sulu_snippet.areas.article.title',
+                    ],
+                ],
+            ]
+        );
+
+        $this->structureFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
+        $this->structureFactory->getStructures('snippet')->willReturn([$structureMetaData->reveal()]);
+
+        $translator = $this->prophesize(TranslatorInterface::class);
+        $translator->trans('sulu_snippet.areas.article.title', [], 'admin', 'en')->willReturn('sulu_snippet.areas.article.title');
+        $translator->trans('sulu_snippet.areas.article.title', [], 'admin', 'de')->willReturn('sulu_snippet.areas.article.title');
+        $this->container = $this->prophesize(ContainerBuilder::class);
+        $this->container->get('sulu_page.structure.factory')->willReturn($this->structureFactory->reveal());
+        $this->container->get('translator')->willReturn($translator->reveal());
+        $this->container->getParameter('sulu_core.locales')->willReturn(['en', 'de']);
+
+        $this->container->setParameter(
+            'sulu_snippet.areas',
+            [
+                'article' => [
+                    'key' => 'article',
+                    'template' => 'test',
+                    'title' => [
+                        'en' => 'sulu_snippet.areas.article.title',
+                        'de' => 'sulu_snippet.areas.article.title',
+                    ],
+                ],
+            ]
+        )->shouldBeCalled();
+
+        $compiler->process($this->container->reveal());
+    }
+
     private function createStructureMetaData($name, $areas = [])
     {
         $structureMetaData = $this->prophesize(StructureMetadata::class);
