@@ -18,35 +18,35 @@ class Url implements ArrayableInterface
     /**
      * The url itself.
      *
-     * @var string
+     * @var string|null
      */
     private $url;
 
     /**
      * The language to which the url leads.
      *
-     * @var string
+     * @var string|null
      */
     private $language;
 
     /**
      * The country to which the url leads.
      *
-     * @var string
+     * @var string|null
      */
     private $country;
 
     /**
      * The segment to which the url leads.
      *
-     * @var string
+     * @var string|null
      */
     private $segment;
 
     /**
      * The url to which this url redirects.
      *
-     * @var string
+     * @var string|redirect
      */
     private $redirect;
 
@@ -58,7 +58,7 @@ class Url implements ArrayableInterface
     private $main;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $environment;
 
@@ -81,7 +81,7 @@ class Url implements ArrayableInterface
     /**
      * Returns the url.
      *
-     * @return string
+     * @return string|null
      */
     public function getUrl()
     {
@@ -91,7 +91,7 @@ class Url implements ArrayableInterface
     /**
      * Sets the country to which this url leads.
      *
-     * @param string $country
+     * @param string|null $country
      */
     public function setCountry($country)
     {
@@ -101,7 +101,7 @@ class Url implements ArrayableInterface
     /**
      * Returns the country to which this url leads.
      *
-     * @return string
+     * @return string|null
      */
     public function getCountry()
     {
@@ -111,7 +111,7 @@ class Url implements ArrayableInterface
     /**
      * Sets the language to which this url leads.
      *
-     * @param string $language
+     * @param string|null $language
      */
     public function setLanguage($language)
     {
@@ -121,7 +121,7 @@ class Url implements ArrayableInterface
     /**
      * Returns the language to which this url leads.
      *
-     * @return string
+     * @return string|null
      */
     public function getLanguage()
     {
@@ -131,7 +131,7 @@ class Url implements ArrayableInterface
     /**
      * Sets the segment to which this url leads.
      *
-     * @param string $segment
+     * @param string|null $segment
      */
     public function setSegment($segment)
     {
@@ -141,7 +141,7 @@ class Url implements ArrayableInterface
     /**
      * Returns the segment to which this url leads.
      *
-     * @return string
+     * @return string|null
      */
     public function getSegment()
     {
@@ -151,7 +151,7 @@ class Url implements ArrayableInterface
     /**
      * Sets the redirect for this url.
      *
-     * @param string $redirect
+     * @param string|null $redirect
      */
     public function setRedirect($redirect)
     {
@@ -161,7 +161,7 @@ class Url implements ArrayableInterface
     /**
      * Returns the redirect url.
      *
-     * @return string
+     * @return string|null
      */
     public function getRedirect()
     {
@@ -191,7 +191,7 @@ class Url implements ArrayableInterface
     /**
      * Returns the environment.
      *
-     * @return string
+     * @return string|null
      */
     public function getEnvironment()
     {

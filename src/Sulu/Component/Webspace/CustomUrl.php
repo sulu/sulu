@@ -21,7 +21,7 @@ class CustomUrl implements ArrayableInterface
     /**
      * The url itself.
      *
-     * @var string
+     * @var string|null
      */
     private $url;
 
