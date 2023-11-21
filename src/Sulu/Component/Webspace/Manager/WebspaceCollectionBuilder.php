@@ -14,6 +14,10 @@ namespace Sulu\Component\Webspace\Manager;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Loader\Exception\ExpectedDefaultTemplatesNotFound;
+use Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultErrorTemplateException;
+use Sulu\Component\Webspace\Loader\Exception\InvalidCustomUrlException;
+use Sulu\Component\Webspace\Loader\Exception\InvalidErrorTemplateException;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Navigation;
@@ -126,22 +130,16 @@ class WebspaceCollectionBuilder
             $webspace->addLocalization($localization[0]);
         }
 
-        foreach ($webspaceConfiguration['segments'] as $segmentConfiguration) {
-            $segment = new Segment();
-            $segment->setKey($segmentConfiguration['key']);
-            $segment->setMetadata($segmentConfiguration['metadata']);
-            $segment->setDefault($segmentConfiguration['default']);
-
-            $webspace->addSegment($segment);
-
-            $segmentRefs[$webspaceKey.'_'.$segmentConfiguration['key']] = $segment;
-        }
+        $this->buildSegments($webspaceConfiguration, $webspace, $segmentRefs);
 
         $this->buildTemplates($webspaceConfiguration, $webspace);
 
         $navigation = new Navigation();
-        foreach ($webspaceConfiguration['navigation']['context'] ?? [] as $contextConfiguration) {
-            $navigation->addContext(new NavigationContext($contextConfiguration['key'], $contextConfiguration['metadata']));
+        foreach ($webspaceConfiguration['navigation']['contexts'] ?? [] as $contextConfiguration) {
+            $navigation->addContext(new NavigationContext(
+                $contextConfiguration['key'],
+                $contextConfiguration['metadata'],
+            ));
         }
         $webspace->setNavigation($navigation);
 
@@ -155,6 +153,20 @@ class WebspaceCollectionBuilder
         }
 
         return $webspace;
+    }
+
+    protected function buildSegments(array $webspaceConfiguration, Webspace $webspace, array &$segmentRefs):void
+    {
+        foreach ($webspaceConfiguration['segments'] as $segmentConfiguration) {
+            $segment = new Segment();
+            $segment->setKey($segmentConfiguration['key']);
+            $segment->setMetadata($segmentConfiguration['metadata']);
+            $segment->setDefault($segmentConfiguration['default']);
+
+            $webspace->addSegment($segment);
+
+            $segmentRefs[$webspace->getKey().'_'.$segmentConfiguration['key']] = $segment;
+        }
     }
 
     protected function buildPortal(array $portalConfiguration, Webspace $webspace): Portal
@@ -173,7 +185,7 @@ class WebspaceCollectionBuilder
         }
 
         foreach ($portalConfiguration['environments'] as $environmentConfiguration) {
-            $portal->addEnvironment($this->buildEnvironment($environmentConfiguration));
+            $portal->addEnvironment($this->buildEnvironment($environmentConfiguration, $webspace));
         }
 
         return $portal;
@@ -186,34 +198,75 @@ class WebspaceCollectionBuilder
         foreach ($webspaceConfiguration['templates'] as $type => $template) {
             $webspace->addTemplate($type, $template);
         }
+
         foreach ($webspaceConfiguration['default_templates'] as $type => $defaultTemplate) {
+            if ($type == 'homepage') {
+                $type = 'home';
+            }
             $webspace->addDefaultTemplate($type, $defaultTemplate);
         }
+
+        $expectedDefaultTemplates = ['page', 'home'];
+        $foundDefaultTemplates = array_keys($webspace->getDefaultTemplates());
+        if (array_diff($expectedDefaultTemplates, $foundDefaultTemplates) !== []) {
+            throw new ExpectedDefaultTemplatesNotFound(
+                $webspace->getKey(),
+                $expectedDefaultTemplates,
+                $foundDefaultTemplates,
+            );
+        }
+
+        $this->buildErrorTemplates($webspaceConfiguration, $webspace);
+
         foreach ($webspaceConfiguration['excluded_templates'] as $excludedTemplate) {
             $webspace->addExcludedTemplate($excludedTemplate);
         }
     }
 
-    protected function buildEnvironment(array $environmentConfiguration): Environment
+    protected function buildErrorTemplates(array $webspaceConfiguration, Webspace $webspace): void
+    {
+        $defaultErrorTemplateCount = 0;
+        foreach ($webspaceConfiguration['error_templates'] as $errorTemplate) {
+            if ($errorTemplate['code'] !== null) {
+                $webspace->addTemplate('error-'.$errorTemplate['code'], $errorTemplate['value']);
+            } elseif ($errorTemplate['default']) {
+                $webspace->addTemplate('error', $errorTemplate['value']);
+                $defaultErrorTemplateCount++;
+            } else {
+                throw new InvalidErrorTemplateException($errorTemplate['value'], $webspace->getKey());
+            }
+        }
+
+        // only one or none default error-template is legal
+        if ($defaultErrorTemplateCount > 1) {
+            throw new InvalidAmountOfDefaultErrorTemplateException($webspace->getKey());
+        }
+    }
+
+    protected function buildEnvironment(array $environmentConfiguration, Webspace $webspace): Environment
     {
         $environment = new Environment();
         $environment->setType($environmentConfiguration['type']);
 
         foreach ($environmentConfiguration['urls'] as $urlConfiguration) {
-            dump($urlConfiguration);
-            $url = new Url();
-            $url->setUrl($urlConfiguration['value']);
+            $url = new Url(\rtrim($urlConfiguration['value'], '/'));
             $url->setLanguage($urlConfiguration['language']);
             $url->setCountry($urlConfiguration['country'] ?? null);
             $url->setSegment($urlConfiguration['segment'] ?? null);
             $url->setRedirect($urlConfiguration['redirect'] ?? null);
-            $url->setMain($urlConfiguration['main'] ?? null);
+            $url->setMain($urlConfiguration['main'] ?? false);
 
             $environment->addUrl($url);
         }
 
         foreach ($environmentConfiguration['customUrls'] as $customUrl) {
-            $environment->addCustomUrl(new CustomUrl($customUrl['url']));
+            $url = new CustomUrl(\rtrim($customUrl['url'], '/'));
+
+            if (false === \strpos($url->getUrl(), '*')) {
+                throw new InvalidCustomUrlException($webspace, $url->getUrl());
+            }
+
+            $environment->addCustomUrl($url);
         }
 
         return $environment;
