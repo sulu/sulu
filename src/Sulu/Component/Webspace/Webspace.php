@@ -98,8 +98,9 @@ class Webspace implements ArrayableInterface
 
     /**
      * Template which is selected by default if no other template is chosen.
+     * Key is the template type and the value is the template.
      *
-     * @var string[]
+     * @var array<string, string>
      */
     private $defaultTemplates = [];
 

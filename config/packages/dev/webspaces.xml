@@ -1,46 +1,50 @@
-<container xmlns="http://symfony.com/schema/dic/services"
+<services:container xmlns="http://example.org/schema/dic/sulu_website"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:sulu_website="http://example.org/schema/dic/sulu_website"
+    xmlns:services="http://symfony.com/schema/dic/services"
     xsi:schemaLocation="http://symfony.com/schema/dic/services
         https://symfony.com/schema/dic/services/services-1.0.xsd"
 >
-    <sulu_website:config>
-        <sulu_website:webspace key="testing" name="Testing website">
-            <sulu_website:localization language="de" default="true" />
+    <config>
+        <webspace key="testing" name="Testing website">
+            <localizations>
+                <localization language="de" default="true" />
+            </localizations>
 
-            <sulu_website:default-template type="page">default</sulu_website:default-template>
-            <sulu_website:default-template type="home">homepage</sulu_website:default-template>
+            <default-template type="page">default</default-template>
+            <default-template type="home">homepage</default-template>
 
-            <sulu_website:template type="search">search/search</sulu_website:template>
-            <sulu_website:template type="error">error/error</sulu_website:template>
+            <template type="search">search/search</template>
+            <template type="error">error/error</template>
 
-            <sulu_website:theme>default</sulu_website:theme>
+            <theme>default</theme>
 
-            <sulu_website:navigation>
-                <sulu_website:context key="main">
-                    <sulu_website:title language="en">Main Navigation</sulu_website:title>
-                    <sulu_website:title language="de">Hauptnavigation</sulu_website:title>
-                </sulu_website:context>
-            </sulu_website:navigation>
+            <navigation>
+                <context key="main">
+                    <meta>
+                        <title language="en">Main Navigation</title>
+                        <title language="de">Hauptnavigation</title>
+                    </meta>
+                </context>
+            </navigation>
 
-            <sulu_website:resourceLocator>
-                <sulu_website:strategy>leave-first-edit</sulu_website:strategy>
-            </sulu_website:resourceLocator>
+            <resource-locator>
+                <strategy>leave-first-edit</strategy>
+            </resource-locator>
 
-            <sulu_website:portal name="example.com" key="example">
-                <sulu_website:environment type="prod">
-                    <sulu_website:url language="en">{host}</sulu_website:url>
-                </sulu_website:environment>
-                <sulu_website:environment type="stage">
-                    <sulu_website:url language="en">{host}</sulu_website:url>
-                </sulu_website:environment>
-                <sulu_website:environment type="test">
-                    <sulu_website:url language="en">{host}</sulu_website:url>
-                </sulu_website:environment>
-                <sulu_website:environment type="dev">
-                    <sulu_website:url language="en">{host}</sulu_website:url>
-                </sulu_website:environment>
-            </sulu_website:portal>
-        </sulu_website:webspace>
-    </sulu_website:config>
-</container>
+            <portal name="example.com" key="example">
+                <environment type="prod">
+                    <url language="en">{host}</url>
+                </environment>
+                <environment type="stage">
+                    <url language="en">{host}</url>
+                </environment>
+                <environment type="test">
+                    <url language="en">{host}</url>
+                </environment>
+                <environment type="dev">
+                    <url language="en">{host}</url>
+                </environment>
+            </portal>
+        </webspace>
+    </config>
+</services:container>

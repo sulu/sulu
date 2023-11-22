@@ -135,15 +135,16 @@ class WebspaceCollectionBuilder
         $this->buildTemplates($webspaceConfiguration, $webspace);
 
         $navigation = new Navigation();
+
         foreach ($webspaceConfiguration['navigation']['contexts'] ?? [] as $contextConfiguration) {
             $navigation->addContext(new NavigationContext(
                 $contextConfiguration['key'],
-                $contextConfiguration['metadata'],
+                $contextConfiguration['meta'],
             ));
         }
         $webspace->setNavigation($navigation);
 
-        $webspace->setResourceLocatorStrategy($webspaceConfiguration['resourceLocator']['strategy']);
+        $webspace->setResourceLocatorStrategy($webspaceConfiguration['resource_locator']['strategy']);
 
         foreach ($webspaceConfiguration['portals'] as $portalConfiguration) {
             $portal = $this->buildPortal($portalConfiguration, $webspace);
@@ -259,12 +260,8 @@ class WebspaceCollectionBuilder
             $environment->addUrl($url);
         }
 
-        foreach ($environmentConfiguration['customUrls'] as $customUrl) {
-            $url = new CustomUrl(\rtrim($customUrl['url'], '/'));
-
-            if (false === \strpos($url->getUrl(), '*')) {
-                throw new InvalidCustomUrlException($webspace, $url->getUrl());
-            }
+        foreach ($environmentConfiguration['custom_urls'] as $customUrl) {
+            $url = new CustomUrl(\rtrim($customUrl, '/'));
 
             $environment->addCustomUrl($url);
         }

@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
-
+<services:container xmlns="http://example.org/schema/dic/sulu_website"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:services="http://symfony.com/schema/dic/services"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd"
+    >
+<config>
+<webspace>
     <name>Sulu CMF</name>
     <key>sulu_io</key>
 
@@ -13,26 +17,22 @@
 
     <theme>sulu</theme>
 
-    <default-templates>
-        <default-template type="page">default</default-template>
-        <default-template type="homepage">overview</default-template>
-    </default-templates>
+    <default-template type="page">default</default-template>
+    <default-template type="homepage">overview</default-template>
 
     <navigation>
-        <contexts>
-            <context key="main">
-                <meta>
-                    <title lang="de">Hauptnavigation</title>
-                    <title lang="en">Mainnavigation</title>
-                </meta>
-            </context>
-            <context key="footer">
-                <meta>
-                    <title lang="de">Unten</title>
-                    <title lang="en">Footer</title>
-                </meta>
-            </context>
-        </contexts>
+        <context key="main">
+            <meta>
+                <title language="de">Hauptnavigation</title>
+                <title language="en">Main navigation</title>
+            </meta>
+        </context>
+        <context key="footer">
+            <meta>
+                <title language="de">Unten</title>
+                <title language="en">Footer</title>
+            </meta>
+        </context>
     </navigation>
 
     <resource-locator>
@@ -44,24 +44,18 @@
             <name>Sulu CMF AT</name>
             <key>sulucmf_at</key>
 
-            <localizations>
-                <localization language="en" country="us"/>
-                <localization language="de" country="at" default="true"/>
-            </localizations>
+            <localization language="en" country="us"/>
+            <localization language="de" country="at" default="true"/>
 
-            <environments>
-                <environment type="prod">
-                    <urls>
-                        <url language="de" country="at">sulu.at</url>
-                        <url redirect="sulu.at">www.sulu.at</url>
-                    </urls>
-                </environment>
-                <environment type="dev">
-                    <urls>
-                        <url language="de" country="at">sulu.lo</url>
-                    </urls>
-                </environment>
-            </environments>
+            <environment type="prod">
+                <url language="de" country="at">sulu.at</url>
+                <url redirect="sulu.at">www.sulu.at</url>
+            </environment>
+            <environment type="dev">
+                <url language="de" country="at">sulu.lo</url>
+            </environment>
         </portal>
     </portals>
 </webspace>
+</config>
+</services:container>

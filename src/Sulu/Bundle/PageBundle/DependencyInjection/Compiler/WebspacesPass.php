@@ -14,30 +14,21 @@ namespace Sulu\Bundle\PageBundle\DependencyInjection\Compiler;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 
 class WebspacesPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        $directory = $container->getParameterBag()->resolveValue($container->getParameter('sulu_core.webspace.config_dir'));
-
-        if (!$container->hasExtension('sulu_search') || !\file_exists($directory)) {
+        if (!$container->hasExtension('sulu_search')) {
             return;
         }
 
         $indexes = $container->getParameter('sulu_search.indexes');
+        $webspaceConfig = $container->getParameter('sulu_website.webspace.configuration');
 
-        $finder = new Finder();
-        $finder->in($directory)->files()->name('*.xml')->sortByName();
-
-        foreach ($finder as $file) {
-            /** @var SplFileInfo $file */
-            $webspaceConfig = \simplexml_load_file($file->getPathName());
-            $webspaceConfig->registerXPathNamespace('x', 'http://schemas.sulu.io/webspace/webspace');
-            $webspaceKey = (string) $webspaceConfig->xpath('/x:webspace/x:key')[0];
-            $webspaceName = (string) $webspaceConfig->xpath('/x:webspace/x:name')[0];
+        foreach ($webspaceConfig as $key => $value) {
+            $webspaceKey = $value['key'];
+            $webspaceName = $value['name'];
             $indexes['page_' . $webspaceKey] = [
                 'name' => $webspaceName,
                 'icon' => 'su-document',

@@ -305,11 +305,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
             $this->initContent($config['content'], $container, $loader);
         }
 
-        // Webspace
-        if (isset($config['webspace'])) {
-            $this->initWebspace($config['webspace'], $container, $loader);
-        }
-
         // Cache
         if (isset($config['cache'])) {
             $this->initCache($config['cache'], $container, $loader);
@@ -333,16 +328,6 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
 
         $container->registerForAutoconfiguration(BlockVisitorInterface::class)
             ->addTag('sulu_content.block_visitor');
-    }
-
-    /**
-     * @return void
-     */
-    private function initWebspace(array $webspaceConfig, ContainerBuilder $container, XmlFileLoader $loader)
-    {
-        $container->setParameter('sulu_core.webspace.config_dir', $webspaceConfig['config_dir']);
-
-        $loader->load('webspace.xml');
     }
 
     /**

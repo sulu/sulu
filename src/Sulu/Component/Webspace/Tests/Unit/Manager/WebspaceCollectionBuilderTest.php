@@ -11,60 +11,35 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit;
 
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Psr\Log\LoggerInterface;
+use Sulu\Bundle\WebsiteBundle\DependencyInjection\SuluWebsiteExtension;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
-use Sulu\Component\Webspace\Loader\XmlFileLoader10;
-use Sulu\Component\Webspace\Loader\XmlFileLoader11;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
 use Sulu\Component\Webspace\Url\Replacer;
-use Symfony\Component\Config\FileLocatorInterface;
-use Symfony\Component\Config\Loader\DelegatingLoader;
-use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Sulu\Bundle\WebsiteBundle\DependencyInjection\Configuration;
 
 class WebspaceCollectionBuilderTest extends WebspaceTestCase
 {
-    use ProphecyTrait;
-
-    /**
-     * @var DelegatingLoader
-     */
-    private $loader;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject_MockObject
-     */
-    private $logger;
-
-    public function setUp(): void
-    {
-        $locator = $this->prophesize(FileLocatorInterface::class);
-        $locator->locate(Argument::any())->will(function($arguments) {
-            return $arguments[0];
-        });
-
-        $resolver = new LoaderResolver([
-            new XmlFileLoader11($locator->reveal()),
-            new XmlFileLoader10($locator->reveal()),
-        ]);
-
-        $this->loader = new DelegatingLoader($resolver);
-
-        $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
-    }
-
     public function testBuild(): void
     {
-        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            new Replacer(),
-            $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple',
-            ['default', 'overview']
-        );
+        $containerBuilder = new ContainerBuilder();
+        $containerBuilder->registerExtension(new SuluWebsiteExtension());
 
-        $webspaceCollection = $webspaceCollectionBuilder->build();
+        $loader = new XmlFileLoader(
+            $containerBuilder,
+            new FileLocator($this->getResourceDirectory() . '/DataFixtures/Webspace/multiple'),
+        );
+        $parameters = $loader->load('sulu.io.xml');
+
+        $configuration =$containerBuilder->getExtensionConfig('sulu_website');
+        $processor = new Processor();
+        $finalConfig = $processor->processConfiguration(new Configuration(), $configuration);
+
+        $webspaceCollection = (new WebspaceCollectionBuilder($finalConfig['webspaces']))->build();
 
         $webspaces = $webspaceCollection->getWebspaces();
 
