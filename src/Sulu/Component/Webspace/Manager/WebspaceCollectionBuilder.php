@@ -16,11 +16,11 @@ use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Loader\Exception\ExpectedDefaultTemplatesNotFound;
 use Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultErrorTemplateException;
-use Sulu\Component\Webspace\Loader\Exception\InvalidCustomUrlException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidErrorTemplateException;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\Navigation;
+use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
@@ -31,8 +31,10 @@ class WebspaceCollectionBuilder
     /**
      * @param array<mixed> $configuration
      */
-    public function __construct(private array $configuration = [])
-    {
+    public function __construct(
+        private PortalInformationBuilder $portalInformationBuilder,
+        private array $configuration = []
+    ) {
     }
 
     public function build(): WebspaceCollection
@@ -41,7 +43,6 @@ class WebspaceCollectionBuilder
         $portalRefs = [];
         $localizationRefs = [];
         $segmentRefs = [];
-        $portalInformationRefs = [];
 
         foreach ($this->configuration as $webspaceKey => $webspaceConfiguration) {
             $webspaceRefs[$webspaceKey] = $this->buildWebspace(
@@ -52,42 +53,9 @@ class WebspaceCollectionBuilder
             );
         }
 
-        /**
-
-        {% for environmentKey, environment in collection.portalInformations %}
-                {% for portalInformation in environment %}
-                        $portalInformationRefs['{{ environmentKey }}']['{{ portalInformation.url }}'] = new PortalInformation(
-                            {{ portalInformation.type }},
-                            $webspaceRefs['{{ portalInformation.webspace }}'],
-                            {% if portalInformation.portal %}
-                                        $portalRefs['{{ portalInformation.portal }}'],
-                            {% else %}
-                                        null,
-                            {% endif %}
-                            {% if portalInformation.localization %}
-                                        $localizationRefs['{{ portalInformation.webspace }}_{{ portalInformation.localization.localization }}'],
-                            {% else %}
-                                        null,
-                            {% endif %}
-                            '{{ portalInformation.url }}',
-                            {% if portalInformation.segment %}
-                                        $segmentRefs['{{ portalInformation.webspace }}_{{ portalInformation.segment }}'],
-                            {% else %}
-                                        null,
-                            {% endif %}
-                            portalInformation.redirect ?: null,
-                            portalInformation.main,
-                            portalInformation.urlExpression
-                            portalInformation.priority
-                        );
-
-                {% endfor %}
-        {% endfor %}
-         */
-
         $webspaceCollection = new WebspaceCollection($webspaceRefs);
-        $webspaceCollection->setPortals($portalRefs);
-        $webspaceCollection->setPortalInformations($portalInformationRefs);
+        $webspaceCollection->setPortals(array_values($portalRefs));
+        $webspaceCollection->setPortalInformations($this->portalInformationBuilder->dumpAndClear());
 
         return $webspaceCollection;
     }
@@ -96,6 +64,7 @@ class WebspaceCollectionBuilder
      * @param array<string, PortalInformation> $portalRefs
      * @param array<string, Localization> $localizationRefs
      * @param array<string, Segment> $segmentRefs
+     * @param array<int,mixed> $webspaceConfiguration
      */
     protected function buildWebspace(
         array $webspaceConfiguration,
@@ -134,15 +103,7 @@ class WebspaceCollectionBuilder
 
         $this->buildTemplates($webspaceConfiguration, $webspace);
 
-        $navigation = new Navigation();
-
-        foreach ($webspaceConfiguration['navigation']['contexts'] ?? [] as $contextConfiguration) {
-            $navigation->addContext(new NavigationContext(
-                $contextConfiguration['key'],
-                $contextConfiguration['meta'],
-            ));
-        }
-        $webspace->setNavigation($navigation);
+        $this->buildNavgiation($webspaceConfiguration, $webspace);
 
         $webspace->setResourceLocatorStrategy($webspaceConfiguration['resource_locator']['strategy']);
 
@@ -156,12 +117,35 @@ class WebspaceCollectionBuilder
         return $webspace;
     }
 
+    /**
+     * @param array<int,mixed> $webspaceConfiguration
+     */
+    public function buildNavgiation(array $webspaceConfiguration, Webspace $webspace): void
+    {
+        $navigation = new Navigation();
+
+        foreach ($webspaceConfiguration['navigation']['contexts'] ?? [] as $contextConfiguration) {
+            if (array_key_exists('titles', $contextConfiguration['meta'] ?? [])) {
+                $meta = ['title' => $contextConfiguration['meta']['titles']];
+            } else {
+                $meta = $contextConfiguration['meta'];
+            }
+
+            $navigation->addContext(new NavigationContext($contextConfiguration['key'], $meta));
+        }
+        $webspace->setNavigation($navigation);
+    }
+
+    /**
+     * @param array<int,mixed> $webspaceConfiguration
+     * @param array<int,mixed> $segmentRefs
+     */
     protected function buildSegments(array $webspaceConfiguration, Webspace $webspace, array &$segmentRefs):void
     {
         foreach ($webspaceConfiguration['segments'] as $segmentConfiguration) {
             $segment = new Segment();
             $segment->setKey($segmentConfiguration['key']);
-            $segment->setMetadata($segmentConfiguration['metadata']);
+            $segment->setMetadata($segmentConfiguration['metadata'] ?? []);
             $segment->setDefault($segmentConfiguration['default']);
 
             $webspace->addSegment($segment);
@@ -169,8 +153,13 @@ class WebspaceCollectionBuilder
             $segmentRefs[$webspace->getKey().'_'.$segmentConfiguration['key']] = $segment;
         }
     }
-
-    protected function buildPortal(array $portalConfiguration, Webspace $webspace): Portal
+    /**
+     * @param array<int,mixed> $portalConfiguration
+     */
+    protected function buildPortal(
+        array $portalConfiguration,
+        Webspace $webspace,
+    ): Portal
     {
         $portal = new Portal();
         $portal->setName($portalConfiguration['name']);
@@ -186,12 +175,18 @@ class WebspaceCollectionBuilder
         }
 
         foreach ($portalConfiguration['environments'] as $environmentConfiguration) {
-            $portal->addEnvironment($this->buildEnvironment($environmentConfiguration, $webspace));
+            $portal->addEnvironment($this->buildEnvironment(
+                $environmentConfiguration,
+                $portal,
+                $webspace,
+            ));
         }
 
         return $portal;
     }
-
+    /**
+     * @param array<int,mixed> $webspaceConfiguration
+     */
     protected function buildTemplates( array $webspaceConfiguration, Webspace $webspace): void
     {
         $webspace->setTheme($webspaceConfiguration['theme']);
@@ -223,7 +218,9 @@ class WebspaceCollectionBuilder
             $webspace->addExcludedTemplate($excludedTemplate);
         }
     }
-
+    /**
+     * @param array<int,mixed> $webspaceConfiguration
+     */
     protected function buildErrorTemplates(array $webspaceConfiguration, Webspace $webspace): void
     {
         $defaultErrorTemplateCount = 0;
@@ -243,8 +240,14 @@ class WebspaceCollectionBuilder
             throw new InvalidAmountOfDefaultErrorTemplateException($webspace->getKey());
         }
     }
-
-    protected function buildEnvironment(array $environmentConfiguration, Webspace $webspace): Environment
+    /**
+     * @param array<int,mixed> $environmentConfiguration
+     */
+    protected function buildEnvironment(
+        array $environmentConfiguration,
+        Portal $portal,
+        Webspace $webspace,
+    ): Environment
     {
         $environment = new Environment();
         $environment->setType($environmentConfiguration['type']);
@@ -258,17 +261,22 @@ class WebspaceCollectionBuilder
             $url->setMain($urlConfiguration['main'] ?? false);
 
             $environment->addUrl($url);
+
+            $this->portalInformationBuilder->addUrl($url, $environment, $portal);
         }
 
         foreach ($environmentConfiguration['custom_urls'] as $customUrl) {
             $url = new CustomUrl(\rtrim($customUrl, '/'));
 
+            $this->portalInformationBuilder->addCustomUrl($url, $environment, $portal);
             $environment->addCustomUrl($url);
         }
 
         return $environment;
     }
-
+    /**
+     * @param array<int,mixed> $localizationConfiguration
+     */
     protected function buildLocalization(array $localizationConfiguration): Localization
     {
         $localization = new Localization($localizationConfiguration['language']);

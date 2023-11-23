@@ -14,7 +14,10 @@ namespace Sulu\Component\Webspace\Tests\Unit;
 use Sulu\Bundle\WebsiteBundle\DependencyInjection\SuluWebsiteExtension;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
+use Sulu\Component\Webspace\Manager\PortalInformationBuilder;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
+use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Url\Replacer;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
@@ -24,24 +27,36 @@ use Sulu\Bundle\WebsiteBundle\DependencyInjection\Configuration;
 
 class WebspaceCollectionBuilderTest extends WebspaceTestCase
 {
-    public function testBuild(): void
+    /** @var array<string> $files */
+    private function loadCollection(string $directory, array $files): WebspaceCollection
     {
         $containerBuilder = new ContainerBuilder();
         $containerBuilder->registerExtension(new SuluWebsiteExtension());
 
         $loader = new XmlFileLoader(
             $containerBuilder,
-            new FileLocator($this->getResourceDirectory() . '/DataFixtures/Webspace/multiple'),
+            new FileLocator(),
         );
-        $parameters = $loader->load('sulu.io.xml');
 
-        $configuration =$containerBuilder->getExtensionConfig('sulu_website');
+        $configuration = $containerBuilder->getExtensionConfig('sulu_website');
+
         $processor = new Processor();
-        $finalConfig = $processor->processConfiguration(new Configuration(), $configuration);
+        $finalConfiguration = $processor->processConfiguration(new Configuration(), $configuration);
 
-        $webspaceCollection = (new WebspaceCollectionBuilder($finalConfig['webspaces']))->build();
+        return (new WebspaceCollectionBuilder(
+            new PortalInformationBuilder(new Replacer()),
+            $finalConfiguration['webspaces'],
+        ))->build();
+    }
 
-        $webspaces = $webspaceCollection->getWebspaces();
+    public function testBuild(): void
+    {
+        $webspaceCollection = $this->loadCollection(
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple',
+            [ 'massiveart.xml', 'sulu.io.xml' ]
+        );
+
+        $webspaces = array_values($webspaceCollection->getWebspaces());
 
         $this->assertCount(2, $webspaces);
 
@@ -50,15 +65,18 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
         $this->assertEquals(2, \count($webspaces[0]->getNavigation()->getContexts()));
 
-        $this->assertEquals('main', $webspaces[0]->getNavigation()->getContexts()[0]->getKey());
-        $this->assertEquals('Hauptnavigation', $webspaces[0]->getNavigation()->getContexts()[0]->getTitle('de'));
-        $this->assertEquals('Mainnavigation', $webspaces[0]->getNavigation()->getContexts()[0]->getTitle('en'));
-        $this->assertEquals('Main', $webspaces[0]->getNavigation()->getContexts()[0]->getTitle('fr'));
+        /** @var NavigationContext $navigationContext */
+        $navigationContext =$webspaces[0]->getNavigation()->getContexts();
 
-        $this->assertEquals('footer', $webspaces[0]->getNavigation()->getContexts()[1]->getKey());
-        $this->assertEquals('Unten', $webspaces[0]->getNavigation()->getContexts()[1]->getTitle('de'));
-        $this->assertEquals('Footer', $webspaces[0]->getNavigation()->getContexts()[1]->getTitle('en'));
-        $this->assertEquals('Footer', $webspaces[0]->getNavigation()->getContexts()[1]->getTitle('fr'));
+        $this->assertEquals('main', $navigationContext[0]->getKey());
+        $this->assertEquals('Hauptnavigation', $navigationContext[0]->getTitle('de'));
+        $this->assertEquals('Mainnavigation', $navigationContext[0]->getTitle('en'));
+        $this->assertEquals('Main', $navigationContext[0]->getTitle('fr'));
+
+        $this->assertEquals('footer', $navigationContext[1]->getKey());
+        $this->assertEquals('Unten', $navigationContext[1]->getTitle('de'));
+        $this->assertEquals('Footer', $navigationContext[1]->getTitle('en'));
+        $this->assertEquals('Footer', $navigationContext[1]->getTitle('fr'));
 
         $portals = $webspaceCollection->getPortals();
 
@@ -138,14 +156,10 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
     public function testBuildWithMultipleLocalizationUrls(): void
     {
-        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            new Replacer(),
+        $webspaceCollection = $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple-localization-urls',
-            ['default', 'overview']
+            ['sulu.io.xml']
         );
-
-        $webspaceCollection = $webspaceCollectionBuilder->build();
 
         $portalInformations = $webspaceCollection->getPortalInformations('prod');
 

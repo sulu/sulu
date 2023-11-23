@@ -14,7 +14,6 @@ namespace Sulu\Component\Webspace\Manager;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * A collection of all webspaces and portals in a specific sulu installation.
@@ -26,7 +25,7 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
     /**
      * All the portals in a specific sulu installation.
      *
-     * @var array<string, Portal>
+     * @var array<int, Portal>
      */
     private $portals = [];
 
@@ -51,7 +50,7 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
      *
      * @return Portal|null
      */
-    public function getPortal($key)
+    public function getPortal(string $key): ?Portal
     {
         return $this->portals[$key] ?? null;
     }
@@ -59,12 +58,11 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
     /**
      * Returns the portal informations for the given environment.
      *
-     * @param string $environment The environment to deliver
-     * @param array|null $types Defines which type of portals are requested (null for all)
+     * @param array<string>|null $types Defines which type of portals are requested (null for all)
      *
      * @return PortalInformation[]
      */
-    public function getPortalInformations($environment, $types = null)
+    public function getPortalInformations(string $environment, array $types = null): array
     {
         if (!isset($this->portalInformations[$environment])) {
             throw new \InvalidArgumentException(\sprintf(
@@ -83,24 +81,12 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
         );
     }
 
-    /**
-     * Returns the webspace with the given key.
-     *
-     * @param string $key The key of the webspace
-     *
-     * @return Webspace|null
-     */
-    public function getWebspace($key)
+    public function getWebspace(string $key): ?Webspace
     {
         return $this->webspaces[$key] ?? null;
     }
 
-    /**
-     * Returns the length of the collection.
-     *
-     * @return int
-     */
-    public function count()
+    public function count(): int
     {
         return \count($this->webspaces);
     }
@@ -128,7 +114,7 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         $collection = [];
 
@@ -155,7 +141,7 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
     /**
      * @return Webspace[]
      */
-    public function getWebspaces()
+    public function getWebspaces(): array
     {
         return $this->webspaces;
     }
@@ -163,9 +149,9 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
     /**
      * Returns all the portals of this collection.
      *
-     * @return Portal[]
+     * @return array<int, Portal>
      */
-    public function getPortals()
+    public function getPortals(): array
     {
         return $this->portals;
     }
@@ -173,9 +159,9 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
     /**
      * Sets the portals for this collection.
      *
-     * @param Portal[] $portals
+     * @param <int, Portal> $portals
      */
-    public function setPortals($portals)
+    public function setPortals($portals): void
     {
         $this->portals = $portals;
     }

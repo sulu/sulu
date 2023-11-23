@@ -10,10 +10,8 @@
     <name>Sulu CMF</name>
     <key>sulu_io</key>
 
-    <localizations>
-        <localization language="en" country="us" shadow="auto"/>
-        <localization language="de" country="at" default="true"/>
-    </localizations>
+    <localization language="en" country="us" shadow="auto"/>
+    <localization language="de" country="at" default="true"/>
 
     <theme>sulu</theme>
 
