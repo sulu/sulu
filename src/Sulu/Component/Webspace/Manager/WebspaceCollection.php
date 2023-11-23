@@ -126,7 +126,7 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
      */
     public function getWebspaces(): array
     {
-        return array_values($this->webspaces);
+        return $this->webspaces;
     }
 
     /**
@@ -136,7 +136,7 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
      */
     public function getPortals(): array
     {
-        return array_values($this->portals);
+        return $this->portals;
     }
 
     /**

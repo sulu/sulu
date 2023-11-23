@@ -33,10 +33,10 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $containerBuilder = new ContainerBuilder();
         $containerBuilder->registerExtension(new SuluWebsiteExtension());
 
-        $loader = new XmlFileLoader(
-            $containerBuilder,
-            new FileLocator(),
-        );
+        $loader = new XmlFileLoader($containerBuilder, new FileLocator($directory));
+        foreach ($files as $file) {
+            $loader->load($file);
+        }
 
         $configuration = $containerBuilder->getExtensionConfig('sulu_website');
 
@@ -49,7 +49,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         ))->build();
     }
 
-    public function testBuild(): void
+    public function testBuildAll(): void
     {
         $webspaceCollection = $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple',
@@ -78,7 +78,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertEquals('Footer', $navigationContext[1]->getTitle('en'));
         $this->assertEquals('Footer', $navigationContext[1]->getTitle('fr'));
 
-        $portals = $webspaceCollection->getPortals();
+        $portals = array_values($webspaceCollection->getPortals());
 
         $this->assertCount(3, $portals);
 
@@ -89,6 +89,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $prodPortalInformations = $webspaceCollection->getPortalInformations('prod');
 
         $this->assertCount(7, $prodPortalInformations);
+
 
         $prodPortalInformationKeys = \array_keys($prodPortalInformations);
         $prodPortalInformationValues = \array_values($prodPortalInformations);
@@ -174,14 +175,10 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
     public function testBuildWithMainUrl(): void
     {
-        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            new Replacer(),
+        $webspaceCollection = $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/main',
-            ['default', 'overview']
+            ['sulu.io.xml']
         );
-
-        $webspaceCollection = $webspaceCollectionBuilder->build();
 
         $webspace = $webspaceCollection->getWebspaces()[0];
         $this->assertEquals('sulu_io', $webspace->getKey());
@@ -201,14 +198,10 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
     public function testBuildWithCustomUrl(): void
     {
-        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            new Replacer(),
+        $webspaceCollection = $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/custom-url',
-            ['default', 'overview']
+            ['sulu.io.xml']
         );
-
-        $webspaceCollection = $webspaceCollectionBuilder->build();
 
         $webspace = $webspaceCollection->getWebspaces()[0];
         $this->assertEquals('sulu_io', $webspace->getKey());
@@ -229,14 +222,10 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
     public function testLanguageSpecificPartial(): void
     {
-        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            new Replacer(),
+        $webspaceCollection = $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/language-specific',
-            ['default', 'overview']
+            ['sulu.io.xml']
         );
-
-        $webspaceCollection = $webspaceCollectionBuilder->build();
 
         $portalInformations = $webspaceCollection->getPortalInformations('dev');
 

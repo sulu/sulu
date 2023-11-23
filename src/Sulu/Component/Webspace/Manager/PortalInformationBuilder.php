@@ -14,6 +14,9 @@ use Sulu\Component\Webspace\Url;
 
 class PortalInformationBuilder
 {
+    /**
+     * @var array<string, array<string, PortalInformation>> $portalInformation
+    */
     private array $portalInformations = [];
 
     public function __construct(private ReplacerInterface $urlReplacer) {
@@ -182,13 +185,23 @@ class PortalInformationBuilder
             && '.' != \substr($urlResult, -1);
     }
 
+    /**
+     * @return array<int,array>
+     */
     public function dumpAndClear(): array
     {
-        $result = [...$this->portalInformations];
+        $portalInformations = $this->portalInformations;
+
+        foreach($portalInformations as &$portalInformation) {
+            \uksort(
+                $portalInformation,
+                fn ($a, $b) => \strlen($a) < \strlen($b) ? 1 : -1
+            );
+        }
 
         unset($this->portalInformations);
 
-        return $result;
+        return $portalInformations;
     }
 
 }
