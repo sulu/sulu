@@ -22,12 +22,6 @@ use Sulu\Component\Webspace\Webspace;
  */
 class WebspaceCollection implements \IteratorAggregate, \Countable
 {
-    /**
-     * All the portals in a specific sulu installation.
-     *
-     * @var array<int, Portal>
-     */
-    private $portals = [];
 
     /**
      * The portals of this specific sulu installation, prefiltered by the environment and url.
@@ -37,10 +31,12 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
     private $portalInformations = [];
 
     /**
-     * @param array<string, Webspace> $webspaces     All the webspaces in a specific sulu installation (indexed by key)
+     * @param array<string, Webspace> $webspaces     All webspaces in a specific sulu installation (indexed by key)
+     * @param array<string, Portal> $portals         All portals in a specific sulu installation (indexed by key)
      */
     public function __construct(
         private array $webspaces = [],
+        private array $portals = [],
     ) { }
 
     /**
@@ -91,20 +87,7 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
         return \count($this->webspaces);
     }
 
-    /**
-     * Returns the length of the collection.
-     *
-     * @deprecated Use the count function instead.
-     *
-     * @return int
-     */
-    public function length()
-    {
-        return count($this);
-    }
-
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->webspaces);
     }
@@ -143,7 +126,7 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
      */
     public function getWebspaces(): array
     {
-        return $this->webspaces;
+        return array_values($this->webspaces);
     }
 
     /**
@@ -153,7 +136,7 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
      */
     public function getPortals(): array
     {
-        return $this->portals;
+        return array_values($this->portals);
     }
 
     /**

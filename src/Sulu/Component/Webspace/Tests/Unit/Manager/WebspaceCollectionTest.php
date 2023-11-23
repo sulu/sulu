@@ -37,8 +37,6 @@ class WebspaceCollectionTest extends TestCase
         $portals = [];
         $portalInformations = ['prod' => [], 'dev' => []];
 
-        $this->webspaceCollection = new WebspaceCollection();
-
         // first portal
         $portal = new Portal();
         $portal->setName('Portal1');
@@ -119,8 +117,8 @@ class WebspaceCollectionTest extends TestCase
             $segmentSummer
         );
 
-        $this->webspaceCollection->setWebspaces($webspaces);
-        $this->webspaceCollection->setPortals($portals);
+        $this->webspaceCollection = new WebspaceCollection($webspaces, $portals);
+
         $this->webspaceCollection->setPortalInformations($portalInformations);
     }
 

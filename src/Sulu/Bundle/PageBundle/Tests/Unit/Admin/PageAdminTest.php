@@ -103,10 +103,7 @@ class PageAdminTest extends TestCase
         $webspace2->setLocalizations([$localization2]);
         $webspace2->setDefaultLocalization($localization2);
 
-        $webspaceCollection = new WebspaceCollection();
-        $webspaceCollection->setWebspaces([$webspace1, $webspace2]);
-
-        $this->webspaceManager->getWebspaceCollection()->willReturn($webspaceCollection);
+        $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([$webspace1, $webspace2]));
 
         $admin = new PageAdmin(
             $this->viewBuilderFactory,

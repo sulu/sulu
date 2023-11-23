@@ -53,8 +53,7 @@ class WebspaceCollectionBuilder
             );
         }
 
-        $webspaceCollection = new WebspaceCollection($webspaceRefs);
-        $webspaceCollection->setPortals(array_values($portalRefs));
+        $webspaceCollection = new WebspaceCollection($webspaceRefs, $portalRefs);
         $webspaceCollection->setPortalInformations($this->portalInformationBuilder->dumpAndClear());
 
         return $webspaceCollection;

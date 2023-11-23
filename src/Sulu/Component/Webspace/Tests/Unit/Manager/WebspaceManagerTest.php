@@ -571,7 +571,7 @@ class WebspaceManagerTest extends WebspaceTestCase
 
         $webspaces = $this->webspaceManager->getWebspaceCollection();
 
-        $this->assertEquals(2, $webspaces->length());
+        $this->assertCount(2, $webspaces);
 
         $webspace = $webspaces->getWebspace('massiveart');
         $this->assertInstanceOf(Webspace::class, $webspace);
