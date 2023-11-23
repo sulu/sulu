@@ -26,14 +26,14 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * All the webspaces in a specific sulu installation.
      *
-     * @var Webspace[]
+     * @var array<string, Webspace>
      */
     private $webspaces;
 
     /**
      * All the portals in a specific sulu installation.
      *
-     * @var Portal[]
+     * @var array<string, Portal>
      */
     private $portals;
 
@@ -52,6 +52,9 @@ class WebspaceCollection implements \IteratorAggregate
      */
     private $resources;
 
+    /**
+     * @param array<string, Webspace> $webspaces
+     */
     public function __construct(array $webspaces = [])
     {
         $this->webspaces = $webspaces;
@@ -78,7 +81,7 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Returns the portal with the given index.
      *
-     * @param int|string $key The index of the portal
+     * @param string $key The index of the portal
      *
      * @return Portal|null
      */
@@ -117,7 +120,7 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Returns the webspace with the given key.
      *
-     * @param int|string $key The key of the webspace
+     * @param string $key The key of the webspace
      *
      * @return Webspace|null
      */
@@ -172,7 +175,7 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * @param \Sulu\Component\Webspace\Webspace[] $webspaces
+     * @param array<string, Webspace> $webspaces
      */
     public function setWebspaces($webspaces)
     {
@@ -180,7 +183,7 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * @return \Sulu\Component\Webspace\Webspace[]
+     * @return array<string, Webspace>
      */
     public function getWebspaces()
     {
@@ -190,7 +193,7 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Returns all the portals of this collection.
      *
-     * @return Portal[]
+     * @return array<string, Portal>
      */
     public function getPortals()
     {
@@ -200,7 +203,7 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Sets the portals for this collection.
      *
-     * @param Portal[] $portals
+     * @param array<string, Portal> $portals
      */
     public function setPortals($portals)
     {

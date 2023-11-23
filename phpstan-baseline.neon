@@ -1046,7 +1046,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
 
 		-
-			message: "#^Parameter \\#2 \\$callback of function array_filter expects callable\\(mixed\\)\\: mixed, Closure\\(Sulu\\\\Bundle\\\\AdminBundle\\\\Entity\\\\Collaboration\\)\\: bool given\\.$#"
+			message: "#^Parameter \\#2 \\$callback of function array_filter expects \\(callable\\(mixed\\)\\: mixed\\)\\|null, Closure\\(Sulu\\\\Bundle\\\\AdminBundle\\\\Entity\\\\Collaboration\\)\\: bool given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
 
@@ -14366,11 +14366,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManager\\:\\:get\\(\\) return type with generic class Doctrine\\\\ORM\\\\Tools\\\\Pagination\\\\Paginator does not specify its types\\: T$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManager\\:\\:get\\(\\) should return Doctrine\\\\ORM\\\\Tools\\\\Pagination\\\\Paginator but returns array\\<int\\<0, max\\>, Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Collection\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
@@ -14537,11 +14532,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManagerInterface\\:\\:get\\(\\) has parameter \\$sortBy with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManagerInterface\\:\\:get\\(\\) return type with generic class Doctrine\\\\ORM\\\\Tools\\\\Pagination\\\\Paginator does not specify its types\\: T$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManagerInterface.php
 
@@ -16132,11 +16122,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMedia\\(\\) has parameter \\$filter with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMedia\\(\\) should return array\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media\\> but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
 
@@ -56484,11 +56469,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\Dumper\\\\WebspaceCollectionDumper\\:\\:render\\(\\) has parameter \\$template with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Manager/Dumper/WebspaceCollectionDumper.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollection\\:\\:__construct\\(\\) has parameter \\$webspaces with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceCollection.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollection\\:\\:addResource\\(\\) has no return type specified\\.$#"
