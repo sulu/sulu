@@ -78,13 +78,13 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Returns the portal with the given index.
      *
-     * @param string $key The index of the portal
+     * @param int|string $key The index of the portal
      *
      * @return Portal|null
      */
     public function getPortal($key)
     {
-        return \array_key_exists($key, $this->portals) ? $this->portals[$key] : null;
+        return $this->portals[$key] ?? null;
     }
 
     /**
@@ -117,13 +117,13 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Returns the webspace with the given key.
      *
-     * @param string $key The key of the webspace
+     * @param int|string $key The key of the webspace
      *
      * @return Webspace|null
      */
     public function getWebspace($key)
     {
-        return \array_key_exists($key, $this->webspaces) ? $this->webspaces[$key] : null;
+        return $this->webspaces[$key] ?? null;
     }
 
     /**
