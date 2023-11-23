@@ -71,8 +71,8 @@ class CustomUrlAdmin extends Admin
     public function configureViews(ViewCollection $viewCollection): void
     {
         $listToolbarActions = [
-            new ToolbarAction('sulu_admin.add'),
-            new ToolbarAction('sulu_admin.delete'),
+            ToolbarAction::ADD(),
+            ToolbarAction::DELETE(),
         ];
 
         if ($this->hasSomeWebspaceCustomUrlPermission()) {

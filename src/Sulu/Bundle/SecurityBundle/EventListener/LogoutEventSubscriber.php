@@ -39,7 +39,7 @@ final class LogoutEventSubscriber implements EventSubscriberInterface
         $adminUrl = $this->urlGenerator->generate('sulu_admin');
         $request = $logoutEvent->getRequest();
 
-        if (!\str_starts_with($request->getPathInfo(), $adminUrl)) {
+        if (!str_starts_with($request->getPathInfo(), $adminUrl)) {
             // do nothing when not in admin context
 
             return;

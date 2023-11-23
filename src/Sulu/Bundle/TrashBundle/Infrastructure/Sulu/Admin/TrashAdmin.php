@@ -86,7 +86,7 @@ final class TrashAdmin extends Admin
             $toolbarActions = [];
 
             if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-                $toolbarActions[] = new ToolbarAction('sulu_admin.delete');
+                $toolbarActions[] = ToolbarAction::DELETE();
             }
 
             $listViewBuilder = $this->viewBuilderFactory->createListViewBuilder(static::LIST_VIEW, '/trash/:locale')

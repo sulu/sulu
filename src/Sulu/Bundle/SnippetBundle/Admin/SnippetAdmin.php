@@ -104,12 +104,12 @@ class SnippetAdmin extends Admin
         $editDropdownToolbarActions = [];
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::ADD)) {
-            $listToolbarActions[] = new ToolbarAction('sulu_admin.add');
+            $listToolbarActions[] = ToolbarAction::ADD();
         }
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $formToolbarActionsWithoutType[] = new ToolbarAction('sulu_admin.save');
-            $formToolbarActionsWithType[] = new ToolbarAction('sulu_admin.save');
+            $formToolbarActionsWithoutType[] = ToolbarAction::SAVE();
+            $formToolbarActionsWithType[] = ToolbarAction::SAVE();
             $formToolbarActionsWithType[] = new ToolbarAction('sulu_admin.type', ['sort_by' => 'title']);
 
             $editDropdownToolbarActions[] = new ToolbarAction('sulu_admin.copy', [
@@ -123,12 +123,12 @@ class SnippetAdmin extends Admin
         }
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-            $formToolbarActionsWithType[] = new ToolbarAction('sulu_admin.delete');
-            $listToolbarActions[] = new ToolbarAction('sulu_admin.delete');
+            $formToolbarActionsWithType[] = ToolbarAction::DELETE();
+            $listToolbarActions[] = ToolbarAction::DELETE();
         }
 
         if ($this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
-            $listToolbarActions[] = new ToolbarAction('sulu_admin.export');
+            $listToolbarActions[] = ToolbarAction::EXPORT();
         }
 
         if (0 !== \count($editDropdownToolbarActions)) {

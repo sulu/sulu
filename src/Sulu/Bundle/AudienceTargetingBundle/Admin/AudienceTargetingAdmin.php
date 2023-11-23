@@ -77,20 +77,20 @@ class AudienceTargetingAdmin extends Admin
         $formToolbarActions = [];
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::ADD)) {
-            $listToolbarActions[] = new ToolbarAction('sulu_admin.add');
+            $listToolbarActions[] = ToolbarAction::ADD();
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $formToolbarActions[] = new ToolbarAction('sulu_admin.save');
+            $formToolbarActions[] = ToolbarAction::SAVE();
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-            $listToolbarActions[] = new ToolbarAction('sulu_admin.delete');
-            $formToolbarActions[] = new ToolbarAction('sulu_admin.delete');
+            $listToolbarActions[] = ToolbarAction::DELETE();
+            $formToolbarActions[] = ToolbarAction::DELETE();
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
-            $listToolbarActions[] = new ToolbarAction('sulu_admin.export');
+            $listToolbarActions[] = ToolbarAction::EXPORT();
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {

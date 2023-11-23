@@ -76,21 +76,21 @@ class CategoryAdmin extends Admin
         $listToolbarActions = [];
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::ADD)) {
-            $listToolbarActions[] = new ToolbarAction('sulu_admin.add');
+            $listToolbarActions[] = ToolbarAction::ADD();
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $formToolbarActions[] = new ToolbarAction('sulu_admin.save');
+            $formToolbarActions[] = ToolbarAction::SAVE();
             $listToolbarActions[] = new ToolbarAction('sulu_admin.move');
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::DELETE)) {
-            $formToolbarActions[] = new ToolbarAction('sulu_admin.delete');
-            $listToolbarActions[] = new ToolbarAction('sulu_admin.delete');
+            $formToolbarActions[] = ToolbarAction::DELETE();
+            $listToolbarActions[] = ToolbarAction::DELETE();
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
-            $listToolbarActions[] = new ToolbarAction('sulu_admin.export');
+            $listToolbarActions[] = ToolbarAction::EXPORT();
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
@@ -157,7 +157,7 @@ class CategoryAdmin extends Admin
                     ->setFormKey('category_keywords')
                     ->addRouterAttributesToFormRequest(['id' => 'categoryId'])
                     ->setTabTitle('sulu_category.keywords')
-                    ->addToolbarActions([new ToolbarAction('sulu_admin.add'), new ToolbarAction('sulu_admin.delete')])
+                    ->addToolbarActions([ToolbarAction::ADD(), ToolbarAction::DELETE()])
                     ->setParent(static::EDIT_FORM_VIEW)
             );
         }

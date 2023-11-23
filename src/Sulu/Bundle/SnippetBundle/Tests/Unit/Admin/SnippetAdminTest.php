@@ -102,9 +102,9 @@ class SnippetAdminTest extends TestCase
         $this->assertEquals([
             'title' => 'sulu_snippet.snippets',
             'toolbarActions' => [
-                new ToolbarAction('sulu_admin.add'),
-                new ToolbarAction('sulu_admin.delete'),
-                new ToolbarAction('sulu_admin.export'),
+                ToolbarAction::ADD(),
+                ToolbarAction::DELETE(),
+                ToolbarAction::EXPORT(),
             ],
             'resourceKey' => 'snippets',
             'listKey' => 'snippets',

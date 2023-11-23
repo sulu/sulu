@@ -108,10 +108,10 @@ class MediaAdmin extends Admin
         $mediaLocales = $this->localizationManager->getLocales();
 
         $toolbarActions = [
-            new ToolbarAction('sulu_admin.save', [
+            ToolbarAction::SAVE([
                 'visible_condition' => '(_permissions && _permissions.edit)',
             ]),
-            new ToolbarAction('sulu_admin.delete', [
+            ToolbarAction::DELETE([
                 'visible_condition' => '(!_permissions || _permissions.delete)',
             ]),
         ];
