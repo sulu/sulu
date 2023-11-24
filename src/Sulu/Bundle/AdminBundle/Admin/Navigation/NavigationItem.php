@@ -11,6 +11,9 @@
 
 namespace Sulu\Bundle\AdminBundle\Admin\Navigation;
 
+/**
+ * @implements \Iterator<int, self>
+ */
 class NavigationItem implements \Iterator
 {
     /**
@@ -28,7 +31,7 @@ class NavigationItem implements \Iterator
     protected $name;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $label;
 
@@ -40,7 +43,7 @@ class NavigationItem implements \Iterator
     protected $icon;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $view;
 
@@ -52,7 +55,7 @@ class NavigationItem implements \Iterator
     /**
      * Contains the children of this item, which are other NavigationItems.
      *
-     * @var array
+     * @var array<self>
      */
     protected $children = [];
 
@@ -61,7 +64,7 @@ class NavigationItem implements \Iterator
      *
      * @var int
      */
-    protected $position;
+    protected $position = 0;
 
     /**
      * Describes how the navigation item should be shown in husky.
@@ -178,6 +181,9 @@ class NavigationItem implements \Iterator
         return $this->view;
     }
 
+    /**
+     * @param string[] $childViews
+     */
     public function setChildViews(array $childViews): void
     {
         $this->childViews = $childViews;
@@ -449,15 +455,9 @@ class NavigationItem implements \Iterator
 
         $children = $this->getChildren();
 
-        \usort(
-            $children,
-            function(NavigationItem $a, NavigationItem $b) {
-                $aPosition = $a->getPosition() ?? \PHP_INT_MAX;
-                $bPosition = $b->getPosition() ?? \PHP_INT_MAX;
-
-                return $aPosition - $bPosition;
-            }
-        );
+        \usort($children, function(NavigationItem $a, NavigationItem $b) {
+            return $a->getPosition() <=> $b->getPosition();
+        });
 
         foreach ($children as $key => $child) {
             /* @var NavigationItem $child */

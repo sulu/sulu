@@ -101,59 +101,9 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/Admin.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Admin\\:\\:getSecurityContextsWithPlaceholder\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Admin.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\AdminPool\\:\\:getSecurityContexts\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/AdminPool.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\AdminPool\\:\\:getSecurityContextsWithPlaceholder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/AdminPool.php
-
-		-
-			message: "#^Class Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem implements generic interface Iterator but does not specify its types\\: TKey, TValue$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:setChildViews\\(\\) has parameter \\$childViews with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:\\$children type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:\\$label \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\:\\:\\$view \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationItem.php
-
-		-
-			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Admin/Navigation/NavigationRegistry.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\Badge\\:\\:getRouterAttributesToRequest\\(\\) should return array\\<int\\|string, string\\> but returns array\\<string, mixed\\>\\.$#"
@@ -1051,7 +1001,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
 
 		-
-			message: "#^Parameter \\#2 \\$callback of function array_filter expects callable\\(mixed\\)\\: mixed, Closure\\(Sulu\\\\Bundle\\\\AdminBundle\\\\Entity\\\\Collaboration\\)\\: bool given\\.$#"
+			message: "#^Parameter \\#2 \\$callback of function array_filter expects \\(callable\\(mixed\\)\\: mixed\\)\\|null, Closure\\(Sulu\\\\Bundle\\\\AdminBundle\\\\Entity\\\\Collaboration\\)\\: bool given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Entity/CollaborationRepository.php
 
@@ -2308,11 +2258,6 @@ parameters:
 		-
 			message: "#^Cannot call method getName\\(\\) on Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\Navigation\\\\NavigationItem\\|null\\.$#"
 			count: 2
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Navigation/NavigationItemTest.php
-
-		-
-			message: "#^Cannot call method getName\\(\\) on mixed\\.$#"
-			count: 3
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Navigation/NavigationItemTest.php
 
 		-
@@ -4241,11 +4186,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\CategoryController\\:\\:initializeListBuilder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\CategoryController\\:\\:initializeListBuilder\\(\\) has parameter \\$locale with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
@@ -4292,11 +4232,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\CategoryController\\:\\:putAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\CategoryController\\:\\:saveCategory\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
@@ -5174,116 +5109,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$array of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayHasKey\\(\\) expects array\\|ArrayAccess, mixed given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Search/Converter/CategoryConverterTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:appendProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:clearProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:createCategoryApi\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:createCategoryApi\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:createCategoryEntity\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:getProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:setProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testAppendUrl\\(\\) has parameter \\$expected with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testAppendUrl\\(\\) has parameter \\$parameter with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testAppendUrl\\(\\) has parameter \\$string with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testAppendUrl\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testClearUrl\\(\\) has parameter \\$parameter with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testClearUrl\\(\\) has parameter \\$string with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testClearUrl\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testGet\\(\\) has parameter \\$categoryData with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testGet\\(\\) has parameter \\$depth with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testGet\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testGet\\(\\) has parameter \\$parent with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testSetUrl\\(\\) has parameter \\$expected with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testSetUrl\\(\\) has parameter \\$parameter with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testSetUrl\\(\\) has parameter \\$string with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Tests\\\\Unit\\\\Twig\\\\CategoryTwigExtensionTest\\:\\:testSetUrl\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
 
 		-
 			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:\\$query \\(Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<string\\>\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
@@ -11341,11 +11166,6 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Admin/CustomUrlAdmin.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CustomUrlBundle\\\\Admin\\\\CustomUrlAdmin\\:\\:getSecurityContextsWithPlaceholder\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Admin/CustomUrlAdmin.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getTitle\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
@@ -14156,11 +13976,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManager\\:\\:get\\(\\) return type with generic class Doctrine\\\\ORM\\\\Tools\\\\Pagination\\\\Paginator does not specify its types\\: T$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManager\\:\\:get\\(\\) should return Doctrine\\\\ORM\\\\Tools\\\\Pagination\\\\Paginator but returns array\\<int\\<0, max\\>, Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Collection\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManager.php
@@ -14322,11 +14137,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManagerInterface\\:\\:get\\(\\) has parameter \\$sortBy with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManagerInterface\\:\\:get\\(\\) return type with generic class Doctrine\\\\ORM\\\\Tools\\\\Pagination\\\\Paginator does not specify its types\\: T$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Collection/Manager/CollectionManagerInterface.php
 
@@ -15256,12 +15066,32 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
 		-
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$changer type mapping mismatch\\: property can contain Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null but database expects Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\User\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$children type mapping mismatch\\: property can contain Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionInterface\\> but database expects Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\>\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$creator type mapping mismatch\\: property can contain Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null but database expects Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\User\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$defaultMeta \\(Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\) does not accept Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$defaultMeta type mapping mismatch\\: database can contain Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\|null but property expects Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$media type mapping mismatch\\: property can contain Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaInterface\\> but database expects Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
@@ -15812,11 +15642,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMedia\\(\\) has parameter \\$filter with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMedia\\(\\) should return array\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media\\> but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
 
@@ -19051,21 +18876,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/DispositionTypeTwigExtensionTest.php
 
 		-
-			message: "#^Cannot access offset 0 on Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/MediaTwigExtensionTest.php
-
-		-
-			message: "#^Cannot access offset 1 on Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/MediaTwigExtensionTest.php
-
-		-
-			message: "#^Cannot access offset 2 on Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/MediaTwigExtensionTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Twig\\\\MediaTwigExtensionTest\\:\\:testResolveNotExistMedia\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/MediaTwigExtensionTest.php
@@ -19088,11 +18898,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$medias of method Sulu\\\\Bundle\\\\MediaBundle\\\\Twig\\\\MediaTwigExtension\\:\\:resolveMediasFunction\\(\\) expects array\\<int\\|Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaInterface\\>, array\\<int, int\\|Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media\\|Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media\\> given\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/MediaTwigExtensionTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media given\\.$#"
-			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Twig/MediaTwigExtensionTest.php
 
 		-
@@ -19431,27 +19236,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Twig/MediaTwigExtension.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Twig\\\\MediaTwigExtension\\:\\:resolveMediasFunction\\(\\) should return Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media but returns array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Twig/MediaTwigExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Twig\\\\MediaTwigExtension\\:\\:resolveMediasFunction\\(\\) should return Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Media but returns array\\<int, mixed\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Twig/MediaTwigExtension.php
-
-		-
 			message: "#^Call to an undefined method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilderInterface\\:\\:disablePreviewWebspaceChooser\\(\\)\\.$#"
 			count: 4
 			path: src/Sulu/Bundle/PageBundle/Admin/PageAdmin.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Admin\\\\PageAdmin\\:\\:getConfig\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Admin/PageAdmin.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Admin\\\\PageAdmin\\:\\:getSecurityContextsWithPlaceholder\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Admin/PageAdmin.php
 
@@ -26121,6 +25911,11 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Admin/PageAdminTest.php
 
 		-
+			message: "#^Parameter \\#1 \\$webspaces of class Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollection constructor expects array\\<string, Sulu\\\\Component\\\\Webspace\\\\Webspace\\>, array\\<int, Sulu\\\\Component\\\\Webspace\\\\Webspace\\> given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Command/ValidateWebspacesCommandTest.php
+
+		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Unit\\\\Command\\\\ValidateWebspacesCommandTest\\:\\:\\$structureMetadataFactory \\(Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\>\\) does not accept Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactoryInterface\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Command/ValidateWebspacesCommandTest.php
@@ -28451,6 +28246,11 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Command/CreateRoleCommand.php
 
 		-
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Command/CreateRoleCommand.php
+
+		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\:\\:getSalt\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
@@ -28534,6 +28334,11 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Command\\\\CreateUserCommand\\:\\:\\$passwordHasherFactory has unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactoryInterface as its type\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
+
+		-
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Command/InitCommand.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Command\\\\SyncPhpcrPermissionsCommand\\:\\:findDocuments\\(\\) should return iterable\\<object\\>&Sulu\\\\Component\\\\DocumentManager\\\\Collection\\\\QueryResultCollection but returns mixed\\.$#"
@@ -30957,11 +30762,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Admin\\\\SnippetAdmin\\:\\:getGlobalSnippetsSecurityContext\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Admin/SnippetAdmin.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Admin\\\\SnippetAdmin\\:\\:getSecurityContextsWithPlaceholder\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Admin/SnippetAdmin.php
 
@@ -33697,11 +33497,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Admin\\\\WebsiteAdmin\\:\\:getSecurityContextPermissions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Admin/WebsiteAdmin.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Admin\\\\WebsiteAdmin\\:\\:getSecurityContextsWithPlaceholder\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Admin/WebsiteAdmin.php
 
@@ -51371,11 +51166,6 @@ parameters:
 			path: src/Sulu/Component/Rest/RestHelper.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:initializeListBuilder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:processSubEntities\\(\\) has parameter \\$entities with no value type specified in iterable type Traversable\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
@@ -51404,11 +51194,6 @@ parameters:
 			message: "#^Variable \\$entities in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/RestHelper.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelperInterface\\:\\:initializeListBuilder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/RestHelperInterface.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\RestHelperInterface\\:\\:processSubEntities\\(\\) has parameter \\$entities with no value type specified in iterable type Traversable\\.$#"
@@ -52917,11 +52702,6 @@ parameters:
 
 		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
-			message: "#^Cannot access offset 'tags' on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/ContentType.php
 
@@ -54909,11 +54689,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\Dumper\\\\WebspaceCollectionDumper\\:\\:render\\(\\) has parameter \\$template with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Manager/Dumper/WebspaceCollectionDumper.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollection\\:\\:__construct\\(\\) has parameter \\$webspaces with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Manager/WebspaceCollection.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollection\\:\\:addResource\\(\\) has no return type specified\\.$#"

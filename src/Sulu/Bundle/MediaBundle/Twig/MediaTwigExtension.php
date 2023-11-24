@@ -73,7 +73,7 @@ class MediaTwigExtension extends AbstractExtension
      * @param string $locale
      *z
      *
-     * @return MediaApi
+     * @return MediaApi[]
      */
     public function resolveMediasFunction($medias, $locale)
     {

@@ -127,7 +127,7 @@ interface ListBuilderInterface
     /**
      * Defines how many items should be returned.
      *
-     * @param int $limit
+     * @param int|null $limit
      *
      * @return ListBuilderInterface
      */
@@ -136,7 +136,7 @@ interface ListBuilderInterface
     /**
      * Returns the limit of the builder.
      *
-     * @return int
+     * @return int|null
      */
     public function getLimit();
 

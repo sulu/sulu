@@ -62,7 +62,7 @@ abstract class AbstractListBuilder implements ListBuilderInterface
     /**
      * The limit for this query.
      *
-     * @var int
+     * @var int|null
      */
     protected $limit = null;
 
