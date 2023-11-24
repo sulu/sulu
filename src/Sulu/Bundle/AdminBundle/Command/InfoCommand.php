@@ -81,6 +81,7 @@ class InfoCommand extends Command
  - Sulu Slack Channel: <href=https://sulu.io/services-and-support#chat>https://sulu.io/services-and-support#chat</>
  - Symfony Slack Channel: <href=https://symfony.com/community>https://symfony.com/community</>
  - Doctrine Slack Channel: <href=https://www.doctrine-project.org/community/index.html>https://www.doctrine-project.org/community/index.html</>
+ - FriendsOfSulu: <href=https://github.com/FriendsOfSulu>https://github.com/FriendsOfSulu</>
 
 ---
 

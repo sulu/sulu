@@ -44,9 +44,9 @@ class AdminPool
     }
 
     /**
-     * Returns the combined security contexts from all Admin objects.
+     * Returns all the security contexts, which are available in the concrete bundle.
      *
-     * @return array
+     * @return array<string, array<string, array<string, string[]>>>
      */
     public function getSecurityContexts()
     {
@@ -58,6 +58,11 @@ class AdminPool
         return $contexts;
     }
 
+    /**
+     * Returns all the security contexts, which are available in the concrete bundle.
+     *
+     * @return array<string, array<string, array<string, string[]>>>
+     */
     public function getSecurityContextsWithPlaceholder()
     {
         $contexts = [];

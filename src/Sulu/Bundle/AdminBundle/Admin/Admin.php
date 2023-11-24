@@ -22,6 +22,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewProviderInterface;
 abstract class Admin implements ViewProviderInterface, NavigationProviderInterface
 {
     public const SULU_ADMIN_SECURITY_SYSTEM = 'Sulu';
+
     public const SETTINGS_NAVIGATION_ITEM = 'sulu_admin.settings';
 
     public static function getPriority(): int
@@ -40,7 +41,7 @@ abstract class Admin implements ViewProviderInterface, NavigationProviderInterfa
     /**
      * Returns all the security contexts, which are available in the concrete bundle.
      *
-     * @return mixed[]
+     * @return array<string, array<string, array<string, string[]>>>
      */
     public function getSecurityContexts()
     {
@@ -50,7 +51,7 @@ abstract class Admin implements ViewProviderInterface, NavigationProviderInterfa
     /**
      * Returns all the security contexts, which are available in the concrete bundle.
      *
-     * @return array
+     * @return array<string, array<string, array<string, string[]>>>
      */
     public function getSecurityContextsWithPlaceholder()
     {

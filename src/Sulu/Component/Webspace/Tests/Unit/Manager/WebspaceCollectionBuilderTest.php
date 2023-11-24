@@ -66,26 +66,28 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
         $webspaceCollection = $webspaceCollectionBuilder->build();
 
-        $webspaces = $webspaceCollection->getWebspaces();
+        $webspaces = \array_values($webspaceCollection->getWebspaces());
 
         $this->assertCount(2, $webspaces);
 
         $this->assertEquals('Massive Art', $webspaces[0]->getName());
         $this->assertEquals('Sulu CMF', $webspaces[1]->getName());
 
-        $this->assertEquals(2, \count($webspaces[0]->getNavigation()->getContexts()));
+        $navigationContext = $webspaces[0]->getNavigation()->getContexts();
 
-        $this->assertEquals('main', $webspaces[0]->getNavigation()->getContexts()[0]->getKey());
-        $this->assertEquals('Hauptnavigation', $webspaces[0]->getNavigation()->getContexts()[0]->getTitle('de'));
-        $this->assertEquals('Mainnavigation', $webspaces[0]->getNavigation()->getContexts()[0]->getTitle('en'));
-        $this->assertEquals('Main', $webspaces[0]->getNavigation()->getContexts()[0]->getTitle('fr'));
+        $this->assertEquals(2, \count($navigationContext));
 
-        $this->assertEquals('footer', $webspaces[0]->getNavigation()->getContexts()[1]->getKey());
-        $this->assertEquals('Unten', $webspaces[0]->getNavigation()->getContexts()[1]->getTitle('de'));
-        $this->assertEquals('Footer', $webspaces[0]->getNavigation()->getContexts()[1]->getTitle('en'));
-        $this->assertEquals('Footer', $webspaces[0]->getNavigation()->getContexts()[1]->getTitle('fr'));
+        $this->assertEquals('main', $navigationContext[0]->getKey());
+        $this->assertEquals('Hauptnavigation', $navigationContext[0]->getTitle('de'));
+        $this->assertEquals('Mainnavigation', $navigationContext[0]->getTitle('en'));
+        $this->assertEquals('Main', $navigationContext[0]->getTitle('fr'));
 
-        $portals = $webspaceCollection->getPortals();
+        $this->assertEquals('footer', $navigationContext[1]->getKey());
+        $this->assertEquals('Unten', $navigationContext[1]->getTitle('de'));
+        $this->assertEquals('Footer', $navigationContext[1]->getTitle('en'));
+        $this->assertEquals('Footer', $navigationContext[1]->getTitle('fr'));
+
+        $portals = \array_values($webspaceCollection->getPortals());
 
         $this->assertCount(3, $portals);
 
@@ -194,7 +196,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
         $webspaceCollection = $webspaceCollectionBuilder->build();
 
-        $webspace = $webspaceCollection->getWebspaces()[0];
+        $webspace = $webspaceCollection->getWebspaces()['sulu_io'];
         $this->assertEquals('sulu_io', $webspace->getKey());
 
         $dev = $webspace->getPortals()[0]->getEnvironment('dev');
@@ -221,7 +223,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
         $webspaceCollection = $webspaceCollectionBuilder->build();
 
-        $webspace = $webspaceCollection->getWebspaces()[0];
+        $webspace = $webspaceCollection->getWebspaces()['sulu_io'];
         $this->assertEquals('sulu_io', $webspace->getKey());
 
         $dev = $webspace->getPortals()[0]->getEnvironment('dev');

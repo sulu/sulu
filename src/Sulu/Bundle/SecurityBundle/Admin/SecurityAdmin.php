@@ -116,13 +116,13 @@ class SecurityAdmin extends Admin
         return [
             self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Security' => [
-                    static::ROLE_SECURITY_CONTEXT => [
+                    self::ROLE_SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,
                         PermissionTypes::DELETE,
                     ],
-                    static::USER_SECURITY_CONTEXT => [
+                    self::USER_SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,
