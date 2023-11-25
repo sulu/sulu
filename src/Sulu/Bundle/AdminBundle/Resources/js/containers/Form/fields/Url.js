@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {isArrayLike} from 'mobx';
+import {isObservableArray} from 'mobx';
 import UrlComponent from '../../../components/Url';
 import type {FieldTypeProps} from '../../../types';
 import type {IObservableArray} from 'mobx/lib/mobx';
@@ -19,7 +19,9 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
             value,
         } = this.props;
 
-        if (unvalidatedDefaults !== undefined && !isArrayLike(unvalidatedDefaults)) {
+        if (unvalidatedDefaults !== undefined
+            && !(Array.isArray(unvalidatedDefaults) || isObservableArray(unvalidatedDefaults))
+        ) {
             throw new Error('The "defaults" schema option must be an array!');
         }
         // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
@@ -73,7 +75,7 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
         let protocols = undefined;
 
         if (unvalidatedSchemes) {
-            if (!isArrayLike(unvalidatedSchemes)) {
+            if (!(Array.isArray(unvalidatedSchemes) || isObservableArray(unvalidatedSchemes))) {
                 throw new Error('The "schemes" schema option must be an array!');
             }
             // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
@@ -93,7 +95,7 @@ export default class Url extends React.Component<FieldTypeProps<?string>> {
             });
         }
 
-        if (!isArrayLike(defaults)) {
+        if (!(Array.isArray(defaults) || isObservableArray(defaults))) {
             throw new Error('The "defaults" schema option must be an array!');
         }
 

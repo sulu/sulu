@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, isArrayLike, observable} from 'mobx';
+import {action, computed, isObservableArray, observable} from 'mobx';
 import {arrayMove} from '../../../utils';
 import type {ColumnItem, StructureStrategyInterface} from '../types';
 
@@ -129,7 +129,7 @@ export default class ColumnStructureStrategy implements StructureStrategyInterfa
         const resourceKey = Object.keys(item._embedded)[0];
         const childItems = item._embedded[resourceKey];
 
-        if (isArrayLike(childItems) && !this.rawData.has(item.id)) {
+        if ((Array.isArray(childItems) || isObservableArray(childItems)) && !this.rawData.has(item.id)) {
             this.rawData.set(item.id, []);
             // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array
             childItems.forEach((childItem) => {

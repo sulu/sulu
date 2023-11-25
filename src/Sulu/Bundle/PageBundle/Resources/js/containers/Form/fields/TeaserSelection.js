@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, isArrayLike, observable} from 'mobx';
+import {computed, isObservableArray, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import jsonpointer from 'json-pointer';
 import {userStore} from 'sulu-admin-bundle/stores';
@@ -55,7 +55,7 @@ class TeaserSelection extends React.Component<FieldTypeProps<TeaserSelectionValu
             } = {},
         } = schemaOptions;
 
-        if (!isArrayLike(presentAs)) {
+        if (!(Array.isArray(presentAs) || isObservableArray(presentAs))) {
             throw new Error(
                 'The "present_as" schemaOption must be an array, but received ' + typeof presentAs + '!'
             );

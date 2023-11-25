@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, isArrayLike, observable, toJS} from 'mobx';
+import {action, autorun, computed, isObservableArray, observable, toJS} from 'mobx';
 import equal from 'fast-deep-equal';
 import log from 'loglevel';
 import {compile} from 'path-to-regexp';
@@ -71,7 +71,7 @@ function equalBindings(value1, value2) {
 }
 
 function addValueToSearchParameters(searchParameters: URLSearchParams, value: Object, path: string) {
-    if (isArrayLike(value)) {
+    if (Array.isArray(value) || isObservableArray(value)) {
         addArrayToSearchParameters(searchParameters, value, path);
     } else if (value instanceof Date) {
         addDateToSearchParameters(searchParameters, value, path);
