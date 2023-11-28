@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Snippet;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\WebsiteBundle\Resolver\StructureResolverInterface;
 use Sulu\Component\Content\Compat\Structure\SnippetBridge;
+use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 
@@ -22,6 +23,9 @@ use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
  */
 class SnippetResolver implements SnippetResolverInterface
 {
+    /**
+     * @var array<array|StructureInterface>
+     */
     private array $snippetCache = [];
 
     public function __construct(
@@ -30,11 +34,20 @@ class SnippetResolver implements SnippetResolverInterface
     ) {
     }
 
+    /**
+     * @param array<string> $uuids
+     * @param string $webspaceKey
+     * @param string $locale
+     * @param string|null $shadowLocale
+     * @param bool $loadExcerpt
+     *
+     * @return array
+     */
     public function resolve($uuids, $webspaceKey, $locale, $shadowLocale = null, $loadExcerpt = false)
     {
         $snippets = [];
         foreach ($uuids as $uuid) {
-            $cacheKey = sprintf('%s|%s', $locale, $uuid);
+            $cacheKey = \sprintf('%s|%s', $locale, $uuid);
             if (!\array_key_exists($cacheKey, $this->snippetCache)) {
                 try {
                     $snippet = $this->contentMapper->load($uuid, $webspaceKey, $locale);
