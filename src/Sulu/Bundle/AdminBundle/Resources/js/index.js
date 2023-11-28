@@ -123,6 +123,7 @@ import {ExternalLinkTypeOverlay, LinkTypeOverlay} from './containers/Link';
 import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
 
 configure({
+    useProxies: "never",
     // TODO revert to "always" and upgrade step by step see: https://mobx.js.org/migrating-from-4-or-5.html
     enforceActions: 'never',
 });

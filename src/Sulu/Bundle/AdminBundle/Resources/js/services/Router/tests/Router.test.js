@@ -39,7 +39,8 @@ test('Navigate to route using state', () => {
 
     router.navigate('test');
     router.navigate('page', {uuid: 'some-uuid'});
-    expect(isObservable(router.route)).toBe(true);
+
+    expect(isObservable(router.route)).toBe(true); // should be observable
     expect(router.route.type).toBe('form');
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
