@@ -2,8 +2,14 @@
 import Enzyme from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import '@testing-library/jest-dom';
+import {configure} from 'mobx';
 
 Enzyme.configure({adapter: new Adapter()});
+
+configure({
+    // TODO revert to "always" and upgrade step by step see: https://mobx.js.org/migrating-from-4-or-5.html
+    enforceActions: 'never',
+});
 
 jest.mock('sulu-admin-bundle/services/Config', () => ({
     endpoints: {

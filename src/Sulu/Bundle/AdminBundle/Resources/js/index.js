@@ -123,8 +123,8 @@ import {ExternalLinkTypeOverlay, LinkTypeOverlay} from './containers/Link';
 import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
 
 configure({
-    // TODO revert and upgrade step by step see: https://mobx.js.org/migrating-from-4-or-5.html
-    enforceActions: 'always',
+    // TODO revert to "always" and upgrade step by step see: https://mobx.js.org/migrating-from-4-or-5.html
+    enforceActions: 'never',
 });
 
 if (!window.ResizeObserver) {
