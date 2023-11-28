@@ -122,7 +122,10 @@ import {initializeJexl} from './utils/jexl';
 import {ExternalLinkTypeOverlay, LinkTypeOverlay} from './containers/Link';
 import linkTypeRegistry from './containers/Link/registries/linkTypeRegistry';
 
-configure({enforceActions: 'observed'});
+configure({
+    // TODO revert and upgrade step by step see: https://mobx.js.org/migrating-from-4-or-5.html
+    enforceActions: 'always',
+});
 
 if (!window.ResizeObserver) {
     window.ResizeObserver = ResizeObserver;
