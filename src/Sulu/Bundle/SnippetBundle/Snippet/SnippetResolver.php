@@ -22,27 +22,12 @@ use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
  */
 class SnippetResolver implements SnippetResolverInterface
 {
-    /**
-     * @var array
-     */
-    private $snippetCache = [];
-
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
-
-    /**
-     * @var StructureResolverInterface
-     */
-    private $structureResolver;
+    private array $snippetCache = [];
 
     public function __construct(
-        ContentMapperInterface $contentMapper,
-        StructureResolverInterface $structureResolver
+        private ContentMapperInterface $contentMapper,
+        private StructureResolverInterface $structureResolver
     ) {
-        $this->contentMapper = $contentMapper;
-        $this->structureResolver = $structureResolver;
     }
 
     public function resolve($uuids, $webspaceKey, $locale, $shadowLocale = null, $loadExcerpt = false)
