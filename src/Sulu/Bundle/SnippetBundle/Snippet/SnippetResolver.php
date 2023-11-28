@@ -34,7 +34,8 @@ class SnippetResolver implements SnippetResolverInterface
     {
         $snippets = [];
         foreach ($uuids as $uuid) {
-            if (!\array_key_exists($uuid, $this->snippetCache)) {
+            $cacheKey = sprintf('%s|%s', $locale, $uuid);
+            if (!\array_key_exists($cacheKey, $this->snippetCache)) {
                 try {
                     $snippet = $this->contentMapper->load($uuid, $webspaceKey, $locale);
                 } catch (DocumentNotFoundException $e) {
@@ -63,10 +64,10 @@ class SnippetResolver implements SnippetResolverInterface
                 $resolved['view']['template'] = $snippet->getKey();
                 $resolved['view']['uuid'] = $snippet->getUuid();
 
-                $this->snippetCache[$uuid] = $resolved;
+                $this->snippetCache[$cacheKey] = $resolved;
             }
 
-            $snippets[] = $this->snippetCache[$uuid];
+            $snippets[] = $this->snippetCache[$cacheKey];
         }
 
         return $snippets;
