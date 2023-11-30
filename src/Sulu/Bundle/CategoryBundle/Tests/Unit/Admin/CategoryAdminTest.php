@@ -68,7 +68,7 @@ class CategoryAdminTest extends TestCase
     private $formOverlayListBuilder;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $locales;
 
