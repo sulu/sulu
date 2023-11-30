@@ -116,17 +116,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/Badge.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addLocalesToView\\(\\) has parameter \\$locales with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addMetadataRequestParameters\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addMetadataRequestParametersToView\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
 
@@ -151,26 +141,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addRouterAttributesToBackViewToView\\(\\) has parameter \\$routerAttributesToBackView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addRouterAttributesToEditViewToView\\(\\) has parameter \\$routerAttributesToEditView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addRouterAttributesToFormMetadataToView\\(\\) has parameter \\$routerAttributesToFormMetadata with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addRouterAttributesToFormRequestToView\\(\\) has parameter \\$routerAttributesToFormRequest with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addRouterAttributesToListMetadataToView\\(\\) has parameter \\$routerAttributesToListMetadata with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
@@ -191,11 +161,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:setRequestParametersToView\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilderInterface\\:\\:addMetadataRequestParameters\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilderInterface.php
@@ -206,17 +171,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilderInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addLocalesToView\\(\\) has parameter \\$locales with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addMetadataRequestParameters\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addMetadataRequestParametersToView\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
 
@@ -226,37 +181,12 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addRequestParametersToView\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addRouterAttributesToBackView\\(\\) has parameter \\$routerAttributesToBackView with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addRouterAttributesToBackViewToView\\(\\) has parameter \\$routerAttributesToBackView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addRouterAttributesToEditViewToView\\(\\) has parameter \\$routerAttributesToEditView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addRouterAttributesToFormMetadata\\(\\) has parameter \\$routerAttributesToFormMetadata with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addRouterAttributesToFormMetadataToView\\(\\) has parameter \\$routerAttributesToFormMetadata with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addRouterAttributesToFormRequestToView\\(\\) has parameter \\$routerAttributesToFormRequest with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
 
@@ -267,11 +197,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:setRequestParameters\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:setRequestParametersToView\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
 
@@ -289,31 +214,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilderInterface\\:\\:addRouterAttributesToFormMetadata\\(\\) has parameter \\$routerAttributesToFormMetadata with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilderInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ListItemAction\\:\\:__construct\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ListItemAction.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ListItemAction\\:\\:getOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ListItemAction.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ListItemAction\\:\\:getType\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ListItemAction.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ListItemAction\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ListItemAction.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ListViewBuilder\\:\\:addLocalesToView\\(\\) has parameter \\$locales with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ListViewBuilder.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ListViewBuilder\\:\\:addRequestParameters\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
@@ -356,17 +256,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/ListViewBuilderInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addLocalesToView\\(\\) has parameter \\$locales with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addMetadataRequestParameters\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addMetadataRequestParametersToView\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
 
@@ -376,32 +266,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addRequestParametersToView\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addRouterAttributesToBackViewToView\\(\\) has parameter \\$routerAttributesToBackView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addRouterAttributesToEditViewToView\\(\\) has parameter \\$routerAttributesToEditView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addRouterAttributesToFormMetadata\\(\\) has parameter \\$routerAttributesToFormMetadata with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addRouterAttributesToFormMetadataToView\\(\\) has parameter \\$routerAttributesToFormMetadata with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addRouterAttributesToFormRequestToView\\(\\) has parameter \\$routerAttributesToFormRequest with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
 
@@ -412,11 +277,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:setRequestParameters\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:setRequestParametersToView\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
 
@@ -436,52 +296,12 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilderInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addLocalesToView\\(\\) has parameter \\$locales with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addMetadataRequestParametersToView\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addRequestParametersToView\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addRouterAttributesToBackViewToView\\(\\) has parameter \\$routerAttributesToBackView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addRouterAttributesToBlacklistToView\\(\\) has parameter \\$routerAttributesToBlacklist with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addRouterAttributesToEditViewToView\\(\\) has parameter \\$routerAttributesToEditView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addRouterAttributesToFormMetadataToView\\(\\) has parameter \\$routerAttributesToFormMetadata with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addRouterAttributesToFormRequestToView\\(\\) has parameter \\$routerAttributesToFormRequest with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:setOption\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:setRequestParametersToView\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
 
