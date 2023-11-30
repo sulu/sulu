@@ -66,7 +66,7 @@ class SnippetAdminTest extends TestCase
             $this->viewBuilderFactory,
             $this->securityChecker->reveal(),
             $this->webspaceManager->reveal(),
-            false,
+            false
         );
 
         $this->securityChecker->hasPermission('sulu.global.snippets', 'add')->willReturn(true);
