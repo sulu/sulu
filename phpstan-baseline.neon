@@ -34801,11 +34801,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/EventListener/AppendAnalyticsListener.php
 
 		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/EventListener/AppendAnalyticsListener.php
-
-		-
 			message: "#^Parameter \\#1 \\$responseContent of method Sulu\\\\Bundle\\\\WebsiteBundle\\\\EventListener\\\\AppendAnalyticsListener\\:\\:setAnalyticsContent\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/EventListener/AppendAnalyticsListener.php
