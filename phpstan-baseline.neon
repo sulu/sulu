@@ -3346,16 +3346,6 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
 
 		-
-			message: "#^Offset 0 does not exist on array\\{\\}\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
-
-		-
-			message: "#^Offset 1 does not exist on array\\{\\}\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:provideAddSetCookieHeader\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
@@ -43653,6 +43643,11 @@ parameters:
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Query\\\\ListToTreeConverter\\:\\:toArray\\(\\) has parameter \\$tree with no type specified\\.$#"
 			count: 1
+			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
+
+		-
+			message: "#^Offset 'children' does not exist on array\\{\\}\\.$#"
+			count: 2
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
 
 		-

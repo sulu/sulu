@@ -137,6 +137,7 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
         $node->setProperty($propertyName . '-page', $parentDocument->getUuid());
         $node->setProperty($propertyName . '-page-path', $resourceSegment);
 
+        /** @var string|null $suffix */
         $suffix = $node->getPropertyValueWithDefault($propertyName . '-suffix', null);
         if ($suffix) {
             $path = \rtrim($resourceSegment, '/') . '/' . \ltrim($suffix, '/');
