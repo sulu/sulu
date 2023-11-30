@@ -60,7 +60,7 @@ trait FormViewBuilderTrait
     }
 
     /**
-     * @param array<string, mixed> $routerAttributesToFormRequest
+     * @param array<string|int, mixed> $routerAttributesToFormRequest
      */
     private function addRouterAttributesToFormRequestToView(View $view, array $routerAttributesToFormRequest): void
     {

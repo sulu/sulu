@@ -270,11 +270,11 @@ class FormOverlayListViewBuilderTest extends TestCase
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
             ->addRouterAttributesToListRequest(['webspace' => 'webspaceId', 'parent' => 'parentId'])
-            ->addRouterAttributesToListRequest(['locale' => 'en_US'])
+            ->addRouterAttributesToListRequest(['locale'])
             ->getView();
 
         $this->assertEquals(
-            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale' => 'en_US'],
+            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
             $route->getOption('routerAttributesToListRequest')
         );
     }
@@ -287,11 +287,11 @@ class FormOverlayListViewBuilderTest extends TestCase
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
             ->addRouterAttributesToFormRequest(['webspace' => 'webspaceId', 'parent' => 'parentId'])
-            ->addRouterAttributesToFormRequest(['locale' => 'en_US'])
+            ->addRouterAttributesToFormRequest(['locale'])
             ->getView();
 
         $this->assertEquals(
-            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale' => 'en_US'],
+            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
             $route->getOption('routerAttributesToFormRequest')
         );
     }
@@ -304,11 +304,11 @@ class FormOverlayListViewBuilderTest extends TestCase
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
             ->addRouterAttributesToFormMetadata(['webspace' => 'webspaceId', 'parent' => 'parentId'])
-            ->addRouterAttributesToFormMetadata(['locale' => 'en_US'])
+            ->addRouterAttributesToFormMetadata(['locale'])
             ->getView();
 
         $this->assertEquals(
-            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale' => 'en_US'],
+            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
             $route->getOption('routerAttributesToFormMetadata')
         );
     }
@@ -321,11 +321,11 @@ class FormOverlayListViewBuilderTest extends TestCase
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
             ->addResourceStorePropertiesToListRequest(['webspace' => 'webspaceId', 'parent' => 'parentId'])
-            ->addResourceStorePropertiesToListRequest(['locale' => 'en_US'])
+            ->addResourceStorePropertiesToListRequest(['locale'])
             ->getView();
 
         $this->assertEquals(
-            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale' => 'en_US'],
+            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
             $route->getOption('resourceStorePropertiesToListRequest')
         );
     }
@@ -338,11 +338,11 @@ class FormOverlayListViewBuilderTest extends TestCase
             ->setFormKey('role_details')
             ->addListAdapters(['tree'])
             ->addResourceStorePropertiesToFormRequest(['webspace' => 'webspaceId', 'parent' => 'parentId'])
-            ->addResourceStorePropertiesToFormRequest(['locale' => 'en_US'])
+            ->addResourceStorePropertiesToFormRequest(['locale'])
             ->getView();
 
         $this->assertEquals(
-            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale' => 'en_US'],
+            ['webspace' => 'webspaceId', 'parent' => 'parentId', 'locale'],
             $route->getOption('resourceStorePropertiesToFormRequest')
         );
     }
