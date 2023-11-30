@@ -33156,11 +33156,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Twig/SnippetTwigExtensionTest.php
 
 		-
-			message: "#^Class Sulu\\\\Bundle\\\\SnippetBundle\\\\Admin\\\\SnippetAdmin constructor invoked with 5 parameters, 4 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Admin/SnippetAdminTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Unit\\\\Admin\\\\SnippetAdminTest\\:\\:provideConfigureViews\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Admin/SnippetAdminTest.php
