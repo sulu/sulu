@@ -24,7 +24,7 @@ interface ContentTypeInterface
      *
      * @param string $webspaceKey
      * @param string $languageCode
-     * @param string $segmentKey
+     * @param string|null $segmentKey
      */
     public function read(
         NodeInterface $node,
@@ -39,7 +39,7 @@ interface ContentTypeInterface
      *
      * @param string $webspaceKey
      * @param string $languageCode
-     * @param string $segmentKey
+     * @param string|null $segmentKey
      */
     public function hasValue(
         NodeInterface $node,
@@ -55,7 +55,7 @@ interface ContentTypeInterface
      * @param int $userId
      * @param string $webspaceKey
      * @param string $languageCode
-     * @param string $segmentKey
+     * @param string|null $segmentKey
      */
     public function write(
         NodeInterface $node,
@@ -71,7 +71,7 @@ interface ContentTypeInterface
      *
      * @param string $webspaceKey
      * @param string $languageCode
-     * @param string $segmentKey
+     * @param string|null $segmentKey
      */
     public function remove(
         NodeInterface $node,
