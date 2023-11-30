@@ -24146,61 +24146,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerFieldsTest.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getResourceSegment\\(\\)\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getStructure\\(\\)\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getUuid\\(\\)\\.$#"
-			count: 34
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setPermissions\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setRedirectTarget\\(\\)\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setRedirectType\\(\\)\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setResourceSegment\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setShadowLocale\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setShadowLocaleEnabled\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setStructureType\\(\\)\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setTitle\\(\\)\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
 			message: "#^Cannot access an offset on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
@@ -24247,7 +24192,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'contentLocales' on mixed\\.$#"
-			count: 11
+			count: 10
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -24267,7 +24212,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'id' on mixed\\.$#"
-			count: 48
+			count: 47
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -24357,7 +24302,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'title' on mixed\\.$#"
-			count: 38
+			count: 37
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -24367,7 +24312,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'url' on mixed\\.$#"
-			count: 21
+			count: 20
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -24477,7 +24422,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 86
+			count: 88
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
