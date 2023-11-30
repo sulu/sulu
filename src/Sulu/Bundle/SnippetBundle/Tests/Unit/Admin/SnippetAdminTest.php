@@ -20,7 +20,9 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 use Sulu\Component\Security\Authorization\SecurityChecker;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 
 class SnippetAdminTest extends TestCase
 {
@@ -66,16 +68,24 @@ class SnippetAdminTest extends TestCase
             $this->viewBuilderFactory,
             $this->securityChecker->reveal(),
             $this->webspaceManager->reveal(),
-            false,
-            'Test'
+            false
         );
 
         $this->securityChecker->hasPermission('sulu.global.snippets', 'add')->willReturn(true);
         $this->securityChecker->hasPermission('sulu.global.snippets', 'edit')->willReturn(true);
         $this->securityChecker->hasPermission('sulu.global.snippets', 'delete')->willReturn(true);
         $this->securityChecker->hasPermission('sulu.global.snippets', 'view')->willReturn(true);
+        $this->securityChecker->hasPermission('sulu.webspaces.sulu.default-snippets', 'edit')->willReturn(true);
 
         $this->webspaceManager->getAllLocales()->willReturn(\array_values($locales));
+
+        $webspace = new Webspace();
+        $webspace->setKey('sulu');
+        $webspaceCollection = new WebspaceCollection([
+            'sulu' => $webspace,
+        ]);
+        $this->webspaceManager->getWebspaceCollection()
+            ->willReturn($webspaceCollection);
 
         $viewCollection = new ViewCollection();
         $snippetAdmin->configureViews($viewCollection);
