@@ -7,9 +7,7 @@ import {configure} from 'mobx';
 Enzyme.configure({adapter: new Adapter()});
 
 configure({
-    useProxies: "never",
-    // TODO revert to "always" and upgrade step by step see: https://mobx.js.org/migrating-from-4-or-5.html
-    enforceActions: 'never',
+    enforceActions: 'always',
 });
 
 jest.mock('sulu-admin-bundle/services/Config', () => ({

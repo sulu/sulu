@@ -1,7 +1,7 @@
 // @flow
 import 'url-search-params-polyfill';
 import {createMemoryHistory} from 'history';
-import {observable, isObservable} from 'mobx';
+import {observable, action, intercept, isObservableProp} from 'mobx';
 import Router from '../Router';
 import Route from '../Route';
 import routeRegistry from '../registries/routeRegistry';
@@ -40,7 +40,7 @@ test('Navigate to route using state', () => {
     router.navigate('test');
     router.navigate('page', {uuid: 'some-uuid'});
 
-    expect(isObservable(router.route)).toBe(true); // should be observable
+    expect(isObservableProp(router, 'route')).toBe(true); // should be observable
     expect(router.route.type).toBe('form');
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
@@ -119,7 +119,7 @@ test('Redirect to route using state', () => {
     router.navigate('test1');
     router.navigate('test2');
     router.redirect('page', {uuid: 'some-uuid'});
-    expect(isObservable(router.route)).toBe(true);
+    expect(isObservableProp(router, 'route')).toBe(true);
     expect(router.route.type).toBe('form');
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
@@ -145,7 +145,7 @@ test('Navigate to route with search parameters using state', () => {
     const router = new Router(history);
 
     router.navigate('page', {uuid: 'some-uuid', page: 1, sort: 'title'});
-    expect(isObservable(router.route)).toBe(true);
+    expect(isObservableProp(router, 'route')).toBe(true);
     expect(router.route.type).toBe('form');
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
@@ -175,7 +175,7 @@ test('Navigate to route with object search parameters using state', () => {
         'page',
         {uuid: 'some-uuid', page: 1, filter: {firstName: {eq: 'Max'}, lastName: {eq: 'Mustermann'}}}
     );
-    expect(isObservable(router.route)).toBe(true);
+    expect(isObservableProp(router, 'route')).toBe(true);
     expect(router.route.type).toBe('form');
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
@@ -205,7 +205,7 @@ test('Navigate to route with array search parameters using state', () => {
         'page',
         {uuid: 'some-uuid', page: 1, ids: [1, 2, 3]}
     );
-    expect(isObservable(router.route)).toBe(true);
+    expect(isObservableProp(router, 'route')).toBe(true);
     expect(router.route.type).toBe('form');
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
@@ -235,7 +235,7 @@ test('Navigate to route with dates in array search parameters using state', () =
         'page',
         {uuid: 'some-uuid', page: 1, dates: [new Date('2020-03-10 00:00'), new Date('2020-03-20 12:00')]}
     );
-    expect(isObservable(router.route)).toBe(true);
+    expect(isObservableProp(router, 'route')).toBe(true);
     expect(router.route.type).toBe('form');
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
@@ -265,7 +265,7 @@ test('Navigate to route with array nested in object search parameters using stat
         'page',
         {uuid: 'some-uuid', page: 1, filter: {ids: [1, 2, 3]}}
     );
-    expect(isObservable(router.route)).toBe(true);
+    expect(isObservableProp(router, 'route')).toBe(true);
     expect(router.route.type).toBe('form');
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
@@ -295,7 +295,7 @@ test('Navigate to route with date search parameters using state', () => {
         'page',
         {uuid: 'some-uuid', page: 1, from: new Date('2020-02-28 00:00')}
     );
-    expect(isObservable(router.route)).toBe(true);
+    expect(isObservableProp(router, 'route')).toBe(true);
     expect(router.route.type).toBe('form');
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
@@ -325,7 +325,7 @@ test('Navigate to route with string representing invalid date search parameters 
         'page',
         {uuid: 'some-uuid', page: 1, from: '2020-02-32'}
     );
-    expect(isObservable(router.route)).toBe(true);
+    expect(isObservableProp(router, 'route')).toBe(true);
     expect(router.route.type).toBe('form');
     expect(router.route.options.type).toBe('page');
     expect(router.attributes.uuid).toBe('some-uuid');
@@ -394,7 +394,10 @@ test('Navigate to route without default attribute when observable is changed', (
     expect(router.attributes.locale).toBe('en');
     expect(history.location.pathname).toBe('/list/en');
 
-    locale.set('de');
+    action(() => {
+        locale.set('de');
+    })();
+
     expect(router.attributes.locale).toBe('de');
     expect(history.location.pathname).toBe('/list/de');
 });
@@ -877,7 +880,10 @@ test('Binding should update state in router', () => {
     router.bind('page', page);
     expect(router.attributes.page).toBe(1);
 
-    page.set(2);
+    action(() => {
+        page.set(2);
+    })();
+
     expect(router.attributes.page).toBe(2);
 });
 
@@ -913,14 +919,16 @@ test('Binding should not touch observable value when default attribute is alread
     const locale = observable.box('en');
     let observableChanged = false;
 
-    locale.intercept((change) => {
+    intercept(locale, (change) => {
         observableChanged = true;
         return change;
     });
 
     const history = createMemoryHistory();
     const router = new Router(history);
-    router.attributes.locale = undefined;
+    action(() => {
+        router.attributes.locale = undefined;
+    })();
 
     router.bind('locale', locale, 'en');
     router.handleNavigation('page', {}, router.navigate);
@@ -947,7 +955,9 @@ test('Binding should update URL with fixed attributes', () => {
     expect(router.attributes.uuid).toBe(1);
     expect(router.url).toBe('/page/1?locale=de');
 
-    uuid.set(2);
+    action(() => {
+        uuid.set(2);
+    })();
     expect(router.attributes.uuid).toBe(2);
 });
 
@@ -970,7 +980,9 @@ test('Binding should update URL with fixed attributes as string if not a number'
     expect(router.attributes.uuid).toBe('some-uuid');
     expect(router.url).toBe('/page/some-uuid?locale=de');
 
-    uuid.set('another-uuid');
+    action(() => {
+        uuid.set('another-uuid');
+    })();
     expect(router.attributes.uuid).toBe('another-uuid');
 });
 
@@ -993,7 +1005,9 @@ test('Binding should update state in router with other default bindings', () => 
     router.bind('locale', locale);
     router.handleNavigation('list', {}, router.navigate);
 
-    locale.set('de');
+    action(() => {
+        locale.set('de');
+    })();
     expect(history.location.search).toBe('?locale=de');
     expect(router.attributes.locale).toBe('de');
 });
@@ -1071,7 +1085,9 @@ test('Bound query should omit URL parameter if set to default value', () => {
     router.navigate('list');
 
     router.bind('page', value, '1');
-    value.set('1');
+    action(() => {
+        value.set('1');
+    })();
     expect(history.location.search).toBe('');
 });
 
