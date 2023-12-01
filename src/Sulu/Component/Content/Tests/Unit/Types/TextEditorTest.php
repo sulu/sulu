@@ -15,7 +15,6 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface as NodePropertyInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
