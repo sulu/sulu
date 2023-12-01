@@ -45,7 +45,7 @@ class TextEditor extends SimpleContentType
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
     {
         $value = $node->getPropertyValueWithDefault($property->getName(), $this->defaultValue);
-        $property->setValue($this->validate($value, $languageCode));
+        $property->setValue(\is_string($value) ? $this->validate($value, $languageCode) : null);
 
         return $value;
     }

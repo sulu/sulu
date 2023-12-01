@@ -378,6 +378,7 @@ class PageControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $permissions = [
@@ -455,6 +456,7 @@ class PageControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(
@@ -507,6 +509,7 @@ class PageControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(
@@ -546,6 +549,7 @@ class PageControllerTest extends SuluTestCase
             ],
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->request(
@@ -771,6 +775,7 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager->persist($internalLinkPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->flush();
 
+        /** @var BasePageDocument $internalLinkPage */
         $internalLinkPage = $this->documentManager->find($internalLinkPage->getUuid());
         $internalLinkPage->setRedirectType(RedirectType::INTERNAL);
         $internalLinkPage->setRedirectTarget($targetPage);
@@ -1062,6 +1067,7 @@ class PageControllerTest extends SuluTestCase
             'url' => '/test',
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(
@@ -1200,6 +1206,7 @@ class PageControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest('POST', '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en', $data);
@@ -1311,6 +1318,7 @@ class PageControllerTest extends SuluTestCase
             'url' => '/test',
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(
@@ -1404,6 +1412,7 @@ class PageControllerTest extends SuluTestCase
             'url' => '/test',
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest('POST', '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en', $data);
@@ -1429,6 +1438,7 @@ class PageControllerTest extends SuluTestCase
             'url' => '/test',
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(
@@ -1466,6 +1476,7 @@ class PageControllerTest extends SuluTestCase
             'url' => '/test',
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(
@@ -1477,6 +1488,7 @@ class PageControllerTest extends SuluTestCase
 
         $data['url'] = '/test2';
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(
@@ -1511,6 +1523,7 @@ class PageControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(
@@ -1685,6 +1698,7 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager->persist($internalLinkPage, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->flush();
 
+        /** @var BasePageDocument $internalLinkPage */
         $internalLinkPage = $this->documentManager->find($internalLinkPage->getUuid());
         $internalLinkPage->setRedirectType(RedirectType::INTERNAL);
         $internalLinkPage->setRedirectTarget($externalLinkPage);
@@ -1885,6 +1899,7 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager->publish($document, 'en');
         $this->documentManager->flush();
 
+        /** @var BasePageDocument $document */
         $document = $this->documentManager->find($document->getUuid(), 'de', ['load_ghost_content' => false]);
         $document->setTitle('test_de');
         $document->setResourceSegment('/test_de');
@@ -1917,9 +1932,11 @@ class PageControllerTest extends SuluTestCase
 
         $uuid = \json_decode($this->client->getResponse()->getContent(), true)['id'];
 
+        /** @var BasePageDocument $germanDocument */
         $germanDocument = $this->documentManager->find($uuid, 'de');
         $this->assertStringStartsWith('/test-de/test-de', $germanDocument->getResourceSegment());
 
+        /** @var BasePageDocument $englishDocument */
         $englishDocument = $this->documentManager->find($uuid, 'en');
         $this->assertStringStartsWith('/test-en/test-en', $englishDocument->getResourceSegment());
     }
@@ -1980,6 +1997,7 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager->publish($document, 'de');
         $this->documentManager->flush();
 
+        /** @var BasePageDocument $document */
         $document = $this->documentManager->find($document->getUuid(), 'de');
         $document->setTitle('draft title');
         $this->documentManager->persist($document, 'de');
@@ -2017,6 +2035,7 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager->publish($document, 'de');
         $this->documentManager->flush();
 
+        /** @var BasePageDocument $document */
         $document = $this->documentManager->find($document->getUuid(), 'de');
         $document->setTitle('draft title');
         $this->documentManager->persist($document, 'de');
@@ -2163,6 +2182,7 @@ class PageControllerTest extends SuluTestCase
             ],
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(
@@ -2195,6 +2215,7 @@ class PageControllerTest extends SuluTestCase
             'navContexts' => ['main', 'footer'],
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(
@@ -2243,6 +2264,7 @@ class PageControllerTest extends SuluTestCase
             ],
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->request(
@@ -2285,6 +2307,7 @@ class PageControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(
@@ -2333,6 +2356,7 @@ class PageControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(
@@ -2370,6 +2394,42 @@ class PageControllerTest extends SuluTestCase
         $this->assertContains('en', $result['contentLocales']);
     }
 
+    public function testCopyLocaleWithNoDest(): void
+    {
+        $data = [
+            'title' => 'test1',
+            'template' => 'default',
+            'url' => '/test1',
+            'article' => 'Test',
+        ];
+
+        /** @var BasePageDocument $homeDocument */
+        $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
+
+        $this->client->jsonRequest(
+            'POST',
+            '/api/pages?parentId=' . $homeDocument->getUuid() . '&webspace=sulu_io&language=en&action=publish',
+            $data
+        );
+        /** @var array<string, mixed> $data */
+        $data = \json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->client->jsonRequest(
+            'POST',
+            '/api/pages/' . $data['id'] . '?action=copy-locale&webspace=sulu_io&locale=en&dest='
+        );
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+        /** @var array<string, mixed> $result */
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertSame($data['id'], $result['id'] ?? null);
+        $this->assertSame($data['title'], $result['title'] ?? null);
+        $this->assertSame($data['url'], $result['url'] ?? null);
+        $this->assertSame($data['article'], $result['article'] ?? null);
+        $this->assertTrue($result['publishedState'] ?? null);
+        $this->assertSame(['en'], $result['contentLocales'] ?? null);
+    }
+
     public function testCopyMultipleLocales(): void
     {
         $data = [
@@ -2379,6 +2439,7 @@ class PageControllerTest extends SuluTestCase
             'article' => 'Test',
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(
@@ -2398,6 +2459,7 @@ class PageControllerTest extends SuluTestCase
             'GET',
             '/api/pages/' . $data['id'] . '?webspace=sulu_io&language=de'
         );
+        /** @var array<string, mixed> $result */
         $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertEquals($data['id'], $result['id']);
         $this->assertEquals($data['title'], $result['title']);
@@ -2433,6 +2495,7 @@ class PageControllerTest extends SuluTestCase
             ],
         ];
 
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         $this->client->jsonRequest(
@@ -2460,6 +2523,7 @@ class PageControllerTest extends SuluTestCase
     {
         $this->importer->import(__DIR__ . '/../../fixtures/exports/tree.xml');
 
+        /** @var BasePageDocument $document */
         $document = $this->documentManager->find('585ccd35-a98e-4e41-a62c-e502ca905496', 'en');
         $document->setStructureType('internallinks');
         $document->getStructure()->bind(
@@ -2579,6 +2643,7 @@ class PageControllerTest extends SuluTestCase
 
     private function setUpContent($data)
     {
+        /** @var BasePageDocument $homeDocument */
         $homeDocument = $this->documentManager->find('/cmf/sulu_io/contents');
 
         for ($i = 0; $i < \count($data); ++$i) {

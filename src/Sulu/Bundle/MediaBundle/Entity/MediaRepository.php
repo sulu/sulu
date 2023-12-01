@@ -216,7 +216,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
     {
         $queryBuilder = $this->createQueryBuilder('media')
             ->leftJoin('media.files', 'file')
-            ->leftJoin('file.fileVersions', 'fileVersion')
+            ->leftJoin('file.fileVersions', 'fileVersion', Join::WITH, 'fileVersion.version = file.version')
             ->leftJoin('fileVersion.defaultMeta', 'fileVersionDefaultMeta')
             ->leftJoin('fileVersion.meta', 'fileVersionMeta', Join::WITH, 'fileVersionMeta.locale = :locale')
             ->select('media.id')

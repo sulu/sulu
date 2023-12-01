@@ -142,6 +142,9 @@ trait ListViewBuilderTrait
         $route->setOption('routerAttributesToListMetadata', $newRouterAttributesToListMetadata);
     }
 
+    /**
+     * @param string[] $locales
+     */
     private function addLocalesToView(View $route, array $locales): void
     {
         $oldLocales = $route->getOption('locales');

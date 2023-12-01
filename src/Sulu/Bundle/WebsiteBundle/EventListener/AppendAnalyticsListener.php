@@ -93,7 +93,7 @@ class AppendAnalyticsListener
 
         $response = $event->getResponse();
 
-        if (0 !== \strpos($response->headers->get('Content-Type'), 'text/html')
+        if (0 !== \strpos($response->headers->get('Content-Type', ''), 'text/html')
             || !$response->getContent()
             || null === $this->requestAnalyzer->getPortalInformation()
         ) {

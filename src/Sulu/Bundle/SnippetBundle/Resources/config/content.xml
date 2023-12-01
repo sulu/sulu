@@ -23,6 +23,8 @@
         <service id="sulu_snippet.resolver" class="Sulu\Bundle\SnippetBundle\Snippet\SnippetResolver" public="true">
             <argument type="service" id="sulu.content.mapper" />
             <argument type="service" id="sulu_website.resolver.structure" />
+
+            <tag name="kernel.reset" method="reset" />
         </service>
 
         <service id="sulu_snippet.content.single_snippet_selection" class="Sulu\Bundle\SnippetBundle\Content\SingleSnippetSelection">

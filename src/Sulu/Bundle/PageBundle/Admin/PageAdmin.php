@@ -190,7 +190,7 @@ class PageAdmin extends Admin
                     new ToolbarAction(
                         'sulu_admin.copy_locale',
                         [
-                            'visible_condition' => '(!_permissions || _permissions.edit)',
+                            'visible_condition' => '(!_permissions || _permissions.edit) && __webspace.localizations|length > 1',
                         ]
                     ),
                     new ToolbarAction(
