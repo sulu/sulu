@@ -83,15 +83,9 @@ class NavigationRegistry
             $this->processNavigationItem($navigationItem);
         }
 
-        \usort(
-            $navigationItems,
-            function(NavigationItem $a, NavigationItem $b) {
-                $aPosition = $a->getPosition() ?? \PHP_INT_MAX;
-                $bPosition = $b->getPosition() ?? \PHP_INT_MAX;
-
-                return $aPosition - $bPosition;
-            }
-        );
+        \usort($navigationItems, function(NavigationItem $a, NavigationItem $b) {
+            return $a->getPosition() <=> $b->getPosition();
+        });
 
         $this->navigationItems = $navigationItems;
     }

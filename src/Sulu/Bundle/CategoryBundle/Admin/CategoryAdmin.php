@@ -74,26 +74,33 @@ class CategoryAdmin extends Admin
 
         $formToolbarActions = [];
         $listToolbarActions = [];
+        $keywordsToolbarActions = [];
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::ADD)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.add');
+            $keywordsToolbarActions[] = new ToolbarAction('sulu_admin.add');
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
-            $formToolbarActions[] = new ToolbarAction('sulu_admin.save');
             $listToolbarActions[] = new ToolbarAction('sulu_admin.move');
+        }
+
+        if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)
+           || $this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::ADD)) {
+            $formToolbarActions[] = new ToolbarAction('sulu_admin.save');
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::DELETE)) {
             $formToolbarActions[] = new ToolbarAction('sulu_admin.delete');
             $listToolbarActions[] = new ToolbarAction('sulu_admin.delete');
+            $keywordsToolbarActions[] = new ToolbarAction('sulu_admin.delete');
         }
 
         if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
             $listToolbarActions[] = new ToolbarAction('sulu_admin.export');
         }
 
-        if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+        if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
             $listViewBuilder = $this->viewBuilderFactory
                 ->createListViewBuilder(static::LIST_VIEW, '/categories/:locale')
                 ->setResourceKey(CategoryInterface::RESOURCE_KEY)
@@ -101,9 +108,13 @@ class CategoryAdmin extends Admin
                 ->setTitle('sulu_category.categories')
                 ->addListAdapters(['tree_table'])
                 ->addLocales($locales)
-                ->setEditView(static::EDIT_FORM_VIEW)
                 ->enableSearching()
                 ->addToolbarActions($listToolbarActions);
+
+            // hide edit button of the tree_table adapter by not setting an add view if the user has no edit permission
+            if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
+                $listViewBuilder->setEditView(static::EDIT_FORM_VIEW);
+            }
 
             // hide add button of the tree_table adapter by not setting an add view if the user has no add permission
             if ($this->securityChecker->hasPermission(self::SECURITY_CONTEXT, PermissionTypes::ADD)) {
@@ -157,7 +168,7 @@ class CategoryAdmin extends Admin
                     ->setFormKey('category_keywords')
                     ->addRouterAttributesToFormRequest(['id' => 'categoryId'])
                     ->setTabTitle('sulu_category.keywords')
-                    ->addToolbarActions([new ToolbarAction('sulu_admin.add'), new ToolbarAction('sulu_admin.delete')])
+                    ->addToolbarActions($keywordsToolbarActions)
                     ->setParent(static::EDIT_FORM_VIEW)
             );
         }
@@ -168,7 +179,7 @@ class CategoryAdmin extends Admin
         return [
             self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Settings' => [
-                    static::SECURITY_CONTEXT => [
+                    self::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                         PermissionTypes::ADD,
                         PermissionTypes::EDIT,

@@ -33,8 +33,6 @@ class PageAdmin extends Admin
 {
     /**
      * The prefix for the security context, the key of the webspace has to be appended.
-     *
-     * @var string
      */
     public const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
 
@@ -192,7 +190,7 @@ class PageAdmin extends Admin
                     new ToolbarAction(
                         'sulu_admin.copy_locale',
                         [
-                            'visible_condition' => '(!_permissions || _permissions.edit)',
+                            'visible_condition' => '(!_permissions || _permissions.edit) && __webspace.localizations|length > 1',
                         ]
                     ),
                     new ToolbarAction(
@@ -424,14 +422,15 @@ class PageAdmin extends Admin
             }
 
             $webspaceSecuritySystemContexts[$system] = [
-                static::SECURITY_CONTEXT_GROUP => [
-                    static::SECURITY_CONTEXT_PREFIX . $webspace->getKey() => [
+                self::SECURITY_CONTEXT_GROUP => [
+                    self::SECURITY_CONTEXT_PREFIX . $webspace->getKey() => [
                         PermissionTypes::VIEW,
                     ],
                 ],
             ];
         }
 
+        /** @var array<string, array<string>> $webspaceContexts */
         $webspaceContexts = [];
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             /* @var Webspace $webspace */
@@ -472,8 +471,8 @@ class PageAdmin extends Admin
             }
 
             $webspaceSecuritySystemContexts[$system] = [
-                static::SECURITY_CONTEXT_GROUP => [
-                    static::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
+                self::SECURITY_CONTEXT_GROUP => [
+                    self::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
                         PermissionTypes::VIEW,
                     ],
                 ],
@@ -482,9 +481,9 @@ class PageAdmin extends Admin
 
         return \array_merge(
             [
-                static::SULU_ADMIN_SECURITY_SYSTEM => [
-                    static::SECURITY_CONTEXT_GROUP => [
-                        static::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
+                self::SULU_ADMIN_SECURITY_SYSTEM => [
+                    self::SECURITY_CONTEXT_GROUP => [
+                        self::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
                             PermissionTypes::VIEW,
                             PermissionTypes::ADD,
                             PermissionTypes::EDIT,

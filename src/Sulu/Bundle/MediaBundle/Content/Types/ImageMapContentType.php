@@ -162,7 +162,7 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
      * @param string $userId
      * @param string $webspaceKey
      * @param string $languageCode
-     * @param string $segmentKey
+     * @param string|null $segmentKey
      * @param bool $isImport
      *
      * @throws UnexpectedPropertyType

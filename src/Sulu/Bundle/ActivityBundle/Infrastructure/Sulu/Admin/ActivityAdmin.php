@@ -79,7 +79,7 @@ class ActivityAdmin extends Admin
         return [
             self::SULU_ADMIN_SECURITY_SYSTEM => [
                 'Activities' => [
-                    static::SECURITY_CONTEXT => [
+                    self::SECURITY_CONTEXT => [
                         PermissionTypes::VIEW,
                     ],
                 ],
