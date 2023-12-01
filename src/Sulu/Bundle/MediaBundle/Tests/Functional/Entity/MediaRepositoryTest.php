@@ -669,11 +669,16 @@ class MediaRepositoryTest extends SuluTestCase
         $this->assertEquals(2, \count($result));
         $this->assertEquals(5, \count($result[0]));
         $this->assertEquals(5, \count($result[1]));
-        $this->assertEquals($media1->getId(), $result[0]['id']);
-        $this->assertEquals(2, $result[0]['version']);
-        $this->assertEquals('test-1.jpeg', $result[0]['name']);
-        $this->assertEquals('test-1-title', $result[0]['title']);
-        $this->assertEquals('test-1-title', $result[0]['defaultTitle']);
+
+        $resultMedia1 = $result[0];
+        if ($media1->getId() === ($result[1]['id'] ?? null)) { // the order is not fix, we need to find the correct one first
+            $resultMedia1 = $result[1];
+        }
+        $this->assertEquals($media1->getId(), $resultMedia1['id']);
+        $this->assertEquals(2, $resultMedia1['version']);
+        $this->assertEquals('test-1.jpeg', $resultMedia1['name']);
+        $this->assertEquals('test-1-title', $resultMedia1['title']);
+        $this->assertEquals('test-1-title', $resultMedia1['defaultTitle']);
     }
 
     public function testFindMediaDisplayInfoWithIncorrectIds(): void
