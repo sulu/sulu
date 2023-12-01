@@ -14,6 +14,7 @@ namespace Sulu\Component\Content\Tests\Unit\Types;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface as NodePropertyInterface;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
@@ -79,6 +80,21 @@ EOT;
 <sulu-link href="123">Hello Hikaro Sulu</sulu-link>
 EOT
         )->shouldBeCalled();
+
+        $this->textEditor->read($this->node->reveal(), $this->property->reveal(), 'sulu_io', 'de', null);
+    }
+
+    public function testReadNoneString(): void
+    {
+        $content = [1, 2];
+
+        $this->property->getName()->willReturn('i18n:de-description');
+        $this->node->getPropertyValueWithDefault('i18n:de-description', '')->willReturn($content);
+
+        $this->markupParser->validate(Argument::any())->shouldNotBeCalled();
+
+        $this->property->setValue(null)
+            ->shouldBeCalled();
 
         $this->textEditor->read($this->node->reveal(), $this->property->reveal(), 'sulu_io', 'de', null);
     }

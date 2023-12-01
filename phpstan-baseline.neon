@@ -116,17 +116,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/Badge.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addLocalesToView\\(\\) has parameter \\$locales with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addMetadataRequestParameters\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addMetadataRequestParametersToView\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
 
@@ -151,26 +141,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addRouterAttributesToBackViewToView\\(\\) has parameter \\$routerAttributesToBackView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addRouterAttributesToEditViewToView\\(\\) has parameter \\$routerAttributesToEditView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addRouterAttributesToFormMetadataToView\\(\\) has parameter \\$routerAttributesToFormMetadata with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addRouterAttributesToFormRequestToView\\(\\) has parameter \\$routerAttributesToFormRequest with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:addRouterAttributesToListMetadataToView\\(\\) has parameter \\$routerAttributesToListMetadata with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
@@ -191,11 +161,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilder\\:\\:setRequestParametersToView\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormOverlayListViewBuilderInterface\\:\\:addMetadataRequestParameters\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilderInterface.php
@@ -206,17 +171,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormOverlayListViewBuilderInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addLocalesToView\\(\\) has parameter \\$locales with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addMetadataRequestParameters\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addMetadataRequestParametersToView\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
 
@@ -226,37 +181,12 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addRequestParametersToView\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addRouterAttributesToBackView\\(\\) has parameter \\$routerAttributesToBackView with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addRouterAttributesToBackViewToView\\(\\) has parameter \\$routerAttributesToBackView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addRouterAttributesToEditViewToView\\(\\) has parameter \\$routerAttributesToEditView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addRouterAttributesToFormMetadata\\(\\) has parameter \\$routerAttributesToFormMetadata with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addRouterAttributesToFormMetadataToView\\(\\) has parameter \\$routerAttributesToFormMetadata with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:addRouterAttributesToFormRequestToView\\(\\) has parameter \\$routerAttributesToFormRequest with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
 
@@ -267,11 +197,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:setRequestParameters\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilder\\:\\:setRequestParametersToView\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilder.php
 
@@ -289,31 +214,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\FormViewBuilderInterface\\:\\:addRouterAttributesToFormMetadata\\(\\) has parameter \\$routerAttributesToFormMetadata with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/FormViewBuilderInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ListItemAction\\:\\:__construct\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ListItemAction.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ListItemAction\\:\\:getOptions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ListItemAction.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ListItemAction\\:\\:getType\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ListItemAction.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ListItemAction\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ListItemAction.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ListViewBuilder\\:\\:addLocalesToView\\(\\) has parameter \\$locales with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ListViewBuilder.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ListViewBuilder\\:\\:addRequestParameters\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
@@ -356,17 +256,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/ListViewBuilderInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addLocalesToView\\(\\) has parameter \\$locales with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addMetadataRequestParameters\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addMetadataRequestParametersToView\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
 
@@ -376,32 +266,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addRequestParametersToView\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addRouterAttributesToBackViewToView\\(\\) has parameter \\$routerAttributesToBackView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addRouterAttributesToEditViewToView\\(\\) has parameter \\$routerAttributesToEditView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addRouterAttributesToFormMetadata\\(\\) has parameter \\$routerAttributesToFormMetadata with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addRouterAttributesToFormMetadataToView\\(\\) has parameter \\$routerAttributesToFormMetadata with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:addRouterAttributesToFormRequestToView\\(\\) has parameter \\$routerAttributesToFormRequest with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
 
@@ -412,11 +277,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:setRequestParameters\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\PreviewFormViewBuilder\\:\\:setRequestParametersToView\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilder.php
 
@@ -436,52 +296,12 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/PreviewFormViewBuilderInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addLocalesToView\\(\\) has parameter \\$locales with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addMetadataRequestParametersToView\\(\\) has parameter \\$metadataRequestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addRequestParametersToView\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addRouterAttributesToBackViewToView\\(\\) has parameter \\$routerAttributesToBackView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addRouterAttributesToBlacklistToView\\(\\) has parameter \\$routerAttributesToBlacklist with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addRouterAttributesToEditViewToView\\(\\) has parameter \\$routerAttributesToEditView with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addRouterAttributesToFormMetadataToView\\(\\) has parameter \\$routerAttributesToFormMetadata with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:addRouterAttributesToFormRequestToView\\(\\) has parameter \\$routerAttributesToFormRequest with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:setOption\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ResourceTabViewBuilder\\:\\:setRequestParametersToView\\(\\) has parameter \\$requestParameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Admin/View/ResourceTabViewBuilder.php
 
@@ -1316,11 +1136,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\StructureFormMetadataLoader\\:\\:warmUp\\(\\) has parameter \\$cacheDir with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\StructureFormMetadataLoader\\:\\:warmUp\\(\\) should return array\\<string\\> but return statement is missing\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
@@ -1397,11 +1212,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\XmlFormMetadataLoader\\:\\:getMetadata\\(\\) should return Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\MetadataInterface\\|null but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\XmlFormMetadataLoader\\:\\:warmUp\\(\\) has parameter \\$cacheDir with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
 
@@ -2292,11 +2102,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Content/Types/TargetGroupSelection.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Content\\\\Types\\\\TargetGroupSelection\\:\\:write\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Content/Types/TargetGroupSelection.php
 
@@ -3206,21 +3011,6 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Functional/Entity/TargetGroupRepositoryTest.php
 
 		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Content\\\\Types\\\\TargetGroupSelection\\:\\:read\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Content/Types/TargetGroupSelectionTest.php
-
-		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Content\\\\Types\\\\TargetGroupSelection\\:\\:remove\\(\\) expects string, null given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Content/Types/TargetGroupSelectionTest.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Content\\\\Types\\\\TargetGroupSelection\\:\\:write\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Content/Types/TargetGroupSelectionTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupEvaluationControllerTest\\:\\:provideTargetGroup\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Controller/TargetGroupEvaluationControllerTest.php
@@ -3273,16 +3063,6 @@ parameters:
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventListener\\\\AudienceTargetingCacheListenerTest\\:\\:readObjectAttribute\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
-
-		-
-			message: "#^Offset 0 does not exist on array\\{\\}\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
-
-		-
-			message: "#^Offset 1 does not exist on array\\{\\}\\.$#"
-			count: 2
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
 
 		-
@@ -4107,11 +3887,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Content/Types/CategorySelection.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\CategoryBundle\\\\Content\\\\Types\\\\CategorySelection\\:\\:write\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Content/Types/CategorySelection.php
 
@@ -7891,11 +7666,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
 
 		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\ContactBundle\\\\Content\\\\Types\\\\ContactAccountSelection\\:\\:write\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Content\\\\Types\\\\ContactAccountSelection\\:\\:\\$accountManager with generic interface Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface does not specify its types\\: DoctrineEntity, ApiEntity, AddressRelationEntity$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
@@ -10921,11 +10691,6 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/Build/SuluBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\Cache\\\\StructureWarmer\\:\\:warmUp\\(\\) has parameter \\$cacheDir with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/Cache/StructureWarmer.php
-
-		-
 			message: "#^Argument of an invalid type DOMNodeList\\<DOMNode\\>\\|false supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/DataFixtures/ReplacerXmlLoader.php
@@ -12041,7 +11806,7 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/DataFixtures/DocumentFixtureInterface.php
 
 		-
-			message: "#^Parameter \\#1 \\$object_or_class of function is_subclass_of expects object\\|string, string\\|null given\\.$#"
+			message: "#^Parameter \\#1 \\$object_or_class of function is_subclass_of expects object\\|string, class\\-string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/DocumentFixturePass.php
 
@@ -12962,11 +12727,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/LocationBundle/Content/Types/LocationContentType.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\LocationBundle\\\\Content\\\\Types\\\\LocationContentType\\:\\:write\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/LocationBundle/Content/Types/LocationContentType.php
 
@@ -14366,11 +14126,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Content/Types/ImageMapContentType.php
 
 		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\MediaBundle\\\\Content\\\\Types\\\\ImageMapContentType\\:\\:doWrite\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Content/Types/ImageMapContentType.php
-
-		-
 			message: "#^Access to an undefined property object\\:\\:\\$max\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Content/Types/MediaSelectionContentType.php
@@ -14451,11 +14206,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Content/Types/MediaSelectionContentType.php
 
 		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\MediaBundle\\\\Content\\\\Types\\\\MediaSelectionContentType\\:\\:write\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Content/Types/MediaSelectionContentType.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Content\\\\Types\\\\MediaSelectionContentType\\:\\:\\$permissions type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Content/Types/MediaSelectionContentType.php
@@ -14502,11 +14252,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$name of class Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\SchemaMetadata\\\\PropertyMetadata constructor expects string, float\\|int\\|string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Content/Types/SingleMediaSelection.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\SimpleContentType\\:\\:write\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Content/Types/SingleMediaSelection.php
 
@@ -15066,32 +14811,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$changer type mapping mismatch\\: property can contain Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null but database expects Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$children type mapping mismatch\\: property can contain Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionInterface\\> but database expects Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$creator type mapping mismatch\\: property can contain Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null but database expects Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$defaultMeta \\(Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\) does not accept Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$defaultMeta type mapping mismatch\\: database can contain Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\|null but property expects Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$media type mapping mismatch\\: property can contain Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaInterface\\> but database expects Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
@@ -19991,16 +19716,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Content/Structure/ExcerptStructureExtension.php
 
 		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\ContentTypeInterface\\:\\:read\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Content/Structure/ExcerptStructureExtension.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\ContentTypeInterface\\:\\:write\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Content/Structure/ExcerptStructureExtension.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Structure\\\\ExcerptValueContainer\\:\\:__construct\\(\\) has parameter \\$data with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Content/Structure/ExcerptValueContainer.php
@@ -20206,11 +19921,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Content/Types/PageSelection.php
 
 		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\PageSelection\\:\\:write\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Content/Types/PageSelection.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\PageSelection\\:\\:\\$enabledTwigAttributes type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Content/Types/PageSelection.php
@@ -20267,11 +19977,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Content/Types/Select.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\SimpleContentType\\:\\:write\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Content/Types/Select.php
 
@@ -23481,61 +23186,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerFieldsTest.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getResourceSegment\\(\\)\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getStructure\\(\\)\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getUuid\\(\\)\\.$#"
-			count: 34
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setPermissions\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setRedirectTarget\\(\\)\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setRedirectType\\(\\)\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setResourceSegment\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setShadowLocale\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setShadowLocaleEnabled\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setStructureType\\(\\)\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setTitle\\(\\)\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
-
-		-
 			message: "#^Cannot access an offset on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
@@ -23582,7 +23232,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'contentLocales' on mixed\\.$#"
-			count: 11
+			count: 10
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -23602,7 +23252,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'id' on mixed\\.$#"
-			count: 48
+			count: 47
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -23692,7 +23342,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'title' on mixed\\.$#"
-			count: 38
+			count: 37
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -23702,7 +23352,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'url' on mixed\\.$#"
-			count: 21
+			count: 20
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -23812,7 +23462,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 86
+			count: 88
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -25466,16 +25116,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/ResourceLocatorTest.php
 
 		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\SimpleContentType\\:\\:read\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/ResourceLocatorTest.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\SimpleContentType\\:\\:write\\(\\) expects string, null given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/ResourceLocatorTest.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\ResourceLocator\\\\ResourceLocatorTest\\:\\:\\$em \\(Doctrine\\\\ORM\\\\EntityManager\\) does not accept Doctrine\\\\Persistence\\\\ObjectManager\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/ResourceLocator/ResourceLocatorTest.php
@@ -25936,28 +25576,8 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Content/Types/DateTest.php
 
 		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\Date\\:\\:read\\(\\) expects string, null given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Content/Types/DateTest.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\Date\\:\\:write\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Content/Types/DateTest.php
-
-		-
 			message: "#^Method Prophecy\\\\Prophecy\\\\MethodProphecy\\:\\:shouldBeCalled\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Content/Types/DateTimeTest.php
-
-		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\DateTime\\:\\:read\\(\\) expects string, null given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Content/Types/DateTimeTest.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\DateTime\\:\\:write\\(\\) expects string, null given\\.$#"
-			count: 2
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Content/Types/DateTimeTest.php
 
 		-
@@ -25971,29 +25591,9 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Content/Types/EmailTest.php
 
 		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\PageSelection\\:\\:write\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Content/Types/PageSelectionTest.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Unit\\\\Content\\\\Types\\\\PageSelectionTest\\:\\:\\$logger is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Content/Types/PageSelectionTest.php
-
-		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\SegmentSelect\\:\\:read\\(\\) expects string, null given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Content/Types/SegmentSelectTest.php
-
-		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\SegmentSelect\\:\\:remove\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Content/Types/SegmentSelectTest.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\SegmentSelect\\:\\:write\\(\\) expects string, null given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Unit/Content/Types/SegmentSelectTest.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Unit\\\\Content\\\\Types\\\\SinglePageSelectionTest\\:\\:providePreResolve\\(\\) has no return type specified\\.$#"
@@ -27644,16 +27244,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Routing\\\\RouteProvider\\:\\:\\$routeCache \\(array\\<Sulu\\\\Bundle\\\\RouteBundle\\\\Entity\\\\Route\\>\\) does not accept array\\<Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Routing/RouteProvider.php
-
-		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Bundle\\\\RouteBundle\\\\Content\\\\Type\\\\PageTreeRouteContentType\\:\\:read\\(\\) expects string, null given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/RouteBundle/Tests/Functional/Content/PageTreeRouteContentTypeTest.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\RouteBundle\\\\Content\\\\Type\\\\PageTreeRouteContentType\\:\\:write\\(\\) expects string, null given\\.$#"
-			count: 4
-			path: src/Sulu/Bundle/RouteBundle/Tests/Functional/Content/PageTreeRouteContentTypeTest.php
 
 		-
 			message: "#^Cannot access offset '_embedded' on mixed\\.$#"
@@ -30366,6 +29956,11 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/User/UserProvider.php
 
 		-
+			message: "#^Class Sulu\\\\Bundle\\\\SecurityBundle\\\\User\\\\UserProvider implements generic interface Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserProviderInterface but does not specify its types\\: TUser$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/User/UserProvider.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\User\\\\UserProvider\\:\\:loadUserByUsername\\(\\) has parameter \\$username with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/User/UserProvider.php
@@ -30957,11 +30552,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#5 \\$loadExcerpt of method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\SnippetResolverInterface\\:\\:resolve\\(\\) expects bool, array\\|bool\\|string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetContent.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetContent\\:\\:write\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetContent.php
 
@@ -31666,21 +31256,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
 
 		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetContent\\:\\:read\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
-
-		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetContent\\:\\:remove\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetContent\\:\\:write\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Content\\\\SnippetContentTest\\:\\:\\$session \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
@@ -32151,11 +31726,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Twig/SnippetTwigExtensionTest.php
 
 		-
-			message: "#^Class Sulu\\\\Bundle\\\\SnippetBundle\\\\Admin\\\\SnippetAdmin constructor invoked with 5 parameters, 4 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Admin/SnippetAdminTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Unit\\\\Admin\\\\SnippetAdminTest\\:\\:provideConfigureViews\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Admin/SnippetAdminTest.php
@@ -32592,11 +32162,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Content/Types/TagSelection.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Bundle\\\\TagBundle\\\\Content\\\\Types\\\\TagSelection\\:\\:write\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Content/Types/TagSelection.php
 
@@ -33316,6 +32881,16 @@ parameters:
 			path: src/Sulu/Bundle/TestBundle/Testing/TestUserProvider.php
 
 		-
+			message: "#^Class Sulu\\\\Bundle\\\\TestBundle\\\\Testing\\\\TestUserProvider implements generic interface Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserProviderInterface but does not specify its types\\: TUser$#"
+			count: 1
+			path: src/Sulu/Bundle/TestBundle/Testing/TestUserProvider.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\TestBundle\\\\Testing\\\\TestUserProvider\\:\\:__construct\\(\\) has parameter \\$userProvider with generic interface Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserProviderInterface but does not specify its types\\: TUser$#"
+			count: 1
+			path: src/Sulu/Bundle/TestBundle/Testing/TestUserProvider.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\TestBundle\\\\Testing\\\\TestUserProvider\\:\\:getUser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TestBundle/Testing/TestUserProvider.php
@@ -33327,6 +32902,11 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\TestBundle\\\\Testing\\\\TestUserProvider\\:\\:\\$passwordHasherFactory has unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactoryInterface as its type\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/TestBundle/Testing/TestUserProvider.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\TestBundle\\\\Testing\\\\TestUserProvider\\:\\:\\$userProvider with generic interface Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserProviderInterface does not specify its types\\: TUser$#"
 			count: 1
 			path: src/Sulu/Bundle/TestBundle/Testing/TestUserProvider.php
 
@@ -33932,11 +33512,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\EventListener\\\\AppendAnalyticsListener\\:\\:setAnalyticsContent\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/EventListener/AppendAnalyticsListener.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/EventListener/AppendAnalyticsListener.php
 
@@ -35191,16 +34766,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Navigation/NavigationMapperTest.php
 
 		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\ContentTypeInterface\\:\\:read\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Navigation/NavigationMapperTest.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\ContentTypeInterface\\:\\:write\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Navigation/NavigationMapperTest.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Functional\\\\Navigation\\\\NavigationMapperTest\\:\\:\\$homeDocument has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Navigation/NavigationMapperTest.php
@@ -35662,16 +35227,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$userId of method Sulu\\\\Component\\\\Content\\\\ContentTypeInterface\\:\\:write\\(\\) expects int, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Sitemap/SitemapGeneratorTest.php
-
-		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\ContentTypeInterface\\:\\:read\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Sitemap/SitemapGeneratorTest.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\ContentTypeInterface\\:\\:write\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Sitemap/SitemapGeneratorTest.php
 
@@ -38726,11 +38281,6 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Structure/ManagedStructure.php
 
 		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\ContentTypeInterface\\:\\:read\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Structure/ManagedStructure.php
-
-		-
 			message: "#^Property Sulu\\\\Component\\\\Content\\\\Document\\\\Structure\\\\ManagedStructure\\:\\:\\$document \\(Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\StructureBehavior\\) does not accept object\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Structure/ManagedStructure.php
@@ -39852,11 +39402,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$userId of method Sulu\\\\Component\\\\Content\\\\ContentTypeInterface\\:\\:write\\(\\) expects int, null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/StructureSubscriber.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\ContentTypeInterface\\:\\:write\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/StructureSubscriber.php
 
@@ -42326,6 +41871,11 @@ parameters:
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
 
 		-
+			message: "#^Offset 'children' does not exist on array\\{\\}\\.$#"
+			count: 2
+			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
+
+		-
 			message: "#^Offset 'children' on array\\{\\} in empty\\(\\) does not exist\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Query/ListToTreeConverter.php
@@ -42822,11 +42372,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\SimpleContentType\\:\\:write\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/SimpleContentType.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\SimpleContentType\\:\\:write\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/SimpleContentType.php
 
@@ -44201,29 +43746,9 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Types/NumberTest.php
 
 		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\Types\\\\Number\\:\\:read\\(\\) expects string, null given\\.$#"
-			count: 2
-			path: src/Sulu/Component/Content/Tests/Unit/Types/NumberTest.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\Types\\\\Number\\:\\:write\\(\\) expects string, null given\\.$#"
-			count: 3
-			path: src/Sulu/Component/Content/Tests/Unit/Types/NumberTest.php
-
-		-
 			message: "#^Property Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Types\\\\NumberTest\\:\\:\\$template is never written, only read\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Types/NumberTest.php
-
-		-
-			message: "#^Parameter \\#5 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\Types\\\\TextEditor\\:\\:read\\(\\) expects string, null given\\.$#"
-			count: 2
-			path: src/Sulu/Component/Content/Tests/Unit/Types/TextEditorTest.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\Types\\\\TextEditor\\:\\:write\\(\\) expects string, null given\\.$#"
-			count: 2
-			path: src/Sulu/Component/Content/Tests/Unit/Types/TextEditorTest.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\Block\\\\ScheduleBlockVisitor\\:\\:matchWeekday\\(\\) has no return type specified\\.$#"
@@ -44356,11 +43881,6 @@ parameters:
 			path: src/Sulu/Component/Content/Types/BlockContentType.php
 
 		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\Types\\\\BlockContentType\\:\\:doWrite\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/BlockContentType.php
-
-		-
 			message: "#^Property Sulu\\\\Component\\\\Content\\\\Types\\\\BlockContentType\\:\\:\\$blockVisitors \\(array\\<Sulu\\\\Component\\\\Content\\\\Types\\\\Block\\\\BlockVisitorInterface\\>\\) does not accept iterable\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Types/BlockContentType.php
@@ -44387,11 +43907,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/Link.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\SimpleContentType\\:\\:write\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Types/Link.php
 
@@ -44566,11 +44081,6 @@ parameters:
 			path: src/Sulu/Component/Content/Types/ResourceLocator/Strategy/TreeLeafEditStrategy.php
 
 		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Component\\\\Content\\\\ContentTypeInterface\\:\\:write\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/ResourceLocator/Strategy/TreeLeafEditStrategy.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Types\\\\TextEditor\\:\\:__construct\\(\\) has parameter \\$markupNamespace with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Types/TextEditor.php
@@ -44597,11 +44107,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$content of method Sulu\\\\Component\\\\Content\\\\Types\\\\TextEditor\\:\\:removeValidation\\(\\) expects string, int\\|string given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Types/TextEditor.php
-
-		-
-			message: "#^Parameter \\#1 \\$content of method Sulu\\\\Component\\\\Content\\\\Types\\\\TextEditor\\:\\:validate\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Types/TextEditor.php
 
@@ -50621,11 +50126,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\FieldDescriptorFactory\\:\\:warmUp\\(\\) has parameter \\$cacheDir with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\FieldDescriptorFactory\\:\\:warmUp\\(\\) should return array\\<string\\> but return statement is missing\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
@@ -52787,11 +52287,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$value of class Sulu\\\\Component\\\\Content\\\\Compat\\\\PropertyParameter constructor expects array\\|bool\\|string, null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/ContentType.php
-
-		-
-			message: "#^Parameter \\#6 \\$segmentKey of method Sulu\\\\Component\\\\SmartContent\\\\ContentType\\:\\:write\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/ContentType.php
 
