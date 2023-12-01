@@ -17,11 +17,12 @@ use Sulu\Component\Content\Compat\Structure\SnippetBridge;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\ContentMapperInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * Resolves snippets by UUIDs.
  */
-class SnippetResolver implements SnippetResolverInterface
+class SnippetResolver implements SnippetResolverInterface, ResetInterface
 {
     /**
      * @var array<array|StructureInterface>
@@ -32,6 +33,11 @@ class SnippetResolver implements SnippetResolverInterface
         private ContentMapperInterface $contentMapper,
         private StructureResolverInterface $structureResolver
     ) {
+    }
+
+    public function reset(): void
+    {
+        $this->snippetCache = [];
     }
 
     /**
