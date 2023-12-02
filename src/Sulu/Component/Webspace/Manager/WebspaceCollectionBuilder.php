@@ -194,7 +194,7 @@ class WebspaceCollectionBuilder
             $webspace->addTemplate($type, $template);
         }
 
-        foreach ($webspaceConfiguration['default_templates'] as $type => $defaultTemplate) {
+        foreach ($webspaceConfiguration['default_templates']['default_template'] as $type => $defaultTemplate) {
             if ($type == 'homepage') {
                 $type = 'home';
             }

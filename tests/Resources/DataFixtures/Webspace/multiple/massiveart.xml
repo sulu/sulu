@@ -24,8 +24,10 @@
 
     <theme>massiveart</theme>
 
-    <default-template type="page">default</default-template>
-    <default-template type="homepage">overview</default-template>
+    <default-templates>
+        <default-template type="page">default</default-template>
+        <default-template type="homepage">overview</default-template>
+    </default-templates>
 
     <navigation>
             <context key="main">
