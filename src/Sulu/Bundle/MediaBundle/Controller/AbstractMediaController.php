@@ -41,7 +41,7 @@ abstract class AbstractMediaController extends AbstractRestController
     /**
      * @param Request $request
      *
-     * @return string
+     * @return string|null
      */
     protected function getTitleFromUpload($request)
     {
@@ -54,15 +54,20 @@ abstract class AbstractMediaController extends AbstractRestController
 
             return \implode('.', \explode('.', $uploadedFile->getClientOriginalName(), -1));
         }
+
+        return null;
     }
 
     /**
      * @param string $name
      *
-     * @return UploadedFile
+     * @return UploadedFile|null
      */
     protected function getUploadedFile(Request $request, $name)
     {
-        return $request->files->get($name);
+        /** @var UploadedFile|null $file */
+        $file = $request->files->get($name);
+
+        return $file;
     }
 }

@@ -497,7 +497,7 @@ class MediaManager implements MediaManagerInterface
     /**
      * Prepares data.
      *
-     * @param UploadedFile $uploadedFile
+     * @param UploadedFile|null $uploadedFile
      * @param array $data
      * @param UserInterface|null $user
      *

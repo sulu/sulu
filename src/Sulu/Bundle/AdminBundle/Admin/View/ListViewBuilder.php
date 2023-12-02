@@ -87,6 +87,9 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
+    /**
+     * @param array<string> $locales
+     */
     public function addLocales(array $locales): ListViewBuilderInterface
     {
         $this->addLocalesToView($this->view, $locales);
@@ -108,6 +111,9 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
+    /**
+     * @param ToolbarAction[] $toolbarActions
+     */
     public function addToolbarActions(array $toolbarActions): ListViewBuilderInterface
     {
         $this->addToolbarActionsToView($this->view, $toolbarActions);
@@ -276,6 +282,9 @@ class ListViewBuilder implements ListViewBuilderInterface
         return $this;
     }
 
+    /**
+     * @param Badge[] $badges
+     */
     public function addTabBadges(array $badges): ListViewBuilderInterface
     {
         $this->addTabBadgesToView($this->view, $badges);

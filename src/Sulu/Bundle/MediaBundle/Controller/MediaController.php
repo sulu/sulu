@@ -256,7 +256,7 @@ class MediaController extends AbstractMediaController implements
     /**
      * @deprecated
      */
-    private function getListRepresentation(Request $request)
+    private function getListRepresentation(Request $request): ListRepresentation
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('media');
@@ -322,11 +322,10 @@ class MediaController extends AbstractMediaController implements
      * @deprecated
      *
      * @param FieldDescriptorInterface[] $fieldDescriptors
-     * @param array $types
      *
      * @return DoctrineListBuilder
      */
-    private function getListBuilder(Request $request, array $fieldDescriptors, $types)
+    private function getListBuilder(Request $request, array $fieldDescriptors, array $types)
     {
         $listBuilder = $this->doctrineListBuilderFactory->create($this->mediaClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
@@ -405,7 +404,7 @@ class MediaController extends AbstractMediaController implements
     /**
      * Creates a new media.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      *
      * @throws \Sulu\Bundle\MediaBundle\Media\Exception\CollectionNotFoundException
      */
@@ -419,7 +418,7 @@ class MediaController extends AbstractMediaController implements
      *
      * @param int $id The id of the media to update
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      *
      * @throws \Sulu\Component\Rest\Exception\EntityNotFoundException
      */
@@ -433,7 +432,7 @@ class MediaController extends AbstractMediaController implements
      *
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction($id)
     {
@@ -453,6 +452,8 @@ class MediaController extends AbstractMediaController implements
     /**
      * @param int $id
      * @param string $version
+     *
+     * @return Response
      *
      * @throws \Sulu\Component\Rest\Exception\MissingParameterException
      */
@@ -522,7 +523,7 @@ class MediaController extends AbstractMediaController implements
     /**
      * @param int|null $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     protected function saveEntity($id, Request $request)
     {
@@ -540,6 +541,9 @@ class MediaController extends AbstractMediaController implements
         return $this->handleView($view);
     }
 
+    /**
+     * @return string
+     */
     public function getSecurityContext()
     {
         return MediaAdmin::SECURITY_CONTEXT;
