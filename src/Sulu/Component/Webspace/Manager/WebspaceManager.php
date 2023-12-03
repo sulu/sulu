@@ -431,6 +431,10 @@ class WebspaceManager implements WebspaceManagerInterface
         return $webspaces;
     }
 
+    /**
+     * @deprecated since 2.6 Use the service sulu_core.webspace.collection
+     * Do not remove this method yet since the service mentioned above is generated form this method.
+     */
     public function getWebspaceCollection(): WebspaceCollection
     {
         if (null === $this->webspaceCollection) {

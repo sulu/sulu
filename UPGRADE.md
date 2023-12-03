@@ -2,6 +2,18 @@
 
 ## 2.6.0
 
+## `WebspaceCollection` is a service now
+
+These methods were deprecated:
+* `WebspaceManager::findWebspacesByKey()`
+* `WebspaceManager::findPortalByKey()`
+* `WebspaceManager::getPortals()`
+
+the new WebspaceCollection service: `sulu_core.webspace.collection` and the corresponding methods:
+* `getWebspace()`
+* `getPortal()`
+* `getPortals()`
+
 ### DocumentToUuidTransformer return type changed
 
 For compatibility to Symfony 7 the `DocumentToUuidTransformer` methods return types changed:
