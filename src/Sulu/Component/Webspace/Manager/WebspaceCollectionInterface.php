@@ -2,10 +2,19 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Webspace\Manager;
 
-use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Webspace\Portal;
+use Sulu\Component\Webspace\Webspace;
 
 interface WebspaceCollectionInterface extends \IteratorAggregate, \Countable
 {
@@ -30,6 +39,5 @@ interface WebspaceCollectionInterface extends \IteratorAggregate, \Countable
      *
      * @return PortalInformation[]
      */
-    public function getPortalInformations(string $environment, array $types = null): array;
-
+    public function getPortalInformations(string $environment, ?array $types = null): array;
 }

@@ -27,16 +27,18 @@ class WebspaceCollection implements WebspaceCollectionInterface
      *
      * @var array<string, PortalInformation>
      */
-    private $portalInformations = [];
 
     /**
-     * @param array<string, Webspace> $webspaces     All webspaces in a specific sulu installation (indexed by key)
-     * @param array<string, Portal> $portals         All portals in a specific sulu installation (indexed by key)
+     * @param array<string, Webspace> $webspaces All webspaces (indexed by key)
+     * @param array<string, Portal> $portals All portals (indexed by key)
+     * @param array<string, Portal> $portalInformations All portalInformations (indexed by key)
      */
     public function __construct(
         private array $webspaces = [],
         private array $portals = [],
-    ) { }
+        private array $portalInformations = [],
+    ) {
+    }
 
     public function getWebspace(string $key): ?Webspace
     {
@@ -66,7 +68,7 @@ class WebspaceCollection implements WebspaceCollectionInterface
         return $this->portals;
     }
 
-    public function getPortalInformations(string $environment, array $types = null): array
+    public function getPortalInformations(string $environment, ?array $types = null): array
     {
         if (!isset($this->portalInformations[$environment])) {
             throw new \InvalidArgumentException(\sprintf(
@@ -97,8 +99,6 @@ class WebspaceCollection implements WebspaceCollectionInterface
 
     /**
      * Returns the content of these portals as array.
-     *
-     * @return array
      */
     public function toArray(): array
     {

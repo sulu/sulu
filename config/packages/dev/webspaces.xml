@@ -39,6 +39,8 @@
 
             <portals>
                 <portal name="example.com" key="example">
+                    <localization language="en" />
+
                     <environment type="prod">
                         <url language="en">{host}</url>
                     </environment>
@@ -52,7 +54,22 @@
                         <url language="en">{host}</url>
                     </environment>
                 </portal>
-                <portal name="example.com" key="exampl2" />
+                <portal name="example.com" key="exampl2">
+                    <localization language="en" />
+
+                    <environment type="prod">
+                        <url language="en">{host}</url>
+                    </environment>
+                    <environment type="stage">
+                        <url language="en">{host}</url>
+                    </environment>
+                    <environment type="test">
+                        <url language="en">{host}</url>
+                    </environment>
+                    <environment type="dev">
+                        <url language="en">{host}</url>
+                    </environment>
+                </portal>
             </portals>
         </webspace>
     </config>

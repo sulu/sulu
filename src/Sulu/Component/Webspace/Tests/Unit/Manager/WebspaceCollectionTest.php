@@ -117,9 +117,7 @@ class WebspaceCollectionTest extends TestCase
             $segmentSummer
         );
 
-        $this->webspaceCollection = new WebspaceCollection($webspaces, $portals);
-
-        $this->webspaceCollection->setPortalInformations($portalInformations);
+        $this->webspaceCollection = new WebspaceCollection($webspaces, $portals, $portalInformations);
     }
 
     public function testGetPortalInformations(): void

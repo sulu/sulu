@@ -325,6 +325,7 @@ class SuluCoreExtension extends Extension implements PrependExtensionInterface
         $loader->load('serializer.xml');
         $loader->load('request_analyzer.xml');
         $loader->load('doctrine.xml');
+        $loader->load('webspace.xml');
 
         $container->registerForAutoconfiguration(BlockVisitorInterface::class)
             ->addTag('sulu_content.block_visitor');

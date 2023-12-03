@@ -9,8 +9,9 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace\Tests\Unit;
+namespace Sulu\Component\Webspace\Tests\Unit\Manager;
 
+use Sulu\Bundle\WebsiteBundle\DependencyInjection\Configuration;
 use Sulu\Bundle\WebsiteBundle\DependencyInjection\SuluWebsiteExtension;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
@@ -23,11 +24,10 @@ use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Sulu\Bundle\WebsiteBundle\DependencyInjection\Configuration;
 
 class WebspaceCollectionBuilderTest extends WebspaceTestCase
 {
-    /** @var array<string> $files */
+    /** @param array<string> $files */
     private function loadCollection(string $directory, array $files): WebspaceCollection
     {
         $containerBuilder = new ContainerBuilder();
@@ -53,10 +53,10 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
     {
         $webspaceCollection = $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple',
-            [ 'massiveart.xml', 'sulu.io.xml' ]
+            ['massiveart.xml', 'sulu.io.xml']
         );
 
-        $webspaces = array_values($webspaceCollection->getWebspaces());
+        $webspaces = \array_values($webspaceCollection->getWebspaces());
 
         $this->assertCount(2, $webspaces);
 
@@ -66,7 +66,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertEquals(2, \count($webspaces[0]->getNavigation()->getContexts()));
 
         /** @var NavigationContext $navigationContext */
-        $navigationContext =$webspaces[0]->getNavigation()->getContexts();
+        $navigationContext = $webspaces[0]->getNavigation()->getContexts();
 
         $this->assertEquals('main', $navigationContext[0]->getKey());
         $this->assertEquals('Hauptnavigation', $navigationContext[0]->getTitle('de'));
@@ -78,7 +78,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertEquals('Footer', $navigationContext[1]->getTitle('en'));
         $this->assertEquals('Footer', $navigationContext[1]->getTitle('fr'));
 
-        $portals = array_values($webspaceCollection->getPortals());
+        $portals = \array_values($webspaceCollection->getPortals());
 
         $this->assertCount(3, $portals);
 
@@ -89,7 +89,6 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $prodPortalInformations = $webspaceCollection->getPortalInformations('prod');
 
         $this->assertCount(7, $prodPortalInformations);
-
 
         $prodPortalInformationKeys = \array_keys($prodPortalInformations);
         $prodPortalInformationValues = \array_values($prodPortalInformations);

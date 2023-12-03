@@ -2,27 +2,38 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Webspace\Manager;
+
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
-use Sulu\Component\Webspace\Webspace;
-use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Url;
+use Sulu\Component\Webspace\Url\ReplacerInterface;
+use Sulu\Component\Webspace\Webspace;
 
 class PortalInformationBuilder
 {
     /**
-     * @var array<string, array<string, PortalInformation>> $portalInformation
-    */
+     * @var array<string, array<string, PortalInformation>>
+     */
     private array $portalInformations = [];
 
-    public function __construct(private ReplacerInterface $urlReplacer) {
+    public function __construct(private ReplacerInterface $urlReplacer)
+    {
     }
 
-    public function addUrl(Url $url, Environment $environment,  Portal $portal): void
+    public function addUrl(Url $url, Environment $environment, Portal $portal): void
     {
         $urlAddress = $url->getUrl();
         if (null == $url->getRedirect()) {
@@ -52,10 +63,10 @@ class PortalInformationBuilder
             urlExpression: $urlAddress,
             priority: 1
         );
-
     }
 
-    private function buildUrlRedirect(Webspace $webspace, Environment $environment, Portal $portal, string $urlAddress, Url $url): void {
+    private function buildUrlRedirect(Webspace $webspace, Environment $environment, Portal $portal, string $urlAddress, Url $url): void
+    {
         $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
             type: RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
             webspace: $webspace,
@@ -67,10 +78,12 @@ class PortalInformationBuilder
             priority: $this->urlReplacer->hasHostReplacer($urlAddress) ? 4 : 9
         );
     }
+
     /**
      * @param array<int,mixed> $replacers
      */
-    private function buildUrlFullMatch(Portal $portal, Environment $environment, array $replacers, string $urlAddress, Localization $localization, Url $url): void {
+    private function buildUrlFullMatch(Portal $portal, Environment $environment, array $replacers, string $urlAddress, Localization $localization, Url $url): void
+    {
         $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
 
         $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
@@ -85,7 +98,8 @@ class PortalInformationBuilder
         );
     }
 
-    private function buildUrlPartialMatch(Portal $portal, Environment $environment, string $urlAddress, Url $url): void {
+    private function buildUrlPartialMatch(Portal $portal, Environment $environment, string $urlAddress, Url $url): void
+    {
         $replacers = [];
 
         $urlResult = $this->urlReplacer->cleanup(
@@ -113,7 +127,8 @@ class PortalInformationBuilder
         }
     }
 
-    private function buildUrls(Portal $portal, Environment $environment, Url $url, string $urlAddress): void {
+    private function buildUrls(Portal $portal, Environment $environment, Url $url, string $urlAddress): void
+    {
         if ($url->getLanguage()) {
             $language = $url->getLanguage();
             $country = $url->getCountry();
@@ -192,7 +207,7 @@ class PortalInformationBuilder
     {
         $portalInformations = $this->portalInformations;
 
-        foreach($portalInformations as &$portalInformation) {
+        foreach ($portalInformations as &$portalInformation) {
             \uksort(
                 $portalInformation,
                 fn ($a, $b) => \strlen($a) < \strlen($b) ? 1 : -1
@@ -203,5 +218,4 @@ class PortalInformationBuilder
 
         return $portalInformations;
     }
-
 }

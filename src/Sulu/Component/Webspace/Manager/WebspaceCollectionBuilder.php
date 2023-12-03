@@ -17,9 +17,9 @@ use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Loader\Exception\ExpectedDefaultTemplatesNotFound;
 use Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultErrorTemplateException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidErrorTemplateException;
+use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Portal;
-use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
@@ -53,10 +53,11 @@ class WebspaceCollectionBuilder
             );
         }
 
-        $webspaceCollection = new WebspaceCollection($webspaceRefs, $portalRefs);
-        $webspaceCollection->setPortalInformations($this->portalInformationBuilder->dumpAndClear());
-
-        return $webspaceCollection;
+        return new WebspaceCollection(
+            $webspaceRefs,
+            $portalRefs,
+            $this->portalInformationBuilder->dumpAndClear(),
+        );
     }
 
     /**
@@ -78,7 +79,7 @@ class WebspaceCollectionBuilder
         $webspace->setName($webspaceConfiguration['name']);
 
         $securityConfiguration = $webspaceConfiguration['security'];
-        if ($securityConfiguration !== []) {
+        if ([] !== $securityConfiguration) {
             $security = new Security();
             $security->setSystem($securityConfiguration['system']);
             $security->setPermissionCheck($securityConfiguration['permissionCheck']);
@@ -93,7 +94,7 @@ class WebspaceCollectionBuilder
                 $this->buildLocalizationTree($childLocalization, $localization, 1, 0, $webspaceKey);
             }
 
-            $localizationRefs[$webspaceKey.'_'.$localization[0]] = $localization[0];
+            $localizationRefs[$webspaceKey . '_' . $localization[0]] = $localization[0];
 
             $webspace->addLocalization($localization[0]);
         }
@@ -122,7 +123,7 @@ class WebspaceCollectionBuilder
         $navigation = new Navigation();
 
         foreach ($webspaceConfiguration['navigation']['contexts'] ?? [] as $contextConfiguration) {
-            if (array_key_exists('titles', $contextConfiguration['meta'] ?? [])) {
+            if (\array_key_exists('titles', $contextConfiguration['meta'] ?? [])) {
                 $meta = ['title' => $contextConfiguration['meta']['titles']];
             } else {
                 $meta = $contextConfiguration['meta'];
@@ -137,7 +138,7 @@ class WebspaceCollectionBuilder
      * @param array<int,mixed> $webspaceConfiguration
      * @param array<int,mixed> $segmentRefs
      */
-    protected function buildSegments(array $webspaceConfiguration, Webspace $webspace, array &$segmentRefs):void
+    protected function buildSegments(array $webspaceConfiguration, Webspace $webspace, array &$segmentRefs): void
     {
         foreach ($webspaceConfiguration['segments']['segment'] ?? [] as $segmentConfiguration) {
             $segment = new Segment();
@@ -147,9 +148,10 @@ class WebspaceCollectionBuilder
 
             $webspace->addSegment($segment);
 
-            $segmentRefs[$webspace->getKey().'_'.$segmentConfiguration['key']] = $segment;
+            $segmentRefs[$webspace->getKey() . '_' . $segmentConfiguration['key']] = $segment;
         }
     }
+
     /**
      * @param array<int,mixed> $portalConfiguration
      */
@@ -180,10 +182,11 @@ class WebspaceCollectionBuilder
 
         return $portal;
     }
+
     /**
      * @param array<int,mixed> $webspaceConfiguration
      */
-    protected function buildTemplates( array $webspaceConfiguration, Webspace $webspace): void
+    protected function buildTemplates(array $webspaceConfiguration, Webspace $webspace): void
     {
         $webspace->setTheme($webspaceConfiguration['theme']);
 
@@ -192,15 +195,15 @@ class WebspaceCollectionBuilder
         }
 
         foreach ($webspaceConfiguration['default_templates']['default_template'] as $type => $defaultTemplate) {
-            if ($type == 'homepage') {
+            if ('homepage' == $type) {
                 $type = 'home';
             }
             $webspace->addDefaultTemplate($type, $defaultTemplate);
         }
 
         $expectedDefaultTemplates = ['page', 'home'];
-        $foundDefaultTemplates = array_keys($webspace->getDefaultTemplates());
-        if (array_diff($expectedDefaultTemplates, $foundDefaultTemplates) !== []) {
+        $foundDefaultTemplates = \array_keys($webspace->getDefaultTemplates());
+        if ([] !== \array_diff($expectedDefaultTemplates, $foundDefaultTemplates)) {
             throw new ExpectedDefaultTemplatesNotFound(
                 $webspace->getKey(),
                 $expectedDefaultTemplates,
@@ -214,6 +217,7 @@ class WebspaceCollectionBuilder
             $webspace->addExcludedTemplate($excludedTemplate);
         }
     }
+
     /**
      * @param array<int,mixed> $webspaceConfiguration
      */
@@ -221,11 +225,11 @@ class WebspaceCollectionBuilder
     {
         $defaultErrorTemplateCount = 0;
         foreach ($webspaceConfiguration['error_templates'] ?? [] as $errorTemplate) {
-            if ($errorTemplate['code'] !== null) {
-                $webspace->addTemplate('error-'.$errorTemplate['code'], $errorTemplate['value']);
+            if (null !== $errorTemplate['code']) {
+                $webspace->addTemplate('error-' . $errorTemplate['code'], $errorTemplate['value']);
             } elseif ($errorTemplate['default']) {
                 $webspace->addTemplate('error', $errorTemplate['value']);
-                $defaultErrorTemplateCount++;
+                ++$defaultErrorTemplateCount;
             } else {
                 throw new InvalidErrorTemplateException($errorTemplate['value'], $webspace->getKey());
             }
@@ -236,6 +240,7 @@ class WebspaceCollectionBuilder
             throw new InvalidAmountOfDefaultErrorTemplateException($webspace->getKey());
         }
     }
+
     /**
      * @param array<int,mixed> $environmentConfiguration
      */
@@ -243,8 +248,7 @@ class WebspaceCollectionBuilder
         array $environmentConfiguration,
         Portal $portal,
         Webspace $webspace,
-    ): Environment
-    {
+    ): Environment {
         $environment = new Environment();
         $environment->setType($environmentConfiguration['type']);
 
@@ -270,6 +274,7 @@ class WebspaceCollectionBuilder
 
         return $environment;
     }
+
     /**
      * @param array<int,mixed> $localizationConfiguration
      */

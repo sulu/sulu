@@ -22,8 +22,6 @@ class Security
 
     /**
      * Sets the key of the segment.
-     *
-     * @param string $system
      */
     public function setSystem(string $system): void
     {
@@ -32,8 +30,6 @@ class Security
 
     /**
      * Returns the key of the segment.
-     *
-     * @return string
      */
     public function getSystem(): string
     {
