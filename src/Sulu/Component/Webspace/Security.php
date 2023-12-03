@@ -17,19 +17,19 @@ namespace Sulu\Component\Webspace;
 class Security
 {
     /**
-     * The key of the segment.
-     *
-     * @var string
+     * @param ?string $system The key of the segment
+     * @param bool $permissionCheck
      */
-    private $system;
-
-    /**
-     * @var bool
-     */
-    private $permissionCheck = false;
+    public function __construct(
+        private $system = null,
+        private $permissionCheck = false
+    ) {
+    }
 
     /**
      * Sets the key of the segment.
+     *
+     * @deprecated since version 2.6 and will be removed in 3.0
      *
      * @param string $system
      */
@@ -48,6 +48,9 @@ class Security
         return $this->system;
     }
 
+    /**
+     * @deprecated since version 2.6 and will be removed in 3.0
+     */
     public function setPermissionCheck(bool $permissionCheck)
     {
         $this->permissionCheck = $permissionCheck;

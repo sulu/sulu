@@ -21,20 +21,6 @@ use Sulu\Component\Webspace\Exception\PortalLocalizationNotFoundException;
 class Portal
 {
     /**
-     * The name of the portal.
-     *
-     * @var string
-     */
-    private $name;
-
-    /**
-     * The key of the portal.
-     *
-     * @var string
-     */
-    private $key;
-
-    /**
      * An array of localizations.
      *
      * @var Localization[]
@@ -63,9 +49,16 @@ class Portal
     private $environments;
 
     /**
-     * @var Webspace
+     * @param string $key
+     * @param string $name
+     * @param Webspace $webspace
      */
-    private $webspace;
+    public function __construct(
+        private $key = null,
+        private $name = null,
+        private $webspace = null,
+    ) {
+    }
 
     /**
      * Sets the name of the portal.
