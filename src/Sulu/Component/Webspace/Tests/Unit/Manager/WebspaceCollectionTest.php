@@ -118,6 +118,18 @@ class WebspaceCollectionTest extends TestCase
         $this->webspaceCollection->setPortalInformations($portalInformations);
     }
 
+    public function testFindWebspaceByNotExistingKey(): void
+    {
+        $webspace = $this->webspaceCollection->getWebspace('not_existing');
+        $this->assertNull($webspace);
+    }
+
+    public function testFindPortalByNotExistingKey(): void
+    {
+        $portal = $this->webspaceCollection->getPortal('not_existing');
+        $this->assertNull($portal);
+    }
+
     public function testGetPortalInformations(): void
     {
         $this->assertCount(1, $this->webspaceCollection->getPortalInformations('dev'));

@@ -101,6 +101,7 @@ class WebspaceManager implements WebspaceManagerInterface
         $this->structureMetadataFactory = $structureMetadataFactory;
     }
 
+    /** @deprecated since 2.6 and will be removed in 3.0. Use sulu_core.webspace.collection::getWebspace */
     public function findWebspaceByKey(?string $key): ?Webspace
     {
         if (!$key) {
@@ -110,6 +111,7 @@ class WebspaceManager implements WebspaceManagerInterface
         return $this->getWebspaceCollection()->getWebspace($key);
     }
 
+    /** @deprecated since 2.6 and will be removed in 3.0. Use sulu_core.webspace.collection::getPortal */
     public function findPortalByKey(?string $key): ?Portal
     {
         if (!$key) {
@@ -337,6 +339,7 @@ class WebspaceManager implements WebspaceManagerInterface
         return $this->createResourceLocatorUrl($portalUrl, $resourceLocator, $scheme);
     }
 
+    /** @deprecated since 2.6 and will be removed in 3.0. Use sulu_core.webspace.collection::getPortals */
     public function getPortals(): array
     {
         return $this->getWebspaceCollection()->getPortals();
