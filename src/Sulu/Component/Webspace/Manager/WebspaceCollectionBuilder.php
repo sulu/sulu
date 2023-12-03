@@ -86,7 +86,7 @@ class WebspaceCollectionBuilder
             $webspace->setSecurity($security);
         }
 
-        foreach ($webspaceConfiguration['localizations'] as $localizationConfiguration) {
+        foreach ($webspaceConfiguration['localizations']['localization'] as $localizationConfiguration) {
             $localization = [$this->buildLocalization($localizationConfiguration)];
 
             foreach ($localizationConfiguration['children'] ?? [] as $childLocalization) {
@@ -99,14 +99,12 @@ class WebspaceCollectionBuilder
         }
 
         $this->buildSegments($webspaceConfiguration, $webspace, $segmentRefs);
-
         $this->buildTemplates($webspaceConfiguration, $webspace);
-
         $this->buildNavgiation($webspaceConfiguration, $webspace);
 
         $webspace->setResourceLocatorStrategy($webspaceConfiguration['resource_locator']['strategy']);
 
-        foreach ($webspaceConfiguration['portals'] as $portalConfiguration) {
+        foreach ($webspaceConfiguration['portals']['portal'] as $portalConfiguration) {
             $portal = $this->buildPortal($portalConfiguration, $webspace);
 
             $portalRefs[$portalConfiguration['key']] = $portal;
@@ -141,7 +139,7 @@ class WebspaceCollectionBuilder
      */
     protected function buildSegments(array $webspaceConfiguration, Webspace $webspace, array &$segmentRefs):void
     {
-        foreach ($webspaceConfiguration['segments'] as $segmentConfiguration) {
+        foreach ($webspaceConfiguration['segments']['segment'] ?? [] as $segmentConfiguration) {
             $segment = new Segment();
             $segment->setKey($segmentConfiguration['key']);
             $segment->setMetadata($segmentConfiguration['metadata'] ?? []);
@@ -158,14 +156,13 @@ class WebspaceCollectionBuilder
     protected function buildPortal(
         array $portalConfiguration,
         Webspace $webspace,
-    ): Portal
-    {
+    ): Portal {
         $portal = new Portal();
         $portal->setName($portalConfiguration['name']);
         $portal->setKey($portalConfiguration['key']);
         $portal->setWebspace($webspace);
 
-        foreach ($portalConfiguration['localizations'] ?? [] as $localizationConfiguration) {
+        foreach ($portalConfiguration['localizations'] as $localizationConfiguration) {
             $localization = new Localization($localizationConfiguration['language']);
             $localization->setCountry($localizationConfiguration['country']);
             $localization->setDefault($localizationConfiguration['default']);
@@ -190,7 +187,7 @@ class WebspaceCollectionBuilder
     {
         $webspace->setTheme($webspaceConfiguration['theme']);
 
-        foreach ($webspaceConfiguration['templates'] as $type => $template) {
+        foreach ($webspaceConfiguration['templates']['template'] ?? [] as $type => $template) {
             $webspace->addTemplate($type, $template);
         }
 
@@ -213,7 +210,7 @@ class WebspaceCollectionBuilder
 
         $this->buildErrorTemplates($webspaceConfiguration, $webspace);
 
-        foreach ($webspaceConfiguration['excluded_templates'] as $excludedTemplate) {
+        foreach ($webspaceConfiguration['excluded_templates'] ?? [] as $excludedTemplate) {
             $webspace->addExcludedTemplate($excludedTemplate);
         }
     }
@@ -223,7 +220,7 @@ class WebspaceCollectionBuilder
     protected function buildErrorTemplates(array $webspaceConfiguration, Webspace $webspace): void
     {
         $defaultErrorTemplateCount = 0;
-        foreach ($webspaceConfiguration['error_templates'] as $errorTemplate) {
+        foreach ($webspaceConfiguration['error_templates'] ?? [] as $errorTemplate) {
             if ($errorTemplate['code'] !== null) {
                 $webspace->addTemplate('error-'.$errorTemplate['code'], $errorTemplate['value']);
             } elseif ($errorTemplate['default']) {

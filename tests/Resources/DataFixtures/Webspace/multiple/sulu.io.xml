@@ -10,8 +10,10 @@
     <name>Sulu CMF</name>
     <key>sulu_io</key>
 
-    <localization language="en" country="us" shadow="auto"/>
-    <localization language="de" country="at" default="true"/>
+    <localizations>
+        <localization language="en" country="us" shadow="auto"/>
+        <localization language="de" country="at" default="true"/>
+    </localizations>
 
     <theme>sulu</theme>
 
@@ -34,10 +36,6 @@
             </meta>
         </context>
     </navigation>
-
-    <resource-locator>
-        <strategy>short</strategy>
-    </resource-locator>
 
     <portals>
         <portal>

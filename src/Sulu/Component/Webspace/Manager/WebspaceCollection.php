@@ -20,9 +20,8 @@ use Sulu\Component\Webspace\Webspace;
  *
  * @implements \IteratorAggregate<Webspace>
  */
-class WebspaceCollection implements \IteratorAggregate, \Countable
+class WebspaceCollection implements WebspaceCollectionInterface
 {
-
     /**
      * The portals of this specific sulu installation, prefiltered by the environment and url.
      *
@@ -39,25 +38,34 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
         private array $portals = [],
     ) { }
 
+    public function getWebspace(string $key): ?Webspace
+    {
+        return $this->webspaces[$key] ?? null;
+    }
+
     /**
-     * Returns the portal with the given index.
-     *
-     * @param string $key The index of the portal
-     *
-     * @return Portal|null
+     * @return array<string, Webspace>
      */
+    public function getWebspaces(): array
+    {
+        return $this->webspaces;
+    }
+
     public function getPortal(string $key): ?Portal
     {
         return $this->portals[$key] ?? null;
     }
 
     /**
-     * Returns the portal informations for the given environment.
+     * Returns all the portals of this collection.
      *
-     * @param array<string>|null $types Defines which type of portals are requested (null for all)
-     *
-     * @return PortalInformation[]
+     * @return array<string, Portal>
      */
+    public function getPortals(): array
+    {
+        return $this->portals;
+    }
+
     public function getPortalInformations(string $environment, array $types = null): array
     {
         if (!isset($this->portalInformations[$environment])) {
@@ -75,11 +83,6 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
                 return \in_array($portalInformation->getType(), $types);
             }
         );
-    }
-
-    public function getWebspace(string $key): ?Webspace
-    {
-        return $this->webspaces[$key] ?? null;
     }
 
     public function count(): int
@@ -119,43 +122,5 @@ class WebspaceCollection implements \IteratorAggregate, \Countable
         $collection['portalInformations'] = $portalInformations;
 
         return $collection;
-    }
-
-    /**
-     * @return Webspace[]
-     */
-    public function getWebspaces(): array
-    {
-        return $this->webspaces;
-    }
-
-    /**
-     * Returns all the portals of this collection.
-     *
-     * @return array<int, Portal>
-     */
-    public function getPortals(): array
-    {
-        return $this->portals;
-    }
-
-    /**
-     * Sets the portals for this collection.
-     *
-     * @param <int, Portal> $portals
-     */
-    public function setPortals($portals): void
-    {
-        $this->portals = $portals;
-    }
-
-    /**
-     * Sets the portal Information for this collection.
-     *
-     * @param array $portalInformations
-     */
-    public function setPortalInformations($portalInformations)
-    {
-        $this->portalInformations = $portalInformations;
     }
 }

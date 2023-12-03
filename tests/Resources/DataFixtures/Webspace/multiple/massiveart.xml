@@ -10,17 +10,21 @@
     <name>Massive Art</name>
     <key>massiveart</key>
 
-    <localization language="en" country="us" shadow="auto" default="true" />
-    <localization language="fr" country="ca"/>
+    <localizations>
+        <localization language="en" country="us" shadow="auto" default="true" />
+        <localization language="fr" country="ca"/>
+    </localizations>
 
-    <segment key="w" default="false">
+    <segments>
+        <segment key="w" default="false">
             <title language="en">Winter</title>
             <title language="de">Winter</title>
-    </segment>
-    <segment key="s" default="true">
+        </segment>
+        <segment key="s" default="true">
             <title language="en">Summer</title>
             <title language="de">Sommer</title>
-    </segment>
+        </segment>
+    </segments>
 
     <theme>massiveart</theme>
 
@@ -48,38 +52,40 @@
         <strategy>tree_leaf_edit</strategy>
     </resource-locator>
 
-    <portal>
-        <name>Massive Art US</name>
-        <key>massiveart_us</key>
+    <portals>
+        <portal>
+            <name>Massive Art US</name>
+            <key>massiveart_us</key>
 
-        <localization language="en" country="us"/>
-        <localization language="en" country="ca"/>
-        <localization language="fr" country="ca"/>
+            <localization language="en" country="us"/>
+            <localization language="en" country="ca"/>
+            <localization language="fr" country="ca"/>
 
-        <environment type="prod">
-            <url value="{language}.massiveart-us.{country}" />
-        </environment>
-        <environment type="dev">
-            <url value="massiveart-us.lo/{localization}" />
-        </environment>
-    </portal>
-    <portal>
-        <name>Massive Art CA</name>
-        <key>massiveart_ca</key>
+            <environment type="prod">
+                <url value="{language}.massiveart-us.{country}" />
+            </environment>
+            <environment type="dev">
+                <url value="massiveart-us.lo/{localization}" />
+            </environment>
+        </portal>
+        <portal>
+            <name>Massive Art CA</name>
+            <key>massiveart_ca</key>
 
-        <localization language="en" country="ca"/>
-        <localization language="fr" country="ca" default="true"/>
+            <localization language="en" country="ca"/>
+            <localization language="fr" country="ca" default="true"/>
 
-        <environment type="prod">
-            <url value="{language}.massiveart-ca.{country}" />
-        </environment>
-        <environment type="test">
-            <url value="{language}.massiveart-ca.{country}" />
-        </environment>
-        <environment type="dev">
-            <url value="massiveart-ca.lo/{localization}" />
-        </environment>
-    </portal>
+            <environment type="prod">
+                <url value="{language}.massiveart-ca.{country}" />
+            </environment>
+            <environment type="test">
+                <url value="{language}.massiveart-ca.{country}" />
+            </environment>
+            <environment type="dev">
+                <url value="massiveart-ca.lo/{localization}" />
+            </environment>
+        </portal>
+    </portals>
 </webspace>
 </config>
 </services:container>

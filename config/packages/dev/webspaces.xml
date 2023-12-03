@@ -6,15 +6,21 @@
 >
     <config>
         <webspace key="testing" name="Testing website">
+
             <localizations>
                 <localization language="de" default="true" />
+                <localization language="en" />
             </localizations>
 
-            <default-template type="page">default</default-template>
-            <default-template type="home">homepage</default-template>
+            <default-templates>
+                <default-template type="page">default</default-template>
+                <default-template type="home">homepage</default-template>
+            </default-templates>
 
-            <template type="search">search/search</template>
-            <template type="error">error/error</template>
+            <templates>
+                <template type="search">search/search</template>
+                <template type="error">error/error</template>
+            </templates>
 
             <theme>default</theme>
 
@@ -28,23 +34,26 @@
             </navigation>
 
             <resource-locator>
-                <strategy>leave-first-edit</strategy>
+                <strategy>tree_leaf_edit</strategy>
             </resource-locator>
 
-            <portal name="example.com" key="example">
-                <environment type="prod">
-                    <url language="en">{host}</url>
-                </environment>
-                <environment type="stage">
-                    <url language="en">{host}</url>
-                </environment>
-                <environment type="test">
-                    <url language="en">{host}</url>
-                </environment>
-                <environment type="dev">
-                    <url language="en">{host}</url>
-                </environment>
-            </portal>
+            <portals>
+                <portal name="example.com" key="example">
+                    <environment type="prod">
+                        <url language="en">{host}</url>
+                    </environment>
+                    <environment type="stage">
+                        <url language="en">{host}</url>
+                    </environment>
+                    <environment type="test">
+                        <url language="en">{host}</url>
+                    </environment>
+                    <environment type="dev">
+                        <url language="en">{host}</url>
+                    </environment>
+                </portal>
+                <portal name="example.com" key="exampl2" />
+            </portals>
         </webspace>
     </config>
 </services:container>
