@@ -39,8 +39,6 @@ class SnippetResolver implements SnippetResolverInterface, ResetInterface
      */
     private $structureResolver;
 
-
-
     public function __construct(
         ContentMapperInterface $contentMapper,
         StructureResolverInterface $structureResolver
