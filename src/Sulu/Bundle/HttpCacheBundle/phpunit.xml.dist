@@ -22,6 +22,7 @@
     <php>
         <server name="APP_ENV" value="test" force="true"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
+        <ini name="date.timezone" value="UTC"/>
     </php>
 
     <listeners>

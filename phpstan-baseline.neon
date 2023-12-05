@@ -12061,56 +12061,6 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\:\\:checkPermission\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\:\\:exportDocumentView\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\:\\:exportSystemView\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\:\\:importXML\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\:\\:logout\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\:\\:move\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\:\\:refresh\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\:\\:removeItem\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\:\\:save\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\:\\:setNamespacePrefix\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
-
-		-
 			message: "#^Parameter \\#1 \\$source of method DOMDocument\\:\\:loadXML\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Session/Session.php
@@ -38821,72 +38771,7 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:accept\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:addMixin\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:followLifecycleTransition\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:getIterator\\(\\) should return Traversable\\<mixed, mixed\\> but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:orderBefore\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:remove\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:removeMixin\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:removeShare\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:removeSharedSet\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:rename\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:revert\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:setMixins\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:setPrimaryType\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode\\:\\:update\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/SuluNode.php
 
