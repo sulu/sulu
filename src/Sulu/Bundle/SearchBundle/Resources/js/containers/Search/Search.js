@@ -87,6 +87,24 @@ class Search extends React.Component<Props> {
             return <Loader />;
         }
 
+        const results = searchStore.result.map((result, index) => (
+            <SearchResult
+                description={result.document.description}
+                icon={indexes[result.document.index].icon}
+                image={result.document.imageUrl}
+                index={index}
+                key={result.document.index + '_' + result.document.id + '_' + result.document.locale}
+                locale={result.document.locale}
+                onClick={this.handleResultClick}
+                resource={
+                    indexes[result.document.index]
+                        ? indexes[result.document.index].name
+                        : ''
+                }
+                title={result.document.title}
+            />
+        ));
+
         return (
             <div className={searchStyles.search}>
                 <SearchField
@@ -109,25 +127,6 @@ class Search extends React.Component<Props> {
                     </div>
                 }
                 {!searchStore.loading && searchStore.result.length > 0 &&
-                    searchStore.result.map((result, index) => (
-                        <SearchResult
-                            description={result.document.description}
-                            icon={indexes[result.document.index].icon}
-                            image={result.document.imageUrl}
-                            index={index}
-                            key={result.document.index + '_' + result.document.id + '_' + result.document.locale}
-                            locale={result.document.locale}
-                            onClick={this.handleResultClick}
-                            resource={
-                                indexes[result.document.index]
-                                    ? indexes[result.document.index].name
-                                    : ''
-                            }
-                            title={result.document.title}
-                        />
-                    ))
-                }
-                {!searchStore.loading && searchStore.result.length > 0 &&
                     <Pagination
                         currentLimit={searchStore.limit}
                         currentPage={searchStore.page}
@@ -135,7 +134,9 @@ class Search extends React.Component<Props> {
                         onLimitChange={this.handleLimitChange}
                         onPageChange={this.handlePageChange}
                         totalPages={searchStore.pages}
-                    />
+                    >
+                        {results}
+                    </Pagination>
                 }
             </div>
         );

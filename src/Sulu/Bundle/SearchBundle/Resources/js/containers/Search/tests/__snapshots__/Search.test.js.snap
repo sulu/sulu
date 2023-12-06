@@ -223,90 +223,90 @@ exports[`Render search results 1`] = `
   >
     sulu_search.search_hint
   </p>
-  <div
-    class="searchResult"
-    role="button"
-  >
+  <section>
     <div
-      class="imageContainer"
-    >
-      <img
-        class="image"
-        src="/image.jgp"
-      />
-    </div>
-    <div
-      class="resultContainer"
+      class="searchResult"
+      role="button"
     >
       <div
-        class="resource"
+        class="imageContainer"
       >
-        Page
-      </div>
-      <div
-        class="titleContainer"
-      >
-        <div
-          class="title"
-        >
-          Test1
-        </div>
-        <div
-          class="locale"
-        >
-           (de)
-        </div>
-      </div>
-      <div
-        class="description"
-      >
-        something
-
-      </div>
-    </div>
-  </div>
-  <div
-    class="searchResult"
-    role="button"
-  >
-    <div
-      class="imageContainer"
-    >
-      <div
-        class="icon"
-      >
-        <span
-          aria-label="su-contact"
-          class="su-contact"
+        <img
+          class="image"
+          src="/image.jgp"
         />
       </div>
-    </div>
-    <div
-      class="resultContainer"
-    >
       <div
-        class="resource"
-      >
-        Contact
-      </div>
-      <div
-        class="titleContainer"
+        class="resultContainer"
       >
         <div
-          class="title"
+          class="resource"
         >
-          Max Mustermann
+          Page
+        </div>
+        <div
+          class="titleContainer"
+        >
+          <div
+            class="title"
+          >
+            Test1
+          </div>
+          <div
+            class="locale"
+          >
+             (de)
+          </div>
+        </div>
+        <div
+          class="description"
+        >
+          something
+
+        </div>
+      </div>
+    </div>
+    <div
+      class="searchResult"
+      role="button"
+    >
+      <div
+        class="imageContainer"
+      >
+        <div
+          class="icon"
+        >
+          <span
+            aria-label="su-contact"
+            class="su-contact"
+          />
         </div>
       </div>
       <div
-        class="description"
+        class="resultContainer"
       >
-        something 2
+        <div
+          class="resource"
+        >
+          Contact
+        </div>
+        <div
+          class="titleContainer"
+        >
+          <div
+            class="title"
+          >
+            Max Mustermann
+          </div>
+        </div>
+        <div
+          class="description"
+        >
+          something 2
 
+        </div>
       </div>
     </div>
-  </div>
-  <section>
     <nav
       class="pagination"
     >
