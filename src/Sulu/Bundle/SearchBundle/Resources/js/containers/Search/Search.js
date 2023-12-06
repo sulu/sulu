@@ -3,6 +3,7 @@ import React from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Icon, Loader} from 'sulu-admin-bundle/components';
+import Pagination from 'sulu-admin-bundle/components/Pagination';
 import {Router} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import jsonpointer from 'json-pointer';
@@ -40,6 +41,14 @@ class Search extends React.Component<Props> {
 
     @action handleQueryChange = (query: ?string) => {
         this.query = query;
+    };
+
+    handleLimitChange = (limit: number) => {
+        searchStore.setLimit(limit);
+    };
+
+    handlePageChange = (page: number) => {
+        searchStore.setPage(page);
     };
 
     handleSearch = () => {
@@ -117,6 +126,16 @@ class Search extends React.Component<Props> {
                             title={result.document.title}
                         />
                     ))
+                }
+                {!searchStore.loading && searchStore.result.length > 0 &&
+                    <Pagination
+                        currentLimit={searchStore.limit}
+                        currentPage={searchStore.page}
+                        loading={searchStore.loading}
+                        onLimitChange={this.handleLimitChange}
+                        onPageChange={this.handlePageChange}
+                        totalPages={searchStore.pages}
+                    />
                 }
             </div>
         );
