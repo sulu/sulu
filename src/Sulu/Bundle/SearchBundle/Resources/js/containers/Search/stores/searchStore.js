@@ -9,7 +9,7 @@ class SearchStore {
     @observable page: ?number = 1;
     @observable limit: ?number = 10;
     @observable loading: boolean = false;
-    pages: ?number = undefined;    
+    pages: ?number = undefined;
     total: ?number = undefined;
 
     constructor() {
