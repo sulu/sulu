@@ -116,22 +116,22 @@ class Session implements SessionInterface
 
     public function move($srcAbsPath, $destAbsPath)
     {
-        return $this->inner->move($srcAbsPath, $destAbsPath);
+        $this->inner->move($srcAbsPath, $destAbsPath);
     }
 
     public function removeItem($absPath)
     {
-        return $this->inner->removeItem($absPath);
+        $this->inner->removeItem($absPath);
     }
 
     public function save()
     {
-        return $this->inner->save();
+        $this->inner->save();
     }
 
     public function refresh($keepChanges)
     {
-        return $this->inner->refresh($keepChanges);
+        $this->inner->refresh($keepChanges);
     }
 
     public function hasPendingChanges()
@@ -146,7 +146,7 @@ class Session implements SessionInterface
 
     public function checkPermission($absPath, $actions)
     {
-        return $this->inner->checkPermission($absPath, $actions);
+        $this->inner->checkPermission($absPath, $actions);
     }
 
     public function hasCapability($methodName, $target, array $arguments)
@@ -156,7 +156,7 @@ class Session implements SessionInterface
 
     public function importXML($parentAbsPath, $uri, $uuidBehavior)
     {
-        return $this->inner->importXML($parentAbsPath, $uri, $uuidBehavior);
+        $this->inner->importXML($parentAbsPath, $uri, $uuidBehavior);
     }
 
     public function exportSystemView($absPath, $stream, $skipBinary, $noRecurse)
@@ -183,12 +183,12 @@ class Session implements SessionInterface
 
     public function exportDocumentView($absPath, $stream, $skipBinary, $noRecurse)
     {
-        return $this->inner->exportDocumentView($absPath, $stream, $skipBinary, $noRecurse);
+        $this->inner->exportDocumentView($absPath, $stream, $skipBinary, $noRecurse);
     }
 
     public function setNamespacePrefix($prefix, $uri)
     {
-        return $this->inner->setNamespacePrefix($prefix, $uri);
+        $this->inner->setNamespacePrefix($prefix, $uri);
     }
 
     public function getNamespacePrefixes()
@@ -208,7 +208,7 @@ class Session implements SessionInterface
 
     public function logout()
     {
-        return $this->inner->logout();
+        $this->inner->logout();
     }
 
     public function isLive()

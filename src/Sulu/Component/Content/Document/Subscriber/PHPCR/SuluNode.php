@@ -83,17 +83,17 @@ class SuluNode implements \IteratorAggregate, NodeInterface
 
     public function accept(ItemVisitorInterface $visitor)
     {
-        return $this->node->accept($visitor);
+        $this->node->accept($visitor);
     }
 
     public function revert()
     {
-        return $this->node->revert();
+        $this->node->revert();
     }
 
     public function remove()
     {
-        return $this->node->remove();
+        $this->node->remove();
     }
 
     public function addNode($relPath, $primaryNodeTypeName = null)
@@ -108,12 +108,12 @@ class SuluNode implements \IteratorAggregate, NodeInterface
 
     public function orderBefore($srcChildRelPath, $destChildRelPath)
     {
-        return $this->node->orderBefore($srcChildRelPath, $destChildRelPath);
+        $this->node->orderBefore($srcChildRelPath, $destChildRelPath);
     }
 
     public function rename($newName)
     {
-        return $this->node->rename($newName);
+        $this->node->rename($newName);
     }
 
     public function setProperty($name, $value, $type = PropertyType::UNDEFINED)
@@ -228,22 +228,22 @@ class SuluNode implements \IteratorAggregate, NodeInterface
 
     public function setPrimaryType($nodeTypeName)
     {
-        return $this->node->setPrimaryType($nodeTypeName);
+        $this->node->setPrimaryType($nodeTypeName);
     }
 
     public function addMixin($mixinName)
     {
-        return $this->node->addMixin($mixinName);
+        $this->node->addMixin($mixinName);
     }
 
     public function removeMixin($mixinName)
     {
-        return $this->node->removeMixin($mixinName);
+        $this->node->removeMixin($mixinName);
     }
 
     public function setMixins(array $mixinNames)
     {
-        return $this->node->setMixins($mixinNames);
+        $this->node->setMixins($mixinNames);
     }
 
     public function canAddMixin($mixinName)
@@ -258,7 +258,7 @@ class SuluNode implements \IteratorAggregate, NodeInterface
 
     public function update($srcWorkspace)
     {
-        return $this->node->update($srcWorkspace);
+        $this->node->update($srcWorkspace);
     }
 
     public function getCorrespondingNodePath($workspaceName)
@@ -273,12 +273,12 @@ class SuluNode implements \IteratorAggregate, NodeInterface
 
     public function removeSharedSet()
     {
-        return $this->node->removeSharedSet();
+        $this->node->removeSharedSet();
     }
 
     public function removeShare()
     {
-        return $this->node->removeShare();
+        $this->node->removeShare();
     }
 
     public function isCheckedOut()
@@ -293,7 +293,7 @@ class SuluNode implements \IteratorAggregate, NodeInterface
 
     public function followLifecycleTransition($transition)
     {
-        return $this->node->followLifecycleTransition($transition);
+        $this->node->followLifecycleTransition($transition);
     }
 
     public function getAllowedLifecycleTransitions()

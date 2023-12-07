@@ -131,7 +131,7 @@ class SnippetResolverTest extends TestCase
         $contentMapper->load(
             $uuid,
             $webspaceKey,
-            Argument::that(fn ($value) => \in_array($value, $locales)),
+            Argument::that(function($value) use ($locales) { return \in_array($value, $locales); })
         )->shouldBeCalledTimes(\count($locales))->will(
             function($arguments) use ($structures) {
                 return $structures[$arguments[2]];
