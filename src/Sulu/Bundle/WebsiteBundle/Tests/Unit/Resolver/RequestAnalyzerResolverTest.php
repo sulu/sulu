@@ -96,14 +96,11 @@ class RequestAnalyzerResolverTest extends TestCase
         $portal = new Portal();
         $portal->setKey('sulu_io_portal');
         $portal->setName('Sulu Portal');
-        $locale = new Localization();
-        $locale->setLanguage('de');
+        $locale = new Localization('de');
         $locale->setDefault(true);
         $portal->addLocalization($locale);
 
-        $localization = new Localization();
-        $localization->setLanguage('de');
-        $localization->setCountry('at');
+        $localization = new Localization('de', 'at');
 
         $segment = new Segment();
         $segment->setKey('s');

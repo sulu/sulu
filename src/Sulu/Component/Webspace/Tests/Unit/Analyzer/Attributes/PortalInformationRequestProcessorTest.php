@@ -44,9 +44,7 @@ class PortalInformationRequestProcessorTest extends TestCase
         $portal = new Portal();
         $portal->setKey('sulu');
 
-        $localization = new Localization();
-        $localization->setCountry('at');
-        $localization->setLanguage('de');
+        $localization = new Localization('de', 'at');
 
         $portalInformation = new PortalInformation(
             $config['match_type'],
@@ -95,9 +93,7 @@ class PortalInformationRequestProcessorTest extends TestCase
         $webspace = new Webspace();
         $webspace->setKey('sulu');
 
-        $defaultLocalization = new Localization();
-        $defaultLocalization->setCountry('ch');
-        $defaultLocalization->setLanguage('it');
+        $defaultLocalization = new Localization('it', 'ch');
 
         $portal = new Portal();
         $portal->setKey('sulu');
@@ -153,9 +149,7 @@ class PortalInformationRequestProcessorTest extends TestCase
         $portal = new Portal();
         $portal->setKey('sulu');
 
-        $localization = new Localization();
-        $localization->setCountry('at');
-        $localization->setLanguage('de');
+        $localization = new Localization('de', 'at');
 
         $portalInformation = new PortalInformation(
             $config['match_type'],

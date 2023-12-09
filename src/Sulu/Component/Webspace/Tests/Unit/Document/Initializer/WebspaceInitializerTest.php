@@ -99,18 +99,15 @@ class WebspaceInitializerTest extends TestCase
         $webspace1 = new Webspace();
         $webspace1->setKey('webspace1');
         $webspace1->setTheme('theme1');
-        $localization1_1 = new Localization();
-        $localization1_1->setLanguage('de');
-        $localization1_2 = new Localization();
-        $localization1_2->setLanguage('en');
+        $localization1_1 = new Localization('de');
+        $localization1_2 = new Localization('en');
         $webspace1->setLocalizations([$localization1_1, $localization1_2]);
 
         /** @var Webspace $webspace2 */
         $webspace2 = new Webspace();
         $webspace2->setKey('webspace2');
         $webspace2->setTheme('theme1');
-        $localization2_1 = new Localization();
-        $localization2_1->setLanguage('de');
+        $localization2_1 = new Localization('de');
         $webspace2->setLocalizations([$localization2_1]);
 
         $this->webspaceCollection->getIterator()->willReturn(

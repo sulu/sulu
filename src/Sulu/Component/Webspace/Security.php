@@ -16,7 +16,7 @@ namespace Sulu\Component\Webspace;
  */
 class Security
 {
-    private string $system;
+    private ?string $system = null;
 
     private bool $permissionCheck = false;
 
@@ -31,7 +31,7 @@ class Security
     /**
      * Returns the key of the segment.
      */
-    public function getSystem(): string
+    public function getSystem(): ?string
     {
         return $this->system;
     }
