@@ -31,8 +31,8 @@ parameters:
         - %currentWorkingDirectory%/src/Sulu/Bundle/MarkupBundle/Listener/SwiftMailerListener.php
         - %currentWorkingDirectory%/src/Sulu/Bundle/MarkupBundle/Tests/Unit/Listener/SwiftMailerListenerTest.php
     symfony:
-        container_xml_path: %currentWorkingDirectory%/var/cache/admin/dev/App_KernelDevDebugContainer.xml
-        console_application_loader: tests/phpstan/console-application.php
-        constant_hassers: false
+        containerXmlPath: %currentWorkingDirectory%/var/cache/admin/dev/App_KernelDevDebugContainer.xml
+        consoleApplicationLoader: tests/phpstan/console-application.php
+        constantHassers: false
     doctrine:
         objectManagerLoader: tests/phpstan/object-manager.php

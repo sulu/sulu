@@ -17,6 +17,9 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
+/**
+ * @extends NestedTreeRepository<AccountInterface>
+ */
 class AccountRepository extends NestedTreeRepository implements DataProviderRepositoryInterface, AccountRepositoryInterface
 {
     use DataProviderRepositoryTrait;
@@ -33,7 +36,7 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
                 'a.accountContacts',
                 'accountContacts',
                 'WITH',
-                'accountContacts.idContacts = :contactId AND accountContacts.main = TRUE'
+                'IDENTITY(accountContacts.contact) = :contactId AND accountContacts.main = TRUE'
             )
             ->setParameter('contactId', $contactId);
         $query = $qb->getQuery();

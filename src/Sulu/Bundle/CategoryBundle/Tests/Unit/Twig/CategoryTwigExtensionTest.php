@@ -47,6 +47,8 @@ class CategoryTwigExtensionTest extends TestCase
     /**
      * Returns ApiCategory with given Data (id, name).
      *
+     * @param array{id: int, name: string} $data
+     *
      * @return ApiCategory
      */
     private function createCategoryEntity(array $data)
@@ -58,7 +60,12 @@ class CategoryTwigExtensionTest extends TestCase
         return $category->reveal();
     }
 
-    private function createCategoryApi($data)
+    /**
+     * @param array{id: int, name: string} $data
+     *
+     * @return EntityCategory
+     */
+    private function createCategoryApi(array $data)
     {
         $category = $this->prophesize(EntityCategory::class);
         $category->getId()->willReturn($data['id']);
@@ -66,33 +73,38 @@ class CategoryTwigExtensionTest extends TestCase
         return $category->reveal();
     }
 
-    public function getProvider()
+    /**
+     * @return array<array{0:array<mixed>, 1?:string, 2?:string, 3?:int}>
+     */
+    public function getProvider(): array
     {
         return [
             [[]],
             [[['id' => 1, 'name' => 'sulu']]],
             [[['id' => 1, 'name' => 'sulu'], ['id' => 2, 'name' => 'core']]],
             [[['id' => 1, 'name' => 'sulu'], ['id' => 2, 'name' => 'core'], ['id' => 3, 'name' => 'massive']]],
-            [[], 'de', 5],
-            [[['id' => 1, 'name' => 'sulu']], 'de', 5],
-            [[['id' => 1, 'name' => 'sulu'], ['id' => 2, 'name' => 'core']], 'de', 5],
-            [[['id' => 1, 'name' => 'sulu'], ['id' => 2, 'name' => 'core'], ['id' => 3, 'name' => 'massive']], 'de', 5],
-            [[], 'de', 5, 1],
-            [[['id' => 1, 'name' => 'sulu']], 'de', 5, 1],
-            [[['id' => 1, 'name' => 'sulu'], ['id' => 2, 'name' => 'core']], 'de', 5, 1],
+            [[], 'de', '5'],
+            [[['id' => 1, 'name' => 'sulu']], 'de', '5'],
+            [[['id' => 1, 'name' => 'sulu'], ['id' => 2, 'name' => 'core']], 'de', '5'],
+            [[['id' => 1, 'name' => 'sulu'], ['id' => 2, 'name' => 'core'], ['id' => 3, 'name' => 'massive']], 'de', '5'],
+            [[], 'de', '5', 1],
+            [[['id' => 1, 'name' => 'sulu']], 'de', '5', 1],
+            [[['id' => 1, 'name' => 'sulu'], ['id' => 2, 'name' => 'core']], 'de', '5', 1],
             [
                 [['id' => 1, 'name' => 'sulu'], ['id' => 2, 'name' => 'core'], ['id' => 3, 'name' => 'massive']],
                 'de',
-                5,
+                '5',
                 1,
             ],
         ];
     }
 
     /**
+     * @param array<array{id:int, name: string}> $categoryData
+     *
      * @dataProvider getProvider
      */
-    public function testGet($categoryData, $locale = 'en', $parent = null, $depth = null): void
+    public function testGet(array $categoryData, string $locale = 'en', ?string $parent = null, ?int $depth = null): void
     {
         $categoryEntities = [];
         $categoryApis = [];
@@ -120,7 +132,10 @@ class CategoryTwigExtensionTest extends TestCase
         $this->assertEquals($categoryData, $extension->getCategoriesFunction($locale, $parent, $depth));
     }
 
-    public function appendProvider()
+    /**
+     * @return array<array{string, string, string, string}>
+     */
+    public function appendProvider(): array
     {
         return [
             ['c', '/test', '1,2', '1,2,3'],
@@ -161,7 +176,7 @@ class CategoryTwigExtensionTest extends TestCase
     /**
      * @dataProvider appendProvider
      */
-    public function testAppendUrl($parameter, $url, $string, $expected): void
+    public function testAppendUrl(string $parameter, string $url, string $string, string $expected): void
     {
         $category = ['id' => 3, 'name' => 'test'];
 
@@ -189,7 +204,10 @@ class CategoryTwigExtensionTest extends TestCase
         $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
     }
 
-    public function setProvider()
+    /**
+     * @return array<array{string, string, string, string}>
+     */
+    public function setProvider(): array
     {
         return [
             ['c', '/test', '1,2', '3'],
@@ -206,7 +224,7 @@ class CategoryTwigExtensionTest extends TestCase
     /**
      * @dataProvider setProvider
      */
-    public function testSetUrl($parameter, $url, $string, $expected): void
+    public function testSetUrl(string $parameter, string $url, string $string, string $expected): void
     {
         $category = ['id' => 3, 'name' => 'test'];
 
@@ -234,7 +252,8 @@ class CategoryTwigExtensionTest extends TestCase
         $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
     }
 
-    public function clearProvider()
+    /** @return array<array{string, string, string}> */
+    public function clearProvider(): array
     {
         return [
             ['c', '/test', '1,2'],
@@ -249,7 +268,7 @@ class CategoryTwigExtensionTest extends TestCase
     /**
      * @dataProvider clearProvider
      */
-    public function testClearUrl($parameter, $url, $string): void
+    public function testClearUrl(string $parameter, string $url, string $string): void
     {
         $manager = $this->prophesize(CategoryManagerInterface::class);
         $requestStack = $this->prophesize(RequestStack::class);

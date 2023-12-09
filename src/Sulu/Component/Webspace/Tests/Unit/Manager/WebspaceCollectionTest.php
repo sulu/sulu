@@ -33,7 +33,6 @@ class WebspaceCollectionTest extends TestCase
 
     public function setUp(): void
     {
-        $webspaces = [];
         $portals = [];
         $portalInformations = ['prod' => [], 'dev' => []];
 
@@ -67,6 +66,7 @@ class WebspaceCollectionTest extends TestCase
         $portal->setDefaultLocalization($localizationEnUs);
 
         $webspace = new Webspace();
+        $webspace->setKey('default');
         $webspace->addLocalization($localizationEnUs);
         $webspace->addLocalization($localizationFrCa);
         $segmentSummer = new Segment();
@@ -81,15 +81,11 @@ class WebspaceCollectionTest extends TestCase
         $webspace->addSegment($segmentWinter);
         $webspace->setTheme('portal1theme');
         $webspace->addPortal($portal);
-        $webspace->setKey('default');
         $webspace->setName('Default');
         $webspace->setResourceLocatorStrategy('tree_leaf_edit');
         $webspace->addPortal($portal);
 
         $webspace->setNavigation(new Navigation([new NavigationContext('main', [])]));
-
-        $portals[] = $portal;
-        $webspaces[] = $webspace;
 
         $portalInformations['prod']['www.portal1.com'] = new PortalInformation(
             RequestAnalyzerInterface::MATCH_TYPE_FULL,

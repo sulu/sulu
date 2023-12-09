@@ -94,7 +94,8 @@ class MediaAdminTest extends TestCase
         $security2 = new Security();
         $security2->setSystem('Webspace2');
         $webspace2->setSecurity($security2);
-        $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([$webspace1, $webspace2]));
+        $this->webspaceManager->getWebspaceCollection()
+            ->willReturn(new WebspaceCollection(['test-1' => $webspace1, 'test-2' => $webspace2]));
 
         $this->assertEquals(
             [

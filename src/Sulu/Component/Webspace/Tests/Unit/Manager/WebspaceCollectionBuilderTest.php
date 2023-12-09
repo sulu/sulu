@@ -64,10 +64,9 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertEquals('Massive Art', $webspaces[0]->getName());
         $this->assertEquals('Sulu CMF', $webspaces[1]->getName());
 
-        $this->assertEquals(2, \count($webspaces[0]->getNavigation()->getContexts()));
-
         /** @var NavigationContext $navigationContext */
         $navigationContext = $webspaces[0]->getNavigation()->getContexts();
+        $this->assertEquals(2, \count($navigationContext));
 
         $this->assertEquals('main', $navigationContext[0]->getKey());
         $this->assertEquals('Hauptnavigation', $navigationContext[0]->getTitle('de'));
@@ -180,7 +179,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
             ['sulu.io.xml']
         );
 
-        $webspace = $webspaceCollection->getWebspaces()[0];
+        $webspace = $webspaceCollection->getWebspaces()['sulu_io'];
         $this->assertEquals('sulu_io', $webspace->getKey());
 
         $dev = $webspace->getPortals()[0]->getEnvironment('dev');
@@ -203,7 +202,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
             ['sulu.io.xml']
         );
 
-        $webspace = $webspaceCollection->getWebspaces()[0];
+        $webspace = $webspaceCollection->getWebspaces()['sulu_io'];
         $this->assertEquals('sulu_io', $webspace->getKey());
 
         $dev = $webspace->getPortals()[0]->getEnvironment('dev');

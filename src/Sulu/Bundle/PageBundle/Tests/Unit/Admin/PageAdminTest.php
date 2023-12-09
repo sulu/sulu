@@ -103,7 +103,8 @@ class PageAdminTest extends TestCase
         $webspace2->setLocalizations([$localization2]);
         $webspace2->setDefaultLocalization($localization2);
 
-        $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([$webspace1, $webspace2]));
+        $this->webspaceManager->getWebspaceCollection()
+            ->willReturn(new WebspaceCollection(['test-1' => $webspace1, 'test-2' => $webspace2]));
 
         $admin = new PageAdmin(
             $this->viewBuilderFactory,
@@ -224,8 +225,8 @@ class PageAdminTest extends TestCase
         $webspace2->setSecurity($webspace2Security->reveal());
 
         $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([
-            $webspace1,
-            $webspace2,
+            'webspace-key-1' => $webspace1,
+            'webspace-key-2' => $webspace2,
         ]));
 
         $this->assertEquals(

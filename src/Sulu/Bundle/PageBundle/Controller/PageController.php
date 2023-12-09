@@ -243,7 +243,7 @@ class PageController extends AbstractRestController implements ClassResourceInte
                 case 'copy-locale':
                     $srcLocale = $this->getRequestParameter($request, 'src', false, $locale);
                     $destLocales = $this->getRequestParameter($request, 'dest', true);
-                    $destLocales = \explode(',', $destLocales);
+                    $destLocales = \array_filter(\explode(',', $destLocales));
 
                     $document = $this->documentManager->find($id, $srcLocale);
 

@@ -23,12 +23,6 @@ use Sulu\Component\Webspace\Webspace;
 class WebspaceCollection implements WebspaceCollectionInterface
 {
     /**
-     * The portals of this specific sulu installation, prefiltered by the environment and url.
-     *
-     * @var array<string, PortalInformation>
-     */
-
-    /**
      * @param array<string, Webspace> $webspaces All webspaces (indexed by key)
      * @param array<string, Portal> $portals All portals (indexed by key)
      * @param array<string, Portal> $portalInformations All portalInformations (indexed by key)
