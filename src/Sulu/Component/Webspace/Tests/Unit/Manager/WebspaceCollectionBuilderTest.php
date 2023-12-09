@@ -19,6 +19,7 @@ use Sulu\Component\Webspace\Manager\PortalInformationBuilder;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
 use Sulu\Component\Webspace\NavigationContext;
+use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
 use Sulu\Component\Webspace\Url\Replacer;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
