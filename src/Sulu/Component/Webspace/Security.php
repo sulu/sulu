@@ -17,7 +17,7 @@ namespace Sulu\Component\Webspace;
 class Security
 {
     /**
-     * @param ?string $system The key of the segment
+     * @param string $system The key of the segment
      * @param bool $permissionCheck
      */
     public function __construct(

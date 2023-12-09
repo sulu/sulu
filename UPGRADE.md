@@ -3,16 +3,14 @@
 ## 2.6.0
 
 ## `WebspaceCollection` is a service now
+The `WebspaceCollection` or `WebspaceCollectionCache` is now a service: `sulu_core.webspace.collection`. This means that
+the methods of the `WebspaceManager` to get webspace will be removed.
 
-These methods were deprecated:
-* `WebspaceManager::findWebspacesByKey()`
-* `WebspaceManager::findPortalByKey()`
-* `WebspaceManager::getPortals()`
-
-the new WebspaceCollection service: `sulu_core.webspace.collection` and the corresponding methods:
-* `getWebspace()`
-* `getPortal()`
-* `getPortals()`
+| Deprecated method                       | New Method                          |
+|-----------------------------------------|-------------------------------------|
+| `WebspaceManager::findWebspacesByKey()` | `WebspaceCollection::getWebspace()` |
+| `WebspaceManager::findPortalByKey()`    | `WebspaceCollection::getPortal()`   |
+| `WebspaceManager::getPortals()`         | `WebspaceCollection::getPortals()`  |
 
 ### DocumentToUuidTransformer return type changed
 
