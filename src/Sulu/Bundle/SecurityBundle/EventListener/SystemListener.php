@@ -60,13 +60,13 @@ class SystemListener implements EventSubscriberInterface
         }
 
         $webspace = $this->requestAnalyzer->getWebspace();
-        if ($webspace) {
-            $security = $webspace->getSecurity();
-            if ($security) {
-                $this->systemStore->setSystem($security->getSystem());
+        if (!$webspace) {
+            return;
+        }
 
-                return;
-            }
+        $security = $webspace->getSecurity();
+        if ($security?->getSystem()) {
+            $this->systemStore->setSystem($security->getSystem());
         }
     }
 }

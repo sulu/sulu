@@ -28996,7 +28996,7 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/SuluSecurityListener.php
 
 		-
-			message: "#^If condition is always true\\.$#"
+			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/SystemListener.php
 
@@ -55034,16 +55034,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\WebspaceTestCase\\:\\:getResourceDirectory\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Unit/WebspaceTestCase.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Url\\:\\:__construct\\(\\) has parameter \\$environment with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Url.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Url\\:\\:__construct\\(\\) has parameter \\$url with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Url.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Url\\:\\:setCountry\\(\\) has no return type specified\\.$#"
