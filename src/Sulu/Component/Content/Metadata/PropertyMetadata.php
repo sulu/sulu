@@ -88,7 +88,7 @@ class PropertyMetadata extends ItemMetadata
     protected $structure;
 
     /**
-     * @var ItemMetadata[]
+     * @var ComponentMetadata[]
      */
     public $components = [];
 
@@ -270,7 +270,7 @@ class PropertyMetadata extends ItemMetadata
     /**
      * Return the components.
      *
-     * @return ItemMetadata[]
+     * @return ComponentMetadata[]
      */
     public function getComponents()
     {
@@ -280,7 +280,7 @@ class PropertyMetadata extends ItemMetadata
     /**
      * @param string $name
      *
-     * @return ItemMetadata
+     * @return ComponentMetadata
      */
     public function getComponentByName($name)
     {
@@ -294,7 +294,7 @@ class PropertyMetadata extends ItemMetadata
     /**
      * Add a new component.
      */
-    public function addComponent(ItemMetadata $component)
+    public function addComponent(ComponentMetadata $component)
     {
         $this->components[] = $component;
     }

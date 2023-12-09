@@ -24,6 +24,7 @@ use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
@@ -36,6 +37,11 @@ class LegacyPropertyFactoryTest extends TestCase
      * @var ObjectProphecy<NamespaceRegistry>
      */
     private $namespaceRegistry;
+
+    /**
+     * @var ObjectProphecy<StructureMetadataFactoryInterface>
+     */
+    private $structureFactory;
 
     /**
      * @var LegacyPropertyFactory
@@ -75,8 +81,10 @@ class LegacyPropertyFactoryTest extends TestCase
     public function setUp(): void
     {
         $this->namespaceRegistry = $this->prophesize(NamespaceRegistry::class);
+        $this->structureFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
         $this->factory = new LegacyPropertyFactory(
-            $this->namespaceRegistry->reveal()
+            $this->namespaceRegistry->reveal(),
+            $this->structureFactory->reveal()
         );
 
         $this->property1 = $this->prophesize(PropertyMetadata::class);

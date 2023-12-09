@@ -22,9 +22,11 @@ use Sulu\Component\Content\Compat\Section\SectionProperty;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
 use Sulu\Component\Content\Metadata\BlockMetadata;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\ItemMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 
 /**
@@ -36,9 +38,12 @@ class LegacyPropertyFactory
 {
     private $namespaceRegistry;
 
-    public function __construct(NamespaceRegistry $namespaceRegistry)
+    private $structureFactory;
+
+    public function __construct(NamespaceRegistry $namespaceRegistry, StructureMetadataFactoryInterface $structureFactory)
     {
         $this->namespaceRegistry = $namespaceRegistry;
+        $this->structureFactory = $structureFactory;
     }
 
     /**
@@ -54,13 +59,12 @@ class LegacyPropertyFactory
         if ($property instanceof ItemMetadata) {
             $property = $this->createProperty($property, $structure);
         }
-        $property = new TranslatedProperty(
+
+        return new TranslatedProperty(
             $property,
             $locale,
             $this->namespaceRegistry->getPrefix('content_localized')
         );
-
-        return $property;
     }
 
     /**
@@ -193,19 +197,43 @@ class LegacyPropertyFactory
         $blockProperty->setStructure($structure);
 
         foreach ($property->getComponents() as $component) {
-            $blockPropertyType = new BlockPropertyType(
-                $component->getName(),
-                [
-                    'title' => $component->getTitles(),
-                    'info_text' => $component->getDescriptions(),
-                ]
-            );
+            if ($component->getIsRef()) {
+                /** @var StructureMetadata $refTypedFormMetadata */
+                $refStructureMetadata = $this->structureFactory->getStructureMetadata('block', $component->getName());
+                if ($refStructureMetadata) {
+                    if ($structure) {
+                        $blockPropertyType = new BlockPropertyType(
+                            $component->getName(),
+                            [
+                                'title' => $refStructureMetadata->getTitle($structure->getLanguageCode()),
+                                'info_text' => $refStructureMetadata->getDescription($structure->getLanguageCode()),
+                            ]
+                        );
+                    } else {
+                        $blockPropertyType = new BlockPropertyType($component->getName(), []);
+                    }
 
-            foreach ($component->getChildren() as $property) {
-                $blockPropertyType->addChild($this->createProperty($property, $structure));
+                    foreach ($refStructureMetadata->getProperties() as $property) {
+                        $blockPropertyType->addChild($this->createProperty($property, $structure));
+                    }
+
+                    $blockProperty->addType($blockPropertyType);
+                }
+            } else {
+                $blockPropertyType = new BlockPropertyType(
+                    $component->getName(),
+                    [
+                        'title' => $component->getTitles(),
+                        'info_text' => $component->getDescriptions(),
+                    ]
+                );
+
+                foreach ($component->getChildren() as $property) {
+                    $blockPropertyType->addChild($this->createProperty($property, $structure));
+                }
+
+                $blockProperty->addType($blockPropertyType);
             }
-
-            $blockProperty->addType($blockPropertyType);
         }
 
         return $blockProperty;

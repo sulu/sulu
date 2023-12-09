@@ -197,7 +197,9 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
                 }
 
                 foreach ($itemMetadata->getTypes() as $type) {
-                    $this->enhanceBlockMetadata($type->getItems());
+                    if (null != $type->getItems()) {
+                        $this->enhanceBlockMetadata($type->getItems());
+                    }
                 }
             }
 
@@ -219,7 +221,9 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
 
             if ($item instanceof FieldMetadata) {
                 foreach ($item->getTypes() as $type) {
-                    $this->validateItems($type->getItems(), $formKey);
+                    if (null != $type->getItems()) {
+                        $this->validateItems($type->getItems(), $formKey);
+                    }
                 }
 
                 $this->fieldMetadataValidator->validate($item, $formKey);

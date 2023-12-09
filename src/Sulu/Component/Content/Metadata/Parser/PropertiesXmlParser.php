@@ -202,12 +202,14 @@ class PropertiesXmlParser
 
     private function loadType(\DOMXPath $xpath, \DOMNode $node, &$tags, $formKey)
     {
-        $result = $this->loadValues($xpath, $node, ['name']);
+        $result = $this->loadValues($xpath, $node, ['name', 'ref']);
 
         $result['meta'] = $this->loadMeta($xpath, $node);
 
         $propertiesNode = $xpath->query('x:properties', $node)->item(0);
-        $result['properties'] = $this->loadProperties($tags, $xpath, $propertiesNode, $formKey);
+        if ($propertiesNode) {
+            $result['properties'] = $this->loadProperties($tags, $xpath, $propertiesNode, $formKey);
+        }
 
         return $result;
     }
@@ -419,16 +421,20 @@ class PropertiesXmlParser
         foreach ($types as $name => $type) {
             $component = new ComponentMetadata();
             $component->setName($name);
+            $component->setIsRef($type['ref'] ?: false);
 
             if (isset($type['meta']['title'])) {
                 $component->setTitles($type['meta']['title']);
             }
+
             if (isset($data['meta']['info_text'])) {
                 $component->setDescriptions($data['meta']['info_text']);
             }
 
-            foreach ($this->mapProperties($type['properties']) as $childProperty) {
-                $component->addChild($childProperty);
+            if (!$component->getIsRef()) {
+                foreach ($this->mapProperties($type['properties']) as $childProperty) {
+                    $component->addChild($childProperty);
+                }
             }
 
             $property->addComponent($component);

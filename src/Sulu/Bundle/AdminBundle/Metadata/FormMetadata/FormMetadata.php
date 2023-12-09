@@ -38,7 +38,7 @@ class FormMetadata extends AbstractMetadata
      * @SerializedName("form")
      * @Exclude(if="'admin_form_metadata_keys_only' in context.getAttribute('groups')")
      */
-    private $items;
+    private $items = [];
 
     /**
      * @var SchemaMetadata
