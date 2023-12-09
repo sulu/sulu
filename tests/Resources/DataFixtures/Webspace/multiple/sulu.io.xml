@@ -23,35 +23,49 @@
     </default-templates>
 
     <navigation>
-        <context key="main">
-            <meta>
-                <title language="de">Hauptnavigation</title>
-                <title language="en">Main navigation</title>
-            </meta>
-        </context>
-        <context key="footer">
-            <meta>
-                <title language="de">Unten</title>
-                <title language="en">Footer</title>
-            </meta>
-        </context>
+        <contexts>
+            <context key="main">
+                <meta>
+                    <title lang="de">Hauptnavigation</title>
+                    <title lang="en">Mainnavigation</title>
+                </meta>
+            </context>
+            <context key="footer">
+                <meta>
+                    <title lang="de">Unten</title>
+                    <title lang="en">Footer</title>
+                </meta>
+            </context>
+        </contexts>
     </navigation>
+
+    <resource-locator>
+        <strategy>short</strategy>
+    </resource-locator>
 
     <portals>
         <portal>
             <name>Sulu CMF AT</name>
             <key>sulucmf_at</key>
 
-            <localization language="en" country="us"/>
-            <localization language="de" country="at" default="true"/>
+            <localizations>
+                <localization language="en" country="us"/>
+                <localization language="de" country="at" default="true"/>
+            </localizations>
 
-            <environment type="prod">
-                <url language="de" country="at">sulu.at</url>
-                <url redirect="sulu.at">www.sulu.at</url>
-            </environment>
-            <environment type="dev">
-                <url language="de" country="at">sulu.lo</url>
-            </environment>
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url language="de" country="at">sulu.at</url>
+                        <url redirect="sulu.at">www.sulu.at</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url language="de" country="at">sulu.lo</url>
+                    </urls>
+                </environment>
+            </environments>
         </portal>
     </portals>
 </webspace>

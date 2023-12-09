@@ -11,18 +11,24 @@
     <key>massiveart</key>
 
     <localizations>
-        <localization language="en" country="us" shadow="auto" default="true" />
+        <localization language="en" country="us" shadow="auto" default="true">
+            <localization language="en" country="ca"/>
+        </localization>
         <localization language="fr" country="ca"/>
     </localizations>
 
     <segments>
         <segment key="w" default="false">
-            <title language="en">Winter</title>
-            <title language="de">Winter</title>
+            <meta>
+                <title lang="en">Winter</title>
+                <title lang="de">Winter</title>
+            </meta>
         </segment>
         <segment key="s" default="true">
-            <title language="en">Summer</title>
-            <title language="de">Sommer</title>
+            <meta>
+                <title lang="en">Summer</title>
+                <title lang="de">Sommer</title>
+            </meta>
         </segment>
     </segments>
 
@@ -34,18 +40,20 @@
     </default-templates>
 
     <navigation>
+        <contexts>
             <context key="main">
                 <meta>
-                    <title language="de">Hauptnavigation</title>
-                    <title language="en">Mainnavigation</title>
+                    <title lang="de">Hauptnavigation</title>
+                    <title lang="en">Mainnavigation</title>
                 </meta>
             </context>
             <context key="footer">
                 <meta>
-                    <title language="de">Unten</title>
-                    <title language="en">Footer</title>
+                    <title lang="de">Unten</title>
+                    <title lang="en">Footer</title>
                 </meta>
             </context>
+        </contexts>
     </navigation>
 
     <resource-locator>
@@ -57,33 +65,51 @@
             <name>Massive Art US</name>
             <key>massiveart_us</key>
 
-            <localization language="en" country="us"/>
-            <localization language="en" country="ca"/>
-            <localization language="fr" country="ca"/>
+            <localizations>
+                <localization language="en" country="us"/>
+                <localization language="en" country="ca"/>
+                <localization language="fr" country="ca"/>
+            </localizations>
 
-            <environment type="prod">
-                <url value="{language}.massiveart-us.{country}" />
-            </environment>
-            <environment type="dev">
-                <url value="massiveart-us.lo/{localization}" />
-            </environment>
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url>{language}.massiveart-us.{country}</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url>massiveart-us.lo/{localization}</url>
+                    </urls>
+                </environment>
+            </environments>
         </portal>
         <portal>
             <name>Massive Art CA</name>
             <key>massiveart_ca</key>
 
-            <localization language="en" country="ca"/>
-            <localization language="fr" country="ca" default="true"/>
+            <localizations>
+                <localization language="en" country="ca"/>
+                <localization language="fr" country="ca" default="true"/>
+            </localizations>
 
-            <environment type="prod">
-                <url value="{language}.massiveart-ca.{country}" />
-            </environment>
-            <environment type="test">
-                <url value="{language}.massiveart-ca.{country}" />
-            </environment>
-            <environment type="dev">
-                <url value="massiveart-ca.lo/{localization}" />
-            </environment>
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url>{language}.massiveart-ca.{country}</url>
+                    </urls>
+                </environment>
+                <environment type="test">
+                    <urls>
+                        <url>{language}.massiveart-ca.{country}</url>
+                    </urls>
+                </environment>
+                <environment type="dev">
+                    <urls>
+                        <url>massiveart-ca.lo/{localization}</url>
+                    </urls>
+                </environment>
+            </environments>
         </portal>
     </portals>
 </webspace>
