@@ -40,7 +40,7 @@
     </navigation>
 
     <resource-locator>
-        <strategy>short</strategy>
+        <strategy>tree_full_edit</strategy>
     </resource-locator>
 
     <portals>
