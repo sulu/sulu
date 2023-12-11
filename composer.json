@@ -108,12 +108,18 @@
         "twig/twig": "^2.13 || ^3.0",
         "webmozart/assert": "^1.9"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:alexander-schranz/jackalope-doctrine-dbal.git"
+        }
+    ],
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.14",
         "google/cloud-storage": "^1.0",
         "handcraftedinthealps/zendsearch": "^2.0",
         "jackalope/jackalope": "^1.4.5",
-        "jackalope/jackalope-doctrine-dbal": "^1.6",
+        "jackalope/jackalope-doctrine-dbal": "dev-feature/improve-delete-properties-performance ",
         "jangregor/phpstan-prophecy": "^1.0",
         "league/flysystem": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0.1",
