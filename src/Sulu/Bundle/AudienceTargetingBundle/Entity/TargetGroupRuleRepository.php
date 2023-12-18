@@ -24,12 +24,12 @@ class TargetGroupRuleRepository extends EntityRepository implements TargetGroupR
     {
         $newConditions = [];
         foreach ($targetGroupRule->getConditions()->toArray() as $condition) {
-            $condition = $this->getEntityManager()->merge($condition);
+            $this->getEntityManager()->persist($condition);
             $newConditions[] = $condition;
         }
 
         $targetGroupRule->clearConditions();
-        $targetGroupRule = $this->getEntityManager()->merge($targetGroupRule);
+        $this->getEntityManager()->persist($targetGroupRule);
 
         foreach ($targetGroupRule->getConditions()->toArray() as $condition) {
             if (!\in_array($condition, $newConditions)) {

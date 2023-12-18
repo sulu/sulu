@@ -30,13 +30,13 @@ class TargetGroupRepository extends EntityRepository implements TargetGroupRepos
 
         $newWebspaces = [];
         foreach ($targetGroup->getWebspaces()->toArray() as $webspace) {
-            $newWebspace = $this->getEntityManager()->merge($webspace);
-            $newWebspaces[] = $newWebspace;
+            $this->getEntityManager()->persist($webspace);
+            $newWebspaces[] = $webspace;
         }
 
         $targetGroup->clearRules();
         $targetGroup->clearWebspaces();
-        $targetGroup = $this->getEntityManager()->merge($targetGroup);
+        $this->getEntityManager()->persist($targetGroup);
 
         foreach ($targetGroup->getRules()->toArray() as $rule) {
             if (!\in_array($rule, $newRules)) {
