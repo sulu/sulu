@@ -601,7 +601,8 @@ class PageControllerTest extends SuluTestCase
         $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
         $this->documentManager->flush();
 
-        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager')->clear();
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->documentManager->clear();
 
         $this->client->jsonRequest('GET', '/api/pages/' . $document->getUuid() . '?language=en');
         $response = \json_decode($this->client->getResponse()->getContent(), true);

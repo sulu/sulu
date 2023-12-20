@@ -12156,17 +12156,7 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/DataFixtures/DocumentFixtureGroupInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DataFixtures\\\\DocumentFixtureInterface\\:\\:load\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DataFixtures/DocumentFixtureInterface.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(DocumentManager\\)\\: Unexpected token \"\\\\n     \", expected variable at offset 195$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DataFixtures/DocumentFixtureInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\Compiler\\\\DocumentFixturePass\\:\\:process\\(\\) has no return type specified\\.$#"
+			message: "#^Parameter \\#1 \\$object_or_class of function is_subclass_of expects object\\|string, class\\-string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/DocumentFixturePass.php
 
@@ -20738,6 +20728,11 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$actionParameter of method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\PageController\\:\\:handleActionParameter\\(\\) expects string\\|null, mixed given\\.$#"
 			count: 2
+			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
+
+		-
+			message: "#^Parameter \\#1 \\$identifier of method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:find\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
 		-
@@ -46431,106 +46426,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/DocumentInspector.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:clear\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:copy\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:createQuery\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:find\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:flush\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:getOptionsResolver\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:getOptionsResolver\\(\\) has parameter \\$eventName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:move\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:persist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:persist\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:publish\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:publish\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:refresh\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:remove\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:removeDraft\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:removeLocale\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:reorder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:restore\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:restore\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:unpublish\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
 			message: "#^Parameter \\#1 \\$innerQuery of class Sulu\\\\Component\\\\DocumentManager\\\\Event\\\\QueryCreateEvent constructor expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/DocumentManager.php
@@ -46554,96 +46449,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$locale of class Sulu\\\\Component\\\\DocumentManager\\\\Event\\\\QueryCreateEvent constructor expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:\\$optionsResolvers type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:clear\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:createQuery\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:find\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:flush\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:move\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:persist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:persist\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:publish\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:publish\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:refresh\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:remove\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:removeDraft\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:removeLocale\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:reorder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:restore\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:restore\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:unpublish\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentRegistry\\:\\:assertDocumentExists\\(\\) has no return type specified\\.$#"
@@ -48694,6 +48499,11 @@ parameters:
 			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\GeneralSubscriberTest\\:\\:\\$refreshEvent is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/GeneralSubscriberTest.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:remove\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			count: 1
+			path: src/Sulu/Component/DocumentManager/TimingDocumentManager.php
 
 		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\StructureBehavior\\:\\:getUuid\\(\\)\\.$#"

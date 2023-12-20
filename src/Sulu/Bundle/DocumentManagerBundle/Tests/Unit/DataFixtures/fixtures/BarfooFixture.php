@@ -12,11 +12,11 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\DataFixtures\fixtures;
 
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
-use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\DocumentManager\DocumentManager;
 
 class BarfooFixture implements DocumentFixtureInterface
 {
-    public function load(DocumentManagerInterface $documentManager): void
+    public function load(DocumentManager $documentManager): void
     {
     }
 
