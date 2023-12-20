@@ -11,7 +11,7 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\DataFixtures;
 
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 interface DocumentFixtureInterface
 {
@@ -23,7 +23,7 @@ interface DocumentFixtureInterface
      *
      * @return void
      */
-    public function load(DocumentManager $documentManager);
+    public function load(DocumentManagerInterface $documentManager);
 
     /**
      * Return an integer by which the order will be determined in

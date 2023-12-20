@@ -13,11 +13,11 @@ namespace Sulu\Bundle\DocumentManagerBundle\Tests\Unit\Command\DataFixtures;
 
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureGroupInterface;
 use Sulu\Bundle\DocumentManagerBundle\DataFixtures\DocumentFixtureInterface;
-use Sulu\Component\DocumentManager\DocumentManager;
+use Sulu\Component\DocumentManager\DocumentManagerInterface;
 
 class GroupBarFixture implements DocumentFixtureInterface, DocumentFixtureGroupInterface
 {
-    public function load(DocumentManager $documentManager): void
+    public function load(DocumentManagerInterface $documentManager): void
     {
         return;
     }
