@@ -43,13 +43,21 @@ class WebspaceConfiguration
                         ->arrayNode('context')
                             ->requiresAtLeastOneElement()
                             ->useAttributeAsKey('key', false)
+                            ->beforeNormalization()
+                                ->always(function ($value) {
+                                    if (!array_key_exists(0, $value)) {
+                                        return [$value];
+                                    }
+                                    return $value;
+                                })
+                            ->end()
                             ->arrayPrototype()
                                 ->children()
                                     ->scalarNode('key')->isRequired()->example('main')->end()
                                     ->arrayNode('meta')
                                         ->children()
                                             ->arrayNode('title')
-                                                ->useAttributeAsKey('lang', false)
+                                                ->useAttributeAsKey('lang')
                                                 ->arrayPrototype()
                                                     ->children()
                                                         ->scalarNode('lang')->isRequired()->end()
@@ -78,7 +86,7 @@ class WebspaceConfiguration
                 ->children()
                     ->enumNode('strategy')
                         ->defaultValue('tree_leaf_edit')
-                        ->values(['tree_leaf_edit', 'tree_full_edit'])
+                        ->values(['tree_leaf_edit', 'tree_full_edit', 'short'])
                     ->end()
                 ->end()
             ->end();
@@ -239,7 +247,7 @@ class WebspaceConfiguration
                                 ->children()
                                     ->arrayNode('localization')
                                         ->info('List of languages for the portal')
-                                        ->example(['language' => 'de', 'default' => true])
+                                        ->example([['language' => 'de', 'default' => true]])
                                         ->beforeNormalization()
                                             ->ifTrue(fn ($x) => array_sum(array_column($x, 'default')) > 1)
                                             ->thenInvalid('You can not have more than one default localization')
@@ -258,6 +266,14 @@ class WebspaceConfiguration
                             ->arrayNode('environments')
                                 ->children()
                                     ->arrayNode('environment')
+                                    ->beforeNormalization()
+                                        ->always(function ($value) {
+                                            if (!array_key_exists(0, $value)) {
+                                                return [$value];
+                                            }
+                                            return $value;
+                                        })
+                                    ->end()
                                     ->useAttributeAsKey('type', false)
                                     ->arrayPrototype()
                                         ->children();
@@ -282,16 +298,17 @@ class WebspaceConfiguration
             ->arrayNode('urls')
                 ->children()
                     ->arrayNode('url')
-                        ->beforeNormalization()->castToArray()->end()
+                        ->beforeNormalization()
+                            ->always(static function ($value) {
+                                if (is_string($value)) {
+                                    return [['value' => $value]];
+                                } else if (!array_key_exists(0, $value)) {
+                                    return [$value];
+                                }
+                                return $value;
+                            })
+                        ->end()
                         ->arrayPrototype()
-                            ->beforeNormalization()
-                                ->always(function ($x) {
-                                    if (is_string($x)) {
-                                        return ['value' => $x];
-                                    }
-                                    return $x;
-                                })
-                            ->end()
                             ->children()
                                 ->scalarNode('language')->defaultNull()->end()
                                 ->scalarNode('country')->defaultNull()->end()

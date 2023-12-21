@@ -134,16 +134,6 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
-     * Sets the language of this localization.
-     *
-     * @param string|null $language
-     */
-    public function setLanguage($language)
-    {
-        $this->language = $language;
-    }
-
-    /**
      * Returns the language of this localization.
      *
      * @return string|null

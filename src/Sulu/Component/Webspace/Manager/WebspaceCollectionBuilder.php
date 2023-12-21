@@ -122,14 +122,15 @@ class WebspaceCollectionBuilder
     {
         $navigation = new Navigation();
 
-        foreach ($webspaceConfiguration['navigation']['contexts'] ?? [] as $contextConfiguration) {
-            if (\array_key_exists('titles', $contextConfiguration['meta'] ?? [])) {
-                $meta = ['title' => $contextConfiguration['meta']['titles']];
-            } else {
-                $meta = $contextConfiguration['meta'];
+        foreach ($webspaceConfiguration['navigation']['contexts'] ?? [] as $contextConfigurations) {
+            foreach ($contextConfigurations as $contextConfiguration) {
+                if (\array_key_exists('titles', $contextConfiguration['meta'] ?? [])) {
+                    $meta = ['title' => $contextConfiguration['meta']['titles']];
+                } else {
+                    $meta = $contextConfiguration['meta'];
+                }
+                $navigation->addContext(new NavigationContext($contextConfiguration['key'], $meta));
             }
-
-            $navigation->addContext(new NavigationContext($contextConfiguration['key'], $meta));
         }
         $webspace->setNavigation($navigation);
     }
@@ -164,7 +165,7 @@ class WebspaceCollectionBuilder
         $portal->setKey($portalConfiguration['key']);
         $portal->setWebspace($webspace);
 
-        foreach ($portalConfiguration['localizations'] as $localizationConfiguration) {
+        foreach ($portalConfiguration['localizations']['localization'] ?? [] as $localizationConfiguration) {
             $localization = new Localization($localizationConfiguration['language']);
             $localization->setCountry($localizationConfiguration['country']);
             $localization->setDefault($localizationConfiguration['default']);
@@ -172,7 +173,7 @@ class WebspaceCollectionBuilder
             $portal->addLocalization($localization);
         }
 
-        foreach ($portalConfiguration['environments'] as $environmentConfiguration) {
+        foreach ($portalConfiguration['environments']['environment'] ?? [] as $environmentConfiguration) {
             $portal->addEnvironment($this->buildEnvironment(
                 $environmentConfiguration,
                 $portal,
@@ -252,7 +253,7 @@ class WebspaceCollectionBuilder
         $environment = new Environment();
         $environment->setType($environmentConfiguration['type']);
 
-        foreach ($environmentConfiguration['urls'] as $urlConfiguration) {
+        foreach ($environmentConfiguration['urls']['url'] ?? [] as $urlConfiguration) {
             $url = new Url(\rtrim($urlConfiguration['value'], '/'));
             $url->setLanguage($urlConfiguration['language']);
             $url->setCountry($urlConfiguration['country'] ?? null);
@@ -265,7 +266,7 @@ class WebspaceCollectionBuilder
             $this->portalInformationBuilder->addUrl($url, $environment, $portal);
         }
 
-        foreach ($environmentConfiguration['custom_urls'] as $customUrl) {
+        foreach ($environmentConfiguration['custom_urls']['custom_url'] ?? [] as $customUrl) {
             $url = new CustomUrl(\rtrim($customUrl, '/'));
 
             $this->portalInformationBuilder->addCustomUrl($url, $environment, $portal);
