@@ -36,7 +36,7 @@ class TargetGroupRepository extends EntityRepository implements TargetGroupRepos
 
         $targetGroup->clearRules();
         $targetGroup->clearWebspaces();
-        $this->getEntityManager()->persist($targetGroup);
+        $this->getEntityManager()->merge($targetGroup);
 
         foreach ($targetGroup->getRules()->toArray() as $rule) {
             if (!\in_array($rule, $newRules)) {
