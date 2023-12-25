@@ -19,6 +19,7 @@ use Sulu\Bundle\RouteBundle\Domain\Event\RouteRemovedEvent;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Generator\RouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface;
+use Sulu\Bundle\RouteBundle\Model\ResourceLocatorParts;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -214,7 +215,7 @@ class RouteController extends AbstractRestController implements ClassResourceInt
             $options['route_schema'] = $routeSchema;
             $options['locale'] = $locale;
 
-            $route = $this->routeGenerator->generate($parts, $options);
+            $route = $this->routeGenerator->generate(new ResourceLocatorParts($parts), $options);
 
             if ($this->conflictResolver) {
                 // create temporary route that is not persisted to resolve possible conflicts with existing routes

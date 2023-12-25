@@ -176,7 +176,10 @@ export default class DeleteToolbarAction extends AbstractFormToolbarAction {
         const {id} = this.resourceFormStore;
 
         const visibleConditionFulfilled = !visibleCondition || jexl.evalSync(visibleCondition, this.conditionData);
-        const isDisabled = !id || (deleteLocale && jexl.evalSync('contentLocales.length == 1', this.conditionData));
+        const isDisabled = !id || (deleteLocale && jexl.evalSync(
+            'contentLocales && contentLocales|length == 1',
+            this.conditionData
+        ));
 
         if (visibleConditionFulfilled) {
             return {
