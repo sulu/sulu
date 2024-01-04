@@ -24,6 +24,7 @@ use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleRepositoryInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupWebspaceRepositoryInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\EntityNotFoundException;
@@ -126,7 +127,7 @@ class TargetGroupController extends AbstractRestController implements ClassResou
 
         // If webspaces are concatinated we need to group by id. This happens
         // when no fields are supplied at all OR webspaces are requested as field.
-        $fieldsParam = $request->get('fields');
+        $fieldsParam = $request->get('fields', '');
         $fields = \explode(',', $fieldsParam);
         if (null === $fieldsParam || false !== \array_search('webspaceKeys', $fields)) {
             $listBuilder->addGroupBy($fieldDescriptors['id']);
@@ -195,7 +196,7 @@ class TargetGroupController extends AbstractRestController implements ClassResou
         $data = \json_decode($jsonData, true);
 
         // Id should be taken of request uri.
-        $data['id'] = $id;
+        $data['id'] = (int) $id;
 
         $data = $this->convertFromRequest($data);
 
@@ -215,7 +216,7 @@ class TargetGroupController extends AbstractRestController implements ClassResou
      */
     public function deleteAction($id)
     {
-        $targetGroup = $this->getTargetGroupById($id);
+        $targetGroup = $this->getTargetGroupById((int) $id);
 
         $this->entityManager->remove($targetGroup);
         $this->entityManager->flush();
@@ -341,15 +342,9 @@ class TargetGroupController extends AbstractRestController implements ClassResou
          * } $webspaceData
          */
         foreach ($data['webspaces'] as $webspaceData) {
-            $webspace = $this->targetGroupWebspaceRepository->findOneBy([
-                'webspaceKey' => $webspaceData['webspaceKey'],
-            ]);
+            $targetGroupWebspace = $this->getOrCreateTargetGroupWebspaceByKey($webspaceData['webspaceKey'], $targetGroup);
 
-            if (!$webspace) {
-                throw new EntityNotFoundException($this->targetGroupWebspaceRepository->getClassName(), $webspaceData['webspaceKey']);
-            }
-
-            $targetGroup->addWebspace($webspace);
+            $targetGroup->addWebspace($targetGroupWebspace);
         }
 
         return $targetGroup;
@@ -452,5 +447,43 @@ class TargetGroupController extends AbstractRestController implements ClassResou
         }
 
         return $this->targetGroupConditionRepository->createNew();
+    }
+
+    /**
+     * Returns target group by id. Throws an exception if not found.
+     *
+     * @throws EntityNotFoundException
+     */
+    private function getTargetGroupWebspaceById(string $webspaceKey, TargetGroupInterface $targetGroup): TargetGroupWebspaceInterface
+    {
+        /** @var TargetGroupWebspaceInterface $targetGroupWebspace */
+        $targetGroupWebspace = $this->targetGroupWebspaceRepository->findOneBy([
+            'webspaceKey' => $webspaceKey,
+            'targetGroup' => $targetGroup,
+        ]);
+
+        if (!$targetGroupWebspace) {
+            throw new EntityNotFoundException($this->targetGroupWebspaceRepository->getClassName(), $webspaceKey);
+        }
+
+        return $targetGroupWebspace;
+    }
+
+    /**
+     * Returns target group webspace by id or creates it if no id provided. Throws an exception if not found.
+     *
+     * @throws EntityNotFoundException
+     */
+    private function getOrCreateTargetGroupWebspaceByKey(?string $webspaceKey, ?TargetGroupInterface $targetGroup): TargetGroupWebspaceInterface
+    {
+        if (null !== $webspaceKey && $targetGroup instanceof TargetGroupInterface) {
+            return $this->getTargetGroupWebspaceById($webspaceKey, $targetGroup);
+        }
+
+        $targetGroupWebspace = $this->targetGroupWebspaceRepository->createNew();
+        $targetGroupWebspace->setWebspaceKey($webspaceKey);
+        $targetGroupWebspace->setTargetGroup($targetGroup);
+
+        return $targetGroupWebspace;
     }
 }
