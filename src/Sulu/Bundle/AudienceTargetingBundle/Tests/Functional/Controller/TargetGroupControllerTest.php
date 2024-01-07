@@ -93,9 +93,6 @@ class TargetGroupControllerTest extends SuluTestCase
 
     public function testPost(): void
     {
-        $webspace = $this->entityManager->getClassMetadata(WebspaceInterface::class);
-        $this->getEntityManager()->persist($webspace);
-
         $data = [
             'title' => 'Target Group Title',
             'description' => 'Target group description number 1',

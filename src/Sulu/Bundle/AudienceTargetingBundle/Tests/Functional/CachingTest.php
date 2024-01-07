@@ -204,7 +204,7 @@ class CachingTest extends SuluTestCase
         $targetGroupCondition->setCondition($condition);
         $targetGroupRule->addCondition($targetGroupCondition);
         $targetGroup->addRule($targetGroupRule);
-        $targetGroup = $targetGroupRepository->save($targetGroup);
+        $this->getEntityManager()->persist($targetGroup);
         $this->getEntityManager()->flush();
 
         return $targetGroup;

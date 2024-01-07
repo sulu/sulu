@@ -20,31 +20,4 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
  */
 class TargetGroupRuleRepository extends EntityRepository implements TargetGroupRuleRepositoryInterface
 {
-    public function save(TargetGroupRuleInterface $targetGroupRule)
-    {
-        $newConditions = [];
-        foreach ($targetGroupRule->getConditions()->toArray() as $condition) {
-            $this->getEntityManager()->persist($condition);
-            $newConditions[] = $condition;
-        }
-
-        $targetGroupRule->clearConditions();
-        $this->getEntityManager()->persist($targetGroupRule);
-
-        foreach ($targetGroupRule->getConditions()->toArray() as $condition) {
-            if (!\in_array($condition, $newConditions)) {
-                $targetGroupRule->removeCondition($condition);
-                $this->getEntityManager()->remove($condition);
-            }
-        }
-
-        foreach ($newConditions as $newCondition) {
-            if (!$targetGroupRule->getConditions()->contains($newCondition)) {
-                $targetGroupRule->addCondition($newCondition);
-            }
-            $newCondition->setRule($targetGroupRule);
-        }
-
-        return $targetGroupRule;
-    }
 }

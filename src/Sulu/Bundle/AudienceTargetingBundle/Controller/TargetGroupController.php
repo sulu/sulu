@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\AudienceTargetingBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use FOS\RestBundle\View\ViewHandlerInterface;
 use HandcraftedInTheAlps\RestRoutingBundle\Controller\Annotations\RouteResource;
@@ -176,8 +177,6 @@ class TargetGroupController extends AbstractRestController implements ClassResou
     {
         $data = $this->convertFromRequest(\json_decode($request->getContent(), true));
         $targetGroup = $this->mapEntity($data);
-        $targetGroup = $this->targetGroupRepository->save($targetGroup);
-
         $this->entityManager->flush();
 
         return $this->handleView($this->view($targetGroup));
@@ -201,7 +200,6 @@ class TargetGroupController extends AbstractRestController implements ClassResou
         $data = $this->convertFromRequest($data);
 
         $targetGroup = $this->mapEntity($data);
-        $targetGroup = $this->targetGroupRepository->save($targetGroup);
         $this->entityManager->flush();
 
         return $this->handleView($this->view($targetGroup));
@@ -314,28 +312,48 @@ class TargetGroupController extends AbstractRestController implements ClassResou
         $targetGroup->setPriority($data['priority']);
         $targetGroup->setActive($data['active']);
 
+        $oldRules = new ArrayCollection($targetGroup->getRules()->toArray()); // remove reference
         $targetGroup->clearRules();
+
         foreach ($data['rules'] as $ruleData) {
             $rule = $this->getOrCreateTargetGroupRuleById($targetGroup->getId(), $ruleData['id'] ?? null);
+            $oldRules->removeElement($rule);
 
             $rule->setTargetGroup($targetGroup);
             $rule->setTitle($ruleData['title']);
             $rule->setFrequency($ruleData['frequency']);
             $rule->setTargetGroup($targetGroup);
+
+            $this->entityManager->persist($rule);
             $targetGroup->addRule($rule);
 
+            $oldConditions = new ArrayCollection($rule->getConditions()->toArray()); // remove reference
             $rule->clearConditions();
+
             foreach ($ruleData['conditions'] as $conditionData) {
                 $condition = $this->getOrCreateTargetGroupConditionById($rule->getId(), $conditionData['id'] ?? null);
+                $oldConditions->removeElement($condition);
 
                 $condition->setRule($rule);
                 $condition->setType($conditionData['type']);
                 $condition->setCondition($conditionData['condition']);
+
+                $this->entityManager->persist($condition);
                 $rule->addCondition($condition);
+
+                foreach ($oldConditions as $oldCondition) {
+                    $this->entityManager->remove($oldCondition);
+                }
             }
         }
 
+        foreach ($oldRules as $oldRule) {
+            $this->entityManager->remove($oldRule);
+        }
+
+        $oldWebspaces = new ArrayCollection($targetGroup->getWebspaces()->toArray()); // remove reference
         $targetGroup->clearWebspaces();
+
         /**
          * @var array{
          *     webspaceKey: string
@@ -343,9 +361,17 @@ class TargetGroupController extends AbstractRestController implements ClassResou
          */
         foreach ($data['webspaces'] as $webspaceData) {
             $targetGroupWebspace = $this->getOrCreateTargetGroupWebspaceByKey($webspaceData['webspaceKey'], $targetGroup);
+            $oldWebspaces->removeElement($targetGroupWebspace);
 
+            $this->entityManager->persist($targetGroupWebspace);
             $targetGroup->addWebspace($targetGroupWebspace);
         }
+
+        foreach ($oldWebspaces as $oldWebspace) {
+            $this->entityManager->remove($oldWebspace);
+        }
+
+        $this->entityManager->persist($targetGroup);
 
         return $targetGroup;
     }
@@ -451,33 +477,26 @@ class TargetGroupController extends AbstractRestController implements ClassResou
 
     /**
      * Returns target group by id. Throws an exception if not found.
-     *
-     * @throws EntityNotFoundException
      */
-    private function getTargetGroupWebspaceById(string $webspaceKey, TargetGroupInterface $targetGroup): TargetGroupWebspaceInterface
+    private function getTargetGroupWebspaceById(string $webspaceKey, TargetGroupInterface $targetGroup): ?TargetGroupWebspaceInterface
     {
-        /** @var TargetGroupWebspaceInterface $targetGroupWebspace */
-        $targetGroupWebspace = $this->targetGroupWebspaceRepository->findOneBy([
+        /** @var  */
+        return $this->targetGroupWebspaceRepository->findOneBy([
             'webspaceKey' => $webspaceKey,
             'targetGroup' => $targetGroup,
         ]);
-
-        if (!$targetGroupWebspace) {
-            throw new EntityNotFoundException($this->targetGroupWebspaceRepository->getClassName(), $webspaceKey);
-        }
-
-        return $targetGroupWebspace;
     }
 
     /**
      * Returns target group webspace by id or creates it if no id provided. Throws an exception if not found.
-     *
-     * @throws EntityNotFoundException
      */
-    private function getOrCreateTargetGroupWebspaceByKey(?string $webspaceKey, ?TargetGroupInterface $targetGroup): TargetGroupWebspaceInterface
+    private function getOrCreateTargetGroupWebspaceByKey(?string $webspaceKey, ?TargetGroupInterface $targetGroup): ?TargetGroupWebspaceInterface
     {
         if (null !== $webspaceKey && $targetGroup instanceof TargetGroupInterface) {
-            return $this->getTargetGroupWebspaceById($webspaceKey, $targetGroup);
+            $targetGroupWebspace = $this->getTargetGroupWebspaceById($webspaceKey, $targetGroup);
+            if ($targetGroupWebspace instanceof TargetGroupWebspaceInterface) {
+                return $targetGroupWebspace;
+            }
         }
 
         $targetGroupWebspace = $this->targetGroupWebspaceRepository->createNew();

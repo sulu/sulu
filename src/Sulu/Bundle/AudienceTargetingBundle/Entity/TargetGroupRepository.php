@@ -20,55 +20,6 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
  */
 class TargetGroupRepository extends EntityRepository implements TargetGroupRepositoryInterface
 {
-    public function save(TargetGroupInterface $targetGroup)
-    {
-        $newRules = [];
-        foreach ($targetGroup->getRules()->toArray() as $rule) {
-            $rule = $this->getEntityManager()->getRepository(TargetGroupRuleInterface::class)->save($rule);
-            $newRules[] = $rule;
-        }
-
-        $newWebspaces = [];
-        foreach ($targetGroup->getWebspaces()->toArray() as $webspace) {
-            $this->getEntityManager()->persist($webspace);
-            $newWebspaces[] = $webspace;
-        }
-
-        $targetGroup->clearRules();
-        $targetGroup->clearWebspaces();
-        $this->getEntityManager()->merge($targetGroup);
-
-        foreach ($targetGroup->getRules()->toArray() as $rule) {
-            if (!\in_array($rule, $newRules)) {
-                $targetGroup->removeRule($rule);
-                $this->getEntityManager()->remove($rule);
-            }
-        }
-
-        foreach ($targetGroup->getWebspaces()->toArray() as $webspace) {
-            if (!\in_array($webspace, $newWebspaces)) {
-                $targetGroup->removeWebspace($webspace);
-                $this->getEntityManager()->remove($webspace);
-            }
-        }
-
-        foreach ($newRules as $newRule) {
-            if (!$targetGroup->getRules()->contains($newRule)) {
-                $targetGroup->addRule($newRule);
-            }
-            $newRule->setTargetGroup($targetGroup);
-        }
-
-        foreach ($newWebspaces as $newWebspace) {
-            if (!$targetGroup->getWebspaces()->contains($newWebspace)) {
-                $targetGroup->addWebspace($newWebspace);
-            }
-            $newWebspace->setTargetGroup($targetGroup);
-        }
-
-        return $targetGroup;
-    }
-
     public function findByIds($ids)
     {
         $queryBuilder = $this->createQueryBuilder('targetGroup')
