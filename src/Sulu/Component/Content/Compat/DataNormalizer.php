@@ -66,6 +66,8 @@ class DataNormalizer
             'shadowLocaleEnabled' => self::getAndUnsetValue($data, 'shadowOn') ? true : false,
             'parent' => self::getAndUnsetValue($data, 'parent'),
             'workflowStage' => self::getAndUnsetValue($data, 'workflowStage'),
+            'lastModifiedEnabled' => self::getAndUnsetValue($data, 'lastModifiedEnabled'),
+            'lastModified' => self::getAndUnsetValue($data, 'lastModified'),
             'authored' => self::getAndUnsetValue($data, 'authored'),
             'author' => self::getAndUnsetValue($data, 'author'),
             'structure' => $data,

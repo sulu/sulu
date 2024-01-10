@@ -809,6 +809,8 @@ class ContentMapper implements ContentMapperInterface
         }
 
         if ($document instanceof LocalizedAuthorBehavior) {
+            $documentData['isUpdated'] = $document->getLastModifiedEnabled();
+            $documentData['updated'] = $document->getLastModified();
             $documentData['author'] = $document->getAuthor();
             $documentData['authored'] = $document->getAuthored();
         }

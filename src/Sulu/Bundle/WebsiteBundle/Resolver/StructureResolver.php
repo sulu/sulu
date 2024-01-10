@@ -108,6 +108,7 @@ class StructureResolver implements StructureResolverInterface
         }
 
         if ($document instanceof LocalizedAuthorBehavior) {
+            $data['lastModified'] = $document->getLastModifiedEnabled() ? $document->getLastModified() : null;
             $data['authored'] = $document->getAuthored();
             $data['author'] = $document->getAuthor();
         }

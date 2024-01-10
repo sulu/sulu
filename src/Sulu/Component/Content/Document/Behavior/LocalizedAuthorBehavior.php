@@ -17,6 +17,38 @@ namespace Sulu\Component\Content\Document\Behavior;
 interface LocalizedAuthorBehavior extends LocalizedBlameBehavior
 {
     /**
+     * Returns lastModifiedEnabled.
+     *
+     * @return bool
+     */
+    public function getLastModifiedEnabled();
+
+    /**
+     * Set lastModifiedEnabled.
+     *
+     * @param bool $isLastModified
+     *
+     * @return void
+     */
+    public function setLastModifiedEnabled($isLastModified);
+
+    /**
+     * Returns lastModified-date.
+     *
+     * @return \DateTime
+     */
+    public function getLastModified();
+
+    /**
+     * Set lastModified-date.
+     *
+     * @param \DateTime|null $lastModified
+     *
+     * @return void
+     */
+    public function setLastModified($lastModified);
+
+    /**
      * Returns author-date.
      *
      * @return \DateTime

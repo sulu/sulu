@@ -25856,108 +25856,8 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
 
 		-
-			message: "#^Cannot access offset 'author' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'authored' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'created' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'creator' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'extensionsData' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'locale' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'navigationContexts' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'permissions' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'redirectExternal' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'redirectTargetUuid' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'redirectType' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'resourceSegment' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'shadowLocale' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'shadowLocaleEnabled' on mixed\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'structureData' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'structureType' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'suluOrder' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Cannot access offset 'title' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$contactId of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setAuthor\\(\\) expects int\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
 			message: "#^Parameter \\#1 \\$data of method Sulu\\\\Component\\\\Content\\\\Document\\\\Structure\\\\StructureInterface\\:\\:bind\\(\\) expects array, mixed given\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$datetime of class DateTime constructor expects string, mixed given\\.$#"
-			count: 2
 			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
 
 		-
@@ -25967,21 +25867,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$identifier of method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:find\\(\\) expects string, mixed given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$locale of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setLocale\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$navigationContexts of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setNavigationContexts\\(\\) expects array, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$order of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setSuluOrder\\(\\) expects int, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
 
@@ -25991,57 +25876,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
 
 		-
-			message: "#^Parameter \\#1 \\$redirectExternal of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setRedirectExternal\\(\\) expects string\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$redirectType of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setRedirectType\\(\\) expects int, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$resourceSegment of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setResourceSegment\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$shadowLocale of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setShadowLocale\\(\\) expects string\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$shadowLocaleEnabled of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setShadowLocaleEnabled\\(\\) expects bool, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$structureType of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setStructureType\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$title of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setTitle\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Parameter \\#1 \\$userId of method Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument\\:\\:setCreator\\(\\) expects int\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
 			message: "#^Parameter \\#2 \\$locale of class Sulu\\\\Bundle\\\\PageBundle\\\\Domain\\\\Event\\\\PageTranslationRestoredEvent constructor expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:find\\(\\) expects string\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
-
-		-
-			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:persist\\(\\) expects string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Trash/PageTrashItemHandler.php
 

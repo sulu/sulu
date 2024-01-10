@@ -62,6 +62,8 @@ class StructureXmlLoader extends AbstractLoader
         'navContexts',
         'shadow-on',
         'shadow-base',
+        'isUpdated',
+        'updated',
         'author',
         'authored',
         'type',
