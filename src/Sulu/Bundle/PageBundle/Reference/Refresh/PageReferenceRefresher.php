@@ -77,7 +77,7 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
                     yield $document;
                 }
 
-                $this->documentManager->clear(); // the cache is locale independent and so we need clear between locale changs
+                $this->documentManager->clear(); // the cache is locale independent, so we need to clear between locale changes
             }
         }
     }
