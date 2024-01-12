@@ -77,7 +77,7 @@
         </service>
 
         <!-- Utilities -->
-        <service id="sulu_document_manager.path_segment_registry" class="Sulu\Component\DocumentManager\PathSegmentRegistry">
+        <service id="sulu_document_manager.path_segment_registry" class="Sulu\Component\DocumentManager\PathSegmentRegistry" public="true">
             <argument>%sulu_document_manager.segments%</argument>
         </service>
 
