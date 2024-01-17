@@ -31,6 +31,8 @@
     "sulu_page.editing_information": "Bearbeitungsinformationen",
     "sulu_page.authored_date": "Verfasst am",
     "sulu_page.author": "Autor",
+    "sulu_page.last_modified_enabled": "Aktualisierungsdatum aktivieren",
+    "sulu_page.last_modified_date": "Datum der Aktualisierung",
     "sulu_page.changelog": "Änderungshistorie",
     "sulu_page.text_for_more_link": "Text für weiterführenden Link",
     "sulu_page.icons": "Icons",
