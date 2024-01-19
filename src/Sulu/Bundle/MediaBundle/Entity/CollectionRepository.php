@@ -107,7 +107,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                     $queryBuilder,
                     $user,
                     $permission,
-                    Collection::class,
+                    CollectionEntity::class,
                     'collection'
                 );
             } else {
@@ -115,7 +115,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                     $queryBuilder,
                     $user,
                     $permission,
-                    Collection::class,
+                    CollectionEntity::class,
                     'collection'
                 );
             }
