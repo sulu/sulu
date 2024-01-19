@@ -53,7 +53,7 @@ class QueryCreateEvent extends AbstractEvent
     }
 
     /**
-     * @return string
+     * @return string|QueryInterface
      */
     public function getInnerQuery()
     {
