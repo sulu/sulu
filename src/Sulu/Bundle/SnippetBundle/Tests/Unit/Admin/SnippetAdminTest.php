@@ -125,9 +125,9 @@ class SnippetAdminTest extends TestCase
             'formKey' => 'snippet',
             'editView' => 'sulu_snippet.edit_form',
             'toolbarActions' => [
-                new Toolbaraction('sulu_admin.save'),
-                new Toolbaraction('sulu_admin.type', ['sort_by' => 'title']),
-                new Toolbaraction('sulu_admin.delete'),
+                new ToolbarAction('sulu_admin.save'),
+                new ToolbarAction('sulu_admin.type', ['sort_by' => 'title']),
+                new ToolbarAction('sulu_admin.delete'),
             ],
         ], $this->readObjectAttribute($addDetailView, 'options'));
         $this->assertEquals('sulu_snippet.edit_form', $editFormView->getName());
@@ -144,9 +144,9 @@ class SnippetAdminTest extends TestCase
             'tabTitle' => 'sulu_admin.details',
             'formKey' => 'snippet',
             'toolbarActions' => [
-                new Toolbaraction('sulu_admin.save'),
-                new Toolbaraction('sulu_admin.type', ['sort_by' => 'title']),
-                new Toolbaraction('sulu_admin.delete'),
+                new ToolbarAction('sulu_admin.save'),
+                new ToolbarAction('sulu_admin.type', ['sort_by' => 'title']),
+                new ToolbarAction('sulu_admin.delete'),
             ],
         ], $this->readObjectAttribute($editDetailView, 'options'));
     }

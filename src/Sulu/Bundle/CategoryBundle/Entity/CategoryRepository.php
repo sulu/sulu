@@ -230,6 +230,7 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         $query = $queryBuilder->getQuery();
         $query->setParameter('key', $key);
 
+        /** @var CategoryInterface[] */
         return $query->getResult();
     }
 

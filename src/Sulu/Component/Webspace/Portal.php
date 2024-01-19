@@ -237,7 +237,7 @@ class Portal
      *
      * @return Environment
      *
-     * @throws Exception\EnvironmentNotFoundException
+     * @throws EnvironmentNotFoundException
      */
     public function getEnvironment($type)
     {

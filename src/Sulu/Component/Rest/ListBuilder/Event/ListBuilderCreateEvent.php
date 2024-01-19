@@ -20,11 +20,11 @@ use Symfony\Contracts\EventDispatcher\Event;
 class ListBuilderCreateEvent extends Event
 {
     /**
-     * @var ListbuilderInterface
+     * @var ListBuilderInterface
      */
     protected $listBuilder;
 
-    public function __construct(ListbuilderInterface $listBuilder)
+    public function __construct(ListBuilderInterface $listBuilder)
     {
         $this->listBuilder = $listBuilder;
     }
