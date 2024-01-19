@@ -288,6 +288,7 @@ class ContactRepository extends EntityRepository implements DataProviderReposito
         if ($arrayResult) {
             return $query->getArrayResult();
         } else {
+            /** @var ContactInterface[] */
             return $query->getResult();
         }
     }

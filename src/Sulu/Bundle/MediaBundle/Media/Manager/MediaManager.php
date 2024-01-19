@@ -348,7 +348,7 @@ class MediaManager implements MediaManagerInterface
      *
      * @param UploadedFile|null $uploadedFile
      * @param array $data
-     * @param UserInterface $user
+     * @param UserInterface|null $user
      *
      * @return Media
      *
@@ -499,7 +499,7 @@ class MediaManager implements MediaManagerInterface
      *
      * @param UploadedFile $uploadedFile
      * @param array $data
-     * @param UserInterface $user
+     * @param UserInterface|null $user
      *
      * @return Media
      *
@@ -533,7 +533,7 @@ class MediaManager implements MediaManagerInterface
      * Create a new media.
      *
      * @param array $data
-     * @param UserInterface $user
+     * @param UserInterface|null $user
      *
      * @return Media
      */
@@ -584,7 +584,7 @@ class MediaManager implements MediaManagerInterface
      * Data can be set over by array.
      *
      * @param array $data
-     * @param UserInterface $user
+     * @param UserInterface|null $user
      *
      * @return Media
      */
@@ -643,7 +643,7 @@ class MediaManager implements MediaManagerInterface
                         $media->removeTags();
                         if (\count($value)) {
                             foreach ($value as $tag) {
-                                $tagEntity = $this->tagManager->findOrCreateByName($tag, $user->getId());
+                                $tagEntity = $this->tagManager->findOrCreateByName($tag);
                                 $media->addTag($tagEntity);
                             }
                         }
@@ -945,7 +945,7 @@ class MediaManager implements MediaManagerInterface
      *
      * @param int $userId
      *
-     * @return UserInterface
+     * @return UserInterface|null
      */
     protected function getUser($userId)
     {

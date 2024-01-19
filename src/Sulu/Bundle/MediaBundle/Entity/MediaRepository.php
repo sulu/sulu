@@ -74,12 +74,16 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             $query->setParameter('mediaId', $id);
 
             if ($asArray) {
-                if (isset($query->getArrayResult()[0])) {
-                    return $query->getArrayResult()[0];
+                /** @var MediaInterface[] $result */
+                $result = $query->getArrayResult();
+
+                if (isset($result[0])) {
+                    return $result[0];
                 } else {
                     return null;
                 }
             } else {
+                /** @var MediaInterface */
                 return $query->getSingleResult();
             }
         } catch (NoResultException $ex) {
@@ -99,18 +103,17 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                     Join::WITH,
                     'formatOptions.formatKey = :formatKey'
                 )
+                ->setParameter('formatKey', $formatKey)
                 ->addSelect('file')
                 ->addSelect('fileVersion')
                 ->addSelect('formatOptions')
-                ->where('media.id = :mediaId');
+                ->where('media.id = :mediaId')
+                ->setParameter('mediaId', $id);
 
-            $query = $queryBuilder->getQuery();
-            $query->setParameter('mediaId', $id);
-            $query->setParameter('formatKey', $formatKey);
-
-            return $query->getSingleResult();
+            /** @var MediaInterface */
+            return $queryBuilder->getQuery()->getSingleResult();
         } catch (NoResultException $ex) {
-            return;
+            return null;
         }
     }
 
@@ -209,6 +212,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             }
         }
 
+        /** @var MediaInterface[] */
         return $queryBuilder->getQuery()->getResult();
     }
 
@@ -270,15 +274,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         return [$collection, $systemCollections, $types, $search, $orderBy, $orderSort, $ids];
     }
 
-    /**
-     * Returns the most recent version of a media for the specified
-     * filename within a collection.
-     *
-     * @param string $filename
-     * @param int $collectionId
-     *
-     * @return Media
-     */
     public function findMediaWithFilenameInCollectionWithId($filename, $collectionId)
     {
         $queryBuilder = $this->createQueryBuilder('media')
@@ -291,22 +286,17 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->setMaxResults(1)
             ->setParameter('filename', $filename)
             ->setParameter('collectionId', $collectionId);
+
+        /** @var MediaInterface[] $result */
         $result = $queryBuilder->getQuery()->getResult();
 
         if (\count($result) > 0) {
             return $result[0];
         }
 
-        return;
+        return null;
     }
 
-    /**
-     * @param int $collectionId
-     * @param int|null $limit
-     * @param int|null $offset
-     *
-     * @return array
-     */
     public function findMediaByCollectionId($collectionId, $limit, $offset)
     {
         $queryBuilder = $this->createQueryBuilder('media')
@@ -314,6 +304,8 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->join('media.collection', 'collection')
             ->where('collection.id = :collectionId')
             ->setParameter('collectionId', $collectionId);
+
+        /** @var int $count */
         $count = $queryBuilder->getQuery()->getSingleScalarResult();
 
         $queryBuilder = $this->createQueryBuilder('media')
@@ -326,6 +318,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             ->setParameter('collectionId', $collectionId);
 
         $query = $queryBuilder->getQuery();
+        /** @var Paginator<MediaInterface> $paginator */
         $paginator = new Paginator($query);
 
         return ['media' => $paginator, 'count' => $count];

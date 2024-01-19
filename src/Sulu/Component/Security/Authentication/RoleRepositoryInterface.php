@@ -23,7 +23,7 @@ interface RoleRepositoryInterface extends RepositoryInterface
      *
      * @param int $id id of the role
      *
-     * @return RoleInterface
+     * @return RoleInterface|null
      */
     public function findRoleById($id);
 

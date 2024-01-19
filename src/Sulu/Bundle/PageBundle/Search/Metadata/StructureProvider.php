@@ -319,7 +319,7 @@ EOT;
                         $componentProperty,
                         $propertyMapping,
                         $component->getName() . '_',
-                        'type === \'' . $component->getName() . '\''
+                        'type === \'' . $component->getName() . '\' && massive_search_value("[settings][schedules_enabled]", false) !== true && massive_search_value("[settings][hidden]", false) !== true'
                     );
                 }
             }

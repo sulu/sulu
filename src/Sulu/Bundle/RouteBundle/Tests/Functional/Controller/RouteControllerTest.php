@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -44,7 +46,7 @@ class RouteControllerTest extends SuluTestCase
      */
     private $activityRepository;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
         $this->entityManager = $this->getEntityManager();
@@ -70,7 +72,7 @@ class RouteControllerTest extends SuluTestCase
         $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $this->assertEquals('/prefix/2019/test', $result['resourcelocator']);
+        $this->assertSame('/prefix/2019/test', $result['resourcelocator']);
     }
 
     public function testGenerateWithConfigFromParameter(): void
@@ -93,7 +95,7 @@ class RouteControllerTest extends SuluTestCase
         $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $this->assertEquals('/2019/custom-part/test', $result['resourcelocator']);
+        $this->assertSame('/2019/custom-part/test', $result['resourcelocator']);
     }
 
     public function testGenerateWithTranslationInSchema(): void
@@ -115,7 +117,7 @@ class RouteControllerTest extends SuluTestCase
 
         $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $this->assertEquals('/event/tomorrowland', $result['resourcelocator']);
+        $this->assertSame('/event/tomorrowland', $result['resourcelocator']);
 
         // test german translation
         $this->client->jsonRequest(
@@ -134,7 +136,7 @@ class RouteControllerTest extends SuluTestCase
 
         $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
-        $this->assertEquals('/veranstaltung/tomorrowland', $result['resourcelocator']);
+        $this->assertSame('/veranstaltung/tomorrowland', $result['resourcelocator']);
     }
 
     public function testGenerateWithConflict(): void
@@ -159,7 +161,7 @@ class RouteControllerTest extends SuluTestCase
         $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $this->assertEquals('/prefix/2019/test-1', $result['resourcelocator']);
+        $this->assertSame('/prefix/2019/test-1', $result['resourcelocator']);
     }
 
     public function testGenerateWithConflictSameEntity(): void
@@ -185,7 +187,32 @@ class RouteControllerTest extends SuluTestCase
         $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $this->assertEquals('/prefix/2019/test', $result['resourcelocator']);
+        $this->assertSame('/prefix/2019/test', $result['resourcelocator']);
+    }
+
+    public function testGenerateObjectAccess(): void
+    {
+        $this->client->jsonRequest(
+            'POST',
+            '/api/routes?action=generate',
+            [
+                'locale' => 'de',
+                'resourceKey' => 'event-resource-key',
+                'entityClass' => 'event-class',
+                'routeSchema' => '/prefix/{object.getYear()}/{object.month}/{object["day"]}/{object.getTitle()}',
+                'parts' => [
+                    'title' => 'Christmas Party',
+                    'year' => '2023',
+                    'month' => '12',
+                    'day' => '24',
+                ],
+            ]
+        );
+
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->assertSame('/prefix/2023/12/24/christmas-party', $result['resourcelocator']);
     }
 
     public function testCGetAction(): void
@@ -217,8 +244,8 @@ class RouteControllerTest extends SuluTestCase
         $this->assertCount(1, $result['_embedded']['routes']);
 
         $items = $result['_embedded']['routes'];
-        $this->assertEquals($routes[0]->getId(), $items[0]['id']);
-        $this->assertEquals($routes[0]->getPath(), $items[0]['path']);
+        $this->assertSame($routes[0]->getId(), $items[0]['id']);
+        $this->assertSame($routes[0]->getPath(), $items[0]['path']);
     }
 
     public function testCGetActionWithEntityClassParameter(): void
@@ -249,8 +276,8 @@ class RouteControllerTest extends SuluTestCase
         $this->assertCount(1, $result['_embedded']['routes']);
 
         $items = $result['_embedded']['routes'];
-        $this->assertEquals($entityRoute1->getId(), $items[0]['id']);
-        $this->assertEquals($entityRoute1->getPath(), $items[0]['path']);
+        $this->assertSame($entityRoute1->getId(), $items[0]['id']);
+        $this->assertSame($entityRoute1->getPath(), $items[0]['path']);
     }
 
     public function testCGetActionNotExistingResourceKey(): void
@@ -306,8 +333,8 @@ class RouteControllerTest extends SuluTestCase
         for ($i = 0; $i < 3; ++$i) {
             $id = $routes[$i]->getId();
 
-            $this->assertEquals($routes[$i]->getId(), $items[$id]['id']);
-            $this->assertEquals($routes[$i]->getPath(), $items[$id]['path']);
+            $this->assertSame($routes[$i]->getId(), $items[$id]['id']);
+            $this->assertSame($routes[$i]->getPath(), $items[$id]['path']);
         }
     }
 
@@ -382,8 +409,8 @@ class RouteControllerTest extends SuluTestCase
         for ($i = 0; $i < 2; ++$i) {
             $id = $routes[$i + 1]->getId();
 
-            $this->assertEquals($routes[$i + 1]->getId(), $items[$id]['id']);
-            $this->assertEquals($routes[$i + 1]->getPath(), $items[$id]['path']);
+            $this->assertSame($routes[$i + 1]->getId(), $items[$id]['id']);
+            $this->assertSame($routes[$i + 1]->getPath(), $items[$id]['path']);
         }
     }
 

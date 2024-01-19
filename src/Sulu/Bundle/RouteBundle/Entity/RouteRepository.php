@@ -41,32 +41,32 @@ class RouteRepository extends EntityRepository implements RouteRepositoryInterfa
 
     public function findByEntity($entityClass, $entityId, $locale)
     {
-        $query = $this->createQueryBuilder('entity')
+        $queryBuilder = $this->createQueryBuilder('entity')
             ->andWhere('entity.entityClass = :entityClass')
             ->andWhere('entity.entityId = :entityId')
             ->andWhere('entity.locale = :locale')
             ->andWhere('entity.history = false')
-            ->getQuery()
             ->setParameters(['entityClass' => $entityClass, 'entityId' => $entityId, 'locale' => $locale]);
 
         try {
-            return $query->getSingleResult();
+            /** @var RouteInterface */
+            return $queryBuilder->getQuery()->getSingleResult();
         } catch (NoResultException $e) {
-            return;
+            return null;
         }
     }
 
     public function findHistoryByEntity($entityClass, $entityId, $locale)
     {
-        $query = $this->createQueryBuilder('entity')
+        $queryBuilder = $this->createQueryBuilder('entity')
             ->andWhere('entity.entityClass = :entityClass')
             ->andWhere('entity.entityId = :entityId')
             ->andWhere('entity.locale = :locale')
             ->andWhere('entity.history = true')
-            ->getQuery()
             ->setParameters(['entityClass' => $entityClass, 'entityId' => $entityId, 'locale' => $locale]);
 
-        return $query->getResult();
+        /** @var RouteInterface[] */
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function findAllByEntity($entityClass, $entityId, $locale = null)
@@ -82,6 +82,7 @@ class RouteRepository extends EntityRepository implements RouteRepositoryInterfa
                 ->setParameter('locale', $locale);
         }
 
+        /** @var RouteInterface[] */
         return $queryBuilder->getQuery()->getResult();
     }
 

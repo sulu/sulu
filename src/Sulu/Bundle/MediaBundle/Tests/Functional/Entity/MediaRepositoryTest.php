@@ -722,6 +722,7 @@ class MediaRepositoryTest extends SuluTestCase
         $this->em->flush();
 
         $retrievedMedia = $this->mediaRepository->findMediaByIdForRendering($media->getId(), 'my-format');
+        $this->assertNotNull($retrievedMedia);
 
         $files = $retrievedMedia->getFiles();
         $this->assertEquals($media->getId(), $retrievedMedia->getId());

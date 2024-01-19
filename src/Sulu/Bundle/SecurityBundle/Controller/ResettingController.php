@@ -379,7 +379,7 @@ class ResettingController
      *
      * @param string $token
      *
-     * @return \Symfony\Component\Security\Core\User\UserInterface
+     * @return UserInterface
      *
      * @throws InvalidTokenException
      */

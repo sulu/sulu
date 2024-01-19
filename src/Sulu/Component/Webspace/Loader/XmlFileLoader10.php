@@ -506,7 +506,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     /**
      * Generates the URLs for the given environment.
      *
-     * @throws Exception\InvalidUrlDefinitionException
+     * @throws InvalidUrlDefinitionException
      */
     protected function generateUrls(\DOMNode $environmentNode, Environment $environment)
     {
@@ -592,7 +592,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     /**
      * Validate default webspace localization.
      *
-     * @throws Exception\InvalidWebspaceDefaultLocalizationException
+     * @throws InvalidWebspaceDefaultLocalizationException
      */
     protected function validateWebspaceDefaultLocalization()
     {
@@ -606,8 +606,8 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     /**
      * Validate portal localization.
      *
-     * @throws Exception\PortalDefaultLocalizationNotFoundException
-     * @throws Exception\InvalidPortalDefaultLocalizationException
+     * @throws PortalDefaultLocalizationNotFoundException
+     * @throws InvalidPortalDefaultLocalizationException
      */
     protected function validateDefaultPortalLocalization()
     {
@@ -629,8 +629,8 @@ class XmlFileLoader10 extends BaseXmlFileLoader
     /**
      * Validate webspace default segment.
      *
-     * @throws Exception\WebspaceDefaultSegmentNotFoundException
-     * @throws Exception\InvalidWebspaceDefaultSegmentException
+     * @throws WebspaceDefaultSegmentNotFoundException
+     * @throws InvalidWebspaceDefaultSegmentException
      */
     protected function validateWebspaceDefaultSegment()
     {
@@ -661,7 +661,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
      *
      * @return bool
      *
-     * @throws Exception\InvalidDefaultLocalizationException
+     * @throws InvalidDefaultLocalizationException
      */
     protected function validateDefaultLocalization($localizations)
     {

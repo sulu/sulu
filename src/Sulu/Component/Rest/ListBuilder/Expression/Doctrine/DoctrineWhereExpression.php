@@ -45,7 +45,7 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression implements Wher
     public function __construct(
         DoctrineFieldDescriptorInterface $field,
         $value,
-        $comparator = ListbuilderInterface::WHERE_COMPARATOR_EQUAL
+        $comparator = ListBuilderInterface::WHERE_COMPARATOR_EQUAL
     ) {
         $this->field = $field;
         $this->value = $value;
