@@ -109,7 +109,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                     $queryBuilder,
                     $user,
                     $permission,
-                    Collection::class,
+                    CollectionEntity::class,
                     'collection'
                 );
             } else {
@@ -117,12 +117,13 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                     $queryBuilder,
                     $user,
                     $permission,
-                    Collection::class,
+                    CollectionEntity::class,
                     'collection'
                 );
             }
         }
 
+        /** @var CollectionEntity[] */
         return $queryBuilder->getQuery()->getResult();
     }
 
@@ -220,6 +221,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
                 $qb->setMaxResults($limit);
             }
 
+            /** @var Collection[] */
             return new Paginator($qb->getQuery());
         } catch (NoResultException $ex) {
             return;
@@ -290,6 +292,7 @@ class CollectionRepository extends NestedTreeRepository implements CollectionRep
             ->setParameter('id', $id)
             ->setParameter('locale', $locale);
 
+        /** @var CollectionEntity[] */
         return $queryBuilder->getQuery()->getResult();
     }
 

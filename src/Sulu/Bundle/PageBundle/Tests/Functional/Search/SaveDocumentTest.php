@@ -47,6 +47,7 @@ class SaveDocumentTest extends BaseTestCase
                     'type' => 'article',
                     'title' => 'Dornbirn',
                     'article' => 'Dornbirn Austrua',
+                    'settings' => [],
                 ],
                 [
                     'type' => 'article',
@@ -54,7 +55,8 @@ class SaveDocumentTest extends BaseTestCase
                     'article' => 'Basel Switzerland',
                     'lines' => ['line1', 'line2'],
                 ],
-            ], ], false);
+            ],
+        ], false);
         $document->setParent($this->homeDocument);
 
         $this->documentManager->persist($document, 'de');
@@ -65,6 +67,100 @@ class SaveDocumentTest extends BaseTestCase
         $searches = [
             'Places' => 1,
             'Basel' => 1,
+            'Dornbirn' => 1,
+        ];
+
+        foreach ($searches as $search => $count) {
+            $res = $searchManager->createSearch($search)->locale('de')->index('page_sulu_io')->execute();
+            $this->assertCount($count, $res, 'Searching for: ' . $search);
+        }
+    }
+
+    public function testSaveDocumentWithScheduledBlock(): void
+    {
+        $document = new PageDocument();
+        $document->setTitle('Places');
+        $document->setStructureType('blocks');
+        $document->setResourceSegment('/places');
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $document->getStructure()->bind([
+            'block' => [
+                [
+                    'type' => 'article',
+                    'title' => 'Dornbirn',
+                    'article' => 'Dornbirn Austrua',
+                    'settings' => [
+                        'schedules_enabled' => false,
+                    ],
+                ],
+                [
+                    'type' => 'article',
+                    'title' => 'Basel',
+                    'article' => 'Basel Switzerland',
+                    'lines' => ['line1', 'line2'],
+                    'settings' => [
+                        'schedules_enabled' => true,
+                    ],
+                ],
+            ],
+        ], false);
+        $document->setParent($this->homeDocument);
+
+        $this->documentManager->persist($document, 'de');
+        $this->documentManager->flush();
+
+        $searchManager = $this->getSearchManager();
+
+        $searches = [
+            'Places' => 1,
+            'Basel' => 0,
+            'Dornbirn' => 1,
+        ];
+
+        foreach ($searches as $search => $count) {
+            $res = $searchManager->createSearch($search)->locale('de')->index('page_sulu_io')->execute();
+            $this->assertCount($count, $res, 'Searching for: ' . $search);
+        }
+    }
+
+    public function testSaveDocumentWithHiddenBlock(): void
+    {
+        $document = new PageDocument();
+        $document->setTitle('Places');
+        $document->setStructureType('blocks');
+        $document->setResourceSegment('/places');
+        $document->setWorkflowStage(WorkflowStage::PUBLISHED);
+        $document->getStructure()->bind([
+            'block' => [
+                [
+                    'type' => 'article',
+                    'title' => 'Dornbirn',
+                    'article' => 'Dornbirn Austria',
+                    'settings' => [
+                        'hidden' => false,
+                    ],
+                ],
+                [
+                    'type' => 'article',
+                    'title' => 'Basel',
+                    'article' => 'Basel Switzerland',
+                    'lines' => ['line1', 'line2'],
+                    'settings' => [
+                        'hidden' => true,
+                    ],
+                ],
+            ],
+        ], false);
+        $document->setParent($this->homeDocument);
+
+        $this->documentManager->persist($document, 'de');
+        $this->documentManager->flush();
+
+        $searchManager = $this->getSearchManager();
+
+        $searches = [
+            'Places' => 1,
+            'Basel' => 0,
             'Dornbirn' => 1,
         ];
 

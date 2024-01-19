@@ -701,7 +701,7 @@ class CollectionManager implements CollectionManagerInterface
      *
      * @param int $userId
      *
-     * @return UserInterface
+     * @return UserInterface|null
      */
     protected function getUser($userId)
     {
