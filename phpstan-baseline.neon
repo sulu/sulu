@@ -2276,16 +2276,6 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Entity/TargetGroupRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupRepository\\:\\:findAllActiveForWebspaceOrderedByPriority\\(\\) should return array\\<Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupInterface\\> but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Entity/TargetGroupRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupRepository\\:\\:findByIds\\(\\) should return array\\<Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupInterface\\> but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Entity/TargetGroupRepository.php
-
-		-
 			message: "#^Unable to resolve the template type TMaybeContained in call to method Doctrine\\\\Common\\\\Collections\\\\ReadableCollection\\<int,Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupRuleInterface\\>\\:\\:contains\\(\\)$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Entity/TargetGroupRepository.php
@@ -3956,7 +3946,7 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
 		-
-			message: "#^Cannot call method rowCount\\(\\) on true\\.$#"
+			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
@@ -3967,6 +3957,11 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Command\\\\RecoverCommand\\:\\:fixCategoriesWithoutParents\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
@@ -4339,11 +4334,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryMeta\\:\\:\\$locale type mapping mismatch\\: database can contain string\\|null but property expects string\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryMeta.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryRepository\\:\\:createNew\\(\\) should return Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryInterface but returns object\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Entity/CategoryRepository.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryRepository\\:\\:findCategories\\(\\) should return array\\<Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryInterface\\> but returns mixed\\.$#"
@@ -6666,7 +6656,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
 		-
-			message: "#^Cannot call method rowCount\\(\\) on true\\.$#"
+			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
@@ -6677,6 +6667,11 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Command\\\\AccountRecoverCommand\\:\\:fixNodesWithoutParents\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
@@ -9001,11 +8996,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:createNew\\(\\) should return Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountInterface but returns object\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findAccountById\\(\\) should return Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountInterface\\|null but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
@@ -9072,11 +9062,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFiltersIds\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findById\\(\\) should return Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountInterface\\|null but returns object\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
@@ -9307,11 +9292,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByAccountId\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface\\> but returns array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByAccountId\\(\\) should return array\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface\\> but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
@@ -15826,11 +15806,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
-			message: "#^Cannot access offset 0 on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
-
-		-
 			message: "#^Cannot access offset 1 on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
@@ -15856,32 +15831,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMedia\\(\\) should return array\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media\\> but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMediaByCollectionId\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMediaById\\(\\) has parameter \\$asArray with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMediaById\\(\\) should return Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media\\|null but returns mixed\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMediaByIdForRendering\\(\\) should return Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMediaByIdForRendering\\(\\) should return Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
 
@@ -15897,16 +15847,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMediaResourcesByCollection\\(\\) should return array\\<array\\{id\\: int, resourceKey\\: string, depth\\: int\\}\\> but returns array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMediaWithFilenameInCollectionWithId\\(\\) should return Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepository\\:\\:findMediaWithFilenameInCollectionWithId\\(\\) should return Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
 
@@ -15931,11 +15871,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
 
 		-
-			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
-
-		-
 			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepository.php
@@ -15952,11 +15887,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepositoryInterface\\:\\:findMedia\\(\\) has parameter \\$filter with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepositoryInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepositoryInterface\\:\\:findMediaByCollectionId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepositoryInterface.php
 
@@ -16412,11 +16342,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatManager\\\\FormatManager\\:\\:getResponseHeaders\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatManager/FormatManager.php
 
@@ -16947,11 +16872,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManager\\:\\:setDataToMedia\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagManagerInterface\\:\\:findOrCreateByName\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
@@ -22756,11 +22676,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201702021447\\:\\:downgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
@@ -27786,32 +27701,12 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Entity/Route.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Entity\\\\RouteRepository\\:\\:findAllByEntity\\(\\) should return array\\<Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\> but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Entity/RouteRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Entity\\\\RouteRepository\\:\\:findByEntity\\(\\) should return Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Entity/RouteRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Entity\\\\RouteRepository\\:\\:findByEntity\\(\\) should return Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Entity/RouteRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Entity\\\\RouteRepository\\:\\:findByPath\\(\\) should return Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null but empty return statement found\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Entity/RouteRepository.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Entity\\\\RouteRepository\\:\\:findByPath\\(\\) should return Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Entity/RouteRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Entity\\\\RouteRepository\\:\\:findHistoryByEntity\\(\\) should return array\\<Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\> but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Entity/RouteRepository.php
 
@@ -28852,7 +28747,7 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/GroupController.php
 
 		-
@@ -29187,7 +29082,7 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleController.php
 
 		-
@@ -29491,11 +29386,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Entity/AccessControlRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\AccessControlRepository\\:\\:findByTypeAndId\\(\\) should return array\\<Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlInterface\\> but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/AccessControlRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\AccessControlRepository\\:\\:findByTypeAndIdAndRole\\(\\) should return Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlInterface but empty return statement found\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/AccessControlRepository.php
@@ -29551,37 +29441,12 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Entity/Role.php
 
 		-
-			message: "#^Cannot access offset 'id' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/RoleRepository.php
-
-		-
 			message: "#^Cannot access offset 'name' on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/RoleRepository.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\RoleRepository\\:\\:findAllRoles\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/RoleRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\RoleRepository\\:\\:findAllRoles\\(\\) should return array\\<Sulu\\\\Component\\\\Security\\\\Authentication\\\\RoleInterface\\> but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/RoleRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\RoleRepository\\:\\:findAllRoles\\(\\) should return array\\<Sulu\\\\Component\\\\Security\\\\Authentication\\\\RoleInterface\\> but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/RoleRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\RoleRepository\\:\\:findRoleById\\(\\) should return Sulu\\\\Component\\\\Security\\\\Authentication\\\\RoleInterface but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/RoleRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\RoleRepository\\:\\:findRoleById\\(\\) should return Sulu\\\\Component\\\\Security\\\\Authentication\\\\RoleInterface but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/RoleRepository.php
 
@@ -29612,11 +29477,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\RoleRepository\\:\\:getRoleNames\\(\\) should return array\\<string\\> but returns array\\<int\\<0, max\\>, mixed\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/RoleRepository.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function array_map expects array, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/RoleRepository.php
 
@@ -29796,16 +29656,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\UserRepository\\:\\:findAllUsersByRoleId\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\UserRepository\\:\\:findAllUsersByRoleId\\(\\) should return array but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\UserRepository\\:\\:findUserByContact\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRepository.php
@@ -29831,22 +29681,7 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\UserRepository\\:\\:findUserById\\(\\) should return Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\UserRepository\\:\\:findUserById\\(\\) should return Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\UserRepository\\:\\:findUserByIdentifier\\(\\) should return Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\UserRepository\\:\\:findUserBySystem\\(\\) should return array\\<Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\User\\> but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRepository.php
 
@@ -29882,11 +29717,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\UserRepository\\:\\:findUsersById\\(\\) has parameter \\$ids with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\UserRepository\\:\\:findUsersById\\(\\) should return array\\<Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\> but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/UserRepository.php
 
@@ -30981,11 +30811,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Twig/UserTwigExtension.php
 
 		-
-			message: "#^Strict comparison using \\=\\=\\= between null and Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface will always evaluate to false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Twig/UserTwigExtension.php
-
-		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\:\\:getId\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/User/UserProvider.php
@@ -31277,7 +31102,7 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 6
+			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/UserManager/UserManager.php
 
 		-
@@ -39653,11 +39478,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\:\\:getContact\\(\\)\\.$#"
 			count: 2
-			path: src/Sulu/Component/Content/Document/Subscriber/AuthorSubscriber.php
-
-		-
-			message: "#^Left side of && is always true\\.$#"
-			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/AuthorSubscriber.php
 
 		-
