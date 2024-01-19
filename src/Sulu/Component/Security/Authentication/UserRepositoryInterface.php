@@ -27,7 +27,7 @@ interface UserRepositoryInterface extends RepositoryInterface
      *
      * @param int $id The user to find
      *
-     * @return UserInterface
+     * @return UserInterface|null
      */
     public function findUserById($id);
 
