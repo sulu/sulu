@@ -44,7 +44,7 @@ class PageBridgeHandlerTest extends TestCase
             $structureFactory->reveal()
         );
 
-        $visitor = $this->prophesize(DeSerializationVisitorInterface::class);
+        $visitor = $this->prophesize(DeserializationVisitorInterface::class);
         $context = $this->prophesize(Context::class);
         $graphNavigator = $this->prophesize(GraphNavigatorInterface::class);
 
