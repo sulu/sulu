@@ -13,7 +13,6 @@ namespace Sulu\Bundle\CategoryBundle\Entity;
 
 use Doctrine\ORM\Query\Expr\Join;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
-use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 
 /**
  * @extends NestedTreeRepository<CategoryInterface>
