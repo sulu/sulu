@@ -183,24 +183,21 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
 
     public function findByFilter(array $filter): ?array
     {
-        try {
-            $qb = $this->createQueryBuilder('account');
+        $qb = $this->createQueryBuilder('account');
 
-            foreach ($filter as $key => $value) {
-                switch ($key) {
-                    case 'id':
-                        $qb->where('account.id IN (:ids)');
-                        $qb->setParameter('ids', $value);
-                        break;
-                }
+        foreach ($filter as $key => $value) {
+            switch ($key) {
+                case 'id':
+                    $qb->where('account.id IN (:ids)');
+                    $qb->setParameter('ids', $value);
+                    break;
             }
-
-            $query = $qb->getQuery();
-
-            return $query->getResult();
-        } catch (NoResultException $ex) {
-            return null;
         }
+
+        $query = $qb->getQuery();
+
+        /** @var AccountInterface[] */
+        return $query->getResult();
     }
 
     public function findAllSelect(array $fields = []): array
@@ -345,6 +342,7 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
             $query = $qb->getQuery();
             $query->setParameter('accountId', $id);
 
+            /** @var AccountInterface[] */
             return $query->getResult();
         } catch (NoResultException $ex) {
             return [];
