@@ -12156,11 +12156,6 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/DataFixtures/DocumentFixtureGroupInterface.php
 
 		-
-			message: "#^Parameter \\#1 \\$object_or_class of function is_subclass_of expects object\\|string, class\\-string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/DocumentFixturePass.php
-
-		-
 			message: "#^Parameter \\#1 \\$object_or_class of function is_subclass_of expects object\\|string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/DocumentFixturePass.php
@@ -46426,9 +46421,9 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/DocumentInspector.php
 
 		-
-			message: "#^Parameter \\#1 \\$innerQuery of class Sulu\\\\Component\\\\DocumentManager\\\\Event\\\\QueryCreateEvent constructor expects string, mixed given\\.$#"
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
 			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
+			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/QuerySubscriber.php
 
 		-
 			message: "#^Parameter \\#2 \\$locale of class Sulu\\\\Component\\\\DocumentManager\\\\Event\\\\FindEvent constructor expects string, string\\|null given\\.$#"
@@ -47951,26 +47946,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/GeneralSubscriber.php
 
 		-
-			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/QuerySubscriber.php
-
-		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/QuerySubscriber.php
-
-		-
-			message: "#^Elseif branch is unreachable because previous condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/QuerySubscriber.php
-
-		-
-			message: "#^Instanceof between \\*NEVER\\* and PHPCR\\\\Query\\\\QueryInterface will always evaluate to false\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/QuerySubscriber.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\Subscriber\\\\Phpcr\\\\QuerySubscriber\\:\\:handleCreate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/QuerySubscriber.php
@@ -48499,11 +48474,6 @@ parameters:
 			message: "#^Property Sulu\\\\Comonent\\\\DocumentManager\\\\Tests\\\\Unit\\\\Subscriber\\\\GeneralSubscriberTest\\:\\:\\$refreshEvent is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/Subscriber/Phpcr/GeneralSubscriberTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:remove\\(\\) invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/TimingDocumentManager.php
 
 		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\StructureBehavior\\:\\:getUuid\\(\\)\\.$#"
