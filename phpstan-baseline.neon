@@ -52701,6 +52701,21 @@ parameters:
 			path: src/Sulu/Component/Rest/Tests/Unit/Listing/ListQueryBuilderTest.php
 
 		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\RequestParametersTraitTest\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/Tests/Unit/RequestParametersTraitTest.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/Tests/Unit/RequestParametersTraitTest.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/Tests/Unit/RequestParametersTraitTest.php
+
+		-
 			message: "#^Call to method add\\(\\) on an unknown class Mock\\.$#"
 			count: 5
 			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
