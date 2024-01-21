@@ -1,5 +1,16 @@
 # Upgrade
 
+## 2.4.16
+
+### Hidden blocks wont be indexed anymore
+
+To remove hidden blocks from the search index, you need to run the reindex commands:
+
+```bash
+bin/adminconsole massive:search:reindex --provider sulu_structure
+bin/websiteconsole massive:search:reindex --provider sulu_structure
+```
+
 ## 2.4.15
 
 ### Remove Node 12 Support for Custm Admin Builds

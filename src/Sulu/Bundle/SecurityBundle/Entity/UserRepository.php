@@ -79,27 +79,26 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
                 ->addSelect('settings')
                 ->addSelect('contact')
                 ->addSelect('emails')
-                ->where('user.id=:userId');
+                ->where('user.id=:userId')
+                ->setParameter('userId', $id);
 
-            $query = $qb->getQuery();
-            $query->setParameter('userId', $id);
-
-            return $query->getSingleResult();
+            /** @var UserInterface */
+            return $qb->getQuery()->getSingleResult();
         } catch (NoResultException $ex) {
-            return;
+            return null;
         }
     }
 
     public function findUsersById(array $ids)
     {
-        $query = $this->createQueryBuilder('user')
+        $queryBuilder = $this->createQueryBuilder('user')
             ->leftJoin('user.contact', 'contact')
             ->addSelect('contact')
             ->where('user.id IN (:userIds)')
-            ->setParameter('userIds', $ids)
-            ->getQuery();
+            ->setParameter('userIds', $ids);
 
-        return $query->getResult();
+        /** @var UserInterface[] */
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**
@@ -163,19 +162,18 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      *
      * @param int $roleId
      *
-     * @return array
+     * @return UserInterface[]
      */
     public function findAllUsersByRoleId($roleId)
     {
         $qb = $this->createQueryBuilder('user')
             ->leftJoin('user.userRoles', 'userRole')
             ->leftJoin('userRole.role', 'role')
-            ->where('role=:roleId');
+            ->where('role=:roleId')
+            ->setParameter('roleId', $roleId);
 
-        $query = $qb->getQuery();
-        $query->setParameter('roleId', $roleId);
-
-        return $query->getResult();
+        /** @var UserInterface[] */
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -264,7 +262,7 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
      *
      * @param string $system
      *
-     * @return User[]
+     * @return UserInterface[]
      */
     public function findUserBySystem($system)
     {
@@ -273,12 +271,11 @@ class UserRepository extends EntityRepository implements UserRepositoryInterface
             ->leftJoin('user.userRoles', 'userRoles')
             ->leftJoin('user.contact', 'contact')
             ->leftJoin('userRoles.role', 'role')
-            ->where('role.system = :system');
+            ->where('role.system = :system')
+            ->setParameter('system', $system);
 
-        $query = $queryBuilder->getQuery();
-        $query->setParameter('system', $system);
-
-        return $query->getResult();
+        /** @var UserInterface[] */
+        return $queryBuilder->getQuery()->getResult();
     }
 
     /**

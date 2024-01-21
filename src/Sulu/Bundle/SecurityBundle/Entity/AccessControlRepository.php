@@ -56,11 +56,12 @@ class AccessControlRepository extends EntityRepository implements AccessControlR
             $queryBuilder->setParameter('system', $system);
         }
 
-        $query = $queryBuilder->getQuery()
+        $queryBuilder
             ->setParameter('entityId', $id)
             ->setParameter('entityClass', $type);
 
-        return $query->getResult();
+        /** @var AccessControlInterface[] */
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function findIdsWithGrantedPermissions(
