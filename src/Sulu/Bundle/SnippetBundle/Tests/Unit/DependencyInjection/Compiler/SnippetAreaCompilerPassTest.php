@@ -80,6 +80,50 @@ class SnippetAreaCompilerPassTest extends TestCase
         $compiler->process($this->container->reveal());
     }
 
+    public function testWithOnlyOneTranslation(): void
+    {
+        $compiler = new SnippetAreaCompilerPass();
+
+        $structureMetaData = $this->createStructureMetaData(
+            'test',
+            [
+                'article' => [
+                    'key' => 'article',
+                    'title' => [
+                        'en' => 'Article EN',
+                    ],
+                ],
+            ]
+        );
+
+        $this->structureFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
+        $this->structureFactory->getStructures('snippet')->willReturn([$structureMetaData->reveal()]);
+
+        $translator = $this->prophesize(TranslatorInterface::class);
+        $translator->trans()->shouldNotBeCalled();
+
+        $this->container = $this->prophesize(ContainerBuilder::class);
+        $this->container->get('sulu_page.structure.factory')->willReturn($this->structureFactory->reveal());
+        $this->container->get('translator')->shouldNotBeCalled();
+        $this->container->getParameter('sulu_core.locales')->willReturn(['en', 'de']);
+
+        $this->container->setParameter(
+            'sulu_snippet.areas',
+            [
+                'article' => [
+                    'key' => 'article',
+                    'template' => 'test',
+                    'title' => [
+                        'en' => 'Article EN',
+                        'de' => 'Test DE Article',
+                    ],
+                ],
+            ]
+        )->shouldBeCalled();
+
+        $compiler->process($this->container->reveal());
+    }
+
     public function testWithAreas(): void
     {
         $compiler = new SnippetAreaCompilerPass();

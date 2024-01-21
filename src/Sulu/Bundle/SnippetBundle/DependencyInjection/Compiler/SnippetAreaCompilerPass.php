@@ -90,15 +90,14 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
         $titles = [];
         $areaTitles = $area['title'];
 
-        // If we only have one title, it is probably a translation key
-        if (1 === \count($areaTitles)) {
+        // If we only have one title and no locale (indexed 0) then it's a translation key
+        if (1 === \count($areaTitles) && \array_key_exists(0, $areaTitles)) {
             $translator = $container->get('translator');
             $titleToTranslate = \reset($areaTitles);
             foreach ($locales as $locale) {
                 $titles[$locale] = $translator->trans($titleToTranslate, [], 'admin', $locale);
             }
         } else {
-            \trigger_error('Translating snippet areas in the XML is deprecated use a translation instead.', \E_USER_DEPRECATED);
             foreach ($locales as $locale) {
                 $title = $templateTitles[$locale] . ' ' . \ucfirst($key);
                 if (isset($areaTitles[$locale])) {
