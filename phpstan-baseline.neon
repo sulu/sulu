@@ -41231,11 +41231,6 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/PropertyMetadata.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\PropertyMetadata\\:\\:getComponentByName\\(\\) should return Sulu\\\\Component\\\\Content\\\\Metadata\\\\ItemMetadata but return statement is missing\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/PropertyMetadata.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\PropertyMetadata\\:\\:getContentTypeName\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/PropertyMetadata.php

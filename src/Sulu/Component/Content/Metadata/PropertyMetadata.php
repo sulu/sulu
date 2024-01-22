@@ -280,7 +280,7 @@ class PropertyMetadata extends ItemMetadata
     /**
      * @param string $name
      *
-     * @return ItemMetadata
+     * @return ItemMetadata|null
      */
     public function getComponentByName($name)
     {
@@ -289,6 +289,8 @@ class PropertyMetadata extends ItemMetadata
                 return $component;
             }
         }
+
+        return null;
     }
 
     /**

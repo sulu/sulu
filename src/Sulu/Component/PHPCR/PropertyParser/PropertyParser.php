@@ -16,22 +16,6 @@ namespace Sulu\Component\PHPCR\PropertyParser;
 final class PropertyParser implements PropertyParserInterface
 {
     /**
-     * @param array<Property> $shadowedKeys
-     *                                      Shadowed keys are keys that shouldn't have a value or shouldn't have children. In the current representation
-     *                                      a property has to be a leaf node to have a value. Here is an example:
-     *                                      'some_prop' => 10,
-     *                                      'some_prop-other-prop' => 'hello'
-     *                                      But then the property `some_prop` has the value 10 and at the same time it also has a sub property of `other_prop`.
-     *                                      In this case we would mark the `some_prop` node as shadowed.
-     *
-     *      This doesn't mean that Sulu doesn't use that property anymore
-     */
-    public function __construct(
-        public array $shadowedKeys = []
-    ) {
-    }
-
-    /**
      * Parses the list of propertyName => propertyValue from the PHPCR\NodeInterface::getPropertiesValues into a tree like
      * structure to make it easier to work with.
      *
@@ -41,7 +25,6 @@ final class PropertyParser implements PropertyParserInterface
      */
     public function parse(array $array): array
     {
-        $this->shadowedKeys = [];
         $result = [];
         foreach ($array as $key => $value) {
             // Starting from the root node every time
@@ -57,7 +40,6 @@ final class PropertyParser implements PropertyParserInterface
                     }
                     $current = &$current[$index];
                     if ($current instanceof Property) {
-                        $this->shadowedKeys[] = $current;
                         $current = [];
                     }
                 }
@@ -68,15 +50,8 @@ final class PropertyParser implements PropertyParserInterface
                 }
                 $current = &$current[$part];
                 if ($current instanceof Property) {
-                    $this->shadowedKeys[] = $current;
                     $current = [];
                 }
-            }
-
-            // If the current node is not empty it has children and all the children are shadowed by this key
-            if (0 !== \count($current)) {
-                $this->shadowedKeys[] = new Property($key, $value);
-                continue;
             }
 
             $current = new Property($key, $value);
@@ -88,16 +63,16 @@ final class PropertyParser implements PropertyParserInterface
     /**
      * Returns a list of property names under the current property.
      *
-     * @param array<mixed> $node
+     * @param array<mixed> $properties
      *
      * @return \Generator<string>
      */
-    public function keyIterator(array $node): \Generator
+    public function keyIterator(array $properties): \Generator
     {
-        foreach ($node as $key => $value) {
+        foreach ($properties as $key => $value) {
             if (\is_array($value)) {
                 yield from $this->keyIterator($value);
-            } else {
+            } elseif ($value instanceof Property) {
                 yield $value->getPath();
             }
         }

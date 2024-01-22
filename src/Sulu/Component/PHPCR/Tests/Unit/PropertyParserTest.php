@@ -12,6 +12,7 @@
 namespace Sulu\Component\PHPCR\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Component\PHPCR\PropertyParser\Property;
 use Sulu\Component\PHPCR\PropertyParser\PropertyParser;
 
 final class PropertyParserTest extends TestCase
@@ -35,6 +36,8 @@ final class PropertyParserTest extends TestCase
 
         $result = $this->propertyParser->parse($data);
         self::assertArrayHasKey('i18n:de_de', $result);
+
+        /** @var array<string, Property> $mainNode */
         $mainNode = $result['i18n:de_de'];
 
         self::assertSame($mainNode['title']->getValue(), 'Rock Band');
@@ -62,8 +65,10 @@ final class PropertyParserTest extends TestCase
         ];
 
         $result = $this->propertyParser->parse($data);
+
+        /** @var array{length: Property, 0:array<Property>} $mainNode */
         $mainNode = $result['i18n:de_de'];
-        self::arrayHasKey(0, $mainNode);
+        self::assertArrayHasKey(0, $mainNode);
 
         self::assertSame($mainNode['length']->getValue(), 1);
         self::assertSame($mainNode[0]['type']->getValue(), 'overview');
@@ -81,40 +86,11 @@ final class PropertyParserTest extends TestCase
         ];
         $result = $this->propertyParser->parse($data);
 
+        /** @var array<mixed> $mainKey */
         $mainKey = $result['i18n:de_de'];
         self::assertArrayHasKey(0, $mainKey);
         self::assertCount(1, $mainKey);
         self::assertSame($mainKey[0]['content'][0]['generic_content_snippet']->getValue(), '0f97ea0c-4d8e-4412-9c18-33e53e0f8af6');
-    }
-
-    /**
-     * @param array<string, string> $data
-     *
-     * @dataProvider dataFindingShadowKeys
-     */
-    public function testFindingShadowKeys(array $data): void
-    {
-        $this->propertyParser->parse($data);
-
-        $shadowedKeys = $this->propertyParser->shadowedKeys;
-        self::assertCount(1, $shadowedKeys);
-
-        self::assertSame('i18n:de_de-content#0', $shadowedKeys[0]->getPath());
-        self::assertSame('a3fb197d-8555-4d21-b42e-29ec377e3083', $shadowedKeys[0]->getValue());
-    }
-
-    /** @return \Generator<string,array{array<string,string>}> */
-    public function dataFindingShadowKeys(): \Generator
-    {
-        yield 'Shadow key is first' => [[
-            'i18n:de_de-content#0' => 'a3fb197d-8555-4d21-b42e-29ec377e3083',
-            'i18n:de_de-content#0-generic_content_snippet#0' => '0f97ea0c-4d8e-4412-9c18-33e53e0f8af6',
-        ]];
-
-        yield 'Shadow key comes after content' => [[
-            'i18n:de_de-content#0-generic_content_snippet#0' => '0f97ea0c-4d8e-4412-9c18-33e53e0f8af6',
-            'i18n:de_de-content#0' => 'a3fb197d-8555-4d21-b42e-29ec377e3083',
-        ]];
     }
 
     /**
@@ -127,14 +103,11 @@ final class PropertyParserTest extends TestCase
         $result = $this->propertyParser->parse($data);
         $extractCode = fn ($data) => $data->getPath();
 
-        $iterableKeys = \iterator_to_array($this->propertyParser->keyIterator($result), false);
-        \sort($iterableKeys);
+        $actualKeys = \iterator_to_array($this->propertyParser->keyIterator($result), false);
+        \sort($actualKeys);
 
         $expectedKeys = \array_keys($data);
         \sort($expectedKeys);
-
-        $actualKeys = \array_merge($iterableKeys, \array_map($extractCode, $this->propertyParser->shadowedKeys));
-        \sort($actualKeys);
 
         self::assertEquals($expectedKeys, $actualKeys);
     }

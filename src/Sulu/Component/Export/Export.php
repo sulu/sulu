@@ -111,7 +111,7 @@ class Export
             $blockType = $blockData['type'];
 
             $block = $this->getPropertiesContentData(
-                $property->getComponentByName($blockType)->getChildren(),
+                $property->getComponentByName($blockType)?->getChildren() ?? [],
                 $blockData
             );
 

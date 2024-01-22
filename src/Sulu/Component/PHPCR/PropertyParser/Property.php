@@ -11,8 +11,6 @@ declare(strict_types=1);
  * with this source code in the file LICENSE.
  */
 
-declare(strict_types=1);
-
 namespace Sulu\Component\PHPCR\PropertyParser;
 
 class Property
