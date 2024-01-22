@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\PHPCR\Tests\Unit;
 
-use Generator;
 use PHPUnit\Framework\TestCase;
 use Sulu\Component\PHPCR\PropertyParser\PropertyParser;
 
@@ -104,7 +103,7 @@ final class PropertyParserTest extends TestCase
         self::assertSame('a3fb197d-8555-4d21-b42e-29ec377e3083', $shadowedKeys[0]->getValue());
     }
 
-    /** @return Generator<string,array{array<string,string>}> */
+    /** @return \Generator<string,array{array<string,string>}> */
     public function dataFindingShadowKeys(): \Generator
     {
         yield 'Shadow key is first' => [[
@@ -141,7 +140,7 @@ final class PropertyParserTest extends TestCase
     }
 
     /**
-     * @return Generator<string,array{array<string,mixed>}|array{array<string,string>}>
+     * @return \Generator<string,array{array<string,mixed>}|array{array<string,string>}>
      */
     public function dataAllKeysAreHandled(): \Generator
     {

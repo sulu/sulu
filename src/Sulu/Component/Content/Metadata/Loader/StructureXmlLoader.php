@@ -36,26 +36,25 @@ class StructureXmlLoader extends AbstractLoader
 
     public const SCHEMA_NAMESPACE_URI = 'http://schemas.sulu.io/template/template';
 
-public const RESERVED_KEYS =[
-        'template',
-        'changer',
-        'changed',
-        'creator',
-        'created',
-        'published',
-        'state',
-        'internal',
-        'nodeType',
-        'navContexts',
-        'shadow-on',
-        'shadow-base',
-        'author',
-        'authored',
-        'type',
-        'id',
-        'webspace',
-    ];
-
+    public const RESERVED_KEYS = [
+            'template',
+            'changer',
+            'changed',
+            'creator',
+            'created',
+            'published',
+            'state',
+            'internal',
+            'nodeType',
+            'navContexts',
+            'shadow-on',
+            'shadow-base',
+            'author',
+            'authored',
+            'type',
+            'id',
+            'webspace',
+        ];
 
     /**
      * Tags that are required in template.

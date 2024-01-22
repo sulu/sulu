@@ -38,6 +38,6 @@ class Property
 
     public function __toString(): string
     {
-        return $this->path .' = '. $this->value;
+        return $this->path . ' = ' . $this->value;
     }
 }
