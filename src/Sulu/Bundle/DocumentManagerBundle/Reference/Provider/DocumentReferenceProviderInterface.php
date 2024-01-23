@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\DocumentManagerBundle\Reference\Provider;
 
-use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
@@ -24,7 +23,7 @@ interface DocumentReferenceProviderInterface
     /**
      * @param UuidBehavior&TitleBehavior&StructureBehavior $document
      */
-    public function updateReferences($document, string $locale, string $context): ReferenceCollectorInterface;
+    public function updateReferences($document, string $locale, string $context): void;
 
     public function removeReferences(UuidBehavior $document, ?string $locale, string $context): void;
 }

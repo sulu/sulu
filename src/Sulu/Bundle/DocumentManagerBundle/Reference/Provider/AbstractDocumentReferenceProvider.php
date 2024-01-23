@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\DocumentManagerBundle\Reference\Provider;
 
 use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollector;
-use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
@@ -65,7 +64,7 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
 
     abstract public static function getResourceKey(): string;
 
-    public function updateReferences($document, string $locale, string $context): ReferenceCollectorInterface
+    public function updateReferences($document, string $locale, string $context): void
     {
         $referenceResourceKey = $this->getReferenceResourceKey($document);
 
@@ -111,8 +110,6 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
         }
 
         $referenceCollector->persistReferences();
-
-        return $referenceCollector;
     }
 
     public function removeReferences(UuidBehavior $document, ?string $locale, string $context): void

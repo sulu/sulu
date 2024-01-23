@@ -95,21 +95,20 @@ class ReferenceController extends AbstractRestController implements ClassResourc
 
         $fields = \explode(',', $request->query->get('fields', ''));
         $removeFields = ['id']; // the frontend always add the id field, but we don't need it in this case as we group by other fields
-        $fields = [...$fields, 'referenceResourceKey', 'referenceResourceId', 'referenceLocale', 'referenceRouterAttributes'];
+        $fields = [
+            ...$fields,
+            'referenceResourceKey',
+            'referenceResourceId',
+            'referenceLocale',
+            'referenceRouterAttributes',
+        ];
 
         if ($rootLevel) {
             $removeFields[] = 'referenceContext';
             $removeFields[] = 'referenceProperty';
         }
 
-        foreach ($removeFields as $removeField) {
-            $fieldIndex = \array_search($removeField, $fields, true);
-            if (false !== $fieldIndex) {
-                unset($fields[$fieldIndex]);
-            }
-        }
-        $fields = \array_filter(\array_unique($fields));
-
+        $fields = \array_filter(\array_unique(\array_diff($fields, $removeFields)));
         $rows = $this->expandItems(
             $this->referenceRepository->findFlatBy($filters, $sortBys, $fields, distinct: $rootLevel),
             $rootLevel

@@ -17,11 +17,13 @@ use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\Event\ClearEvent;
+use Sulu\Component\DocumentManager\Event\CopyLocaleEvent;
 use Sulu\Component\DocumentManager\Event\FlushEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\RemoveLocaleEvent;
+use Sulu\Component\DocumentManager\Event\UnpublishEvent;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\HttpKernel\SuluKernel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -53,6 +55,14 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
      *     locale: string,
      * }>
      */
+    private array $unpublishDocuments = [];
+
+    /**
+     * @var array<array{
+     *     document: UuidBehavior&TitleBehavior&StructureBehavior,
+     *     locale: string,
+     * }>
+     */
     private array $persistDocuments = [];
 
     /**
@@ -68,8 +78,7 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
      */
     public function __construct(
         iterable $documentReferenceProviders,
-        private ReferenceRepositoryInterface $referenceRepository,
-        private string $suluContext
+        private ReferenceRepositoryInterface $referenceRepository
     ) {
         $this->documentReferenceProviders = $documentReferenceProviders instanceof \Traversable ? \iterator_to_array($documentReferenceProviders) : $documentReferenceProviders;
     }
@@ -81,11 +90,13 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
     {
         return [
             Events::PUBLISH => 'onPublish',
+            Events::UNPUBLISH => 'onUnpublish',
             Events::PERSIST => 'onPersist',
             Events::REMOVE => 'onRemove',
             Events::REMOVE_LOCALE => 'onRemoveLocale',
             Events::CLEAR => 'onClear',
             Events::FLUSH => 'onFlush',
+            Events::COPY_LOCALE => 'onCopyLocale',
         ];
     }
 
@@ -109,6 +120,42 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
         }
 
         $this->publishDocuments[] = [
+            'document' => $document,
+            'locale' => $locale,
+        ];
+    }
+
+    public function onUnpublish(UnpublishEvent $event): void
+    {
+        $document = $event->getDocument();
+        $locale = $event->getLocale();
+
+        if (!$document instanceof StructureBehavior
+            || !$document instanceof TitleBehavior
+            || !$document instanceof UuidBehavior
+        ) {
+            return;
+        }
+
+        $this->unpublishDocuments[] = [
+            'document' => $document,
+            'locale' => $locale,
+        ];
+    }
+
+    public function onCopyLocale(CopyLocaleEvent $event): void
+    {
+        $document = $event->getDocument();
+        $locale = $event->getDestLocale();
+
+        if (!$document instanceof StructureBehavior
+            || !$document instanceof TitleBehavior
+            || !$document instanceof UuidBehavior
+        ) {
+            return;
+        }
+
+        $this->persistDocuments[] = [
             'document' => $document,
             'locale' => $locale,
         ];
@@ -182,7 +229,15 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
             $this->getProvider($documentData['document'])?->updateReferences(
                 $documentData['document'],
                 $documentData['locale'],
-                $this->suluContext,
+                SuluKernel::CONTEXT_ADMIN,
+            );
+        }
+
+        foreach ($this->unpublishDocuments as $documentData) {
+            $this->getProvider($documentData['document'])?->removeReferences(
+                $documentData['document'],
+                $documentData['locale'],
+                SuluKernel::CONTEXT_WEBSITE,
             );
         }
 
@@ -200,7 +255,12 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
             $this->getProvider($documentData['document'])?->removeReferences(
                 $documentData['document'],
                 $documentData['locale'],
-                $this->suluContext,
+                SuluKernel::CONTEXT_ADMIN,
+            );
+            $this->getProvider($documentData['document'])?->removeReferences(
+                $documentData['document'],
+                $documentData['locale'],
+                SuluKernel::CONTEXT_WEBSITE,
             );
         }
 
@@ -223,6 +283,7 @@ class DocumentReferenceSubscriber implements EventSubscriberInterface, ResetInte
     {
         $this->persistDocuments = [];
         $this->publishDocuments = [];
+        $this->unpublishDocuments = [];
         $this->removeDocuments = [];
     }
 }

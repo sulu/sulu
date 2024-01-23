@@ -26101,11 +26101,6 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PublicPreviewController.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ReferenceBundle/Infrastructure/Symfony/DependencyInjection/SuluReferenceExtension.php
-
-		-
 			message: "#^Parameter \\#2 \\$destination of method Sulu\\\\Bundle\\\\RouteBundle\\\\PageTree\\\\PageTreeMoverInterface\\:\\:move\\(\\) expects Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument, object given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Command/MovePageTreeCommand.php
