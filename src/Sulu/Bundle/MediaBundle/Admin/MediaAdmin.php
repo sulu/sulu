@@ -19,7 +19,6 @@ use Sulu\Bundle\AdminBundle\Admin\View\ToolbarAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\ReferenceAdmin;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\View\ReferenceViewBuilderFactoryInterface;
 use Sulu\Component\Localization\Manager\LocalizationManagerInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -174,28 +173,40 @@ class MediaAdmin extends Admin
                     ->setParent(static::EDIT_FORM_VIEW)
             );
 
-            if ($this->activityViewBuilderFactory->hasActivityListPermission()) {
-                $viewCollection->add(
-                    $this->activityViewBuilderFactory
-                        ->createActivityListViewBuilder(
-                            static::EDIT_FORM_VIEW . '.activity',
-                            '/activities',
-                            MediaInterface::RESOURCE_KEY
-                        )
-                        ->setParent(static::EDIT_FORM_VIEW)
-                );
-            }
+            if ($this->activityViewBuilderFactory->hasActivityListPermission() || $this->referenceViewBuilderFactory->hasReferenceListPermission()) {
+                $insightsResourceTabViewName = MediaAdmin::EDIT_FORM_VIEW . '.insights';
 
-            if ($this->securityChecker->hasPermission(ReferenceAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW)) {
+                $viewCollection->add(
+                    $this->viewBuilderFactory
+                        ->createResourceTabViewBuilder($insightsResourceTabViewName, '/insights')
+                        ->setResourceKey(MediaInterface::RESOURCE_KEY)
+                        ->setTabOrder(6144)
+                        ->setTabTitle('sulu_admin.insights')
+                        ->setTitleProperty('')
+                        ->setParent(MediaAdmin::EDIT_FORM_VIEW)
+                );
+
+                if ($this->activityViewBuilderFactory->hasActivityListPermission()) {
+                    $viewCollection->add(
+                        $this->activityViewBuilderFactory
+                            ->createActivityListViewBuilder(
+                                $insightsResourceTabViewName . '.activity',
+                                '/activities',
+                                MediaInterface::RESOURCE_KEY
+                            )
+                            ->setParent($insightsResourceTabViewName)
+                    );
+                }
+
                 if ($this->referenceViewBuilderFactory->hasReferenceListPermission()) {
                     $viewCollection->add(
                         $this->referenceViewBuilderFactory
                             ->createReferenceListViewBuilder(
-                                static::EDIT_FORM_VIEW . '.reference',
+                                $insightsResourceTabViewName . '.reference',
                                 '/references',
                                 MediaInterface::RESOURCE_KEY
                             )
-                            ->setParent(static::EDIT_FORM_VIEW)
+                            ->setParent($insightsResourceTabViewName)
                     );
                 }
             }

@@ -11,11 +11,11 @@
 
 namespace Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\View;
 
-use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\ActivityAdmin;
 use Sulu\Bundle\AdminBundle\Admin\View\ListItemAction;
 use Sulu\Bundle\AdminBundle\Admin\View\ListViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactoryInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Model\ReferenceInterface;
+use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\ReferenceAdmin;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
@@ -71,6 +71,6 @@ class ReferenceViewBuilderFactory implements ReferenceViewBuilderFactoryInterfac
 
     public function hasReferenceListPermission(): bool
     {
-        return $this->securityChecker->hasPermission(ActivityAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW);
+        return $this->securityChecker->hasPermission(ReferenceAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW);
     }
 }

@@ -220,6 +220,7 @@
     "sulu_admin.activity": "Activity",
     "sulu_admin.versions": "Versions",
     "sulu_admin.activity_versions": "Activity & Versions",
+    "sulu_admin.insights": "Insights",
     "sulu_admin.insufficient_descendant_permissions": "Insufficient permissions for {count} descendant elements.",
     "sulu_admin.unexpected_delete_server_error": "An unexpected error occurred while deleting.",
     "sulu_admin.two_factor_authentication": "Two-Factor authentication",
