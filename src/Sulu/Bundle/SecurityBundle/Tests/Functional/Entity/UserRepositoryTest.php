@@ -219,11 +219,13 @@ class UserRepositoryTest extends SuluTestCase
         /** @var UserRepository $userRepository */
         $userRepository = $this->client->getContainer()->get('sulu_security.user_repository');
 
+        /** @var User[] $suluUsers */
         $suluUsers = $userRepository->findUserBySystem('Sulu');
         $this->assertCount(2, $suluUsers);
         $this->assertTrue('admin' === $suluUsers[0]->getUsername() || 'admin' === $suluUsers[1]->getUsername());
         $this->assertTrue('sulu' === $suluUsers[0]->getUsername() || 'sulu' === $suluUsers[1]->getUsername());
 
+        /** @var User[] $clientUsers */
         $clientUsers = $userRepository->findUserBySystem('Client');
         $this->assertCount(1, $clientUsers);
         $this->assertEquals('client', $clientUsers[0]->getUsername());

@@ -66,7 +66,7 @@ class PageBridgeHandler implements SubscribingHandlerInterface
      * @return PageBridge
      */
     public function doDeserialize(
-        DeSerializationVisitorInterface $visitor,
+        DeserializationVisitorInterface $visitor,
         array $data,
         array $type,
         Context $context

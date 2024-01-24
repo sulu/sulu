@@ -137,6 +137,17 @@ sulu_website:
             urls: true
 ```
 
+## 2.5.12
+
+### Hidden blocks wont be indexed anymore
+
+To remove hidden blocks from the search index, you need to run the reindex commands:
+
+```bash
+bin/adminconsole massive:search:reindex --provider sulu_structure
+bin/websiteconsole massive:search:reindex --provider sulu_structure
+```
+
 ## 2.5.11
 
 ### Rename WebsiteController::renderBlock to WebsiteController::renderBlockView
@@ -491,6 +502,17 @@ framework:
 
 It should also be considered to remove the **SwiftMailer** and **SwiftMailerBundle**
 from your application and replace it with [**Symfony Mailer**](https://symfony.com/doc/6.1/mailer.html).
+
+## 2.4.16
+
+### Hidden blocks wont be indexed anymore
+
+To remove hidden blocks from the search index, you need to run the reindex commands:
+
+```bash
+bin/adminconsole massive:search:reindex --provider sulu_structure
+bin/websiteconsole massive:search:reindex --provider sulu_structure
+```
 
 ## 2.4.15
 

@@ -154,7 +154,7 @@ class TagManager implements TagManagerInterface
      *
      * @param number $id The tag to delete
      *
-     * @throws Exception\TagNotFoundException
+     * @throws TagNotFoundException
      */
     public function delete($id)
     {
@@ -187,7 +187,7 @@ class TagManager implements TagManagerInterface
      *
      * @return TagInterface The new Tag, which is valid for all given tags
      *
-     * @throws Exception\TagNotFoundException
+     * @throws TagNotFoundException
      */
     public function merge($srcTagIds, $destTagId)
     {
