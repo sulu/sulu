@@ -74,6 +74,7 @@ class DocumentReferenceSubscriberTest extends TestCase
         // get publishDocuments from subscriber with reflection
         $reflection = new \ReflectionClass($this->documentReferenceSubscriber);
         $property = $reflection->getProperty('publishDocuments');
+        $property->setAccessible(true); // TODO remove when minimum php version is 8.1
         /** @var array<array{document: UuidBehavior&TitleBehavior&StructureBehavior, locale: string}> $publishDocuments */
         $publishDocuments = $property->getValue($this->documentReferenceSubscriber);
 
@@ -92,6 +93,7 @@ class DocumentReferenceSubscriberTest extends TestCase
         // get unpublishDocuments from subscriber with reflection
         $reflection = new \ReflectionClass($this->documentReferenceSubscriber);
         $property = $reflection->getProperty('unpublishDocuments');
+        $property->setAccessible(true); // TODO remove when minimum php version is 8.1
         /** @var array<array{document: UuidBehavior&TitleBehavior&StructureBehavior, locale: string}> $unpublishDocuments */
         $unpublishDocuments = $property->getValue($this->documentReferenceSubscriber);
 
@@ -110,6 +112,7 @@ class DocumentReferenceSubscriberTest extends TestCase
         // get persistDocuments from subscriber with reflection
         $reflection = new \ReflectionClass($this->documentReferenceSubscriber);
         $property = $reflection->getProperty('persistDocuments');
+        $property->setAccessible(true); // TODO remove when minimum php version is 8.1
         /** @var array<array{document: UuidBehavior&TitleBehavior&StructureBehavior, locale: string}> $persistDocuments */
         $persistDocuments = $property->getValue($this->documentReferenceSubscriber);
 
@@ -128,6 +131,7 @@ class DocumentReferenceSubscriberTest extends TestCase
         // get removeDocuments from subscriber with reflection
         $reflection = new \ReflectionClass($this->documentReferenceSubscriber);
         $property = $reflection->getProperty('removeDocuments');
+        $property->setAccessible(true); // TODO remove when minimum php version is 8.1
         /** @var array<array{document: UuidBehavior&TitleBehavior&StructureBehavior}> $removeDocuments */
         $removeDocuments = $property->getValue($this->documentReferenceSubscriber);
 
@@ -145,6 +149,7 @@ class DocumentReferenceSubscriberTest extends TestCase
         // get removeDocuments from subscriber with reflection
         $reflection = new \ReflectionClass($this->documentReferenceSubscriber);
         $property = $reflection->getProperty('removeDocuments');
+        $property->setAccessible(true); // TODO remove when minimum php version is 8.1
         /** @var array<array{document: UuidBehavior&TitleBehavior&StructureBehavior, locale: string}> $removeDocuments */
         $removeDocuments = $property->getValue($this->documentReferenceSubscriber);
 
@@ -163,6 +168,7 @@ class DocumentReferenceSubscriberTest extends TestCase
         // get persistDocuments from subscriber with reflection
         $reflection = new \ReflectionClass($this->documentReferenceSubscriber);
         $property = $reflection->getProperty('persistDocuments');
+        $property->setAccessible(true); // TODO remove when minimum php version is 8.1
         /** @var array<array{document: UuidBehavior&TitleBehavior&StructureBehavior, locale: string}> $persistDocuments */
         $persistDocuments = $property->getValue($this->documentReferenceSubscriber);
 
@@ -203,12 +209,12 @@ class DocumentReferenceSubscriberTest extends TestCase
             SuluKernel::CONTEXT_WEBSITE,
         )->shouldBeCalledTimes(1);
 
-        // unpublishDocuments + removeDocuments with locale
+        // unpublishDocuments
         $this->documentReferenceProvider->removeReferences(
             $document,
             'en',
             SuluKernel::CONTEXT_WEBSITE
-        )->shouldBeCalledTimes(2);
+        )->shouldBeCalledTimes(1);
 
         // removeDocuments
         $this->documentReferenceProvider->removeReferences(
@@ -229,9 +235,13 @@ class DocumentReferenceSubscriberTest extends TestCase
 
         $reflection = new \ReflectionClass($this->documentReferenceSubscriber);
         $persistDocumentsProperty = $reflection->getProperty('persistDocuments');
+        $persistDocumentsProperty->setAccessible(true); // TODO remove when minimum php version is 8.1
         $unpublishDocumentsProperty = $reflection->getProperty('unpublishDocuments');
+        $unpublishDocumentsProperty->setAccessible(true); // TODO remove when minimum php version is 8.1
         $publishDocumentsProperty = $reflection->getProperty('publishDocuments');
+        $publishDocumentsProperty->setAccessible(true); // TODO remove when minimum php version is 8.1
         $removeDocumentsProperty = $reflection->getProperty('removeDocuments');
+        $removeDocumentsProperty->setAccessible(true); // TODO remove when minimum php version is 8.1
 
         /** @var array<array{document: UuidBehavior&TitleBehavior&StructureBehavior, locale: string}> $persistDocuments */
         $persistDocuments = $persistDocumentsProperty->getValue($this->documentReferenceSubscriber);

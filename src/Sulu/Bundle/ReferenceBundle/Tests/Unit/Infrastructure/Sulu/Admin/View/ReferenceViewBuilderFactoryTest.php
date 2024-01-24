@@ -14,8 +14,8 @@ namespace Sulu\Bundle\ReferenceBundle\Tests\Unit\Infrastructure\Sulu\Admin\View;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Sulu\Bundle\ActivityBundle\Infrastructure\Sulu\Admin\ActivityAdmin;
 use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilderFactory;
+use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\ReferenceAdmin;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\Admin\View\ReferenceViewBuilderFactory;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
@@ -79,7 +79,7 @@ class ReferenceViewBuilderFactoryTest extends TestCase
 
     public function testHasReferenceListPermission(): void
     {
-        $this->securityChecker->hasPermission(ActivityAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW)
+        $this->securityChecker->hasPermission(ReferenceAdmin::SECURITY_CONTEXT, PermissionTypes::VIEW)
             ->willReturn(true);
 
         $this->assertTrue($this->referenceViewBuilderFactory->hasReferenceListPermission());
