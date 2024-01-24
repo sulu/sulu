@@ -96,6 +96,36 @@ final class PropertyParserTest extends TestCase
     /**
      * @param array<string, string> $data
      *
+     * @dataProvider dataFindingShadowKeys
+     */
+    public function testFindingShadowKeys(array $data): void
+    {
+        $this->propertyParser->parse($data);
+
+        $shadowedKeys = $this->propertyParser->shadowedProperties;
+        self::assertCount(1, $shadowedKeys);
+
+        self::assertSame('i18n:de_de-content#0', $shadowedKeys[0]->getPath());
+        self::assertSame('a3fb197d-8555-4d21-b42e-29ec377e3083', $shadowedKeys[0]->getValue());
+    }
+
+    /** @return \Generator<string,array{array<string,string>}> */
+    public function dataFindingShadowKeys(): \Generator
+    {
+        yield 'Shadow key is first' => [[
+            'i18n:de_de-content#0' => 'a3fb197d-8555-4d21-b42e-29ec377e3083',
+            'i18n:de_de-content#0-generic_content_snippet#0' => '0f97ea0c-4d8e-4412-9c18-33e53e0f8af6',
+        ]];
+
+        yield 'Shadow key comes after content' => [[
+            'i18n:de_de-content#0-generic_content_snippet#0' => '0f97ea0c-4d8e-4412-9c18-33e53e0f8af6',
+            'i18n:de_de-content#0' => 'a3fb197d-8555-4d21-b42e-29ec377e3083',
+        ]];
+    }
+
+    /**
+     * @param array<string, string> $data
+     *
      * @dataProvider dataAllKeysAreHandled
      */
     public function testAllKeysAreHandled(array $data): void
@@ -103,7 +133,10 @@ final class PropertyParserTest extends TestCase
         $result = $this->propertyParser->parse($data);
         $extractCode = fn ($data) => $data->getPath();
 
-        $actualKeys = \iterator_to_array($this->propertyParser->keyIterator($result), false);
+        $iterableKeys = \iterator_to_array($this->propertyParser->keyIterator($result), false);
+        \sort($iterableKeys);
+
+        $actualKeys = \array_merge($iterableKeys, \array_map($extractCode, $this->propertyParser->shadowedProperties));
         \sort($actualKeys);
 
         $expectedKeys = \array_keys($data);
