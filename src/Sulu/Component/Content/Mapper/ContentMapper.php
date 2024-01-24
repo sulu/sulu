@@ -32,6 +32,7 @@ use Sulu\Component\Content\ContentTypeManager;
 use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\LocalizedAuthorBehavior;
+use Sulu\Component\Content\Document\Behavior\LocalizedLastModifiedBehavior;
 use Sulu\Component\Content\Document\Behavior\OrderBehavior;
 use Sulu\Component\Content\Document\Behavior\RedirectTypeBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
@@ -806,6 +807,10 @@ class ContentMapper implements ContentMapperInterface
         if (isset($url)) {
             $documentData['url'] = $url;
             $documentData['urls'] = $this->inspector->getLocalizedUrlsForPage($document);
+        }
+
+        if ($document instanceof LocalizedLastModifiedBehavior) {
+            $documentData['lastModified'] = $document->getLastModified();
         }
 
         if ($document instanceof LocalizedAuthorBehavior) {
