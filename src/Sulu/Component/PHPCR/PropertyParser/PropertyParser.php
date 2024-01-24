@@ -16,12 +16,12 @@ namespace Sulu\Component\PHPCR\PropertyParser;
 final class PropertyParser implements PropertyParserInterface
 {
     /**
-    * @param array<Node> $shadowedProperties
-    *        A shadowed property is a property that has a value and keys under it like this:
-    *        a=10
-    *        a.b=true
-    *
-    *        This can not happen happen in normal Sulu if a property gets changed from an object to a scalar.
+     * @param array<Property> $shadowedProperties
+     *                                            A shadowed property is a property that has a value and keys under it like this:
+     *                                            a=10
+     *                                            a.b=true
+     *
+     *        This can not happen happen in normal Sulu if a property gets changed from an object to a scalar.
      */
     public function __construct(
         public array $shadowedProperties = [],
@@ -70,7 +70,7 @@ final class PropertyParser implements PropertyParserInterface
                 }
             }
 
-            if (is_countable($current) && count($current) !== 0) {
+            if (\is_countable($current) && 0 !== \count($current)) {
                 $this->shadowedProperties[] = new Property($key, $value);
 
                 continue;

@@ -48371,6 +48371,16 @@ parameters:
 			path: src/Sulu/Component/PHPCR/PathCleanup.php
 
 		-
+			message: "#^Result of && is always false\\.$#"
+			count: 1
+			path: src/Sulu/Component/PHPCR/PropertyParser/PropertyParser.php
+
+		-
+			message: "#^Strict comparison using \\!\\=\\= between 0 and 0 will always evaluate to false\\.$#"
+			count: 1
+			path: src/Sulu/Component/PHPCR/PropertyParser/PropertyParser.php
+
+		-
 			message: "#^Method Sulu\\\\Component\\\\PHPCR\\\\SessionManager\\\\SessionManager\\:\\:__construct\\(\\) has parameter \\$nodeNames with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/PHPCR/SessionManager/SessionManager.php

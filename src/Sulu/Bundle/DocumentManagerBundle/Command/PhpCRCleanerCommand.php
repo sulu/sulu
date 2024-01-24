@@ -101,7 +101,7 @@ class PhpCRCleanerCommand extends Command
     /**
      * @param 16|32|64|128|256 $verbosity
      */
-    private function ddump(string $message, int $depth, int $verbosity = OutputInterface::VERBOSITY_NORMAL): void
+    private function depthDump(string $message, int $depth, int $verbosity = OutputInterface::VERBOSITY_NORMAL): void
     {
         $this->output->writeln(\str_repeat('  ', $depth) . $message, $verbosity);
     }
@@ -114,7 +114,7 @@ class PhpCRCleanerCommand extends Command
         // If we are at the top of the metadata run we don't want to mess with that as it contains extra properties like seo and other extension data
         if ($metaData instanceof StructureMetadata) {
             foreach ($metaData->getProperties() as $subKey => $value) {
-                $this->ddump('Iterating over: ' . $subKey, $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
+                $this->depthDump('Iterating over: ' . $subKey, $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
 
                 /** @var array<mixed>|null $subValue */
                 $subValue = $data[$subKey] ?? null;
@@ -127,24 +127,24 @@ class PhpCRCleanerCommand extends Command
         if ($metaData instanceof BlockMetadata) {
             if (null === $data) {
                 Assert::eq(0, $depth, 'Empty arrays are only allowed at the root');
-                $this->ddump('Empty page? ' . $metaData->getName(), $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
+                $this->depthDump('Empty page? ' . $metaData->getName(), $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
             } else {
                 $this->handleBlockMetadata($data, $metaData, $depth);
             }
         } elseif ($metaData instanceof ComponentMetadata) {
             if (null === $data) {
                 Assert::eq(0, $depth, 'Empty arrays are only allowed at the root');
-                $this->ddump('Empty page? ' . $metaData->getName(), $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
+                $this->depthDump('Empty page? ' . $metaData->getName(), $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
             } else {
                 $this->handleComponentMetadata($data, $metaData, $depth);
             }
         } elseif ($metaData instanceof PropertyMetadata) {
             if (null === $data) {
                 Assert::eq(0, $depth, 'Empty arrays are only allowed at the root');
-                $this->ddump('Empty page? ' . $metaData->getName(), $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
+                $this->depthDump('Empty page? ' . $metaData->getName(), $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
             } else {
                 Assert::eq($metaData->getName(), $key);
-                $this->ddump('Property: ' . $metaData->getName(), $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
+                $this->depthDump('Property: ' . $metaData->getName(), $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
             }
         } else {
             throw new \InvalidArgumentException('Unable to handle meta data of class: ' . \get_class($metaData));
@@ -156,7 +156,7 @@ class PhpCRCleanerCommand extends Command
      */
     private function handleBlockMetadata(array $data, BlockMetadata $metadata, int $depth): void
     {
-        $this->ddump('============ ' . $metadata->getName() . ' =============', $depth, OutputInterface::VERBOSITY_QUIET);
+        $this->depthDump('============ ' . $metadata->getName() . ' =============', $depth, OutputInterface::VERBOSITY_QUIET);
 
         if (!\array_key_exists('length', $data)) {
             \trigger_error('Expected length to exist: ' . \join(',', \array_keys($data)), \E_USER_WARNING);
@@ -195,14 +195,14 @@ class PhpCRCleanerCommand extends Command
      */
     private function handleComponentMetadata(array $data, ItemMetadata $metaData, int $depth): void
     {
-        $this->ddump('Found component with name: ' . $metaData->getName(), $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
+        $this->depthDump('Found component with name: ' . $metaData->getName(), $depth, OutputInterface::VERBOSITY_VERY_VERBOSE);
 
         // Remove 'type' and 'settings' from the unused properties because they are always allowed
         $unusedPropeties = \array_filter(\array_keys($data), fn (string $x) => !\in_array($x, ['type', 'settings']));
 
         foreach ($metaData->getChildren() as $propertyName => $child) {
             if (!\array_key_exists($propertyName, $data)) {
-                $this->ddump('Found unconfigured property: ' . $propertyName, $depth, OutputInterface::VERBOSITY_VERBOSE);
+                $this->depthDump('Found unconfigured property: ' . $propertyName, $depth, OutputInterface::VERBOSITY_VERBOSE);
 
                 continue;
             }
@@ -218,7 +218,7 @@ class PhpCRCleanerCommand extends Command
         }
 
         if (\count($unusedPropeties) > 0) {
-            $this->ddump(
+            $this->depthDump(
                 'Found dead propety: ' . \join(', ', $unusedPropeties),
                 $depth,
                 OutputInterface::VERBOSITY_VERY_VERBOSE
