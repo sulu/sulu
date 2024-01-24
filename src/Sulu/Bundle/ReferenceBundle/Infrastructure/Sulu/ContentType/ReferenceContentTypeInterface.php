@@ -13,9 +13,8 @@ namespace Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType;
 
 use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 interface ReferenceContentTypeInterface
 {
-    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void;
+    public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void;
 }

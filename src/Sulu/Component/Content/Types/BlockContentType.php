@@ -23,7 +23,6 @@ use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
@@ -468,9 +467,9 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
         );
     }
 
-    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
+    public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
     {
-        $values = $propertyValue->getValue();
+        $values = $property->getValue();
 
         if (!\is_array($values)) {
             return;
@@ -482,11 +481,11 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
             foreach ($propertyType->getChildProperties() as $child) {
                 $contentType = $this->contentTypeManager->get($child->getContentTypeName());
                 $childName = $child->getName();
+                $child->setValue($value[$childName]);
 
                 if ($contentType instanceof ReferenceContentTypeInterface && isset($value[$childName])) {
                     $contentType->getReferences(
                         $child,
-                        new PropertyValue($childName, $value[$childName]),
                         $referenceCollector,
                         $propertyPrefix . $property->getName() . '.'
                     );

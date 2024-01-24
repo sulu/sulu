@@ -32,7 +32,6 @@ use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\ComplexContentType;
 use Sulu\Component\Content\ContentTypeExportInterface;
-use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
@@ -254,9 +253,9 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         return new PropertyMetadata($propertyMetadata->getName(), $mandatory, $mediaSelectionMetadata);
     }
 
-    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
+    public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
     {
-        $data = $propertyValue->getValue();
+        $data = $property->getValue();
         if (!\is_array($data) || (!isset($data['ids']) || !\is_array($data['ids']))) {
             return;
         }

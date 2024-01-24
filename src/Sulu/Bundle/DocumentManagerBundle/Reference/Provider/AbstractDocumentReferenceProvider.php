@@ -88,7 +88,10 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
                 continue;
             }
 
-            $contentType->getReferences($property, $structure->getProperty($property->getName()), $referenceCollector);
+            $propertyValue = $structure->getProperty($property->getName());
+            $property->setValue($propertyValue->getValue());
+
+            $contentType->getReferences($property, $referenceCollector);
         }
 
         if ($document instanceof ExtensionBehavior) {

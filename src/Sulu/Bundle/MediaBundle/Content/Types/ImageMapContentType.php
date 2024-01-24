@@ -503,9 +503,9 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
         );
     }
 
-    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
+    public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
     {
-        $value = $propertyValue->getValue();
+        $value = $property->getValue();
 
         if (!$value) {
             return;
@@ -522,7 +522,6 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
             if ($contentType instanceof ReferenceContentTypeInterface) {
                 $contentType->getReferences(
                     $imageProperty,
-                    new PropertyValue($property->getName(), $imageProperty->getValue()),
                     $referenceCollector,
                     $propertyPrefix . $property->getName() . '.'
                 );
@@ -536,11 +535,11 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
             foreach ($propertyType->getChildProperties() as $child) {
                 $contentType = $this->contentTypeManager->get($child->getContentTypeName());
                 $childName = $child->getName();
+                $child->setValue($value[$childName]);
 
                 if ($contentType instanceof ReferenceContentTypeInterface && isset($value[$childName])) {
                     $contentType->getReferences(
                         $child,
-                        new PropertyValue($childName, $value[$childName]),
                         $referenceCollector,
                         $propertyPrefix . $property->getName() . '.hotspots.'
                     );

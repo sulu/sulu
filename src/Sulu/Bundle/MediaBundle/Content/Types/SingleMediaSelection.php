@@ -29,7 +29,6 @@ use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterfac
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
-use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
@@ -191,9 +190,9 @@ class SingleMediaSelection extends SimpleContentType implements PreResolvableCon
         return new PropertyMetadata($propertyMetadata->getName(), $mandatory, $singleMediaSelectionMetadata);
     }
 
-    public function getReferences(PropertyInterface $property, PropertyValue $propertyValue, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
+    public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
     {
-        $data = $propertyValue->getValue();
+        $data = $property->getValue();
         if (!\is_array($data) || !isset($data['id'])) {
             return;
         }

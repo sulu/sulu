@@ -20,7 +20,6 @@ use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Compat\StructureManagerInterface;
 use Sulu\Component\Content\ContentTypeExportInterface;
 use Sulu\Component\Content\ContentTypeManagerInterface;
-use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExportExtensionInterface;
 use Sulu\Component\Content\Extension\ReferenceExtensionInterface;
@@ -307,10 +306,10 @@ class ExcerptStructureExtension extends AbstractExtension implements ExportExten
             if (!$contentType instanceof ReferenceContentTypeInterface) {
                 continue;
             }
+            $property->setValue($data[$property->getName()] ?? null);
 
             $contentType->getReferences(
                 $property,
-                new PropertyValue($property->getName(), $data[$property->getName()] ?? null),
                 $referenceCollector,
                 $propertyPrefix
             );
