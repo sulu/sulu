@@ -18,9 +18,7 @@
         <field name="referenceLocale" column="referenceLocale" type="string" nullable="true" length="5"/>
         <field name="referenceRouterAttributes" column="referenceRouterAttributes" type="json">
             <options>
-                <option name="jsonb">
-                    true
-                </option>
+                <option name="jsonb">true</option>
             </options>
         </field>
         <field name="referenceTitle" column="referenceTitle" type="string" nullable="false" length="191"/>
