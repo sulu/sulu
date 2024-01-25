@@ -55,7 +55,7 @@ class PortalInformationBuilder
     {
         $urlAddress = $url->getUrl();
 
-        $this->portalInformation[$environment->getType()][$urlAddress] = new PortalInformation(
+        $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
             type: RequestAnalyzerInterface::MATCH_TYPE_WILDCARD,
             webspace: $portal->getWebspace(),
             portal: $portal,

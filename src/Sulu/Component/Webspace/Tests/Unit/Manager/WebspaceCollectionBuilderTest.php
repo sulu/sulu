@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit\Manager;
 
-use InvalidArgumentException;
 use Sulu\Bundle\WebsiteBundle\DependencyInjection\Configuration;
 use Sulu\Bundle\WebsiteBundle\DependencyInjection\SuluWebsiteExtension;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -24,6 +23,7 @@ use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
 use Sulu\Component\Webspace\Url\Replacer;
+use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -246,9 +246,9 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
     public function testThrowForMissingDefaultTemplate(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidTypeException::class);
 
-        $webspaceCollection = $this->loadCollection(
+        $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/missing-default-template',
             ['sulu.xml']
         );
@@ -256,58 +256,16 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
     public function testThrowForMissingExcludedTemplate(): void
     {
-        $this->markTestIncomplete();
         $this->expectException(InvalidTemplateException::class);
 
-        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            new Replacer(),
+        $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/excluded-default-template',
-            ['default', 'overview']
+            ['sulu.xml']
         );
-
-        $webspaceCollection = $webspaceCollectionBuilder->build();
-    }
-
-    public function testLoadMissingDefaultTemplate(): void
-    {
-        $this->markTestIncomplete();
-        $this->expectException(InvalidTemplateException::class);
-
-        $this->structureMetadataFactory->getStructures('page')->willReturn([]);
-
-        $this->webspaceManager = new WebspaceManager(
-            new Replacer(),
-            $this->requestStack->reveal(),
-            'prod',
-            'sulu.io',
-            'http',
-            $this->structureMetadataFactory->reveal()
-        );
-
-        $webspaces = $this->webspaceManager->getWebspaceCollection();
-    }
-
-    public function testLoadExcludedDefaultTemplate(): void
-    {
-        $this->markTestIncomplete();
-        $this->expectException(InvalidTemplateException::class);
-
-        $this->webspaceManager = new WebspaceManager(
-            new Replacer(),
-            $this->requestStack->reveal(),
-            'prod',
-            'sulu.io',
-            'http',
-            $this->structureMetadataFactory->reveal()
-        );
-
-        $webspaces = $this->webspaceManager->getWebspaceCollection();
     }
 
     public function testRedirectUrl(): void
     {
-        $this->markTestIncomplete();
         $portalInformation = $this->webspaceManager->findPortalInformationByUrl('www.sulu.at/test/test', 'prod');
         $this->assertInstanceOf(PortalInformation::class, $portalInformation);
 

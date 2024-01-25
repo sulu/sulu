@@ -168,6 +168,9 @@ class WebspaceConfiguration
             ->info('This node defines which of the templates should be excluded in the template dropdown of the page form.')
             ->children()
                 ->arrayNode('excluded_template')
+                    ->beforeNormalization()
+                        ->castToArray()
+                    ->end()
                     ->scalarPrototype()->end()
                 ->end()
             ->end();
@@ -204,6 +207,8 @@ class WebspaceConfiguration
                             if (\array_sum(\array_column($value, 'default')) > 1) {
                                 throw new \InvalidArgumentException('You can not have more than one default localization');
                             }
+
+                            return $value;
                         })
                     ->end()
                     ->useAttributeAsKey('language', false)

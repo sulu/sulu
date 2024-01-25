@@ -96,7 +96,6 @@ class WebspaceCollectionBuilder
             }
 
             $localizationRefs[$webspaceKey . '_' . $localization[0]] = $localization[0];
-
             $webspace->addLocalization($localization[0]);
         }
 
@@ -201,7 +200,7 @@ class WebspaceCollectionBuilder
             $webspace->addTemplate($type, $template);
         }
 
-        foreach ($webspaceConfiguration['excluded_templates'] ?? [] as $excludedTemplate) {
+        foreach ($webspaceConfiguration['excluded_templates']['excluded_template'] ?? [] as $excludedTemplate) {
             $webspace->addExcludedTemplate($excludedTemplate);
         }
 
@@ -253,6 +252,13 @@ class WebspaceCollectionBuilder
         $environment = new Environment();
         $environment->setType($environmentConfiguration['type']);
 
+        foreach ($environmentConfiguration['custom_urls']['custom_url'] ?? [] as $customUrl) {
+            $url = new CustomUrl(\rtrim($customUrl, '/'));
+
+            $this->portalInformationBuilder->addCustomUrl($url, $environment, $portal);
+            $environment->addCustomUrl($url);
+        }
+
         foreach ($environmentConfiguration['urls']['url'] ?? [] as $urlConfiguration) {
             $url = new Url(\rtrim($urlConfiguration['value'], '/'));
             $url->setLanguage($urlConfiguration['language']);
@@ -264,13 +270,6 @@ class WebspaceCollectionBuilder
             $environment->addUrl($url);
 
             $this->portalInformationBuilder->addUrl($url, $environment, $portal);
-        }
-
-        foreach ($environmentConfiguration['custom_urls']['custom_url'] ?? [] as $customUrl) {
-            $url = new CustomUrl(\rtrim($customUrl, '/'));
-
-            $this->portalInformationBuilder->addCustomUrl($url, $environment, $portal);
-            $environment->addCustomUrl($url);
         }
 
         return $environment;
