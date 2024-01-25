@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Sulu\Component\Webspace\Manager;
 
 use Sulu\Component\Webspace\Portal;
-use Sulu\Component\Webspace\Webspace;
 use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Webspace;
 
 interface WebspaceCollectionInterface extends \IteratorAggregate, \Countable
 {

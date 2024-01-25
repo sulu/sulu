@@ -33,8 +33,6 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @param string $locale
      * @param string $format
-     *
-     * @return Localization
      */
     public static function createFromString($locale, $format = self::UNDERSCORE): self
     {
@@ -55,8 +53,6 @@ class Localization implements \JsonSerializable, ArrayableInterface
 
     /**
      * The language of the localization.
-     *
-     * @var string
      *
      * @Groups({"frontend", "Default"})
      */

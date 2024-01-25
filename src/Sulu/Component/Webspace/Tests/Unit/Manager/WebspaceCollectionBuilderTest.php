@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Webspace\Tests\Unit\Manager;
 
+use InvalidArgumentException;
 use Sulu\Bundle\WebsiteBundle\DependencyInjection\Configuration;
 use Sulu\Bundle\WebsiteBundle\DependencyInjection\SuluWebsiteExtension;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
@@ -176,7 +177,6 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
     public function testBuildWithMainUrl(): void
     {
-        $this->markTestIncomplete();
         $webspaceCollection = $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/main',
             ['sulu.io.xml']
@@ -200,7 +200,6 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
     public function testBuildWithCustomUrl(): void
     {
-        $this->markTestIncomplete();
         $webspaceCollection = $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/custom-url',
             ['sulu.io.xml']
@@ -225,7 +224,6 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
     public function testLanguageSpecificPartial(): void
     {
-        $this->markTestIncomplete();
         $webspaceCollection = $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/language-specific',
             ['sulu.io.xml']
@@ -248,17 +246,12 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
     public function testThrowForMissingDefaultTemplate(): void
     {
-        $this->markTestIncomplete();
-        $this->expectException(InvalidTemplateException::class);
+        $this->expectException(InvalidArgumentException::class);
 
-        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            new Replacer(),
+        $webspaceCollection = $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/missing-default-template',
-            []
+            ['sulu.xml']
         );
-
-        $webspaceCollection = $webspaceCollectionBuilder->build();
     }
 
     public function testThrowForMissingExcludedTemplate(): void

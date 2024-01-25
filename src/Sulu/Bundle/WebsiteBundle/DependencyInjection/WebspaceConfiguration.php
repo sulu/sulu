@@ -2,6 +2,15 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Bundle\WebsiteBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
@@ -34,7 +43,8 @@ class WebspaceConfiguration
         $webspaceNode->end()->end()->end();
     }
 
-    private static function addNavigationContext(NodeBuilder $node) :void {
+    private static function addNavigationContext(NodeBuilder $node): void
+    {
         $node
             ->arrayNode('navigation')
                 ->children()
@@ -44,10 +54,11 @@ class WebspaceConfiguration
                             ->requiresAtLeastOneElement()
                             ->useAttributeAsKey('key', false)
                             ->beforeNormalization()
-                                ->always(function ($value) {
-                                    if (!array_key_exists(0, $value)) {
+                                ->always(function($value) {
+                                    if (!\array_key_exists(0, $value)) {
                                         return [$value];
                                     }
+
                                     return $value;
                                 })
                             ->end()
@@ -57,6 +68,15 @@ class WebspaceConfiguration
                                     ->arrayNode('meta')
                                         ->children()
                                             ->arrayNode('title')
+                                                ->beforeNormalization()
+                                                    ->always(function($value) {
+                                                        if (!\array_key_exists(0, $value)) {
+                                                            return [$value];
+                                                        }
+
+                                                        return $value;
+                                                    })
+                                                ->end()
                                                 ->useAttributeAsKey('lang')
                                                 ->arrayPrototype()
                                                     ->children()
@@ -96,11 +116,9 @@ class WebspaceConfiguration
     {
         $node
             ->arrayNode('security')
-                ->arrayPrototype()
-                    ->children()
-                        ->scalarNode('system')->isRequired()->end()
-                        ->booleanNode('permissionCheck')->defaultValue(false)->end()
-                    ->end()
+                ->children()
+                    ->scalarNode('system')->isRequired()->end()
+                    ->booleanNode('permissionCheck')->defaultValue(false)->end()
                 ->end()
             ->end();
     }
@@ -119,11 +137,22 @@ class WebspaceConfiguration
                 ->end()
             ->end();
 
-
         $node->arrayNode('default_templates')
             ->isRequired()
             ->children()
                 ->arrayNode('default_template')
+                    ->beforeNormalization()
+                        ->ifTrue(function ($value) {
+                            $templates = array_column($value, 'type');
+                            if (!in_array('home', $templates) && !in_array('homepage', $templates)) {
+                                return false;
+                            }
+                            if (!in_array('page', $templates)) {
+                                return false;
+                            }
+                        })
+                        ->thenInvalid('Expected default templates "page" and "home"')
+                    ->end()
                     ->useAttributeAsKey('type')
                     ->arrayPrototype()
                         ->children()
@@ -168,8 +197,14 @@ class WebspaceConfiguration
                 ->arrayNode('localization')
                     ->info('List of languages enabled in this webspace.')
                     ->beforeNormalization()
-                        ->ifTrue(fn ($x) => array_sum(array_column($x, 'default')) > 1)
-                        ->thenInvalid('You can not have more than one default localization')
+                        ->always(function ($value) {
+                            if (!\array_key_exists(0, $value)) {
+                                return [$value];
+                            }
+                            if (\array_sum(\array_column($value, 'default')) > 1) {
+                                throw new \InvalidArgumentException('You can not have more than one default localization');
+                            }
+                        })
                     ->end()
                     ->useAttributeAsKey('language', false)
                     ->arrayPrototype()
@@ -231,10 +266,11 @@ class WebspaceConfiguration
                 ->arrayNode('portal')
                     ->useAttributeAsKey('key', false)
                     ->beforeNormalization()
-                        ->always(function ($value) {
-                            if (array_key_exists('key', $value)) {
+                        ->always(function($value) {
+                            if (\array_key_exists('key', $value)) {
                                 return [$value];
                             }
+
                             return $value;
                         })
                     ->end()
@@ -249,7 +285,7 @@ class WebspaceConfiguration
                                         ->info('List of languages for the portal')
                                         ->example([['language' => 'de', 'default' => true]])
                                         ->beforeNormalization()
-                                            ->ifTrue(fn ($x) => array_sum(array_column($x, 'default')) > 1)
+                                            ->ifTrue(fn ($x) => \array_sum(\array_column($x, 'default')) > 1)
                                             ->thenInvalid('You can not have more than one default localization')
                                         ->end()
                                         ->arrayPrototype()
@@ -267,10 +303,11 @@ class WebspaceConfiguration
                                 ->children()
                                     ->arrayNode('environment')
                                     ->beforeNormalization()
-                                        ->always(function ($value) {
-                                            if (!array_key_exists(0, $value)) {
+                                        ->always(function($value) {
+                                            if (!\array_key_exists(0, $value)) {
                                                 return [$value];
                                             }
+
                                             return $value;
                                         })
                                     ->end()
@@ -278,17 +315,17 @@ class WebspaceConfiguration
                                     ->arrayPrototype()
                                         ->children();
 
-            self::addEnvironments($environments);
+        self::addEnvironments($environments);
 
-            $environments
-                                        ->end()
+        $environments
                                     ->end()
                                 ->end()
                             ->end()
                         ->end()
                     ->end()
                 ->end()
-            ->end();
+            ->end()
+        ->end();
     }
 
     private static function addEnvironments(NodeBuilder $environment): void
@@ -299,12 +336,13 @@ class WebspaceConfiguration
                 ->children()
                     ->arrayNode('url')
                         ->beforeNormalization()
-                            ->always(static function ($value) {
-                                if (is_string($value)) {
+                            ->always(static function($value) {
+                                if (\is_string($value)) {
                                     return [['value' => $value]];
-                                } else if (!array_key_exists(0, $value)) {
+                                } elseif (!\array_key_exists(0, $value)) {
                                     return [$value];
                                 }
+
                                 return $value;
                             })
                         ->end()
@@ -314,6 +352,7 @@ class WebspaceConfiguration
                                 ->scalarNode('country')->defaultNull()->end()
                                 ->scalarNode('redirect')->defaultNull()->end()
                                 ->scalarNode('value')->isRequired()->end()
+                                ->booleanNode('main')->defaultFalse()->end()
                             ->end()
                         ->end()
                     ->end()
@@ -323,10 +362,18 @@ class WebspaceConfiguration
             ->arrayNode('custom_urls')
                 ->children()
                     ->arrayNode('custom_url')
+                        ->beforeNormalization()
+                            ->always(function ($x) {
+                                if (is_string($x)) {
+                                    return [$x];
+                                }
+                                return $x;
+                            })
+                        ->end()
                         ->scalarPrototype()
                             ->isRequired()
                             ->beforeNormalization()
-                                ->ifTrue(fn (string $value) => !str_contains($value, '*'))
+                                ->ifTrue(fn (string $value) => !\str_contains($value, '*'))
                                 ->thenInvalid('The custom-url %s has no placeholder')
                             ->end()
                         ->end()

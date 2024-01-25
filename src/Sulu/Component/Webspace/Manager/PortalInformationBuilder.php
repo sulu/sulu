@@ -15,6 +15,7 @@ namespace Sulu\Component\Webspace\Manager;
 
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
@@ -50,7 +51,7 @@ class PortalInformationBuilder
         }
     }
 
-    public function addCustomUrl(Url $url, Environment $environment, Portal $portal): void
+    public function addCustomUrl(CustomUrl $url, Environment $environment, Portal $portal): void
     {
         $urlAddress = $url->getUrl();
 

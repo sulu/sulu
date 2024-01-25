@@ -201,6 +201,7 @@ class WebspaceCollectionBuilder
             $webspace->addTemplate($type, $template);
         }
 
+        dump(array_keys($webspaceConfiguration));
         foreach ($webspaceConfiguration['excluded_templates'] ?? [] as $excludedTemplate) {
             $webspace->addExcludedTemplate($excludedTemplate);
         }
@@ -209,10 +210,21 @@ class WebspaceCollectionBuilder
             if ('homepage' == $type) {
                 $type = 'home';
             }
+            dump($defaultTemplate, $webspace->getExcludedTemplates());
             if (in_array($defaultTemplate, $webspace->getExcludedTemplates())) {
                 throw new InvalidTemplateException($webspace, $defaultTemplate);
             }
             $webspace->addDefaultTemplate($type, $defaultTemplate);
+        }
+
+        $expectedDefaultTemplates = ['page', 'home'];
+        $foundDefaultTemplates = \array_keys($webspace->getDefaultTemplates());
+        if ([] !== \array_diff($expectedDefaultTemplates, $foundDefaultTemplates)) {
+            throw new ExpectedDefaultTemplatesNotFound(
+                $webspace->getKey(),
+                $expectedDefaultTemplates,
+                $foundDefaultTemplates,
+            );
         }
 
         $this->buildErrorTemplates($webspaceConfiguration, $webspace);
