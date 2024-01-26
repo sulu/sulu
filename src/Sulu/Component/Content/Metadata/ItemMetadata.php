@@ -155,6 +155,13 @@ abstract class ItemMetadata
         return $this;
     }
 
+    public function addTag(array $tag): self
+    {
+        $this->tags[] = $tag;
+
+        return $this;
+    }
+
     public function setParameters(array $parameters): self
     {
         $this->parameters = $parameters;
@@ -288,7 +295,7 @@ abstract class ItemMetadata
      */
     public function getTags()
     {
-        return $this->tags;
+        return $this->tags ?? [];
     }
 
     /**

@@ -23,6 +23,7 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\IfThenElseMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperRegistry;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\RefSchemaMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Metadata\BlockMetadata as ContentBlockMetadata;
 use Sulu\Component\Content\Metadata\ItemMetadata as ContentItemMetadata;
@@ -145,6 +146,7 @@ class FormMetadataMapper
             $type = new FormMetadata();
             $type->setName($component->getName());
             $type->setTitle($component->getTitle($locale) ?? \ucfirst($component->getName()));
+            $type->setTags($this->mapTags($component->getTags()));
 
             $typeChildren = $this->mapChildren($component->getChildren(), $locale);
 
@@ -228,6 +230,15 @@ class FormMetadataMapper
                         ]),
                         new SchemaMetadata($this->mapSchemaProperties($blockType->getChildren()))
                     );
+
+                    if ($blockType->hasTag('sulu.global_block')) {
+                        $blockTypeSchemas[] = new IfThenElseMetadata(
+                            new SchemaMetadata([
+                                new PropertyMetadata('type', true, new ConstMetadata($blockType->getName())),
+                            ]),
+                            new RefSchemaMetadata('#/definitions/' . $blockType->getName())
+                        );
+                    }
                 }
 
                 return new PropertyMetadata(

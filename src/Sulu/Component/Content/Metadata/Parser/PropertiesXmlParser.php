@@ -435,6 +435,13 @@ class PropertiesXmlParser
                 foreach ($this->mapProperties($type['properties']) as $childProperty) {
                     $component->addChild($childProperty);
                 }
+            } else {
+                $component->addTag([
+                    'name' => 'sulu.global_block',
+                    'attributes' => [
+                        'global_block' => $name,
+                    ],
+                ]);
             }
 
             $property->addComponent($component);
