@@ -16,7 +16,6 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Util\WildcardUrlUtil;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -28,75 +27,35 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class WebspaceManager implements WebspaceManagerInterface
 {
     /**
-     * @var ReplacerInterface
-     */
-    private $urlReplacer;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var string
-     */
-    private $defaultHost;
-
-    /**
-     * @var string
-     */
-    private $defaultScheme;
-
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $structureMetadataFactory;
-
-    /**
      * @var mixed[]
      */
     private $portalUrlCache = [];
 
     public function __construct(
         private WebspaceCollection $webspaceCollection,
-        ReplacerInterface $urlReplacer,
-        RequestStack $requestStack,
-        string $environment,
-        string $defaultHost,
-        string $defaultScheme,
-        StructureMetadataFactoryInterface $structureMetadataFactory
+        private ReplacerInterface $urlReplacer,
+        private RequestStack $requestStack,
+        private string $environment,
+        private string $defaultHost,
+        private string $defaultScheme,
+        private StructureMetadataFactoryInterface $structureMetadataFactory
     ) {
-        $this->urlReplacer = $urlReplacer;
-        $this->requestStack = $requestStack;
-        $this->environment = $environment;
-        $this->defaultHost = $defaultHost;
-        $this->defaultScheme = $defaultScheme;
-        $this->structureMetadataFactory = $structureMetadataFactory;
     }
 
-    /** @deprecated Use WebspaceCollection::getWebspace is cheaper. */
-    public function findWebspaceByKey(?string $key): ?Webspace
+    public function getPortalInformations(): array
     {
-        if (!$key) {
-            return null;
-        }
+        return $this->webspaceCollection->getPortalInformations();
+    }
 
+    public function getWebspaceCollection(): WebspaceCollectionInterface
+    {
+        return $this->webspaceCollection;
+    }
+
+    /** @deprecated since 2.6 */
+    public function findWebspaceByKey(string $key): ?Webspace
+    {
         return $this->webspaceCollection->getWebspace($key);
-    }
-
-    /** @deprecated Use WebspaceCollection::getPortal is cheaper. */
-    public function findPortalByKey(?string $key): ?Portal
-    {
-        if (!$key) {
-            return null;
-        }
-
-        return $this->webspaceCollection->getPortal($key);
     }
 
     public function findPortalInformationByUrl(string $url, ?string $environment = null): ?PortalInformation
@@ -317,11 +276,6 @@ class WebspaceManager implements WebspaceManagerInterface
         return $this->createResourceLocatorUrl($portalUrl, $resourceLocator, $scheme);
     }
 
-    public function getPortals(): array
-    {
-        return $this->webspaceCollection->getPortals();
-    }
-
     public function getUrls(?string $environment = null): array
     {
         if (null === $environment) {
@@ -335,15 +289,6 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return $urls;
-    }
-
-    public function getPortalInformations(?string $environment = null): array
-    {
-        if (null === $environment) {
-            $environment = $this->environment;
-        }
-
-        return $this->webspaceCollection->getPortalInformations($environment);
     }
 
     public function getPortalInformationsByWebspaceKey(?string $environment, string $webspaceKey): array
@@ -502,10 +447,5 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return $url;
-    }
-
-    public function getWebspaceCollection(): WebspaceCollection
-    {
-        return $this->webspaceCollection;
     }
 }

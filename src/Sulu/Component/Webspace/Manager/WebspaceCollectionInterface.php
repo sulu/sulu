@@ -38,7 +38,7 @@ interface WebspaceCollectionInterface extends \IteratorAggregate, \Countable
      *
      * @param array<string>|null $types Defines which type of portals are requested (null for all)
      *
-     * @return PortalInformation[]
+     * @return array<string, PortalInformation>
      */
     public function getPortalInformations(string $environment, ?array $types = null): array;
 }

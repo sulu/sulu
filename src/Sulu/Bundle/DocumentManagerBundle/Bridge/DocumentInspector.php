@@ -73,7 +73,7 @@ class DocumentInspector extends BaseDocumentInspector
      *
      * @param object $document
      *
-     * @return string
+     * @return string|null
      */
     public function getWebspace($document)
     {
@@ -359,7 +359,7 @@ class DocumentInspector extends BaseDocumentInspector
      *
      * @param string $path path of node
      *
-     * @return string
+     * @return string|null
      */
     private function extractWebspaceFromPath($path)
     {
@@ -376,6 +376,6 @@ class DocumentInspector extends BaseDocumentInspector
             return $matches[1];
         }
 
-        return;
+        return null;
     }
 }

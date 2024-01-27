@@ -169,7 +169,7 @@ class Webspace implements ArrayableInterface
      *
      * @return Localization[]
      */
-    public function getLocalizations()
+    public function getLocalizations(): array
     {
         return $this->localizations;
     }
@@ -179,7 +179,7 @@ class Webspace implements ArrayableInterface
      *
      * @return Localization[]
      */
-    public function getAllLocalizations()
+    public function getAllLocalizations(): array
     {
         $localizations = [];
         foreach ($this->getLocalizations() as $child) {

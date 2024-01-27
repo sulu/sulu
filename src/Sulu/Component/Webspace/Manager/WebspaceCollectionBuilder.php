@@ -15,7 +15,6 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
-use Sulu\Component\Webspace\Loader\Exception\ExpectedDefaultTemplatesNotFound;
 use Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultErrorTemplateException;
 use Sulu\Component\Webspace\Loader\Exception\InvalidErrorTemplateException;
 use Sulu\Component\Webspace\Navigation;
@@ -42,14 +41,12 @@ class WebspaceCollectionBuilder
     {
         $webspaceRefs = [];
         $portalRefs = [];
-        $localizationRefs = [];
         $segmentRefs = [];
 
         foreach ($this->configuration as $webspaceKey => $webspaceConfiguration) {
             $webspaceRefs[$webspaceKey] = $this->buildWebspace(
                 $webspaceConfiguration,
                 $portalRefs,
-                $localizationRefs,
                 $segmentRefs,
             );
         }
@@ -63,14 +60,12 @@ class WebspaceCollectionBuilder
 
     /**
      * @param array<string, PortalInformation> $portalRefs
-     * @param array<string, Localization> $localizationRefs
      * @param array<string, Segment> $segmentRefs
      * @param array<int,mixed> $webspaceConfiguration
      */
     protected function buildWebspace(
         array $webspaceConfiguration,
         array &$portalRefs,
-        array &$localizationRefs,
         array &$segmentRefs,
     ): Webspace {
         $webspaceKey = $webspaceConfiguration['key'];
@@ -89,14 +84,16 @@ class WebspaceCollectionBuilder
         }
 
         foreach ($webspaceConfiguration['localizations']['localization'] as $localizationConfiguration) {
-            $localization = [$this->buildLocalization($localizationConfiguration)];
+            $localization = $this->buildLocalization($localizationConfiguration);
 
-            foreach ($localizationConfiguration['children'] ?? [] as $childLocalization) {
-                $this->buildLocalizationTree($childLocalization, $localization, 1, 0, $webspaceKey);
+            foreach ($localizationConfiguration['localization'] ?? [] as $childLocalization) {
+                $childLocalization = $this->buildLocalization($childLocalization);
+                $childLocalization->setParent($localization);
+
+                $localization->addChild($childLocalization);
             }
 
-            $localizationRefs[$webspaceKey . '_' . $localization[0]] = $localization[0];
-            $webspace->addLocalization($localization[0]);
+            $webspace->addLocalization($localization);
         }
 
         $this->buildSegments($webspaceConfiguration, $webspace, $segmentRefs);
@@ -208,14 +205,13 @@ class WebspaceCollectionBuilder
             if ('homepage' == $type) {
                 $type = 'home';
             }
-            if (in_array($defaultTemplate, $webspace->getExcludedTemplates())) {
+            if (\in_array($defaultTemplate, $webspace->getExcludedTemplates())) {
                 throw new InvalidTemplateException($webspace, $defaultTemplate);
             }
             $webspace->addDefaultTemplate($type, $defaultTemplate);
         }
 
         $this->buildErrorTemplates($webspaceConfiguration, $webspace);
-
     }
 
     /**
@@ -286,28 +282,5 @@ class WebspaceCollectionBuilder
         $localization->setDefault($localizationConfiguration['default']);
 
         return $localization;
-    }
-
-    /**
-     * @param array<mixed> $localizationConfiguration
-     * @param array<Localization> $localization
-     */
-    private function buildLocalizationTree(
-        array $localizationConfiguration,
-        array &$localization,
-        int $currentIndex,
-        int $parentIndex,
-        string $webspaceKey
-    ): void {
-        $localization[$currentIndex] = $this->buildLocalization($localizationConfiguration);
-        $localization[$currentIndex]->setParent($localization[$parentIndex]);
-
-        //$localizationRefs[$webspaceKey.'_'.$localization[$currentIndex]] = $localization[$currentIndex];
-
-        foreach ($localizationConfiguration['children'] as $childLocalization) {
-            $this->buildLocalizationTree($childLocalization, $localization, $currentIndex + 1, $currentIndex);
-        }
-
-        $localization[$currentIndex - 1]->addChild($localization[$currentIndex]);
     }
 }

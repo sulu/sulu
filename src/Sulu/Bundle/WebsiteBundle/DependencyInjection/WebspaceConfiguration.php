@@ -142,12 +142,12 @@ class WebspaceConfiguration
             ->children()
                 ->arrayNode('default_template')
                     ->beforeNormalization()
-                        ->ifTrue(function ($value) {
-                            $templates = array_column($value, 'type');
-                            if (!in_array('home', $templates) && !in_array('homepage', $templates)) {
+                        ->ifTrue(function($value) {
+                            $templates = \array_column($value, 'type');
+                            if (!\in_array('home', $templates) && !\in_array('homepage', $templates)) {
                                 return false;
                             }
-                            if (!in_array('page', $templates)) {
+                            if (!\in_array('page', $templates)) {
                                 return false;
                             }
                         })
@@ -200,7 +200,7 @@ class WebspaceConfiguration
                 ->arrayNode('localization')
                     ->info('List of languages enabled in this webspace.')
                     ->beforeNormalization()
-                        ->always(function ($value) {
+                        ->always(function($value) {
                             if (!\array_key_exists(0, $value)) {
                                 return [$value];
                             }
@@ -219,11 +219,25 @@ class WebspaceConfiguration
                             ->scalarNode('shadow')->defaultNull()->end()
                             ->booleanNode('default')->defaultValue(false)->end()
                             ->arrayNode('localization')
-                                ->children()
-                                    ->scalarNode('language')->isRequired()->end()
-                                    ->scalarNode('country')->defaultNull()->end()
-                                    ->scalarNode('shadow')->defaultNull()->end()
-                                    ->booleanNode('default')->defaultValue(false)->end()
+                                ->beforeNormalization()
+                                    ->always(function($value) {
+                                        if (!\array_key_exists(0, $value)) {
+                                            return [$value];
+                                        }
+                                        if (\array_sum(\array_column($value, 'default')) > 1) {
+                                            throw new \InvalidArgumentException('You can not have more than one default localization');
+                                        }
+
+                                        return $value;
+                                    })
+                                ->end()
+                                ->arrayPrototype()
+                                    ->children()
+                                        ->scalarNode('language')->isRequired()->end()
+                                        ->scalarNode('country')->defaultNull()->end()
+                                        ->scalarNode('shadow')->defaultNull()->end()
+                                        ->booleanNode('default')->defaultValue(false)->end()
+                                    ->end()
                                 ->end()
                             ->end()
                         ->end()
@@ -368,10 +382,11 @@ class WebspaceConfiguration
                 ->children()
                     ->arrayNode('custom_url')
                         ->beforeNormalization()
-                            ->always(function ($x) {
-                                if (is_string($x)) {
+                            ->always(function($x) {
+                                if (\is_string($x)) {
                                     return [$x];
                                 }
+
                                 return $x;
                             })
                         ->end()

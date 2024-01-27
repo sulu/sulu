@@ -13,15 +13,23 @@ namespace Sulu\Component\Webspace\Manager;
 
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Localization\Provider\LocalizationProviderInterface;
-use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 
 interface WebspaceManagerInterface extends LocalizationProviderInterface
 {
-    public function findWebspaceByKey(?string $key): ?Webspace;
+    /**
+     * Returns the portal informations for the given environment.
+     *
+     * @deprecated since version 2.6 should be removed in favor of the WebspaceCollectionInterface
+     *
+     * @return array<string, PortalInformation>
+     */
+    public function getPortalInformations(): array;
 
-    public function findPortalByKey(?string $key): ?Portal;
+    public function getWebspaceCollection(): WebspaceCollectionInterface;
+
+    public function findWebspaceByKey(string $key): ?Webspace;
 
     /**
      * Returns the portal with the given url (which has not necessarily to be the main url).
@@ -91,11 +99,6 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
     ): ?string;
 
     /**
-     * @return Portal[]
-     */
-    public function getPortals(): array;
-
-    /**
      * @return string[]
      */
     public function getUrls(?string $environment = null): array;
@@ -103,15 +106,7 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
     /**
      * @return PortalInformation[]
      */
-    public function getPortalInformations(?string $environment = null): array;
-
-    /**
-     * @return PortalInformation[]
-     */
     public function getPortalInformationsByWebspaceKey(?string $environment, string $webspaceKey): array;
-
-    /** @deprecated Use the WebspaceCollection service instead. */
-    public function getWebspaceCollection(): WebspaceCollection;
 
     /**
      * For all available webspaces provide all their possible locales. Moreover
