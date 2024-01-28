@@ -62,6 +62,7 @@
             <argument>%sulu_security.reset_password.mail.token_send_limit%</argument>
             <argument>%sulu_admin.email%</argument>
             <argument>%kernel.secret%%</argument>
+            <argument type="service" id="logger" on-invalid="null"/>
 
             <tag name="sulu.context" context="admin"/>
         </service>
