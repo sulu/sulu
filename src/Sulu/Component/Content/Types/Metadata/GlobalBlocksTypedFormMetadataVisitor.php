@@ -4,19 +4,12 @@ declare(strict_types=1);
 
 namespace Sulu\Component\Content\Types\Metadata;
 
-use Doctrine\DBAL\Schema\Schema;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadataVisitorInterface;
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AllOfsMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\IfThenElseMetadata;
-use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
-use Sulu\Component\Content\Types\BlockContentType;
 
 class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorInterface
 {
@@ -54,21 +47,19 @@ class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorIn
     private function enhanceGlobalBlockTypes(array $items, string $locale, SchemaMetadata $rootSchema): void
     {
         foreach ($items as $item) {
-            if (BlockContentType::NAME === $item->getType()) {
-                foreach ($item->getTypes() as $type) {
-                    $globalBlockTag = $type->getTagsByName('sulu.global_block')[0] ?? null;
-                    if (!$globalBlockTag) {
-                        continue;
-                    }
-
-                    $globalBlockType = $globalBlockTag->getAttribute('global_block');
-                    $blockMetadata = $this->getGlobalBlockMetadata($globalBlockType, $locale);
-                    $type->setTitle($blockMetadata->getTitle());
-
-                    $rootSchema->addDefinition($blockMetadata->getName(), $blockMetadata->getSchema());
-
-                    $this->enhanceGlobalBlockTypes($type->getItems(), $locale, $rootSchema);
+            foreach ($item->getTypes() as $type) {
+                $globalBlockTag = $type->getTagsByName('sulu.global_block')[0] ?? null;
+                if (!$globalBlockTag) {
+                    continue;
                 }
+
+                $globalBlockType = $globalBlockTag->getAttribute('global_block');
+                $blockMetadata = $this->getGlobalBlockMetadata($globalBlockType, $locale);
+                $type->setTitle($blockMetadata->getTitle());
+
+                $rootSchema->addDefinition($blockMetadata->getName(), $blockMetadata->getSchema());
+
+                $this->enhanceGlobalBlockTypes($type->getItems(), $locale, $rootSchema);
             }
         }
     }

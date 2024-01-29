@@ -96,9 +96,9 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
             return null;
         }
 
-        if (!$configCache->isFresh()) {
+        // FIXME revert if (!$configCache->isFresh()) {
             $this->warmUp($this->cacheDir);
-        }
+        // }
 
         $form = \unserialize(\file_get_contents($configCache->getPath()));
 

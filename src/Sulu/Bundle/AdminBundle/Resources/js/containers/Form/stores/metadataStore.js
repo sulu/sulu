@@ -1,8 +1,9 @@
 // @flow
+import {toJS} from 'mobx';
 import metadataStore from '../../../stores/metadataStore';
 import type {Schema, SchemaTypes} from '../types';
 
-const FORM_TYPE = 'form';
+export const FORM_TYPE = 'form';
 
 class MetadataStore {
     getSchemaTypes(formKey: string, metadataOptions: ?Object): Promise<?SchemaTypes> {
@@ -45,6 +46,26 @@ class MetadataStore {
 
                     throw new Error(errorMessage);
                 }
+
+                return metadataStore.loadMetadata(FORM_TYPE, 'block', {}).then((blockSchema) => {
+                    return {
+                        typeConfiguration,
+                        blockSchema,
+                    };
+                });
+            }).then(({typeConfiguration, blockSchema}) => {
+                Object.keys(typeConfiguration.form).forEach((schemaFieldKey) => {
+                    if (typeConfiguration.form[schemaFieldKey].types) {
+                        Object.keys(typeConfiguration.form[schemaFieldKey].types).forEach((key) => {
+                            // need to be checked in another way, ref or global flag property ???
+                            if (typeConfiguration.form[schemaFieldKey].types && toJS(typeConfiguration.form[schemaFieldKey].types[key].form).length === 0) {
+                                if (typeConfiguration.form[schemaFieldKey].types && blockSchema.types[key]) {
+                                    typeConfiguration.form[schemaFieldKey].types[key].form = blockSchema.types[key].form;
+                                }
+                            }
+                        });
+                    }
+                });
 
                 return typeConfiguration.form;
             });

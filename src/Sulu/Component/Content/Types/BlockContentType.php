@@ -32,8 +32,6 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
  */
 class BlockContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
-    const NAME = 'block';
-
     /**
      * @var ContentTypeManagerInterface
      */

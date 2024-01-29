@@ -12,6 +12,15 @@
 namespace Sulu\Bundle\MediaBundle\Content\Types;
 
 use PHPCR\NodeInterface;
+use Sulu\Bundle\AdminBundle\FormMetadata\FormMetadataMapper;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\AllOfsMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ArrayMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\IfThenElseMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadataMapperInterface;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\RefSchemaMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Component\Content\Compat\Block\BlockPropertyWrapper;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
@@ -22,18 +31,27 @@ use Sulu\Component\Content\ContentTypeManagerInterface;
 use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Exception\UnexpectedPropertyType;
+use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 
-class ImageMapContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
+class ImageMapContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, PropertyMetadataMapperInterface
 {
     /**
      * @var ContentTypeManagerInterface
      */
     private $contentTypeManager;
 
-    public function __construct(ContentTypeManagerInterface $contentTypeManager)
-    {
+    /**
+     * @var FormMetadataMapper
+     */
+    private $formMetadataMapper;
+
+    public function __construct(
+        ContentTypeManagerInterface $contentTypeManager,
+        FormMetadataMapper $formMetadataMapper,
+    ) {
         $this->contentTypeManager = $contentTypeManager;
+        $this->formMetadataMapper = $formMetadataMapper;
     }
 
     public function read(
@@ -443,6 +461,40 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
                 return $contentType->preResolve($property);
             },
             false
+        );
+    }
+
+    public function mapPropertyMetadata(ContentPropertyMetadata $propertyMetadata): PropertyMetadata
+    {
+        $blockTypeSchemas = [];
+        foreach ($propertyMetadata->getComponents() as $blockType) {
+            $blockTypeSchemas[] = new IfThenElseMetadata(
+                new SchemaMetadata([
+                    new PropertyMetadata('type', true, new ConstMetadata($blockType->getName())),
+                ]),
+                $this->formMetadataMapper->mapSchema($blockType->getChildren()),
+            );
+
+            if ($blockType->hasTag('sulu.global_block')) {
+                $blockTypeSchemas[] = new IfThenElseMetadata(
+                    new SchemaMetadata([
+                        new PropertyMetadata('type', true, new ConstMetadata($blockType->getName())),
+                    ]),
+                    new RefSchemaMetadata('#/definitions/' . $blockType->getName())
+                );
+            }
+        }
+
+        return new PropertyMetadata(
+            $propertyMetadata->getName(),
+            $propertyMetadata->isRequired(),
+            new SchemaMetadata([
+                new PropertyMetadata('imageId', true),
+                new PropertyMetadata(
+                    'hotspots', true, new ArrayMetadata(
+                    new AllOfsMetadata($blockTypeSchemas)
+                )),
+            ])
         );
     }
 }
