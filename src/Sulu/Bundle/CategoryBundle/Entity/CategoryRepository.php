@@ -22,6 +22,7 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
 {
     public function createNew()
     {
+        /** @var class-string<CategoryInterface> */
         $className = $this->getClassName();
 
         return new $className();
