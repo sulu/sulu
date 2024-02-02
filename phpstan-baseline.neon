@@ -27946,11 +27946,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
 
 		-
-			message: "#^Property DOMNode\\:\\:\\$nodeName \\(string\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\AccessControl\\:\\:getEntityClass\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Entity/AccessControl.php
