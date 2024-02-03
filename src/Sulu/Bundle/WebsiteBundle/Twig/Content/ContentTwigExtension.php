@@ -77,12 +77,12 @@ class ContentTwigExtension extends AbstractExtension implements ContentTwigExten
     private $requestStack;
 
     /**
-     * @var array{urls?: boolean}
+     * @var array{urls?: bool}
      */
     private $enabledTwigAttributes;
 
     /**
-     * @param array{urls?: boolean} $enabledTwigAttributes
+     * @param array{urls?: bool} $enabledTwigAttributes
      */
     public function __construct(
         ContentMapperInterface $contentMapper,
