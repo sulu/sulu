@@ -32,14 +32,13 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
                 ->leftJoin('role.securityType', 'securityType')
                 ->addSelect('permissions')
                 ->addSelect('securityType')
-                ->where('role.id=:roleId');
+                ->where('role.id=:roleId')
+                ->setParameter('roleId', $id);
 
-            $query = $queryBuilder->getQuery();
-            $query->setParameter('roleId', $id);
-
-            return $query->getSingleResult();
+            /** @var RoleInterface */
+            return $queryBuilder->getQuery()->getSingleResult();
         } catch (NoResultException $e) {
-            return;
+            return null;
         }
     }
 
@@ -60,33 +59,28 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
 
             return $query->getSingleResult();
         } catch (NoResultException $e) {
-            return;
+            return null;
         }
     }
 
     public function findAllRoles(array $filters = [])
     {
-        try {
-            $queryBuilder = $this->createQueryBuilder('role')
-                ->leftJoin('role.permissions', 'permissions')
-                ->addSelect('permissions');
+        $queryBuilder = $this->createQueryBuilder('role')
+            ->leftJoin('role.permissions', 'permissions')
+            ->addSelect('permissions');
 
-            if (isset($filters['anonymous'])) {
-                $queryBuilder->andWhere('role.anonymous = :anonymous')
-                    ->setParameter('anonymous', $filters['anonymous']);
-            }
-
-            if (isset($filters['system'])) {
-                $queryBuilder->andWhere('role.system = :roleSystem')
-                    ->setParameter('roleSystem', $filters['system']);
-            }
-
-            $query = $queryBuilder->getQuery();
-
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return;
+        if (isset($filters['anonymous'])) {
+            $queryBuilder->andWhere('role.anonymous = :anonymous')
+                ->setParameter('anonymous', $filters['anonymous']);
         }
+
+        if (isset($filters['system'])) {
+            $queryBuilder->andWhere('role.system = :roleSystem')
+                ->setParameter('roleSystem', $filters['system']);
+        }
+
+        /** @var RoleInterface[] */
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function getRoleNames()
@@ -105,6 +99,7 @@ class RoleRepository extends EntityRepository implements RoleRepositoryInterface
 
     public function findRoleIdsBySystem($system)
     {
+        /** @var array<array{id: int}> $result */
         $result = $this->createQueryBuilder('role')
             ->select('role.id')
             ->where('role.system = :roleSystem')

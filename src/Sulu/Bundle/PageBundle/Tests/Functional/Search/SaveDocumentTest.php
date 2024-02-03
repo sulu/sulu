@@ -12,7 +12,6 @@
 namespace Sulu\Bundle\PageBundle\Tests\Functional\Search;
 
 use Sulu\Bundle\PageBundle\Document\PageDocument;
-use Sulu\Bundle\PageBundle\Form\Type\PageDocumentType;
 use Sulu\Component\Content\Document\WorkflowStage;
 
 class SaveDocumentTest extends BaseTestCase

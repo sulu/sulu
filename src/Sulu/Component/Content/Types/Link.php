@@ -71,7 +71,7 @@ class Link extends SimpleContentType
         }
 
         $result = [
-            'provider' => $value['provider'],
+            'provider' => $value['provider'] ?? null,
             'locale' => $value['locale'],
         ];
 

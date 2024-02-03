@@ -23,6 +23,7 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
 
     public function findById(int $id): ?AccountInterface
     {
+        /** @var AccountInterface */
         return $this->find($id);
     }
 
@@ -379,6 +380,7 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
 
     public function createNew()
     {
+        /** @var class-string<AccountInterface> $className */
         $className = $this->getClassName();
 
         return new $className();
