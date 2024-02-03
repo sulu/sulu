@@ -59,24 +59,17 @@ class RequestAnalyzerResolverTest extends TestCase
     {
         if (null === $this->webspaceManager) {
             $webspace = new Webspace();
-            $en = new Localization();
-            $en->setLanguage('en');
-            $en_us = new Localization();
-            $en_us->setLanguage('en');
-            $en_us->setCountry('us');
+            $en = new Localization('en');
+            $en_us = new Localization('en', 'us');
             $en_us->setParent($en);
             $en->addChild($en_us);
 
-            $de = new Localization();
-            $de->setLanguage('de');
-            $de_at = new Localization();
-            $de_at->setLanguage('de');
-            $de_at->setCountry('at');
+            $de = new Localization('de');
+            $de_at = new Localization('de', 'at');
             $de_at->setParent($de);
             $de->addChild($de_at);
 
-            $es = new Localization();
-            $es->setLanguage('es');
+            $es = new Localization('es');
 
             $webspace->addLocalization($en);
             $webspace->addLocalization($de);
