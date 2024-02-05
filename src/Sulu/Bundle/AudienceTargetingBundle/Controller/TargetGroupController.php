@@ -324,7 +324,7 @@ class TargetGroupController extends AbstractRestController implements ClassResou
             $rule->setFrequency($ruleData['frequency']);
             $rule->setTargetGroup($targetGroup);
 
-            $this->entityManager->persist($rule);
+            $rule = $this->targetGroupRuleRepository->save($rule);
             $targetGroup->addRule($rule);
 
             $oldConditions = new ArrayCollection($rule->getConditions()->toArray()); // remove reference
@@ -371,9 +371,7 @@ class TargetGroupController extends AbstractRestController implements ClassResou
             $this->entityManager->remove($oldWebspace);
         }
 
-        $this->entityManager->persist($targetGroup);
-
-        return $targetGroup;
+        return $this->targetGroupRepository->save($targetGroup);
     }
 
     /**

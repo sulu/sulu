@@ -21,6 +21,13 @@ use Sulu\Component\Persistence\Repository\RepositoryInterface;
 interface TargetGroupRepositoryInterface extends RepositoryInterface
 {
     /**
+     * Saves the given target group to the repository.
+     *
+     * @return TargetGroupInterface
+     */
+    public function save(TargetGroupInterface $targetGroup);
+
+    /**
      * Find the target groups with the given IDs.
      *
      * @param int[] $ids

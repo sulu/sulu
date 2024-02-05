@@ -20,6 +20,18 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
  */
 class TargetGroupRepository extends EntityRepository implements TargetGroupRepositoryInterface
 {
+    /**
+     * Saves the given target group to the repository.
+     *
+     * @return TargetGroupInterface
+     */
+    public function save(TargetGroupInterface $targetGroup)
+    {
+        $this->getEntityManager()->persist($targetGroup);
+
+        return $targetGroup;
+    }
+
     public function findByIds($ids)
     {
         $queryBuilder = $this->createQueryBuilder('targetGroup')

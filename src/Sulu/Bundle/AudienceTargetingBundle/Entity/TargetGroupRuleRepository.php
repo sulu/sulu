@@ -20,4 +20,15 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
  */
 class TargetGroupRuleRepository extends EntityRepository implements TargetGroupRuleRepositoryInterface
 {
+    /**
+     * Saves the given target group rule to the repository.
+     *
+     * @return TargetGroupRuleInterface
+     */
+    public function save(TargetGroupRuleInterface $targetGroupRule)
+    {
+        $this->getEntityManager()->persist($targetGroupRule);
+
+        return $targetGroupRule;
+    }
 }
