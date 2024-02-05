@@ -338,10 +338,10 @@ class TargetGroupController extends AbstractRestController implements ClassResou
 
                 $this->entityManager->persist($condition);
                 $rule->addCondition($condition);
+            }
 
-                foreach ($oldConditions as $oldCondition) {
-                    $this->entityManager->remove($oldCondition);
-                }
+            foreach ($oldConditions as $oldCondition) {
+                $this->entityManager->remove($oldCondition);
             }
         }
 
