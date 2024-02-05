@@ -254,7 +254,7 @@ class MediaStreamController
     protected function getFileVersion($id, $version)
     {
         /** @var MediaInterface $mediaEntity */
-        $mediaEntity = $this->mediaRepository->findMediaById($id);
+        $mediaEntity = $this->mediaRepository->findMediaByIdForRendering($id, null);
 
         if (!$mediaEntity) {
             return null;

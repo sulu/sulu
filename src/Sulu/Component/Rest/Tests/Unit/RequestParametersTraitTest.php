@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class RequestParametersTraitTest extends TestCase
 {
+    use ProphecyTrait;
     use RequestParametersTrait;
 
     public function testGetRequestParameter(): void
