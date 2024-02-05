@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\DocumentManager\Event;
 
+use PHPCR\Query\QueryInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\DocumentManager\Query\Query;
 
@@ -19,7 +20,7 @@ class QueryCreateEvent extends AbstractEvent
     use EventOptionsTrait;
 
     /**
-     * @var string
+     * @var string|QueryInterface
      */
     private $innerQuery;
 
@@ -39,7 +40,7 @@ class QueryCreateEvent extends AbstractEvent
     private $primarySelector;
 
     /**
-     * @param string $innerQuery
+     * @param string|QueryInterface $innerQuery
      * @param string $locale
      * @param null|string $primarySelector
      */
@@ -52,7 +53,7 @@ class QueryCreateEvent extends AbstractEvent
     }
 
     /**
-     * @return string
+     * @return string|QueryInterface
      */
     public function getInnerQuery()
     {
