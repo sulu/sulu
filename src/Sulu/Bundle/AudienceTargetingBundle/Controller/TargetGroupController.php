@@ -287,18 +287,18 @@ class TargetGroupController extends AbstractRestController implements ClassResou
      *     priority: int,
      *     active: bool,
      *     rules: array<array{
-     *          id?: int|null,
-     *          title: string,
-     *          frequency: int,
-     *          conditions: array<array{
-     *              id?: int|null,
-     *              type: string,
-     *              condition: array
-     *          }>
+     *         id?: int|null,
+     *         title: string,
+     *         frequency: int,
+     *         conditions: array<array{
+     *             id?: int|null,
+     *             type: string,
+     *             condition: mixed[],
+     *         }>,
      *     }>,
      *     webspaces: array<array{
      *          webspaceKey: string
-     *     }>
+     *     }>,
      * } $data
      */
     private function mapEntity(array $data): TargetGroupInterface
@@ -486,15 +486,14 @@ class TargetGroupController extends AbstractRestController implements ClassResou
     /**
      * Returns target group webspace by id or creates it if no id provided. Throws an exception if not found.
      */
-    private function getOrCreateTargetGroupWebspaceByKey(?string $webspaceKey, ?TargetGroupInterface $targetGroup): ?TargetGroupWebspaceInterface
+    private function getOrCreateTargetGroupWebspaceByKey(string $webspaceKey, TargetGroupInterface $targetGroup): TargetGroupWebspaceInterface
     {
-        if (null !== $webspaceKey && $targetGroup instanceof TargetGroupInterface) {
-            $targetGroupWebspace = $this->getTargetGroupWebspaceById($webspaceKey, $targetGroup);
-            if ($targetGroupWebspace instanceof TargetGroupWebspaceInterface) {
-                return $targetGroupWebspace;
-            }
+        $targetGroupWebspace = $this->getTargetGroupWebspaceById($webspaceKey, $targetGroup);
+        if ($targetGroupWebspace instanceof TargetGroupWebspaceInterface) {
+            return $targetGroupWebspace;
         }
 
+        /** @var TargetGroupWebspaceInterface $targetGroupWebspace */
         $targetGroupWebspace = $this->targetGroupWebspaceRepository->createNew();
         $targetGroupWebspace->setWebspaceKey($webspaceKey);
         $targetGroupWebspace->setTargetGroup($targetGroup);

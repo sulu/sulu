@@ -2191,16 +2191,6 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Entity/TargetGroupInterface.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupRuleInterface\\>\\:\\:save\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Entity/TargetGroupRepository.php
-
-		-
-			message: "#^Unable to resolve the template type TMaybeContained in call to method Doctrine\\\\Common\\\\Collections\\\\ReadableCollection\\<int,Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupRuleInterface\\>\\:\\:contains\\(\\)$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Entity/TargetGroupRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupRule\\:\\:clearConditions\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Entity/TargetGroupRule.php
