@@ -46761,22 +46761,12 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Event/UnpublishEvent.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\EventDispatcher\\\\DebugEventDispatcher\\:\\:doDispatch\\(\\) has no return type specified\\.$#"
+			message: "#^Call to an undefined method object\\:\\:getDebugMessage\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/EventDispatcher/DebugEventDispatcher.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\EventDispatcher\\\\DebugEventDispatcher\\:\\:doDispatch\\(\\) has parameter \\$event with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/EventDispatcher/DebugEventDispatcher.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\EventDispatcher\\\\DebugEventDispatcher\\:\\:doDispatch\\(\\) has parameter \\$eventName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/EventDispatcher/DebugEventDispatcher.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\EventDispatcher\\\\DebugEventDispatcher\\:\\:doDispatch\\(\\) has parameter \\$listeners with no type specified\\.$#"
+			message: "#^Cannot use array destructuring on callable\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/EventDispatcher/DebugEventDispatcher.php
 

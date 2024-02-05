@@ -22,12 +22,23 @@ use Symfony\Component\Stopwatch\Stopwatch;
 final class DebugEventDispatcherTest extends TestCase
 {
     public const TEST = 'test';
-    protected DebugEventDispatcher $dispatcher;
-    protected array $logOut = [];
+
+    /**
+     * @var DebugEventDispatcher
+     */
+    protected $dispatcher;
+
+    /**
+     * @var array<string>
+     */
+    protected $logOut = [];
 
     protected function setUp(): void
     {
         $this->dispatcher = new DebugEventDispatcher(new Stopwatch(), new class($this->logOut) extends AbstractLogger {
+            /**
+             * @param array<string> $logOutput
+             */
             public function __construct(protected array &$logOutput)
             {
             }
@@ -36,12 +47,22 @@ final class DebugEventDispatcherTest extends TestCase
             {
                 $this->logOutput[] = $message;
             }
+
+            /**
+             * @param object $event
+             * @param string $eventName
+             * @param mixed $ref
+             */
+            public function listenerMock($event, $eventName, $ref): void
+            {
+            }
         });
-        $this->dispatcher->addListener(self::TEST, [$this, 'listenerMock']);
+        $this->dispatcher->addListener(self::TEST, [$this->dispatcher, 'listenerMock']);
     }
 
-    public function listenerMock($event, $eventName, $ref)
+    protected function tearDown(): void
     {
+        $this->logOut = [];
     }
 
     public function testDebugLogWritten(): void
