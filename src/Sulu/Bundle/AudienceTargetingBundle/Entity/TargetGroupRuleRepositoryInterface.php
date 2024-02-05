@@ -21,7 +21,7 @@ use Sulu\Component\Persistence\Repository\RepositoryInterface;
 interface TargetGroupRuleRepositoryInterface extends RepositoryInterface
 {
     /**
-     * Saves the rule of the target group to the database.
+     * Saves the rule of the target group rule to the database.
      *
      * @return TargetGroupRuleInterface
      */
