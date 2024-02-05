@@ -2611,11 +2611,6 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Serializer/Subscriber/TargetGroupSerializeSubscriber.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\SuluAudienceTargetingBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/SuluAudienceTargetingBundle.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\TargetGroup\\\\TargetGroupEvaluator\\:\\:evaluate\\(\\) should return Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupInterface but returns Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupInterface\\|null\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/AudienceTargetingBundle/TargetGroup/TargetGroupEvaluator.php
@@ -4519,11 +4514,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between null and Massive\\\\Bundle\\\\SearchBundle\\\\Search\\\\Field will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Search/Converter/CategoryConverter.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\SuluCategoryBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/SuluCategoryBundle.php
 
 		-
 			message: "#^Cannot access property \\$form on mixed\\.$#"
@@ -9596,11 +9586,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/EventListener/AccountListener.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\SuluContactBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/SuluContactBundle.php
-
-		-
 			message: "#^Array has 2 duplicate keys with value 'id' \\('id', 'id'\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
@@ -11161,11 +11146,6 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/Entity/ApiEntityWrapper.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\SuluCoreBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/SuluCoreBundle.php
-
-		-
 			message: "#^Cannot access offset '_embedded' on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/Tests/Functional/Controller/LocalizationControllerTest.php
@@ -11409,11 +11389,6 @@ parameters:
 			message: "#^Parameter \\#2 \\.\\.\\.\\$arrays of function array_merge expects array, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CustomUrlBundle\\\\SuluCustomUrlBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/SuluCustomUrlBundle.php
 
 		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
@@ -12349,11 +12324,6 @@ parameters:
 			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, string\\|null given\\.$#"
 			count: 5
 			path: src/Sulu/Bundle/DocumentManagerBundle/Slugifier/Urlizer.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\SuluDocumentManagerBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/SuluDocumentManagerBundle.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Tests\\\\Functional\\\\BaseTestCase\\:\\:generateDataSet\\(\\) has no return type specified\\.$#"
@@ -13474,11 +13444,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\TagMatchGroup\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Markup/TagMatchGroup.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\SuluMarkupBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/SuluMarkupBundle.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\Tag\\\\TagInterface\\:\\:parseAll\\(\\) has parameter \\$attributesByTag with no value type specified in iterable type array\\.$#"
@@ -17179,11 +17144,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Search\\\\Subscriber\\\\StructureMediaSearchSubscriber\\:\\:\\$requestAnalyzer \\(Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\RequestAnalyzerInterface\\) does not accept Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\RequestAnalyzerInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Search/Subscriber/StructureMediaSearchSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\SuluMediaBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/SuluMediaBundle.php
 
 		-
 			message: "#^Cannot access offset 'images' on mixed\\.$#"
@@ -23161,11 +23121,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Sitemap/PagesSitemapProvider.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\SuluPageBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/SuluPageBundle.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Teaser\\\\Configuration\\\\TeaserConfiguration\\:\\:__construct\\(\\) has parameter \\$displayProperties with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Teaser/Configuration/TeaserConfiguration.php
@@ -27196,11 +27151,6 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRendererInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\SuluPreviewBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/SuluPreviewBundle.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Tests\\\\Functional\\\\Preview\\\\Renderer\\\\PreviewRendererTest\\:\\:readObjectAttribute\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Functional/Preview/Renderer/PreviewRendererTest.php
@@ -27949,11 +27899,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Routing\\\\RouteProvider\\:\\:\\$routeCache \\(array\\<Sulu\\\\Bundle\\\\RouteBundle\\\\Entity\\\\Route\\>\\) does not accept array\\<Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Routing/RouteProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\SuluRouteBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/SuluRouteBundle.php
 
 		-
 			message: "#^Cannot access offset '_embedded' on mixed\\.$#"
@@ -29959,11 +29904,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Serializer\\\\Subscriber\\\\SecuritySubscriber\\:\\:\\$tokenStorage \\(Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\) does not accept Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Serializer/Subscriber/SecuritySubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\SuluSecurityBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/SuluSecurityBundle.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Tests\\\\Application\\\\SecuredDocument\\:\\:getPermissions\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -31986,11 +31926,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/WrongSnippetTypeException.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\SuluSnippetBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/SuluSnippetBundle.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\BaseFunctionalTestCase\\:\\:createSnippet\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/BaseFunctionalTestCase.php
@@ -33146,11 +33081,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Event/TagMergeEvent.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\TagBundle\\\\SuluTagBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/SuluTagBundle.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\Exception\\\\TagAlreadyExistsException\\:\\:\\$name \\(int\\) does not accept string\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/Exception/TagAlreadyExistsException.php
@@ -33604,16 +33534,6 @@ parameters:
 			message: "#^Variable \\$loader might not be defined\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/TestBundle/Resources/app/config/config.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\TestBundle\\\\SuluTestBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/SuluTestBundle.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\TestBundle\\\\SuluTestBundle\\:\\:getConfigDir\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/SuluTestBundle.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\TestBundle\\\\Testing\\\\KernelTestCase\\:\\:createKernel\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
@@ -35334,11 +35254,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Sitemap\\\\XmlSitemapRenderer\\:\\:render\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Sitemap/XmlSitemapRenderer.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\SuluWebsiteBundle\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/SuluWebsiteBundle.php
 
 		-
 			message: "#^Cannot call method isClassInActiveBundle\\(\\) on class\\-string\\|object\\.$#"
