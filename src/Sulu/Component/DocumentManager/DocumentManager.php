@@ -23,7 +23,7 @@ class DocumentManager implements DocumentManagerInterface, ResetInterface
     private $eventDispatcher;
 
     /**
-     * @var array Cached options resolver instances
+     * @var array<string, OptionsResolver> Cached options resolver instances
      */
     private $optionsResolvers = [];
 
@@ -161,7 +161,7 @@ class DocumentManager implements DocumentManagerInterface, ResetInterface
         return $event->getQuery();
     }
 
-    private function getOptionsResolver($eventName)
+    private function getOptionsResolver(string $eventName): OptionsResolver
     {
         if (isset($this->optionsResolvers[$eventName])) {
             return $this->optionsResolvers[$eventName];
