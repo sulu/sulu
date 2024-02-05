@@ -102,7 +102,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->where('media.id = :mediaId')
                 ->setParameter('mediaId', $id);
 
-            if ($formatKey !== null) {
+            if (null !== $formatKey) {
                 $queryBuilder
                     ->addSelect('formatOptions')
                     ->leftJoin(
