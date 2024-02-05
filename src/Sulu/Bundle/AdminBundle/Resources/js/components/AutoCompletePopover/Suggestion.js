@@ -39,6 +39,7 @@ export default class Suggestion extends React.PureComponent<Props> {
         } catch (e) {
             // fallback to highlight first exact match if given query is an invalid regular expression like "*"
             splittedText = text.split(this.props.query);
+            highlightedWords = [];
             for (let i = 0; i < splittedText.length - 1; i++) {
                 highlightedWords.push(this.props.query);
             }
