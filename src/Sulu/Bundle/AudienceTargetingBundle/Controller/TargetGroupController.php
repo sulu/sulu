@@ -126,7 +126,7 @@ class TargetGroupController extends AbstractRestController implements ClassResou
 
         // If webspaces are concatinated we need to group by id. This happens
         // when no fields are supplied at all OR webspaces are requested as field.
-        $fieldsParam = $request->get('fields', '');
+        $fieldsParam = $request->get('fields');
         $fields = \explode(',', $fieldsParam);
         if (null === $fieldsParam || false !== \array_search('webspaceKeys', $fields)) {
             $listBuilder->addGroupBy($fieldDescriptors['id']);
