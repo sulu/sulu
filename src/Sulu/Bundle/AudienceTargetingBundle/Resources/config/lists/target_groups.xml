@@ -7,10 +7,12 @@
             <field-name>id</field-name>
             <entity-name>%sulu.model.target_group.class%</entity-name>
         </property>
+
         <property name="title" translation="sulu_admin.title" visibility="always">
             <field-name>title</field-name>
             <entity-name>%sulu.model.target_group.class%</entity-name>
         </property>
+
         <property
             name="active"
             visibility="yes"
@@ -21,6 +23,7 @@
             <transformer type="bool"/>
             <filter type="boolean" />
         </property>
+
         <property
             name="priority"
             translation="sulu_audience_targeting.priority"
@@ -31,6 +34,7 @@
 
             <filter type="number" />
         </property>
+
         <group-concat-property
             name="webspaceKeys"
             visibility="no"
