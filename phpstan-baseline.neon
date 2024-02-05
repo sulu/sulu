@@ -32946,16 +32946,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/DependencyInjection/SuluWebsiteExtension.php
 
 		-
-			message: "#^Parameter \\#1 \\$func of method Doctrine\\\\Common\\\\Collections\\\\ReadableCollection\\<\\(int\\|string\\),mixed\\>\\:\\:map\\(\\) expects Closure\\(mixed\\)\\: string, Closure\\(Sulu\\\\Bundle\\\\WebsiteBundle\\\\Entity\\\\Domain\\)\\: string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Entity/Analytics.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Entity\\\\Analytics\\:\\:\\$domains with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Entity/Analytics.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Entity\\\\AnalyticsRepository\\:\\:findById\\(\\) should return Sulu\\\\Bundle\\\\WebsiteBundle\\\\Entity\\\\AnalyticsInterface but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Entity/AnalyticsRepository.php

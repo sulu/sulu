@@ -51,7 +51,7 @@ class Analytics implements AnalyticsInterface
     private $webspaceKey;
 
     /**
-     * @var Collection|Domain[]
+     * @var Collection<int, Domain>
      *
      * @Exclude
      */
@@ -154,6 +154,8 @@ class Analytics implements AnalyticsInterface
 
     /**
      * @VirtualProperty
+     *
+     * @return Collection<int, string>|null
      */
     public function getDomains(): ?Collection
     {
