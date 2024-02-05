@@ -29,16 +29,20 @@ export default class Suggestion extends React.PureComponent<Props> {
         }
 
         let matcher;
+        let splittedText;
+        let highlightedWords = [];
         try {
             // try to match all highlighted parts using case insensitive regular expression
             matcher = new RegExp(this.props.query, 'gi');
+            splittedText = text.split(matcher);
+            highlightedWords = text.match(matcher);
         } catch (e) {
             // fallback to highlight first exact match if given query is an invalid regular expression like "*"
-            matcher = this.props.query;
+            splittedText = text.split(this.props.query);
+            for (let i = 0; i < splittedText.length - 1; i++) {
+                highlightedWords.push(this.props.query);
+            }
         }
-
-        const splittedText = text.split(matcher);
-        const highlightedWords = text.match(matcher);
 
         return (
             <span>
