@@ -231,6 +231,32 @@ class PageTreeRouteContentTypeTest extends TestCase
         );
     }
 
+    public function testWriteString(): void
+    {
+        $value = '/test-page/test-custom-child';
+        $this->property->getValue()->willReturn($value);
+
+        $route = $this->prophesize(RouteInterface::class);
+        $document = $this->prophesize(RoutableBehavior::class);
+        $this->chainRouteGenerator->generate($document->reveal())->willReturn($route->reveal());
+        $this->documentRegistry->getDocumentForNode($this->node->reveal(), $this->locale)
+            ->willReturn($document->reveal());
+
+        $this->node->setProperty($this->propertyName, '/')->shouldBeCalled();
+        $this->node->setProperty($this->propertyName . '-suffix', '/')->shouldBeCalled();
+
+        $this->node->hasProperty($this->propertyName . '-page')->willReturn(false);
+
+        $this->contentType->write(
+            $this->node->reveal(),
+            $this->property->reveal(),
+            1,
+            $this->webspaceKey,
+            $this->locale,
+            null
+        );
+    }
+
     public function testWriteExistingPageRelation(): void
     {
         $value = [
