@@ -40,14 +40,21 @@ export default class Suggestion extends React.PureComponent<Props> {
         const splittedText = text.split(matcher);
         const highlightedWords = text.match(matcher);
 
-        return (<span>
-            {splittedText.map((splitText, index) => {
-                return <>
-                    {splitText}
-                    {highlightedWords && highlightedWords[index] ? <strong>{highlightedWords[index]}</strong> : null}
-                </>
-            })}
-        </span>);
+        return (
+            <span>
+                {splittedText.map((splitText, index) => {
+                    return (
+                        <>
+                            {splitText}
+                            {highlightedWords && highlightedWords[index]
+                                ? <strong>{highlightedWords[index]}</strong>
+                                : null
+                            }
+                        </>
+                    );
+                })}
+            </span>
+        );
     };
 
     handleClick = () => {
