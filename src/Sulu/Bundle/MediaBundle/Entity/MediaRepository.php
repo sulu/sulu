@@ -97,18 +97,22 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
             $queryBuilder = $this->createQueryBuilder('media')
                 ->leftJoin('media.files', 'file')
                 ->leftJoin('file.fileVersions', 'fileVersion', Join::WITH, 'file.version = fileVersion.version')
-                ->leftJoin(
-                    'fileVersion.formatOptions',
-                    'formatOptions',
-                    Join::WITH,
-                    'formatOptions.formatKey = :formatKey'
-                )
-                ->setParameter('formatKey', $formatKey)
                 ->addSelect('file')
                 ->addSelect('fileVersion')
-                ->addSelect('formatOptions')
                 ->where('media.id = :mediaId')
                 ->setParameter('mediaId', $id);
+
+            if (null !== $formatKey) {
+                $queryBuilder
+                    ->addSelect('formatOptions')
+                    ->leftJoin(
+                        'fileVersion.formatOptions',
+                        'formatOptions',
+                        Join::WITH,
+                        'formatOptions.formatKey = :formatKey'
+                    )
+                    ->setParameter('formatKey', $formatKey);
+            }
 
             /** @var MediaInterface */
             return $queryBuilder->getQuery()->getSingleResult();
