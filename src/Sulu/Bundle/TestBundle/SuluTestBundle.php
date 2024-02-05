@@ -15,6 +15,9 @@ use Sulu\Bundle\TestBundle\DependencyInjection\Compiler\ReplaceTestClientPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * @final
+ */
 class SuluTestBundle extends Bundle
 {
     /**
