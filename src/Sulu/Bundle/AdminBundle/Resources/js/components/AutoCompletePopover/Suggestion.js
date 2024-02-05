@@ -37,12 +37,17 @@ export default class Suggestion extends React.PureComponent<Props> {
             matcher = this.props.query;
         }
 
-        // $FlowFixMe: flow does not recognize the replaceAll method: https://github.com/facebook/flow/issues/560
-        const highlightedText = text.replaceAll(matcher, '<strong>$&</strong>');
+        const splittedText = text.split(matcher);
+        const highlightedWords = text.match(matcher);
 
-        return (
-            <span dangerouslySetInnerHTML={{__html: highlightedText}} />
-        );
+        return (<span>
+            {splittedText.map((splitText, index) => {
+                return <>
+                    {splitText}
+                    {highlightedWords && highlightedWords[index] ? <strong>{highlightedWords[index]}</strong> : null}
+                </>
+            })}
+        </span>);
     };
 
     handleClick = () => {
