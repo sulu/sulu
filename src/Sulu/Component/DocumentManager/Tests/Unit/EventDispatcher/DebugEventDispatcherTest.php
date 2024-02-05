@@ -29,23 +29,29 @@ final class DebugEventDispatcherTest extends TestCase
     protected $dispatcher;
 
     /**
-     * @var array<string>
+     * @var AbstractLogger
      */
-    protected $logOut = [];
+    protected $logger;
 
     protected function setUp(): void
     {
-        $this->dispatcher = new DebugEventDispatcher(new Stopwatch(), new class($this->logOut) extends AbstractLogger {
+        $this->logger = new class() extends AbstractLogger {
             /**
-             * @param array<string> $logOutput
+             * @var array<string>
              */
-            public function __construct(protected array &$logOutput)
-            {
-            }
+            private $logOutput = [];
 
             public function log($level, $message, array $context = []): void
             {
                 $this->logOutput[] = $message;
+            }
+
+            /**
+             * @return array<string>
+             */
+            public function getLogOutput(): array
+            {
+                return $this->logOutput;
             }
 
             /**
@@ -56,13 +62,10 @@ final class DebugEventDispatcherTest extends TestCase
             public function listenerMock($event, $eventName, $ref): void
             {
             }
-        });
-        $this->dispatcher->addListener(self::TEST, [$this->dispatcher, 'listenerMock']);
-    }
+        };
 
-    protected function tearDown(): void
-    {
-        $this->logOut = [];
+        $this->dispatcher = new DebugEventDispatcher(new Stopwatch(), $this->logger);
+        $this->dispatcher->addListener(self::TEST, [$this->logger, 'listenerMock']);
     }
 
     public function testDebugLogWritten(): void
@@ -73,6 +76,7 @@ final class DebugEventDispatcherTest extends TestCase
                 parent::__construct(new \stdClass());
             }
         }, self::TEST);
-        $this->assertCount(1, $this->logOut);
+        $this->assertTrue(\method_exists($this->logger, 'getLogOutput'));
+        $this->assertCount(1, $this->logger->getLogOutput());
     }
 }
