@@ -114,6 +114,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                     ->setParameter('formatKey', $formatKey);
             }
 
+            /** @var MediaInterface */
             return $queryBuilder->getQuery()->getSingleResult();
         } catch (NoResultException $ex) {
             return null;
