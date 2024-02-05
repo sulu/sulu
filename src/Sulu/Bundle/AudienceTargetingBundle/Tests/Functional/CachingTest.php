@@ -190,22 +190,30 @@ class CachingTest extends SuluTestCase
         $targetGroup->setTitle('Test');
         $targetGroup->setPriority($priority);
         $targetGroup->setActive(true);
+
         /** @var TargetGroupWebspaceInterface $targetGroupWebspace */
         $targetGroupWebspace = $targetGroupWebspaceRepository->createNew();
         $targetGroupWebspace->setWebspaceKey('sulu_io');
+        $targetGroupWebspace->setTargetGroup($targetGroup);
         $targetGroup->addWebspace($targetGroupWebspace);
+
         /** @var TargetGroupRuleInterface $targetGroupRule */
         $targetGroupRule = $targetGroupRuleRepository->createNew();
         $targetGroupRule->setTitle('Test');
         $targetGroupRule->setFrequency($frequency);
+        $targetGroupRule->setTargetGroup($targetGroup);
+
         /** @var TargetGroupConditionInterface $targetGroupCondition */
         $targetGroupCondition = $targetGroupConditionRepository->createNew();
         $targetGroupCondition->setType($rule);
         $targetGroupCondition->setCondition($condition);
+        $targetGroupCondition->setRule($targetGroupRule);
         $targetGroupRule->addCondition($targetGroupCondition);
         $targetGroup->addRule($targetGroupRule);
-        $targetGroup = $targetGroupRepository->save($targetGroup);
+
+        $this->getEntityManager()->persist($targetGroup);
         $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
 
         return $targetGroup;
     }
