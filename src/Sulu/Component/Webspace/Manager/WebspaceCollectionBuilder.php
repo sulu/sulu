@@ -36,7 +36,7 @@ class WebspaceCollectionBuilder
         private PortalInformationBuilder $portalInformationBuilder,
         private array $configuration = []
     ) {
-        Assert::notEmpty($configuration);
+        Assert::notEmpty($configuration, 'No webspace configuration found. Did you forget to set up webspaces? More info here: https://docs.sulu.io/en/latest/book/webspaces.html');
     }
 
     public function build(): WebspaceCollection
