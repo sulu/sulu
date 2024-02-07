@@ -25,7 +25,7 @@ interface WebspaceManagerInterface extends LocalizationProviderInterface
      *
      * @return array<string, PortalInformation>
      */
-    public function getPortalInformations(): array;
+    public function getPortalInformations(?string $environment = null, ?array $types = null): array;
 
     public function getWebspaceCollection(): WebspaceCollectionInterface;
 

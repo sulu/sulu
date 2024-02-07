@@ -42,9 +42,9 @@ class WebspaceManager implements WebspaceManagerInterface
     ) {
     }
 
-    public function getPortalInformations(): array
+    public function getPortalInformations(?string $environment = null, ?array $types = null): array
     {
-        return $this->webspaceCollection->getPortalInformations();
+        return $this->webspaceCollection->getPortalInformations($environment ?? $this->environment, $types);
     }
 
     public function getWebspaceCollection(): WebspaceCollectionInterface

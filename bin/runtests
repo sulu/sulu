@@ -219,7 +219,7 @@ function init_dbal()
     exec_sf_cmd(
         'doctrine:database:create',
         false,
-        false
+        true
     );
 
     write_info('Updating schema');
