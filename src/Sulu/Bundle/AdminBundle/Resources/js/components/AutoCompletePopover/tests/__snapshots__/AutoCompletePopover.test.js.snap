@@ -33,6 +33,7 @@ exports[`Render with highlighted suggestions 1`] = `
               class="column"
             >
               <span>
+                
                 <strong>
                   Test
                 </strong>
@@ -53,6 +54,7 @@ exports[`Render with highlighted suggestions 1`] = `
               class="column"
             >
               <span>
+                
                 <strong>
                   Test
                 </strong>
