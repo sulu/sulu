@@ -42,7 +42,7 @@ class WebspaceTest extends TestCase
             ],
             'security' => [
                 'system' => 'sec_sys',
-                'permissionCheck' => false,
+                'permission_check' => false,
             ],
             'segments' => [
                 [
@@ -87,7 +87,7 @@ class WebspaceTest extends TestCase
 
         $security = new Security();
         $security->setSystem($expected['security']['system']);
-        $security->setPermissionCheck($expected['security']['permissionCheck']);
+        $security->setPermissionCheck($expected['security']['permission_check']);
         $webspace->setSecurity($security);
 
         $portal = new Portal();

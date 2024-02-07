@@ -118,7 +118,7 @@ class WebspaceConfiguration
             ->arrayNode('security')
                 ->children()
                     ->scalarNode('system')->isRequired()->end()
-                    ->booleanNode('permissionCheck')->defaultValue(false)->end()
+                    ->booleanNode('permission_check')->defaultValue(false)->end()
                 ->end()
             ->end();
     }

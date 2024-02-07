@@ -80,7 +80,7 @@ class WebspaceCollectionBuilder
         if ([] !== $securityConfiguration) {
             $security = new Security();
             $security->setSystem($securityConfiguration['system']);
-            $security->setPermissionCheck($securityConfiguration['permissionCheck']);
+            $security->setPermissionCheck($securityConfiguration['permission_check']);
 
             $webspace->setSecurity($security);
         }
