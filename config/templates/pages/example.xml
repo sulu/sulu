@@ -50,7 +50,7 @@
             </meta>
 
             <types>
-                <type name="text_block" ref="true"/>
+                <type ref="text_block"/>
                 <type name="editor">
                     <meta>
                         <title lang="en">Editor</title>

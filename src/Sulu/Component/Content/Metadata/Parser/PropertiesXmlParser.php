@@ -203,6 +203,24 @@ class PropertiesXmlParser
     private function loadType(\DOMXPath $xpath, \DOMNode $node, &$tags, $formKey)
     {
         $result = $this->loadValues($xpath, $node, ['name', 'ref']);
+        if ($result['ref'] && $result['name']) {
+            throw new \InvalidArgumentException(sprintf(
+                "Element '{http://schemas.sulu.io/template/template}type', attribute 'name' / 'ref': The attribute 'name' and 'ref' is not allowed at the same time. (in %s - line %s)",
+                $node->baseURI,
+                $node->getLineNo()
+            ));
+        } elseif (!$result['ref'] && !$result['name']) {
+            throw new \InvalidArgumentException(sprintf(
+                "Element '{http://schemas.sulu.io/template/template}type', attribute 'name' / 'ref': The attribute 'name' or 'ref' is required. (in %s - line %s)",
+                $node->baseURI,
+                $node->getLineNo()
+            ));
+        }
+
+        if ($result['ref']) {
+            $result['name'] = $result['ref'];
+            $result['ref'] = true;
+        }
 
         $result['meta'] = $this->loadMeta($xpath, $node);
 

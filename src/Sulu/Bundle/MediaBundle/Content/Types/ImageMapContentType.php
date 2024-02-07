@@ -468,13 +468,6 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
     {
         $blockTypeSchemas = [];
         foreach ($propertyMetadata->getComponents() as $blockType) {
-            $blockTypeSchemas[] = new IfThenElseMetadata(
-                new SchemaMetadata([
-                    new PropertyMetadata('type', true, new ConstMetadata($blockType->getName())),
-                ]),
-                $this->formMetadataMapper->mapSchema($blockType->getChildren()),
-            );
-
             if ($blockType->hasTag('sulu.global_block')) {
                 $blockTypeSchemas[] = new IfThenElseMetadata(
                     new SchemaMetadata([
@@ -482,7 +475,16 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
                     ]),
                     new RefSchemaMetadata('#/definitions/' . $blockType->getName())
                 );
+
+                continue;
             }
+
+            $blockTypeSchemas[] = new IfThenElseMetadata(
+                new SchemaMetadata([
+                    new PropertyMetadata('type', true, new ConstMetadata($blockType->getName())),
+                ]),
+                $this->formMetadataMapper->mapSchema($blockType->getChildren()),
+            );
         }
 
         return new PropertyMetadata(
