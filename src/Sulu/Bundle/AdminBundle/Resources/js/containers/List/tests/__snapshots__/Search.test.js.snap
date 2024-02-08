@@ -1,77 +1,89 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`The component should expand the input when clicking on icon 1`] = `
-<div
-  class="input dark left hasAppendIcon"
+<label
+  aria-label="sulu_admin.list_search_placeholder"
 >
   <div
-    class="prependedContainer dark"
+    class="input dark left hasAppendIcon"
   >
-    <span
-      aria-label="su-search"
-      class="su-search clickable icon dark iconClickable"
-      role="button"
-      tabindex="0"
+    <div
+      class="prependedContainer dark"
+    >
+      <span
+        aria-label="su-search"
+        class="su-search clickable icon dark iconClickable"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+    <input
+      placeholder="sulu_admin.list_search_placeholder"
+      type="text"
+      value=""
     />
   </div>
-  <input
-    placeholder="sulu_admin.list_search_placeholder"
-    type="text"
-    value=""
-  />
-</div>
+</label>
 `;
 
 exports[`The component should render collapsed 1`] = `
-<div
-  class="input dark left collapsed hasAppendIcon"
+<label
+  aria-label="sulu_admin.list_search_placeholder"
 >
   <div
-    class="prependedContainer dark collapsed"
+    class="input dark left collapsed hasAppendIcon"
   >
-    <span
-      aria-label="su-search"
-      class="su-search clickable icon dark iconClickable collapsed"
-      role="button"
-      tabindex="0"
+    <div
+      class="prependedContainer dark collapsed"
+    >
+      <span
+        aria-label="su-search"
+        class="su-search clickable icon dark iconClickable collapsed"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+    <input
+      placeholder="sulu_admin.list_search_placeholder"
+      type="text"
+      value=""
     />
   </div>
-  <input
-    placeholder="sulu_admin.list_search_placeholder"
-    type="text"
-    value=""
-  />
-</div>
+</label>
 `;
 
 exports[`The component should render not collapsed when value is given 1`] = `
-<div
-  class="input dark left hasAppendIcon"
+<label
+  aria-label="sulu_admin.list_search_placeholder"
 >
   <div
-    class="prependedContainer dark"
+    class="input dark left hasAppendIcon"
   >
-    <span
-      aria-label="su-search"
-      class="su-search clickable icon dark iconClickable"
-      role="button"
-      tabindex="0"
+    <div
+      class="prependedContainer dark"
+    >
+      <span
+        aria-label="su-search"
+        class="su-search clickable icon dark iconClickable"
+        role="button"
+        tabindex="0"
+      />
+    </div>
+    <input
+      placeholder="sulu_admin.list_search_placeholder"
+      type="text"
+      value="search-string"
     />
+    <div
+      class="appendContainer"
+    >
+      <span
+        aria-label="su-times"
+        class="su-times clickable icon dark iconClickable"
+        role="button"
+        tabindex="0"
+      />
+    </div>
   </div>
-  <input
-    placeholder="sulu_admin.list_search_placeholder"
-    type="text"
-    value="search-string"
-  />
-  <div
-    class="appendContainer"
-  >
-    <span
-      aria-label="su-times"
-      class="su-times clickable icon dark iconClickable"
-      role="button"
-      tabindex="0"
-    />
-  </div>
-</div>
+</label>
 `;
