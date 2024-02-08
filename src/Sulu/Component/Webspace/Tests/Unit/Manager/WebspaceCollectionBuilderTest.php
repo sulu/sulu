@@ -46,6 +46,7 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $finalConfiguration = $processor->processConfiguration(new Configuration(), $configuration);
 
         return (new WebspaceCollectionBuilder(
+            WebspaceCollection::class,
             new PortalInformationBuilder(new Replacer()),
             $finalConfiguration['webspaces'],
         ))->build();

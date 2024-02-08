@@ -25,7 +25,6 @@ use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
-use Webmozart\Assert\Assert;
 
 class WebspaceCollectionBuilder
 {
@@ -33,6 +32,7 @@ class WebspaceCollectionBuilder
      * @param array<mixed> $configuration
      */
     public function __construct(
+        private string $webspaceCollectionClass,
         private PortalInformationBuilder $portalInformationBuilder,
         private array $configuration = []
     ) {
@@ -52,7 +52,7 @@ class WebspaceCollectionBuilder
             );
         }
 
-        return new WebspaceCollection(
+        return new $this->webspaceCollectionClass(
             $webspaceRefs,
             $portalRefs,
             $this->portalInformationBuilder->dumpAndClear(),
