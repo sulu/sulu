@@ -24,6 +24,7 @@ use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Finder\Finder;
+use Webmozart\Assert\Assert;
 
 class WebspaceCollectionBuilder
 {
@@ -136,6 +137,7 @@ class WebspaceCollectionBuilder
             );
         }
 
+        Assert::notEmpty($this->webspaces);
         $collection->setWebspaces($this->webspaces);
         $collection->setPortals($this->portals);
         $collection->setPortalInformations($this->portalInformations);
