@@ -2,15 +2,35 @@
 
 ## 2.6.0
 
-## `WebspaceCollection` is a service now
+### `WebspaceCollection` is a service now
 The `WebspaceCollection` or `WebspaceCollectionCache` is now a service: `sulu_core.webspace.collection`. This means that
-the methods of the `WebspaceManager` to get webspace will be removed.
+these methods of the `WebspaceManager` are deprecated and should be moved to the `WebspaceCollection`:
 
 | Deprecated method                       | New Method                          |
 |-----------------------------------------|-------------------------------------|
 | `WebspaceManager::findWebspacesByKey()` | `WebspaceCollection::getWebspace()` |
 | `WebspaceManager::findPortalByKey()`    | `WebspaceCollection::getPortal()`   |
 | `WebspaceManager::getPortals()`         | `WebspaceCollection::getPortals()`  |
+
+### Webspace objects have constructor arguments
+The following objects now allow setting its properties through the constructor:
+- Sulu\Component\Webspace\Portal::\_\_construct(string $key, string $name, Webspace $webspace)
+- Sulu\Component\Webspace\Security::\_\_construct(string $system, bool $permissionCheck)
+- Sulu\Component\Webspace\Segment::\_\_construct(string $key, bool $default, ?MetaData $metadata)
+- Sulu\Component\Webspace\Url::\_\_construct(
+     ?string $url,
+     ?string $language,
+     ?string $country,
+     ?string $segment,
+     ?string $redirect,
+     bool $main,
+     string $environment,
+)
+- Sulu\Component\Webspace\Webspace::\_\_construct(string $key, string $name)
+
+If you override any of these methods add the call to the parent constructor to it as well.
+
+> Note: Using the setters for those properties is deprecated and might be removed in 3.0
 
 ### DocumentToUuidTransformer return type changed
 
