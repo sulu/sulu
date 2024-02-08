@@ -23,6 +23,7 @@ Array [
       class="inputContainer"
     >
       <input
+        autofocus=""
         class="input"
         value="Test"
       />
@@ -71,6 +72,7 @@ Array [
       class="inputContainer"
     >
       <input
+        autofocus=""
         class="input"
         value=""
       />
