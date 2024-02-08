@@ -51,11 +51,6 @@ parameters:
 			path: src/Sulu/Bundle/ActivityBundle/UserInterface/Controller/ActivityController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ActivityBundle\\\\UserInterface\\\\Controller\\\\ActivityController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/UserInterface/Controller/ActivityController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ActivityBundle\\\\UserInterface\\\\Controller\\\\ActivityController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ActivityBundle/UserInterface/Controller/ActivityController.php
@@ -2112,7 +2107,7 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 2
+			count: 4
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Controller/TargetGroupController.php
 
 		-
@@ -2122,11 +2117,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$data of method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Controller\\\\TargetGroupController\\:\\:convertFromRequest\\(\\) expects array, mixed given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Controller/TargetGroupController.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Controller\\\\TargetGroupController\\:\\:deserializeData\\(\\) expects string, string\\|false given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Controller/TargetGroupController.php
 
@@ -2199,16 +2189,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupInterface\\:\\:clearWebspaces\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Entity/TargetGroupInterface.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupRuleInterface\\>\\:\\:save\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Entity/TargetGroupRepository.php
-
-		-
-			message: "#^Unable to resolve the template type TMaybeContained in call to method Doctrine\\\\Common\\\\Collections\\\\ReadableCollection\\<int,Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupRuleInterface\\>\\:\\:contains\\(\\)$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Entity/TargetGroupRepository.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupRule\\:\\:clearConditions\\(\\) has no return type specified\\.$#"
@@ -3902,11 +3882,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\CategoryController\\:\\:getAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\CategoryController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
@@ -10896,11 +10871,6 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CustomUrlBundle\\\\Controller\\\\CustomUrlController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CustomUrlBundle\\\\Controller\\\\CustomUrlController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Controller/CustomUrlController.php
@@ -11749,16 +11719,6 @@ parameters:
 			message: "#^PHPDoc tag @param has invalid value \\(string\\[\\]\\)\\: Unexpected token \"\\\\n     \", expected variable at offset 26$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/DataFixtures/DocumentFixtureGroupInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DataFixtures\\\\DocumentFixtureInterface\\:\\:load\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DataFixtures/DocumentFixtureInterface.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(DocumentManager\\)\\: Unexpected token \"\\\\n     \", expected variable at offset 195$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DataFixtures/DocumentFixtureInterface.php
 
 		-
 			message: "#^Parameter \\#1 \\$object_or_class of function is_subclass_of expects object\\|string, class\\-string\\|null given\\.$#"
@@ -14221,11 +14181,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\CollectionController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\CollectionController\\:\\:getOffset\\(\\) has parameter \\$limit with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
@@ -14316,11 +14271,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\FormatController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\FormatController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
@@ -14347,11 +14297,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaController\\:\\:deleteVersionAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
@@ -14461,11 +14406,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaFormatController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaFormatController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
@@ -14484,11 +14424,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaRedirectController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaRedirectController.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaRedirectController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
@@ -19871,11 +19806,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\PageController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\PageController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
@@ -19941,6 +19871,11 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
 		-
+			message: "#^Parameter \\#1 \\$identifier of method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:find\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
+
+		-
 			message: "#^Parameter \\#1 \\$uuid of method Sulu\\\\Component\\\\Content\\\\Repository\\\\ContentRepositoryInterface\\:\\:findByParentUuid\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
@@ -19996,11 +19931,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/PageController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\PageResourcelocatorController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/PageResourcelocatorController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\PageResourcelocatorController\\:\\:getLocale\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/PageResourcelocatorController.php
@@ -20036,11 +19966,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/ResourcelocatorController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\ResourcelocatorController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/ResourcelocatorController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\ResourcelocatorController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/ResourcelocatorController.php
@@ -20069,11 +19994,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/ResourcelocatorController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\SmartContentItemController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/SmartContentItemController.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\SmartContentItemController\\:\\:getLocale\\(\\) has no return type specified\\.$#"
@@ -20146,11 +20066,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\VersionController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\VersionController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
@@ -20189,11 +20104,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/VersionController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\WebspaceController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Controller/WebspaceController.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Controller\\\\WebspaceController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
@@ -26291,11 +26201,6 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Tests/Unit/Preview/Renderer/PreviewRendererTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\UserInterface\\\\Controller\\\\PreviewController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\UserInterface\\\\Controller\\\\PreviewController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewController.php
@@ -26311,11 +26216,6 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\UserInterface\\\\Controller\\\\PreviewLinkController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewLinkController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\UserInterface\\\\Controller\\\\PreviewLinkController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewLinkController.php
@@ -26329,11 +26229,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PreviewLinkController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\UserInterface\\\\Controller\\\\PublicPreviewController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PublicPreviewController.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\UserInterface\\\\Controller\\\\PublicPreviewController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
@@ -26467,11 +26362,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Controller\\\\RouteController\\:\\:generateUrlResponse\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Controller\\\\RouteController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
 
@@ -27052,11 +26942,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Controller\\\\WebsiteSearchController\\:\\:__construct\\(\\) has parameter \\$indexes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Controller/WebsiteSearchController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Controller\\\\WebsiteSearchController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SearchBundle/Controller/WebsiteSearchController.php
 
@@ -28132,11 +28017,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\UserController\\:\\:checkArguments\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\UserController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
@@ -30286,11 +30166,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetAreaController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetAreaController\\:\\:getLocalizedAreas\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
@@ -30372,11 +30247,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetController\\:\\:findDocument\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
 
@@ -32321,11 +32191,6 @@ parameters:
 			path: src/Sulu/Bundle/TestBundle/Resources/app/config/config.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\TestBundle\\\\SuluTestBundle\\:\\:getConfigDir\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TestBundle/SuluTestBundle.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\TestBundle\\\\Testing\\\\KernelTestCase\\:\\:createKernel\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TestBundle/Testing/KernelTestCase.php
@@ -32662,11 +32527,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\TrashBundle\\\\UserInterface\\\\Controller\\\\Admin\\\\TrashItemController\\:\\:__construct\\(\\) has parameter \\$restoreConfigurationProviderLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator but does not specify its types\\: T$#"
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\TrashBundle\\\\UserInterface\\\\Controller\\\\Admin\\\\TrashItemController\\:\\:getBooleanRequestParameter\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
 
@@ -33084,16 +32944,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\DependencyInjection\\\\SuluWebsiteExtension\\:\\:load\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/DependencyInjection/SuluWebsiteExtension.php
-
-		-
-			message: "#^Parameter \\#1 \\$func of method Doctrine\\\\Common\\\\Collections\\\\ReadableCollection\\<\\(int\\|string\\),mixed\\>\\:\\:map\\(\\) expects Closure\\(mixed\\)\\: string, Closure\\(Sulu\\\\Bundle\\\\WebsiteBundle\\\\Entity\\\\Domain\\)\\: string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Entity/Analytics.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Entity\\\\Analytics\\:\\:\\$domains with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Entity/Analytics.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Entity\\\\AnalyticsRepository\\:\\:findById\\(\\) should return Sulu\\\\Bundle\\\\WebsiteBundle\\\\Entity\\\\AnalyticsInterface but returns mixed\\.$#"
@@ -44691,111 +44541,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/DocumentInspector.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:clear\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:copy\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:createQuery\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:find\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:flush\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:getOptionsResolver\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:getOptionsResolver\\(\\) has parameter \\$eventName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:move\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:persist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:persist\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:publish\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:publish\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:refresh\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:remove\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:removeDraft\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:removeLocale\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:reorder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:restore\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:restore\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:unpublish\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Parameter \\#1 \\$innerQuery of class Sulu\\\\Component\\\\DocumentManager\\\\Event\\\\QueryCreateEvent constructor expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
 			message: "#^Parameter \\#2 \\$locale of class Sulu\\\\Component\\\\DocumentManager\\\\Event\\\\FindEvent constructor expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/DocumentManager.php
@@ -44814,96 +44559,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$locale of class Sulu\\\\Component\\\\DocumentManager\\\\Event\\\\QueryCreateEvent constructor expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\DocumentManager\\:\\:\\$optionsResolvers type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManager.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:clear\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:createQuery\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:find\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:flush\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:move\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:persist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:persist\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:publish\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:publish\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:refresh\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:remove\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:removeDraft\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:removeLocale\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:reorder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:restore\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:restore\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:unpublish\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/DocumentManagerInterface.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\DocumentRegistry\\:\\:assertDocumentExists\\(\\) has no return type specified\\.$#"
@@ -45231,22 +44886,12 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Event/UnpublishEvent.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\EventDispatcher\\\\DebugEventDispatcher\\:\\:doDispatch\\(\\) has no return type specified\\.$#"
+			message: "#^Call to an undefined method object\\:\\:getDebugMessage\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/EventDispatcher/DebugEventDispatcher.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\EventDispatcher\\\\DebugEventDispatcher\\:\\:doDispatch\\(\\) has parameter \\$event with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/EventDispatcher/DebugEventDispatcher.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\EventDispatcher\\\\DebugEventDispatcher\\:\\:doDispatch\\(\\) has parameter \\$eventName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/EventDispatcher/DebugEventDispatcher.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\DocumentManager\\\\EventDispatcher\\\\DebugEventDispatcher\\:\\:doDispatch\\(\\) has parameter \\$listeners with no type specified\\.$#"
+			message: "#^Cannot use array destructuring on callable\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/EventDispatcher/DebugEventDispatcher.php
 
@@ -46376,22 +46021,7 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/GeneralSubscriber.php
 
 		-
-			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/QuerySubscriber.php
-
-		-
 			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/QuerySubscriber.php
-
-		-
-			message: "#^Elseif branch is unreachable because previous condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/QuerySubscriber.php
-
-		-
-			message: "#^Instanceof between \\*NEVER\\* and PHPCR\\\\Query\\\\QueryInterface will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Subscriber/Phpcr/QuerySubscriber.php
 
@@ -49431,11 +49061,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/ListRepresentation.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:getCurrentRequest\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListRestHelper\\:\\:getExcludedIds\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
@@ -49503,11 +49128,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, mixed given\\.$#"
 			count: 4
-			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListRestHelper\\:\\:\\$requestStack \\(Symfony\\\\Component\\\\HttpFoundation\\\\Request\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\RequestStack\\.$#"
-			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/ListRestHelper.php
 
 		-
@@ -50816,22 +50436,17 @@ parameters:
 			path: src/Sulu/Component/Rest/Tests/Unit/Listing/ListQueryBuilderTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\RequestParametersTraitTest\\:\\:getGetBooleanRequestParameterReflection\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\RequestParametersTraitTest\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/RequestParametersTraitTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\RequestParametersTraitTest\\:\\:getGetRequestParameterReflection\\(\\) has no return type specified\\.$#"
+			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/RequestParametersTraitTest.php
 
 		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\RequestParametersTraitTest\\:\\:\\$requestParametersTrait \\(Sulu\\\\Component\\\\Rest\\\\RequestParametersTrait\\) does not accept object\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/RequestParametersTraitTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\RequestParametersTraitTest\\:\\:\\$requestParametersTrait has invalid type Sulu\\\\Component\\\\Rest\\\\RequestParametersTrait\\.$#"
+			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/RequestParametersTraitTest.php
 

@@ -30,8 +30,10 @@
             <argument type="service" id="sulu_core.doctrine_rest_helper"/>
             <argument type="service" id="sulu_core.list_builder.field_descriptor_factory"/>
             <argument type="service" id="sulu_core.doctrine_list_builder_factory"/>
-            <argument type="service" id="jms_serializer"/>
             <argument type="service" id="sulu.repository.target_group"/>
+            <argument type="service" id="sulu.repository.target_group_rule"/>
+            <argument type="service" id="sulu.repository.target_group_condition"/>
+            <argument type="service" id="sulu.repository.target_group_webspace"/>
             <argument type="service" id="doctrine.orm.entity_manager"/>
 
             <tag name="sulu.context" context="admin"/>

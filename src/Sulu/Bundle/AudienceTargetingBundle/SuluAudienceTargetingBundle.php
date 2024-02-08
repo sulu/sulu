@@ -24,12 +24,17 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 /**
  * Sulu Audience Targeting Bundle is for managing target groups, their rules and conditions
  * and applying them to certain contents to delivery user specific content.
+ *
+ * @final
  */
 class SuluAudienceTargetingBundle extends Bundle
 {
     use PersistenceBundleTrait;
 
-    public function build(ContainerBuilder $container)
+    /**
+     * @internal
+     */
+    public function build(ContainerBuilder $container): void
     {
         $this->buildPersistence(
             [
