@@ -129,12 +129,11 @@ jobs:
             matrix:
                 include:
                     - php-version: '7.2'
-                      database: mysql
+                      database: mysql-57
                       phpcr-transport: doctrinedbal
                       dependency-versions: 'lowest'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
-                      docker-compose: mysql_57
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: disabled
                           DATABASE_URL: mysql://root@127.0.0.1:3306/sulu_test?serverVersion=5.7
@@ -142,12 +141,11 @@ jobs:
                           DATABASE_COLLATE: utf8mb4_unicode_ci
 
                     - php-version: '8.0'
-                      database: mysql
+                      database: mysql-57
                       phpcr-transport: doctrinedbal
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, imagick'
                       tools: 'composer:v2'
-                      docker-compose: mysql_57
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
                           DATABASE_URL: mysql://root@127.0.0.1:3306/sulu_test?serverVersion=5.7
@@ -155,12 +153,11 @@ jobs:
                           DATABASE_COLLATE: utf8mb4_unicode_ci
 
                     - php-version: '8.1'
-                      database: postgres
+                      database: postgres-13
                       phpcr-transport: doctrinedbal
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
-                      docker-compose: postgres_13
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
                           DATABASE_URL: postgres://symfony:ChangeMe@127.0.0.1:5432/sulu_test?serverVersion=12.5
@@ -168,12 +165,11 @@ jobs:
                           DATABASE_COLLATE:
 
                     - php-version: '8.3'
-                      database: mysql
+                      database: mysql-80
                       phpcr-transport: jackrabbit
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
-                      docker-compose: mysql_80
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
                           DATABASE_URL: mysql://root:ChangeMe@127.0.0.1:3306/sulu_test?serverVersion=8.0
@@ -186,7 +182,7 @@ jobs:
 
             - name: Start Database
               run: |
-                  docker compose -f tests/docker/docker-compose.${{ matrix.docker-compose }}.yml up --wait
+                  docker compose -f tests/docker/docker-compose.${{ matrix.database }}.yml up --wait
 
             - name: Start Jackrabbit
               if: ${{ matrix.phpcr-transport == 'jackrabbit' }}
