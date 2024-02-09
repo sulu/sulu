@@ -18,6 +18,9 @@ class RefSchemaMetadata implements SchemaMetadataInterface
     ) {
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function toJsonSchema(): array
     {
         return [

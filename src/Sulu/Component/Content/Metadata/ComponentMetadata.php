@@ -20,15 +20,4 @@ namespace Sulu\Component\Content\Metadata;
  */
 class ComponentMetadata extends ItemMetadata
 {
-    private bool $isRef = false;
-
-    public function setIsRef(bool $isRef)
-    {
-        $this->isRef = $isRef;
-    }
-
-    public function getIsRef(): bool
-    {
-        return $this->isRef;
-    }
 }

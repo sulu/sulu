@@ -17,7 +17,6 @@ use Sulu\Component\Content\Compat\Property as LegacyProperty;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\PropertyTag;
-use Sulu\Component\Content\Compat\PropertyType;
 use Sulu\Component\Content\Compat\Section\SectionProperty;
 use Sulu\Component\Content\Compat\StructureInterface;
 use Sulu\Component\Content\Mapper\Translation\TranslatedProperty;
@@ -37,8 +36,14 @@ use Sulu\Component\DocumentManager\NamespaceRegistry;
  */
 class LegacyPropertyFactory
 {
+    /**
+     * @var NamespaceRegistry
+     */
     private $namespaceRegistry;
 
+    /**
+     * @var StructureMetadataFactoryInterface
+     */
     private $structureFactory;
 
     public function __construct(NamespaceRegistry $namespaceRegistry, StructureMetadataFactoryInterface $structureFactory)
@@ -125,7 +130,7 @@ class LegacyPropertyFactory
         }
 
         foreach ($property->getComponents() as $component) {
-            if ($component->getIsRef()) {
+            if ($component->hasTag('sulu.global_block')) {
                 $propertyBridge->addType($this->createReferenceType($component, $structure));
 
                 continue;
@@ -192,7 +197,7 @@ class LegacyPropertyFactory
         $blockProperty->setStructure($structure);
 
         foreach ($property->getComponents() as $component) {
-            if ($component->getIsRef()) {
+            if ($component->hasTag('sulu.global_block')) {
                 $blockProperty->addType($this->createReferenceType($component, $structure));
 
                 continue;
@@ -204,14 +209,14 @@ class LegacyPropertyFactory
         return $blockProperty;
     }
 
-    private function createReferenceType(ComponentMetadata $component, ?StructureInterface $structure = null): ?BlockPropertyType
+    private function createReferenceType(ComponentMetadata $component, ?StructureInterface $structure = null): BlockPropertyType
     {
-        /** @var StructureMetadata $refTypedFormMetadata */
+        /** @var StructureMetadata $structureMetadata */
         $structureMetadata = $this->structureFactory->getStructureMetadata('block', $component->getName());
         if (!$structureMetadata) {
-            // TODO throw an exception?
-
-            return null;
+            throw new \InvalidArgumentException(
+                \sprintf('Global block with name "%s" was not found!', $component->getName())
+            );
         }
 
         if ($structure) {

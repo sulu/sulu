@@ -79,7 +79,6 @@ class SchemaMetadata implements SchemaMetadataInterface
 
         $jsonSchema = \array_merge(
             [],
-            0 < \count($definitionSchema) ? ['definitions' => $definitionSchema] : [],
             $propertiesSchema,
             $this->anyOfsMetadata->toJsonSchema(),
             $this->allOfsMetadata->toJsonSchema()
@@ -90,9 +89,13 @@ class SchemaMetadata implements SchemaMetadataInterface
          * empty schema object as array instead of an object and would break
          */
         if (empty($jsonSchema)) {
-            return [
+            $jsonSchema = [
                 'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
             ];
+        }
+
+        if (0 < \count($definitionSchema)) {
+            $jsonSchema['definitions'] = $definitionSchema;
         }
 
         return $jsonSchema;

@@ -2,8 +2,18 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Types\Metadata;
 
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
@@ -19,16 +29,6 @@ class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorIn
     }
 
     private ?TypedFormMetadata $globalBlocksMetadata = null;
-
-    private function getGlobalBlockMetadata(string $name, string $locale): ?FormMetadata
-    {
-        if (null === $this->globalBlocksMetadata) {
-            $this->globalBlocksMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
-                ->getMetadata('block', $locale, []);
-        }
-
-        return $this->globalBlocksMetadata->getForms()[$name] ?? null;
-    }
 
     public function visitTypedFormMetadata(
         TypedFormMetadata $formMetadata,
@@ -47,6 +47,10 @@ class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorIn
     private function enhanceGlobalBlockTypes(array $items, string $locale, SchemaMetadata $rootSchema): void
     {
         foreach ($items as $item) {
+            if (!$item instanceof FieldMetadata) {
+                continue;
+            }
+
             foreach ($item->getTypes() as $type) {
                 $globalBlockTag = $type->getTagsByName('sulu.global_block')[0] ?? null;
                 if (!$globalBlockTag) {
@@ -55,6 +59,10 @@ class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorIn
 
                 $globalBlockType = $globalBlockTag->getAttribute('global_block');
                 $blockMetadata = $this->getGlobalBlockMetadata($globalBlockType, $locale);
+                if (!$blockMetadata) {
+                    continue;
+                }
+
                 $type->setTitle($blockMetadata->getTitle());
 
                 $rootSchema->addDefinition($blockMetadata->getName(), $blockMetadata->getSchema());
@@ -62,5 +70,18 @@ class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorIn
                 $this->enhanceGlobalBlockTypes($type->getItems(), $locale, $rootSchema);
             }
         }
+    }
+
+    private function getGlobalBlockMetadata(string $name, string $locale): ?FormMetadata
+    {
+        if (null === $this->globalBlocksMetadata) {
+            /** @var TypedFormMetadata $globalBlocksMetadata */
+            $globalBlocksMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
+                ->getMetadata('block', $locale, []);
+
+            $this->globalBlocksMetadata = $globalBlocksMetadata;
+        }
+
+        return $this->globalBlocksMetadata->getForms()[$name] ?? null;
     }
 }

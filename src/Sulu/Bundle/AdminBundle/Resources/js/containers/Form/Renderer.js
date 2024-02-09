@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {action, toJS} from 'mobx';
+import {action} from 'mobx';
 import {observer} from 'mobx-react';
 import jsonpointer from 'json-pointer';
 import Form from '../../components/Form';
@@ -8,7 +8,6 @@ import Router from '../../services/Router';
 import Field from './Field';
 import FormInspector from './FormInspector';
 import Section from './Section';
-import metadataStore from './stores/metadataStore';
 import type {Element} from 'react';
 import type {ErrorCollection, Schema, SchemaEntry, ChangeContext} from './types';
 
@@ -61,21 +60,6 @@ class Renderer extends React.Component<Props> {
         const error = (showAllErrors || formInspector.isFieldModified(itemDataPath)) && errors && errors[schemaKey]
             ? errors[schemaKey]
             : undefined;
-
-        // find a better place to fetch ref block schema data ???
-        if (schemaField.types) {
-            Object.keys(schemaField.types).forEach((key) => {
-                // need to be checked in another way, ref or global flag property ???
-                if (schemaField.types && toJS(schemaField.types[key].form).length === 0) {
-                    metadataStore.getSchema('block', key)
-                        .then(action((schema: ?Schema) => {
-                            if (schemaField.types && schema) {
-                                schemaField.types[key].form = schema;
-                            }
-                        }));
-                }
-            });
-        }
 
         return (
             <Field

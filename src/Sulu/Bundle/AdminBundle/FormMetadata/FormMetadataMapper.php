@@ -224,21 +224,18 @@ class FormMetadataMapper
             if ($itemMetadata instanceof ContentBlockMetadata) {
                 $blockTypeSchemas = [];
                 foreach ($itemMetadata->getComponents() as $blockType) {
+                    $metadata = new SchemaMetadata($this->mapSchemaProperties($blockType->getChildren()));
+                    if ($blockType->hasTag('sulu.global_block')) {
+                        $definitionName = $blockType->getTag('sulu.global_block')['attributes']['global_block'];
+                        $metadata = new RefSchemaMetadata('#/definitions/' . $definitionName);
+                    }
+
                     $blockTypeSchemas[] = new IfThenElseMetadata(
                         new SchemaMetadata([
                             new PropertyMetadata('type', true, new ConstMetadata($blockType->getName())),
                         ]),
-                        new SchemaMetadata($this->mapSchemaProperties($blockType->getChildren()))
+                        $metadata
                     );
-
-                    if ($blockType->hasTag('sulu.global_block')) {
-                        $blockTypeSchemas[] = new IfThenElseMetadata(
-                            new SchemaMetadata([
-                                new PropertyMetadata('type', true, new ConstMetadata($blockType->getName())),
-                            ]),
-                            new RefSchemaMetadata('#/definitions/' . $blockType->getName())
-                        );
-                    }
                 }
 
                 return new PropertyMetadata(

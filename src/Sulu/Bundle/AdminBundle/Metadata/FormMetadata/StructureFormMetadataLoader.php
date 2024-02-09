@@ -96,9 +96,9 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
             return null;
         }
 
-        // FIXME revert if (!$configCache->isFresh()) {
+        if (!$configCache->isFresh()) {
             $this->warmUp($this->cacheDir);
-        // }
+        }
 
         $form = \unserialize(\file_get_contents($configCache->getPath()));
 
@@ -197,9 +197,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
                 }
 
                 foreach ($itemMetadata->getTypes() as $type) {
-                    if (null != $type->getItems()) {
-                        $this->enhanceBlockMetadata($type->getItems());
-                    }
+                    $this->enhanceBlockMetadata($type->getItems());
                 }
             }
 
@@ -221,9 +219,7 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
 
             if ($item instanceof FieldMetadata) {
                 foreach ($item->getTypes() as $type) {
-                    if (null != $type->getItems()) {
-                        $this->validateItems($type->getItems(), $formKey);
-                    }
+                    $this->validateItems($type->getItems(), $formKey);
                 }
 
                 $this->fieldMetadataValidator->validate($item, $formKey);

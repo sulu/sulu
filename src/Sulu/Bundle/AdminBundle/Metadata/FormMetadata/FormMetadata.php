@@ -59,7 +59,7 @@ class FormMetadata extends AbstractMetadata
      *
      * @Exclude(if="'admin_form_metadata_keys_only' in context.getAttribute('groups')")
      */
-    protected $tags;
+    protected $tags = [];
 
     public function setName(string $name)
     {

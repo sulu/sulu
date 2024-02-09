@@ -155,6 +155,9 @@ abstract class ItemMetadata
         return $this;
     }
 
+    /**
+     * @param array{name: string, attributes?: array<string, mixed>} $tag
+     */
     public function addTag(array $tag): self
     {
         $this->tags[] = $tag;
@@ -295,7 +298,7 @@ abstract class ItemMetadata
      */
     public function getTags()
     {
-        return $this->tags ?? [];
+        return $this->tags;
     }
 
     /**

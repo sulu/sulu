@@ -47,6 +47,13 @@ class MetadataStore {
                     throw new Error(errorMessage);
                 }
 
+                if (!this.hasGlobalBlock(typeConfiguration)) {
+                    return {
+                        typeConfiguration,
+                        blockSchema: null,
+                    };
+                }
+
                 return metadataStore.loadMetadata(FORM_TYPE, 'block', {}).then((blockSchema) => {
                     return {
                         typeConfiguration,
@@ -54,21 +61,48 @@ class MetadataStore {
                     };
                 });
             }).then(({typeConfiguration, blockSchema}) => {
+                if (!blockSchema) {
+                    return typeConfiguration.form;
+                }
+
                 Object.keys(typeConfiguration.form).forEach((schemaFieldKey) => {
-                    if (typeConfiguration.form[schemaFieldKey].types) {
-                        Object.keys(typeConfiguration.form[schemaFieldKey].types).forEach((key) => {
-                            // need to be checked in another way, ref or global flag property ???
-                            if (typeConfiguration.form[schemaFieldKey].types && toJS(typeConfiguration.form[schemaFieldKey].types[key].form).length === 0) {
-                                if (typeConfiguration.form[schemaFieldKey].types && blockSchema.types[key]) {
-                                    typeConfiguration.form[schemaFieldKey].types[key].form = blockSchema.types[key].form;
-                                }
-                            }
-                        });
+                    if (!typeConfiguration.form[schemaFieldKey].types) {
+                        return;
                     }
+
+                    Object.keys(typeConfiguration.form[schemaFieldKey].types).forEach((key) => {
+                        if (!typeConfiguration.form[schemaFieldKey].types
+                            || toJS(typeConfiguration.form[schemaFieldKey].types[key].form).length > 0
+                        ) {
+                            return;
+                        }
+
+                        if (typeConfiguration.form[schemaFieldKey].types && blockSchema.types[key]) {
+                            typeConfiguration.form[schemaFieldKey].types[key].form = blockSchema.types[key].form;
+                        }
+                    });
                 });
 
                 return typeConfiguration.form;
             });
+    }
+
+    hasGlobalBlock(typeConfiguration: {form: Object}) {
+        return undefined !== Object.keys(typeConfiguration.form).find((schemaFieldKey) => {
+            if (!typeConfiguration.form[schemaFieldKey].types) {
+                return false;
+            }
+
+            return undefined !== Object.keys(typeConfiguration.form[schemaFieldKey].types).find((key) => {
+                if (!typeConfiguration.form[schemaFieldKey].types
+                    || toJS(typeConfiguration.form[schemaFieldKey].types[key].form).length > 0
+                ) {
+                    return false;
+                }
+
+                return !!typeConfiguration.form[schemaFieldKey].types;
+            });
+        });
     }
 
     getJsonSchema(formKey: string, type: ?string, metadataOptions: ?Object): Promise<Object> {

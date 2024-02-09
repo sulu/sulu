@@ -204,13 +204,13 @@ class PropertiesXmlParser
     {
         $result = $this->loadValues($xpath, $node, ['name', 'ref']);
         if ($result['ref'] && $result['name']) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 "Element '{http://schemas.sulu.io/template/template}type', attribute 'name' / 'ref': The attribute 'name' and 'ref' is not allowed at the same time. (in %s - line %s)",
                 $node->baseURI,
                 $node->getLineNo()
             ));
         } elseif (!$result['ref'] && !$result['name']) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new \InvalidArgumentException(\sprintf(
                 "Element '{http://schemas.sulu.io/template/template}type', attribute 'name' / 'ref': The attribute 'name' or 'ref' is required. (in %s - line %s)",
                 $node->baseURI,
                 $node->getLineNo()
@@ -439,7 +439,6 @@ class PropertiesXmlParser
         foreach ($types as $name => $type) {
             $component = new ComponentMetadata();
             $component->setName($name);
-            $component->setIsRef($type['ref'] ?: false);
 
             if (isset($type['meta']['title'])) {
                 $component->setTitles($type['meta']['title']);
@@ -449,7 +448,7 @@ class PropertiesXmlParser
                 $component->setDescriptions($data['meta']['info_text']);
             }
 
-            if (!$component->getIsRef()) {
+            if (!$type['ref']) {
                 foreach ($this->mapProperties($type['properties']) as $childProperty) {
                     $component->addChild($childProperty);
                 }
