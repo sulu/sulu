@@ -1,7 +1,7 @@
 version: '3'
 services:
   database:
-    image: sulu/mysql-server:5.7 # arm and x86/x64 compatible mysql image
+    image: mysql/mysql-server:5.7
     ports:
       - "3306:3306"
     environment:
