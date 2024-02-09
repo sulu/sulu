@@ -24,6 +24,12 @@
         "source": "https://github.com/sulu/skeleton",
         "docs": "https://docs.sulu.io/"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:mbabker/FOSRestBundle.git"
+        }
+    ],
     "require": {
         "php": "^8.2 || ^8.3",
         "ext-dom": "*",
@@ -47,7 +53,7 @@
         "friendsofsymfony/http-cache": "^2.10",
         "friendsofsymfony/http-cache-bundle": "^2.10.1",
         "friendsofsymfony/jsrouting-bundle": "^2.7 || ^3.0",
-        "friendsofsymfony/rest-bundle": "^3.0.4",
+        "friendsofsymfony/rest-bundle": "dev-sf-7 as 3.99",
         "gedmo/doctrine-extensions": "^3.0.4",
         "guzzlehttp/promises": "^1.0",
         "handcraftedinthealps/goodby-csv": "^1.4",
