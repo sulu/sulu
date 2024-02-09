@@ -134,9 +134,10 @@ jobs:
                       dependency-versions: 'lowest'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
+                      docker-compose: mysql_57
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: disabled
-                          DATABASE_URL: mysql://root:root@127.0.0.1:3306/sulu_test?serverVersion=5.7
+                          DATABASE_URL: mysql://root@127.0.0.1:3306/sulu_test?serverVersion=5.7
                           DATABASE_CHARSET: utf8mb4
                           DATABASE_COLLATE: utf8mb4_unicode_ci
 
@@ -146,9 +147,10 @@ jobs:
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, imagick'
                       tools: 'composer:v2'
+                      docker-compose: mysql_57
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
-                          DATABASE_URL: mysql://root:root@127.0.0.1:3306/sulu_test?serverVersion=5.7
+                          DATABASE_URL: mysql://root@127.0.0.1:3306/sulu_test?serverVersion=5.7
                           DATABASE_CHARSET: utf8mb4
                           DATABASE_COLLATE: utf8mb4_unicode_ci
 
@@ -158,9 +160,10 @@ jobs:
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
+                      docker-compose: postgres_13
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
-                          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/sulu_test?serverVersion=12.5
+                          DATABASE_URL: postgres://symfony:ChangeMe@127.0.0.1:5432/sulu_test?serverVersion=12.5
                           DATABASE_CHARSET: UTF8
                           DATABASE_COLLATE:
 
@@ -170,40 +173,25 @@ jobs:
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
+                      docker-compose: mysql_80
                       env:
-                          SYMFONY_DEPRECATIONS_HELPER: disabled
-                          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/sulu_test?serverVersion=12.5
-                          DATABASE_CHARSET: UTF8
-                          DATABASE_COLLATE:
-
-        services:
-            mysql:
-                image: mysql:5.7
-                env:
-                    MYSQL_ROOT_PASSWORD: root
-                ports:
-                    - 3306:3306
-                options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
-
-            postgres:
-                image: postgres:12.5
-                env:
-                    POSTGRES_USER: postgres
-                    POSTGRES_PASSWORD: postgres
-                ports:
-                    - 5432:5432
-                options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
-            jackrabbit:
-                image: sulu/jackrabbit:2.20-tomcat-filesystem
-                env:
-                    LOG_LEVEL: WARN
-                ports:
-                    - 8080:8080
+                          SYMFONY_DEPRECATIONS_HELPER: weak
+                          DATABASE_URL: mysql://root:ChangeMe@127.0.0.1:3306/sulu_test?serverVersion=8.0
+                          DATABASE_CHARSET: utf8mb4
+                          DATABASE_COLLATE: utf8mb4_unicode_ci
 
         steps:
             - name: Checkout project
               uses: actions/checkout@v2
+
+            - name: Start Database
+              run: |
+                  docker compose -f tests/docker/docker-compose.${{ matrix.docker-compose }}.yml up --wait
+
+            - name: Start Jackrabbit
+              if: ${{ matrix.phpcr-transport == 'jackrabbit' }}
+              run: |
+                  docker compose -f tests/docker/docker-compose.jackrabbit.yml up --wait
 
             - name: Install and configure PHP
               uses: shivammathur/setup-php@v2

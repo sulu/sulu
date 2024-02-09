@@ -1,0 +1,15 @@
+version: '3'
+services:
+  database:
+    image: mysql/mysql-server:8.0 # arm and x86/x64 compatible mysql image
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: 'sulu_test'
+      MYSQL_ROOT_PASSWORD: 'ChangeMe'
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - sulu-mysql80-data:/var/lib/mysql
+
+volumes:
+  sulu-mysql80-data:

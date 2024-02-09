@@ -1,0 +1,15 @@
+version: '3'
+services:
+  database:
+    image: postgres:13-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: 'sulu_test'
+      POSTGRES_PASSWORD: 'ChangeMe'
+      POSTGRES_USER: 'symfony'
+    volumes:
+      - sulu-postgres-13:/var/lib/postgresql/data:rw
+
+volumes:
+  sulu-postgres-13-data:
