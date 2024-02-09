@@ -8,6 +8,7 @@ services:
       POSTGRES_DB: 'sulu_test'
       POSTGRES_PASSWORD: 'ChangeMe'
       POSTGRES_USER: 'symfony'
+    command: postgres -c 'max_connections=1000' # fix failed: FATAL:  sorry, too many clients already
     volumes:
       - sulu-postgres-13-data:/var/lib/postgresql/data:rw
 
