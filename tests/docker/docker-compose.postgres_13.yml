@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: 'ChangeMe'
       POSTGRES_USER: 'symfony'
     volumes:
-      - sulu-postgres-13:/var/lib/postgresql/data:rw
+      - sulu-postgres-13-data:/var/lib/postgresql/data:rw
 
 volumes:
   sulu-postgres-13-data:
