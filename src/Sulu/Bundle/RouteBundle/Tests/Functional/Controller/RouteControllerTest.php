@@ -206,13 +206,38 @@ class RouteControllerTest extends SuluTestCase
                     'month' => '12',
                     'day' => '24',
                 ],
-            ]
+            ],
         );
 
         $result = \json_decode($this->client->getResponse()->getContent(), true);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
         $this->assertSame('/prefix/2023/12/24/christmas-party', $result['resourcelocator']);
+    }
+
+    public function testGenerateObjectImplodeAccess(): void
+    {
+        $this->client->jsonRequest(
+            'POST',
+            '/api/routes?action=generate',
+            [
+                'locale' => 'de',
+                'resourceKey' => 'event-resource-key',
+                'entityClass' => 'event-class',
+                'routeSchema' => '/prefix/{implode("-", object)}',
+                'parts' => [
+                    'title' => 'Christmas Party',
+                    'year' => '2023',
+                    'month' => '12',
+                    'day' => '24',
+                ],
+            ],
+        );
+
+        $result = \json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertHttpStatusCode(200, $this->client->getResponse());
+
+        $this->assertSame('/prefix/christmas-party-2023-12-24', $result['resourcelocator']);
     }
 
     public function testCGetAction(): void
