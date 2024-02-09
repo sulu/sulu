@@ -2,6 +2,8 @@ version: '3'
 services:
   jackrabbit:
     image: sulu/jackrabbit:2.20-tomcat-filesystem
+    ports:
+      - "8080:8080"
     volumes:
       - sulu-jackrabbit-data:/opt/jackrabbit/repository
 
