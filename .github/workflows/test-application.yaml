@@ -129,16 +129,16 @@ jobs:
             matrix:
                 include:
                     - php-version: '7.2'
-                      database: postgres
-                      phpcr-transport: jackrabbit
+                      database: mysql
+                      phpcr-transport: doctrinedbal
                       dependency-versions: 'lowest'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: disabled
-                          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/sulu_test?serverVersion=12.5
-                          DATABASE_CHARSET: UTF8
-                          DATABASE_COLLATE:
+                          DATABASE_URL: mysql://root:root@127.0.0.1:3306/sulu_test?serverVersion=5.7
+                          DATABASE_CHARSET: utf8mb4
+                          DATABASE_COLLATE: utf8mb4_unicode_ci
 
                     - php-version: '8.0'
                       database: mysql
@@ -153,17 +153,28 @@ jobs:
                           DATABASE_COLLATE: utf8mb4_unicode_ci
 
                     - php-version: '8.1'
-                      database: mysql
+                      database: postgres
                       phpcr-transport: doctrinedbal
                       dependency-versions: 'highest'
-                      php-extensions: 'ctype, iconv, mysql, imagick'
+                      php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
-                      composer-stability: dev
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
-                          DATABASE_URL: mysql://root:root@127.0.0.1:3306/sulu_test?serverVersion=5.7
-                          DATABASE_CHARSET: utf8mb4
-                          DATABASE_COLLATE: utf8mb4_unicode_ci
+                          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/sulu_test?serverVersion=12.5
+                          DATABASE_CHARSET: UTF8
+                          DATABASE_COLLATE:
+
+                    - php-version: '8.3'
+                      database: mysql
+                      phpcr-transport: jackrabbit
+                      dependency-versions: 'highest'
+                      php-extensions: 'ctype, iconv, mysql, gd'
+                      tools: 'composer:v2'
+                      env:
+                          SYMFONY_DEPRECATIONS_HELPER: disabled
+                          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/sulu_test?serverVersion=12.5
+                          DATABASE_CHARSET: UTF8
+                          DATABASE_COLLATE:
 
         services:
             mysql:
