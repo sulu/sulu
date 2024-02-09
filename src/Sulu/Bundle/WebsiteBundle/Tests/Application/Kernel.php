@@ -32,5 +32,6 @@ class Kernel extends SuluTestKernel
 
         $context = $this->getContext();
         $loader->load(__DIR__ . '/config/config_' . $context . '.yml');
+        $loader->load(__DIR__ . '/config/webspaces/.*', 'glob');
     }
 }

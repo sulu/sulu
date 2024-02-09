@@ -28,6 +28,8 @@ class Kernel extends SuluTestKernel
         } else {
             $loader->load(__DIR__ . '/config/config_website.yml');
         }
+
+        $loader->load(__DIR__ . '/config/webspaces/.*', 'glob');
     }
 
     public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true): Response
