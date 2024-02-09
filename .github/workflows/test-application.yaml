@@ -153,14 +153,14 @@ jobs:
                           DATABASE_COLLATE: utf8mb4_unicode_ci
 
                     - php-version: '8.1'
-                      database: postgres-13
+                      database: postgres-14
                       phpcr-transport: doctrinedbal
                       dependency-versions: 'highest'
                       php-extensions: 'ctype, iconv, mysql, gd'
                       tools: 'composer:v2'
                       env:
                           SYMFONY_DEPRECATIONS_HELPER: weak
-                          DATABASE_URL: postgres://symfony:ChangeMe@127.0.0.1:5432/sulu_test?serverVersion=12.5
+                          DATABASE_URL: postgres://symfony:ChangeMe@127.0.0.1:5432/sulu_test?serverVersion=14.11
                           DATABASE_CHARSET: UTF8
                           DATABASE_COLLATE:
 
