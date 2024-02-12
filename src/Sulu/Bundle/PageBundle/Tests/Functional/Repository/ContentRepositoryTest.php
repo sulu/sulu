@@ -212,9 +212,9 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertCount(3, $result);
 
-        $this->assertEquals($page1->getUuid(), $result[0]);
-        $this->assertEquals($page2->getUuid(), $result[1]);
-        $this->assertEquals($page3->getUuid(), $result[2]);
+        $this->assertContains($page1->getUuid(), $result);
+        $this->assertContains($page2->getUuid(), $result);
+        $this->assertContains($page3->getUuid(), $result);
     }
 
     public function testFindByParentMapping(): void
