@@ -46,7 +46,7 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
         SnippetResolverInterface $snippetResolver,
         DefaultSnippetManagerInterface $defaultSnippetManager,
         ReferenceStoreInterface $snippetReferenceStore,
-        ReferenceStoreInterface $snippetAreaReferenceStore
+        ?ReferenceStoreInterface $snippetAreaReferenceStore = null
     ) {
         $this->snippetResolver = $snippetResolver;
         $this->defaultSnippetManager = $defaultSnippetManager;

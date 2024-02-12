@@ -60,8 +60,8 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         DefaultSnippetManagerInterface $defaultSnippetManager,
         SnippetResolverInterface $snippetResolver,
         ReferenceStoreInterface $referenceStore,
-        ReferenceStoreInterface $snippetAreaReferenceStore,
-        $defaultEnabled
+        $defaultEnabled,
+        ?ReferenceStoreInterface $snippetAreaReferenceStore = null,
     ) {
         $this->snippetResolver = $snippetResolver;
         $this->defaultSnippetManager = $defaultSnippetManager;
