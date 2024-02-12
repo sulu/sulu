@@ -30,9 +30,9 @@ class CacheInvalidationSubscriber implements EventSubscriberInterface
      * }> $areas
      */
     public function __construct(
-        private readonly DefaultSnippetManagerInterface $defaultSnippetManager,
-        private readonly ?CacheManager $cacheManager,
-        private readonly array $areas
+        private DefaultSnippetManagerInterface $defaultSnippetManager,
+        private ?CacheManager $cacheManager,
+        private array $areas
     ) {
     }
 
