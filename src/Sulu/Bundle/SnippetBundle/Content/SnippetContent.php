@@ -44,7 +44,7 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
     private $referenceStore;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ReferenceStoreInterface|null
      */
     private $snippetAreaReferenceStore;
 

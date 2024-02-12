@@ -38,7 +38,7 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
     private $snippetReferenceStore;
 
     /**
-     * @var ReferenceStoreInterface
+     * @var ReferenceStoreInterface|null
      */
     private $snippetAreaReferenceStore;
 
