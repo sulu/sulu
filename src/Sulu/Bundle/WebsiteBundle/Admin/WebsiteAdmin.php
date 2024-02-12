@@ -19,7 +19,8 @@ use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\WebsiteBundle\Entity\AnalyticsInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
-use Sulu\Component\Webspace\Manager\WebspaceCollection;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class WebsiteAdmin extends Admin
@@ -32,9 +33,9 @@ class WebsiteAdmin extends Admin
     private $viewBuilderFactory;
 
     /**
-     * @var WebspaceCollection
+     * @var WebspaceManagerInterface
      */
-    private $webspaceCollection;
+    private $webspaceManager;
 
     /**
      * @var SecurityCheckerInterface
@@ -48,12 +49,12 @@ class WebsiteAdmin extends Admin
 
     public function __construct(
         ViewBuilderFactoryInterface $viewBuilderFactory,
-        WebspaceCollection $webspaceCollection,
+        WebspaceManagerInterface $webspaceManager,
         SecurityCheckerInterface $securityChecker,
         UrlGeneratorInterface $urlGenerator
     ) {
         $this->viewBuilderFactory = $viewBuilderFactory;
-        $this->webspaceCollection = $webspaceCollection;
+        $this->webspaceManager = $webspaceManager;
         $this->securityChecker = $securityChecker;
         $this->urlGenerator = $urlGenerator;
     }
@@ -89,7 +90,8 @@ class WebsiteAdmin extends Admin
     public function getSecurityContexts()
     {
         $webspaceContexts = [];
-        foreach ($this->webspaceCollection as $webspace) {
+        /* @var Webspace $webspace */
+        foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             $securityContextKey = self::getAnalyticsSecurityContext($webspace->getKey());
             $webspaceContexts[$securityContextKey] = $this->getSecurityContextPermissions();
         }
