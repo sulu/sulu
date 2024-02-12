@@ -20,6 +20,6 @@ class Kernel extends SuluTestKernel
     {
         parent::registerContainerConfiguration($loader);
 
-        $loader->load(__DIR__ . '/config/webspaces/.*', 'glob');
+        $loader->load(__DIR__ . '/config/webspaces/sulu.io.xml');
     }
 }

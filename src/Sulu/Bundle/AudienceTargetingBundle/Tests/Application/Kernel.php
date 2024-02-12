@@ -23,13 +23,13 @@ class Kernel extends SuluTestKernel
     {
         parent::registerContainerConfiguration($loader);
 
+        $loader->load(__DIR__ . '/config/webspaces/sulu.io.xml');
+
         if ('admin' === $this->getContext()) {
             $loader->load(__DIR__ . '/config/config_admin.yml');
         } else {
             $loader->load(__DIR__ . '/config/config_website.yml');
         }
-
-        $loader->load(__DIR__ . '/config/webspaces/.*', 'glob');
     }
 
     public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true): Response

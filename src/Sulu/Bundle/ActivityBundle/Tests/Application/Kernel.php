@@ -21,7 +21,7 @@ class Kernel extends SuluTestKernel
         parent::registerContainerConfiguration($loader);
 
         $envSpecificFile = __DIR__ . '/config/' . $this->getEnvironment() . '/config.yaml';
-        $loader->load(__DIR__ . '/config/webspaces/.*', 'glob');
+        $loader->load(__DIR__ . '/config/webspaces/sulu-io.xml');
 
         if (\file_exists($envSpecificFile)) {
             $loader->load($envSpecificFile);

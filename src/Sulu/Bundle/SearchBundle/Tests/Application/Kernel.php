@@ -32,7 +32,7 @@ class Kernel extends SuluTestKernel
         parent::registerContainerConfiguration($loader);
 
         $loader->load(__DIR__ . '/config/config.yml');
-        $loader->load(__DIR__ . '/config/webspaces/.*', 'glob');
+        $loader->load(__DIR__ . '/config/webspaces/sulu.io.xml');
 
         $environmentConfig = __DIR__ . '/config/config_' . $this->getEnvironment() . '.yml';
         if (\file_exists($environmentConfig)) {
