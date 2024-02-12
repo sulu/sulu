@@ -143,7 +143,7 @@ abstract class AbstractLoader implements LoaderInterface
                 }
             }
 
-            if(!isset($area['cache-invalidation'])) {
+            if (!isset($area['cache-invalidation'])) {
                 $area['cache-invalidation'] = 'true';
             }
 

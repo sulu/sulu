@@ -23,6 +23,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CacheInvalidationSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @param array<int, array{
+     *     key: string,
+     *     cache-invalidation: string
+     * }> $areas
+     */
     public function __construct(
         private readonly DefaultSnippetManagerInterface $defaultSnippetManager,
         private readonly ?CacheManager $cacheManager,
@@ -60,13 +66,13 @@ class CacheInvalidationSubscriber implements EventSubscriberInterface
         $this->invalidateSnippetArea($event->getResourceId(), $event->getSnippetAreaKey());
     }
 
-    private function invalidateSnippetArea(string $snippetUuid, string $areaKey = null): void
+    private function invalidateSnippetArea(string $snippetUuid, ?string $areaKey = null): void
     {
         if (!$this->cacheManager) {
             return;
         }
 
-        if ($areaKey === null) {
+        if (null === $areaKey) {
             $areaKey = $this->defaultSnippetManager->loadType($snippetUuid);
         }
 
