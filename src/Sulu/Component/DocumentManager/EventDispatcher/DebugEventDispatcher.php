@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\DocumentManager\EventDispatcher;
 
+use Psr\EventDispatcher\StoppableEventInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -40,11 +41,16 @@ class DebugEventDispatcher extends EventDispatcher
         $this->logger = $logger ?: new NullLogger();
     }
 
-    protected function doDispatch($listeners, $eventName, $event)
+    protected function callListeners(iterable $listeners, string $eventName, object $event): void
     {
         $eventStopwatch = $this->stopwatch->start($eventName, 'section');
+        $stoppable = $event instanceof StoppableEventInterface;
 
         foreach ($listeners as $listener) {
+            if ($stoppable && $event->isPropagationStopped()) {
+                break;
+            }
+
             list($listenerInstance, $methodName) = $listener;
             $className = \get_class($listenerInstance);
             $name = $this->getDebugClassName($className);
@@ -59,10 +65,6 @@ class DebugEventDispatcher extends EventDispatcher
 
             if ($listenerStopwatch->isStarted()) {
                 $listenerStopwatch->stop();
-            }
-
-            if ($event->isPropagationStopped()) {
-                break;
             }
         }
 

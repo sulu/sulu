@@ -17,11 +17,17 @@ use Sulu\Bundle\PersistenceBundle\PersistenceBundleTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * @final
+ */
 class SuluContactBundle extends Bundle
 {
     use PersistenceBundleTrait;
 
-    public function build(ContainerBuilder $container)
+    /**
+     * @internal
+     */
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 

@@ -53,6 +53,7 @@ class CollaborationRepository
 
         $cacheItem = $this->cache->getItem($this->getCacheIdFromCollaboration($collaboration));
         $value = $cacheItem->get() ?? [];
+        \assert(\is_array($value), 'Value from collaboration cache should be an array.');
         $value[$collaboration->getConnectionId()] = $collaboration;
 
         $value = \array_filter($value, function(Collaboration $collaboration) {
@@ -72,7 +73,9 @@ class CollaborationRepository
     public function delete(Collaboration $collaboration): array
     {
         $cacheItem = $this->cache->getItem($this->getCacheIdFromCollaboration($collaboration));
-        $value = \array_filter($cacheItem->get() ?? [], function(Collaboration $cachedCollaboration) use ($collaboration) {
+        $value = $cacheItem->get() ?? [];
+        \assert(\is_array($value), 'Value from collaboration cache should be an array.');
+        $value = \array_filter($value, function(Collaboration $cachedCollaboration) use ($collaboration) {
             return $collaboration->getConnectionId() !== $cachedCollaboration->getConnectionId();
         });
         $cacheItem->set($value);

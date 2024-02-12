@@ -44,12 +44,14 @@ trait RequestParametersTrait
     /**
      * returns request parameter as boolean 'true' => true , 'false' => false.
      *
+     * @template T of bool|null
+     *
      * @param Request $request
      * @param string $name
      * @param bool $force TRUE if value is mandatory
-     * @param bool $default value if parameter not exists
+     * @param T $default value if parameter not exists
      *
-     * @return bool
+     * @return bool|T
      *
      * @throws MissingParameterException parameter is mandatory but does not exists
      * @throws ParameterDataTypeException parameter hast the wrong data type

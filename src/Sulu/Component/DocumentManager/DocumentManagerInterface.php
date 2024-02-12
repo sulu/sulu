@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\DocumentManager;
 
+use PHPCR\Query\QueryInterface;
 use Sulu\Component\DocumentManager\Query\Query;
 
 interface DocumentManagerInterface
@@ -20,6 +21,7 @@ interface DocumentManagerInterface
      *
      * @param string $identifier Path or UUID
      * @param string $locale Locale
+     * @param array<string, mixed> $options
      *
      * @return object
      *
@@ -43,6 +45,9 @@ interface DocumentManagerInterface
      *
      * @param object $document
      * @param string $locale
+     * @param array<string, mixed> $options
+     *
+     * @return void
      */
     public function persist($document, $locale = null, array $options = []);
 
@@ -51,6 +56,8 @@ interface DocumentManagerInterface
      * session.
      *
      * @param object $document
+     *
+     * @return void
      */
     public function remove($document/*, array $options = []*/);
 
@@ -59,6 +66,8 @@ interface DocumentManagerInterface
      *
      * @param object $document
      * @param string $locale
+     *
+     * @return void
      */
     public function removeLocale($document, $locale);
 
@@ -67,6 +76,8 @@ interface DocumentManagerInterface
      *
      * @param object $document
      * @param string $destId The path of the new parent
+     *
+     * @return void
      */
     public function move($document, $destId);
 
@@ -76,7 +87,7 @@ interface DocumentManagerInterface
      * @param object $document
      * @param string $destPath
      *
-     * @return string
+     * @return string|null
      */
     public function copy($document, $destPath);
 
@@ -97,6 +108,8 @@ interface DocumentManagerInterface
      *
      * @param object $document
      * @param string|null $destId
+     *
+     * @return void
      */
     public function reorder($document, $destId);
 
@@ -105,6 +118,9 @@ interface DocumentManagerInterface
      *
      * @param object $document
      * @param string $locale
+     * @param array<string, mixed> $options
+     *
+     * @return void
      */
     public function publish($document, $locale = null, array $options = []);
 
@@ -113,6 +129,8 @@ interface DocumentManagerInterface
      *
      * @param object $document
      * @param string $locale
+     *
+     * @return void
      */
     public function unpublish($document, $locale);
 
@@ -121,6 +139,8 @@ interface DocumentManagerInterface
      *
      * @param object $document
      * @param string $locale
+     *
+     * @return void
      */
     public function removeDraft($document, $locale);
 
@@ -130,6 +150,9 @@ interface DocumentManagerInterface
      * @param object $document
      * @param string $locale
      * @param string $version The UUID of the version to restore
+     * @param array<string, mixed> $options
+     *
+     * @return void
      *
      * @throws Exception\VersionNotFoundException
      */
@@ -139,16 +162,22 @@ interface DocumentManagerInterface
      * Refresh the given document with the persisted state of the node.
      *
      * @param object $document
+     *
+     * @return void
      */
     public function refresh($document);
 
     /**
      * Persist changes to the persistent storage.
+     *
+     * @return void
      */
     public function flush();
 
     /**
      * Clear the document manager, should reset the underlying PHPCR session and deregister all documents.
+     *
+     * @return void
      */
     public function clear();
 
@@ -158,8 +187,9 @@ interface DocumentManagerInterface
      * NOTE: This should not be used generally as it exposes the database structure and breaks abstraction. Use the
      *       domain-aware query builder instead.
      *
-     * @param mixed $query Either a JCR-SQL2 string, or a PHPCR query object
+     * @param string|QueryInterface $query Either a JCR-SQL2 string, or a PHPCR query object
      * @param string $locale
+     * @param array<string, mixed> $options
      *
      * @return Query
      */

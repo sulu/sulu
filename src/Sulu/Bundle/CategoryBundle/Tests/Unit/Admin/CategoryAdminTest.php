@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\CategoryBundle\Tests\Unit\Admin;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AdminBundle\Admin\View\FormOverlayListViewBuilderInterface;
 use Sulu\Bundle\AdminBundle\Admin\View\FormViewBuilderInterface;
@@ -27,6 +28,8 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class CategoryAdminTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
      * @var ObjectProphecy<ViewBuilderFactoryInterface>
      */

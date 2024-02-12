@@ -16,9 +16,15 @@ use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * @final
+ */
 class SuluSnippetBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
+    /**
+     * @internal
+     */
+    public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new SnippetAreaCompilerPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1024);
 
