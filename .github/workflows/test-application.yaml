@@ -140,18 +140,6 @@ jobs:
                           DATABASE_CHARSET: utf8mb4
                           DATABASE_COLLATE: utf8mb4_unicode_ci
 
-                    - php-version: '7.2'
-                      database: mysql-57
-                      phpcr-transport: doctrinedbal
-                      dependency-versions: 'highest'
-                      php-extensions: 'ctype, iconv, mysql, gd'
-                      tools: 'composer:v2'
-                      env:
-                          SYMFONY_DEPRECATIONS_HELPER: disabled
-                          DATABASE_URL: mysql://root@127.0.0.1:3306/sulu_test?serverVersion=5.7
-                          DATABASE_CHARSET: utf8mb4
-                          DATABASE_COLLATE: utf8mb4_unicode_ci
-
                     - php-version: '8.0'
                       database: mysql-57
                       phpcr-transport: jackrabbit
