@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\WebsiteBundle\DependencyInjection;
 
+use InvalidArgumentException;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 
@@ -308,10 +309,22 @@ class WebspaceConfiguration
                                         ->info('List of languages for the portal')
                                         ->example([['language' => 'de', 'default' => true]])
                                         ->beforeNormalization()
-                                            ->ifTrue(fn ($x) => \array_sum(\array_column($x, 'default')) > 1)
-                                            ->thenInvalid('You can not have more than one default localization')
+                                            ->always(function ($value) {
+                                                if (\is_string($value) || !\array_key_exists(0, $value)) {
+                                                    $value = [$value];
+                                                }
+
+                                                if (\array_sum(\array_column($value, 'default')) > 1) {
+                                                    throw new InvalidArgumentException('You can not have more than one default localization');
+                                                }
+
+                                                return $value;
+                                            })
                                         ->end()
                                         ->arrayPrototype()
+                                            ->beforeNormalization()
+                                                ->ifString()->then(fn ($x) => ['language' => $x])
+                                            ->end()
                                             ->children()
                                                 ->scalarNode('language')->isRequired()->end()
                                                 ->scalarNode('country')->defaultNull()->end()
@@ -360,9 +373,7 @@ class WebspaceConfiguration
                     ->arrayNode('url')
                         ->beforeNormalization()
                             ->always(static function($value) {
-                                if (\is_string($value)) {
-                                    return [['value' => $value]];
-                                } elseif (!\array_key_exists(0, $value)) {
+                                if (\is_string($value) || !\array_key_exists(0, $value)) {
                                     return [$value];
                                 }
 
@@ -370,6 +381,9 @@ class WebspaceConfiguration
                             })
                         ->end()
                         ->arrayPrototype()
+                            ->beforeNormalization()
+                                ->ifString()->then(fn ($x) => ['value' => $x])
+                            ->end()
                             ->children()
                                 ->scalarNode('language')->defaultNull()->end()
                                 ->scalarNode('country')->defaultNull()->end()
@@ -386,13 +400,7 @@ class WebspaceConfiguration
                 ->children()
                     ->arrayNode('custom_url')
                         ->beforeNormalization()
-                            ->always(function($x) {
-                                if (\is_string($x)) {
-                                    return [$x];
-                                }
-
-                                return $x;
-                            })
+                            ->ifString()->then(fn ($x) => [$x])
                         ->end()
                         ->scalarPrototype()
                             ->isRequired()
