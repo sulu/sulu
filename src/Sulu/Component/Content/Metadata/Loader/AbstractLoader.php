@@ -136,11 +136,15 @@ abstract class AbstractLoader implements LoaderInterface
             $area = [];
 
             foreach ($node->attributes as $key => $attr) {
-                if (\in_array($key, ['key'])) {
+                if (\in_array($key, ['key', 'cache-invalidation'])) {
                     $area[$key] = $attr->value;
                 } else {
                     $area['attributes'][$key] = $attr->value;
                 }
+            }
+
+            if(!isset($area['cache-invalidation'])) {
+                $area['cache-invalidation'] = 'true';
             }
 
             $meta = $this->loadMeta('x:meta/x:*', $xpath, $node);

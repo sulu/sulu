@@ -101,8 +101,9 @@
         </service>
 
         <service id="sulu_snippet.cache_invalidation_subscriber" class="Sulu\Bundle\SnippetBundle\EventListener\CacheInvalidationSubscriber">
-            <argument type="service" id="sulu_http_cache.cache_manager" on-invalid="null"/>
             <argument type="service" id="sulu_snippet.default_snippet.manager"/>
+            <argument type="service" id="sulu_http_cache.cache_manager" on-invalid="null"/>
+            <argument>%sulu_snippet.areas%</argument>
 
             <tag name="kernel.event_subscriber"/>
         </service>

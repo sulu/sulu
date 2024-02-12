@@ -44,6 +44,7 @@
             </xs:element>
         </xs:sequence>
         <xs:attribute name="key" type="xs:string" use="required"/>
+        <xs:attribute name="cache-invalidation" type="xs:boolean" default="true"/>
     </xs:complexType>
 
     <xs:complexType name="langType">

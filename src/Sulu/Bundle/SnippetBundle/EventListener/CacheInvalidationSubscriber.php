@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -21,22 +23,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CacheInvalidationSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var CacheManager|null
-     */
-    private $cacheManager;
-
-    /**
-     * @var DefaultSnippetManagerInterface
-     */
-    private $defaultSnippetManager;
-
     public function __construct(
-        ?CacheManager $cacheManager,
-        DefaultSnippetManagerInterface $defaultSnippetManager
+        private readonly DefaultSnippetManagerInterface $defaultSnippetManager,
+        private readonly ?CacheManager $cacheManager,
+        private readonly array $areas
     ) {
-        $this->cacheManager = $cacheManager;
-        $this->defaultSnippetManager = $defaultSnippetManager;
     }
 
     public static function getSubscribedEvents()
@@ -51,41 +42,41 @@ class CacheInvalidationSubscriber implements EventSubscriberInterface
 
     public function invalidateSnippetAreaOnModified(SnippetModifiedEvent $event): void
     {
-        $this->invalidateSnippetAreaBySnippet($event->getResourceId());
+        $this->invalidateSnippetArea($event->getResourceId());
     }
 
     public function invalidateSnippetAreaOnRemoved(SnippetRemovedEvent $event): void
     {
-        $this->invalidateSnippetAreaBySnippet($event->getResourceId());
+        $this->invalidateSnippetArea($event->getResourceId());
     }
 
     public function invalidateSnippetAreaOnAreaRemoved(WebspaceDefaultSnippetRemovedEvent $event): void
     {
-        $this->invalidateSnippetAreaByKey($event->getSnippetAreaKey());
+        $this->invalidateSnippetArea($event->getResourceId(), $event->getSnippetAreaKey());
     }
 
     public function invalidateSnippetAreaOnAreaModified(WebspaceDefaultSnippetModifiedEvent $event): void
     {
-        $this->invalidateSnippetAreaByKey($event->getSnippetAreaKey());
+        $this->invalidateSnippetArea($event->getResourceId(), $event->getSnippetAreaKey());
     }
 
-    private function invalidateSnippetAreaBySnippet(string $snippetUuid): void
-    {
-        $areaKey = $this->defaultSnippetManager->loadType($snippetUuid);
-
-        if (!$areaKey) {
-            return;
-        }
-
-        $this->invalidateSnippetAreaByKey($areaKey);
-    }
-
-    private function invalidateSnippetAreaByKey(string $areaKey): void
+    private function invalidateSnippetArea(string $snippetUuid, string $areaKey = null): void
     {
         if (!$this->cacheManager) {
             return;
         }
 
-        $this->cacheManager->invalidateReference('snippet_area', $areaKey);
+        if ($areaKey === null) {
+            $areaKey = $this->defaultSnippetManager->loadType($snippetUuid);
+        }
+
+        foreach ($this->areas as $area) {
+            if ($area['key'] !== $areaKey || 'false' === $area['cache-invalidation']) {
+                continue;
+            }
+
+            $this->cacheManager->invalidateReference('snippet_area', $areaKey);
+            break;
+        }
     }
 }
