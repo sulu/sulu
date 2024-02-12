@@ -16,6 +16,7 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Util\WildcardUrlUtil;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
@@ -42,9 +43,13 @@ class WebspaceManager implements WebspaceManagerInterface
     ) {
     }
 
-    public function getPortalInformations(?string $environment = null, ?array $types = null): array
+    public function findPortalByKey(?string $key): ?Portal
     {
-        return $this->webspaceCollection->getPortalInformations($environment ?? $this->environment, $types);
+        if (null === $key) {
+            return null;
+        }
+
+        return $this->webspaceCollection->getPortal($key);
     }
 
     public function getWebspaceCollection(): WebspaceCollectionInterface
@@ -53,7 +58,7 @@ class WebspaceManager implements WebspaceManagerInterface
     }
 
     /** @deprecated since 2.6 */
-    public function findWebspaceByKey(string $key): ?Webspace
+    public function findWebspaceByKey(?string $key): ?Webspace
     {
         return $this->webspaceCollection->getWebspace($key);
     }
@@ -276,6 +281,12 @@ class WebspaceManager implements WebspaceManagerInterface
         return $this->createResourceLocatorUrl($portalUrl, $resourceLocator, $scheme);
     }
 
+    /** @deprecated since 2.6 */
+    public function getPortals(): array
+    {
+        return $this->webspaceCollection->getPortals();
+    }
+
     public function getUrls(?string $environment = null): array
     {
         if (null === $environment) {
@@ -289,6 +300,11 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return $urls;
+    }
+
+    public function getPortalInformations(?string $environment = null): array
+    {
+        return $this->getWebspaceCollection()->getPortalInformations($environment ?? $this->environment);
     }
 
     public function getPortalInformationsByWebspaceKey(?string $environment, string $webspaceKey): array

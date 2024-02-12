@@ -113,9 +113,11 @@ class WebspaceCollectionTest extends TestCase
             $segmentSummer
         );
 
-        $this->webspaceCollection = new WebspaceCollection(['default' => $webspace]);
-        $this->webspaceCollection->setPortals(['portal1' => $portal]);
-        $this->webspaceCollection->setPortalInformations($portalInformations);
+        $this->webspaceCollection = new WebspaceCollection(
+            webspaces: ['default' => $webspace],
+            portals: ['portal1' => $portal],
+            portalInformations: $portalInformations,
+        );
     }
 
     public function testGetPortalInformations(): void

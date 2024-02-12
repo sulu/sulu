@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Sulu\Bundle\WebsiteBundle\DependencyInjection;
 
-use InvalidArgumentException;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 
@@ -212,7 +211,6 @@ class WebspaceConfiguration
                             return $value;
                         })
                     ->end()
-                    ->useAttributeAsKey('language', false)
                     ->arrayPrototype()
                         ->children()
                             ->scalarNode('language')->isRequired()->end()
@@ -254,7 +252,7 @@ class WebspaceConfiguration
             ->children()
                 ->arrayNode('segment')
                     ->beforeNormalization()
-                        ->ifTrue(fn ($x) => array_sum(array_column($x, 'default')) !== 1)
+                        ->ifTrue(fn ($x) => 1 !== \array_sum(\array_column($x, 'default')))
                         ->thenInvalid('No default segment in one of the webspaces')
                     ->end()
                     ->useAttributeAsKey('key', false)
@@ -309,13 +307,13 @@ class WebspaceConfiguration
                                         ->info('List of languages for the portal')
                                         ->example([['language' => 'de', 'default' => true]])
                                         ->beforeNormalization()
-                                            ->always(function ($value) {
+                                            ->always(function($value) {
                                                 if (\is_string($value) || !\array_key_exists(0, $value)) {
                                                     $value = [$value];
                                                 }
 
                                                 if (\array_sum(\array_column($value, 'default')) > 1) {
-                                                    throw new InvalidArgumentException('You can not have more than one default localization');
+                                                    throw new \InvalidArgumentException('You can not have more than one default localization');
                                                 }
 
                                                 return $value;

@@ -166,6 +166,12 @@ class WebspaceCollectionBuilder
         $localizationConfigurations = $portalConfiguration['localizations']['localization'] ?? [];
         if ([] === $localizationConfigurations) {
             $portal->setLocalizations($webspace->getLocalizations());
+            foreach ($webspace->getLocalizations() as $localization) {
+                if (!$localization->isDefault()) {
+                    continue;
+                }
+                $portal->setDefaultLocalization($localization);
+            }
         } else {
             foreach ($localizationConfigurations as $localizationConfiguration) {
                 $localization = new Localization($localizationConfiguration['language']);

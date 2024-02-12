@@ -32,10 +32,8 @@ class Kernel extends SuluTestKernel
 
         $context = $this->getContext();
         $loader->load(__DIR__ . '/config/config_' . $context . '.yml');
-        foreach([ "example.xml", "sulu_lo.xml", "sulu_with_localized_tld.xml", "test_lo.xml", "test_with_index.xml" ]
-        as $filename) {
-            $loader->load(__DIR__ . '/config/webspaces/'.$filename);
+        foreach (['example.xml', 'sulu_lo.xml', 'sulu_with_localized_tld.xml', 'test_lo.xml', 'test_with_index.xml'] as $filename) {
+            $loader->load(__DIR__ . '/config/webspaces/' . $filename);
         }
-
     }
 }
