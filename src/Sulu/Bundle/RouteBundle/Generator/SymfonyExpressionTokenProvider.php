@@ -38,7 +38,7 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
                 'Expected "translator" in "%s" to be instance of "%s" but "%s" given.',
                 __CLASS__,
                 LocaleAwareInterface::class,
-                $translator::class,
+                \get_class($translator)
             ));
         }
 
