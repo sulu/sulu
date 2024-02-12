@@ -17,15 +17,13 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryTrait;
 
-/**
- * @extends NestedTreeRepository<AccountInterface>
- */
 class AccountRepository extends NestedTreeRepository implements DataProviderRepositoryInterface, AccountRepositoryInterface
 {
     use DataProviderRepositoryTrait;
 
     public function findById(int $id): ?AccountInterface
     {
+        /** @var AccountInterface */
         return $this->find($id);
     }
 
@@ -382,6 +380,7 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
 
     public function createNew()
     {
+        /** @var class-string<AccountInterface> $className */
         $className = $this->getClassName();
 
         return new $className();

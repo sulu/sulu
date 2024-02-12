@@ -19,10 +19,15 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Integrates markup into symfony.
+ *
+ * @final
  */
 class SuluMarkupBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
+    /**
+     * @internal
+     */
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 

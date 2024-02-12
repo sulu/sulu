@@ -22,12 +22,17 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Entry point for the SuluCategoryBundle.
+ *
+ * @final
  */
 class SuluCategoryBundle extends Bundle
 {
     use PersistenceBundleTrait;
 
-    public function build(ContainerBuilder $container)
+    /**
+     * @internal
+     */
+    public function build(ContainerBuilder $container): void
     {
         $this->buildPersistence(
             [

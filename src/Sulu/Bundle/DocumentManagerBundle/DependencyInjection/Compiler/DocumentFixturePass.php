@@ -20,6 +20,9 @@ class DocumentFixturePass implements CompilerPassInterface
 {
     public const TAG_NAME = 'sulu.document_manager_fixture';
 
+    /**
+     * @return void
+     */
     public function process(ContainerBuilder $container)
     {
         foreach ($container->findTaggedServiceIds(self::TAG_NAME) as $id => $tags) {

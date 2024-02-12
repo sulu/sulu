@@ -21,12 +21,17 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Integrates preview into symfony.
+ *
+ * @final
  */
 class SuluPreviewBundle extends Bundle
 {
     use PersistenceBundleTrait;
 
-    public function build(ContainerBuilder $container)
+    /**
+     * @internal
+     */
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 

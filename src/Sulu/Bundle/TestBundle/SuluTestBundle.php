@@ -15,16 +15,25 @@ use Sulu\Bundle\TestBundle\DependencyInjection\Compiler\ReplaceTestClientPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * @final
+ */
 class SuluTestBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
+    /**
+     * @internal
+     */
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 
         $container->addCompilerPass(new ReplaceTestClientPass());
     }
 
-    public static function getConfigDir()
+    /**
+     * @internal
+     */
+    public static function getConfigDir(): string
     {
         return __DIR__ . '/Resources/app/config';
     }

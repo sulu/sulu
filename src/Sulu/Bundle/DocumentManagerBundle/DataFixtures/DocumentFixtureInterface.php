@@ -21,7 +21,7 @@ interface DocumentFixtureInterface
      * Use the document manager to create and save fixtures.
      * Be sure to call DocumentManager#save() when you are done.
      *
-     * @param DocumentManager
+     * @return void
      */
     public function load(DocumentManager $documentManager);
 
