@@ -14,6 +14,7 @@ namespace Sulu\Component\Webspace\Manager;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
+use Webmozart\Assert\Assert;
 
 /**
  * A collection of all webspaces and portals in a specific sulu installation.
@@ -44,6 +45,7 @@ class WebspaceCollection implements WebspaceCollectionInterface
      */
     public function getWebspaces(): array
     {
+        Assert::notEmpty($this->webspaces, 'The current installation has no webspaces configured.');
         return $this->webspaces;
     }
 
