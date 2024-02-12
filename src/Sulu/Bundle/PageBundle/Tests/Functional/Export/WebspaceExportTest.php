@@ -25,7 +25,6 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\DocumentManager\Exception\MetadataNotFoundException;
-use Sulu\Component\Util\SortUtils;
 
 /**
  * Tests for the Webspace Export class.
@@ -100,14 +99,9 @@ class WebspaceExportTest extends SuluTestCase
             $exportData['locale']
         );
 
-        // we do not care about in which order the documents are returned the export don't force any order
-        // so to avoid flaky tests we order them here by the title value
-        $expectedResultDocuments = SortUtils::multisort($expectedResult['documents'], '[content][title][value]');
-        $exportDataDocuments = SortUtils::multisort($exportData['documents'], '[content][title][value]');
-
         $this->assertEquals(
-            $expectedResultDocuments,
-            $exportDataDocuments
+            $expectedResult['documents'],
+            $exportData['documents']
         );
     }
 
