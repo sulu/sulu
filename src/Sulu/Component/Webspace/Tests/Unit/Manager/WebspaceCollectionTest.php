@@ -54,12 +54,20 @@ class WebspaceCollectionTest extends TestCase
         $environment->addUrl($url);
         $portal->addEnvironment($environment);
 
-        $localizationEnUs = new Localization('en', 'us');
+        $localizationEnUs = new Localization();
+        $localizationEnUs->setCountry('us');
+        $localizationEnUs->setLanguage('en');
         $localizationEnUs->setShadow('auto');
         $localizationEnUs->setDefault(true);
-        $localizationEnCa = new Localization('en', 'ca');
+        $localizationEnCa = new Localization();
+        $localizationEnCa->setCountry('ca');
+        $localizationEnCa->setLanguage('en');
+        $localizationEnCa->setDefault(false);
         $localizationEnUs->addChild($localizationEnCa);
-        $localizationFrCa = new Localization('fr', 'ca');
+        $localizationFrCa = new Localization();
+        $localizationFrCa->setCountry('ca');
+        $localizationFrCa->setLanguage('fr');
+        $localizationFrCa->setDefault(false);
         $portal->addLocalization($localizationEnUs);
         $portal->addLocalization($localizationEnCa);
         $portal->addLocalization($localizationFrCa);
@@ -70,8 +78,8 @@ class WebspaceCollectionTest extends TestCase
         $webspace->addLocalization($localizationEnUs);
         $webspace->addLocalization($localizationFrCa);
         $segmentSummer = new Segment();
-        $segmentSummer->setKey('s');
         $segmentSummer->setMetadata(['title' => ['en' => 'Summer', 'de' => 'Sommer']]);
+        $segmentSummer->setKey('s');
         $segmentSummer->setDefault(true);
         $segmentWinter = new Segment();
         $segmentWinter->setMetadata(['title' => ['en' => 'Winter', 'de' => 'Winter']]);
@@ -105,7 +113,9 @@ class WebspaceCollectionTest extends TestCase
             $segmentSummer
         );
 
-        $this->webspaceCollection = new WebspaceCollection([$webspace], $portals, $portalInformations);
+        $this->webspaceCollection = new WebspaceCollection(['default' => $webspace]);
+        $this->webspaceCollection->setPortals(['portal1' => $portal]);
+        $this->webspaceCollection->setPortalInformations($portalInformations);
     }
 
     public function testGetPortalInformations(): void

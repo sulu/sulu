@@ -16,6 +16,13 @@ use Sulu\Component\Util\ArrayableInterface;
 class Url implements ArrayableInterface
 {
     /**
+     * The url itself.
+     *
+     * @var string
+     */
+    private $url;
+
+    /**
      * The language to which the url leads.
      *
      * @var string
@@ -50,10 +57,15 @@ class Url implements ArrayableInterface
      */
     private $main;
 
-    public function __construct(
-        private ?string $url = null,
-        private ?string $environment = null
-    ) {
+    /**
+     * @var string
+     */
+    private $environment;
+
+    public function __construct($url = null, $environment = null)
+    {
+        $this->url = $url;
+        $this->environment = $environment;
     }
 
     /**

@@ -245,13 +245,7 @@ class StructureSubscriber implements EventSubscriberInterface
     private function getDefaultStructureType(StructureBehavior $document)
     {
         $alias = $this->inspector->getMetadata($document)->getAlias();
-
-        $documentWebspace = $this->inspector->getWebspace($document);
-        if (null === $documentWebspace) {
-            return $this->getDefaultStructureTypeFromConfig($alias);
-        }
-
-        $webspace = $this->webspaceManager->findWebspaceByKey($documentWebspace);
+        $webspace = $this->webspaceManager->findWebspaceByKey($this->inspector->getWebspace($document));
 
         if (!$webspace) {
             return $this->getDefaultStructureTypeFromConfig($alias);

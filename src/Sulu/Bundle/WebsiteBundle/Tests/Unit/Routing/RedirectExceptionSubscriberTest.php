@@ -237,7 +237,8 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->attributes->getAttribute('redirect', null)->willReturn(null);
         $this->attributes->getAttribute('portalUrl', null)->willReturn(null);
 
-        $localization = new Localization('de');
+        $localization = new Localization();
+        $localization->setLanguage('de');
         $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
 
         $this->router->matchRequest(Argument::type(Request::class))->willReturn([
@@ -268,7 +269,8 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->attributes->getAttribute('redirect', null)->willReturn(null);
         $this->attributes->getAttribute('portalUrl', null)->willReturn(null);
 
-        $localization = new Localization('de');
+        $localization = new Localization();
+        $localization->setLanguage('de');
         $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
 
         $this->router->matchRequest(Argument::type(Request::class))->willReturn([
@@ -299,7 +301,8 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->attributes->getAttribute('redirect', null)->willReturn('sulu.lo/de');
         $this->attributes->getAttribute('portalUrl', null)->willReturn('sulu.lo/de/');
 
-        $localization = new Localization('de');
+        $localization = new Localization();
+        $localization->setLanguage('de');
         $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
 
         $this->urlReplacer->replaceCountry(Argument::cetera())->shouldBeCalled()->willReturn('sulu.lo/de');
@@ -334,7 +337,8 @@ class RedirectExceptionSubscriberTest extends TestCase
         $this->attributes->getAttribute('redirect', null)->willReturn('sulu.lo/de');
         $this->attributes->getAttribute('portalUrl', null)->willReturn('sulu.lo/de/');
 
-        $localization = new Localization('de');
+        $localization = new Localization();
+        $localization->setLanguage('de');
         $this->defaultLocaleProvider->getDefaultLocale()->willReturn($localization);
 
         $this->urlReplacer->replaceCountry(Argument::cetera())->shouldBeCalled()->willReturn('sulu.lo/de');

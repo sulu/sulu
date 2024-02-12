@@ -59,17 +59,24 @@ class RequestAnalyzerResolverTest extends TestCase
     {
         if (null === $this->webspaceManager) {
             $webspace = new Webspace();
-            $en = new Localization('en');
-            $en_us = new Localization('en', 'us');
+            $en = new Localization();
+            $en->setLanguage('en');
+            $en_us = new Localization();
+            $en_us->setLanguage('en');
+            $en_us->setCountry('us');
             $en_us->setParent($en);
             $en->addChild($en_us);
 
-            $de = new Localization('de');
-            $de_at = new Localization('de', 'at');
+            $de = new Localization();
+            $de->setLanguage('de');
+            $de_at = new Localization();
+            $de_at->setLanguage('de');
+            $de_at->setCountry('at');
             $de_at->setParent($de);
             $de->addChild($de_at);
 
-            $es = new Localization('es');
+            $es = new Localization();
+            $es->setLanguage('es');
 
             $webspace->addLocalization($en);
             $webspace->addLocalization($de);
@@ -89,11 +96,14 @@ class RequestAnalyzerResolverTest extends TestCase
         $portal = new Portal();
         $portal->setKey('sulu_io_portal');
         $portal->setName('Sulu Portal');
-        $locale = new Localization('de');
+        $locale = new Localization();
+        $locale->setLanguage('de');
         $locale->setDefault(true);
         $portal->addLocalization($locale);
 
-        $localization = new Localization('de', 'at');
+        $localization = new Localization();
+        $localization->setLanguage('de');
+        $localization->setCountry('at');
 
         $segment = new Segment();
         $segment->setKey('s');

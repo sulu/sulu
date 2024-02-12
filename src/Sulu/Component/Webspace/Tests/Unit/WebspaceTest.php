@@ -95,7 +95,8 @@ class WebspaceTest extends TestCase
         $portal->setEnvironments([]);
         $webspace->addPortal($portal);
 
-        $localization = $this->getLocalization($expected['localizations'][0]['language']);
+        $localization = new Localization();
+        $localization->setLanguage($expected['localizations'][0]['language']);
         $portal->addLocalization($localization);
         $webspace->addLocalization($localization);
 
@@ -107,9 +108,11 @@ class WebspaceTest extends TestCase
         $this->assertEquals($expected, $webspace->toArray());
     }
 
-    private function getLocalization(string $language, string $country = '', ?string $shadow = null): Localization
+    private function getLocalization($language, $country = '', $shadow = null)
     {
-        $locale = new Localization($language, $country);
+        $locale = new Localization();
+        $locale->setLanguage($language);
+        $locale->setCountry($country);
         $locale->setShadow($shadow);
 
         return $locale;

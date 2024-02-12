@@ -65,7 +65,11 @@ class PortalLoaderTest extends TestCase
         );
         $this->portalLoader->setResolver($this->loaderResolver->reveal());
 
-        $this->localizations = [new Localization('de'),new Localization('en')];
+        $de = new Localization();
+        $de->setLanguage('de');
+        $en = new Localization();
+        $en->setLanguage('en');
+        $this->localizations = [$de, $en];
     }
 
     public function testLoad(): void

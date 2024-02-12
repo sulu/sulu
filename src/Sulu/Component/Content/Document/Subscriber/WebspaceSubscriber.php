@@ -84,11 +84,8 @@ class WebspaceSubscriber implements EventSubscriberInterface
             $event->getCopiedPath(),
             $this->documentInspector->getLocale($event->getDocument())
         );
-        $documentWebspace = $this->documentInspector->getWebspace($copiedDocument);
-        if (!$documentWebspace) {
-            return;
-        }
-        $webspace = $this->webspaceManager->findWebspaceByKey($documentWebspace);
+
+        $webspace = $this->webspaceManager->findWebspaceByKey($this->documentInspector->getWebspace($copiedDocument));
         if (!$webspace) {
             return;
         }

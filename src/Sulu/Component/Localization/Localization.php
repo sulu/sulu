@@ -33,8 +33,10 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @param string $locale
      * @param string $format
+     *
+     * @return Localization
      */
-    public static function createFromString($locale, $format = self::UNDERSCORE): self
+    public static function createFromString($locale, $format = self::UNDERSCORE)
     {
         $delimiter = '-';
         if (\in_array($format, [self::UNDERSCORE, self::LCID])) {
@@ -43,7 +45,8 @@ class Localization implements \JsonSerializable, ArrayableInterface
 
         $parts = \explode($delimiter, $locale);
 
-        $localization = new self(\strtolower($parts[0]));
+        $localization = new self();
+        $localization->setLanguage(\strtolower($parts[0]));
         if (\count($parts) > 1) {
             $localization->setCountry(\strtolower($parts[1]));
         }
@@ -54,14 +57,16 @@ class Localization implements \JsonSerializable, ArrayableInterface
     /**
      * The language of the localization.
      *
+     * @var string
+     *
      * @Groups({"frontend", "Default"})
      */
-    private string $language;
+    private $language;
 
     /**
      * The country of the localization.
      *
-     * @var string|null
+     * @var string
      *
      * @Groups({"frontend", "Default"})
      */
@@ -101,19 +106,18 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @Groups({"frontend", "Default"})
      */
-    private $default = false;
+    private $default;
 
-    public function __construct(string $language, ?string $country = null, ?string $shadow = null)
+    public function __construct($language = null, $country = null)
     {
         $this->language = $language;
         $this->country = $country;
-        $this->shadow = $shadow;
     }
 
     /**
      * Sets the country of this localization.
      *
-     * @param string|null $country
+     * @param string $country
      */
     public function setCountry($country)
     {
@@ -123,7 +127,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     /**
      * Returns the country of this localization.
      *
-     * @return string|null
+     * @return string
      */
     public function getCountry()
     {
@@ -131,9 +135,19 @@ class Localization implements \JsonSerializable, ArrayableInterface
     }
 
     /**
+     * Sets the language of this localization.
+     *
+     * @param string $language
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+    }
+
+    /**
      * Returns the language of this localization.
      *
-     * @return string|null
+     * @return string
      */
     public function getLanguage()
     {
@@ -173,7 +187,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @param Localization[] $children
      */
-    public function setChildren($children)
+    public function setChildren(array $children): void
     {
         $this->children = $children;
     }
@@ -319,9 +333,11 @@ class Localization implements \JsonSerializable, ArrayableInterface
     public function getAllLocalizations()
     {
         $localizations = [];
-        foreach ($this->getChildren() as $child) {
-            $localizations[] = $child;
-            $localizations = \array_merge($localizations, $child->getAllLocalizations());
+        if (null !== $this->getChildren() && \count($this->getChildren()) > 0) {
+            foreach ($this->getChildren() as $child) {
+                $localizations[] = $child;
+                $localizations = \array_merge($localizations, $child->getAllLocalizations());
+            }
         }
 
         return $localizations;

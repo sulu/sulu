@@ -21,8 +21,11 @@ class GeneratorTest extends TestCase
 {
     public function provideGenerateData()
     {
-        $locales = [new Localization('de'), new Localization('en')];
+        $locales = [new Localization(), new Localization()];
+
+        $locales[0]->setLanguage('de');
         $locales[0]->setCountry('at');
+        $locales[1]->setLanguage('en');
 
         return [
             [

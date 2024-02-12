@@ -98,9 +98,8 @@ class Webspace implements ArrayableInterface
 
     /**
      * Template which is selected by default if no other template is chosen.
-     * Key is the template type and the value is the template.
      *
-     * @var array<string, string>
+     * @var string[]
      */
     private $defaultTemplates = [];
 
@@ -169,7 +168,7 @@ class Webspace implements ArrayableInterface
      *
      * @return Localization[]
      */
-    public function getLocalizations(): array
+    public function getLocalizations()
     {
         return $this->localizations;
     }
@@ -179,7 +178,7 @@ class Webspace implements ArrayableInterface
      *
      * @return Localization[]
      */
-    public function getAllLocalizations(): array
+    public function getAllLocalizations()
     {
         $localizations = [];
         foreach ($this->getLocalizations() as $child) {

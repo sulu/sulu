@@ -184,7 +184,9 @@ class RequestAnalyzerTest extends TestCase
         $portal = new Portal();
         $portal->setKey('sulu');
 
-        $localization = new Localization('de', 'at');
+        $localization = new Localization();
+        $localization->setCountry('at');
+        $localization->setLanguage('de');
 
         $portalInformation = new PortalInformation(
             $config['match_type'],
@@ -227,7 +229,9 @@ class RequestAnalyzerTest extends TestCase
         $portal = new Portal();
         $portal->setKey('sulu');
 
-        $localization = new Localization('de', 'at');
+        $localization = new Localization();
+        $localization->setCountry('at');
+        $localization->setLanguage('de');
 
         $portalInformation = new PortalInformation(
             $config['match_type'],
@@ -289,7 +293,9 @@ class RequestAnalyzerTest extends TestCase
         $portal = new Portal();
         $portal->setKey('sulu');
 
-        $localization = new Localization('de', 'at');
+        $localization = new Localization();
+        $localization->setCountry('at');
+        $localization->setLanguage('de');
 
         $portalInformation = new PortalInformation(
             $config['match_type'],

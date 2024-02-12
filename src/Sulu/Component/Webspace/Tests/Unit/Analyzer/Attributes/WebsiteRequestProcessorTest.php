@@ -58,7 +58,9 @@ class WebsiteRequestProcessorTest extends TestCase
         $portal = new Portal();
         $portal->setKey('sulu');
 
-        $localization = new Localization('de', 'at');
+        $localization = new Localization();
+        $localization->setCountry('at');
+        $localization->setLanguage('de');
 
         $portalInformation1 = new PortalInformation(
             RequestAnalyzerInterface::MATCH_TYPE_FULL,
@@ -109,7 +111,9 @@ class WebsiteRequestProcessorTest extends TestCase
         $portal = new Portal();
         $portal->setKey('sulu');
 
-        $localization = new Localization('de', 'at');
+        $localization = new Localization();
+        $localization->setCountry('at');
+        $localization->setLanguage('de');
 
         $portalInformation1 = new PortalInformation(
             RequestAnalyzerInterface::MATCH_TYPE_FULL,
@@ -159,7 +163,9 @@ class WebsiteRequestProcessorTest extends TestCase
         $portal = new Portal();
         $portal->setKey('sulu');
 
-        $localization = new Localization('de', 'at');
+        $localization = new Localization();
+        $localization->setCountry('at');
+        $localization->setLanguage('de');
 
         $portalInformation1 = new PortalInformation(
             RequestAnalyzerInterface::MATCH_TYPE_FULL,
@@ -209,7 +215,9 @@ class WebsiteRequestProcessorTest extends TestCase
         $portal = new Portal();
         $portal->setKey('sulu');
 
-        $localization = new Localization('de', 'at');
+        $localization = new Localization();
+        $localization->setCountry('at');
+        $localization->setLanguage('de');
 
         return [
             [['portalInformation' => $portalInformation]],
