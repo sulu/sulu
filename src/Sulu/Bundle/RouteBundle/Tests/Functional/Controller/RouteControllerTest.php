@@ -206,7 +206,7 @@ class RouteControllerTest extends SuluTestCase
                     'month' => '12',
                     'day' => '24',
                 ],
-            ],
+            ]
         );
 
         $result = \json_decode($this->client->getResponse()->getContent(), true);
