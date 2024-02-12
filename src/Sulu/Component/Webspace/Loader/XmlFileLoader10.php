@@ -230,8 +230,7 @@ class XmlFileLoader10 extends BaseXmlFileLoader
      */
     protected function generateLocalizationFromNode(\DOMElement $localizationNode, $flat = false, $parent = null)
     {
-        $localization = new Localization();
-        $localization->setLanguage($localizationNode->attributes->getNamedItem('language')->nodeValue);
+        $localization = new Localization($localizationNode->attributes->getNamedItem('language')->nodeValue);
 
         // set parent if given
         if ($parent) {
