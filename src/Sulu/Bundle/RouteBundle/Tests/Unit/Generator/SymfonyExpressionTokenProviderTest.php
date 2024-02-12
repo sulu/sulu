@@ -68,6 +68,22 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         );
     }
 
+    public function testResolveWithImplodeAndArrayObject(): void
+    {
+        $translator = $this->prophesize(Translator::class);
+        $translator->getLocale()->willReturn('de');
+        $translator->setLocale('de')->shouldBeCalled();
+
+        $entity = new \ArrayObject(['title', 'subtitle']);
+
+        $provider = new SymfonyExpressionTokenProvider($translator->reveal());
+
+        $this->assertEquals(
+            'events/title-subtitle',
+            $provider->provide($entity, '"events/" ~ implode("-", object)')
+        );
+    }
+
     public function testResolveWithLocale(): void
     {
         $translator = $this->prophesize(Translator::class);
