@@ -63,8 +63,8 @@ class SnippetContentTest extends TestCase
             $this->defaultSnippetManager->reveal(),
             $this->snippetResolver->reveal(),
             $this->referenceStore->reveal(),
-            $this->snippetAreaReferenceStore,
             false,
+            $this->snippetAreaReferenceStore,
         );
     }
 
@@ -154,5 +154,36 @@ class SnippetContentTest extends TestCase
         $this->contentType->preResolve($property->reveal());
 
         $this->referenceStore->add('123-123-123')->shouldBeCalled();
+    }
+
+    public function testSnippetContentWithNullSnippetAreaReferenceStore(): void
+    {
+        $this->contentType = new SnippetContent(
+            $this->defaultSnippetManager->reveal(),
+            $this->snippetResolver->reveal(),
+            $this->referenceStore->reveal(),
+            false,
+            null
+        );
+
+        $property = $this->prophesize(PropertyInterface::class);
+        $structure = $this->prophesize(StructureBridge::class);
+        $structure->getWebspaceKey()->willReturn('sulu_io');
+        $structure->getLanguageCode()->willReturn('de');
+        $structure->getIsShadow()->wilLReturn(true);
+        $structure->getShadowBaseLanguage()->wilLReturn('en');
+        $property->getStructure()->willReturn($structure->reveal());
+        $property->getValue()->willReturn(['123-123-123']);
+        $property->getParams()->willReturn([]);
+
+        $this->snippetResolver->resolve(['123-123-123'], 'sulu_io', 'de', 'en', false)
+            ->willReturn(
+                [['content' => ['title' => 'test-1'], 'view' => ['title' => 'test-2', 'template' => 'default']]]
+            );
+        $this->referenceStore->add('123-123-123')->shouldNotBeCalled();
+
+        $result = $this->contentType->getContentData($property->reveal());
+
+        $this->assertEquals([['title' => 'test-1']], $result);
     }
 }

@@ -68,6 +68,14 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         $this->referenceStore = $referenceStore;
         $this->snippetAreaReferenceStore = $snippetAreaReferenceStore;
         $this->defaultEnabled = $defaultEnabled;
+
+        if (null === $this->snippetAreaReferenceStore) {
+            @trigger_deprecation(
+                'sulu/sulu',
+                '2.6',
+                'Instantiating the SnippetContent without the $snippetAreaReferenceStore argument is deprecated!'
+            );
+        }
     }
 
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
@@ -179,7 +187,7 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
     {
         try {
             $snippet = $this->defaultSnippetManager->load($webspaceKey, $snippetArea, $locale);
-            $this->snippetAreaReferenceStore->add($snippetArea);
+            $this->snippetAreaReferenceStore?->add($snippetArea);
         } catch (WrongSnippetTypeException $exception) {
             return [];
         }

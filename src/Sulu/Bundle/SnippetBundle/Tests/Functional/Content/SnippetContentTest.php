@@ -90,8 +90,8 @@ class SnippetContentTest extends BaseFunctionalTestCase
             $this->defaultSnippetManager->reveal(),
             $this->getContainer()->get('sulu_snippet.resolver'),
             $this->referenceStore,
-            $this->snippetAreaReferenceStore,
-            true
+            true,
+            $this->snippetAreaReferenceStore
         );
 
         $this->getContainer()->get('sulu_document_manager.document_manager')->clear();
