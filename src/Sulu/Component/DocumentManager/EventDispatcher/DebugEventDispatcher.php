@@ -43,6 +43,9 @@ class DebugEventDispatcher extends EventDispatcher
         $this->logger = $logger ?: new NullLogger();
     }
 
+    /**
+     * @param callable[] $listeners
+     */
     protected function doCallListeners(iterable $listeners, string $eventName, object $event): void
     {
         $eventStopwatch = $this->stopwatch->start($eventName, 'section');

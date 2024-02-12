@@ -17,6 +17,12 @@ if (\class_exists('Symfony\Component\EventDispatcher\Event')) { // indicates its
      */
     trait CallListenersTrait
     {
+        /**
+         * @param callable[] $listeners
+         * @param object $event
+         *
+         * @return void
+         */
         protected function callListeners(iterable $listeners, string $eventName, $event)
         {
             $this->doCallListeners($listeners, $eventName, $event);
@@ -28,6 +34,9 @@ if (\class_exists('Symfony\Component\EventDispatcher\Event')) { // indicates its
      */
     trait CallListenersTrait
     {
+        /**
+         * @param callable[] $listeners
+         */
         protected function callListeners(iterable $listeners, string $eventName, object $event): void
         {
             $this->doCallListeners($listeners, $eventName, $event);
