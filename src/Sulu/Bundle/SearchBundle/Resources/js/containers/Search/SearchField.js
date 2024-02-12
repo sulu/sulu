@@ -117,6 +117,7 @@ class SearchField extends React.Component<Props> {
                     </ArrowMenu>
                     <div className={searchFieldStyles.inputContainer}>
                         <input
+                            autoFocus={true}
                             className={searchFieldStyles.input}
                             onChange={this.handleQueryChange}
                             onKeyPress={this.handleQueryKeyPress}
