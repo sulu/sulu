@@ -17,6 +17,9 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 
+/**
+ * @extends \IteratorAggregate<Webspace>
+ */
 interface WebspaceCollectionInterface extends \IteratorAggregate, \Countable
 {
     public function getWebspace(string $key): ?Webspace;
@@ -41,4 +44,9 @@ interface WebspaceCollectionInterface extends \IteratorAggregate, \Countable
      * @return array<string, PortalInformation>
      */
     public function getPortalInformations(string $environment, ?array $types = null): array;
+
+    /**
+     * @return array{webspaces:array<mixed>, portalInformations:array<mixed>}
+     */
+    public function toArray(): array;
 }

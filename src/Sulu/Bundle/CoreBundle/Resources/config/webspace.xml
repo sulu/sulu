@@ -22,6 +22,7 @@
         <service id="sulu_core.webspace.collection" class="Sulu\Component\Webspace\Manager\WebspaceCollection">
             <factory service="sulu_core.webspace.collection_builder" method="build"/>
         </service>
+        <service id="Sulu\Component\Webspace\Manager\WebspaceCollectionInterface" alias="sulu_core.webspace.collection"/>
 
         <service id="sulu_core.webspace.webspace_manager" class="Sulu\Component\Webspace\Manager\WebspaceManager" public="true">
             <argument type="service" id="sulu_core.webspace.collection"/>

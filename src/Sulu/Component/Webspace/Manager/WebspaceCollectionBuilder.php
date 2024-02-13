@@ -25,6 +25,7 @@ use Sulu\Component\Webspace\Security;
 use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
 use Sulu\Component\Webspace\Webspace;
+use Webmozart\Assert\Assert;
 
 class WebspaceCollectionBuilder
 {
@@ -38,7 +39,7 @@ class WebspaceCollectionBuilder
     ) {
     }
 
-    public function build(): WebspaceCollection
+    public function build(): WebspaceCollectionInterface
     {
         $webspaceRefs = [];
         $portalRefs = [];
@@ -52,11 +53,18 @@ class WebspaceCollectionBuilder
             );
         }
 
-        return new $this->webspaceCollectionClass(
+        $webspaceCollection = new $this->webspaceCollectionClass(
             $webspaceRefs,
             $portalRefs,
             $this->portalInformationBuilder->dumpAndClear(),
         );
+        Assert::isInstanceOf(
+            $webspaceCollection,
+            WebspaceCollectionInterface::class,
+            sprintf('The class "%s" does not implement the "%s"', $this->webspaceCollectionClass, WebspaceCollectionInterface::class),
+        );
+
+        return $webspaceCollection;
     }
 
     /**

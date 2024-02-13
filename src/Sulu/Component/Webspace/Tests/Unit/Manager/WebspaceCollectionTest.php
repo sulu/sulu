@@ -141,6 +141,7 @@ class WebspaceCollectionTest extends TestCase
 
         $this->assertEquals('Default', $webspace['name']);
         $this->assertEquals('default', $webspace['key']);
+
         $this->assertEquals('us', $webspace['localizations'][0]['country']);
         $this->assertEquals('en', $webspace['localizations'][0]['language']);
         $this->assertEquals(true, $webspace['localizations'][0]['default']);

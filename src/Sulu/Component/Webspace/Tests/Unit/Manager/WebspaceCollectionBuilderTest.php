@@ -18,7 +18,6 @@ use Sulu\Component\Webspace\Exception\InvalidTemplateException;
 use Sulu\Component\Webspace\Manager\PortalInformationBuilder;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
-use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
 use Sulu\Component\Webspace\Url\Replacer;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
@@ -66,7 +65,6 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertEquals('Massive Art', $webspaces[0]->getName());
         $this->assertEquals('Sulu CMF', $webspaces[1]->getName());
 
-        /** @var NavigationContext $navigationContext */
         $navigationContext = $webspaces[0]->getNavigation()->getContexts();
         $this->assertEquals(2, \count($navigationContext));
 
@@ -164,6 +162,8 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         );
 
         $webspace = $webspaceCollection->getWebspace('massiveart');
+        $this->assertNotNull($webspace, 'No webspace found with key "massiveart"');
+
         $localizations = $webspace->getLocalizations();
 
         // Checking the main locales

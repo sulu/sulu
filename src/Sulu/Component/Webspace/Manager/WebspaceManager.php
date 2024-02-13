@@ -33,7 +33,7 @@ class WebspaceManager implements WebspaceManagerInterface
     private $portalUrlCache = [];
 
     public function __construct(
-        private WebspaceCollection $webspaceCollection,
+        private WebspaceCollectionInterface $webspaceCollection,
         private ReplacerInterface $urlReplacer,
         private RequestStack $requestStack,
         private string $environment,
@@ -60,6 +60,10 @@ class WebspaceManager implements WebspaceManagerInterface
     /** @deprecated since 2.6 */
     public function findWebspaceByKey(?string $key): ?Webspace
     {
+        if (null === $key) {
+            return null;
+        }
+
         return $this->webspaceCollection->getWebspace($key);
     }
 
@@ -155,9 +159,6 @@ class WebspaceManager implements WebspaceManagerInterface
         ?string $domain = null,
         ?string $scheme = null
     ): array {
-        if (null === $environment) {
-            $environment = $this->environment;
-        }
         if (null === $webspaceKey) {
             $currentWebspace = $this->getCurrentWebspace();
             $webspaceKey = $currentWebspace ? $currentWebspace->getKey() : $webspaceKey;
@@ -165,7 +166,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
         $urls = [];
         $portals = $this->webspaceCollection->getPortalInformations(
-            $environment,
+            $environment ?? $this->environment,
             [RequestAnalyzerInterface::MATCH_TYPE_FULL]
         );
         foreach ($portals as $portalInformation) {

@@ -26,7 +26,7 @@ class WebspaceCollection implements WebspaceCollectionInterface
     /**
      * @param array<string, Webspace> $webspaces All webspaces (indexed by key)
      * @param array<string, Portal> $portals All portals (indexed by key)
-     * @param array<string, Portal> $portalInformations All portalInformations (indexed by key)
+     * @param array<string, array<string, PortalInformation>> $portalInformations All portalInformations (indexed by environment and key)
      */
     public function __construct(
         private array $webspaces = [],
@@ -40,9 +40,6 @@ class WebspaceCollection implements WebspaceCollectionInterface
         return $this->webspaces[$key] ?? null;
     }
 
-    /**
-     * @return array<string, Webspace>
-     */
     public function getWebspaces(): array
     {
         Assert::notEmpty($this->webspaces, 'The current installation has no webspaces configured.');
@@ -55,11 +52,6 @@ class WebspaceCollection implements WebspaceCollectionInterface
         return $this->portals[$key] ?? null;
     }
 
-    /**
-     * Returns all the portals of this collection.
-     *
-     * @return array<string, Portal>
-     */
     public function getPortals(): array
     {
         return $this->portals;
@@ -94,9 +86,6 @@ class WebspaceCollection implements WebspaceCollectionInterface
         return new \ArrayIterator($this->webspaces);
     }
 
-    /**
-     * Returns the content of these portals as array.
-     */
     public function toArray(): array
     {
         $collection = [];
