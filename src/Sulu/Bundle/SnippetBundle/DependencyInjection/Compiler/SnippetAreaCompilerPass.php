@@ -44,6 +44,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
                 'key' => $template,
                 'template' => $template,
                 'title' => $templateTitles,
+                'cache-invalidation' => 'false',
             ];
 
             foreach ($structure->getAreas() as $area) {
@@ -79,6 +80,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
     private function getArea($template, $area, $locales, $templateTitles)
     {
         $key = $area['key'];
+        $cacheInvalidation = $area['cache-invalidation'];
 
         $titles = [];
 
@@ -95,6 +97,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
             'key' => $key,
             'template' => $template,
             'title' => $titles,
+            'cache-invalidation' => $cacheInvalidation,
         ];
     }
 }
