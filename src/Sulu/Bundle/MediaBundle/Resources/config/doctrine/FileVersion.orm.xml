@@ -35,7 +35,7 @@
 
         <one-to-one field="defaultMeta" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionMeta">
             <cascade>
-                <cascade-all />
+                <cascade-persist />
             </cascade>
 
             <join-column name="idFileVersionsMetaDefault" referenced-column-name="id" nullable="true" on-delete="CASCADE" />
