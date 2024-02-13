@@ -23,9 +23,9 @@ class Kernel extends SuluTestKernel
 
         $loader->load(__DIR__ . '/config/config.yml');
 
+        $loader->load(__DIR__ . '/config/webspaces/destination.io.xml');
         $loader->load(__DIR__ . '/config/webspaces/sulu.io.xml');
         $loader->load(__DIR__ . '/config/webspaces/test.io.xml');
-        $loader->load(__DIR__ . '/config/webspaces/destination.io.xml');
 
         if ('jackrabbit' === \getenv('PHPCR_TRANSPORT')) {
             $loader->load(__DIR__ . '/config/versioning.yml');

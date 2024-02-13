@@ -61,7 +61,7 @@ class WebspaceCollectionBuilder
         Assert::isInstanceOf(
             $webspaceCollection,
             WebspaceCollectionInterface::class,
-            sprintf('The class "%s" does not implement the "%s"', $this->webspaceCollectionClass, WebspaceCollectionInterface::class),
+            \sprintf('The class "%s" does not implement the "%s"', $this->webspaceCollectionClass, WebspaceCollectionInterface::class),
         );
 
         return $webspaceCollection;
@@ -150,7 +150,7 @@ class WebspaceCollectionBuilder
         foreach ($webspaceConfiguration['segments']['segment'] ?? [] as $segmentConfiguration) {
             $segment = new Segment();
             $segment->setKey($segmentConfiguration['key']);
-            $segment->setMetadata($segmentConfiguration['metadata'] ?? []);
+            $segment->setMetadata($segmentConfiguration['meta'] ?? []);
             $segment->setDefault($segmentConfiguration['default']);
 
             $webspace->addSegment($segment);
@@ -185,6 +185,7 @@ class WebspaceCollectionBuilder
                 $localization = new Localization($localizationConfiguration['language']);
                 $localization->setCountry($localizationConfiguration['country']);
                 $localization->setDefault($localizationConfiguration['default']);
+                $localization->setShadow($localizationConfiguration['shadow']);
 
                 $portal->addLocalization($localization);
             }
@@ -208,7 +209,7 @@ class WebspaceCollectionBuilder
     {
         $webspace->setTheme($webspaceConfiguration['theme']);
 
-        foreach ($webspaceConfiguration['templates']['template'] ?? [] as $type => $template) {
+        foreach ($webspaceConfiguration['templates']['template'] ?? [] as ['type' => $type, 'value' => $template]) {
             $webspace->addTemplate($type, $template);
         }
 
@@ -217,9 +218,6 @@ class WebspaceCollectionBuilder
         }
 
         foreach ($webspaceConfiguration['default_templates']['default_template'] as $type => $defaultTemplate) {
-            if ('homepage' == $type) {
-                $type = 'home';
-            }
             if (\in_array($defaultTemplate, $webspace->getExcludedTemplates())) {
                 throw new InvalidTemplateException($webspace, $defaultTemplate);
             }
