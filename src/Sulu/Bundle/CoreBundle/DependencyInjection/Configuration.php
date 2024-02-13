@@ -67,6 +67,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('config_dir')
                     ->defaultValue('%kernel.project_dir%/config/webspaces')
+                    ->setDeprecated('sulu/sulu', '2.6', 'The child node "%node%" at path "%path%" is deprecated and config will only be read from the default directory.')
                 ->end()
             ->end()
         ->end();
