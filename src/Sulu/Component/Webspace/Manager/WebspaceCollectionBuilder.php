@@ -208,7 +208,6 @@ class WebspaceCollectionBuilder
     protected function buildTemplates(array $webspaceConfiguration, Webspace $webspace): void
     {
         $webspace->setTheme($webspaceConfiguration['theme']);
-
         foreach ($webspaceConfiguration['templates']['template'] ?? [] as ['type' => $type, 'value' => $template]) {
             $webspace->addTemplate($type, $template);
         }
@@ -221,7 +220,11 @@ class WebspaceCollectionBuilder
             if (\in_array($defaultTemplate, $webspace->getExcludedTemplates())) {
                 throw new InvalidTemplateException($webspace, $defaultTemplate);
             }
+
             $webspace->addDefaultTemplate($type, $defaultTemplate);
+            if($type === 'homepage'){
+                $webspace->addDefaultTemplate('home', $defaultTemplate);
+            }
         }
 
         $this->buildErrorTemplates($webspaceConfiguration, $webspace);

@@ -42,8 +42,6 @@ class WebspaceCollection implements WebspaceCollectionInterface
 
     public function getWebspaces(): array
     {
-        Assert::notEmpty($this->webspaces, 'The current installation has no webspaces configured.');
-
         return $this->webspaces;
     }
 
