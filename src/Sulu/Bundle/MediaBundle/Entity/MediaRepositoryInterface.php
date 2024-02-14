@@ -37,7 +37,7 @@ interface MediaRepositoryInterface extends RepositoryInterface
      * to be able to render the actual media.
      *
      * @param int $id
-     * @param string $formatKey
+     * @param string|null $formatKey
      *
      * @return MediaInterface|null
      */

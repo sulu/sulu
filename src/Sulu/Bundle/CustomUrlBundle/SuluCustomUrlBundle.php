@@ -18,10 +18,15 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Integrates custom-urls into sulu.
+ *
+ * @final
  */
 class SuluCustomUrlBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
+    /**
+     * @internal
+     */
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 

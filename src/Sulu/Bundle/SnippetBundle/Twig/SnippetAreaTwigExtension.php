@@ -14,6 +14,7 @@ namespace Sulu\Bundle\SnippetBundle\Twig;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\DocumentManager\Exception\DocumentNotFoundException;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Twig\Extension\AbstractExtension;
@@ -39,14 +40,21 @@ class SnippetAreaTwigExtension extends AbstractExtension
      */
     private $snippetResolver;
 
+    /**
+     * @var ReferenceStoreInterface
+     */
+    private $snippetAreaReferenceStore;
+
     public function __construct(
         DefaultSnippetManagerInterface $defaultSnippetManager,
         RequestAnalyzerInterface $requestAnalyzer,
-        SnippetResolverInterface $snippetResolver
+        SnippetResolverInterface $snippetResolver,
+        ReferenceStoreInterface $snippetAreaReferenceStore
     ) {
         $this->defaultSnippetManager = $defaultSnippetManager;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->snippetResolver = $snippetResolver;
+        $this->snippetAreaReferenceStore = $snippetAreaReferenceStore;
     }
 
     public function getFunctions()
@@ -73,6 +81,8 @@ class SnippetAreaTwigExtension extends AbstractExtension
         if (!$locale) {
             $locale = $this->requestAnalyzer->getCurrentLocalization()->getLocale();
         }
+
+        $this->snippetAreaReferenceStore->add($area);
 
         try {
             $snippet = $this->defaultSnippetManager->load($webspaceKey, $area, $locale);

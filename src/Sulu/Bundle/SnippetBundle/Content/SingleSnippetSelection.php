@@ -37,14 +37,29 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
      */
     private $snippetReferenceStore;
 
+    /**
+     * @var ReferenceStoreInterface|null
+     */
+    private $snippetAreaReferenceStore;
+
     public function __construct(
         SnippetResolverInterface $snippetResolver,
         DefaultSnippetManagerInterface $defaultSnippetManager,
-        ReferenceStoreInterface $snippetReferenceStore
+        ReferenceStoreInterface $snippetReferenceStore,
+        ?ReferenceStoreInterface $snippetAreaReferenceStore = null
     ) {
         $this->snippetResolver = $snippetResolver;
         $this->defaultSnippetManager = $defaultSnippetManager;
         $this->snippetReferenceStore = $snippetReferenceStore;
+        $this->snippetAreaReferenceStore = $snippetAreaReferenceStore;
+
+        if (null === $this->snippetAreaReferenceStore) {
+            @trigger_deprecation(
+                'sulu/sulu',
+                '2.6',
+                'Instantiating the SingleSnippetSelection without the $snippetAreaReferenceStore argument is deprecated!'
+            );
+        }
 
         parent::__construct('SingleSnippetSelection', null);
     }
@@ -123,6 +138,7 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
     {
         try {
             $snippet = $this->defaultSnippetManager->load($webspaceKey, $snippetArea, $locale);
+            $this->snippetAreaReferenceStore?->add($snippetArea);
         } catch (WrongSnippetTypeException $exception) {
             return null;
         }

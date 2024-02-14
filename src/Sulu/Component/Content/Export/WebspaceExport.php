@@ -308,6 +308,8 @@ class WebspaceExport extends Export implements WebspaceExportInterface
 
         $queryString = 'SELECT * FROM [nt:unstructured] AS a WHERE ' . \implode(' AND ', $where);
 
+        $queryString .= ' ORDER BY [jcr:path] ASC';
+
         return $queryString;
     }
 
