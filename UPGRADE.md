@@ -101,6 +101,11 @@ Additionally, the following packages where upgraded:
 
 This update is also handled normally by the update build command automatically.
 
+### Query parameters in the snippet controller work again
+
+In the previous version the `SnippetController` would return the entire content of the snippet in the `cgetAction`. Now
+it respects the list of fields provided in the query parameter and only returns those.
+
 ### DocumentToUuidTransformer return type changed
 
 For compatibility to Symfony 7 the `DocumentToUuidTransformer` methods return types changed:
