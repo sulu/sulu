@@ -210,7 +210,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $view = View::create($data);
 
         $requestedFields = $this->listRestHelper->getFields() ?? [];
-        if ($requestedFields !== []) {
+        if ([] !== $requestedFields) {
             $context = new Context();
             $context->addExclusionStrategy(new FieldsExclusionStrategy($requestedFields));
             $view->setContext($context);
