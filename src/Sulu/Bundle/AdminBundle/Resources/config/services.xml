@@ -268,6 +268,7 @@
             class="Sulu\Bundle\AdminBundle\Command\ViewDebugCommand"
         >
             <argument type="service" id="sulu_admin.view_registry"/>
+            <tag name="sulu.context" context="admin"/>
             <tag name="console.command"/>
         </service>
 
