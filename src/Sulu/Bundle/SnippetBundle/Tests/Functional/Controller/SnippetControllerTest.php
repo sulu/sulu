@@ -297,6 +297,9 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $response);
 
         $result = \json_decode($response->getContent(), true);
+        $this->assertIsArray($result);
+
+        /** @array array<int, array<string, mixed>> $snippetData */
         $snippetData = $result['_embedded']['snippets'];
 
         foreach ($snippetData as $snippet) {
