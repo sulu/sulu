@@ -51,7 +51,7 @@ class ViewDebugCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $views = $this->viewRegistry->getViews();
-        $name = $input->getArgument('name');
+        $name = (string) $input->getArgument('name');
 
         $view = null;
         if ($name) {
@@ -124,7 +124,7 @@ class ViewDebugCommand extends Command
         return $tableRows;
     }
 
-    private function handleList(View $view, array $tableRows)
+    private function handleList(View $view, array $tableRows): array
     {
         $tableRows[] = ['resourceKey', $view->getOption('resourceKey')];
         $tableRows[] = ['listKey', $view->getOption('listKey')];

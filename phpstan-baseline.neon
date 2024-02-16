@@ -531,6 +531,71 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
 
 		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:default\\(\\) has parameter \\$tableRows with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:default\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:findViewNameContaining\\(\\) has parameter \\$views with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:findViewNameContaining\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:handleFormView\\(\\) has parameter \\$tableRows with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:handleFormView\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:handleList\\(\\) has parameter \\$tableRows with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:handleList\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:handleResourceTab\\(\\) has parameter \\$tableRows with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:handleResourceTab\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ViewRegistry\\:\\:findViewByName\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
 			message: "#^Binary operation \"\\*\" between string and 1000 results in an error\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
@@ -15367,6 +15432,16 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatLoader\\\\BaseXmlFormatLoader\\:\\:setGlobalOptions\\(\\) has parameter \\$globalOptions with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
+
+		-
+			message: "#^Parameter \\#1 \\$file of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatLoader\\\\BaseXmlFormatLoader\\:\\:parseXml\\(\\) expects string, array\\|string given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
+
+		-
+			message: "#^Parameter \\#1 \\$file of static method Symfony\\\\Component\\\\Config\\\\Util\\\\XmlUtils\\:\\:loadFile\\(\\) expects string, array\\|string given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
 
@@ -39846,6 +39921,11 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
 
 		-
+			message: "#^Parameter \\#1 \\$resource of class Symfony\\\\Component\\\\Config\\\\Resource\\\\FileResource constructor expects string, array\\|string given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
+
+		-
 			message: "#^Parameter \\#1 \\$type of method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:assertExists\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
@@ -52782,6 +52862,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$country of method Sulu\\\\Component\\\\Localization\\\\Localization\\:\\:setCountry\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
+
+		-
+			message: "#^Parameter \\#1 \\$file of method Sulu\\\\Component\\\\Webspace\\\\Loader\\\\XmlFileLoader10\\:\\:parseXml\\(\\) expects string, array\\|string given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
