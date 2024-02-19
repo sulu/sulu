@@ -492,9 +492,9 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
             (string) $propertyMetadata->getName(),
             $propertyMetadata->isRequired(),
             new SchemaMetadata([
-                new PropertyMetadata('imageId', false),
+                new PropertyMetadata('imageId', $propertyMetadata->isRequired()),
                 new PropertyMetadata(
-                    'hotspots', false, new ArrayMetadata(
+                    'hotspots', $propertyMetadata->isRequired(), new ArrayMetadata(
                         new AllOfsMetadata($blockTypeSchemas)
                     )),
             ])

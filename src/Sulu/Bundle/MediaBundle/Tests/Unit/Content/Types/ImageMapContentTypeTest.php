@@ -1198,6 +1198,7 @@ class ImageMapContentTypeTest extends TestCase
         ];
 
         $metadata = new ContentPropertyMetadata('imageMap');
+        $metadata->setRequired(true);
         foreach ($types as $key => $config) {
             $type = new ComponentMetadata($key);
 
@@ -1266,6 +1267,91 @@ class ImageMapContentTypeTest extends TestCase
                 ],
             ],
             'required' => ['imageId', 'hotspots'],
+        ], $result->toJsonSchema());
+    }
+
+    public function testMapPropertyMetatadaWithRequiredFalse(): void
+    {
+        $types = [
+            'headline' => [
+                'isGlobalBlock' => true,
+            ],
+            'text' => [
+                'children' => [
+                    'text' => 'text_line',
+                ],
+            ],
+        ];
+
+        $metadata = new ContentPropertyMetadata('imageMap');
+        $metadata->setRequired(false);
+        foreach ($types as $key => $config) {
+            $type = new ComponentMetadata($key);
+
+            $isGlobalBlock = $config['isGlobalBlock'] ?? false;
+            if ($isGlobalBlock) {
+                $type->addTag([
+                    'name' => 'sulu.global_block',
+                    'attributes' => [
+                        'global_block' => $key,
+                    ],
+                ]);
+            }
+
+            foreach ($config['children'] ?? [] as $childName => $childType) {
+                $itemMetadata = new ContentPropertyMetadata($childName);
+                $type->addChild($itemMetadata);
+            }
+
+            if (!$isGlobalBlock) {
+                $itemSchemaMetadata = new SchemaMetadata([
+                    new SchemaPropertyMetadata('type', false),
+                ]);
+                $this->formMetadataMapper->mapSchema($type->getChildren())->willReturn($itemSchemaMetadata);
+            }
+            $metadata->addComponent($type);
+        }
+
+        $result = $this->imageMapContentType->mapPropertyMetadata($metadata);
+        $this->assertSame([
+            'type' => 'object',
+            'properties' => [
+                'hotspots' => [
+                    'type' => 'array',
+                    'items' => [
+                        'allOf' => [
+                            [
+                                'if' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'type' => [
+                                            'const' => 'headline',
+                                        ],
+                                    ],
+                                    'required' => ['type'],
+                                ],
+                                'then' => [
+                                    '$ref' => '#/definitions/headline',
+                                ],
+                            ],
+                            [
+                                'if' => [
+                                    'type' => 'object',
+                                    'properties' => [
+                                        'type' => [
+                                            'const' => 'text',
+                                        ],
+                                    ],
+                                    'required' => ['type'],
+                                ],
+                                'then' => [
+                                    'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ], $result->toJsonSchema());
     }
 }
