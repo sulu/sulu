@@ -30731,11 +30731,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
 
 		-
-			message: "#^Class Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetContent constructor invoked with 5 parameters, 4 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
-
-		-
 			message: "#^Parameter \\#1 \\$array of function next expects array\\|object, mixed given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
@@ -31234,16 +31229,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Unit\\\\Admin\\\\SnippetAdminTest\\:\\:testConfigureViews\\(\\) has parameter \\$locales with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Admin/SnippetAdminTest.php
-
-		-
-			message: "#^Class Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetContent constructor invoked with 5 parameters, 4 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetContentTest.php
-
-		-
-			message: "#^Parameter \\#4 \\$defaultEnabled of class Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetContent constructor expects true, false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetContentTest.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Unit\\\\Content\\\\SnippetDataProviderTest\\:\\:provideResolveDataItems\\(\\) has no return type specified\\.$#"

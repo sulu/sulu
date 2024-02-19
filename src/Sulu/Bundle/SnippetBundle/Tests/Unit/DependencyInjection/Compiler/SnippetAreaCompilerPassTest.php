@@ -58,6 +58,7 @@ class SnippetAreaCompilerPassTest extends TestCase
                 'test' => [
                     'key' => 'test',
                     'template' => 'test',
+                    'cache-invalidation' => 'false',
                     'title' => [
                         'de' => 'Test DE',
                         'en' => 'Test EN',
@@ -66,6 +67,7 @@ class SnippetAreaCompilerPassTest extends TestCase
                 'hotel' => [
                     'key' => 'hotel',
                     'template' => 'hotel',
+                    'cache-invalidation' => 'false',
                     'title' => [
                         'de' => 'Hotel DE',
                         'en' => 'Hotel EN',
@@ -86,6 +88,7 @@ class SnippetAreaCompilerPassTest extends TestCase
             [
                 'article' => [
                     'key' => 'article',
+                    'cache-invalidation' => 'true',
                     'title' => [
                         'de' => 'Artikel Test',
                         'en' => 'Article Test',
@@ -113,6 +116,7 @@ class SnippetAreaCompilerPassTest extends TestCase
                 'article' => [
                     'key' => 'article',
                     'template' => 'test',
+                    'cache-invalidation' => 'true',
                     'title' => [
                         'de' => 'Artikel Test',
                         'en' => 'Article Test',
