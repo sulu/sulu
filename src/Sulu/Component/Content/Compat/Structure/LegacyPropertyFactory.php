@@ -42,14 +42,25 @@ class LegacyPropertyFactory
     private $namespaceRegistry;
 
     /**
-     * @var StructureMetadataFactoryInterface
+     * @var StructureMetadataFactoryInterface|null
      */
     private $structureFactory;
 
-    public function __construct(NamespaceRegistry $namespaceRegistry, StructureMetadataFactoryInterface $structureFactory)
+    public function __construct(NamespaceRegistry $namespaceRegistry, ?StructureMetadataFactoryInterface $structureFactory = null)
     {
         $this->namespaceRegistry = $namespaceRegistry;
         $this->structureFactory = $structureFactory;
+
+        if (!$structureFactory) {
+            @trigger_deprecation(
+                'sulu/sulu',
+                '2.6',
+                \sprintf(
+                    'The usage of the "%s" without the service the "sulu_page.structure.factory" is deprecated and will not longer work in Sulu 3.0.',
+                    self::class
+                )
+            );
+        }
     }
 
     /**
@@ -211,6 +222,10 @@ class LegacyPropertyFactory
 
     private function createReferenceType(ComponentMetadata $component, ?StructureInterface $structure = null): BlockPropertyType
     {
+        if (!$this->structureFactory) {
+            throw new \RuntimeException('The required service "sulu_page.structure.factory" was not injected.');
+        }
+
         /** @var StructureMetadata $structureMetadata */
         $structureMetadata = $this->structureFactory->getStructureMetadata('block', $component->getName());
         if (!$structureMetadata) {
