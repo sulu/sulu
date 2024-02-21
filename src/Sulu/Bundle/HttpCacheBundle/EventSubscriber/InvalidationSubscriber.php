@@ -81,6 +81,11 @@ class InvalidationSubscriber implements EventSubscriberInterface
     private $environment;
 
     /**
+     * @var bool
+     */
+    private $activated = true;
+
+    /**
      * @param string $environment - kernel envionment, dev, prod, etc
      */
     public function __construct(
@@ -103,6 +108,16 @@ class InvalidationSubscriber implements EventSubscriberInterface
         $this->environment = $environment;
     }
 
+    public function deactivate(): void
+    {
+        $this->activated = false;
+    }
+
+    public function activate(): void
+    {
+        $this->activated = true;
+    }
+
     public static function getSubscribedEvents()
     {
         return [
@@ -120,6 +135,10 @@ class InvalidationSubscriber implements EventSubscriberInterface
      */
     public function invalidateDocumentBeforePublishing(PublishEvent $event)
     {
+        if (false === $this->activated) {
+            return;
+        }
+
         $document = $event->getDocument();
 
         if ($document instanceof StructureBehavior) {
@@ -145,6 +164,10 @@ class InvalidationSubscriber implements EventSubscriberInterface
      */
     public function invalidateDocumentBeforeUnpublishing(UnpublishEvent $event)
     {
+        if (false === $this->activated) {
+            return;
+        }
+
         $document = $event->getDocument();
 
         if ($document instanceof StructureBehavior) {
@@ -166,6 +189,10 @@ class InvalidationSubscriber implements EventSubscriberInterface
      */
     public function invalidateDocumentBeforeRemoving(RemoveEvent $event)
     {
+        if (false === $this->activated) {
+            return;
+        }
+
         $document = $event->getDocument();
 
         if ($document instanceof StructureBehavior) {
@@ -186,6 +213,10 @@ class InvalidationSubscriber implements EventSubscriberInterface
      */
     public function invalidateDocumentBeforeRemovingLocale(RemoveLocaleEvent $event)
     {
+        if (false === $this->activated) {
+            return;
+        }
+
         $document = $event->getDocument();
 
         if ($document instanceof StructureBehavior) {

@@ -21,5 +21,19 @@
 
             <tag name="console.command" />
         </service>
+
+        <service id="sulu_document_manager.command.phpcr_cleanup" class="Sulu\Bundle\DocumentManagerBundle\Command\PHPCRCleanupCommand">
+            <argument type="service" id="doctrine_phpcr.live_session" />
+            <argument type="service" id="doctrine_phpcr.default_session" />
+            <argument type="service" id="sulu_document_manager.namespace_registry" />
+            <argument type="service" id="sulu_document_manager.event_dispatcher.standard" />
+            <argument type="service" id="sulu_document_manager.document_manager" />
+            <argument type="service" id="sulu_page.structure.factory" />
+            <argument type="service" id="sulu_http_cache.event_subscriber.invalidation" />
+            <argument>%kernel.project_dir%</argument>
+            <argument>%sulu_document_manager.mapping%</argument>
+
+            <tag name="console.command" />
+        </service>
     </services>
 </container>
