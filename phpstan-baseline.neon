@@ -24521,6 +24521,11 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
 		-
+			message: "#^Cannot assign offset 'documents' to string\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
+
+		-
 			message: "#^Cannot call method format\\(\\) on DateTime\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
@@ -24606,17 +24611,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
 		-
-			message: "#^Offset 'format' does not exist on array\\{documents\\: non\\-empty\\-array\\<int, mixed\\>\\}\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
-
-		-
-			message: "#^Offset 'locale' does not exist on array\\{documents\\: non\\-empty\\-array\\<int, mixed\\>\\}\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
-
-		-
-			message: "#^Offset 'webspaceKey' does not exist on array\\{documents\\: non\\-empty\\-array\\<int, mixed\\>\\}\\.$#"
+			message: "#^Offset 'documents' does not exist on string\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
@@ -24647,6 +24642,11 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Export\\\\WebspaceExportTest\\:\\:\\$extensionManager is never read, only written\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
+
+		-
+			message: "#^string does not accept array\\<int, mixed\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
