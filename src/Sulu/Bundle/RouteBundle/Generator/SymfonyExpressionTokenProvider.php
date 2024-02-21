@@ -45,11 +45,28 @@ class SymfonyExpressionTokenProvider implements TokenProviderInterface
         $this->translator = $translator;
 
         $this->expressionLanguage = new ExpressionLanguage();
-        $this->expressionLanguage->addFunction(ExpressionFunction::fromPhp('implode'));
         $this->expressionLanguage->addFunction(ExpressionFunction::fromPhp('is_array'));
+
+        $this->expressionLanguage->register('implode', function(...$args): string {
+            foreach ($args as $i => $arg) {
+                if ($arg instanceof \ArrayObject) {
+                    $args[$i] = $arg->getArrayCopy();
+                }
+            }
+
+            return \sprintf('\%s(%s)', 'implode', \implode(', ', $args));
+        }, function($arguments, ...$args): string {
+            foreach ($args as $i => $arg) {
+                if ($arg instanceof \ArrayObject) {
+                    $args[$i] = $arg->getArrayCopy();
+                }
+            }
+
+            return \implode(...$args);
+        });
     }
 
-    public function provide($entity, $name/*, $options = [] */)
+    public function provide($entity, $name/* , $options = [] */)
     {
         $options = \func_num_args() > 2 ? \func_get_arg(2) : [];
         $locale = $this->translator->getLocale();
