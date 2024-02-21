@@ -170,7 +170,7 @@ class PublishSubscriber implements EventSubscriberInterface
      */
     public function setNodeFromPublicWorkspaceForPublishing(PublishEvent $event)
     {
-        if ($event->getNode()) {
+        if ($event->hasNode()) {
             return;
         }
 

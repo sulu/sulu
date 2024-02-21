@@ -133,7 +133,7 @@ class CleanupNode implements \IteratorAggregate, NodeInterface
         return $this->node->getProperty($relPath);
     }
 
-    public function getPropertyValue($name, $type = PropertyType::UNDEFINED)
+    public function getPropertyValue($name, $type = null)
     {
         return $this->node->getPropertyValue($name, $type);
     }
