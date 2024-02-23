@@ -32,8 +32,6 @@ use Webmozart\Assert\Assert;
 
 class PhpCRCleanerCommand extends Command
 {
-    protected static $defaultName = 'sulu:document:clean';
-
     private OutputInterface $output;
 
     /** @var array<mixed> */
@@ -48,7 +46,7 @@ class PhpCRCleanerCommand extends Command
         private MetadataFactoryInterface $documentMetaDataFactory,
         private array $mapping,
     ) {
-        parent::__construct();
+        parent::__construct('sulu:document:clean');
 
         foreach ($this->mapping as $item) {
             $this->aliasMapping[$item['phpcr_type']] = $item['alias'];
@@ -69,6 +67,7 @@ class PhpCRCleanerCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->output = $output;
+
         $queryManager = $this->session->getWorkspace()->getQueryManager();
         $rows = $queryManager->createQuery('SELECT * FROM [nt:unstructured]', 'JCR-SQL2')->execute();
 
@@ -186,7 +185,7 @@ class PhpCRCleanerCommand extends Command
            This means deleting a block is trivially easy because you just have to decrease the length property.
            However this also means that if you have data whos index is greater or equal to the length then it's
            considered deleted. Here we actually delete those kinds of properties. */
-        $length = $data['length']->value;
+        $length = $data['length']->getValue();
         Assert::greaterThan($length, 0);
 
         foreach ($data as $index => $value) {
@@ -195,7 +194,7 @@ class PhpCRCleanerCommand extends Command
             }
 
             if ($index < $length) {
-                $type = $value['type']->value;
+                $type = $value['type']->getValue();
                 $component = $metadata->getComponentByName($type);
                 if (null !== $component) {
                     $this->handleComponentMetadata($value, $component, $depth + 1);
