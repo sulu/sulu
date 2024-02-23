@@ -26,6 +26,7 @@
             <argument type="service" id="Sulu\Component\PHPCR\PropertyParser\PropertyParserInterface" />
             <argument type="service" id="doctrine_phpcr.live_session" />
             <argument type="service" id="sulu_page.structure.factory" />
+            <argument>%sulu_document_manager.mapping%</argument>
 
             <tag name="console.command" />
         </service>
