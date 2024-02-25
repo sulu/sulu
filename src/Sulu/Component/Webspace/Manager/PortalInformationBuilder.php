@@ -83,8 +83,14 @@ class PortalInformationBuilder
     /**
      * @param array<int,mixed> $replacers
      */
-    private function buildUrlFullMatch(Portal $portal, Environment $environment, array $replacers, string $urlAddress, Localization $localization, Url $url): void
-    {
+    private function buildUrlFullMatch(
+        Portal $portal,
+        Environment $environment,
+        array $replacers,
+        string $urlAddress,
+        Localization $localization,
+        Url $url
+    ): void {
         $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
 
         $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
@@ -202,7 +208,7 @@ class PortalInformationBuilder
     }
 
     /**
-     * @return array<int,array>
+     * @return array<string, array<string, PortalInformation>>
      */
     public function dumpAndClear(): array
     {

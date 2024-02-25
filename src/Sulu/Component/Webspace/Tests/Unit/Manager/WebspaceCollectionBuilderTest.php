@@ -18,6 +18,7 @@ use Sulu\Component\Webspace\Exception\InvalidTemplateException;
 use Sulu\Component\Webspace\Manager\PortalInformationBuilder;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
+use Sulu\Component\Webspace\Manager\WebspaceCollectionInterface;
 use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
 use Sulu\Component\Webspace\Url\Replacer;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
@@ -29,7 +30,7 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 class WebspaceCollectionBuilderTest extends WebspaceTestCase
 {
     /** @param array<string> $files */
-    private function loadCollection(string $directory, array $files): WebspaceCollection
+    private function loadCollection(string $directory, array $files): WebspaceCollectionInterface
     {
         $containerBuilder = new ContainerBuilder();
         $containerBuilder->registerExtension(new SuluWebsiteExtension());

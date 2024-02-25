@@ -29,9 +29,6 @@ use Webmozart\Assert\Assert;
 
 class WebspaceCollectionBuilder
 {
-    /**
-     * @param array<mixed> $configuration
-     */
     public function __construct(
         private string $webspaceCollectionClass,
         private PortalInformationBuilder $portalInformationBuilder,
@@ -70,7 +67,6 @@ class WebspaceCollectionBuilder
     /**
      * @param array<string, PortalInformation> $portalRefs
      * @param array<string, Segment> $segmentRefs
-     * @param array<int,mixed> $webspaceConfiguration
      */
     protected function buildWebspace(
         array $webspaceConfiguration,
@@ -121,9 +117,6 @@ class WebspaceCollectionBuilder
         return $webspace;
     }
 
-    /**
-     * @param array<int,mixed> $webspaceConfiguration
-     */
     public function buildNavgiation(array $webspaceConfiguration, Webspace $webspace): void
     {
         $navigation = new Navigation();
@@ -141,10 +134,6 @@ class WebspaceCollectionBuilder
         $webspace->setNavigation($navigation);
     }
 
-    /**
-     * @param array<int,mixed> $webspaceConfiguration
-     * @param array<int,mixed> $segmentRefs
-     */
     protected function buildSegments(array $webspaceConfiguration, Webspace $webspace, array &$segmentRefs): void
     {
         foreach ($webspaceConfiguration['segments']['segment'] ?? [] as $segmentConfiguration) {
@@ -159,9 +148,6 @@ class WebspaceCollectionBuilder
         }
     }
 
-    /**
-     * @param array<int,mixed> $portalConfiguration
-     */
     protected function buildPortal(
         array $portalConfiguration,
         Webspace $webspace,
@@ -202,9 +188,6 @@ class WebspaceCollectionBuilder
         return $portal;
     }
 
-    /**
-     * @param array<int,mixed> $webspaceConfiguration
-     */
     protected function buildTemplates(array $webspaceConfiguration, Webspace $webspace): void
     {
         $webspace->setTheme($webspaceConfiguration['theme']);
@@ -230,9 +213,6 @@ class WebspaceCollectionBuilder
         $this->buildErrorTemplates($webspaceConfiguration, $webspace);
     }
 
-    /**
-     * @param array<int,mixed> $webspaceConfiguration
-     */
     protected function buildErrorTemplates(array $webspaceConfiguration, Webspace $webspace): void
     {
         $defaultErrorTemplateCount = 0;
@@ -253,9 +233,6 @@ class WebspaceCollectionBuilder
         }
     }
 
-    /**
-     * @param array<int,mixed> $environmentConfiguration
-     */
     protected function buildEnvironment(
         array $environmentConfiguration,
         Portal $portal,
@@ -288,7 +265,7 @@ class WebspaceCollectionBuilder
     }
 
     /**
-     * @param array<int,mixed> $localizationConfiguration
+     * @param array<string, string> $localizationConfiguration
      */
     protected function buildLocalization(array $localizationConfiguration): Localization
     {

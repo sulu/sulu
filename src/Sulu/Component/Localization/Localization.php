@@ -199,7 +199,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     public function getChildren(): array
     {
-        return $this->children ?? [];
+        return $this->children;
     }
 
     /**

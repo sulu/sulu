@@ -41,14 +41,15 @@ interface WebspaceCollectionInterface extends \IteratorAggregate, \Countable
      * Setting a copy of the templated url with the values for the current request filled in.
      * These changes are being reset every time the kernel gets reset.
      *
-     * @param array<string, PortalInformation> $portalInformations
+     * @param array<string, array<string, PortalInformation>> $portalInformations
      */
     public function setPortalInformations(array $portalInformations): void;
 
     /**
      * Returns the portal informations for the given environment.
      *
-     * @param array<string>|null $types Defines which type of portals are requested (null for all)
+     * @param array<int>|null $types Defines which type of portals are requested (null for all)
+One of the Constants RequestAnalyzerInterface::MATCH_TYPE_*
      *
      * @return array<string, PortalInformation>
      */
@@ -64,7 +65,7 @@ interface WebspaceCollectionInterface extends \IteratorAggregate, \Countable
     public function isPortalInformationsHostReplaced(): bool;
 
     /**
-     * @return array{webspaces:array<mixed>, portalInformations:array<mixed>}
+     * @return array{webspaces:array, portalInformations:array}
      */
     public function toArray(): array;
 }

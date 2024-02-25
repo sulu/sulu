@@ -99,14 +99,14 @@ class WebspaceCollectionCache extends WebspaceCollection
         $localization = new Localization();
         $localization->setLanguage('en');
         $localization->setCountry('us');
-        $localization->setDefault('');
+        $localization->setDefault(false);
         $portal->addLocalization($localization);
 
         // add localization
         $localization = new Localization();
         $localization->setLanguage('de');
         $localization->setCountry('at');
-        $localization->setDefault('1');
+        $localization->setDefault(true);
         $portal->addLocalization($localization);
 
         // add environment
@@ -149,7 +149,7 @@ class WebspaceCollectionCache extends WebspaceCollection
         $localization1->setCountry('ca');
         $localization1->setShadow('');
         $localization1->setParent($localization0);
-        $localization1->setDefault('');
+        $localization1->setDefault(false);
 
         $localizationRefs['massiveart_en_ca'] = $localization1;
 
@@ -237,28 +237,28 @@ class WebspaceCollectionCache extends WebspaceCollection
         $localization = new Localization();
         $localization->setLanguage('en');
         $localization->setCountry('us');
-        $localization->setDefault('');
+        $localization->setDefault(false);
         $portal->addLocalization($localization);
 
         // add localization
         $localization = new Localization();
         $localization->setLanguage('en');
         $localization->setCountry('ca');
-        $localization->setDefault('');
+        $localization->setDefault(false);
         $portal->addLocalization($localization);
 
         // add localization
         $localization = new Localization();
         $localization->setLanguage('fr');
         $localization->setCountry('ca');
-        $localization->setDefault('');
+        $localization->setDefault(false);
         $portal->addLocalization($localization);
 
         // add localization
         $localization = new Localization();
         $localization->setLanguage('de');
         $localization->setCountry('');
-        $localization->setDefault('1');
+        $localization->setDefault(true);
         $portal->addLocalization($localization);
 
         // add environment
@@ -305,14 +305,14 @@ class WebspaceCollectionCache extends WebspaceCollection
         $localization = new Localization();
         $localization->setLanguage('en');
         $localization->setCountry('ca');
-        $localization->setDefault('1');
+        $localization->setDefault(true);
         $portal->addLocalization($localization);
 
         // add localization
         $localization = new Localization();
         $localization->setLanguage('fr');
         $localization->setCountry('ca');
-        $localization->setDefault('');
+        $localization->setDefault(false);
         $portal->addLocalization($localization);
 
         // add environment
@@ -421,14 +421,14 @@ class WebspaceCollectionCache extends WebspaceCollection
         $localization = new Localization();
         $localization->setLanguage('en');
         $localization->setCountry('us');
-        $localization->setDefault('');
+        $localization->setDefault(false);
         $portal->addLocalization($localization);
 
         // add localization
         $localization = new Localization();
         $localization->setLanguage('de');
         $localization->setCountry('at');
-        $localization->setDefault('1');
+        $localization->setDefault(true);
         $portal->addLocalization($localization);
 
         // add environment
@@ -553,7 +553,7 @@ class WebspaceCollectionCache extends WebspaceCollection
         $localization = new Localization();
         $localization->setLanguage('de');
         $localization->setCountry('at');
-        $localization->setDefault('1');
+        $localization->setDefault(true);
         $portal->addLocalization($localization);
 
         // add environment
@@ -624,7 +624,7 @@ class WebspaceCollectionCache extends WebspaceCollection
         $localization = new Localization();
         $localization->setLanguage('en');
         $localization->setCountry('');
-        $localization->setDefault('1');
+        $localization->setDefault(true);
         $portal->addLocalization($localization);
 
         // add environment
@@ -679,7 +679,7 @@ class WebspaceCollectionCache extends WebspaceCollection
         $localization1->setCountry('uk');
         $localization1->setShadow('');
         $localization1->setParent($localization0);
-        $localization1->setDefault('');
+        $localization1->setDefault(false);
 
         $localizationRefs['sulu_io_without_portal_localization_en_uk'] = $localization1;
 
@@ -731,21 +731,21 @@ class WebspaceCollectionCache extends WebspaceCollection
         $localization = new Localization();
         $localization->setLanguage('en');
         $localization->setCountry('us');
-        $localization->setDefault('');
+        $localization->setDefault(false);
         $portal->addLocalization($localization);
 
         // add localization
         $localization = new Localization();
         $localization->setLanguage('en');
         $localization->setCountry('uk');
-        $localization->setDefault('');
+        $localization->setDefault(false);
         $portal->addLocalization($localization);
 
         // add localization
         $localization = new Localization();
         $localization->setLanguage('de');
         $localization->setCountry('at');
-        $localization->setDefault('1');
+        $localization->setDefault(true);
         $portal->addLocalization($localization);
 
         // add environment
