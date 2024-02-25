@@ -242,7 +242,7 @@ class WebspaceConfiguration
                                     ->children()
                                         ->scalarNode('language')->isRequired()->end()
                                         ->scalarNode('country')->defaultValue('')->end()
-                                        ->scalarNode('shadow')->defaultNull('')->end()
+                                        ->scalarNode('shadow')->defaultNull()->end()
                                         ->booleanNode('default')->defaultValue(false)->end()
                                     ->end()
                                 ->end()

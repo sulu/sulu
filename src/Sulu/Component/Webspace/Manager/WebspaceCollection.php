@@ -120,7 +120,7 @@ class WebspaceCollection implements WebspaceCollectionInterface
         }
 
         $portalInformations = [];
-        foreach ($this->portalInformations as $environment => $environmentPortalInformations) {
+        foreach ($this->portalInformations ?? $this->portalInformationsTemplate as $environment => $environmentPortalInformations) {
             $portalInformations[$environment] = [];
 
             foreach ($environmentPortalInformations as $environmentPortalInformation) {
