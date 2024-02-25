@@ -39,7 +39,7 @@ interface ReplacerInterface
      * Replace language with given value.
      *
      * @param string $url
-     * @param string $language
+     * @param string|null $language
      *
      * @return string
      */
@@ -58,7 +58,7 @@ interface ReplacerInterface
      * Replace country with given value.
      *
      * @param string $url
-     * @param string $country
+     * @param string|null $country
      *
      * @return string
      */
@@ -124,9 +124,9 @@ interface ReplacerInterface
     /**
      * Replace replacer with given value.
      *
-     * @param string $url
+     * @param string|null $url
      * @param string $replacer
-     * @param string $value
+     * @param string|null $value
      *
      * @return string
      */

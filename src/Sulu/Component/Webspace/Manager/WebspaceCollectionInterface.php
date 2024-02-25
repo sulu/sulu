@@ -49,7 +49,7 @@ interface WebspaceCollectionInterface extends \IteratorAggregate, \Countable
      * Returns the portal informations for the given environment.
      *
      * @param array<int>|null $types Defines which type of portals are requested (null for all)
-One of the Constants RequestAnalyzerInterface::MATCH_TYPE_*
+     *                               One of the Constants RequestAnalyzerInterface::MATCH_TYPE_*
      *
      * @return array<string, PortalInformation>
      */

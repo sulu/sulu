@@ -53,6 +53,7 @@ class PortalInformationBuilder
 
     public function addCustomUrl(CustomUrl $url, Environment $environment, Portal $portal): void
     {
+        /** @var string $urlAddress */
         $urlAddress = $url->getUrl();
 
         $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
@@ -81,7 +82,7 @@ class PortalInformationBuilder
     }
 
     /**
-     * @param array<int,mixed> $replacers
+     * @param array<string, string|null> $replacers
      */
     private function buildUrlFullMatch(
         Portal $portal,
@@ -187,7 +188,7 @@ class PortalInformationBuilder
     }
 
     /**
-     * @param array<int,mixed> $replacers
+     * @param array<string, string|null> $replacers
      */
     private function generateUrlAddress(string $pattern, array $replacers): string
     {

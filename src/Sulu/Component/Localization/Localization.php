@@ -57,7 +57,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     /**
      * The language of the localization.
      *
-     * @var string
+     * @var string|null
      *
      * @Groups({"frontend", "Default"})
      */
@@ -66,7 +66,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     /**
      * The country of the localization.
      *
-     * @var string
+     * @var string|null
      *
      * @Groups({"frontend", "Default"})
      */
@@ -75,7 +75,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     /**
      * Defines how the generation of shadow pages should be handled.
      *
-     * @var string
+     * @var string|null
      *
      * @Groups({"frontend", "Default"})
      */
@@ -117,7 +117,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     /**
      * Sets the country of this localization.
      *
-     * @param string $country
+     * @param string|null $country
      */
     public function setCountry($country)
     {
@@ -127,7 +127,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     /**
      * Returns the country of this localization.
      *
-     * @return string
+     * @return string|null
      */
     public function getCountry()
     {
@@ -137,7 +137,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     /**
      * Sets the language of this localization.
      *
-     * @param string $language
+     * @param string|null $language
      */
     public function setLanguage($language)
     {
@@ -147,7 +147,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     /**
      * Returns the language of this localization.
      *
-     * @return string
+     * @return string|null
      */
     public function getLanguage()
     {
@@ -157,7 +157,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     /**
      * Sets how to handle shadow pages for this localization.
      *
-     * @param string $shadow
+     * @param string|null $shadow
      */
     public function setShadow($shadow)
     {
@@ -167,7 +167,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
     /**
      * Returns how to handle shadow pages for this localization.
      *
-     * @return string
+     * @return string|null
      */
     public function getShadow()
     {
@@ -218,8 +218,8 @@ class Localization implements \JsonSerializable, ArrayableInterface
     {
         @trigger_deprecation('sulu/sulu', '1.2', __METHOD__ . '() is deprecated and will be removed in 2.0. Use getLocale() instead.');
 
-        $localization = $this->getLanguage();
-        if (null != $this->getCountry()) {
+        $localization = $this->getLanguage() ?? '';
+        if (null !== $this->getCountry()) {
             $localization .= $delimiter . $this->getCountry();
         }
 
@@ -238,9 +238,9 @@ class Localization implements \JsonSerializable, ArrayableInterface
      */
     public function getLocale($format = self::UNDERSCORE)
     {
-        $localization = \strtolower($this->getLanguage());
+        $localization = \strtolower($this->getLanguage() ?? '');
 
-        if (null != $this->getCountry()) {
+        if (null !== $this->getCountry()) {
             $country = \strtolower($this->getCountry());
             $delimiter = '-';
 

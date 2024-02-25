@@ -264,9 +264,6 @@ class WebspaceCollectionBuilder
         return $environment;
     }
 
-    /**
-     * @param array<string, string> $localizationConfiguration
-     */
     protected function buildLocalization(array $localizationConfiguration): Localization
     {
         $localization = new Localization($localizationConfiguration['language']);

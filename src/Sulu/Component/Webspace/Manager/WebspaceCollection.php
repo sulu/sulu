@@ -98,6 +98,9 @@ class WebspaceCollection implements WebspaceCollectionInterface
         return \count($this->webspaces);
     }
 
+    /**
+    * @return \ArrayIterator<string, Webspace>
+    */
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->webspaces);
