@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<services:container xmlns="http://example.org/schema/dic/sulu_website"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:services="http://symfony.com/schema/dic/services"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd"
+    >
+<config>
+<webspace>
+
+    <name>Sulu CMF</name>
+    <key>sulu_io</key>
+
+    <localizations>
+        <localization language="en" shadow="auto"/>
+    </localizations>
+
+    <theme>sulu</theme>
+
+    <default-templates>
+        <default-template type="page">default</default-template>
+        <default-template type="home">default</default-template>
+    </default-templates>
+
+    <error-templates>
+        <error-template default="false">error</error-template>
+    </error-templates>
+
+    <navigation>
+        <contexts>
+            <context key="main">
+                <meta>
+                    <title lang="en">Mainnavigation</title>
+                </meta>
+            </context>
+        </contexts>
+    </navigation>
+
+    <portals>
+        <portal>
+            <name>Sulu CMF AT</name>
+            <key>sulucmf_at</key>
+
+            <environments>
+                <environment type="prod">
+                    <urls>
+                        <url language="en">sulu.us</url>
+                    </urls>
+                </environment>
+            </environments>
+        </portal>
+    </portals>
+</webspace>
+</config>
+</services:container>

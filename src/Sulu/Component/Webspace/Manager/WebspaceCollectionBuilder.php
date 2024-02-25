@@ -15,8 +15,8 @@ use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
-use Sulu\Component\Webspace\Loader\Exception\InvalidAmountOfDefaultErrorTemplateException;
-use Sulu\Component\Webspace\Loader\Exception\InvalidErrorTemplateException;
+use Sulu\Component\Webspace\Exception\InvalidAmountOfDefaultErrorTemplateException;
+use Sulu\Component\Webspace\Exception\InvalidErrorTemplateException;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Portal;
@@ -217,9 +217,9 @@ class WebspaceCollectionBuilder
     {
         $defaultErrorTemplateCount = 0;
         foreach ($webspaceConfiguration['error_templates'] ?? [] as $errorTemplate) {
-            if (null !== $errorTemplate['code']) {
+            if (null !== ($errorTemplate['code'] ?? null)) {
                 $webspace->addTemplate('error-' . $errorTemplate['code'], $errorTemplate['value']);
-            } elseif ($errorTemplate['default']) {
+            } elseif ($errorTemplate['default'] ?? false) {
                 $webspace->addTemplate('error', $errorTemplate['value']);
                 ++$defaultErrorTemplateCount;
             } else {

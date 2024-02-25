@@ -99,8 +99,8 @@ class WebspaceCollection implements WebspaceCollectionInterface
     }
 
     /**
-    * @return \ArrayIterator<string, Webspace>
-    */
+     * @return \ArrayIterator<string, Webspace>
+     */
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->webspaces);

@@ -15,6 +15,8 @@ use Sulu\Bundle\WebsiteBundle\DependencyInjection\Configuration;
 use Sulu\Bundle\WebsiteBundle\DependencyInjection\SuluWebsiteExtension;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
+use Sulu\Component\Webspace\Exception\InvalidAmountOfDefaultErrorTemplateException;
+use Sulu\Component\Webspace\Exception\InvalidErrorTemplateException;
 use Sulu\Component\Webspace\Manager\PortalInformationBuilder;
 use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
@@ -287,6 +289,26 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
         $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/missing-default-template',
+            ['sulu.xml']
+        );
+    }
+
+    public function testThrowForInvalidErrorTemplate(): void
+    {
+        $this->expectException(InvalidErrorTemplateException::class);
+
+        $this->loadCollection(
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid-error-template',
+            ['sulu.xml']
+        );
+    }
+
+    public function testThrowForTooManyDefaultErrorTemplate(): void
+    {
+        $this->expectException(InvalidAmountOfDefaultErrorTemplateException::class);
+
+        $this->loadCollection(
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/too-many-default-error-templates',
             ['sulu.xml']
         );
     }

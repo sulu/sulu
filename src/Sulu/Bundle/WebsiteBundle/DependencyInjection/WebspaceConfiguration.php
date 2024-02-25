@@ -188,6 +188,14 @@ class WebspaceConfiguration
             ->info('A list of error templates, which either have a code (for specific status codes) or are general error templates.')
             ->children()
                 ->arrayNode('error_template')
+                    ->beforeNormalization()->always(function($value) {
+                        if (!\array_key_exists(0, $value)) {
+                            return [$value];
+                        }
+
+                        return $value;
+                    })
+                    ->end()
                     ->arrayPrototype()
                         ->children()
                             ->scalarNode('code')->defaultNull()->end()

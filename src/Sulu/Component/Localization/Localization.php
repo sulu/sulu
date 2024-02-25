@@ -207,7 +207,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @param string $delimiter between language and country
      *
-     * @return string
+     * @return string|null
      *
      * @VirtualProperty
      * @Groups({"frontend", "Default"})
@@ -219,7 +219,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
         @trigger_deprecation('sulu/sulu', '1.2', __METHOD__ . '() is deprecated and will be removed in 2.0. Use getLocale() instead.');
 
         $localization = $this->getLanguage() ?? '';
-        if (null !== $this->getCountry()) {
+        if (null != $this->getCountry()) {
             $localization .= $delimiter . $this->getCountry();
         }
 
@@ -240,8 +240,8 @@ class Localization implements \JsonSerializable, ArrayableInterface
     {
         $localization = \strtolower($this->getLanguage() ?? '');
 
-        if (null !== $this->getCountry()) {
-            $country = \strtolower($this->getCountry());
+        $country = $this->getCountry() ?? '';
+        if ('' !== $country) {
             $delimiter = '-';
 
             switch ($format) {
