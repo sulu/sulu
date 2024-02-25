@@ -14,7 +14,6 @@ namespace Sulu\Component\Webspace\Manager;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
-use Webmozart\Assert\Assert;
 
 /**
  * A collection of all webspaces and portals in a specific sulu installation.
@@ -23,15 +22,20 @@ use Webmozart\Assert\Assert;
  */
 class WebspaceCollection implements WebspaceCollectionInterface
 {
+    /* @var array<string, array<string, PortalInformation>> */
+    private ?array $portalInformations = null;
+
     /**
      * @param array<string, Webspace> $webspaces All webspaces (indexed by key)
      * @param array<string, Portal> $portals All portals (indexed by key)
-     * @param array<string, array<string, PortalInformation>> $portalInformations All portalInformations (indexed by environment and key)
+     * @param array<string, array<string, PortalInformation>> $portalInformationsTemplate
+     *                                                                                    All portalInformations (indexed by environment and key)
+     *                                                                                    These portalInformations still contain the placeholders in the URL
      */
     public function __construct(
         private array $webspaces = [],
         private array $portals = [],
-        private array $portalInformations = [],
+        private array $portalInformationsTemplate = [],
     ) {
     }
 
@@ -55,19 +59,36 @@ class WebspaceCollection implements WebspaceCollectionInterface
         return $this->portals;
     }
 
+    public function getPortalInformationsTemplates(): array
+    {
+        return $this->portalInformationsTemplate;
+    }
+
+    public function setPortalInformations(array $portalInformations): void
+    {
+        $this->portalInformations = $portalInformations;
+    }
+
+    public function isPortalInformationsHostReplaced(): bool
+    {
+        return null !== $this->portalInformations;
+    }
+
     public function getPortalInformations(string $environment, ?array $types = null): array
     {
-        if (!isset($this->portalInformations[$environment])) {
+        $portalInformations = $this->portalInformations ?? $this->portalInformationsTemplate;
+
+        if (!isset($portalInformations[$environment])) {
             throw new \InvalidArgumentException(\sprintf(
                 'Unknown portal environment "%s"', $environment
             ));
         }
         if (null === $types) {
-            return $this->portalInformations[$environment];
+            return $portalInformations[$environment];
         }
 
         return \array_filter(
-            $this->portalInformations[$environment],
+            $portalInformations[$environment],
             function(PortalInformation $portalInformation) use ($types) {
                 return \in_array($portalInformation->getType(), $types);
             }
@@ -82,6 +103,11 @@ class WebspaceCollection implements WebspaceCollectionInterface
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->webspaces);
+    }
+
+    public function reset(): void
+    {
+        $this->portalInformations = null;
     }
 
     public function toArray(): array

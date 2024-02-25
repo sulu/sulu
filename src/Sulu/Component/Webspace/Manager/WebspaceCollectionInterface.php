@@ -37,6 +37,15 @@ interface WebspaceCollectionInterface extends \IteratorAggregate, \Countable
     public function getPortals(): array;
 
     /**
+     * @internal
+     * Setting a copy of the templated url with the values for the current request filled in.
+     * These changes are being reset every time the kernel gets reset.
+     *
+     * @param array<string, PortalInformation> $portalInformations
+     */
+    public function setPortalInformations(array $portalInformations): void;
+
+    /**
      * Returns the portal informations for the given environment.
      *
      * @param array<string>|null $types Defines which type of portals are requested (null for all)
@@ -44,6 +53,15 @@ interface WebspaceCollectionInterface extends \IteratorAggregate, \Countable
      * @return array<string, PortalInformation>
      */
     public function getPortalInformations(string $environment, ?array $types = null): array;
+
+    /**
+     * Returns all portal informations with placeholders.
+     *
+     * @return array<string, array<string, PortalInformation>>
+     */
+    public function getPortalInformationsTemplates(): array;
+
+    public function isPortalInformationsHostReplaced(): bool;
 
     /**
      * @return array{webspaces:array<mixed>, portalInformations:array<mixed>}

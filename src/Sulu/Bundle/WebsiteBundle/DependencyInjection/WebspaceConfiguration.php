@@ -132,6 +132,7 @@ class WebspaceConfiguration
                         if (!\array_key_exists(0, $value)) {
                             return [$value];
                         }
+
                         return $value;
                     })
                     ->end()

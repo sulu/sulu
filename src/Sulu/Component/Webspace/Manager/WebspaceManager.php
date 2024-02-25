@@ -54,6 +54,24 @@ class WebspaceManager implements WebspaceManagerInterface
 
     public function getWebspaceCollection(): WebspaceCollectionInterface
     {
+        if ($this->webspaceCollection->isPortalInformationsHostReplaced()) {
+            return $this->webspaceCollection;
+        }
+
+        $host = $this->requestStack->getCurrentRequest()?->getHost() ?? $this->defaultHost;
+        $newPortalInformations = [];
+        foreach ($this->webspaceCollection->getPortalInformationsTemplates() as $environment => $portalInformations) {
+            $newPortalInformations[$environment] = [];
+            foreach ($portalInformations as $url => $portalInformation) {
+                $actualPoralInformation = clone $portalInformation;
+                $actualPoralInformation->setUrl($this->urlReplacer->replaceHost($portalInformation->getUrl(), $host));
+                $actualPoralInformation->setUrlExpression($this->urlReplacer->replaceHost($portalInformation->getUrlExpression(), $host));
+                $actualPoralInformation->setRedirect($this->urlReplacer->replaceHost($portalInformation->getRedirect(), $host));
+                $newPortalInformations[$environment][$url] = $actualPoralInformation;
+            }
+        }
+        $this->webspaceCollection->setPortalInformations($newPortalInformations);
+
         return $this->webspaceCollection;
     }
 
@@ -73,7 +91,7 @@ class WebspaceManager implements WebspaceManagerInterface
             $environment = $this->environment;
         }
 
-        $portalInformations = $this->webspaceCollection->getPortalInformations($environment);
+        $portalInformations = $this->getWebspaceCollection()->getPortalInformations($environment);
         foreach ($portalInformations as $portalInformation) {
             if ($this->matchUrl($url, $portalInformation->getUrl())) {
                 return $portalInformation;
@@ -90,7 +108,7 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return \array_filter(
-            $this->webspaceCollection->getPortalInformations($environment),
+            $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($host) {
                 $portalHost = $portalInformation->getHost();
 
@@ -107,7 +125,7 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return \array_filter(
-            $this->webspaceCollection->getPortalInformations($environment),
+            $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($url) {
                 return $this->matchUrl($url, $portalInformation->getUrl());
             }
@@ -124,7 +142,7 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return \array_filter(
-            $this->webspaceCollection->getPortalInformations($environment),
+            $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($webspaceKey, $locale) {
                 return $portalInformation->getWebspace()->getKey() === $webspaceKey
                     && $portalInformation->getLocale() === $locale;
@@ -142,7 +160,7 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return \array_filter(
-            $this->webspaceCollection->getPortalInformations($environment),
+            $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portalInformation) use ($portalKey, $locale) {
                 return $portalInformation->getPortal()
                     && $portalInformation->getPortal()->getKey() === $portalKey
@@ -165,7 +183,7 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         $urls = [];
-        $portals = $this->webspaceCollection->getPortalInformations(
+        $portals = $this->getWebspaceCollection()->getPortalInformations(
             $environment ?? $this->environment,
             [RequestAnalyzerInterface::MATCH_TYPE_FULL]
         );
@@ -211,7 +229,7 @@ class WebspaceManager implements WebspaceManagerInterface
         $fullMatchedUrl = null;
         $partialMatchedUrl = null;
 
-        $portals = $this->webspaceCollection->getPortalInformations(
+        $portals = $this->getWebspaceCollection()->getPortalInformations(
             $environment
         );
 
@@ -296,7 +314,7 @@ class WebspaceManager implements WebspaceManagerInterface
 
         $urls = [];
 
-        foreach ($this->webspaceCollection->getPortalInformations($environment) as $portalInformation) {
+        foreach ($this->getWebspaceCollection()->getPortalInformations($environment) as $portalInformation) {
             $urls[] = $portalInformation->getUrl();
         }
 
@@ -315,7 +333,7 @@ class WebspaceManager implements WebspaceManagerInterface
         }
 
         return \array_filter(
-            $this->webspaceCollection->getPortalInformations($environment),
+            $this->getWebspaceCollection()->getPortalInformations($environment),
             function(PortalInformation $portal) use ($webspaceKey) {
                 return $portal->getWebspaceKey() === $webspaceKey;
             }

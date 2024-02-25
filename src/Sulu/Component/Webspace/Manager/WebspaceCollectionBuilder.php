@@ -222,7 +222,7 @@ class WebspaceCollectionBuilder
             }
 
             $webspace->addDefaultTemplate($type, $defaultTemplate);
-            if($type === 'homepage'){
+            if ('homepage' === $type) {
                 $webspace->addDefaultTemplate('home', $defaultTemplate);
             }
         }

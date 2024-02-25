@@ -21,6 +21,7 @@
 
         <service id="sulu_core.webspace.collection" class="Sulu\Component\Webspace\Manager\WebspaceCollection">
             <factory service="sulu_core.webspace.collection_builder" method="build"/>
+            <tag name="kernel.reset" method="reset"/>
         </service>
         <service id="Sulu\Component\Webspace\Manager\WebspaceCollectionInterface" alias="sulu_core.webspace.collection"/>
 

@@ -16,7 +16,6 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
-use Sulu\Component\Webspace\Manager\WebspaceCollectionInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
@@ -24,7 +23,6 @@ use Sulu\Component\Webspace\Url\Replacer;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Webmozart\Assert\Assert;
 
 class WebspaceManagerTest extends WebspaceTestCase
 {
@@ -56,11 +54,8 @@ class WebspaceManagerTest extends WebspaceTestCase
             ->getStructures('page')
             ->willReturn([$defaultStructure, $overviewStructure]);
 
-        $fileContent = \file_get_contents(__DIR__ . '/webspaceCollection.serialized.php');
-        Assert::notFalse($fileContent);
-
-        $webspaceCollection = \unserialize($fileContent);
-        Assert::isInstanceOf($webspaceCollection, WebspaceCollectionInterface::class);
+        // todo: Replace this with proper mocks
+        $webspaceCollection = new WebspaceCollectionCache();
 
         $this->webspaceManager = new WebspaceManager(
             $webspaceCollection,

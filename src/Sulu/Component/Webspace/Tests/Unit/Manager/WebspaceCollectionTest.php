@@ -116,7 +116,7 @@ class WebspaceCollectionTest extends TestCase
         $this->webspaceCollection = new WebspaceCollection(
             webspaces: ['default' => $webspace],
             portals: ['portal1' => $portal],
-            portalInformations: $portalInformations,
+            portalInformationsTemplate: $portalInformations,
         );
     }
 
