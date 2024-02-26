@@ -1892,7 +1892,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$name of class Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\SchemaMetadata\\\\PropertyMetadata constructor expects string, float\\|int\\|string given\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
 
 		-
@@ -36791,6 +36791,11 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
 
 		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
+
+		-
 			message: "#^Parameter \\#1 \\$name of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Section\\\\SectionProperty constructor expects string, float\\|int\\|string given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
@@ -36807,11 +36812,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$col of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Section\\\\SectionProperty constructor expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Compat\\\\Structure\\\\LegacyPropertyFactory\\:\\:\\$namespaceRegistry has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
 
@@ -40782,7 +40782,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$context of method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Parser\\\\PropertiesXmlParser\\:\\:loadProperties\\(\\) expects DOMNode, DOMNode\\|null given\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
 
 		-
@@ -40867,11 +40867,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\PropertyMetadata\\:\\:addComponent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/PropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\PropertyMetadata\\:\\:getComponentByName\\(\\) should return Sulu\\\\Component\\\\Content\\\\Metadata\\\\ItemMetadata but return statement is missing\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/PropertyMetadata.php
 
@@ -42261,23 +42256,13 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Compat/Structure/LegacyPropertyFactoryTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Compat\\\\Structure\\\\LegacyPropertyFactoryTest\\:\\:testCreateBlock\\(\\) has parameter \\$property with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Compat/Structure/LegacyPropertyFactoryTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Compat\\\\Structure\\\\LegacyPropertyFactoryTest\\:\\:testCreatePropertyWithTypes\\(\\) has parameter \\$child with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Compat/Structure/LegacyPropertyFactoryTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Compat\\\\Structure\\\\LegacyPropertyFactoryTest\\:\\:testCreateSection\\(\\) has parameter \\$property with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Compat/Structure/LegacyPropertyFactoryTest.php
-
-		-
 			message: "#^Parameter \\#1 \\$property of method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Compat\\\\Structure\\\\LegacyPropertyFactoryTest\\:\\:setUpProperty\\(\\) expects Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Component\\\\Content\\\\Metadata\\\\PropertyMetadata\\>, Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Component\\\\Content\\\\Metadata\\\\BlockMetadata\\> given\\.$#"
-			count: 1
+			count: 2
 			path: src/Sulu/Component/Content/Tests/Unit/Compat/Structure/LegacyPropertyFactoryTest.php
 
 		-
@@ -42692,36 +42677,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'value' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Metadata/ItemMetadataCase.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Metadata\\\\ItemMetadataCase\\:\\:testGetNotExistingTitle\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Metadata/ItemMetadataCase.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Metadata\\\\ItemMetadataCase\\:\\:testGetParameters\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Metadata/ItemMetadataCase.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Metadata\\\\ItemMetadataCase\\:\\:testGetParametersInvalid\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Metadata/ItemMetadataCase.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Metadata\\\\ItemMetadataCase\\:\\:testGetTag\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Metadata/ItemMetadataCase.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Metadata\\\\ItemMetadataCase\\:\\:testGetTagNotExist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Metadata/ItemMetadataCase.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Metadata\\\\ItemMetadataCase\\:\\:testGetTitle\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Metadata/ItemMetadataCase.php
 
