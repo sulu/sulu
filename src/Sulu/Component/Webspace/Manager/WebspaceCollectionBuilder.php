@@ -14,9 +14,9 @@ namespace Sulu\Component\Webspace\Manager;
 use Sulu\Component\Localization\Localization;
 use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
-use Sulu\Component\Webspace\Exception\InvalidTemplateException;
 use Sulu\Component\Webspace\Exception\InvalidAmountOfDefaultErrorTemplateException;
 use Sulu\Component\Webspace\Exception\InvalidErrorTemplateException;
+use Sulu\Component\Webspace\Exception\InvalidTemplateException;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Portal;
@@ -216,20 +216,20 @@ class WebspaceCollectionBuilder
     protected function buildErrorTemplates(array $webspaceConfiguration, Webspace $webspace): void
     {
         $defaultErrorTemplateCount = 0;
-        foreach ($webspaceConfiguration['error_templates'] ?? [] as $errorTemplate) {
+        foreach ($webspaceConfiguration['error_templates']['error_template'] ?? [] as $errorTemplate) {
             if (null !== ($errorTemplate['code'] ?? null)) {
                 $webspace->addTemplate('error-' . $errorTemplate['code'], $errorTemplate['value']);
             } elseif ($errorTemplate['default'] ?? false) {
                 $webspace->addTemplate('error', $errorTemplate['value']);
                 ++$defaultErrorTemplateCount;
             } else {
-                throw new InvalidErrorTemplateException($errorTemplate['value'], $webspace->getKey());
+                throw new InvalidErrorTemplateException($errorTemplate['value'], $webspace);
             }
         }
 
         // only one or none default error-template is legal
         if ($defaultErrorTemplateCount > 1) {
-            throw new InvalidAmountOfDefaultErrorTemplateException($webspace->getKey());
+            throw new InvalidAmountOfDefaultErrorTemplateException($webspace);
         }
     }
 

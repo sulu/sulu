@@ -21,7 +21,7 @@ class InvalidErrorTemplateException extends WebspaceException
             \sprintf(
                 'Error template "%s" in webspace "%s" has to be defined as default or with a code.',
                 $template,
-                $webspace
+                $webspace->getKey(),
             )
         );
 

@@ -23,7 +23,8 @@
     </default-templates>
 
     <error-templates>
-        <error-template default="false">error</error-template>
+        <error-template default="true">error</error-template>
+        <error-template default="true">error</error-template>
     </error-templates>
 
     <navigation>
