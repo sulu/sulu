@@ -32,9 +32,11 @@ class S3Storage extends FlysystemStorage
      */
     private $bucketName;
 
-    public function __construct(FilesystemInterface $filesystem, int $segments)
+    private $url;
+
+    public function __construct(FilesystemInterface $filesystem, int $segments, $url)
     {
-        parent::__construct($filesystem, $segments);
+        parent::__construct($filesystem, $segments, $url);
 
         if (!$filesystem instanceof Filesystem || !$filesystem->getAdapter() instanceof AwsS3Adapter) {
             throw new \RuntimeException('This storage can only handle filesystems with "AwsS3Adapter".');
@@ -44,6 +46,8 @@ class S3Storage extends FlysystemStorage
 
         $this->endpoint = (string) $this->adapter->getClient()->getEndpoint();
         $this->bucketName = $this->adapter->getBucket();
+
+        $this->url = $url;
     }
 
     public function getPath(array $storageOptions): string
@@ -51,7 +55,7 @@ class S3Storage extends FlysystemStorage
         $filePath = $this->getFilePath($storageOptions);
         $path = $this->adapter->applyPathPrefix($filePath);
 
-        return $this->endpoint . '/' . $this->bucketName . '/' . \ltrim($path, '/');
+        return ($this->url ?? $this->endpoint . '/' . $this->bucketName) . '/' . \ltrim($path, '/');
     }
 
     public function getType(array $storageOptions): string
