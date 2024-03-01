@@ -8,7 +8,7 @@ services:
       POSTGRES_DB: 'sulu_test'
       POSTGRES_PASSWORD: 'ChangeMe'
       POSTGRES_USER: 'symfony'
-    command: postgres -c 'max_connections=1000' # fix failed: FATAL:  sorry, too many clients already
+    command: postgres -c 'max_connections=9999' # fix "failed: FATAL:  sorry, too many clients already" or timeouts on postgres tests
     volumes:
       - sulu-postgres-14-data:/var/lib/postgresql/data:rw
 
