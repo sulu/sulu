@@ -204,6 +204,15 @@
             <tag name="sulu_content.block_visitor" />
         </service>
 
+        <service
+            id="sulu.content.type.block.global_block_visitor"
+            class="Sulu\Component\Content\Types\Metadata\GlobalBlocksTypedFormMetadataVisitor"
+        >
+            <argument type="service" id="sulu_admin.metadata_provider_registry" />
+
+            <tag name="sulu_admin.typed_form_metadata_visitor"/>
+        </service>
+
         <!-- content query -->
         <service id="sulu.content.query_executor" class="%sulu.content.query_executor.class%">
             <argument type="service" id="sulu.phpcr.session"/>

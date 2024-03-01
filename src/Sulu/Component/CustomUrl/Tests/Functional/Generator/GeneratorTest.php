@@ -21,11 +21,7 @@ class GeneratorTest extends TestCase
 {
     public function provideGenerateData()
     {
-        $locales = [new Localization(), new Localization()];
-
-        $locales[0]->setLanguage('de');
-        $locales[0]->setCountry('at');
-        $locales[1]->setLanguage('en');
+        $locales = [new Localization('de', 'at'), new Localization('en')];
 
         return [
             [
@@ -136,16 +132,24 @@ class GeneratorTest extends TestCase
     }
 
     /**
+     * @param array<string> $domainParts
+     * @param class-string<\Throwable>|null $exception
+     *
      * @dataProvider provideGenerateData
      */
-    public function testGenerate($baseDomain, $domainParts, $locales, $expected, $exception = null): void
-    {
+    public function testGenerate(
+        string $baseDomain,
+        array $domainParts,
+        ?Localization $locale,
+        ?string $expected,
+        ?string $exception = null
+    ): void {
         if ($exception) {
             self::expectException($exception);
         }
 
         $generator = new Generator(new Replacer());
-        $result = $generator->generate($baseDomain, $domainParts, $locales);
+        $result = $generator->generate($baseDomain, $domainParts, $locale);
 
         if (null === $expected) {
             return;
