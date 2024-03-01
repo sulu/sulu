@@ -295,7 +295,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocale());
         $this->assertNull($portalInformation->getSegment());
 
-        /** @var Webspace $webspace */
         $webspace = $portalInformation->getWebspace();
 
         $this->assertEquals('Sulu CMF', $webspace->getName());
@@ -310,7 +309,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
         $this->assertEquals('sulu', $webspace->getTheme());
 
-        /** @var Portal $portal */
         $portal = $portalInformation->getPortal();
 
         $this->assertEquals('Sulu CMF AT', $portal->getName());
@@ -387,11 +385,11 @@ class WebspaceManagerTest extends WebspaceTestCase
     public function testFindPortalInformationsByUrl(): void
     {
         $portalInformations = $this->webspaceManager->findPortalInformationsByUrl('sulu.at/test/test/test', 'prod');
+        $this->assertNotCount(0, $portalInformations);
         $portalInformation = \reset($portalInformations);
         $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocale());
         $this->assertNull($portalInformation->getSegment());
 
-        /** @var Webspace $webspace */
         $webspace = $portalInformation->getWebspace();
 
         $this->assertEquals('Sulu CMF', $webspace->getName());
@@ -406,7 +404,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('', $webspace->getLocalizations()[1]->getShadow());
         $this->assertEquals('sulu', $webspace->getTheme());
 
-        /** @var Portal $portal */
         $portal = $portalInformation->getPortal();
 
         $this->assertEquals('Sulu CMF AT', $portal->getName());
@@ -437,8 +434,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocale());
         $this->assertNull($portalInformation->getSegment());
 
-        /* @var Portal $portal */
-        /** @var Webspace $webspace */
         $webspace = $portalInformation->getWebspace();
 
         $this->assertEquals('Sulu CMF', $webspace->getName());

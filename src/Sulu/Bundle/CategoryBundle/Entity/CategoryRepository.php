@@ -14,6 +14,9 @@ namespace Sulu\Bundle\CategoryBundle\Entity;
 use Doctrine\ORM\Query\Expr\Join;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
+/**
+ * @extends NestedTreeRepository<CategoryInterface>
+ */
 class CategoryRepository extends NestedTreeRepository implements CategoryRepositoryInterface
 {
     public function createNew()

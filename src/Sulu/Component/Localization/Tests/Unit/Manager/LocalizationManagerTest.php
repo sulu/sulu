@@ -32,12 +32,9 @@ class LocalizationManagerTest extends TestCase
 
     public function testGetAllLocalizations(): void
     {
-        $localization1 = new Localization();
-        $localization1->setLanguage('de');
-        $localization2 = new Localization();
-        $localization2->setLanguage('en');
-        $localization3 = new Localization();
-        $localization3->setLanguage('fr');
+        $localization1 = new Localization('de');
+        $localization2 = new Localization('en');
+        $localization3 = new Localization('fr');
 
         $this->addLocalizationProvider([$localization1, $localization2]);
         $this->addLocalizationProvider([$localization3]);
@@ -52,10 +49,8 @@ class LocalizationManagerTest extends TestCase
 
     public function testGetAllLocalizationsWithSameLocalizations(): void
     {
-        $localization1 = new Localization();
-        $localization1->setLanguage('de');
-        $localization2 = new Localization();
-        $localization2->setLanguage('en');
+        $localization1 = new Localization('de');
+        $localization2 = new Localization('en');
 
         $this->addLocalizationProvider([$localization1, $localization2]);
         $this->addLocalizationProvider([$localization2]);

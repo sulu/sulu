@@ -45,8 +45,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
 
         $parts = \explode($delimiter, $locale);
 
-        $localization = new self();
-        $localization->setLanguage(\strtolower($parts[0]));
+        $localization = new self(\strtolower($parts[0]));
         if (\count($parts) > 1) {
             $localization->setCountry(\strtolower($parts[1]));
         }
@@ -88,7 +87,7 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @Groups({"frontend", "Default"})
      */
-    private $children;
+    private $children = [];
 
     /**
      * The parent localization.
@@ -375,11 +374,9 @@ class Localization implements \JsonSerializable, ArrayableInterface
     public function getAllLocalizations()
     {
         $localizations = [];
-        if (null !== $this->getChildren() && \count($this->getChildren()) > 0) {
-            foreach ($this->getChildren() as $child) {
-                $localizations[] = $child;
-                $localizations = \array_merge($localizations, $child->getAllLocalizations());
-            }
+        foreach ($this->getChildren() as $child) {
+            $localizations[] = $child;
+            $localizations = \array_merge($localizations, $child->getAllLocalizations());
         }
 
         return $localizations;
