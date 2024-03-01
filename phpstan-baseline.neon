@@ -3921,7 +3921,7 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
 		-
-			message: "#^Cannot call method rowCount\\(\\) on true\\.$#"
+			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
@@ -3932,6 +3932,11 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Command\\\\RecoverCommand\\:\\:fixCategoriesWithoutParents\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Command/RecoverCommand.php
 
@@ -6616,7 +6621,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
 		-
-			message: "#^Cannot call method rowCount\\(\\) on true\\.$#"
+			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
@@ -6627,6 +6632,11 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Command\\\\AccountRecoverCommand\\:\\:fixNodesWithoutParents\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Command/AccountRecoverCommand.php
 
@@ -47866,11 +47876,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
 
 		-
-			message: "#^Cannot call method getClass\\(\\) on Sulu\\\\Component\\\\DocumentManager\\\\Metadata\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Metadata/BaseMetadataFactoryTest.php
-
-		-
 			message: "#^Call to an undefined method Jackalope\\\\Workspace\\:\\:reveal\\(\\)\\.$#"
 			count: 2
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/NodeHelperTest.php
@@ -56131,16 +56136,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
 
 		-
-			message: "#^Cannot call method getLocale\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|false\\.$#"
-			count: 2
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getLocalization\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
 			message: "#^Cannot call method getLocalization\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|null\\.$#"
 			count: 3
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
@@ -56171,11 +56166,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
 
 		-
-			message: "#^Cannot call method getPortal\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|false\\.$#"
-			count: 2
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
 			message: "#^Cannot call method getPortal\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|null\\.$#"
 			count: 3
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
@@ -56196,11 +56186,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
 
 		-
-			message: "#^Cannot call method getSegment\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
 			message: "#^Cannot call method getSegment\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|null\\.$#"
 			count: 3
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
@@ -56218,11 +56203,6 @@ parameters:
 		-
 			message: "#^Cannot call method getUrl\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|null\\.$#"
 			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
-
-		-
-			message: "#^Cannot call method getWebspace\\(\\) on Sulu\\\\Component\\\\Webspace\\\\PortalInformation\\|false\\.$#"
-			count: 2
 			path: src/Sulu/Component/Webspace/Tests/Unit/Manager/WebspaceManagerTest.php
 
 		-
