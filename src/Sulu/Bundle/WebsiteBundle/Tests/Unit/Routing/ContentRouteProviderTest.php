@@ -104,9 +104,6 @@ class ContentRouteProviderTest extends TestCase
 
     public function testStateTest(): void
     {
-        $localization = new Localization();
-        $localization->setLanguage('de');
-
         $portal = new Portal();
         $portal->setKey('portal');
         $webspace = new Webspace();
@@ -131,9 +128,7 @@ class ContentRouteProviderTest extends TestCase
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
-        $localization = new Localization();
-        $localization->setLanguage('de');
-        $attributes->getAttribute('localization', null)->willReturn($localization);
+        $attributes->getAttribute('localization', null)->willReturn(new Localization('de'));
 
         $portal = new Portal();
         $portal->setKey('portal');
@@ -196,9 +191,7 @@ class ContentRouteProviderTest extends TestCase
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
-        $localization = new Localization();
-        $localization->setLanguage('de');
-        $attributes->getAttribute('localization', null)->willReturn($localization);
+        $attributes->getAttribute('localization', null)->willReturn(new Localization('de'));
 
         $portal = new Portal();
         $portal->setKey('portal');
@@ -279,9 +272,7 @@ class ContentRouteProviderTest extends TestCase
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
-        $localization = new Localization();
-        $localization->setLanguage('de');
-        $attributes->getAttribute('localization', null)->willReturn($localization);
+        $attributes->getAttribute('localization', null)->willReturn(new Localization('de'));
 
         $portal = new Portal();
         $portal->setKey('portal');
@@ -355,9 +346,7 @@ class ContentRouteProviderTest extends TestCase
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
-        $localization = new Localization();
-        $localization->setLanguage('de');
-        $attributes->getAttribute('localization', null)->willReturn($localization);
+        $attributes->getAttribute('localization', null)->willReturn(new Localization('de'));
 
         $portal = new Portal();
         $portal->setKey('portal');
@@ -420,9 +409,7 @@ class ContentRouteProviderTest extends TestCase
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
-        $localization = new Localization();
-        $localization->setLanguage('de');
-        $attributes->getAttribute('localization', null)->willReturn($localization);
+        $attributes->getAttribute('localization', null)->willReturn(new Localization('de'));
 
         $portal = new Portal();
         $portal->setKey('portal');
@@ -488,9 +475,6 @@ class ContentRouteProviderTest extends TestCase
 
     public function testGetCollectionForRequestWithMissingStructure(): void
     {
-        $localization = new Localization();
-        $localization->setLanguage('de');
-
         $portal = new Portal();
         $portal->setKey('portal');
         $webspace = new Webspace();
@@ -526,9 +510,7 @@ class ContentRouteProviderTest extends TestCase
     {
         $attributes = $this->prophesize(RequestAttributes::class);
 
-        $localization = new Localization();
-        $localization->setLanguage('de');
-        $attributes->getAttribute('localization', null)->willReturn($localization);
+        $attributes->getAttribute('localization', null)->willReturn(new Localization('de'));
 
         $portal = new Portal();
         $portal->setKey('portal');
@@ -606,9 +588,6 @@ class ContentRouteProviderTest extends TestCase
 
     public function testGetCollectionForNotExistingRequest(): void
     {
-        $localization = new Localization();
-        $localization->setLanguage('de');
-
         $portal = new Portal();
         $portal->setKey('portal');
         $webspace = new Webspace();

@@ -49,8 +49,7 @@ class MetaTwigExtensionTest extends TestCase
         $webspace = new Webspace();
         $webspace->setKey('sulu_test');
 
-        $locale = new Localization();
-        $locale->setLanguage('en');
+        $locale = new Localization('en');
 
         $this->portal = new Portal();
         $this->portal->setDefaultLocalization($locale);
@@ -102,10 +101,7 @@ class MetaTwigExtensionTest extends TestCase
      */
     public function testGetAlternateLinksDifferentDefaultLocale(): void
     {
-        $locale = new Localization();
-        $locale->setLanguage('de');
-
-        $this->portal->setXDefaultLocalization($locale);
+        $this->portal->setXDefaultLocalization(new Localization('de'));
 
         $extension = new MetaTwigExtension(
             $this->requestAnalyzer->reveal(),
