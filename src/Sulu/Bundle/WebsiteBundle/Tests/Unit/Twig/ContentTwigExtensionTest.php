@@ -126,14 +126,10 @@ class ContentTwigExtensionTest extends TestCase
         $this->webspace->getKey()
             ->willReturn('sulu_test');
 
-        $locale = new Localization();
-        $locale->setCountry('us');
-        $locale->setLanguage('en');
-
         $this->webspaceManager->findWebspaceByKey('sulu_test')->willReturn($this->webspace->reveal());
 
         $this->requestAnalyzer->getWebspace()->willReturn($this->webspace->reveal());
-        $this->requestAnalyzer->getCurrentLocalization()->willReturn($locale);
+        $this->requestAnalyzer->getCurrentLocalization()->willReturn(new Localization('en', 'us'));
 
         $this->sessionManager->getSession()->willReturn($this->session->reveal());
         $this->sessionManager->getContentNode('sulu_test')->willReturn($this->startPageNode->reveal());

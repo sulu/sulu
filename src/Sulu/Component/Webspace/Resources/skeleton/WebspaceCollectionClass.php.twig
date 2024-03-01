@@ -41,9 +41,7 @@ class {{ cache_class }} extends {{ base_class }}
 {% endif %}
 {% for localization in webspace.localizations %}
         // add localization to webspace
-        $localization0 = new Localization();
-        $localization0->setLanguage('{{ localization.language }}');
-        $localization0->setCountry('{{ localization.country }}');
+        $localization0 = new Localization('{{ localization.language }}', '{{ localization.country }}');
         $localization0->setShadow('{{ (localization.shadow) }}');
         $localization0->setDefault({{ localization.default ? 'true' : 'false' }});
         $localization0->setXDefault('{{ localization.xDefault }}');
@@ -92,9 +90,7 @@ class {{ cache_class }} extends {{ base_class }}
 {% for localization in portal.localizations %}
 
         // add localization
-        $localization = new Localization();
-        $localization->setLanguage('{{ localization.language }}');
-        $localization->setCountry('{{ localization.country }}');
+        $localization = new Localization('{{ localization.language }}', '{{ localization.country }}');
         $localization->setDefault('{{ localization.default }}');
         $localization->setXDefault('{{ localization.xDefault }}');
         $portal->addLocalization($localization);
@@ -194,9 +190,7 @@ class {{ cache_class }} extends {{ base_class }}
 
 {% macro create_localizations(localization, count, parent, webspace) %}{% import _self as self %}
     // parent id {{ parent }}
-    $localization{{ count }} = new Localization();
-    $localization{{ count }}->setLanguage('{{ localization.language }}');
-    $localization{{ count }}->setCountry('{{ localization.country }}');
+    $localization{{ count }} = new Localization('{{ localization.language }}', '{{ localization.country }}');
     $localization{{ count }}->setShadow('{{ (localization.shadow) }}');
     $localization{{ count }}->setParent($localization{{ parent }});
     $localization{{ count }}->setDefault('{{ localization.default }}');

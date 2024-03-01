@@ -148,14 +148,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->webspace = new Webspace();
         $this->webspace->setKey('test_io');
 
-        $local1 = new Localization();
-        $local1->setLanguage('en');
-
-        $local2 = new Localization();
-        $local2->setLanguage('en');
-        $local2->setCountry('us');
-
-        $this->webspace->setLocalizations([$local1, $local2]);
+        $this->webspace->setLocalizations([new Localization('en'), new Localization('en', 'us')]);
         $this->webspace->setName('Default');
 
         $this->webspace->addDefaultTemplate('page', 'default');
