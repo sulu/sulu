@@ -44496,31 +44496,6 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Tests/Functional/Generator/GeneratorTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Tests\\\\Functional\\\\Generator\\\\GeneratorTest\\:\\:testGenerate\\(\\) has parameter \\$baseDomain with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Tests/Functional/Generator/GeneratorTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Tests\\\\Functional\\\\Generator\\\\GeneratorTest\\:\\:testGenerate\\(\\) has parameter \\$domainParts with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Tests/Functional/Generator/GeneratorTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Tests\\\\Functional\\\\Generator\\\\GeneratorTest\\:\\:testGenerate\\(\\) has parameter \\$exception with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Tests/Functional/Generator/GeneratorTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Tests\\\\Functional\\\\Generator\\\\GeneratorTest\\:\\:testGenerate\\(\\) has parameter \\$expected with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Tests/Functional/Generator/GeneratorTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Tests\\\\Functional\\\\Generator\\\\GeneratorTest\\:\\:testGenerate\\(\\) has parameter \\$locales with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Tests/Functional/Generator/GeneratorTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Tests\\\\Unit\\\\Manager\\\\CustomUrlManagerTest\\:\\:getMapping\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Tests/Unit/Manager/Manager/CustomUrlManagerTest.php
@@ -46589,11 +46564,6 @@ parameters:
 			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\TestDocumentManagerSubscriber\\:\\:\\$unpublish has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
-
-		-
-			message: "#^Cannot call method getClass\\(\\) on Sulu\\\\Component\\\\DocumentManager\\\\Metadata\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Metadata/BaseMetadataFactoryTest.php
 
 		-
 			message: "#^Call to an undefined method Jackalope\\\\Workspace\\:\\:reveal\\(\\)\\.$#"
@@ -53466,11 +53436,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
 		-
-			message: "#^Parameter \\#1 \\$language of method Sulu\\\\Component\\\\Localization\\\\Localization\\:\\:setLanguage\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
-
-		-
 			message: "#^Parameter \\#1 \\$localizationNode of method Sulu\\\\Component\\\\Webspace\\\\Loader\\\\XmlFileLoader10\\:\\:generateLocalizationFromNode\\(\\) expects DOMElement, DOMNode given\\.$#"
 			count: 3
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
@@ -54613,26 +54578,6 @@ parameters:
 		-
 			message: "#^Cannot call method getLocale\\(\\) on Sulu\\\\Component\\\\Localization\\\\Localization\\|null\\.$#"
 			count: 4
-			path: src/Sulu/Component/Webspace/Tests/Unit/WebspaceTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\WebspaceTest\\:\\:getLocalization\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/WebspaceTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\WebspaceTest\\:\\:getLocalization\\(\\) has parameter \\$country with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/WebspaceTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\WebspaceTest\\:\\:getLocalization\\(\\) has parameter \\$language with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/WebspaceTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\WebspaceTest\\:\\:getLocalization\\(\\) has parameter \\$shadow with no type specified\\.$#"
-			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Unit/WebspaceTest.php
 
 		-
