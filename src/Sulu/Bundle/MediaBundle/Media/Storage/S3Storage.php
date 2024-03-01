@@ -47,7 +47,7 @@ class S3Storage extends FlysystemStorage
         $this->endpoint = (string) $this->adapter->getClient()->getEndpoint();
         $this->bucketName = $this->adapter->getBucket();
 
-        $this->url = $url;
+        $this->url = null !== $url ? $url : $this->endpoint;
     }
 
     public function getPath(array $storageOptions): string
