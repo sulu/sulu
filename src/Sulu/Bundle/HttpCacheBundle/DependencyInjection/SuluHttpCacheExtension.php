@@ -44,6 +44,10 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
             ];
         }
 
+        if (\array_key_exists('noop', $config['proxy_client'])) {
+            $fosHttpCacheConfig['proxy_client']['noop'] = $config['proxy_client']['noop'];
+        }
+
         if ($config['proxy_client']['symfony']['enabled']) {
             $symfonyProxyClient = $config['proxy_client']['symfony'];
             $fosHttpCacheConfig['proxy_client']['symfony']['http']['servers'] =
@@ -90,7 +94,7 @@ class SuluHttpCacheExtension extends Extension implements PrependExtensionInterf
         $proxyClientAvailable = false;
         if (\array_key_exists('proxy_client', $config)) {
             foreach ($config['proxy_client'] as $proxyClient) {
-                if (true === $proxyClient['enabled']) {
+                if ((\is_bool($proxyClient) && $proxyClient) || true === $proxyClient['enabled']) {
                     $proxyClientAvailable = true;
                     break;
                 }
