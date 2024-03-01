@@ -32,9 +32,12 @@ class S3Storage extends FlysystemStorage
      */
     private $bucketName;
 
+    /**
+     * @var string|null
+     */
     private $url;
 
-    public function __construct(FilesystemInterface $filesystem, int $segments, $url)
+    public function __construct(FilesystemInterface $filesystem, int $segments, ?string $url = null)
     {
         parent::__construct($filesystem, $segments);
 
