@@ -93,7 +93,8 @@ class ActivityRepositoryTest extends SuluTestCase
         $entityRepository = $this->entityManager->getRepository(ActivityInterface::class);
 
         $activity = $this->repository->createFromDomainEvent($this->domainEvent->reveal());
-        static::assertCount(0, $entityRepository->findAll());
+        $activities = $entityRepository->findAll();
+        static::assertCount(0, $activities);
 
         $this->repository->addAndCommit($activity);
         $activities = $entityRepository->findAll();
@@ -113,7 +114,8 @@ class ActivityRepositoryTest extends SuluTestCase
         $entityRepository = $this->entityManager->getRepository(ActivityInterface::class);
 
         $activity = $this->repository->createFromDomainEvent($this->domainEvent->reveal());
-        static::assertCount(0, $entityRepository->findAll());
+        $activities = $entityRepository->findAll();
+        static::assertCount(0, $activities);
 
         $this->repository->addAndCommit($activity);
         $activities = $entityRepository->findAll();
@@ -121,6 +123,7 @@ class ActivityRepositoryTest extends SuluTestCase
         static::assertSame(['name' => 'name-123', 'description' => 'description-123'], $activities[0]->getPayload());
 
         $this->repository->addAndCommit($activity);
-        static::assertCount(2, $entityRepository->findAll());
+        $activities = $entityRepository->findAll();
+        static::assertCount(2, $activities);
     }
 }
