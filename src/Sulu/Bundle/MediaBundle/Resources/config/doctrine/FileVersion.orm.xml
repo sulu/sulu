@@ -35,10 +35,10 @@
 
         <one-to-one field="defaultMeta" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionMeta">
             <cascade>
-                <cascade-all />
+                <cascade-persist />
             </cascade>
 
-            <join-column name="idFileVersionsMetaDefault" referenced-column-name="id" nullable="true" on-delete="CASCADE" />
+            <join-column name="idFileVersionsMetaDefault" referenced-column-name="id" nullable="true" on-delete="SET NULL" /><!-- why this should on-delete="RESTRICT" to avoid remove defaultMeta because of the nature of databases we need to use here SET NULL else the FileVersion is never deleteable -->
         </one-to-one>
         <one-to-many field="contentLanguages" target-entity="Sulu\Bundle\MediaBundle\Entity\FileVersionContentLanguage" mapped-by="fileVersion">
             <cascade>

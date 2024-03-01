@@ -54,20 +54,15 @@ class WebspaceCollectionTest extends TestCase
         $environment->addUrl($url);
         $portal->addEnvironment($environment);
 
-        $localizationEnUs = new Localization();
-        $localizationEnUs->setCountry('us');
-        $localizationEnUs->setLanguage('en');
+        $localizationEnUs = new Localization('en', 'us');
         $localizationEnUs->setShadow('auto');
         $localizationEnUs->setDefault(true);
-        $localizationEnCa = new Localization();
-        $localizationEnCa->setCountry('ca');
-        $localizationEnCa->setLanguage('en');
+        $localizationEnCa = new Localization('en', 'ca');
         $localizationEnCa->setDefault(false);
         $localizationEnUs->addChild($localizationEnCa);
-        $localizationFrCa = new Localization();
-        $localizationFrCa->setCountry('ca');
-        $localizationFrCa->setLanguage('fr');
+        $localizationFrCa = new Localization('fr', 'ca');
         $localizationFrCa->setDefault(false);
+
         $portal->addLocalization($localizationEnUs);
         $portal->addLocalization($localizationEnCa);
         $portal->addLocalization($localizationFrCa);

@@ -54,8 +54,7 @@ class LocalizationProvider implements LocalizationProviderInterface
     {
         $parts = \explode('_', $locale);
 
-        $localization = new Localization();
-        $localization->setLanguage($parts[0]);
+        $localization = new Localization($parts[0]);
         if (\count($parts) > 1) {
             $localization->setCountry($parts[1]);
         }

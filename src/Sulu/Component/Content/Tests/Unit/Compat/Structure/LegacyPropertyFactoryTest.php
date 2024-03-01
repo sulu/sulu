@@ -24,8 +24,10 @@ use Sulu\Component\Content\Compat\Section\SectionPropertyInterface;
 use Sulu\Component\Content\Compat\Structure\LegacyPropertyFactory;
 use Sulu\Component\Content\Metadata\BlockMetadata;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
+use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Metadata\SectionMetadata;
+use Sulu\Component\Content\Metadata\StructureMetadata;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
 
 class LegacyPropertyFactoryTest extends TestCase
@@ -36,6 +38,11 @@ class LegacyPropertyFactoryTest extends TestCase
      * @var ObjectProphecy<NamespaceRegistry>
      */
     private $namespaceRegistry;
+
+    /**
+     * @var ObjectProphecy<StructureMetadataFactoryInterface>
+     */
+    private $structureFactory;
 
     /**
      * @var LegacyPropertyFactory
@@ -75,8 +82,10 @@ class LegacyPropertyFactoryTest extends TestCase
     public function setUp(): void
     {
         $this->namespaceRegistry = $this->prophesize(NamespaceRegistry::class);
+        $this->structureFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
         $this->factory = new LegacyPropertyFactory(
-            $this->namespaceRegistry->reveal()
+            $this->namespaceRegistry->reveal(),
+            $this->structureFactory->reveal()
         );
 
         $this->property1 = $this->prophesize(PropertyMetadata::class);
@@ -172,8 +181,10 @@ class LegacyPropertyFactoryTest extends TestCase
      * It should create a section property.
      *
      * @depends testCreateProperty
+     *
+     * @param ObjectProphecy<PropertyMetadata> $property
      */
-    public function testCreateSection($property): void
+    public function testCreateSection(ObjectProphecy $property): void
     {
         $name = 'foo';
         $parameters = ['foo', 'bar'];
@@ -204,12 +215,15 @@ class LegacyPropertyFactoryTest extends TestCase
      * It should create a block property.
      *
      * @depends testCreateProperty
+     *
+     * @param ObjectProphecy<PropertyMetadata> $property
      */
-    public function testCreateBlock($property): void
+    public function testCreateBlock(ObjectProphecy $property): void
     {
         $this->setUpProperty($this->block);
 
         $this->component->getName()->willReturn('hai');
+        $this->component->hasTag('sulu.global_block')->willReturn(false);
         $this->component->getChildren()->willReturn([
             $property->reveal(),
         ]);
@@ -243,12 +257,49 @@ class LegacyPropertyFactoryTest extends TestCase
      * It should create a block property.
      *
      * @depends testCreateProperty
+     *
+     * @param ObjectProphecy<PropertyMetadata> $property
+     */
+    public function testCreateBlockWithGlobalBlock(ObjectProphecy $property): void
+    {
+        $this->setUpProperty($this->block);
+
+        $structureMetadata = $this->prophesize(StructureMetadata::class);
+        $structureMetadata->getProperties()->willReturn([]);
+        $this->structureFactory->getStructureMetadata('block', 'hai')->willReturn($structureMetadata->reveal());
+
+        $this->component->getName()->willReturn('hai');
+        $this->component->hasTag('sulu.global_block')->willReturn(true);
+        $this->component->getChildren()->willReturn([
+            $property->reveal(),
+        ]);
+
+        $this->block->getComponents()->willReturn([
+            $this->component->reveal(),
+        ]);
+        $this->block->getDefaultComponentName()->willReturn('foobar');
+
+        /** @var BlockProperty $blockProperty */
+        $blockProperty = $this->factory->createProperty($this->block->reveal());
+
+        $this->assertInstanceOf(BlockPropertyInterface::class, $blockProperty);
+        $this->assertCount(1, $blockProperty->getTypes());
+        $blockType = $blockProperty->getType('hai');
+        $this->assertNotNull($blockType);
+        $this->assertCount(0, $blockType->getChildProperties());
+    }
+
+    /**
+     * It should create a block property.
+     *
+     * @depends testCreateProperty
      */
     public function testCreatePropertyWithTypes($child): void
     {
         $this->setUpProperty($this->property2);
 
         $this->component2->getName()->willReturn('hai');
+        $this->component2->hasTag('sulu.global_block')->willReturn(false);
         $this->component2->getChildren()->willReturn([
             $child->reveal(),
         ]);
