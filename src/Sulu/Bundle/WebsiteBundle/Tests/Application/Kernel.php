@@ -48,7 +48,7 @@ class Kernel extends SuluTestKernel
 
     public function registerBundles(): iterable
     {
-        $bundles = parent::registerBundles();
+        $bundles = [...parent::registerBundles()];
 
         if ('with_security' === $this->appContext) {
             $bundles[] = new SecurityBundle();
@@ -57,17 +57,11 @@ class Kernel extends SuluTestKernel
         return $bundles;
     }
 
-    /**
-     * @return string
-     */
     public function getCacheDir(): string
     {
         return parent::getCacheDir() . \ltrim('/' . $this->appContext);
     }
 
-    /**
-     * @return string
-     */
     public function getCommonCacheDir(): string
     {
         return parent::getCommonCacheDir() . \ltrim('/' . $this->appContext);
