@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @internal
+ *
  * @final
  *
  * This class is internal overriding or extending should not be required instead create an own RequestProcessor.
