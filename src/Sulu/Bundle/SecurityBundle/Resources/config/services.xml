@@ -303,7 +303,7 @@
 
         <service id="sulu_security.system_listener" class="Sulu\Bundle\SecurityBundle\EventListener\SystemListener">
             <argument type="service" id="sulu_security.system_store" />
-            <argument type="service" id="sulu_core.webspace.request_analyzer"/>
+            <argument>null</argument>
             <argument>%sulu.context%</argument>
 
             <tag name="kernel.event_subscriber"/>
