@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
 use PHPCR\SessionInterface;
+use Sulu\Component\Webspace\Manager\WebspaceManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -24,6 +25,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpKernel\DependencyInjection\ServicesResetter;
 use Symfony\Component\Process\Process;
 
+/**
+ * TODO:
+ * * Snippets
+ * * Articles
+ */
 class PHPCRCleanupCommand extends Command
 {
     protected static $defaultName = 'sulu:phpcr:cleanup';
@@ -32,6 +38,7 @@ class PHPCRCleanupCommand extends Command
 
     public function __construct(
         private SessionInterface $session,
+        private WebspaceManager $webspaceManager,
         private ServicesResetter $servicesResetter,
         private string $projectDirectory,
     ) {
@@ -112,8 +119,20 @@ class PHPCRCleanupCommand extends Command
         $io->newLine();
         $io->newLine();
 
+        $wheres = [];
+        foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
+            $wheres[] = \sprintf('(ISDESCENDANTNODE(page, "/cmf/%1$s/contents") OR ISSAMENODE(page, "/cmf/%1$s/contents"))', $webspace->getKey());
+        }
+
+        $wheres[] = 'page.[jcr:path] LIKE "/cmf/snippets/%/%"';
+
+        $sql2 = \sprintf(
+            'SELECT [jcr:uuid] FROM [nt:unstructured] AS page WHERE %s',
+            \implode(' OR ', $wheres),
+        );
+
         $queryManager = $this->session->getWorkspace()->getQueryManager();
-        $rows = $queryManager->createQuery('SELECT [jcr:uuid] FROM [nt:unstructured] AS page WHERE ISDESCENDANTNODE(page, "/cmf") AND page.[jcr:path] LIKE "/cmf/%/%"  AND NOT page.[jcr:path] LIKE "/cmf/%/routes/%" AND NOT page.[jcr:path] LIKE "/cmf/%/routes" AND NOT page.[jcr:path] LIKE "/cmf/%/custom-urls/%" AND NOT page.[jcr:path] LIKE "/cmf/%/custom-urls"', 'JCR-SQL2')->execute();
+        $rows = $queryManager->createQuery($sql2, 'JCR-SQL2')->execute();
 
         $uuids = \array_map(static fn ($row) => $row->getValue('jcr:uuid'), \iterator_to_array($rows->getRows()));
         unset($rows);

@@ -259,7 +259,7 @@ class PHPCRCleanupSingleNodeCommand extends Command
 
         foreach ($node->getProperties() as $property) {
             \preg_match(
-                \sprintf('/^%s:([a-zA-Z_]*?)-template/', $this->languagePrefix),
+                \sprintf('/^%s:([a-zA-Z_]*?)-(template|title)/', $this->languagePrefix),
                 $property->getName(),
                 $matches,
             );
