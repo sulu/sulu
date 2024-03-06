@@ -127,6 +127,9 @@ class PHPCRCleanupCommand extends Command
             'removedProperties' => 0,
         ];
 
+        $ignoredUuids = [];
+        $erroredUuids = [];
+
         $io->section('Running cleanup process ...');
         $progressBar = $io->createProgressBar(\count($uuids));
         $progressBar->setFormat("Nodes: %nodes%\nIgnored: %ignoredNodes%\nErrored: %erroredNodes%\nDocuments: %documents%\nProperties: %properties%\nRemoved properties: %removedProperties%\n\n%current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s%\n\n");
@@ -153,11 +156,13 @@ class PHPCRCleanupCommand extends Command
                 $status = $process->wait();
                 if (PHPCRCleanupSingleNodeCommand::IGNORED === $status) {
                     ++$stats['ignoredNodes'];
+                    $ignoredUuids[] = $uuid;
 
                     continue;
                 }
                 if (0 !== $status) {
                     ++$stats['erroredNodes'];
+                    $erroredUuids[] = $uuid;
 
                     continue;
                 }
@@ -187,12 +192,18 @@ class PHPCRCleanupCommand extends Command
         $progressBar->finish();
         $io->success('Cleanup process finished');
 
+        $io->section('Following nodes are errored');
+        $io->listing($erroredUuids);
+
+        $io->section('Following nodes are ignored');
+        $io->listing($ignoredUuids);
+
         return self::SUCCESS;
     }
 
     protected function createProcess(string $uuid, bool $dryRun, bool $debug): Process
     {
-        return new Process(\array_filter([
+        $process = new Process(\array_filter([
             $_SERVER['PHP_BINARY'],
             $_SERVER['argv'][0],
             'sulu:phpcr:cleanup:single-node',
@@ -200,5 +211,9 @@ class PHPCRCleanupCommand extends Command
             $dryRun ? '--dry-run' : null,
             $debug ? '--debug' : null,
         ]));
+
+        $process->setTimeout(120);
+
+        return $process;
     }
 }
