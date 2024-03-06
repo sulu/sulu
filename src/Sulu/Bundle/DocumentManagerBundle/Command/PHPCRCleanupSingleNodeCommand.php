@@ -134,9 +134,11 @@ class PHPCRCleanupSingleNodeCommand extends Command
                 $defaultCleanupNode = new CleanupNode(clone $node);
                 $this->persist($document, $defaultCleanupNode, $locale);
 
-                $liveNode = $this->liveSession->getNodeByIdentifier($document->getUuid());
-                $liveCleanupNode = new CleanupNode(clone $liveNode);
+                $wasPublished = false;
                 if (WorkflowStage::PUBLISHED === $workflowStage) {
+                    $wasPublished = true;
+                    $liveNode = $this->liveSession->getNodeByIdentifier($document->getUuid());
+                    $liveCleanupNode = new CleanupNode(clone $liveNode);
                     $this->publish($document, $liveCleanupNode, $locale);
                 }
 
@@ -151,19 +153,22 @@ class PHPCRCleanupSingleNodeCommand extends Command
                 $stats['removedProperties'] += $result ? 1 : 0;
             }
 
-            $liveNode = $this->liveSession->getNode($node->getPath());
-            $writtenProperties = $liveCleanupNode->getWrittenPropertyKeys();
-            foreach ($this->cleanupNode($liveNode, $locale, $writtenProperties, $dryRun) as $result) {
-                ++$stats['properties'];
-                $stats['removedProperties'] += $result ? 1 : 0;
-            }
-
             if (!$dryRun) {
                 $this->session->save();
-                $this->liveSession->save();
             }
 
-            $this->documentManager->clear();
+            if ($wasPublished) {
+                $liveNode = $this->liveSession->getNode($node->getPath());
+                $writtenProperties = $liveCleanupNode->getWrittenPropertyKeys();
+                foreach ($this->cleanupNode($liveNode, $locale, $writtenProperties, $dryRun) as $result) {
+                    ++$stats['properties'];
+                    $stats['removedProperties'] += $result ? 1 : 0;
+                }
+
+                if (!$dryRun) {
+                    $this->liveSession->save();
+                }
+            }
         }
 
         $io->success(\sprintf(

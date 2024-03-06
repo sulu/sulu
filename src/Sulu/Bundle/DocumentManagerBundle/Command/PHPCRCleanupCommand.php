@@ -192,11 +192,15 @@ class PHPCRCleanupCommand extends Command
         $progressBar->finish();
         $io->success('Cleanup process finished');
 
-        $io->section('Following nodes are errored');
-        $io->listing($erroredUuids);
+        if (0 < \count($erroredUuids)) {
+            $io->section('Following nodes are errored');
+            $io->listing($erroredUuids);
+        }
 
-        $io->section('Following nodes are ignored');
-        $io->listing($ignoredUuids);
+        if (0 < \count($ignoredUuids)) {
+            $io->section('Following nodes are ignored');
+            $io->listing($ignoredUuids);
+        }
 
         return self::SUCCESS;
     }
