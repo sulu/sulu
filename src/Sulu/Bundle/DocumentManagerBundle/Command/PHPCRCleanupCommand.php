@@ -125,6 +125,7 @@ class PHPCRCleanupCommand extends Command
         }
 
         $wheres[] = 'page.[jcr:path] LIKE "/cmf/snippets/%/%"';
+        $wheres[] = 'page.[jcr:path] LIKE "/cmf/articles/%/%/%"';
 
         $sql2 = \sprintf(
             'SELECT [jcr:uuid] FROM [nt:unstructured] AS page WHERE %s',
