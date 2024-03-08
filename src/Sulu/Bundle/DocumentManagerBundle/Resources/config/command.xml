@@ -23,7 +23,7 @@
         </service>
 
         <service id="sulu_document_manager.command.phpcr_cleanup" class="Sulu\Bundle\DocumentManagerBundle\Command\PHPCRCleanupCommand">
-            <argument type="service" id="doctrine_phpcr.live_session" />
+            <argument type="service" id="doctrine_phpcr.default_session" />
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
             <argument type="service" id="services_resetter" />
             <argument>%kernel.project_dir%</argument>
