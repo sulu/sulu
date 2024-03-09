@@ -27,7 +27,7 @@ class SystemListener implements EventSubscriberInterface
     private $systemStore;
 
     /**
-     * @var RequestAnalyzerInterface
+     * @var RequestAnalyzerInterface|null
      */
     private $requestAnalyzer;
 
@@ -38,10 +38,15 @@ class SystemListener implements EventSubscriberInterface
 
     public function __construct(
         SystemStoreInterface $systemStore,
-        RequestAnalyzerInterface $requestAnalyzer,
+        ?RequestAnalyzerInterface $requestAnalyzer,
         string $context
     ) {
         $this->systemStore = $systemStore;
+
+        if (null !== $requestAnalyzer) {
+            @trigger_deprecation('sulu/sulu', '2.4', 'The argument "%s" in class "%s" is deprecated and not longer required set `null` instead.', RequestAnalyzerInterface::class, __CLASS__);
+        }
+
         $this->requestAnalyzer = $requestAnalyzer;
         $this->context = $context;
     }
@@ -57,16 +62,6 @@ class SystemListener implements EventSubscriberInterface
             $this->systemStore->setSystem(Admin::SULU_ADMIN_SECURITY_SYSTEM);
 
             return;
-        }
-
-        $webspace = $this->requestAnalyzer->getWebspace();
-        if ($webspace) {
-            $security = $webspace->getSecurity();
-            if ($security) {
-                $this->systemStore->setSystem($security->getSystem());
-
-                return;
-            }
         }
     }
 }

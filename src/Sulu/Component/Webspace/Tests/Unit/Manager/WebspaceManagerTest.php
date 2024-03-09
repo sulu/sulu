@@ -78,6 +78,7 @@ class WebspaceManagerTest extends WebspaceTestCase
     public function testFindPortalInformationsByUrl(): void
     {
         $portalInformations = $this->webspaceManager->findPortalInformationsByUrl('sulu.at/test/test/test', 'prod');
+        $this->assertNotCount(0, $portalInformations);
         $portalInformation = \reset($portalInformations);
         $this->assertInstanceOf(PortalInformation::class, $portalInformation);
         $this->assertEquals('de_at', $portalInformation->getLocalization()->getLocale());

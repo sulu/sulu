@@ -1892,7 +1892,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$name of class Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\SchemaMetadata\\\\PropertyMetadata constructor expects string, float\\|int\\|string given\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormMetadataMapperTest.php
 
 		-
@@ -10691,11 +10691,6 @@ parameters:
 			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/Configuration.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\DependencyInjection\\\\Configuration\\:\\:getWebspaceConfiguration\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/Configuration.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\DependencyInjection\\\\SuluCoreExtension\\:\\:initCache\\(\\) has parameter \\$cache with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
@@ -10707,11 +10702,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\DependencyInjection\\\\SuluCoreExtension\\:\\:initFields\\(\\) has parameter \\$fieldsConfig with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CoreBundle\\\\DependencyInjection\\\\SuluCoreExtension\\:\\:initWebspace\\(\\) has parameter \\$webspaceConfig with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CoreBundle/DependencyInjection/SuluCoreExtension.php
 
@@ -28571,12 +28561,12 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/SuluSecurityListener.php
 
 		-
-			message: "#^If condition is always true\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SystemListener\\:\\:onKernelRequest\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/SystemListener.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SystemListener\\:\\:onKernelRequest\\(\\) has no return type specified\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SystemListener\\:\\:\\$requestAnalyzer is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/SystemListener.php
 
@@ -29364,11 +29354,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SuluSecurityListenerTest\\:\\:testMethodPermissionMapping\\(\\) has parameter \\$permission with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SuluSecurityListenerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SystemListenerTest\\:\\:provideSetWebsiteSystem\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SystemListenerTest.php
 
 		-
 			message: "#^Class Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\AuthenticationEntryPoint does not have a constructor and must be instantiated without any parameters\\.$#"
@@ -30706,11 +30691,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
 
 		-
-			message: "#^Class Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetContent constructor invoked with 5 parameters, 4 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
-
-		-
 			message: "#^Parameter \\#1 \\$array of function next expects array\\|object, mixed given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
@@ -31209,16 +31189,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Unit\\\\Admin\\\\SnippetAdminTest\\:\\:testConfigureViews\\(\\) has parameter \\$locales with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Admin/SnippetAdminTest.php
-
-		-
-			message: "#^Class Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetContent constructor invoked with 5 parameters, 4 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetContentTest.php
-
-		-
-			message: "#^Parameter \\#4 \\$defaultEnabled of class Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetContent constructor expects true, false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetContentTest.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Unit\\\\Content\\\\SnippetDataProviderTest\\:\\:provideResolveDataItems\\(\\) has no return type specified\\.$#"
@@ -33612,6 +33582,11 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Routing\\\\ContentRouteProvider\\:\\:\\$defaultOptions type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/Routing/ContentRouteProvider.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Routing\\\\ContentRouteProvider\\:\\:\\$securityChecker is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Routing/ContentRouteProvider.php
 
@@ -36776,6 +36751,11 @@ parameters:
 			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
 
 		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
+
+		-
 			message: "#^Parameter \\#1 \\$name of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Section\\\\SectionProperty constructor expects string, float\\|int\\|string given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
@@ -36792,11 +36772,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$col of class Sulu\\\\Component\\\\Content\\\\Compat\\\\Section\\\\SectionProperty constructor expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Content\\\\Compat\\\\Structure\\\\LegacyPropertyFactory\\:\\:\\$namespaceRegistry has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Compat/Structure/LegacyPropertyFactory.php
 
@@ -40767,7 +40742,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$context of method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Parser\\\\PropertiesXmlParser\\:\\:loadProperties\\(\\) expects DOMNode, DOMNode\\|null given\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Content/Metadata/Parser/PropertiesXmlParser.php
 
 		-
@@ -40852,11 +40827,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\PropertyMetadata\\:\\:addComponent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/PropertyMetadata.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Metadata\\\\PropertyMetadata\\:\\:getComponentByName\\(\\) should return Sulu\\\\Component\\\\Content\\\\Metadata\\\\ItemMetadata but return statement is missing\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/PropertyMetadata.php
 
@@ -42246,23 +42216,13 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Compat/Structure/LegacyPropertyFactoryTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Compat\\\\Structure\\\\LegacyPropertyFactoryTest\\:\\:testCreateBlock\\(\\) has parameter \\$property with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Compat/Structure/LegacyPropertyFactoryTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Compat\\\\Structure\\\\LegacyPropertyFactoryTest\\:\\:testCreatePropertyWithTypes\\(\\) has parameter \\$child with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Compat/Structure/LegacyPropertyFactoryTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Compat\\\\Structure\\\\LegacyPropertyFactoryTest\\:\\:testCreateSection\\(\\) has parameter \\$property with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Compat/Structure/LegacyPropertyFactoryTest.php
-
-		-
 			message: "#^Parameter \\#1 \\$property of method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Compat\\\\Structure\\\\LegacyPropertyFactoryTest\\:\\:setUpProperty\\(\\) expects Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Component\\\\Content\\\\Metadata\\\\PropertyMetadata\\>, Prophecy\\\\Prophecy\\\\ObjectProphecy\\<Sulu\\\\Component\\\\Content\\\\Metadata\\\\BlockMetadata\\> given\\.$#"
-			count: 1
+			count: 2
 			path: src/Sulu/Component/Content/Tests/Unit/Compat/Structure/LegacyPropertyFactoryTest.php
 
 		-
@@ -42677,36 +42637,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'value' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Metadata/ItemMetadataCase.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Metadata\\\\ItemMetadataCase\\:\\:testGetNotExistingTitle\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Metadata/ItemMetadataCase.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Metadata\\\\ItemMetadataCase\\:\\:testGetParameters\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Metadata/ItemMetadataCase.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Metadata\\\\ItemMetadataCase\\:\\:testGetParametersInvalid\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Metadata/ItemMetadataCase.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Metadata\\\\ItemMetadataCase\\:\\:testGetTag\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Metadata/ItemMetadataCase.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Metadata\\\\ItemMetadataCase\\:\\:testGetTagNotExist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Metadata/ItemMetadataCase.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Metadata\\\\ItemMetadataCase\\:\\:testGetTitle\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Metadata/ItemMetadataCase.php
 
@@ -44181,29 +44111,14 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Tests/Functional/Generator/GeneratorTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Tests\\\\Functional\\\\Generator\\\\GeneratorTest\\:\\:testGenerate\\(\\) has parameter \\$baseDomain with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Tests\\\\Unit\\\\Manager\\\\CustomUrlManagerTest\\:\\:getMapping\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: src/Sulu/Component/CustomUrl/Tests/Functional/Generator/GeneratorTest.php
+			path: src/Sulu/Component/CustomUrl/Tests/Unit/Manager/CustomUrlManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Tests\\\\Functional\\\\Generator\\\\GeneratorTest\\:\\:testGenerate\\(\\) has parameter \\$domainParts with no type specified\\.$#"
+			message: "#^Property Sulu\\\\Component\\\\CustomUrl\\\\Tests\\\\Unit\\\\Manager\\\\CustomUrlManagerTest\\:\\:\\$environment is never written, only read\\.$#"
 			count: 1
-			path: src/Sulu/Component/CustomUrl/Tests/Functional/Generator/GeneratorTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Tests\\\\Functional\\\\Generator\\\\GeneratorTest\\:\\:testGenerate\\(\\) has parameter \\$exception with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Tests/Functional/Generator/GeneratorTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Tests\\\\Functional\\\\Generator\\\\GeneratorTest\\:\\:testGenerate\\(\\) has parameter \\$expected with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Tests/Functional/Generator/GeneratorTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Tests\\\\Functional\\\\Generator\\\\GeneratorTest\\:\\:testGenerate\\(\\) has parameter \\$locales with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Tests/Functional/Generator/GeneratorTest.php
+			path: src/Sulu/Component/CustomUrl/Tests/Unit/Manager/CustomUrlManagerTest.php
 
 		-
 			message: "#^Cannot call method getDefaults\\(\\) on Symfony\\\\Component\\\\Routing\\\\Route\\|null\\.$#"
@@ -46266,11 +46181,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
 
 		-
-			message: "#^Cannot call method getClass\\(\\) on Sulu\\\\Component\\\\DocumentManager\\\\Metadata\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/Metadata/BaseMetadataFactoryTest.php
-
-		-
 			message: "#^Call to an undefined method Jackalope\\\\Workspace\\:\\:reveal\\(\\)\\.$#"
 			count: 2
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/NodeHelperTest.php
@@ -47007,11 +46917,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Localization\\\\Localization\\:\\:findLocalization\\(\\) should return Sulu\\\\Component\\\\Localization\\\\Localization\\|null but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Component/Localization/Localization.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Localization\\\\Localization\\:\\:setChildren\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Localization/Localization.php
 
@@ -48852,11 +48757,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Filter\\\\FilterTypeRegistry\\:\\:__construct\\(\\) has parameter \\$filterTypes with no value type specified in iterable type iterable\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Filter/FilterTypeRegistry.php
-
-		-
-			message: "#^Parameter \\#1 \\$iterator of function iterator_to_array expects Traversable, iterable given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/FilterTypeRegistry.php
 
@@ -52886,6 +52786,66 @@ parameters:
 			path: src/Sulu/Component/Webspace/Environment.php
 
 		-
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollection\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 2
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollection.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionBuilder\\:\\:__construct\\(\\) has parameter \\$configuration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionBuilder\\:\\:buildEnvironment\\(\\) has parameter \\$environmentConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionBuilder\\:\\:buildErrorTemplates\\(\\) has parameter \\$webspaceConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionBuilder\\:\\:buildLocalization\\(\\) has parameter \\$localizationConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionBuilder\\:\\:buildNavgiation\\(\\) has parameter \\$webspaceConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionBuilder\\:\\:buildPortal\\(\\) has parameter \\$portalConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionBuilder\\:\\:buildSegments\\(\\) has parameter \\$segmentRefs with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionBuilder\\:\\:buildSegments\\(\\) has parameter \\$webspaceConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionBuilder\\:\\:buildTemplates\\(\\) has parameter \\$webspaceConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionBuilder\\:\\:buildWebspace\\(\\) has parameter \\$webspaceConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionInterface\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 2
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionInterface.php
+
+		-
 			message: "#^Cannot access offset string on mixed\\.$#"
 			count: 4
 			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
@@ -52913,6 +52873,11 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$resourceLocator of method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceManager\\:\\:createResourceLocatorUrl\\(\\) expects string, string\\|null given\\.$#"
 			count: 2
+			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
+
+		-
+			message: "#^Property Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceManager\\:\\:\\$structureMetadataFactory is never read, only written\\.$#"
+			count: 1
 			path: src/Sulu/Component/Webspace/Manager/WebspaceManager.php
 
 		-
@@ -53648,26 +53613,6 @@ parameters:
 		-
 			message: "#^Cannot call method getLocale\\(\\) on Sulu\\\\Component\\\\Localization\\\\Localization\\|null\\.$#"
 			count: 4
-			path: src/Sulu/Component/Webspace/Tests/Unit/WebspaceTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\WebspaceTest\\:\\:getLocalization\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/WebspaceTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\WebspaceTest\\:\\:getLocalization\\(\\) has parameter \\$country with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/WebspaceTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\WebspaceTest\\:\\:getLocalization\\(\\) has parameter \\$language with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/WebspaceTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\WebspaceTest\\:\\:getLocalization\\(\\) has parameter \\$shadow with no type specified\\.$#"
-			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Unit/WebspaceTest.php
 
 		-
