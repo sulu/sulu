@@ -1,0 +1,40 @@
+security:
+    enable_authenticator_manager: true
+
+    access_decision_manager:
+        strategy: unanimous
+        allow_if_all_abstain: true
+
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+    password_hashers:
+        Sulu\Bundle\SecurityBundle\Entity\User: bcrypt
+
+    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+    providers:
+        sulu:
+            id: sulu_security.user_provider
+
+    firewalls:
+        website:
+            pattern: ^/
+            lazy: true
+            provider: sulu
+            # The login and logout routes need to be created.
+            # For an advanced user management with registration and opt-in emails have a look at the:
+            # https://github.com/sulu/SuluCommunityBundle
+            # Also have a look at the user context based caching when you output user role specific data
+            # https://docs.sulu.io/en/2.2/cookbook/user-context-caching.html
+            form_login:
+                login_path: login
+                check_path: login
+            logout:
+                path: logout
+                target: /
+            remember_me:
+                secret:   "%kernel.secret%"
+                lifetime: 604800 # 1 week in seconds
+                path:     /
+
+sulu_security:
+    checker:
+        enabled: true

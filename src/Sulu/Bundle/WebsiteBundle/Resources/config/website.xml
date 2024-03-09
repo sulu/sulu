@@ -21,7 +21,7 @@
             <argument type="service" id="sulu.content.structure_manager"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager"/>
             <argument type="service" id="sulu_core.webspace.request_analyzer"/>
-            <argument type="service" id="sulu_security.security_checker" on-invalid="null"/>
+            <argument>null</argument><!-- not longer required -->
             <argument type="collection" />
 
             <tag name="sulu.context" context="website"/>
