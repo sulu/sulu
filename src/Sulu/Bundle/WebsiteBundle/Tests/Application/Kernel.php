@@ -12,10 +12,16 @@
 namespace Sulu\Bundle\WebsiteBundle\Tests\Application;
 
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
 class Kernel extends SuluTestKernel
 {
+    /**
+     * @var string
+     */
+    private $appContext;
+
     /**
      * @param string $environment
      * @param bool $debug
@@ -23,7 +29,10 @@ class Kernel extends SuluTestKernel
      */
     public function __construct($environment, $debug, $suluContext = self::CONTEXT_ADMIN)
     {
-        parent::__construct($environment, $debug, $suluContext);
+        $envParts = \explode('_', $environment, 2);
+        $this->appContext = $envParts[1] ?? '';
+
+        parent::__construct($envParts[0], $debug, $suluContext);
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
@@ -32,5 +41,29 @@ class Kernel extends SuluTestKernel
 
         $context = $this->getContext();
         $loader->load(__DIR__ . '/config/config_' . $context . '.yml');
+        if ('' !== $this->appContext) {
+            $loader->load(__DIR__ . '/config/config_' . $this->appContext . '.yml');
+        }
+    }
+
+    public function registerBundles(): iterable
+    {
+        $bundles = [...parent::registerBundles()];
+
+        if ('with_security' === $this->appContext) {
+            $bundles[] = new SecurityBundle();
+        }
+
+        return $bundles;
+    }
+
+    public function getCacheDir(): string
+    {
+        return parent::getCacheDir() . \ltrim('/' . $this->appContext);
+    }
+
+    public function getCommonCacheDir(): string
+    {
+        return parent::getCommonCacheDir() . \ltrim('/' . $this->appContext);
     }
 }

@@ -24,9 +24,7 @@ use Sulu\Component\Content\Exception\ResourceLocatorMovedException;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
-use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
-use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
@@ -35,6 +33,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Webmozart\Assert\Assert;
 
 /**
  * The PortalRouteProvider should load the dynamic routes created by Sulu.
@@ -98,6 +97,7 @@ class ContentRouteProvider implements RouteProviderInterface
         $this->webspaceManager = $webspaceManager;
         $this->requestAnalyzer = $requestAnalyzer;
         $this->securityChecker = $securityChecker;
+        Assert::null($securityChecker, 'The security checker should be called by the SecurityListener not the ContentRouteProvider.'); // people who overwrite the ContentRouteProvider should make aware of that they also need to refactor this
         $this->defaultOptions = $defaultOptions;
     }
 
@@ -165,18 +165,6 @@ class ContentRouteProvider implements RouteProviderInterface
                 // If the title is empty the document does not exist in this locale
                 // Necessary because of https://github.com/sulu/sulu/issues/2724, otherwise locale could be checked
                 return $collection;
-            }
-
-            if ($this->securityChecker && $portal->getWebspace()->hasWebsiteSecurity()) {
-                $this->securityChecker->checkPermission(
-                    new SecurityCondition(
-                        'sulu.webspaces.' . $document->getWebspaceName(),
-                        $document->getLocale(),
-                        \get_class($document),
-                        $document->getUuid()
-                    ),
-                    PermissionTypes::VIEW
-                );
             }
 
             if (\preg_match('/\/$/', $resourceLocator) && ('/' !== $resourceLocator || $prefix)) {

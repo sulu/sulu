@@ -28596,12 +28596,12 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/SuluSecurityListener.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SystemListener\\:\\:onKernelRequest\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/SystemListener.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SystemListener\\:\\:onKernelRequest\\(\\) has no return type specified\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SystemListener\\:\\:\\$requestAnalyzer is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/SystemListener.php
 
@@ -29389,11 +29389,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SuluSecurityListenerTest\\:\\:testMethodPermissionMapping\\(\\) has parameter \\$permission with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SuluSecurityListenerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SystemListenerTest\\:\\:provideSetWebsiteSystem\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SystemListenerTest.php
 
 		-
 			message: "#^Class Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\AuthenticationEntryPoint does not have a constructor and must be instantiated without any parameters\\.$#"
@@ -33622,6 +33617,11 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Routing\\\\ContentRouteProvider\\:\\:\\$defaultOptions type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/Routing/ContentRouteProvider.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Routing\\\\ContentRouteProvider\\:\\:\\$securityChecker is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Routing/ContentRouteProvider.php
 
