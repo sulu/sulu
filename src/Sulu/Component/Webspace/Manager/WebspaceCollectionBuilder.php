@@ -17,6 +17,7 @@ use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Exception\InvalidAmountOfDefaultErrorTemplateException;
 use Sulu\Component\Webspace\Exception\InvalidErrorTemplateException;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
+use Sulu\Component\Webspace\Loader\Exception\InvalidUrlDefinitionException;
 use Sulu\Component\Webspace\Navigation;
 use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Portal;
@@ -249,6 +250,10 @@ class WebspaceCollectionBuilder
         }
 
         foreach ($environmentConfiguration['urls']['url'] ?? [] as $urlConfiguration) {
+            if ($this->isUrlValid($urlConfiguration)) {
+                throw new InvalidUrlDefinitionException($webspace, $urlNode->nodeValue);
+            }
+
             $url = new Url(\rtrim($urlConfiguration['value'], '/'));
             $url->setLanguage($urlConfiguration['language']);
             $url->setCountry($urlConfiguration['country'] ?? null);
@@ -262,6 +267,22 @@ class WebspaceCollectionBuilder
         }
 
         return $environment;
+    }
+
+    private function isUrlValid(array $urlConfiguration): bool
+    {
+        $urlValue = $urlConfiguration['value'];
+
+        $hasLocalization = \array_key_exists($urlConfiguration, 'localization')
+            || \str_contains($urlValue, '{localization}');
+
+        $hasLanguage = \array_key_exists($urlConfiguration, 'language')
+            || \str_contains($urlValue, '{language}')
+            || $hasLocalization;
+
+        $hasRedirect = \array_key_exists($urlConfiguration['redirect']);
+
+        return $hasLanguage || $hasRedirect;
     }
 
     protected function buildLocalization(array $localizationConfiguration): Localization

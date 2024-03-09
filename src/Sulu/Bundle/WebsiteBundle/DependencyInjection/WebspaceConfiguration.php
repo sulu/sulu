@@ -220,7 +220,7 @@ class WebspaceConfiguration
                             if (!\array_key_exists(0, $value)) {
                                 return [$value];
                             }
-                            if (\array_sum(\array_column($value, 'default')) !== 1) {
+                            if (1 !== \array_sum(\array_column($value, 'default'))) {
                                 throw new \InvalidArgumentException('You can not have more than one default localization');
                             }
 
@@ -239,7 +239,7 @@ class WebspaceConfiguration
                                         if (!\array_key_exists(0, $value)) {
                                             return [$value];
                                         }
-                                        if (\array_sum(\array_column($value, 'default')) !== 1) {
+                                        if (1 !== \array_sum(\array_column($value, 'default'))) {
                                             throw new \InvalidArgumentException('You can not have more than one default localization');
                                         }
 
@@ -327,7 +327,7 @@ class WebspaceConfiguration
                                                     $value = [$value];
                                                 }
 
-                                                if (\array_sum(\array_column($value, 'default')) !== 1) {
+                                                if (1 !== \array_sum(\array_column($value, 'default'))) {
                                                     throw new \InvalidArgumentException('You can not have more than one default localization');
                                                 }
 
