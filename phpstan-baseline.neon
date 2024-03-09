@@ -52841,6 +52841,11 @@ parameters:
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
 
 		-
+			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionBuilder\\:\\:isUrlValid\\(\\) has parameter \\$urlConfiguration with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionBuilder.php
+
+		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Manager\\\\WebspaceCollectionInterface\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 2
 			path: src/Sulu/Component/Webspace/Manager/WebspaceCollectionInterface.php
