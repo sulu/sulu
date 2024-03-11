@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of Sulu.
+ *
+ * (c) Sulu GmbH
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Sulu\Component\Content\Document\Subscriber\PHPCR;
 
 use PHPCR\ItemInterface;
@@ -18,7 +27,7 @@ class CleanupNode implements \IteratorAggregate, NodeInterface
 
     public function getWrittenPropertyKeys()
     {
-        return array_keys($this->writtenProperties);
+        return \array_keys($this->writtenProperties);
     }
 
     public function getPath()

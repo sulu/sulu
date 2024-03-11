@@ -61,7 +61,7 @@ class PHPCRCleanupCommand extends Command
         if (!$dryRun) {
             $io->warning('This command will remove properties from the PHPCR repository. Make sure to have a backup before running this command.');
             if (!$input->getOption('force')) {
-                $answer = $io->ask('Do you want to continue [y/n]', null, function (?string $value) {
+                $answer = $io->ask('Do you want to continue [y/n]', null, function(?string $value) {
                     if (null === $value) {
                         return false;
                     }

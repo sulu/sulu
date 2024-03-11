@@ -83,7 +83,7 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
 
         foreach ($node->getProperties(self::SHADOW_BASE_PROPERTY) as $name => $property) {
             $locale = $this->getLocale($name);
-            if ($node->getPropertyValueWithDefault(sprintf(self::SHADOW_ON_PROPERTY, $locale), false)
+            if ($node->getPropertyValueWithDefault(\sprintf(self::SHADOW_ON_PROPERTY, $locale), false)
                 && $property->getValue() === $document->getLocale()
             ) {
                 $locale = $this->getLocale($property->getName());
