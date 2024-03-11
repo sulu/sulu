@@ -23,6 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpKernel\DependencyInjection\ServicesResetter;
+use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\PhpProcess;
 use Symfony\Component\Process\Process;
 
@@ -228,13 +229,17 @@ class PHPCRCleanupCommand extends Command
 
     protected function createProcess(string $uuid, bool $dryRun, bool $debug): Process
     {
-        $process = new PhpProcess(\implode(' ', \array_filter([
+        $executableFinder = new PhpExecutableFinder();
+        $php = $executableFinder->find(false);
+
+        $process = new Process(\array_filter([
+            $php,
             $_SERVER['argv'][0],
             'sulu:phpcr:cleanup:single-node',
             $uuid,
             $dryRun ? '--dry-run' : null,
             $debug ? '--debug' : null,
-        ])));
+        ]));
 
         $process->setTimeout(120);
 
