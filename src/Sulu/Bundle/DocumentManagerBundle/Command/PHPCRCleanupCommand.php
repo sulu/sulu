@@ -24,18 +24,10 @@ use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpKernel\DependencyInjection\ServicesResetter;
 use Symfony\Component\Process\PhpExecutableFinder;
-use Symfony\Component\Process\PhpProcess;
 use Symfony\Component\Process\Process;
 
-/**
- * TODO:
- * * Snippets
- * * Articles
- */
 class PHPCRCleanupCommand extends Command
 {
-    protected static $defaultName = 'sulu:phpcr:cleanup';
-
     private OutputInterface $logger;
 
     public function __construct(
@@ -44,7 +36,7 @@ class PHPCRCleanupCommand extends Command
         private ServicesResetter $servicesResetter,
         private string $projectDirectory,
     ) {
-        parent::__construct();
+        parent::__construct('sulu:phpcr:cleanup');
     }
 
     protected function configure(): void

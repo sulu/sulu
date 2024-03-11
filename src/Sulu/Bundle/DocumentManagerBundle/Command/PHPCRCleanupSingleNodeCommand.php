@@ -50,8 +50,6 @@ class PHPCRCleanupSingleNodeCommand extends Command
         'changer',
     ];
 
-    protected static $defaultName = 'sulu:phpcr:cleanup:single-node';
-
     private string $languagePrefix;
 
     private array $aliasMapping = [];
@@ -73,7 +71,7 @@ class PHPCRCleanupSingleNodeCommand extends Command
         private InvalidationSubscriber $invalidationSubscriber,
         array $mapping,
     ) {
-        parent::__construct();
+        parent::__construct('sulu:phpcr:cleanup:single-node');
 
         $this->logger = new NullOutput();
 
@@ -269,7 +267,7 @@ class PHPCRCleanupSingleNodeCommand extends Command
             }
         }
 
-        return \array_values(\array_unique($locales));
+        return \array_keys($locales);
     }
 
     private function getAliasForNode(NodeInterface $node): ?string
