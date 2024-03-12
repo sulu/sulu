@@ -48811,11 +48811,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/FilterTypeRegistry.php
 
 		-
-			message: "#^Parameter \\#1 \\$iterator of function iterator_to_array expects Traversable, iterable given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Filter/FilterTypeRegistry.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Filter\\\\NumberFilterType\\:\\:filter\\(\\) has parameter \\$options with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/NumberFilterType.php
