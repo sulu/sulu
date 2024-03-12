@@ -4,11 +4,11 @@
 
 ### PHP 8.2 upgrade
 
-Before you can upgrade to Sulu 2.6 you should make sure your project code and
-dependency are already working with PHP 8.2.
+Before upgrading to Sulu 2.6, ensure that your project's code and dependencies
+are already compatible with PHP 8.2.
 
-We recommend todo the PHP upgrade as seperate step before you are updating to
-Sulu 2.6. This make it easier for you to identify eventueally occuring bugs
+We recommend performing the PHP upgrade as a separate step before updating to
+Sulu 2.6. This will make it easier for you to identify any bugs that may occur
 in the project code with PHP 8.2.
 
 ### DocumentToUuidTransformer return type changed
