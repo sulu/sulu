@@ -2,6 +2,15 @@
 
 ## 2.6.0
 
+### PHP 8.2 upgrade
+
+Before upgrading to Sulu 2.6, ensure that your project's code and dependencies
+are already compatible with PHP 8.2.
+
+We recommend performing the PHP upgrade as a separate step before updating to
+Sulu 2.6. This will make it easier for you to identify any bugs that may occur
+in the project code with PHP 8.2.
+
 ### DocumentToUuidTransformer return type changed
 
 For compatibility to Symfony 7 the `DocumentToUuidTransformer` methods return types changed:
