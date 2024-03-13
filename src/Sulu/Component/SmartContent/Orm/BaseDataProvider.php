@@ -108,6 +108,9 @@ abstract class BaseDataProvider implements DataProviderInterface
         return;
     }
 
+    /**
+     * @param array{locale: string} $options
+     */
     public function resolveDataItems(
         array $filters,
         array $propertyParameter,

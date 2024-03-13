@@ -25,7 +25,7 @@ interface DataProviderRepositoryInterface
      * @param int $pageSize
      * @param int $limit
      * @param string $locale
-     * @param mixed[] $options
+     * @param array{webspaceKey?: string, locale: string} $options
      *
      * @return object[]
      */
