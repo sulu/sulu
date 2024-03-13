@@ -31,7 +31,7 @@ trait DataProviderRepositoryTrait
      * @param int $pageSize
      * @param int $limit
      * @param string $locale
-     * @param array $options
+     * @param array{webspaceKey?: string, locale?: string} $options
      * @param string|null $entityClass
      * @param string|null $entityAlias
      * @param int|null $permission
@@ -92,9 +92,9 @@ trait DataProviderRepositoryTrait
      * @param int $pageSize
      * @param int $limit
      * @param string $locale
-     * @param array $options
+     * @param mixed[] $options
      *
-     * @return array
+     * @return int[]|string[]
      */
     private function findByFiltersIds(
         $filters,
@@ -252,6 +252,7 @@ trait DataProviderRepositoryTrait
 
         return \array_map(
             function($item) {
+                /** @var int|string */
                 return $item['id'];
             },
             $query->getScalarResult()
@@ -282,7 +283,7 @@ trait DataProviderRepositoryTrait
      * @param string $operator "and" or "or"
      * @param string $alias
      *
-     * @return array parameter for the query
+     * @return array<string, int|string|int[]|string[]> parameter for the query
      */
     private function appendRelation(QueryBuilder $queryBuilder, $relation, $values, $operator, $alias)
     {
@@ -303,7 +304,7 @@ trait DataProviderRepositoryTrait
      * @param int[] $values
      * @param string $alias
      *
-     * @return array parameter for the query
+     * @return array<string, int|string|int[]|string[]> parameter for the query
      */
     private function appendRelationOr(QueryBuilder $queryBuilder, $relation, $values, $alias)
     {
@@ -320,7 +321,7 @@ trait DataProviderRepositoryTrait
      * @param int[] $values
      * @param string $alias
      *
-     * @return array parameter for the query
+     * @return array<string, int|string|int[]|string[]> parameter for the query
      */
     private function appendRelationAnd(QueryBuilder $queryBuilder, $relation, $values, $alias)
     {
@@ -355,16 +356,19 @@ trait DataProviderRepositoryTrait
      *
      * @param string $alias
      * @param string $locale
+     *
+     * @return void
      */
     abstract protected function appendJoins(QueryBuilder $queryBuilder, $alias, $locale);
 
     /**
      * Append additional condition to query builder for "findByFilters" function.
      *
+     * @param string $alias
      * @param string $locale
-     * @param array $options
+     * @param mixed[] $options
      *
-     * @return array parameters for query
+     * @return array<string, int|string|int[]|string[]> parameters for query
      */
     protected function append(QueryBuilder $queryBuilder, $alias, $locale, $options = [])
     {
@@ -408,6 +412,11 @@ trait DataProviderRepositoryTrait
         return $alias . '.targetGroups';
     }
 
+    /**
+     * @param string $alias
+     *
+     * @return string
+     */
     protected function appendTypeRelation(QueryBuilder $queryBuilder, $alias)
     {
         return $alias . '.type';
@@ -416,10 +425,11 @@ trait DataProviderRepositoryTrait
     /**
      * Extension point to append datasource.
      *
+     * @param int|string $datasource
      * @param bool $includeSubFolders
      * @param string $alias
      *
-     * @return array parameters for query
+     * @return array<string, int|string|int[]|string[]> parameters for query
      */
     protected function appendDatasource($datasource, $includeSubFolders, QueryBuilder $queryBuilder, $alias)
     {
@@ -434,6 +444,8 @@ trait DataProviderRepositoryTrait
      * @param string $sortMethod
      * @param string $alias
      * @param string $locale
+     *
+     * @return void
      */
     protected function appendSortBy($sortBy, $sortMethod, QueryBuilder $queryBuilder, $alias, $locale)
     {
@@ -449,6 +461,8 @@ trait DataProviderRepositoryTrait
      *
      * @param string $alias
      * @param string $locale
+     *
+     * @return void
      */
     protected function appendSortByJoins(QueryBuilder $queryBuilder, $alias, $locale)
     {
