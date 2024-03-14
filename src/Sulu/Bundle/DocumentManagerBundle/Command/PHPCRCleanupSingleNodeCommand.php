@@ -20,6 +20,7 @@ use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\Subscriber\PHPCR\CleanupNode;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
+use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event;
 use Sulu\Component\DocumentManager\Events;
@@ -33,6 +34,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Webmozart\Assert\Assert;
 
 class PHPCRCleanupSingleNodeCommand extends Command
 {
@@ -52,6 +54,9 @@ class PHPCRCleanupSingleNodeCommand extends Command
 
     private string $languagePrefix;
 
+    /**
+     * @var array<string, string>
+     */
     private array $aliasMapping = [];
 
     /**
@@ -61,6 +66,9 @@ class PHPCRCleanupSingleNodeCommand extends Command
 
     private OutputInterface $logger;
 
+    /**
+     * @param array<array{phpcr_type: string, alias: string}> $mapping
+     */
     public function __construct(
         private SessionInterface $liveSession,
         private SessionInterface $session,
@@ -128,13 +136,14 @@ class PHPCRCleanupSingleNodeCommand extends Command
             }
 
             try {
+                Assert::isInstanceOf($document, UuidBehavior::class);
+
                 $node = $this->session->getNodeByIdentifier($document->getUuid());
                 $defaultCleanupNode = new CleanupNode(clone $node);
                 $this->persist($document, $defaultCleanupNode, $locale);
 
-                $wasPublished = false;
-                if (WorkflowStage::PUBLISHED === $workflowStage) {
-                    $wasPublished = true;
+                $wasPublished = WorkflowStage::PUBLISHED === $workflowStage;
+                if ($wasPublished) {
                     $liveNode = $this->liveSession->getNodeByIdentifier($document->getUuid());
                     $liveCleanupNode = new CleanupNode(clone $liveNode);
                     $this->publish($document, $liveCleanupNode, $locale);
@@ -183,7 +192,7 @@ class PHPCRCleanupSingleNodeCommand extends Command
         return self::SUCCESS;
     }
 
-    private function persist($document, CleanupNode $cleanupNode, string $locale): void
+    private function persist(object $document, CleanupNode $cleanupNode, string $locale): void
     {
         $options = $this->getOptionsResolver(Events::PERSIST)->resolve();
         $event = new Event\PersistEvent($document, $locale, $options);
@@ -191,14 +200,13 @@ class PHPCRCleanupSingleNodeCommand extends Command
         $this->documentManagerEventDispatcher->dispatch($event, Events::PERSIST);
     }
 
-    private function publish($document, CleanupNode $cleanupNode, string $locale): void
+    private function publish(object $document, CleanupNode $cleanupNode, string $locale): void
     {
-        $this->invalidationSubscriber->deactivate();
         $options = $this->getOptionsResolver(Events::PUBLISH)->resolve();
+        $options[InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION] = false;
         $event = new Event\PublishEvent($document, $locale, $options);
         $event->setNode($cleanupNode);
         $this->documentManagerEventDispatcher->dispatch($event, Events::PUBLISH);
-        $this->invalidationSubscriber->activate();
     }
 
     private function cleanupNode(NodeInterface $node, string $locale, array $writtenProperties, bool $dryRun): \Generator

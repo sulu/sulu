@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of Sulu.
  *
@@ -37,7 +35,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
     private $customUrlManager;
 
     /**
-     * @var CacheManager|null
+     * @var null|CacheManager
      */
     private $cacheManager;
 
@@ -124,7 +122,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
 
         $url = PathHelper::relativizePath(
             $routeDocument->getPath(),
-            $this->customUrlManager->getRoutesPath($this->documentInspector->getWebspace($routeDocument)),
+            $this->customUrlManager->getRoutesPath($this->documentInspector->getWebspace($routeDocument))
         );
 
         $this->cacheManager->invalidatePath($this->getUrlWithScheme($url));

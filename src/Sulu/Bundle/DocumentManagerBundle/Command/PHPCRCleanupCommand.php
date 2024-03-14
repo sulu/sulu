@@ -25,6 +25,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpKernel\DependencyInjection\ServicesResetter;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
+use Webmozart\Assert\Assert;
 
 class PHPCRCleanupCommand extends Command
 {
@@ -107,7 +108,12 @@ class PHPCRCleanupCommand extends Command
             $debugFile = $input->getOption('debug-file');
             $io->writeln('Debug file: ' . $debugFile);
 
-            $this->logger = new StreamOutput(\fopen($debugFile, 'w'));
+            $resource = \fopen($debugFile, 'w');
+            if (false === $resource) {
+                throw new \RuntimeException(\sprintf('Could not open debug file "%s"', $debugFile));
+            }
+
+            $this->logger = new StreamOutput($resource);
         }
 
         $io->newLine();
@@ -157,9 +163,14 @@ class PHPCRCleanupCommand extends Command
 
         $progressBar->start();
 
-        $chunks = \array_chunk($uuids, (int) $input->getOption('processes'));
+        $chunkSize = (int) $input->getOption('processes');
+        Assert::greaterThan($chunkSize, 0, 'Chunk size must be greater than 0');
+
+        $chunks = \array_chunk($uuids, $chunkSize);
         foreach ($chunks as $chunk) {
             $processes = [];
+
+            /** @var string $uuid */
             foreach ($chunk as $uuid) {
                 $processes[$uuid] = $this->createProcess($uuid, $dryRun, $debug);
                 $processes[$uuid]->start();

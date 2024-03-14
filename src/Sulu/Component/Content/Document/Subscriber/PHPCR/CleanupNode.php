@@ -297,6 +297,7 @@ class CleanupNode implements \IteratorAggregate, NodeInterface
         return $this->node->getAllowedLifecycleTransitions();
     }
 
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return $this->node->getIterator();
