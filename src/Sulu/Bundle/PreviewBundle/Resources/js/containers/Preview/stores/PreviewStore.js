@@ -1,5 +1,5 @@
 // @flow
-import {action, computed, observable} from 'mobx';
+import {action, computed, observable, toJS} from 'mobx';
 import {Requester} from 'sulu-admin-bundle/services';
 import {buildQueryString, transformDateForUrl} from 'sulu-admin-bundle/utils';
 import type {IObservableValue} from 'mobx/lib/mobx';
@@ -14,7 +14,7 @@ export default class PreviewStore {
 
     resourceKey: string;
     id: ?string | number;
-    locale: ?IObservableValue<string>;
+    @observable locale: ?string;
     @observable webspace: string;
     @observable segment: ?string;
     @observable targetGroup: number = -1;
@@ -30,8 +30,8 @@ export default class PreviewStore {
         segment: ?string
     ) {
         // keep backwards compatibility to previous versions where locale was passed as string
-        if (typeof locale === 'string') {
-            locale = observable.box(locale);
+        if (typeof locale !== 'string') {
+            locale = toJS(locale);
         }
         this.resourceKey = resourceKey;
         this.id = id;
@@ -89,8 +89,15 @@ export default class PreviewStore {
         });
     }
 
-    restart(): Promise<string> {
-        return this.stop().then(() => this.start());
+    @action restart(locale: ?string): Promise<string> {
+        return this.stop().then(
+            () => {
+                if (locale) {
+                    this.locale = locale;
+                }
+
+                return this.start();
+            });
     }
 
     update(data: Object): Promise<string> {
