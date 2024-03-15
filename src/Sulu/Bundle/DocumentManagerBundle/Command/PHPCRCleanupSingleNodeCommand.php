@@ -36,6 +36,9 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Webmozart\Assert\Assert;
 
+/**
+ * @internal
+ */
 class PHPCRCleanupSingleNodeCommand extends Command
 {
     public const IGNORED = 101;

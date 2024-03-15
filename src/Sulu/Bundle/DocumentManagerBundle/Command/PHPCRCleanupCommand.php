@@ -27,6 +27,9 @@ use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 use Webmozart\Assert\Assert;
 
+/**
+ * @internal
+ */
 class PHPCRCleanupCommand extends Command
 {
     private OutputInterface $logger;
