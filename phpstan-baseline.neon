@@ -7181,6 +7181,11 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
+			message: "#^Default value of the parameter \\#6 \\$options \\(array\\{\\}\\) of method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AccountManager\\:\\:findByFilters\\(\\) is incompatible with type array\\{webspaceKey\\?\\: string, locale\\: string\\}\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
+
+		-
 			message: "#^Do not throw the \\\\Exception base class\\. Instead, extend the \\\\Exception base class\\. More info\\: http\\://bit\\.ly/subtypeexception$#"
 			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
@@ -7322,6 +7327,11 @@ parameters:
 
 		-
 			message: "#^Call to function is_array\\(\\) with string will always evaluate to false\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
+
+		-
+			message: "#^Default value of the parameter \\#6 \\$options \\(array\\{\\}\\) of method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManager\\:\\:findByFilters\\(\\) is incompatible with type array\\{webspaceKey\\?\\: string, locale\\: string\\}\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
@@ -8646,31 +8656,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:append\\(\\) has parameter \\$alias with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:append\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:append\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:appendDatasource\\(\\) has parameter \\$datasource with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:appendDatasource\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:appendJoins\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
@@ -8682,41 +8667,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:appendJoins\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:appendRelation\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:appendRelationAnd\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:appendRelationOr\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:appendSortBy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:appendSortByJoins\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:appendTypeRelation\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:appendTypeRelation\\(\\) has parameter \\$alias with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
@@ -8766,11 +8716,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFilters\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$entityAlias with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
@@ -8786,17 +8731,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$permission with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\AccountRepository\\:\\:findByFiltersIds\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/AccountRepository.php
 
@@ -8921,31 +8856,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:append\\(\\) has parameter \\$alias with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:append\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:append\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:appendDatasource\\(\\) has parameter \\$datasource with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:appendDatasource\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:appendJoins\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
@@ -8957,41 +8867,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:appendJoins\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:appendRelation\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:appendRelationAnd\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:appendRelationOr\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:appendSortBy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:appendSortByJoins\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:appendTypeRelation\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:appendTypeRelation\\(\\) has parameter \\$alias with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
@@ -9026,11 +8901,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByFilters\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$entityAlias with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
@@ -9046,17 +8916,7 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$permission with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactRepository\\:\\:findByFiltersIds\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Entity/ContactRepository.php
 
@@ -11629,6 +11489,31 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Command\\\\FixturesLoadCommand\\:\\:__construct\\(\\) has parameter \\$fixtures with no value type specified in iterable type Traversable\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Command/FixturesLoadCommand.php
+
+		-
+			message: "#^In method \"Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Command\\\\PHPCRCleanupSingleNodeCommand\\:\\:execute\", caught \"Exception\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Command\\\\PHPCRCleanupSingleNodeCommand\\:\\:cleanupNode\\(\\) has parameter \\$writtenProperties with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Command\\\\PHPCRCleanupSingleNodeCommand\\:\\:getLocales\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Command\\\\PHPCRCleanupSingleNodeCommand\\:\\:\\$invalidationSubscriber is never read, only written\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
+
+		-
+			message: "#^Variable \\$liveCleanupNode might not be defined\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
 
 		-
 			message: "#^Cannot use array destructuring on array\\<callable\\>\\|\\(callable\\)\\.$#"
@@ -14956,6 +14841,11 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/FileVersionPublishLanguage.php
 
 		-
+			message: "#^Default value of the parameter \\#6 \\$options \\(array\\{\\}\\) of method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:findByFilters\\(\\) is incompatible with type array\\{webspaceKey\\?\\: string, locale\\: string\\}\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:__construct\\(\\) has parameter \\$collectionEntityName with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
@@ -15031,26 +14921,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:appendRelation\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:appendRelationAnd\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:appendRelationOr\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:appendSortBy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:appendSortByJoins\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
@@ -15082,16 +14952,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:appendTargetGroupRelation\\(\\) has parameter \\$alias with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:appendTypeRelation\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:appendTypeRelation\\(\\) has parameter \\$alias with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
@@ -15136,27 +14996,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:findByFiltersIds\\(\\) has parameter \\$permission with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:findByFiltersIds\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:parentFindByFilters\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:parentFindByFilters\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
@@ -20017,6 +19862,16 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\DataProviderInterface\\:\\:resolveDatasource\\(\\) invoked with 4 parameters, 3 required\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Controller/SmartContentItemController.php
+
+		-
+			message: "#^Parameter \\#1 \\$datasource of method Sulu\\\\Component\\\\SmartContent\\\\DataProviderInterface\\:\\:resolveDatasource\\(\\) expects int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Controller/SmartContentItemController.php
+
+		-
+			message: "#^Parameter \\#1 \\$filters of method Sulu\\\\Component\\\\SmartContent\\\\DataProviderInterface\\:\\:resolveDataItems\\(\\) expects array\\{dataSource\\?\\: int\\|string\\|null, sortMethod\\?\\: 'asc'\\|'desc', sortBy\\?\\: string, tags\\?\\: array\\<string\\>, tagOperator\\?\\: 'and'\\|'or', types\\?\\: array\\<string\\>, categories\\?\\: array\\<int\\>, categoryOperator\\?\\: 'and'\\|'or', \\.\\.\\.\\}, array\\<string, array\\|float\\|int\\<min, \\-1\\>\\|int\\<1, max\\>\\|non\\-falsy\\-string\\|true\\> given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Controller/SmartContentItemController.php
 
@@ -30066,21 +29921,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetDataProvider.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetDataProvider\\:\\:resolveDataItems\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetDataProvider\\:\\:resolveDataItems\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetDataProvider\\:\\:resolveDatasource\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetDataProvider.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetDataProvider\\:\\:resolveDatasource\\(\\) should return Sulu\\\\Component\\\\SmartContent\\\\DatasourceItemInterface but returns null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetDataProvider.php
@@ -30106,22 +29946,22 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetDataProvider.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetDataProvider\\:\\:resolveResourceItems\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetDataProvider\\:\\:resolveResourceItems\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetDataProvider.php
-
-		-
 			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetDataProvider.php
 
 		-
 			message: "#^Parameter \\#2 \\$initializer of method ProxyManager\\\\Factory\\\\LazyLoadingValueHolderFactory\\:\\:createProxy\\(\\) expects Closure\\(Sulu\\\\Bundle\\\\SnippetBundle\\\\Document\\\\SnippetDocument\\|null\\=, ProxyManager\\\\Proxy\\\\ValueHolderInterface\\<Sulu\\\\Bundle\\\\SnippetBundle\\\\Document\\\\SnippetDocument\\>&ProxyManager\\\\Proxy\\\\VirtualProxyInterface&Sulu\\\\Bundle\\\\SnippetBundle\\\\Document\\\\SnippetDocument\\=, string\\=, array\\<string, mixed\\>\\=, Closure\\|null\\=\\)\\: bool, Closure\\(mixed, ProxyManager\\\\Proxy\\\\LazyLoadingInterface, mixed, array, mixed\\)\\: true given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetDataProvider.php
+
+		-
+			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetDataProvider\\:\\:decorateDataItems\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetDataProvider.php
+
+		-
+			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetDataProvider\\:\\:decorateResourceItems\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetDataProvider.php
 
@@ -35791,6 +35631,11 @@ parameters:
 			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/ContactDataProviderTest.php
 
 		-
+			message: "#^Parameter \\#1 \\$filters of method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveDataItems\\(\\) expects array\\{dataSource\\?\\: int\\|string\\|null, sortMethod\\?\\: 'asc'\\|'desc', sortBy\\?\\: string, tags\\?\\: array\\<string\\>, tagOperator\\?\\: 'and'\\|'or', types\\?\\: array\\<string\\>, categories\\?\\: array\\<int\\>, categoryOperator\\?\\: 'and'\\|'or', \\.\\.\\.\\}, array\\{sortBy\\: null\\} given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/ContactDataProviderTest.php
+
+		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\BreadcrumbItem\\:\\:__construct\\(\\) has parameter \\$depth with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/BreadcrumbItem.php
@@ -38154,6 +37999,26 @@ parameters:
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, Iterator\\<string, PHPCR\\\\NodeInterface\\> given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/OrderSubscriber.php
+
+		-
+			message: "#^Call to an undefined method PHPCR\\\\NodeInterface\\:\\:getIterator\\(\\)\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/CleanupNode.php
+
+		-
+			message: "#^Class Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\CleanupNode implements generic interface IteratorAggregate but does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/CleanupNode.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\CleanupNode\\:\\:getWrittenPropertyKeys\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/CleanupNode.php
+
+		-
+			message: "#^Property Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\CleanupNode\\:\\:\\$writtenProperties type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/CleanupNode.php
 
 		-
 			message: "#^Class Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode implements generic interface IteratorAggregate but does not specify its types\\: TKey, TValue$#"
@@ -41811,21 +41676,6 @@ parameters:
 			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:resolveDataItems\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:resolveDataItems\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:resolveDatasource\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:resolveDatasource\\(\\) should return Sulu\\\\Component\\\\SmartContent\\\\DatasourceItemInterface but empty return statement found\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
@@ -41866,22 +41716,32 @@ parameters:
 			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:resolveResourceItems\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:resolveResourceItems\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
-
-		-
 			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
 
 		-
+			message: "#^Parameter \\#1 \\$webspaceKey of method Sulu\\\\Component\\\\Content\\\\Query\\\\ContentQueryExecutorInterface\\:\\:execute\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
+
+		-
 			message: "#^Parameter \\#2 \\$initializer of method ProxyManager\\\\Factory\\\\LazyLoadingValueHolderFactory\\:\\:createProxy\\(\\) expects Closure\\(Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\PageDocument\\|null\\=, ProxyManager\\\\Proxy\\\\ValueHolderInterface\\<Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\PageDocument\\>&ProxyManager\\\\Proxy\\\\VirtualProxyInterface&Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\PageDocument\\=, string\\=, array\\<string, mixed\\>\\=, Closure\\|null\\=\\)\\: bool, Closure\\(mixed, ProxyManager\\\\Proxy\\\\LazyLoadingInterface, mixed, array, mixed\\)\\: true given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
+
+		-
+			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:decorateDataItems\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
+
+		-
+			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Component\\\\Content\\\\SmartContent\\\\PageDataProvider\\:\\:decorateResourceItems\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
+
+		-
+			message: "#^Parameter \\#2 \\$locales of method Sulu\\\\Component\\\\Content\\\\Query\\\\ContentQueryExecutorInterface\\:\\:execute\\(\\) expects array\\<string\\>, array\\<int, mixed\\> given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/SmartContent/PageDataProvider.php
 
@@ -47041,6 +46901,11 @@ parameters:
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
 		-
+			message: "#^Default value of the parameter \\#3 \\$options \\(array\\{\\}\\) of method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:resolveDataItems\\(\\) is incompatible with type array\\{locale\\: string\\}\\.$#"
+			count: 1
+			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
+
+		-
 			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:__construct\\(\\) has parameter \\$permissions with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
@@ -47066,32 +46931,7 @@ parameters:
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:resolveDataItems\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:resolveDataItems\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:resolveDatasource\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:resolveDatasource\\(\\) should return Sulu\\\\Component\\\\SmartContent\\\\DatasourceItemInterface but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:resolveResourceItems\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:resolveResourceItems\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
@@ -47101,7 +46941,12 @@ parameters:
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManagerInterface\\:\\:getById\\(\\) expects int, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManagerInterface\\:\\:getById\\(\\) expects int, int\\<min, \\-1\\>\\|int\\<1, max\\>\\|string given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
+
+		-
+			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManagerInterface\\:\\:getById\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
@@ -47392,6 +47237,11 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @var for variable \\$mediaTypeRepository contains generic interface Doctrine\\\\Persistence\\\\ObjectRepository but does not specify its types\\: TEntityClass$#"
+			count: 1
+			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$filters of method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:resolveDataItems\\(\\) expects array\\{dataSource\\?\\: int\\|string\\|null, sortMethod\\?\\: 'asc'\\|'desc', sortBy\\?\\: string, tags\\?\\: array\\<string\\>, tagOperator\\?\\: 'and'\\|'or', types\\?\\: array\\<string\\>, categories\\?\\: array\\<int\\>, categoryOperator\\?\\: 'and'\\|'or', \\.\\.\\.\\}, array\\{dataSource\\: 42, tags\\: array\\{1\\}\\} given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
 
@@ -48797,11 +48647,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Filter\\\\FilterTypeRegistry\\:\\:__construct\\(\\) has parameter \\$filterTypes with no value type specified in iterable type iterable\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Filter/FilterTypeRegistry.php
-
-		-
-			message: "#^Parameter \\#1 \\$iterator of function iterator_to_array expects Traversable, iterable given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/FilterTypeRegistry.php
 
@@ -51366,31 +51211,6 @@ parameters:
 			path: src/Sulu/Component/SmartContent/ContentType.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\DataProviderInterface\\:\\:resolveDataItems\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/DataProviderInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\DataProviderInterface\\:\\:resolveDataItems\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/DataProviderInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\DataProviderInterface\\:\\:resolveDatasource\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/DataProviderInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\DataProviderInterface\\:\\:resolveResourceItems\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/DataProviderInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\DataProviderInterface\\:\\:resolveResourceItems\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/DataProviderInterface.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\DataProviderPool\\:\\:add\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/DataProviderPool.php
@@ -51432,6 +51252,11 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
+			count: 1
+			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
+
+		-
+			message: "#^Default value of the parameter \\#3 \\$options \\(array\\{\\}\\) of method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveDataItems\\(\\) is incompatible with type array\\{locale\\: string\\}\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 
@@ -51496,21 +51321,6 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveDataItems\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveDataItems\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveDatasource\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveDatasource\\(\\) should return Sulu\\\\Component\\\\SmartContent\\\\DatasourceItemInterface but empty return statement found\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
@@ -51531,17 +51341,17 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveResourceItems\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveResourceItems\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\DataProviderRepositoryInterface\\:\\:findByFilters\\(\\) invoked with 8 parameters, 5\\-6 required\\.$#"
+			count: 1
+			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
+
+		-
+			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:decorateResourceItems\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
+
+		-
+			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveFilters\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 
@@ -51556,6 +51366,11 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 
 		-
+			message: "#^Parameter \\#6 \\$options of method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\DataProviderRepositoryInterface\\:\\:findByFilters\\(\\) expects array\\{webspaceKey\\?\\: string, locale\\: string\\}, array given\\.$#"
+			count: 1
+			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
+
+		-
 			message: "#^Property Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:\\$permissions type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
@@ -51564,6 +51379,11 @@ parameters:
 			message: "#^Property Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:\\$referenceStore \\(Sulu\\\\Bundle\\\\WebsiteBundle\\\\ReferenceStore\\\\ReferenceStoreInterface\\) does not accept Sulu\\\\Bundle\\\\WebsiteBundle\\\\ReferenceStore\\\\ReferenceStoreInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
+
+		-
+			message: "#^Default value of the parameter \\#6 \\$options \\(array\\{\\}\\) of method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\DataProviderRepositoryInterface\\:\\:findByFilters\\(\\) is incompatible with type array\\{webspaceKey\\?\\: string, locale\\: string\\}\\.$#"
+			count: 1
+			path: src/Sulu/Component/SmartContent/Orm/DataProviderRepositoryInterface.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\DataProviderRepositoryInterface\\:\\:findByFilters\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
@@ -51791,72 +51611,7 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:append\\(\\) has parameter \\$alias with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:append\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:append\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:appendDatasource\\(\\) has parameter \\$datasource with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:appendDatasource\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:appendRelation\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:appendRelationAnd\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:appendRelationOr\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:appendSortBy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:appendSortByJoins\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:appendTypeRelation\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:appendTypeRelation\\(\\) has parameter \\$alias with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
 			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFilters\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFilters\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
@@ -51876,17 +51631,7 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFiltersIds\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
 			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFiltersIds\\(\\) has parameter \\$permission with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
-
-		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFiltersIds\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 

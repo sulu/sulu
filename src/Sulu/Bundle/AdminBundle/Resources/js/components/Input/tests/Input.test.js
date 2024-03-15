@@ -15,6 +15,12 @@ test('Input should render', () => {
     expect(container).toMatchSnapshot();
 });
 
+test('Input should render with autoFocus', () => {
+    const onChange = jest.fn();
+    const {container} = render(<Input autoFocus={true} onBlur={jest.fn()} onChange={onChange} value="My value" />);
+    expect(container).toMatchSnapshot();
+});
+
 test('Input should render with autocomplete off', () => {
     const onChange = jest.fn();
     const {container} = render(<Input autocomplete="off" disabled={true} onChange={onChange} value="My value" />);

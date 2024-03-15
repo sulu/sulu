@@ -127,11 +127,13 @@ class AdminControllerTest extends SuluTestCase
                 'translations' => '/admin/translations',
                 'generateUrl' => '/admin/api/resourcelocators?action=generate',
                 'routing' => '/admin/js/routing',
+                'has_single_sign_on' => false,
             ],
             'suluVersion' => '_._._',
             'appVersion' => null,
             'passwordPattern' => null,
             'passwordInfoTranslationKey' => null,
+            'hasSingleSignOn' => false,
         ], $config);
     }
 

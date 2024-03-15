@@ -245,8 +245,6 @@ test('Should request server on restart preview with new locale', () => {
     const previewStore = new PreviewStore('pages', '123-123-123', locale, 'sulu_io');
     previewStore.start();
 
-    locale.set('de');
-
     // $FlowFixMe
     Requester.post = jest.fn();
     const startPromise = Promise.resolve({token: '123-123-123'});
@@ -254,7 +252,7 @@ test('Should request server on restart preview with new locale', () => {
     Requester.post.mockReturnValueOnce(stopPromise);
     Requester.post.mockReturnValueOnce(startPromise);
 
-    return previewStore.restart().then(() => {
+    return previewStore.restart('de').then(() => {
         expect(Requester.post).toBeCalledWith('/stop');
         expect(Requester.post).toBeCalledWith('/start?provider=pages&id=123-123-123&locale=de');
     });

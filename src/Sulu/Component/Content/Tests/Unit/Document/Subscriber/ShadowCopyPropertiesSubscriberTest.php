@@ -52,6 +52,8 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
 
         $this->document->getLocale()->willReturn('en');
 
+        $this->node->getPropertyValueWithDefault('i18n:de-shadow-on', false)->willReturn(true);
+
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-tags', [])->willReturn([1, 2, 3]);
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-categories', [])->willReturn([3, 2, 1]);
         $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']);
@@ -60,7 +62,30 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
         $this->node->setProperty('i18n:de-excerpt-categories', [3, 2, 1])->shouldBeCalled();
         $this->node->setProperty('i18n:de-navContexts', ['main'])->shouldBeCalled();
 
-        $this->node->getProperties('i18n:*-shadow-base')->willReturn([$property->reveal()]);
+        $this->node->getProperties('i18n:*-shadow-base')->willReturn(['i18n:de-shadow-base' => $property->reveal()]);
+
+        $this->subscriber->copyToShadows($this->document->reveal(), $this->node->reveal());
+    }
+
+    public function testCopyToShadowsNoShadow(): void
+    {
+        $property = $this->prophesize(PropertyInterface::class);
+        $property->getName()->willReturn('i18n:de-shadow-base');
+        $property->getValue()->willReturn('en');
+
+        $this->document->getLocale()->willReturn('en');
+
+        $this->node->getPropertyValueWithDefault('i18n:de-shadow-on', false)->willReturn(false);
+
+        $this->node->getPropertyValueWithDefault('i18n:en-excerpt-tags', [])->willReturn([1, 2, 3]);
+        $this->node->getPropertyValueWithDefault('i18n:en-excerpt-categories', [])->willReturn([3, 2, 1]);
+        $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']);
+
+        $this->node->setProperty('i18n:de-excerpt-tags', [1, 2, 3])->shouldNotBeCalled();
+        $this->node->setProperty('i18n:de-excerpt-categories', [3, 2, 1])->shouldNotBeCalled();
+        $this->node->setProperty('i18n:de-navContexts', ['main'])->shouldNotBeCalled();
+
+        $this->node->getProperties('i18n:*-shadow-base')->willReturn(['i18n:de-shadow-base' => $property->reveal()]);
 
         $this->subscriber->copyToShadows($this->document->reveal(), $this->node->reveal());
     }
@@ -77,6 +102,9 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
 
         $this->document->getLocale()->willReturn('en');
 
+        $this->node->getPropertyValueWithDefault('i18n:de-shadow-on', false)->willReturn(true);
+        $this->node->getPropertyValueWithDefault('i18n:en_us-shadow-on', false)->willReturn(true);
+
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-tags', [])->willReturn([1, 2, 3]);
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-categories', [])->willReturn([3, 2, 1]);
         $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']);
@@ -89,7 +117,7 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
         $this->node->setProperty('i18n:en_us-excerpt-categories', [3, 2, 1])->shouldBeCalled();
         $this->node->setProperty('i18n:en_us-navContexts', ['main'])->shouldBeCalled();
 
-        $this->node->getProperties('i18n:*-shadow-base')->willReturn([$property1->reveal(), $property2->reveal()]);
+        $this->node->getProperties('i18n:*-shadow-base')->willReturn(['i18n:de-shadow-base' => $property1->reveal(), 'i18n:en_us-shadow-base' => $property2->reveal()]);
 
         $this->subscriber->copyToShadows($this->document->reveal(), $this->node->reveal());
     }
@@ -124,32 +152,6 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
         $this->node->setProperty('i18n:de-excerpt-tags', [1, 2, 3])->shouldBeCalled();
         $this->node->setProperty('i18n:de-excerpt-categories', [3, 2, 1])->shouldBeCalled();
         $this->node->setProperty('i18n:de-navContexts', ['main'])->shouldBeCalled();
-
-        $this->persistEvent->getDocument()->willReturn($this->document->reveal());
-        $this->persistEvent->getNode()->willReturn($this->node->reveal());
-
-        $this->subscriber->copyShadowProperties($this->persistEvent->reveal());
-    }
-
-    public function testHandlePersistNotShadow(): void
-    {
-        $this->document->isShadowLocaleEnabled()->willReturn(false);
-
-        $property = $this->prophesize(PropertyInterface::class);
-        $property->getName()->willReturn('i18n:de-shadow-base');
-        $property->getValue()->willReturn('en');
-
-        $this->document->getLocale()->willReturn('en');
-
-        $this->node->getPropertyValueWithDefault('i18n:en-excerpt-tags', [])->willReturn([1, 2, 3]);
-        $this->node->getPropertyValueWithDefault('i18n:en-excerpt-categories', [])->willReturn([3, 2, 1]);
-        $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']);
-
-        $this->node->setProperty('i18n:de-excerpt-tags', [1, 2, 3])->shouldBeCalled();
-        $this->node->setProperty('i18n:de-excerpt-categories', [3, 2, 1])->shouldBeCalled();
-        $this->node->setProperty('i18n:de-navContexts', ['main'])->shouldBeCalled();
-
-        $this->node->getProperties('i18n:*-shadow-base')->willReturn([$property->reveal()]);
 
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
