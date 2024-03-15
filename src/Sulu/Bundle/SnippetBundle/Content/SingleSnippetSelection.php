@@ -11,6 +11,10 @@
 
 namespace Sulu\Bundle\SnippetBundle\Content;
 
+use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
+use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
+use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
+use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\WrongSnippetTypeException;
@@ -20,7 +24,7 @@ use Sulu\Component\Content\Compat\Structure\PageBridge;
 use Sulu\Component\Content\PreResolvableContentTypeInterface;
 use Sulu\Component\Content\SimpleContentType;
 
-class SingleSnippetSelection extends SimpleContentType implements PreResolvableContentTypeInterface
+class SingleSnippetSelection extends SimpleContentType implements PreResolvableContentTypeInterface, ReferenceContentTypeInterface
 {
     /**
      * @var SnippetResolverInterface
@@ -144,5 +148,19 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
         }
 
         return $snippet ? $snippet->getUuid() : null;
+    }
+
+    public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
+    {
+        $data = $property->getValue();
+        if ($data === null) {
+            return;
+        }
+
+        $referenceCollector->addReference(
+            SnippetDocument::RESOURCE_KEY,
+            $data,
+            $propertyPrefix . $property->getName()
+        );
     }
 }

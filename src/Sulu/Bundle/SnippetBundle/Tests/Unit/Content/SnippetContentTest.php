@@ -12,13 +12,17 @@
 namespace Sulu\Bundle\SnippetBundle\Tests\Unit\Content;
 
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollector;
 use Sulu\Bundle\SnippetBundle\Content\SnippetContent;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Component\Content\Compat\Metadata;
+use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
@@ -185,5 +189,44 @@ class SnippetContentTest extends TestCase
         $result = $this->contentType->getContentData($property->reveal());
 
         $this->assertEquals([['title' => 'test-1']], $result);
+    }
+
+    public function testGetReferencesWithNullProperty(): void
+    {
+        $property = new Property(
+            'snippet',
+            new Metadata([]),
+            'snippet_selection',
+        );
+        $property->setValue(null);
+
+        $referenceCollector = $this->prophesize(ReferenceCollector::class);
+        $referenceCollector->addReference(Argument::cetera())->shouldNotHaveBeenCalled();
+
+        $this->contentType->getReferences($property, $referenceCollector->reveal());
+    }
+
+    public function testGetReferences(): void
+    {
+        $property = new Property(
+            'snippets',
+            new Metadata([]),
+            'snippet_selection',
+        );
+        $property->setValue(['123-123-123', '321-321-321']);
+
+        $referenceCollector = $this->prophesize(ReferenceCollector::class);
+        $referenceCollector->addReference(
+            'snippets',
+            '123-123-123',
+            'snippets'
+        )->shouldBeCalled();
+        $referenceCollector->addReference(
+            'snippets',
+            '321-321-321',
+            'snippets'
+        )->shouldBeCalled();
+
+        $this->contentType->getReferences($property, $referenceCollector->reveal());
     }
 }

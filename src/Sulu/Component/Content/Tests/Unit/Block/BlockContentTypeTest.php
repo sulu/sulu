@@ -18,6 +18,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
 use Sulu\Bundle\PageBundle\Content\Types\SinglePageSelection;
+use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Component\Content\Compat\Block\BlockProperty;
 use Sulu\Component\Content\Compat\Block\BlockPropertyType;
@@ -928,5 +929,24 @@ class BlockContentTypeTest extends TestCase
             ],
             $result
         );
+    }
+
+    public function testGetReferencesWithNullProperty():void{
+        $this->blockProperty = new BlockProperty('block1', '', 'type1', false, true, 999, 1);
+        $type1 = new BlockPropertyType('type1', '');
+        $type1->addChild(new Property('media', '', 'media_selection', false, true));
+        $this->blockProperty->addType($type1);
+
+        $this->subBlockProperty = new BlockProperty('sub-block', '', 'subType1', false, true, 999, 1);
+        $subType1 = new BlockPropertyType('subType1', '');
+        $subType1->addChild(new Property('single_media', '', 'single_media_selection', false, true));
+        $this->subBlockProperty->addType($subType1);
+        $type1->addChild($this->subBlockProperty);
+
+        /** @var ObjectProphecy<ReferenceCollectorInterface> $referenceCollector */
+        $referenceCollector = $this->prophesize(ReferenceCollectorInterface::class);
+        $this->blockContentType->getReferences($this->blockProperty, $referenceCollector->reveal());
+
+        $referenceCollector->addReference(Argument::cetera())->shouldNotHaveBeenCalled();
     }
 }

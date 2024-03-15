@@ -475,7 +475,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
             return;
         }
 
-        foreach ($values as $value) {
+        foreach ($values as $index => $value) {
             $propertyType = $property->getType($value['type']);
 
             foreach ($propertyType->getChildProperties() as $child) {
@@ -487,7 +487,7 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
                     $contentType->getReferences(
                         $child,
                         $referenceCollector,
-                        $propertyPrefix . $property->getName() . '.'
+                        $propertyPrefix . $property->getName().'['. $index .']' . '.'
                     );
                 }
             }
