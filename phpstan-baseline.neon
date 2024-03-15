@@ -11491,6 +11491,31 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Command/FixturesLoadCommand.php
 
 		-
+			message: "#^In method \"Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Command\\\\PHPCRCleanupSingleNodeCommand\\:\\:execute\", caught \"Exception\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Command\\\\PHPCRCleanupSingleNodeCommand\\:\\:cleanupNode\\(\\) has parameter \\$writtenProperties with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Command\\\\PHPCRCleanupSingleNodeCommand\\:\\:getLocales\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Command\\\\PHPCRCleanupSingleNodeCommand\\:\\:\\$invalidationSubscriber is never read, only written\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
+
+		-
+			message: "#^Variable \\$liveCleanupNode might not be defined\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
+
+		-
 			message: "#^Cannot use array destructuring on array\\<callable\\>\\|\\(callable\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Command/SubscriberDebugCommand.php
@@ -37979,6 +38004,26 @@ parameters:
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, Iterator\\<string, PHPCR\\\\NodeInterface\\> given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/OrderSubscriber.php
+
+		-
+			message: "#^Call to an undefined method PHPCR\\\\NodeInterface\\:\\:getIterator\\(\\)\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/CleanupNode.php
+
+		-
+			message: "#^Class Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\CleanupNode implements generic interface IteratorAggregate but does not specify its types\\: TKey, TValue$#"
+			count: 1
+			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/CleanupNode.php
+
+		-
+			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\CleanupNode\\:\\:getWrittenPropertyKeys\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/CleanupNode.php
+
+		-
+			message: "#^Property Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\CleanupNode\\:\\:\\$writtenProperties type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Document/Subscriber/PHPCR/CleanupNode.php
 
 		-
 			message: "#^Class Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode implements generic interface IteratorAggregate but does not specify its types\\: TKey, TValue$#"
