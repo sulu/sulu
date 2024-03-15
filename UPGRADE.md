@@ -11,6 +11,13 @@ We recommend performing the PHP upgrade as a separate step before updating to
 Sulu 2.6. This will make it easier for you to identify any bugs that may occur
 in the project code with PHP 8.2.
 
+### Custom Admin Builds npm version changed
+
+Sulu 2.6 now supports [npm 8, 9, and 10](https://nodejs.org/en/download), 
+as well as [pnpm 8](https://pnpm.io/) or [bun 1](https://bun.sh/) for custom 
+admin builds. With the introduction of these new versions, it is necessary 
+to drop the support for npm 6.
+
 ### DocumentToUuidTransformer return type changed
 
 For compatibility to Symfony 7 the `DocumentToUuidTransformer` methods return types changed:
