@@ -13,9 +13,10 @@ in the project code with PHP 8.2.
 
 ### Custom Admin Builds npm version changed
 
-Sulu 2.6 now supports [npm 8, 9, 10](https://nodejs.org/en/download) and even
-[pnpm 8](https://pnpm.io/) or [bun 1](https://bun.sh/) to be used for custom admin
-builds. To support this new versions we were required to drop support for NPM 6.
+Sulu 2.6 now supports [npm 8, 9, and 10](https://nodejs.org/en/download), 
+as well as [pnpm 8](https://pnpm.io/) or [bun 1](https://bun.sh/) for custom 
+admin builds. With the introduction of these new versions, it is necessary 
+to drop the support for npm 6.
 
 ### DocumentToUuidTransformer return type changed
 
