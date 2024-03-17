@@ -770,7 +770,7 @@ class MediaSelectionContentTypeTest extends TestCase
         $property->setValue(null);
 
         $referenceCollector = $this->prophesize(ReferenceCollector::class);
-$referenceCollector->addReference(Argument::cetera())->shouldNotHaveBeenCalled();
+        $referenceCollector->addReference(Argument::cetera())->shouldNotHaveBeenCalled();
 
         $this->mediaSelection->getReferences($property, $referenceCollector->reveal());
     }

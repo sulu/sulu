@@ -481,14 +481,16 @@ class BlockContentType extends ComplexContentType implements ContentTypeExportIn
             foreach ($propertyType->getChildProperties() as $child) {
                 $contentType = $this->contentTypeManager->get($child->getContentTypeName());
                 $childName = $child->getName();
-                $child->setValue($value[$childName]);
+                $oldValue = $child->getValue();
 
-                if ($contentType instanceof ReferenceContentTypeInterface && isset($value[$childName])) {
+                if ($contentType instanceof ReferenceContentTypeInterface) {
+                    $child->setValue($value[$childName]);
                     $contentType->getReferences(
                         $child,
                         $referenceCollector,
-                        $propertyPrefix . $property->getName().'['. $index .']' . '.'
+                        $propertyPrefix . $property->getName() . '[' . $index . '].'
                     );
+                    $child->setValue($oldValue);
                 }
             }
         }

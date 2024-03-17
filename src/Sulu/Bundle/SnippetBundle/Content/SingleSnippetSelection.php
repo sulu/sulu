@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\SnippetBundle\Content;
 
-use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
 use Sulu\Bundle\ReferenceBundle\Infrastructure\Sulu\ContentType\ReferenceContentTypeInterface;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
@@ -153,7 +152,7 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
     public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
     {
         $data = $property->getValue();
-        if ($data === null) {
+        if (null === $data) {
             return;
         }
 

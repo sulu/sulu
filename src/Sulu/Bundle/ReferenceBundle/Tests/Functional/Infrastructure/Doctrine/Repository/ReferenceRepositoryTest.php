@@ -91,7 +91,7 @@ class ReferenceRepositoryTest extends SuluTestCase
         /** @var \Generator $references */
         $references = $this->referenceRepository->findFlatBy(filters: ['id' => $referenceId], fields: ['id', 'referenceResourceKey']);
 
-        /** @var array{id: integer, referenceResourceKey: string} $reference */
+        /** @var array{id: int, referenceResourceKey: string} $reference */
         $reference = $references->current();
         $this->assertSame($referenceId, $reference['id']);
         $this->assertSame('pages', $reference['referenceResourceKey']);
