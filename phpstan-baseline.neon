@@ -27566,11 +27566,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
 
 		-
-			message: "#^Empty catch block\\. If you are sure this is meant to be empty, please add a \"// @ignoreException\" comment in the catch block\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
-
-		-
 			message: "#^In method \"Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\ResettingController\\:\\:sendEmailAction\", caught \"Exception\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
