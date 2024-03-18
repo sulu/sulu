@@ -11,371 +11,287 @@
 
 namespace Sulu\Component\Webspace\Manager;
 
-use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
 use Sulu\Component\Localization\Localization;
-use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\CustomUrl;
 use Sulu\Component\Webspace\Environment;
+use Sulu\Component\Webspace\Exception\InvalidAmountOfDefaultErrorTemplateException;
+use Sulu\Component\Webspace\Exception\InvalidErrorTemplateException;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
+use Sulu\Component\Webspace\Exception\InvalidUrlDefinitionException;
+use Sulu\Component\Webspace\Navigation;
+use Sulu\Component\Webspace\NavigationContext;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
+use Sulu\Component\Webspace\Security;
+use Sulu\Component\Webspace\Segment;
 use Sulu\Component\Webspace\Url;
-use Sulu\Component\Webspace\Url\ReplacerInterface;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\Config\Resource\FileResource;
-use Symfony\Component\Finder\Finder;
+use Webmozart\Assert\Assert;
 
 class WebspaceCollectionBuilder
 {
-    /**
-     * The loader for the xml config files.
-     *
-     * @var LoaderInterface
-     */
-    private $loader;
-
-    /**
-     * @var ReplacerInterface
-     */
-    private $urlReplacer;
-
-    /**
-     * The path to the xml config files.
-     *
-     * @var string
-     */
-    private $path;
-
-    /**
-     * The webspaces for the configured path.
-     *
-     * @var Webspace[]
-     */
-    private $webspaces;
-
-    /**
-     * The portals for the configured path.
-     *
-     * @var Portal[]
-     */
-    private $portals;
-
-    /**
-     * The portal informations for the configured path.
-     *
-     * @var PortalInformation[][]
-     */
-    private $portalInformations;
-
-    /**
-     * @var TypedFormMetadata
-     */
-    private $typedFormMetadata;
-
-    /**
-     * @var array
-     */
-    private $availableTemplates;
-
     public function __construct(
-        LoaderInterface $loader,
-        ReplacerInterface $urlReplacer,
-        $path,
-        array $availableTemplates
+        private string $webspaceCollectionClass,
+        private PortalInformationBuilder $portalInformationBuilder,
+        private array $configuration = []
     ) {
-        $this->loader = $loader;
-        $this->urlReplacer = $urlReplacer;
-        $this->path = $path;
-        $this->availableTemplates = $availableTemplates;
     }
 
-    public function build()
+    public function build(): WebspaceCollectionInterface
     {
-        $finder = new Finder();
-        $finder->in($this->path)->files()->name('*.xml')->sortByName();
+        $webspaceRefs = [];
+        $portalRefs = [];
+        $segmentRefs = [];
 
-        // Iterate over config files, and add a portal object for each config to the collection
-        $collection = new WebspaceCollection();
-
-        // reset arrays
-        $this->webspaces = [];
-        $this->portals = [];
-        $this->portalInformations = [];
-
-        foreach ($finder as $file) {
-            // add file resource for cache invalidation
-            $collection->addResource(new FileResource($file->getRealPath()));
-
-            /** @var Webspace $webspace */
-            $webspace = $this->loader->load($file->getRealPath());
-
-            foreach ($webspace->getDefaultTemplates() as $defaultTemplate) {
-                if (!\in_array($defaultTemplate, $this->availableTemplates)) {
-                    throw new InvalidTemplateException($webspace, $defaultTemplate);
-                }
-
-                if (\in_array($defaultTemplate, $webspace->getExcludedTemplates())) {
-                    throw new InvalidTemplateException($webspace, $defaultTemplate);
-                }
-            }
-
-            $this->webspaces[$webspace->getKey()] = $webspace;
-
-            $this->buildPortals($webspace);
-        }
-
-        $environments = \array_keys($this->portalInformations);
-
-        foreach ($environments as $environment) {
-            // sort all portal informations by length
-            \uksort(
-                $this->portalInformations[$environment],
-                function($a, $b) {
-                    return \strlen($a) < \strlen($b) ? 1 : -1;
-                }
+        foreach ($this->configuration as $webspaceKey => $webspaceConfiguration) {
+            $webspaceRefs[$webspaceKey] = $this->buildWebspace(
+                $webspaceConfiguration,
+                $portalRefs,
+                $segmentRefs,
             );
         }
 
-        $collection->setWebspaces($this->webspaces);
-        $collection->setPortals($this->portals);
-        $collection->setPortalInformations($this->portalInformations);
+        $webspaceCollection = new $this->webspaceCollectionClass(
+            $webspaceRefs,
+            $portalRefs,
+            $this->portalInformationBuilder->dumpAndClear(),
+        );
+        Assert::isInstanceOf(
+            $webspaceCollection,
+            WebspaceCollectionInterface::class,
+            \sprintf('The class "%s" does not implement the "%s"', $this->webspaceCollectionClass, WebspaceCollectionInterface::class),
+        );
 
-        return $collection;
-    }
-
-    private function buildPortals(Webspace $webspace)
-    {
-        foreach ($webspace->getPortals() as $portal) {
-            $this->portals[] = $portal;
-
-            $this->buildEnvironments($portal);
-        }
-    }
-
-    private function buildEnvironments(Portal $portal)
-    {
-        foreach ($portal->getEnvironments() as $environment) {
-            $this->buildEnvironment($portal, $environment);
-        }
-    }
-
-    private function buildEnvironment(Portal $portal, Environment $environment)
-    {
-        foreach ($environment->getUrls() as $url) {
-            $urlAddress = $url->getUrl();
-            $urlRedirect = $url->getRedirect();
-            if (null == $urlRedirect) {
-                $this->buildUrls($portal, $environment, $url, $urlAddress);
-            } else {
-                // create the redirect
-                $this->buildUrlRedirect(
-                    $portal->getWebspace(),
-                    $environment,
-                    $portal,
-                    $urlAddress,
-                    $urlRedirect,
-                    $url
-                );
-            }
-        }
-
-        foreach ($environment->getCustomUrls() as $customUrl) {
-            $urlAddress = $customUrl->getUrl();
-            $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
-                RequestAnalyzerInterface::MATCH_TYPE_WILDCARD,
-                $portal->getWebspace(),
-                $portal,
-                null,
-                $urlAddress,
-                null,
-                null,
-                false,
-                $urlAddress,
-                1
-            );
-        }
+        return $webspaceCollection;
     }
 
     /**
-     * @param string $urlAddress
-     * @param string $urlRedirect
+     * @param array<string, PortalInformation> $portalRefs
+     * @param array<string, Segment> $segmentRefs
      */
-    private function buildUrlRedirect(
+    protected function buildWebspace(
+        array $webspaceConfiguration,
+        array &$portalRefs,
+        array &$segmentRefs,
+    ): Webspace {
+        $webspaceKey = $webspaceConfiguration['key'];
+
+        $webspace = new Webspace();
+        $webspace->setKey($webspaceKey);
+        $webspace->setName($webspaceConfiguration['name']);
+
+        $securityConfiguration = $webspaceConfiguration['security'] ?? [];
+        if ([] !== $securityConfiguration) {
+            $security = new Security();
+            $security->setSystem($securityConfiguration['system']);
+            $security->setPermissionCheck($securityConfiguration['permission_check']);
+
+            $webspace->setSecurity($security);
+        }
+
+        foreach ($webspaceConfiguration['localizations']['localization'] as $localizationConfiguration) {
+            $localization = $this->buildLocalization($localizationConfiguration);
+
+            foreach ($localizationConfiguration['localization'] ?? [] as $childLocalization) {
+                $childLocalization = $this->buildLocalization($childLocalization);
+                $childLocalization->setParent($localization);
+
+                $localization->addChild($childLocalization);
+            }
+
+            $webspace->addLocalization($localization);
+        }
+
+        $this->buildSegments($webspaceConfiguration, $webspace, $segmentRefs);
+        $this->buildTemplates($webspaceConfiguration, $webspace);
+        $this->buildNavgiation($webspaceConfiguration, $webspace);
+
+        $webspace->setResourceLocatorStrategy($webspaceConfiguration['resource_locator']['strategy']);
+
+        foreach ($webspaceConfiguration['portals']['portal'] as $portalConfiguration) {
+            $portal = $this->buildPortal($portalConfiguration, $webspace);
+
+            $portalRefs[$portalConfiguration['key']] = $portal;
+            $webspace->addPortal($portal);
+        }
+
+        return $webspace;
+    }
+
+    public function buildNavgiation(array $webspaceConfiguration, Webspace $webspace): void
+    {
+        $navigation = new Navigation();
+
+        foreach ($webspaceConfiguration['navigation']['contexts'] ?? [] as $contextConfigurations) {
+            foreach ($contextConfigurations as $contextConfiguration) {
+                if (\array_key_exists('titles', $contextConfiguration['meta'] ?? [])) {
+                    $meta = ['title' => $contextConfiguration['meta']['titles']];
+                } else {
+                    $meta = $contextConfiguration['meta'];
+                }
+                $navigation->addContext(new NavigationContext($contextConfiguration['key'], $meta));
+            }
+        }
+        $webspace->setNavigation($navigation);
+    }
+
+    protected function buildSegments(array $webspaceConfiguration, Webspace $webspace, array &$segmentRefs): void
+    {
+        foreach ($webspaceConfiguration['segments']['segment'] ?? [] as $segmentConfiguration) {
+            $segment = new Segment();
+            $segment->setKey($segmentConfiguration['key']);
+            $segment->setMetadata($segmentConfiguration['meta'] ?? []);
+            $segment->setDefault($segmentConfiguration['default']);
+
+            $webspace->addSegment($segment);
+
+            $segmentRefs[$webspace->getKey() . '_' . $segmentConfiguration['key']] = $segment;
+        }
+    }
+
+    protected function buildPortal(
+        array $portalConfiguration,
         Webspace $webspace,
-        Environment $environment,
-        Portal $portal,
-        $urlAddress,
-        $urlRedirect,
-        Url $url
-    ) {
-        $this->portalInformations[$environment->getType()][$urlAddress] = new PortalInformation(
-            RequestAnalyzerInterface::MATCH_TYPE_REDIRECT,
-            $webspace,
-            $portal,
-            null,
-            $urlAddress,
-            null,
-            $urlRedirect,
-            $url->isMain(),
-            $url->getUrl(),
-            $this->urlReplacer->hasHostReplacer($urlAddress) ? 4 : 9
-        );
-    }
+    ): Portal {
+        $portal = new Portal();
+        $portal->setName($portalConfiguration['name']);
+        $portal->setKey($portalConfiguration['key']);
+        $portal->setWebspace($webspace);
 
-    /**
-     * @param string[] $replacers
-     * @param string $urlAddress
-     */
-    private function buildUrlFullMatch(
-        Portal $portal,
-        Environment $environment,
-        $replacers,
-        $urlAddress,
-        Localization $localization,
-        Url $url
-    ) {
-        $urlResult = $this->generateUrlAddress($urlAddress, $replacers);
-        $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
-            RequestAnalyzerInterface::MATCH_TYPE_FULL,
-            $portal->getWebspace(),
-            $portal,
-            $localization,
-            $urlResult,
-            null,
-            null,
-            $url->isMain(),
-            $url->getUrl(),
-            $this->urlReplacer->hasHostReplacer($urlResult) ? 5 : 10
-        );
-    }
-
-    /**
-     * @param string $urlAddress
-     */
-    private function buildUrlPartialMatch(
-        Portal $portal,
-        Environment $environment,
-        $urlAddress,
-        Url $url
-    ) {
-        $replacers = [];
-
-        $urlResult = $this->urlReplacer->cleanup(
-            $urlAddress,
-            [
-                ReplacerInterface::REPLACER_LANGUAGE,
-                ReplacerInterface::REPLACER_COUNTRY,
-                ReplacerInterface::REPLACER_LOCALIZATION,
-                ReplacerInterface::REPLACER_SEGMENT,
-            ]
-        );
-        $urlRedirect = $this->generateUrlAddress($urlAddress, $replacers);
-
-        if ($this->validateUrlPartialMatch($urlResult, $environment)) {
-            $this->portalInformations[$environment->getType()][$urlResult] = new PortalInformation(
-                RequestAnalyzerInterface::MATCH_TYPE_PARTIAL,
-                $portal->getWebspace(),
-                $portal,
-                null,
-                $urlResult,
-                null,
-                $urlRedirect,
-                false, // partial matches cannot be main
-                $url->getUrl(),
-                $this->urlReplacer->hasHostReplacer($urlResult) ? 4 : 9
-            );
-        }
-    }
-
-    /**
-     * Builds the URLs for the portal, which are not a redirect.
-     *
-     * @param string $urlAddress
-     */
-    private function buildUrls(
-        Portal $portal,
-        Environment $environment,
-        Url $url,
-        $urlAddress
-    ) {
-        if ($url->getLanguage()) {
-            $language = $url->getLanguage();
-            $country = $url->getCountry();
-            $locale = $language . ($country ? '_' . $country : '');
-
-            $replacers = [
-                ReplacerInterface::REPLACER_LANGUAGE => $language,
-                ReplacerInterface::REPLACER_COUNTRY => $country,
-                ReplacerInterface::REPLACER_LOCALIZATION => $locale,
-            ];
-
-            $this->buildUrlFullMatch(
-                $portal,
-                $environment,
-                $replacers,
-                $urlAddress,
-                $portal->getLocalization($locale),
-                $url
-            );
+        $localizationConfigurations = $portalConfiguration['localizations']['localization'] ?? [];
+        if ([] === $localizationConfigurations) {
+            $portal->setLocalizations($webspace->getLocalizations());
+            foreach ($webspace->getLocalizations() as $localization) {
+                if (!$localization->isDefault()) {
+                    continue;
+                }
+                $portal->setDefaultLocalization($localization);
+            }
         } else {
-            // create all the urls for every localization combination
-            foreach ($portal->getLocalizations() as $localization) {
-                $language = $url->getLanguage() ? $url->getLanguage() : $localization->getLanguage();
-                $country = $url->getCountry() ? $url->getCountry() : $localization->getCountry();
+            foreach ($localizationConfigurations as $localizationConfiguration) {
+                $localization = new Localization($localizationConfiguration['language']);
+                $localization->setCountry($localizationConfiguration['country']);
+                $localization->setDefault($localizationConfiguration['default']);
+                $localization->setShadow($localizationConfiguration['shadow']);
 
-                $replacers = [
-                    ReplacerInterface::REPLACER_LANGUAGE => $language,
-                    ReplacerInterface::REPLACER_COUNTRY => $country,
-                    ReplacerInterface::REPLACER_LOCALIZATION => $localization->getLocale(Localization::DASH),
-                ];
-
-                $this->buildUrlFullMatch(
-                    $portal,
-                    $environment,
-                    $replacers,
-                    $urlAddress,
-                    $localization,
-                    $url
-                );
+                $portal->addLocalization($localization);
             }
         }
 
-        $this->buildUrlPartialMatch(
-            $portal,
-            $environment,
-            $urlAddress,
-            $url
-        );
-    }
-
-    /**
-     * @param string $urlResult
-     *
-     * @return bool
-     */
-    private function validateUrlPartialMatch($urlResult, Environment $environment)
-    {
-        return
-            // only valid if there is no full match already
-            !\array_key_exists($urlResult, $this->portalInformations[$environment->getType()])
-            // check if last character is no dot
-            && '.' != \substr($urlResult, -1);
-    }
-
-    /**
-     * Replaces the given values in the pattern.
-     *
-     * @param string $pattern
-     * @param array $replacers
-     *
-     * @return string
-     */
-    private function generateUrlAddress($pattern, $replacers)
-    {
-        foreach ($replacers as $replacer => $value) {
-            $pattern = $this->urlReplacer->replace($pattern, $replacer, $value);
+        foreach ($portalConfiguration['environments']['environment'] ?? [] as $environmentConfiguration) {
+            $portal->addEnvironment($this->buildEnvironment(
+                $environmentConfiguration,
+                $portal,
+                $webspace,
+            ));
         }
 
-        return $pattern;
+        return $portal;
+    }
+
+    protected function buildTemplates(array $webspaceConfiguration, Webspace $webspace): void
+    {
+        $webspace->setTheme($webspaceConfiguration['theme']);
+        foreach ($webspaceConfiguration['templates']['template'] ?? [] as ['type' => $type, 'value' => $template]) {
+            $webspace->addTemplate($type, $template);
+        }
+
+        foreach ($webspaceConfiguration['excluded_templates']['excluded_template'] ?? [] as $excludedTemplate) {
+            $webspace->addExcludedTemplate($excludedTemplate);
+        }
+
+        foreach ($webspaceConfiguration['default_templates']['default_template'] as $type => $defaultTemplate) {
+            if (\in_array($defaultTemplate, $webspace->getExcludedTemplates())) {
+                throw new InvalidTemplateException($webspace, $defaultTemplate);
+            }
+
+            $webspace->addDefaultTemplate($type, $defaultTemplate);
+            if ('homepage' === $type) {
+                $webspace->addDefaultTemplate('home', $defaultTemplate);
+            }
+        }
+
+        $this->buildErrorTemplates($webspaceConfiguration, $webspace);
+    }
+
+    protected function buildErrorTemplates(array $webspaceConfiguration, Webspace $webspace): void
+    {
+        $defaultErrorTemplateCount = 0;
+        foreach ($webspaceConfiguration['error_templates']['error_template'] ?? [] as $errorTemplate) {
+            if (null !== ($errorTemplate['code'] ?? null)) {
+                $webspace->addTemplate('error-' . $errorTemplate['code'], $errorTemplate['value']);
+            } elseif ($errorTemplate['default'] ?? false) {
+                $webspace->addTemplate('error', $errorTemplate['value']);
+                ++$defaultErrorTemplateCount;
+            } else {
+                throw new InvalidErrorTemplateException($errorTemplate['value'], $webspace);
+            }
+        }
+
+        // only one or none default error-template is legal
+        if ($defaultErrorTemplateCount > 1) {
+            throw new InvalidAmountOfDefaultErrorTemplateException($webspace);
+        }
+    }
+
+    protected function buildEnvironment(
+        array $environmentConfiguration,
+        Portal $portal,
+        Webspace $webspace,
+    ): Environment {
+        $environment = new Environment();
+        $environment->setType($environmentConfiguration['type']);
+
+        foreach ($environmentConfiguration['custom_urls']['custom_url'] ?? [] as $customUrl) {
+            $url = new CustomUrl(\rtrim($customUrl, '/'));
+
+            $this->portalInformationBuilder->addCustomUrl($url, $environment, $portal);
+            $environment->addCustomUrl($url);
+        }
+
+        foreach ($environmentConfiguration['urls']['url'] ?? [] as $urlConfiguration) {
+            if (!$this->isUrlValid($urlConfiguration)) {
+                throw new InvalidUrlDefinitionException($webspace, $urlConfiguration['value']);
+            }
+
+            $url = new Url(\rtrim($urlConfiguration['value'], '/'));
+            $url->setLanguage($urlConfiguration['language']);
+            $url->setCountry($urlConfiguration['country'] ?? null);
+            $url->setSegment($urlConfiguration['segment'] ?? null);
+            $url->setRedirect($urlConfiguration['redirect'] ?? null);
+            $url->setMain($urlConfiguration['main'] ?? false);
+
+            $environment->addUrl($url);
+
+            $this->portalInformationBuilder->addUrl($url, $environment, $portal);
+        }
+
+        return $environment;
+    }
+
+    private function isUrlValid(array $urlConfiguration): bool
+    {
+        $urlValue = $urlConfiguration['value'];
+
+        $hasLocalization = \array_key_exists('localization', $urlConfiguration)
+            || \str_contains($urlValue, '{localization}');
+
+        $hasLanguage = \array_key_exists('language', $urlConfiguration)
+            || \str_contains($urlValue, '{language}')
+            || $hasLocalization;
+
+        $hasRedirect = \array_key_exists('redirect', $urlConfiguration);
+
+        return $hasLanguage || $hasRedirect;
+    }
+
+    protected function buildLocalization(array $localizationConfiguration): Localization
+    {
+        $localization = new Localization($localizationConfiguration['language']);
+        $localization->setCountry($localizationConfiguration['country'] ?? null);
+        $localization->setShadow($localizationConfiguration['shadow'] ?? null);
+        $localization->setDefault($localizationConfiguration['default']);
+
+        return $localization;
     }
 }

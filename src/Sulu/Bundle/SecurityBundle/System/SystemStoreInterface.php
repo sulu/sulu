@@ -17,7 +17,7 @@ interface SystemStoreInterface
 {
     public function getSystem(): ?string;
 
-    public function setSystem(string $system): void;
+    public function setSystem(?string $system): void;
 
     public function getAnonymousRole(): ?RoleInterface;
 }

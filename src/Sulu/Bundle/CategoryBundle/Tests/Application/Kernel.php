@@ -12,7 +12,14 @@
 namespace Sulu\Bundle\CategoryBundle\Tests\Application;
 
 use Sulu\Bundle\TestBundle\Kernel\SuluTestKernel;
+use Symfony\Component\Config\Loader\LoaderInterface;
 
 class Kernel extends SuluTestKernel
 {
+    public function registerContainerConfiguration(LoaderInterface $loader): void
+    {
+        parent::registerContainerConfiguration($loader);
+
+        $loader->load(__DIR__ . '/config/webspaces/sulu.io.xml');
+    }
 }

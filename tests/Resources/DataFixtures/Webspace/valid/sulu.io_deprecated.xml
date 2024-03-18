@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<webspace xmlns="http://schemas.sulu.io/webspace/webspace"
-           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-           xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.0.xsd">
-
+<services:container xmlns="http://example.org/schema/dic/sulu_website"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:services="http://symfony.com/schema/dic/services"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd"
+    >
+<config>
+<webspace>
     <name>Sulu CMF</name>
     <key>sulu_io</key>
 
@@ -82,3 +86,5 @@
         </portal>
     </portals>
 </webspace>
+</config>
+</services:container>

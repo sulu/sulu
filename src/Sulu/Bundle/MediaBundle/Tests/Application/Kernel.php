@@ -26,5 +26,7 @@ class Kernel extends SuluTestKernel
         } else {
             $loader->load(__DIR__ . '/config/config.yml');
         }
+
+        $loader->load(__DIR__ . '/config/webspaces/sulu.io.xml');
     }
 }

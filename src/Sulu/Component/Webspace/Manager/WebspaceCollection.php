@@ -14,143 +14,104 @@ namespace Sulu\Component\Webspace\Manager;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\Config\Resource\FileResource;
 
 /**
  * A collection of all webspaces and portals in a specific sulu installation.
- *
- * @implements \IteratorAggregate<Webspace>
  */
-class WebspaceCollection implements \IteratorAggregate
+class WebspaceCollection implements WebspaceCollectionInterface
 {
-    /**
-     * All the webspaces in a specific sulu installation.
-     *
-     * @var array<string, Webspace>
-     */
-    private $webspaces;
+    /** @var array<string, array<string, PortalInformation>>|null */
+    private ?array $portalInformations = null;
 
     /**
-     * All the portals in a specific sulu installation.
-     *
-     * @var array<string, Portal>
+     * @param array<string, Webspace> $webspaces All webspaces (indexed by key)
+     * @param array<string, Portal> $portals All portals (indexed by key)
+     * @param array<string, array<string, PortalInformation>> $portalInformationsTemplate
+     *                                                                                    All portalInformations (indexed by environment and key)
+     *                                                                                    These portalInformations still contain the placeholders in the URL
      */
-    private $portals;
-
-    /**
-     * The portals of this specific sulu installation, prefiltered by the environment and url.
-     *
-     * @var array
-     */
-    private $portalInformations;
-
-    /**
-     * Contains all the resources, which where used to build this collection.
-     * Is required by the Symfony CacheConfig-Component.
-     *
-     * @var FileResource[]
-     */
-    private $resources;
-
-    /**
-     * @param array<string, Webspace> $webspaces
-     */
-    public function __construct(array $webspaces = [])
-    {
-        $this->webspaces = $webspaces;
+    public function __construct(
+        private array $webspaces = [],
+        private array $portals = [],
+        private array $portalInformationsTemplate = [],
+    ) {
     }
 
-    /**
-     * Adds a new FileResource, which is required to determine if the cache is fresh.
-     */
-    public function addResource(FileResource $resource)
+    public function getWebspace(string $key): ?Webspace
     {
-        $this->resources[] = $resource;
+        return $this->webspaces[$key] ?? null;
     }
 
-    /**
-     * Returns the resources used to build this collection.
-     *
-     * @return array The resources build to use this collection
-     */
-    public function getResources()
+    public function getWebspaces(): array
     {
-        return $this->resources;
+        return $this->webspaces;
     }
 
-    /**
-     * Returns the portal with the given index.
-     *
-     * @param string $key The index of the portal
-     *
-     * @return Portal|null
-     */
-    public function getPortal($key)
+    public function getPortal(string $key): ?Portal
     {
         return $this->portals[$key] ?? null;
     }
 
-    /**
-     * Returns the portal informations for the given environment.
-     *
-     * @param string $environment The environment to deliver
-     * @param array|null $types Defines which type of portals are requested (null for all)
-     *
-     * @return PortalInformation[]
-     */
-    public function getPortalInformations($environment, $types = null)
+    public function getPortals(): array
     {
-        if (!isset($this->portalInformations[$environment])) {
+        return $this->portals;
+    }
+
+    public function getPortalInformationsTemplates(): array
+    {
+        return $this->portalInformationsTemplate;
+    }
+
+    public function setPortalInformations(array $portalInformations): void
+    {
+        $this->portalInformations = $portalInformations;
+    }
+
+    public function isPortalInformationsHostReplaced(): bool
+    {
+        return null !== $this->portalInformations;
+    }
+
+    public function getPortalInformations(string $environment, ?array $types = null): array
+    {
+        $portalInformations = $this->portalInformations ?? $this->portalInformationsTemplate;
+
+        if (!isset($portalInformations[$environment])) {
             throw new \InvalidArgumentException(\sprintf(
                 'Unknown portal environment "%s"', $environment
             ));
         }
         if (null === $types) {
-            return $this->portalInformations[$environment];
+            return $portalInformations[$environment];
         }
 
         return \array_filter(
-            $this->portalInformations[$environment],
+            $portalInformations[$environment],
             function(PortalInformation $portalInformation) use ($types) {
                 return \in_array($portalInformation->getType(), $types);
             }
         );
     }
 
-    /**
-     * Returns the webspace with the given key.
-     *
-     * @param string $key The key of the webspace
-     *
-     * @return Webspace|null
-     */
-    public function getWebspace($key)
-    {
-        return $this->webspaces[$key] ?? null;
-    }
-
-    /**
-     * Returns the length of the collection.
-     *
-     * @return int
-     */
-    public function length()
+    public function count(): int
     {
         return \count($this->webspaces);
     }
 
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    /**
+     * @return \ArrayIterator<string, Webspace>
+     */
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->webspaces);
     }
 
-    /**
-     * Returns the content of these portals as array.
-     *
-     * @return array
-     */
-    public function toArray()
+    public function reset(): void
+    {
+        $this->portalInformations = null;
+    }
+
+    public function toArray(): array
     {
         $collection = [];
 
@@ -160,7 +121,7 @@ class WebspaceCollection implements \IteratorAggregate
         }
 
         $portalInformations = [];
-        foreach ($this->portalInformations as $environment => $environmentPortalInformations) {
+        foreach ($this->portalInformations ?? $this->portalInformationsTemplate as $environment => $environmentPortalInformations) {
             $portalInformations[$environment] = [];
 
             foreach ($environmentPortalInformations as $environmentPortalInformation) {
@@ -172,51 +133,5 @@ class WebspaceCollection implements \IteratorAggregate
         $collection['portalInformations'] = $portalInformations;
 
         return $collection;
-    }
-
-    /**
-     * @param array<string, Webspace> $webspaces
-     */
-    public function setWebspaces($webspaces)
-    {
-        $this->webspaces = $webspaces;
-    }
-
-    /**
-     * @return array<string, Webspace>
-     */
-    public function getWebspaces()
-    {
-        return $this->webspaces;
-    }
-
-    /**
-     * Returns all the portals of this collection.
-     *
-     * @return array<string, Portal>
-     */
-    public function getPortals()
-    {
-        return $this->portals;
-    }
-
-    /**
-     * Sets the portals for this collection.
-     *
-     * @param array<string, Portal> $portals
-     */
-    public function setPortals($portals)
-    {
-        $this->portals = $portals;
-    }
-
-    /**
-     * Sets the portal Information for this collection.
-     *
-     * @param array $portalInformations
-     */
-    public function setPortalInformations($portalInformations)
-    {
-        $this->portalInformations = $portalInformations;
     }
 }

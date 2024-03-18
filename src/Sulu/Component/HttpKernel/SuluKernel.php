@@ -91,6 +91,9 @@ abstract class SuluKernel extends Kernel
         $container->addResource(new FileResource($this->getProjectDir() . '/config/bundles.php'));
         $confDir = $this->getProjectDir() . '/config';
 
+        // Loading webspace config
+        $this->load($loader, $confDir, '/webspaces/*');
+
         // this is a bc layer that sulu_admin.yaml is only loaded when bundle is registered
         // this can be removed when there is no longer context based configuration
         /** @var array<string, class-string> $bundles */

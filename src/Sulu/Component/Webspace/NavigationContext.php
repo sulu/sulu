@@ -23,21 +23,13 @@ class NavigationContext
      */
     private $metadata;
 
-    /**
-     * @var string
-     */
-    private $key;
-
-    public function __construct($key, $metadata)
+    public function __construct(private string $key, $metadata)
     {
         $this->key = $key;
         $this->metadata = new Metadata($metadata);
     }
 
-    /**
-     * @return string
-     */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }

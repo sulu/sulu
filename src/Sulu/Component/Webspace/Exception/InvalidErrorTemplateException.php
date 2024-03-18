@@ -9,35 +9,22 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace\Loader\Exception;
+namespace Sulu\Component\Webspace\Exception;
 
-/**
- * Represents a wrong error template configuration.
- */
+use Sulu\Component\Webspace\Webspace;
+
 class InvalidErrorTemplateException extends WebspaceException
 {
-    /**
-     * @var string
-     */
-    private $template;
-
-    /**
-     * InvalidErrorTemplateException constructor.
-     *
-     * @param string $template
-     * @param string $webspace
-     */
-    public function __construct($template, $webspace)
+    public function __construct(private string $template, Webspace $webspace)
     {
         parent::__construct(
             \sprintf(
                 'Error template "%s" in webspace "%s" has to be defined as default or with a code.',
                 $template,
-                $webspace
+                $webspace->getKey(),
             )
         );
 
-        $this->template = $template;
         $this->webspace = $webspace;
     }
 

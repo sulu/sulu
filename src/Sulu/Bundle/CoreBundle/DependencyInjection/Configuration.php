@@ -30,7 +30,6 @@ class Configuration implements ConfigurationInterface
 
         $children = $rootNode->children();
         $this->getContentConfiguration($children);
-        $this->getWebspaceConfiguration($children);
         $this->getFieldsConfiguration($children);
         $this->getCoreConfiguration($children);
         $this->getCacheConfiguration($children);
@@ -58,18 +57,6 @@ class Configuration implements ConfigurationInterface
                 ->defaultValue(['de', 'en'])
             ->end()
             ->scalarNode('fallback_locale')->defaultValue('en')->end();
-    }
-
-    private function getWebspaceConfiguration(NodeBuilder $rootNode)
-    {
-        $rootNode->arrayNode('webspace')
-            ->addDefaultsIfNotSet()
-            ->children()
-                ->scalarNode('config_dir')
-                    ->defaultValue('%kernel.project_dir%/config/webspaces')
-                ->end()
-            ->end()
-        ->end();
     }
 
     private function getFieldsConfiguration(NodeBuilder $rootNode)

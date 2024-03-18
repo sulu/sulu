@@ -9,54 +9,43 @@
 <webspace>
 
     <name>Sulu CMF</name>
-    <key>sulu_io_single_language</key>
+    <key>sulu_io</key>
 
     <localizations>
-        <localization language="en" default="true"/>
+        <localization language="en" shadow="auto"/>
     </localizations>
 
     <theme>sulu</theme>
 
     <default-templates>
         <default-template type="page">default</default-template>
-        <default-template type="homepage">overview</default-template>
+        <default-template type="home">default</default-template>
     </default-templates>
+
+    <error-templates>
+        <error-template default="true">error</error-template>
+        <error-template default="true">error</error-template>
+    </error-templates>
 
     <navigation>
         <contexts>
             <context key="main">
                 <meta>
-                    <title lang="de">Hauptnavigation</title>
                     <title lang="en">Mainnavigation</title>
-                </meta>
-            </context>
-            <context key="footer">
-                <meta>
-                    <title lang="de">Unten</title>
-                    <title lang="en">Footer</title>
                 </meta>
             </context>
         </contexts>
     </navigation>
 
-    <resource-locator>
-        <strategy>short</strategy>
-    </resource-locator>
-
     <portals>
         <portal>
             <name>Sulu CMF AT</name>
-            <key>sulucmf_singlelanguage_at</key>
+            <key>sulucmf_at</key>
 
             <environments>
                 <environment type="prod">
                     <urls>
-                        <url language="en">sulu-single-language.at</url>
-                    </urls>
-                </environment>
-                <environment type="dev">
-                    <urls>
-                        <url language="en">sulu-single-language.lo</url>
+                        <url language="en">sulu.us</url>
                     </urls>
                 </environment>
             </environments>

@@ -9,62 +9,57 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace\Tests\Unit;
+namespace Sulu\Component\Webspace\Tests\Unit\Manager;
 
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Psr\Log\LoggerInterface;
+use Sulu\Bundle\WebsiteBundle\DependencyInjection\Configuration;
+use Sulu\Bundle\WebsiteBundle\DependencyInjection\SuluWebsiteExtension;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Sulu\Component\Webspace\Exception\InvalidAmountOfDefaultErrorTemplateException;
+use Sulu\Component\Webspace\Exception\InvalidErrorTemplateException;
 use Sulu\Component\Webspace\Exception\InvalidTemplateException;
-use Sulu\Component\Webspace\Loader\XmlFileLoader10;
-use Sulu\Component\Webspace\Loader\XmlFileLoader11;
+use Sulu\Component\Webspace\Manager\PortalInformationBuilder;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceCollectionBuilder;
+use Sulu\Component\Webspace\Manager\WebspaceCollectionInterface;
+use Sulu\Component\Webspace\Tests\Unit\WebspaceTestCase;
 use Sulu\Component\Webspace\Url\Replacer;
-use Symfony\Component\Config\FileLocatorInterface;
-use Symfony\Component\Config\Loader\DelegatingLoader;
-use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
 class WebspaceCollectionBuilderTest extends WebspaceTestCase
 {
-    use ProphecyTrait;
-
-    /**
-     * @var DelegatingLoader
-     */
-    private $loader;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject_MockObject
-     */
-    private $logger;
-
-    public function setUp(): void
+    /** @param array<string> $files */
+    private function loadCollection(string $directory, array $files): WebspaceCollectionInterface
     {
-        $locator = $this->prophesize(FileLocatorInterface::class);
-        $locator->locate(Argument::any())->will(function($arguments) {
-            return $arguments[0];
-        });
+        $containerBuilder = new ContainerBuilder();
+        $containerBuilder->registerExtension(new SuluWebsiteExtension());
 
-        $resolver = new LoaderResolver([
-            new XmlFileLoader11($locator->reveal()),
-            new XmlFileLoader10($locator->reveal()),
-        ]);
+        $loader = new XmlFileLoader($containerBuilder, new FileLocator($directory));
+        foreach ($files as $file) {
+            $loader->load($file);
+        }
 
-        $this->loader = new DelegatingLoader($resolver);
+        $configuration = $containerBuilder->getExtensionConfig('sulu_website');
 
-        $this->logger = $this->getMockBuilder(LoggerInterface::class)->getMock();
+        $processor = new Processor();
+        $finalConfiguration = $processor->processConfiguration(new Configuration(), $configuration);
+
+        return (new WebspaceCollectionBuilder(
+            WebspaceCollection::class,
+            new PortalInformationBuilder(new Replacer()),
+            $finalConfiguration['webspaces'],
+        ))->build();
     }
 
-    public function testBuild(): void
+    public function testBuildAll(): void
     {
-        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            new Replacer(),
+        $webspaceCollection = $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple',
-            ['default', 'overview']
+            ['massiveart.xml', 'sulu.io.xml']
         );
-
-        $webspaceCollection = $webspaceCollectionBuilder->build();
 
         $webspaces = \array_values($webspaceCollection->getWebspaces());
 
@@ -74,7 +69,6 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         $this->assertEquals('Sulu CMF', $webspaces[1]->getName());
 
         $navigationContext = $webspaces[0]->getNavigation()->getContexts();
-
         $this->assertEquals(2, \count($navigationContext));
 
         $this->assertEquals('main', $navigationContext[0]->getKey());
@@ -163,16 +157,51 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
         );
     }
 
-    public function testBuildWithMultipleLocalizationUrls(): void
+    public function testChildLocalizations(): void
     {
-        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            new Replacer(),
-            $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple-localization-urls',
-            ['default', 'overview']
+        $webspaceCollection = $this->loadCollection(
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple',
+            ['massiveart.xml']
         );
 
-        $webspaceCollection = $webspaceCollectionBuilder->build();
+        $webspace = $webspaceCollection->getWebspace('massiveart');
+        $this->assertNotNull($webspace, 'No webspace found with key "massiveart"');
+
+        $localizations = $webspace->getLocalizations();
+
+        // Checking the main locales
+        $this->assertCount(2, $localizations);
+        $this->assertEquals('en', $localizations[0]->getLanguage());
+        $this->assertEquals('us', $localizations[0]->getCountry());
+        $this->assertEquals('auto', $localizations[0]->getShadow());
+
+        $this->assertEquals('fr', $localizations[1]->getLanguage());
+        $this->assertEquals('ca', $localizations[1]->getCountry());
+        $this->assertEquals(null, $localizations[1]->getShadow());
+
+        // Checking the child locale
+        $this->assertEquals(1, \count($localizations[0]->getChildren()));
+        $childLocalization = $localizations[0]->getChildren()[0];
+        $this->assertEquals('en', $childLocalization->getLanguage());
+        $this->assertEquals('ca', $childLocalization->getCountry());
+        $this->assertEquals(null, $childLocalization->getShadow());
+        $this->assertEquals($localizations[0], $childLocalization->getParent());
+
+        $this->assertEquals(0, \count($localizations[1]->getChildren()));
+
+        // Checking list of all locales
+        $this->assertEquals(
+            [$localizations[0], $childLocalization, $localizations[1]],
+            $webspace->getAllLocalizations()
+        );
+    }
+
+    public function testBuildWithMultipleLocalizationUrls(): void
+    {
+        $webspaceCollection = $this->loadCollection(
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/multiple-localization-urls',
+            ['sulu.io.xml']
+        );
 
         $portalInformations = $webspaceCollection->getPortalInformations('prod');
 
@@ -187,14 +216,10 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
     public function testBuildWithMainUrl(): void
     {
-        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            new Replacer(),
+        $webspaceCollection = $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/main',
-            ['default', 'overview']
+            ['sulu.io.xml']
         );
-
-        $webspaceCollection = $webspaceCollectionBuilder->build();
 
         $webspace = $webspaceCollection->getWebspaces()['sulu_io'];
         $this->assertEquals('sulu_io', $webspace->getKey());
@@ -214,14 +239,10 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
     public function testBuildWithCustomUrl(): void
     {
-        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            new Replacer(),
+        $webspaceCollection = $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/custom-url',
-            ['default', 'overview']
+            ['sulu.io.xml']
         );
-
-        $webspaceCollection = $webspaceCollectionBuilder->build();
 
         $webspace = $webspaceCollection->getWebspaces()['sulu_io'];
         $this->assertEquals('sulu_io', $webspace->getKey());
@@ -242,14 +263,10 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
     public function testLanguageSpecificPartial(): void
     {
-        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            new Replacer(),
+        $webspaceCollection = $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/language-specific',
-            ['default', 'overview']
+            ['sulu.io.xml']
         );
-
-        $webspaceCollection = $webspaceCollectionBuilder->build();
 
         $portalInformations = $webspaceCollection->getPortalInformations('dev');
 
@@ -268,29 +285,41 @@ class WebspaceCollectionBuilderTest extends WebspaceTestCase
 
     public function testThrowForMissingDefaultTemplate(): void
     {
-        $this->expectException(InvalidTemplateException::class);
+        $this->expectException(InvalidTypeException::class);
 
-        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            new Replacer(),
+        $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/missing-default-template',
-            []
+            ['sulu.xml']
         );
+    }
 
-        $webspaceCollection = $webspaceCollectionBuilder->build();
+    public function testThrowForInvalidErrorTemplate(): void
+    {
+        $this->expectException(InvalidErrorTemplateException::class);
+
+        $this->loadCollection(
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/invalid-error-template',
+            ['sulu.xml']
+        );
+    }
+
+    public function testThrowForTooManyDefaultErrorTemplate(): void
+    {
+        $this->expectException(InvalidAmountOfDefaultErrorTemplateException::class);
+
+        $this->loadCollection(
+            $this->getResourceDirectory() . '/DataFixtures/Webspace/too-many-default-error-templates',
+            ['sulu.xml']
+        );
     }
 
     public function testThrowForMissingExcludedTemplate(): void
     {
         $this->expectException(InvalidTemplateException::class);
 
-        $webspaceCollectionBuilder = new WebspaceCollectionBuilder(
-            $this->loader,
-            new Replacer(),
+        $this->loadCollection(
             $this->getResourceDirectory() . '/DataFixtures/Webspace/excluded-default-template',
-            ['default', 'overview']
+            ['sulu.xml']
         );
-
-        $webspaceCollection = $webspaceCollectionBuilder->build();
     }
 }

@@ -39,7 +39,7 @@ class Portal
      *
      * @var Localization[]
      */
-    private $localizations;
+    private $localizations = [];
 
     /**
      * The default localization for this portal.

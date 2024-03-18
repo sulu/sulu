@@ -9,25 +9,15 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Component\Webspace\Loader\Exception;
+namespace Sulu\Component\Webspace\Exception;
 
 use Sulu\Component\Webspace\Webspace;
 
 class WebspaceException extends \Exception
 {
-    /**
-     * The webspace of this exception.
-     *
-     * @var Webspace
-     */
-    protected $webspace;
+    protected Webspace $webspace;
 
-    /**
-     * Returns the webspace of this exception.
-     *
-     * @return Webspace
-     */
-    public function getWebspace()
+    public function getWebspace(): Webspace
     {
         return $this->webspace;
     }

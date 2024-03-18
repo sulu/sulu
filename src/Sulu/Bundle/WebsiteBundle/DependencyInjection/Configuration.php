@@ -105,6 +105,7 @@ class Configuration implements ConfigurationInterface
             ->end();
 
         $this->addObjectsSection($rootNode);
+        WebspaceConfiguration::addWebspaceSection($rootNode);
 
         return $treeBuilder;
     }
