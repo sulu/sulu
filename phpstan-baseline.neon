@@ -26576,11 +26576,6 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Document/Subscriber/RoutableSubscriber.php
 
 		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 246\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Document/Subscriber/RoutableSubscriber.php
-
-		-
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Document/Subscriber/RoutableSubscriber.php
