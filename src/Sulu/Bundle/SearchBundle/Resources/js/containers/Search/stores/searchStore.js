@@ -20,7 +20,14 @@ class SearchStore {
             }
 
             this.setLoading(true);
-            ResourceRequester.getList('search', {q: this.query, index: this.indexName, page: this.page, limit: this.limit}).then(action((response) => {
+            ResourceRequester.getList('search',
+                {
+                    q: this.query,
+                    index: this.indexName,
+                    page: this.page, limit:
+                        this.limit,
+                }
+            ).then(action((response) => {
                 this.setLoading(false);
                 this.total = response.total;
                 this.page = response.page;
