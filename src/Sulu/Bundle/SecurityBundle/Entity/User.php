@@ -313,7 +313,7 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
     /**
      * Removes the password of the user.
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
     }
 
