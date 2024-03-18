@@ -33,6 +33,7 @@
             <argument>%sulu_admin.collaboration_enabled%</argument>
             <argument>%sulu_security.password_policy_pattern%</argument>
             <argument>%sulu_security.password_policy_info_translation_key%</argument>
+            <argument>%sulu_security.has_single_sign_on_providers%</argument>
 
             <tag name="sulu.context" context="admin"/>
         </service>

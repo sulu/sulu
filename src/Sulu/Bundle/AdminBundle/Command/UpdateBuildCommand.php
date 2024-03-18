@@ -349,7 +349,9 @@ class UpdateBuildCommand extends Command
     {
         $filesToCleanup = [
             'package-lock.json',
+            'bun.lockb',
             'yarn.lock',
+            'pnpm-lock.yaml',
             'node_modules',
         ];
 
