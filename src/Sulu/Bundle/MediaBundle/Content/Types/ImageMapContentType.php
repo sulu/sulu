@@ -535,15 +535,17 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
             foreach ($propertyType->getChildProperties() as $child) {
                 $contentType = $this->contentTypeManager->get($child->getContentTypeName());
                 $childName = $child->getName();
-                $child->setValue($value[$childName]);
 
-                if ($contentType instanceof ReferenceContentTypeInterface && isset($value[$childName])) {
-                    $contentType->getReferences(
-                        $child,
-                        $referenceCollector,
-                        $propertyPrefix . $property->getName() . '.hotspots[' . $index . '].'
-                    );
+                if (!$contentType instanceof ReferenceContentTypeInterface || !isset($value[$childName])) {
+                    continue;
                 }
+
+                $child->setValue($value[$childName]);
+                $contentType->getReferences(
+                    $child,
+                    $referenceCollector,
+                    $propertyPrefix . $property->getName() . '.hotspots[' . $index . '].'
+                );
             }
         }
     }

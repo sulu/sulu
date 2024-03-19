@@ -1400,6 +1400,17 @@ class ImageMapContentTypeTest extends TestCase
                         'height' => 0.6,
                     ],
                 ],
+                [
+                    'type' => 'headline-image',
+                    'headline-image' => null,
+                    'hotspot' => [
+                        'type' => 'rectangle',
+                        'left' => 0.3,
+                        'top' => 0.4,
+                        'width' => 0.5,
+                        'height' => 0.6,
+                    ],
+                ],
             ],
         ];
 
