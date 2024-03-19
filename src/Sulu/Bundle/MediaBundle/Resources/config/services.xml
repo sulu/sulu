@@ -164,6 +164,7 @@
             <argument type="service" id="router"/>
             <argument type="service" id="sulu_core.webspace.webspace_manager" />
             <argument type="service" id="sulu_activity.activity_list_view_builder_factory" />
+            <argument type="service" id="sulu_reference.reference_list_view_builder_factory" />
         </service>
         <service id="sulu_media.collection_repository" class="%sulu_media.collection_repository.class%" public="true">
             <factory service="doctrine.orm.entity_manager" method="getRepository"/>

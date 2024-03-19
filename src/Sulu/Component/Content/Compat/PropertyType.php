@@ -105,13 +105,21 @@ class PropertyType
      */
     public function getChild($name)
     {
+        $propertyNames = [];
         foreach ($this->childProperties as $child) {
             if ($child->getName() === $name) {
                 return $child;
             }
+
+            $propertyNames[] = $child->getName();
         }
 
-        throw new NoSuchPropertyException();
+        throw new NoSuchPropertyException(\sprintf(
+            'Property "%s" not found in "%s". Available properties: "%s"',
+            $name,
+            $this->getName(),
+            \implode('", "', $propertyNames)
+        ));
     }
 
     public function __clone()

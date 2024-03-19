@@ -75,6 +75,7 @@ class SuluTestKernel extends SuluKernel
             new \Sulu\Bundle\PreviewBundle\SuluPreviewBundle(),
             new \Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle(),
             new \Sulu\Bundle\TrashBundle\SuluTrashBundle(),
+            new \Sulu\Bundle\ReferenceBundle\SuluReferenceBundle(),
         ];
 
         if (\class_exists(\Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class)) {
