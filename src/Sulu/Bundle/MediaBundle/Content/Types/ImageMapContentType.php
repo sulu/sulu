@@ -529,7 +529,7 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
         }
 
         $hotspots = $value['hotspots'] ?? [];
-        foreach ($hotspots as $value) {
+        foreach ($hotspots as $index => $value) {
             $propertyType = $property->getType($value['type']);
 
             foreach ($propertyType->getChildProperties() as $child) {
@@ -541,7 +541,7 @@ class ImageMapContentType extends ComplexContentType implements ContentTypeExpor
                     $contentType->getReferences(
                         $child,
                         $referenceCollector,
-                        $propertyPrefix . $property->getName() . '.hotspots.'
+                        $propertyPrefix . $property->getName() . '.hotspots[' . $index . '].'
                     );
                 }
             }

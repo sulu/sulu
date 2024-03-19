@@ -22,7 +22,12 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\PropertyMetadata as SchemaPr
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Content\Types\ImageMapContentType;
+use Sulu\Bundle\MediaBundle\Content\Types\MediaSelectionContentType;
 use Sulu\Bundle\MediaBundle\Content\Types\SingleMediaSelection;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
+use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollectorInterface;
+use Sulu\Bundle\ReferenceBundle\Domain\Model\Reference;
+use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Component\Content\Compat\Block\BlockPropertyWrapper;
 use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyType;
@@ -31,6 +36,7 @@ use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\Content\Metadata\ComponentMetadata;
 use Sulu\Component\Content\Metadata\PropertyMetadata as ContentPropertyMetadata;
 use Sulu\Component\Content\Types\TextLine;
+use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class ImageMapContentTypeTest extends TestCase
 {
@@ -1353,5 +1359,124 @@ class ImageMapContentTypeTest extends TestCase
                 ],
             ],
         ], $result->toJsonSchema());
+    }
+
+    public function testGetReferenceImageMap(): void
+    {
+        $types = [
+            'headline-image' => [
+                'children' => [
+                    'headline-image' => 'single_media_selection',
+                ],
+            ],
+            'text-images' => [
+                'children' => [
+                    'text-images' => 'media_selection',
+                ],
+            ],
+        ];
+
+        $value = [
+            'imageId' => 1,
+            'hotspots' => [
+                [
+                    'type' => 'text-images',
+                    'text-images' => ['ids' => [2, 3, 4]],
+                    'hotspot' => [
+                        'type' => 'circle',
+                        'left' => 0.3,
+                        'top' => 0.4,
+                        'radius' => 0.5,
+                    ],
+                ],
+                [
+                    'type' => 'headline-image',
+                    'headline-image' => ['id' => 5],
+                    'hotspot' => [
+                        'type' => 'rectangle',
+                        'left' => 0.3,
+                        'top' => 0.4,
+                        'width' => 0.5,
+                        'height' => 0.6,
+                    ],
+                ],
+            ],
+        ];
+
+        $property = new Property(
+            'imageMap',
+            '',
+            'image_map',
+            false,
+            true,
+            1,
+            1,
+            [],
+            [],
+            null,
+            'text'
+        );
+        $property->setValue($value);
+
+        foreach ($types as $key => $config) {
+            $type = new PropertyType($key, []);
+
+            foreach ($config['children'] as $childName => $childType) {
+                $type->addChild(new Property($childName, '', $childType));
+            }
+
+            $property->addType($type);
+        }
+
+        $singleMediaSelectionContentType = new SingleMediaSelection(
+            $this->prophesize(MediaManagerInterface::class)->reveal(),
+            new ReferenceStore(),
+            $this->prophesize(RequestAnalyzerInterface::class)->reveal(),
+            null
+        );
+        $this->contentTypeManager->get('single_media_selection')->willReturn($singleMediaSelectionContentType);
+        $mediaSelectionContentType = new MediaSelectionContentType(
+            $this->prophesize(MediaManagerInterface::class)->reveal(),
+            new ReferenceStore(),
+            $this->prophesize(RequestAnalyzerInterface::class)->reveal(),
+            null,
+            null
+        );
+        $this->contentTypeManager->get('media_selection')->willReturn($mediaSelectionContentType);
+
+        /** @var ObjectProphecy<ReferenceCollectorInterface> $referenceCollector */
+        $referenceCollector = $this->prophesize(ReferenceCollectorInterface::class);
+        // add image
+        $referenceCollector->addReference(
+            'media',
+            1,
+            'imageMap.image'
+        )->shouldBeCalled()->willReturn(new Reference());
+
+        $referenceCollector->addReference(
+            'media',
+            2,
+            'imageMap.hotspots[0].text-images'
+        )->shouldBeCalled()->willReturn(new Reference());
+
+        $referenceCollector->addReference(
+            'media',
+            3,
+            'imageMap.hotspots[0].text-images'
+        )->shouldBeCalled()->willReturn(new Reference());
+
+        $referenceCollector->addReference(
+            'media',
+            4,
+            'imageMap.hotspots[0].text-images'
+        )->shouldBeCalled()->willReturn(new Reference());
+
+        $referenceCollector->addReference(
+            'media',
+            5,
+            'imageMap.hotspots[1].headline-image'
+        )->shouldBeCalled()->willReturn(new Reference());
+
+        $this->imageMapContentType->getReferences($property, $referenceCollector->reveal());
     }
 }
