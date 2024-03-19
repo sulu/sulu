@@ -61,7 +61,7 @@ class ReferenceController extends AbstractRestController implements ClassResourc
 
         $referenceResourceKey = null;
         $referenceResourceId = null;
-        $referenceResourceLocale = null;
+        $referenceLocale = $request->query->get('locale');
 
         $rootLevel = true;
         if ($parentId) {
@@ -69,7 +69,7 @@ class ReferenceController extends AbstractRestController implements ClassResourc
             list(
                 $referenceResourceKey,
                 $referenceResourceId,
-                $referenceResourceLocale,
+                $referenceLocale,
             ) = \explode('__', $parentId); // see expandItems method about the implode
             $limit = null;
             $offset = null;
@@ -80,7 +80,7 @@ class ReferenceController extends AbstractRestController implements ClassResourc
             'resourceKey' => $resourceKey,
             'referenceResourceKey' => $referenceResourceKey,
             'referenceResourceId' => $referenceResourceId,
-            'referenceResourceLocale' => $referenceResourceLocale,
+            'referenceLocale' => $referenceLocale,
             'limit' => $limit,
             'offset' => $offset,
         ]);
