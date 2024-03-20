@@ -1108,7 +1108,6 @@ class DoctrineListBuilderTest extends TestCase
 
         $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
         $this->queryBuilder->addSelect('SuluCoreBundle_Example.name AS name_alias')->shouldBeCalled();
-        $this->queryBuilder->groupBy(self::$entityNameAlias . '.name')->shouldBeCalledTimes(1);
 
         $this->doctrineListBuilder->setSelectFields(
             [

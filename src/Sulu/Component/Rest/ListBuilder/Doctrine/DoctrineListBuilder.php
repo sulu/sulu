@@ -332,9 +332,6 @@ class DoctrineListBuilder extends AbstractListBuilder
         // group by
         $this->assignGroupBy($queryBuilder);
 
-        // assign sort-fields
-        $this->assignSortFields($queryBuilder);
-
         $queryBuilder->distinct($this->distinct);
 
         return $queryBuilder;
@@ -462,7 +459,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      */
     protected function assignGroupBy($queryBuilder)
     {
-        $groupByFields = array_merge($this->groupByFields, $this->sortFields);
+        $groupByFields = \array_merge($this->groupByFields, $this->sortFields);
 
         if (!empty($groupByFields)) {
             foreach ($groupByFields as $field) {
@@ -497,13 +494,13 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         foreach ($this->selectFields as $field) {
             if ($this->isGroupingFieldDescriptor($field)) {
-                $joins = array_merge($joins, $field->getJoins());
+                $joins = \array_merge($joins, $field->getJoins());
             }
         }
 
         /** @var DoctrineFieldDescriptorInterface $field */
         foreach ($this->sortFields as $field) {
-            $joins = array_merge($joins, $field->getJoins());
+            $joins = \array_merge($joins, $field->getJoins());
         }
 
         return $joins;
