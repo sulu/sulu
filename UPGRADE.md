@@ -11,6 +11,34 @@ We recommend performing the PHP upgrade as a separate step before updating to
 Sulu 2.6. This will make it easier for you to identify any bugs that may occur
 in the project code with PHP 8.2.
 
+### New required bundle
+
+A new Bundle was added to Sulu which need to be registred in the `config/bundles.php`:
+
+```diff
+return [
+    // ...
++    Sulu\Bundle\ReferenceBundle\SuluReferenceBundle::class => ['all' => true],
+];
+```
+
+And the bundles route configuration in the `config/routes/sulu_admin.yaml`:
+
+```diff
+# ...
++
++sulu_reference_api:
++    resource: "@SuluReferenceBundle/Resources/config/routing_api.yml"
++    type: rest
++    prefix: /admin/api
+```
+
+To create references for existing data run the following command:
+
+```bash
+bin/console sulu:reference:refresh
+```
+
 ### Custom Admin Builds npm version changed
 
 Sulu 2.6 now supports [npm 8, 9, and 10](https://nodejs.org/en/download), 
