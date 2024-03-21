@@ -39,6 +39,21 @@ To create references for existing data run the following command:
 bin/console sulu:reference:refresh
 ```
 
+### PHPCRMigrationBundle namespace changed
+
+The [`phpcr/phpcr-migrations-bundle`](https://github.com/dantleech/phpcr-migrations-bundle) is now part of the phpcr
+under the package name [`phpcr/phpcr-migrations-bundle`](https://github.com/phpcr/phpcr-migrations-bundle).
+
+Beside changing the packages in your `composer.json` you also need to change the namespace in the `config/bundles.php`:
+
+```diff
+return [
+    // ...
+-    DTL\Bundle\PhpcrMigrations\PhpcrMigrationsBundle::class => ['all' => true],
++    PHPCR\PhpcrMigrationsBundle\PhpcrMigrationsBundle::class => ['all' => true],
+];
+```
+
 ### Custom Admin Builds npm version changed
 
 Sulu 2.6 now supports [npm 8, 9, and 10](https://nodejs.org/en/download), 

@@ -45,7 +45,7 @@ return [
     Sulu\Bundle\RouteBundle\SuluRouteBundle::class => ['all' => true],
     Sulu\Bundle\MarkupBundle\SuluMarkupBundle::class => ['all' => true],
     Sulu\Bundle\AudienceTargetingBundle\SuluAudienceTargetingBundle::class => ['all' => true],
-    DTL\Bundle\PhpcrMigrations\PhpcrMigrationsBundle::class => ['all' => true],
+    PHPCR\PhpcrMigrationsBundle\PhpcrMigrationsBundle::class => ['all' => true],
     Massive\Bundle\BuildBundle\MassiveBuildBundle::class => ['all' => true],
     Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
     Sulu\Bundle\TestBundle\SuluTestBundle::class => ['dev' => true, 'test' => true],
