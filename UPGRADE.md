@@ -41,10 +41,10 @@ bin/console sulu:reference:refresh
 
 ### PHPCRMigrationBundle namespace changed
 
-The [`phpcr/phpcr-migrations-bundle`](https://github.com/dantleech/phpcr-migrations-bundle) is now part of the phpcr
+The [`dantleech/phpcr-migrations-bundle`](https://github.com/dantleech/phpcr-migrations-bundle) is now part of the phpcr
 under the package name [`phpcr/phpcr-migrations-bundle`](https://github.com/phpcr/phpcr-migrations-bundle).
 
-Beside changing the packages in your `composer.json` you also need to change the namespace in the `config/bundles.php`:
+Besides changing the packages in your `composer.json`, you also need to change the namespace in the `config/bundles.php`:
 
 ```diff
 return [
