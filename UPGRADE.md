@@ -13,7 +13,7 @@ in the project code with PHP 8.2.
 
 ### New required bundle
 
-A new Bundle was added to Sulu which need to be registred in the `config/bundles.php`:
+A new Bundle was added to Sulu which needs to be registered in the `config/bundles.php`:
 
 ```diff
 return [
