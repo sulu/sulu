@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\Tests\Unit\ListBuilder\Doctrine;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Select;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\Mapping\ClassMetadata;
@@ -29,6 +30,7 @@ use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 use Sulu\Component\Rest\Exception\InvalidSearchException;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
+use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineCountFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescriptor;
@@ -1106,21 +1108,100 @@ class DoctrineListBuilderTest extends TestCase
 
     public function testGroupBy(): void
     {
-        $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName);
+        $this->queryBuilder->addOrderBy(Argument::cetera())->shouldNotBeCalled();
 
-        $this->queryBuilder->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled();
-        $this->queryBuilder->addSelect('Sulu_Bundle_CoreBundle_Entity_Example.name AS name_alias')->shouldBeCalled();
-        $this->queryBuilder->groupBy(self::$entityNameAlias . '.name')->shouldBeCalledTimes(1);
-
-        $this->doctrineListBuilder->setSelectFields(
-            [
-                $nameFieldDescriptor,
-            ]
+        $queryBuilder1 = $this->prophesize(QueryBuilder::class);
+        $query1 = $this->prophesize(AbstractQuery::class);
+        $queryBuilder2 = $this->prophesize(QueryBuilder::class);
+        $query2 = $this->prophesize(AbstractQuery::class);
+        $queryBuilder3 = $this->prophesize(QueryBuilder::class);
+        $query3 = $this->prophesize(AbstractQuery::class);
+        $this->entityManager->createQueryBuilder()->willReturn(
+            $queryBuilder1->reveal(),
+            $queryBuilder2->reveal(),
+            $queryBuilder3->reveal()
         );
+
+        $nameFieldDescriptor = new DoctrineFieldDescriptor('name', 'name_alias', self::$entityName);
+        $countFieldDescriptor = new DoctrineCountFieldDescriptor('id', 'count', self::$entityName);
+
+        $query1->getArrayResult()->willReturn([
+            [
+                'id' => 1,
+            ],
+            [
+                'id' => 2,
+            ],
+        ]);
+        $queryBuilder1->getDQL()->willReturn('');
+        $queryBuilder1->getQuery()->willReturn($query1->reveal());
+        $queryBuilder1->from(self::$entityName, self::$entityNameAlias)->willReturn($queryBuilder1->reveal());
+        $queryBuilder1->setMaxResults(10)->willReturn($queryBuilder1->reveal());
+        $queryBuilder1->setFirstResult(0)->willReturn($queryBuilder1->reveal());
+        $queryBuilder1->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($queryBuilder1->reveal());
+        $queryBuilder1->select(self::$entityNameAlias . '.id AS id')->shouldBeCalled()->willReturn($queryBuilder1->reveal());
+
+        $query2->getArrayResult()->willReturn([
+            [
+                'id' => 1,
+                'name' => 'Test 1',
+            ],
+            [
+                'id' => 2,
+                'name' => 'Test 2',
+            ],
+        ]);
+        $queryBuilder2->getDQL()->willReturn('');
+        $queryBuilder2->getQuery()->willReturn($query2->reveal());
+        $queryBuilder2->from(self::$entityName, self::$entityNameAlias)->willReturn($queryBuilder2->reveal());
+        $queryBuilder2->distinct(false)->willReturn($queryBuilder2->reveal());
+        $queryBuilder2->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($queryBuilder2->reveal());
+        $queryBuilder2->addSelect(self::$entityNameAlias . '.name AS name_alias')->shouldBeCalled()->willReturn($queryBuilder2->reveal());
+        $queryBuilder2->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled()->willReturn($queryBuilder2->reveal());
+        $queryBuilder2->where(self::$entityNameAlias . '.id IN (:ids)')->shouldBeCalled()->willReturn($queryBuilder2->reveal());
+        $queryBuilder2->setParameter('ids', [1, 2])->shouldBeCalled()->willReturn($queryBuilder2->reveal());
+
+        $query3->getArrayResult()->willReturn([
+            1 => [
+                'id' => 1,
+                'count' => 10,
+            ],
+            2 => [
+                'id' => 2,
+                'count' => 20,
+            ],
+        ]);
+        $queryBuilder3->getDQL()->willReturn('');
+        $queryBuilder3->getQuery()->willReturn($query3->reveal());
+        $queryBuilder3->from(self::$entityName, self::$entityNameAlias)->willReturn($queryBuilder3->reveal());
+        $queryBuilder3->distinct(false)->willReturn($queryBuilder3->reveal());
+        $queryBuilder3->addSelect('COUNT(' . self::$entityNameAlias . '.id) AS count')->shouldBeCalled()->willReturn($queryBuilder3->reveal());
+        $queryBuilder3->addSelect(self::$entityNameAlias . '.id AS id')->shouldBeCalled()->willReturn($queryBuilder3->reveal());
+        $queryBuilder3->where(self::$entityNameAlias . '.id IN (:ids)')->shouldBeCalled()->willReturn($queryBuilder3->reveal());
+        $queryBuilder3->setParameter('ids', [1, 2])->shouldBeCalled()->willReturn($queryBuilder3->reveal());
+        $queryBuilder3->addGroupBy(self::$entityNameAlias . '.name')->shouldBeCalled()->willReturn($queryBuilder3->reveal());
+        $queryBuilder3->indexBy(self::$entityNameAlias, self::$entityNameAlias . '.id')->shouldBeCalled()->willReturn($queryBuilder3->reveal());
+
+        $this->doctrineListBuilder->setSelectFields([
+            $nameFieldDescriptor,
+            $countFieldDescriptor,
+        ]);
 
         $this->doctrineListBuilder->addGroupBy($nameFieldDescriptor);
 
-        $this->doctrineListBuilder->execute();
+        $result = $this->doctrineListBuilder->execute();
+        $this->assertSame([
+            [
+                'id' => 1,
+                'name' => 'Test 1',
+                'count' => 10,
+            ],
+            [
+                'id' => 2,
+                'name' => 'Test 2',
+                'count' => 20,
+            ],
+        ], $result);
     }
 
     public function testBetween(): void
