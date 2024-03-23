@@ -163,6 +163,13 @@ class Preview extends React.Component<Props> {
             formStore,
         } = this.props;
 
+        this.localeDisposer = reaction(
+            () => toJS(formStore.locale),
+            (locale) => {
+                this.previewStore.restart(locale);
+            }
+        );
+
         if (previewStore.resourceKey !== formStore.resourceKey) {
             return;
         }
@@ -184,13 +191,6 @@ class Preview extends React.Component<Props> {
                 if (formStore.type) {
                     previewStore.updateContext(toJS(formStore.type), toJS(formStore.data)).then(this.setContent);
                 }
-            }
-        );
-
-        this.localeDisposer = reaction(
-            () => toJS(formStore.locale),
-            (locale) => {
-                this.previewStore.restart(locale);
             }
         );
     };

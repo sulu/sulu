@@ -4,7 +4,7 @@
 
 // allow acces for following ips
 $allowedIPs = [
-  '127.0.0.1',
+    '127.0.0.1',
 ];
 
 // translations for maintenance

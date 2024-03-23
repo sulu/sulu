@@ -25,11 +25,11 @@ class CropTransformationTest extends AbstractTransformationTest
             [
                 // Transformation Options
                 'options' => [
-                        'x' => 100,
-                        'y' => 100,
-                        'w' => 150,
-                        'h' => 200,
-                    ],
+                    'x' => 100,
+                    'y' => 100,
+                    'w' => 150,
+                    'h' => 200,
+                ],
                 // Tested Result
                 'width' => 150,
                 'height' => 200,

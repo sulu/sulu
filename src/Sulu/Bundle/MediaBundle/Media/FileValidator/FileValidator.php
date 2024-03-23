@@ -43,11 +43,11 @@ class FileValidator implements FileValidatorInterface
      * @throws MaxFileSizeExceededException
      */
     public function validate(UploadedFile $file, $methods = [
-            self::VALIDATOR_FILE_SET,
-            self::VALIDATOR_FILE_ERRORS,
-            self::VALIDATOR_BLOCK_FILE_TYPES,
-            self::VALIDATOR_MAX_FILE_SIZE,
-        ])
+        self::VALIDATOR_FILE_SET,
+        self::VALIDATOR_FILE_ERRORS,
+        self::VALIDATOR_BLOCK_FILE_TYPES,
+        self::VALIDATOR_MAX_FILE_SIZE,
+    ])
     {
         if (\in_array(self::VALIDATOR_FILE_ERRORS, $methods) && $file->getError() > 0) {
             throw new InvalidFileException(\sprintf('The file upload had an error("%s: %s")', $file->getError(), $file->getErrorMessage()));
