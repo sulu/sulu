@@ -292,6 +292,10 @@ class SuluPageExtension extends Extension implements PrependExtensionInterface
             $loader->load('services_trash.xml');
         }
 
+        if (\array_key_exists('SuluReferenceBundle', $bundles)) {
+            $loader->load('services_reference.xml');
+        }
+
         $this->appendDefaultAuthor($config, $container);
 
         $container->setParameter('sulu_page.seo', $config['seo']);

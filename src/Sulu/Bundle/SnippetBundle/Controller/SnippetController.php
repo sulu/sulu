@@ -34,6 +34,7 @@ use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -492,6 +493,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $data = $request->request->all();
         $data['workflowStage'] = $request->get('state', WorkflowStage::PUBLISHED);
 
+        /** @var class-string<FormTypeInterface> $formType */
         $formType = $this->metadataFactory->getMetadataForAlias(Structure::TYPE_SNIPPET)->getFormType();
         $form = $this->formFactory->create($formType, $document, [
             'csrf_protection' => false,

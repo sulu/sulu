@@ -41,6 +41,49 @@ We recommend performing the PHP upgrade as a separate step before updating to
 Sulu 2.6. This will make it easier for you to identify any bugs that may occur
 in the project code with PHP 8.2.
 
+### New required bundle
+
+A new Bundle was added to Sulu which needs to be registered in the `config/bundles.php`:
+
+```diff
+return [
+    // ...
++    Sulu\Bundle\ReferenceBundle\SuluReferenceBundle::class => ['all' => true],
+];
+```
+
+And the bundles route configuration in the `config/routes/sulu_admin.yaml`:
+
+```diff
+# ...
++
++sulu_reference_api:
++    resource: "@SuluReferenceBundle/Resources/config/routing_api.yml"
++    type: rest
++    prefix: /admin/api
+```
+
+To create references for existing data run the following command:
+
+```bash
+bin/console sulu:reference:refresh
+```
+
+### PHPCRMigrationBundle namespace changed
+
+The [`dantleech/phpcr-migrations-bundle`](https://github.com/dantleech/phpcr-migrations-bundle) is now part of the phpcr
+under the package name [`phpcr/phpcr-migrations-bundle`](https://github.com/phpcr/phpcr-migrations-bundle).
+
+Besides changing the packages in your `composer.json`, you also need to change the namespace in the `config/bundles.php`:
+
+```diff
+return [
+    // ...
+-    DTL\Bundle\PhpcrMigrations\PhpcrMigrationsBundle::class => ['all' => true],
++    PHPCR\PhpcrMigrationsBundle\PhpcrMigrationsBundle::class => ['all' => true],
+];
+```
+
 ### Custom Admin Builds npm version changed
 
 Sulu 2.6 now supports [npm 8, 9, and 10](https://nodejs.org/en/download), 
