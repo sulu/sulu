@@ -169,6 +169,11 @@ class AdminController
      */
     private $passwordInfoTranslationKey;
 
+    /**
+     * @var bool
+     */
+    private $hasSingleSignOnProvider;
+
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         TokenStorageInterface $tokenStorage,
@@ -195,7 +200,8 @@ class AdminController
         string $collaborationInterval,
         ?bool $collaborationEnabled = null,
         ?string $passwordPattern = null,
-        ?string $passwordInfoTranslationKey = null
+        ?string $passwordInfoTranslationKey = null,
+        bool $hasSingleSignOnProvider = false
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->tokenStorage = $tokenStorage;
@@ -220,6 +226,7 @@ class AdminController
         $this->translations = $translations;
         $this->fallbackLocale = $fallbackLocale;
         $this->collaborationInterval = $collaborationInterval;
+        $this->hasSingleSignOnProvider = $hasSingleSignOnProvider;
 
         if (null === $collaborationEnabled) {
             @trigger_deprecation('sulu/sulu', '2.3', 'Instantiating the AdminController without the $collaborationEnabled argument is deprecated!');
@@ -243,6 +250,7 @@ class AdminController
             'translations' => $this->urlGenerator->generate('sulu_admin.translation'),
             'generateUrl' => $this->urlGenerator->generate('sulu_page.post_resourcelocator', ['action' => 'generate']),
             'routing' => $this->urlGenerator->generate('fos_js_routing_js'),
+            'has_single_sign_on' => $this->hasSingleSignOnProvider,
         ];
 
         try {
@@ -261,6 +269,7 @@ class AdminController
                 'password_info_translation_key' => $this->passwordInfoTranslationKey,
                 'sulu_version' => $this->suluVersion,
                 'app_version' => $this->appVersion,
+                'has_single_sign_on' => $this->hasSingleSignOnProvider,
             ]
         ));
     }

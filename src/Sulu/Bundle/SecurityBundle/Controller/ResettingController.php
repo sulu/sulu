@@ -13,6 +13,8 @@ namespace Sulu\Bundle\SecurityBundle\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\SecurityBundle\Domain\Event\UserPasswordResettedEvent;
 use Sulu\Bundle\SecurityBundle\Entity\User;
@@ -152,6 +154,11 @@ class ResettingController
     protected $secret;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @param PasswordHasherFactoryInterface|EncoderFactoryInterface $passwordHasherFactory
      */
     public function __construct(
@@ -174,7 +181,8 @@ class ResettingController
         string $mailTemplate,
         string $tokenSendLimit,
         string $adminMail,
-        string $secret
+        string $secret,
+        ?LoggerInterface $logger = null
     ) {
         $this->validator = $validator;
         $this->translator = $translator;
@@ -197,6 +205,7 @@ class ResettingController
         $this->tokenSendLimit = $tokenSendLimit;
         $this->adminMail = $adminMail;
         $this->secret = $secret;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**
@@ -234,7 +243,7 @@ class ResettingController
             $email = $this->getEmail($user);
             $this->sendTokenEmail($user, $this->getSenderAddress($request), $email, $token);
         } catch (\Exception $ex) {
-            // do nothing
+            $this->logger->debug($ex->getMessage(), ['exception' => $ex]);
         }
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);

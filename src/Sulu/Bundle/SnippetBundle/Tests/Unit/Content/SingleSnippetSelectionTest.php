@@ -15,12 +15,15 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\ReferenceBundle\Application\Collector\ReferenceCollector;
 use Sulu\Bundle\SnippetBundle\Content\SingleSnippetSelection;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
 use Sulu\Bundle\SnippetBundle\Snippet\SnippetResolverInterface;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStore;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
+use Sulu\Component\Content\Compat\Metadata;
+use Sulu\Component\Content\Compat\Property;
 use Sulu\Component\Content\Compat\PropertyInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
@@ -268,5 +271,39 @@ class SingleSnippetSelectionTest extends TestCase
         $result = $this->singleSnippetSelection->getContentData($property->reveal());
 
         $this->assertEquals(['title' => 'test-1'], $result);
+    }
+
+    public function testGetReferencesWithNullProperty(): void
+    {
+        $property = new Property(
+            'snippet',
+            new Metadata([]),
+            'single_snippet_selection',
+        );
+        $property->setValue(null);
+
+        $referenceCollector = $this->prophesize(ReferenceCollector::class);
+        $referenceCollector->addReference(Argument::cetera())->shouldNotHaveBeenCalled();
+
+        $this->singleSnippetSelection->getReferences($property, $referenceCollector->reveal());
+    }
+
+    public function testGetReferences(): void
+    {
+        $property = new Property(
+            'snippet',
+            new Metadata([]),
+            'single_snippet_selection',
+        );
+        $property->setValue('123-123-123');
+
+        $referenceCollector = $this->prophesize(ReferenceCollector::class);
+        $referenceCollector->addReference(
+            'snippets',
+            '123-123-123',
+            'snippet'
+        )->shouldBeCalled();
+
+        $this->singleSnippetSelection->getReferences($property, $referenceCollector->reveal());
     }
 }

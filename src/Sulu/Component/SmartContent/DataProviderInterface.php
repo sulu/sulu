@@ -36,9 +36,24 @@ interface DataProviderInterface
     /**
      * Resolves given filters and returns filtered data items.
      *
-     * @param array $filters Contains the filter configuration
+     * @param array{
+     *     dataSource?: string|int|null,
+     *     sortMethod?: 'asc'|'desc',
+     *     sortBy?: string,
+     *     tags?: string[],
+     *     tagOperator?: 'or'|'and',
+     *     types?: string[],
+     *     categories?: int[],
+     *     categoryOperator?: 'or'|'and',
+     *     targetGroupId?: string|int|null,
+     *     websiteTags?: string[],
+     *     websiteTagsOperator?: 'or'|'and',
+     *     websiteCategories?: int[],
+     *     websiteCategoriesOperator?: 'or'|'and',
+     *     limitResult?: int,
+     * } $filters Contains the filter configuration
      * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property
-     * @param array $options Options like webspace or locale
+     * @param mixed[] $options Options like webspace or locale
      * @param int|null $limit Indicates maximum size of result set
      * @param int $page Indicates page of result set
      * @param int|null $pageSize Indicates page-size of result set
@@ -57,9 +72,24 @@ interface DataProviderInterface
     /**
      * Resolves given filters and returns filtered resource items with ArrayAccess.
      *
-     * @param array $filters Contains the filter configuration
+     * @param array{
+     *      dataSource?: string|int|null,
+     *      sortMethod?: 'asc'|'desc',
+     *      sortBy?: string,
+     *      tags?: string[],
+     *      tagOperator?: 'or'|'and',
+     *      types?: string[],
+     *      categories?: int[],
+     *      categoryOperator?: 'or'|'and',
+     *      targetGroupId?: string|int|null,
+     *      websiteTags?: string[],
+     *      websiteTagsOperator?: 'or'|'and',
+     *      websiteCategories?: int[],
+     *      websiteCategoriesOperator?: 'or'|'and',
+     *      limitResult?: int,
+     *  } $filters Contains the filter configuration
      * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property
-     * @param array $options Options like webspace or locale
+     * @param mixed[] $options Options like webspace or locale
      * @param int|null $limit Indicates maximum size of result set
      * @param int $page Indicates page of result set
      * @param int|null $pageSize Indicates page-size of result set
@@ -78,9 +108,9 @@ interface DataProviderInterface
     /**
      * Resolves datasource and returns the data of it.
      *
-     * @param mixed $datasource Identification of datasource
+     * @param string|int|null $datasource Identification of datasource
      * @param PropertyParameter[] $propertyParameter Contains the parameter of resolved property
-     * @param array $options Options like webspace or locale
+     * @param mixed[] $options Options like webspace or locale
      *
      * @return DatasourceItemInterface
      */
