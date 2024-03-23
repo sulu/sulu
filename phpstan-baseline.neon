@@ -1236,6 +1236,11 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
 
 		-
+			message: "#^Cannot call method merge\\(\\) on mixed\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\XmlFormMetadataLoader\\:\\:__construct\\(\\) has parameter \\$formDirectories with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
@@ -1257,16 +1262,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$data of function unserialize expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
-			message: "#^Parameter \\#1 \\$key of method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\XmlFormMetadataLoader\\:\\:getConfigCache\\(\\) expects string, int\\|string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
-			message: "#^Parameter \\#2 \\$formKey of method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\XmlFormMetadataLoader\\:\\:validateItems\\(\\) expects string, int\\|string given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
 
@@ -29621,12 +29616,12 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/SuluSecurityListener.php
 
 		-
-			message: "#^If condition is always true\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SystemListener\\:\\:onKernelRequest\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/SystemListener.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SystemListener\\:\\:onKernelRequest\\(\\) has no return type specified\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SystemListener\\:\\:\\$requestAnalyzer is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/SystemListener.php
 
@@ -30549,11 +30544,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SuluSecurityListenerTest\\:\\:testMethodPermissionMapping\\(\\) has parameter \\$permission with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SuluSecurityListenerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\SystemListenerTest\\:\\:provideSetWebsiteSystem\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/EventListener/SystemListenerTest.php
 
 		-
 			message: "#^Class Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\AuthenticationEntryPoint does not have a constructor and must be instantiated without any parameters\\.$#"
@@ -34887,6 +34877,11 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Routing\\\\ContentRouteProvider\\:\\:\\$defaultOptions type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/Routing/ContentRouteProvider.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\WebsiteBundle\\\\Routing\\\\ContentRouteProvider\\:\\:\\$securityChecker is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Routing/ContentRouteProvider.php
 
@@ -51472,7 +51467,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset mixed on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Rest/Listing/ListRepository.php
 
 		-

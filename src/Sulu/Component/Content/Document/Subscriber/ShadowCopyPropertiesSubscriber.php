@@ -26,6 +26,8 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
 {
     public const SHADOW_BASE_PROPERTY = 'i18n:*-shadow-base';
 
+    public const SHADOW_ON_PROPERTY = 'i18n:%s-shadow-on';
+
     public const TAGS_PROPERTY = 'i18n:%s-excerpt-tags';
 
     public const CATEGORIES_PROPERTY = 'i18n:%s-excerpt-categories';
@@ -79,8 +81,11 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
         $categories = $this->getCategories($node, $document->getLocale());
         $navigationContext = $this->getNavigationContext($node, $document->getLocale());
 
-        foreach ($node->getProperties(self::SHADOW_BASE_PROPERTY) as $property) {
-            if ($property->getValue() === $document->getLocale()) {
+        foreach ($node->getProperties(self::SHADOW_BASE_PROPERTY) as $name => $property) {
+            $locale = $this->getLocale($name);
+            if ($node->getPropertyValueWithDefault(\sprintf(self::SHADOW_ON_PROPERTY, $locale), false)
+                && $property->getValue() === $document->getLocale()
+            ) {
                 $locale = $this->getLocale($property->getName());
 
                 $node->setProperty(\sprintf(self::TAGS_PROPERTY, $locale), $tags);
