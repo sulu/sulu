@@ -17,6 +17,7 @@ use Sulu\Bundle\SnippetBundle\DependencyInjection\Compiler\SnippetAreaCompilerPa
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\Content\Metadata\StructureMetadata;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SnippetAreaCompilerPassTest extends TestCase
 {
@@ -74,6 +75,50 @@ class SnippetAreaCompilerPassTest extends TestCase
         $compiler->process($this->container->reveal());
     }
 
+    public function testWithOnlyOneTranslation(): void
+    {
+        $compiler = new SnippetAreaCompilerPass();
+
+        $structureMetaData = $this->createStructureMetaData(
+            'test',
+            [
+                'article' => [
+                    'key' => 'article',
+                    'title' => [
+                        'en' => 'Article EN',
+                    ],
+                ],
+            ]
+        );
+
+        $this->structureFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
+        $this->structureFactory->getStructures('snippet')->willReturn([$structureMetaData->reveal()]);
+
+        $translator = $this->prophesize(TranslatorInterface::class);
+        $translator->trans()->shouldNotBeCalled();
+
+        $this->container = $this->prophesize(ContainerBuilder::class);
+        $this->container->get('sulu_page.structure.factory')->willReturn($this->structureFactory->reveal());
+        $this->container->get('translator')->shouldNotBeCalled();
+        $this->container->getParameter('sulu_core.locales')->willReturn(['en', 'de']);
+
+        $this->container->setParameter(
+            'sulu_snippet.areas',
+            [
+                'article' => [
+                    'key' => 'article',
+                    'template' => 'test',
+                    'title' => [
+                        'en' => 'Article EN',
+                        'de' => 'Test DE Article',
+                    ],
+                ],
+            ]
+        )->shouldBeCalled();
+
+        $compiler->process($this->container->reveal());
+    }
+
     public function testWithAreas(): void
     {
         $compiler = new SnippetAreaCompilerPass();
@@ -113,6 +158,94 @@ class SnippetAreaCompilerPassTest extends TestCase
                     'title' => [
                         'de' => 'Artikel Test',
                         'en' => 'Article Test',
+                    ],
+                ],
+            ]
+        )->shouldBeCalled();
+
+        $compiler->process($this->container->reveal());
+    }
+
+    public function testWithTranslatedAreas(): void
+    {
+        $compiler = new SnippetAreaCompilerPass();
+
+        $structureMetaData = $this->createStructureMetaData(
+            'test',
+            [
+                'article' => [
+                    'key' => 'article',
+                    'title' => [
+                        'sulu_snippet.areas.article.title',
+                    ],
+                ],
+            ]
+        );
+
+        $this->structureFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
+        $this->structureFactory->getStructures('snippet')->willReturn([$structureMetaData->reveal()]);
+
+        $translator = $this->prophesize(TranslatorInterface::class);
+        $translator->trans('sulu_snippet.areas.article.title', [], 'admin', 'en')->willReturn('Article Test');
+        $translator->trans('sulu_snippet.areas.article.title', [], 'admin', 'de')->willReturn('Artikel Test');
+        $this->container = $this->prophesize(ContainerBuilder::class);
+        $this->container->get('sulu_page.structure.factory')->willReturn($this->structureFactory->reveal());
+        $this->container->get('translator')->willReturn($translator->reveal());
+        $this->container->getParameter('sulu_core.locales')->willReturn(['en', 'de']);
+
+        $this->container->setParameter(
+            'sulu_snippet.areas',
+            [
+                'article' => [
+                    'key' => 'article',
+                    'template' => 'test',
+                    'title' => [
+                        'en' => 'Article Test',
+                        'de' => 'Artikel Test',
+                    ],
+                ],
+            ]
+        )->shouldBeCalled();
+
+        $compiler->process($this->container->reveal());
+    }
+
+    public function testWithTranslatedAreaButNoTranslation(): void
+    {
+        $compiler = new SnippetAreaCompilerPass();
+
+        $structureMetaData = $this->createStructureMetaData(
+            'test',
+            [
+                'article' => [
+                    'key' => 'article',
+                    'title' => [
+                        'sulu_snippet.areas.article.title',
+                    ],
+                ],
+            ]
+        );
+
+        $this->structureFactory = $this->prophesize(StructureMetadataFactoryInterface::class);
+        $this->structureFactory->getStructures('snippet')->willReturn([$structureMetaData->reveal()]);
+
+        $translator = $this->prophesize(TranslatorInterface::class);
+        $translator->trans('sulu_snippet.areas.article.title', [], 'admin', 'en')->willReturn('sulu_snippet.areas.article.title');
+        $translator->trans('sulu_snippet.areas.article.title', [], 'admin', 'de')->willReturn('sulu_snippet.areas.article.title');
+        $this->container = $this->prophesize(ContainerBuilder::class);
+        $this->container->get('sulu_page.structure.factory')->willReturn($this->structureFactory->reveal());
+        $this->container->get('translator')->willReturn($translator->reveal());
+        $this->container->getParameter('sulu_core.locales')->willReturn(['en', 'de']);
+
+        $this->container->setParameter(
+            'sulu_snippet.areas',
+            [
+                'article' => [
+                    'key' => 'article',
+                    'template' => 'test',
+                    'title' => [
+                        'en' => 'sulu_snippet.areas.article.title',
+                        'de' => 'sulu_snippet.areas.article.title',
                     ],
                 ],
             ]
