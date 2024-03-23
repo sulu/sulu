@@ -83,7 +83,7 @@ interface CollectionManagerInterface
      *
      * @param string $locale the locale which the collection should be return
      * @param int $offset
-     * @param int $limit
+     * @param int|null $limit
      * @param string $search
      * @param int $depth maximum depth for query
      * @param array $sortBy
