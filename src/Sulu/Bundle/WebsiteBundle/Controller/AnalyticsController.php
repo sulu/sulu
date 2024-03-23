@@ -186,23 +186,18 @@ class AnalyticsController extends AbstractRestController implements ClassResourc
             return null;
         }
 
-        switch ($data['type']) {
-            case 'google':
-                return $data['google_key'] ?? null;
-            case 'google_tag_manager':
-                return $data['google_tag_manager_key'] ?? null;
-            case 'matomo':
-                return [
-                    'siteId' => $data['matomo_id'] ?? null,
-                    'url' => $data['matomo_url'] ?? null,
-                ];
-            case 'custom':
-                return [
-                    'position' => $data['custom_position'] ?? null,
-                    'value' => $data['custom_script'] ?? null,
-                ];
-            default:
-                return null;
-        }
+        return match ($data['type']) {
+            'google' => $data['google_key'] ?? null,
+            'google_tag_manager' => $data['google_tag_manager_key'] ?? null,
+            'matomo' => [
+                'siteId' => $data['matomo_id'] ?? null,
+                'url' => $data['matomo_url'] ?? null,
+            ],
+            'custom' => [
+                'position' => $data['custom_position'] ?? null,
+                'value' => $data['custom_script'] ?? null,
+            ],
+            default => null,
+        };
     }
 }

@@ -105,12 +105,11 @@ class RouteController extends AbstractRestController implements ClassResourceInt
     public function postAction(Request $request): Response
     {
         $action = $request->query->get('action');
-        switch ($action) {
-            case 'generate':
-                return $this->generateUrlResponse($request);
-        }
 
-        throw new RestException('Unrecognized action: ' . $action);
+        return match ($action) {
+            'generate' => $this->generateUrlResponse($request),
+            default => throw new RestException('Unrecognized action: ' . $action),
+        };
     }
 
     /**

@@ -287,14 +287,11 @@ trait DataProviderRepositoryTrait
      */
     private function appendRelation(QueryBuilder $queryBuilder, $relation, $values, $operator, $alias)
     {
-        switch ($operator) {
-            case 'or':
-                return $this->appendRelationOr($queryBuilder, $relation, $values, $alias);
-            case 'and':
-                return $this->appendRelationAnd($queryBuilder, $relation, $values, $alias);
-        }
-
-        return [];
+        return match ($operator) {
+            'or' => $this->appendRelationOr($queryBuilder, $relation, $values, $alias),
+            'and' => $this->appendRelationAnd($queryBuilder, $relation, $values, $alias),
+            default => [],
+        };
     }
 
     /**

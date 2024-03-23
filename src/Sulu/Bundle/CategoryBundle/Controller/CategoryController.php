@@ -162,13 +162,10 @@ class CategoryController extends AbstractRestController implements ClassResource
         $action = $this->getRequestParameter($request, 'action', true);
 
         try {
-            switch ($action) {
-                case 'move':
-                    return $this->move($id, $request);
-                    break;
-                default:
-                    throw new RestException(\sprintf('Unrecognized action: "%s"', $action));
-            }
+            return match ($action) {
+                'move' => $this->move($id, $request),
+                default => throw new RestException(\sprintf('Unrecognized action: "%s"', $action)),
+            };
         } catch (RestException $ex) {
             $view = $this->view($ex->toArray(), 400);
 

@@ -336,13 +336,10 @@ class CollectionController extends AbstractRestController implements ClassResour
         $action = $this->getRequestParameter($request, 'action', true);
 
         try {
-            switch ($action) {
-                case 'move':
-                    return $this->moveEntity($id, $request);
-                    break;
-                default:
-                    throw new RestException(\sprintf('Unrecognized action: "%s"', $action));
-            }
+            return match ($action) {
+                'move' => $this->moveEntity($id, $request),
+                default => throw new RestException(\sprintf('Unrecognized action: "%s"', $action)),
+            };
         } catch (RestException $ex) {
             $view = $this->view($ex->toArray(), 400);
 
