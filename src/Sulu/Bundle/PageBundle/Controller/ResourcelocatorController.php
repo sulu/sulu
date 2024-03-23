@@ -44,12 +44,11 @@ class ResourcelocatorController implements ClassResourceInterface
     public function postAction(Request $request)
     {
         $action = $request->query->get('action');
-        switch ($action) {
-            case 'generate':
-                return $this->generateUrlResponse($request);
-        }
 
-        throw new RestException('Unrecognized action: ' . $action);
+        return match ($action) {
+            'generate' => $this->generateUrlResponse($request),
+            default => throw new RestException('Unrecognized action: ' . $action),
+        };
     }
 
     private function generateUrlResponse(Request $request)

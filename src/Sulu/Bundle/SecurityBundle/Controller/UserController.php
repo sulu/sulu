@@ -189,19 +189,12 @@ class UserController extends AbstractRestController implements ClassResourceInte
         $action = $request->get('action');
 
         try {
-            switch ($action) {
-                case 'enable':
-                    $user = $this->userManager->enableUser($id);
-                    break;
-                case 'lock':
-                    $user = $this->userManager->lockUser($id);
-                    break;
-                case 'unlock':
-                    $user = $this->userManager->unlockUser($id);
-                    break;
-                default:
-                    throw new RestException('Unrecognized action: ' . $action);
-            }
+            $user = match ($action) {
+                'enable' => $this->userManager->enableUser($id),
+                'lock' => $this->userManager->lockUser($id),
+                'unlock' => $this->userManager->unlockUser($id),
+                default => throw new RestException('Unrecognized action: ' . $action),
+            };
 
             // prepare view
             $view = $this->view($user, 200);

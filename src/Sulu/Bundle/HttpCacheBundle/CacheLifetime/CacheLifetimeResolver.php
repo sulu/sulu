@@ -38,16 +38,11 @@ class CacheLifetimeResolver implements CacheLifetimeResolverInterface
         $cacheLifetimeKey = \sprintf('%s:%s', $type, $value);
 
         if (!\array_key_exists($cacheLifetimeKey, $this->cacheLifetimes)) {
-            switch ($type) {
-                case self::TYPE_EXPRESSION:
-                    $this->cacheLifetimes[$cacheLifetimeKey] = $this->getCacheLifetimeForExpression($value);
-                    break;
-                case self::TYPE_SECONDS:
-                    $this->cacheLifetimes[$cacheLifetimeKey] = (int) $value;
-                    break;
-                default:
-                    $this->cacheLifetimes[$cacheLifetimeKey] = 0;
-            }
+            $this->cacheLifetimes[$cacheLifetimeKey] = match ($type) {
+                self::TYPE_EXPRESSION => $this->getCacheLifetimeForExpression($value),
+                self::TYPE_SECONDS => (int) $value,
+                default => 0,
+            };
         }
 
         return $this->cacheLifetimes[$cacheLifetimeKey];

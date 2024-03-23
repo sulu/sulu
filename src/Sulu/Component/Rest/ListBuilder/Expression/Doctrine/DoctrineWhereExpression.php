@@ -83,14 +83,11 @@ class DoctrineWhereExpression extends AbstractDoctrineExpression implements Wher
      */
     protected function convertNullComparator($comparator)
     {
-        switch ($comparator) {
-            case ListBuilderInterface::WHERE_COMPARATOR_EQUAL:
-                return 'IS NULL';
-            case ListBuilderInterface::WHERE_COMPARATOR_UNEQUAL:
-                return 'IS NOT NULL';
-            default:
-                return $comparator;
-        }
+        return match ($comparator) {
+            ListBuilderInterface::WHERE_COMPARATOR_EQUAL => 'IS NULL',
+            ListBuilderInterface::WHERE_COMPARATOR_UNEQUAL => 'IS NOT NULL',
+            default => $comparator,
+        };
     }
 
     public function getValue()
