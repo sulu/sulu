@@ -1,5 +1,5 @@
 // @flow
-import {isArrayLike} from 'mobx';
+import {isObservableArray} from 'mobx';
 import RequestPromise from './RequestPromise';
 import type {HandleResponseHook} from './types';
 
@@ -21,7 +21,7 @@ function transformResponseObject(data: Object) {
             return transformedData;
         }
 
-        if (isArrayLike(value)) {
+        if (Array.isArray(value) || isObservableArray(value)) {
             transformedData[key] = transformResponseArray(value);
 
             return transformedData;
@@ -59,7 +59,7 @@ function transformRequestObject(data: Object): Object {
             return transformedData;
         }
 
-        if (isArrayLike(value)) {
+        if (Array.isArray(value) || isObservableArray(value)) {
             transformedData[key] = transformRequestArray(value);
 
             return transformedData;
@@ -79,7 +79,7 @@ function transformRequestObject(data: Object): Object {
 
 function transformRequestArray(data) {
     return data.map((value) => {
-        if (isArrayLike(value)) {
+        if (Array.isArray(value) || isObservableArray(value)) {
             return transformRequestArray(value);
         }
 
@@ -92,7 +92,7 @@ function transformRequestArray(data) {
 }
 
 function transformRequestData(data: Object | Array<Object>) {
-    if (isArrayLike(data)) {
+    if (Array.isArray(data) || isObservableArray(data)) {
         return transformRequestArray(data);
     }
 
@@ -120,7 +120,7 @@ function handleJsonResponse(response: Response, options: ?Object): Promise<Objec
     }
 
     return response.json().then((data) => {
-        if (isArrayLike(data)) {
+        if (Array.isArray(data) || isObservableArray(data)) {
             return transformResponseArray(data);
         }
 
@@ -130,7 +130,7 @@ function handleJsonResponse(response: Response, options: ?Object): Promise<Objec
 
 function handleObjectResponse(response: Response, options: ?Object): Promise<Object> {
     return handleJsonResponse(response, options).then((response) => {
-        if (isArrayLike(response)) {
+        if (Array.isArray(response) || isObservableArray(response)) {
             throw Error('Response was expected to be an object, but an array was given');
         }
 

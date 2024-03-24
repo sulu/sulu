@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {isArrayLike} from 'mobx';
+import {isObservableArray} from 'mobx';
 import CKEditor5Component from '../../CKEditor5';
 import type {TextEditorProps} from '../types';
 import type {IObservableArray} from 'mobx/lib/mobx';
@@ -18,7 +18,7 @@ export default class CKEditor5 extends React.Component<TextEditorProps> {
 
         const unvalidatedFormatOptionValues = options && options.formats ? options.formats.value : [];
 
-        if (!isArrayLike(unvalidatedFormatOptionValues)) {
+        if (!(Array.isArray(unvalidatedFormatOptionValues) || isObservableArray(unvalidatedFormatOptionValues))) {
             throw new Error('The passed "formats" must be an array of strings');
         }
         // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array

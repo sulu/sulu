@@ -2,7 +2,7 @@
 import React from 'react';
 import {observer} from 'mobx-react';
 import userStore from 'sulu-admin-bundle/stores/userStore';
-import {computed, isArrayLike, observable} from 'mobx';
+import {computed, isObservableArray, observable} from 'mobx';
 import {
     convertDisplayOptionsFromParams,
     convertMediaTypesFromParams,
@@ -89,7 +89,10 @@ class SingleMediaSelection extends React.Component<FieldTypeProps<Value>> {
         } = schemaOptions;
         const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
 
-        if (displayOptions !== undefined && displayOptions !== null && !isArrayLike(displayOptions)) {
+        if (displayOptions !== undefined
+            && displayOptions !== null
+            && !(Array.isArray(displayOptions) || isObservableArray(displayOptions))
+        ) {
             throw new Error('The "displayOptions" option has to be an Array if set.');
         }
 

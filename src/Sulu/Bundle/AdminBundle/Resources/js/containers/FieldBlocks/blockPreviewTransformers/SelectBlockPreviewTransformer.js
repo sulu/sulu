@@ -1,13 +1,13 @@
 // @flow
 import React from 'react';
-import {isArrayLike} from 'mobx';
+import {isObservableArray} from 'mobx';
 import type {Node} from 'react';
 import type {BlockPreviewTransformer} from '../types';
 import type {SchemaEntry} from '../../Form/types';
 
 export default class SelectBlockPreviewTransformer implements BlockPreviewTransformer {
     transform(value: *, schema: SchemaEntry): Node {
-        if (!isArrayLike(value)) {
+        if (!(Array.isArray(value) || isObservableArray(value))) {
             return null;
         }
 
@@ -16,7 +16,7 @@ export default class SelectBlockPreviewTransformer implements BlockPreviewTransf
         }
 
         const values = schema.options.values.value;
-        if (!isArrayLike(values)) {
+        if (!(Array.isArray(values) || isObservableArray(values))) {
             throw new Error('The "SingleSelect" field type must have a "values" option defined being an array!');
         }
 

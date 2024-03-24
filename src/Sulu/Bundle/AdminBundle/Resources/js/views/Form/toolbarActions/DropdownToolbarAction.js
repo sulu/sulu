@@ -1,6 +1,6 @@
 // @flow
 import React, {Fragment} from 'react';
-import {isArrayLike} from 'mobx';
+import {isObservableArray} from 'mobx';
 import {ResourceFormStore} from '../../../containers/Form';
 import Router from '../../../services/Router';
 import ResourceStore from '../../../stores/ResourceStore';
@@ -32,7 +32,7 @@ export default class DropdownToolbarAction extends AbstractFormToolbarAction {
 
         const {toolbarActions} = this.options;
 
-        if (!isArrayLike(toolbarActions)) {
+        if (!(Array.isArray(toolbarActions) || isObservableArray(toolbarActions))) {
             throw new Error('The passed "toolbarActions" option must be of type object or array');
         }
 

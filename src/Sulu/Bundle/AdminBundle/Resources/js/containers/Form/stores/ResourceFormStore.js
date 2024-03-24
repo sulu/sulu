@@ -1,5 +1,5 @@
 // @flow
-import {action, autorun, computed, get, set, isArrayLike, observable, toJS, when} from 'mobx';
+import {action, autorun, computed, get, set, observable, toJS, when, isObservableArray} from 'mobx';
 import jsonpointer from 'json-pointer';
 import log from 'loglevel';
 import {createAjv} from '../../../utils/Ajv';
@@ -61,7 +61,8 @@ function mergeData(
         if (remoteTypes && localTypes
             && Object.keys(remoteTypes).length > 0 && Object.keys(localTypes).length > 0
             && localData[name] && remoteData[name]
-            && isArrayLike(localData[name]) && isArrayLike(remoteData[name])
+            && (Array.isArray(localData[name]) || isObservableArray(localData[name]))
+            && (Array.isArray(remoteData[name]) || isObservableArray(remoteData[name]))
         ) {
             for (let key = 0; key < Math.max(remoteData[name].length, localData[name].length); ++key) {
                 const remoteChildData = toJS(remoteData[name].length > key ? remoteData[name][key] || {} : {});

@@ -3,7 +3,7 @@ import React from 'react';
 import {observer} from 'mobx-react';
 import log from 'loglevel';
 import userStore from 'sulu-admin-bundle/stores/userStore';
-import {computed, isArrayLike, observable} from 'mobx';
+import {computed, isObservableArray, observable} from 'mobx';
 import {
     convertDisplayOptionsFromParams,
     convertMediaTypesFromParams,
@@ -46,7 +46,7 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
     @computed get value(): ?Value {
         const {value, dataPath} = this.props;
 
-        if (value && isArrayLike(value)) {
+        if (value && (Array.isArray(value) || isObservableArray(value))) {
             log.warn(
                 'The "MediaSelection" field with the path "' + dataPath + '" expects an object with an "ids" '
                 + 'property as value but received an array instead. Is it possible that your API returns an array of '
@@ -61,7 +61,7 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
             return {ids: value.map((item) => item && typeof item === 'object' ? item.id : item)};
         }
 
-        if (value && (typeof value !== 'object' || !isArrayLike(value.ids))) {
+        if (value && (typeof value !== 'object' || !(Array.isArray(value.ids) || isObservableArray(value.ids)))) {
             throw new Error(
                 'The "MediaSelection" field expects an object with an "ids" property and '
                 + 'an optional "displayOption" property as value.'
@@ -106,7 +106,9 @@ class MediaSelection extends React.Component<FieldTypeProps<Value>> {
 
         const locale = formInspector.locale ? formInspector.locale : observable.box(userStore.contentLocale);
 
-        if (displayOptions !== undefined && displayOptions !== null && !isArrayLike(displayOptions)) {
+        if (displayOptions !== undefined && displayOptions !== null
+            && !(Array.isArray(displayOptions) || isObservableArray(displayOptions))
+        ) {
             throw new Error('The "displayOptions" option has to be an Array if set.');
         }
         // $FlowFixMe: flow does not recognize that isArrayLike(value) means that value is an array

@@ -37,7 +37,7 @@ test('Set toolbar items and let mobx react', () => {
         throw new Error('The type should be set now to "button"!');
     }
 
-    expect(isObservable(toolbarStore.config.items)).toBe(true);
+    expect(isObservableProp(toolbarStore.config, 'items')).toBe(true);
     expect(toolbarConfigItems).toHaveLength(1);
     expect(buttonConfig.label).toBe('Test');
     expect(buttonConfig.icon).toBe('test');

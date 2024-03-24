@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import {computed, toJS, reaction, when, isArrayLike} from 'mobx';
+import {computed, toJS, reaction, when, isObservableArray} from 'mobx';
 import equals from 'fast-deep-equal';
 import jsonpointer from 'json-pointer';
 import SmartContentComponent, {smartContentConfigStore, SmartContentStore} from '../../SmartContent';
@@ -27,7 +27,7 @@ class SmartContent extends React.Component<Props> {
             } = {},
         } = this.props;
 
-        if (!isArrayLike(schemaPresentations)) {
+        if (!(Array.isArray(schemaPresentations) || isObservableArray(schemaPresentations))) {
             throw new Error(
                 'The "present_as" schemaOption must be an array, but received ' + typeof schemaPresentations + '!'
             );

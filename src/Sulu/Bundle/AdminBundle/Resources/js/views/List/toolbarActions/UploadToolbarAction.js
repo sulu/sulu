@@ -1,7 +1,7 @@
 // @flow
 import React from 'react';
 import log from 'loglevel';
-import {action, computed, isArrayLike, observable} from 'mobx';
+import {action, computed, isObservableArray, observable} from 'mobx';
 import Dropzone from 'react-dropzone';
 import symfonyRouting from 'fos-jsrouting/router';
 import {translate, transformBytesToReadableString} from '../../../utils';
@@ -305,7 +305,7 @@ export default class UploadToolbarAction extends AbstractListToolbarAction {
             return undefined;
         }
 
-        if (!isArrayLike(accept)) {
+        if (!(Array.isArray(accept) || isObservableArray(accept))) {
             throw new Error('The "accept" option must be an array!');
         }
 
