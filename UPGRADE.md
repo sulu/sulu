@@ -61,6 +61,8 @@ as well as [pnpm 8](https://pnpm.io/) or [bun 1](https://bun.sh/) for custom
 admin builds. With the introduction of these new versions, it is necessary 
 to drop the support for npm 6.
 
+The upgrade of CKEditor to the latest version atleast [requires Node 18](https://github.com/ckeditor/ckeditor5-dev/blob/v39.6.3/package.json#L19).
+
 ### DocumentToUuidTransformer return type changed
 
 For compatibility to Symfony 7 the `DocumentToUuidTransformer` methods return types changed:
@@ -110,6 +112,8 @@ Additionally, the following packages where upgraded:
 - `postcss-loader`: `^7.0.2`
 - `postcss-nested`: `^6.0.0`
 - `postcss-simple-vars`: `^7.0.1`
+- `@ckeditor/ckeditor5-dev-utils`: `^39.6.3`
+- `@ckeditor/ckeditor5-theme-lark`: `^41.2.1`
 
 This update is also handled normally by the update build command automatically.
 
