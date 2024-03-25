@@ -3,7 +3,7 @@
 exports[`Render the MediaCollection 1`] = `
 <div
   class="dropzone"
-  role="button"
+  role="presentation"
   tabindex="0"
 >
   <div>
@@ -590,7 +590,7 @@ exports[`Render the MediaCollection 1`] = `
 exports[`Render the MediaCollection for all media 1`] = `
 <div
   class="dropzone"
-  role="button"
+  role="presentation"
   tabindex="0"
 >
   <div>
