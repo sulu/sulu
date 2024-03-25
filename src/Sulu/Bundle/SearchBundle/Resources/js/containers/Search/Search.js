@@ -3,6 +3,7 @@ import React from 'react';
 import {action, observable} from 'mobx';
 import {observer} from 'mobx-react';
 import {Icon, Loader} from 'sulu-admin-bundle/components';
+import Pagination from 'sulu-admin-bundle/components/Pagination';
 import {Router} from 'sulu-admin-bundle/services';
 import {translate} from 'sulu-admin-bundle/utils';
 import jsonpointer from 'json-pointer';
@@ -42,6 +43,14 @@ class Search extends React.Component<Props> {
         this.query = query;
     };
 
+    handleLimitChange = (limit: number) => {
+        searchStore.setLimit(limit);
+    };
+
+    handlePageChange = (page: number) => {
+        searchStore.setPage(page);
+    };
+
     handleSearch = () => {
         searchStore.search(this.query, this.indexName);
     };
@@ -78,6 +87,24 @@ class Search extends React.Component<Props> {
             return <Loader />;
         }
 
+        const results = searchStore.result.map((result, index) => (
+            <SearchResult
+                description={result.document.description}
+                icon={indexes[result.document.index].icon}
+                image={result.document.imageUrl}
+                index={index}
+                key={result.document.index + '_' + result.document.id + '_' + result.document.locale}
+                locale={result.document.locale}
+                onClick={this.handleResultClick}
+                resource={
+                    indexes[result.document.index]
+                        ? indexes[result.document.index].name
+                        : ''
+                }
+                title={result.document.title}
+            />
+        ));
+
         return (
             <div className={searchStyles.search}>
                 <SearchField
@@ -100,23 +127,16 @@ class Search extends React.Component<Props> {
                     </div>
                 }
                 {!searchStore.loading && searchStore.result.length > 0 &&
-                    searchStore.result.map((result, index) => (
-                        <SearchResult
-                            description={result.document.description}
-                            icon={indexes[result.document.index].icon}
-                            image={result.document.imageUrl}
-                            index={index}
-                            key={result.document.index + '_' + result.document.id + '_' + result.document.locale}
-                            locale={result.document.locale}
-                            onClick={this.handleResultClick}
-                            resource={
-                                indexes[result.document.index]
-                                    ? indexes[result.document.index].name
-                                    : ''
-                            }
-                            title={result.document.title}
-                        />
-                    ))
+                    <Pagination
+                        currentLimit={searchStore.limit}
+                        currentPage={searchStore.page}
+                        loading={searchStore.loading}
+                        onLimitChange={this.handleLimitChange}
+                        onPageChange={this.handlePageChange}
+                        totalPages={searchStore.pages}
+                    >
+                        {results}
+                    </Pagination>
                 }
             </div>
         );
