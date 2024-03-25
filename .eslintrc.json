@@ -180,7 +180,7 @@
             }
         ],
         "react/jsx-pascal-case": "error",
-        "react/jsx-sort-default-props": [
+        "react/sort-default-props": [
             "error",
             {
                 "ignoreCase": true
