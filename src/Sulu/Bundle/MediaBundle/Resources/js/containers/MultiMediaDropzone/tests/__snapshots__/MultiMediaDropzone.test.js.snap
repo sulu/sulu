@@ -4,12 +4,11 @@ exports[`Render a MultiMediaDropzone 1`] = `
 Array [
   <div
     class="dropzone"
-    role="button"
+    role="presentation"
     tabindex="0"
   >
     <div />
     <input
-      autocomplete="off"
       multiple=""
       style="display:none"
       tabindex="-1"
