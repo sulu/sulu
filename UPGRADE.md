@@ -108,13 +108,16 @@ If you have not integrated custom JavaScript code, you project is adjusted autom
 Additionally, the following packages where upgraded:
 
 - `babel-loader`: `^9.1.0`
+- `css-loader`: `^6.10.0`
 - `css-minimizer-webpack-plugin`: `^6.0.0`
+- `file-loader`: was removed and replaced by webpack internal [assets/resource](https://webpack.js.org/guides/asset-modules/)
 - `glob`: `^10.3.10`
 - `postcss-calc`: `^9.0.1`
 - `postcss-import`: `^16.1.0`
 - `postcss-loader`: `^8.1.0`
 - `postcss-nested`: `^6.0.0`
 - `postcss-simple-vars`: `^7.0.1`
+- `raw-loader`: was removed and replaced by webpack internal [assets/source](https://webpack.js.org/guides/asset-modules/)
 - `regenerator-runtime`: `^0.14.0`
 - `@ckeditor/ckeditor5-dev-utils`: `^39.6.3`
 - `@ckeditor/ckeditor5-theme-lark`: `^41.2.1`
