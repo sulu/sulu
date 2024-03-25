@@ -154,6 +154,13 @@ export default class CKEditor5 extends React.Component<Props> {
                     'mergeTableCells',
                 ],
             },
+            ui: {
+                poweredBy: {
+                    position: 'inside',
+                    side: 'right',
+                    label: ''
+                }
+            },
         };
 
         ClassicEditor
