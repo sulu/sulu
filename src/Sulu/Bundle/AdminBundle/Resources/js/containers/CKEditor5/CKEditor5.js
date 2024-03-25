@@ -158,8 +158,10 @@ export default class CKEditor5 extends React.Component<Props> {
                 poweredBy: {
                     position: 'inside',
                     side: 'right',
-                    label: ''
-                }
+                    label: '',
+                    verticalOffset: 2,
+                    horizontalOffset: 3,
+                },
             },
         };
 
