@@ -30,6 +30,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * @internal
+ */
 #[AsCommand(name: 'sulu:debug:admin:views', description: 'Display current Views for the admin')]
 class ViewDebugCommand extends Command
 {

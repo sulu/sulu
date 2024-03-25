@@ -15436,16 +15436,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
 
 		-
-			message: "#^Parameter \\#1 \\$file of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatLoader\\\\BaseXmlFormatLoader\\:\\:parseXml\\(\\) expects string, array\\|string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
-
-		-
-			message: "#^Parameter \\#1 \\$file of static method Symfony\\\\Component\\\\Config\\\\Util\\\\XmlUtils\\:\\:loadFile\\(\\) expects string, array\\|string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
-
-		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatLoader/BaseXmlFormatLoader.php
@@ -39921,11 +39911,6 @@ parameters:
 			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
 
 		-
-			message: "#^Parameter \\#1 \\$resource of class Symfony\\\\Component\\\\Config\\\\Resource\\\\FileResource constructor expects string, array\\|string given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
-
-		-
 			message: "#^Parameter \\#1 \\$type of method Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\:\\:assertExists\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Metadata/Factory/StructureMetadataFactory.php
@@ -52862,11 +52847,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$country of method Sulu\\\\Component\\\\Localization\\\\Localization\\:\\:setCountry\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
-
-		-
-			message: "#^Parameter \\#1 \\$file of method Sulu\\\\Component\\\\Webspace\\\\Loader\\\\XmlFileLoader10\\:\\:parseXml\\(\\) expects string, array\\|string given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Loader/XmlFileLoader10.php
 
