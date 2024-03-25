@@ -106,7 +106,9 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                         {
                             loader: MiniCssExtractPlugin.loader,
                         },
-                        // style loader not required in our setup
+                        // style loader not required: https://github.com/webpack-contrib/css-loader#recommend
+                        // eslint-disable-next-line max-len
+                        // https://ckeditor.com/docs/ckeditor5/latest/installation/advanced/alternative-setups/integrating-from-source.html#option-extracting-css
                         'css-loader',
                     ],
                 },
@@ -131,7 +133,7 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                 },
                 {
                     test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
-                    use: 'raw-loader',
+                    type: 'asset/source',
                 },
                 {
                     test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
@@ -160,25 +162,17 @@ module.exports = (env, argv) => { // eslint-disable-line no-undef
                 {
                     test: /\.(svg|ttf|woff|woff2|eot)(\?.*$|$)/,
                     exclude: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {
-                                name: 'fonts/[name].[contenthash].[ext]',
-                            },
-                        },
-                    ],
+                    type: 'asset/resource',
+                    generator: {
+                        filename: '[name].[contenthash][ext]',
+                    },
                 },
                 {
                     test: /\.(jpg|gif|png)(\?.*$|$)/,
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {
-                                name: 'images/[name].[contenthash].[ext]',
-                            },
-                        },
-                    ],
+                    type: 'asset/resource',
+                    generator: {
+                        filename: 'images/[name].[contenthash][ext]',
+                    },
                 },
             ],
         },
