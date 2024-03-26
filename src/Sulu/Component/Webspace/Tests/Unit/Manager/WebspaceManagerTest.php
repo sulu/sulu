@@ -209,7 +209,7 @@ class WebspaceManagerTest extends WebspaceTestCase
 
     public function testFindWebspaceByKey(): void
     {
-        $webspace = $this->webspaceManager->findWebspaceByKey('sulu_io');
+        $webspace = $this->webspaceManager->getWebspaceCollection()->getWebspace('sulu_io');
         $this->assertInstanceOf(Webspace::class, $webspace);
 
         $this->assertEquals('Sulu CMF', $webspace->getName());
@@ -256,7 +256,7 @@ class WebspaceManagerTest extends WebspaceTestCase
 
     public function testFindPortalByKey(): void
     {
-        $portal = $this->webspaceManager->findPortalByKey('sulucmf_at');
+        $portal = $this->webspaceManager->getWebspaceCollection()->getPortal('sulucmf_at');
         $this->assertInstanceOf(Portal::class, $portal);
 
         $this->assertEquals('Sulu CMF AT', $portal->getName());
@@ -282,18 +282,6 @@ class WebspaceManagerTest extends WebspaceTestCase
         $this->assertEquals('dev', $environmentDev->getType());
         $this->assertCount(1, $environmentDev->getUrls());
         $this->assertEquals('sulu.lo', $environmentDev->getUrls()[0]->getUrl());
-    }
-
-    public function testFindWebspaceByNotExistingKey(): void
-    {
-        $portal = $this->webspaceManager->findWebspaceByKey('not_existing');
-        $this->assertNull($portal);
-    }
-
-    public function testFindPortalByNotExistingKey(): void
-    {
-        $portal = $this->webspaceManager->findPortalByKey('not_existing');
-        $this->assertNull($portal);
     }
 
     public function testFindPortalInformationByUrl(): void

@@ -20,20 +20,6 @@ use Sulu\Component\Util\ArrayableInterface;
 class Webspace implements ArrayableInterface
 {
     /**
-     * The name of the webspace.
-     *
-     * @var string
-     */
-    private $name;
-
-    /**
-     * The key of the webspace.
-     *
-     * @var string
-     */
-    private $key;
-
-    /**
      * The localizations defined for this webspace.
      *
      * @var Localization[]
@@ -123,7 +109,19 @@ class Webspace implements ArrayableInterface
     private $resourceLocatorStrategy;
 
     /**
+     * @param string $key
+     * @param string $name
+     */
+    public function __construct(
+        private $key = null,
+        private $name = null,
+    ) {
+    }
+
+    /**
      * Sets the key of the webspace.
+     *
+     * @deprecated since version 2.6, to be removed in 3.0 use the constructor instead.
      *
      * @param string $key
      *
@@ -269,6 +267,8 @@ class Webspace implements ArrayableInterface
 
     /**
      * Sets the name of the webspace.
+     *
+     * @deprecated since version 2.6, to be removed in 3.0 use the constructor instead.
      *
      * @param string $name
      *

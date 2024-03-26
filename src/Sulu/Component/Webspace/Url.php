@@ -16,62 +16,31 @@ use Sulu\Component\Util\ArrayableInterface;
 class Url implements ArrayableInterface
 {
     /**
-     * The url itself.
-     *
-     * @var string
+     * @param string $url
+     * @param string $language the language to which the url leads
+     * @param string $country the country to which the url leads
+     * @param string $segment the segment to which the url leads
+     * @param string $redirect the url to which this url redirects
+     * @param bool $main indicate the main url
+     * @param string $environment
      */
-    private $url;
-
-    /**
-     * The language to which the url leads.
-     *
-     * @var string
-     */
-    private $language;
-
-    /**
-     * The country to which the url leads.
-     *
-     * @var string
-     */
-    private $country;
-
-    /**
-     * The segment to which the url leads.
-     *
-     * @var string
-     */
-    private $segment;
-
-    /**
-     * The url to which this url redirects.
-     *
-     * @var string
-     */
-    private $redirect;
-
-    /**
-     * Indicate the main url.
-     *
-     * @var bool
-     */
-    private $main;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    public function __construct($url = null, $environment = null)
-    {
-        $this->url = $url;
-        $this->environment = $environment;
+    public function __construct(
+        private $url = null,
+        private $language = null,
+        private $country = null,
+        private $segment = null,
+        private $redirect = null,
+        private $main = false,
+        private $environment = null
+    ) {
     }
 
     /**
      * Sets the url.
      *
      * @param string $url
+     *
+     * @deprecated since version 2.6 use constructor instead.
      */
     public function setUrl($url)
     {
@@ -92,6 +61,8 @@ class Url implements ArrayableInterface
      * Sets the country to which this url leads.
      *
      * @param string $country
+     *
+     * @deprecated since version 2.6 use constructor instead.
      */
     public function setCountry($country)
     {
@@ -112,6 +83,8 @@ class Url implements ArrayableInterface
      * Sets the language to which this url leads.
      *
      * @param string $language
+     *
+     * @deprecated since version 2.6 use constructor instead.
      */
     public function setLanguage($language)
     {
@@ -132,6 +105,8 @@ class Url implements ArrayableInterface
      * Sets the segment to which this url leads.
      *
      * @param string $segment
+     *
+     * @deprecated since version 2.6 use constructor instead.
      */
     public function setSegment($segment)
     {
@@ -152,6 +127,8 @@ class Url implements ArrayableInterface
      * Sets the redirect for this url.
      *
      * @param string $redirect
+     *
+     * @deprecated since version 2.6 use constructor instead.
      */
     public function setRedirect($redirect)
     {
@@ -182,6 +159,8 @@ class Url implements ArrayableInterface
      * Sets main flag.
      *
      * @param bool $main
+     *
+     * @deprecated since version 2.6 use constructor instead.
      */
     public function setMain($main)
     {
@@ -202,6 +181,8 @@ class Url implements ArrayableInterface
      * Sets the environment.
      *
      * @param string $environment
+     *
+     * @deprecated since version 2.6 use constructor instead.
      */
     public function setEnvironment($environment)
     {

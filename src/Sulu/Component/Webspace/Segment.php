@@ -20,26 +20,21 @@ use Sulu\Component\Util\ArrayableInterface;
 class Segment implements ArrayableInterface
 {
     /**
-     * The key of the segment.
-     *
-     * @var string
+     * @param string $key
+     * @param bool $default
+     * @param Metadata $metadata
      */
-    private $key;
-
-    /**
-     * Defines if this segment is the default one.
-     *
-     * @var bool
-     */
-    private $default;
-
-    /**
-     * @var Metadata
-     */
-    private $metadata;
+    public function __construct(
+        private $key = null,
+        private $default = false,
+        private $metadata = null
+    ) {
+    }
 
     /**
      * Sets the key of the segment.
+     *
+     * @deprecated since version 2.6 use constructor instead.
      *
      * @param string $key
      */
@@ -61,6 +56,8 @@ class Segment implements ArrayableInterface
     /**
      * Sets if this segment is the default one.
      *
+     * @deprecated since version 2.6 use constructor instead.
+     *
      * @param bool $default
      */
     public function setDefault($default)
@@ -78,6 +75,9 @@ class Segment implements ArrayableInterface
         return $this->default;
     }
 
+    /**
+     * @deprecated since version 2.6 use constructor instead.
+     */
     public function setMetadata($metadata)
     {
         $this->metadata = new Metadata($metadata);

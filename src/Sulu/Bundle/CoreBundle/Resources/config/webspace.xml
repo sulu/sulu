@@ -8,6 +8,10 @@
     </parameters>
 
     <services>
+        <service id="sulu_core.webspace.collection" class="Sulu\Component\Webspace\Manager\WebspaceCollection">
+            <factory service="sulu_core.webspace.webspace_manager" method="getWebspaceCollection"/>
+        </service>
+
         <service id="sulu_core.webspace.loader.resolver" class="Symfony\Component\Config\Loader\LoaderResolver">
             <argument type="collection">
                 <argument type="service" id="sulu_core.webspace.loader.xml.1.1"/>
