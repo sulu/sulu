@@ -63,6 +63,44 @@ to drop the support for npm 6.
 
 The upgrade of CKEditor to the latest version atleast [requires Node 18](https://github.com/ckeditor/ckeditor5-dev/blob/v39.6.3/package.json#L19).
 
+### Webpack 5 upgrade
+
+Sulu now uses Webpack 5 to build the administration interface application. To enable this, the following JavaScript dependencies were updated/changed:
+
+- `webpack`: `^5.75.0`
+- `webpack-cli`: `^5.0`
+- `webpack-manifest-plugin`: `^5.0.0`
+- `mini-css-extract-plugin`: `^2.7.1`
+- `optimize-css-assets-webpack-plugin` was removed replaced by `css-minimizer-webpack-plugin`: `^6.0.0`
+- `clean-webpack-plugin` was removed and replaced by `clean: true` webpack output option
+- `webpack-clean-obsolete-chunks` was removed and replaced by `clean: true` webpack output option
+- `is-email` was removed and replaced by `sulu-admin-bundle/utils/Email/validateEmail` method 
+- `file-loader`: was removed and replaced by webpack internal [assets/resource](https://webpack.js.org/guides/asset-modules/)
+- `raw-loader`: was removed and replaced by webpack internal [assets/source](https://webpack.js.org/guides/asset-modules/)
+
+If you have integrated custom JavaScript components into the administration interface,
+you might need to adjust your components to be compatible with the updated dependencies.
+If you have not integrated custom JavaScript code, you project is adjusted automatically by the
+[update build](https://docs.sulu.io/en/latest/upgrades/upgrade-2.x.html) command.
+
+Additionally, the following packages where upgraded:
+
+- `babel-loader`: `^9.1.0`
+- `css-loader`: `^6.10.0`
+- `glob`: `^10.3.10`
+- `postcss-calc`: `^9.0.1`
+- `postcss-import`: `^16.1.0`
+- `postcss-loader`: `^8.1.0`
+- `postcss-nested`: `^6.0.0`
+- `postcss-simple-vars`: `^7.0.1`
+- `debounce`: `^2.0`
+- `react-dropzone`: `^14.2.0`
+- `regenerator-runtime`: `^0.14.0`
+- `@ckeditor/ckeditor5-dev-utils`: `^39.6.3`
+- `@ckeditor/ckeditor5-theme-lark`: `^41.2.1`
+
+This update is also handled normally by the update build command automatically.
+
 ### DocumentToUuidTransformer return type changed
 
 For compatibility to Symfony 7 the `DocumentToUuidTransformer` methods return types changed:
@@ -86,43 +124,6 @@ Use the newly added `getUrl` method:
 -routeRegistry.getListUrl(/* ... */)
 +routeRegistry.getUrl('list', (/* ... */)
 ```
-
-### Webpack 5 upgrade
-
-Sulu now uses Webpack 5 to build the administration interface application. To enable this, the following JavaScript dependencies were updated/changed:
-
-- `webpack`: `^5.75.0`
-- `webpack-cli`: `^5.0`
-- `webpack-manifest-plugin`: `^5.0.0`
-- `mini-css-extract-plugin`: `^2.7.1`
-- `optimize-css-assets-webpack-plugin` was removed replaced by `css-minimizer-webpack-plugin`: `^4.2.2`
-- `clean-webpack-plugin` was removed and replaced by `clean: true` webpack output option
-- `webpack-clean-obsolete-chunks` was removed and replaced by `clean: true` webpack output option
-- `is-email` was removed and replaced by `sulu-admin-bundle/utils/Email/validateEmail` method 
-
-If you have integrated custom JavaScript components into the administration interface,
-you might need to adjust your components to be compatible with the updated dependencies.
-If you have not integrated custom JavaScript code, you project is adjusted automatically by the
-[update build](https://docs.sulu.io/en/latest/upgrades/upgrade-2.x.html) command.
-
-Additionally, the following packages where upgraded:
-
-- `babel-loader`: `^9.1.0`
-- `css-loader`: `^6.10.0`
-- `css-minimizer-webpack-plugin`: `^6.0.0`
-- `file-loader`: was removed and replaced by webpack internal [assets/resource](https://webpack.js.org/guides/asset-modules/)
-- `glob`: `^10.3.10`
-- `postcss-calc`: `^9.0.1`
-- `postcss-import`: `^16.1.0`
-- `postcss-loader`: `^8.1.0`
-- `postcss-nested`: `^6.0.0`
-- `postcss-simple-vars`: `^7.0.1`
-- `raw-loader`: was removed and replaced by webpack internal [assets/source](https://webpack.js.org/guides/asset-modules/)
-- `regenerator-runtime`: `^0.14.0`
-- `@ckeditor/ckeditor5-dev-utils`: `^39.6.3`
-- `@ckeditor/ckeditor5-theme-lark`: `^41.2.1`
-
-This update is also handled normally by the update build command automatically.
 
 ### Static protected $defaultName property of commands removed
 
