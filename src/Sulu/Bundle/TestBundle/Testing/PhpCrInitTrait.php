@@ -119,18 +119,11 @@ trait PhpCrInitTrait
             );
         }
 
-        switch ($workspace) {
-            case 'live':
-                return static::$kernel->getCommonCacheDir() . '/initial_live.xml';
-
-                break;
-            case 'default':
-                return static::$kernel->getCommonCacheDir() . '/initial.xml';
-
-                break;
-            default:
-                throw new \InvalidArgumentException(\sprintf('Workspace "%s" is not a valid option', $workspace));
-        }
+        return match ($workspace) {
+            'live' => static::$kernel->getCommonCacheDir() . '/initial_live.xml',
+            'default' => static::$kernel->getCommonCacheDir() . '/initial.xml',
+            default => throw new \InvalidArgumentException(\sprintf('Workspace "%s" is not a valid option', $workspace)),
+        };
     }
 
     abstract public static function getContainer(): ContainerInterface;

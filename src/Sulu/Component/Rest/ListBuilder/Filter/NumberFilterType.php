@@ -26,21 +26,14 @@ class NumberFilterType implements FilterTypeInterface
         }
 
         foreach (\array_keys($options) as $operator) {
-            switch ($operator) {
-                case 'eq':
-                    $listBuilderOperator = ListBuilderInterface::WHERE_COMPARATOR_EQUAL;
-                    break;
-                case 'lt':
-                    $listBuilderOperator = ListBuilderInterface::WHERE_COMPARATOR_LESS;
-                    break;
-                case 'gt':
-                    $listBuilderOperator = ListBuilderInterface::WHERE_COMPARATOR_GREATER;
-                    break;
-                default:
-                    throw new InvalidFilterTypeOptionsException(
-                        'The NumberFilterType does not support the "' . $operator . '" operator'
-                    );
-            }
+            $listBuilderOperator = match ($operator) {
+                'eq' => ListBuilderInterface::WHERE_COMPARATOR_EQUAL,
+                'lt' => ListBuilderInterface::WHERE_COMPARATOR_LESS,
+                'gt' => ListBuilderInterface::WHERE_COMPARATOR_GREATER,
+                default => throw new InvalidFilterTypeOptionsException(
+                    'The NumberFilterType does not support the "' . $operator . '" operator'
+                ),
+            };
 
             if (!\is_numeric($options[$operator])) {
                 throw new InvalidFilterTypeOptionsException(

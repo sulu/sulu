@@ -166,14 +166,10 @@ class PreviewController
     private function getOptionsFromRequest(Request $request): array
     {
         return \array_filter($request->query->all(), function($key) {
-            switch ($key) {
-                case 'id':
-                case 'provider':
-                case 'token':
-                    return false;
-                default:
-                    return true;
-            }
+            return match ($key) {
+                'id', 'provider', 'token' => false,
+                default => true,
+            };
         }, \ARRAY_FILTER_USE_KEY);
     }
 }

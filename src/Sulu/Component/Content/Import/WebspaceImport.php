@@ -422,17 +422,12 @@ class WebspaceImport extends Import implements WebspaceImportInterface
             return;
         }
 
-        switch ($key) {
-            case 'redirectTarget':
-                $value = $this->documentManager->find($value);
-                break;
-            case 'permissions':
-                $value = \json_decode($value, true);
-                break;
-            case 'navigationContexts':
-                $value = \json_decode($value);
-                break;
-        }
+        $value = match ($key) {
+            'redirectTarget' => $this->documentManager->find($value),
+            'permissions' => \json_decode($value, true),
+            'navigationContexts' => \json_decode($value),
+            default => $value,
+        };
 
         return $value;
     }
