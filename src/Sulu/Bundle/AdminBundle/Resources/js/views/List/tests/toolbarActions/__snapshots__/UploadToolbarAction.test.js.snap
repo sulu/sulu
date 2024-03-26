@@ -2,11 +2,10 @@
 
 exports[`Should correctly render node 1`] = `
 <div
-  role="button"
+  role="presentation"
 >
   <input
     accept="text/csv"
-    autocomplete="off"
     style="display:none"
     tabindex="-1"
     type="file"

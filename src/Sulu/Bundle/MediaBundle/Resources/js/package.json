@@ -6,13 +6,13 @@
     "dependencies": {
         "classnames": "^2.2.5",
         "copy-to-clipboard": "^3.0.8",
-        "debounce": "^1.0.2",
+        "debounce": "^1.0.2 || ^2.0.0",
         "fast-deep-equal": "^3.1.1",
         "loglevel": "^1.4.1",
         "json-pointer": "^0.6.0",
         "mousetrap": "^1.6.1",
         "react-clipboard.js": "^2.0.16",
-        "react-dropzone": "^11.2.0",
+        "react-dropzone": "^14.2.0",
         "react-portal": "^4.1.0",
         "url-search-params-polyfill": "^8.0.0"
     },
