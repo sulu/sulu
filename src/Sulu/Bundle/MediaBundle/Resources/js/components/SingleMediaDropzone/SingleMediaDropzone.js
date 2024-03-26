@@ -121,7 +121,7 @@ class SingleMediaDropzone extends React.Component<Props> {
         return (
             <>
                 <Dropzone
-                    accept={accept ? {'*': [accept]} : undefined}
+                    accept={accept ? {[accept]: []} : undefined}
                     disabled={disabled}
                     multiple={false}
                     noClick={uploading}

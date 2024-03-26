@@ -5,7 +5,7 @@ exports[`Should correctly render node 1`] = `
   role="presentation"
 >
   <input
-    accept=""
+    accept="text/csv"
     style="display:none"
     tabindex="-1"
     type="file"
