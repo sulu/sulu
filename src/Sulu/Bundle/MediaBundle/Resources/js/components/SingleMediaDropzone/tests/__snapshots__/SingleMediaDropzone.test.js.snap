@@ -3,7 +3,7 @@
 exports[`Render a SingleMediaDropzone 1`] = `
 <div
   class="mediaContainer default"
-  role="button"
+  role="presentation"
   tabindex="0"
 >
   <img
@@ -25,7 +25,6 @@ exports[`Render a SingleMediaDropzone 1`] = `
     </div>
   </div>
   <input
-    autocomplete="off"
     style="display:none"
     tabindex="-1"
     type="file"
@@ -57,7 +56,6 @@ exports[`Render a SingleMediaDropzone in disabled state 1`] = `
     </div>
   </div>
   <input
-    autocomplete="off"
     style="display:none"
     tabindex="-1"
     type="file"
@@ -119,7 +117,6 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
     </div>
   </div>
   <input
-    autocomplete="off"
     style="display:none"
     tabindex="-1"
     type="file"
@@ -161,7 +158,6 @@ exports[`Render a SingleMediaDropzone with a MimeTypeIndicator if an error appea
     </div>
   </div>
   <input
-    autocomplete="off"
     style="display: none;"
     tabindex="-1"
     type="file"
@@ -205,7 +201,6 @@ exports[`Render a SingleMediaDropzone with a loader if image has not been loaded
     </div>
   </div>
   <input
-    autocomplete="off"
     style="display: none;"
     tabindex="-1"
     type="file"
@@ -243,7 +238,6 @@ Array [
       </div>
     </div>
     <input
-      autocomplete="off"
       style="display:none"
       tabindex="-1"
       type="file"
@@ -259,8 +253,8 @@ Array [
 
 exports[`Render a SingleMediaDropzone with the default empty icon 1`] = `
 <div
-    class="mediaContainer default"
-    role="presentation"
+  class="mediaContainer default"
+  role="presentation"
   tabindex="0"
 >
   <div
@@ -286,7 +280,6 @@ exports[`Render a SingleMediaDropzone with the default empty icon 1`] = `
     </div>
   </div>
   <input
-    autocomplete="off"
     style="display:none"
     tabindex="-1"
     type="file"
@@ -296,8 +289,8 @@ exports[`Render a SingleMediaDropzone with the default empty icon 1`] = `
 
 exports[`Render a SingleMediaDropzone with the passed empty icon 1`] = `
 <div
-    class="mediaContainer default"
-    role="presentation"
+  class="mediaContainer default"
+  role="presentation"
   tabindex="0"
 >
   <div
@@ -323,7 +316,6 @@ exports[`Render a SingleMediaDropzone with the passed empty icon 1`] = `
     </div>
   </div>
   <input
-    autocomplete="off"
     style="display:none"
     tabindex="-1"
     type="file"
@@ -334,7 +326,7 @@ exports[`Render a SingleMediaDropzone with the passed empty icon 1`] = `
 exports[`Render a SingleMediaDropzone with the round skin 1`] = `
 <div
   class="mediaContainer round"
-  role="button"
+  role="presentation"
   tabindex="0"
 >
   <img
@@ -356,7 +348,6 @@ exports[`Render a SingleMediaDropzone with the round skin 1`] = `
     </div>
   </div>
   <input
-    autocomplete="off"
     style="display:none"
     tabindex="-1"
     type="file"
@@ -366,8 +357,8 @@ exports[`Render a SingleMediaDropzone with the round skin 1`] = `
 
 exports[`Render a SingleMediaDropzone without a loader if image has been loaded after an error occured before 1`] = `
 <div
-    class="mediaContainer default"
-    role="presentation"
+  class="mediaContainer default"
+  role="presentation"
   tabindex="0"
 >
   <img
@@ -389,7 +380,6 @@ exports[`Render a SingleMediaDropzone without a loader if image has been loaded 
     </div>
   </div>
   <input
-    autocomplete="off"
     style="display: none;"
     tabindex="-1"
     type="file"
@@ -399,8 +389,8 @@ exports[`Render a SingleMediaDropzone without a loader if image has been loaded 
 
 exports[`Render a SingleMediaDropzone without a loader if image has been loaded yet 1`] = `
 <div
-    class="mediaContainer default"
-    role="presentation"
+  class="mediaContainer default"
+  role="presentation"
   tabindex="0"
 >
   <img

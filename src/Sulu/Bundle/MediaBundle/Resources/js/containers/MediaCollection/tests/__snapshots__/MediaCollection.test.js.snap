@@ -578,7 +578,6 @@ exports[`Render the MediaCollection 1`] = `
     </div>
   </div>
   <input
-    autocomplete="off"
     multiple=""
     style="display:none"
     tabindex="-1"
