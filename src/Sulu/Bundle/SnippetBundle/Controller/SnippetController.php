@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use PHPCR\NodeInterface;
+use Sulu\Bundle\CoreBundle\Serializer\Exclusion\FieldsExclusionStrategy;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
@@ -205,7 +207,16 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
             $total
         );
 
-        return $this->viewHandler->handle(View::create($data));
+        $view = View::create($data);
+
+        $requestedFields = $this->listRestHelper->getFields() ?? [];
+        if ([] !== $requestedFields) {
+            $context = new Context();
+            $context->addExclusionStrategy(new FieldsExclusionStrategy($requestedFields));
+            $view->setContext($context);
+        }
+
+        return $this->viewHandler->handle($view);
     }
 
     /**

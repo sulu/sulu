@@ -2,6 +2,10 @@
 
 ## 2.6.0
 
+### Query parameters in the snippet controller work again
+In the previous version the `SnippetController` would return the entire content of the snippet in the `cgetAction`. Now
+it respects the list of fields provided in the query parameter and only returns those.
+
 ### PHP 8.2 upgrade
 
 Before upgrading to Sulu 2.6, ensure that your project's code and dependencies
