@@ -11,11 +11,11 @@
 
 namespace Sulu\Component\Content\Repository;
 
-use Jackalope\Query\Row;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use JMS\Serializer\Annotation\SerializedName;
 use JMS\Serializer\Annotation\VirtualProperty;
+use PHPCR\Query\RowInterface;
 use Sulu\Component\Content\Compat\StructureType;
 use Sulu\Exception\FeatureNotImplementedException;
 
@@ -121,7 +121,7 @@ class Content implements \ArrayAccess
     private $contentLocales;
 
     /**
-     * @var Row
+     * @var RowInterface
      */
     private $row;
 
@@ -320,14 +320,14 @@ class Content implements \ArrayAccess
     }
 
     /**
-     * @return Row
+     * @return RowInterface
      */
     public function getRow()
     {
         return $this->row;
     }
 
-    public function setRow(Row $row)
+    public function setRow(RowInterface $row)
     {
         $this->row = $row;
     }
