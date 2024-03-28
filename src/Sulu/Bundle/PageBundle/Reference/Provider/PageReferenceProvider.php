@@ -38,8 +38,7 @@ class PageReferenceProvider extends AbstractDocumentReferenceProvider
             $structureManager,
             $extensionManager,
             $referenceRepository,
-            Structure::TYPE_PAGE,
-            '' // TODO check what we need here
+            Structure::TYPE_PAGE
         );
     }
 

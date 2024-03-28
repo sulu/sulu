@@ -44,22 +44,18 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
 
     private string $structureType;
 
-    protected string $referenceSecurityContext;
-
     public function __construct(
         ContentTypeManagerInterface $contentTypeManager,
         StructureManagerInterface $structureManager,
         ExtensionManagerInterface $extensionManager,
         ReferenceRepositoryInterface $referenceRepository,
         string $structureType,
-        string $referenceSecurityContext
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;
         $this->extensionManager = $extensionManager;
         $this->referenceRepository = $referenceRepository;
         $this->structureType = $structureType;
-        $this->referenceSecurityContext = $referenceSecurityContext;
     }
 
     abstract public static function getResourceKey(): string;
