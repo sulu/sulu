@@ -38,8 +38,7 @@ class SnippetReferenceProvider extends AbstractDocumentReferenceProvider
             $structureManager,
             $extensionManager,
             $referenceRepository,
-            Structure::TYPE_SNIPPET,
-            SnippetAdmin::SECURITY_CONTEXT
+            Structure::TYPE_SNIPPET
         );
     }
 
