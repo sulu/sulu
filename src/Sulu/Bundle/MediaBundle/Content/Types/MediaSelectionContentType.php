@@ -256,14 +256,23 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
     public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
     {
         $data = $property->getValue();
-        if (!\is_array($data) || (!isset($data['ids']) || !\is_array($data['ids']))) {
+
+        if ($data instanceof MediaSelectionContainer) { // TODO should probably be removed when tests are refactored
+            $data = $data->toArray();
+        }
+
+        if (!\is_array($data) || !isset($data['ids']) || !\is_array($data['ids'])) {
             return;
         }
 
         foreach ($data['ids'] as $id) {
+            if (!\is_int($id)) {
+                continue;
+            }
+
             $referenceCollector->addReference(
                 MediaInterface::RESOURCE_KEY,
-                $id,
+                (string) $id,
                 $propertyPrefix . $property->getName()
             );
         }
