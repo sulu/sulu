@@ -18,6 +18,9 @@ use JMS\Serializer\Exclusion\ExclusionStrategyInterface;
 use JMS\Serializer\Metadata\ClassMetadata;
 use JMS\Serializer\Metadata\PropertyMetadata;
 
+/**
+ * @internal
+ */
 class FieldsExclusionStrategy implements ExclusionStrategyInterface
 {
     /** @param array<int, string> $requestedFields */
