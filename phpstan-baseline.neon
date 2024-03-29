@@ -5396,11 +5396,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
 		-
-			message: "#^Parameter \\#1 \\$contact of class Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact constructor expects Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact, Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
-
-		-
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
@@ -7306,11 +7301,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$contact of class Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact constructor expects Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact, Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AccountManager\\:\\:\\$addressEntity has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
@@ -7453,11 +7443,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$contact \\(Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface\\) of method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManager\\:\\:removeAddressRelation\\(\\) should be compatible with parameter \\$entity \\(string\\) of method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface,Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact,Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactAddress\\>\\:\\:removeAddressRelation\\(\\)$#"
 			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: "#^Parameter \\#1 \\$contact of class Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact constructor expects Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact, Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface given\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
 		-
