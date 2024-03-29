@@ -52,16 +52,12 @@ class DeviceTypeRule implements RuleInterface
             return false;
         }
 
-        switch ($options[static::DEVICE_TYPE]) {
-            case static::SMARTPHONE:
-                return $this->deviceDetector->isSmartphone();
-            case static::TABLET:
-                return $this->deviceDetector->isTablet();
-            case static::DESKTOP:
-                return $this->deviceDetector->isDesktop();
-        }
-
-        return false;
+        return match ($options[static::DEVICE_TYPE]) {
+            static::SMARTPHONE => $this->deviceDetector->isSmartphone(),
+            static::TABLET => $this->deviceDetector->isTablet(),
+            static::DESKTOP => $this->deviceDetector->isDesktop(),
+            default => false,
+        };
     }
 
     public function getName()

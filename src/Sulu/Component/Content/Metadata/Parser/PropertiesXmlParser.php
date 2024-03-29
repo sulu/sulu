@@ -290,14 +290,10 @@ class PropertiesXmlParser
             'meta' => $this->loadMeta($xpath, $node),
         ];
 
-        switch ($result['type']) {
-            case 'collection':
-                $result['value'] = $this->loadParams('x:param', $xpath, $node);
-                break;
-            default:
-                $result['value'] = $this->getValueFromXPath('@value', $xpath, $node);
-                break;
-        }
+        $result['value'] = match ($result['type']) {
+            'collection' => $this->loadParams('x:param', $xpath, $node),
+            default => $this->getValueFromXPath('@value', $xpath, $node),
+        };
 
         return $result;
     }
