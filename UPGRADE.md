@@ -127,7 +127,7 @@ Use the newly added `getUrl` method:
 
 ### Static protected $defaultName property of commands removed
 
-As deprecated in Symfony 6.1 the `$defaultName` of Sulu Commands where replaced with the new
+As deprecated in Symfony 6.1 the `$defaultName` of Sulu Commands were replaced with the new
 `Symfony\Component\Console\Attribute\AsCommand` annotation.
 
 ### ListBuilder Doctrine Changes
@@ -193,6 +193,11 @@ sulu_website:
         attributes:
             urls: true
 ```
+
+### Fields Query parameter are now kept in mind for SnippetController
+
+In the previous version the `SnippetController` would return the entire content of the snippet in the `cgetAction`. Now
+it respects the list of fields provided in the query parameter and only returns those.
 
 ## 2.5.12
 
