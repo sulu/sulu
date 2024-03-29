@@ -531,6 +531,71 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Command/UpdateBuildCommand.php
 
 		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:default\\(\\) has parameter \\$tableRows with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:default\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:findViewNameContaining\\(\\) has parameter \\$views with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:findViewNameContaining\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:handleFormView\\(\\) has parameter \\$tableRows with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:handleFormView\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:handleList\\(\\) has parameter \\$tableRows with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:handleList\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:handleResourceTab\\(\\) has parameter \\$tableRows with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\ViewDebugCommand\\:\\:handleResourceTab\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$name of method Sulu\\\\Bundle\\\\AdminBundle\\\\Admin\\\\View\\\\ViewRegistry\\:\\:findViewByName\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
+			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Command/ViewDebugCommand.php
+
+		-
 			message: "#^Binary operation \"\\*\" between string and 1000 results in an error\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
@@ -1186,6 +1251,11 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
 
 		-
+			message: "#^Cannot call method merge\\(\\) on mixed\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\XmlFormMetadataLoader\\:\\:__construct\\(\\) has parameter \\$formDirectories with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
@@ -1202,16 +1272,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$data of function unserialize expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
-			message: "#^Parameter \\#1 \\$key of method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\XmlFormMetadataLoader\\:\\:getConfigCache\\(\\) expects string, int\\|string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
-			message: "#^Parameter \\#2 \\$formKey of method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\XmlFormMetadataLoader\\:\\:validateItems\\(\\) expects string, int\\|string given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
 
@@ -4061,11 +4121,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
 		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\KeywordController\\:\\:deleteAction\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
@@ -5372,11 +5427,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Account\\:\\:setNote\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
-
-		-
-			message: "#^Parameter \\#1 \\$contact of class Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact constructor expects Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact, Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
@@ -7276,11 +7326,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$contact of class Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact constructor expects Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact, Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AccountManager\\:\\:\\$addressEntity has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
@@ -7413,11 +7458,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$contact \\(Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface\\) of method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManager\\:\\:removeAddressRelation\\(\\) should be compatible with parameter \\$entity \\(string\\) of method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface,Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact,Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactAddress\\>\\:\\:removeAddressRelation\\(\\)$#"
 			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: "#^Parameter \\#1 \\$contact of class Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact constructor expects Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact, Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface given\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
 		-
@@ -11616,11 +11656,6 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\Compiler\\\\ExtractingEventDispatcher\\:\\:getSubscribedEvents\\(\\) should return array\\<string, array\\<int\\|string, array\\<int\\|string, int\\|string\\>\\|int\\|string\\>\\|string\\> but returns array\\<int\\|string, mixed\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\Compiler\\\\RegisterListenersPass\\:\\:setHotPathEvents\\(\\) has parameter \\$hotPathEvents with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
@@ -14146,11 +14181,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
 		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\FormatController\\:\\:cgetAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
@@ -14273,11 +14303,6 @@ parameters:
 		-
 			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
@@ -26346,11 +26371,6 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Document/Subscriber/RoutableSubscriber.php
 
 		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 246\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Document/Subscriber/RoutableSubscriber.php
-
-		-
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Document/Subscriber/RoutableSubscriber.php
@@ -27562,11 +27582,6 @@ parameters:
 
 		-
 			message: "#^Class Swift_Mailer not found\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
-
-		-
-			message: "#^Empty catch block\\. If you are sure this is meant to be empty, please add a \"// @ignoreException\" comment in the catch block\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
 
@@ -30121,11 +30136,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
 
 		-
-			message: "#^Parameter \\#1 \\$type of method Symfony\\\\Component\\\\Form\\\\FormFactory\\:\\:create\\(\\) expects class\\-string\\<TFormType of Symfony\\\\Component\\\\Form\\\\FormTypeInterface\\<mixed\\>\\>, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
-
-		-
 			message: "#^Parameter \\#2 \\$default of method Symfony\\\\Component\\\\HttpFoundation\\\\HeaderBag\\:\\:get\\(\\) expects string\\|null, false given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
@@ -30837,7 +30847,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 17
+			count: 18
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerTest.php
 
 		-
@@ -32138,11 +32148,6 @@ parameters:
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\TestBundle\\\\Testing\\\\SuluTestCase\\:\\:\\$workspaceInitialized has no type specified\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 2
 			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
 
 		-
@@ -49352,7 +49357,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset mixed on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Component/Rest/Listing/ListRepository.php
 
 		-

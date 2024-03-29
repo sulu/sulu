@@ -470,16 +470,11 @@ class MediaController extends AbstractMediaController implements
         $action = $this->getRequestParameter($request, 'action', true);
 
         try {
-            switch ($action) {
-                case 'move':
-                    return $this->moveEntity($id, $request);
-                    break;
-                case 'new-version':
-                    return $this->saveEntity($id, $request);
-                    break;
-                default:
-                    throw new RestException(\sprintf('Unrecognized action: "%s"', $action));
-            }
+            return match ($action) {
+                'move' => $this->moveEntity($id, $request),
+                'new-version' => $this->saveEntity($id, $request),
+                default => throw new RestException(\sprintf('Unrecognized action: "%s"', $action)),
+            };
         } catch (RestException $e) {
             $view = $this->view($e->toArray(), 400);
 

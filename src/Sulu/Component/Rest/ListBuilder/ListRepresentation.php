@@ -15,6 +15,8 @@ use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @Serializer\ExclusionPolicy("all")
+ *
+ * @deprecated use PaginatedRepresentation instead
  */
 class ListRepresentation extends PaginatedRepresentation implements RepresentationInterface
 {

@@ -3,7 +3,7 @@
 exports[`Render a FileUploadButton 1`] = `
 <div>
   <div
-    role="button"
+    role="presentation"
     tabindex="0"
   >
     <button
@@ -17,7 +17,6 @@ exports[`Render a FileUploadButton 1`] = `
       </span>
     </button>
     <input
-      autocomplete="off"
       multiple=""
       style="display: none;"
       tabindex="-1"
@@ -30,7 +29,7 @@ exports[`Render a FileUploadButton 1`] = `
 exports[`Render a FileUploadButton with other skin and icon 1`] = `
 <div>
   <div
-    role="button"
+    role="presentation"
     tabindex="0"
   >
     <button
@@ -48,7 +47,6 @@ exports[`Render a FileUploadButton with other skin and icon 1`] = `
       </span>
     </button>
     <input
-      autocomplete="off"
       multiple=""
       style="display: none;"
       tabindex="-1"
@@ -61,7 +59,7 @@ exports[`Render a FileUploadButton with other skin and icon 1`] = `
 exports[`Render a disabled FileUploadButton 1`] = `
 <div>
   <div
-    role="button"
+    role="presentation"
     tabindex="0"
   >
     <button
@@ -76,7 +74,6 @@ exports[`Render a disabled FileUploadButton 1`] = `
       </span>
     </button>
     <input
-      autocomplete="off"
       multiple=""
       style="display: none;"
       tabindex="-1"

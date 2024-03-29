@@ -73,31 +73,18 @@ class ListXmlLoader
     private function loadPropertyMetadata(\DOMXPath $xpath, \DOMNode $propertyNode)
     {
         $propertyMetadata = null;
-        switch ($propertyNode->nodeName) {
-            case 'concatenation-property':
-                $propertyMetadata = $this->loadConcatenationPropertyMetadata($xpath, $propertyNode);
-                break;
-            case 'identity-property':
-                $propertyMetadata = $this->loadIdentityPropertyMetadata($xpath, $propertyNode);
-                break;
-            case 'group-concat-property':
-                $propertyMetadata = $this->loadGroupConcatPropertyMetadata($xpath, $propertyNode);
-                break;
-            case 'case-property':
-                $propertyMetadata = $this->loadCasePropertyMetadata($xpath, $propertyNode);
-                break;
-            case 'count-property':
-                $propertyMetadata = $this->loadCountPropertyMetadata($xpath, $propertyNode);
-                break;
-            case 'property':
-                $propertyMetadata = $this->loadSinglePropertyMetadata($xpath, $propertyNode);
-                break;
-            default:
-                throw new \InvalidArgumentException(\sprintf(
-                    'The tag "%s" cannot be handled by this loader',
-                    $propertyNode->nodeName
-                ));
-        }
+        $propertyMetadata = match ($propertyNode->nodeName) {
+            'concatenation-property' => $this->loadConcatenationPropertyMetadata($xpath, $propertyNode),
+            'identity-property' => $this->loadIdentityPropertyMetadata($xpath, $propertyNode),
+            'group-concat-property' => $this->loadGroupConcatPropertyMetadata($xpath, $propertyNode),
+            'case-property' => $this->loadCasePropertyMetadata($xpath, $propertyNode),
+            'count-property' => $this->loadCountPropertyMetadata($xpath, $propertyNode),
+            'property' => $this->loadSinglePropertyMetadata($xpath, $propertyNode),
+            default => throw new \InvalidArgumentException(\sprintf(
+                'The tag "%s" cannot be handled by this loader',
+                $propertyNode->nodeName
+            )),
+        };
 
         if (null !== $translation = XmlUtil::getValueFromXPath('@translation', $xpath, $propertyNode)) {
             $propertyMetadata->setTranslation($translation);

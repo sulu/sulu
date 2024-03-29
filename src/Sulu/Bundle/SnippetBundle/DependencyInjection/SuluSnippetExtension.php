@@ -199,6 +199,10 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
         $loader->load('admin.xml');
         $loader->load('command.xml');
 
+        if (\array_key_exists('SuluReferenceBundle', $bundles)) {
+            $loader->load('services_reference.xml');
+        }
+
         if (\array_key_exists('SuluTrashBundle', $bundles)) {
             $loader->load('services_trash.xml');
         }

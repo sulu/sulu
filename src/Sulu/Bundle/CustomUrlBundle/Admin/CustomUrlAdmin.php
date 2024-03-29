@@ -107,9 +107,9 @@ class CustomUrlAdmin extends Admin
 
         return [
             self::SULU_ADMIN_SECURITY_SYSTEM => [
-                 'Webspaces' => $webspaceContexts,
-             ],
-         ];
+                'Webspaces' => $webspaceContexts,
+            ],
+        ];
     }
 
     public function getSecurityContextsWithPlaceholder()

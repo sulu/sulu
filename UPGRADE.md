@@ -25,12 +25,95 @@ We recommend performing the PHP upgrade as a separate step before updating to
 Sulu 2.6. This will make it easier for you to identify any bugs that may occur
 in the project code with PHP 8.2.
 
+### New required bundle
+
+A new Bundle was added to Sulu which needs to be registered in the `config/bundles.php`:
+
+```diff
+return [
+    // ...
++    Sulu\Bundle\ReferenceBundle\SuluReferenceBundle::class => ['all' => true],
+];
+```
+
+And the bundles route configuration in the `config/routes/sulu_admin.yaml`:
+
+```diff
+# ...
++
++sulu_reference_api:
++    resource: "@SuluReferenceBundle/Resources/config/routing_api.yml"
++    type: rest
++    prefix: /admin/api
+```
+
+To create references for existing data run the following command:
+
+```bash
+bin/console sulu:reference:refresh
+```
+
+### PHPCRMigrationBundle namespace changed
+
+The [`dantleech/phpcr-migrations-bundle`](https://github.com/dantleech/phpcr-migrations-bundle) is now part of the phpcr
+under the package name [`phpcr/phpcr-migrations-bundle`](https://github.com/phpcr/phpcr-migrations-bundle).
+
+Besides changing the packages in your `composer.json`, you also need to change the namespace in the `config/bundles.php`:
+
+```diff
+return [
+    // ...
+-    DTL\Bundle\PhpcrMigrations\PhpcrMigrationsBundle::class => ['all' => true],
++    PHPCR\PhpcrMigrationsBundle\PhpcrMigrationsBundle::class => ['all' => true],
+];
+```
+
 ### Custom Admin Builds npm version changed
 
 Sulu 2.6 now supports [npm 8, 9, and 10](https://nodejs.org/en/download), 
 as well as [pnpm 8](https://pnpm.io/) or [bun 1](https://bun.sh/) for custom 
 admin builds. With the introduction of these new versions, it is necessary 
 to drop the support for npm 6.
+
+The upgrade of CKEditor to the latest version atleast [requires Node 18](https://github.com/ckeditor/ckeditor5-dev/blob/v39.6.3/package.json#L19).
+
+### Webpack 5 upgrade
+
+Sulu now uses Webpack 5 to build the administration interface application. To enable this, the following JavaScript dependencies were updated/changed:
+
+- `webpack`: `^5.75.0`
+- `webpack-cli`: `^5.0`
+- `webpack-manifest-plugin`: `^5.0.0`
+- `mini-css-extract-plugin`: `^2.7.1`
+- `optimize-css-assets-webpack-plugin` was removed replaced by `css-minimizer-webpack-plugin`: `^6.0.0`
+- `clean-webpack-plugin` was removed and replaced by `clean: true` webpack output option
+- `webpack-clean-obsolete-chunks` was removed and replaced by `clean: true` webpack output option
+- `is-email` was removed and replaced by `sulu-admin-bundle/utils/Email/validateEmail` method 
+- `file-loader`: was removed and replaced by webpack internal [assets/resource](https://webpack.js.org/guides/asset-modules/)
+- `raw-loader`: was removed and replaced by webpack internal [assets/source](https://webpack.js.org/guides/asset-modules/)
+
+If you have integrated custom JavaScript components into the administration interface,
+you might need to adjust your components to be compatible with the updated dependencies.
+If you have not integrated custom JavaScript code, you project is adjusted automatically by the
+[update build](https://docs.sulu.io/en/latest/upgrades/upgrade-2.x.html) command.
+
+Additionally, the following packages where upgraded:
+
+- `babel-loader`: `^9.1.0`
+- `css-loader`: `^6.10.0`
+- `glob`: `^10.3.10`
+- `postcss-calc`: `^9.0.1`
+- `postcss-import`: `^16.1.0`
+- `postcss-loader`: `^8.1.0`
+- `postcss-nested`: `^6.0.0`
+- `postcss-simple-vars`: `^7.0.1`
+- `debounce`: `^2.0`
+- `react-dropzone`: `^14.2.0`
+- `regenerator-runtime`: `^0.14.0`
+- `@ckeditor/ckeditor5-dev-utils`: `^39.6.3`
+- `@ckeditor/ckeditor5-theme-lark`: `^41.2.1`
+
+This update is also handled normally by the update build command automatically.
 
 ### DocumentToUuidTransformer return type changed
 
@@ -56,37 +139,9 @@ Use the newly added `getUrl` method:
 +routeRegistry.getUrl('list', (/* ... */)
 ```
 
-### Webpack 5 upgrade
-
-Sulu now uses Webpack 5 to build the administration interface application. To enable this, the following JavaScript dependencies were updated/changed:
-
-- `webpack`: `^5.75.0`
-- `webpack-cli`: `^5.0`
-- `webpack-manifest-plugin`: `^5.0.0`
-- `mini-css-extract-plugin`: `^2.7.1`
-- `optimize-css-assets-webpack-plugin` was removed replaced by `css-minimizer-webpack-plugin`: `^4.2.2`
-- `clean-webpack-plugin` was removed and replaced by `clean: true` webpack output option
-- `webpack-clean-obsolete-chunks` was removed and replaced by `clean: true` webpack output option
-- `is-email` was removed and replaced by `sulu-admin-bundle/utils/Email/validateEmail` method 
-
-If you have integrated custom JavaScript components into the administration interface,
-you might need to adjust your components to be compatible with the updated dependencies.
-If you have not integrated custom JavaScript code, you project is adjusted automatically by the
-[update build](https://docs.sulu.io/en/latest/upgrades/upgrade-2.x.html) command.
-
-Additionally, the following packages where upgraded:
-
-- `babel-loader`: `^9.1.0`
-- `postcss-import`: `^15.0.1`
-- `postcss-loader`: `^7.0.2`
-- `postcss-nested`: `^6.0.0`
-- `postcss-simple-vars`: `^7.0.1`
-
-This update is also handled normally by the update build command automatically.
-
 ### Static protected $defaultName property of commands removed
 
-As deprecated in Symfony 6.1 the `$defaultName` of Sulu Commands where replaced with the new
+As deprecated in Symfony 6.1 the `$defaultName` of Sulu Commands were replaced with the new
 `Symfony\Component\Console\Attribute\AsCommand` annotation.
 
 ### ListBuilder Doctrine Changes
@@ -152,6 +207,11 @@ sulu_website:
         attributes:
             urls: true
 ```
+
+### Fields Query parameter are now kept in mind for SnippetController
+
+In the previous version the `SnippetController` would return the entire content of the snippet in the `cgetAction`. Now
+it respects the list of fields provided in the query parameter and only returns those.
 
 ## 2.5.12
 
