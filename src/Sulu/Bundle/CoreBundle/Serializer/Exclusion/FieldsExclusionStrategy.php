@@ -19,6 +19,8 @@ use JMS\Serializer\Metadata\ClassMetadata;
 use JMS\Serializer\Metadata\PropertyMetadata;
 
 /**
+ * @final
+ *
  * @internal
  */
 class FieldsExclusionStrategy implements ExclusionStrategyInterface
