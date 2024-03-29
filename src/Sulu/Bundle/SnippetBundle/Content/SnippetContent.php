@@ -265,6 +265,10 @@ class SnippetContent extends ComplexContentType implements ContentTypeExportInte
         }
 
         foreach ($data as $id) {
+            if (!\is_string($id)) {
+                continue;
+            }
+
             $referenceCollector->addReference(
                 SnippetDocument::RESOURCE_KEY,
                 $id,
