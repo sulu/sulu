@@ -4121,11 +4121,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
 		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\KeywordController\\:\\:deleteAction\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
@@ -5432,11 +5427,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Account\\:\\:setNote\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
-
-		-
-			message: "#^Parameter \\#1 \\$contact of class Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact constructor expects Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact, Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Api/Account.php
 
@@ -7336,11 +7326,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$contact of class Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact constructor expects Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact, Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AccountManager\\:\\:\\$addressEntity has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/AccountManager.php
@@ -7473,11 +7458,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$contact \\(Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface\\) of method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManager\\:\\:removeAddressRelation\\(\\) should be compatible with parameter \\$entity \\(string\\) of method Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface\\<Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface,Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact,Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactAddress\\>\\:\\:removeAddressRelation\\(\\)$#"
 			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
-
-		-
-			message: "#^Parameter \\#1 \\$contact of class Sulu\\\\Bundle\\\\ContactBundle\\\\Api\\\\Contact constructor expects Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Contact, Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\ContactInterface given\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Contact/ContactManager.php
 
 		-
@@ -14201,11 +14181,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
 		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\FormatController\\:\\:cgetAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
@@ -14328,11 +14303,6 @@ parameters:
 		-
 			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
@@ -32178,11 +32148,6 @@ parameters:
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\TestBundle\\\\Testing\\\\SuluTestCase\\:\\:\\$workspaceInitialized has no type specified\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 2
 			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
 
 		-
