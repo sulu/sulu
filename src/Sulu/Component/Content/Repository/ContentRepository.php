@@ -527,7 +527,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         return $queryBuilder;
     }
 
-    private function getPropertyName($propertyName, $locale)
+    private function getPropertyName(string $propertyName, $locale): string
     {
         if ($locale) {
             return $this->propertyEncoder->localizedContentName($propertyName, $locale);

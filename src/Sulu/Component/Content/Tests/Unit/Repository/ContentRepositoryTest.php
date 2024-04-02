@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Repository;
 
+use Jackalope\Query\QOM\QueryObjectModel;
 use PHPCR\Query\QOM\ChildNodeInterface;
 use PHPCR\Query\QOM\ColumnInterface;
 use PHPCR\Query\QOM\ComparisonInterface;
@@ -110,6 +111,10 @@ class ContentRepositoryTest extends TestCase
         $this->sessionManager = $this->prophesize(SessionManagerInterface::class);
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
         $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);
+        $this->propertyEncoder->localizedContentName(Argument::type('string'), Argument::type('string'))
+            ->will(fn ($args) => 'i18n-'.$args[1].'-'.$args[0]);
+        $this->propertyEncoder->systemName('order')->willReturn('order');
+
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
         $this->localizationFinder = $this->prophesize(LocalizationFinderInterface::class);
         $this->structureManager = $this->prophesize(StructureManagerInterface::class);
@@ -164,8 +169,8 @@ class ContentRepositoryTest extends TestCase
         $this->structureManager->getStructures('page')->willReturn([$structure->reveal()]);
         $this->structureManager->getStructure('test')->willReturn($structure->reveal());
 
-        $this->query = $this->prophesize(QueryInterface::class);
-        $this->query->setLimit(Argument::any())->willReturn(null);
+        $this->query = $this->prophesize(QueryObjectModel::class);
+        $this->query->setLimit(Argument::any());
         $qomFactory->createQuery(Argument::cetera())->willReturn($this->query->reveal());
     }
 

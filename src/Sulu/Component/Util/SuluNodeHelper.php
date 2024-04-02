@@ -314,25 +314,27 @@ class SuluNodeHelper
      * Return either the next or previous sibling of the given node
      * according to the $previous flag.
      *
-     * @param bool $previous
-     *
      * @return NodeInterface|null
      *
      * @throws \RuntimeException
      */
-    private function getSiblingNode(NodeInterface $node, $previous = false)
+    private function getSiblingNode(NodeInterface $node, bool $previous = false)
     {
         $parentNode = $node->getParent();
         $children = $parentNode->getNodes();
         $previousNode = null;
 
-        while ($child = \current($children)) {
+        while ($child = $children->current()) {
             if ($child->getPath() === $node->getPath()) {
-                return $previous ? $previousNode : (\next($children) ?: null);
+                if ($previous){
+                    return $previousNode;
+                }
+                $children->next();
+                return $children->current();
             }
 
             $previousNode = $child;
-            \next($children);
+            $children->next();
         }
 
         throw new \RuntimeException(
