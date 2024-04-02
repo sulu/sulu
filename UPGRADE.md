@@ -39,10 +39,12 @@ Also a new table is required to be created in the database you can use doctrine 
 CREATE TABLE re_references (id INT AUTO_INCREMENT NOT NULL, resourceKey VARCHAR(191) NOT NULL, resourceId VARCHAR(191) NOT NULL, referenceResourceKey VARCHAR(191) NOT NULL, referenceResourceId VARCHAR(191) NOT NULL, referenceLocale VARCHAR(5) DEFAULT NULL, referenceRouterAttributes JSON NOT NULL, referenceTitle VARCHAR(191) NOT NULL, referenceProperty VARCHAR(191) NOT NULL, referenceContext VARCHAR(16) NOT NULL, created DATETIME NOT NULL, changed DATETIME NOT NULL, INDEX resource_idx (resourceKey, resourceId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
 ```
 
-To create references for existing data run the following command:
+To create references for existing data run the following commands:
 
 ```bash
-bin/console sulu:reference:refresh
+bin/adminconsole sulu:reference:refresh
+
+bin/websiteconsole sulu:reference:refresh
 ```
 
 ### PHPCRMigrationBundle namespace changed
