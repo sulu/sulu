@@ -135,13 +135,10 @@ function exec_cmd($cmdLine, $echo = true, $checkForError = true)
         write($out);
     });
 
-    if ($checkForError && $process->getExitCode() !== 0) {
-        write_error(sprintf(
-            'Could not execute command "%s", got exit code "%s": %s',
-            $cmdLine,
-            $process->getExitCode(),
-            $process->getErrorOutput()
-        ));
+    if ($checkForError) {
+        $process->mustRun();
+    } else {
+        $process->run();
     }
 
     return $process;
