@@ -40,15 +40,15 @@ class AdminControllerTest extends SuluTestCase
 
         $response = \json_decode($this->client->getResponse()->getContent() ?: '');
 
-        $this->assertObjectHasAttribute('sulu_admin', $response);
-        $this->assertObjectHasAttribute('navigation', $response->sulu_admin);
-        $this->assertObjectHasAttribute('resources', $response->sulu_admin);
-        $this->assertObjectHasAttribute('routes', $response->sulu_admin);
-        $this->assertObjectHasAttribute('fieldTypeOptions', $response->sulu_admin);
+        $this->assertTrue(\property_exists($response, 'sulu_admin'));
+        $this->assertTrue(\property_exists($response->sulu_admin, 'navigation'));
+        $this->assertTrue(\property_exists($response->sulu_admin, 'resources'));
+        $this->assertTrue(\property_exists($response->sulu_admin, 'routes'));
+        $this->assertTrue(\property_exists($response->sulu_admin, 'fieldTypeOptions'));
         $this->assertIsArray($response->sulu_admin->navigation);
         $this->assertIsArray($response->sulu_admin->routes);
         $this->assertIsObject($response->sulu_admin->resources);
-        $this->assertObjectHasAttribute('sulu_preview', $response);
+        $this->assertTrue(\property_exists($response, 'sulu_preview'));
 
         $this->assertEquals('en', $response->sulu_admin->localizations[0]->localization);
         $this->assertEquals('en_us', $response->sulu_admin->localizations[1]->localization);
@@ -71,15 +71,15 @@ class AdminControllerTest extends SuluTestCase
 
         $response = \json_decode($this->client->getResponse()->getContent() ?: '');
 
-        $this->assertObjectHasAttribute('sulu_admin', $response);
-        $this->assertObjectHasAttribute('navigation', $response->sulu_admin);
-        $this->assertObjectHasAttribute('resources', $response->sulu_admin);
-        $this->assertObjectHasAttribute('routes', $response->sulu_admin);
-        $this->assertObjectHasAttribute('fieldTypeOptions', $response->sulu_admin);
+        $this->assertTrue(\property_exists($response, 'sulu_admin'));
+        $this->assertTrue(\property_exists($response->sulu_admin, 'navigation'));
+        $this->assertTrue(\property_exists($response->sulu_admin, 'resources'));
+        $this->assertTrue(\property_exists($response->sulu_admin, 'routes'));
+        $this->assertTrue(\property_exists($response->sulu_admin, 'fieldTypeOptions'));
         $this->assertIsArray($response->sulu_admin->navigation);
         $this->assertIsArray($response->sulu_admin->routes);
         $this->assertIsObject($response->sulu_admin->resources);
-        $this->assertObjectHasAttribute('sulu_preview', $response);
+        $this->assertTrue(\property_exists($response, 'sulu_preview'));
 
         $this->assertEquals('en', $response->sulu_admin->localizations[0]->localization);
         $this->assertEquals('en_us', $response->sulu_admin->localizations[1]->localization);

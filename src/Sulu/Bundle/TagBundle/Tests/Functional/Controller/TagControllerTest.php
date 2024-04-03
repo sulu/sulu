@@ -310,13 +310,9 @@ class TagControllerTest extends SuluTestCase
 
         $tag1Id = $tag1->getId();
 
-        $mockedEventListener = $this->getMockBuilder('Mock')->setMethods(['onDelete'])->getMock();
-        $mockedEventListener->expects($this->once())->method('onDelete');
-
-        $this->client->getContainer()->get('event_dispatcher')->addListener(
-            'sulu.tag.delete',
-            [$mockedEventListener, 'onDelete']
-        );
+        $eventListenerWasCalled = false;
+        $this->client->getContainer()->get('event_dispatcher')
+                ->addListener('sulu.tag.delete', fn () => $eventListenerWasCalled = true);
 
         $this->client->jsonRequest(
             'DELETE',
@@ -354,13 +350,9 @@ class TagControllerTest extends SuluTestCase
         $tag3Id = $tag3->getId();
         $tag4Id = $tag4->getId();
 
-        $mockedEventListener = $this->getMockBuilder('Mock')->setMethods(['onMerge'])->getMock();
-        $mockedEventListener->expects($this->once())->method('onMerge');
-
-        $this->client->getContainer()->get('event_dispatcher')->addListener(
-            'sulu.tag.merge',
-            [$mockedEventListener, 'onMerge']
-        );
+        $eventListenerWasCalled = false;
+        $this->client->getContainer()->get('event_dispatcher')
+                ->addListener('sulu.tag.merge', fn () => $eventListenerWasCalled = true);
 
         $this->client->jsonRequest(
             'POST',

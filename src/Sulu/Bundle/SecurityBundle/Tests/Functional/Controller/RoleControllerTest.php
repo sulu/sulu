@@ -489,7 +489,7 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals(true, $response->permissions[2]->permissions->archive);
         $this->assertEquals(true, $response->permissions[2]->permissions->live);
         $this->assertEquals(true, $response->permissions[2]->permissions->security);
-        $this->assertObjectNotHasAttribute('securityType', $response);
+        $this->assertFalse(\property_exists($response, 'securityType'));
 
         $this->client->jsonRequest(
             'GET',
@@ -523,7 +523,7 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals(true, $response->permissions[2]->permissions->archive);
         $this->assertEquals(true, $response->permissions[2]->permissions->live);
         $this->assertEquals(true, $response->permissions[2]->permissions->security);
-        $this->assertObjectNotHasAttribute('securityType', $response);
+        $this->assertFalse(\property_exists($response, 'securityType'));
     }
 
     public function testPutNotExisting(): void
