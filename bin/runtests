@@ -135,10 +135,13 @@ function exec_cmd($cmdLine, $echo = true, $checkForError = true)
         write($out);
     });
 
-    if ($checkForError) {
-        $process->mustRun();
-    } else {
-        $process->run();
+    if ($checkForError && $process->getExitCode() !== 0) {
+        write_error(sprintf(
+            'Could not execute command "%s", got exit code "%s": %s',
+            $cmdLine,
+            $process->getExitCode(),
+            $process->getErrorOutput()
+        ));
     }
 
     return $process;
@@ -220,9 +223,12 @@ function init_dbal()
     );
 
     write_info('Updating schema');
-    exec_sf_cmd(
+    $process = exec_sf_cmd(
         'doctrine:schema:update --force'
     );
+    if ($process->getExitCode() !== 0) {
+        exit($process->getExitCode());
+    }
 }
 
 function run_bundle_tests(\SplFileInfo $phpunitFile)
@@ -295,17 +301,23 @@ function init_bundle()
 
     write_info('Doctrine ORM detected, updating the schema for the bundle.');
 
-    exec_cmd(sprintf(
+    $process = exec_sf_cmd(sprintf(
         PHP_BINARY . ' %s %s',
         $console,
         ' doctrine:schema:update --force'
     ));
+    if ($process->getExitCode() !== 0) {
+        exit($process->getExitCode());
+    }
 
-    exec_cmd(sprintf(
+    $process = exec_cmd(sprintf(
         PHP_BINARY . ' %s %s',
         $console,
         ' sulu:document:initialize --purge --force --ansi'
     ));
+    if ($process->getExitCode() !== 0) {
+        exit($process->getExitCode());
+    }
 }
 
 function is_everything_ok()
