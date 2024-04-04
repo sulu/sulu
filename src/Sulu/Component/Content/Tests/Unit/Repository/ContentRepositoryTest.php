@@ -180,6 +180,7 @@ class ContentRepositoryTest extends TestCase
 
         $queryResult = $this->prophesize(QueryResultInterface::class);
         $this->query->execute()->willReturn($queryResult->reveal());
+        $this->query->setLimit(1)->shouldBeCalled();
 
         $row = $this->prophesize(RowInterface::class);
         $rowIterator = new \ArrayIterator([$row->reveal()]);
