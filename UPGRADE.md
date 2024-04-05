@@ -109,9 +109,9 @@ Additionally, the following packages where upgraded:
 
 This update is also handled normally by the update build command automatically.
 
-### DocumentToUuidTransformer return type changed
+### Different return type changed for preparing Symfony 7 compatibility
 
-For compatibility to Symfony 7 the `DocumentToUuidTransformer` methods return types changed:
+The `DocumentToUuidTransformer` methods return types changed:
 
 ```diff
 -    public function transform($document)
@@ -120,6 +120,51 @@ For compatibility to Symfony 7 the `DocumentToUuidTransformer` methods return ty
 -    public function reverseTransform($uuid)
 +    public function reverseTransform($uuid): ?object
 ```
+
+The `User` methods return types changed:
+
+```diff
+-    public function eraseCredentials()
++    public function eraseCredentials(): void
+```
+
+The `AuthenticationEntryPoint` methods return types changed:
+
+```diff
+-    public function start(Request $request, ?AuthenticationException $authException = null)
++    public function start(Request $request, ?AuthenticationException $authException = null): Response
+```
+
+The `UserProvider` and `TestUserProvider` methods return types changed:
+
+```diff
+-    public function refreshUser()
++    public function refreshUser(): UserInterface
+
+-    public function supportsClass()
++    public function supportsClass(): bool
+```
+
+The `SecurityContextVoter` and `TestVoter` methods return types changed:
+
+```diff
+-    public function vote(TokenInterface $token, $object, array $attributes)
++    public function vote(TokenInterface $token, $object, array $attributes): int
+```
+
+### Replace Symfony Security class
+
+The `Symfony\Component\Security\Core\Security` deprecated class was replaced by
+`Symfony\Bundle\SecurityBundle\Security` for preparing Symfony 7 compatibility:
+
+ - `Sulu/Bundle/ActivityBundle/Application/Subscriber/SetDomainEventUserSubscriber`
+ - `Sulu/Bundle/PageBundle/EventListener/PageRemoveSubscriber`
+ - `Sulu/Bundle/SecurityBundle/Metadata/TwoFactorFormMetadataVisitor`
+ - `Sulu/Bundle/SecurityBundle/Security/AuthenticationHandler`
+ - `Sulu/Bundle/TrashBundle/Infrastructure/Doctrine/Repository/TrashItemRepository`
+ - `Sulu/Component/Content/Mapper/ContentMapper`
+ - `Sulu/Component/Media/SmartContent/MediaDataProvider`
+ - `Sulu/Component/Security/Authorization/AccessControl/AccessControlManager`
 
 ### Admin JS ResourceRouteRegistry getDetailUrl and getListUrl deprecated
 
