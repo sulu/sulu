@@ -29,7 +29,8 @@ use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlRepositoryInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class PageRemoveSubscriber implements EventSubscriberInterface
 {
@@ -51,7 +52,7 @@ class PageRemoveSubscriber implements EventSubscriberInterface
     private $systemStore;
 
     /**
-     * @var Security|null
+     * @var Security|SymfonyCoreSecurity|null
      */
     private $security;
 
@@ -67,7 +68,7 @@ class PageRemoveSubscriber implements EventSubscriberInterface
         SessionManagerInterface $sessionManager,
         AccessControlRepositoryInterface $accessControlRepository,
         SystemStoreInterface $systemStore,
-        ?Security $security,
+        Security|SymfonyCoreSecurity|null $security,
         array $permissions
     ) {
         $this->sessionManager = $sessionManager;

@@ -22,7 +22,9 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
 class AuthenticationHandlerTest extends TestCase
 {
@@ -65,7 +67,14 @@ class AuthenticationHandlerTest extends TestCase
         $router = $this->prophesize(RouterInterface::class);
         $session = $this->prophesize(Session::class);
         $session->get('_security.admin.target_path')->willReturn('/admin/#target/path');
-        $session->set(Security::AUTHENTICATION_ERROR, $this->exception->reveal())->willReturn(null);
+        $session->set(
+            \class_exists(SecurityRequestAttributes::class)
+                ? SecurityRequestAttributes::AUTHENTICATION_ERROR
+                : (\class_exists(Security::class)
+                    ? Security::AUTHENTICATION_ERROR // BC layer to Symfony <=6.4
+                    : SymfonyCoreSecurity::AUTHENTICATION_ERROR), // BC layer to Symfony <=5.4
+            $this->exception->reveal()
+        )->willReturn(null);
         $this->request->getSession()
             ->willReturn($session->reveal());
         $router->generate('sulu_admin')->willReturn('/admin');

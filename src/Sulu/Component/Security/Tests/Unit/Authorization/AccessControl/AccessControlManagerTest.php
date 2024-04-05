@@ -35,7 +35,8 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class AccessControlManagerTest extends TestCase
 {
@@ -112,7 +113,7 @@ class AccessControlManagerTest extends TestCase
         $this->systemStore = $this->prophesize(SystemStoreInterface::class);
         $this->roleRepository = $this->prophesize(RoleRepositoryInterface::class);
         $this->accessControlRepository = $this->prophesize(AccessControlRepositoryInterface::class);
-        $this->security = $this->prophesize(Security::class);
+        $this->security = $this->prophesize(\class_exists(Security::class) ? Security::class : SymfonyCoreSecurity::class);
         $this->user = $this->prophesize(UserInterface::class);
 
         $this->security->getUser()->willReturn($this->user->reveal());

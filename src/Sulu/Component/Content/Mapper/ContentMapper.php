@@ -63,7 +63,8 @@ use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInte
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * Maps content nodes to phpcr nodes with content types and provides utility function to handle content nodes.
@@ -148,7 +149,7 @@ class ContentMapper implements ContentMapperInterface
     private $permissions;
 
     /**
-     * @var ?Security
+     * @var ?Security|SymfonyCoreSecurity
      */
     private $security;
 
@@ -167,7 +168,7 @@ class ContentMapper implements ContentMapperInterface
         NamespaceRegistry $namespaceRegistry,
         AccessControlManagerInterface $accessControlManager,
         $permissions,
-        ?Security $security = null
+        Security|SymfonyCoreSecurity|null $security = null
     ) {
         $this->contentTypeManager = $contentTypeManager;
         $this->structureManager = $structureManager;

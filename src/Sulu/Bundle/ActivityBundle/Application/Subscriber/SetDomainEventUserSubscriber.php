@@ -14,17 +14,18 @@ namespace Sulu\Bundle\ActivityBundle\Application\Subscriber;
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Component\Security\Authentication\UserInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class SetDomainEventUserSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var Security|null
+     * @var SymfonyCoreSecurity|Security|null
      */
     private $security;
 
     public function __construct(
-        ?Security $security
+        Security|SymfonyCoreSecurity|null $security
     ) {
         $this->security = $security;
     }
