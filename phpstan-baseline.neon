@@ -17176,7 +17176,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerAdminTest.php
 
 		-
-			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			message: "#^Call to method getEncoder\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerAdminTest.php
+
+		-
+			message: "#^Call to method getPasswordHasher\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerAdminTest.php
 
@@ -17196,7 +17201,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerTest.php
 
 		-
-			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			message: "#^Call to method getEncoder\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerWebsiteSecuredTest.php
+
+		-
+			message: "#^Call to method getPasswordHasher\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaStreamControllerWebsiteSecuredTest.php
 
@@ -21626,6 +21636,11 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
 
 		-
+			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Version202404051700\\:\\:\\$container \\(Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\) does not accept Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202404051700.php
+
+		-
 			message: "#^Cannot access property \\$headers on Symfony\\\\Component\\\\HttpFoundation\\\\Request\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Rule/PageRule.php
@@ -24176,6 +24191,16 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Markup/LinkTagTest.php
 
 		-
+			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Reference\\\\Refresh\\\\PageReferenceRefresherTest\\:\\:\\$pageReferenceRefresher \\(Sulu\\\\Bundle\\\\PageBundle\\\\Reference\\\\Refresh\\\\PageReferenceRefresher\\) does not accept object\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Reference/Refresh/PageReferenceRefresherTest.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Reference\\\\Refresh\\\\PageReferenceRefresherTest\\:\\:\\$referenceRepository \\(Sulu\\\\Component\\\\Persistence\\\\Repository\\\\ORM\\\\EntityRepository\\<Sulu\\\\Bundle\\\\ReferenceBundle\\\\Domain\\\\Model\\\\Reference\\>\\) does not accept object\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Reference/Refresh/PageReferenceRefresherTest.php
+
+		-
 			message: "#^Call to an undefined method object\\:\\:getChanged\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Repository/ContentRepositoryTest.php
@@ -25441,7 +25466,7 @@ parameters:
 			path: src/Sulu/Bundle/PersistenceBundle/Tests/Functional/EventSubscriber/ORM/UserBlameSubscriberIntegrationTest.php
 
 		-
-			message: "#^Method class@anonymous/src/Sulu/Bundle/PersistenceBundle/Tests/Unit/DependencyInjection/PersistenceExtensionTraitTest\\.php\\:79\\:\\:setAccessControlQueryEnhancer\\(\\) has parameter \\$accessControlQueryEnhancer with no type specified\\.$#"
+			message: "#^Method class@anonymous/Sulu/Bundle/PersistenceBundle/Tests/Unit/DependencyInjection/PersistenceExtensionTraitTest\\.php\\:79\\:\\:setAccessControlQueryEnhancer\\(\\) has parameter \\$accessControlQueryEnhancer with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PersistenceBundle/Tests/Unit/DependencyInjection/PersistenceExtensionTraitTest.php
 
@@ -26009,6 +26034,11 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/UserInterface/Controller/PublicPreviewController.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\ReferenceBundle\\\\Tests\\\\Functional\\\\Infrastructure\\\\Doctrine\\\\Repository\\\\ReferenceRepositoryTest\\:\\:\\$referenceRepository \\(Sulu\\\\Bundle\\\\ReferenceBundle\\\\Domain\\\\Repository\\\\ReferenceRepositoryInterface\\) does not accept object\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ReferenceBundle/Tests/Functional/Infrastructure/Doctrine/Repository/ReferenceRepositoryTest.php
 
 		-
 			message: "#^Parameter \\#2 \\$destination of method Sulu\\\\Bundle\\\\RouteBundle\\\\PageTree\\\\PageTreeMoverInterface\\:\\:move\\(\\) expects Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\BasePageDocument, object given\\.$#"
@@ -28626,6 +28656,11 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Command/CreateUserCommandTest.php
 
 		-
+			message: "#^Parameter \\#7 \\$passwordHasherFactory of class Sulu\\\\Bundle\\\\SecurityBundle\\\\Command\\\\CreateUserCommand constructor expects Symfony\\\\Component\\\\PasswordHasher\\\\Hasher\\\\PasswordHasherFactoryInterface\\|Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactoryInterface, Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Command/CreateUserCommandTest.php
+
+		-
 			message: "#^Cannot access property \\$_embedded on mixed\\.$#"
 			count: 4
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/GroupControllerTest.php
@@ -28721,6 +28756,16 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ProfileControllerTest.php
 
 		-
+			message: "#^Call to method getEncoder\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
+
+		-
+			message: "#^Call to method getPasswordHasher\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
+
+		-
 			message: "#^Cannot access property \\$code on mixed\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
@@ -28728,11 +28773,6 @@ parameters:
 		-
 			message: "#^Cannot call method getCollector\\(\\) on Symfony\\\\Component\\\\HttpKernel\\\\Profiler\\\\Profile\\|false\\|null\\.$#"
 			count: 9
-			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
-
-		-
-			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
 
 		-
@@ -30081,6 +30121,11 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/DependencyInjection/Compiler/SnippetAreaCompilerPass.php
 
 		-
+			message: "#^Call to function array_key_exists\\(\\) with 'SuluReferenceBundle' and array\\{FrameworkBundle\\: string, TwigBundle\\: string, MonologBundle\\: string, SwiftmailerBundle\\: string, SuluCoreBundle\\: string, DoctrineBundle\\: string, DoctrineFixturesBundle\\: string, DoctrinePHPCRBundle\\: string, \\.\\.\\.\\} will always evaluate to false\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/DependencyInjection/SuluSnippetExtension.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\DependencyInjection\\\\SuluSnippetExtension\\:\\:load\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/DependencyInjection/SuluSnippetExtension.php
@@ -30481,6 +30526,16 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
 
 		-
+			message: "#^Parameter \\#5 \\$snippetAreaReferenceStore of class Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetContent constructor expects Sulu\\\\Bundle\\\\WebsiteBundle\\\\ReferenceStore\\\\ReferenceStoreInterface\\|null, object\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Content\\\\SnippetContentTest\\:\\:\\$snippetAreaReferenceStore \\(Sulu\\\\Bundle\\\\WebsiteBundle\\\\ReferenceStore\\\\ReferenceStoreInterface\\) does not accept object\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
+
+		-
 			message: "#^Cannot access offset '_embedded' on mixed\\.$#"
 			count: 3
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetAreaControllerTest.php
@@ -30834,6 +30889,16 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Import\\\\SnippetImportTest\\:\\:\\$snippets \\(array\\<Sulu\\\\Bundle\\\\SnippetBundle\\\\Document\\\\SnippetDocument\\>\\) does not accept array\\<object\\>\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Import/SnippetImportTest.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Reference\\\\Refresh\\\\SnippetReferenceRefresherTest\\:\\:\\$referenceRepository \\(Sulu\\\\Component\\\\Persistence\\\\Repository\\\\ORM\\\\EntityRepository\\<Sulu\\\\Bundle\\\\ReferenceBundle\\\\Domain\\\\Model\\\\Reference\\>\\) does not accept object\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Reference/Refresh/SnippetReferenceRefresherTest.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Reference\\\\Refresh\\\\SnippetReferenceRefresherTest\\:\\:\\$snippetReferenceRefresher \\(Sulu\\\\Bundle\\\\SnippetBundle\\\\Reference\\\\Refresh\\\\SnippetReferenceRefresher\\) does not accept object\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Reference/Refresh/SnippetReferenceRefresherTest.php
 
 		-
 			message: "#^Cannot call method current\\(\\) on array\\<Sulu\\\\Bundle\\\\SnippetBundle\\\\Document\\\\SnippetDocument\\>\\.$#"
@@ -33801,7 +33866,12 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Controller/AnalyticsControllerTest.php
 
 		-
-			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			message: "#^Call to method getEncoder\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Controller/CacheControllerTest.php
+
+		-
+			message: "#^Call to method getPasswordHasher\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactory\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Functional/Controller/CacheControllerTest.php
 
@@ -51306,27 +51376,27 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFilters\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
+			message: "#^Method class@anonymous/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFilters\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFiltersIds\\(\\) has parameter \\$entityAlias with no type specified\\.$#"
+			message: "#^Method class@anonymous/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFiltersIds\\(\\) has parameter \\$entityAlias with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFiltersIds\\(\\) has parameter \\$entityClass with no type specified\\.$#"
+			message: "#^Method class@anonymous/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFiltersIds\\(\\) has parameter \\$entityClass with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFiltersIds\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
+			message: "#^Method class@anonymous/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFiltersIds\\(\\) has parameter \\$filters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
 		-
-			message: "#^Method class@anonymous/src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFiltersIds\\(\\) has parameter \\$permission with no type specified\\.$#"
+			message: "#^Method class@anonymous/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest\\.php\\:106\\:\\:findByFiltersIds\\(\\) has parameter \\$permission with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/Orm/DataProviderRepositoryTraitTest.php
 
