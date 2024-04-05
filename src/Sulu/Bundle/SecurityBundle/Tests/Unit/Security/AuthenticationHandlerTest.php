@@ -58,6 +58,7 @@ class AuthenticationHandlerTest extends TestCase
     public function setUp(): void
     {
         $this->exception = $this->prophesize(AuthenticationException::class);
+        $this->exception->getMessageKey()->willReturn('error');
         $this->request = $this->prophesize(Request::class);
         $this->token = $this->prophesize(TokenInterface::class);
         $this->user = $this->prophesize(UserInterface::class);
