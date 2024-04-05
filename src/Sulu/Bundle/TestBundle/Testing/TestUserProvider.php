@@ -158,7 +158,7 @@ class TestUserProvider implements UserProviderInterface, ResetInterface
      *
      * @throws UnsupportedUserException if the account is not supported
      */
-    public function refreshUser(UserInterface $user)
+    public function refreshUser(UserInterface $user): UserInterface
     {
         if (self::TEST_USER_USERNAME === $user->getUserIdentifier()) {
             return $this->getUser();
@@ -174,7 +174,7 @@ class TestUserProvider implements UserProviderInterface, ResetInterface
      *
      * @return bool
      */
-    public function supportsClass($class)
+    public function supportsClass($class): bool
     {
         return $this->userProvider->supportsClass($class);
     }
