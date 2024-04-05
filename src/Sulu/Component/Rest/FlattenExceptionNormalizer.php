@@ -54,7 +54,7 @@ class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
     /**
      * @return array<int|string, mixed>
      */
-    public function normalize($exception, $format = null, array $context = [])
+    public function normalize($exception, $format = null, array $context = []): array
     {
         /** @var array<int|string, mixed> $data */
         $data = $this->decoratedNormalizer->normalize($exception, $format, $context);
