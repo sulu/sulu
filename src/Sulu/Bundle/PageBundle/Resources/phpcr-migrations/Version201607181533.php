@@ -13,8 +13,8 @@ namespace Sulu\Bundle\PageBundle;
 
 use PHPCR\ImportUUIDBehaviorInterface;
 use PHPCR\Migrations\VersionInterface;
+use PHPCR\PhpcrMigrationsBundle\ContainerAwareInterface;
 use PHPCR\SessionInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -86,7 +86,7 @@ class Version201607181533 implements VersionInterface, ContainerAwareInterface
      *
      * @param ContainerInterface|null $container A ContainerInterface instance or null
      */
-    public function setContainer(?ContainerInterface $container = null)
+    public function setContainer(?ContainerInterface $container = null): void
     {
         $this->container = $container;
     }

@@ -13,17 +13,20 @@ namespace Sulu\Bundle\PageBundle;
 
 use Jackalope\Property;
 use PHPCR\Migrations\VersionInterface;
+use PHPCR\PhpcrMigrationsBundle\ContainerAwareInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use Sulu\Component\PHPCR\NodeTypes\Content\HomeNodeType;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Version201504271608 implements VersionInterface, ContainerAwareInterface
 {
+    /**
+     * @var ContainerInterface
+     */
     private $container;
 
-    public function setContainer(?ContainerInterface $container = null)
+    public function setContainer(?ContainerInterface $container = null): void
     {
         $this->container = $container;
     }

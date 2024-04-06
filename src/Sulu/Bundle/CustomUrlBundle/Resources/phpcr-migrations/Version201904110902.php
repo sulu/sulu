@@ -13,13 +13,21 @@ namespace Sulu\Bundle\CustomUrlBundle;
 
 use PHPCR\Migrations\VersionInterface;
 use PHPCR\NodeInterface;
+use PHPCR\PhpcrMigrationsBundle\ContainerAwareInterface;
 use PHPCR\SessionInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Version201904110902 implements VersionInterface, ContainerAwareInterface
 {
-    use ContainerAwareTrait;
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    public function setContainer(?ContainerInterface $container = null): void
+    {
+        $this->container = $container;
+    }
 
     public function up(SessionInterface $session)
     {
