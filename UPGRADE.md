@@ -14,6 +14,12 @@ Removing unused arguments:
 
 - `Sulu\Component\Webspace\Analyzer\Attributes\WebsiteRequestProcessor::__construct` `$contentMapper` (2nd argument) removed
 
+Classes implementing the `DocumentFixtureInterface` have to update the load method signature:
+```diff
+-    public function load(DocumentManager $documentManager): void
++    public function load(DocumentManagerInterface $documentManager): void
+```
+
 ## 2.6.0
 
 ### PHP 8.2 upgrade
