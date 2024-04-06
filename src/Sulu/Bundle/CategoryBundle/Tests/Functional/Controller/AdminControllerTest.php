@@ -26,10 +26,10 @@ class AdminControllerTest extends SuluTestCase
 
         $form = $response->form;
 
-        $this->assertObjectHasAttribute('name', $form);
-        $this->assertObjectHasAttribute('key', $form);
-        $this->assertObjectHasAttribute('description', $form);
-        $this->assertObjectHasAttribute('medias', $form);
+        $this->assertTrue(\property_exists($form, 'name'));
+        $this->assertTrue(\property_exists($form, 'key'));
+        $this->assertTrue(\property_exists($form, 'description'));
+        $this->assertTrue(\property_exists($form, 'medias'));
 
         $schema = $response->schema;
 

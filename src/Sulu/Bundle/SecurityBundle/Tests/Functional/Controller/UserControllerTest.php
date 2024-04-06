@@ -253,7 +253,7 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals(4, \count($response->_embedded->users));
         $this->assertEquals('admin', $response->_embedded->users[0]->username);
         $this->assertEquals('admin@test.com', $response->_embedded->users[0]->email);
-        $this->assertObjectNotHasAttribute('password', $response->_embedded->users[0]);
+        $this->assertFalse(\property_exists($response->_embedded->users[0], 'password'));
         $this->assertEquals('de', $response->_embedded->users[0]->locale);
     }
 
@@ -265,7 +265,7 @@ class UserControllerTest extends SuluTestCase
 
         $this->assertEquals('admin', $response->username);
         $this->assertEquals('admin@test.com', $response->email);
-        $this->assertObjectNotHasAttribute('password', $response);
+        $this->assertFalse(\property_exists($response, 'password'));
         $this->assertEquals('de', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('Role2', $response->userRoles[1]->role->name);
@@ -860,7 +860,7 @@ class UserControllerTest extends SuluTestCase
 
         $this->assertEquals($this->user1->getId(), $response->id);
         $this->assertEquals('admin', $response->username);
-        $this->assertObjectNotHasAttribute('password', $response);
+        $this->assertFalse(\property_exists($response, 'password'));
 
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);
         $this->assertEquals('Sulu', $response->userRoles[0]->role->system);
@@ -902,7 +902,7 @@ class UserControllerTest extends SuluTestCase
 
         $this->assertNotNull($adminUser);
         $this->assertEquals('admin', $adminUser->username);
-        $this->assertObjectNotHasAttribute('password', $adminUser);
+        $this->assertFalse(\property_exists($adminUser, 'password'));
         $this->assertEquals('de', $adminUser->locale);
     }
 
@@ -919,17 +919,17 @@ class UserControllerTest extends SuluTestCase
         $user = $users[0];
         $contact = $user->contact;
 
-        $this->assertObjectNotHasAttribute('account', $contact);
-        $this->assertObjectNotHasAttribute('phones', $contact);
-        $this->assertObjectNotHasAttribute('faxes', $contact);
-        $this->assertObjectNotHasAttribute('position', $contact);
-        $this->assertObjectNotHasAttribute('addresses', $contact);
-        $this->assertObjectNotHasAttribute('notes', $contact);
-        $this->assertObjectNotHasAttribute('tags', $contact);
-        $this->assertObjectNotHasAttribute('medias', $contact);
-        $this->assertObjectNotHasAttribute('categories', $contact);
-        $this->assertObjectNotHasAttribute('urls', $contact);
-        $this->assertObjectNotHasAttribute('bankAccounts', $contact);
+        $this->assertFalse(\property_exists($contact, 'account'));
+        $this->assertFalse(\property_exists($contact, 'phones'));
+        $this->assertFalse(\property_exists($contact, 'faxes'));
+        $this->assertFalse(\property_exists($contact, 'position'));
+        $this->assertFalse(\property_exists($contact, 'addresses'));
+        $this->assertFalse(\property_exists($contact, 'notes'));
+        $this->assertFalse(\property_exists($contact, 'tags'));
+        $this->assertFalse(\property_exists($contact, 'medias'));
+        $this->assertFalse(\property_exists($contact, 'categories'));
+        $this->assertFalse(\property_exists($contact, 'urls'));
+        $this->assertFalse(\property_exists($contact, 'bankAccounts'));
     }
 
     public function testPutWithRemovedRoles(): void
@@ -1062,7 +1062,7 @@ class UserControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertObjectNotHasAttribute('password', $response);
+        $this->assertFalse(\property_exists($response, 'password'));
     }
 
     public function testPutWithEmptyPassword(): void
@@ -1099,7 +1099,7 @@ class UserControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals('manager', $response->username);
-        $this->assertObjectNotHasAttribute('password', $response);
+        $this->assertFalse(\property_exists($response, 'password'));
         $this->assertEquals($this->contact1->getId(), $response->contact->id);
         $this->assertEquals('en', $response->locale);
         $this->assertEquals('Role1', $response->userRoles[0]->role->name);

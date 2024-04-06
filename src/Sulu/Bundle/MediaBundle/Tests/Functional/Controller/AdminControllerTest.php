@@ -39,8 +39,8 @@ class AdminControllerTest extends SuluTestCase
 
         $form = $response->form;
 
-        $this->assertObjectHasAttribute('title', $form);
-        $this->assertObjectHasAttribute('description', $form);
+        $this->assertTrue(\property_exists($form, 'title'));
+        $this->assertTrue(\property_exists($form, 'description'));
 
         $schema = $response->schema;
 
@@ -57,14 +57,14 @@ class AdminControllerTest extends SuluTestCase
         $response = \json_decode($client->getResponse()->getContent());
 
         $form = $response->form;
-        $this->assertObjectHasAttribute('media_upload', $form);
-        $this->assertObjectHasAttribute('media_details', $form);
+        $this->assertTrue(\property_exists($form, 'media_upload'));
+        $this->assertTrue(\property_exists($form, 'media_details'));
 
         $items = $form->media_details->items;
-        $this->assertObjectHasAttribute('title', $items);
-        $this->assertObjectHasAttribute('description', $items);
-        $this->assertObjectHasAttribute('license', $items);
-        $this->assertObjectHasAttribute('taxonomies', $items);
+        $this->assertTrue(\property_exists($items, 'title'));
+        $this->assertTrue(\property_exists($items, 'description'));
+        $this->assertTrue(\property_exists($items, 'license'));
+        $this->assertTrue(\property_exists($items, 'taxonomies'));
 
         $schema = $response->schema;
 

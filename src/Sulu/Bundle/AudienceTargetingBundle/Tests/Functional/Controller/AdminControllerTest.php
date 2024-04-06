@@ -51,8 +51,8 @@ class AdminControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
 
-        $this->assertObjectHasAttribute('id', $response);
-        $this->assertObjectHasAttribute('title', $response);
+        $this->assertTrue(\property_exists($response, 'id'));
+        $this->assertTrue(\property_exists($response, 'title'));
 
         $this->assertEquals('ID', $response->id->label);
         $this->assertEquals('string', $response->id->type);
