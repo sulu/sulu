@@ -138,6 +138,18 @@ Use the newly added `getUrl` method:
 As deprecated in Symfony 6.1 the `$defaultName` of Sulu Commands were replaced with the new
 `Symfony\Component\Console\Attribute\AsCommand` annotation.
 
+### Jackalope 2 ContentRepository compatibility
+
+To be compatible with Jackalope 2 the following method in the `ContentRepository` class
+has changed:
+
+```diff
+public function resolveInternalLinkContent(
+-    Row $row,
++    RowInterface $row,
+     $locale,
+```
+
 ### ListBuilder Doctrine Changes
 
 Bundle aliases where deprecated by [`doctrine/persistence` 3.0](https://github.com/doctrine/persistence/blob/3.2.0/UPGRADE.md#bc-break-removed-support-for-short-namespace-aliases) the full FQCN need to be used when upgrading to `doctrine/persistence:^3.0`:
