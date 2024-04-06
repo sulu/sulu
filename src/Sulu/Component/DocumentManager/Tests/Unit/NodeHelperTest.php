@@ -82,7 +82,7 @@ class NodeHelperTest extends TestCase
     {
         /** @var ObjectProphecy<Workspace> $workspace */
         $workspace = $this->prophesize(Workspace::class);
-    $this->session->getWorkspace()->willReturn($workspace->reveal());
+        $this->session->getWorkspace()->willReturn($workspace->reveal());
         $identifier = UUIDHelper::generateUUID();
 
         $destinationNode = $this->prophesize(NodeInterface::class);
@@ -100,8 +100,8 @@ class NodeHelperTest extends TestCase
     {
         /** @var Workspace $workspace */
         $workspace = $this->prophesize(Workspace::class);
-    $this->session->getWorkspace()->willReturn($workspace->reveal());
-        $identifier=UUIDHelper::generateUUID();
+        $this->session->getWorkspace()->willReturn($workspace->reveal());
+        $identifier = UUIDHelper::generateUUID();
 
         $destinationNode = $this->prophesize(NodeInterface::class);
         $destinationNode->getPath()->willReturn('/path/to/some/other/node');

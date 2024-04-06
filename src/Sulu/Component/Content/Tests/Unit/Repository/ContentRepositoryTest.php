@@ -112,7 +112,7 @@ class ContentRepositoryTest extends TestCase
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
         $this->propertyEncoder = $this->prophesize(PropertyEncoder::class);
         $this->propertyEncoder->localizedContentName(Argument::type('string'), Argument::type('string'))
-            ->will(fn ($args) => 'i18n-'.$args[1].'-'.$args[0]);
+            ->will(fn ($args) => 'i18n-' . $args[1] . '-' . $args[0]);
         $this->propertyEncoder->systemName('order')->willReturn('order');
 
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);

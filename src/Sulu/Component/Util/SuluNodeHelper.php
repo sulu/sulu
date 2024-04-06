@@ -326,10 +326,11 @@ class SuluNodeHelper
 
         while ($child = $children->current()) {
             if ($child->getPath() === $node->getPath()) {
-                if ($previous){
+                if ($previous) {
                     return $previousNode;
                 }
                 $children->next();
+
                 return $children->current();
             }
 
