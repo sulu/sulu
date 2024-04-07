@@ -49,7 +49,7 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
         foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
             $webspaceKey = $webspace->getKey();
 
-            $sql2 = \sprintf("SELECT jcr:uuid FROM [nt:unstructured] as document WHERE document.[jcr:mixinTypes] = 'sulu:%s'", 'page');
+            $sql2 = \sprintf("SELECT [jcr:uuid] FROM [nt:unstructured] as document WHERE document.[jcr:mixinTypes] = 'sulu:%s'", 'page');
             $sql2 .= \sprintf(" AND (isdescendantnode(document, '/cmf/%s/contents') OR issamenode(document, '/cmf/%s/contents'))", $webspaceKey, $webspaceKey);
 
             $queryManager = $this->session->getWorkspace()->getQueryManager();
