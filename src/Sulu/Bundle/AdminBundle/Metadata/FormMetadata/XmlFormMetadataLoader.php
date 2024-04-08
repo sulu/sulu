@@ -77,7 +77,7 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
         return $form;
     }
 
-    public function warmUp($cacheDir)
+    public function warmUp($cacheDir, ?string $buildDir = null): array
     {
         $formFinder = (new Finder())->in($this->formDirectories)->name('*.xml');
         $formsMetadataCollection = [];
@@ -130,7 +130,7 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
         }
     }
 
-    public function isOptional()
+    public function isOptional(): bool
     {
         return false;
     }

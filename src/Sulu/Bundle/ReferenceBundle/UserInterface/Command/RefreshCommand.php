@@ -45,7 +45,7 @@ class RefreshCommand extends Command
         $this->addArgument('resource-key', InputArgument::OPTIONAL, 'The resource key which should be refreshed');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $resourceKeyFilter = $input->getArgument('resource-key');
 
