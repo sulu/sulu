@@ -64,7 +64,7 @@ abstract class BaseDataProvider implements DataProviderInterface
     private $referenceStore;
 
     /**
-     * @var ?Security|SymfonyCoreSecurity
+     * @var Security|SymfonyCoreSecurity|null
      */
     private $security;
 

@@ -84,7 +84,7 @@ class AccessControlManagerTest extends TestCase
     private $accessControlRepository;
 
     /**
-     * @var ObjectProphecy<Security>
+     * @var ObjectProphecy<Security|SymfonyCoreSecurity>
      */
     private $security;
 

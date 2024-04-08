@@ -68,7 +68,7 @@ class AccessControlManager implements AccessControlManagerInterface
     private $accessControlRepository;
 
     /**
-     * @var Security|null
+     * @var Security|SymfonyCoreSecurity|null
      */
     private $security;
 

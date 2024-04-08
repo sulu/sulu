@@ -76,7 +76,7 @@ class MediaDataProviderTest extends TestCase
     private $mediaDataProvider;
 
     /**
-     * @var ObjectProphecy<Security>
+     * @var ObjectProphecy<Security|SymfonyCoreSecurity>
      */
     private $security;
 

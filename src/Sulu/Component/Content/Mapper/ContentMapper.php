@@ -149,7 +149,7 @@ class ContentMapper implements ContentMapperInterface
     private $permissions;
 
     /**
-     * @var ?Security|SymfonyCoreSecurity
+     * @var Security|SymfonyCoreSecurity|null
      */
     private $security;
 

@@ -1181,11 +1181,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\StructureFormMetadataLoader\\:\\:warmUp\\(\\) should return array\\<string\\> but return statement is missing\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
 			message: "#^Parameter \\#1 \\$data of function unserialize expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
@@ -1262,11 +1257,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\XmlFormMetadataLoader\\:\\:getMetadata\\(\\) should return Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\MetadataInterface\\|null but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\XmlFormMetadataLoader\\:\\:warmUp\\(\\) should return array\\<string\\> but return statement is missing\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
 
@@ -33581,11 +33571,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/AppCache.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Application\\\\AppCache\\:\\:registerContainerConfiguration\\(\\) with return type void returns mixed but should not return anything\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/AppCache.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Application\\\\AppCache\\:\\:serialize\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/AppCache.php
@@ -47081,6 +47066,11 @@ parameters:
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
 
 		-
+			message: "#^Parameter \\#6 \\$security of class Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider constructor expects Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\|null, object given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
+
+		-
 			message: "#^Method Sulu\\\\Component\\\\Media\\\\Tests\\\\Unit\\\\SystemCollections\\\\SystemCollectionManagerTest\\:\\:appendExistingCollection\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/Tests/Unit/SystemCollections/SystemCollectionManagerTest.php
@@ -50562,6 +50552,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$user of method Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlManager\\:\\:getUserPermissions\\(\\) expects Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null, string given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/AccessControlManagerTest.php
+
+		-
+			message: "#^Parameter \\#7 \\$security of class Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlManager constructor expects Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\|null, object given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/AccessControlManagerTest.php
 
