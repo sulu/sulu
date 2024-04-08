@@ -262,6 +262,18 @@ sulu_website:
 In the previous version the `SnippetController` would return the entire content of the snippet in the `cgetAction`. Now
 it respects the list of fields provided in the query parameter and only returns those.
 
+## 2.5.15
+
+### Change FileVersion default meta relation
+
+Currently, when removing the default meta, it did also remove the whole file version to avoid it following DB Change
+is required:
+
+```sql
+ALTER TABLE me_file_versions DROP FOREIGN KEY FK_7B6E89456B801096
+ALTER TABLE me_file_versions ADD CONSTRAINT FK_7B6E89456B801096 FOREIGN KEY (idFileVersionsMetaDefault) REFERENCES me_file_version_meta (id) ON DELETE SET NULL
+```
+
 ## 2.5.12
 
 ### Hidden blocks wont be indexed anymore
@@ -627,6 +639,18 @@ framework:
 
 It should also be considered to remove the **SwiftMailer** and **SwiftMailerBundle**
 from your application and replace it with [**Symfony Mailer**](https://symfony.com/doc/6.1/mailer.html).
+
+## 2.4.17
+
+### Change FileVersion default meta relation
+
+Currently, when removing the default meta, it did also remove the whole file version to avoid it following DB Change
+is required:
+
+```sql
+ALTER TABLE me_file_versions DROP FOREIGN KEY FK_7B6E89456B801096
+ALTER TABLE me_file_versions ADD CONSTRAINT FK_7B6E89456B801096 FOREIGN KEY (idFileVersionsMetaDefault) REFERENCES me_file_version_meta (id) ON DELETE SET NULL
+```
 
 ## 2.4.16
 

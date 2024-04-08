@@ -22862,7 +22862,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'shadowOn' on mixed\\.$#"
-			count: 5
+			count: 3
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -22872,7 +22872,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'template' on mixed\\.$#"
-			count: 3
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -22997,7 +22997,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 88
+			count: 86
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -23453,11 +23453,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method object\\:\\:setTitle\\(\\)\\.$#"
 			count: 2
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Document/Subscriber/ShadowCopyPropertiesSubscriberTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, mixed given\\.$#"
-			count: 4
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Document/Subscriber/ShadowCopyPropertiesSubscriberTest.php
 
 		-
@@ -38156,16 +38151,6 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Subscriber/SecuritySubscriber.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getLocale\\(\\)\\.$#"
-			count: 7
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getShadowLocale\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:isShadowLocaleEnabled\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
@@ -38182,56 +38167,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:copyToShadows\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getCategories\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getCategories\\(\\) should return array but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getLocale\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getLocale\\(\\) has parameter \\$propertyName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getNavigationContext\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getNavigationContext\\(\\) should return array but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getTags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getTags\\(\\) should return array but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:supports\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:supports\\(\\) has parameter \\$document with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
 

@@ -44,6 +44,17 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
         $this->subscriber = new ShadowCopyPropertiesSubscriber($this->encoder->reveal());
     }
 
+    public function testGetSubscribedEvents(): void
+    {
+        $this->assertSame(
+            [
+                'sulu_document_manager.persist' => ['copyShadowProperties', -256],
+                'sulu_document_manager.publish' => ['copyShadowProperties', -256],
+            ],
+            ShadowCopyPropertiesSubscriber::getSubscribedEvents()
+        );
+    }
+
     public function testCopyToShadows(): void
     {
         $property = $this->prophesize(PropertyInterface::class);
@@ -54,13 +65,21 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
 
         $this->node->getPropertyValueWithDefault('i18n:de-shadow-on', false)->willReturn(true);
 
+        $authored = new \DateTime('now');
+
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-tags', [])->willReturn([1, 2, 3]);
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-categories', [])->willReturn([3, 2, 1]);
         $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']);
+        $this->node->getPropertyValueWithDefault('i18n:en-author', null)->willReturn(12);
+        $this->node->getPropertyValueWithDefault('i18n:en-authored', null)->willReturn($authored);
+        $this->node->getPropertyValueWithDefault('i18n:en-template', null)->willReturn('test');
 
         $this->node->setProperty('i18n:de-excerpt-tags', [1, 2, 3])->shouldBeCalled();
         $this->node->setProperty('i18n:de-excerpt-categories', [3, 2, 1])->shouldBeCalled();
         $this->node->setProperty('i18n:de-navContexts', ['main'])->shouldBeCalled();
+        $this->node->setProperty('i18n:de-author', 12)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-authored', $authored)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-template', 'test')->shouldBeCalled();
 
         $this->node->getProperties('i18n:*-shadow-base')->willReturn(['i18n:de-shadow-base' => $property->reveal()]);
 
@@ -77,13 +96,21 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
 
         $this->node->getPropertyValueWithDefault('i18n:de-shadow-on', false)->willReturn(false);
 
+        $authored = new \DateTime('now');
+
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-tags', [])->willReturn([1, 2, 3]);
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-categories', [])->willReturn([3, 2, 1]);
         $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']);
+        $this->node->getPropertyValueWithDefault('i18n:en-author', null)->willReturn(12);
+        $this->node->getPropertyValueWithDefault('i18n:en-authored', null)->willReturn($authored);
+        $this->node->getPropertyValueWithDefault('i18n:en-template', null)->willReturn('test');
 
         $this->node->setProperty('i18n:de-excerpt-tags', [1, 2, 3])->shouldNotBeCalled();
         $this->node->setProperty('i18n:de-excerpt-categories', [3, 2, 1])->shouldNotBeCalled();
         $this->node->setProperty('i18n:de-navContexts', ['main'])->shouldNotBeCalled();
+        $this->node->setProperty('i18n:de-author', 12)->shouldNotBeCalled();
+        $this->node->setProperty('i18n:de-authored', $authored)->shouldNotBeCalled();
+        $this->node->setProperty('i18n:de-template', 'test')->shouldNotBeCalled();
 
         $this->node->getProperties('i18n:*-shadow-base')->willReturn(['i18n:de-shadow-base' => $property->reveal()]);
 
@@ -105,17 +132,28 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
         $this->node->getPropertyValueWithDefault('i18n:de-shadow-on', false)->willReturn(true);
         $this->node->getPropertyValueWithDefault('i18n:en_us-shadow-on', false)->willReturn(true);
 
+        $authored = new \DateTime('now');
+
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-tags', [])->willReturn([1, 2, 3]);
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-categories', [])->willReturn([3, 2, 1]);
         $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']);
+        $this->node->getPropertyValueWithDefault('i18n:en-author', null)->willReturn(12);
+        $this->node->getPropertyValueWithDefault('i18n:en-authored', null)->willReturn($authored);
+        $this->node->getPropertyValueWithDefault('i18n:en-template', null)->willReturn('test');
 
         $this->node->setProperty('i18n:de-excerpt-tags', [1, 2, 3])->shouldBeCalled();
         $this->node->setProperty('i18n:de-excerpt-categories', [3, 2, 1])->shouldBeCalled();
         $this->node->setProperty('i18n:de-navContexts', ['main'])->shouldBeCalled();
+        $this->node->setProperty('i18n:de-author', 12)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-authored', $authored)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-template', 'test')->shouldBeCalled();
 
         $this->node->setProperty('i18n:en_us-excerpt-tags', [1, 2, 3])->shouldBeCalled();
         $this->node->setProperty('i18n:en_us-excerpt-categories', [3, 2, 1])->shouldBeCalled();
         $this->node->setProperty('i18n:en_us-navContexts', ['main'])->shouldBeCalled();
+        $this->node->setProperty('i18n:en_us-author', 12)->shouldBeCalled();
+        $this->node->setProperty('i18n:en_us-authored', $authored)->shouldBeCalled();
+        $this->node->setProperty('i18n:en_us-template', 'test')->shouldBeCalled();
 
         $this->node->getProperties('i18n:*-shadow-base')->willReturn(['i18n:de-shadow-base' => $property1->reveal(), 'i18n:en_us-shadow-base' => $property2->reveal()]);
 
@@ -127,13 +165,21 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
         $this->document->getShadowLocale()->willReturn('en');
         $this->document->getLocale()->willReturn('de');
 
+        $authored = new \DateTime('now');
+
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-tags', [])->willReturn([1, 2, 3]);
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-categories', [])->willReturn([3, 2, 1]);
         $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']);
+        $this->node->getPropertyValueWithDefault('i18n:en-author', null)->willReturn(12);
+        $this->node->getPropertyValueWithDefault('i18n:en-authored', null)->willReturn($authored);
+        $this->node->getPropertyValueWithDefault('i18n:en-template', null)->willReturn('test');
 
         $this->node->setProperty('i18n:de-excerpt-tags', [1, 2, 3])->shouldBeCalled();
         $this->node->setProperty('i18n:de-excerpt-categories', [3, 2, 1])->shouldBeCalled();
         $this->node->setProperty('i18n:de-navContexts', ['main'])->shouldBeCalled();
+        $this->node->setProperty('i18n:de-author', 12)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-authored', $authored)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-template', 'test')->shouldBeCalled();
 
         $this->subscriber->copyFromShadow($this->document->reveal(), $this->node->reveal());
     }
@@ -145,13 +191,21 @@ class ShadowCopyPropertiesSubscriberTest extends SubscriberTestCase
         $this->document->getShadowLocale()->willReturn('en');
         $this->document->getLocale()->willReturn('de');
 
+        $authored = new \DateTime('now');
+
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-tags', [])->willReturn([1, 2, 3]);
         $this->node->getPropertyValueWithDefault('i18n:en-excerpt-categories', [])->willReturn([3, 2, 1]);
         $this->node->getPropertyValueWithDefault('i18n:en-navContexts', [])->willReturn(['main']);
+        $this->node->getPropertyValueWithDefault('i18n:en-author', null)->willReturn(12);
+        $this->node->getPropertyValueWithDefault('i18n:en-authored', null)->willReturn($authored);
+        $this->node->getPropertyValueWithDefault('i18n:en-template', null)->willReturn('test');
 
         $this->node->setProperty('i18n:de-excerpt-tags', [1, 2, 3])->shouldBeCalled();
         $this->node->setProperty('i18n:de-excerpt-categories', [3, 2, 1])->shouldBeCalled();
         $this->node->setProperty('i18n:de-navContexts', ['main'])->shouldBeCalled();
+        $this->node->setProperty('i18n:de-author', 12)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-authored', $authored)->shouldBeCalled();
+        $this->node->setProperty('i18n:de-template', 'test')->shouldBeCalled();
 
         $this->persistEvent->getDocument()->willReturn($this->document->reveal());
         $this->persistEvent->getNode()->willReturn($this->node->reveal());
