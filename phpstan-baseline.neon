@@ -10881,11 +10881,6 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
 
 		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CustomUrlBundle\\\\Version201904110902\\:\\:down\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
@@ -21071,11 +21066,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504271608.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Version201504271608\\:\\:\\$container has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504271608.php
-
-		-
 			message: "#^Cannot call method getIdentifier\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
@@ -21097,11 +21087,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$id of method PHPCR\\\\SessionInterface\\:\\:getNodeByIdentifier\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Version201504281842\\:\\:\\$container has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
 
@@ -21161,11 +21146,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Version201507231648\\:\\:\\$container \\(Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\) does not accept Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
-
-		-
 			message: "#^In method \"Sulu\\\\Bundle\\\\PageBundle\\\\Version201507281529\\:\\:migrateExternalLinks\", caught \"Exception\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507281529.php
@@ -21177,11 +21157,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201507281529\\:\\:migrateExternalLinks\\(\\) has parameter \\$directionUp with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507281529.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Version201507281529\\:\\:\\$container \\(Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\) does not accept Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507281529.php
 
@@ -21278,11 +21253,6 @@ parameters:
 		-
 			message: "#^Cannot call method format\\(\\) on string\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 5
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
 
 		-
@@ -21486,11 +21456,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
 
 		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 5
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201511240844\\:\\:findUrlBlockProperties\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
@@ -21591,18 +21556,8 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201607181533.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Version201607181533\\:\\:\\$container \\(Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\) does not accept Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201607181533.php
-
-		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\:\\:getContact\\(\\)\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 6
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
 
 		-
@@ -21619,11 +21574,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserRepositoryInterface\\:\\:findUserById\\(\\) expects int, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201903271333\\:\\:downgrade\\(\\) has no return type specified\\.$#"
@@ -21646,11 +21596,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
 
 		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201905071542\\:\\:downgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
@@ -21659,11 +21604,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201905071542\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
-
-		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005191116.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version202005191116\\:\\:downgrade\\(\\) has no return type specified\\.$#"
@@ -21676,11 +21616,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005191116.php
 
 		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version202005250917\\:\\:downgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
@@ -21689,11 +21624,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version202005250917\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
-
-		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202105311447.php
 
 		-
 			message: "#^Cannot access property \\$headers on Symfony\\\\Component\\\\HttpFoundation\\\\Request\\|null\\.$#"
@@ -23261,11 +23191,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Controller\\\\SmartContentItemControllerTest\\:\\:\\$session \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Controller\\\\SmartContentItemControllerTest\\:\\:\\$structureManager is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
@@ -23706,11 +23631,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$identifier of method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:find\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
-
-		-
 			message: "#^Parameter \\#1 \\$shadowLocaleEnabled of method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\ShadowLocaleBehavior\\:\\:setShadowLocaleEnabled\\(\\) expects bool, bool\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
@@ -23842,11 +23762,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Mapper\\\\ContentMapperSnippetTest\\:\\:\\$parent \\(Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\HomeDocument\\) does not accept object\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperSnippetTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Mapper\\\\ContentMapperSnippetTest\\:\\:\\$session \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperSnippetTest.php
 
@@ -24972,11 +24887,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Search\\\\BaseTestCase\\:\\:\\$homeDocument \\(Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\HomeDocument\\) does not accept object\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Search/BaseTestCase.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Search\\\\BaseTestCase\\:\\:\\$session \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Search/BaseTestCase.php
 
@@ -26622,6 +26532,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\RouteBundle\\\\Entity\\\\RouteRepositoryInterface\\:\\:find\\(\\) expects int, string given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/RouteBundle/Routing/RouteProvider.php
+
+		-
+			message: "#^Parameter \\#1 \\$path of method Sulu\\\\Bundle\\\\RouteBundle\\\\Routing\\\\RouteProvider\\:\\:stripFormatExtension\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Routing/RouteProvider.php
 
@@ -30381,7 +30296,7 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\SnippetRepository\\:\\:getSnippetsQuery\\(\\) should return Jackalope\\\\Query\\\\Query but returns PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelInterface\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\SnippetRepository\\:\\:getSnippetsQuery\\(\\) should return Jackalope\\\\Query\\\\Query but returns PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
 
@@ -30392,7 +30307,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$operand2 of method PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelFactoryInterface\\:\\:comparison\\(\\) expects PHPCR\\\\Query\\\\QOM\\\\StaticOperandInterface, mixed given\\.$#"
-			count: 2
+			count: 3
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
 
 		-
@@ -30568,11 +30483,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, mixed given\\.$#"
 			count: 11
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Content\\\\SnippetContentTest\\:\\:\\$session \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
 
 		-
@@ -30861,11 +30771,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Controller\\\\SnippetControllerTest\\:\\:\\$phpcrSession \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerTest.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Controller\\\\SnippetControllerTest\\:\\:\\$phpcrSession is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerTest.php
@@ -30992,11 +30897,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Content\\\\SnippetRepositoryTest\\:\\:testGetSnippetsByUuids\\(\\) has parameter \\$snippets with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Content\\\\SnippetRepositoryTest\\:\\:\\$phpcrSession \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
 
@@ -31813,11 +31713,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
 			count: 19
-			path: src/Sulu/Bundle/TagBundle/Tests/Functional/Controller/TagControllerTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\TagBundle\\\\Tests\\\\Functional\\\\Controller\\\\TagControllerTest\\:\\:\\$session \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tests/Functional/Controller/TagControllerTest.php
 
 		-
@@ -41301,17 +41196,7 @@ parameters:
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Repository\\\\ContentRepository\\:\\:getPropertyName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Repository\\\\ContentRepository\\:\\:getPropertyName\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Repository\\\\ContentRepository\\:\\:getPropertyName\\(\\) has parameter \\$propertyName with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
@@ -41356,16 +41241,6 @@ parameters:
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
 		-
-			message: "#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(PHPCR\\\\Query\\\\RowInterface\\)\\: mixed\\)\\|null, Closure\\(Jackalope\\\\Query\\\\Row\\)\\: string given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(PHPCR\\\\Query\\\\RowInterface, int\\|string\\)\\: mixed\\)\\|null, Closure\\(Jackalope\\\\Query\\\\Row, mixed\\)\\: \\(Sulu\\\\Component\\\\Content\\\\Repository\\\\Content\\|null\\) given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
 			message: "#^Parameter \\#1 \\$localization of static method Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureType\\:\\:getShadow\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
@@ -41377,11 +41252,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$path of method Sulu\\\\Component\\\\Util\\\\SuluNodeHelper\\:\\:extractWebspaceFromPath\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\$row of method Sulu\\\\Component\\\\Content\\\\Repository\\\\ContentRepository\\:\\:resolveContent\\(\\) expects Jackalope\\\\Query\\\\Row, PHPCR\\\\Query\\\\RowInterface given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
@@ -41417,7 +41287,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$operand2 of method PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelFactoryInterface\\:\\:comparison\\(\\) expects PHPCR\\\\Query\\\\QOM\\\\StaticOperandInterface, mixed given\\.$#"
-			count: 4
+			count: 5
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
 		-
@@ -43511,11 +43381,6 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Document/Subscriber/CustomUrlSubscriber.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Document\\\\Subscriber\\\\InvalidationSubscriber\\:\\:getUrlWithScheme\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Document/Subscriber/InvalidationSubscriber.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Document\\\\Subscriber\\\\InvalidationSubscriber\\:\\:invalidateCustomUrlDocument\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Document/Subscriber/InvalidationSubscriber.php
@@ -43542,6 +43407,11 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Document\\\\Subscriber\\\\InvalidationSubscriber\\:\\:invalidateRouteDocument\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Sulu/Component/CustomUrl/Document/Subscriber/InvalidationSubscriber.php
+
+		-
+			message: "#^Parameter \\#1 \\$url of method Sulu\\\\Component\\\\CustomUrl\\\\Document\\\\Subscriber\\\\InvalidationSubscriber\\:\\:getUrlWithScheme\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Document/Subscriber/InvalidationSubscriber.php
 
@@ -43741,17 +43611,7 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Manager/TitleAlreadyExistsException.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Repository\\\\CustomUrlRepository\\:\\:createBaseDomainQuery\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Repository/CustomUrlRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Repository\\\\CustomUrlRepository\\:\\:createBaseDomainQuery\\(\\) has parameter \\$baseDomains with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Repository/CustomUrlRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Repository\\\\CustomUrlRepository\\:\\:findList\\(\\) has parameter \\$baseDomains with no value type specified in iterable type array\\.$#"
+			message: "#^Cannot call method execute\\(\\) on PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Repository/CustomUrlRepository.php
 
@@ -43797,7 +43657,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$operand2 of method PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelFactoryInterface\\:\\:comparison\\(\\) expects PHPCR\\\\Query\\\\QOM\\\\StaticOperandInterface, mixed given\\.$#"
-			count: 2
+			count: 4
 			path: src/Sulu/Component/CustomUrl/Repository/CustomUrlRepository.php
 
 		-
@@ -46044,11 +45904,6 @@ parameters:
 			message: "#^Property Sulu\\\\Component\\\\DocumentManager\\\\Tests\\\\Unit\\\\TestDocumentManagerSubscriber\\:\\:\\$unpublish has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
-
-		-
-			message: "#^Call to an undefined method Jackalope\\\\Workspace\\:\\:reveal\\(\\)\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/NodeHelperTest.php
 
 		-
 			message: "#^Method PHPUnit\\\\Framework\\\\TestCase\\:\\:expectException\\(\\) invoked with 2 parameters, 1 required\\.$#"
@@ -51896,23 +51751,8 @@ parameters:
 			path: src/Sulu/Component/Util/SuluNodeHelper.php
 
 		-
-			message: "#^Offset string on string in isset\\(\\) does not exist\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function array_keys expects array, string given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
 			message: "#^Parameter \\#2 \\$haystack of function in_array expects array, mixed given\\.$#"
 			count: 3
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Util\\\\SuluNodeHelper\\:\\:\\$paths \\(string\\) does not accept array\\.$#"
-			count: 1
 			path: src/Sulu/Component/Util/SuluNodeHelper.php
 
 		-

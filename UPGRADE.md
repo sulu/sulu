@@ -138,6 +138,61 @@ Use the newly added `getUrl` method:
 As deprecated in Symfony 6.1 the `$defaultName` of Sulu Commands were replaced with the new
 `Symfony\Component\Console\Attribute\AsCommand` annotation.
 
+### Jackalope 2 ContentRepository compatibility
+
+To be compatible with Jackalope 2 the following method in the `ContentRepository` class
+has changed:
+
+```diff
+public function resolveInternalLinkContent(
+-    Row $row,
++    RowInterface $row,
+     $locale,
+```
+
+### PHPCR and Jackalope update
+
+An update of PHPCR and Jackalope to latest major version is optional but recommended.   
+The following new versions are supported by Sulu:
+
+ - `doctrine/phpcr-bundle`: `^3.0`
+ - `phpcr/phpcr-utils`: `^2.0`
+ - `jackalope/jackalope`: `^2.0`
+ - `jackalope/jackalope-doctrine-dbal`: `^2.0`
+ - `jackalope/jackalope-jackrabbit`: `^2.0`
+
+In case of upgrading the `sulu_document_manager.yaml` cache configuration need to be changed:
+
+```diff
+# config/packages/sulu_document_manager.yaml
+
+when@prod: &prod
+    # ...
+
+    services:
+        doctrine_phpcr.meta_cache_provider:
+-           class: Doctrine\Common\Cache\Psr6\DoctrineProvider
+-           factory: ['Doctrine\Common\Cache\Psr6\DoctrineProvider', 'wrap']
++           class: Symfony\Component\Cache\Psr16Cache
+            public: false
+            arguments:
+                - '@doctrine_phpcr.meta_cache_pool'
+            tags:
+                - { name: 'kernel.reset', method: 'reset' }
+
+        doctrine_phpcr.nodes_cache_provider:
+-           class: Doctrine\Common\Cache\Psr6\DoctrineProvider
+-           factory: ['Doctrine\Common\Cache\Psr6\DoctrineProvider', 'wrap']
++           class: Symfony\Component\Cache\Psr16Cache
+            public: false
+            arguments:
+                - '@doctrine_phpcr.nodes_cache_pool'
+            tags:
+                - { name: 'kernel.reset', method: 'reset' }
+
+# ...
+```
+
 ### ListBuilder Doctrine Changes
 
 Bundle aliases where deprecated by [`doctrine/persistence` 3.0](https://github.com/doctrine/persistence/blob/3.2.0/UPGRADE.md#bc-break-removed-support-for-short-namespace-aliases) the full FQCN need to be used when upgrading to `doctrine/persistence:^3.0`:
