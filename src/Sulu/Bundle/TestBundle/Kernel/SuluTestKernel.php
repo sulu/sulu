@@ -135,7 +135,7 @@ class SuluTestKernel extends SuluKernel
     /**
      * @return void
      */
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(SuluTestBundle::getConfigDir() . '/config.php');
 
