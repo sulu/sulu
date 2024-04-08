@@ -395,7 +395,7 @@ class BaseDataProviderTest extends TestCase
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
 
-        $security = $this->prophesize(Security::class);
+        $security = $this->prophesize(\class_exists(Security::class) ? Security::class : SymfonyCoreSecurity::class);
         $security->getUser()->willReturn($user->reveal());
 
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
