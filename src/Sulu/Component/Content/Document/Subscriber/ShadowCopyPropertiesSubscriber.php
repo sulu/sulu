@@ -34,6 +34,12 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
 
     public const NAVIGATION_CONTEXT_PROPERTY = 'i18n:%s-navContexts';
 
+    public const AUTHOR_PROPERTY = 'i18n:%s-author';
+
+    public const AUTHORED_PROPERTY = 'i18n:%s-authored';
+
+    public const TEMPLATE_PROPERTY = 'i18n:%s-template';
+
     /**
      * @var PropertyEncoder
      */
@@ -48,7 +54,7 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
     {
         return [
             Events::PERSIST => ['copyShadowProperties', -256],
-            Events::PUBLISH => 'copyShadowProperties',
+            Events::PUBLISH => ['copyShadowProperties', -256],
         ];
     }
 
@@ -57,40 +63,55 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
      */
     public function copyShadowProperties(AbstractMappingEvent $event)
     {
+        if (!$this->supports($event->getDocument())) {
+            return;
+        }
+
+        /** @var ShadowLocaleBehavior&LocaleBehavior $document */
         $document = $event->getDocument();
 
-        if (!$this->supports($document)) {
+        /** @var string|null $documentLocale */
+        $documentLocale = $document->getLocale();
+        if (null === $documentLocale) {
             return;
         }
 
         if (!$event->getDocument()->isShadowLocaleEnabled()) {
-            $this->copyToShadows($event->getDocument(), $event->getNode());
+            $this->copyToShadows($document, $event->getNode());
         } else {
-            $this->copyFromShadow($event->getDocument(), $event->getNode());
+            $this->copyFromShadow($document, $event->getNode());
         }
     }
 
     /**
      * Copy tags and categories from current locale to all shadowed pages with this locale as base-locale.
      *
-     * @param object $document
+     * @param ShadowLocaleBehavior&LocaleBehavior $document
      */
     public function copyToShadows($document, NodeInterface $node)
     {
-        $tags = $this->getTags($node, $document->getLocale());
-        $categories = $this->getCategories($node, $document->getLocale());
-        $navigationContext = $this->getNavigationContext($node, $document->getLocale());
+        $documentLocale = $document->getLocale();
+
+        $tags = $this->getTags($node, $documentLocale);
+        $categories = $this->getCategories($node, $documentLocale);
+        $navigationContext = $this->getNavigationContext($node, $documentLocale);
+        $author = $this->getAuthor($node, $documentLocale);
+        $authored = $this->getAuthored($node, $documentLocale);
+        $template = $this->getTemplate($node, $documentLocale);
 
         foreach ($node->getProperties(self::SHADOW_BASE_PROPERTY) as $name => $property) {
             $locale = $this->getLocale($name);
             if ($node->getPropertyValueWithDefault(\sprintf(self::SHADOW_ON_PROPERTY, $locale), false)
-                && $property->getValue() === $document->getLocale()
+                && $property->getValue() === $documentLocale
             ) {
                 $locale = $this->getLocale($property->getName());
 
                 $node->setProperty(\sprintf(self::TAGS_PROPERTY, $locale), $tags);
                 $node->setProperty(\sprintf(self::CATEGORIES_PROPERTY, $locale), $categories);
                 $node->setProperty(\sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $locale), $navigationContext);
+                $node->setProperty(\sprintf(self::AUTHOR_PROPERTY, $locale), $author);
+                $node->setProperty(\sprintf(self::AUTHORED_PROPERTY, $locale), $authored);
+                $node->setProperty(\sprintf(self::TEMPLATE_PROPERTY, $locale), $template);
             }
         }
     }
@@ -98,74 +119,113 @@ class ShadowCopyPropertiesSubscriber implements EventSubscriberInterface
     /**
      * Copy tags and categories from base-locale to current locale.
      *
-     * @param object $document
+     * @param ShadowLocaleBehavior&LocaleBehavior $document
      */
     public function copyFromShadow($document, NodeInterface $node)
     {
+        /** @var string $shadowLocale */
         $shadowLocale = $document->getShadowLocale();
+        /** @var string $locale */
+        $locale = $document->getLocale();
 
         $tags = $this->getTags($node, $shadowLocale);
         $categories = $this->getCategories($node, $shadowLocale);
         $navigationContext = $this->getNavigationContext($node, $shadowLocale);
+        $author = $this->getAuthor($node, $shadowLocale);
+        $authored = $this->getAuthored($node, $shadowLocale);
+        $template = $this->getTemplate($node, $shadowLocale);
 
-        $node->setProperty(\sprintf(self::TAGS_PROPERTY, $document->getLocale()), $tags);
-        $node->setProperty(\sprintf(self::CATEGORIES_PROPERTY, $document->getLocale()), $categories);
-        $node->setProperty(\sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $document->getLocale()), $navigationContext);
+        $node->setProperty(\sprintf(self::TAGS_PROPERTY, $locale), $tags);
+        $node->setProperty(\sprintf(self::CATEGORIES_PROPERTY, $locale), $categories);
+        $node->setProperty(\sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $locale), $navigationContext);
+        $node->setProperty(\sprintf(self::AUTHOR_PROPERTY, $locale), $author);
+        $node->setProperty(\sprintf(self::AUTHORED_PROPERTY, $locale), $authored);
+        $node->setProperty(\sprintf(self::TEMPLATE_PROPERTY, $locale), $template);
     }
 
     /**
-     * Returns tags of given node and locale.
-     *
-     * @param string $locale
-     *
-     * @return array
+     * @return int[]
      */
-    private function getTags(NodeInterface $node, $locale)
+    private function getTags(NodeInterface $node, string $locale): array
     {
-        return $node->getPropertyValueWithDefault(
-            \sprintf(self::TAGS_PROPERTY, $locale),
+        /** @var int[] $result */
+        $result = $node->getPropertyValueWithDefault(
+            \sprintf(ShadowCopyPropertiesSubscriber::TAGS_PROPERTY, $locale),
             []
         );
+
+        return $result;
     }
 
     /**
-     * Returns categories of given node and locale.
-     *
-     * @param string $locale
-     *
-     * @return array
+     * @return int[]
      */
-    private function getCategories(NodeInterface $node, $locale)
+    private function getCategories(NodeInterface $node, string $locale): array
     {
-        return $node->getPropertyValueWithDefault(
-            \sprintf(self::CATEGORIES_PROPERTY, $locale),
+        /** @var int[] $result */
+        $result = $node->getPropertyValueWithDefault(
+            \sprintf(ShadowCopyPropertiesSubscriber::CATEGORIES_PROPERTY, $locale),
             []
         );
+
+        return $result;
     }
 
     /**
-     * Returns navigation context of given node and locale.
-     *
-     * @param string $locale
-     *
-     * @return array
+     * @return string[]
      */
-    private function getNavigationContext(NodeInterface $node, $locale)
+    private function getNavigationContext(NodeInterface $node, string $locale): array
     {
-        return $node->getPropertyValueWithDefault(
-            \sprintf(self::NAVIGATION_CONTEXT_PROPERTY, $locale),
+        /** @var string[] $result */
+        $result = $node->getPropertyValueWithDefault(
+            \sprintf(ShadowCopyPropertiesSubscriber::NAVIGATION_CONTEXT_PROPERTY, $locale),
             []
         );
+
+        return $result;
     }
 
-    private function getLocale($propertyName)
+    private function getAuthor(NodeInterface $node, string $locale): ?string
+    {
+        /** @var string|null $result */
+        $result = $node->getPropertyValueWithDefault(
+            \sprintf(ShadowCopyPropertiesSubscriber::AUTHOR_PROPERTY, $locale),
+            null
+        );
+
+        return $result;
+    }
+
+    private function getAuthored(NodeInterface $node, string $locale): ?\DateTimeInterface
+    {
+        /** @var \DateTimeInterface|null $result */
+        $result = $node->getPropertyValueWithDefault(
+            \sprintf(ShadowCopyPropertiesSubscriber::AUTHORED_PROPERTY, $locale),
+            null
+        );
+
+        return $result;
+    }
+
+    private function getTemplate(NodeInterface $node, string $locale): ?string
+    {
+        /** @var string|null $result */
+        $result = $node->getPropertyValueWithDefault(
+            \sprintf(ShadowCopyPropertiesSubscriber::TEMPLATE_PROPERTY, $locale),
+            null
+        );
+
+        return $result;
+    }
+
+    private function getLocale(string $propertyName): string
     {
         \preg_match('/i18n:(?P<locale>.+)-shadow-base/', $propertyName, $match);
 
         return $match['locale'];
     }
 
-    protected function supports($document)
+    protected function supports(object $document): bool
     {
         return $document instanceof ShadowLocaleBehavior && $document instanceof LocaleBehavior;
     }

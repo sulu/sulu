@@ -142,12 +142,12 @@
                 <title>sulu_page.editing_information</title>
             </meta>
             <properties>
-                <property name="authored" type="datetime" colspan="6">
+                <property name="authored" type="datetime" colspan="6" visibleCondition="shadowOn == false AND path != ''">
                     <meta>
                         <title>sulu_page.authored_date</title>
                     </meta>
                 </property>
-                <property name="author" type="single_contact_selection" colspan="6">
+                <property name="author" type="single_contact_selection" colspan="6" visibleCondition="shadowOn == false AND path != ''">
                     <meta>
                         <title>sulu_page.author</title>
                     </meta>
