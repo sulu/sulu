@@ -80,21 +80,9 @@ class Version202404051700 implements VersionInterface, ContainerAwareInterface
         /** @var string $shadowLocale */
         $shadowLocale = $node->getPropertyValue($this->getPropertyName(ShadowCopyPropertiesSubscriber::SHADOW_BASE_PROPERTY, $locale));
 
-        $tags = $this->getTags($node, $shadowLocale);
-        $categories = $this->getCategories($node, $shadowLocale);
-        $navigationContext = $this->getNavigationContext($node, $shadowLocale);
-        $author = $this->getAuthor($node, $shadowLocale);
-        $authored = $this->getAuthored($node, $shadowLocale);
         $lastModified = $this->getLastModified($node, $shadowLocale);
-        $template = $this->getTemplate($node, $shadowLocale);
 
-        $node->setProperty(\sprintf(ShadowCopyPropertiesSubscriber::TAGS_PROPERTY, $locale), $tags);
-        $node->setProperty(\sprintf(ShadowCopyPropertiesSubscriber::CATEGORIES_PROPERTY, $locale), $categories);
-        $node->setProperty(\sprintf(ShadowCopyPropertiesSubscriber::NAVIGATION_CONTEXT_PROPERTY, $locale), $navigationContext);
-        $node->setProperty(\sprintf(ShadowCopyPropertiesSubscriber::AUTHOR_PROPERTY, $locale), $author);
-        $node->setProperty(\sprintf(ShadowCopyPropertiesSubscriber::AUTHORED_PROPERTY, $locale), $authored);
         $node->setProperty(\sprintf(ShadowCopyPropertiesSubscriber::LAST_MODIFIED_PROPERTY, $locale), $lastModified);
-        $node->setProperty(\sprintf(ShadowCopyPropertiesSubscriber::TEMPLATE_PROPERTY, $locale), $template);
     }
 
     private function getPropertyName(string $pattern, string $locale): string
@@ -102,86 +90,11 @@ class Version202404051700 implements VersionInterface, ContainerAwareInterface
         return \sprintf($pattern, $locale);
     }
 
-    /**
-     * @return int[]
-     */
-    private function getTags(NodeInterface $node, string $locale): array
-    {
-        /** @var int[] $result */
-        $result = $node->getPropertyValueWithDefault(
-            \sprintf(ShadowCopyPropertiesSubscriber::TAGS_PROPERTY, $locale),
-            []
-        );
-
-        return $result;
-    }
-
-    /**
-     * @return int[]
-     */
-    private function getCategories(NodeInterface $node, string $locale): array
-    {
-        /** @var int[] $result */
-        $result = $node->getPropertyValueWithDefault(
-            \sprintf(ShadowCopyPropertiesSubscriber::CATEGORIES_PROPERTY, $locale),
-            []
-        );
-
-        return $result;
-    }
-
-    /**
-     * @return string[]
-     */
-    private function getNavigationContext(NodeInterface $node, string $locale): array
-    {
-        /** @var string[] $result */
-        $result = $node->getPropertyValueWithDefault(
-            \sprintf(ShadowCopyPropertiesSubscriber::NAVIGATION_CONTEXT_PROPERTY, $locale),
-            []
-        );
-
-        return $result;
-    }
-
-    private function getAuthor(NodeInterface $node, string $locale): ?string
-    {
-        /** @var string|null $result */
-        $result = $node->getPropertyValueWithDefault(
-            \sprintf(ShadowCopyPropertiesSubscriber::AUTHOR_PROPERTY, $locale),
-            null
-        );
-
-        return $result;
-    }
-
-    private function getAuthored(NodeInterface $node, string $locale): ?\DateTimeInterface
-    {
-        /** @var \DateTimeInterface|null $result */
-        $result = $node->getPropertyValueWithDefault(
-            \sprintf(ShadowCopyPropertiesSubscriber::AUTHORED_PROPERTY, $locale),
-            null
-        );
-
-        return $result;
-    }
-
     private function getLastModified(NodeInterface $node, string $locale): ?\DateTimeInterface
     {
         /** @var \DateTimeInterface|null $result */
         $result = $node->getPropertyValueWithDefault(
             \sprintf(ShadowCopyPropertiesSubscriber::LAST_MODIFIED_PROPERTY, $locale),
-            null
-        );
-
-        return $result;
-    }
-
-    private function getTemplate(NodeInterface $node, string $locale): ?string
-    {
-        /** @var string|null $result */
-        $result = $node->getPropertyValueWithDefault(
-            \sprintf(ShadowCopyPropertiesSubscriber::TEMPLATE_PROPERTY, $locale),
             null
         );
 
