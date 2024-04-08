@@ -108,6 +108,8 @@ class XmlFormMetadataLoader implements FormMetadataLoaderInterface, CacheWarmerI
                 );
             }
         }
+
+        return [];
     }
 
     /**

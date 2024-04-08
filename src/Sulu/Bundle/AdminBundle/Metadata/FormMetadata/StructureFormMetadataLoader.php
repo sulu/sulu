@@ -148,6 +148,8 @@ class StructureFormMetadataLoader implements FormMetadataLoaderInterface, CacheW
                 );
             }
         }
+
+        return [];
     }
 
     /**
