@@ -26,6 +26,10 @@ class Version202105311447 implements VersionInterface, ContainerAwareInterface
 
     public function setContainer(?ContainerInterface $container = null): void
     {
+        if (null === $container) {
+            throw new \RuntimeException('Container is required to run this migration.');
+        }
+
         $this->container = $container;
     }
 

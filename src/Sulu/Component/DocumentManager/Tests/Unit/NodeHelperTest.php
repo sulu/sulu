@@ -98,7 +98,6 @@ class NodeHelperTest extends TestCase
 
     public function testCopyWithDestinationName(): void
     {
-        /** @var Workspace $workspace */
         $workspace = $this->prophesize(Workspace::class);
         $this->session->getWorkspace()->willReturn($workspace->reveal());
         $identifier = UUIDHelper::generateUUID();

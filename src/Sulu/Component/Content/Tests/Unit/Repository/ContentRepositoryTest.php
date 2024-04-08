@@ -20,7 +20,6 @@ use PHPCR\Query\QOM\PropertyValueInterface;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\Query\QOM\SelectorInterface;
 use PHPCR\Query\QOM\StaticOperandInterface;
-use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryManagerInterface;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\Query\RowInterface;
@@ -101,7 +100,7 @@ class ContentRepositoryTest extends TestCase
     private $systemStore;
 
     /**
-     * @var ObjectProphecy<QueryInterface>
+     * @var ObjectProphecy<QueryObjectModel>
      */
     private $query;
 

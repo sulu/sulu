@@ -58,6 +58,10 @@ class Version201511171538 implements VersionInterface, ContainerAwareInterface
 
     public function setContainer(?ContainerInterface $container = null): void
     {
+        if (null === $container) {
+            throw new \RuntimeException('Container is required to run this migration.');
+        }
+
         $this->structureMetadataFactory = $container->get('sulu_page.structure.factory');
         $this->propertyEncoder = $container->get('sulu_document_manager.property_encoder');
         $this->localizationManager = $container->get('sulu.core.localization_manager');

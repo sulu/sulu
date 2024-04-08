@@ -66,7 +66,7 @@ class Version201511240843 implements VersionInterface, ContainerAwareInterface
     public function setContainer(?ContainerInterface $container = null): void
     {
         if (null === $container) {
-            throw new \RuntimeException('Expected "container" to be set.');
+            throw new \RuntimeException('Container is required to run this migration.');
         }
 
         $this->structureMetadataFactory = $container->get('sulu_page.structure.factory');

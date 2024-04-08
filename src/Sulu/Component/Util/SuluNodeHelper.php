@@ -33,7 +33,7 @@ class SuluNodeHelper
     private $languageNamespace;
 
     /**
-     * @var string
+     * @var array<string, string|null>
      */
     private $paths;
 
