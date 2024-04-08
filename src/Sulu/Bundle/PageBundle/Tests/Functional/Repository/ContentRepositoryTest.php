@@ -433,7 +433,10 @@ class ContentRepositoryTest extends SuluTestCase
 
         $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
 
-        $result = $this->contentRepository->findByParentUuid($parentUuid, 'de', 'sulu_io',
+        $result = $this->contentRepository->findByParentUuid(
+            $parentUuid,
+            'de',
+            'sulu_io',
             MappingBuilder::create()->getMapping());
 
         $this->assertCount(3, $result);
@@ -452,7 +455,9 @@ class ContentRepositoryTest extends SuluTestCase
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
-        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io',
+        $result = $this->contentRepository->findByWebspaceRoot(
+            'de',
+            'sulu_io',
             MappingBuilder::create()->getMapping());
 
         $this->assertCount(3, $result);
@@ -1178,6 +1183,19 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertCount(3, $result);
 
+        $homepageUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
+        $order = [
+            $homepageUuid,
+            $page1->getUuid(),
+            $page2->getUuid(),
+        ];
+        \usort($result, function(Content $a, Content $b) use ($order) {
+            $posA = \array_search($a->getId(), $order);
+            $posB = \array_search($b->getId(), $order);
+
+            return $posA - $posB;
+        });
+
         $items = \array_map(
             function(Content $content) {
                 return [
@@ -1190,18 +1208,23 @@ class ContentRepositoryTest extends SuluTestCase
             $result
         );
 
-        $homepageUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
-        $this->assertContains(
-            ['uuid' => $homepageUuid, 'hasChildren' => true, 'children' => [], 'permissions' => []],
-            $items
+        $this->assertSame(
+            [
+                'uuid' => $homepageUuid,
+                'hasChildren' => true,
+                'children' => null,
+                'permissions' => [],
+            ],
+            $items[0]
         );
-        $this->assertContains(
+
+        $this->assertSame(
             [
                 'uuid' => $page1->getUuid(),
                 'hasChildren' => true,
-                'children' => [],
+                'children' => null,
                 'permissions' => [
-                    $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                    $role1->getId() => ['view' => false, 'add' => false, 'edit' => true, 'delete' => false],
                     $role2->getId() => [
                         'view' => true,
                         'add' => false,
@@ -1217,11 +1240,16 @@ class ContentRepositoryTest extends SuluTestCase
                     ],
                 ],
             ],
-            $items
+            $items[1]
         );
-        $this->assertContains(
-            ['uuid' => $page2->getUuid(), 'hasChildren' => false, 'children' => [], 'permissions' => []],
-            $items
+        $this->assertSame(
+            [
+                'uuid' => $page2->getUuid(),
+                'hasChildren' => false,
+                'children' => null,
+                'permissions' => [],
+            ],
+            $items[2]
         );
     }
 
@@ -1274,13 +1302,13 @@ class ContentRepositoryTest extends SuluTestCase
             $result
         );
 
-        $this->assertContains(
+        $this->assertSame(
             [
                 'uuid' => $page1->getUuid(),
                 'hasChildren' => true,
-                'children' => [],
+                'children' => null,
                 'permissions' => [
-                    $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                    $role1->getId() => ['view' => false, 'add' => false, 'edit' => true, 'delete' => false],
                     $role2->getId() => [
                         'view' => true,
                         'add' => false,
@@ -1296,16 +1324,16 @@ class ContentRepositoryTest extends SuluTestCase
                     ],
                 ],
             ],
-            $items
+            $items[0]
         );
-        $this->assertContains(
+        $this->assertSame(
             [
                 'uuid' => $page2->getUuid(),
                 'hasChildren' => false,
-                'children' => [],
+                'children' => null,
                 'permissions' => [],
             ],
-            $items
+            $items[1]
         );
     }
 
@@ -1366,7 +1394,7 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertContains(
             [
-                $role1->getId() => ['view' => false, 'add' => false, 'delete' => false, 'edit' => true],
+                $role1->getId() => ['view' => false, 'add' => false, 'edit' => true, 'delete' => false],
                 $role2->getId() => [
                     'view' => true,
                     'add' => false,
@@ -1524,7 +1552,8 @@ class ContentRepositoryTest extends SuluTestCase
         $page1 = $this->createPage('test-1', 'de');
         $page2 = $this->createPage('test-2', 'de');
         $page2->setWorkflowStage(WorkflowStage::TEST);
-        $this->documentManager->persist($page2,
+        $this->documentManager->persist(
+            $page2,
             'de',
             [
                 'path' => $this->sessionManager->getContentPath('sulu_io') . '/test-2',
@@ -1578,8 +1607,14 @@ class ContentRepositoryTest extends SuluTestCase
      *
      * @return PageDocument
      */
-    private function createPage($title, $locale, $data = [], $parentDocument = null, array $permissions = [], bool $publish = true)
-    {
+    private function createPage(
+        $title,
+        $locale,
+        $data = [],
+        $parentDocument = null,
+        array $permissions = [],
+        bool $publish = true
+    ) {
         /** @var PageDocument $document */
         $document = $this->documentManager->create('page');
 
