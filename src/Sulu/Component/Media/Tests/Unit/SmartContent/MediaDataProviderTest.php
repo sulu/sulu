@@ -36,9 +36,9 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Security as WebspaceSecurity;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MediaDataProviderTest extends TestCase

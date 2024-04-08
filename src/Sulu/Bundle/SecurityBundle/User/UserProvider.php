@@ -45,7 +45,7 @@ class UserProvider implements UserProviderInterface
     }
 
     /**
-     * For Symfony <= 5.4
+     * For Symfony <= 5.4.
      *
      * @return UserInterface
      */

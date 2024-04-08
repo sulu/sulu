@@ -26,8 +26,8 @@ use Sulu\Component\SmartContent\ResourceItemInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Security as WebspaceSecurity;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
 
 class BaseDataProviderTest extends TestCase
 {

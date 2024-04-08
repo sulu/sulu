@@ -34,9 +34,9 @@ use Sulu\Component\Security\Authorization\MaskConverterInterface;
 use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
-use Symfony\Bundle\SecurityBundle\Security;
 
 class AccessControlManagerTest extends TestCase
 {

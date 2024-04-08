@@ -13,9 +13,9 @@ namespace Sulu\Bundle\ActivityBundle\Application\Subscriber;
 
 use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 use Sulu\Component\Security\Authentication\UserInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
-use Symfony\Bundle\SecurityBundle\Security;
 
 class SetDomainEventUserSubscriber implements EventSubscriberInterface
 {
