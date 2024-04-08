@@ -153,7 +153,7 @@ public function resolveInternalLinkContent(
 ### PHPCR and Jackalope update
 
 An update of PHPCR and Jackalope to latest major version is optional but recommended.   
-The following new version are supported by Sulu:
+The following new versions are supported by Sulu:
 
  - `doctrine/phpcr-bundle`: `^3.0`
  - `phpcr/phpcr-utils`: `^2.0`
