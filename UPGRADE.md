@@ -152,6 +152,27 @@ The `SecurityContextVoter` and `TestVoter` methods return types changed:
 +    public function vote(TokenInterface $token, $object, array $attributes): int
 ```
 
+Different internal `Warmer` has be changed:
+
+```diff
+-    public function warmUp($cacheDir)
++    public function warmUp($cacheDir, ?string $buildDir = null): array
+
+-    public function isOptional()
++    public function isOptional(): bool
+```
+
+Different internal `Loader` has be changed:
+
+```diff
+-    public function load($resource, $type = null)
++    public function load($resource, $type = null): mixed
+
+
+-    public function supports($resource, $type = null)
++    public function supports($resource, $type = null): bool
+```
+
 ### Replace Symfony Security class
 
 The `Symfony\Component\Security\Core\Security` deprecated class was replaced by
