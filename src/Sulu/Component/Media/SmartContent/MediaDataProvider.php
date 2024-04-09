@@ -23,8 +23,9 @@ use Sulu\Component\SmartContent\DatasourceItem;
 use Sulu\Component\SmartContent\Orm\BaseDataProvider;
 use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -63,7 +64,7 @@ class MediaDataProvider extends BaseDataProvider
         ArraySerializerInterface $serializer,
         RequestStack $requestStack,
         ReferenceStoreInterface $referenceStore,
-        ?Security $security,
+        Security|SymfonyCoreSecurity|null $security,
         RequestAnalyzerInterface $requestAnalyzer,
         $permissions,
         bool $hasAudienceTargeting = false,

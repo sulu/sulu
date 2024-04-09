@@ -27,7 +27,7 @@ class PreviewKernel extends Kernel
      */
     private $projectDir;
 
-    public function registerContainerConfiguration(LoaderInterface $loader)
+    public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         parent::registerContainerConfiguration($loader);
 

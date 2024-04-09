@@ -31,7 +31,10 @@ class PathCleanupTest extends TestCase
     protected function setUp(): void
     {
         $slugger = new AsciiSlugger();
-        $this->hasEmojiSupport = \method_exists($slugger, 'withEmoji');
+        $this->hasEmojiSupport = \method_exists($slugger, 'withEmoji') && (
+            !\method_exists(\Symfony\Component\String\AbstractUnicodeString::class, 'localeUpper') // BC Layer <= Symfony 7.0
+            || \class_exists(\Symfony\Component\Emoji\EmojiTransliterator::class) // Symfony >= 7.1 requires symfony/emoji
+        );
 
         $this->cleaner = new PathCleanup(
             [

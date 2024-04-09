@@ -16,7 +16,8 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataVisitorInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\OptionMetadata;
 use Sulu\Bundle\SecurityBundle\Entity\User;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
 
 /**
  * @internal
@@ -30,7 +31,7 @@ class TwoFactorFormMetadataVisitor implements FormMetadataVisitorInterface
 
     private ?string $twoFactorForcePattern;
 
-    private ?Security $security;
+    private Security|SymfonyCoreSecurity|null $security;
 
     /**
      * @param string[] $twoFactorMethods
@@ -38,7 +39,7 @@ class TwoFactorFormMetadataVisitor implements FormMetadataVisitorInterface
     public function __construct(
         array $twoFactorMethods,
         ?string $twoFactorForcePattern,
-        ?Security $security
+        Security|SymfonyCoreSecurity|null $security
     ) {
         $this->twoFactorMethods = $twoFactorMethods;
         $this->twoFactorForcePattern = $twoFactorForcePattern;
