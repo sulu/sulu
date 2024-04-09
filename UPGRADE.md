@@ -109,9 +109,9 @@ Additionally, the following packages where upgraded:
 
 This update is also handled normally by the update build command automatically.
 
-### Different return type changed for preparing Symfony 7 compatibility
+### Return type adjustments to prepare Symfony 7 compatibility
 
-The `DocumentToUuidTransformer` methods return types changed:
+Return type changes in `DocumentToUuidTransformer`:
 
 ```diff
 -    public function transform($document)
@@ -121,21 +121,21 @@ The `DocumentToUuidTransformer` methods return types changed:
 +    public function reverseTransform($uuid): ?object
 ```
 
-The `User` methods return types changed:
+Return type changes in `User`:
 
 ```diff
 -    public function eraseCredentials()
 +    public function eraseCredentials(): void
 ```
 
-The `AuthenticationEntryPoint` methods return types changed:
+Return type changes in `AuthenticationEntryPoint`:
 
 ```diff
 -    public function start(Request $request, ?AuthenticationException $authException = null)
 +    public function start(Request $request, ?AuthenticationException $authException = null): Response
 ```
 
-The `UserProvider` and `TestUserProvider` methods return types changed:
+Return type changes in `UserProvider` and `TestUserProvider`:
 
 ```diff
 -    public function refreshUser()
@@ -145,14 +145,14 @@ The `UserProvider` and `TestUserProvider` methods return types changed:
 +    public function supportsClass(): bool
 ```
 
-The `SecurityContextVoter` and `TestVoter` methods return types changed:
+Return type changes in `SecurityContextVoter` and `TestVoter`:
 
 ```diff
 -    public function vote(TokenInterface $token, $object, array $attributes)
 +    public function vote(TokenInterface $token, $object, array $attributes): int
 ```
 
-Different internal `Warmer` has be changed:
+Return type changes in the internal `Warmer`:
 
 ```diff
 -    public function warmUp($cacheDir)
@@ -162,7 +162,7 @@ Different internal `Warmer` has be changed:
 +    public function isOptional(): bool
 ```
 
-Different internal `Loader` has be changed:
+Return type changes in `Loader`:
 
 ```diff
 -    public function load($resource, $type = null)
