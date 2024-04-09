@@ -40,22 +40,19 @@ class RegisterPreviewWebspaceClassPassTest extends TestCase
             ->willReturn(true);
 
         $this->containerBuilderMock
+            ->expects($this->exactly(2))
             ->method('getParameter')
-            ->with('sulu.preview')
-            ->willReturn(true);
+            ->willReturnOnConsecutiveCalls(true, 'websiteWebspaceCollectionCache');
 
         $this->containerBuilderMock
-            ->method('getParameter')
-            ->with('sulu_core.webspace.cache_class')
-            ->willReturn('websiteWebspaceCollectionCache');
-
-        $this->containerBuilderMock
-            ->expects($this->never())
+            ->expects($this->once())
             ->method('setParameter')
             ->with(
                 'sulu_core.webspace.cache_class',
                 'previewwebsiteWebspaceCollectionCache'
             );
+
+        $this->createCompilerPass()->process($this->containerBuilderMock);
     }
 
     private function createCompilerPass(): RegisterPreviewWebspaceClassPass
