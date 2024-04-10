@@ -232,7 +232,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         }, []));
     }
 
-    getConditionData(data, dataPath) {
+    getConditionData(data: {[string]: any}, dataPath: ?string) {
         const {formInspector} = this.props;
 
         return conditionDataProviderRegistry.getAll().reduce(
