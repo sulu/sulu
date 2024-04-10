@@ -173,6 +173,13 @@ Return type changes in `Loader`:
 +    public function supports($resource, $type = null): bool
 ```
 
+Return type changes in `ExpressionLanguageProvider`:
+
+```diff
+-    public function getFunctions()
++    public function getFunctions(): array
+```
+
 ### Replace Symfony Security class
 
 The `Symfony\Component\Security\Core\Security` deprecated class was replaced by
