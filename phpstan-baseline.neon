@@ -50466,11 +50466,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/FilterTypeNotFoundException.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Filter\\\\FilterTypeRegistry\\:\\:__construct\\(\\) has parameter \\$filterTypes with no value type specified in iterable type iterable\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Filter/FilterTypeRegistry.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Filter\\\\NumberFilterType\\:\\:filter\\(\\) has parameter \\$options with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/NumberFilterType.php
