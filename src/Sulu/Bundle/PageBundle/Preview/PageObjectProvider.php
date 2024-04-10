@@ -74,7 +74,7 @@ class PageObjectProvider implements PreviewObjectProviderInterface
         $structure = $object->getStructure();
         foreach ($data as $property => $value) {
             try {
-                if ($property === 'ext') {
+                if ('ext' === $property) {
                     $object->setExtensionsData(new ExtensionContainer($value));
                     continue;
                 }
