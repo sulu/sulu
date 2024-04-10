@@ -31761,11 +31761,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
 
 		-
-			message: "#^Parameter \\#3 \\$operand2 of method PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelFactoryInterface\\:\\:comparison\\(\\) expects PHPCR\\\\Query\\\\QOM\\\\StaticOperandInterface, mixed given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
-
-		-
 			message: "#^Parameter \\#3 \\$webspaceKey of method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:copyLanguage\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
@@ -43051,11 +43046,6 @@ parameters:
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
 		-
-			message: "#^Parameter \\#3 \\$operand2 of method PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelFactoryInterface\\:\\:comparison\\(\\) expects PHPCR\\\\Query\\\\QOM\\\\StaticOperandInterface, mixed given\\.$#"
-			count: 4
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
 			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
@@ -45508,11 +45498,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Component\\\\Content\\\\Repository\\\\ContentRepositoryInterface\\:\\:findByUuids\\(\\) expects string, null given\\.$#"
 			count: 1
-			path: src/Sulu/Component/CustomUrl/Repository/CustomUrlRepository.php
-
-		-
-			message: "#^Parameter \\#3 \\$operand2 of method PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelFactoryInterface\\:\\:comparison\\(\\) expects PHPCR\\\\Query\\\\QOM\\\\StaticOperandInterface, mixed given\\.$#"
-			count: 2
 			path: src/Sulu/Component/CustomUrl/Repository/CustomUrlRepository.php
 
 		-
@@ -50482,11 +50467,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Filter\\\\FilterTypeRegistry\\:\\:__construct\\(\\) has parameter \\$filterTypes with no value type specified in iterable type iterable\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Filter/FilterTypeRegistry.php
-
-		-
-			message: "#^Parameter \\#1 \\$iterator of function iterator_to_array expects Traversable, iterable given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/FilterTypeRegistry.php
 
