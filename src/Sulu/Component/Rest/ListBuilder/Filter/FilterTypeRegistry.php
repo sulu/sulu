@@ -18,7 +18,7 @@ class FilterTypeRegistry
      */
     private $filterTypes;
 
-    public function __construct(iterable $filterTypes)
+    public function __construct(\Traversable $filterTypes)
     {
         $this->filterTypes = \iterator_to_array($filterTypes);
     }
