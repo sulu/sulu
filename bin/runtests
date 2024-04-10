@@ -293,14 +293,8 @@ function init_bundle()
     write_info('Doctrine ORM detected, updating the schema for the bundle.');
 
     $process = exec_sf_cmd('doctrine:schema:update --force');
-    if ($process->getExitCode() !== 0) {
-        exit($process->getExitCode());
-    }
 
     $process = exec_sf_cmd('sulu:document:initialize --purge --force --ansi');
-    if ($process->getExitCode() !== 0) {
-        exit($process->getExitCode());
-    }
 }
 
 function is_everything_ok()
