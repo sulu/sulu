@@ -178,6 +178,7 @@ class SuluSnippetExtension extends Extension implements PrependExtensionInterfac
 
     public function load(array $configs, ContainerBuilder $container)
     {
+        /** @var array<string, class-string> $bundles */
         $bundles = $container->getParameter('kernel.bundles');
 
         $configuration = new Configuration();
