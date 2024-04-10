@@ -1181,11 +1181,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\StructureFormMetadataLoader\\:\\:warmUp\\(\\) should return array\\<string\\> but return statement is missing\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
-
-		-
 			message: "#^Parameter \\#1 \\$data of function unserialize expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/StructureFormMetadataLoader.php
@@ -1262,11 +1257,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\XmlFormMetadataLoader\\:\\:getMetadata\\(\\) should return Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\MetadataInterface\\|null but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Metadata\\\\FormMetadata\\\\XmlFormMetadataLoader\\:\\:warmUp\\(\\) should return array\\<string\\> but return statement is missing\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Metadata/FormMetadata/XmlFormMetadataLoader.php
 
@@ -1556,7 +1546,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: "#^Parameter \\#2 \\$object of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertObjectHasAttribute\\(\\) expects object, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, mixed given\\.$#"
 			count: 4
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/AdminControllerTest.php
 
@@ -2781,7 +2771,7 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: "#^Parameter \\#2 \\$object of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertObjectHasAttribute\\(\\) expects object, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, mixed given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Functional/Controller/AdminControllerTest.php
 
@@ -3036,47 +3026,47 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Functional/Entity/TargetGroupRepositoryTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupEvaluationControllerTest\\:\\:provideTargetGroup\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\Controller\\\\TargetGroupEvaluationControllerTest\\:\\:provideTargetGroup\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Controller/TargetGroupEvaluationControllerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupEvaluationControllerTest\\:\\:provideTargetGroupHit\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\Controller\\\\TargetGroupEvaluationControllerTest\\:\\:provideTargetGroupHit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Controller/TargetGroupEvaluationControllerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupEvaluationControllerTest\\:\\:testTargetGroupAction\\(\\) has parameter \\$currentTargetGroup with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\Controller\\\\TargetGroupEvaluationControllerTest\\:\\:testTargetGroupAction\\(\\) has parameter \\$currentTargetGroup with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Controller/TargetGroupEvaluationControllerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupEvaluationControllerTest\\:\\:testTargetGroupAction\\(\\) has parameter \\$header with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\Controller\\\\TargetGroupEvaluationControllerTest\\:\\:testTargetGroupAction\\(\\) has parameter \\$header with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Controller/TargetGroupEvaluationControllerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupEvaluationControllerTest\\:\\:testTargetGroupAction\\(\\) has parameter \\$targetGroup with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\Controller\\\\TargetGroupEvaluationControllerTest\\:\\:testTargetGroupAction\\(\\) has parameter \\$targetGroup with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Controller/TargetGroupEvaluationControllerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupEvaluationControllerTest\\:\\:testTargetGroupAction\\(\\) has parameter \\$targetGroupId with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\Controller\\\\TargetGroupEvaluationControllerTest\\:\\:testTargetGroupAction\\(\\) has parameter \\$targetGroupId with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Controller/TargetGroupEvaluationControllerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupEvaluationControllerTest\\:\\:testTargetGroupHitAction\\(\\) has parameter \\$newTargetGroup with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\Controller\\\\TargetGroupEvaluationControllerTest\\:\\:testTargetGroupHitAction\\(\\) has parameter \\$newTargetGroup with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Controller/TargetGroupEvaluationControllerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupEvaluationControllerTest\\:\\:testTargetGroupHitAction\\(\\) has parameter \\$newTargetGroupId with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\Controller\\\\TargetGroupEvaluationControllerTest\\:\\:testTargetGroupHitAction\\(\\) has parameter \\$newTargetGroupId with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Controller/TargetGroupEvaluationControllerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupEvaluationControllerTest\\:\\:testTargetGroupHitAction\\(\\) has parameter \\$oldTargetGroup with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\Controller\\\\TargetGroupEvaluationControllerTest\\:\\:testTargetGroupHitAction\\(\\) has parameter \\$oldTargetGroup with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Controller/TargetGroupEvaluationControllerTest.php
 
@@ -3086,172 +3076,172 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventListener\\\\AudienceTargetingCacheListenerTest\\:\\:readObjectAttribute\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\AudienceTargetingCacheListenerTest\\:\\:readObjectAttribute\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/AudienceTargetingCacheListenerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:provideAddSetCookieHeader\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:provideAddSetCookieHeader\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:provideAddTargetGroupHitScript\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:provideAddTargetGroupHitScript\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:provideAddVaryHeader\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:provideAddVaryHeader\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:provideSetTargetGroupFromCookie\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:provideSetTargetGroupFromCookie\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:provideSetTargetGroupFromEvaluation\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:provideSetTargetGroupFromEvaluation\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:provideSetTargetGroupFromHeader\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:provideSetTargetGroupFromHeader\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testAddSetCookieHeader\\(\\) has parameter \\$cookieValue with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testAddSetCookieHeader\\(\\) has parameter \\$cookieValue with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testAddSetCookieHeader\\(\\) has parameter \\$hasChanged with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testAddSetCookieHeader\\(\\) has parameter \\$hasChanged with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testAddSetCookieHeader\\(\\) has parameter \\$targetGroupCookie with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testAddSetCookieHeader\\(\\) has parameter \\$targetGroupCookie with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testAddSetCookieHeader\\(\\) has parameter \\$url with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testAddSetCookieHeader\\(\\) has parameter \\$url with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testAddSetCookieHeader\\(\\) has parameter \\$visitorSession with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testAddSetCookieHeader\\(\\) has parameter \\$visitorSession with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testAddTargetGroupHitScript\\(\\) has parameter \\$forwardedRefererHeader with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testAddTargetGroupHitScript\\(\\) has parameter \\$forwardedRefererHeader with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testAddTargetGroupHitScript\\(\\) has parameter \\$forwardedUrlHeader with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testAddTargetGroupHitScript\\(\\) has parameter \\$forwardedUrlHeader with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testAddTargetGroupHitScript\\(\\) has parameter \\$forwardedUuidHeader with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testAddTargetGroupHitScript\\(\\) has parameter \\$forwardedUuidHeader with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testAddTargetGroupHitScript\\(\\) has parameter \\$targetGroupHitUrl with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testAddTargetGroupHitScript\\(\\) has parameter \\$targetGroupHitUrl with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testAddTargetGroupHitScript\\(\\) has parameter \\$uuid with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testAddTargetGroupHitScript\\(\\) has parameter \\$uuid with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testAddVaryHeader\\(\\) has parameter \\$hasInfluencedContent with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testAddVaryHeader\\(\\) has parameter \\$hasInfluencedContent with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testAddVaryHeader\\(\\) has parameter \\$header with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testAddVaryHeader\\(\\) has parameter \\$header with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testAddVaryHeader\\(\\) has parameter \\$requestUrl with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testAddVaryHeader\\(\\) has parameter \\$requestUrl with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testAddVaryHeader\\(\\) has parameter \\$targetGroupUrl with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testAddVaryHeader\\(\\) has parameter \\$targetGroupUrl with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testAddVaryHeader\\(\\) has parameter \\$varyHeaders with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testAddVaryHeader\\(\\) has parameter \\$varyHeaders with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromCookie\\(\\) has parameter \\$cookieTargetGroup with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromCookie\\(\\) has parameter \\$cookieTargetGroup with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromCookie\\(\\) has parameter \\$cookieVisitorSession with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromCookie\\(\\) has parameter \\$cookieVisitorSession with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromCookie\\(\\) has parameter \\$evaluationResult with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromCookie\\(\\) has parameter \\$evaluationResult with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromCookie\\(\\) has parameter \\$result with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromCookie\\(\\) has parameter \\$result with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromCookie\\(\\) has parameter \\$resultUpdate with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromCookie\\(\\) has parameter \\$resultUpdate with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromCookie\\(\\) has parameter \\$targetGroupCookie with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromCookie\\(\\) has parameter \\$targetGroupCookie with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromCookie\\(\\) has parameter \\$visitorSessionCookie with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromCookie\\(\\) has parameter \\$visitorSessionCookie with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromEvaluation\\(\\) has parameter \\$evaluatedTargetGroup with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromEvaluation\\(\\) has parameter \\$evaluatedTargetGroup with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromEvaluation\\(\\) has parameter \\$result with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromEvaluation\\(\\) has parameter \\$result with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromHeader\\(\\) has parameter \\$headerTargetGroup with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromHeader\\(\\) has parameter \\$headerTargetGroup with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromHeader\\(\\) has parameter \\$result with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromHeader\\(\\) has parameter \\$result with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromHeader\\(\\) has parameter \\$targetGroupHeader with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\EventListener\\\\TargetGroupSubscriberTest\\:\\:testSetTargetGroupFromHeader\\(\\) has parameter \\$targetGroupHeader with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/EventListener/TargetGroupSubscriberTest.php
 
@@ -9546,6 +9536,11 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
+			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, mixed given\\.$#"
+			count: 3
+			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
+
+		-
 			message: "#^Parameter \\#1 \\$primaryAddress of method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Address\\:\\:setPrimaryAddress\\(\\) expects bool, bool\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
@@ -9563,11 +9558,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, mixed given\\.$#"
 			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$object of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertObjectHasAttribute\\(\\) expects object, mixed given\\.$#"
-			count: 3
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -9611,16 +9601,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountMediaControllerTest.php
 
 		-
-			message: "#^Cannot access property \\$form on mixed\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
-
-		-
-			message: "#^Cannot access property \\$schema on mixed\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
-
-		-
 			message: "#^Cannot access property \\$sulu_contact on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
@@ -9633,11 +9613,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$array of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayHasKey\\(\\) expects array\\|ArrayAccess, mixed given\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$object of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertObjectHasAttribute\\(\\) expects object, mixed given\\.$#"
-			count: 4
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
@@ -9961,6 +9936,11 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
+			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, mixed given\\.$#"
+			count: 4
+			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
+
+		-
 			message: "#^Parameter \\#1 \\$primaryAddress of method Sulu\\\\Bundle\\\\ContactBundle\\\\Entity\\\\Address\\:\\:setPrimaryAddress\\(\\) expects bool, bool\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
@@ -9973,11 +9953,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$array of function array_map expects array, mixed given\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
-
-		-
-			message: "#^Parameter \\#2 \\$object of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertObjectHasAttribute\\(\\) expects object, mixed given\\.$#"
-			count: 4
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -10892,11 +10867,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'suffix' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
-
-		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Resources/phpcr-migrations/Version201904110902.php
 
@@ -12451,47 +12421,47 @@ parameters:
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/CacheLifetime/CacheLifetimeRequestStoreTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventListener\\\\InvalidationSubscriberTest\\:\\:provideRequest\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventSubscriber\\\\InvalidationSubscriberTest\\:\\:provideRequest\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventListener\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforePublishing\\(\\) has parameter \\$request with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventSubscriber\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforePublishing\\(\\) has parameter \\$request with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventListener\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforePublishing\\(\\) has parameter \\$scheme with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventSubscriber\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforePublishing\\(\\) has parameter \\$scheme with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventListener\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeRemoving\\(\\) has parameter \\$request with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventSubscriber\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeRemoving\\(\\) has parameter \\$request with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventListener\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeRemoving\\(\\) has parameter \\$scheme with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventSubscriber\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeRemoving\\(\\) has parameter \\$scheme with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventListener\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeRemovingLocale\\(\\) has parameter \\$request with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventSubscriber\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeRemovingLocale\\(\\) has parameter \\$request with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventListener\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeRemovingLocale\\(\\) has parameter \\$scheme with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventSubscriber\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeRemovingLocale\\(\\) has parameter \\$scheme with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventListener\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeUnpublishing\\(\\) has parameter \\$request with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventSubscriber\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeUnpublishing\\(\\) has parameter \\$request with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventListener\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeUnpublishing\\(\\) has parameter \\$scheme with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventSubscriber\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeUnpublishing\\(\\) has parameter \\$scheme with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
 
@@ -17066,7 +17036,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaFormatControllerTest.php
 
 		-
-			message: "#^Parameter \\#2 \\$object of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertObjectNotHasAttribute\\(\\) expects object, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, mixed given\\.$#"
 			count: 7
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaFormatControllerTest.php
 
@@ -18031,19 +18001,14 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/ImageConverter/Scaler/ScalerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\ImageConverter\\\\Transformations\\\\AbstractTransformationTest\\:\\:createImagine\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\ImageConverter\\\\Transformations\\\\AbstractTransformation\\:\\:getDataList\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/ImageConverter/Transformations/AbstractTransformationTest.php
+			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/ImageConverter/Transformations/AbstractTransformation.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\ImageConverter\\\\Transformations\\\\AbstractTransformationTest\\:\\:getDataList\\(\\) return type has no value type specified in iterable type array\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\ImageConverter\\\\Transformations\\\\AbstractTransformation\\:\\:\\$transformation \\(Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ImageConverter\\\\Transformation\\\\TransformationInterface\\) does not accept object\\|null\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/ImageConverter/Transformations/AbstractTransformationTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\ImageConverter\\\\Transformations\\\\AbstractTransformationTest\\:\\:\\$transformation \\(Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ImageConverter\\\\Transformation\\\\TransformationInterface\\) does not accept object\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/ImageConverter/Transformations/AbstractTransformationTest.php
+			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/ImageConverter/Transformations/AbstractTransformation.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\ImageConverter\\\\Transformations\\\\CropTransformationTest\\:\\:getDataList\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -18056,92 +18021,92 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/ImageConverter/Transformations/PasteTransformationTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:createMedia\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:createMedia\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:createMedia\\(\\) has parameter \\$id with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:createMedia\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:provideGetByIds\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:provideGetByIds\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:provideSpecialCharacterFileName\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:provideSpecialCharacterFileName\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:provideSpecialCharacterUrl\\(\\) has no return type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:provideSpecialCharacterUrl\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testGetByIds\\(\\) has parameter \\$ids with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testGetByIds\\(\\) has parameter \\$ids with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testGetByIds\\(\\) has parameter \\$media with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testGetByIds\\(\\) has parameter \\$media with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testGetByIds\\(\\) has parameter \\$permissions with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testGetByIds\\(\\) has parameter \\$permissions with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testGetByIds\\(\\) has parameter \\$result with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testGetByIds\\(\\) has parameter \\$result with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testGetByIds\\(\\) has parameter \\$user with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testGetByIds\\(\\) has parameter \\$user with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterFileName\\(\\) has parameter \\$cleanUpArgument with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterFileName\\(\\) has parameter \\$cleanUpArgument with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterFileName\\(\\) has parameter \\$cleanUpResult with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterFileName\\(\\) has parameter \\$cleanUpResult with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterFileName\\(\\) has parameter \\$extension with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterFileName\\(\\) has parameter \\$extension with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterFileName\\(\\) has parameter \\$fileName with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterFileName\\(\\) has parameter \\$fileName with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterUrl\\(\\) has parameter \\$expected with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterUrl\\(\\) has parameter \\$expected with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterUrl\\(\\) has parameter \\$filename with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterUrl\\(\\) has parameter \\$filename with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterUrl\\(\\) has parameter \\$id with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterUrl\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterUrl\\(\\) has parameter \\$version with no type specified\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:testSpecialCharacterUrl\\(\\) has parameter \\$version with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
@@ -18156,7 +18121,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:\\$categoryManager is never read, only written\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Tests\\\\Unit\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:\\$categoryManager is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
@@ -21091,11 +21056,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504271608.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Version201504271608\\:\\:\\$container has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504271608.php
-
-		-
 			message: "#^Cannot call method getIdentifier\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
@@ -21117,11 +21077,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$id of method PHPCR\\\\SessionInterface\\:\\:getNodeByIdentifier\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Version201504281842\\:\\:\\$container has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201504281842.php
 
@@ -21181,11 +21136,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Version201507231648\\:\\:\\$container \\(Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\) does not accept Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507231648.php
-
-		-
 			message: "#^In method \"Sulu\\\\Bundle\\\\PageBundle\\\\Version201507281529\\:\\:migrateExternalLinks\", caught \"Exception\" must be rethrown\\. Either catch a more specific exception or add a \"throw\" clause in the \"catch\" block to propagate the exception\\. More info\\: http\\://bit\\.ly/failloud$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507281529.php
@@ -21197,11 +21147,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201507281529\\:\\:migrateExternalLinks\\(\\) has parameter \\$directionUp with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507281529.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Version201507281529\\:\\:\\$container \\(Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\) does not accept Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201507281529.php
 
@@ -21298,11 +21243,6 @@ parameters:
 		-
 			message: "#^Cannot call method format\\(\\) on string\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
-
-		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 5
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511171538.php
 
 		-
@@ -21506,11 +21446,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
 
 		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 5
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201511240844\\:\\:findUrlBlockProperties\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201511240844.php
@@ -21611,18 +21546,8 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201607181533.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Version201607181533\\:\\:\\$container \\(Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\) does not accept Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201607181533.php
-
-		-
 			message: "#^Call to an undefined method Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\:\\:getContact\\(\\)\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 6
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
 
 		-
@@ -21639,11 +21564,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserRepositoryInterface\\:\\:findUserById\\(\\) expects int, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201702021447.php
-
-		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201903271333\\:\\:downgrade\\(\\) has no return type specified\\.$#"
@@ -21666,11 +21586,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201903271333.php
 
 		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201905071542\\:\\:downgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
@@ -21679,11 +21594,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version201905071542\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201905071542.php
-
-		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005191116.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version202005191116\\:\\:downgrade\\(\\) has no return type specified\\.$#"
@@ -21696,11 +21606,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005191116.php
 
 		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version202005250917\\:\\:downgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
@@ -21709,11 +21614,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Version202005250917\\:\\:upgrade\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202005250917.php
-
-		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version202105311447.php
 
 		-
 			message: "#^Cannot access property \\$headers on Symfony\\\\Component\\\\HttpFoundation\\\\Request\\|null\\.$#"
@@ -22686,7 +22586,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: "#^Parameter \\#2 \\$object of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertObjectHasAttribute\\(\\) expects object, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, mixed given\\.$#"
 			count: 3
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/AdminControllerTest.php
 
@@ -22952,7 +22852,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'shadowOn' on mixed\\.$#"
-			count: 5
+			count: 3
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -22962,7 +22862,7 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'template' on mixed\\.$#"
-			count: 3
+			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -23087,7 +22987,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 88
+			count: 86
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/PageControllerTest.php
 
 		-
@@ -23277,11 +23177,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Controller\\\\SmartContentItemControllerTest\\:\\:\\$em \\(Doctrine\\\\ORM\\\\EntityManager\\) does not accept Doctrine\\\\ORM\\\\EntityManagerInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Controller\\\\SmartContentItemControllerTest\\:\\:\\$session \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Controller/SmartContentItemControllerTest.php
 
@@ -23551,11 +23446,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Document/Subscriber/ShadowCopyPropertiesSubscriberTest.php
 
 		-
-			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, mixed given\\.$#"
-			count: 4
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Document/Subscriber/ShadowCopyPropertiesSubscriberTest.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriberTest\\:\\:\\$homeDocument \\(Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\HomeDocument\\) does not accept object\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Document/Subscriber/ShadowCopyPropertiesSubscriberTest.php
@@ -23726,11 +23616,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$identifier of method Sulu\\\\Component\\\\DocumentManager\\\\DocumentManagerInterface\\:\\:find\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
-
-		-
 			message: "#^Parameter \\#1 \\$shadowLocaleEnabled of method Sulu\\\\Component\\\\Content\\\\Document\\\\Behavior\\\\ShadowLocaleBehavior\\:\\:setShadowLocaleEnabled\\(\\) expects bool, bool\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Export/WebspaceExportTest.php
@@ -23862,11 +23747,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Mapper\\\\ContentMapperSnippetTest\\:\\:\\$parent \\(Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\HomeDocument\\) does not accept object\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperSnippetTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Mapper\\\\ContentMapperSnippetTest\\:\\:\\$session \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Mapper/ContentMapperSnippetTest.php
 
@@ -24992,11 +24872,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Search\\\\BaseTestCase\\:\\:\\$homeDocument \\(Sulu\\\\Bundle\\\\PageBundle\\\\Document\\\\HomeDocument\\) does not accept object\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Search/BaseTestCase.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Tests\\\\Functional\\\\Search\\\\BaseTestCase\\:\\:\\$session \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Tests/Functional/Search/BaseTestCase.php
 
@@ -26646,6 +26521,11 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Routing/RouteProvider.php
 
 		-
+			message: "#^Parameter \\#1 \\$path of method Sulu\\\\Bundle\\\\RouteBundle\\\\Routing\\\\RouteProvider\\:\\:stripFormatExtension\\(\\) expects string, string\\|false given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/RouteBundle/Routing/RouteProvider.php
+
+		-
 			message: "#^Parameter \\#2 \\$format of method Sulu\\\\Bundle\\\\RouteBundle\\\\Routing\\\\RouteProvider\\:\\:stripFormatExtension\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Routing/RouteProvider.php
@@ -27966,11 +27846,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
 
 		-
-			message: "#^Cannot call method getParameter\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\DataFixtures\\\\ORM\\\\LoadSecurityTypes\\:\\:load\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/DataFixtures/ORM/LoadSecurityTypes.php
@@ -28926,7 +28801,7 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
-			message: "#^Parameter \\#2 \\$object of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertObjectNotHasAttribute\\(\\) expects object, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, mixed given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
@@ -29046,7 +28921,7 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
-			message: "#^Parameter \\#2 \\$object of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertObjectNotHasAttribute\\(\\) expects object, mixed given\\.$#"
+			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, mixed given\\.$#"
 			count: 4
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
@@ -30401,7 +30276,7 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\SnippetRepository\\:\\:getSnippetsQuery\\(\\) should return Jackalope\\\\Query\\\\Query but returns PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelInterface\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\SnippetRepository\\:\\:getSnippetsQuery\\(\\) should return Jackalope\\\\Query\\\\Query but returns PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
 
@@ -30412,7 +30287,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$operand2 of method PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelFactoryInterface\\:\\:comparison\\(\\) expects PHPCR\\\\Query\\\\QOM\\\\StaticOperandInterface, mixed given\\.$#"
-			count: 2
+			count: 3
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
 
 		-
@@ -30588,11 +30463,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, mixed given\\.$#"
 			count: 11
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Content\\\\SnippetContentTest\\:\\:\\$session \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Content/SnippetContentTest.php
 
 		-
@@ -30881,11 +30751,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Controller\\\\SnippetControllerTest\\:\\:\\$phpcrSession \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerTest.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Controller\\\\SnippetControllerTest\\:\\:\\$phpcrSession is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Controller/SnippetControllerTest.php
@@ -31012,11 +30877,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Content\\\\SnippetRepositoryTest\\:\\:testGetSnippetsByUuids\\(\\) has parameter \\$snippets with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\Content\\\\SnippetRepositoryTest\\:\\:\\$phpcrSession \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Functional/Snippet/SnippetRepositoryTest.php
 
@@ -31736,11 +31596,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Tests/Functional/Controller/AdminControllerTest.php
 
 		-
-			message: "#^Call to method expects\\(\\) on an unknown class Mock\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/TagBundle/Tests/Functional/Controller/TagControllerTest.php
-
-		-
 			message: "#^Cannot access offset 'name' on mixed\\.$#"
 			count: 3
 			path: src/Sulu/Bundle/TagBundle/Tests/Functional/Controller/TagControllerTest.php
@@ -31836,28 +31691,8 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Tests/Functional/Controller/TagControllerTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$className of method PHPUnit\\\\Framework\\\\TestCase\\:\\:getMockBuilder\\(\\) expects class\\-string\\<Mock\\>, string given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/TagBundle/Tests/Functional/Controller/TagControllerTest.php
-
-		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
 			count: 19
-			path: src/Sulu/Bundle/TagBundle/Tests/Functional/Controller/TagControllerTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\TagBundle\\\\Tests\\\\Functional\\\\Controller\\\\TagControllerTest\\:\\:\\$session \\(PHPCR\\\\SessionInterface\\) does not accept object\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Tests/Functional/Controller/TagControllerTest.php
-
-		-
-			message: "#^Trying to mock an undefined method onDelete\\(\\) on class Mock\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Tests/Functional/Controller/TagControllerTest.php
-
-		-
-			message: "#^Trying to mock an undefined method onMerge\\(\\) on class Mock\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tests/Functional/Controller/TagControllerTest.php
 
 		-
@@ -33722,11 +33557,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Application\\\\AppCache\\:\\:locateResource\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/AppCache.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Application\\\\AppCache\\:\\:registerContainerConfiguration\\(\\) with return type void returns mixed but should not return anything\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/AppCache.php
 
@@ -38296,16 +38126,6 @@ parameters:
 			path: src/Sulu/Component/Content/Document/Subscriber/SecuritySubscriber.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getLocale\\(\\)\\.$#"
-			count: 7
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getShadowLocale\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:isShadowLocaleEnabled\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
@@ -38322,56 +38142,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:copyToShadows\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getCategories\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getCategories\\(\\) should return array but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getLocale\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getLocale\\(\\) has parameter \\$propertyName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getNavigationContext\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getNavigationContext\\(\\) should return array but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getTags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:getTags\\(\\) should return array but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:supports\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\ShadowCopyPropertiesSubscriber\\:\\:supports\\(\\) has parameter \\$document with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Document/Subscriber/ShadowCopyPropertiesSubscriber.php
 
@@ -41336,17 +41106,7 @@ parameters:
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Repository\\\\ContentRepository\\:\\:getPropertyName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Repository\\\\ContentRepository\\:\\:getPropertyName\\(\\) has parameter \\$locale with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Repository\\\\ContentRepository\\:\\:getPropertyName\\(\\) has parameter \\$propertyName with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
@@ -41391,16 +41151,6 @@ parameters:
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
 		-
-			message: "#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(PHPCR\\\\Query\\\\RowInterface\\)\\: mixed\\)\\|null, Closure\\(Jackalope\\\\Query\\\\Row\\)\\: string given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function array_map expects \\(callable\\(PHPCR\\\\Query\\\\RowInterface, int\\|string\\)\\: mixed\\)\\|null, Closure\\(Jackalope\\\\Query\\\\Row, mixed\\)\\: \\(Sulu\\\\Component\\\\Content\\\\Repository\\\\Content\\|null\\) given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
 			message: "#^Parameter \\#1 \\$localization of static method Sulu\\\\Component\\\\Content\\\\Compat\\\\StructureType\\:\\:getShadow\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
@@ -41412,11 +41162,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$path of method Sulu\\\\Component\\\\Util\\\\SuluNodeHelper\\:\\:extractWebspaceFromPath\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\$row of method Sulu\\\\Component\\\\Content\\\\Repository\\\\ContentRepository\\:\\:resolveContent\\(\\) expects Jackalope\\\\Query\\\\Row, PHPCR\\\\Query\\\\RowInterface given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
@@ -41452,7 +41197,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$operand2 of method PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelFactoryInterface\\:\\:comparison\\(\\) expects PHPCR\\\\Query\\\\QOM\\\\StaticOperandInterface, mixed given\\.$#"
-			count: 4
+			count: 5
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
 		-
@@ -43546,11 +43291,6 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Document/Subscriber/CustomUrlSubscriber.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Document\\\\Subscriber\\\\InvalidationSubscriber\\:\\:getUrlWithScheme\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Document/Subscriber/InvalidationSubscriber.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Document\\\\Subscriber\\\\InvalidationSubscriber\\:\\:invalidateCustomUrlDocument\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Document/Subscriber/InvalidationSubscriber.php
@@ -43577,6 +43317,11 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Document\\\\Subscriber\\\\InvalidationSubscriber\\:\\:invalidateRouteDocument\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Sulu/Component/CustomUrl/Document/Subscriber/InvalidationSubscriber.php
+
+		-
+			message: "#^Parameter \\#1 \\$url of method Sulu\\\\Component\\\\CustomUrl\\\\Document\\\\Subscriber\\\\InvalidationSubscriber\\:\\:getUrlWithScheme\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Document/Subscriber/InvalidationSubscriber.php
 
@@ -43776,17 +43521,7 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Manager/TitleAlreadyExistsException.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Repository\\\\CustomUrlRepository\\:\\:createBaseDomainQuery\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Repository/CustomUrlRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Repository\\\\CustomUrlRepository\\:\\:createBaseDomainQuery\\(\\) has parameter \\$baseDomains with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Repository/CustomUrlRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Repository\\\\CustomUrlRepository\\:\\:findList\\(\\) has parameter \\$baseDomains with no value type specified in iterable type array\\.$#"
+			message: "#^Cannot call method execute\\(\\) on PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Repository/CustomUrlRepository.php
 
@@ -43832,7 +43567,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$operand2 of method PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelFactoryInterface\\:\\:comparison\\(\\) expects PHPCR\\\\Query\\\\QOM\\\\StaticOperandInterface, mixed given\\.$#"
-			count: 2
+			count: 4
 			path: src/Sulu/Component/CustomUrl/Repository/CustomUrlRepository.php
 
 		-
@@ -46081,11 +45816,6 @@ parameters:
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/DocumentManagerTest.php
 
 		-
-			message: "#^Call to an undefined method Jackalope\\\\Workspace\\:\\:reveal\\(\\)\\.$#"
-			count: 2
-			path: src/Sulu/Component/DocumentManager/Tests/Unit/NodeHelperTest.php
-
-		-
 			message: "#^Method PHPUnit\\\\Framework\\\\TestCase\\:\\:expectException\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: src/Sulu/Component/DocumentManager/Tests/Unit/NodeHelperTest.php
@@ -47252,6 +46982,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, array\\<Sulu\\\\Component\\\\Content\\\\Compat\\\\PropertyParameter\\>\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
+
+		-
+			message: "#^Parameter \\#6 \\$security of class Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider constructor expects Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\|null, object given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
 
@@ -50201,47 +49936,7 @@ parameters:
 			path: src/Sulu/Component/Rest/Tests/Unit/RequestParametersTraitTest.php
 
 		-
-			message: "#^Call to method add\\(\\) on an unknown class Mock\\.$#"
-			count: 5
-			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
-
-		-
-			message: "#^Call to method delete\\(\\) on an unknown class Mock\\.$#"
-			count: 5
-			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
-
-		-
-			message: "#^Call to method expects\\(\\) on an unknown class Mock\\.$#"
-			count: 24
-			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
-
-		-
-			message: "#^Call to method get\\(\\) on an unknown class Mock\\.$#"
-			count: 4
-			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
-
-		-
-			message: "#^Call to method getId\\(\\) on an unknown class Mock\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
-
-		-
-			message: "#^Call to method update\\(\\) on an unknown class Mock\\.$#"
-			count: 5
-			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
-
-		-
-			message: "#^Cloning object of an unknown class Mock\\.$#"
-			count: 2
-			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$className of method PHPUnit\\\\Framework\\\\TestCase\\:\\:getMockBuilder\\(\\) expects class\\-string\\<Mock\\>, string given\\.$#"
-			count: 8
-			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$entities of method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:compareEntitiesWithData\\(\\) expects Traversable, array\\<int, Mock&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\> given\\.$#"
+			message: "#^Parameter \\#1 \\$entities of method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:compareEntitiesWithData\\(\\) expects Traversable, array\\<int, PHPUnit\\\\Framework\\\\MockObject\\\\MockObject&Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\MockInterface\\> given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
 
@@ -50251,38 +49946,8 @@ parameters:
 			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$entities of method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:processSubEntities\\(\\) expects Traversable, array\\<int, Mock&PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\> given\\.$#"
+			message: "#^Parameter \\#1 \\$entities of method Sulu\\\\Component\\\\Rest\\\\RestHelper\\:\\:processSubEntities\\(\\) expects Traversable, array\\<int, PHPUnit\\\\Framework\\\\MockObject\\\\MockObject&Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\MockInterface\\> given\\.$#"
 			count: 2
-			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
-
-		-
-			message: "#^Trying to mock an undefined method add\\(\\) on class Mock\\.$#"
-			count: 5
-			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
-
-		-
-			message: "#^Trying to mock an undefined method delete\\(\\) on class Mock\\.$#"
-			count: 5
-			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
-
-		-
-			message: "#^Trying to mock an undefined method get\\(\\) on class Mock\\.$#"
-			count: 5
-			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
-
-		-
-			message: "#^Trying to mock an undefined method getId\\(\\) on class Mock\\.$#"
-			count: 3
-			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
-
-		-
-			message: "#^Trying to mock an undefined method getValue\\(\\) on class Mock\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
-
-		-
-			message: "#^Trying to mock an undefined method update\\(\\) on class Mock\\.$#"
-			count: 5
 			path: src/Sulu/Component/Rest/Tests/Unit/RestHelperTest.php
 
 		-
@@ -50807,6 +50472,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$user of method Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlManager\\:\\:getUserPermissions\\(\\) expects Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null, string given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/AccessControlManagerTest.php
+
+		-
+			message: "#^Parameter \\#7 \\$security of class Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlManager constructor expects Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\|null, object given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/AccessControlManagerTest.php
 
@@ -51996,23 +51666,8 @@ parameters:
 			path: src/Sulu/Component/Util/SuluNodeHelper.php
 
 		-
-			message: "#^Offset string on string in isset\\(\\) does not exist\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function array_keys expects array, string given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
 			message: "#^Parameter \\#2 \\$haystack of function in_array expects array, mixed given\\.$#"
 			count: 3
-			path: src/Sulu/Component/Util/SuluNodeHelper.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Util\\\\SuluNodeHelper\\:\\:\\$paths \\(string\\) does not accept array\\.$#"
-			count: 1
 			path: src/Sulu/Component/Util/SuluNodeHelper.php
 
 		-

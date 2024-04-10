@@ -92,8 +92,8 @@ class ContactMediaControllerTest extends SuluTestCase
 
         $this->assertEquals(1, $response->total);
         $this->assertEquals($media1->getId(), $response->_embedded->contact_media[0]->id);
-        $this->assertObjectHasAttribute('thumbnails', $response->_embedded->contact_media[0]);
-        $this->assertObjectHasAttribute('sulu-100x100', $response->_embedded->contact_media[0]->thumbnails);
+        $this->assertTrue(\property_exists($response->_embedded->contact_media[0], 'thumbnails'));
+        $this->assertTrue(\property_exists($response->_embedded->contact_media[0]->thumbnails, 'sulu-100x100'));
         $this->assertTrue(\is_string($response->_embedded->contact_media[0]->thumbnails->{'sulu-100x100'}));
     }
 

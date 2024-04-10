@@ -1007,13 +1007,13 @@ class BlockContentTypeTest extends TestCase
                 'type' => 'type1',
                 'media' => [
                     'ids' => [
-                        '123-123-123',
-                        '321-321-321',
+                        1,
+                        2,
                     ],
                 ],
                 'sub-block' => [
                     'type' => 'subType1',
-                    'single_media' => ['id' => '111-111-111'],
+                    'single_media' => ['id' => 3],
                     'settings' => [],
                 ],
                 'settings' => [],
@@ -1022,7 +1022,7 @@ class BlockContentTypeTest extends TestCase
                 'type' => 'type1',
                 'media' => [
                     'ids' => [
-                        '444-444-444',
+                        4,
                     ],
                 ],
                 'sub-block' => [],
@@ -1036,28 +1036,28 @@ class BlockContentTypeTest extends TestCase
         $referenceCollector = $this->prophesize(ReferenceCollectorInterface::class);
         $referenceCollector->addReference(
             'media',
-            '123-123-123',
+            1,
             'block1[0].media'
         )
             ->shouldBeCalled()
             ->willReturn(new Reference());
         $referenceCollector->addReference(
             'media',
-            '321-321-321',
+            2,
             'block1[0].media'
         )
             ->shouldBeCalled()
             ->willReturn(new Reference());
         $referenceCollector->addReference(
             'media',
-            '111-111-111',
+            3,
             'block1[0].sub-block[0].single_media'
         )
             ->shouldBeCalled()
             ->willReturn(new Reference());
         $referenceCollector->addReference(
             'media',
-            '444-444-444',
+            4,
             'block1[1].media'
         )
             ->shouldBeCalled()

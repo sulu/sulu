@@ -427,12 +427,12 @@ class SingleMediaSelectionTest extends TestCase
             new Metadata([]),
             'single_media_selection',
         );
-        $property->setValue(['id' => '123-123-123']);
+        $property->setValue(['id' => 1]);
 
         $referenceCollector = $this->prophesize(ReferenceCollector::class);
         $referenceCollector->addReference(
             'media',
-            '123-123-123',
+            1,
             'media'
         )->shouldBeCalled();
 

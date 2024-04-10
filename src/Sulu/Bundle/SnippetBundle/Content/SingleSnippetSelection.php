@@ -152,7 +152,7 @@ class SingleSnippetSelection extends SimpleContentType implements PreResolvableC
     public function getReferences(PropertyInterface $property, ReferenceCollectorInterface $referenceCollector, string $propertyPrefix = ''): void
     {
         $data = $property->getValue();
-        if (null === $data) {
+        if (!\is_string($data)) {
             return;
         }
 

@@ -22,8 +22,9 @@ use Sulu\Component\Security\Authorization\PermissionTypes;
 use Sulu\Component\Security\Authorization\SecurityCondition;
 use Sulu\Component\Security\Event\PermissionUpdateEvent;
 use Sulu\Component\Security\Event\SecurityEvents;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
 
 /**
  * An implementation of the AccessControlManagerInterface, which supports registering AccessControlProvider. All method
@@ -67,7 +68,7 @@ class AccessControlManager implements AccessControlManagerInterface
     private $accessControlRepository;
 
     /**
-     * @var Security|null
+     * @var Security|SymfonyCoreSecurity|null
      */
     private $security;
 
@@ -86,7 +87,7 @@ class AccessControlManager implements AccessControlManagerInterface
         iterable $descendantProviders,
         RoleRepositoryInterface $roleRepository,
         AccessControlRepositoryInterface $accessControlRepository,
-        ?Security $security,
+        Security|SymfonyCoreSecurity|null $security,
         array $permissions
     ) {
         $this->maskConverter = $maskConverter;

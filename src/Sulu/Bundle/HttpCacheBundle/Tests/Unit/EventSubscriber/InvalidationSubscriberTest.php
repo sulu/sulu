@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\EventListener;
+namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\EventSubscriber;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;

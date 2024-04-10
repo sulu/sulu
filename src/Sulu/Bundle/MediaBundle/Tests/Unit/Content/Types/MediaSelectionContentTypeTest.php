@@ -782,17 +782,17 @@ class MediaSelectionContentTypeTest extends TestCase
             new Metadata([]),
             'media_selection',
         );
-        $property->setValue(['ids' => ['123-123-123', '321-321-321']]);
+        $property->setValue(['ids' => [1, 2]]);
 
         $referenceCollector = $this->prophesize(ReferenceCollector::class);
         $referenceCollector->addReference(
             'media',
-            '123-123-123',
+            1,
             'media'
         )->shouldBeCalled();
         $referenceCollector->addReference(
             'media',
-            '321-321-321',
+            2,
             'media'
         )->shouldBeCalled();
 

@@ -26,7 +26,8 @@ use Sulu\Component\SmartContent\ResourceItemInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\Security as WebspaceSecurity;
 use Sulu\Component\Webspace\Webspace;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
 
 class BaseDataProviderTest extends TestCase
 {
@@ -351,7 +352,7 @@ class BaseDataProviderTest extends TestCase
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
 
-        $security = $this->prophesize(Security::class);
+        $security = $this->prophesize(\class_exists(Security::class) ? Security::class : SymfonyCoreSecurity::class);
         $security->getUser()->willReturn($user->reveal());
 
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);
@@ -394,7 +395,7 @@ class BaseDataProviderTest extends TestCase
 
         $serializer = $this->prophesize(ArraySerializerInterface::class);
 
-        $security = $this->prophesize(Security::class);
+        $security = $this->prophesize(\class_exists(Security::class) ? Security::class : SymfonyCoreSecurity::class);
         $security->getUser()->willReturn($user->reveal());
 
         $requestAnalyzer = $this->prophesize(RequestAnalyzerInterface::class);

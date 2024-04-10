@@ -38,9 +38,9 @@ class PropertyMetadataMinMaxValueResolverTest extends TestCase
 
         $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
 
-        $this->assertObjectHasAttribute('min', $minMaxValue);
+        $this->assertTrue(\property_exists($minMaxValue, 'min'));
         $this->assertSame(2, $minMaxValue->min);
-        $this->assertObjectHasAttribute('max', $minMaxValue);
+        $this->assertTrue(\property_exists($minMaxValue, 'max'));
         $this->assertSame(3, $minMaxValue->max);
     }
 
@@ -54,9 +54,9 @@ class PropertyMetadataMinMaxValueResolverTest extends TestCase
 
         $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
 
-        $this->assertObjectHasAttribute('min', $minMaxValue);
+        $this->assertTrue(\property_exists($minMaxValue, 'min'));
         $this->assertSame(2, $minMaxValue->min);
-        $this->assertObjectHasAttribute('max', $minMaxValue);
+        $this->assertTrue(\property_exists($minMaxValue, 'max'));
         $this->assertNull($minMaxValue->max);
     }
 
@@ -70,9 +70,9 @@ class PropertyMetadataMinMaxValueResolverTest extends TestCase
 
         $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
 
-        $this->assertObjectHasAttribute('min', $minMaxValue);
+        $this->assertTrue(\property_exists($minMaxValue, 'min'));
         $this->assertNull($minMaxValue->min);
-        $this->assertObjectHasAttribute('max', $minMaxValue);
+        $this->assertTrue(\property_exists($minMaxValue, 'max'));
         $this->assertSame(2, $minMaxValue->max);
     }
 
@@ -83,9 +83,9 @@ class PropertyMetadataMinMaxValueResolverTest extends TestCase
 
         $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
 
-        $this->assertObjectHasAttribute('min', $minMaxValue);
+        $this->assertTrue(\property_exists($minMaxValue, 'min'));
         $this->assertNull($minMaxValue->min);
-        $this->assertObjectHasAttribute('max', $minMaxValue);
+        $this->assertTrue(\property_exists($minMaxValue, 'max'));
         $this->assertNull($minMaxValue->max);
     }
 
@@ -97,9 +97,9 @@ class PropertyMetadataMinMaxValueResolverTest extends TestCase
 
         $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
 
-        $this->assertObjectHasAttribute('min', $minMaxValue);
+        $this->assertTrue(\property_exists($minMaxValue, 'min'));
         $this->assertSame(1, $minMaxValue->min);
-        $this->assertObjectHasAttribute('max', $minMaxValue);
+        $this->assertTrue(\property_exists($minMaxValue, 'max'));
         $this->assertNull($minMaxValue->max);
     }
 
@@ -114,9 +114,9 @@ class PropertyMetadataMinMaxValueResolverTest extends TestCase
 
         $minMaxValue = $this->propertyMetadataMinMaxValueResolver->resolveMinMaxValue($propertyMetadata);
 
-        $this->assertObjectHasAttribute('min', $minMaxValue);
+        $this->assertTrue(\property_exists($minMaxValue, 'min'));
         $this->assertSame(2, $minMaxValue->min);
-        $this->assertObjectHasAttribute('max', $minMaxValue);
+        $this->assertTrue(\property_exists($minMaxValue, 'max'));
         $this->assertSame(3, $minMaxValue->max);
     }
 
@@ -135,9 +135,9 @@ class PropertyMetadataMinMaxValueResolverTest extends TestCase
             'maxItems'
         );
 
-        $this->assertObjectHasAttribute('min', $minMaxValue);
+        $this->assertTrue(\property_exists($minMaxValue, 'min'));
         $this->assertSame(2, $minMaxValue->min);
-        $this->assertObjectHasAttribute('max', $minMaxValue);
+        $this->assertTrue(\property_exists($minMaxValue, 'max'));
         $this->assertSame(3, $minMaxValue->max);
     }
 
