@@ -337,6 +337,15 @@ it respects the list of fields provided in the query parameter and only returns 
 
 ## 2.5.15
 
+### Run Shadow migrations
+
+To fix shadow pages be correctly available you need to run the phpcr migration command:
+
+```bash
+bin/console phpcr:migrations:migrate
+```
+
+
 ### Change FileVersion default meta relation
 
 Currently, when removing the default meta, it did also remove the whole file version to avoid it following DB Change
@@ -712,6 +721,16 @@ framework:
 
 It should also be considered to remove the **SwiftMailer** and **SwiftMailerBundle**
 from your application and replace it with [**Symfony Mailer**](https://symfony.com/doc/6.1/mailer.html).
+
+## 2.4.19
+
+### Run Shadow migrations
+
+To fix shadow pages be correctly available you need to run the phpcr migration command:
+
+```bash
+bin/console phpcr:migrations:migrate
+```
 
 ## 2.4.17
 
