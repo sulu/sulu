@@ -1,5 +1,15 @@
 # Upgrade
 
+## 2.4.19
+
+### Run Shadow migrations
+
+To fix shadow pages be correctly available you need to run the phpcr migration command:
+
+```bash
+bin/console phpcr:migrations:migrate
+```
+
 ## 2.4.17
 
 ### Change FileVersion default meta relation
