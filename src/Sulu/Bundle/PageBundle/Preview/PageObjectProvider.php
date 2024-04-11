@@ -18,6 +18,7 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Admin\PageAdmin;
 use Sulu\Bundle\PageBundle\Document\BasePageDocument;
 use Sulu\Bundle\PreviewBundle\Preview\Object\PreviewObjectProviderInterface;
+use Sulu\Component\Content\Document\Extension\ExtensionContainer;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
@@ -73,6 +74,11 @@ class PageObjectProvider implements PreviewObjectProviderInterface
         $structure = $object->getStructure();
         foreach ($data as $property => $value) {
             try {
+                if ('ext' === $property) {
+                    $object->setExtensionsData(new ExtensionContainer($value));
+                    continue;
+                }
+
                 $propertyAccess->setValue($structure, $property, $value);
             } catch (\InvalidArgumentException $e) {
                 //ignore not existing properties
