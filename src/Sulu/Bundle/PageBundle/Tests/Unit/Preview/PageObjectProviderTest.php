@@ -91,6 +91,12 @@ class PageObjectProviderTest extends TestCase
         $this->assertEquals('SULU', $structure->getProperty('title')->getValue());
     }
 
+    /**
+     * @param array{
+     *     title: string,
+     *     ext: array<string, mixed>
+     * } $data
+     */
     public function testSetExtensionValues(string $locale = 'de', array $data = ['title' => 'SULU', 'ext' => ['key' => 'value']]): void
     {
         $structure = new Structure();
