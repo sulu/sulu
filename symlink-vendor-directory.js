@@ -33,7 +33,7 @@ if (
         && path.basename(path.dirname(process.cwd())) === 'assets'
     )
 ) {
-    exec('npx symlink-dir ' + from + ' ' + to, (error) => {
+    exec('npx "symlink-dir@<6.0" ' + from + ' ' + to, (error) => {
         if (error) {
             throw new Error('Error occured while creating symlink: ' + error);
         }
