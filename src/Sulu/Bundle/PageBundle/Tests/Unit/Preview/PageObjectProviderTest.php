@@ -95,6 +95,32 @@ class PageObjectProviderTest extends TestCase
     }
 
     /**
+     * @param array{
+     *     title: string,
+     *     ext: array<string, mixed>
+     * } $data
+     */
+    public function testSetExtensionValues(string $locale = 'de', array $data = ['title' => 'SULU', 'ext' => ['key' => 'value']]): void
+    {
+        $structure = new Structure();
+        $object = $this->prophesize(BasePageDocument::class);
+        $object->setExtensionsData(
+            Argument::that(
+                function($extensionContainer) {
+                    $this->assertEquals(['key' => 'value'], $extensionContainer->toArray());
+
+                    return true;
+                }
+            )
+        )->shouldBeCalled();
+        $object->getStructure()->willReturn($structure);
+
+        $this->provider->setValues($object->reveal(), $locale, $data);
+
+        $this->assertEquals('SULU', $structure->getProperty('title')->getValue());
+    }
+
+    /**
      * @param string[] $context
      */
     public function testSetContext(string $locale = 'de', array $context = ['template' => 'test-template']): void
