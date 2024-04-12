@@ -12,6 +12,7 @@ import ResourceStore from '../../../stores/ResourceStore';
 import blockPreviewTransformerRegistry from '../registries/blockPreviewTransformerRegistry';
 import fieldRegistry from '../../Form/registries/fieldRegistry';
 import SingleSelect from '../../Form/fields/SingleSelect';
+import conditionDataProviderRegistry from '../../Form/registries/conditionDataProviderRegistry';
 
 jest.mock('../../../services/Router/Router', () => jest.fn());
 jest.mock('../../Form/FormInspector', () => jest.fn(function() {
@@ -1538,6 +1539,89 @@ test('Should display and update correct icons based on block settings data and s
         fieldBlocks.find('Checkbox[dataPath="/setting"]').prop('onChange')(false);
         fieldBlocks.find('FormOverlay Button[children="sulu_admin.apply"]').simulate('click');
 
+        expect(fieldBlocks.find('Block').at(0).find('Icon[name="su-hide"]').exists()).toBe(false);
+    });
+});
+
+test('Should display correct icons based on visibleCondition', () => {
+    const formInspector = new FormInspector(new ResourceFormStore(new ResourceStore('test'), 'test'));
+    conditionDataProviderRegistry.add(() => ({__locale: 'de'}));
+
+    const types = {
+        default: {
+            title: 'Default',
+            form: {
+                text1: {
+                    label: 'Text 1',
+                    tags: [
+                        {name: 'sulu.block_preview'},
+                    ],
+                    type: 'text_line',
+                },
+            },
+        },
+    };
+
+    formInspector.getSchemaEntryByPath.mockReturnValue({types});
+
+    const schemaPromise = Promise.resolve({
+        setting: {
+            tags: [
+                {
+                    attributes: {
+                        icon: 'su-hide',
+                        visibleCondition: '__locale == "de" && text1 == "Test 1"',
+                    },
+                    name: 'sulu.block_setting_icon',
+                },
+            ],
+            type: 'checkbox',
+        },
+    });
+    const jsonSchemaPromise = Promise.resolve({});
+    metadataStore.getSchema.mockReturnValue(schemaPromise);
+    metadataStore.getJsonSchema.mockReturnValue(jsonSchemaPromise);
+
+    const value = [
+        {
+            text1: 'Test 1',
+            type: 'default',
+            settings: {
+                setting: true,
+            },
+        },
+    ];
+
+    const fieldBlocks = mount(
+        <FieldBlocks
+            {...fieldTypeDefaultProps}
+            defaultType="editor"
+            formInspector={formInspector}
+            schemaOptions={{settings_form_key: {name: 'settings_form_key', value: 'page_block_settings'}}}
+            types={types}
+            value={value}
+        />
+    );
+
+    return Promise.all([schemaPromise, jsonSchemaPromise]).then(() => {
+        fieldBlocks.update();
+        expect(fieldBlocks.find('Block').at(0).find('Icon[name="su-hide"]').exists()).toBe(true);
+
+        fieldBlocks.setProps(
+            {
+                value: [
+                    {
+                        text1: 'Test 2',
+                        type: 'default',
+                        settings: {
+                            setting: true,
+                        },
+                    },
+                ],
+            }
+        );
+
+        fieldBlocks.update();
         expect(fieldBlocks.find('Block').at(0).find('Icon[name="su-hide"]').exists()).toBe(false);
     });
 });

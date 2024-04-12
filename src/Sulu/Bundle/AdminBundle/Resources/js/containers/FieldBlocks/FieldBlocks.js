@@ -1,14 +1,16 @@
 // @flow
 import equals from 'fast-deep-equal';
 import jsonpointer from 'json-pointer';
+import jexl from 'jexl';
 import React, {Fragment} from 'react';
-import {action, observable, computed, toJS} from 'mobx';
+import {action, computed, observable, toJS} from 'mobx';
 import {observer} from 'mobx-react';
 import BlockCollection from '../../components/BlockCollection';
 import {translate} from '../../utils/Translator';
 import {memoryFormStoreFactory} from '../Form';
 import FormOverlay from '../FormOverlay';
 import snackbarStore from '../../stores/snackbarStore';
+import conditionDataProviderRegistry from '../Form/registries/conditionDataProviderRegistry';
 import blockPreviewTransformerRegistry from './registries/blockPreviewTransformerRegistry';
 import FieldRenderer from './FieldRenderer';
 import type {BlockError, FieldTypeProps, FormStoreInterface} from '../Form/types';
@@ -194,7 +196,7 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
             const blockSettingsTag = schemaEntry.tags.find((tag) => tag.name === SETTINGS_TAG);
 
             if (blockSettingsTag) {
-                iconsMapping[SETTINGS_PREFIX + schemaKey] = blockSettingsTag.attributes.icon;
+                iconsMapping[SETTINGS_PREFIX + schemaKey] = blockSettingsTag.attributes;
             }
 
             return iconsMapping;
@@ -209,12 +211,36 @@ class FieldBlocks extends React.Component<FieldTypeProps<Array<BlockEntry>>> {
         }
 
         return this.value.map((value) => Object.keys(this.iconsMapping).reduce((icons, pointer) => {
-            if (jsonpointer.has(value, pointer) && jsonpointer.get(value, pointer)) {
-                icons.push(this.iconsMapping[pointer]);
+            const visibleCondition = this.iconsMapping[pointer].visibleCondition;
+            if (jsonpointer.has(value, pointer) || visibleCondition !== undefined) {
+                let icon = undefined;
+                if (visibleCondition !== undefined) {
+                    const conditionData = this.getConditionData(value, pointer);
+                    if (jexl.evalSync(visibleCondition, conditionData)){
+                        icon = this.iconsMapping[pointer].icon;
+                    }
+                } else if (jsonpointer.get(value, pointer)) {
+                    icon = this.iconsMapping[pointer].icon;
+                }
+
+                if (icon) {
+                    icons.push(icon);
+                }
             }
 
             return icons;
         }, []));
+    }
+
+    getConditionData(data: {[string]: any}, dataPath: ?string) {
+        const {formInspector} = this.props;
+
+        return conditionDataProviderRegistry.getAll().reduce(
+            function(data, conditionDataProvider) {
+                return {...data, ...conditionDataProvider(data, dataPath, formInspector)};
+            },
+            {...data}
+        );
     }
 
     @action setValue = (value: Object) => {
