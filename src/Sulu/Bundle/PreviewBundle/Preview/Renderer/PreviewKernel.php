@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\PreviewBundle\Preview\Renderer;
 
 use App\Kernel;
+use Sulu\Bundle\PreviewBundle\Infrastructure\Symfony\DependencyInjection\Compiler\RegisterPreviewWebspaceClassPass;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -110,5 +111,13 @@ class PreviewKernel extends Kernel
             parent::getKernelParameters(),
             ['sulu.preview' => true]
         );
+    }
+
+    /**
+     * @return void
+     */
+    protected function build(ContainerBuilder $container)
+    {
+        $container->addCompilerPass(new RegisterPreviewWebspaceClassPass());
     }
 }
