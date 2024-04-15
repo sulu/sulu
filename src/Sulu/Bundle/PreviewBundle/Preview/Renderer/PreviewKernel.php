@@ -113,6 +113,9 @@ class PreviewKernel extends Kernel
         );
     }
 
+    /**
+     * @return void
+     */
     protected function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new RegisterPreviewWebspaceClassPass());

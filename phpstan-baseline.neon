@@ -30276,18 +30276,8 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\SnippetRepository\\:\\:getSnippetsQuery\\(\\) should return Jackalope\\\\Query\\\\Query but returns PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
-
-		-
 			message: "#^Parameter \\#2 \\$userId of method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:copyLanguage\\(\\) expects string, int given\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
-
-		-
-			message: "#^Parameter \\#3 \\$operand2 of method PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelFactoryInterface\\:\\:comparison\\(\\) expects PHPCR\\\\Query\\\\QOM\\\\StaticOperandInterface, mixed given\\.$#"
-			count: 3
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetRepository.php
 
 		-
@@ -41196,11 +41186,6 @@ parameters:
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
 
 		-
-			message: "#^Parameter \\#3 \\$operand2 of method PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelFactoryInterface\\:\\:comparison\\(\\) expects PHPCR\\\\Query\\\\QOM\\\\StaticOperandInterface, mixed given\\.$#"
-			count: 5
-			path: src/Sulu/Component/Content/Repository/ContentRepository.php
-
-		-
 			message: "#^Parameter \\#3 \\$subject of function str_replace expects array\\|string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Repository/ContentRepository.php
@@ -43521,11 +43506,6 @@ parameters:
 			path: src/Sulu/Component/CustomUrl/Manager/TitleAlreadyExistsException.php
 
 		-
-			message: "#^Cannot call method execute\\(\\) on PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Component/CustomUrl/Repository/CustomUrlRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\CustomUrl\\\\Repository\\\\CustomUrlRepository\\:\\:findUrls\\(\\) should return Iterator but returns array\\<string\\>\\.$#"
 			count: 1
 			path: src/Sulu/Component/CustomUrl/Repository/CustomUrlRepository.php
@@ -43563,11 +43543,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Component\\\\Content\\\\Repository\\\\ContentRepositoryInterface\\:\\:findByUuids\\(\\) expects string, null given\\.$#"
 			count: 1
-			path: src/Sulu/Component/CustomUrl/Repository/CustomUrlRepository.php
-
-		-
-			message: "#^Parameter \\#3 \\$operand2 of method PHPCR\\\\Query\\\\QOM\\\\QueryObjectModelFactoryInterface\\:\\:comparison\\(\\) expects PHPCR\\\\Query\\\\QOM\\\\StaticOperandInterface, mixed given\\.$#"
-			count: 4
 			path: src/Sulu/Component/CustomUrl/Repository/CustomUrlRepository.php
 
 		-
@@ -48386,11 +48361,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/FilterTypeInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Filter\\\\FilterTypeRegistry\\:\\:__construct\\(\\) has parameter \\$filterTypes with no value type specified in iterable type iterable\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Filter/FilterTypeRegistry.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Filter\\\\NumberFilterType\\:\\:filter\\(\\) has parameter \\$options with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Filter/NumberFilterType.php
@@ -48777,11 +48747,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\FieldDescriptorFactory\\:\\:resolveOptions\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\FieldDescriptorFactory\\:\\:warmUp\\(\\) should return array\\<string\\> but return statement is missing\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
 
