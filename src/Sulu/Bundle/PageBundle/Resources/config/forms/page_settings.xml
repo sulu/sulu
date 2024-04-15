@@ -142,7 +142,7 @@
                 <title>sulu_page.editing_information</title>
             </meta>
             <properties>
-                <property name="lastModifiedEnabled" type="checkbox" colspan="6">
+                <property name="lastModifiedEnabled" type="checkbox" colspan="6" visibleCondition="shadowOn == false AND path != ''">
                     <meta>
                         <title>sulu_page.last_modified_enabled</title>
                     </meta>
@@ -152,7 +152,7 @@
                         <param name="default_value" value="false"/>
                     </params>
                 </property>
-                <property name="lastModified" type="datetime" colspan="6" disabledCondition="!lastModifiedEnabled">
+                <property name="lastModified" type="datetime" colspan="6" disabledCondition="!lastModifiedEnabled" visibleCondition="shadowOn == false AND path != ''">
                     <meta>
                         <title>sulu_page.last_modified_date</title>
                     </meta>
