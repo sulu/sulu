@@ -11,6 +11,7 @@
         "@ckeditor/ckeditor5-engine": "^41.2.1",
         "@ckeditor/ckeditor5-essentials": "^41.2.1",
         "@ckeditor/ckeditor5-heading": "^41.2.1",
+        "@ckeditor/ckeditor5-language": "^41.2.1",
         "@ckeditor/ckeditor5-list": "^41.2.1",
         "@ckeditor/ckeditor5-paragraph": "^41.2.1",
         "@ckeditor/ckeditor5-table": "^41.2.1",
