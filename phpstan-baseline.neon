@@ -48761,11 +48761,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Metadata\\\\FieldDescriptorFactory\\:\\:warmUp\\(\\) should return array\\<string\\> but return statement is missing\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
-
-		-
 			message: "#^Parameter \\#1 \\$data of function unserialize expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Metadata/FieldDescriptorFactory.php
