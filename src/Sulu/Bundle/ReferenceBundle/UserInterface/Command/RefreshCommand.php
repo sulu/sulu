@@ -13,6 +13,7 @@ namespace Sulu\Bundle\ReferenceBundle\UserInterface\Command;
 
 use Sulu\Bundle\ReferenceBundle\Application\Refresh\ReferenceRefresherInterface;
 use Sulu\Bundle\ReferenceBundle\Domain\Repository\ReferenceRepositoryInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,6 +25,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  *
  * @final
  */
+#[AsCommand(name: 'sulu:reference:refresh')]
 class RefreshCommand extends Command
 {
     protected static $defaultName = 'sulu:reference:refresh';
