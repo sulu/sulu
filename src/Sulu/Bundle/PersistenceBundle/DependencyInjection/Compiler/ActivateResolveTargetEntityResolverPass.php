@@ -15,6 +15,9 @@ use Doctrine\ORM\Events;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * @internal
+ */
 class ActivateResolveTargetEntityResolverPass implements CompilerPassInterface
 {
     /**
