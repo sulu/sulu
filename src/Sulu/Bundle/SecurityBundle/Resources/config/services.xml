@@ -345,7 +345,7 @@
             class="Sulu\Bundle\SecurityBundle\EventListener\PermissionInheritanceSubscriber"
         >
             <argument type="service" id="sulu_security.access_control_manager" />
-            <tag name="doctrine.event_subscriber"/>
+            <tag name="doctrine.event_listener"/>
         </service>
 
         <service id="sulu_security.phpcr_security_subscriber" class="Sulu\Bundle\SecurityBundle\EventListener\PhpcrSecuritySubscriber">

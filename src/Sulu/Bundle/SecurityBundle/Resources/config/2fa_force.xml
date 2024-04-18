@@ -6,7 +6,7 @@
         <service id="sulu_security.force_two_factor_listener" class="Sulu\Bundle\SecurityBundle\EventListener\ForceTwoFactorSubscriber">
             <argument>%sulu_security.two_factor_force_pattern%</argument>
 
-            <tag name="doctrine.event_subscriber"/>
+            <tag name="doctrine.event_listener"/>
         </service>
     </services>
 </container>
