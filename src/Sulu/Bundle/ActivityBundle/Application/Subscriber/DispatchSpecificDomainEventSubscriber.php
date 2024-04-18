@@ -17,15 +17,9 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class DispatchSpecificDomainEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
     public function __construct(
-        EventDispatcherInterface $eventDispatcher
+        private EventDispatcherInterface $eventDispatcher
     ) {
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public static function getSubscribedEvents()

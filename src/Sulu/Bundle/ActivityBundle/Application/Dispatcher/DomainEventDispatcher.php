@@ -16,13 +16,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class DomainEventDispatcher implements DomainEventDispatcherInterface
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
     public function __construct(
-        EventDispatcherInterface $eventDispatcher
+        private EventDispatcherInterface $eventDispatcher
     ) {
         $this->eventDispatcher = $eventDispatcher;
     }
