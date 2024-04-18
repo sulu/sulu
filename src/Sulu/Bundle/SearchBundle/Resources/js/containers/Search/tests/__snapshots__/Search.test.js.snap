@@ -223,7 +223,9 @@ exports[`Render search results 1`] = `
   >
     sulu_search.search_hint
   </p>
-  <section>
+  <section
+    class="resultsContainer"
+  >
     <div
       class="searchResult"
       role="button"

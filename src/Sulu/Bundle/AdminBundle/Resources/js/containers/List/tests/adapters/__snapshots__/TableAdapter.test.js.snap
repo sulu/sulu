@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Render column with ascending sort icon 1`] = `
-<section>
+<section
+  class="resultsContainer"
+>
   <div
     class="tableContainer dark"
   >
@@ -173,7 +175,9 @@ exports[`Render column with ascending sort icon 1`] = `
 `;
 
 exports[`Render column with descending sort icon 1`] = `
-<section>
+<section
+  class="resultsContainer"
+>
   <div
     class="tableContainer dark"
   >
@@ -345,7 +349,9 @@ exports[`Render column with descending sort icon 1`] = `
 `;
 
 exports[`Render data with all different visibility types schema 1`] = `
-<section>
+<section
+  class="resultsContainer"
+>
   <div
     class="tableContainer dark"
   >
@@ -530,7 +536,9 @@ exports[`Render data with all different visibility types schema 1`] = `
 `;
 
 exports[`Render data with pencil button and given itemActions when onItemEdit callback is passed 1`] = `
-<section>
+<section
+  class="resultsContainer"
+>
   <div
     class="tableContainer dark hasButtons"
   >
@@ -819,7 +827,9 @@ exports[`Render data with pencil button and given itemActions when onItemEdit ca
 `;
 
 exports[`Render data with pencil button when onItemEdit callback is passed 1`] = `
-<section>
+<section
+  class="resultsContainer"
+>
   <div
     class="tableContainer dark hasButtons"
   >
@@ -1024,7 +1034,9 @@ exports[`Render data with pencil button when onItemEdit callback is passed 1`] =
 `;
 
 exports[`Render data with schema 1`] = `
-<section>
+<section
+  class="resultsContainer"
+>
   <div
     class="tableContainer dark"
   >
@@ -1331,7 +1343,9 @@ exports[`Render data with schema 1`] = `
 `;
 
 exports[`Render data with schema and selections 1`] = `
-<section>
+<section
+  class="resultsContainer"
+>
   <div
     class="tableContainer dark"
   >
@@ -1609,7 +1623,9 @@ exports[`Render data with schema and selections 1`] = `
 `;
 
 exports[`Render data with schema in different order 1`] = `
-<section>
+<section
+  class="resultsContainer"
+>
   <div
     class="tableContainer dark"
   >
@@ -1771,7 +1787,9 @@ exports[`Render data with schema in different order 1`] = `
 `;
 
 exports[`Render data with schema not containing all fields 1`] = `
-<section>
+<section
+  class="resultsContainer"
+>
   <div
     class="tableContainer dark"
   >
@@ -1894,7 +1912,9 @@ exports[`Render data with schema not containing all fields 1`] = `
 `;
 
 exports[`Render data with shrunken cell 1`] = `
-<section>
+<section
+  class="resultsContainer"
+>
   <div
     class="tableContainer dark"
   >
@@ -2157,7 +2177,9 @@ exports[`Render data with shrunken cell 1`] = `
 `;
 
 exports[`Render data with skin 1`] = `
-<section>
+<section
+  class="resultsContainer"
+>
   <div
     class="tableContainer light"
   >
@@ -2290,7 +2312,9 @@ exports[`Render data with skin 1`] = `
 `;
 
 exports[`Render data without header 1`] = `
-<section>
+<section
+  class="resultsContainer"
+>
   <div
     class="tableContainer dark"
   >
