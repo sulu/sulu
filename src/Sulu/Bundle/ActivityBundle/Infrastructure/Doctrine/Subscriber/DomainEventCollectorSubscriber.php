@@ -19,7 +19,6 @@ use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterfa
 
 class DomainEventCollectorSubscriber implements EventSubscriber
 {
-
     public function __construct(
         private DomainEventCollectorInterface $domainEventCollector
     ) {
