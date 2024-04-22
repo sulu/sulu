@@ -2,7 +2,7 @@
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service id="sulu_media.media_audience_targeting_subscriber"
-                 class="Sulu\Bundle\MediaBundle\EventListener\MediaAudienceTargetingListener">
+                 class="Sulu\Bundle\MediaBundle\EventListener\MediaAudienceTargetingSubscriber">
             <!-- Priority 50 as the MetadataLoader need to be before the ResolveTargetEntityListener of Doctrine -->
             <tag name="doctrine.event_listener" event="loadClassMetadata" priority="10"/>
         </service>

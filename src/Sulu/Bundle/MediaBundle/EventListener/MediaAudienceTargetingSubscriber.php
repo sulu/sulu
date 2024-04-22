@@ -20,7 +20,7 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 /**
  * This subscriber adds the relationship between media and audience target groups if both bundles are registered.
  */
-class MediaAudienceTargetingListener
+class MediaAudienceTargetingSubscriber
 {
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {

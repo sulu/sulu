@@ -9,13 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Listener;
+namespace Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Subscriber;
 
 use Doctrine\ORM\Event\OnClearEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 
-class DomainEventCollectorListener
+class DomainEventCollectorSubscriber
 {
     /**
      * @var DomainEventCollectorInterface

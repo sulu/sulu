@@ -18,7 +18,7 @@ use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
 /**
  * @internal
  */
-class ForceTwoFactorListener
+class ForceTwoFactorSubscriber
 {
     private string $twoFactorForcePattern;
 

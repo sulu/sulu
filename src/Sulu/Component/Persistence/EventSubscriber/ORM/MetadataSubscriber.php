@@ -22,7 +22,7 @@ use Doctrine\Persistence\Mapping\ReflectionService;
 /**
  * Doctrine subscriber used to manipulate metadata.
  */
-class MetadataSubscriber implements EventSubscriber
+class MetadataSubscriber
 {
     /**
      * @var array
@@ -42,13 +42,6 @@ class MetadataSubscriber implements EventSubscriber
     public function __construct($objects)
     {
         $this->objects = $objects;
-    }
-
-    public function getSubscribedEvents()
-    {
-        return [
-            Events::loadClassMetadata,
-        ];
     }
 
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
