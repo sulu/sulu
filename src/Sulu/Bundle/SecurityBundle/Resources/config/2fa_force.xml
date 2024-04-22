@@ -3,10 +3,11 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="sulu_security.force_two_factor_listener" class="Sulu\Bundle\SecurityBundle\EventListener\ForceTwoFactorSubscriber">
+        <service id="sulu_security.force_two_factor_listener" class="ForceTwoFactorListener">
             <argument>%sulu_security.two_factor_force_pattern%</argument>
 
-            <tag name="doctrine.event_listener"/>
+            <tag name="doctrine.event_listener" event="preUpdate"/>
+            <tag name="doctrine.event_listener" event="prePersist"/>
         </service>
     </services>
 </container>

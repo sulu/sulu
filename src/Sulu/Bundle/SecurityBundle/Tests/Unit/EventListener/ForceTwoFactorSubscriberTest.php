@@ -19,7 +19,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
-use Sulu\Bundle\SecurityBundle\EventListener\ForceTwoFactorSubscriber;
+use Sulu\Bundle\SecurityBundle\EventListener\ForceTwoFactorListener;
 
 class ForceTwoFactorSubscriberTest extends TestCase
 {
@@ -30,13 +30,13 @@ class ForceTwoFactorSubscriberTest extends TestCase
      */
     private ObjectProphecy $entityManager;
 
-    private ForceTwoFactorSubscriber $forceTwoFactorSubscriber;
+    private ForceTwoFactorListener $forceTwoFactorSubscriber;
 
     public function setUp(): void
     {
         $this->entityManager = $this->prophesize(EntityManagerInterface::class);
 
-        $this->forceTwoFactorSubscriber = new ForceTwoFactorSubscriber(
+        $this->forceTwoFactorSubscriber = new ForceTwoFactorListener(
             '/^(.*)@sulu\.io$/'
         );
     }

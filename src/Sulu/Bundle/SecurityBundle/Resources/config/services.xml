@@ -342,10 +342,10 @@
 
         <service
             id="sulu_security.permission_inheritance_subscriber"
-            class="Sulu\Bundle\SecurityBundle\EventListener\PermissionInheritanceSubscriber"
+            class="Sulu\Bundle\SecurityBundle\EventListener\PermissionInheritanceListener"
         >
             <argument type="service" id="sulu_security.access_control_manager" />
-            <tag name="doctrine.event_listener"/>
+            <tag name="doctrine.event_listener" event="postPersist"/>
         </service>
 
         <service id="sulu_security.phpcr_security_subscriber" class="Sulu\Bundle\SecurityBundle\EventListener\PhpcrSecuritySubscriber">

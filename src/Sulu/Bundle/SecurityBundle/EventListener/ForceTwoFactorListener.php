@@ -11,8 +11,6 @@
 
 namespace Sulu\Bundle\SecurityBundle\EventListener;
 
-use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
@@ -20,21 +18,13 @@ use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
 /**
  * @internal
  */
-class ForceTwoFactorSubscriber implements EventSubscriber
+class ForceTwoFactorListener
 {
     private string $twoFactorForcePattern;
 
     public function __construct(string $twoFactorForcePattern)
     {
         $this->twoFactorForcePattern = $twoFactorForcePattern;
-    }
-
-    public function getSubscribedEvents(): array
-    {
-        return [
-            Events::preUpdate,
-            Events::prePersist,
-        ];
     }
 
     /**
