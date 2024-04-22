@@ -70,7 +70,6 @@ class ReferencesOption
         $this->targetEntityMapping = $targetEntityMapping;
     }
 
-
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {
         $classMetadata = $event->getClassMetadata();

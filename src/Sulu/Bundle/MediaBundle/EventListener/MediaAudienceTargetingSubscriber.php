@@ -11,7 +11,6 @@
 
 namespace Sulu\Bundle\MediaBundle\EventListener;
 
-use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
