@@ -17,15 +17,9 @@ use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterfa
 
 class DomainEventCollectorSubscriber
 {
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
     public function __construct(
-        DomainEventCollectorInterface $domainEventDispatcher
+        private DomainEventCollectorInterface $domainEventCollector
     ) {
-        $this->domainEventCollector = $domainEventDispatcher;
     }
 
     public function onClear(OnClearEventArgs $args): void
