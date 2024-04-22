@@ -11,13 +11,11 @@
 
 namespace Sulu\Bundle\SecurityBundle\EventListener;
 
-use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Sulu\Bundle\SecurityBundle\Entity\PermissionInheritanceInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 
-class PermissionInheritanceSubscriber implements EventSubscriber
+class PermissionInheritanceSubscriber
 {
     /**
      * @var AccessControlManagerInterface
@@ -27,15 +25,6 @@ class PermissionInheritanceSubscriber implements EventSubscriber
     public function __construct(AccessControlManagerInterface $accessControlManager)
     {
         $this->accessControlManager = $accessControlManager;
-    }
-
-    public function getSubscribedEvents()
-    {
-        $events = [
-            Events::postPersist,
-        ];
-
-        return $events;
     }
 
     /**
