@@ -194,6 +194,23 @@ Return type changes in `ExpressionLanguageProvider`:
 +    public function getFunctions(): array
 ```
 
+### Symfony Doctrine Bridge 7 compatibility changes
+
+To be compatible with the changes of Symfony 7 Doctrine Bridge all Sulu `doctrine.event_subscribers` were migrated to
+`doctrine.event_listener`:
+
+It is recommended to migrate own event subscribers also to listeners.
+
+Example:
+
+```diff
+-<tag name="doctrine.event_subscriber" priority="-256"/>
++<tag name="doctrine.event_listener" event="onClear" priority="-256"/>
+```
+
+See also the documentation [official Doctrine Events documentation](https://symfony.com/doc/6.4/doctrine/events.html).  
+Or the Merge request implementing this changes in Sulu [here](https://github.com/sulu/sulu/pull/7374/files).
+
 ### Replace Symfony Security class
 
 The `Symfony\Component\Security\Core\Security` deprecated class was replaced by
