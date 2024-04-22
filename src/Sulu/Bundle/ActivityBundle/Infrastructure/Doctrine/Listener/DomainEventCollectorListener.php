@@ -9,15 +9,13 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Subscriber;
+namespace Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Listener;
 
-use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\OnClearEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
-use Doctrine\ORM\Events;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 
-class DomainEventCollectorSubscriber implements EventSubscriber
+class DomainEventCollectorListener
 {
     /**
      * @var DomainEventCollectorInterface
@@ -28,14 +26,6 @@ class DomainEventCollectorSubscriber implements EventSubscriber
         DomainEventCollectorInterface $domainEventDispatcher
     ) {
         $this->domainEventCollector = $domainEventDispatcher;
-    }
-
-    public function getSubscribedEvents()
-    {
-        return [
-            Events::onClear,
-            Events::postFlush,
-        ];
     }
 
     public function onClear(OnClearEventArgs $args): void

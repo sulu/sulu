@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
-use Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Subscriber\DomainEventCollectorSubscriber;
+use Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Listener\DomainEventCollectorListener;
 
 class DomainEventCollectorSubscriberTest extends TestCase
 {
@@ -55,9 +55,9 @@ class DomainEventCollectorSubscriberTest extends TestCase
         $subscriber->postFlush($postFlushEvent->reveal());
     }
 
-    private function createDomainEventCollectorSubscriber(): DomainEventCollectorSubscriber
+    private function createDomainEventCollectorSubscriber(): DomainEventCollectorListener
     {
-        return new DomainEventCollectorSubscriber(
+        return new DomainEventCollectorListener(
             $this->domainEventCollector->reveal()
         );
     }

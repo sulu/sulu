@@ -17,7 +17,7 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Sulu\Bundle\SecurityBundle\Entity\PermissionInheritanceInterface;
 use Sulu\Component\Security\Authorization\AccessControl\AccessControlManagerInterface;
 
-class PermissionInheritanceSubscriber implements EventSubscriber
+class PermissionInheritanceListener implements EventSubscriber
 {
     /**
      * @var AccessControlManagerInterface
