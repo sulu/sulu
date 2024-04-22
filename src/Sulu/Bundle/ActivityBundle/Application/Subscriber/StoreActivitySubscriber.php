@@ -17,15 +17,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class StoreActivitySubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var ActivityRepositoryInterface
-     */
-    private $activityRepository;
-
     public function __construct(
-        ActivityRepositoryInterface $activityRepository
+        private ActivityRepositoryInterface $activityRepository
     ) {
-        $this->activityRepository = $activityRepository;
     }
 
     public static function getSubscribedEvents()

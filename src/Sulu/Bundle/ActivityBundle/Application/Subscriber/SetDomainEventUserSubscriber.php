@@ -18,15 +18,9 @@ use Symfony\Component\Security\Core\Security;
 
 class SetDomainEventUserSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var Security|null
-     */
-    private $security;
-
     public function __construct(
-        ?Security $security
+        private ?Security $security
     ) {
-        $this->security = $security;
     }
 
     public static function getSubscribedEvents()
