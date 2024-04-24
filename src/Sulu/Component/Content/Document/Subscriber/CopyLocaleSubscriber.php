@@ -11,25 +11,33 @@
 
 namespace Sulu\Component\Content\Document\Subscriber;
 
+use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
+use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
+use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\ParentBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\TitleBehavior;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
 use Sulu\Component\DocumentManager\DocumentAccessor;
-use Sulu\Component\DocumentManager\DocumentInspector;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\CopyLocaleEvent;
 use Sulu\Component\DocumentManager\Events;
+use Sulu\Component\Route\Document\Behavior\RoutableBehavior;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CopyLocaleSubscriber implements EventSubscriberInterface
 {
+    public const PAGE_TREE_ROUTE_TYPE = 'page_tree_route';
+
+    public const ROUTE_PROPERTY = 'routePath';
+
     /**
      * @var DocumentManagerInterface
      */
@@ -106,8 +114,14 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
         }
 
         if ($destDocument instanceof StructureBehavior && $document instanceof StructureBehavior) {
+            if ($destDocument instanceof RoutableBehavior) {
+                $documentStructure = $this->checkPageTreeRoute($destDocument, $document, $destLocale);
+            } else {
+                $documentStructure = $document->getStructure()->toArray();
+            }
+
             $destDocument->setStructureType($document->getStructureType());
-            $destDocument->getStructure()->bind($document->getStructure()->toArray());
+            $destDocument->getStructure()->bind($documentStructure);
         }
 
         if ($destDocument instanceof WorkflowStageBehavior) {
@@ -138,5 +152,72 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
         $this->documentManager->persist($destDocument, $destLocale, ['omit_modified_domain_event' => true]);
 
         $event->setDestDocument($destDocument);
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    public function checkPageTreeRoute(RoutableBehavior $destDocument, StructureBehavior $document, string $destLocale): array
+    {
+        $documentStructure = $document->getStructure()->toArray();
+        $pageTreeRoutePropertyName = $this->getPageTreeRoutePropertyName($document);
+        $routePath = $documentStructure[$pageTreeRoutePropertyName] ?? null;
+
+        if (!$routePath || !\array_key_exists('page', $routePath)) {
+            return $documentStructure;
+        }
+
+        $parentPageUuid = $routePath['page']['uuid'];
+
+        /** @var ?PageDocument $destParentDocument */
+        $destParentDocument = $this->documentManager->find(
+            $parentPageUuid,
+            $destLocale
+        );
+
+        if ($destParentDocument instanceof PageDocument && WorkflowStage::PUBLISHED === $destParentDocument->getWorkflowStage()) {
+            $destParentUrl = $destParentDocument->getStructure()->getProperty('url')->getValue();
+        } else {
+            $destParentUrl = '';
+            $parentPageUuid = null;
+        }
+
+        $routePathProp = $destParentUrl . $routePath['suffix'];
+        $documentStructure[$pageTreeRoutePropertyName] = [
+            'page' => [
+                'uuid' => $parentPageUuid,
+                'path' => $destParentUrl,
+            ],
+            'path' => $routePathProp,
+            'suffix' => $routePath['suffix'],
+        ];
+        $destDocument->setRoutePath($routePathProp);
+        $destDocument->getRoute()->setPath($routePathProp);
+        $destDocument->getRoute()->setLocale($destLocale);
+
+        return $documentStructure;
+    }
+
+    /**
+     * Returns encoded "routePath" property-name.
+     */
+    public function getPageTreeRoutePropertyName(StructureBehavior $document): string
+    {
+        $metadata = $this->documentInspector->getStructureMetadata($document);
+
+        if (null === $metadata) {
+            return self::ROUTE_PROPERTY;
+        }
+
+        $properties = $metadata->getProperties();
+
+        /** @var PropertyMetadata $property */
+        foreach ($properties as $property) {
+            if (self::PAGE_TREE_ROUTE_TYPE === $property->getName()) {
+                return $property->getName();
+            }
+        }
+
+        return self::ROUTE_PROPERTY;
     }
 }

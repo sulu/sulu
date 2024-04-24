@@ -84,15 +84,15 @@ class CollaborationControllerTest extends SuluTestCase
         $this->assertEquals('page', $collaborations[0]->resourceKey);
         $this->assertEquals(4, $collaborations[0]->id);
         $this->assertEquals('Max Mustermann', $collaborations[0]->fullName);
-        $this->assertObjectHasAttribute('connectionId', $collaborations[0]);
-        $this->assertObjectHasAttribute('started', $collaborations[0]);
-        $this->assertObjectHasAttribute('changed', $collaborations[0]);
+        $this->assertTrue(\property_exists($collaborations[0], 'connectionId'));
+        $this->assertTrue(\property_exists($collaborations[0], 'started'));
+        $this->assertTrue(\property_exists($collaborations[0], 'changed'));
         $this->assertEquals('page', $collaborations[1]->resourceKey);
         $this->assertEquals(4, $collaborations[1]->id);
         $this->assertEquals('Erika Mustermann', $collaborations[1]->fullName);
-        $this->assertObjectHasAttribute('connectionId', $collaborations[1]);
-        $this->assertObjectHasAttribute('started', $collaborations[1]);
-        $this->assertObjectHasAttribute('changed', $collaborations[1]);
+        $this->assertTrue(\property_exists($collaborations[1], 'connectionId'));
+        $this->assertTrue(\property_exists($collaborations[1], 'started'));
+        $this->assertTrue(\property_exists($collaborations[1], 'changed'));
     }
 
     public function testDelete(): void

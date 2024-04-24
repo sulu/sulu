@@ -317,11 +317,9 @@ class DoctrineAccessControlProviderTest extends TestCase
 
     public function provideSupport()
     {
-        $securedEntity = $this->prophesize(SecuredEntityInterface::class);
-
         return [
             [\stdClass::class, false],
-            [\get_class($securedEntity->reveal()), true],
+            [SecuredEntityInterface::class, true],
         ];
     }
 }

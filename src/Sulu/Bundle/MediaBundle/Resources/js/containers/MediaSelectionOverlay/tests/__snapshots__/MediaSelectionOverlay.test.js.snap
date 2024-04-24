@@ -37,7 +37,7 @@ Array [
           >
             <div
               class="dropzone"
-              role="button"
+              role="presentation"
               tabindex="0"
             >
               <div>
@@ -635,7 +635,6 @@ Array [
                 </div>
               </div>
               <input
-                autocomplete="off"
                 multiple=""
                 style="display: none;"
                 tabindex="-1"
@@ -737,7 +736,7 @@ Array [
           >
             <div
               class="dropzone"
-              role="button"
+              role="presentation"
               tabindex="0"
             >
               <div>
@@ -1335,7 +1334,6 @@ Array [
                 </div>
               </div>
               <input
-                autocomplete="off"
                 multiple=""
                 style="display: none;"
                 tabindex="-1"

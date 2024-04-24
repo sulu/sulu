@@ -58,7 +58,8 @@ class UserBuilder extends SuluBuilder
             [
                 'name' => $roleName,
                 'system' => $system,
-        ]);
+            ]
+        );
         $this->output->writeln(
             \sprintf('Created role "<comment>%s</comment>" in system "<comment>%s</comment>"', $roleName, $system)
         );

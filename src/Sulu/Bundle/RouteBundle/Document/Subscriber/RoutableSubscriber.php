@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\RouteBundle\Document\Subscriber;
 
 use Doctrine\ORM\EntityManagerInterface;
+use PHPCR\NodeInterface;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
@@ -39,6 +40,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class RoutableSubscriber implements EventSubscriberInterface
 {
     public const ROUTE_PROPERTY = 'routePath';
+    public const ROUTE_SUFFIX_PROPERTY = 'routePath-suffix';
 
     public const TAG_NAME = 'sulu_route.route_path';
 
@@ -168,9 +170,10 @@ class RoutableSubscriber implements EventSubscriberInterface
         $routePath = $event->getNode()->getPropertyValueWithDefault($propertyName, null);
 
         $route = $this->conflictResolver->resolve($this->chainRouteGenerator->generate($document, $routePath));
+        $routePath = $route->getPath();
         $document->setRoutePath($route->getPath());
 
-        $event->getNode()->setProperty($propertyName, $route->getPath());
+        $event->getNode()->setProperty($propertyName, $routePath);
     }
 
     /**
@@ -243,7 +246,7 @@ class RoutableSubscriber implements EventSubscriberInterface
         try {
             $route = $this->createOrUpdateRoute($document, $event->getLocale());
         } catch (RouteIsNotUniqueException $exception) {
-            throw new ResourceLocatorAlreadyExistsException($exception->getRoute()->getPath(), $document->getPath());
+            throw new ResourceLocatorAlreadyExistsException($exception->getRoute()->getPath(), $document->getPath(), $exception);
         }
 
         $document->setRoutePath($route->getPath());
@@ -254,6 +257,8 @@ class RoutableSubscriber implements EventSubscriberInterface
             $route->getPath()
         );
 
+        $this->setCorrectRouteSuffix($this->documentInspector->getNode($document), $route->getPath(), $event->getLocale());
+        $this->setCorrectRouteSuffix($event->getNode(), $route->getPath(), $event->getLocale());
         $this->entityManager->flush();
     }
 
@@ -276,7 +281,7 @@ class RoutableSubscriber implements EventSubscriberInterface
             }
 
             $route = $this->conflictResolver->resolve(
-                $this->chainRouteGenerator->generate($localizedDocument, $localizedDocument->getRoutePath())
+                $this->chainRouteGenerator->generate($localizedDocument, $localizedDocument->getRoutePath()),
             );
             $localizedDocument->setRoutePath($route->getPath());
 
@@ -331,5 +336,26 @@ class RoutableSubscriber implements EventSubscriberInterface
     private function getPropertyName(string $locale, string $field): string
     {
         return $this->propertyEncoder->localizedSystemName($field, $locale);
+    }
+
+    private function setCorrectRouteSuffix(NodeInterface $node, string $routePath, string $locale): void
+    {
+        $suffixName = $this->getPropertyName($locale, self::ROUTE_SUFFIX_PROPERTY);
+
+        if (!$node->hasProperty($suffixName)) {
+            return;
+        }
+
+        /** @var string $suffixValue */
+        $suffixValue = $node->getPropertyValue($suffixName);
+
+        $position = \strpos($routePath, $suffixValue);
+        if (false !== $position) {
+            $result = \substr($routePath, $position);
+        } else {
+            $result = $suffixValue;
+        }
+
+        $node->setProperty($suffixName, $result);
     }
 }

@@ -288,6 +288,28 @@ class SnippetControllerTest extends SuluTestCase
         }
     }
 
+    public function testIndexWithFields(): void
+    {
+        $fields = ['id', 'title', 'path'];
+        $this->client->jsonRequest('GET', '/api/snippets?locale=de&fields=' . \implode(',', $fields));
+        $response = $this->client->getResponse();
+
+        $this->assertHttpStatusCode(200, $response);
+
+        $result = \json_decode($response->getContent(), true);
+        $this->assertIsArray($result);
+
+        /** @array array<int, array<string, mixed>> $snippetData */
+        $snippetData = $result['_embedded']['snippets'];
+
+        foreach ($snippetData as $snippet) {
+            foreach ($fields as $field) {
+                $this->assertArrayHasKey($field, $snippet);
+            }
+            $this->assertArrayNotHasKey('description', $snippet);
+        }
+    }
+
     public function providePost()
     {
         return [

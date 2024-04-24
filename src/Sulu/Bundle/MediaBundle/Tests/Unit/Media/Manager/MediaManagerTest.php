@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\Manager;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\Manager;
 
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
@@ -36,6 +36,7 @@ use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
 use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProviderInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;

@@ -23,6 +23,7 @@ use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Exception\ResourceLocatorNotFoundException;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\UuidBehavior;
+use Sulu\Component\DocumentManager\Event\ConfigureOptionsEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveEvent;
 use Sulu\Component\DocumentManager\Event\RemoveLocaleEvent;
@@ -40,6 +41,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 class InvalidationSubscriber implements EventSubscriberInterface
 {
+    public const HTTP_CACHE_INVALIDATION_OPTION = 'http_cache_invalidation';
+
     /**
      * @var null|CacheManager
      */
@@ -106,6 +109,7 @@ class InvalidationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
+            Events::CONFIGURE_OPTIONS => 'configureOptions',
             Events::PUBLISH => ['invalidateDocumentBeforePublishing', 1024],
             Events::UNPUBLISH => ['invalidateDocumentBeforeUnpublishing', 1024],
             Events::REMOVE => ['invalidateDocumentBeforeRemoving', 1024],
@@ -120,6 +124,10 @@ class InvalidationSubscriber implements EventSubscriberInterface
      */
     public function invalidateDocumentBeforePublishing(PublishEvent $event)
     {
+        if (false === $event->getOption(static::HTTP_CACHE_INVALIDATION_OPTION, true)) {
+            return;
+        }
+
         $document = $event->getDocument();
 
         if ($document instanceof StructureBehavior) {
@@ -145,6 +153,10 @@ class InvalidationSubscriber implements EventSubscriberInterface
      */
     public function invalidateDocumentBeforeUnpublishing(UnpublishEvent $event)
     {
+        if (false === $event->getOption(static::HTTP_CACHE_INVALIDATION_OPTION, true)) {
+            return;
+        }
+
         $document = $event->getDocument();
 
         if ($document instanceof StructureBehavior) {
@@ -166,6 +178,10 @@ class InvalidationSubscriber implements EventSubscriberInterface
      */
     public function invalidateDocumentBeforeRemoving(RemoveEvent $event)
     {
+        if (false === $event->getOption(static::HTTP_CACHE_INVALIDATION_OPTION, true)) {
+            return;
+        }
+
         $document = $event->getDocument();
 
         if ($document instanceof StructureBehavior) {
@@ -186,6 +202,10 @@ class InvalidationSubscriber implements EventSubscriberInterface
      */
     public function invalidateDocumentBeforeRemovingLocale(RemoveLocaleEvent $event)
     {
+        if (false === $event->getOption(static::HTTP_CACHE_INVALIDATION_OPTION, true)) {
+            return;
+        }
+
         $document = $event->getDocument();
 
         if ($document instanceof StructureBehavior) {
@@ -328,5 +348,12 @@ class InvalidationSubscriber implements EventSubscriberInterface
             null,
             $scheme
         );
+    }
+
+    public function configureOptions(ConfigureOptionsEvent $event): void
+    {
+        $optionsResolver = $event->getOptions();
+
+        $optionsResolver->setDefault(static::HTTP_CACHE_INVALIDATION_OPTION, true);
     }
 }
