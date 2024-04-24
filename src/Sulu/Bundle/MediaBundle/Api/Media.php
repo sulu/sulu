@@ -111,7 +111,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return int
      */
     #[VirtualProperty]
@@ -123,7 +122,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -161,7 +159,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return int
      */
     #[VirtualProperty]
@@ -189,7 +186,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return int
      */
     #[VirtualProperty]
@@ -212,7 +208,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return string|null
      */
     #[VirtualProperty]
@@ -243,7 +238,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return string|null
      */
     #[VirtualProperty]
@@ -270,7 +264,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return string|null
      */
     #[VirtualProperty]
@@ -298,7 +291,6 @@ class Media extends ApiWrapper
 
     /**
      * Returns copyright for media.
-     *
      *
      * @return string|null
      *
@@ -330,7 +322,6 @@ class Media extends ApiWrapper
     /**
      * Returns copyright for media.
      *
-     *
      * @return string|null
      *
      * @throws FileVersionNotFoundException
@@ -359,7 +350,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return int
      */
     #[VirtualProperty]
@@ -370,7 +360,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return int
      */
     #[VirtualProperty]
@@ -401,7 +390,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return array
      */
     #[VirtualProperty]
@@ -443,7 +431,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -454,7 +441,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return MediaType
      */
     #[VirtualProperty]
@@ -487,7 +473,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return bool
      */
     #[VirtualProperty]
@@ -498,7 +483,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return bool
      */
     #[VirtualProperty]
@@ -509,7 +493,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return bool
      */
     #[VirtualProperty]
@@ -520,7 +503,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return bool
      */
     #[VirtualProperty]
@@ -531,7 +513,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return array
      */
     #[VirtualProperty]
@@ -575,7 +556,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return array
      */
     #[VirtualProperty]
@@ -613,7 +593,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return array
      */
     #[VirtualProperty]
@@ -654,7 +633,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return string[]
      */
     #[VirtualProperty]
@@ -680,7 +658,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return array
      */
     #[VirtualProperty]
@@ -699,7 +676,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -718,7 +694,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -757,7 +732,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return \DateTime
      */
     #[VirtualProperty]
@@ -780,7 +754,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return string|null
      */
     #[VirtualProperty]
@@ -796,7 +769,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return \DateTime
      */
     #[VirtualProperty]
@@ -819,7 +791,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return string|null
      */
     #[VirtualProperty]
@@ -847,7 +818,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return array|null
      */
     #[VirtualProperty]
@@ -864,7 +834,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return int
      */
     #[VirtualProperty]
@@ -1026,7 +995,6 @@ class Media extends ApiWrapper
     /**
      * Returns the categories of the media.
      *
-     *
      * @return int[]
      */
     #[VirtualProperty]
@@ -1071,7 +1039,6 @@ class Media extends ApiWrapper
     /**
      * Returns the target groups of the media.
      *
-     *
      * @return int[]
      */
     #[VirtualProperty]
@@ -1090,7 +1057,6 @@ class Media extends ApiWrapper
 
     /**
      * Returns the x coordinate of the focus point.
-     *
      *
      * @return int|null
      */
@@ -1114,7 +1080,6 @@ class Media extends ApiWrapper
     /**
      * Returns the y coordinate of the focus point.
      *
-     *
      * @return int|null
      */
     #[VirtualProperty]
@@ -1135,7 +1100,6 @@ class Media extends ApiWrapper
     }
 
     /**
-     *
      * @return ?int
      */
     #[VirtualProperty]

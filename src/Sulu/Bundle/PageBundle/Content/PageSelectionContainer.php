@@ -25,7 +25,6 @@ class PageSelectionContainer implements ArrayableInterface
     /**
      * The content mapper, which is needed for lazy loading.
      *
-     *
      * @var ContentQueryExecutorInterface
      */
     #[Exclude]
@@ -33,7 +32,6 @@ class PageSelectionContainer implements ArrayableInterface
 
     /**
      * The content mapper, which is needed for lazy loading.
-     *
      *
      * @var ContentQueryBuilderInterface
      */
@@ -43,7 +41,6 @@ class PageSelectionContainer implements ArrayableInterface
     /**
      * The params to load.
      *
-     *
      * @var array
      */
     #[Exclude]
@@ -52,7 +49,6 @@ class PageSelectionContainer implements ArrayableInterface
     /**
      * The key of the webspace.
      *
-     *
      * @var string
      */
     #[Exclude]
@@ -60,7 +56,6 @@ class PageSelectionContainer implements ArrayableInterface
 
     /**
      * The code of the language.
-     *
      *
      * @var string
      */

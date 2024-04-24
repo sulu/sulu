@@ -1065,7 +1065,6 @@ class Account extends ApiWrapper
     /**
      * Get type of api entity.
      *
-     *
      * @return string
      */
     #[VirtualProperty]

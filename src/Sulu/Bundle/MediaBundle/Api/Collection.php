@@ -127,7 +127,6 @@ class Collection extends ApiWrapper
     /**
      * Indicates if sub collections exists.
      *
-     *
      * @return bool
      */
     #[VirtualProperty]
@@ -150,7 +149,6 @@ class Collection extends ApiWrapper
     }
 
     /**
-     *
      * @return string|null
      */
     #[VirtualProperty]
@@ -166,7 +164,6 @@ class Collection extends ApiWrapper
     }
 
     /**
-     *
      * @return int
      */
     #[VirtualProperty]
@@ -238,7 +235,6 @@ class Collection extends ApiWrapper
     }
 
     /**
-     *
      * @return array|null
      */
     #[VirtualProperty]
@@ -267,7 +263,6 @@ class Collection extends ApiWrapper
     }
 
     /**
-     *
      * @return array
      */
     #[VirtualProperty]
@@ -278,7 +273,6 @@ class Collection extends ApiWrapper
     }
 
     /**
-     *
      * @return array
      */
     #[VirtualProperty]
@@ -320,7 +314,6 @@ class Collection extends ApiWrapper
     }
 
     /**
-     *
      * @return string|null
      */
     #[VirtualProperty]
@@ -348,7 +341,6 @@ class Collection extends ApiWrapper
     }
 
     /**
-     *
      * @return string|null
      */
     #[VirtualProperty]
@@ -371,7 +363,6 @@ class Collection extends ApiWrapper
     }
 
     /**
-     *
      * @return CollectionType
      */
     #[VirtualProperty]
@@ -382,7 +373,6 @@ class Collection extends ApiWrapper
     }
 
     /**
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -418,7 +408,6 @@ class Collection extends ApiWrapper
     }
 
     /**
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -497,7 +486,6 @@ class Collection extends ApiWrapper
     }
 
     /**
-     *
      * @return string
      */
     #[VirtualProperty]

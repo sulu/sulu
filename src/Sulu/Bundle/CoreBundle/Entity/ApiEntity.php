@@ -47,7 +47,6 @@ abstract class ApiEntity
     /**
      * property to be shown in serialized object.
      *
-     *
      * @var string
      */
     #[Accessor(getter: 'getLinks')]

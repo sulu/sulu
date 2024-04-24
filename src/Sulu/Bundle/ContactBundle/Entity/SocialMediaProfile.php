@@ -60,7 +60,6 @@ class SocialMediaProfile
     }
 
     /**
-     *
      * @return int
      */
     #[VirtualProperty]
@@ -85,7 +84,6 @@ class SocialMediaProfile
     }
 
     /**
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -107,7 +105,6 @@ class SocialMediaProfile
     }
 
     /**
-     *
      * @return SocialMediaProfileType
      */
     #[Serializer\VirtualProperty]

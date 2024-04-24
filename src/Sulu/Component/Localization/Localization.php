@@ -107,7 +107,6 @@ class Localization implements \JsonSerializable, ArrayableInterface
      *
      * @var bool
      *
-     *
      * @deprecated use $default instead
      */
     #[Groups(['frontend', 'Default'])]
@@ -213,7 +212,6 @@ class Localization implements \JsonSerializable, ArrayableInterface
      * @param string $delimiter between language and country
      *
      * @return string
-     *
      *
      * @deprecated use getLocale instead
      */

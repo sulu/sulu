@@ -95,7 +95,6 @@ class Contact extends ApiEntity implements ContactInterface
     /**
      * @var Collection<int, Note>
      *
-     *
      * @deprecated
      */
     #[Groups(['fullContact'])]
@@ -303,7 +302,6 @@ class Contact extends ApiEntity implements ContactInterface
     }
 
     /**
-     *
      * @return string
      */
     #[VirtualProperty]

@@ -27,7 +27,6 @@ use Sulu\Component\Security\Authentication\UserInterface;
 class TrashItem implements TrashItemInterface
 {
     /**
-     *
      * @var int
      */
     #[Expose]
@@ -35,7 +34,6 @@ class TrashItem implements TrashItemInterface
     private $id;
 
     /**
-     *
      * @var string
      */
     #[Expose]
@@ -43,7 +41,6 @@ class TrashItem implements TrashItemInterface
     private $resourceKey;
 
     /**
-     *
      * @var string
      */
     #[Expose]
@@ -51,7 +48,6 @@ class TrashItem implements TrashItemInterface
     private $resourceId;
 
     /**
-     *
      * @var mixed[]
      */
     #[Expose]
@@ -62,7 +58,6 @@ class TrashItem implements TrashItemInterface
      * The restoreType can be used to indicate a sub entity.
      *     e.g.: Store and Restore a single translation of a page.
      *          -> "translation".
-     *
      *
      * @var string|null
      */
@@ -75,7 +70,6 @@ class TrashItem implements TrashItemInterface
      *     e.g.: Store and Restore a single translation of a page.
      *          -> ["locale" => "en"].
      *
-     *
      * @var mixed[]
      */
     #[Expose]
@@ -83,7 +77,6 @@ class TrashItem implements TrashItemInterface
     private $restoreOptions = [];
 
     /**
-     *
      * @var string|null
      */
     #[Expose]
@@ -97,7 +90,6 @@ class TrashItem implements TrashItemInterface
     private $resourceSecurityObjectType;
 
     /**
-     *
      * @var string|null
      */
     #[Expose]
@@ -105,7 +97,6 @@ class TrashItem implements TrashItemInterface
     private $resourceSecurityObjectId;
 
     /**
-     *
      * @var \DateTimeImmutable
      */
     #[Expose]

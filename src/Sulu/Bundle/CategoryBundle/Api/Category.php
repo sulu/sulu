@@ -33,7 +33,6 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the id of the category.
      *
-     *
      * @return array
      */
     #[VirtualProperty]
@@ -46,7 +45,6 @@ class Category extends ApiEntityWrapper
 
     /**
      * Returns the key of the category.
-     *
      *
      * @return string
      */
@@ -61,7 +59,6 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the default locale of the category.
      *
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -74,7 +71,6 @@ class Category extends ApiEntityWrapper
 
     /**
      * Returns the name of the Category dependent on the locale.
-     *
      *
      * @return string
      */
@@ -93,7 +89,6 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the description of the Category dependent on the locale.
      *
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -110,7 +105,6 @@ class Category extends ApiEntityWrapper
 
     /**
      * Returns the medias of the Category dependent on the locale.
-     *
      *
      * @return array{ids: array<int>}
      */
@@ -153,7 +147,6 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the locale of the Category dependent on the existing translations and default locale.
      *
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -171,7 +164,6 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the locale of the Category dependent on the existing translations and default locale.
      *
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -188,7 +180,6 @@ class Category extends ApiEntityWrapper
 
     /**
      * Returns the name of the Category dependent on the locale.
-     *
      *
      * @return array
      */
@@ -221,7 +212,6 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the creator of the category.
      *
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -240,7 +230,6 @@ class Category extends ApiEntityWrapper
 
     /**
      * Returns the changer of the category.
-     *
      *
      * @return string
      */
@@ -261,7 +250,6 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the created date for the category.
      *
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -275,7 +263,6 @@ class Category extends ApiEntityWrapper
     /**
      * Returns the created date for the category.
      *
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -288,7 +275,6 @@ class Category extends ApiEntityWrapper
 
     /**
      * Returns the children of a category.
-     *
      *
      * @return Category[]
      */
@@ -375,7 +361,6 @@ class Category extends ApiEntityWrapper
     /**
      * Returns a the id of the parent category, if one exists.
      * This method is used to serialize the parent-id.
-     *
      *
      * @return null|Category
      */

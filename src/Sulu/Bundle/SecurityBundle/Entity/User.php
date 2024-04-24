@@ -187,7 +187,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
     /**
      * Get username.
      *
-     *
      * @return string
      */
     #[SerializedName('username')]
@@ -681,7 +680,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
     }
 
     /**
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -694,7 +692,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
     }
 
     /**
-     *
      * @return string
      */
     #[VirtualProperty]
@@ -717,7 +714,6 @@ class User extends ApiEntity implements UserInterface, EquatableInterface, Audit
     }
 
     /**
-     *
      * @return string
      */
     #[VirtualProperty]

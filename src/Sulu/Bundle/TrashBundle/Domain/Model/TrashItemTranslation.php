@@ -31,7 +31,6 @@ class TrashItemTranslation
     private $trashItem;
 
     /**
-     *
      * @var string|null
      */
     #[Expose]
@@ -39,7 +38,6 @@ class TrashItemTranslation
     private $locale;
 
     /**
-     *
      * @var string
      */
     #[Expose]

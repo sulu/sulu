@@ -58,7 +58,6 @@ class SocialMediaProfileType implements \JsonSerializable
     }
 
     /**
-     *
      * @return int
      */
     #[VirtualProperty]
@@ -83,7 +82,6 @@ class SocialMediaProfileType implements \JsonSerializable
     }
 
     /**
-     *
      * @return string
      */
     #[VirtualProperty]
