@@ -34,9 +34,8 @@ use Webmozart\Assert\Assert;
 /**
  * Class Media
  * The Media RestObject is the api entity for the MediaController.
- *
- * @ExclusionPolicy("all")
  */
+#[ExclusionPolicy('all')]
 class Media extends ApiWrapper
 {
     /**
@@ -112,33 +111,32 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("id")
-     * @Groups({"partialMedia", "Default"})
      *
      * @return int
      */
+    #[VirtualProperty]
+    #[SerializedName('id')]
+    #[Groups(['partialMedia', 'Default'])]
     public function getId()
     {
         return $this->entity->getId();
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("locale")
      *
      * @return string
      */
+    #[VirtualProperty]
+    #[SerializedName('locale')]
     public function getLocale()
     {
         return $this->locale;
     }
 
     /**
-     * @VirtualProperty
-     *
      * @return string
      */
+    #[VirtualProperty]
     public function getFallbackLocale()
     {
         if (!$this->getLocalizedMeta()) {
@@ -163,11 +161,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("collection")
      *
      * @return int
      */
+    #[VirtualProperty]
+    #[SerializedName('collection')]
     public function getCollection()
     {
         $collection = $this->entity->getCollection();
@@ -191,11 +189,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("size")
      *
      * @return int
      */
+    #[VirtualProperty]
+    #[SerializedName('size')]
     public function getSize()
     {
         return $this->getFileVersion()->getSize();
@@ -214,11 +212,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("mimeType")
      *
      * @return string|null
      */
+    #[VirtualProperty]
+    #[SerializedName('mimeType')]
     public function getMimeType()
     {
         return $this->getFileVersion()->getMimeType();
@@ -245,11 +243,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("title")
      *
      * @return string|null
      */
+    #[VirtualProperty]
+    #[SerializedName('title')]
     public function getTitle()
     {
         if (!$this->getLocalizedMeta()) {
@@ -272,11 +270,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("description")
      *
      * @return string|null
      */
+    #[VirtualProperty]
+    #[SerializedName('description')]
     public function getDescription()
     {
         if (!$this->getLocalizedMeta()) {
@@ -301,13 +299,13 @@ class Media extends ApiWrapper
     /**
      * Returns copyright for media.
      *
-     * @VirtualProperty
-     * @SerializedName("copyright")
      *
      * @return string|null
      *
      * @throws FileVersionNotFoundException
      */
+    #[VirtualProperty]
+    #[SerializedName('copyright')]
     public function getCopyright()
     {
         if (!$this->getLocalizedMeta()) {
@@ -332,13 +330,13 @@ class Media extends ApiWrapper
     /**
      * Returns copyright for media.
      *
-     * @VirtualProperty
-     * @SerializedName("credits")
      *
      * @return string|null
      *
      * @throws FileVersionNotFoundException
      */
+    #[VirtualProperty]
+    #[SerializedName('credits')]
     public function getCredits()
     {
         if (!$this->getLocalizedMeta()) {
@@ -361,22 +359,22 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("version")
      *
      * @return int
      */
+    #[VirtualProperty]
+    #[SerializedName('version')]
     public function getVersion()
     {
         return $this->getFileVersion()->getVersion();
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("subVersion")
      *
      * @return int
      */
+    #[VirtualProperty]
+    #[SerializedName('subVersion')]
     public function getSubVersion()
     {
         return $this->getFileVersion()->getSubVersion();
@@ -403,11 +401,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("versions")
      *
      * @return array
      */
+    #[VirtualProperty]
+    #[SerializedName('versions')]
     public function getVersions()
     {
         $versions = [];
@@ -445,22 +443,22 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("name")
      *
      * @return string
      */
+    #[VirtualProperty]
+    #[SerializedName('name')]
     public function getName()
     {
         return $this->getFileVersion()->getName();
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("type")
      *
      * @return MediaType
      */
+    #[VirtualProperty]
+    #[SerializedName('type')]
     public function getType()
     {
         return $this->entity->getType();
@@ -489,55 +487,55 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("isImage")
      *
      * @return bool
      */
+    #[VirtualProperty]
+    #[SerializedName('isImage')]
     public function isImage()
     {
         return $this->isTypeOf(self::MEDIA_TYPE_IMAGE);
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("isVideo")
      *
      * @return bool
      */
+    #[VirtualProperty]
+    #[SerializedName('isVideo')]
     public function isVideo()
     {
         return $this->isTypeOf(self::MEDIA_TYPE_VIDEO);
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("isAudio")
      *
      * @return bool
      */
+    #[VirtualProperty]
+    #[SerializedName('isAudio')]
     public function isAudio()
     {
         return $this->isTypeOf(self::MEDIA_TYPE_AUDIO);
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("isDocument")
      *
      * @return bool
      */
+    #[VirtualProperty]
+    #[SerializedName('isDocument')]
     public function isDocument()
     {
         return $this->isTypeOf(self::MEDIA_TYPE_DOCUMENT);
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("storageOptions")
      *
      * @return array
      */
+    #[VirtualProperty]
+    #[SerializedName('storageOptions')]
     public function getStorageOptions()
     {
         return $this->getFileVersion()->getStorageOptions();
@@ -577,11 +575,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("publishLanguages")
      *
      * @return array
      */
+    #[VirtualProperty]
+    #[SerializedName('publishLanguages')]
     public function getPublishLanguages()
     {
         $publishLanguages = [];
@@ -615,11 +613,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("contentLanguages")
      *
      * @return array
      */
+    #[VirtualProperty]
+    #[SerializedName('contentLanguages')]
     public function getContentLanguages()
     {
         $contentLanguages = [];
@@ -656,11 +654,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("tags")
      *
      * @return string[]
      */
+    #[VirtualProperty]
+    #[SerializedName('tags')]
     public function getTags()
     {
         $tags = [];
@@ -673,21 +671,20 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @SerializedName("thumbnails")
-     *
      * @return array
      */
+    #[SerializedName('thumbnails')]
     public function getFormats()
     {
         return $this->formats;
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("thumbnails")
      *
      * @return array
      */
+    #[VirtualProperty]
+    #[SerializedName('thumbnails')]
     public function getThumbnails() // FIXME change to getPreviews when SerializedName working
     {
         return $this->formats;
@@ -702,11 +699,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("url")
      *
      * @return string
      */
+    #[VirtualProperty]
+    #[SerializedName('url')]
     public function getUrl()
     {
         return $this->url;
@@ -721,11 +718,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("adminUrl")
      *
      * @return string
      */
+    #[VirtualProperty]
+    #[SerializedName('adminUrl')]
     public function getAdminUrl()
     {
         // if the admin url is not set fallback to the website url for backward compatibility
@@ -760,11 +757,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("changed")
      *
      * @return \DateTime
      */
+    #[VirtualProperty]
+    #[SerializedName('changed')]
     public function getChanged()
     {
         return $this->getFileVersion()->getChanged();
@@ -783,11 +780,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("changer")
      *
      * @return string|null
      */
+    #[VirtualProperty]
+    #[SerializedName('changer')]
     public function getChanger()
     {
         $user = $this->getFileVersion()->getChanger();
@@ -799,11 +796,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("created")
      *
      * @return \DateTime
      */
+    #[VirtualProperty]
+    #[SerializedName('created')]
     public function getCreated()
     {
         return $this->entity->getCreated();
@@ -822,11 +819,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("creator")
      *
      * @return string|null
      */
+    #[VirtualProperty]
+    #[SerializedName('creator')]
     public function getCreator()
     {
         $user = $this->getFileVersion()->getCreator();
@@ -850,11 +847,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("properties")
      *
      * @return array|null
      */
+    #[VirtualProperty]
+    #[SerializedName('properties')]
     public function getProperties()
     {
         $properties = $this->getFileVersion()->getProperties();
@@ -867,11 +864,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("downloadCounter")
      *
      * @return int
      */
+    #[VirtualProperty]
+    #[SerializedName('downloadCounter')]
     public function getDownloadCounter()
     {
         $downloadCounter = 0;
@@ -1029,11 +1026,11 @@ class Media extends ApiWrapper
     /**
      * Returns the categories of the media.
      *
-     * @VirtualProperty
-     * @SerializedName("categories")
      *
      * @return int[]
      */
+    #[VirtualProperty]
+    #[SerializedName('categories')]
     public function getCategories()
     {
         $apiCategories = [];
@@ -1074,12 +1071,12 @@ class Media extends ApiWrapper
     /**
      * Returns the target groups of the media.
      *
-     * @VirtualProperty
-     * @SerializedName("targetGroups")
-     * @Groups({"fullMediaAudienceTargeting"})
      *
      * @return int[]
      */
+    #[VirtualProperty]
+    #[SerializedName('targetGroups')]
+    #[Groups(['fullMediaAudienceTargeting'])]
     public function getTargetGroups()
     {
         if (!$this->getFileVersion()->getTargetGroups()) {
@@ -1094,11 +1091,11 @@ class Media extends ApiWrapper
     /**
      * Returns the x coordinate of the focus point.
      *
-     * @VirtualProperty
-     * @SerializedName("focusPointX")
      *
      * @return int|null
      */
+    #[VirtualProperty]
+    #[SerializedName('focusPointX')]
     public function getFocusPointX()
     {
         return $this->getFileVersion()->getFocusPointX();
@@ -1117,11 +1114,11 @@ class Media extends ApiWrapper
     /**
      * Returns the y coordinate of the focus point.
      *
-     * @VirtualProperty
-     * @SerializedName("focusPointY")
      *
      * @return int|null
      */
+    #[VirtualProperty]
+    #[SerializedName('focusPointY')]
     public function getFocusPointY()
     {
         return $this->getFileVersion()->getFocusPointY();
@@ -1138,11 +1135,11 @@ class Media extends ApiWrapper
     }
 
     /**
-     * @VirtualProperty
-     * @SerializedName("previewImageId")
      *
      * @return ?int
      */
+    #[VirtualProperty]
+    #[SerializedName('previewImageId')]
     public function getPreviewImageId()
     {
         $previewImage = $this->entity->getPreviewImage();

@@ -21,9 +21,8 @@ use JMS\Serializer\Annotation\VirtualProperty;
 
 /**
  * Social media profile belonging to account or contact.
- *
- * @ExclusionPolicy("All")
  */
+#[ExclusionPolicy('All')]
 class SocialMediaProfile
 {
     /**
@@ -61,12 +60,12 @@ class SocialMediaProfile
     }
 
     /**
-     * @VirtualProperty()
-     * @SerializedName("id")
-     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      *
      * @return int
      */
+    #[VirtualProperty]
+    #[SerializedName('id')]
+    #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     public function getId()
     {
         return $this->id;
@@ -86,12 +85,12 @@ class SocialMediaProfile
     }
 
     /**
-     * @VirtualProperty()
-     * @SerializedName("username")
-     * @Groups({"fullAccount", "partialAccount", "fullContact", "partialContact"})
      *
      * @return string
      */
+    #[VirtualProperty]
+    #[SerializedName('username')]
+    #[Groups(['fullAccount', 'partialAccount', 'fullContact', 'partialContact'])]
     public function getUsername()
     {
         return $this->username;
@@ -108,12 +107,12 @@ class SocialMediaProfile
     }
 
     /**
-     * @Serializer\VirtualProperty()
-     * @Serializer\SerializedName("socialMediaProfileType")
-     * @Groups({"fullAccount", "fullContact"})
      *
      * @return SocialMediaProfileType
      */
+    #[Serializer\VirtualProperty]
+    #[Serializer\SerializedName('socialMediaProfileType')]
+    #[Groups(['fullAccount', 'fullContact'])]
     public function getSocialMediaProfileType()
     {
         return $this->socialMediaProfileType;

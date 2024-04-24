@@ -21,37 +21,32 @@ use Sulu\Exception\FeatureNotImplementedException;
 
 /**
  * Container class for content data.
- *
- * @ExclusionPolicy("all")
  */
+#[ExclusionPolicy('all')]
 class Content implements \ArrayAccess
 {
     /**
      * @var string
-     *
-     * @Expose
      */
+    #[Expose]
     private $locale;
 
     /**
      * @var string
-     *
-     * @Expose
      */
+    #[Expose]
     private $webspaceKey;
 
     /**
      * @var string
-     *
-     * @Expose
      */
+    #[Expose]
     private $id;
 
     /**
      * @var string
-     *
-     * @Expose
      */
+    #[Expose]
     private $path;
 
     /**
@@ -66,9 +61,8 @@ class Content implements \ArrayAccess
 
     /**
      * @var bool
-     *
-     * @Expose
      */
+    #[Expose]
     private $hasChildren;
 
     /**
@@ -103,9 +97,8 @@ class Content implements \ArrayAccess
 
     /**
      * @var string
-     *
-     * @Expose
      */
+    #[Expose]
     private $url;
 
     /**
@@ -115,9 +108,8 @@ class Content implements \ArrayAccess
 
     /**
      * @var string[]
-     *
-     * @Expose
      */
+    #[Expose]
     private $contentLocales;
 
     /**
@@ -217,10 +209,9 @@ class Content implements \ArrayAccess
      * Returns template.
      *
      * @return string
-     *
-     * @VirtualProperty
-     * @SerializedName("template")
      */
+    #[VirtualProperty]
+    #[SerializedName('template')]
     public function getTemplate()
     {
         if ($this->brokenTemplate) {
@@ -234,10 +225,9 @@ class Content implements \ArrayAccess
      * Returns original-template.
      *
      * @return string
-     *
-     * @VirtualProperty
-     * @SerializedName("originalTemplate")
      */
+    #[VirtualProperty]
+    #[SerializedName('originalTemplate')]
     public function getOriginalTemplate()
     {
         return $this->template;
@@ -414,10 +404,9 @@ class Content implements \ArrayAccess
 
     /**
      * @internal
-     *
-     * @VirtualProperty
-     * @SerializedName("_embedded")
      */
+    #[VirtualProperty]
+    #[SerializedName('_embedded')]
     public function getEmbedded(): array
     {
         return [

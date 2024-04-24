@@ -25,68 +25,60 @@ class FieldDescriptor implements FieldDescriptorInterface
      * The name of the field in the database.
      *
      * @var string
-     *
-     * @Expose
      */
+    #[Expose]
     private $name;
 
     /**
      * The translation name.
      *
      * @var string
-     *
-     * @Expose
      */
+    #[Expose]
     private $translation;
 
     /**
      * Defines the visibility of the field.
      *
      * @var string
-     *
-     * @Expose
      */
+    #[Expose]
     private $visibility;
 
     /**
      * Defines the searchability of the field.
      *
      * @var string
-     *
-     * @Expose
      */
+    #[Expose]
     private $searchability;
 
     /**
      * Defines if this field is sortable.
      *
      * @var bool
-     *
-     * @Expose
      */
+    #[Expose]
     private $sortable;
 
     /**
      * @var string
-     *
-     * @Expose
      */
+    #[Expose]
     private $width;
 
     /**
      * The type of the field (only used for special fields like dates).
      *
      * @var string
-     *
-     * @Expose
      */
+    #[Expose]
     private $type;
 
     /**
      * @var AbstractPropertyMetadata
-     *
-     * @Exclude
      */
+    #[Exclude]
     private $metadata;
 
     public function __construct(
@@ -112,9 +104,7 @@ class FieldDescriptor implements FieldDescriptorInterface
         return $this->name;
     }
 
-    /**
-     * @Serializer\VirtualProperty()
-     */
+    #[Serializer\VirtualProperty]
     public function getDisabled()
     {
         return \in_array(
@@ -143,9 +133,7 @@ class FieldDescriptor implements FieldDescriptorInterface
         return $this->searchability;
     }
 
-    /**
-     * @Serializer\VirtualProperty()
-     */
+    #[Serializer\VirtualProperty]
     public function getDefault()
     {
         return \in_array(
