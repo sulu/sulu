@@ -13,6 +13,12 @@ export default function(data: Object, dataPath: ?string): {[string]: any} {
 
     do {
         parentDataPath = parentDataPath.substring(0, parentDataPath.lastIndexOf('/'));
+
+        if (!jsonpointer.has(data, parentDataPath)) {
+            currentConditionData.__parent = null;
+            break;
+        }
+
         const evaluatedData = jsonpointer.get(data, parentDataPath);
 
         if (isArrayLike(evaluatedData)) {
