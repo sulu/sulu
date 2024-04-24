@@ -139,9 +139,9 @@ Additionally, the following packages where upgraded:
 
 This update is also handled normally by the update build command automatically.
 
-### DocumentToUuidTransformer return type changed
+### Return type adjustments to prepare Symfony 7 compatibility
 
-For compatibility to Symfony 7 the `DocumentToUuidTransformer` methods return types changed:
+Return type changes in `DocumentToUuidTransformer`:
 
 ```diff
 -    public function transform($document)
@@ -150,6 +150,96 @@ For compatibility to Symfony 7 the `DocumentToUuidTransformer` methods return ty
 -    public function reverseTransform($uuid)
 +    public function reverseTransform($uuid): ?object
 ```
+
+Return type changes in `User`:
+
+```diff
+-    public function eraseCredentials()
++    public function eraseCredentials(): void
+```
+
+Return type changes in `AuthenticationEntryPoint`:
+
+```diff
+-    public function start(Request $request, ?AuthenticationException $authException = null)
++    public function start(Request $request, ?AuthenticationException $authException = null): Response
+```
+
+Return type changes in `UserProvider` and `TestUserProvider`:
+
+```diff
+-    public function refreshUser()
++    public function refreshUser(): UserInterface
+
+-    public function supportsClass()
++    public function supportsClass(): bool
+```
+
+Return type changes in `SecurityContextVoter` and `TestVoter`:
+
+```diff
+-    public function vote(TokenInterface $token, $object, array $attributes)
++    public function vote(TokenInterface $token, $object, array $attributes): int
+```
+
+Return type changes in the internal `Warmer`:
+
+```diff
+-    public function warmUp($cacheDir)
++    public function warmUp($cacheDir, ?string $buildDir = null): array
+
+-    public function isOptional()
++    public function isOptional(): bool
+```
+
+Return type changes in `Loader`:
+
+```diff
+-    public function load($resource, $type = null)
++    public function load($resource, $type = null): mixed
+
+
+-    public function supports($resource, $type = null)
++    public function supports($resource, $type = null): bool
+```
+
+Return type changes in `ExpressionLanguageProvider`:
+
+```diff
+-    public function getFunctions()
++    public function getFunctions(): array
+```
+
+### Symfony Doctrine Bridge 7 compatibility changes
+
+To be compatible with the changes of Symfony 7 Doctrine Bridge all Sulu `doctrine.event_subscribers` were migrated to
+`doctrine.event_listener`:
+
+It is recommended to migrate own event subscribers also to listeners.
+
+Example:
+
+```diff
+-<tag name="doctrine.event_subscriber" priority="-256"/>
++<tag name="doctrine.event_listener" event="onClear" priority="-256"/>
+```
+
+See also the documentation [official Doctrine Events documentation](https://symfony.com/doc/6.4/doctrine/events.html).  
+Or the Merge request implementing this changes in Sulu [here](https://github.com/sulu/sulu/pull/7374/files).
+
+### Replace Symfony Security class
+
+The `Symfony\Component\Security\Core\Security` deprecated class was replaced by
+`Symfony\Bundle\SecurityBundle\Security` for preparing Symfony 7 compatibility:
+
+ - `Sulu/Bundle/ActivityBundle/Application/Subscriber/SetDomainEventUserSubscriber`
+ - `Sulu/Bundle/PageBundle/EventListener/PageRemoveSubscriber`
+ - `Sulu/Bundle/SecurityBundle/Metadata/TwoFactorFormMetadataVisitor`
+ - `Sulu/Bundle/SecurityBundle/Security/AuthenticationHandler`
+ - `Sulu/Bundle/TrashBundle/Infrastructure/Doctrine/Repository/TrashItemRepository`
+ - `Sulu/Component/Content/Mapper/ContentMapper`
+ - `Sulu/Component/Media/SmartContent/MediaDataProvider`
+ - `Sulu/Component/Security/Authorization/AccessControl/AccessControlManager`
 
 ### Admin JS ResourceRouteRegistry getDetailUrl and getListUrl deprecated
 
@@ -167,6 +257,61 @@ Use the newly added `getUrl` method:
 
 As deprecated in Symfony 6.1 the `$defaultName` of Sulu Commands were replaced with the new
 `Symfony\Component\Console\Attribute\AsCommand` annotation.
+
+### Jackalope 2 ContentRepository compatibility
+
+To be compatible with Jackalope 2 the following method in the `ContentRepository` class
+has changed:
+
+```diff
+public function resolveInternalLinkContent(
+-    Row $row,
++    RowInterface $row,
+     $locale,
+```
+
+### PHPCR and Jackalope update
+
+An update of PHPCR and Jackalope to latest major version is optional but recommended.   
+The following new versions are supported by Sulu:
+
+ - `doctrine/phpcr-bundle`: `^3.0`
+ - `phpcr/phpcr-utils`: `^2.0`
+ - `jackalope/jackalope`: `^2.0`
+ - `jackalope/jackalope-doctrine-dbal`: `^2.0`
+ - `jackalope/jackalope-jackrabbit`: `^2.0`
+
+In case of upgrading the `sulu_document_manager.yaml` cache configuration need to be changed:
+
+```diff
+# config/packages/sulu_document_manager.yaml
+
+when@prod: &prod
+    # ...
+
+    services:
+        doctrine_phpcr.meta_cache_provider:
+-           class: Doctrine\Common\Cache\Psr6\DoctrineProvider
+-           factory: ['Doctrine\Common\Cache\Psr6\DoctrineProvider', 'wrap']
++           class: Symfony\Component\Cache\Psr16Cache
+            public: false
+            arguments:
+                - '@doctrine_phpcr.meta_cache_pool'
+            tags:
+                - { name: 'kernel.reset', method: 'reset' }
+
+        doctrine_phpcr.nodes_cache_provider:
+-           class: Doctrine\Common\Cache\Psr6\DoctrineProvider
+-           factory: ['Doctrine\Common\Cache\Psr6\DoctrineProvider', 'wrap']
++           class: Symfony\Component\Cache\Psr16Cache
+            public: false
+            arguments:
+                - '@doctrine_phpcr.nodes_cache_pool'
+            tags:
+                - { name: 'kernel.reset', method: 'reset' }
+
+# ...
+```
 
 ### ListBuilder Doctrine Changes
 
@@ -236,6 +381,27 @@ sulu_website:
 
 In the previous version the `SnippetController` would return the entire content of the snippet in the `cgetAction`. Now
 it respects the list of fields provided in the query parameter and only returns those.
+
+## 2.5.15
+
+### Run Shadow migrations
+
+To fix shadow pages be correctly available you need to run the phpcr migration command:
+
+```bash
+bin/console phpcr:migrations:migrate
+```
+
+
+### Change FileVersion default meta relation
+
+Currently, when removing the default meta, it did also remove the whole file version to avoid it following DB Change
+is required:
+
+```sql
+ALTER TABLE me_file_versions DROP FOREIGN KEY FK_7B6E89456B801096
+ALTER TABLE me_file_versions ADD CONSTRAINT FK_7B6E89456B801096 FOREIGN KEY (idFileVersionsMetaDefault) REFERENCES me_file_version_meta (id) ON DELETE SET NULL
+```
 
 ## 2.5.12
 
@@ -602,6 +768,28 @@ framework:
 
 It should also be considered to remove the **SwiftMailer** and **SwiftMailerBundle**
 from your application and replace it with [**Symfony Mailer**](https://symfony.com/doc/6.1/mailer.html).
+
+## 2.4.19
+
+### Run Shadow migrations
+
+To fix shadow pages be correctly available you need to run the phpcr migration command:
+
+```bash
+bin/console phpcr:migrations:migrate
+```
+
+## 2.4.17
+
+### Change FileVersion default meta relation
+
+Currently, when removing the default meta, it did also remove the whole file version to avoid it following DB Change
+is required:
+
+```sql
+ALTER TABLE me_file_versions DROP FOREIGN KEY FK_7B6E89456B801096
+ALTER TABLE me_file_versions ADD CONSTRAINT FK_7B6E89456B801096 FOREIGN KEY (idFileVersionsMetaDefault) REFERENCES me_file_version_meta (id) ON DELETE SET NULL
+```
 
 ## 2.4.16
 

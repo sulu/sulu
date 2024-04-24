@@ -16,6 +16,7 @@ use Jackalope\Query\Row;
 use PHPCR\ItemNotFoundException;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
+use PHPCR\Query\RowInterface;
 use PHPCR\SessionInterface;
 use PHPCR\Util\PathHelper;
 use PHPCR\Util\QOM\QueryBuilder;
@@ -335,7 +336,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
             ->where($this->qomFactory->descendantNode('node', $path));
 
         return \array_map(
-            function(Row $row) {
+            function(RowInterface $row) {
                 return $row->getNode()->getIdentifier();
             },
             \iterator_to_array($descendantQueryBuilder->execute())
@@ -444,7 +445,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         return \array_values(
             \array_filter(
                 \array_map(
-                    function(Row $row, $index) use ($mapping, $locale, $locales, $user, $permissions) {
+                    function(RowInterface $row, $index) use ($mapping, $locale, $locales, $user, $permissions) {
                         return $this->resolveContent(
                             $row,
                             $locale,
@@ -526,7 +527,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
         return $queryBuilder;
     }
 
-    private function getPropertyName($propertyName, $locale)
+    private function getPropertyName(string $propertyName, $locale): string
     {
         if ($locale) {
             return $this->propertyEncoder->localizedContentName($propertyName, $locale);
@@ -667,7 +668,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      * @return Content|null
      */
     private function resolveContent(
-        Row $row,
+        RowInterface $row,
         $locale,
         $locales,
         MappingInterface $mapping,
@@ -768,7 +769,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      *
      * @return string[]
      */
-    private function resolveAvailableLocales(Row $row)
+    private function resolveAvailableLocales(RowInterface $row)
     {
         $locales = [];
         foreach ($row->getValues() as $key => $value) {
@@ -792,7 +793,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      * @return Content|null
      */
     public function resolveInternalLinkContent(
-        Row $row,
+        RowInterface $row,
         $locale,
         $webspaceKey,
         MappingInterface $mapping,
@@ -849,7 +850,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      * @param string $locale
      * @param string $shadowLocale
      */
-    private function resolveProperty(Row $row, $name, $locale, $shadowLocale = null)
+    private function resolveProperty(RowInterface $row, $name, $locale, $shadowLocale = null)
     {
         if (\array_key_exists(\sprintf('node.%s', $name), $row->getValues())) {
             return $row->getValue($name);
@@ -876,7 +877,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      *
      * @return string|null
      */
-    private function resolveUrl(Row $row, $locale)
+    private function resolveUrl(RowInterface $row, $locale)
     {
         if (WorkflowStage::PUBLISHED !== $this->resolveProperty($row, $locale . 'State', $locale)) {
             return null;
@@ -904,7 +905,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      *
      * @return string
      */
-    private function resolvePath(Row $row, $webspaceKey)
+    private function resolvePath(RowInterface $row, $webspaceKey)
     {
         return '/' . \ltrim(\str_replace($this->sessionManager->getContentPath($webspaceKey), '', $row->getPath()), '/');
     }
@@ -914,7 +915,7 @@ class ContentRepository implements ContentRepositoryInterface, DescendantProvide
      *
      * @return bool
      */
-    private function resolveHasChildren(Row $row)
+    private function resolveHasChildren(RowInterface $row)
     {
         $queryBuilder = new QueryBuilder($this->qomFactory);
 

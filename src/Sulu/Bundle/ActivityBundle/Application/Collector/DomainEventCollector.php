@@ -17,19 +17,13 @@ use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 class DomainEventCollector implements DomainEventCollectorInterface
 {
     /**
-     * @var DomainEventDispatcherInterface
-     */
-    private $domainEventDispatcher;
-
-    /**
      * @var DomainEvent[]
      */
     private $eventsToBeDispatched = [];
 
     public function __construct(
-        DomainEventDispatcherInterface $domainEventDispatcher
+        private DomainEventDispatcherInterface $domainEventDispatcher
     ) {
-        $this->domainEventDispatcher = $domainEventDispatcher;
     }
 
     public function collect(DomainEvent $domainEvent): void

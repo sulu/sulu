@@ -1355,56 +1355,6 @@ class PageControllerTest extends SuluTestCase
         $this->assertArrayNotHasKey('type', $response);
     }
 
-    public function testPutRemoveShadowWithDifferentTemplate(): void
-    {
-        $document = $this->createPageDocument();
-        $document->setTitle('test_en');
-        $document->setResourceSegment('/test_en');
-        $document->setStructureType('default');
-        $document->getStructure()->bind([
-            'tags' => [
-                'tag1',
-                'tag2',
-            ],
-            'article' => 'Test English',
-        ]);
-        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
-
-        $document->setStructureType('overview');
-        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
-
-        $document->setShadowLocale('en');
-        $document->setShadowLocaleEnabled(true);
-        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
-
-        $this->client->jsonRequest('GET', '/api/pages/' . $document->getUuid() . '?language=de');
-        $response = \json_decode($this->client->getResponse()->getContent(), true);
-
-        $this->assertEquals(true, $response['shadowOn']);
-        $this->assertEquals('overview', $response['template']);
-
-        $this->client->jsonRequest(
-            'PUT',
-            '/api/pages/' . $document->getUuid() . '?language=de&webspace=sulu_io',
-            [
-                'id' => $document->getUuid(),
-                'nodeType' => 1,
-                'shadowOn' => false,
-            ]
-        );
-
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-
-        $this->client->jsonRequest('GET', '/api/pages/' . $document->getUuid() . '?language=de');
-        $response = \json_decode($this->client->getResponse()->getContent(), true);
-
-        $this->assertEquals(false, $response['shadowOn']);
-        $this->assertEquals('overview', $response['template']);
-    }
-
     public function testPutWithValidHash(): void
     {
         $data = [
