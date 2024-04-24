@@ -1,6 +1,7 @@
 # Upgrade
 
 ## 2.6.0
+
 ### PHP 8.2 upgrade
 
 Before upgrading to Sulu 2.6, ensure that your project's code and dependencies
