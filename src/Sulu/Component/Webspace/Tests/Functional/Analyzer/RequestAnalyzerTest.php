@@ -28,6 +28,7 @@ use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpFoundation\InputBag;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -275,7 +276,7 @@ class RequestAnalyzerTest extends TestCase
         $request = $this->getMockBuilder(Request::class)->getMock();
         $request->request = new InputBag(['post' => 1]);
         $request->query = new InputBag(['get' => 1]);
-        $request->attributes = new InputBag();
+        $request->attributes = new ParameterBag();
 
         $this->requestAnalyzer->analyze($request);
         $this->requestAnalyzer->validate($request);
