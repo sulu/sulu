@@ -4826,11 +4826,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Search/Converter/CategoryConverterTest.php
 
 		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:\\$query \\(Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<string\\>\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
-
-		-
 			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryRepositoryInterface\\:\\:findCategoryById\\(\\) expects int, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Trash/CategoryTrashItemHandler.php
@@ -32151,11 +32146,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Tests/Unit/Twig/TagTwigExtensionTest.php
 
 		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:\\$query \\(Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<string\\>\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/TagBundle/Tests/Unit/Twig/TagTwigExtensionTest.php
-
-		-
 			message: "#^Parameter \\#1 \\$datetime of class DateTime constructor expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Trash/TagTrashItemHandler.php
@@ -35533,11 +35523,6 @@ parameters:
 		-
 			message: "#^Method Sulu\\\\Component\\\\Category\\\\Tests\\\\Unit\\\\Request\\\\CategoryRequestHandlerTest\\:\\:toggleProvider\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: src/Sulu/Component/Category/Tests/Unit/Request/CategoryRequestHandlerTest.php
-
-		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:\\$query \\(Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<string\\>\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
-			count: 6
 			path: src/Sulu/Component/Category/Tests/Unit/Request/CategoryRequestHandlerTest.php
 
 		-
@@ -52086,11 +52071,6 @@ parameters:
 			path: src/Sulu/Component/Tag/Tests/Unit/Request/TagRequestHandlerTest.php
 
 		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:\\$query \\(Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<string\\>\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
-			count: 4
-			path: src/Sulu/Component/Tag/Tests/Unit/Request/TagRequestHandlerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Util\\\\ArrayUtils\\:\\:filter\\(\\) has parameter \\$collection with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Util/ArrayUtils.php
@@ -53747,16 +53727,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Functional\\\\Analyzer\\\\RequestAnalyzerTest\\:\\:testAnalyzeWithFormat\\(\\) has parameter \\$expected with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Functional/Analyzer/RequestAnalyzerTest.php
-
-		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:\\$query \\(Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<string\\>\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Functional/Analyzer/RequestAnalyzerTest.php
-
-		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:\\$request \\(Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<bool\\|float\\|int\\|string\\>\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Functional/Analyzer/RequestAnalyzerTest.php
 
