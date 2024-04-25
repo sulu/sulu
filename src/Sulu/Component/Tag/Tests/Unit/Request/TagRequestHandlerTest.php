@@ -14,7 +14,7 @@ namespace Sulu\Component\Tag\Tests\Unit\Request;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Tag\Request\TagRequestHandler;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -43,7 +43,7 @@ class TagRequestHandlerTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$tagsParameter => $tagsString]);
+        $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($tagsParameter, '')->willReturn($tagsString);
 
@@ -76,7 +76,7 @@ class TagRequestHandlerTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$tagsParameter => $tagsString]);
+        $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
@@ -110,7 +110,7 @@ class TagRequestHandlerTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$tagsParameter => $tagsString]);
+        $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
@@ -142,7 +142,7 @@ class TagRequestHandlerTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$tagsParameter => $tagsString]);
+        $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);

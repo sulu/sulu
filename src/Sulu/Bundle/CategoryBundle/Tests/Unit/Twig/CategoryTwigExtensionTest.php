@@ -26,7 +26,7 @@ use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandler;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -185,7 +185,7 @@ class CategoryTwigExtensionTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$parameter => $string]);
+        $requestReveal->query = new InputBag([$parameter => $string]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($parameter, '')->willReturn($string);
         $request->getPathInfo()->willReturn($url);
@@ -233,7 +233,7 @@ class CategoryTwigExtensionTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$parameter => $string]);
+        $requestReveal->query = new InputBag([$parameter => $string]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($parameter, '')->willReturn($string);
         $request->getPathInfo()->willReturn($url);
@@ -275,7 +275,7 @@ class CategoryTwigExtensionTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$parameter => $string]);
+        $requestReveal->query = new InputBag([$parameter => $string]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($parameter, '')->willReturn($string);
         $request->getPathInfo()->willReturn($url);
