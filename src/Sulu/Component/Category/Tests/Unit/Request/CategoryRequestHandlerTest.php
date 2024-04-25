@@ -14,7 +14,7 @@ namespace Sulu\Component\Category\Tests\Unit\Request;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Category\Request\CategoryRequestHandler;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -43,7 +43,7 @@ class CategoryRequestHandlerTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$parameter => $queryString]);
+        $requestReveal->query = new InputBag([$parameter => $queryString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($parameter, '')->willReturn($queryString);
 
@@ -78,7 +78,7 @@ class CategoryRequestHandlerTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$parameter => $queryString]);
+        $requestReveal->query = new InputBag([$parameter => $queryString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($parameter, '')->willReturn($queryString);
         $request->getPathInfo()->willReturn($url);
@@ -114,7 +114,7 @@ class CategoryRequestHandlerTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$parameter => $queryString]);
+        $requestReveal->query = new InputBag([$parameter => $queryString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($parameter, '')->willReturn($queryString);
         $request->getPathInfo()->willReturn($url);
@@ -150,7 +150,7 @@ class CategoryRequestHandlerTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$parameter => $queryString]);
+        $requestReveal->query = new InputBag([$parameter => $queryString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($parameter, '')->willReturn($queryString);
         $request->getPathInfo()->willReturn($url);
@@ -186,7 +186,7 @@ class CategoryRequestHandlerTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$parameter => $queryString]);
+        $requestReveal->query = new InputBag([$parameter => $queryString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($parameter, '')->willReturn($queryString);
         $request->getPathInfo()->willReturn($url);
@@ -219,7 +219,7 @@ class CategoryRequestHandlerTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$parameter => $queryString]);
+        $requestReveal->query = new InputBag([$parameter => $queryString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($parameter, '')->willReturn($queryString);
         $request->getPathInfo()->willReturn($url);
