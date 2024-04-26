@@ -31,7 +31,7 @@ use Webmozart\Assert\Assert;
 /**
  * @internal
  */
-#[AsCommand(name: 'sulu:phpcr:cleanup')]
+#[AsCommand(name: 'sulu:document:phpcr-cleanup', description: 'Cleanup the PHPCR repository and remove unused properties.')]
 class PHPCRCleanupCommand extends Command
 {
     private OutputInterface $logger;
@@ -42,7 +42,7 @@ class PHPCRCleanupCommand extends Command
         private ServicesResetter $servicesResetter,
         private string $projectDirectory,
     ) {
-        parent::__construct('sulu:phpcr:cleanup');
+        parent::__construct();
     }
 
     protected function configure(): void
@@ -243,7 +243,7 @@ class PHPCRCleanupCommand extends Command
         $process = new Process(\array_filter([
             $php,
             $_SERVER['argv'][0],
-            'sulu:phpcr:cleanup:single-node',
+            PHPCRCleanupSingleNodeCommand::getDefaultName(),
             $uuid,
             $dryRun ? '--dry-run' : null,
             $debug ? '--debug' : null,

@@ -11511,11 +11511,6 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Command\\\\PHPCRCleanupSingleNodeCommand\\:\\:\\$invalidationSubscriber is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
-
-		-
 			message: "#^Variable \\$liveCleanupNode might not be defined\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Command/PHPCRCleanupSingleNodeCommand.php
