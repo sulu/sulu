@@ -33,7 +33,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * @internal
  */
-#[AsCommand(name: 'sulu:admin:debug-views', description: 'Display current Views for the admin')]
+#[AsCommand(name: 'sulu:admin:debug-view', description: 'Display current Views for the admin')]
 class ViewDebugCommand extends Command
 {
     public function __construct(
