@@ -18,7 +18,7 @@ export default class CircularProgressbar extends React.PureComponent<Props> {
     };
 
     @computed get percentageText() {
-        const { hidePercentageText, percentage } = this.props;
+        const {hidePercentageText, percentage} = this.props;
 
         if (hidePercentageText) {
             return null;
@@ -28,7 +28,7 @@ export default class CircularProgressbar extends React.PureComponent<Props> {
     }
 
     render() {
-        const { size, percentage } = this.props;
+        const {size, percentage} = this.props;
         const sizeStyle = {
             width: size,
             height: size,
