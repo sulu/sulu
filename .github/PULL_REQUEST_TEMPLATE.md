@@ -34,3 +34,16 @@ $foo->doSomething();
 
 - [ ] Create a documentation PR
 - [ ] Add breaking changes to UPGRADE.md
+
+<!--
+
+Dear Contributers,
+
+Thank you already for contributing to the Sulu ecosystem.  
+Please join our Slack channel: https://sulu.io/services/support#chat
+and feel free there to ask for any help with your pull request.
+
+Best Regards,
+Sulu Core Team
+
+-->
