@@ -69,7 +69,9 @@ exports[`Render the MediaCollection 1`] = `
       <div
         class="list"
       >
-        <section>
+        <section
+          class="resultsContainer"
+        >
           <ul
             class="folderList"
           >
@@ -642,7 +644,9 @@ exports[`Render the MediaCollection for all media 1`] = `
       <div
         class="list"
       >
-        <section>
+        <section
+          class="resultsContainer"
+        >
           <ul
             class="folderList"
           >
