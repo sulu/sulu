@@ -37,13 +37,15 @@ $foo->doSomething();
 
 <!--
 
-Dear Contributers,
+Dear Contributors,
 
-Thank you already for contributing to the Sulu ecosystem.  
-Please join our Slack channel: https://sulu.io/services/support#chat
-and feel free there to ask for any help with your pull request.
+Thank you for contributing to the Sulu ecosystem!
 
-Best Regards,
-Sulu Core Team
+We appreciate your effort to improve our project.
+If you need assistance or have questions about your pull request, our team is here to help. 
+Please join our Slack channel for support: https://sulu.io/services/support#chat.
+
+Best Regards, 
+the Sulu Core Team
 
 -->
