@@ -208,12 +208,11 @@ class Preview extends React.Component<Props> {
             return;
         }
 
-        const preservedScrollPos=this.getPreviewScrollPos();
+        const preservedScrollPosition = this.getPreviewScrollPosition();
         previewDocument.open(); // This will lose in Firefox the and safari previewDocument.location
         previewDocument.write(previewContent);
         previewDocument.close();
-        setTimeout(() => this.setPreviewScrollPos(preservedScrollPos), 100);
-
+        setTimeout(() => this.setPreviewScrollPosition(preservedScrollPosition), 0);
     };
 
     componentWillUnmount() {
@@ -253,7 +252,7 @@ class Preview extends React.Component<Props> {
         return this.iframeRef.contentDocument;
     };
 
-    getPreviewWindow= (): ?Window => {
+    getPreviewWindow = (): ?any => {
         if (this.previewWindow) {
             return this.previewWindow;
         }
@@ -261,23 +260,25 @@ class Preview extends React.Component<Props> {
         if (!(this.iframeRef instanceof HTMLIFrameElement)) {
             return;
         }
+
         return this.iframeRef.contentWindow;
     };
 
-
-    getPreviewScrollPos = ()  => {
-        const win=this.getPreviewWindow();
-        if(win) {
-            return win.document.documentElement.scrollTop || win.pageYOffset || win.document.body.scrollTop;
+    getPreviewScrollPosition = () => {
+        const previewWindow = this.getPreviewWindow();
+        if (previewWindow) {
+            return previewWindow.document.documentElement.scrollTop
+                || previewWindow.pageYOffset
+                || previewWindow.document.body.scrollTop;
         }
     };
 
-    setPreviewScrollPos = (pos)  => {
-        const win=this.getPreviewWindow();
-        if(win) {
-            win.scrollTo({ top: pos});
+    setPreviewScrollPosition = (pos) => {
+        const previewWindow = this.getPreviewWindow();
+        if (previewWindow) {
+            previewWindow.scrollTo({top: pos});
         }
-    }
+    };
 
     @action setIframe = (iframeRef: ?Object) => {
         this.iframeRef = iframeRef;
