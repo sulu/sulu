@@ -270,9 +270,9 @@ class Preview extends React.Component<Props> {
     getPreviewScrollPosition = (): ?number => {
         const previewWindow = this.getPreviewWindow();
         if (previewWindow) {
-            return previewWindow.document.documentElement.scrollTop
+            return previewWindow.document?.documentElement?.scrollTop
                 || previewWindow.pageYOffset
-                || previewWindow.document.body.scrollTop;
+                || previewWindow.document?.body?.scrollTop;
         }
     };
 
