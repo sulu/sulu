@@ -40,10 +40,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Makes collections available through a REST API.
  */
-class CollectionController extends AbstractRestController implements
-    ClassResourceInterface,
-    SecuredControllerInterface,
-    SecuredObjectControllerInterface
+class CollectionController extends AbstractRestController implements ClassResourceInterface, SecuredControllerInterface, SecuredObjectControllerInterface
 {
     use RequestParametersTrait;
 
