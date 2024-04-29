@@ -212,7 +212,10 @@ class Preview extends React.Component<Props> {
         previewDocument.open(); // This will lose in Firefox the and safari previewDocument.location
         previewDocument.write(previewContent);
         previewDocument.close();
-        setTimeout(() => this.setPreviewScrollPosition(preservedScrollPosition), 0);
+
+        if (preservedScrollPosition) {
+            setTimeout(() => this.setPreviewScrollPosition(preservedScrollPosition), 0);
+        }
     };
 
     componentWillUnmount() {
@@ -264,7 +267,7 @@ class Preview extends React.Component<Props> {
         return this.iframeRef.contentWindow;
     };
 
-    getPreviewScrollPosition = () => {
+    getPreviewScrollPosition = (): ?number => {
         const previewWindow = this.getPreviewWindow();
         if (previewWindow) {
             return previewWindow.document.documentElement.scrollTop
