@@ -98,7 +98,7 @@ class MediaStreamController
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function getImageAction(Request $request)
     {
