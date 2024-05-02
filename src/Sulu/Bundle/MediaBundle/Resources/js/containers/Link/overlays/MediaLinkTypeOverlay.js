@@ -29,7 +29,7 @@ export default class MediaLinkTypeOverlay extends React.Component<LinkTypeOverla
             open,
             title,
             target,
-            anchor
+            anchor,
         } = this.props;
 
         if (typeof href === 'string') {
