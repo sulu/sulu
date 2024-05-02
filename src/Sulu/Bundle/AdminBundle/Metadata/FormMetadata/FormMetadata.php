@@ -20,45 +20,39 @@ class FormMetadata extends AbstractMetadata
 {
     /**
      * @var string
-     *
-     * @Exclude(if="'admin_form_metadata_keys_only' in context.getAttribute('groups')")
      */
+    #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
     private $name;
 
     /**
      * @var string
-     *
-     * @Exclude(if="'admin_form_metadata_keys_only' in context.getAttribute('groups')")
      */
+    #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
     private $title;
 
     /**
      * @var ItemMetadata[]
-     *
-     * @SerializedName("form")
-     * @Exclude(if="'admin_form_metadata_keys_only' in context.getAttribute('groups')")
      */
+    #[SerializedName('form')]
+    #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
     private $items = [];
 
     /**
      * @var SchemaMetadata
-     *
-     * @Exclude(if="'admin_form_metadata_keys_only' in context.getAttribute('groups')")
      */
+    #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
     private $schema;
 
     /**
      * @var string
-     *
-     * @Exclude(if="'admin_form_metadata_keys_only' in context.getAttribute('groups')")
      */
+    #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
     private $key;
 
     /**
      * @var TagMetadata[]
-     *
-     * @Exclude(if="'admin_form_metadata_keys_only' in context.getAttribute('groups')")
      */
+    #[Exclude(if: "'admin_form_metadata_keys_only' in context.getAttribute('groups')")]
     protected $tags = [];
 
     public function setName(string $name)

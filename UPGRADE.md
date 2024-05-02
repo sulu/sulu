@@ -194,6 +194,13 @@ Return type changes in `ExpressionLanguageProvider`:
 +    public function getFunctions(): array
 ```
 
+Return type changes in `Kernel`:
+
+```diff
+-    public function registerContainerConfiguration(LoaderInterface $loader)
++    public function registerContainerConfiguration(LoaderInterface $loader): void
+```
+
 ### Symfony Doctrine Bridge 7 compatibility changes
 
 To be compatible with the changes of Symfony 7 Doctrine Bridge all Sulu `doctrine.event_subscribers` were migrated to
@@ -210,6 +217,15 @@ Example:
 
 See also the documentation [official Doctrine Events documentation](https://symfony.com/doc/6.4/doctrine/events.html).  
 Or the Merge request implementing this changes in Sulu [here](https://github.com/sulu/sulu/pull/7374/files).
+
+### GeolocatorInterface locate method GeolocatorOptions added
+
+To provide the Accept-Language locale to geolocator services, a custom Geolocator now requires support for the new ﻿`GeolocatorOptions` parameter:
+
+```diff
+-    public function locate(string $query): GeolocatorResponse
++    public function locate(string $query, ?GeolocatorOptions $options = null): GeolocatorResponse
+```
 
 ### Replace Symfony Security class
 

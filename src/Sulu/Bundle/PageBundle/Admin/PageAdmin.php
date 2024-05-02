@@ -101,7 +101,7 @@ class PageAdmin extends Admin
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        if ($this->hasSomeWebspacePermission()) {
+        if ($this->getFirstWebspaceWithPermissions() instanceof Webspace) {
             $webspaceItem = new NavigationItem('sulu_page.webspaces');
             $webspaceItem->setPosition(10);
             $webspaceItem->setIcon('su-webspace');
@@ -113,8 +113,7 @@ class PageAdmin extends Admin
 
     public function configureViews(ViewCollection $viewCollection): void
     {
-        /** @var Webspace $firstWebspace */
-        $firstWebspace = \current($this->webspaceManager->getWebspaceCollection()->getWebspaces());
+        $firstWebspace = $this->getFirstWebspaceWithPermissions();
 
         $createPageSaveVisibleCondition = '!_permissions && (!__webspace || __webspace._permissions.edit)';
         $editPageSaveVisibleCondition = '_permissions && _permissions.edit';
@@ -220,13 +219,17 @@ class PageAdmin extends Admin
 
         // This view has to be registered even if permissions for pages are missing
         // Otherwise the application breaks when other bundles try to add child views to this one
+        $webspaceKey = '';
+        if ($firstWebspace instanceof Webspace) {
+            $webspaceKey = $firstWebspace->getKey();
+        }
         $viewCollection->add(
             $this->viewBuilderFactory
                 ->createViewBuilder(static::WEBSPACE_TABS_VIEW, '/webspaces/:webspace', 'sulu_page.webspace_tabs')
-                ->setAttributeDefault('webspace', $firstWebspace->getKey())
+                ->setAttributeDefault('webspace', $webspaceKey)
         );
 
-        if ($this->hasSomeWebspacePermission()) {
+        if ($firstWebspace instanceof Webspace) {
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createViewBuilder(static::PAGES_VIEW, '/pages/:locale', 'sulu_page.page_list')
@@ -517,20 +520,18 @@ class PageAdmin extends Admin
         ];
     }
 
-    private function hasSomeWebspacePermission(): bool
+    private function getFirstWebspaceWithPermissions(): ?Webspace
     {
         foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
-            $hasWebspacePermission = $this->securityChecker->hasPermission(
+            if ($this->securityChecker->hasPermission(
                 self::getPageSecurityContext($webspace->getKey()),
                 PermissionTypes::EDIT
-            );
-
-            if ($hasWebspacePermission) {
-                return true;
+            )) {
+                return $webspace;
             }
         }
 
-        return false;
+        return null;
     }
 
     /**

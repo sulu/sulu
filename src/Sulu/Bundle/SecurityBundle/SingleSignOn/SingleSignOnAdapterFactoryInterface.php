@@ -28,7 +28,7 @@ interface SingleSignOnAdapterFactoryInterface
      *     fragment?: string,
      * } $dsn
      */
-    public function createAdapter(#[\SensitiveParameter] array $dsn, /* TODO check how to handle this */ string $userRole): SingleSignOnAdapterInterface;
+    public function createAdapter(#[\SensitiveParameter] array $dsn, /* TODO check how to handle this */ string $defaultRoleKey): SingleSignOnAdapterInterface;
 
     /**
      * Returns the expected DSN scheme for this adapter.

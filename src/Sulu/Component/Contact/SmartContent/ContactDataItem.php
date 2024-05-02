@@ -18,9 +18,8 @@ use Sulu\Component\SmartContent\ItemInterface;
 
 /**
  * Represents contact item in contact data provider.
- *
- * @ExclusionPolicy("all")
  */
+#[ExclusionPolicy('all')]
 class ContactDataItem implements ItemInterface
 {
     /**
@@ -33,25 +32,19 @@ class ContactDataItem implements ItemInterface
         $this->entity = $entity;
     }
 
-    /**
-     * @VirtualProperty
-     */
+    #[VirtualProperty]
     public function getId()
     {
         return $this->entity->getId();
     }
 
-    /**
-     * @VirtualProperty
-     */
+    #[VirtualProperty]
     public function getTitle()
     {
         return $this->entity->getFullName();
     }
 
-    /**
-     * @VirtualProperty
-     */
+    #[VirtualProperty]
     public function getImage()
     {
         return;

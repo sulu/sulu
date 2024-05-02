@@ -38,7 +38,6 @@
             <argument type="service" id="sulu_document_manager.namespace_registry" />
             <argument type="service" id="sulu_document_manager.event_dispatcher" />
             <argument type="service" id="sulu_document_manager.document_manager" />
-            <argument type="service" id="sulu_http_cache.event_subscriber.invalidation" />
             <argument>%sulu_document_manager.mapping%</argument>
 
             <tag name="console.command" />

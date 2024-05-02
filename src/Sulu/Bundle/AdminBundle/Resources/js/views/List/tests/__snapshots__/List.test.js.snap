@@ -340,7 +340,9 @@ exports[`Should render the list with a title 1`] = `
     <div
       class="list"
     >
-      <section>
+      <section
+        class="resultsContainer"
+      >
         <div
           class="tableContainer dark"
         >
@@ -627,7 +629,9 @@ exports[`Should render the list with nodes of given ListItemActions 1`] = `
     <div
       class="list"
     >
-      <section>
+      <section
+        class="resultsContainer"
+      >
         <div
           class="tableContainer dark hasButtons"
         >
@@ -960,7 +964,9 @@ exports[`Should render the list with nodes of given ToolbarActions 1`] = `
     <div
       class="list"
     >
-      <section>
+      <section
+        class="resultsContainer"
+      >
         <div
           class="tableContainer dark"
         >
@@ -1251,7 +1257,9 @@ exports[`Should render the list with the correct resourceKey 1`] = `
     <div
       class="list"
     >
-      <section>
+      <section
+        class="resultsContainer"
+      >
         <div
           class="tableContainer dark"
         >

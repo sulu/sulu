@@ -75,7 +75,9 @@ exports[`Render a simple MediaOverview 1`] = `
       <div
         class="list"
       >
-        <section>
+        <section
+          class="resultsContainer"
+        >
           <ul
             class="folderList"
           >
