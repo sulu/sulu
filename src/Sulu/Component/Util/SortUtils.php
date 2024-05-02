@@ -104,16 +104,20 @@ final class SortUtils
      *
      * If the intl extension is not loaded, the comparison falls back to binary comparison.
      *
-     * @param iterable<mixed> $list
+     * @template T of mixed
+     * @template TKey of array-key
+     *
+     * @param iterable<TKey, T> $list
      * @param null|callable $getComparableValue callback to get the value from each item that will be compared
      *
-     * @return mixed[]
+     * @return array<TKey, T>
      *
      * @throws \InvalidArgumentException if the comparison of the values failed
      */
     public static function sortLocaleAware(iterable $list, string $locale, ?callable $getComparableValue = null): array
     {
         $array = \is_array($list) ? $list : \iterator_to_array($list);
+        $isList = \array_is_list($array);
 
         if (null === $getComparableValue) {
             $getComparableValue = fn ($item) => $item;
@@ -122,7 +126,9 @@ final class SortUtils
         // Collator class requires intl extension
         $collator = \class_exists(\Collator::class) ? new \Collator($locale) : null;
 
-        \uasort($array, function(mixed $itemA, mixed $itemB) use ($collator, $getComparableValue) {
+        $sortMethod = $isList ? '\usort' : '\uasort';
+
+        $sortMethod($array, function(mixed $itemA, mixed $itemB) use ($collator, $getComparableValue) {
             $valueA = (string) $getComparableValue($itemA);
             $valueB = (string) $getComparableValue($itemB);
 
