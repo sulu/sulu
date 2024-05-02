@@ -29866,16 +29866,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Content/SnippetQueryBuilder.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getTitle\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getUuid\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetAreaController\\:\\:__construct\\(\\) has parameter \\$sulu_snippet_area with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
@@ -29913,11 +29903,6 @@ parameters:
 		-
 			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
-
-		-
-			message: "#^Ternary operator condition is always true\\.$#"
-			count: 4
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
 
 		-
