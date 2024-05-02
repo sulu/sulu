@@ -135,7 +135,7 @@ class SnippetAreaController implements ClassResourceInterface
 
         $data = [
             '_embedded' => [
-                'areas' => $dataList,
+                'areas' => \array_values($dataList),
             ],
             'total' => \count($dataList),
         ];

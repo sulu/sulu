@@ -122,7 +122,7 @@ final class SortUtils
         // Collator class requires intl extension
         $collator = \class_exists(\Collator::class) ? new \Collator($locale) : null;
 
-        \usort($array, function(mixed $itemA, mixed $itemB) use ($collator, $getComparableValue) {
+        \uasort($array, function(mixed $itemA, mixed $itemB) use ($collator, $getComparableValue) {
             $valueA = (string) $getComparableValue($itemA);
             $valueB = (string) $getComparableValue($itemB);
 
