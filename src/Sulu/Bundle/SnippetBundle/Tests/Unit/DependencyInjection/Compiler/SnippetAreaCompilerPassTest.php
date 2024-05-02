@@ -89,6 +89,7 @@ class SnippetAreaCompilerPassTest extends TestCase
             [
                 'article' => [
                     'key' => 'article',
+                    'cache-invalidation' => 'false',
                     'title' => [
                         'en' => 'Article EN',
                     ],
@@ -113,6 +114,7 @@ class SnippetAreaCompilerPassTest extends TestCase
                 'article' => [
                     'key' => 'article',
                     'template' => 'test',
+                    'cache-invalidation' => 'false',
                     'title' => [
                         'en' => 'Article EN',
                         'de' => 'Test DE Article',
@@ -182,6 +184,7 @@ class SnippetAreaCompilerPassTest extends TestCase
             [
                 'article' => [
                     'key' => 'article',
+                    'cache-invalidation' => 'false',
                     'title' => [
                         'sulu_snippet.areas.article.title',
                     ],
@@ -206,6 +209,7 @@ class SnippetAreaCompilerPassTest extends TestCase
                 'article' => [
                     'key' => 'article',
                     'template' => 'test',
+                    'cache-invalidation' => 'false',
                     'title' => [
                         'en' => 'Article Test',
                         'de' => 'Artikel Test',
@@ -226,6 +230,7 @@ class SnippetAreaCompilerPassTest extends TestCase
             [
                 'article' => [
                     'key' => 'article',
+                    'cache-invalidation' => 'false',
                     'title' => [
                         'sulu_snippet.areas.article.title',
                     ],
@@ -250,6 +255,7 @@ class SnippetAreaCompilerPassTest extends TestCase
                 'article' => [
                     'key' => 'article',
                     'template' => 'test',
+                    'cache-invalidation' => 'false',
                     'title' => [
                         'en' => 'sulu_snippet.areas.article.title',
                         'de' => 'sulu_snippet.areas.article.title',
