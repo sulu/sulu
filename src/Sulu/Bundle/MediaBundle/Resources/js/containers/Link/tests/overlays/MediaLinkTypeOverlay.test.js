@@ -42,10 +42,10 @@ test('Render overlay with anchor enabled', () => {
     const mediaLinkTypeOverlay = mount(
         <MediaLinkTypeOverlay
             href={undefined}
+            onAnchorChange={jest.fn()}
             onCancel={jest.fn()}
             onConfirm={jest.fn()}
             onHrefChange={jest.fn()}
-            onAnchorChange={jest.fn()}
             open={true}
         />
     );
