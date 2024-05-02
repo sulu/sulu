@@ -48,7 +48,7 @@ class OpenIdSingleSignOnAdapter implements SingleSignOnAdapterInterface
         private string $clientId,
         #[\SensitiveParameter]
         private string $clientSecret,
-        private string $userRole,
+        private string $defaultRoleKey,
         private array $translations,
     ) {
     }
@@ -254,19 +254,19 @@ class OpenIdSingleSignOnAdapter implements SingleSignOnAdapterInterface
 
         $roleNames = $user->getRoles();
 
-        $role = $this->roleRepository->findOneBy(['key' => $this->userRole]);
+        $role = $this->roleRepository->findOneBy(['key' => $this->defaultRoleKey]);
 
         if (!$role instanceof Role) {
-            throw new \RuntimeException('Role with Key "' . $this->userRole . '" not found for OIDC user: "' . $email . '"');
+            throw new \RuntimeException('Role with Key "' . $this->defaultRoleKey . '" not found for OIDC user: "' . $email . '"');
         }
 
         if (!\in_array($role->getIdentifier(), $roleNames, true)) {
-            $userRole = new UserRole();
-            $userRole->setRole($role);
-            $userRole->setUser($user);
-            $userRole->setLocale('["en", "de"]');
-            $user->addUserRole($userRole);
-            $this->entityManager->persist($userRole);
+            $defaultRoleKey = new UserRole();
+            $defaultRoleKey->setRole($role);
+            $defaultRoleKey->setUser($user);
+            $defaultRoleKey->setLocale('["en", "de"]');
+            $user->addUserRole($defaultRoleKey);
+            $this->entityManager->persist($defaultRoleKey);
         }
 
         $contact = $user->getContact();

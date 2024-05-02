@@ -131,7 +131,7 @@ class SuluSecurityExtension extends Extension implements PrependExtensionInterfa
             $definition = new Definition();
             $definition->setFactory([new Reference('sulu_security.single_sign_on_adapter_factory'), 'createAdapter']);
             $definition->setClass(SingleSignOnAdapterInterface::class);
-            $definition->setArguments([$providerConfig['dsn'], $providerConfig['user_role'] ?? null]);
+            $definition->setArguments([$providerConfig['dsn'], $providerConfig['default_role_key'] ?? null]);
             $definition->addTag('sulu_security.single_sign_on_adapter', ['domain' => $domain]);
 
             $container->setDefinition('sulu_security.single_sign_on_adapter_' . \str_replace('.', '_', $domain), $definition);

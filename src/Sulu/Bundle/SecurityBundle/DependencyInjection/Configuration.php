@@ -76,7 +76,7 @@ class Configuration implements ConfigurationInterface
                                     ->scalarNode('dsn')
                                         ->cannotBeEmpty()
                                     ->end()
-                                    ->scalarNode('user_role')
+                                    ->scalarNode('default_role_key')
                                         ->cannotBeEmpty()
                                     ->end()
                                 ->end()

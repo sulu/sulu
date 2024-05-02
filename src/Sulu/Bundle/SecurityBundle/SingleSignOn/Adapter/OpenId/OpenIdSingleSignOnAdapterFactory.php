@@ -41,7 +41,7 @@ class OpenIdSingleSignOnAdapterFactory implements SingleSignOnAdapterFactoryInte
     ) {
     }
 
-    public function createAdapter(#[\SensitiveParameter] array $dsn, string $userRole): SingleSignOnAdapterInterface
+    public function createAdapter(#[\SensitiveParameter] array $dsn, string $defaultRoleKey): SingleSignOnAdapterInterface
     {
         $endpoint = (($dsn['query']['no-tls'] ?? false) ? 'http' : 'https') . '://' // http://
             . $dsn['host']                                                          // example.org
@@ -61,7 +61,7 @@ class OpenIdSingleSignOnAdapterFactory implements SingleSignOnAdapterFactoryInte
             $endpoint,
             $clientId,
             $clientSecret,
-            $userRole,
+            $defaultRoleKey,
             $this->translations,
         );
     }
