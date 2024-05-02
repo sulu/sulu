@@ -70,6 +70,7 @@ class MapquestGeolocatorTest extends TestCase
             $this->assertEquals($expectation, $result[$field]);
         }
     }
+
     public function testAcceptLanguage(): void
     {
         $mockResponse = new MockResponse('{"status": "OK","results":[]}');

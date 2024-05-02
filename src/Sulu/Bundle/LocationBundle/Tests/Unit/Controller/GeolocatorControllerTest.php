@@ -31,7 +31,7 @@ class GeolocatorControllerTest extends TestCase
         $geolocatorResponse->toArray()->willReturn(['test']);
 
         $locator = $this->prophesize(GeolocatorInterface::class);
-        $locator->locate('Dornbirn Teststraße 6', Argument::that(function (GeolocatorOptions $options) {
+        $locator->locate('Dornbirn Teststraße 6', Argument::that(function(GeolocatorOptions $options) {
             $this->assertSame('de', $options->getAcceptLanguage());
 
             return true;

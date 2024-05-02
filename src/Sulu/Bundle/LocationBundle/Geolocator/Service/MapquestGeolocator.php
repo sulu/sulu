@@ -22,7 +22,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * https://developer.mapquest.com/documentation/
+ * https://developer.mapquest.com/documentation/.
  */
 class MapquestGeolocator implements GeolocatorInterface
 {
