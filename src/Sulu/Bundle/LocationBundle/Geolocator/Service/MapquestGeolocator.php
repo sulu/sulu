@@ -15,15 +15,14 @@ namespace Sulu\Bundle\LocationBundle\Geolocator\Service;
 
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorInterface;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorLocation;
+use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorOptions;
 use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Webmozart\Assert\Assert;
 
 /**
- * Geolocator which uses the open street maps nominatim service.
- *
- * http://wiki.openstreetmap.org/wiki/Nominatim
+ * https://developer.mapquest.com/documentation/
  */
 class MapquestGeolocator implements GeolocatorInterface
 {
@@ -52,12 +51,19 @@ class MapquestGeolocator implements GeolocatorInterface
         $this->key = $key;
     }
 
-    public function locate(string $query): GeolocatorResponse
+    public function locate(string $query, ?GeolocatorOptions $options = null): GeolocatorResponse
     {
+        $requestHeaders = [];
+
+        if ($options && $options->getAcceptLanguage()) {
+            $requestHeaders['Accept-Language'] = $options->getAcceptLanguage();
+        }
+
         $response = $this->client->request(
             'GET',
             $this->baseUrl,
             [
+                'headers' => $requestHeaders,
                 'query' => [
                     'location' => $query,
                     'format' => 'json',
