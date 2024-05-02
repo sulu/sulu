@@ -206,8 +206,7 @@ Or the Merge request implementing this changes in Sulu [here](https://github.com
 
 ### GeolocatorInterface locate method GeolocatorOptions added
 
-To support to give the Accept-Language locale to the geolocator services a custom Geolocator
-requires now to support the new `GeolocatorOptions` parameter:
+To provide the Accept-Language locale to geolocator services, a custom Geolocator now requires support for the new ﻿`GeolocatorOptions` parameter:
 
 ```diff
 -    public function locate(string $query): GeolocatorResponse
