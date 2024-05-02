@@ -204,6 +204,16 @@ Example:
 See also the documentation [official Doctrine Events documentation](https://symfony.com/doc/6.4/doctrine/events.html).  
 Or the Merge request implementing this changes in Sulu [here](https://github.com/sulu/sulu/pull/7374/files).
 
+### GeolocatorInterface locate method GeolocatorOptions added
+
+To support to give the Accept-Language locale to the geolocator services a custom Geolocator
+requires now to support the new `GeolocatorOptions` parameter:
+
+```diff
+-    public function locate(string $query): GeolocatorResponse
++    public function locate(string $query, ?GeolocatorOptions $options = null): GeolocatorResponse
+```
+
 ### Replace Symfony Security class
 
 The `Symfony\Component\Security\Core\Security` deprecated class was replaced by
