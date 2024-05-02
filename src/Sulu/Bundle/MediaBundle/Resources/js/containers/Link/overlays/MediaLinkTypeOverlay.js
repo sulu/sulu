@@ -18,7 +18,19 @@ export default class MediaLinkTypeOverlay extends React.Component<LinkTypeOverla
     };
 
     render() {
-        const {href, locale, onCancel, onConfirm, onTitleChange, onTargetChange, onAnchorChange, open, title, target, anchor} = this.props;
+        const {
+            href,
+            locale,
+            onCancel,
+            onConfirm,
+            onTitleChange,
+            onTargetChange,
+            onAnchorChange,
+            open,
+            title,
+            target,
+            anchor
+        } = this.props;
 
         if (typeof href === 'string') {
             throw new Error('The id of a media should always be a number!');
