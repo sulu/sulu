@@ -138,10 +138,10 @@ class SingleSignOnAdapterFactory
         return $parsedDsn;
     }
 
-    public function createAdapter(#[\SensitiveParameter] string $dsn, string $userRole): SingleSignOnAdapterInterface
+    public function createAdapter(#[\SensitiveParameter] string $dsn, string $defaultRoleKey): SingleSignOnAdapterInterface
     {
         $parsedDsn = $this->parseDsn($dsn);
 
-        return $this->factories[$parsedDsn['scheme']]->createAdapter($parsedDsn, $userRole);
+        return $this->factories[$parsedDsn['scheme']]->createAdapter($parsedDsn, $defaultRoleKey);
     }
 }
