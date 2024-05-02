@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\LocationBundle\Tests\Unit\Geolocator\Service;
 
 use PHPUnit\Framework\TestCase;
+use Sulu\Bundle\LocationBundle\Geolocator\GeolocatorOptions;
 use Sulu\Bundle\LocationBundle\Geolocator\Service\MapquestGeolocator;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
@@ -68,5 +69,17 @@ class MapquestGeolocatorTest extends TestCase
         foreach ($expectationMap as $field => $expectation) {
             $this->assertEquals($expectation, $result[$field]);
         }
+    }
+    public function testAcceptLanguage(): void
+    {
+        $mockResponse = new MockResponse('{"status": "OK","results":[]}');
+
+        $httpClient = new MockHttpClient($mockResponse);
+        $geolocator = new MapquestGeolocator($httpClient, 'https://example.org', 'key');
+        $options = new GeolocatorOptions();
+        $options->setAcceptLanguage('it-IT, it;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5');
+        $geolocator->locate('foobar', $options);
+
+        $this->assertContains('Accept-Language: it-IT, it;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5', $mockResponse->getRequestOptions()['headers']);
     }
 }
