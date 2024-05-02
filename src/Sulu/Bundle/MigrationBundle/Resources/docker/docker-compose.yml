@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+    # DATABASE_URL=mysql://root:ChangeMe@127.0.0.1:3306/su_myapp?serverVersion=8.0&charset=utf8mb4
+    mysql_8:
+        image: mysql/mysql-server:8.0
+        environment:
+            MYSQL_DATABASE: ${MYSQL_DATABASE:-su_myapp}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-ChangeMe}
+            MYSQL_ROOT_HOST: '%'
+        volumes:
+            - mysql-data-8:/var/lib/mysql
+        ports:
+            - "3306:3306"
+
+    # DATABASE_URL=postgresql://symfony:ChangeMe@127.0.0.1:5432/su_myapp?serverVersion=13&charset=utf8
+    postgresql_13:
+        image: postgres:13-alpine
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB:-su_myapp}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ChangeMe}
+            POSTGRES_USER: ${POSTGRES_USER:-symfony}
+        volumes:
+            - postgre-data-13:/var/lib/postgresql/data:rw
+        ports:
+            - "5432:5432"
+
+    # DATABASE_URL=mysql://root:@127.0.0.1:3307/su_myapp?serverVersion=mariadb-10.6.4&charset=utf8mb4
+    mariadb_10:
+        image: mariadb:10.6.4
+        ports:
+            - "3307:3306"
+        volumes:
+            - mariadb-data-10:/var/lib/mysql
+        environment:
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+volumes:
+    mysql-data-8:
+    postgre-data-13:
+    mariadb-data-10:
