@@ -23,9 +23,7 @@ class GeolocatorController
      */
     private $geolocator;
 
-    public function __construct(
-        GeolocatorInterface $geolocator,
-    ) {
+    public function __construct(GeolocatorInterface $geolocator,) {
         $this->geolocator = $geolocator;
     }
 
@@ -48,8 +46,8 @@ class GeolocatorController
 
     private function getLocale(Request $request): ?string
     {
-        $locale = $request->query->getString('locale');
-        if (!$locale) {
+        $locale = $request->query->get('locale');
+        if (!$locale && !\is_string($locale)) {
             return null;
         }
 
