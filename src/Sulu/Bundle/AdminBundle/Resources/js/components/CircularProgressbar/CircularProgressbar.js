@@ -1,5 +1,6 @@
 // @flow
 import React from 'react';
+import {computed} from 'mobx';
 import {CircularProgressbar as ReactCircularProgressbar} from 'react-circular-progressbar';
 import circularProgressbarStyles from './circularProgressbar.scss';
 
@@ -16,21 +17,18 @@ export default class CircularProgressbar extends React.PureComponent<Props> {
         size: 100,
     };
 
-    handlePercentageText = (percentage: number) => {
-        const {hidePercentageText} = this.props;
+    @computed get percentageText() {
+        const {hidePercentageText, percentage} = this.props;
 
         if (hidePercentageText) {
             return null;
         }
 
         return `${percentage}%`;
-    };
+    }
 
     render() {
-        const {
-            size,
-            percentage,
-        } = this.props;
+        const {size, percentage} = this.props;
         const sizeStyle = {
             width: size,
             height: size,
@@ -47,8 +45,8 @@ export default class CircularProgressbar extends React.PureComponent<Props> {
                         text: circularProgressbarStyles.text,
                         background: circularProgressbarStyles.background,
                     }}
-                    percentage={percentage}
-                    textForPercentage={this.handlePercentageText} // eslint-disable-line react/jsx-handler-names
+                    text={this.percentageText}
+                    value={percentage}
                 />
             </div>
         );
