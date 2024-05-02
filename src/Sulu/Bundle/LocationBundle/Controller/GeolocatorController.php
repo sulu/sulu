@@ -23,7 +23,7 @@ class GeolocatorController
      */
     private $geolocator;
 
-    public function __construct(GeolocatorInterface $geolocator,) {
+    public function __construct(GeolocatorInterface $geolocator) {
         $this->geolocator = $geolocator;
     }
 
