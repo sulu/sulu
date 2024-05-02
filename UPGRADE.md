@@ -180,6 +180,13 @@ Return type changes in `ExpressionLanguageProvider`:
 +    public function getFunctions(): array
 ```
 
+Return type changes in `Kernel`:
+
+```diff
+-    public function registerContainerConfiguration(LoaderInterface $loader)
++    public function registerContainerConfiguration(LoaderInterface $loader): void
+```
+
 ### Symfony Doctrine Bridge 7 compatibility changes
 
 To be compatible with the changes of Symfony 7 Doctrine Bridge all Sulu `doctrine.event_subscribers` were migrated to
