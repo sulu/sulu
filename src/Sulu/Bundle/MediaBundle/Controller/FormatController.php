@@ -18,6 +18,7 @@ use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class FormatController extends AbstractRestController implements ClassResourceInterface
 {
@@ -37,6 +38,9 @@ class FormatController extends AbstractRestController implements ClassResourceIn
         $this->formatManager = $formatManager;
     }
 
+    /**
+     * @return Response
+     */
     public function cgetAction(Request $request)
     {
         $locale = $this->getRequestParameter($request, 'locale', true);

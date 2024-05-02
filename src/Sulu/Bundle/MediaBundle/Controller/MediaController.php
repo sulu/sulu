@@ -258,7 +258,7 @@ class MediaController extends AbstractMediaController implements
     /**
      * @deprecated
      */
-    private function getListRepresentation(Request $request)
+    private function getListRepresentation(Request $request): ListRepresentation
     {
         $locale = $this->getRequestParameter($request, 'locale', true);
         $fieldDescriptors = $this->fieldDescriptorFactory->getFieldDescriptors('media');
@@ -324,11 +324,10 @@ class MediaController extends AbstractMediaController implements
      * @deprecated
      *
      * @param FieldDescriptorInterface[] $fieldDescriptors
-     * @param array $types
      *
      * @return DoctrineListBuilder
      */
-    private function getListBuilder(Request $request, array $fieldDescriptors, $types)
+    private function getListBuilder(Request $request, array $fieldDescriptors, array $types)
     {
         $listBuilder = $this->doctrineListBuilderFactory->create($this->mediaClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
@@ -456,6 +455,8 @@ class MediaController extends AbstractMediaController implements
      * @param int $id
      * @param string $version
      *
+     * @return Response
+     *
      * @throws MissingParameterException
      */
     public function deleteVersionAction($id, $version)
@@ -537,6 +538,9 @@ class MediaController extends AbstractMediaController implements
         return $this->handleView($view);
     }
 
+    /**
+     * @return string
+     */
     public function getSecurityContext()
     {
         return MediaAdmin::SECURITY_CONTEXT;
