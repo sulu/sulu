@@ -30016,31 +30016,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\DependencyInjection\\\\Compiler\\\\SnippetAreaCompilerPass\\:\\:getArea\\(\\) has parameter \\$area with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/DependencyInjection/Compiler/SnippetAreaCompilerPass.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\DependencyInjection\\\\Compiler\\\\SnippetAreaCompilerPass\\:\\:getArea\\(\\) has parameter \\$locales with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/DependencyInjection/Compiler/SnippetAreaCompilerPass.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\DependencyInjection\\\\Compiler\\\\SnippetAreaCompilerPass\\:\\:getArea\\(\\) has parameter \\$template with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/DependencyInjection/Compiler/SnippetAreaCompilerPass.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\DependencyInjection\\\\Compiler\\\\SnippetAreaCompilerPass\\:\\:getArea\\(\\) has parameter \\$templateTitles with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/DependencyInjection/Compiler/SnippetAreaCompilerPass.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\DependencyInjection\\\\Compiler\\\\SnippetAreaCompilerPass\\:\\:getArea\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/DependencyInjection/Compiler/SnippetAreaCompilerPass.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\DependencyInjection\\\\SuluSnippetExtension\\:\\:load\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/DependencyInjection/SuluSnippetExtension.php
