@@ -816,11 +816,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Exception/InvalidRootTagException.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Exception\\\\MetadataProviderNotFoundException\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Exception/MetadataProviderNotFoundException.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\FieldType\\\\FieldTypeOptionRegistry\\:\\:add\\(\\) has parameter \\$fieldTypeOptions with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/FieldType/FieldTypeOptionRegistry.php
@@ -963,11 +958,6 @@ parameters:
 		-
 			message: "#^Cannot call method item\\(\\) on DOMNodeList\\<DOMNode\\>\\|false\\.$#"
 			count: 3
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormXmlLoader.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\FormMetadata\\\\FormXmlLoader\\:\\:__construct\\(\\) has parameter \\$locales with no value type specified in iterable type array\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormXmlLoader.php
 
 		-
