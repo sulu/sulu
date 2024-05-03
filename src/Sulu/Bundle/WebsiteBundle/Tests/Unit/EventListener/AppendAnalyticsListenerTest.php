@@ -20,9 +20,9 @@ use Sulu\Bundle\WebsiteBundle\EventListener\AppendAnalyticsListener;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 use Sulu\Component\Webspace\PortalInformation;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Twig\Environment;
@@ -57,7 +57,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $request = $this->prophesize(Request::class);
         $request->getRequestFormat()->willReturn($format);
         $response = $this->prophesize(Response::class);
-        $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/plain']);
+        $response->reveal()->headers = new ResponseHeaderBag(['Content-Type' => 'text/plain']);
         $response->getContent()->shouldNotBeCalled();
         $requestAnalyzer->getPortalInformation()->shouldNotBeCalled();
         $event = $this->createResponseEvent($request->reveal(), $response->reveal());
@@ -84,7 +84,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $request = $this->prophesize(Request::class);
         $request->getRequestFormat()->willReturn('html');
         $response = $this->prophesize(BinaryFileResponse::class);
-        $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
+        $response->reveal()->headers = new ResponseHeaderBag(['Content-Type' => 'text/html']);
         $response->getContent()->willReturn(false)->shouldBeCalled();
         $requestAnalyzer->getPortalInformation()->shouldNotBeCalled();
         $event = $this->createResponseEvent($request->reveal(), $response->reveal());
@@ -125,7 +125,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $request = $this->prophesize(Request::class);
         $request->getRequestFormat()->willReturn('html');
         $response = $this->prophesize(Response::class);
-        $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
+        $response->reveal()->headers = new ResponseHeaderBag(['Content-Type' => 'text/html']);
         $event = $this->createResponseEvent($request->reveal(), $response->reveal());
 
         $loader = $this->prophesize(FilesystemLoader::class);
@@ -183,7 +183,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $request->getHost()->willReturn('1.sulu.lo');
         $request->getRequestUri()->willReturn('/2');
         $response = $this->prophesize(Response::class);
-        $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
+        $response->reveal()->headers = new ResponseHeaderBag(['Content-Type' => 'text/html']);
         $event = $this->createResponseEvent($request->reveal(), $response->reveal());
 
         $loader = $this->prophesize(FilesystemLoader::class);
@@ -237,7 +237,7 @@ class AppendAnalyticsListenerTest extends TestCase
 
         $response = $this->prophesize(Response::class);
         $response->getContent()->willReturn('<html><head><title>Test</title></head><body><h1>Title</h1></body></html>');
-        $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
+        $response->reveal()->headers = new ResponseHeaderBag(['Content-Type' => 'text/html']);
         $response->setContent(Argument::cetera())
             ->shouldNotBeCalled();
 
@@ -282,7 +282,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $request = $this->prophesize(Request::class);
         $request->getRequestFormat()->willReturn('html');
         $response = $this->prophesize(Response::class);
-        $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
+        $response->reveal()->headers = new ResponseHeaderBag(['Content-Type' => 'text/html']);
         $event = $this->createResponseEvent($request->reveal(), $response->reveal());
 
         $loader = $this->prophesize(FilesystemLoader::class);
@@ -341,7 +341,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $request = $this->prophesize(Request::class);
         $request->getRequestFormat()->willReturn('html');
         $response = $this->prophesize(Response::class);
-        $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
+        $response->reveal()->headers = new ResponseHeaderBag(['Content-Type' => 'text/html']);
         $event = $this->createResponseEvent($request->reveal(), $response->reveal());
 
         $loader = $this->prophesize(FilesystemLoader::class);
@@ -400,7 +400,7 @@ class AppendAnalyticsListenerTest extends TestCase
         $request = $this->prophesize(Request::class);
         $request->getRequestFormat()->willReturn('html');
         $response = $this->prophesize(Response::class);
-        $response->reveal()->headers = new ParameterBag(['Content-Type' => 'text/html']);
+        $response->reveal()->headers = new ResponseHeaderBag(['Content-Type' => 'text/html']);
         $event = $this->createResponseEvent($request->reveal(), $response->reveal());
 
         $loader = $this->prophesize(FilesystemLoader::class);
