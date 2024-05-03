@@ -108,7 +108,7 @@ trait RestControllerTrait
      * Returns the response with the entity with the given id, or a response with a status of 404, in case the entity
      * is not found. The find method is injected by a callback.
      *
-     * @param string $id
+     * @param string|int $id
      * @param callable $findCallback
      *
      * @return View
@@ -135,7 +135,7 @@ trait RestControllerTrait
      * Deletes the entity with the given id using the deleteCallback and return a successful response, or an error
      * message with a 4xx status code.
      *
-     * @param string $id
+     * @param string|int $id
      * @param callable $deleteCallback
      *
      * @return View

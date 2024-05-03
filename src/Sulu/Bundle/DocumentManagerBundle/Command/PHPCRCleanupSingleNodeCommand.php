@@ -25,6 +25,7 @@ use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event;
 use Sulu\Component\DocumentManager\Events;
 use Sulu\Component\DocumentManager\NamespaceRegistry;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -39,6 +40,7 @@ use Webmozart\Assert\Assert;
 /**
  * @internal
  */
+#[AsCommand(name: 'sulu:document:phpcr-cleanup-single-node', description: 'Cleanup a single PHPCR node and remove unused properties.')]
 class PHPCRCleanupSingleNodeCommand extends Command
 {
     public const IGNORED = 101;
@@ -79,10 +81,9 @@ class PHPCRCleanupSingleNodeCommand extends Command
         NamespaceRegistry $namespaceRegistry,
         private EventDispatcherInterface $documentManagerEventDispatcher,
         private DocumentManagerInterface $documentManager,
-        private InvalidationSubscriber $invalidationSubscriber,
         array $mapping,
     ) {
-        parent::__construct('sulu:phpcr:cleanup:single-node');
+        parent::__construct();
 
         $this->logger = new NullOutput();
 

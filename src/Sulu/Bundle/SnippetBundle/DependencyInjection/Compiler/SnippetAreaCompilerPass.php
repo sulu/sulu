@@ -21,6 +21,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 class SnippetAreaCompilerPass implements CompilerPassInterface
 {
+    /**
+     * @return void
+     */
     public function process(ContainerBuilder $container)
     {
         $structureFactory = $container->get('sulu_page.structure.factory');
@@ -48,7 +51,7 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
             ];
 
             foreach ($structure->getAreas() as $area) {
-                $area = $this->getArea($template, $area, $locales, $templateTitles);
+                $area = $this->getArea($container, (string) $template, $area, $locales, $templateTitles);
 
                 if (isset($areas[$area['key']])) {
                     throw new \InvalidArgumentException(\sprintf(
@@ -73,24 +76,36 @@ class SnippetAreaCompilerPass implements CompilerPassInterface
     }
 
     /**
-     * Get area.
+     * @param array{key: string, title: array<string>, cache-invalidation: string} $area
+     * @param array<string> $locales
+     * @param array<string, string> $templateTitles
      *
-     * @return array
+     * @return array{key: string, template: string, title: array<string, string>}
      */
-    private function getArea($template, $area, $locales, $templateTitles)
+    private function getArea(ContainerBuilder $container, string $template, array $area, array $locales, array $templateTitles): array
     {
         $key = $area['key'];
         $cacheInvalidation = $area['cache-invalidation'];
 
         $titles = [];
+        $areaTitles = $area['title'];
 
-        foreach ($locales as $locale) {
-            $title = $templateTitles[$locale] . ' ' . \ucfirst($key);
-            if (isset($area['title'][$locale])) {
-                $title = $area['title'][$locale];
+        // If we only have one title and no locale (indexed 0) then it's a translation key
+        if (1 === \count($areaTitles) && \array_key_exists(0, $areaTitles)) {
+            $translator = $container->get('translator');
+            $titleToTranslate = \reset($areaTitles);
+            foreach ($locales as $locale) {
+                $titles[$locale] = $translator->trans($titleToTranslate, [], 'admin', $locale);
             }
+        } else {
+            foreach ($locales as $locale) {
+                $title = $templateTitles[$locale] . ' ' . \ucfirst($key);
+                if (isset($areaTitles[$locale])) {
+                    $title = $areaTitles[$locale];
+                }
 
-            $titles[$locale] = $title;
+                $titles[$locale] = $title;
+            }
         }
 
         return [

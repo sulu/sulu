@@ -2,7 +2,9 @@
 
 exports[`Render disabled next link if current page is last page 1`] = `
 <div>
-  <section>
+  <section
+    class="resultsContainer"
+  >
     <p>
       Test
     </p>
@@ -113,7 +115,9 @@ exports[`Render disabled next link if current page is last page 1`] = `
 
 exports[`Render disabled previous link current page is first page 1`] = `
 <div>
-  <section>
+  <section
+    class="resultsContainer"
+  >
     <p>
       Test
     </p>
@@ -224,7 +228,9 @@ exports[`Render disabled previous link current page is first page 1`] = `
 
 exports[`Render pagination with loader 1`] = `
 <div>
-  <section>
+  <section
+    class="resultsContainer"
+  >
     <p>
       Test
     </p>
@@ -346,7 +352,9 @@ exports[`Render pagination with loader 1`] = `
 
 exports[`Render pagination with page numbers 1`] = `
 <div>
-  <section>
+  <section
+    class="resultsContainer"
+  >
     <p>
       Test
     </p>
