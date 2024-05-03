@@ -25,10 +25,10 @@ class CollaborationController implements ClassResourceInterface
     private static $resourceKey = 'collaborations';
 
     public function __construct(
-       private TokenStorageInterface $tokenStorage,
-       private CollaborationRepository $collaborationRepository,
-       private ViewHandler $viewHandler,
-       private string $secret
+        private TokenStorageInterface $tokenStorage,
+        private CollaborationRepository $collaborationRepository,
+        private ViewHandler $viewHandler,
+        private string $secret
     ) {
     }
 

@@ -27,12 +27,12 @@ class Collaboration
     private $changed;
 
     /**
-     * @param int $connectionId;
-     * @param int $userId;
+     * @param string $connectionId
+     * @param int $userId
      * @param string $username
      * @param string $fullName
      * @param string $resourceKey
-     * @param mixed $id;
+     * @param mixed $id
      */
     public function __construct(
         private $connectionId,

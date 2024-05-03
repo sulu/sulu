@@ -37,9 +37,9 @@ class UpdateBuildCommand extends Command
     public const VERSION_REGEX = '/^\d+\.\d+\.\d+(-(alpha|beta|RC)\d+)?$/';
 
     public function __construct(
-       private HttpClientInterface $httpClient,
-       private string $projectDir,
-       private string $suluVersion,
+        private HttpClientInterface $httpClient,
+        private string $projectDir,
+        private string $suluVersion,
     ) {
         parent::__construct();
     }

@@ -44,6 +44,11 @@ class AdminController
      */
     private $collaborationEnabled;
 
+    /**
+     * @param array<mixed> $resources
+     * @param array<string> $locales
+     * @param array<string> $translations
+     */
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
         private TokenStorageInterface $tokenStorage,

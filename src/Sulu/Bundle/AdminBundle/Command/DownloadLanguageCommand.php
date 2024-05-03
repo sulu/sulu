@@ -24,13 +24,15 @@ class DownloadLanguageCommand extends Command
 {
     protected static $defaultName = 'sulu:admin:download-language';
 
+    /**
+     * @param array<string> $defaultLanguages
+     */
     public function __construct(
         private HttpClientInterface $httpClient,
         private Filesystem $filesystem,
         private string $projectDir,
         private array $defaultLanguages,
-    )
-    {
+    ) {
         parent::__construct();
     }
 
