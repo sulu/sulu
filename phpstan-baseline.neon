@@ -391,11 +391,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\DownloadLanguageCommand\\:\\:__construct\\(\\) has parameter \\$defaultLanguages with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Command\\\\DownloadLanguageCommand\\:\\:downloadLanguage\\(\\) has parameter \\$language with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Command/DownloadLanguageCommand.php
@@ -621,27 +616,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Controller\\\\AdminController\\:\\:__construct\\(\\) has parameter \\$locales with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Controller\\\\AdminController\\:\\:__construct\\(\\) has parameter \\$resources with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Controller\\\\AdminController\\:\\:__construct\\(\\) has parameter \\$translations with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Controller\\\\AdminController\\:\\:indexAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Controller\\\\AdminController\\:\\:\\$contactManager with generic interface Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface does not specify its types\\: DoctrineEntity, ApiEntity, AddressRelationEntity$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
 
@@ -656,22 +631,7 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Controller\\\\AdminController\\:\\:\\$locales type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Controller\\\\AdminController\\:\\:\\$resources type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Controller\\\\AdminController\\:\\:\\$serializer is never read, only written\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Controller\\\\AdminController\\:\\:\\$translations type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Controller/AdminController.php
 
@@ -781,36 +741,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/DependencyInjection/SuluAdminExtension.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Entity\\\\Collaboration\\:\\:__construct\\(\\) has parameter \\$connectionId with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Entity/Collaboration.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Entity\\\\Collaboration\\:\\:__construct\\(\\) has parameter \\$fullName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Entity/Collaboration.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Entity\\\\Collaboration\\:\\:__construct\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Entity/Collaboration.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Entity\\\\Collaboration\\:\\:__construct\\(\\) has parameter \\$resourceKey with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Entity/Collaboration.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Entity\\\\Collaboration\\:\\:__construct\\(\\) has parameter \\$userId with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Entity/Collaboration.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Entity\\\\Collaboration\\:\\:__construct\\(\\) has parameter \\$username with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Entity/Collaboration.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Entity\\\\Collaboration\\:\\:getChanged\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Entity/Collaboration.php
@@ -879,11 +809,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Exception\\\\InvalidRootTagException\\:\\:getRootTag\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Exception/InvalidRootTagException.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\AdminBundle\\\\Exception\\\\MetadataProviderNotFoundException\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Exception/MetadataProviderNotFoundException.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\FieldType\\\\FieldTypeOptionRegistry\\:\\:add\\(\\) has parameter \\$fieldTypeOptions with no value type specified in iterable type array\\.$#"
@@ -1028,11 +953,6 @@ parameters:
 		-
 			message: "#^Cannot call method item\\(\\) on DOMNodeList\\<DOMNode\\>\\|false\\.$#"
 			count: 3
-			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormXmlLoader.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\FormMetadata\\\\FormXmlLoader\\:\\:__construct\\(\\) has parameter \\$locales with no value type specified in iterable type array\\.$#"
-			count: 1
 			path: src/Sulu/Bundle/AdminBundle/FormMetadata/FormXmlLoader.php
 
 		-
@@ -12922,11 +12842,6 @@ parameters:
 
 		-
 			message: "#^Class Sulu\\\\Bundle\\\\MarkupBundle\\\\Listener\\\\MarkupListener constructor invoked with 2 parameters, 1 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Listener/MarkupListenerTest.php
-
-		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Response\\:\\:\\$headers \\(Symfony\\\\Component\\\\HttpFoundation\\\\ResponseHeaderBag\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\HeaderBag\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Listener/MarkupListenerTest.php
 
