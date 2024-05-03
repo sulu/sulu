@@ -16,12 +16,7 @@ namespace Sulu\Bundle\AdminBundle\Exception;
  */
 class ViewNotFoundException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $view;
-
-    public function __construct(string $view)
+    public function __construct(private string $view)
     {
         parent::__construct(\sprintf('The view with the name "%s" does not exist.', $view));
 

@@ -13,15 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Exception;
 
 class PropertyMetadataMapperNotFoundException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $type;
-
-    public function __construct(string $type)
+    public function __construct(private string $type)
     {
-        $this->type = $type;
-
         parent::__construct(
             \sprintf('There is no PropertyMetadataMapper registered for the type "%s".', $this->type)
         );
