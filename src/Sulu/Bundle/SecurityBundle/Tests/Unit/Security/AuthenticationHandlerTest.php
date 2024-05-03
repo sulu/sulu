@@ -65,7 +65,7 @@ class AuthenticationHandlerTest extends TestCase
         $router = $this->prophesize(RouterInterface::class);
         $session = $this->prophesize(Session::class);
         $session->get('_security.admin.target_path')->willReturn('/admin/#target/path');
-        $session->set(Security::AUTHENTICATION_ERROR, $this->exception->reveal());
+        $session->set(Security::AUTHENTICATION_ERROR, $this->exception->reveal())->will(function () {});
         $this->request->getSession()
             ->willReturn($session->reveal());
         $router->generate('sulu_admin')->willReturn('/admin');

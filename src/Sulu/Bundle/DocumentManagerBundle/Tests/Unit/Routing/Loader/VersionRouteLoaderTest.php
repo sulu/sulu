@@ -31,6 +31,7 @@ class VersionRouteLoaderTest extends TestCase
 
     public function testLoadWithActivatedVersioning(): void
     {
+
         $versionRouteLoader = new VersionRouteLoader(true);
         $resolver = $this->prophesize(LoaderResolverInterface::class);
 
