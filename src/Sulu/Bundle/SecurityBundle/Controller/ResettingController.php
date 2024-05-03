@@ -508,7 +508,7 @@ class ResettingController
      */
     private function generateTokenHash(string $token): string
     {
-        return \hash('sha1', $this->secret . $token);
+        return \hash('sha1', $this->secret . '%' . $token);
     }
 
     /**

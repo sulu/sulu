@@ -2116,11 +2116,6 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Controller/TargetGroupController.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Component\\\\Rest\\\\AbstractRestController\\:\\:responseGetById\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Controller/TargetGroupController.php
-
-		-
 			message: "#^Parameter \\#2 \\$fieldDescriptors of method Sulu\\\\Component\\\\Rest\\\\RestHelperInterface\\:\\:initializeListBuilder\\(\\) expects array\\<Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\FieldDescriptorInterface\\>, array\\<Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\FieldDescriptorInterface\\>\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Controller/TargetGroupController.php
@@ -4824,11 +4819,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$array of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayHasKey\\(\\) expects array\\|ArrayAccess, mixed given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Search/Converter/CategoryConverterTest.php
-
-		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:\\$query \\(Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<string\\>\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/CategoryBundle/Tests/Unit/Twig/CategoryTwigExtensionTest.php
 
 		-
 			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\CategoryBundle\\\\Entity\\\\CategoryRepositoryInterface\\:\\:findCategoryById\\(\\) expects int, mixed given\\.$#"
@@ -8041,16 +8031,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Component\\\\Rest\\\\AbstractRestController\\:\\:responseDelete\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Component\\\\Rest\\\\AbstractRestController\\:\\:responseGetById\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, mixed given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
@@ -8376,16 +8356,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Component\\\\Rest\\\\AbstractRestController\\:\\:responseDelete\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Component\\\\Rest\\\\AbstractRestController\\:\\:responseGetById\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
-
-		-
 			message: "#^Parameter \\#1 \\$listBuilder of method Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\ContactController\\:\\:prepareListResponse\\(\\) expects Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder, Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
@@ -8491,16 +8461,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactTitleController.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Component\\\\Rest\\\\AbstractRestController\\:\\:responseDelete\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactTitleController.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Component\\\\Rest\\\\AbstractRestController\\:\\:responseGetById\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactTitleController.php
-
-		-
 			message: "#^Parameter \\#1 \\$item of method Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\ContactTitleController\\:\\:addAndUpdateTitles\\(\\) expects array, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactTitleController.php
@@ -8537,16 +8497,6 @@ parameters:
 
 		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/PositionController.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Component\\\\Rest\\\\AbstractRestController\\:\\:responseDelete\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/PositionController.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Component\\\\Rest\\\\AbstractRestController\\:\\:responseGetById\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/PositionController.php
 
@@ -14011,17 +13961,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Content/Types/SingleMediaSelection.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/AbstractMediaController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\AbstractMediaController\\:\\:getData\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/AbstractMediaController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\AbstractMediaController\\:\\:getUploadedFile\\(\\) should return Symfony\\\\Component\\\\HttpFoundation\\\\File\\\\UploadedFile but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/AbstractMediaController.php
 
@@ -14046,36 +13986,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\CollectionController\\:\\:checkSystemCollection\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\CollectionController\\:\\:checkSystemCollection\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\CollectionController\\:\\:checkSystemCollection\\(\\) has parameter \\$parent with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\CollectionController\\:\\:deleteAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\CollectionController\\:\\:getAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\CollectionController\\:\\:getOffset\\(\\) has parameter \\$limit with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\CollectionController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
@@ -14086,37 +13996,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\CollectionController\\:\\:putAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\CollectionController\\:\\:saveEntity\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
 			message: "#^Parameter \\#2 \\$collections of class Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\RootCollection constructor expects array, array\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Api\\\\Collection\\>\\|Doctrine\\\\ORM\\\\Tools\\\\Pagination\\\\Paginator given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
 		-
 			message: "#^Parameter \\#3 \\$destinationId of method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManagerInterface\\:\\:move\\(\\) expects int\\|null, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: "#^Parameter \\#3 \\$limit of method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManagerInterface\\:\\:get\\(\\) expects int\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
-
-		-
-			message: "#^Parameter \\#3 \\$limit of method Sulu\\\\Bundle\\\\MediaBundle\\\\Collection\\\\Manager\\\\CollectionManagerInterface\\:\\:getTree\\(\\) expects int, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
@@ -14151,11 +14036,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/CollectionController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\FormatController\\:\\:cgetAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\FormatController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/FormatController.php
@@ -14181,22 +14061,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaController\\:\\:deleteVersionAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaController\\:\\:getListBuilder\\(\\) has parameter \\$types with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaController\\:\\:getListBuilder\\(\\) should return Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder but returns Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaController\\:\\:getListRepresentation\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
@@ -14222,16 +14092,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionRepositoryInterface\\:\\:findCollectionTypeById\\(\\) expects int, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Component\\\\Rest\\\\AbstractRestController\\:\\:responseDelete\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Component\\\\Rest\\\\AbstractRestController\\:\\:responseGetById\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
 
@@ -14274,16 +14134,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between true and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaFormatController\\:\\:cpatchAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaFormatController\\:\\:cpatchAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaFormatController.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaFormatController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
@@ -18147,11 +17997,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$locale of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManager\\:\\:get\\(\\) expects string, int given\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$uploadedFile of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManager\\:\\:save\\(\\) expects Symfony\\\\Component\\\\HttpFoundation\\\\File\\\\UploadedFile, null given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
 
@@ -28086,16 +27931,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Component\\\\Rest\\\\AbstractRestController\\:\\:responseDelete\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Component\\\\Rest\\\\AbstractRestController\\:\\:responseGetById\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\UserController\\:\\:\\$doctrineListBuilderFactory \\(Doctrine\\\\ORM\\\\EntityManagerInterface\\) does not accept Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderFactoryInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
@@ -32151,11 +31986,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Tests/Unit/Twig/TagTwigExtensionTest.php
 
 		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:\\$query \\(Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<string\\>\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/TagBundle/Tests/Unit/Twig/TagTwigExtensionTest.php
-
-		-
 			message: "#^Parameter \\#1 \\$datetime of class DateTime constructor expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Trash/TagTrashItemHandler.php
@@ -35533,11 +35363,6 @@ parameters:
 		-
 			message: "#^Method Sulu\\\\Component\\\\Category\\\\Tests\\\\Unit\\\\Request\\\\CategoryRequestHandlerTest\\:\\:toggleProvider\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: src/Sulu/Component/Category/Tests/Unit/Request/CategoryRequestHandlerTest.php
-
-		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:\\$query \\(Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<string\\>\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
-			count: 6
 			path: src/Sulu/Component/Category/Tests/Unit/Request/CategoryRequestHandlerTest.php
 
 		-
@@ -52086,11 +51911,6 @@ parameters:
 			path: src/Sulu/Component/Tag/Tests/Unit/Request/TagRequestHandlerTest.php
 
 		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:\\$query \\(Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<string\\>\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
-			count: 4
-			path: src/Sulu/Component/Tag/Tests/Unit/Request/TagRequestHandlerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Util\\\\ArrayUtils\\:\\:filter\\(\\) has parameter \\$collection with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Util/ArrayUtils.php
@@ -53747,16 +53567,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Functional\\\\Analyzer\\\\RequestAnalyzerTest\\:\\:testAnalyzeWithFormat\\(\\) has parameter \\$expected with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Functional/Analyzer/RequestAnalyzerTest.php
-
-		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:\\$query \\(Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<string\\>\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Functional/Analyzer/RequestAnalyzerTest.php
-
-		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:\\$request \\(Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<bool\\|float\\|int\\|string\\>\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Functional/Analyzer/RequestAnalyzerTest.php
 

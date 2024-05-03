@@ -113,8 +113,15 @@ exports[`Render a SingleMediaDropzone while uploading 1`] = `
     "
           fill-opacity="0"
           stroke-width="8"
-          style="stroke-dasharray:289.02652413026095px 289.02652413026095px;stroke-dashoffset:NaNpx"
+          style="stroke-dasharray:289.02652413026095px 289.02652413026095px;stroke-dashoffset:144.51326206513048px"
         />
+        <text
+          class="text"
+          x="50"
+          y="50"
+        >
+          50%
+        </text>
       </svg>
     </div>
   </div>
