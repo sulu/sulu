@@ -34341,18 +34341,8 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
 
 		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Request\\:\\:\\$query \\(Symfony\\\\Component\\\\HttpFoundation\\\\InputBag\\<string\\>\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/Controller/RedirectControllerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\EventListener\\\\AppendAnalyticsListenerTest\\:\\:formatProvider\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/AppendAnalyticsListenerTest.php
-
-		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Response\\:\\:\\$headers \\(Symfony\\\\Component\\\\HttpFoundation\\\\ResponseHeaderBag\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\ParameterBag\\.$#"
-			count: 8
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/AppendAnalyticsListenerTest.php
 
 		-
