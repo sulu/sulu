@@ -12911,11 +12911,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Listener/MarkupListenerTest.php
 
 		-
-			message: "#^Property Symfony\\\\Component\\\\HttpFoundation\\\\Response\\:\\:\\$headers \\(Symfony\\\\Component\\\\HttpFoundation\\\\ResponseHeaderBag\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\HeaderBag\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Listener/MarkupListenerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\Tests\\\\Unit\\\\Markup\\\\HtmlTagExtractorTest\\:\\:provideMultipleTags\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Tests/Unit/Markup/HtmlTagExtractorTest.php
