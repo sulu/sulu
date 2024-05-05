@@ -19,7 +19,7 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class S3StorageTest extends SuluTestCase
 {
-    protected static function setUp(): void
+    protected function setUp(): void
     {
         static::$class = S3Kernel::class;
     }
