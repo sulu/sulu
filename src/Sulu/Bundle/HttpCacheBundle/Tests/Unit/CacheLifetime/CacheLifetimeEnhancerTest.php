@@ -122,7 +122,7 @@ class CacheLifetimeEnhancerTest extends TestCase
             $this->response->setMaxAge($this->maxAge)->shouldBeCalled()->willReturn($this->response->reveal());
             $this->response->setSharedMaxAge($this->sharedMaxAge)->shouldBeCalled()->willReturn($this->response->reveal());
         } else {
-            $this->responseHeaderBag->set(Argument::cetera())->shouldNotBeCalled()->willReturn($this->response->reveal());
+            $this->responseHeaderBag->set(Argument::cetera())->shouldNotBeCalled();
             $this->response->setPublic()->shouldNotBeCalled()->willReturn($this->response->reveal());
             $this->response->setMaxAge(Argument::any())->shouldNotBeCalled()->willReturn($this->response->reveal());
             $this->response->setSharedMaxAge(Argument::any())->shouldNotBeCalled()->willReturn($this->response->reveal());
