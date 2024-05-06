@@ -18,16 +18,9 @@ use Sulu\Component\Content\SimpleContentType;
 
 class SingleCategorySelection extends SimpleContentType implements ContentTypeExportInterface
 {
-    /**
-     * @var CategoryManagerInterface
-     */
-    private $categoryManager;
-
-    public function __construct(CategoryManagerInterface $categoryManager)
+    public function __construct(private CategoryManagerInterface $categoryManager)
     {
         parent::__construct('single_category_selection');
-
-        $this->categoryManager = $categoryManager;
     }
 
     public function getContentData(PropertyInterface $property)

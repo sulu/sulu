@@ -43,71 +43,17 @@ class CategoryManager implements CategoryManagerInterface
 
     public static $catTranslationEntityName = CategoryTranslationInterface::class;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
-
-    /**
-     * @var CategoryRepositoryInterface
-     */
-    private $categoryRepository;
-
-    /**
-     * @var CategoryMetaRepositoryInterface
-     */
-    private $categoryMetaRepository;
-
-    /**
-     * @var CategoryTranslationRepositoryInterface
-     */
-    private $categoryTranslationRepository;
-
-    /**
-     * @var KeywordManagerInterface
-     */
-    private $keywordManager;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
-     * @var TrashManagerInterface|null
-     */
-    private $trashManager;
-
     public function __construct(
-        CategoryRepositoryInterface $categoryRepository,
-        CategoryMetaRepositoryInterface $categoryMetaRepository,
-        CategoryTranslationRepositoryInterface $categoryTranslationRepository,
-        UserRepositoryInterface $userRepository,
-        KeywordManagerInterface $keywordManager,
-        EntityManagerInterface $em,
-        EventDispatcherInterface $eventDispatcher,
-        DomainEventCollectorInterface $domainEventCollector,
-        ?TrashManagerInterface $trashManager = null
+        private CategoryRepositoryInterface $categoryRepository,
+        private CategoryMetaRepositoryInterface $categoryMetaRepository,
+        private CategoryTranslationRepositoryInterface $categoryTranslationRepository,
+        private UserRepositoryInterface $userRepository,
+        private KeywordManagerInterface $keywordManager,
+        private EntityManagerInterface $em,
+        private EventDispatcherInterface $eventDispatcher,
+        private DomainEventCollectorInterface $domainEventCollector,
+        private ?TrashManagerInterface $trashManager = null
     ) {
-        $this->em = $em;
-        $this->userRepository = $userRepository;
-        $this->categoryRepository = $categoryRepository;
-        $this->categoryMetaRepository = $categoryMetaRepository;
-        $this->categoryTranslationRepository = $categoryTranslationRepository;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->keywordManager = $keywordManager;
-        $this->domainEventCollector = $domainEventCollector;
-        $this->trashManager = $trashManager;
     }
 
     public function findById($id)

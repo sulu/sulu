@@ -17,31 +17,12 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryInterface;
 
 class CategoryRemovedEvent extends DomainEvent
 {
-    /**
-     * @var int
-     */
-    private $categoryId;
-
-    /**
-     * @var string|null
-     */
-    private $categoryTitle;
-
-    /**
-     * @var string|null
-     */
-    private $categoryTitleLocale;
-
     public function __construct(
-        int $categoryId,
-        ?string $categoryTitle,
-        ?string $categoryTitleLocale
+        private int $categoryId,
+        private ?string $categoryTitle,
+        private ?string $categoryTitleLocale
     ) {
         parent::__construct();
-
-        $this->categoryId = $categoryId;
-        $this->categoryTitle = $categoryTitle;
-        $this->categoryTitleLocale = $categoryTitleLocale;
     }
 
     public function getEventType(): string
