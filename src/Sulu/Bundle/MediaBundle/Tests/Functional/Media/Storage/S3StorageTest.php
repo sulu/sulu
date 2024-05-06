@@ -24,6 +24,12 @@ class S3StorageTest extends SuluTestCase
         static::$class = S3Kernel::class;
     }
 
+    protected function tearDown(): void
+    {
+        static::$class = null;
+        parent::tearDown();
+    }
+
     public function testSave(): void
     {
         $kernel = self::bootKernel();
