@@ -3731,7 +3731,7 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Category/CategoryManager.php
 
 		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 267\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
+			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 213\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Category/CategoryManager.php
 
@@ -3819,6 +3819,11 @@ parameters:
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Content/Types/CategorySelection.php
+
+		-
+			message: "#^Call to an undefined method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:setParameter\\(\\)\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
 		-
 			message: "#^Left side of && is always true\\.$#"
@@ -4011,11 +4016,6 @@ parameters:
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\CategoryController\\:\\:\\$listBuilderFactory \\(Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderFactory\\) does not accept Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderFactoryInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
-
-		-
 			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/CategoryController.php
@@ -4122,11 +4122,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$force of method Sulu\\\\Bundle\\\\CategoryBundle\\\\Category\\\\KeywordManagerInterface\\:\\:save\\(\\) expects string\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\CategoryBundle\\\\Controller\\\\KeywordController\\:\\:\\$listBuilderFactory \\(Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderFactory\\) does not accept Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderFactoryInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Controller/KeywordController.php
 
