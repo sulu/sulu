@@ -20,6 +20,7 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\PropertyEncoder;
 use Sulu\Bundle\RouteBundle\Document\Subscriber\RoutableSubscriber;
+use Sulu\Bundle\RouteBundle\Entity\Route;
 use Sulu\Bundle\RouteBundle\Entity\RouteRepositoryInterface;
 use Sulu\Bundle\RouteBundle\Generator\ChainRouteGeneratorInterface;
 use Sulu\Bundle\RouteBundle\Manager\ConflictResolverInterface;
@@ -28,6 +29,7 @@ use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\Event\CopyEvent;
+use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\Route\Document\Behavior\RoutableBehavior;
 
 class RoutableSubscriberTest extends TestCase
@@ -202,5 +204,36 @@ class RoutableSubscriberTest extends TestCase
             ->shouldBeCalled();
 
         $this->routableSubscriber->handleCopy($copyEvent);
+    }
+
+    public function testHandlePublish(): void
+    {
+        $document = $this->prophesize(RoutableBehavior::class);
+        $publishEvent = new PublishEvent(
+            $document->reveal(),
+            'en'
+        );
+        $route = $this->prophesize(Route::class);
+        $route->getPath()->willReturn('overview/test-12')->shouldBeCalled();
+        $this->routeRepository->findByEntity(Argument::any(), Argument::any(), 'en')
+            ->willReturn()
+            ->shouldBeCalled();
+        $this->routeManager->create(Argument::any(), Argument::any(), false)
+            ->willReturn($route->reveal())
+            ->shouldBeCalled();
+
+        $node = $this->prophesize(NodeInterface::class);
+        $this->documentInspector->getStructureMetadata(Argument::any())->willReturn(null)->shouldBeCalled();
+        $node->hasProperty('i18n:en-routePath-suffix')->willReturn(true)->shouldBeCalledTimes(2);
+        $node->getPropertyValue('i18n:en-routePath-suffix')->willReturn('/test')->shouldBeCalledTimes(2);
+        $node->setProperty('i18n:en-routePath', 'overview/test-12')->shouldBeCalled();
+        $node->setProperty('i18n:en-routePath-suffix', '/test-12')->shouldBeCalled();
+        $publishEvent->setNode($node->reveal());
+
+        $this->propertyEncoder->localizedSystemName('routePath', 'en')->willReturn('i18n:en-routePath')->shouldBeCalled();
+        $this->documentInspector->getNode($document->reveal())->willReturn($node->reveal())->shouldBeCalled();
+        $this->propertyEncoder->localizedSystemName('routePath-suffix', 'en')->willReturn('i18n:en-routePath-suffix')->shouldBeCalled();
+
+        $this->routableSubscriber->handlePublish($publishEvent);
     }
 }

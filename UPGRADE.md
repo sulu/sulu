@@ -1,5 +1,37 @@
 # Upgrade
 
+## 2.5.15
+
+### Run Shadow migrations
+
+To fix shadow pages be correctly available you need to run the phpcr migration command:
+
+```bash
+bin/console phpcr:migrations:migrate
+```
+
+
+### Change FileVersion default meta relation
+
+Currently, when removing the default meta, it did also remove the whole file version to avoid it following DB Change
+is required:
+
+```sql
+ALTER TABLE me_file_versions DROP FOREIGN KEY FK_7B6E89456B801096
+ALTER TABLE me_file_versions ADD CONSTRAINT FK_7B6E89456B801096 FOREIGN KEY (idFileVersionsMetaDefault) REFERENCES me_file_version_meta (id) ON DELETE SET NULL
+```
+
+## 2.5.12
+
+### Hidden blocks wont be indexed anymore
+
+To remove hidden blocks from the search index, you need to run the reindex commands:
+
+```bash
+bin/adminconsole massive:search:reindex --provider sulu_structure
+bin/websiteconsole massive:search:reindex --provider sulu_structure
+```
+
 ## 2.5.11
 
 ### Rename WebsiteController::renderBlock to WebsiteController::renderBlockView
@@ -354,6 +386,39 @@ framework:
 
 It should also be considered to remove the **SwiftMailer** and **SwiftMailerBundle**
 from your application and replace it with [**Symfony Mailer**](https://symfony.com/doc/6.1/mailer.html).
+
+## 2.4.19
+
+### Run Shadow migrations
+
+To fix shadow pages be correctly available you need to run the phpcr migration command:
+
+```bash
+bin/console phpcr:migrations:migrate
+```
+
+## 2.4.17
+
+### Change FileVersion default meta relation
+
+Currently, when removing the default meta, it did also remove the whole file version to avoid it following DB Change
+is required:
+
+```sql
+ALTER TABLE me_file_versions DROP FOREIGN KEY FK_7B6E89456B801096
+ALTER TABLE me_file_versions ADD CONSTRAINT FK_7B6E89456B801096 FOREIGN KEY (idFileVersionsMetaDefault) REFERENCES me_file_version_meta (id) ON DELETE SET NULL
+```
+
+## 2.4.16
+
+### Hidden blocks wont be indexed anymore
+
+To remove hidden blocks from the search index, you need to run the reindex commands:
+
+```bash
+bin/adminconsole massive:search:reindex --provider sulu_structure
+bin/websiteconsole massive:search:reindex --provider sulu_structure
+```
 
 ## 2.4.15
 

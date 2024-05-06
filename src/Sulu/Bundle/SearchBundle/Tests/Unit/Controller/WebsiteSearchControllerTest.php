@@ -83,14 +83,11 @@ class WebsiteSearchControllerTest extends TestCase
     {
         $request = new Request(['q' => 'Test']);
 
-        $localization = new Localization();
-        $localization->setLanguage('en');
-
         $webspace = new Webspace();
         $webspace->setKey('sulu');
         $webspace->addTemplate('search', 'search');
 
-        $this->requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+        $this->requestAnalyzer->getCurrentLocalization()->willReturn(new Localization('en'));
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
 
         $searchQueryBuilder = $this->prophesize(SearchQueryBuilder::class);
@@ -128,14 +125,11 @@ class WebsiteSearchControllerTest extends TestCase
 
         $request = new Request(['q' => 'Test']);
 
-        $localization = new Localization();
-        $localization->setLanguage('en');
-
         $webspace = new Webspace();
         $webspace->setKey('sulu');
         $webspace->addTemplate('search', 'search');
 
-        $this->requestAnalyzer->getCurrentLocalization()->willReturn($localization);
+        $this->requestAnalyzer->getCurrentLocalization()->willReturn(new Localization('en'));
         $this->requestAnalyzer->getWebspace()->willReturn($webspace);
 
         $searchQueryBuilder = $this->prophesize(SearchQueryBuilder::class);

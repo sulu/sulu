@@ -27,6 +27,7 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Sulu\Component\Webspace\Portal;
 use Sulu\Component\Webspace\PortalInformation;
 use Sulu\Component\Webspace\Webspace;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -191,15 +192,11 @@ class RequestAnalyzerTest extends TestCase
         $portal = new Portal();
         $portal->setKey('sulu');
 
-        $localization = new Localization();
-        $localization->setCountry('at');
-        $localization->setLanguage('de');
-
         $portalInformation = new PortalInformation(
             $config['match_type'],
             $webspace,
             $portal,
-            $localization,
+            new Localization('de', 'at'),
             $config['portal_url'],
             null,
             $config['redirect']
@@ -236,15 +233,11 @@ class RequestAnalyzerTest extends TestCase
         $portal = new Portal();
         $portal->setKey('sulu');
 
-        $localization = new Localization();
-        $localization->setCountry('at');
-        $localization->setLanguage('de');
-
         $portalInformation = new PortalInformation(
             $config['match_type'],
             $webspace,
             $portal,
-            $localization,
+            new Localization('de', 'at'),
             $config['portal_url'],
             null,
             $config['redirect']
@@ -281,8 +274,8 @@ class RequestAnalyzerTest extends TestCase
         $this->webspaceManager->getPortalInformations(Argument::any())->willReturn([]);
 
         $request = $this->getMockBuilder(Request::class)->getMock();
-        $request->request = new ParameterBag(['post' => 1]);
-        $request->query = new ParameterBag(['get' => 1]);
+        $request->request = new InputBag(['post' => 1]);
+        $request->query = new InputBag(['get' => 1]);
         $request->attributes = new ParameterBag();
 
         $this->requestAnalyzer->analyze($request);
@@ -300,15 +293,11 @@ class RequestAnalyzerTest extends TestCase
         $portal = new Portal();
         $portal->setKey('sulu');
 
-        $localization = new Localization();
-        $localization->setCountry('at');
-        $localization->setLanguage('de');
-
         $portalInformation = new PortalInformation(
             $config['match_type'],
             $webspace,
             $portal,
-            $localization,
+            new Localization('de', 'at'),
             $config['portal_url'],
             null,
             $config['redirect']

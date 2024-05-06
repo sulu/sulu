@@ -105,6 +105,55 @@ class SnippetResolverTest extends TestCase
         }
     }
 
+    public function testResolveWithMultipleLocales(): void
+    {
+        $contentMapper = $this->prophesize(ContentMapperInterface::class);
+        $structureResolver = $this->prophesize(StructureResolverInterface::class);
+
+        $uuid = '1234-5678';
+        $webspaceKey = 'sulu_io';
+        $locales = ['en', 'de'];
+
+        $structures = [];
+        foreach ($locales as $locale) {
+            $structure = $this->prophesize(SnippetBridge::class);
+            $structure->getUuid()->willReturn('1234-5678');
+            $structure->getKey()->willReturn('test');
+            $structure->getHasTranslation()->willReturn(true);
+            $structure->setIsShadow(false)->shouldBeCalled();
+            $structure->setShadowBaseLanguage(null)->shouldBeCalled();
+
+            $structures[$locale] = $structure->reveal();
+        }
+
+        $resolver = new SnippetResolver($contentMapper->reveal(), $structureResolver->reveal());
+
+        $contentMapper->load(
+            $uuid,
+            $webspaceKey,
+            Argument::that(function($value) use ($locales) { return \in_array($value, $locales); })
+        )->shouldBeCalledTimes(\count($locales))->will(
+            function($arguments) use ($structures) {
+                return $structures[$arguments[2]];
+            }
+        );
+
+        $structureResolver->resolve($structures['en'], false)
+            ->shouldBeCalledTimes(1)
+            ->willReturn(['content' => ['title' => 'English'], 'view' => ['title' => []]]);
+
+        $structureResolver->resolve($structures['de'], false)
+            ->shouldBeCalledTimes(1)
+            ->willReturn(['content' => ['title' => 'Deutsch'], 'view' => ['title' => []]]);
+
+        $result = $resolver->resolve([$uuid], $webspaceKey, 'en');
+        $result2 = $resolver->resolve([$uuid], $webspaceKey, 'de');
+
+        // Ids are equal but not the entire content
+        $this->assertEquals($result[0]['view']['uuid'], $result2[0]['view']['uuid']);
+        $this->assertNotEquals($result, $result2);
+    }
+
     public function testResolveNotExistingUuid(): void
     {
         $contentMapper = $this->prophesize(ContentMapperInterface::class);

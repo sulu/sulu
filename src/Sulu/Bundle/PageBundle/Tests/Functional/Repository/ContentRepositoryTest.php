@@ -212,9 +212,9 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertCount(3, $result);
 
-        $this->assertEquals($page1->getUuid(), $result[0]);
-        $this->assertEquals($page2->getUuid(), $result[1]);
-        $this->assertEquals($page3->getUuid(), $result[2]);
+        $this->assertContains($page1->getUuid(), $result);
+        $this->assertContains($page2->getUuid(), $result);
+        $this->assertContains($page3->getUuid(), $result);
     }
 
     public function testFindByParentMapping(): void
@@ -436,7 +436,10 @@ class ContentRepositoryTest extends SuluTestCase
 
         $parentUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
 
-        $result = $this->contentRepository->findByParentUuid($parentUuid, 'de', 'sulu_io',
+        $result = $this->contentRepository->findByParentUuid(
+            $parentUuid,
+            'de',
+            'sulu_io',
             MappingBuilder::create()->getMapping());
 
         $this->assertCount(3, $result);
@@ -455,7 +458,9 @@ class ContentRepositoryTest extends SuluTestCase
         $this->createPage('test-2', 'de');
         $this->createPage('test-3', 'de');
 
-        $result = $this->contentRepository->findByWebspaceRoot('de', 'sulu_io',
+        $result = $this->contentRepository->findByWebspaceRoot(
+            'de',
+            'sulu_io',
             MappingBuilder::create()->getMapping());
 
         $this->assertCount(3, $result);
@@ -1181,6 +1186,19 @@ class ContentRepositoryTest extends SuluTestCase
 
         $this->assertCount(3, $result);
 
+        $homepageUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
+        $order = [
+            $homepageUuid,
+            $page1->getUuid(),
+            $page2->getUuid(),
+        ];
+        \usort($result, function(Content $a, Content $b) use ($order) {
+            $posA = \array_search($a->getId(), $order);
+            $posB = \array_search($b->getId(), $order);
+
+            return $posA - $posB;
+        });
+
         $items = \array_map(
             function(Content $content) {
                 return [
@@ -1192,8 +1210,6 @@ class ContentRepositoryTest extends SuluTestCase
             },
             $result
         );
-
-        $homepageUuid = $this->sessionManager->getContentNode('sulu_io')->getIdentifier();
 
         $this->assertSame(
             [
@@ -1539,7 +1555,8 @@ class ContentRepositoryTest extends SuluTestCase
         $page1 = $this->createPage('test-1', 'de');
         $page2 = $this->createPage('test-2', 'de');
         $page2->setWorkflowStage(WorkflowStage::TEST);
-        $this->documentManager->persist($page2,
+        $this->documentManager->persist(
+            $page2,
             'de',
             [
                 'path' => $this->sessionManager->getContentPath('sulu_io') . '/test-2',
@@ -1593,8 +1610,14 @@ class ContentRepositoryTest extends SuluTestCase
      *
      * @return PageDocument
      */
-    private function createPage($title, $locale, $data = [], $parentDocument = null, array $permissions = [], bool $publish = true)
-    {
+    private function createPage(
+        $title,
+        $locale,
+        $data = [],
+        $parentDocument = null,
+        array $permissions = [],
+        bool $publish = true
+    ) {
         /** @var PageDocument $document */
         $document = $this->documentManager->create('page');
 

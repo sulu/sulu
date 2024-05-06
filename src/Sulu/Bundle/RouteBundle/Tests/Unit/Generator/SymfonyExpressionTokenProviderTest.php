@@ -71,6 +71,22 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         );
     }
 
+    public function testResolveWithImplodeAndArrayObject(): void
+    {
+        $translator = $this->prophesize(Translator::class);
+        $translator->getLocale()->willReturn('de');
+        $translator->setLocale('de')->shouldBeCalled();
+
+        $entity = new \ArrayObject(['title', 'subtitle']);
+
+        $provider = new SymfonyExpressionTokenProvider($translator->reveal());
+
+        $this->assertEquals(
+            'events/title-subtitle',
+            $provider->provide($entity, '"events/" ~ implode("-", object)')
+        );
+    }
+
     public function testResolveWithLocale(): void
     {
         $translator = $this->prophesize(Translator::class);
@@ -114,15 +130,16 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         );
     }
 
-    public function testResolveNotExists(): void
+    public function testResolveWithInvalidSyntax(): void
     {
         $this->expectException(CannotEvaluateTokenException::class);
+
         $translator = $this->prophesize(Translator::class);
         $translator->getLocale()->willReturn('en');
         $translator->setLocale('en')->shouldBeCalled();
         $entity = new \stdClass();
         $provider = new SymfonyExpressionTokenProvider($translator->reveal());
-        $provider->provide($entity, 'object.title');
+        $provider->provide($entity, 'object:title');
     }
 
     public function testResolveTranslationAddResource(): void

@@ -2,6 +2,7 @@
 import {mount} from 'enzyme';
 import {observable} from 'mobx';
 import log from 'loglevel';
+import jexl from 'jexl';
 import DeleteToolbarAction from '../../toolbarActions/DeleteToolbarAction';
 import {ResourceFormStore} from '../../../../containers/Form';
 import ResourceStore from '../../../../stores/ResourceStore';
@@ -23,7 +24,6 @@ jest.mock('../../../../stores/ResourceStore', () => jest.fn(function(resourceKey
 
 jest.mock('../../../../containers/Form/stores/ResourceFormStore', () => (
     class {
-        data = {};
         resourceStore;
 
         constructor(resourceStore) {
@@ -32,6 +32,10 @@ jest.mock('../../../../containers/Form/stores/ResourceFormStore', () => (
 
         get id() {
             return this.resourceStore.id;
+        }
+
+        get data() {
+            return this.resourceStore.data;
         }
 
         get locale() {
@@ -53,6 +57,8 @@ jest.mock('../../../../services/Router', () => jest.fn(function() {
 jest.mock('../../../../views/Form', () => jest.fn(function() {
     this.submit = jest.fn();
 }));
+
+jexl.addTransform('length', (value: Array<*>) => value.length);
 
 function createDeleteToolbarAction(options = {}) {
     const resourceStore = new ResourceStore('test', undefined, {locale: observable.box('en')});
@@ -120,9 +126,29 @@ test('Return item config with disabled button if an add form is opened', () => {
     }));
 });
 
+test('Return item config with enabled button if more than one contentLocale and an id is available', () => {
+    const deleteToolbarAction = createDeleteToolbarAction({delete_locale: true});
+    deleteToolbarAction.resourceFormStore.resourceStore.id = '123-123-123';
+    deleteToolbarAction.resourceFormStore.resourceStore.data = {contentLocales: ['de', 'en']};
+
+    expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        disabled: false,
+    }));
+});
+
 test('Return item config with disabled button if only one contentLocale is available', () => {
     const deleteToolbarAction = createDeleteToolbarAction({delete_locale: true});
-    deleteToolbarAction.resourceFormStore.resourceStore.id = undefined;
+    deleteToolbarAction.resourceFormStore.resourceStore.id = '123-123-123';
+    deleteToolbarAction.resourceFormStore.resourceStore.data = {contentLocales: ['de']};
+
+    expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
+        disabled: true,
+    }));
+});
+
+test('Return item config with disabled button if there is no id', () => {
+    const deleteToolbarAction = createDeleteToolbarAction({delete_locale: true});
+    deleteToolbarAction.resourceFormStore.resourceStore.id = null;
     deleteToolbarAction.resourceFormStore.resourceStore.data = {contentLocales: ['de']};
 
     expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({
@@ -146,7 +172,7 @@ test('Return empty item config when passed visible_condition is not met', () => 
 
 test('Return item config when passed visible_condition is met', () => {
     const deleteToolbarAction = createDeleteToolbarAction({visible_condition: 'url == "/"'});
-    deleteToolbarAction.resourceFormStore.data.url = '/';
+    deleteToolbarAction.resourceFormStore.resourceStore.data = {url: '/'};
 
     expect(deleteToolbarAction.getToolbarItemConfig()).toEqual(expect.objectContaining({label: 'sulu_admin.delete'}));
 });

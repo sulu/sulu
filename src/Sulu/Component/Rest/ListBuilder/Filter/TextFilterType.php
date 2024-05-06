@@ -26,15 +26,12 @@ class TextFilterType implements FilterTypeInterface
         }
 
         foreach (\array_keys($options) as $operator) {
-            switch ($operator) {
-                case 'eq':
-                    $listBuilderOperator = ListBuilderInterface::WHERE_COMPARATOR_EQUAL;
-                    break;
-                default:
-                    throw new InvalidFilterTypeOptionsException(
-                        'The TextFilterType does not support the "' . $operator . '" operator'
-                    );
-            }
+            $listBuilderOperator = match ($operator) {
+                'eq' => ListBuilderInterface::WHERE_COMPARATOR_EQUAL,
+                default => throw new InvalidFilterTypeOptionsException(
+                    'The TextFilterType does not support the "' . $operator . '" operator'
+                ),
+            };
 
             $listBuilder->where($fieldDescriptor, $options[$operator], $listBuilderOperator);
         }

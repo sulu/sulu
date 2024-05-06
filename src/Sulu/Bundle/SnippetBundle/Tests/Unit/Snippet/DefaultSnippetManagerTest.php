@@ -268,7 +268,8 @@ class DefaultSnippetManagerTest extends TestCase
         $webspace2 = new Webspace();
         $webspace2->setKey('test-2');
 
-        $webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([$webspace1, $webspace2]));
+        $webspaceManager->getWebspaceCollection()
+            ->willReturn(new WebspaceCollection(['test-1' => $webspace1, 'test-2' => $webspace2]));
         $settingsManager->loadStringByWildcard('test-1', 'snippets-*')->willReturn(
             ['snippets-test-1' => '123', 'snippets-test-2' => '456']
         );
@@ -302,7 +303,8 @@ class DefaultSnippetManagerTest extends TestCase
         $webspace2 = new Webspace();
         $webspace2->setKey('test-2');
 
-        $webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([$webspace1, $webspace2]));
+        $webspaceManager->getWebspaceCollection()
+            ->willReturn(new WebspaceCollection(['test-1' => $webspace1, 'test-2' => $webspace2]));
         $settingsManager->loadStringByWildcard('test-1', 'snippets-*')->willReturn(
             ['snippets-test-1' => '123', 'snippets-test-2' => '456']
         );
@@ -337,7 +339,8 @@ class DefaultSnippetManagerTest extends TestCase
         $webspace2 = new Webspace();
         $webspace2->setKey('test-2');
 
-        $webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([$webspace1, $webspace2]));
+        $webspaceManager->getWebspaceCollection()
+            ->willReturn(new WebspaceCollection(['test-1' => $webspace1, 'test-2' => $webspace2]));
         $settingsManager->loadStringByWildcard('test-1', 'snippets-*')->willReturn(
             ['snippets-test-1' => '123-123-123']
         );

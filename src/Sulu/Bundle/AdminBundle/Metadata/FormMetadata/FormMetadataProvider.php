@@ -22,21 +22,6 @@ use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderInterface;
 class FormMetadataProvider implements MetadataProviderInterface
 {
     /**
-     * @var iterable<FormMetadataLoaderInterface>
-     */
-    private $formMetadataLoaders;
-
-    /**
-     * @var iterable<FormMetadataVisitorInterface>
-     */
-    private $formMetadataVisitors;
-
-    /**
-     * @var iterable<TypedFormMetadataVisitorInterface>
-     */
-    private $typedFormMetadataVisitors;
-
-    /**
      * @var string
      */
     private $fallbackLocale;
@@ -47,15 +32,11 @@ class FormMetadataProvider implements MetadataProviderInterface
      * @param iterable<TypedFormMetadataVisitorInterface> $typedFormMetadataVisitors
      */
     public function __construct(
-        iterable $formMetadataLoaders,
-        iterable $formMetadataVisitors,
-        iterable $typedFormMetadataVisitors,
+        private iterable $formMetadataLoaders,
+        private iterable $formMetadataVisitors,
+        private iterable $typedFormMetadataVisitors,
         ?string $fallbackLocale = null
     ) {
-        $this->formMetadataLoaders = $formMetadataLoaders;
-        $this->formMetadataVisitors = $formMetadataVisitors;
-        $this->typedFormMetadataVisitors = $typedFormMetadataVisitors;
-
         if (!$fallbackLocale) {
             @trigger_deprecation('sulu/sulu', '2.4', 'The usage of the "FormMetadataProvider" without "$fallbackLocale" is deprecated. Please add "$fallbackLocale" instead.');
 

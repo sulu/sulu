@@ -87,6 +87,11 @@ class MediaFormatController extends AbstractRestController implements ClassResou
         return $this->handleView($this->view($formatOptions));
     }
 
+    /**
+     * @param int $id
+     *
+     * @return Response
+     */
     public function cpatchAction($id, Request $request)
     {
         $formatOptions = $request->request->all();

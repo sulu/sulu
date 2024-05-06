@@ -174,6 +174,9 @@ class SnippetAdmin extends Admin
                     ->setTitleVisible(true)
                     ->setParent(static::EDIT_FORM_VIEW)
             );
+        }
+
+        if ($this->hasSomeDefaultSnippetPermission()) {
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createViewBuilder('sulu_snippet.snippet_areas', '/snippet-areas', 'sulu_snippet.snippet_areas')
@@ -204,6 +207,20 @@ class SnippetAdmin extends Admin
         }
 
         return $contexts;
+    }
+
+    private function hasSomeDefaultSnippetPermission(): bool
+    {
+        foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
+            if ($this->securityChecker->hasPermission(
+                self::getDefaultSnippetsSecurityContext($webspace->getKey()),
+                PermissionTypes::EDIT
+            )) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getSecurityContextsWithPlaceholder()

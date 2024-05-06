@@ -13,6 +13,7 @@ namespace Sulu\Component\Rest\ListBuilder;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Webmozart\Assert\Assert;
 
 /**
  * This is an service helper for ListResources accessed
@@ -25,7 +26,7 @@ class ListRestHelper implements ListRestHelperInterface
     /**
      * The current request object.
      *
-     * @var Request
+     * @var RequestStack
      */
     protected $requestStack;
 
@@ -45,7 +46,10 @@ class ListRestHelper implements ListRestHelperInterface
      */
     protected function getRequest()
     {
-        return $this->requestStack->getCurrentRequest();
+        $request = $this->requestStack->getCurrentRequest();
+        Assert::notNull($request, 'There is currently no HTTP going on. You can\'t use this class in console mode.');
+
+        return $request;
     }
 
     /**

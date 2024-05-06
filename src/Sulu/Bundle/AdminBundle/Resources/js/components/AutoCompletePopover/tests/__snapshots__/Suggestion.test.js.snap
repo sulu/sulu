@@ -16,6 +16,7 @@ exports[`Should highlight the part of the suggestion text which matches the quer
       />
       <div>
         <span>
+          
           <strong>
             Sug
           </strong>
@@ -84,6 +85,7 @@ exports[`Suggestion should render strong-tags around found chars 1`] = `
         class="fa fa-ticket icon"
       />
       <span>
+        
         <strong>
           Sug
         </strong>

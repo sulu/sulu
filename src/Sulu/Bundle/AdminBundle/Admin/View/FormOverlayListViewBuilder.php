@@ -121,6 +121,9 @@ class FormOverlayListViewBuilder implements FormOverlayListViewBuilderInterface
         return $this;
     }
 
+    /**
+     * @param string[] $locales
+     */
     public function addLocales(array $locales): FormOverlayListViewBuilderInterface
     {
         $this->addLocalesToView($this->view, $locales);

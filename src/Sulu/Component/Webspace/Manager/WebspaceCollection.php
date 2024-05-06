@@ -26,14 +26,14 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * All the webspaces in a specific sulu installation.
      *
-     * @var Webspace[]
+     * @var array<string, Webspace>
      */
     private $webspaces;
 
     /**
      * All the portals in a specific sulu installation.
      *
-     * @var Portal[]
+     * @var array<string, Portal>
      */
     private $portals;
 
@@ -52,6 +52,9 @@ class WebspaceCollection implements \IteratorAggregate
      */
     private $resources;
 
+    /**
+     * @param array<string, Webspace> $webspaces
+     */
     public function __construct(array $webspaces = [])
     {
         $this->webspaces = $webspaces;
@@ -84,7 +87,7 @@ class WebspaceCollection implements \IteratorAggregate
      */
     public function getPortal($key)
     {
-        return \array_key_exists($key, $this->portals) ? $this->portals[$key] : null;
+        return $this->portals[$key] ?? null;
     }
 
     /**
@@ -123,7 +126,7 @@ class WebspaceCollection implements \IteratorAggregate
      */
     public function getWebspace($key)
     {
-        return \array_key_exists($key, $this->webspaces) ? $this->webspaces[$key] : null;
+        return $this->webspaces[$key] ?? null;
     }
 
     /**
@@ -172,7 +175,7 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * @param Webspace[] $webspaces
+     * @param array<string, Webspace> $webspaces
      */
     public function setWebspaces($webspaces)
     {
@@ -180,7 +183,7 @@ class WebspaceCollection implements \IteratorAggregate
     }
 
     /**
-     * @return Webspace[]
+     * @return array<string, Webspace>
      */
     public function getWebspaces()
     {
@@ -190,7 +193,7 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Returns all the portals of this collection.
      *
-     * @return Portal[]
+     * @return array<string, Portal>
      */
     public function getPortals()
     {
@@ -200,7 +203,7 @@ class WebspaceCollection implements \IteratorAggregate
     /**
      * Sets the portals for this collection.
      *
-     * @param Portal[] $portals
+     * @param array<string, Portal> $portals
      */
     public function setPortals($portals)
     {

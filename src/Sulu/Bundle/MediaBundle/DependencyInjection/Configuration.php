@@ -28,7 +28,7 @@ class Configuration implements ConfigurationInterface
 
     public const STORAGE_AZURE_BLOB = 'azure_blob';
 
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('sulu_media');
         $rootNode = $treeBuilder->getRootNode();

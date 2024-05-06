@@ -111,8 +111,8 @@ class ValidateWebspacesCommand extends Command
 
         foreach ($webspaces as $webspace) {
             $this->eventDispatcher->dispatch(new PreRenderEvent(new RequestAttributes([
-                        'webspace' => $webspace,
-                    ])), Events::PRE_RENDER);
+                'webspace' => $webspace,
+            ])), Events::PRE_RENDER);
 
             $this->outputWebspace($webspace);
         }

@@ -20,69 +20,33 @@ use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
  */
 class TargetGroupRepository extends EntityRepository implements TargetGroupRepositoryInterface
 {
+    /**
+     * Saves the given target group to the repository.
+     *
+     * @return TargetGroupInterface
+     */
     public function save(TargetGroupInterface $targetGroup)
     {
-        $newRules = [];
-        foreach ($targetGroup->getRules()->toArray() as $rule) {
-            $rule = $this->getEntityManager()->getRepository(TargetGroupRuleInterface::class)->save($rule);
-            $newRules[] = $rule;
-        }
-
-        $newWebspaces = [];
-        foreach ($targetGroup->getWebspaces()->toArray() as $webspace) {
-            $newWebspace = $this->getEntityManager()->merge($webspace);
-            $newWebspaces[] = $newWebspace;
-        }
-
-        $targetGroup->clearRules();
-        $targetGroup->clearWebspaces();
-        $targetGroup = $this->getEntityManager()->merge($targetGroup);
-
-        foreach ($targetGroup->getRules()->toArray() as $rule) {
-            if (!\in_array($rule, $newRules)) {
-                $targetGroup->removeRule($rule);
-                $this->getEntityManager()->remove($rule);
-            }
-        }
-
-        foreach ($targetGroup->getWebspaces()->toArray() as $webspace) {
-            if (!\in_array($webspace, $newWebspaces)) {
-                $targetGroup->removeWebspace($webspace);
-                $this->getEntityManager()->remove($webspace);
-            }
-        }
-
-        foreach ($newRules as $newRule) {
-            if (!$targetGroup->getRules()->contains($newRule)) {
-                $targetGroup->addRule($newRule);
-            }
-            $newRule->setTargetGroup($targetGroup);
-        }
-
-        foreach ($newWebspaces as $newWebspace) {
-            if (!$targetGroup->getWebspaces()->contains($newWebspace)) {
-                $targetGroup->addWebspace($newWebspace);
-            }
-            $newWebspace->setTargetGroup($targetGroup);
-        }
+        $this->getEntityManager()->persist($targetGroup);
 
         return $targetGroup;
     }
 
     public function findByIds($ids)
     {
-        $query = $this->createQueryBuilder('targetGroup')
+        $queryBuilder = $this->createQueryBuilder('targetGroup')
             ->where('targetGroup.id IN (:ids)')
-            ->getQuery();
+            ->setParameter('ids', $ids);
 
-        return $query->setParameter('ids', $ids)->getResult();
+        /** @var TargetGroupInterface[] */
+        return $queryBuilder->getQuery()->getResult();
     }
 
     public function findAllActiveForWebspaceOrderedByPriority(
         $webspace,
         $maxFrequency = TargetGroupRuleInterface::FREQUENCY_VISITOR
     ) {
-        $query = $this->createQueryBuilder('targetGroup')
+        $queryBuilder = $this->createQueryBuilder('targetGroup')
             ->addSelect('targetGroupRules')
             ->addSelect('targetGroupConditions')
             ->join('targetGroup.rules', 'targetGroupRules')
@@ -90,12 +54,12 @@ class TargetGroupRepository extends EntityRepository implements TargetGroupRepos
             ->leftJoin('targetGroup.webspaces', 'targetGroupWebspaces')
             ->where('targetGroup.active = true')
             ->andWhere('(targetGroup.allWebspaces = true OR targetGroupWebspaces.webspaceKey = :webspace)')
+            ->setParameter('webspace', $webspace)
             ->andWhere('targetGroupRules.frequency <= :maxFrequency')
-            ->orderBy('targetGroup.priority', 'desc')
-            ->getQuery();
-
-        return $query->setParameter('webspace', $webspace)
             ->setParameter('maxFrequency', $maxFrequency)
-            ->getResult();
+            ->orderBy('targetGroup.priority', 'desc');
+
+        /** @var TargetGroupInterface[] */
+        return $queryBuilder->getQuery()->getResult();
     }
 }
