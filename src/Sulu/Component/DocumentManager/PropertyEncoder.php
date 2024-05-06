@@ -30,20 +30,15 @@ class PropertyEncoder
 
     public function encode($encoding, $name, $locale)
     {
-        switch ($encoding) {
-            case 'system_localized':
-                return $this->localizedSystemName($name, $locale);
-            case 'system':
-                return $this->systemName($name);
-            case 'content_localized':
-                return $this->localizedContentName($name, $locale);
-            case 'content':
-                return $this->contentName($name);
-            default:
-                throw new \InvalidArgumentException(\sprintf(
-                    'Invalid encoding "%s"', $encoding
-                ));
-        }
+        return match ($encoding) {
+            'system_localized' => $this->localizedSystemName($name, $locale),
+            'system' => $this->systemName($name),
+            'content_localized' => $this->localizedContentName($name, $locale),
+            'content' => $this->contentName($name),
+            default => throw new \InvalidArgumentException(\sprintf(
+                'Invalid encoding "%s"', $encoding
+            )),
+        };
     }
 
     /**

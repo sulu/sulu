@@ -37,8 +37,15 @@ exports[`Render a CircularProgressbar 1`] = `
     "
         fill-opacity="0"
         stroke-width="8"
-        style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: NaNpx;"
+        style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: 115.61060965210439px;"
       />
+      <text
+        class="text"
+        x="50"
+        y="50"
+      >
+        60%
+      </text>
     </svg>
   </div>
 </div>
@@ -81,8 +88,15 @@ exports[`Render a CircularProgressbar in a different size 1`] = `
     "
         fill-opacity="0"
         stroke-width="8"
-        style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: NaNpx;"
+        style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: 115.61060965210439px;"
       />
+      <text
+        class="text"
+        x="50"
+        y="50"
+      >
+        60%
+      </text>
     </svg>
   </div>
 </div>
@@ -125,7 +139,7 @@ exports[`Render a CircularProgressbar without the progress info in the center 1`
     "
         fill-opacity="0"
         stroke-width="8"
-        style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: NaNpx;"
+        style="stroke-dasharray: 289.02652413026095px 289.02652413026095px; stroke-dashoffset: 115.61060965210439px;"
       />
     </svg>
   </div>

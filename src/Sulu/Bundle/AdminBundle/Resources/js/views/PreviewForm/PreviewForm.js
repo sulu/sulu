@@ -1,5 +1,6 @@
 // @flow
 import jexl from 'jexl';
+import {toJS} from 'mobx';
 import withSidebar from '../../containers/Sidebar/withSidebar';
 import Form from '../Form';
 
@@ -13,7 +14,11 @@ export default withSidebar(Form, function() {
             },
         },
     } = this.props;
-    const enablePreview = !previewCondition || jexl.evalSync(previewCondition, this.resourceFormStore.data);
+    const previewData = {
+        __routeAttributes: this.props.router.attributes,
+        ...toJS(this.resourceFormStore.data),
+    };
+    const enablePreview = !previewCondition || jexl.evalSync(previewCondition, previewData);
 
     const {
         resourceFormStore: {

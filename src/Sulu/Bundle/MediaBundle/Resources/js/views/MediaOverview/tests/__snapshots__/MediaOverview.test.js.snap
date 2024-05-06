@@ -252,25 +252,29 @@ exports[`Render a simple MediaOverview 1`] = `
       <div
         class="toolbarLeft"
       >
-        <div
-          class="input dark left collapsed hasAppendIcon"
+        <label
+          aria-label="sulu_admin.list_search_placeholder"
         >
           <div
-            class="prependedContainer dark collapsed"
+            class="input dark left collapsed hasAppendIcon"
           >
-            <span
-              aria-label="su-search"
-              class="su-search clickable icon dark iconClickable collapsed"
-              role="button"
-              tabindex="0"
+            <div
+              class="prependedContainer dark collapsed"
+            >
+              <span
+                aria-label="su-search"
+                class="su-search clickable icon dark iconClickable collapsed"
+                role="button"
+                tabindex="0"
+              />
+            </div>
+            <input
+              placeholder="sulu_admin.list_search_placeholder"
+              type="text"
+              value=""
             />
           </div>
-          <input
-            placeholder="sulu_admin.list_search_placeholder"
-            type="text"
-            value=""
-          />
-        </div>
+        </label>
       </div>
       <div
         class="toolbarRight"

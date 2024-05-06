@@ -90,7 +90,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
         CategoryRequestHandlerInterface $categoryRequestHandler,
         ReferenceStoreInterface $tagReferenceStore,
         ReferenceStoreInterface $categoryReferenceStore,
-        ?TargetGroupStoreInterface $targetGroupStore = null,
+        ?TargetGroupStoreInterface $targetGroupStore,
         RequestAnalyzerInterface $requestAnalyzer
     ) {
         $this->dataProviderPool = $dataProviderPool;
@@ -116,7 +116,7 @@ class ContentType extends ComplexContentType implements ContentTypeExportInterfa
             $data = \json_decode($data, true);
         }
 
-        if (!empty($data['tags'])) {
+        if (\is_array($data) && !empty($data['tags'])) {
             $data['tags'] = $this->tagManager->resolveTagIds($data['tags']);
         }
 

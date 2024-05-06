@@ -21,6 +21,8 @@ interface RestHelperInterface
      *
      * @param ListBuilderInterface $listBuilder The ListBuilder to initialize
      * @param FieldDescriptorInterface[] $fieldDescriptors The FieldDescriptors available for this object type
+     *
+     * @return void
      */
     public function initializeListBuilder(ListBuilderInterface $listBuilder, array $fieldDescriptors);
 

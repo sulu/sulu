@@ -20,7 +20,9 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewCollection;
 use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 use Sulu\Bundle\TestBundle\Testing\ReadObjectAttributeTrait;
 use Sulu\Component\Security\Authorization\SecurityChecker;
+use Sulu\Component\Webspace\Manager\WebspaceCollection;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 
 class SnippetAdminTest extends TestCase
 {
@@ -66,16 +68,24 @@ class SnippetAdminTest extends TestCase
             $this->viewBuilderFactory,
             $this->securityChecker->reveal(),
             $this->webspaceManager->reveal(),
-            false,
-            'Test'
+            false
         );
 
         $this->securityChecker->hasPermission('sulu.global.snippets', 'add')->willReturn(true);
         $this->securityChecker->hasPermission('sulu.global.snippets', 'edit')->willReturn(true);
         $this->securityChecker->hasPermission('sulu.global.snippets', 'delete')->willReturn(true);
         $this->securityChecker->hasPermission('sulu.global.snippets', 'view')->willReturn(true);
+        $this->securityChecker->hasPermission('sulu.webspaces.sulu.default-snippets', 'edit')->willReturn(true);
 
         $this->webspaceManager->getAllLocales()->willReturn(\array_values($locales));
+
+        $webspace = new Webspace();
+        $webspace->setKey('sulu');
+        $webspaceCollection = new WebspaceCollection([
+            'sulu' => $webspace,
+        ]);
+        $this->webspaceManager->getWebspaceCollection()
+            ->willReturn($webspaceCollection);
 
         $viewCollection = new ViewCollection();
         $snippetAdmin->configureViews($viewCollection);
@@ -115,9 +125,9 @@ class SnippetAdminTest extends TestCase
             'formKey' => 'snippet',
             'editView' => 'sulu_snippet.edit_form',
             'toolbarActions' => [
-                new Toolbaraction('sulu_admin.save'),
-                new Toolbaraction('sulu_admin.type', ['sort_by' => 'title']),
-                new Toolbaraction('sulu_admin.delete'),
+                new ToolbarAction('sulu_admin.save'),
+                new ToolbarAction('sulu_admin.type', ['sort_by' => 'title']),
+                new ToolbarAction('sulu_admin.delete'),
             ],
         ], $this->readObjectAttribute($addDetailView, 'options'));
         $this->assertEquals('sulu_snippet.edit_form', $editFormView->getName());
@@ -134,9 +144,9 @@ class SnippetAdminTest extends TestCase
             'tabTitle' => 'sulu_admin.details',
             'formKey' => 'snippet',
             'toolbarActions' => [
-                new Toolbaraction('sulu_admin.save'),
-                new Toolbaraction('sulu_admin.type', ['sort_by' => 'title']),
-                new Toolbaraction('sulu_admin.delete'),
+                new ToolbarAction('sulu_admin.save'),
+                new ToolbarAction('sulu_admin.type', ['sort_by' => 'title']),
+                new ToolbarAction('sulu_admin.delete'),
             ],
         ], $this->readObjectAttribute($editDetailView, 'options'));
     }

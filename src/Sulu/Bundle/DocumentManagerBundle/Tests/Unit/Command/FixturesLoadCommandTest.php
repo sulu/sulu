@@ -201,7 +201,7 @@ class FixturesLoadCommandTest extends TestCase
     public function testNoFixturesInteraction(): void
     {
         $helper = $this->prophesize(QuestionHelper::class);
-        $helper->setHelperSet(Argument::cetera())->willReturn(null);
+        $helper->setHelperSet(Argument::cetera())->shouldBeCalled();
         $helper->getName()->willReturn('question');
         $helper->ask(Argument::cetera())->shouldBeCalled()->willReturn(true);
 

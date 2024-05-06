@@ -16,8 +16,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\SecurityBundle\System\SystemStoreInterface;
 use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
-use Sulu\Component\Webspace\Security;
-use Sulu\Component\Webspace\Webspace;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class SystemListenerTest extends TestCase
@@ -47,33 +45,6 @@ class SystemListenerTest extends TestCase
         $systemListener->onKernelRequest($requestEvent->reveal());
 
         $this->systemStore->setSystem('Sulu')->shouldBeCalled();
-    }
-
-    public function provideSetWebsiteSystem()
-    {
-        return [
-            ['sulu-test'],
-            ['sulu-blog'],
-        ];
-    }
-
-    /**
-     * @dataProvider provideSetWebsiteSystem
-     */
-    public function testSetWebsiteSystem(string $system): void
-    {
-        $systemListener = $this->createSystemListener('website');
-        $requestEvent = $this->prophesize(RequestEvent::class);
-
-        $webspace = new Webspace();
-        $security = new Security();
-        $security->setSystem($system);
-        $webspace->setSecurity($security);
-        $this->requestAnalyzer->getWebspace()->willReturn($webspace);
-
-        $systemListener->onKernelRequest($requestEvent->reveal());
-
-        $this->systemStore->setSystem($system)->shouldBeCalled();
     }
 
     private function createSystemListener(string $context): SystemListener

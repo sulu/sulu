@@ -19,15 +19,9 @@ use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterfa
 
 class DomainEventCollectorSubscriber implements EventSubscriber
 {
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
     public function __construct(
-        DomainEventCollectorInterface $domainEventDispatcher
+        private DomainEventCollectorInterface $domainEventCollector
     ) {
-        $this->domainEventCollector = $domainEventDispatcher;
     }
 
     public function getSubscribedEvents()

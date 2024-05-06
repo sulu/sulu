@@ -16,6 +16,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\DocumentManagerBundle\Routing\Loader\VersionRouteLoader;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\Routing\RouteCollection;
 
 class VersionRouteLoaderTest extends TestCase
 {
@@ -32,11 +33,14 @@ class VersionRouteLoaderTest extends TestCase
     {
         $versionRouteLoader = new VersionRouteLoader(true);
         $resolver = $this->prophesize(LoaderResolverInterface::class);
+
+        $routeDefinitons = new RouteCollection();
+
         $loader = $this->prophesize(LoaderInterface::class);
-        $loader->load('routing.yml', 'rest')->shouldBeCalled();
+        $loader->load('routing.yml', 'rest')->shouldBeCalled()->willReturn($routeDefinitons);
         $resolver->resolve('routing.yml', 'rest')->willReturn($loader->reveal());
         $versionRouteLoader->setResolver($resolver->reveal());
 
-        $versionRouteLoader->load('routing.yml');
+        $this->assertEquals($routeDefinitons, $versionRouteLoader->load('routing.yml'));
     }
 }

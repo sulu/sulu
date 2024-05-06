@@ -28,7 +28,7 @@ interface MediaRepositoryInterface extends RepositoryInterface
      *
      * @param int $id
      *
-     * @return Media|null
+     * @return MediaInterface|null
      */
     public function findMediaById($id);
 
@@ -37,9 +37,9 @@ interface MediaRepositoryInterface extends RepositoryInterface
      * to be able to render the actual media.
      *
      * @param int $id
-     * @param string $formatKey
+     * @param string|null $formatKey
      *
-     * @return Media
+     * @return MediaInterface|null
      */
     public function findMediaByIdForRendering($id, $formatKey);
 
@@ -51,7 +51,7 @@ interface MediaRepositoryInterface extends RepositoryInterface
      * @param int $offset
      * @param int|null $permission
      *
-     * @return Media[]
+     * @return MediaInterface[]
      */
     public function findMedia(
         $filter = [],
@@ -74,17 +74,22 @@ interface MediaRepositoryInterface extends RepositoryInterface
     public function findMediaDisplayInfo($ids, $locale);
 
     /**
+     * Returns the most recent version of a media for the specified
+     * filename within a collection.
+     *
      * @param string $filename
      * @param int $collectionId
      *
-     * @return Media
+     * @return MediaInterface|null
      */
     public function findMediaWithFilenameInCollectionWithId($filename, $collectionId);
 
     /**
      * @param int $collectionId
-     * @param int $limit
-     * @param int $offset
+     * @param int|null $limit
+     * @param int|null $offset
+     *
+     * @return array{media: iterable<MediaInterface>, count: int}
      */
     public function findMediaByCollectionId($collectionId, $limit, $offset);
 

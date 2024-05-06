@@ -16,14 +16,8 @@ use Sulu\Bundle\ActivityBundle\Domain\Model\ActivityInterface;
 
 class NullActivityRepository implements ActivityRepositoryInterface
 {
-    /**
-     * @var string
-     */
-    private $activityClass;
-
-    public function __construct(string $activityClass)
+    public function __construct(private string $activityClass)
     {
-        $this->activityClass = $activityClass;
     }
 
     public function createFromDomainEvent(DomainEvent $domainEvent): ActivityInterface

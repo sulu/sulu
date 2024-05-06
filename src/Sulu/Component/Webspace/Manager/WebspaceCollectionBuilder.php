@@ -119,7 +119,7 @@ class WebspaceCollectionBuilder
                 }
             }
 
-            $this->webspaces[] = $webspace;
+            $this->webspaces[$webspace->getKey()] = $webspace;
 
             $this->buildPortals($webspace);
         }

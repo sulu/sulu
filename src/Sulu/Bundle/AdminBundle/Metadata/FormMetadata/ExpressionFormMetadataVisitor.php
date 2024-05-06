@@ -18,15 +18,9 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
  */
 class ExpressionFormMetadataVisitor implements FormMetadataVisitorInterface, TypedFormMetadataVisitorInterface
 {
-    /**
-     * @var ExpressionLanguage
-     */
-    private $expressionLanguage;
-
     public function __construct(
-        ExpressionLanguage $expressionLanguage
+        private ExpressionLanguage $expressionLanguage
     ) {
-        $this->expressionLanguage = $expressionLanguage;
     }
 
     public static function getDefaultPriority(): int

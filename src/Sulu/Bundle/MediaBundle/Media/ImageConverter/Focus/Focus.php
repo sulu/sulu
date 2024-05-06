@@ -68,36 +68,22 @@ class Focus implements FocusInterface
 
             $cropY = 0;
 
-            switch ($x) {
-                case static::FOCUS_LEFT:
-                    $cropX = 0;
-                    break;
-                case static::FOCUS_RIGHT:
-                    $cropX = $imageSize->getWidth() - $width;
-                    break;
-                case static::FOCUS_CENTER:
-                default:
-                    $cropX = ($imageSize->getWidth() - $width) / 2;
-                    break;
-            }
+            $cropX = match ($x) {
+                static::FOCUS_LEFT => 0,
+                static::FOCUS_RIGHT => $imageSize->getWidth() - $width,
+                default => ($imageSize->getWidth() - $width) / 2,
+            };
         } else {
             $width = $imageSize->getWidth();
             $height = (int) \round($width / $targetRatio);
 
             $cropX = 0;
 
-            switch ($y) {
-                case static::FOCUS_TOP:
-                    $cropY = 0;
-                    break;
-                case static::FOCUS_BOTTOM:
-                    $cropY = $imageSize->getHeight() - $height;
-                    break;
-                case static::FOCUS_MIDDLE:
-                default:
-                    $cropY = ($imageSize->getHeight() - $height) / 2;
-                    break;
-            }
+            $cropY = match ($y) {
+                static::FOCUS_TOP => 0,
+                static::FOCUS_BOTTOM => $imageSize->getHeight() - $height,
+                default => ($imageSize->getHeight() - $height) / 2,
+            };
         }
 
         return $image->crop(new Point($cropX, $cropY), new Box($width, $height));

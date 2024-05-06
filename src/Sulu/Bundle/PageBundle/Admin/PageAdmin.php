@@ -33,8 +33,6 @@ class PageAdmin extends Admin
 {
     /**
      * The prefix for the security context, the key of the webspace has to be appended.
-     *
-     * @var string
      */
     public const SECURITY_CONTEXT_PREFIX = 'sulu.webspaces.';
 
@@ -103,7 +101,7 @@ class PageAdmin extends Admin
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
     {
-        if ($this->hasSomeWebspacePermission()) {
+        if ($this->getFirstWebspaceWithPermissions() instanceof Webspace) {
             $webspaceItem = new NavigationItem('sulu_page.webspaces');
             $webspaceItem->setPosition(10);
             $webspaceItem->setIcon('su-webspace');
@@ -115,8 +113,7 @@ class PageAdmin extends Admin
 
     public function configureViews(ViewCollection $viewCollection): void
     {
-        /** @var Webspace $firstWebspace */
-        $firstWebspace = \current($this->webspaceManager->getWebspaceCollection()->getWebspaces());
+        $firstWebspace = $this->getFirstWebspaceWithPermissions();
 
         $createPageSaveVisibleCondition = '!_permissions && (!__webspace || __webspace._permissions.edit)';
         $editPageSaveVisibleCondition = '_permissions && _permissions.edit';
@@ -192,7 +189,7 @@ class PageAdmin extends Admin
                     new ToolbarAction(
                         'sulu_admin.copy_locale',
                         [
-                            'visible_condition' => '(!_permissions || _permissions.edit)',
+                            'visible_condition' => '(!_permissions || _permissions.edit) && __webspace.localizations|length > 1',
                         ]
                     ),
                     new ToolbarAction(
@@ -222,13 +219,17 @@ class PageAdmin extends Admin
 
         // This view has to be registered even if permissions for pages are missing
         // Otherwise the application breaks when other bundles try to add child views to this one
+        $webspaceKey = '';
+        if ($firstWebspace instanceof Webspace) {
+            $webspaceKey = $firstWebspace->getKey();
+        }
         $viewCollection->add(
             $this->viewBuilderFactory
                 ->createViewBuilder(static::WEBSPACE_TABS_VIEW, '/webspaces/:webspace', 'sulu_page.webspace_tabs')
-                ->setAttributeDefault('webspace', $firstWebspace->getKey())
+                ->setAttributeDefault('webspace', $webspaceKey)
         );
 
-        if ($this->hasSomeWebspacePermission()) {
+        if ($firstWebspace instanceof Webspace) {
             $viewCollection->add(
                 $this->viewBuilderFactory
                     ->createViewBuilder(static::PAGES_VIEW, '/pages/:locale', 'sulu_page.page_list')
@@ -424,14 +425,15 @@ class PageAdmin extends Admin
             }
 
             $webspaceSecuritySystemContexts[$system] = [
-                static::SECURITY_CONTEXT_GROUP => [
-                    static::SECURITY_CONTEXT_PREFIX . $webspace->getKey() => [
+                self::SECURITY_CONTEXT_GROUP => [
+                    self::SECURITY_CONTEXT_PREFIX . $webspace->getKey() => [
                         PermissionTypes::VIEW,
                     ],
                 ],
             ];
         }
 
+        /** @var array<string, array<string>> $webspaceContexts */
         $webspaceContexts = [];
         foreach ($this->webspaceManager->getWebspaceCollection() as $webspace) {
             /* @var Webspace $webspace */
@@ -472,8 +474,8 @@ class PageAdmin extends Admin
             }
 
             $webspaceSecuritySystemContexts[$system] = [
-                static::SECURITY_CONTEXT_GROUP => [
-                    static::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
+                self::SECURITY_CONTEXT_GROUP => [
+                    self::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
                         PermissionTypes::VIEW,
                     ],
                 ],
@@ -482,9 +484,9 @@ class PageAdmin extends Admin
 
         return \array_merge(
             [
-                static::SULU_ADMIN_SECURITY_SYSTEM => [
-                    static::SECURITY_CONTEXT_GROUP => [
-                        static::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
+                self::SULU_ADMIN_SECURITY_SYSTEM => [
+                    self::SECURITY_CONTEXT_GROUP => [
+                        self::SECURITY_CONTEXT_PREFIX . '#webspace#' => [
                             PermissionTypes::VIEW,
                             PermissionTypes::ADD,
                             PermissionTypes::EDIT,
@@ -518,20 +520,18 @@ class PageAdmin extends Admin
         ];
     }
 
-    private function hasSomeWebspacePermission(): bool
+    private function getFirstWebspaceWithPermissions(): ?Webspace
     {
         foreach ($this->webspaceManager->getWebspaceCollection()->getWebspaces() as $webspace) {
-            $hasWebspacePermission = $this->securityChecker->hasPermission(
+            if ($this->securityChecker->hasPermission(
                 self::getPageSecurityContext($webspace->getKey()),
                 PermissionTypes::EDIT
-            );
-
-            if ($hasWebspacePermission) {
-                return true;
+            )) {
+                return $webspace;
             }
         }
 
-        return false;
+        return null;
     }
 
     /**

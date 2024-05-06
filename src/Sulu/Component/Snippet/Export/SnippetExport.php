@@ -135,7 +135,7 @@ class SnippetExport extends Export implements SnippetExportInterface
         );
 
         $query = $this->documentManager->createQuery(
-            'SELECT * FROM [nt:unstructured] AS a WHERE ' . \implode(' AND ', $where),
+            'SELECT * FROM [nt:unstructured] AS a WHERE ' . \implode(' AND ', $where) . ' ORDER BY [jcr:path] ASC',
             $this->exportLocale
         );
 
