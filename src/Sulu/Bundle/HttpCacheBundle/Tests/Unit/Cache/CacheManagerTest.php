@@ -61,17 +61,25 @@ class CacheManagerTest extends TestCase
         $this->cacheManager->invalidateTag($tag);
 
         $this->fosCacheManager->supports(FOSCacheManager::TAGS)->willReturn(true);
-        $this->fosCacheManager->invalidateTags([$tag])->shouldBeCalled();
+        $this->fosCacheManager->invalidateTags([$tag])->shouldBeCalled()->willReturn($this->fosCacheManager->reveal());
         $this->cacheManager->invalidateTag($tag);
     }
 
     public function testInvalidatePath(): void
     {
         $this->fosCacheManager->supports(FOSCacheManager::PATH)->willReturn(true);
-        $this->fosCacheManager->invalidatePath('http://sulu.lo/test', Argument::cetera())->shouldBeCalled();
+        $this->fosCacheManager
+            ->invalidatePath('http://sulu.lo/test', Argument::cetera())
+            ->shouldBeCalled()
+            ->willReturn($this->fosCacheManager->reveal())
+        ;
 
         $this->fosCacheManager->supports(FOSCacheManager::REFRESH)->willReturn(true);
-        $this->fosCacheManager->refreshPath('http://sulu.lo/test', Argument::cetera())->shouldBeCalled();
+        $this->fosCacheManager
+            ->refreshPath('http://sulu.lo/test', Argument::cetera())
+            ->shouldBeCalled()
+            ->willReturn($this->fosCacheManager->reveal())
+        ;
 
         $this->cacheManager->invalidatePath('http://sulu.lo/test');
     }
@@ -80,6 +88,7 @@ class CacheManagerTest extends TestCase
     {
         $this->fosCacheManager->supports(FOSCacheManager::PATH)->willReturn(false);
         $this->fosCacheManager->invalidatePath(Argument::any())->shouldNotBeCalled();
+
         $this->cacheManager->invalidatePath('http://sulu.lo/test');
     }
 
@@ -96,14 +105,15 @@ class CacheManagerTest extends TestCase
             BanCapable::REGEX_MATCH_ALL,
             BanCapable::CONTENT_TYPE_ALL,
             $domain
-        )->shouldBeCalled();
+        )->shouldBeCalled()->willReturn($this->fosCacheManager->reveal());
+
         $this->cacheManager->invalidateDomain($domain);
     }
 
     public function testInvalidateReference(): void
     {
         $this->fosCacheManager->supports(FOSCacheManager::TAGS)->willReturn(true);
-        $this->fosCacheManager->invalidateTags(['test-1'])->shouldBeCalled();
+        $this->fosCacheManager->invalidateTags(['test-1'])->shouldBeCalled()->willReturn($this->fosCacheManager->reveal());
 
         $this->cacheManager->invalidateReference('test', 1);
     }
@@ -113,7 +123,7 @@ class CacheManagerTest extends TestCase
         $tag = '72a31676-282d-11e8-b467-0ed5f89f718b';
 
         $this->fosCacheManager->supports(FOSCacheManager::TAGS)->willReturn(true);
-        $this->fosCacheManager->invalidateTags([$tag])->shouldBeCalled();
+        $this->fosCacheManager->invalidateTags([$tag])->shouldBeCalled()->willReturn($this->fosCacheManager->reveal());
 
         $this->cacheManager->invalidateReference('test', $tag);
     }
