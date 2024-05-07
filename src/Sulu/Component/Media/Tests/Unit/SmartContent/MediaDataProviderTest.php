@@ -11,6 +11,7 @@
 
 namespace Sulu\Component\Media\Tests\Unit\SmartContent;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use JMS\Serializer\SerializationContext;
@@ -21,6 +22,8 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
@@ -442,12 +445,22 @@ class MediaDataProviderTest extends TestCase
         $this->assertEquals('test', $result->getTitle());
     }
 
-    private function createMedia($id, $title, $tags = [])
+    private function createMedia($id, $title, $tags = []): Media
     {
+        $fileVersionMeta = new FileVersionMeta();
+        self::setPrivateProperty($fileVersionMeta, 'title', $title);
+
+        $fileVersion = new FileVersion();
+        self::setPrivateProperty($fileVersion, 'tags', new ArrayCollection($tags));
+
         $entity = new MediaEntity();
         self::setPrivateProperty($entity, 'id', $id);
 
-        return new Media($entity, 'de');
+        $media = new Media($entity, 'de');
+        self::setPrivateProperty($media, 'localizedMeta', $fileVersionMeta);
+        self::setPrivateProperty($media, 'fileVersion', $fileVersion);
+
+        return $media;
     }
 
     private function createDataItem(Media $media)

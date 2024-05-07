@@ -132,7 +132,7 @@ class InvalidationSubscriberTest extends TestCase
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforePublishing($hasRequest, $scheme): void
+    public function testInvalidateDocumentBeforePublishing(bool $hasRequest, $scheme): void
     {
         $documentUuid = '743389e6-2ac5-4673-9835-3e709a27a03d';
 
@@ -285,7 +285,7 @@ class InvalidationSubscriberTest extends TestCase
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforeUnpublishing($hasRequest, $scheme): void
+    public function testInvalidateDocumentBeforeUnpublishing(bool $hasRequest, $scheme): void
     {
         $documentUuid = '743c89e6-2ac5-7777-9835-3e709a27a03d';
 
@@ -398,7 +398,7 @@ class InvalidationSubscriberTest extends TestCase
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforeRemoving($hasRequest, $scheme): void
+    public function testInvalidateDocumentBeforeRemoving(bool $hasRequest, $scheme): void
     {
         $documentUuid = '743c89e6-2ac5-7777-1234-3e709a27a0bb';
 
@@ -492,7 +492,7 @@ class InvalidationSubscriberTest extends TestCase
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforeRemovingLocale($hasRequest, $scheme): void
+    public function testInvalidateDocumentBeforeRemovingLocale(bool $hasRequest, $scheme): void
     {
         $documentUuid = '743c89e6-2ac5-7777-1234-3e709a27a0bb';
 

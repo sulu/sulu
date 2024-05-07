@@ -30,12 +30,28 @@ class ExtensionManagerTest extends TestCase
                 $this->name = $name;
             }
 
+            /**
+             * save data to node.
+             *
+             * @param array<string, mixed> $data
+             * @param string $webspaceKey
+             * @param string $languageCode
+             */
             public function save(NodeInterface $node, $data, $webspaceKey, $languageCode): void
             {
             }
 
-            public function load(NodeInterface $node, $webspaceKey, $languageCode): void
+            /**
+             * load data from node.
+             *
+             * @param string $webspaceKey
+             * @param string $languageCode
+             *
+             * @return mixed data of extension
+             */
+            public function load(NodeInterface $node, $webspaceKey, $languageCode): mixed
             {
+                return null;
             }
         };
     }
