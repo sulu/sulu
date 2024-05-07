@@ -17,6 +17,8 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Api\Contact;
+use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Contact\SmartContent\ContactDataItem;
 use Sulu\Component\Contact\SmartContent\ContactDataProvider;
@@ -29,6 +31,7 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 class ContactDataProviderTest extends TestCase
 {
     use ProphecyTrait;
+    use SetGetPrivatePropertyTrait;
 
     /**
      * @var ObjectProphecy<DataProviderRepositoryInterface>
@@ -80,9 +83,9 @@ class ContactDataProviderTest extends TestCase
     public function dataItemsDataProvider()
     {
         $contacts = [
-            $this->createContact(1, 'Max', 'Mustermann')->reveal(),
-            $this->createContact(2, 'Erika', 'Mustermann')->reveal(),
-            $this->createContact(3, 'Leon', 'Mustermann')->reveal(),
+            $this->createContact(1, 'Max', 'Mustermann'),
+            $this->createContact(2, 'Erika', 'Mustermann'),
+            $this->createContact(3, 'Leon', 'Mustermann'),
         ];
 
         $dataItems = [];
@@ -132,9 +135,9 @@ class ContactDataProviderTest extends TestCase
     public function testNullSortBy(): void
     {
         $contacts = [
-            $this->createContact(1, 'Max', 'Mustermann')->reveal(),
-            $this->createContact(2, 'Erika', 'Mustermann')->reveal(),
-            $this->createContact(3, 'Leon', 'Mustermann')->reveal(),
+            $this->createContact(1, 'Max', 'Mustermann'),
+            $this->createContact(2, 'Erika', 'Mustermann'),
+            $this->createContact(3, 'Leon', 'Mustermann'),
         ];
 
         $dataItems = [];
@@ -160,9 +163,9 @@ class ContactDataProviderTest extends TestCase
     public function resourceItemsDataProvider()
     {
         $contacts = [
-            $this->createContact(1, 'Max', 'Mustermann')->reveal(),
-            $this->createContact(2, 'Erika', 'Mustermann')->reveal(),
-            $this->createContact(3, 'Leon', 'Mustermann')->reveal(),
+            $this->createContact(1, 'Max', 'Mustermann'),
+            $this->createContact(2, 'Erika', 'Mustermann'),
+            $this->createContact(3, 'Leon', 'Mustermann'),
         ];
 
         $dataItems = [];
@@ -238,22 +241,21 @@ class ContactDataProviderTest extends TestCase
 
     private function createContact($id, $firstName, $lastName, $tags = [])
     {
-        $contact = $this->prophesize(Contact::class);
-        $contact->getId()->willReturn($id);
-        $contact->getFirstName()->willReturn($firstName);
-        $contact->getLastName()->willReturn($lastName);
-        $contact->getFullName()->willReturn($firstName . ' ' . $lastName);
-        $contact->getTags()->willReturn($tags);
-        $contact->getFormOfAddress()->willReturn('');
-        $contact->getTitle()->willReturn('');
-        $contact->getSalutation()->willReturn('');
-        $contact->getMiddleName()->willReturn('');
-        $contact->getBirthday()->willReturn(new \DateTime());
-        $contact->getCreated()->willReturn(new \DateTime());
-        $contact->getChanged()->willReturn(new \DateTime());
-        $contact->getMedias()->willReturn([]);
+        $contact = new ContactEntity();
+        self::setPrivateProperty($contact, 'id', $id);
+        self::setPrivateProperty($contact, 'firstName', $firstName);
+        self::setPrivateProperty($contact, 'lastName', $lastName);
+        self::setPrivateProperty($contact, 'tags', $tags);
+        self::setPrivateProperty($contact, 'formOfAddress', '');
+        self::setPrivateProperty($contact, 'title', '');
+        self::setPrivateProperty($contact, 'salutation', '');
+        self::setPrivateProperty($contact, 'middleName', '');
+        self::setPrivateProperty($contact, 'birthday', new \DateTime());
+        self::setPrivateProperty($contact, 'created', new \DateTime());
+        self::setPrivateProperty($contact, 'changed', new \DateTime());
+        self::setPrivateProperty($contact, 'medias', []);
 
-        return $contact;
+        return new Contact($contact, 'de');
     }
 
     private function createDataItem(Contact $contact)

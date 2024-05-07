@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Tests\Unit\Extension;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Bundle\PageBundle\Content\Structure\TestExtension;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManager;
 
@@ -31,10 +32,10 @@ class ExtensionManagerTest extends TestCase
     public function addProvider()
     {
         $instances = [
-            $this->getExtension('test1'),
-            $this->getExtension('test2'),
-            $this->getExtension('test3'),
-            $this->getExtension('test4'),
+            new TestExtension('test1'),
+            new TestExtension('test2'),
+            new TestExtension('test3'),
+            new TestExtension('test4'),
         ];
 
         $extensions = [
@@ -68,10 +69,10 @@ class ExtensionManagerTest extends TestCase
     public function hasProvider()
     {
         $instances = [
-            $this->getExtension('test1'),
-            $this->getExtension('test2'),
-            $this->getExtension('test3'),
-            $this->getExtension('test4'),
+            new TestExtension('test1'),
+            new TestExtension('test2'),
+            new TestExtension('test3'),
+            new TestExtension('test4'),
         ];
 
         $extensions = [
@@ -114,10 +115,10 @@ class ExtensionManagerTest extends TestCase
     public function getProvider()
     {
         $instances = [
-            $this->getExtension('test1'),
-            $this->getExtension('test2'),
-            $this->getExtension('test3'),
-            $this->getExtension('test4'),
+            new TestExtension('test1'),
+            new TestExtension('test2'),
+            new TestExtension('test3'),
+            new TestExtension('test4'),
         ];
 
         $extensions = [
@@ -154,10 +155,10 @@ class ExtensionManagerTest extends TestCase
     public function getExceptionProvider()
     {
         $instances = [
-            $this->getExtension('test1'),
-            $this->getExtension('test2'),
-            $this->getExtension('test3'),
-            $this->getExtension('test4'),
+            new TestExtension('test1'),
+            new TestExtension('test2'),
+            new TestExtension('test3'),
+            new TestExtension('test4'),
         ];
 
         $extensions = [
