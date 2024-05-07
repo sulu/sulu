@@ -62,6 +62,15 @@ return [
 ];
 ```
 
+### New Reserved Templates directory for Global Blocks
+
+With the introduction of the new [Global Blocks](https://docs.sulu.io/en/2.6/book/templates.html#templates-global-blocks) there
+is a new reserved directory `config/templates/blocks`.
+
+If you already did use that directory for `xi:includes` your existing blocks to `config/templates/includes/blocks`.
+Migrating to Global Blocks is not required and can be done step by step if you want to use the new Global Blocks
+feature. Have a look at the Global Blocks [Documentation](https://docs.sulu.io/en/2.6/book/templates.html#templates-global-blocks).
+
 ### Custom Admin Builds npm version changed
 
 Sulu 2.6 now supports [npm 8, 9, and 10](https://nodejs.org/en/download), 
