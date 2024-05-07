@@ -20,8 +20,8 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Api\Media;
-use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
+use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
@@ -306,9 +306,9 @@ class MediaDataProviderTest extends TestCase
         );
 
         $medias = [
-            $this->createMedia(1, 'Test-1')->reveal(),
-            $this->createMedia(2, 'Test-2')->reveal(),
-            $this->createMedia(3, 'Test-3')->reveal(),
+            $this->createMedia(1, 'Test-1'),
+            $this->createMedia(2, 'Test-2'),
+            $this->createMedia(3, 'Test-3'),
         ];
 
         $dataItems = [];
@@ -347,9 +347,9 @@ class MediaDataProviderTest extends TestCase
     public function resourceItemsDataProvider()
     {
         $medias = [
-            $this->createMedia(1, 'Test-1')->reveal(),
-            $this->createMedia(2, 'Test-2')->reveal(),
-            $this->createMedia(3, 'Test-3')->reveal(),
+            $this->createMedia(1, 'Test-1'),
+            $this->createMedia(2, 'Test-2'),
+            $this->createMedia(3, 'Test-3'),
         ];
 
         $user = $this->prophesize(UserInterface::class);
@@ -446,8 +446,6 @@ class MediaDataProviderTest extends TestCase
     {
         $entity = new MediaEntity();
         self::setPrivateProperty($entity, 'id', $id);
-        self::setPrivateProperty($entity, 'title', $title);
-        self::setPrivateProperty($entity, 'tags', $tags);
 
         return new Media($entity, 'de');
     }
