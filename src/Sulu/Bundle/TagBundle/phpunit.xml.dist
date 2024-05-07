@@ -24,6 +24,7 @@
         <server name="APP_ENV" value="test" force="true"/>
         <env name="KERNEL_CLASS" value="Sulu\Bundle\TagBundle\Tests\Application\Kernel"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
+        <ini name="date.timezone" value="UTC"/>
     </php>
 
     <listeners>

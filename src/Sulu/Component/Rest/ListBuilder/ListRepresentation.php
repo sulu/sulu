@@ -34,7 +34,7 @@ class ListRepresentation extends PaginatedRepresentation implements Representati
      * @param string $route The name of the route, for generating the links
      * @param array $parameters The parameters to append to the route
      * @param int $page The number of the current page
-     * @param int $limit The size of one page
+     * @param int|null $limit The size of one page
      * @param int $total The total number of elements
      */
     public function __construct($data, $rel, $route, $parameters, $page, $limit, $total)

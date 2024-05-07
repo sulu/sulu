@@ -16,16 +16,10 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 class ChainFieldMetadataValidator implements FieldMetadataValidatorInterface
 {
     /**
-     * @var iterable<FieldMetadataValidatorInterface>
-     */
-    private $validators;
-
-    /**
      * @param iterable<FieldMetadataValidatorInterface> $validators
      */
-    public function __construct(iterable $validators)
+    public function __construct(private iterable $validators)
     {
-        $this->validators = $validators;
     }
 
     public function validate(FieldMetadata $fieldMetadata, string $formKey): void

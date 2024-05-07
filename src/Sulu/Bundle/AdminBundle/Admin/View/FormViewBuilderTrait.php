@@ -45,6 +45,9 @@ trait FormViewBuilderTrait
         $view->setOption('titleVisible', $titleVisible);
     }
 
+    /**
+     * @param string[] $locales
+     */
     private function addLocalesToView(View $view, array $locales): void
     {
         $oldLocales = $view->getOption('locales');
@@ -56,6 +59,9 @@ trait FormViewBuilderTrait
         }
     }
 
+    /**
+     * @param array<string|int, mixed> $routerAttributesToFormRequest
+     */
     private function addRouterAttributesToFormRequestToView(View $view, array $routerAttributesToFormRequest): void
     {
         $oldRouterAttributesToFormRequest = $view->getOption('routerAttributesToFormRequest');
@@ -66,6 +72,9 @@ trait FormViewBuilderTrait
         $view->setOption('routerAttributesToFormRequest', $newRouterAttributesToFormRequest);
     }
 
+    /**
+     * @param array<string, mixed> $routerAttributesToEditView
+     */
     private function addRouterAttributesToEditViewToView(View $view, array $routerAttributesToEditView): void
     {
         $oldRouterAttributesToEditView = $view->getOption('routerAttributesToEditView');
@@ -76,6 +85,9 @@ trait FormViewBuilderTrait
         $view->setOption('routerAttributesToEditView', $newRouterAttributesToEditView);
     }
 
+    /**
+     * @param array<string, mixed> $routerAttributesToBackView
+     */
     private function addRouterAttributesToBackViewToView(View $view, array $routerAttributesToBackView): void
     {
         $oldRouterAttributesToBackView = $view->getOption('routerAttributesToBackView');
@@ -86,6 +98,9 @@ trait FormViewBuilderTrait
         $view->setOption('routerAttributesToBackView', $newRouterAttributesToBackView);
     }
 
+    /**
+     * @param array<string|int, string> $routerAttributesToFormMetadata
+     */
     private function addRouterAttributesToFormMetadataToView(View $route, array $routerAttributesToFormMetadata): void
     {
         $oldRouterAttributesToFormMetadata = $route->getOption('routerAttributesToFormMetadata');
@@ -96,6 +111,9 @@ trait FormViewBuilderTrait
         $route->setOption('routerAttributesToFormMetadata', $newRouterAttributesToFormMetadata);
     }
 
+    /**
+     * @param array<string, mixed> $metadataRequestParameters
+     */
     private function addMetadataRequestParametersToView(View $route, array $metadataRequestParameters): void
     {
         $oldMetadataRequestParameters = $route->getOption('metadataRequestParameters');
@@ -104,6 +122,9 @@ trait FormViewBuilderTrait
         $route->setOption('metadataRequestParameters', $newMetadataRequestParameters);
     }
 
+    /**
+     * @param array<string, mixed> $requestParameters
+     */
     private function addRequestParametersToView(View $route, array $requestParameters): void
     {
         $oldRequestParameters = $route->getOption('requestParameters');
@@ -112,6 +133,9 @@ trait FormViewBuilderTrait
         $route->setOption('requestParameters', $newRequestParameters);
     }
 
+    /**
+     * @param array<string, mixed> $requestParameters
+     */
     private function setRequestParametersToView(View $view, array $requestParameters): void
     {
         $view->setOption('requestParameters', $requestParameters);

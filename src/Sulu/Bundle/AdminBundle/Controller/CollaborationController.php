@@ -24,36 +24,12 @@ class CollaborationController implements ClassResourceInterface
 {
     private static $resourceKey = 'collaborations';
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var CollaborationRepository
-     */
-    private $collaborationRepository;
-
-    /**
-     * @var ViewHandler
-     */
-    private $viewHandler;
-
-    /**
-     * @var string
-     */
-    private $secret;
-
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        CollaborationRepository $collaborationRepository,
-        ViewHandler $viewHandler,
-        string $secret
+        private TokenStorageInterface $tokenStorage,
+        private CollaborationRepository $collaborationRepository,
+        private ViewHandler $viewHandler,
+        private string $secret
     ) {
-        $this->tokenStorage = $tokenStorage;
-        $this->collaborationRepository = $collaborationRepository;
-        $this->viewHandler = $viewHandler;
-        $this->secret = $secret;
     }
 
     public function cputAction(Request $request)

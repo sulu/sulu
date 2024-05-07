@@ -18,12 +18,17 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Entry-point of tag-bundle.
+ *
+ * @final
  */
 class SuluTagBundle extends Bundle
 {
     use PersistenceBundleTrait;
 
-    public function build(ContainerBuilder $container)
+    /**
+     * @internal
+     */
+    public function build(ContainerBuilder $container): void
     {
         $this->buildPersistence(
             [

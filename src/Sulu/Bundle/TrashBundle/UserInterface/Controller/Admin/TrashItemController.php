@@ -269,12 +269,10 @@ class TrashItemController extends AbstractRestController implements ClassResourc
         $action = $this->getRequestParameter($request, 'action', true);
 
         try {
-            switch ($action) {
-                case 'restore':
-                    return $this->restoreTrashItem($id, $request->request->all());
-                default:
-                    throw new RestException(\sprintf('Unrecognized action: "%s"', $action));
-            }
+            return match ($action) {
+                'restore' => $this->restoreTrashItem($id, $request->request->all()),
+                default => throw new RestException(\sprintf('Unrecognized action: "%s"', $action)),
+            };
         } catch (RestException $ex) {
             $view = $this->view($ex->toArray(), 400);
 

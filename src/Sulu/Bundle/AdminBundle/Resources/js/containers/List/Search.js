@@ -76,18 +76,20 @@ class Search extends React.Component<Props> {
 
     render() {
         return (
-            <Input
-                collapsed={this.collapsed}
-                icon="su-search"
-                onBlur={this.handleBlur}
-                onChange={this.handleChange}
-                onClearClick={this.handleClearClick}
-                onIconClick={this.handleIconClick}
-                onKeyPress={this.handleKeyPress}
-                placeholder={translate('sulu_admin.list_search_placeholder')}
-                skin="dark"
-                value={this.value}
-            />
+            <label aria-label={translate('sulu_admin.list_search_placeholder')}>
+                <Input
+                    collapsed={this.collapsed}
+                    icon="su-search"
+                    onBlur={this.handleBlur}
+                    onChange={this.handleChange}
+                    onClearClick={this.handleClearClick}
+                    onIconClick={this.handleIconClick}
+                    onKeyPress={this.handleKeyPress}
+                    placeholder={translate('sulu_admin.list_search_placeholder')}
+                    skin="dark"
+                    value={this.value}
+                />
+            </label>
         );
     }
 }

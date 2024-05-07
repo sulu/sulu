@@ -97,7 +97,7 @@ class NodeOrderBuilderTest extends TestCase
     {
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
-        $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection([$webspace]));
+        $this->webspaceManager->getWebspaceCollection()->willReturn(new WebspaceCollection(['sulu_io' => $webspace]));
 
         $this->sessionManager->getContentPath('sulu_io')->willReturn('/cmf/sulu_io/contents');
 

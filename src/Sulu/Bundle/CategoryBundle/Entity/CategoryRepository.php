@@ -15,10 +15,14 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
+/**
+ * @extends NestedTreeRepository<CategoryInterface>
+ */
 class CategoryRepository extends NestedTreeRepository implements CategoryRepositoryInterface
 {
     public function createNew()
     {
+        /** @var class-string<CategoryInterface> */
         $className = $this->getClassName();
 
         return new $className();
@@ -227,6 +231,7 @@ class CategoryRepository extends NestedTreeRepository implements CategoryReposit
         $query = $queryBuilder->getQuery();
         $query->setParameter('key', $key);
 
+        /** @var CategoryInterface[] */
         return $query->getResult();
     }
 

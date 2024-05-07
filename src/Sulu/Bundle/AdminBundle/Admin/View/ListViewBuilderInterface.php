@@ -99,7 +99,7 @@ interface ListViewBuilderInterface extends ViewBuilderInterface
     public function addRouterAttributesToListMetadata(array $routerAttributesToListMetadata): self;
 
     /**
-     * @param array<integer|string, mixed> $metadataRequestParameters
+     * @param array<int|string, mixed> $metadataRequestParameters
      */
     public function addMetadataRequestParameters(array $metadataRequestParameters): self;
 

@@ -20,22 +20,10 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class ActivityViewBuilderFactory implements ActivityViewBuilderFactoryInterface
 {
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
     public function __construct(
-        ViewBuilderFactoryInterface $viewBuilderFactory,
-        SecurityCheckerInterface $securityChecker
+        private ViewBuilderFactoryInterface $viewBuilderFactory,
+        private SecurityCheckerInterface $securityChecker
     ) {
-        $this->viewBuilderFactory = $viewBuilderFactory;
-        $this->securityChecker = $securityChecker;
     }
 
     public function createActivityListViewBuilder(

@@ -19,24 +19,11 @@ use Sulu\Bundle\CategoryBundle\Entity\KeywordInterface;
 
 class CategoryKeywordModifiedEvent extends DomainEvent
 {
-    /**
-     * @var CategoryInterface
-     */
-    private $category;
-
-    /**
-     * @var KeywordInterface
-     */
-    private $keyword;
-
     public function __construct(
-        CategoryInterface $category,
-        KeywordInterface $keyword
+        private CategoryInterface $category,
+        private KeywordInterface $keyword
     ) {
         parent::__construct();
-
-        $this->category = $category;
-        $this->keyword = $keyword;
     }
 
     public function getCategory(): CategoryInterface

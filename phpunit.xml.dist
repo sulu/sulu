@@ -26,9 +26,9 @@
     </testsuites>
 
     <php>
-        <env name="SYMFONY_PHPUNIT_VERSION" value="8.0"/>
         <server name="APP_ENV" value="test" force="true"/>
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
+        <ini name="date.timezone" value="UTC"/>
     </php>
 
     <listeners>

@@ -13,21 +13,8 @@ namespace Sulu\Bundle\AdminBundle\Exception;
 
 class MetadataNotFoundException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * @var string
-     */
-    private $key;
-
-    public function __construct(string $type, string $key)
+    public function __construct(private string $type, private string $key)
     {
-        $this->type = $type;
-        $this->key = $key;
-
         parent::__construct(
             \sprintf('There is no Metadata available for the type "%s" with the key "%s".', $this->type, $this->key)
         );

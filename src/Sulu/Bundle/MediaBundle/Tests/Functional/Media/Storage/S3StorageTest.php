@@ -19,14 +19,15 @@ use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 
 class S3StorageTest extends SuluTestCase
 {
-    /**
-     * @var string
-     */
-    protected static $class = S3Kernel::class;
-
-    protected static function getKernelClass(): string
+    protected function setUp(): void
     {
-        return S3Kernel::class;
+        static::$class = S3Kernel::class;
+    }
+
+    protected function tearDown(): void
+    {
+        static::$class = null;
+        parent::tearDown();
     }
 
     public function testSave(): void

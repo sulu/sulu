@@ -385,7 +385,7 @@ class ResettingController
      *
      * @param string $token
      *
-     * @return \Symfony\Component\Security\Core\User\UserInterface
+     * @return UserInterface
      *
      * @throws InvalidTokenException
      */
@@ -508,7 +508,7 @@ class ResettingController
      */
     private function generateTokenHash(string $token): string
     {
-        return \hash('sha1', $this->secret . $token);
+        return \hash('sha1', $this->secret . '%' . $token);
     }
 
     /**

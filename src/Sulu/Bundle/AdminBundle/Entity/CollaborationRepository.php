@@ -15,20 +15,10 @@ use Psr\Cache\CacheItemPoolInterface;
 
 class CollaborationRepository
 {
-    /**
-     * @var CacheItemPoolInterface
-     */
-    private $cache;
-
-    /**
-     * @var int
-     */
-    private $threshold;
-
-    public function __construct(CacheItemPoolInterface $cache, int $threshold)
-    {
-        $this->cache = $cache;
-        $this->threshold = $threshold;
+    public function __construct(
+        private CacheItemPoolInterface $cache,
+        private int $threshold,
+    ) {
     }
 
     public function find(string $resourceKey, string $id, string $connectionId): ?Collaboration
@@ -53,6 +43,7 @@ class CollaborationRepository
 
         $cacheItem = $this->cache->getItem($this->getCacheIdFromCollaboration($collaboration));
         $value = $cacheItem->get() ?? [];
+        \assert(\is_array($value), 'Value from collaboration cache should be an array.');
         $value[$collaboration->getConnectionId()] = $collaboration;
 
         $value = \array_filter($value, function(Collaboration $collaboration) {
@@ -72,7 +63,9 @@ class CollaborationRepository
     public function delete(Collaboration $collaboration): array
     {
         $cacheItem = $this->cache->getItem($this->getCacheIdFromCollaboration($collaboration));
-        $value = \array_filter($cacheItem->get() ?? [], function(Collaboration $cachedCollaboration) use ($collaboration) {
+        $value = $cacheItem->get() ?? [];
+        \assert(\is_array($value), 'Value from collaboration cache should be an array.');
+        $value = \array_filter($value, function(Collaboration $cachedCollaboration) use ($collaboration) {
             return $collaboration->getConnectionId() !== $cachedCollaboration->getConnectionId();
         });
         $cacheItem->set($value);

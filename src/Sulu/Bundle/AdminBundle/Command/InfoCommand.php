@@ -20,15 +20,9 @@ class InfoCommand extends Command
 {
     protected static $defaultName = 'sulu:admin:info';
 
-    /**
-     * @var string string
-     */
-    private $suluVersion;
-
-    public function __construct(string $suluVersion)
+    public function __construct(private string $suluVersion)
     {
         parent::__construct();
-        $this->suluVersion = $suluVersion;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -81,6 +75,7 @@ class InfoCommand extends Command
  - Sulu Slack Channel: <href=https://sulu.io/services-and-support#chat>https://sulu.io/services-and-support#chat</>
  - Symfony Slack Channel: <href=https://symfony.com/community>https://symfony.com/community</>
  - Doctrine Slack Channel: <href=https://www.doctrine-project.org/community/index.html>https://www.doctrine-project.org/community/index.html</>
+ - FriendsOfSulu: <href=https://github.com/FriendsOfSulu>https://github.com/FriendsOfSulu</>
 
 ---
 
