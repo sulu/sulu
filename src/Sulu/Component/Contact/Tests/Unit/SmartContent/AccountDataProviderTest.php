@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Contact\Tests\Unit\SmartContent;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\SerializationContext;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -242,15 +241,16 @@ class AccountDataProviderTest extends TestCase
     {
         $entity = new AccountEntity();
         self::setPrivateProperty($entity, 'id', $id);
-        self::setPrivateProperty($entity, 'number', $id);
-        self::setPrivateProperty($entity, 'name', $name);
-        self::setPrivateProperty($entity, 'tags', new ArrayCollection($tags));
-        self::setPrivateProperty($entity, 'placeOfJurisdiction', '');
-        self::setPrivateProperty($entity, 'uid', '');
-        self::setPrivateProperty($entity, 'corporation', '');
-        self::setPrivateProperty($entity, 'created', new \DateTime());
-        self::setPrivateProperty($entity, 'changed', new \DateTime());
-        self::setPrivateProperty($entity, 'medias', new ArrayCollection([]));
+        $entity->setNumber($id);
+        $entity->setName($name);
+        foreach ($tags as $tag) {
+            $entity->addTag($tag);
+        }
+        $entity->setPlaceOfJurisdiction('');
+        $entity->setUid('');
+        $entity->setCorporation('');
+        $entity->setCreated(new \DateTime());
+        $entity->setChanged(new \DateTime());
 
         return new Account($entity, 'de');
     }

@@ -11,7 +11,6 @@
 
 namespace Sulu\Component\Media\Tests\Unit\SmartContent;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use JMS\Serializer\SerializationContext;
@@ -448,10 +447,12 @@ class MediaDataProviderTest extends TestCase
     private function createMedia($id, $title, $tags = []): Media
     {
         $fileVersionMeta = new FileVersionMeta();
-        self::setPrivateProperty($fileVersionMeta, 'title', $title);
+        $fileVersionMeta->setTitle($title);
 
         $fileVersion = new FileVersion();
-        self::setPrivateProperty($fileVersion, 'tags', new ArrayCollection($tags));
+        foreach ($tags as $tag) {
+            $fileVersion->addTag($tag);
+        }
 
         $entity = new MediaEntity();
         self::setPrivateProperty($entity, 'id', $id);

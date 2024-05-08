@@ -243,17 +243,19 @@ class ContactDataProviderTest extends TestCase
     {
         $contact = new ContactEntity();
         self::setPrivateProperty($contact, 'id', $id);
-        self::setPrivateProperty($contact, 'firstName', $firstName);
-        self::setPrivateProperty($contact, 'lastName', $lastName);
-        self::setPrivateProperty($contact, 'tags', $tags);
-        self::setPrivateProperty($contact, 'formOfAddress', '');
-        self::setPrivateProperty($contact, 'title', '');
-        self::setPrivateProperty($contact, 'salutation', '');
-        self::setPrivateProperty($contact, 'middleName', '');
-        self::setPrivateProperty($contact, 'birthday', new \DateTime());
-        self::setPrivateProperty($contact, 'created', new \DateTime());
-        self::setPrivateProperty($contact, 'changed', new \DateTime());
-        self::setPrivateProperty($contact, 'medias', []);
+        $contact->setFirstName($firstName);
+        $contact->setLastName($lastName);
+        foreach ($tags as $tag) {
+            $contact->addTag($tags);
+        }
+
+        $contact->setFormOfAddress(2);
+        $contact->setTitle(null);
+        $contact->setSalutation('');
+        $contact->setMiddleName('');
+        $contact->setBirthday(new \DateTime());
+        $contact->setCreated(new \DateTime());
+        $contact->setChanged(new \DateTime());
 
         return new Contact($contact, 'de');
     }
