@@ -19,7 +19,7 @@ use Sulu\Component\Webspace\Url\Replacer;
 
 class GeneratorTest extends TestCase
 {
-    public function provideGenerateData()
+    public static function provideGenerateData()
     {
         $locales = [new Localization('de', 'at'), new Localization('en')];
 

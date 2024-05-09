@@ -18,7 +18,7 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class SortUtilsTest extends TestCase
 {
-    public function provideSortObjects()
+    public static function provideSortObjects()
     {
         return [
             // ascending

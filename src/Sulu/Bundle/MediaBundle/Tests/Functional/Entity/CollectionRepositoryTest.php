@@ -146,7 +146,7 @@ class CollectionRepositoryTest extends SuluTestCase
         }
     }
 
-    public function provideTreeData()
+    public static function provideTreeData()
     {
         return [
             [0, [0, 1, 12, 15, 20]],

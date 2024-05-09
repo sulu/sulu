@@ -72,7 +72,7 @@ class ContentOnPageTest extends BaseFunctionalTestCase
         $this->documentManager->flush();
     }
 
-    public function provideSaveSnippetPage()
+    public static function provideSaveSnippetPage()
     {
         return [
             [

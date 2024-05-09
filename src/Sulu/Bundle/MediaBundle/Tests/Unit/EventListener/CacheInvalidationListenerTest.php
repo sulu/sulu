@@ -47,7 +47,7 @@ class CacheInvalidationListenerTest extends TestCase
         $this->listener = new CacheInvalidationListener($this->cacheManager->reveal());
     }
 
-    public function provideFunctionName()
+    public static function provideFunctionName()
     {
         return [
             ['postPersist'],

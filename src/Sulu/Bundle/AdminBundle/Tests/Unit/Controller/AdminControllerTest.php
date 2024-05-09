@@ -342,7 +342,7 @@ class AdminControllerTest extends TestCase
         $this->adminController->metadataAction('form', 'pages', $request);
     }
 
-    public function provideTranslationsAction()
+    public static function provideTranslationsAction()
     {
         return [
             [

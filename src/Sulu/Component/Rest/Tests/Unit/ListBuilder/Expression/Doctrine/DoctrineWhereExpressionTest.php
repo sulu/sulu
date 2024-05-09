@@ -64,7 +64,7 @@ class DoctrineWhereExpressionTest extends TestCase
         $this->assertEquals(1, $result);
     }
 
-    public function nullProvider()
+    public static function nullProvider()
     {
         return [
             [ListBuilderInterface::WHERE_COMPARATOR_EQUAL, 'IS NULL'],
@@ -103,7 +103,7 @@ class DoctrineWhereExpressionTest extends TestCase
         $this->assertEquals(1, $result);
     }
 
-    public function andOrProvider()
+    public static function andOrProvider()
     {
         return [
             ['and'],

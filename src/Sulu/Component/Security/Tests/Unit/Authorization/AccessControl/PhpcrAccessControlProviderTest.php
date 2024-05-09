@@ -152,7 +152,7 @@ class PhpcrAccessControlProviderTest extends TestCase
         $this->assertEquals($this->phpcrAccessControlProvider->supports($type), $supported);
     }
 
-    public function provideSupport()
+    public static function provideSupport()
     {
         return [
             [BasePageDocument::class, true],

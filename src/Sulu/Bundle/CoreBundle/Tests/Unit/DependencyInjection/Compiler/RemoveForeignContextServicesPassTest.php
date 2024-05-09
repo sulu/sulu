@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Definition;
 
 class RemoveForeignContextServicesPassTest extends AbstractCompilerPassTestCase
 {
-    public function provideWebsiteServices()
+    public static function provideWebsiteServices()
     {
         return [
             [

@@ -46,7 +46,7 @@ class BlockPropertyTest extends TestCase
         $blockProperty->setValue($data);
     }
 
-    public function provideIsMultiple()
+    public static function provideIsMultiple()
     {
         return [
             [null, null, true],
@@ -81,7 +81,7 @@ class BlockPropertyTest extends TestCase
         $blockProperty->doSetValue($value);
     }
 
-    public function provideSetInvalidValue(): array
+    public static function provideSetInvalidValue(): array
     {
         return [
             'invalid int' => [10, 'Expected block configuration but got "int" at property: "block"'],

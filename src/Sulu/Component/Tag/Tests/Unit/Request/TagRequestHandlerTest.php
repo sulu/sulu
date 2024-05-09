@@ -22,7 +22,7 @@ class TagRequestHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function getProvider()
+    public static function getProvider()
     {
         return [
             ['t', '', []],
@@ -53,7 +53,7 @@ class TagRequestHandlerTest extends TestCase
         $this->assertEquals($expected, $tags);
     }
 
-    public function appendProvider()
+    public static function appendProvider()
     {
         return [
             ['t', '/test', 'Sulu,Core', 'Sulu,Core,Test'],
@@ -87,7 +87,7 @@ class TagRequestHandlerTest extends TestCase
         $this->assertEquals($url . '?' . $tagsParameter . '=' . \urlencode($expected), $result);
     }
 
-    public function setProvider()
+    public static function setProvider()
     {
         return [
             ['t', '/test', 'Sulu,Core', 'Test'],
@@ -121,7 +121,7 @@ class TagRequestHandlerTest extends TestCase
         $this->assertEquals($url . '?' . $tagsParameter . '=' . \urlencode($expected), $result);
     }
 
-    public function removeProvider()
+    public static function removeProvider()
     {
         return [
             ['t', '/test', 'Sulu,Core'],

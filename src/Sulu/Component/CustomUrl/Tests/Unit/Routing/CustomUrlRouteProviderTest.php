@@ -28,7 +28,7 @@ class CustomUrlRouteProviderTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function dataProvider()
+    public static function dataProvider()
     {
         return [
             ['sulu.io', '/test', null, 'sulu.io/test', false],

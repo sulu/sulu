@@ -87,7 +87,7 @@ class ActivityControllerTest extends SuluTestCase
     /**
      * @return \Generator<mixed[]>
      */
-    public function provideCgetAction(): \Generator
+    public static function provideCgetAction(): \Generator
     {
         yield [
             [],

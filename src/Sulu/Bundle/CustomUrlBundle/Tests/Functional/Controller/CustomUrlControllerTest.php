@@ -57,7 +57,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->contentDocument = $this->documentManager->find('/cmf/sulu_io/contents', 'en');
     }
 
-    public function postProvider()
+    public static function postProvider()
     {
         return [
             [
@@ -168,7 +168,7 @@ class CustomUrlControllerTest extends SuluTestCase
         return $responseData['id'];
     }
 
-    public function postMultipleProvider()
+    public static function postMultipleProvider()
     {
         return [
             [
@@ -271,7 +271,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->testPost($data, $url, $statusCode, $restErrorCode);
     }
 
-    public function putProvider()
+    public static function putProvider()
     {
         return [
             [
@@ -558,7 +558,7 @@ class CustomUrlControllerTest extends SuluTestCase
         return $responseData['id'];
     }
 
-    public function getProvider()
+    public static function getProvider()
     {
         return [
             [
@@ -620,7 +620,7 @@ class CustomUrlControllerTest extends SuluTestCase
         $this->assertEquals('sulu_io', $responseData['webspace']);
     }
 
-    public function cgetProvider()
+    public static function cgetProvider()
     {
         return [
             [

@@ -22,7 +22,7 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 
 class NominatimGeolocatorTest extends TestCase
 {
-    public function provideLocate()
+    public static function provideLocate()
     {
         return [
             [

@@ -16,7 +16,7 @@ use Sulu\Component\Util\TextUtils;
 
 class TextUtilsTest extends TestCase
 {
-    public function provideTruncate()
+    public static function provideTruncate()
     {
         return [
             ['Hello', 10, null, 'Hello'],

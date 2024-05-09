@@ -113,7 +113,7 @@ class PreviewRendererTest extends TestCase
         );
     }
 
-    public function portalDataProvider()
+    public static function portalDataProvider()
     {
         return [
             [

@@ -61,7 +61,7 @@ class ReferrerRuleTest extends TestCase
         $this->assertEquals($result, $referrerRule->evaluate($options));
     }
 
-    public function provideEvaluationData()
+    public static function provideEvaluationData()
     {
         return [
             [null, 'https://www.google.com/test', ['referrer' => 'https://www.google.com/*'], true],

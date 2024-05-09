@@ -99,7 +99,7 @@ class CollaborationRepositoryTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function provideUpdate()
+    public static function provideUpdate()
     {
         return [
             [

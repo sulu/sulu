@@ -54,7 +54,7 @@ class PortalInformationTest extends TestCase
     /**
      * @return array<array{string, string, ?string}>
      */
-    public function provideUrl()
+    public static function provideUrl()
     {
         return [
             ['sulu.lo', 'sulu.lo', null],

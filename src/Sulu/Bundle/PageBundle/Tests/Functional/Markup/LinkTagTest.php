@@ -122,7 +122,7 @@ class LinkTagTest extends TestCase
         $this->linkTag = new LinkTag($this->linkProviderPool);
     }
 
-    public function provideParseDataDefaultProvider()
+    public static function provideParseDataDefaultProvider()
     {
         return [
             [

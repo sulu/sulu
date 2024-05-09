@@ -18,7 +18,7 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\StringMetadata;
 
 class PropertyMetadataTest extends TestCase
 {
-    public function provideGetter()
+    public static function provideGetter()
     {
         return [
             ['title', true],
@@ -36,7 +36,7 @@ class PropertyMetadataTest extends TestCase
         $this->assertEquals($mandatory, $property->isMandatory());
     }
 
-    public function provideToJsonSchema()
+    public static function provideToJsonSchema()
     {
         return [
             ['title', false, null, null],

@@ -164,7 +164,7 @@ class ContentMapperSnippetTest extends SuluTestCase
         }
     }
 
-    public function provideRemoveSnippetWithReferencesDereference()
+    public static function provideRemoveSnippetWithReferencesDereference()
     {
         return [
             [true],

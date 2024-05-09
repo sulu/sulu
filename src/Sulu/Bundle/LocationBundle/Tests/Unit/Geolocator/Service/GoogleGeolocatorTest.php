@@ -24,7 +24,7 @@ use Symfony\Component\HttpClient\Response\MockResponse;
 
 class GoogleGeolocatorTest extends TestCase
 {
-    public function provideLocate()
+    public static function provideLocate()
     {
         return [
             [
