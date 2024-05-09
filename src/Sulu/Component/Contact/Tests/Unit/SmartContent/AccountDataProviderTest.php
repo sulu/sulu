@@ -17,6 +17,8 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Api\Account;
+use Sulu\Bundle\ContactBundle\Entity\Account as AccountEntity;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Contact\SmartContent\AccountDataItem;
 use Sulu\Component\Contact\SmartContent\AccountDataProvider;
@@ -29,6 +31,7 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 class AccountDataProviderTest extends TestCase
 {
     use ProphecyTrait;
+    use SetGetPrivatePropertyTrait;
 
     /**
      * @var ObjectProphecy<DataProviderRepositoryInterface>
@@ -80,9 +83,9 @@ class AccountDataProviderTest extends TestCase
     public function dataItemsDataProvider()
     {
         $accounts = [
-            $this->createAccount(1, 'Massive Art')->reveal(),
-            $this->createAccount(2, 'Sulu')->reveal(),
-            $this->createAccount(3, 'Apple')->reveal(),
+            $this->createAccount(1, 'Massive Art'),
+            $this->createAccount(2, 'Sulu'),
+            $this->createAccount(3, 'Apple'),
         ];
 
         $dataItems = [];
@@ -132,9 +135,9 @@ class AccountDataProviderTest extends TestCase
     public function resourceItemsDataProvider()
     {
         $accounts = [
-            $this->createAccount(1, 'Massive Art')->reveal(),
-            $this->createAccount(2, 'Sulu')->reveal(),
-            $this->createAccount(3, 'Apple')->reveal(),
+            $this->createAccount(1, 'Massive Art'),
+            $this->createAccount(2, 'Sulu'),
+            $this->createAccount(3, 'Apple'),
         ];
 
         $dataItems = [];
@@ -234,21 +237,22 @@ class AccountDataProviderTest extends TestCase
         return $mock->reveal();
     }
 
-    private function createAccount($id, $name, $tags = [])
+    private function createAccount($id, $name, $tags = []): Account
     {
-        $account = $this->prophesize(Account::class);
-        $account->getId()->willReturn($id);
-        $account->getNumber()->willReturn($id);
-        $account->getName()->willReturn($name);
-        $account->getTags()->willReturn($tags);
-        $account->getPlaceOfJurisdiction()->willReturn('');
-        $account->getUid()->willReturn('');
-        $account->getCorporation()->willReturn('');
-        $account->getCreated()->willReturn(new \DateTime());
-        $account->getChanged()->willReturn(new \DateTime());
-        $account->getMedias()->willReturn([]);
+        $entity = new AccountEntity();
+        self::setPrivateProperty($entity, 'id', $id);
+        $entity->setNumber($id);
+        $entity->setName($name);
+        foreach ($tags as $tag) {
+            $entity->addTag($tag);
+        }
+        $entity->setPlaceOfJurisdiction('');
+        $entity->setUid('');
+        $entity->setCorporation('');
+        $entity->setCreated(new \DateTime());
+        $entity->setChanged(new \DateTime());
 
-        return $account;
+        return new Account($entity, 'de');
     }
 
     private function createDataItem(Account $account)

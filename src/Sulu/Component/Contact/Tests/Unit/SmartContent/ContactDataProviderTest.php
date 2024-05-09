@@ -17,6 +17,8 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ContactBundle\Api\Contact;
+use Sulu\Bundle\ContactBundle\Entity\Contact as ContactEntity;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Contact\SmartContent\ContactDataItem;
 use Sulu\Component\Contact\SmartContent\ContactDataProvider;
@@ -29,6 +31,7 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 class ContactDataProviderTest extends TestCase
 {
     use ProphecyTrait;
+    use SetGetPrivatePropertyTrait;
 
     /**
      * @var ObjectProphecy<DataProviderRepositoryInterface>
@@ -80,9 +83,9 @@ class ContactDataProviderTest extends TestCase
     public function dataItemsDataProvider()
     {
         $contacts = [
-            $this->createContact(1, 'Max', 'Mustermann')->reveal(),
-            $this->createContact(2, 'Erika', 'Mustermann')->reveal(),
-            $this->createContact(3, 'Leon', 'Mustermann')->reveal(),
+            $this->createContact(1, 'Max', 'Mustermann'),
+            $this->createContact(2, 'Erika', 'Mustermann'),
+            $this->createContact(3, 'Leon', 'Mustermann'),
         ];
 
         $dataItems = [];
@@ -132,9 +135,9 @@ class ContactDataProviderTest extends TestCase
     public function testNullSortBy(): void
     {
         $contacts = [
-            $this->createContact(1, 'Max', 'Mustermann')->reveal(),
-            $this->createContact(2, 'Erika', 'Mustermann')->reveal(),
-            $this->createContact(3, 'Leon', 'Mustermann')->reveal(),
+            $this->createContact(1, 'Max', 'Mustermann'),
+            $this->createContact(2, 'Erika', 'Mustermann'),
+            $this->createContact(3, 'Leon', 'Mustermann'),
         ];
 
         $dataItems = [];
@@ -160,9 +163,9 @@ class ContactDataProviderTest extends TestCase
     public function resourceItemsDataProvider()
     {
         $contacts = [
-            $this->createContact(1, 'Max', 'Mustermann')->reveal(),
-            $this->createContact(2, 'Erika', 'Mustermann')->reveal(),
-            $this->createContact(3, 'Leon', 'Mustermann')->reveal(),
+            $this->createContact(1, 'Max', 'Mustermann'),
+            $this->createContact(2, 'Erika', 'Mustermann'),
+            $this->createContact(3, 'Leon', 'Mustermann'),
         ];
 
         $dataItems = [];
@@ -238,22 +241,23 @@ class ContactDataProviderTest extends TestCase
 
     private function createContact($id, $firstName, $lastName, $tags = [])
     {
-        $contact = $this->prophesize(Contact::class);
-        $contact->getId()->willReturn($id);
-        $contact->getFirstName()->willReturn($firstName);
-        $contact->getLastName()->willReturn($lastName);
-        $contact->getFullName()->willReturn($firstName . ' ' . $lastName);
-        $contact->getTags()->willReturn($tags);
-        $contact->getFormOfAddress()->willReturn('');
-        $contact->getTitle()->willReturn('');
-        $contact->getSalutation()->willReturn('');
-        $contact->getMiddleName()->willReturn('');
-        $contact->getBirthday()->willReturn(new \DateTime());
-        $contact->getCreated()->willReturn(new \DateTime());
-        $contact->getChanged()->willReturn(new \DateTime());
-        $contact->getMedias()->willReturn([]);
+        $contact = new ContactEntity();
+        self::setPrivateProperty($contact, 'id', $id);
+        $contact->setFirstName($firstName);
+        $contact->setLastName($lastName);
+        foreach ($tags as $tag) {
+            $contact->addTag($tags);
+        }
 
-        return $contact;
+        $contact->setFormOfAddress(2);
+        $contact->setTitle(null);
+        $contact->setSalutation('');
+        $contact->setMiddleName('');
+        $contact->setBirthday(new \DateTime());
+        $contact->setCreated(new \DateTime());
+        $contact->setChanged(new \DateTime());
+
+        return new Contact($contact, 'de');
     }
 
     private function createDataItem(Contact $contact)
