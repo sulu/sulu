@@ -123,20 +123,22 @@ class InvalidationSubscriberTest extends TestCase
     public function provideRequest()
     {
         return [
-            [null, 'http'],
-            [$this->prophesize(Request::class), 'http'],
-            [$this->prophesize(Request::class), 'https'],
+            [false, 'http'],
+            [true, 'http'],
+            [true, 'https'],
         ];
     }
 
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforePublishing($request, $scheme): void
+    public function testInvalidateDocumentBeforePublishing(bool $hasRequest, $scheme): void
     {
         $documentUuid = '743389e6-2ac5-4673-9835-3e709a27a03d';
 
-        if ($request) {
+        $request = null;
+        if ($hasRequest) {
+            $request = $this->prophesize(Request::class);
             $request->getScheme()->willReturn($scheme);
             $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
         }
@@ -287,12 +289,15 @@ class InvalidationSubscriberTest extends TestCase
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforeUnpublishing($request, $scheme): void
+    public function testInvalidateDocumentBeforeUnpublishing(bool $hasRequest, $scheme): void
     {
         $documentUuid = '743c89e6-2ac5-7777-9835-3e709a27a03d';
 
-        if ($request) {
+        $request = null;
+        if ($hasRequest) {
+            $request = $this->prophesize(Request::class);
             $request->getScheme()->willReturn($scheme);
+
             $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
         }
 
@@ -400,11 +405,13 @@ class InvalidationSubscriberTest extends TestCase
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforeRemoving($request, $scheme): void
+    public function testInvalidateDocumentBeforeRemoving(bool $hasRequest, $scheme): void
     {
         $documentUuid = '743c89e6-2ac5-7777-1234-3e709a27a0bb';
 
-        if ($request) {
+        $request = null;
+        if ($hasRequest) {
+            $request = $this->prophesize(Request::class);
             $request->getScheme()->willReturn($scheme);
             $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
         }
@@ -493,11 +500,13 @@ class InvalidationSubscriberTest extends TestCase
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforeRemovingLocale($request, $scheme): void
+    public function testInvalidateDocumentBeforeRemovingLocale(bool $hasRequest, $scheme): void
     {
         $documentUuid = '743c89e6-2ac5-7777-1234-3e709a27a0bb';
 
-        if ($request) {
+        $request = null;
+        if ($hasRequest) {
+            $request = $this->prophesize(Request::class);
             $request->getScheme()->willReturn($scheme);
             $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
         }

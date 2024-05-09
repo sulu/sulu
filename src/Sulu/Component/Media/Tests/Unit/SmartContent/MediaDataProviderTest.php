@@ -21,7 +21,11 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MediaBundle\Api\Collection;
 use Sulu\Bundle\MediaBundle\Api\Media;
 use Sulu\Bundle\MediaBundle\Collection\Manager\CollectionManagerInterface;
+use Sulu\Bundle\MediaBundle\Entity\FileVersion;
+use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
+use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Media\SmartContent\MediaDataItem;
@@ -44,6 +48,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class MediaDataProviderTest extends TestCase
 {
     use ProphecyTrait;
+    use SetGetPrivatePropertyTrait;
 
     /**
      * @var ObjectProphecy<DataProviderRepositoryInterface>
@@ -239,9 +244,9 @@ class MediaDataProviderTest extends TestCase
     public function dataItemsDataProvider()
     {
         $medias = [
-            $this->createMedia(1, 'Test-1')->reveal(),
-            $this->createMedia(2, 'Test-2')->reveal(),
-            $this->createMedia(3, 'Test-3')->reveal(),
+            $this->createMedia(1, 'Test-1'),
+            $this->createMedia(2, 'Test-2'),
+            $this->createMedia(3, 'Test-3'),
         ];
 
         $dataItems = [];
@@ -304,9 +309,9 @@ class MediaDataProviderTest extends TestCase
         );
 
         $medias = [
-            $this->createMedia(1, 'Test-1')->reveal(),
-            $this->createMedia(2, 'Test-2')->reveal(),
-            $this->createMedia(3, 'Test-3')->reveal(),
+            $this->createMedia(1, 'Test-1'),
+            $this->createMedia(2, 'Test-2'),
+            $this->createMedia(3, 'Test-3'),
         ];
 
         $dataItems = [];
@@ -345,9 +350,9 @@ class MediaDataProviderTest extends TestCase
     public function resourceItemsDataProvider()
     {
         $medias = [
-            $this->createMedia(1, 'Test-1')->reveal(),
-            $this->createMedia(2, 'Test-2')->reveal(),
-            $this->createMedia(3, 'Test-3')->reveal(),
+            $this->createMedia(1, 'Test-1'),
+            $this->createMedia(2, 'Test-2'),
+            $this->createMedia(3, 'Test-3'),
         ];
 
         $user = $this->prophesize(UserInterface::class);
@@ -440,12 +445,22 @@ class MediaDataProviderTest extends TestCase
         $this->assertEquals('test', $result->getTitle());
     }
 
-    private function createMedia($id, $title, $tags = [])
+    private function createMedia($id, $title, $tags = []): Media
     {
-        $media = $this->prophesize(Media::class);
-        $media->getId()->willReturn($id);
-        $media->getTitle()->willReturn($title);
-        $media->getTags()->willReturn($tags);
+        $fileVersionMeta = new FileVersionMeta();
+        $fileVersionMeta->setTitle($title);
+
+        $fileVersion = new FileVersion();
+        foreach ($tags as $tag) {
+            $fileVersion->addTag($tag);
+        }
+
+        $entity = new MediaEntity();
+        self::setPrivateProperty($entity, 'id', $id);
+
+        $media = new Media($entity, 'de');
+        self::setPrivateProperty($media, 'localizedMeta', $fileVersionMeta);
+        self::setPrivateProperty($media, 'fileVersion', $fileVersion);
 
         return $media;
     }

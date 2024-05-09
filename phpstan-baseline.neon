@@ -12286,17 +12286,7 @@ parameters:
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventSubscriber\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforePublishing\\(\\) has parameter \\$request with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventSubscriber\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforePublishing\\(\\) has parameter \\$scheme with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventSubscriber\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeRemoving\\(\\) has parameter \\$request with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
 
@@ -12306,17 +12296,7 @@ parameters:
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventSubscriber\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeRemovingLocale\\(\\) has parameter \\$request with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventSubscriber\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeRemovingLocale\\(\\) has parameter \\$scheme with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\Tests\\\\Unit\\\\EventSubscriber\\\\InvalidationSubscriberTest\\:\\:testInvalidateDocumentBeforeUnpublishing\\(\\) has parameter \\$request with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/Tests/Unit/EventSubscriber/InvalidationSubscriberTest.php
 
@@ -34871,11 +34851,6 @@ parameters:
 			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/AccountDataProviderTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Contact\\\\Tests\\\\Unit\\\\SmartContent\\\\AccountDataProviderTest\\:\\:createAccount\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/AccountDataProviderTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Contact\\\\Tests\\\\Unit\\\\SmartContent\\\\AccountDataProviderTest\\:\\:createAccount\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Contact/Tests/Unit/SmartContent/AccountDataProviderTest.php
@@ -41816,16 +41791,6 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:getExtension\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:getExtension\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:getProvider\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
@@ -46507,11 +46472,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Media\\\\Tests\\\\Unit\\\\SmartContent\\\\MediaDataProviderTest\\:\\:createDataItem\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Media\\\\Tests\\\\Unit\\\\SmartContent\\\\MediaDataProviderTest\\:\\:createMedia\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
 

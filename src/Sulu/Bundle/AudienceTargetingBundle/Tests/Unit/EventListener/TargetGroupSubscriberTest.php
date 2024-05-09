@@ -15,12 +15,14 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\EventListener\TargetGroupSubscriber;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluatorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,6 +37,7 @@ use Twig\Environment;
 class TargetGroupSubscriberTest extends TestCase
 {
     use ProphecyTrait;
+    use SetGetPrivatePropertyTrait;
 
     /**
      * @var ObjectProphecy<Environment>
@@ -252,15 +255,15 @@ class TargetGroupSubscriberTest extends TestCase
 
     public function provideSetTargetGroupFromEvaluation()
     {
-        $targetGroup1 = $this->prophesize(TargetGroupInterface::class);
-        $targetGroup1->getId()->willReturn(1);
+        $targetGroup1 = new TargetGroup();
+        self::setPrivateProperty($targetGroup1, 'id', 1);
 
-        $targetGroup2 = $this->prophesize(TargetGroupInterface::class);
-        $targetGroup2->getId()->willReturn(3);
+        $targetGroup2 = new TargetGroup();
+        self::setPrivateProperty($targetGroup2, 'id', 3);
 
         return [
-            [$targetGroup1->reveal(), 1],
-            [$targetGroup2->reveal(), 3],
+            [$targetGroup1, 1],
+            [$targetGroup2, 3],
             [null, 0],
         ];
     }

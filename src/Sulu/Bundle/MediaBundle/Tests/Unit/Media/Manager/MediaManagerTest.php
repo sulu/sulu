@@ -42,6 +42,7 @@ use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Security\Authentication\UserInterface as SuluUserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -55,6 +56,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class MediaManagerTest extends TestCase
 {
     use ProphecyTrait;
+    use SetGetPrivatePropertyTrait;
 
     /**
      * @var MediaManager
@@ -524,11 +526,11 @@ class MediaManagerTest extends TestCase
         $media2 = $this->createMedia(2);
         $media3 = $this->createMedia(3);
 
-        $user = $this->prophesize(SuluUserInterface::class);
+        $user = new User();
 
         return [
             [[1, 2, 3], null, null, [$media1, $media2, $media3], [$media1, $media2, $media3]],
-            [[2, 1, 3], $user->reveal(), 64, [$media1, $media2, $media3], [$media2, $media1, $media3]],
+            [[2, 1, 3], $user, 64, [$media1, $media2, $media3], [$media2, $media1, $media3]],
             [[4, 1, 2], null, null, [$media1, $media2], [$media1, $media2]],
         ];
     }
@@ -552,11 +554,8 @@ class MediaManagerTest extends TestCase
 
     protected function createMedia($id)
     {
-        $mediaIdReflection = new \ReflectionProperty(Media::class, 'id');
-        $mediaIdReflection->setAccessible(true);
-
         $media = new Media();
-        $mediaIdReflection->setValue($media, $id);
+        self::setPrivateProperty($media, 'id', $id);
 
         $file = new File();
         $fileVersion = new FileVersion();

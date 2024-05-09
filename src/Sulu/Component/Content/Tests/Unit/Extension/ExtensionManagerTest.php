@@ -11,8 +11,10 @@
 
 namespace Sulu\Component\Content\Tests\Unit\Extension;
 
+use PHPCR\NodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Component\Content\Extension\AbstractExtension;
 use Sulu\Component\Content\Extension\ExtensionInterface;
 use Sulu\Component\Content\Extension\ExtensionManager;
 
@@ -20,21 +22,47 @@ class ExtensionManagerTest extends TestCase
 {
     use ProphecyTrait;
 
-    private function getExtension($name)
+    private static function createExtension(string $name): ExtensionInterface
     {
-        $extension = $this->prophesize(ExtensionInterface::class);
-        $extension->getName()->willReturn($name);
+        return new class($name) extends AbstractExtension {
+            public function __construct(string $name)
+            {
+                $this->name = $name;
+            }
 
-        return $extension->reveal();
+            /**
+             * save data to node.
+             *
+             * @param array<string, mixed> $data
+             * @param string $webspaceKey
+             * @param string $languageCode
+             */
+            public function save(NodeInterface $node, $data, $webspaceKey, $languageCode): void
+            {
+            }
+
+            /**
+             * load data from node.
+             *
+             * @param string $webspaceKey
+             * @param string $languageCode
+             *
+             * @return mixed data of extension
+             */
+            public function load(NodeInterface $node, $webspaceKey, $languageCode): mixed
+            {
+                return null;
+            }
+        };
     }
 
     public function addProvider()
     {
         $instances = [
-            $this->getExtension('test1'),
-            $this->getExtension('test2'),
-            $this->getExtension('test3'),
-            $this->getExtension('test4'),
+            self::createExtension('test1'),
+            self::createExtension('test2'),
+            self::createExtension('test3'),
+            self::createExtension('test4'),
         ];
 
         $extensions = [
@@ -68,10 +96,10 @@ class ExtensionManagerTest extends TestCase
     public function hasProvider()
     {
         $instances = [
-            $this->getExtension('test1'),
-            $this->getExtension('test2'),
-            $this->getExtension('test3'),
-            $this->getExtension('test4'),
+            self::createExtension('test1'),
+            self::createExtension('test2'),
+            self::createExtension('test3'),
+            self::createExtension('test4'),
         ];
 
         $extensions = [
@@ -114,10 +142,10 @@ class ExtensionManagerTest extends TestCase
     public function getProvider()
     {
         $instances = [
-            $this->getExtension('test1'),
-            $this->getExtension('test2'),
-            $this->getExtension('test3'),
-            $this->getExtension('test4'),
+            self::createExtension('test1'),
+            self::createExtension('test2'),
+            self::createExtension('test3'),
+            self::createExtension('test4'),
         ];
 
         $extensions = [
@@ -154,10 +182,10 @@ class ExtensionManagerTest extends TestCase
     public function getExceptionProvider()
     {
         $instances = [
-            $this->getExtension('test1'),
-            $this->getExtension('test2'),
-            $this->getExtension('test3'),
-            $this->getExtension('test4'),
+            self::createExtension('test1'),
+            self::createExtension('test2'),
+            self::createExtension('test3'),
+            self::createExtension('test4'),
         ];
 
         $extensions = [
