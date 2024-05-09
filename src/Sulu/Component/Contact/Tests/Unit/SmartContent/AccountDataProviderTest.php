@@ -262,10 +262,10 @@ class AccountDataProviderTest extends TestCase
 
     private static function createResourceItem(Account $account)
     {
-        return new ArrayAccessItem($account->getId(), $this->serialize($account), $account);
+        return new ArrayAccessItem($account->getId(), self::serialize($account), $account);
     }
 
-    private function serialize(Account $account)
+    private static function serialize(Account $account)
     {
         $tags = [];
         foreach ($account->getTags() as $tag) {

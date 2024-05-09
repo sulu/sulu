@@ -471,10 +471,10 @@ class MediaDataProviderTest extends TestCase
 
     private static function createResourceItem(Media $media)
     {
-        return new ArrayAccessItem($media->getId(), $this->serialize($media), $media);
+        return new ArrayAccessItem($media->getId(), self::serialize($media), $media);
     }
 
-    private function serialize(Media $media)
+    private static function serialize(Media $media)
     {
         return [
             'id' => $media->getId(),

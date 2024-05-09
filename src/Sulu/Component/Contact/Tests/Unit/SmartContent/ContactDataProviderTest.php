@@ -267,10 +267,10 @@ class ContactDataProviderTest extends TestCase
 
     private static function createResourceItem(Contact $contact)
     {
-        return new ArrayAccessItem($contact->getId(), $this->serialize($contact), $contact);
+        return new ArrayAccessItem($contact->getId(), self::serialize($contact), $contact);
     }
 
-    private function serialize(Contact $contact)
+    private static function serialize(Contact $contact)
     {
         $tags = [];
         foreach ($contact->getTags() as $tag) {
