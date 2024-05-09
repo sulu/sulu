@@ -16,7 +16,7 @@ use Sulu\Component\Util\ArrayUtils;
 
 class ArrayUtilsTest extends TestCase
 {
-    public function provideData()
+    public static function provideData()
     {
         return [
             [

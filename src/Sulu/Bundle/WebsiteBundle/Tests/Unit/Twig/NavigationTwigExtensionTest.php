@@ -24,7 +24,7 @@ class NavigationTwigExtensionTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function activeElementProvider()
+    public static function activeElementProvider()
     {
         return [
             [false, '/', '/news/item'],

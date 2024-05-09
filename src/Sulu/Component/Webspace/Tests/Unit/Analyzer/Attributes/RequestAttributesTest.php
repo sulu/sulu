@@ -16,7 +16,7 @@ use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
 
 class RequestAttributesTest extends TestCase
 {
-    public function provideData()
+    public static function provideData()
     {
         return [
             [['test1' => 1], 'test1', null, 1],

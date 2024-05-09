@@ -99,7 +99,7 @@ class TargetGroupEvaluatorTest extends TestCase
         $this->assertEquals($evaluatedTargetGroup, $this->targetGroupEvaluator->evaluate($frequency, $currentTargetGroup));
     }
 
-    public function provideEvaluationData()
+    public static function provideEvaluationData()
     {
         $targetGroup1 = new TargetGroup();
 

@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 class CustomerIdConverterTest extends TestCase
 {
-    public function convertIdsToGroupedIdsProvider()
+    public static function convertIdsToGroupedIdsProvider()
     {
         return [
             [[], [], []],
@@ -40,7 +40,7 @@ class CustomerIdConverterTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function convertGroupedIdsToIdsProvider()
+    public static function convertGroupedIdsToIdsProvider()
     {
         return [
             [[], []],

@@ -32,7 +32,7 @@ class AppendAnalyticsListenerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function formatProvider()
+    public static function formatProvider()
     {
         return [['json'], ['xml']];
     }

@@ -39,7 +39,7 @@ class NumberFilterTypeTest extends TestCase
         $this->listBuilder = $this->prophesize(ListBuilderInterface::class);
     }
 
-    public function provideFilter()
+    public static function provideFilter()
     {
         return [
             ['price', ['eq' => 6], '=', 6],
@@ -59,7 +59,7 @@ class NumberFilterTypeTest extends TestCase
         $this->listBuilder->where($fieldDescriptor->reveal(), $expectedValue, $expectedOperator)->shouldBeCalled();
     }
 
-    public function provideFilterWithInvalidOptions()
+    public static function provideFilterWithInvalidOptions()
     {
         return [
             [''],

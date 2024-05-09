@@ -1017,7 +1017,7 @@ class ContentRepositoryTest extends SuluTestCase
         );
     }
 
-    public function provideWebspaceKeys()
+    public static function provideWebspaceKeys()
     {
         return [['sulu_io'], ['test_io']];
     }

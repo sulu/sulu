@@ -18,7 +18,7 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 
 class ArrayMetadataTest extends TestCase
 {
-    public function provideToJsonSchema()
+    public static function provideToJsonSchema()
     {
         return [
             [

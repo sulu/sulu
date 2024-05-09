@@ -39,7 +39,7 @@ class BooleanFilterTypeTest extends TestCase
         $this->listBuilder = $this->prophesize(ListBuilderInterface::class);
     }
 
-    public function provideFilter()
+    public static function provideFilter()
     {
         return [
             ['active', 'true', true],
