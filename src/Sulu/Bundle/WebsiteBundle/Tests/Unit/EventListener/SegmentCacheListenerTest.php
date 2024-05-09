@@ -33,7 +33,7 @@ class SegmentCacheListenerTests extends TestCase
         $this->segmentCacheListener = new SegmentCacheListener();
     }
 
-    public function providePreHandleCookieValue()
+    public static function providePreHandleCookieValue()
     {
         return [
             ['s'],
@@ -55,7 +55,7 @@ class SegmentCacheListenerTests extends TestCase
         $this->assertEquals($cookieValue, $request->headers->get('X-Sulu-Segment'));
     }
 
-    public function providePostHandleVary()
+    public static function providePostHandleVary()
     {
         return [
             ['X-Something', 60, 120, 120],

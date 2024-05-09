@@ -82,7 +82,7 @@ class TargetGroupEvaluationControllerTest extends TestCase
         $this->assertEquals($targetGroupId, $response->headers->get($header));
     }
 
-    public function provideTargetGroup()
+    public static function provideTargetGroup()
     {
         $targetGroup1 = new TargetGroup();
 
@@ -128,7 +128,7 @@ class TargetGroupEvaluationControllerTest extends TestCase
         $targetGroupEvaluationController->targetGroupHitAction();
     }
 
-    public function provideTargetGroupHit()
+    public static function provideTargetGroupHit()
     {
         $oldTargetGroup1 = new TargetGroup();
         self::setPrivateProperty($oldTargetGroup1, 'id', 1);

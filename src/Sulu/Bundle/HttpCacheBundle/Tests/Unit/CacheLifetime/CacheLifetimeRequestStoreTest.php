@@ -38,7 +38,7 @@ class CacheLifetimeRequestStoreTest extends TestCase
         $this->cacheLifetimeRequestStore = new CacheLifetimeRequestStore($this->requestStack->reveal());
     }
 
-    public function provideSetCacheLifetime()
+    public static function provideSetCacheLifetime()
     {
         return [
             [null, 200, 200],

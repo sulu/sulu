@@ -84,7 +84,7 @@ class PermissionControllerTest extends TestCase
         );
     }
 
-    public function providePermissionData()
+    public static function providePermissionData()
     {
         return [
             [
@@ -160,7 +160,7 @@ class PermissionControllerTest extends TestCase
         $this->permissionController->cputAction($request);
     }
 
-    public function provideWrongPermissionData()
+    public static function provideWrongPermissionData()
     {
         return [
             [null, null, null],

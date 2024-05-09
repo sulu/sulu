@@ -79,7 +79,7 @@ class SettingsManagerTest extends TestCase
         $this->settingsManager->save($webspaceKey, $key, $data);
     }
 
-    public function removeDataProvider()
+    public static function removeDataProvider()
     {
         return [
             ['sulu_io', 'test-1'],
@@ -118,7 +118,7 @@ class SettingsManagerTest extends TestCase
         $this->assertEquals($data, $result);
     }
 
-    public function loadStringDataProvider()
+    public static function loadStringDataProvider()
     {
         return [
             ['sulu_io', 'test-1', '123-123-123', true],

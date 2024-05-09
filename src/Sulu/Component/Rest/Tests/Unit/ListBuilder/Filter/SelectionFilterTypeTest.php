@@ -39,7 +39,7 @@ class SelectionFilterTypeTest extends TestCase
         $this->listBuilder = $this->prophesize(ListBuilderInterface::class);
     }
 
-    public function provideFilter()
+    public static function provideFilter()
     {
         return [
             ['accountIds', '1,2,3', [1, 2, 3]],

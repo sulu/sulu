@@ -93,7 +93,7 @@ class CacheLifetimeEnhancerTest extends TestCase
         );
     }
 
-    public function provideCacheLifeTime()
+    public static function provideCacheLifeTime()
     {
         return [
             [50, null, 50],

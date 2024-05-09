@@ -69,7 +69,7 @@ class LinkTagTest extends TestCase
     /**
      * @return mixed[]
      */
-    public function provideParseData(): array
+    public static function provideParseData(): array
     {
         return [
             [

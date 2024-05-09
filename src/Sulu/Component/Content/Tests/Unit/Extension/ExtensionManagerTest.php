@@ -56,7 +56,7 @@ class ExtensionManagerTest extends TestCase
         };
     }
 
-    public function addProvider()
+    public static function addProvider()
     {
         $instances = [
             self::createExtension('test1'),
@@ -93,7 +93,7 @@ class ExtensionManagerTest extends TestCase
         $this->assertEquals($expected, $manager->getExtensions($type));
     }
 
-    public function hasProvider()
+    public static function hasProvider()
     {
         $instances = [
             self::createExtension('test1'),
@@ -139,7 +139,7 @@ class ExtensionManagerTest extends TestCase
         $this->assertEquals($expected, $manager->hasExtension($type, $name));
     }
 
-    public function getProvider()
+    public static function getProvider()
     {
         $instances = [
             self::createExtension('test1'),
@@ -179,7 +179,7 @@ class ExtensionManagerTest extends TestCase
         $this->assertEquals($expected, $manager->getExtension($type, $name));
     }
 
-    public function getExceptionProvider()
+    public static function getExceptionProvider()
     {
         $instances = [
             self::createExtension('test1'),

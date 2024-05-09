@@ -39,7 +39,7 @@ class DateFilterTypeTest extends TestCase
         $this->listBuilder = $this->prophesize(ListBuilderInterface::class);
     }
 
-    public function provideFilter()
+    public static function provideFilter()
     {
         return [
             ['created', ['from' => '2020-02-05 00:00', 'to' => '2020-02-07 00:00'], ['2020-02-05 00:00:00', '2020-02-07 23:59:59']],
@@ -65,7 +65,7 @@ class DateFilterTypeTest extends TestCase
             ->shouldBeCalled();
     }
 
-    public function provideFilterFromOnly()
+    public static function provideFilterFromOnly()
     {
         return [
             ['created', ['from' => '2020-02-05 00:00'], '2020-02-05 00:00:00'],
@@ -86,7 +86,7 @@ class DateFilterTypeTest extends TestCase
             ->shouldBeCalled();
     }
 
-    public function provideFilterToOnly()
+    public static function provideFilterToOnly()
     {
         return [
             ['created', ['to' => '2020-02-05'], '2020-02-05 23:59:59'],
@@ -108,7 +108,7 @@ class DateFilterTypeTest extends TestCase
             ->shouldBeCalled();
     }
 
-    public function provideFilterWithInvalidOptions()
+    public static function provideFilterWithInvalidOptions()
     {
         return [
             [[]],

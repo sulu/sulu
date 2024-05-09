@@ -62,7 +62,7 @@ class SearchIntegrationTest extends SuluTestCase
     /**
      * @return array<array{string, class-string<\Throwable>|null}>
      */
-    public function provideIndex(): array
+    public static function provideIndex(): array
     {
         return [
             ['sulu-100x100', null],

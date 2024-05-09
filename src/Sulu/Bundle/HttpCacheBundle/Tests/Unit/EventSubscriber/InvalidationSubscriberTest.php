@@ -120,7 +120,7 @@ class InvalidationSubscriberTest extends TestCase
         );
     }
 
-    public function provideRequest()
+    public static function provideRequest()
     {
         return [
             [false, 'http'],

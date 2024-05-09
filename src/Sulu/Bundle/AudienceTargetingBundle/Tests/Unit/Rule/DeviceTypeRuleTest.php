@@ -56,7 +56,7 @@ class DeviceTypeRuleTest extends TestCase
         $this->assertSame($result, $this->deviceTypeRule->evaluate($options));
     }
 
-    public function provideEvaluate()
+    public static function provideEvaluate()
     {
         return [
             [null, ['device_type' => DeviceTypeRule::DESKTOP], false],

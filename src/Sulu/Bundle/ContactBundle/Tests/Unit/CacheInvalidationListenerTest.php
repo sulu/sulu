@@ -45,7 +45,7 @@ class CacheInvalidationListenerTest extends TestCase
         $this->listener = new CacheInvalidationListener($this->cacheManager->reveal());
     }
 
-    public function provideData()
+    public static function provideData()
     {
         return [
             [ContactInterface::class, 'contact'],
@@ -123,7 +123,7 @@ class CacheInvalidationListenerTest extends TestCase
         $this->listener->preRemove($eventArgs->reveal());
     }
 
-    public function provideDataWithTagsAndCategories()
+    public static function provideDataWithTagsAndCategories()
     {
         return [
             [ContactInterface::class, 'contact'],

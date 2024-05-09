@@ -18,7 +18,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class DataCacheTest extends TestCase
 {
-    public function provideIsFreshData()
+    public static function provideIsFreshData()
     {
         $tmpFile = \tempnam(\sys_get_temp_dir(), 'sulu-test');
 

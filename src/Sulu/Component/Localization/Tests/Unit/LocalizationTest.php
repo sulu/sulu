@@ -51,7 +51,7 @@ class LocalizationTest extends TestCase
         $this->assertEquals('de_AT', $this->localization->getLocale(Localization::LCID));
     }
 
-    public function formatProvider()
+    public static function formatProvider()
     {
         return [
             [Localization::UNDERSCORE],

@@ -62,7 +62,7 @@ class LocaleRuleTest extends TestCase
         $this->assertEquals($result, $this->localeRule->evaluate($options));
     }
 
-    public function provideEvaluationData()
+    public static function provideEvaluationData()
     {
         return [
             [['de'], ['locale' => 'de'], true],

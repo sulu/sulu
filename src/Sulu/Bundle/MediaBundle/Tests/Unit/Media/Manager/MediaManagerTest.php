@@ -535,7 +535,7 @@ class MediaManagerTest extends TestCase
         ];
     }
 
-    public function provideSpecialCharacterFileName()
+    public static function provideSpecialCharacterFileName()
     {
         return [
             ['aäüßa', 'aäüßa', 'aaeuesa', ''],
@@ -543,7 +543,7 @@ class MediaManagerTest extends TestCase
         ];
     }
 
-    public function provideSpecialCharacterUrl()
+    public static function provideSpecialCharacterUrl()
     {
         return [
             [1, 'aäüßa.mp4', 2, '/download/1/media/a%C3%A4%C3%BC%C3%9Fa.mp4?v=2'],

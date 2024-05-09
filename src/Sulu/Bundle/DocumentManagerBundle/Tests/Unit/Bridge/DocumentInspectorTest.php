@@ -135,7 +135,7 @@ class DocumentInspectorTest extends TestCase
         $this->assertEquals($expectedWebspace, $webspace);
     }
 
-    public function provideGetWebspace()
+    public static function provideGetWebspace()
     {
         return [
             ['/cmf/sulu_io/content/articles/article-one', 'sulu_io'],
@@ -284,7 +284,7 @@ class DocumentInspectorTest extends TestCase
         $this->assertEquals($expectedWebspace, $webspace);
     }
 
-    public function provideWebspace()
+    public static function provideWebspace()
     {
         return [
             [

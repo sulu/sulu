@@ -16,7 +16,7 @@ use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\ConstMetadata;
 
 class ConstMetadataTest extends TestCase
 {
-    public function provideToJsonSchema()
+    public static function provideToJsonSchema()
     {
         return [
             ['Homepage', ['const' => 'Homepage']],

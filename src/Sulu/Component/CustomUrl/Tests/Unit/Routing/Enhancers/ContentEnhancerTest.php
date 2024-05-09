@@ -28,7 +28,7 @@ class ContentEnhancerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function enhanceProvider()
+    public static function enhanceProvider()
     {
         return [
             [

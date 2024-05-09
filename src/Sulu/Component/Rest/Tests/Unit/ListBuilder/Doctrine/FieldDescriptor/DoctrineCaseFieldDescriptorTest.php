@@ -18,7 +18,7 @@ use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineJoinDescrip
 
 class DoctrineCaseFieldDescriptorTest extends TestCase
 {
-    public function dataProvider()
+    public static function dataProvider()
     {
         return [
             [

@@ -47,7 +47,7 @@ class PermissionInheritanceSubscriberTest extends TestCase
         );
     }
 
-    public function providePostPersist()
+    public static function providePostPersist()
     {
         return [
             [5, 1, [1 => ['view' => true]]],

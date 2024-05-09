@@ -44,7 +44,7 @@ class NodeNameSlugifierTest extends TestCase
         $this->assertEquals('test-article', $this->nodeNameSlugifier->slugify('Test article'));
     }
 
-    public function provide10eData()
+    public static function provide10eData()
     {
         return [
             ['10e', '10-e'],
