@@ -45,7 +45,7 @@ class FocusTest extends TestCase
         $this->focus->focus($image->reveal(), $x, $y, $width, $height);
     }
 
-    public function provideFocus()
+    public static function provideFocus()
     {
         return [
             [800, 800, 0, 0, 400, 400, 0, 0, 800, 800],

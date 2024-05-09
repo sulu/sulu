@@ -242,7 +242,7 @@ class SnippetDataProviderTest extends TestCase
         $this->assertEquals($hasNextPage, $dataProviderResult->getHasNextPage());
     }
 
-    public function provideResolveDataItems()
+    public static function provideResolveDataItems()
     {
         return [
             [['excluded' => null], [], ['webspaceKey' => 'sulu', 'locale' => 'de'], null, 1, null, [], false],
@@ -372,7 +372,7 @@ class SnippetDataProviderTest extends TestCase
         $this->assertEquals(false, $dataProviderResult->getHasNextPage());
     }
 
-    public function provideResolveExcludeDuplicates()
+    public static function provideResolveExcludeDuplicates()
     {
         return [
             [

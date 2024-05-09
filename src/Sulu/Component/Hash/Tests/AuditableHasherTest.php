@@ -51,7 +51,7 @@ class AuditableHasherTest extends TestCase
         $this->assertSame($this->hasher->hash($object->reveal()), $this->hasher->hash($object->reveal()));
     }
 
-    public function provideDifferentObjects()
+    public static function provideDifferentObjects()
     {
         return [
             [1, 2, new \DateTime('2016-02-05'), new \DateTime('2016-02-04')],

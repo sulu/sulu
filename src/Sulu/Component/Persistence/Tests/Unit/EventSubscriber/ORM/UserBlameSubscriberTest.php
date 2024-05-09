@@ -126,7 +126,7 @@ class UserBlameSubscriberTest extends TestCase
         $this->subscriber->loadClassMetadata($this->loadClassMetadataEvent->reveal());
     }
 
-    public function provideLifecycle()
+    public static function provideLifecycle()
     {
         return [
             // new entity no user set

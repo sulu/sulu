@@ -51,7 +51,7 @@ class SnippetAdminTest extends TestCase
         $this->webspaceManager = $this->prophesize(WebspaceManagerInterface::class);
     }
 
-    public function provideConfigureViews()
+    public static function provideConfigureViews()
     {
         return [
             [['en' => 'en', 'de' => 'de', 'fr' => 'fr']],

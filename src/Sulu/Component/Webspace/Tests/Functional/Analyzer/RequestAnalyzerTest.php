@@ -81,7 +81,7 @@ class RequestAnalyzerTest extends TestCase
         $this->webspaceManager->getPortalInformations(Argument::any())->willReturn([]);
     }
 
-    public function provideAnalyze()
+    public static function provideAnalyze()
     {
         return [
             [
@@ -115,7 +115,7 @@ class RequestAnalyzerTest extends TestCase
         ];
     }
 
-    public function provideAnalyzeWithFormat()
+    public static function provideAnalyzeWithFormat()
     {
         return [
             [

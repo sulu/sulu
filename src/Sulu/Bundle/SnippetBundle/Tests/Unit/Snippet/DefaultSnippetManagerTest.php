@@ -60,7 +60,7 @@ class DefaultSnippetManagerTest extends TestCase
         ],
     ];
 
-    public function saveDataProvider()
+    public static function saveDataProvider()
     {
         return [
             ['sulu_io', 'de', 'test', 'test', '123-123-123'],
@@ -162,7 +162,7 @@ class DefaultSnippetManagerTest extends TestCase
         $manager->remove('sulu_io', 'test');
     }
 
-    public function loadDataProvider()
+    public static function loadDataProvider()
     {
         return [
             ['sulu_io', 'de', 'test', '123-123-123'],

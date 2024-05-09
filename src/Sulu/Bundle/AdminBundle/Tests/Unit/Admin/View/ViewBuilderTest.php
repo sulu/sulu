@@ -17,7 +17,7 @@ use Sulu\Bundle\AdminBundle\Admin\View\ViewBuilder;
 
 class ViewBuilderTest extends TestCase
 {
-    public function provideBuildView()
+    public static function provideBuildView()
     {
         return [
             [

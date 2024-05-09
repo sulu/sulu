@@ -598,7 +598,7 @@ class ContentTypeTest extends TestCase
         $this->assertEquals([1, 2, 3, 4, 5], $pageData);
     }
 
-    public function pageProvider()
+    public static function pageProvider()
     {
         return [
             // first page page-size 3 (one page more to check available pages)

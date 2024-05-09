@@ -62,7 +62,7 @@ class PathCleanupTest extends TestCase
         $this->assertEquals($b, $clean);
     }
 
-    public function cleanupProvider()
+    public static function cleanupProvider()
     {
         return [
             ['-/aSDf     asdf/äöü-/hello: world\'s', '/asdf-asdf/aeoeue/hello-world-s', 'de'],

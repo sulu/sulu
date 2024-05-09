@@ -642,7 +642,7 @@ class AccessControlManagerTest extends TestCase
         );
     }
 
-    public function provideUserPermission()
+    public static function provideUserPermission()
     {
         return [
             [

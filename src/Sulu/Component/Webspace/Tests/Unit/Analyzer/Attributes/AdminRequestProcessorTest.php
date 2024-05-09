@@ -24,7 +24,7 @@ class AdminRequestProcessorTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function provideData()
+    public static function provideData()
     {
         return [
             [],

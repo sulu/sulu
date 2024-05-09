@@ -83,14 +83,14 @@ class ContactDataProviderTest extends TestCase
     public function dataItemsDataProvider()
     {
         $contacts = [
-            $this->createContact(1, 'Max', 'Mustermann'),
-            $this->createContact(2, 'Erika', 'Mustermann'),
-            $this->createContact(3, 'Leon', 'Mustermann'),
+            self::createContact(1, 'Max', 'Mustermann'),
+            self::createContact(2, 'Erika', 'Mustermann'),
+            self::createContact(3, 'Leon', 'Mustermann'),
         ];
 
         $dataItems = [];
         foreach ($contacts as $contact) {
-            $dataItems[] = $this->createDataItem($contact);
+            $dataItems[] = self::createDataItem($contact);
         }
 
         return [
@@ -135,14 +135,14 @@ class ContactDataProviderTest extends TestCase
     public function testNullSortBy(): void
     {
         $contacts = [
-            $this->createContact(1, 'Max', 'Mustermann'),
-            $this->createContact(2, 'Erika', 'Mustermann'),
-            $this->createContact(3, 'Leon', 'Mustermann'),
+            self::createContact(1, 'Max', 'Mustermann'),
+            self::createContact(2, 'Erika', 'Mustermann'),
+            self::createContact(3, 'Leon', 'Mustermann'),
         ];
 
         $dataItems = [];
         foreach ($contacts as $contact) {
-            $dataItems[] = $this->createDataItem($contact);
+            $dataItems[] = self::createDataItem($contact);
         }
 
         $this->dataProviderRepository->findByFilters(
@@ -163,14 +163,14 @@ class ContactDataProviderTest extends TestCase
     public function resourceItemsDataProvider()
     {
         $contacts = [
-            $this->createContact(1, 'Max', 'Mustermann'),
-            $this->createContact(2, 'Erika', 'Mustermann'),
-            $this->createContact(3, 'Leon', 'Mustermann'),
+            self::createContact(1, 'Max', 'Mustermann'),
+            self::createContact(2, 'Erika', 'Mustermann'),
+            self::createContact(3, 'Leon', 'Mustermann'),
         ];
 
         $dataItems = [];
         foreach ($contacts as $contact) {
-            $dataItems[] = $this->createResourceItem($contact);
+            $dataItems[] = self::createResourceItem($contact);
         }
 
         return [
@@ -239,7 +239,7 @@ class ContactDataProviderTest extends TestCase
         $this->assertNull($this->contactDataProvider->resolveDatasource('', [], []));
     }
 
-    private function createContact($id, $firstName, $lastName, $tags = [])
+    private static function createContact($id, $firstName, $lastName, $tags = [])
     {
         $contact = new ContactEntity();
         self::setPrivateProperty($contact, 'id', $id);
@@ -260,12 +260,12 @@ class ContactDataProviderTest extends TestCase
         return new Contact($contact, 'de');
     }
 
-    private function createDataItem(Contact $contact)
+    private static function createDataItem(Contact $contact)
     {
         return new ContactDataItem($contact);
     }
 
-    private function createResourceItem(Contact $contact)
+    private static function createResourceItem(Contact $contact)
     {
         return new ArrayAccessItem($contact->getId(), $this->serialize($contact), $contact);
     }

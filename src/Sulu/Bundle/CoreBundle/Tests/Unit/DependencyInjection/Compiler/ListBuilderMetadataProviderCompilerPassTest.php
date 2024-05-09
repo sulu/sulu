@@ -23,7 +23,7 @@ class ListBuilderMetadataProviderCompilerPassTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function dataProcessProvider()
+    public static function dataProcessProvider()
     {
         return [
             [false],

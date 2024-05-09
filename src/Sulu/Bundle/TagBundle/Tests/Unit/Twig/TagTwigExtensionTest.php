@@ -42,7 +42,7 @@ class TagTwigExtensionTest extends TestCase
         return new Memoize(new ArrayCache(), 0);
     }
 
-    public function getProvider()
+    public static function getProvider()
     {
         return [
             [[]],
@@ -82,7 +82,7 @@ class TagTwigExtensionTest extends TestCase
         $this->assertEquals($tagData, $tagExtension->getTagsFunction());
     }
 
-    public function appendProvider()
+    public static function appendProvider()
     {
         return [
             ['t', '/test', 'Sulu,Core', 'Sulu,Core,Test'],
@@ -125,7 +125,7 @@ class TagTwigExtensionTest extends TestCase
         $this->assertEquals($url . '?' . $tagsParameter . '=' . \urlencode($expected), $result);
     }
 
-    public function setProvider()
+    public static function setProvider()
     {
         return [
             ['t', '/test', 'Sulu,Core', 'Test'],
@@ -168,7 +168,7 @@ class TagTwigExtensionTest extends TestCase
         $this->assertEquals($url . '?' . $tagsParameter . '=' . \urlencode($expected), $result);
     }
 
-    public function clearProvider()
+    public static function clearProvider()
     {
         return [
             ['t', '/test', 'Sulu,Core'],

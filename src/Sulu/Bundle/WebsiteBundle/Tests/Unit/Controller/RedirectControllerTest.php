@@ -53,7 +53,7 @@ class RedirectControllerTest extends TestCase
         return $request->reveal();
     }
 
-    public function provideRedirectAction()
+    public static function provideRedirectAction()
     {
         return [
             ['http://sulu.lo/articles?foo=bar', 'sulu.lo', 'sulu.lo/en', 'http://sulu.lo/en/articles?foo=bar'],
@@ -87,7 +87,7 @@ class RedirectControllerTest extends TestCase
         $this->assertEquals($expectedTargetUrl, $response->getTargetUrl());
     }
 
-    public function provideRedirectWebspaceAction()
+    public static function provideRedirectWebspaceAction()
     {
         return [
             ['sulu.lo/de', 'http://sulu.lo', 'http://sulu.lo/de'],
@@ -110,7 +110,7 @@ class RedirectControllerTest extends TestCase
         $this->assertEquals($expectedTargetUrl, $response->getTargetUrl());
     }
 
-    public function provideRedirectToRouteAction()
+    public static function provideRedirectToRouteAction()
     {
         return [
             ['', 410],

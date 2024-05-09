@@ -131,7 +131,7 @@ class PageRuleTest extends TestCase
         $this->assertEquals($result, $pageRule->evaluate(['page' => $uuidRule]));
     }
 
-    public function provideEvaluate()
+    public static function provideEvaluate()
     {
         return [
             ['X-Forwarded-UUID', 'some-uuid', 'X-Forwarded-URL', null, null, null, null, 'some-uuid', true, true],
