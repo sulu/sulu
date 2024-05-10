@@ -12,7 +12,6 @@
 namespace Sulu\Component\Webspace\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Webspace\Environment;
 use Sulu\Component\Webspace\Url;
@@ -26,35 +25,44 @@ class EnvironmentTest extends TestCase
         $expected = [
             'type' => 'foo',
             'urls' => [
-                ['test'],
-            ],
+                0 => [
+                    'url' => 'test',
+                    'language' => null,
+                    'country' => null,
+                    'segment' => null,
+                    'redirect' => null,
+                    'main' => true,
+                    'environment' => null,
+                ]
+            ]
         ];
+        $url = new Url('test', 'test');
 
         $environment = new Environment();
 
-        $environment->addUrl($this->getUrl(['test']));
+        $environment->addUrl($url);
         $environment->setType($expected['type']);
 
         $this->assertEquals($expected, $environment->toArray());
     }
 
-    public function addUrlProvider()
+    public static function addUrlProvider()
     {
         $urls = [
             // case 0
-            $this->getUrl([], false),
+            $this->getUrl(false),
             // case 1
-            $this->getUrl([], true),
+            $this->getUrl(true),
             // case 2
-            $this->getUrl([], true),
-            $this->getUrl([], false),
+            $this->getUrl(true),
+            $this->getUrl(false),
             // case 3
-            $this->getUrl([], false),
-            $this->getUrl([], true),
+            $this->getUrl(false),
+            $this->getUrl(true),
             // case 4
-            $this->getUrl([], false),
-            $this->getUrl([], true),
-            $this->getUrl([], false),
+            $this->getUrl(false),
+            $this->getUrl(true),
+            $this->getUrl(false),
         ];
 
         return [
@@ -92,18 +100,12 @@ class EnvironmentTest extends TestCase
      *
      * @return Url
      */
-    private function getUrl($toArrayResult, $isMain = false)
+    private static function getUrl($isMain = false)
     {
-        $url = $this->prophesize(Url::class);
-        $url->isMain()->willReturn($isMain);
-        $url->setMain(Argument::any())->will(
-            function($args) use ($url) {
-                $url->isMain()->willReturn($args[0]);
-            }
-        );
-        $url->toArray()->willReturn($toArrayResult);
-        $url->setEnvironment(Argument::any())->willReturn(true);
+        $url = new Url('test', 'test');
+        $url->setMain($isMain);
 
-        return $url->reveal();
+        return $url;
     }
+
 }

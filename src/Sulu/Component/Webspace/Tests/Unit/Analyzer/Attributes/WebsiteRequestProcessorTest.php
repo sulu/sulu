@@ -209,7 +209,8 @@ class WebsiteRequestProcessorTest extends TestCase
 
     public function provideValidateData()
     {
-        $portalInformation = $this->prophesize(PortalInformation::class);
+        $portalInformationReflection = new \ReflectionClass(PortalInformation::class);
+        $portalInformation = $portalInformationReflection->newInstanceWithoutConstructor();
 
         $webspace = new Webspace();
         $webspace->setKey('sulu');
