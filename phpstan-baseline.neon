@@ -36,11 +36,6 @@ parameters:
 			path: src/Sulu/Bundle/ActivityBundle/Tests/Functional/UserInterface/Controller/ActivityControllerTest.php
 
 		-
-			message: "#^Unsafe call to private method Sulu\\\\Bundle\\\\ActivityBundle\\\\Tests\\\\Functional\\\\UserInterface\\\\Controller\\\\ActivityControllerTest\\:\\:createActivity\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/Tests/Functional/UserInterface/Controller/ActivityControllerTest.php
-
-		-
 			message: "#^Unsafe call to private method Sulu\\\\Bundle\\\\ActivityBundle\\\\Tests\\\\Functional\\\\UserInterface\\\\Controller\\\\ActivityControllerTest\\:\\:setUpUserRole\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ActivityBundle/Tests/Functional/UserInterface/Controller/ActivityControllerTest.php
@@ -53597,11 +53592,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\EnvironmentTest\\:\\:addUrlProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/EnvironmentTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\EnvironmentTest\\:\\:getUrl\\(\\) has parameter \\$toArrayResult with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Unit/EnvironmentTest.php
 

@@ -33,8 +33,8 @@ class EnvironmentTest extends TestCase
                     'redirect' => null,
                     'main' => true,
                     'environment' => null,
-                ]
-            ]
+                ],
+            ],
         ];
         $url = new Url('test', 'test');
 
@@ -50,19 +50,19 @@ class EnvironmentTest extends TestCase
     {
         $urls = [
             // case 0
-            $this->getUrl(false),
+            self::getUrl(false),
             // case 1
-            $this->getUrl(true),
+            self::getUrl(true),
             // case 2
-            $this->getUrl(true),
-            $this->getUrl(false),
+            self::getUrl(true),
+            self::getUrl(false),
             // case 3
-            $this->getUrl(false),
-            $this->getUrl(true),
+            self::getUrl(false),
+            self::getUrl(true),
             // case 4
-            $this->getUrl(false),
-            $this->getUrl(true),
-            $this->getUrl(false),
+            self::getUrl(false),
+            self::getUrl(true),
+            self::getUrl(false),
         ];
 
         return [
@@ -95,7 +95,6 @@ class EnvironmentTest extends TestCase
     /**
      * Return url with given to-array result.
      *
-     * @param array $toArrayResult
      * @param bool $isMain
      *
      * @return Url
@@ -107,5 +106,4 @@ class EnvironmentTest extends TestCase
 
         return $url;
     }
-
 }

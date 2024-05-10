@@ -31,7 +31,6 @@ use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Media\SmartContent\MediaDataItem;
 use Sulu\Component\Media\SmartContent\MediaDataProvider;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;

@@ -317,7 +317,6 @@ class DoctrineAccessControlProviderTest extends TestCase
 
     public static function provideSupport()
     {
-
         return [
             [\stdClass::class, false],
             [SecuredEntityInterface::class, true],

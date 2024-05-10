@@ -50,7 +50,7 @@ class ActivityControllerTest extends SuluTestCase
                         $resourceSecurityObjectType = null !== $objectSecurity ? SecuredEntityInterface::class : null;
                         $resourceSecurityObjectId = null !== $objectSecurity ? $resourceId : null;
 
-                        static::createActivity(
+                        self::createActivity(
                             $resourceKey,
                             $resourceId,
                             $resourceLocale,

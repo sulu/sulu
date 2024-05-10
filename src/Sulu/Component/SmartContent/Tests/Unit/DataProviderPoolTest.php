@@ -27,19 +27,19 @@ class DataProviderPoolTest extends TestCase
 {
     use ProphecyTrait;
 
-    public static function createDataProvider(): DataProviderInterface {
+    public static function createDataProvider(): DataProviderInterface
+    {
         return new class () implements DataProviderInterface {
-            public function getConfiguration(): ProviderConfigurationInterface {
+            public function getConfiguration(): ProviderConfigurationInterface
+            {
                 return new ProviderConfiguration();
             }
 
-            public function getDefaultPropertyParameter(): array {
+            public function getDefaultPropertyParameter(): array
+            {
                 return [];
             }
 
-            /**
-             * @inheritdoc
-             */
             public function resolveDataItems(
                 array $filters,
                 array $propertyParameter,
@@ -51,9 +51,6 @@ class DataProviderPoolTest extends TestCase
                 return new DataProviderResult([], false);
             }
 
-            /**
-             * @inheritdoc
-             */
             public function resolveResourceItems(
                 array $filters,
                 array $propertyParameter,
@@ -61,7 +58,7 @@ class DataProviderPoolTest extends TestCase
                 $limit = null,
                 $page = 1,
                 $pageSize = null
-            ) : DataProviderResult {
+            ): DataProviderResult {
                 return new DataProviderResult([], false);
             }
 
@@ -141,12 +138,11 @@ class DataProviderPoolTest extends TestCase
     public static function existsProvider()
     {
         $pool = new DataProviderPool(true);
-        $provider = self::createDataProvider();
-        $pool->add('test', $provider);
+        $pool->add('test', self::createDataProvider());
 
         return [
-            [ $pool, 'test', true ],
-            [ $pool, 'test-1', false ],
+            [$pool, 'test', true],
+            [$pool, 'test-1', false],
         ];
     }
 
@@ -162,7 +158,7 @@ class DataProviderPoolTest extends TestCase
     {
         $pool = new DataProviderPool(true);
         $provider = self::createDataProvider();
-        $pool->add('test', $provider->reveal());
+        $pool->add('test', $provider);
 
         return [
             [
