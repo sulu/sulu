@@ -83,14 +83,14 @@ class AccountDataProviderTest extends TestCase
     public function dataItemsDataProvider()
     {
         $accounts = [
-            $this->createAccount(1, 'Massive Art'),
-            $this->createAccount(2, 'Sulu'),
-            $this->createAccount(3, 'Apple'),
+            self::createAccount(1, 'Massive Art'),
+            self::createAccount(2, 'Sulu'),
+            self::createAccount(3, 'Apple'),
         ];
 
         $dataItems = [];
         foreach ($accounts as $account) {
-            $dataItems[] = $this->createDataItem($account);
+            $dataItems[] = self::createDataItem($account);
         }
 
         return [
@@ -135,14 +135,14 @@ class AccountDataProviderTest extends TestCase
     public function resourceItemsDataProvider()
     {
         $accounts = [
-            $this->createAccount(1, 'Massive Art'),
-            $this->createAccount(2, 'Sulu'),
-            $this->createAccount(3, 'Apple'),
+            self::createAccount(1, 'Massive Art'),
+            self::createAccount(2, 'Sulu'),
+            self::createAccount(3, 'Apple'),
         ];
 
         $dataItems = [];
         foreach ($accounts as $account) {
-            $dataItems[] = $this->createResourceItem($account);
+            $dataItems[] = self::createResourceItem($account);
         }
 
         return [
@@ -237,7 +237,7 @@ class AccountDataProviderTest extends TestCase
         return $mock->reveal();
     }
 
-    private function createAccount($id, $name, $tags = []): Account
+    private static function createAccount($id, $name, $tags = []): Account
     {
         $entity = new AccountEntity();
         self::setPrivateProperty($entity, 'id', $id);
@@ -255,17 +255,17 @@ class AccountDataProviderTest extends TestCase
         return new Account($entity, 'de');
     }
 
-    private function createDataItem(Account $account)
+    private static function createDataItem(Account $account)
     {
         return new AccountDataItem($account);
     }
 
-    private function createResourceItem(Account $account)
+    private static function createResourceItem(Account $account)
     {
-        return new ArrayAccessItem($account->getId(), $this->serialize($account), $account);
+        return new ArrayAccessItem($account->getId(), self::serialize($account), $account);
     }
 
-    private function serialize(Account $account)
+    private static function serialize(Account $account)
     {
         $tags = [];
         foreach ($account->getTags() as $tag) {

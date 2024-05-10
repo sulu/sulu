@@ -241,17 +241,17 @@ class MediaDataProviderTest extends TestCase
         );
     }
 
-    public function dataItemsDataProvider()
+    public static function dataItemsDataProvider()
     {
         $medias = [
-            $this->createMedia(1, 'Test-1'),
-            $this->createMedia(2, 'Test-2'),
-            $this->createMedia(3, 'Test-3'),
+            self::createMedia(1, 'Test-1'),
+            self::createMedia(2, 'Test-2'),
+            self::createMedia(3, 'Test-3'),
         ];
 
         $dataItems = [];
         foreach ($medias as $media) {
-            $dataItems[] = $this->createDataItem($media);
+            $dataItems[] = self::createDataItem($media);
         }
 
         return [
@@ -309,14 +309,14 @@ class MediaDataProviderTest extends TestCase
         );
 
         $medias = [
-            $this->createMedia(1, 'Test-1'),
-            $this->createMedia(2, 'Test-2'),
-            $this->createMedia(3, 'Test-3'),
+            self::createMedia(1, 'Test-1'),
+            self::createMedia(2, 'Test-2'),
+            self::createMedia(3, 'Test-3'),
         ];
 
         $dataItems = [];
         foreach ($medias as $media) {
-            $dataItems[] = $this->createDataItem($media);
+            $dataItems[] = self::createDataItem($media);
         }
 
         $this->dataProviderRepository
@@ -350,16 +350,16 @@ class MediaDataProviderTest extends TestCase
     public function resourceItemsDataProvider()
     {
         $medias = [
-            $this->createMedia(1, 'Test-1'),
-            $this->createMedia(2, 'Test-2'),
-            $this->createMedia(3, 'Test-3'),
+            self::createMedia(1, 'Test-1'),
+            self::createMedia(2, 'Test-2'),
+            self::createMedia(3, 'Test-3'),
         ];
 
         $user = $this->prophesize(UserInterface::class);
 
         $resourceItems = [];
         foreach ($medias as $media) {
-            $resourceItems[] = $this->createResourceItem($media);
+            $resourceItems[] = self::createResourceItem($media);
         }
 
         return [
@@ -445,7 +445,7 @@ class MediaDataProviderTest extends TestCase
         $this->assertEquals('test', $result->getTitle());
     }
 
-    private function createMedia($id, $title, $tags = []): Media
+    private static function createMedia($id, $title, $tags = []): Media
     {
         $fileVersionMeta = new FileVersionMeta();
         $fileVersionMeta->setTitle($title);
@@ -465,17 +465,17 @@ class MediaDataProviderTest extends TestCase
         return $media;
     }
 
-    private function createDataItem(Media $media)
+    private static function createDataItem(Media $media)
     {
         return new MediaDataItem($media);
     }
 
-    private function createResourceItem(Media $media)
+    private static function createResourceItem(Media $media)
     {
-        return new ArrayAccessItem($media->getId(), $this->serialize($media), $media);
+        return new ArrayAccessItem($media->getId(), self::serialize($media), $media);
     }
 
-    private function serialize(Media $media)
+    private static function serialize(Media $media)
     {
         return [
             'id' => $media->getId(),
