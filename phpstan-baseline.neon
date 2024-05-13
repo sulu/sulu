@@ -42131,41 +42131,6 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/FallbackLocalizationSubscriberTest.php
 
 		-
-			message: "#^Cannot call method willReturn\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/PHPCR/SuluNodeTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNodeTest\\:\\:provideDelegateData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/PHPCR/SuluNodeTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNodeTest\\:\\:testDelegate\\(\\) has parameter \\$arguments with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/PHPCR/SuluNodeTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNodeTest\\:\\:testDelegate\\(\\) has parameter \\$functionName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/PHPCR/SuluNodeTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNodeTest\\:\\:testDelegate\\(\\) has parameter \\$returnValue with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/PHPCR/SuluNodeTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func_array expects callable\\(\\)\\: mixed, array\\{Prophecy\\\\Prophecy\\\\ObjectProphecy\\<PHPCR\\\\NodeInterface\\>, mixed\\} given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/PHPCR/SuluNodeTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func_array expects callable\\(\\)\\: mixed, array\\{Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode, mixed\\} given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/PHPCR/SuluNodeTest.php
-
-		-
 			message: "#^Class Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\RedirectTypeSubscriber does not have a constructor and must be instantiated without any parameters\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/RedirectTypeSubscriberTest.php

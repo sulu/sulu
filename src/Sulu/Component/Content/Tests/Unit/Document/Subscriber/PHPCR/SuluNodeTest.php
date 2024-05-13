@@ -502,7 +502,7 @@ class SuluNodeTest extends TestCase
 
         $suluNode = new SuluNode($node->reveal());
 
-        $this->assertSame($nodes, $suluNode->getSharedSet());
+        $this->assertSame($nodes, [...$suluNode->getSharedSet()]);
     }
 
     public function testRemoveSharedSet(): void
