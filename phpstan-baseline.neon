@@ -36,11 +36,6 @@ parameters:
 			path: src/Sulu/Bundle/ActivityBundle/Tests/Functional/UserInterface/Controller/ActivityControllerTest.php
 
 		-
-			message: "#^Unsafe call to private method Sulu\\\\Bundle\\\\ActivityBundle\\\\Tests\\\\Functional\\\\UserInterface\\\\Controller\\\\ActivityControllerTest\\:\\:createActivity\\(\\) through static\\:\\:\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ActivityBundle/Tests/Functional/UserInterface/Controller/ActivityControllerTest.php
-
-		-
 			message: "#^Unsafe call to private method Sulu\\\\Bundle\\\\ActivityBundle\\\\Tests\\\\Functional\\\\UserInterface\\\\Controller\\\\ActivityControllerTest\\:\\:setUpUserRole\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ActivityBundle/Tests/Functional/UserInterface/Controller/ActivityControllerTest.php
@@ -42136,41 +42131,6 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/FallbackLocalizationSubscriberTest.php
 
 		-
-			message: "#^Cannot call method willReturn\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/PHPCR/SuluNodeTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNodeTest\\:\\:provideDelegateData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/PHPCR/SuluNodeTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNodeTest\\:\\:testDelegate\\(\\) has parameter \\$arguments with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/PHPCR/SuluNodeTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNodeTest\\:\\:testDelegate\\(\\) has parameter \\$functionName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/PHPCR/SuluNodeTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNodeTest\\:\\:testDelegate\\(\\) has parameter \\$returnValue with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/PHPCR/SuluNodeTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func_array expects callable\\(\\)\\: mixed, array\\{Prophecy\\\\Prophecy\\\\ObjectProphecy\\<PHPCR\\\\NodeInterface\\>, mixed\\} given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/PHPCR/SuluNodeTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$callback of function call_user_func_array expects callable\\(\\)\\: mixed, array\\{Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\PHPCR\\\\SuluNode, mixed\\} given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/PHPCR/SuluNodeTest.php
-
-		-
 			message: "#^Class Sulu\\\\Component\\\\Content\\\\Document\\\\Subscriber\\\\RedirectTypeSubscriber does not have a constructor and must be instantiated without any parameters\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Document/Subscriber/RedirectTypeSubscriberTest.php
@@ -53597,11 +53557,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\EnvironmentTest\\:\\:addUrlProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/EnvironmentTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\EnvironmentTest\\:\\:getUrl\\(\\) has parameter \\$toArrayResult with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Unit/EnvironmentTest.php
 
