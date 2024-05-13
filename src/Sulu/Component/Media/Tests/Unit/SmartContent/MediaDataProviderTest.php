@@ -25,12 +25,12 @@ use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\FileVersionMeta;
 use Sulu\Bundle\MediaBundle\Entity\Media as MediaEntity;
 use Sulu\Bundle\MediaBundle\Entity\MediaType;
+use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Bundle\WebsiteBundle\ReferenceStore\ReferenceStoreInterface;
 use Sulu\Component\Content\Compat\PropertyParameter;
 use Sulu\Component\Media\SmartContent\MediaDataItem;
 use Sulu\Component\Media\SmartContent\MediaDataProvider;
-use Sulu\Component\Security\Authentication\UserInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\SmartContent\ArrayAccessItem;
 use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
@@ -355,7 +355,7 @@ class MediaDataProviderTest extends TestCase
             self::createMedia(3, 'Test-3'),
         ];
 
-        $user = $this->prophesize(UserInterface::class);
+        $user = new User();
 
         $resourceItems = [];
         foreach ($medias as $media) {
@@ -363,7 +363,7 @@ class MediaDataProviderTest extends TestCase
         }
 
         return [
-            [['dataSource' => 42, 'tags' => [1]], null, 1, 3, $medias, false, $user->reveal(), $resourceItems],
+            [['dataSource' => 42, 'tags' => [1]], null, 1, 3, $medias, false, $user, $resourceItems],
             [['dataSource' => 42, 'tags' => [1]], null, 1, 2, $medias, true, null, \array_slice($resourceItems, 0, 2)],
             [['dataSource' => 42, 'tags' => [1]], 5, 1, 2, $medias, true, null, \array_slice($resourceItems, 0, 2)],
             [['dataSource' => 42, 'tags' => [1]], 1, 1, 2, \array_slice($medias, 0, 1), false, null, \array_slice($resourceItems, 0, 1)],

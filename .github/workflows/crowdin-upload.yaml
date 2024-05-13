@@ -9,12 +9,17 @@ jobs:
     upload_sources:
         name: Upload Sources
         runs-on: ubuntu-18.04
+        timeout-minutes: 30
+
         steps:
-            - uses: actions/checkout@v1
+            - uses: actions/checkout@v4
+
             - name: Merge all translation files
               run: jq -s '.|add' src/Sulu/Bundle/*/Resources/translations/admin.*.json > admin.en.json
+
             - name: Download Crowdin CLI
               run: curl "https://downloads.crowdin.com/cli/v3/crowdin-cli.zip" --output crowdin-cli.zip && unzip crowdin-cli.zip
+
             - name: Upload translations to crowdin
               env:
                   CROWDIN_TOKEN: ${{ secrets.CrowdinToken }}

@@ -16,6 +16,7 @@ jobs:
     js-css:
         name: "Node ${{ matrix.node-version }}"
         runs-on: ubuntu-latest
+        timeout-minutes: 30
 
         strategy:
             fail-fast: false
@@ -82,6 +83,7 @@ jobs:
     js-lint:
         name: "Node Lint"
         runs-on: ubuntu-latest
+        timeout-minutes: 30
 
         env:
             COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -118,6 +120,7 @@ jobs:
     php:
         name: "PHP ${{ matrix.php-version }} (${{ matrix.database }}, ${{ matrix.phpcr-transport }}, ${{ matrix.dependency-versions }})"
         runs-on: ubuntu-latest
+        timeout-minutes: 30
 
         env:
             APP_ENV: test
@@ -247,6 +250,7 @@ jobs:
     php-lint:
         name: "PHP Lint"
         runs-on: ubuntu-latest
+        timeout-minutes: 30
 
         env:
             APP_ENV: test
