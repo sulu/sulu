@@ -71,6 +71,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->arrayNode('providers')
                             ->useAttributeAsKey('domain')
+                            ->normalizeKeys(false)
                             ->arrayPrototype()
                                 ->children()
                                     ->scalarNode('dsn')
