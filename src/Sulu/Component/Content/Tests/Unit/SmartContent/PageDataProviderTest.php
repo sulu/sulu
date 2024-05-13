@@ -462,6 +462,8 @@ class PageDataProviderTest extends TestCase
         );
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
+
+        /** @var ContentDataItem[] $items */
         $items = $result->getItems();
 
         $this->assertEquals($data[0]['id'], $items[0]->getId());
@@ -522,6 +524,8 @@ class PageDataProviderTest extends TestCase
         );
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
+
+        /** @var ContentDataItem[] $items */
         $items = $result->getItems();
 
         $this->assertEquals($data[0]['id'], $items[0]->getId());
@@ -574,6 +578,7 @@ class PageDataProviderTest extends TestCase
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
 
+        /** @var ContentDataItem[] $items */
         $items = $result->getItems();
         $this->assertEquals($data[0]['id'], $items[0]->getId());
         $this->assertTrue($items[0]->getResource()->initializeProxy());
@@ -701,6 +706,7 @@ class PageDataProviderTest extends TestCase
 
         $this->assertInstanceOf(DataProviderResult::class, $result);
 
+        /** @var ContentDataItem[] $items */
         $items = $result->getItems();
         for ($i = 0, $length = \count($items); $i < $length; ++$i) {
             $this->assertEquals($data[$i]['id'], $items[$i]->getId());
