@@ -36,6 +36,10 @@ class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorIn
         string $locale,
         array $metadataOptions = [],
     ): void {
+        if ($metadataOptions['ignore_global_blocks'] ?? false) {
+            return;
+        }
+
         foreach ($formMetadata->getForms() as $form) {
             $this->enhanceGlobalBlockTypes($form->getItems(), $locale, $form->getSchema());
         }
@@ -67,7 +71,7 @@ class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorIn
 
                 $rootSchema->addDefinition($blockMetadata->getName(), $blockMetadata->getSchema());
 
-                $this->enhanceGlobalBlockTypes($type->getItems(), $locale, $rootSchema);
+                $this->enhanceGlobalBlockTypes($blockMetadata->getItems(), $locale, $rootSchema);
             }
         }
     }
@@ -77,7 +81,7 @@ class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorIn
         if (null === $this->globalBlocksMetadata) {
             /** @var TypedFormMetadata $globalBlocksMetadata */
             $globalBlocksMetadata = $this->metadataProviderRegistry->getMetadataProvider('form')
-                ->getMetadata('block', $locale, []);
+                ->getMetadata('block', $locale, ['ignore_global_blocks' => true]);
 
             $this->globalBlocksMetadata = $globalBlocksMetadata;
         }
