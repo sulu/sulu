@@ -102,6 +102,10 @@ class MetadataStore {
 
     hasGlobalBlock(typeConfiguration: {form: Object}) {
         return undefined !== Object.keys(typeConfiguration.form).find((schemaFieldKey) => {
+            if (typeConfiguration.form[schemaFieldKey].type === 'section') {
+                return this.hasGlobalBlock({form: typeConfiguration.form[schemaFieldKey].items});
+            }
+
             if (!typeConfiguration.form[schemaFieldKey].types) {
                 return false;
             }
