@@ -69,8 +69,14 @@ class MetadataStore {
             });
     }
 
-    enhanceBlockForm(form, blockSchema) {
+    enhanceBlockForm(form: Object, blockSchema: Object) {
         Object.keys(form).forEach((schemaFieldKey) => {
+            if (form[schemaFieldKey].type === 'section') {
+                form[schemaFieldKey].items = this.enhanceBlockForm(form[schemaFieldKey].items, blockSchema);
+
+                return;
+            }
+
             if (!form[schemaFieldKey].types) {
                 return;
             }
@@ -83,7 +89,10 @@ class MetadataStore {
                 }
 
                 if (form[schemaFieldKey].types && blockSchema.types[key]) {
-                    form[schemaFieldKey].types[key].form = this.enhanceBlockForm(blockSchema.types[key].form, blockSchema);
+                    form[schemaFieldKey].types[key].form = this.enhanceBlockForm(
+                        blockSchema.types[key].form,
+                        blockSchema
+                    );
                 }
             });
         });
