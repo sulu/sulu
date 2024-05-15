@@ -185,7 +185,7 @@ class RequestAnalyzerTest extends TestCase
         $this->assertEquals('https', $requestAnalyzer->getAttribute('scheme'));
     }
 
-    public function provideGetter()
+    public static function provideGetter()
     {
         $localization = new Localization('de', 'at');
 

@@ -40,201 +40,48 @@ class AdminController
     public const TRANSLATION_DOMAIN = 'admin';
 
     /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var AdminPool
-     */
-    private $adminPool;
-
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
-
-    /**
-     * @var ViewHandlerInterface
-     */
-    private $viewHandler;
-
-    /**
-     * @var Environment
-     */
-    private $engine;
-
-    /**
-     * @var TranslatorBagInterface
-     */
-    private $translatorBag;
-
-    /**
-     * @var MetadataProviderRegistry
-     */
-    private $metadataProviderRegistry;
-
-    /**
-     * @var ViewRegistry
-     */
-    private $viewRegistry;
-
-    /**
-     * @var NavigationRegistry
-     */
-    private $navigationRegistry;
-
-    /**
-     * @var FieldTypeOptionRegistryInterface
-     */
-    private $fieldTypeOptionRegistry;
-
-    /**
-     * @var ContactManagerInterface
-     */
-    private $contactManager;
-
-    /**
-     * @var DataProviderPoolInterface
-     */
-    private $dataProviderPool;
-
-    /**
-     * @var LinkProviderPoolInterface
-     */
-    private $linkProviderPool;
-
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var string
-     */
-    private $suluVersion;
-
-    /**
-     * @var string|null
-     */
-    private $appVersion;
-
-    /**
-     * @var array
-     */
-    private $resources;
-
-    /**
-     * @var array
-     */
-    private $locales;
-
-    /**
-     * @var array
-     */
-    private $translations;
-
-    /**
-     * @var string
-     */
-    private $fallbackLocale;
-
-    /**
-     * @var string
-     */
-    private $collaborationInterval;
-
-    /**
      * @var bool
      */
     private $collaborationEnabled;
 
     /**
-     * @var string|null
+     * @param array<mixed> $resources
+     * @param array<string> $locales
+     * @param array<string> $translations
      */
-    private $passwordPattern;
-
-    /**
-     * @var string|null
-     */
-    private $passwordInfoTranslationKey;
-
-    /**
-     * @var bool
-     */
-    private $hasSingleSignOnProvider;
-
     public function __construct(
-        UrlGeneratorInterface $urlGenerator,
-        TokenStorageInterface $tokenStorage,
-        AdminPool $adminPool,
-        SerializerInterface $serializer,
-        ViewHandlerInterface $viewHandler,
-        Environment $engine,
-        TranslatorBagInterface $translatorBag,
-        MetadataProviderRegistry $metadataProviderRegistry,
-        ViewRegistry $viewRegistry,
-        NavigationRegistry $navigationRegistry,
-        FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
-        ContactManagerInterface $contactManager,
-        DataProviderPoolInterface $dataProviderPool,
-        LinkProviderPoolInterface $linkProviderPool,
-        LocalizationManagerInterface $localizationManager,
-        string $environment,
-        string $suluVersion,
-        ?string $appVersion,
-        array $resources,
-        array $locales,
-        array $translations,
-        string $fallbackLocale,
-        string $collaborationInterval,
+        private UrlGeneratorInterface $urlGenerator,
+        private TokenStorageInterface $tokenStorage,
+        private AdminPool $adminPool,
+        private SerializerInterface $serializer,
+        private ViewHandlerInterface $viewHandler,
+        private Environment $engine,
+        private TranslatorBagInterface $translatorBag,
+        private MetadataProviderRegistry $metadataProviderRegistry,
+        private ViewRegistry $viewRegistry,
+        private NavigationRegistry $navigationRegistry,
+        private FieldTypeOptionRegistryInterface $fieldTypeOptionRegistry,
+        private ContactManagerInterface $contactManager,
+        private DataProviderPoolInterface $dataProviderPool,
+        private LinkProviderPoolInterface $linkProviderPool,
+        private LocalizationManagerInterface $localizationManager,
+        private string $environment,
+        private string $suluVersion,
+        private ?string $appVersion,
+        private array $resources,
+        private array $locales,
+        private array $translations,
+        private string $fallbackLocale,
+        private string $collaborationInterval,
         ?bool $collaborationEnabled = null,
-        ?string $passwordPattern = null,
-        ?string $passwordInfoTranslationKey = null,
-        bool $hasSingleSignOnProvider = false
+        private ?string $passwordPattern = null,
+        private ?string $passwordInfoTranslationKey = null,
+        private bool $hasSingleSignOnProvider = false
     ) {
-        $this->urlGenerator = $urlGenerator;
-        $this->tokenStorage = $tokenStorage;
-        $this->adminPool = $adminPool;
-        $this->serializer = $serializer;
-        $this->viewHandler = $viewHandler;
-        $this->engine = $engine;
-        $this->translatorBag = $translatorBag;
-        $this->metadataProviderRegistry = $metadataProviderRegistry;
-        $this->viewRegistry = $viewRegistry;
-        $this->navigationRegistry = $navigationRegistry;
-        $this->fieldTypeOptionRegistry = $fieldTypeOptionRegistry;
-        $this->contactManager = $contactManager;
-        $this->dataProviderPool = $dataProviderPool;
-        $this->linkProviderPool = $linkProviderPool;
-        $this->localizationManager = $localizationManager;
-        $this->environment = $environment;
-        $this->suluVersion = $suluVersion;
-        $this->appVersion = $appVersion;
-        $this->resources = $resources;
-        $this->locales = $locales;
-        $this->translations = $translations;
-        $this->fallbackLocale = $fallbackLocale;
-        $this->collaborationInterval = $collaborationInterval;
-        $this->hasSingleSignOnProvider = $hasSingleSignOnProvider;
-
         if (null === $collaborationEnabled) {
             @trigger_deprecation('sulu/sulu', '2.3', 'Instantiating the AdminController without the $collaborationEnabled argument is deprecated!');
         }
-
         $this->collaborationEnabled = $collaborationEnabled ?? true;
-        $this->passwordPattern = $passwordPattern;
-        $this->passwordInfoTranslationKey = $passwordInfoTranslationKey;
     }
 
     public function indexAction()

@@ -10,6 +10,8 @@ jobs:
     trigger-styleguide-build:
         name: Trigger styleguide build
         runs-on: ubuntu-latest
+        timeout-minutes: 30
+
         steps:
             - name: Trigger styleguide build
               uses: benc-uk/workflow-dispatch@v1

@@ -32,7 +32,7 @@ class MultipleTranslatedPropertiesTest extends TestCase
         );
     }
 
-    public function provideGetName()
+    public static function provideGetName()
     {
         return [
             [Structure::TYPE_PAGE, 'foobar', 'i18n:de-foobar'],

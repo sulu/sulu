@@ -17,7 +17,7 @@ use Sulu\Component\SmartContent\Configuration\Builder;
 
 class BuilderTest extends TestCase
 {
-    public function provideBoolean()
+    public static function provideBoolean()
     {
         return [[true], [false]];
     }

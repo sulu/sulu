@@ -52,7 +52,7 @@ class QueryStringRuleTest extends TestCase
         $this->assertEquals($result, $queryStringRule->evaluate($options));
     }
 
-    public function provideEvaluate()
+    public static function provideEvaluate()
     {
         return [
             [

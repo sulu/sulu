@@ -315,7 +315,7 @@ class DoctrineAccessControlProviderTest extends TestCase
         $this->assertSame($supported, $this->doctrineAccessControlProvider->supports($type));
     }
 
-    public function provideSupport()
+    public static function provideSupport()
     {
         return [
             [\stdClass::class, false],

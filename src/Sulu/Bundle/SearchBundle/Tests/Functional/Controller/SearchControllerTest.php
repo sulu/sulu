@@ -58,7 +58,7 @@ class SearchControllerTest extends SuluTestCase
         $this->indexProducts();
     }
 
-    public function provideSearch()
+    public static function provideSearch()
     {
         return [
             [

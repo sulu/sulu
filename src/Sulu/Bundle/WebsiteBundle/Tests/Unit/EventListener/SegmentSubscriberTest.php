@@ -68,7 +68,7 @@ class SegmentSubscriberTest extends TestCase
         $this->assertEquals([], $response->getVary());
     }
 
-    public function provideAddCookieHeader()
+    public static function provideAddCookieHeader()
     {
         return [
             [['s', 'w'], 's', 's', 'w', null, 0],

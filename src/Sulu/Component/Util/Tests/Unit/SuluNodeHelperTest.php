@@ -151,7 +151,7 @@ class SuluNodeHelperTest extends TestCase
         ], $localizedValues);
     }
 
-    public function provideExtractWebspaceFromPath()
+    public static function provideExtractWebspaceFromPath()
     {
         return [
             ['/cmf/sulu_io/content/articles/article-one', 'sulu_io'],
@@ -173,7 +173,7 @@ class SuluNodeHelperTest extends TestCase
         $this->assertEquals($expected, $res);
     }
 
-    public function provideExtractSnippetTypeFromPath()
+    public static function provideExtractSnippetTypeFromPath()
     {
         return [
             ['/cmf/snippets/foobar/snippet1', 'foobar'],
@@ -199,7 +199,7 @@ class SuluNodeHelperTest extends TestCase
         $this->assertEquals($expected, $res);
     }
 
-    public function provideGetStructureTypeForNode()
+    public static function provideGetStructureTypeForNode()
     {
         return [
             ['sulu:snippet', 'snippet'],
@@ -222,7 +222,7 @@ class SuluNodeHelperTest extends TestCase
         $this->assertEquals($expected, $this->helper->getStructureTypeForNode($this->node));
     }
 
-    public function provideHasSuluNodeType()
+    public static function provideHasSuluNodeType()
     {
         return [
             ['sulu:snippet', true],

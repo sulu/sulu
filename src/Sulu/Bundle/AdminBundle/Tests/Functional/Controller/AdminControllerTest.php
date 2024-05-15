@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of Sulu.
  *
@@ -22,7 +24,7 @@ class AdminControllerTest extends SuluTestCase
      */
     private $client;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->client = $this->createAuthenticatedClient();
         $this->purgeDatabase();
@@ -50,10 +52,10 @@ class AdminControllerTest extends SuluTestCase
         $this->assertIsObject($response->sulu_admin->resources);
         $this->assertTrue(\property_exists($response, 'sulu_preview'));
 
-        $this->assertEquals('en', $response->sulu_admin->localizations[0]->localization);
-        $this->assertEquals('en_us', $response->sulu_admin->localizations[1]->localization);
-        $this->assertEquals('de', $response->sulu_admin->localizations[2]->localization);
-        $this->assertEquals('de_at', $response->sulu_admin->localizations[3]->localization);
+        $this->assertSame('en', $response->sulu_admin->localizations[0]->localization);
+        $this->assertSame('en_us', $response->sulu_admin->localizations[1]->localization);
+        $this->assertSame('de', $response->sulu_admin->localizations[2]->localization);
+        $this->assertSame('de_at', $response->sulu_admin->localizations[3]->localization);
     }
 
     public function testGetConfigWithFallbackNonExistUserLocale(): void
@@ -81,10 +83,10 @@ class AdminControllerTest extends SuluTestCase
         $this->assertIsObject($response->sulu_admin->resources);
         $this->assertTrue(\property_exists($response, 'sulu_preview'));
 
-        $this->assertEquals('en', $response->sulu_admin->localizations[0]->localization);
-        $this->assertEquals('en_us', $response->sulu_admin->localizations[1]->localization);
-        $this->assertEquals('de', $response->sulu_admin->localizations[2]->localization);
-        $this->assertEquals('de_at', $response->sulu_admin->localizations[3]->localization);
+        $this->assertSame('en', $response->sulu_admin->localizations[0]->localization);
+        $this->assertSame('en_us', $response->sulu_admin->localizations[1]->localization);
+        $this->assertSame('de', $response->sulu_admin->localizations[2]->localization);
+        $this->assertSame('de_at', $response->sulu_admin->localizations[3]->localization);
     }
 
     public function testTemplateConfig(): void
@@ -102,7 +104,7 @@ class AdminControllerTest extends SuluTestCase
 
         // extract json from html
         $applicationElement = $crawler->filter('#application')->first();
-        $this->assertEquals(1, $applicationElement->count(), 'Failed getting the application element');
+        $this->assertCount(1, $applicationElement, 'Failed getting the application element');
         $configJson = $applicationElement->attr('data-config');
         $this->assertIsString($configJson, 'Failed to retrieve the configuration json');
         $config = \json_decode($configJson, true);
@@ -159,12 +161,34 @@ class AdminControllerTest extends SuluTestCase
 
         $metaData = \json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
 
-        $this->assertEquals([
+        $this->assertSame([
             'types' => [
-                'default' => [],
                 'overview' => [],
+                'default' => [],
             ],
             'defaultType' => null,
         ], $metaData);
+    }
+
+    public function testGetMetaData(): void
+    {
+        $this->initPhpcr();
+        $collectionType = new LoadCollectionTypes();
+        $collectionType->load($this->getEntityManager());
+
+        $this->client->request('GET', '/admin/metadata/form/page');
+
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $json = $response->getContent();
+        $this->assertIsString($json);
+
+        /** @var array{types: array<string, mixed>} $metaData */
+        $metaData = \json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
+
+        $defaultMetadata = $metaData['types']['default'];
+        $overviewMetadata = $metaData['types']['overview'];
+        $this->assertSame(\json_decode((string) \file_get_contents(__DIR__ . '/fixtures/default.json'), true), $defaultMetadata);
+        $this->assertSame(\json_decode((string) \file_get_contents(__DIR__ . '/fixtures/overview.json'), true), $overviewMetadata);
     }
 }

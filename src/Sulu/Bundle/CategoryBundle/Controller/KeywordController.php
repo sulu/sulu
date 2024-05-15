@@ -23,7 +23,7 @@ use Sulu\Bundle\CategoryBundle\Entity\KeywordRepositoryInterface;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordIsMultipleReferencedException;
 use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
 use Sulu\Component\Rest\AbstractRestController;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
+use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
@@ -43,46 +43,6 @@ class KeywordController extends AbstractRestController implements ClassResourceI
 
     public const FORCE_MERGE = 'merge';
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
-
-    /**
-     * @var DoctrineListBuilderFactory
-     */
-    private $listBuilderFactory;
-
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
-
-    /**
-     * @var KeywordManagerInterface
-     */
-    private $keywordManager;
-
-    /**
-     * @var KeywordRepositoryInterface
-     */
-    private $keywordRepository;
-
-    /**
-     * @var CategoryRepositoryInterface
-     */
-    private $categoryRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var class-string
-     */
-    private $keywordClass;
-
     protected static $entityKey = 'category_keywords';
 
     /**
@@ -90,14 +50,14 @@ class KeywordController extends AbstractRestController implements ClassResourceI
      */
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        RestHelperInterface $restHelper,
-        DoctrineListBuilderFactoryInterface $listBuilderFactory,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        KeywordManagerInterface $keywordManager,
-        KeywordRepositoryInterface $keywordRepository,
-        CategoryRepositoryInterface $categoryRepository,
-        EntityManagerInterface $entityManager,
-        string $keywordClass
+        private RestHelperInterface $restHelper,
+        private DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        private KeywordManagerInterface $keywordManager,
+        private KeywordRepositoryInterface $keywordRepository,
+        private CategoryRepositoryInterface $categoryRepository,
+        private EntityManagerInterface $entityManager,
+        private string $keywordClass
     ) {
         parent::__construct($viewHandler);
         $this->restHelper = $restHelper;
@@ -124,6 +84,7 @@ class KeywordController extends AbstractRestController implements ClassResourceI
 
         $fieldDescriptor = $this->fieldDescriptorFactory->getFieldDescriptors('category_keywords');
 
+        /** @var DoctrineListBuilder $listBuilder */
         $listBuilder = $this->listBuilderFactory->create($this->keywordClass);
         $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptor);
 

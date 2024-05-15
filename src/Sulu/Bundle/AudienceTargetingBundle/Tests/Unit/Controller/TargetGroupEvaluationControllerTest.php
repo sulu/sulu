@@ -16,16 +16,18 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\AudienceTargetingBundle\Controller\TargetGroupEvaluationController;
-use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluatorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 class TargetGroupEvaluationControllerTest extends TestCase
 {
     use ProphecyTrait;
+    use SetGetPrivatePropertyTrait;
 
     /**
      * @var ObjectProphecy<TargetGroupEvaluatorInterface>
@@ -80,23 +82,22 @@ class TargetGroupEvaluationControllerTest extends TestCase
         $this->assertEquals($targetGroupId, $response->headers->get($header));
     }
 
-    public function provideTargetGroup()
+    public static function provideTargetGroup()
     {
-        $targetGroup1 = $this->prophesize(TargetGroupInterface::class);
+        $targetGroup1 = new TargetGroup();
 
-        $targetGroup2 = $this->prophesize(TargetGroupInterface::class);
-        $targetGroup2->getId()->willReturn(2);
-
-        $targetGroup3 = $this->prophesize(TargetGroupInterface::class);
-        $targetGroup3->getId()->willReturn(3);
-        $targetGroup4 = $this->prophesize(TargetGroupInterface::class);
-        $targetGroup4->getId()->willReturn(4);
+        $targetGroup2 = new TargetGroup();
+        self::setPrivateProperty($targetGroup2, 'id', 2);
+        $targetGroup3 = new TargetGroup();
+        self::setPrivateProperty($targetGroup3, 'id', 3);
+        $targetGroup4 = new TargetGroup();
+        self::setPrivateProperty($targetGroup4, 'id', 4);
 
         return [
-            ['X-Sulu-Target-Group-Hash', null, $targetGroup1->reveal(), null],
-            ['X-Sulu-Target-Group-Hash', null, $targetGroup2->reveal(), 2],
+            ['X-Sulu-Target-Group-Hash', null, $targetGroup1, null],
+            ['X-Sulu-Target-Group-Hash', null, $targetGroup2, 2],
             ['X-Sulu-Target-Group', null, null, 0],
-            ['X-Sulu-Target-Group', $targetGroup3->reveal(), $targetGroup4->reveal(), 4],
+            ['X-Sulu-Target-Group', $targetGroup3, $targetGroup4, 4],
         ];
     }
 
@@ -127,16 +128,16 @@ class TargetGroupEvaluationControllerTest extends TestCase
         $targetGroupEvaluationController->targetGroupHitAction();
     }
 
-    public function provideTargetGroupHit()
+    public static function provideTargetGroupHit()
     {
-        $oldTargetGroup1 = $this->prophesize(TargetGroupInterface::class);
-        $oldTargetGroup1->getId()->willReturn(1);
-        $newTargetGroup1 = $this->prophesize(TargetGroupInterface::class);
-        $newTargetGroup1->getId()->willReturn(2);
+        $oldTargetGroup1 = new TargetGroup();
+        self::setPrivateProperty($oldTargetGroup1, 'id', 1);
+        $newTargetGroup1 = new TargetGroup();
+        self::setPrivateProperty($newTargetGroup1, 'id', 2);
 
         return [
-            [$oldTargetGroup1->reveal(), $newTargetGroup1->reveal(), 2],
-            [$oldTargetGroup1->reveal(), null, null],
+            [$oldTargetGroup1, $newTargetGroup1, 2],
+            [$oldTargetGroup1, null, null],
         ];
     }
 }

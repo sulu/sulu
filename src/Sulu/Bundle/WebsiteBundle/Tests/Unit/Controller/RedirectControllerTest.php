@@ -16,6 +16,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Bundle\WebsiteBundle\Controller\RedirectController;
 use Sulu\Component\Webspace\Analyzer\Attributes\RequestAttributes;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -52,7 +53,7 @@ class RedirectControllerTest extends TestCase
         return $request->reveal();
     }
 
-    public function provideRedirectAction()
+    public static function provideRedirectAction()
     {
         return [
             ['http://sulu.lo/articles?foo=bar', 'sulu.lo', 'sulu.lo/en', 'http://sulu.lo/en/articles?foo=bar'],
@@ -86,7 +87,7 @@ class RedirectControllerTest extends TestCase
         $this->assertEquals($expectedTargetUrl, $response->getTargetUrl());
     }
 
-    public function provideRedirectWebspaceAction()
+    public static function provideRedirectWebspaceAction()
     {
         return [
             ['sulu.lo/de', 'http://sulu.lo', 'http://sulu.lo/de'],
@@ -109,7 +110,7 @@ class RedirectControllerTest extends TestCase
         $this->assertEquals($expectedTargetUrl, $response->getTargetUrl());
     }
 
-    public function provideRedirectToRouteAction()
+    public static function provideRedirectToRouteAction()
     {
         return [
             ['', 410],
@@ -143,15 +144,12 @@ class RedirectControllerTest extends TestCase
             \array_merge($attributesData, ['route' => $route, 'permanent' => $permanent])
         );
 
-        $query = $this->prophesize(ParameterBag::class);
-        $query->all()->willReturn($queryData);
-
         $router = $this->prophesize(RouterInterface::class);
         $router->generate($route, \array_merge($attributesData, $queryData), UrlGeneratorInterface::ABSOLUTE_URL)->willReturn('/test-route');
 
         $request = $this->prophesize(Request::class);
         $request->reveal()->attributes = $attributes->reveal();
-        $request->reveal()->query = $query->reveal();
+        $request->reveal()->query = new InputBag([]);
 
         $response = $this->controller->redirectToRouteAction($request->reveal(), $route, $permanent);
 

@@ -53,7 +53,7 @@ class ContentTypeManagerTest extends TestCase
         $this->manager->get('invalid.alias');
     }
 
-    public function provideHas()
+    public static function provideHas()
     {
         return [
             ['content_1.alias', true],

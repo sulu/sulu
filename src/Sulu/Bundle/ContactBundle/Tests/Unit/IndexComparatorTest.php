@@ -18,7 +18,7 @@ class IndexComparatorTest extends TestCase
     /**
      * @return array
      */
-    public function usortProvider()
+    public static function usortProvider()
     {
         return [
             [[5, 4, 3, 1, 2], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5], []],

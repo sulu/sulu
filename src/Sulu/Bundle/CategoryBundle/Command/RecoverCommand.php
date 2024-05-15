@@ -26,22 +26,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'sulu:categories:recover')]
 class RecoverCommand extends Command
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var CategoryRepositoryInterface
-     */
-    private $categoryRepository;
-
-    public function __construct(EntityManagerInterface $entityManager, CategoryRepositoryInterface $categoryRepository)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private CategoryRepositoryInterface $categoryRepository,
+    ) {
         parent::__construct();
-
-        $this->entityManager = $entityManager;
-        $this->categoryRepository = $categoryRepository;
     }
 
     protected function configure()

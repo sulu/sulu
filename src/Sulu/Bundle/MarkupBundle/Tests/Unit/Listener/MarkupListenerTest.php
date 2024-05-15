@@ -17,7 +17,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\MarkupBundle\Listener\MarkupListener;
 use Sulu\Bundle\MarkupBundle\Markup\MarkupParserInterface;
-use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -43,11 +42,6 @@ class MarkupListenerTest extends TestCase
     private $response;
 
     /**
-     * @var ObjectProphecy<HeaderBag>
-     */
-    private $responseHeaders;
-
-    /**
      * @var ObjectProphecy<Request>
      */
     private $request;
@@ -70,9 +64,6 @@ class MarkupListenerTest extends TestCase
 
         $this->request = $this->prophesize(Request::class);
         $this->response = $this->prophesize(Response::class);
-
-        $this->responseHeaders = $this->prophesize(HeaderBag::class);
-        $this->response->reveal()->headers = $this->responseHeaders->reveal();
 
         $this->event = new ResponseEvent(
             $this->kernel->reveal(),

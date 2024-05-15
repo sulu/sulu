@@ -34,7 +34,7 @@ class ResourceTabViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function provideBuildResourceTabView()
+    public static function provideBuildResourceTabView()
     {
         return [
             [

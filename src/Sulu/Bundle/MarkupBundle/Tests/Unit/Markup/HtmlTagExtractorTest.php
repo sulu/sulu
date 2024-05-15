@@ -16,7 +16,7 @@ use Sulu\Bundle\MarkupBundle\Markup\HtmlTagExtractor;
 
 class HtmlTagExtractorTest extends TestCase
 {
-    public function provideTags()
+    public static function provideTags()
     {
         return [
             ['<sulu-tag/>', 'tag', []],
@@ -50,7 +50,7 @@ class HtmlTagExtractorTest extends TestCase
         $this->assertEquals($result[0]->getTags()[$tag], $attributes);
     }
 
-    public function provideMultipleTags()
+    public static function provideMultipleTags()
     {
         $tags = [
             '<sulu-tag/>',

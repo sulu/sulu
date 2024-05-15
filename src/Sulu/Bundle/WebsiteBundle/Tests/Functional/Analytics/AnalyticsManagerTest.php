@@ -127,7 +127,7 @@ class AnalyticsManagerTest extends BaseFunctional
         $this->assertEquals('www.sulu.io/{localization}', $domains[0]);
     }
 
-    public function dataProvider()
+    public static function dataProvider()
     {
         return [
             [

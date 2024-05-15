@@ -37,7 +37,7 @@ class PreviewFormViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function provideBuildPreviewFormView()
+    public static function provideBuildPreviewFormView()
     {
         return [
             [

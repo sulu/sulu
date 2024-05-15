@@ -87,7 +87,7 @@ class TimestampableSubscriberTest extends TestCase
         $this->subscriber->loadClassMetadata($this->loadClassMetadataEvent->reveal());
     }
 
-    public function provideOnPreUpdate()
+    public static function provideOnPreUpdate()
     {
         return [
             [null],

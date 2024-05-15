@@ -47,7 +47,7 @@ class BaseDataProviderTest extends TestCase
         $this->assertEquals([], $provider->getDefaultPropertyParameter());
     }
 
-    public function configurationProvider()
+    public static function configurationProvider()
     {
         return [
             [true, true, true, true, true, []],
@@ -115,7 +115,7 @@ class BaseDataProviderTest extends TestCase
         $this->assertNull($provider->resolveDatasource('', [], []));
     }
 
-    public function filtersProvider()
+    public static function filtersProvider()
     {
         return [
             [

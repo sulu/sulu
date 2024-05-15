@@ -76,7 +76,7 @@ class CategoryTwigExtensionTest extends TestCase
     /**
      * @return array<array{0:array<mixed>, 1?:string, 2?:string, 3?:int}>
      */
-    public function getProvider(): array
+    public static function getProvider(): array
     {
         return [
             [[]],
@@ -135,7 +135,7 @@ class CategoryTwigExtensionTest extends TestCase
     /**
      * @return array<array{string, string, string, string}>
      */
-    public function appendProvider(): array
+    public static function appendProvider(): array
     {
         return [
             ['c', '/test', '1,2', '1,2,3'],
@@ -207,7 +207,7 @@ class CategoryTwigExtensionTest extends TestCase
     /**
      * @return array<array{string, string, string, string}>
      */
-    public function setProvider(): array
+    public static function setProvider(): array
     {
         return [
             ['c', '/test', '1,2', '3'],
@@ -253,7 +253,7 @@ class CategoryTwigExtensionTest extends TestCase
     }
 
     /** @return array<array{string, string, string}> */
-    public function clearProvider(): array
+    public static function clearProvider(): array
     {
         return [
             ['c', '/test', '1,2'],

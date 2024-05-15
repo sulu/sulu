@@ -194,7 +194,7 @@ class PortalInformationRequestProcessorTest extends TestCase
         $this->assertTrue($this->portalInformationRequestProcessor->validate(new RequestAttributes()));
     }
 
-    public function provideProcess()
+    public static function provideProcess()
     {
         return [
             [
@@ -236,7 +236,7 @@ class PortalInformationRequestProcessorTest extends TestCase
         ];
     }
 
-    public function provideProcessWithFormat()
+    public static function provideProcessWithFormat()
     {
         return [
             [

@@ -75,7 +75,7 @@ class AuthenticationHandlerTest extends TestCase
                     ? Security::AUTHENTICATION_ERROR // BC layer to Symfony <=6.4
                     : SymfonyCoreSecurity::AUTHENTICATION_ERROR), // BC layer to Symfony <=5.4
             $this->exception->reveal()
-        )->willReturn(null);
+        )->will(function() {});
         $this->request->getSession()
             ->willReturn($session->reveal());
         $router->generate('sulu_admin')->willReturn('/admin');

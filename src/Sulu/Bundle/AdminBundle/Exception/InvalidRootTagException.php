@@ -13,24 +13,11 @@ namespace Sulu\Bundle\AdminBundle\Exception;
 
 class InvalidRootTagException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $resource;
-
-    /**
-     * @var string
-     */
-    private $rootTag;
-
-    public function __construct(string $resource, string $rootTag)
+    public function __construct(private string $resource, private string $rootTag)
     {
         parent::__construct(
             \sprintf('The resource "%s" does not have a root tag named "%s"', $resource, $rootTag)
         );
-
-        $this->resource = $resource;
-        $this->rootTag = $rootTag;
     }
 
     public function getResource()

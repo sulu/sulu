@@ -12,6 +12,7 @@ import indexStore from './stores/indexStore';
 import SearchField from './SearchField';
 import SearchResult from './SearchResult';
 import searchStyles from './search.scss';
+import searchResultStyles from './searchResult.scss';
 import type {Index} from './types';
 
 type Props = {|
@@ -127,16 +128,18 @@ class Search extends React.Component<Props> {
                     </div>
                 }
                 {!searchStore.loading && searchStore.result.length > 0 &&
-                    <Pagination
-                        currentLimit={searchStore.limit}
-                        currentPage={searchStore.page}
-                        loading={searchStore.loading}
-                        onLimitChange={this.handleLimitChange}
-                        onPageChange={this.handlePageChange}
-                        totalPages={searchStore.pages}
-                    >
-                        {results}
-                    </Pagination>
+                    <div className={searchResultStyles.searchResultsOuterContainer}>
+                        <Pagination
+                            currentLimit={searchStore.limit}
+                            currentPage={searchStore.page}
+                            loading={searchStore.loading}
+                            onLimitChange={this.handleLimitChange}
+                            onPageChange={this.handlePageChange}
+                            totalPages={searchStore.pages}
+                        >
+                            {results}
+                        </Pagination>
+                    </div>
                 }
             </div>
         );

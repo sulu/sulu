@@ -23,7 +23,7 @@ class TabViewBuilderTest extends TestCase
         $this->assertNotSame($viewBuilder->getView(), $viewBuilder->getView());
     }
 
-    public function provideBuildTabView()
+    public static function provideBuildTabView()
     {
         return [
             [
