@@ -50591,11 +50591,6 @@ parameters:
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\RequestAnalyzer\\:\\:__construct\\(\\) has parameter \\$requestProcessors with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\RequestAnalyzer\\:\\:analyze\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Analyzer/RequestAnalyzer.php
@@ -52149,11 +52144,6 @@ parameters:
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Url\\\\ReplacerInterface\\:\\:cleanup\\(\\) has parameter \\$replacers with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Url/ReplacerInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Url\\\\WebspaceUrlChainProvider\\:\\:__construct\\(\\) has parameter \\$chain with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Url/WebspaceUrlChainProvider.php
 
 		-
 			message: "#^Cannot access offset 'host' on array\\{scheme\\?\\: string, host\\?\\: string, port\\?\\: int\\<0, 65535\\>, user\\?\\: string, pass\\?\\: string, path\\?\\: string, query\\?\\: string, fragment\\?\\: string\\}\\|false\\.$#"
