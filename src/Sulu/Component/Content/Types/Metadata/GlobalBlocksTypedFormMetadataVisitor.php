@@ -54,6 +54,8 @@ class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorIn
         foreach ($items as $item) {
             if ($item instanceof SectionMetadata) {
                 $this->enhanceGlobalBlockTypes($item->getItems(), $locale, $rootSchema);
+
+                continue;
             }
 
             if (!$item instanceof FieldMetadata) {
@@ -63,6 +65,8 @@ class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorIn
             foreach ($item->getTypes() as $type) {
                 $globalBlockTag = $type->getTagsByName('sulu.global_block')[0] ?? null;
                 if (!$globalBlockTag) {
+                    $this->enhanceGlobalBlockTypes($type->getItems(), $locale, $rootSchema);
+
                     continue;
                 }
 

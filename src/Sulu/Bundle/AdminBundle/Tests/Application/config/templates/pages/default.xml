@@ -89,6 +89,17 @@
                                 </property>
                             </properties>
                         </type>
+                        <type name="block">
+                            <properties>
+                                <property name="title" type="text_line"/>
+                                <block name="blocks" default-type="text_block2" minOccurs="0">
+                                    <types>
+                                        <type ref="text_block2"/>
+                                        <type ref="text_block3"/>
+                                    </types>
+                                </block>
+                            </properties>
+                        </type>
                     </types>
                 </block>
             </properties>

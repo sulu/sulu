@@ -83,8 +83,13 @@ class MetadataStore {
 
             Object.keys(form[schemaFieldKey].types).forEach((key) => {
                 if (!form[schemaFieldKey].types
-                    || toJS(form[schemaFieldKey].types[key].form).length > 0
+                    || Object.keys(toJS(form[schemaFieldKey].types[key].form)).length > 0
                 ) {
+                    form[schemaFieldKey].types[key].form = this.enhanceBlockForm(
+                        form[schemaFieldKey].types[key].form,
+                        blockSchema
+                    );
+
                     return;
                 }
 
