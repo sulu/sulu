@@ -65,30 +65,52 @@ class MetadataStore {
                     return typeConfiguration.form;
                 }
 
-                Object.keys(typeConfiguration.form).forEach((schemaFieldKey) => {
-                    if (!typeConfiguration.form[schemaFieldKey].types) {
-                        return;
-                    }
-
-                    Object.keys(typeConfiguration.form[schemaFieldKey].types).forEach((key) => {
-                        if (!typeConfiguration.form[schemaFieldKey].types
-                            || toJS(typeConfiguration.form[schemaFieldKey].types[key].form).length > 0
-                        ) {
-                            return;
-                        }
-
-                        if (typeConfiguration.form[schemaFieldKey].types && blockSchema.types[key]) {
-                            typeConfiguration.form[schemaFieldKey].types[key].form = blockSchema.types[key].form;
-                        }
-                    });
-                });
-
-                return typeConfiguration.form;
+                return this.enhanceBlockForm(typeConfiguration.form, blockSchema);
             });
+    }
+
+    enhanceBlockForm(form: Object, blockSchema: Object) {
+        Object.keys(form).forEach((schemaFieldKey) => {
+            if (form[schemaFieldKey].type === 'section') {
+                form[schemaFieldKey].items = this.enhanceBlockForm(form[schemaFieldKey].items, blockSchema);
+
+                return;
+            }
+
+            if (!form[schemaFieldKey].types) {
+                return;
+            }
+
+            Object.keys(form[schemaFieldKey].types).forEach((key) => {
+                if (!form[schemaFieldKey].types
+                    || Object.keys(toJS(form[schemaFieldKey].types[key].form)).length > 0
+                ) {
+                    form[schemaFieldKey].types[key].form = this.enhanceBlockForm(
+                        form[schemaFieldKey].types[key].form,
+                        blockSchema
+                    );
+
+                    return;
+                }
+
+                if (form[schemaFieldKey].types && blockSchema.types[key]) {
+                    form[schemaFieldKey].types[key].form = this.enhanceBlockForm(
+                        blockSchema.types[key].form,
+                        blockSchema
+                    );
+                }
+            });
+        });
+
+        return form;
     }
 
     hasGlobalBlock(typeConfiguration: {form: Object}) {
         return undefined !== Object.keys(typeConfiguration.form).find((schemaFieldKey) => {
+            if (typeConfiguration.form[schemaFieldKey].type === 'section') {
+                return this.hasGlobalBlock({form: typeConfiguration.form[schemaFieldKey].items});
+            }
+
             if (!typeConfiguration.form[schemaFieldKey].types) {
                 return false;
             }
