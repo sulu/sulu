@@ -18,38 +18,13 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 
 class CategoryKeywordRemovedEvent extends DomainEvent
 {
-    /**
-     * @var CategoryInterface
-     */
-    private $category;
-
-    /**
-     * @var int
-     */
-    private $keywordId;
-
-    /**
-     * @var string
-     */
-    private $keywordTitle;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
     public function __construct(
-        CategoryInterface $category,
-        string $locale,
-        int $keywordId,
-        string $keywordTitle
+        private CategoryInterface $category,
+        private string $locale,
+        private int $keywordId,
+        private string $keywordTitle
     ) {
         parent::__construct();
-
-        $this->category = $category;
-        $this->locale = $locale;
-        $this->keywordId = $keywordId;
-        $this->keywordTitle = $keywordTitle;
     }
 
     public function getCategory(): CategoryInterface

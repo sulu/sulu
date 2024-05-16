@@ -642,7 +642,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         }
     }
 
-    public function provideFindByFiltersWithAudienceTargeting()
+    public static function provideFindByFiltersWithAudienceTargeting()
     {
         return [
             [null, [0, 1, 2, 3]],

@@ -16,17 +16,7 @@ namespace Sulu\Bundle\AdminBundle\Exception;
  */
 class ParentViewNotFoundException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $route;
-
-    /**
-     * @var string
-     */
-    private $parentRoute;
-
-    public function __construct(string $parentRoute, string $route)
+    public function __construct(private string $parentRoute, private string $route)
     {
         parent::__construct(
             \sprintf(
@@ -36,9 +26,6 @@ class ParentViewNotFoundException extends \Exception
                 $parentRoute
             )
         );
-
-        $this->route = $route;
-        $this->parentRoute = $parentRoute;
     }
 
     public function getRoute(): string

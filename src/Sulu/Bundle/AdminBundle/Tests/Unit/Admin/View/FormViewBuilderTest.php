@@ -37,7 +37,7 @@ class FormViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function provideBuildFormView()
+    public static function provideBuildFormView()
     {
         return [
             [

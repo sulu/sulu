@@ -39,7 +39,7 @@ class RequestHashCheckerTest extends TestCase
         $this->requestHashChecker = new RequestHashChecker($this->hasher->reveal());
     }
 
-    public function provideCheckHash()
+    public static function provideCheckHash()
     {
         return [
             ['false', 'hash', 'hash', true],

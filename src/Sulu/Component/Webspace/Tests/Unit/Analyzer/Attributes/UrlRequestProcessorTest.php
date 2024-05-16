@@ -41,7 +41,7 @@ class UrlRequestProcessorTest extends TestCase
         $this->assertEquals($path, $requestAttributes->getAttribute('path'));
     }
 
-    public function provideProcess()
+    public static function provideProcess()
     {
         return [
             ['http://127.0.0.1:8000/en/test', '127.0.0.1', 8000, '/en/test'],

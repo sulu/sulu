@@ -140,7 +140,7 @@ class Pagination extends React.Component<Props> {
         const {children, loading, totalPages, currentLimit} = this.props;
 
         return (
-            <section className={paginationStyles.resultsContainer}>
+            <section>
                 {children}
                 <nav className={paginationStyles.pagination}>
                     <span className={paginationStyles.display}>{translate('sulu_admin.per_page')}:</span>

@@ -86,8 +86,9 @@ class GlobalBlocksTypedFormMetadataVisitorTest extends TestCase
         $globalBlockFormTypeMetadata->setName($globalBlockName);
         $globalBlockFormTypeMetadata->setTitle('Test Block Title');
 
-        $this->metadataProviderProphecy->getMetadata('block', $locale, [])
-            ->willReturn($globalBlockFormMetadata);
+        $this->metadataProviderProphecy->getMetadata('block', $locale, [
+            'ignore_global_blocks' => true,
+        ])->shouldBeCalledTimes(1)->willReturn($globalBlockFormMetadata);
 
         // Simulate visiting the TypedFormMetadata with a FieldMetadata that has a global block tag
         $this->globalBlocksTypedFormMetadataVisitor->visitTypedFormMetadata(
@@ -107,5 +108,56 @@ class GlobalBlocksTypedFormMetadataVisitorTest extends TestCase
         );
 
         $this->assertSame('Test Block Title', $fieldType1->getTitle());
+    }
+
+    public function testDefinitionIgnore(): void
+    {
+        $locale = 'en';
+        $globalBlockName = 'test_block';
+
+        $formMetadata = new TypedFormMetadata();
+
+        $formTypeMetadata = new FormMetadata();
+        $formTypeMetadata->setSchema(new SchemaMetadata());
+        $formMetadata->addForm('test', $formTypeMetadata);
+
+        $sectionMetadata = new SectionMetadata('test1');
+        $formTypeMetadata->addItem($sectionMetadata);
+
+        $fieldMetadata = new FieldMetadata('test2');
+        $formTypeMetadata->addItem($fieldMetadata);
+
+        $fieldTag = new TagMetadata();
+        $fieldTag->setName('sulu.global_block');
+        $fieldTag->setAttributes(['global_block' => $globalBlockName]);
+
+        $fieldType1 = new FormMetadata();
+        $fieldType1->setName('test3');
+        $fieldType1->addTag($fieldTag);
+        $fieldMetadata->addType($fieldType1);
+
+        $fieldType2 = new FormMetadata();
+        $fieldType2->setName('test4');
+        $fieldMetadata->addType($fieldType2);
+
+        $globalBlockFormMetadata = new TypedFormMetadata();
+        $globalBlockFormTypeMetadata = new FormMetadata();
+        $globalBlockFormMetadata->addForm($globalBlockName, $globalBlockFormTypeMetadata);
+
+        $globalBlockFormTypeMetadata->setSchema(new SchemaMetadata());
+        $globalBlockFormTypeMetadata->setName($globalBlockName);
+        $globalBlockFormTypeMetadata->setTitle('Test Block Title');
+
+        $this->metadataProviderProphecy->getMetadata('block', $locale, [
+            'ignore_global_blocks' => true,
+        ])->shouldNotBeCalled();
+
+        // Simulate visiting the TypedFormMetadata with a FieldMetadata that has a global block tag
+        $this->globalBlocksTypedFormMetadataVisitor->visitTypedFormMetadata(
+            $formMetadata,
+            'key',
+            $locale,
+            ['ignore_global_blocks' => true],
+        );
     }
 }

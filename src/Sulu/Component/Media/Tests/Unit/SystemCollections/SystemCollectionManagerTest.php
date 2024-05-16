@@ -27,7 +27,7 @@ class SystemCollectionManagerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function configProvider()
+    public static function configProvider()
     {
         return [
             // existing 1 namespace / 1 collection
@@ -291,7 +291,7 @@ class SystemCollectionManagerTest extends TestCase
         ];
     }
 
-    public function getProvider()
+    public static function getProvider()
     {
         return [
             [
@@ -313,7 +313,7 @@ class SystemCollectionManagerTest extends TestCase
         ];
     }
 
-    public function isProvider()
+    public static function isProvider()
     {
         return [
             [

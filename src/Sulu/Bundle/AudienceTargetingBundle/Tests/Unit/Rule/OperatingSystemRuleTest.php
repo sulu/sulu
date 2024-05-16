@@ -53,7 +53,7 @@ class OperatingSystemRuleTest extends TestCase
         $this->assertEquals($result, $this->operatingSystemRule->evaluate($options));
     }
 
-    public function provideEvaluate()
+    public static function provideEvaluate()
     {
         return [
             ['LIN', ['os' => 'GNU/Linux'], true],

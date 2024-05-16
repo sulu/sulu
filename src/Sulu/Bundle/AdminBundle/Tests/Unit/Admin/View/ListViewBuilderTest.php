@@ -52,7 +52,7 @@ class ListViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function provideBuildListView()
+    public static function provideBuildListView()
     {
         return [
             [

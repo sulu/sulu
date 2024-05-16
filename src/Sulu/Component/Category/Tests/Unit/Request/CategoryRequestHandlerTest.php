@@ -22,7 +22,7 @@ class CategoryRequestHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function getProvider()
+    public static function getProvider()
     {
         return [
             ['c', '', []],
@@ -53,7 +53,7 @@ class CategoryRequestHandlerTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
-    public function appendProvider()
+    public static function appendProvider()
     {
         return [
             ['c', '/test', '1,2', '1,2,3'],
@@ -89,7 +89,7 @@ class CategoryRequestHandlerTest extends TestCase
         $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
     }
 
-    public function removeSingleProvider()
+    public static function removeSingleProvider()
     {
         return [
             ['c', '/test', '1,2,3', '1,2'],
@@ -125,7 +125,7 @@ class CategoryRequestHandlerTest extends TestCase
         $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
     }
 
-    public function toggleProvider()
+    public static function toggleProvider()
     {
         return [
             ['c', '/test', '1,2', '1,2,3'],
@@ -161,7 +161,7 @@ class CategoryRequestHandlerTest extends TestCase
         $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
     }
 
-    public function setProvider()
+    public static function setProvider()
     {
         return [
             ['c', '/test', '1,2', '3'],
@@ -197,7 +197,7 @@ class CategoryRequestHandlerTest extends TestCase
         $this->assertEquals($url . '?' . $parameter . '=' . \urlencode($expected), $result);
     }
 
-    public function removeProvider()
+    public static function removeProvider()
     {
         return [
             ['c', '/test', '1,2'],

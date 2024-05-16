@@ -82,7 +82,10 @@ class Version202404051700 implements VersionInterface, ContainerAwareInterface
         }
 
         /** @var string $shadowLocale */
-        $shadowLocale = $node->getPropertyValue($this->getPropertyName(ShadowCopyPropertiesSubscriber::SHADOW_BASE_PROPERTY, $locale));
+        $shadowLocale = $node->getPropertyValue($this->getPropertyName(
+            \str_replace('*', '%s', ShadowCopyPropertiesSubscriber::SHADOW_BASE_PROPERTY),
+            $locale
+        ));
 
         $lastModified = $this->getLastModified($node, $shadowLocale);
 

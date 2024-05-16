@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sulu\Bundle\DocumentManagerBundle\Command;
 
 use PHPCR\SessionInterface;
-use Sulu\Component\Webspace\Manager\WebspaceManager;
+use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -38,7 +38,7 @@ class PHPCRCleanupCommand extends Command
 
     public function __construct(
         private SessionInterface $session,
-        private WebspaceManager $webspaceManager,
+        private WebspaceManagerInterface $webspaceManager,
         private ServicesResetter $servicesResetter,
         private string $projectDirectory,
     ) {

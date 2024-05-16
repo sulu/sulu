@@ -103,9 +103,7 @@ Array [
                   <div
                     class="list"
                   >
-                    <section
-                      class="resultsContainer"
-                    >
+                    <section>
                       <ul
                         class="folderList"
                       >
@@ -804,9 +802,7 @@ Array [
                   <div
                     class="list"
                   >
-                    <section
-                      class="resultsContainer"
-                    >
+                    <section>
                       <ul
                         class="folderList"
                       >

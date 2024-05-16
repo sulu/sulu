@@ -35,7 +35,7 @@ class CustomUrlRouteControllerTest extends SuluTestCase
             ->find('/cmf/sulu_io/contents', 'en');
     }
 
-    public function cdeleteRoutesProvider()
+    public static function cdeleteRoutesProvider()
     {
         return [
             [

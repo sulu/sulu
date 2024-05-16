@@ -44,7 +44,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
         $this->phpcrSession = $this->getContainer()->get('doctrine_phpcr')->getConnection();
     }
 
-    public function provideGetSnippets()
+    public static function provideGetSnippets()
     {
         return [
             [
@@ -83,7 +83,7 @@ class SnippetRepositoryTest extends BaseFunctionalTestCase
         }
     }
 
-    public function provideGetSnippetsByUuids()
+    public static function provideGetSnippetsByUuids()
     {
         return [
             [

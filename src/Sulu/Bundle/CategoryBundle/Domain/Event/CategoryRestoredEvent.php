@@ -19,21 +19,11 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 class CategoryRestoredEvent extends DomainEvent
 {
     /**
-     * @var CategoryInterface
-     */
-    private $category;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        CategoryInterface $category,
-        array $payload
+        private CategoryInterface $category,
+        private array $payload
     ) {
         parent::__construct();
 

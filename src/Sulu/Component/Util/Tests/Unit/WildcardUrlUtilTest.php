@@ -16,7 +16,7 @@ use Sulu\Component\Util\WildcardUrlUtil;
 
 class WildcardUrlUtilTest extends TestCase
 {
-    public function provideMatchData()
+    public static function provideMatchData()
     {
         return [
             ['*.sulu.lo', '1.sulu.lo', true],
@@ -37,7 +37,7 @@ class WildcardUrlUtilTest extends TestCase
         $this->assertEquals($expected, WildcardUrlUtil::match($url, $portalUrl));
     }
 
-    public function provideResolveData()
+    public static function provideResolveData()
     {
         return [
             ['*.sulu.lo', '1.sulu.lo', '1.sulu.lo'],

@@ -95,7 +95,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals($this->hotel1->getUuid(), $result['id']);
     }
 
-    public function provideGet()
+    public static function provideGet()
     {
         return [
             [
@@ -203,7 +203,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertEquals($this->hotel1->getUuid(), $result['id']);
     }
 
-    public function provideIndex()
+    public static function provideIndex()
     {
         return [
             [
@@ -310,7 +310,7 @@ class SnippetControllerTest extends SuluTestCase
         }
     }
 
-    public function providePost()
+    public static function providePost()
     {
         return [
             [

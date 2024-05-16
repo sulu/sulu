@@ -50,7 +50,7 @@ And the bundles route configuration in the `config/routes/sulu_admin.yaml`:
 Also a new table is required to be created in the database you can use doctrine or doctrine migrations for it:
 
 ```sql
-CREATE TABLE re_references (id INT AUTO_INCREMENT NOT NULL, resourceKey VARCHAR(191) NOT NULL, resourceId VARCHAR(191) NOT NULL, referenceResourceKey VARCHAR(191) NOT NULL, referenceResourceId VARCHAR(191) NOT NULL, referenceLocale VARCHAR(5) DEFAULT NULL, referenceRouterAttributes JSON NOT NULL, referenceTitle VARCHAR(191) NOT NULL, referenceProperty VARCHAR(191) NOT NULL, referenceContext VARCHAR(16) NOT NULL, created DATETIME NOT NULL, changed DATETIME NOT NULL, INDEX resource_idx (resourceKey, resourceId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+CREATE TABLE re_references (id INT AUTO_INCREMENT NOT NULL, resourceKey VARCHAR(191) NOT NULL, resourceId VARCHAR(191) NOT NULL, referenceResourceKey VARCHAR(191) NOT NULL, referenceResourceId VARCHAR(191) NOT NULL, referenceLocale VARCHAR(5) DEFAULT NULL, referenceRouterAttributes JSON NOT NULL, referenceTitle VARCHAR(191) NOT NULL, referenceProperty VARCHAR(191) NOT NULL, referenceContext VARCHAR(16) NOT NULL, created DATETIME NOT NULL, changed DATETIME NOT NULL, INDEX resource_idx (resourceKey, resourceId), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB
 ```
 
 To create references for existing data run the following commands:
@@ -75,6 +75,15 @@ return [
 +    PHPCR\PhpcrMigrationsBundle\PhpcrMigrationsBundle::class => ['all' => true],
 ];
 ```
+
+### New Reserved Templates directory for Global Blocks
+
+With the introduction of the new [Global Blocks](https://docs.sulu.io/en/2.6/book/templates.html#templates-global-blocks) there
+is a new reserved directory `config/templates/blocks`.
+
+If you already did use that directory for `xi:includes` you should move the existing blocks to `config/templates/includes/blocks`.
+Migrating to Global Blocks is not required and can be done step by step if you want to use the new Global Blocks
+feature. Have a look at the Global Blocks [Documentation](https://docs.sulu.io/en/2.6/book/templates.html#templates-global-blocks).
 
 ### Custom Admin Builds npm version changed
 

@@ -68,7 +68,7 @@ class SnippetAdminTest extends TestCase
         $this->referenceViewBuilderFactory = new ReferenceViewBuilderFactory($this->viewBuilderFactory, $this->securityChecker->reveal());
     }
 
-    public function provideConfigureViews()
+    public static function provideConfigureViews()
     {
         return [
             [['en' => 'en', 'de' => 'de', 'fr' => 'fr']],

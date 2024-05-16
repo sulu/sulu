@@ -16,7 +16,7 @@ use Sulu\Component\Content\Document\Structure\PropertyValue;
 
 class PropertyValueTest extends TestCase
 {
-    public function provideOffsetSetData()
+    public static function provideOffsetSetData()
     {
         return [
             [[], 'foo', 'bar', ['foo' => 'bar']],

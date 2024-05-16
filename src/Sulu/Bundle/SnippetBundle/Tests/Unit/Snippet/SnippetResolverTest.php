@@ -26,7 +26,7 @@ class SnippetResolverTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function dataProvider()
+    public static function dataProvider()
     {
         return [
             [[]],

@@ -50,24 +50,6 @@ class MediaImageExtractorTest extends TestCase
         );
     }
 
-    public function testExtractUnseekableResource(): void
-    {
-        $resource = $this->createUnseekableResource();
-
-        // this test just check if "createUnseekableResource" will produce the correct unseekable resource to reproduce
-        // bug with aws s3 unseekable resources: https://github.com/sulu/sulu/issues/5468
-        // if this test fail the createUnseekableResource is maybe wrong
-        $this->expectWarning();
-
-        if (\PHP_VERSION_ID >= 80000) {
-            $this->expectWarningMessage('mime_content_type(): Stream does not support seeking');
-        } else {
-            $this->expectWarningMessage('mime_content_type(): stream does not support seeking');
-        }
-
-        $this->mediaImageExtractor->extract($resource);
-    }
-
     public function testExtractUnseekableResourceMimeTypeGiven(): void
     {
         $resource = $this->createUnseekableResource();

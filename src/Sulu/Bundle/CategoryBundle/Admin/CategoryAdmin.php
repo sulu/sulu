@@ -32,29 +32,11 @@ class CategoryAdmin extends Admin
 
     public const EDIT_FORM_VIEW = 'sulu_category.edit_form';
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
-
     public function __construct(
-        ViewBuilderFactoryInterface $viewBuilderFactory,
-        SecurityCheckerInterface $securityChecker,
-        LocalizationManagerInterface $localizationManager
+        private ViewBuilderFactoryInterface $viewBuilderFactory,
+        private SecurityCheckerInterface $securityChecker,
+        private LocalizationManagerInterface $localizationManager
     ) {
-        $this->viewBuilderFactory = $viewBuilderFactory;
-        $this->securityChecker = $securityChecker;
-        $this->localizationManager = $localizationManager;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void

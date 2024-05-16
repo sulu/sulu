@@ -16,7 +16,7 @@ use Sulu\Component\Webspace\Url;
 
 class UrlTest extends TestCase
 {
-    public function provideIsValidLocale()
+    public static function provideIsValidLocale()
     {
         return [
             ['de', 'at', 'de', 'at', true],

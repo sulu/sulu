@@ -30,7 +30,7 @@ class KeywordManagerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function provideSaveData()
+    public static function provideSaveData()
     {
         return [
             [],
@@ -154,7 +154,7 @@ class KeywordManagerTest extends TestCase
         $this->assertEquals($keyword->reveal(), $result);
     }
 
-    public function provideDeleteData()
+    public static function provideDeleteData()
     {
         return [
             [],

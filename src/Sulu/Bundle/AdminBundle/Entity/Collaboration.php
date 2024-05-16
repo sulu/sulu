@@ -19,36 +19,6 @@ class Collaboration
     /**
      * @var int
      */
-    private $connectionId;
-
-    /**
-     * @var int
-     */
-    private $userId;
-
-    /**
-     * @var string
-     */
-    private $username;
-
-    /**
-     * @var string
-     */
-    private $fullName;
-
-    /**
-     * @var string
-     */
-    private $resourceKey;
-
-    /**
-     * @var mixed
-     */
-    private $id;
-
-    /**
-     * @var int
-     */
     private $started;
 
     /**
@@ -56,14 +26,22 @@ class Collaboration
      */
     private $changed;
 
-    public function __construct($connectionId, $userId, $username, $fullName, $resourceKey, $id)
-    {
-        $this->connectionId = $connectionId;
-        $this->userId = $userId;
-        $this->username = $username;
-        $this->fullName = $fullName;
-        $this->resourceKey = $resourceKey;
-        $this->id = $id;
+    /**
+     * @param string $connectionId
+     * @param int $userId
+     * @param string $username
+     * @param string $fullName
+     * @param string $resourceKey
+     * @param mixed $id
+     */
+    public function __construct(
+        private $connectionId,
+        private $userId,
+        private $username,
+        private $fullName,
+        private $resourceKey,
+        private $id,
+    ) {
         $this->started = \time();
         $this->changed = \time();
     }

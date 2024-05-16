@@ -28,21 +28,6 @@ class UpdateBuildCommand extends Command
     public const EXIT_CODE_COULD_NOT_INSTALL_NPM_PACKAGES = 2;
     public const EXIT_CODE_COULD_NOT_BUILD_ADMIN_ASSETS = 3;
 
-    /**
-     * @var HttpClientInterface
-     */
-    private $httpClient;
-
-    /**
-     * @var string
-     */
-    private $projectDir;
-
-    /**
-     * @var string
-     */
-    private $suluVersion;
-
     public const ASSETS_DIR = \DIRECTORY_SEPARATOR . 'assets' . \DIRECTORY_SEPARATOR . 'admin' . \DIRECTORY_SEPARATOR;
 
     public const BUILD_DIR = \DIRECTORY_SEPARATOR . 'public' . \DIRECTORY_SEPARATOR . 'build' . \DIRECTORY_SEPARATOR . 'admin';
@@ -51,13 +36,12 @@ class UpdateBuildCommand extends Command
 
     public const VERSION_REGEX = '/^\d+\.\d+\.\d+(-(alpha|beta|RC)\d+)?$/';
 
-    public function __construct(HttpClientInterface $httpClient, string $projectDir, string $suluVersion)
-    {
+    public function __construct(
+        private HttpClientInterface $httpClient,
+        private string $projectDir,
+        private string $suluVersion,
+    ) {
         parent::__construct();
-
-        $this->httpClient = $httpClient;
-        $this->projectDir = $projectDir;
-        $this->suluVersion = $suluVersion;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
