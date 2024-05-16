@@ -25,7 +25,4 @@
         <ini name="date.timezone" value="UTC"/>
     </php>
 
-    <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
-    </listeners>
 </phpunit>
