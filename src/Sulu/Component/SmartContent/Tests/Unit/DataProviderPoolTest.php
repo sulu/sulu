@@ -121,8 +121,11 @@ class DataProviderPoolTest extends TestCase
 
     /**
      * @dataProvider addProvider
+     *
+     * @param array<DataProviderInterface> $providers
+     * @param array<DataProviderInterface> $expectedProviders
      */
-    public function testAdd(DataProviderPool $pool, $providers, $expectedProviders, $exceptionName = null): void
+    public function testAdd(DataProviderPool $pool, array $providers, array $expectedProviders, ?string $exceptionName = null): void
     {
         if ($exceptionName) {
             $this->expectException($exceptionName);
@@ -149,7 +152,7 @@ class DataProviderPoolTest extends TestCase
     /**
      * @dataProvider existsProvider
      */
-    public function testExists(DataProviderPool $pool, $alias, $expected): void
+    public function testExists(DataProviderPool $pool, string $alias, bool $expected): void
     {
         $this->assertEquals($expected, $pool->exists($alias));
     }
@@ -178,7 +181,7 @@ class DataProviderPoolTest extends TestCase
     /**
      * @dataProvider getProvider
      */
-    public function testGet(DataProviderPool $pool, $alias, $expectedProvider, $exceptionName = null): void
+    public function testGet(DataProviderPool $pool, string $alias, ?DataProviderInterface $expectedProvider, ?string $exceptionName = null): void
     {
         if ($exceptionName) {
             $this->expectException($exceptionName);
@@ -187,7 +190,10 @@ class DataProviderPoolTest extends TestCase
         $this->assertEquals($expectedProvider, $pool->get($alias));
     }
 
-    public function getAllProvider()
+    /**
+     * @return array{DataProviderPool, array<string, DataProviderInterface>}
+     */
+    public static function getAllProvider()
     {
         $pool1 = new DataProviderPool(true);
         $pool2 = new DataProviderPool(true);
@@ -213,8 +219,10 @@ class DataProviderPoolTest extends TestCase
 
     /**
      * @dataProvider getAllProvider
+     *
+     * @param array<string, DataProviderInterface> $expectedProviders
      */
-    public function testGetAll(DataProviderPool $pool, $expectedProviders): void
+    public function testGetAll(DataProviderPool $pool, array $expectedProviders): void
     {
         $this->assertEquals($expectedProviders, $pool->getAll());
     }

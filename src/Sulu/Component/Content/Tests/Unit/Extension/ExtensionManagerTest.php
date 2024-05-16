@@ -128,7 +128,7 @@ class ExtensionManagerTest extends TestCase
     /**
      * @dataProvider hasProvider
      */
-    public function testHas($extensions, $type, $name, $expected): void
+    public function testHas(array $extensions, string $type, string $name, bool $expected): void
     {
         $manager = new ExtensionManager();
 
