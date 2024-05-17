@@ -19,7 +19,7 @@ use Sulu\Bundle\WebsiteBundle\EventListener\SegmentCacheListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class SegmentCacheListenerTests extends TestCase
+class SegmentCacheListenerTest extends TestCase
 {
     use ProphecyTrait;
 

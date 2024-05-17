@@ -80,7 +80,7 @@ class AccountDataProviderTest extends TestCase
         $this->assertEquals([], $parameter);
     }
 
-    public function dataItemsDataProvider()
+    public static function dataItemsDataProvider()
     {
         $accounts = [
             self::createAccount(1, 'Massive Art'),
@@ -132,7 +132,7 @@ class AccountDataProviderTest extends TestCase
         $this->assertEquals($items, $result->getItems());
     }
 
-    public function resourceItemsDataProvider()
+    public static function resourceItemsDataProvider()
     {
         $accounts = [
             self::createAccount(1, 'Massive Art'),
