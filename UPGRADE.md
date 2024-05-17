@@ -1,5 +1,12 @@
 # Upgrade
 
+## master
+
+### Replacing compiler passes with `tagged_iterator`s
+We have replaced the manual logic of getting a list of tagged services to the Symfony `tagged_iterator` argument. This
+means that the following classes have been deprecated:
+- src/Sulu/Component/Symfony/CompilerPass/TaggedServiceCollectorCompilerPass.php
+
 ## 2.6.3
 
 ### Change locale length
@@ -92,9 +99,9 @@ feature. Have a look at the Global Blocks [Documentation](https://docs.sulu.io/e
 
 ### Custom Admin Builds npm version changed
 
-Sulu 2.6 now supports [npm 8, 9, and 10](https://nodejs.org/en/download), 
-as well as [pnpm 8](https://pnpm.io/) or [bun 1](https://bun.sh/) for custom 
-admin builds. With the introduction of these new versions, it is necessary 
+Sulu 2.6 now supports [npm 8, 9, and 10](https://nodejs.org/en/download),
+as well as [pnpm 8](https://pnpm.io/) or [bun 1](https://bun.sh/) for custom
+admin builds. With the introduction of these new versions, it is necessary
 to drop the support for npm 6.
 
 The upgrade of CKEditor to the latest version atleast [requires Node 18](https://github.com/ckeditor/ckeditor5-dev/blob/v39.6.3/package.json#L19).
@@ -110,7 +117,7 @@ Sulu now uses Webpack 5 to build the administration interface application. To en
 - `optimize-css-assets-webpack-plugin` was removed replaced by `css-minimizer-webpack-plugin`: `^6.0.0`
 - `clean-webpack-plugin` was removed and replaced by `clean: true` webpack output option
 - `webpack-clean-obsolete-chunks` was removed and replaced by `clean: true` webpack output option
-- `is-email` was removed and replaced by `sulu-admin-bundle/utils/Email/validateEmail` method 
+- `is-email` was removed and replaced by `sulu-admin-bundle/utils/Email/validateEmail` method
 - `file-loader`: was removed and replaced by webpack internal [assets/resource](https://webpack.js.org/guides/asset-modules/)
 - `raw-loader`: was removed and replaced by webpack internal [assets/source](https://webpack.js.org/guides/asset-modules/)
 
@@ -229,7 +236,7 @@ Example:
 +<tag name="doctrine.event_listener" event="onClear" priority="-256"/>
 ```
 
-See also the documentation [official Doctrine Events documentation](https://symfony.com/doc/6.4/doctrine/events.html).  
+See also the documentation [official Doctrine Events documentation](https://symfony.com/doc/6.4/doctrine/events.html).
 Or the Merge request implementing this changes in Sulu [here](https://github.com/sulu/sulu/pull/7374/files).
 
 ### GeolocatorInterface locate method GeolocatorOptions added
@@ -257,7 +264,7 @@ The `Symfony\Component\Security\Core\Security` deprecated class was replaced by
 
 ### Admin JS ResourceRouteRegistry getDetailUrl and getListUrl deprecated
 
-The `getDetailUrl` and `getListUrl` methods of the `routeRegistry` were deprecated.  
+The `getDetailUrl` and `getListUrl` methods of the `routeRegistry` were deprecated.
 Use the newly added `getUrl` method:
 
 ```diff
@@ -286,7 +293,7 @@ public function resolveInternalLinkContent(
 
 ### PHPCR and Jackalope update
 
-An update of PHPCR and Jackalope to latest major version is optional but recommended.   
+An update of PHPCR and Jackalope to latest major version is optional but recommended.
 The following new versions are supported by Sulu:
 
  - `doctrine/phpcr-bundle`: `^3.0`
@@ -478,7 +485,7 @@ If you have not integrated custom JavaScript code, you project is adjusted autom
 
 ### Rename labelRef to inputContainerRef
 
-The `labelRef` properties of the js components `Input` and `Number` was 
+The `labelRef` properties of the js components `Input` and `Number` was
 renamed to `inputContainerRef` as it is no longer a label tag for improving
 accessibility of the interface.
 
@@ -750,11 +757,11 @@ fos_js_routing:
 
 ### Changed constructor of AdminController
 
-The `AdminController` now requires the password-policy information `$passwordPattern` and `$passwordInformationKey`. 
+The `AdminController` now requires the password-policy information `$passwordPattern` and `$passwordInformationKey`.
 
 ### Changed constructor of UserManager
 
-The `UserManager` now requires the password-policy information `$passwordPattern`. 
+The `UserManager` now requires the password-policy information `$passwordPattern`.
 
 ### User Provider service definition changed
 
@@ -980,13 +987,13 @@ To update your database schema to include the new table, you need to execute the
 CREATE TABLE pr_preview_links (id INT AUTO_INCREMENT NOT NULL, token VARCHAR(12) NOT NULL, resourceKey VARCHAR(255) NOT NULL, resourceId VARCHAR(255) NOT NULL, locale VARCHAR(255) NOT NULL, options JSON NOT NULL, visitCount INT NOT NULL, lastVisit DATETIME DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)', UNIQUE INDEX UNIQ_9A45BD685F37A13B (token), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 ```
 
-To access the preview-link as anonymous user add following rule to the `access_control` section in your 
+To access the preview-link as anonymous user add following rule to the `access_control` section in your
 `config/packages/security.yaml`:
 
 ```diff
 security:
     ...
-    
+
     access_control:
          ...
          - { path: ^/admin/$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
@@ -1333,10 +1340,10 @@ WHERE entityIdInteger IS NULL
 ### Migrate permissions properties for pages
 
 The role-specific PHPCR properties used for storing page permissions decrease performance when
-used in combination with website security. To mitigate the problem and improve performance, all permissions 
-are now stored in a single property. 
+used in combination with website security. To mitigate the problem and improve performance, all permissions
+are now stored in a single property.
 
-If you use page-specific permissions in your project, you need to migrate the existing data by running the 
+If you use page-specific permissions in your project, you need to migrate the existing data by running the
 phpcr migration command:
 
 ```bash
@@ -1375,7 +1382,7 @@ CREATE INDEX IDX_B10AC28E30D07CD5 ON se_users (idUsersChanger);
 The two adapters `table_light` and `tree_table_slim` are deprecated and will be removed in `3.0`.
 
 If you have used these adapters, you should use the default adapter and add the modifications through
-the `adapterOptions`. 
+the `adapterOptions`.
 
 #### table_light
 
@@ -1412,8 +1419,8 @@ the `adapterOptions`.
 ### React Tabs skin was removed
 
 The `skin` prop and `small` prop of the `Tabs` component was replaced with a `type` prop.
-Currently there are three `types` available: `root`, `nested` and `inline`. If you have used 
-the `Tabs` component with a skin, be sure to replace them with the corresponding type. 
+Currently there are three `types` available: `root`, `nested` and `inline`. If you have used
+the `Tabs` component with a skin, be sure to replace them with the corresponding type.
 
 - `type='root'` is the same as `skin='default'`.
 - `type='inline'` is similar to `small=true` and `skin='transparent'`.
@@ -1468,8 +1475,8 @@ in your project, you have to implement that method as well.
 
 ### Changed constructor of multiple services to integrate them with the SuluActivityBundle
 
-To integrate the `SuluActivityBundle` with the existing services, the constructor of the following services was 
-adjusted. If you have extended one of these services in your project, you need to adjust your `parent::__construct` 
+To integrate the `SuluActivityBundle` with the existing services, the constructor of the following services was
+adjusted. If you have extended one of these services in your project, you need to adjust your `parent::__construct`
 call to pass the correct parameters:
 
 - `Sulu\Component\CustomUrl\Manager\CustomUrlManager`
@@ -1546,7 +1553,7 @@ The data that is sent to the server by the field-type was changed like this:
 ```
 
 If you have used the `single_account_selection` field-type in a form configuration for your custom entity,
-you should adjust the API of the custom entity to be compatible with the new data-format. 
+you should adjust the API of the custom entity to be compatible with the new data-format.
 If you cannot adjust the API, you can use the `use_deprecated_object_data_format` param to bring back the old behaviour:
 
 ```diff
@@ -1564,7 +1571,7 @@ The `auto_complete` type of `single_selection` field-type was adjusted to proces
 This makes the data-format used by the `auto_complete` type consistent to all other `single_selection` types and therefore
 allows to switch between different types.
 
-If you have configured a `single_selection` field-type with the `auto_complete` type for your custom entity, 
+If you have configured a `single_selection` field-type with the `auto_complete` type for your custom entity,
 the data that is sent to the server by the field-type is changed like this:
 
 ```diff
@@ -1578,7 +1585,7 @@ the data that is sent to the server by the field-type is changed like this:
 }
 ```
 
-If you have used such a field-type in a form configuration for your custom entity, you should adjust the API of the 
+If you have used such a field-type in a form configuration for your custom entity, you should adjust the API of the
 custom entity to be compatible with the new data-format.
 If you cannot adjust the API, you can use the `use_deprecated_object_data_format` param to bring back the old behaviour:
 
@@ -1593,12 +1600,12 @@ If you cannot adjust the API, you can use the `use_deprecated_object_data_format
 
 ### Adjusted SingleAutoComplete component to accept SingleSelectionStore
 
-The `SingleAutoComplete` container component was adjusted to accept a `SingleSelectionStore` instance via the `store` prop. 
+The `SingleAutoComplete` container component was adjusted to accept a `SingleSelectionStore` instance via the `store` prop.
 Furthermore, the `onChange`, `resourceKey` and `value` prop were replaced by the `store` prop and have been removed.
 This makes the implementation of the `SingleAutoComplete` consistent to the implementation of the `MultiAutoComplete`
 and makes it easier to reuse the component.
 
-If you are using the `SingleAutoComplete` container component in your custom javascript code, you need to adjust your 
+If you are using the `SingleAutoComplete` container component in your custom javascript code, you need to adjust your
 code to instantiate a `SingleSelectionStore` object and pass it to the `store` prop.
 
 ### conditionDataProvider interface changed
@@ -1670,7 +1677,7 @@ The `createOrUpdateByAttributes` method of the `RouteManagerInterface` was adjus
 parameter. This makes the available parameters consistent to the `RouteManagerInterface::create` method and the
 `RouteManagerInterface::update` method.
 
-If you have implemented this interface in your project, you need to add the parameter to the 
+If you have implemented this interface in your project, you need to add the parameter to the
 `createOrUpdateByAttributes` method of your implementation.
 
 ## 2.2.17
@@ -1746,10 +1753,10 @@ composer update
 ### Migrate permissions properties for pages
 
 The role-specific PHPCR properties used for storing page permissions decrease performance when
-used in combination with website security. To mitigate the problem and improve performance, all permissions 
-are now stored in a single property. 
+used in combination with website security. To mitigate the problem and improve performance, all permissions
+are now stored in a single property.
 
-If you use page-specific permissions in your project, you need to migrate the existing data by running the 
+If you use page-specific permissions in your project, you need to migrate the existing data by running the
 phpcr migration command:
 
 ```bash
@@ -1761,7 +1768,7 @@ bin/console phpcr:migrations:migrate
 ### Changed ContentRepository to return title of source instead of link destination for internal link pages
 
 The `ContentRepository` service was changed to return the title of the source page instead of the title of the destination
-page for internal links. This makes the behaviour consistent with external links and the `ContentMapper` service. 
+page for internal links. This makes the behaviour consistent with external links and the `ContentMapper` service.
 This change only affects you if you are using the `ContentRepository` service with a mapping that includes the `title` property.
 
 ### A new argument `$requestStack` has been added to the `ContentTwigExtension`
@@ -1788,12 +1795,12 @@ as is the parameter `sulu_location.guzzle.client.class`.
 
 ### The constructor of the `NominatimGeolocator` and `GoogleGeolocator` requires a `Symfony\Contracts\HttpClient\HttpClientInterface` for the `$client` argument
 
-Constructing `NominatimGeolocator` and `GoogleGeolocator` with the previous `GuzzleHttp\ClientInterface` is deprecated. 
+Constructing `NominatimGeolocator` and `GoogleGeolocator` with the previous `GuzzleHttp\ClientInterface` is deprecated.
 
 ### Doctrine changes for PHP 8 Support
 
-To prepare for PHP8 support, the version constraints of the `doctrine/persistence` package and the `doctrine/dbal` package were updated 
-to include a new major version. If you update these packages in your project, you might need to adjust the code of the project to be compatible with 
+To prepare for PHP8 support, the version constraints of the `doctrine/persistence` package and the `doctrine/dbal` package were updated
+to include a new major version. If you update these packages in your project, you might need to adjust the code of the project to be compatible with
 the new major version. To do this, it is enough to replace the `Doctrine/Common/Persistence` namespace with `Doctrine/Persistence` in most cases:
 
 ```diff
@@ -1801,8 +1808,8 @@ the new major version. To do this, it is enough to replace the `Doctrine/Common/
 +    use Doctrine\Persistence\ObjectManager;
 ```
 
-Alternatively, if you want to prevent the upgrade of the packages, you can set the version constraint of the `doctrine/persistence` to `^1.3` 
-and the `doctrine/dbal` package to `^2.6` in the `composer.json` of your project. But keep in mind that this means that your project will 
+Alternatively, if you want to prevent the upgrade of the packages, you can set the version constraint of the `doctrine/persistence` to `^1.3`
+and the `doctrine/dbal` package to `^2.6` in the `composer.json` of your project. But keep in mind that this means that your project will
 use outdated dependencies and will not be compatible with new PHP versions in this case.
 
 ## 2.2.4
@@ -1949,7 +1956,7 @@ imports:
 ### Changed ContentRepository to return title of source instead of link destination for internal link pages
 
 The `ContentRepository` service was changed to return the title of the source page instead of the title of the destination
-page for internal links. This makes the behaviour consistent with external links and the `ContentMapper` service. 
+page for internal links. This makes the behaviour consistent with external links and the `ContentMapper` service.
 This change only affects you if you are using the `ContentRepository` service with a mapping that includes the `title` property.
 
 ### A new argument `$requestStack` has been added to the `ContentTwigExtension`
@@ -1976,12 +1983,12 @@ as is the parameter `sulu_location.guzzle.client.class`.
 
 ### The constructor of the `NominatimGeolocator` and `GoogleGeolocator` requires a `Symfony\Contracts\HttpClient\HttpClientInterface` for the `$client` argument
 
-Constructing `NominatimGeolocator` and `GoogleGeolocator` with the previous `GuzzleHttp\ClientInterface` is deprecated. 
+Constructing `NominatimGeolocator` and `GoogleGeolocator` with the previous `GuzzleHttp\ClientInterface` is deprecated.
 
 ### Doctrine changes for PHP 8 Support
 
-To prepare for PHP8 support, the version constraints of the `doctrine/persistence` package and the `doctrine/dbal` package were updated 
-to include a new major version. If you update these packages in your project, you might need to adjust the code of the project to be compatible with 
+To prepare for PHP8 support, the version constraints of the `doctrine/persistence` package and the `doctrine/dbal` package were updated
+to include a new major version. If you update these packages in your project, you might need to adjust the code of the project to be compatible with
 the new major version. To do this, it is enough to replace the `Doctrine/Common/Persistence` namespace with `Doctrine/Persistence` in most cases:
 
 ```diff
@@ -1989,8 +1996,8 @@ the new major version. To do this, it is enough to replace the `Doctrine/Common/
 +    use Doctrine\Persistence\ObjectManager;
 ```
 
-Alternatively, if you want to prevent the upgrade of the packages, you can set the version constraint of the `doctrine/persistence` to `^1.3` 
-and the `doctrine/dbal` package to `^2.6` in the `composer.json` of your project. But keep in mind that this means that your project will 
+Alternatively, if you want to prevent the upgrade of the packages, you can set the version constraint of the `doctrine/persistence` to `^1.3`
+and the `doctrine/dbal` package to `^2.6` in the `composer.json` of your project. But keep in mind that this means that your project will
 use outdated dependencies and will not be compatible with new PHP versions in this case.
 
 ## 2.1.8
@@ -2209,7 +2216,7 @@ removed. Instead a `MultiSelectionStore` has to be created manually and passed v
 
 ### Configuration of list item actions
 
-The prop of the `List` container which is used to configure the item actions was changed from `actions` to 
+The prop of the `List` container which is used to configure the item actions was changed from `actions` to
 `itemActionsProvider`. The new prop accepts a function that returns an array of actions for a given item.
 This allows to disable specific actions for specific items.
 
@@ -2265,9 +2272,9 @@ you had some `filter-type` attributes in your configurations, which would not ha
 +        <identity-property name="accountId" visibility="never" translation="sulu_contact.organization">
              <field-name>account</field-name>
              <entity-name>SuluContactBundle:AccountContact</entity-name>
- 
+
              <joins ref="accountContact"/>
- 
+
 -            <filter-type-parameters>
 -                <parameter key="singleUrl"><![CDATA[/admin/api/accounts/{id}]]></parameter>
 -                <parameter key="remoteUrl">
@@ -2315,7 +2322,7 @@ used as a replacement.
 
 ### Deprecation of localizationStore method
 
-The `loadLocalizations` method from the `localizationStore` has been deprecated. Use the `localizations` synchronous 
+The `loadLocalizations` method from the `localizationStore` has been deprecated. Use the `localizations` synchronous
 property instead.
 
 ### Deprecation of webspaceStore methods
@@ -2326,12 +2333,12 @@ property instead.
 ### Deprecation of LocalizationController
 
 The `LocalizationController` has been deprecated. The information is now delivered via `sulu_admin.localizations` config
-in the `admin/config` endpoint. 
+in the `admin/config` endpoint.
 
 ### Deprecation of WebspaceController
 
 The `WebspacesController` has been deprecated. The information is now delivered via `sulu_page.webspaces` config
-in the `admin/config` endpoint. 
+in the `admin/config` endpoint.
 
 ### Add position to category medias
 
@@ -2592,7 +2599,7 @@ Serialization to `array` type is not longer possible use the new `sulu_core.arra
 ### Refactor Rest Controllers
 
 The Sulu `RestController` was deprecated and replaced with the `AbstractRestController`.
-All Sulu Rest controllers were refactored to extend the new `AbstractRestController`. 
+All Sulu Rest controllers were refactored to extend the new `AbstractRestController`.
 Furthermore, all these controllers and now use constructor injection to gather their dependencies.
 
 ### Admin Route/View renamings
@@ -2782,14 +2789,14 @@ sulu_location:
             api_key:              ''
 ```
 
-Unfortunately all of the supported geolocators require an authentication key now, therefore it is required to configure 
+Unfortunately all of the supported geolocators require an authentication key now, therefore it is required to configure
 the `api_key` parameter for the `google` provider or the `nominatim` provider to use the geolocation functionality
 in the admin.
 
 Furthermore, the location field-type was refactored to always use OpenStreetMap for displaying selected locations.
 Because of this the provider related configuration was removed.
 
-Finally, the `GeolocatorController` was refactored. The queryAction is now registered with the name 
+Finally, the `GeolocatorController` was refactored. The queryAction is now registered with the name
 `sulu_location.geolocator_query` instead of `sulu_location_geolocator_query` and the `query` parameter was renamed
 to `search`.
 
@@ -3089,7 +3096,7 @@ class SearchAdmin extends Admin
 
 ### Use yaml files for configuring routes
 
-All remaining XML route definition files were migrated to use the YAML format. Therefore, the following resource paths 
+All remaining XML route definition files were migrated to use the YAML format. Therefore, the following resource paths
 must be adjusted:
 
 | Previous Path                                                     | New Path                                                          |
@@ -3105,7 +3112,7 @@ must be adjusted:
 
 ### Add bundle prefix to rest route names
 
-We decided to add a bundle prefix to all of our rest routes to keep things consistent and prevent eventual collisions 
+We decided to add a bundle prefix to all of our rest routes to keep things consistent and prevent eventual collisions
 in the future. The following route names were changed:
 
 | Previous Name                      | New Name                                             |
@@ -3297,7 +3304,7 @@ of these classes was moved to the `Role`, `User`, `UserRole`, `Route` and `Colle
 
 Instead of `sulu:webspaces:init` or `sulu:phpcr:init` use `sulu:document:initialize`.
 
-### Removed SuluResourceBundle 
+### Removed SuluResourceBundle
 
 The `SuluResourceBundle` was removed from the source code as it is not used by Sulu anymore.
 
@@ -3626,9 +3633,9 @@ before, you have to specify the constructor arguments correctly now.
 
 **This change only affects you if you have used a 2.0.0 alpha release before**
 
-The functionality to display the preview of the page which is edited in a sidebar was moved from the default `Form` 
-view(registered with the name `sulu_admin.form`) to a new `PreviewForm` view (registered with key 
-`sulu_admin.preview_form`). 
+The functionality to display the preview of the page which is edited in a sidebar was moved from the default `Form`
+view(registered with the name `sulu_admin.form`) to a new `PreviewForm` view (registered with key
+`sulu_admin.preview_form`).
 
 Furthermore, the route-option `preview` which is used to define a condition whether to preview should be displayed or
 not was renamed to `previewCondition`.
@@ -3636,7 +3643,7 @@ not was renamed to `previewCondition`.
 ### excluded query parameter of Media API
 
 The `excluded` query parameter which can be used to exclude specific ids from the media list returned by the Media API
-was renamed to `excludedIds` to increase the consistency within our APIs. 
+was renamed to `excludedIds` to increase the consistency within our APIs.
 
 ### Router Attributes to List or Form Store switched
 
@@ -4188,7 +4195,7 @@ return [
 Of course the `resourceKey` can still often be passed from a parent route and therefore omitted in the form route
 definition, which is often the case when making use of the `sulu_admin.resource_tabs` view.
 
-The frontend routes for a datagrid defined in the `Admin` classes now need the `datagridKey` in addition to the 
+The frontend routes for a datagrid defined in the `Admin` classes now need the `datagridKey` in addition to the
 `resourceKey`. This allows to have the same endpoint for multiple datagrids.
 
 ```php
@@ -4277,7 +4284,7 @@ sulu_media:
 
 ### Media Bundle several Interfaces changed
 
-To allow adding new features some interfaces where changed and needs to be updated if you did build something on top 
+To allow adding new features some interfaces where changed and needs to be updated if you did build something on top
 of them:
 
  - StorageInterface
@@ -4575,7 +4582,7 @@ section does not do anything special anymore, and therefore can be safely remove
 
 ### Admin Navigation
 
-The admin navigation should not be built into the constructor anymore. Instead of `setNavigation` 
+The admin navigation should not be built into the constructor anymore. Instead of `setNavigation`
 create `getNavigation` function in the `Admin` class which should return a `Navigation` object.
 This makes it easier to override only this part of the Admin.
 
@@ -4678,7 +4685,7 @@ a tree using the `parentId` on their own.
 
 ### Dependencies
 
-Removed required dependency `pulse00/ffmpeg-bundle`. If you want to use preview images for videos, run following 
+Removed required dependency `pulse00/ffmpeg-bundle`. If you want to use preview images for videos, run following
 command:
 
 ```bash
@@ -5084,7 +5091,7 @@ in your twig template.
 We've added the possibility to determine the position of the content.
 The '<script></script>' wrapper was also removed from the custom template.
 That means the user has to add this wrapper when it's needed.
- 
+
 Changes to existing custom analytics needs to be deployed with following SQL statement on your database:
 
 ```sql
@@ -5168,9 +5175,9 @@ Following methods and constants was removed from `ContentTypeInterface`.
 * `getType()`
 * `getReferenceUuids()`
 
-For replacement of `getReferenceUuids` we have introduced the 
+For replacement of `getReferenceUuids` we have introduced the
 [reference-store](http://docs.sulu.io/en/latest/bundles/content/reference-store.html)
-and the `PreResolveContentTypeInterface::preResolve` method. 
+and the `PreResolveContentTypeInterface::preResolve` method.
 
 ### Additional routing file from SuluRouteBundle
 
@@ -5196,7 +5203,7 @@ ALTER TABLE ro_routes CHANGE created created DATETIME NOT NULL, CHANGE changed c
 ### Highlight section styling changed
 
 To make the highlight section reusable the css not longer depend on the `#content-form`
-selector you should use now the `.form` class instead. 
+selector you should use now the `.form` class instead.
 
 ### Removed symfony/security-acl dependency
 
@@ -5365,10 +5372,10 @@ config. The port must still be omitted when the `{host}` placeholder is used.
 
 ### Admin User Settings
 
-The method `sulu.loadUserSetting()` was removed from the Sulu Aura.js extension located in `Sulu/Bundle/AdminBundle/Resources/public/js/aura_extensions/sulu-extension.js`. 
+The method `sulu.loadUserSetting()` was removed from the Sulu Aura.js extension located in `Sulu/Bundle/AdminBundle/Resources/public/js/aura_extensions/sulu-extension.js`.
 Instead the method `sulu.getUserSetting()` should be used, which provides same functionality, but is called differently (no need to provide neither URL nor callback in addition to the key).
 
- 
+
 ### Media StorageInterface
 
 The `StorageInterface` in the `Sulu\Bundle\MediaBundle\Media\Storage` namespace
@@ -5398,9 +5405,9 @@ __BEFORE:__
     <view>page.html.twig</view>
     <controller>SuluContentBundle:Default:index</controller>
     <cacheLifetime>2400</cacheLifetime>
-    
+
     ...
-    
+
 </template>
 ```
 
@@ -5417,9 +5424,9 @@ __NOW:__
 
     <!-- releases cache each day at midnight -->
     <cacheLifetime type="expression">@daily</cacheLifetime>
-    
+
     ...
-    
+
 </template>
 ```
 
@@ -5443,11 +5450,11 @@ This lead to the following changes:
 `/categories/{key}/children` was replaced with `/categories/{id}/children`
 
 **Classes:**
-`Category\CategoryRepositoryInterface` moved to `Entity\CategoryRepositoryInterface` 
+`Category\CategoryRepositoryInterface` moved to `Entity\CategoryRepositoryInterface`
 `Category\KeywordRepositoryInterface` moved to `Entity\KeywordRepositoryInterface`
-`Category\Exception\KeywordIsMultipleReferencedException` moved to `Exception\KeywordIsMultipleReferencedException` 
-`Category\Exception\KeywordNotUniqueException` moved to `Exception\KeywordNotUniqueException` 
-`Category\Exception\KeyNotUniqueException` was replaced with `Exception\CategoryKeyNotUniqueException` 
+`Category\Exception\KeywordIsMultipleReferencedException` moved to `Exception\KeywordIsMultipleReferencedException`
+`Category\Exception\KeywordNotUniqueException` moved to `Exception\KeywordNotUniqueException`
+`Category\Exception\KeyNotUniqueException` was replaced with `Exception\CategoryKeyNotUniqueException`
 
 **Methods:**
 Removed: `Api\Category::setName($name)`
@@ -5474,8 +5481,8 @@ Deprecated: `CategoryManagerInterface::findChildren($key, $sortBy = null, $sortO
 Replacement: `CategoryManagerInterface::findChildrenByParentKey($parentKey = null)`
 
 **Container Parameters/Definitions:**
-Deprecated: `sulu_category.entity.category` 
-Replacement: `sulu.model.category.class` 
+Deprecated: `sulu_category.entity.category`
+Replacement: `sulu.model.category.class`
 
 Deprecated: `sulu_category.entity.keyword`
 Replacement: `sulu.model.keyword.class`
@@ -5509,7 +5516,7 @@ was changed to `sulu_media.image_format_files` and the type was changed
 from a scalar to an array.
 
 #### "Command" renamed to "Transformation"
-Internally the concept of a command on an image was renamed to 
+Internally the concept of a command on an image was renamed to
 "transformation". This renaming was consequently executed throughout the
 MediaBundle. This BC break is only important when custom commands have
 been created. To update the custom commands (now transformations) they now have
@@ -5668,7 +5675,7 @@ After:
 </templates>
 ```
 
-And the `resource-locator` node has moved from `portal` to `webspace`. 
+And the `resource-locator` node has moved from `portal` to `webspace`.
 
 This change only affects the files which use the 1.1 version of the webspace
 schema definition.
@@ -5701,7 +5708,7 @@ The `orderBefore` method of the `NodeRepository` has been removed. Use the
 ### LocalizationProvider
 The core LocalizationProvider (which provided the system locales)
 got removed. At this point the WebspaceLocalizationProvider is the
-only LocalizationProvider in Sulu. If the system locales 
+only LocalizationProvider in Sulu. If the system locales
 (locales in which translations for the admin panel are available) are
 needed, please refer directly to the config `sulu_core.translations`.
 
@@ -5791,22 +5798,22 @@ indexed as title, although this value was already the default:
 
 ### Webspaces
 
-We have deprecated (1.0) the schema for webspaces and created a new version (1.1) of it. 
+We have deprecated (1.0) the schema for webspaces and created a new version (1.1) of it.
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <webspace xmlns="http://schemas.sulu.io/webspace/webspace"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://schemas.sulu.io/webspace/webspace http://schemas.sulu.io/webspace/webspace-1.1.xsd">
-          
+
           ...
-          
+
 </webspace>
 ```
 
 You should update your webspace.xml files soonish. To do that you simply have to move the `default-templates` and
 `error-templates` from the `theme` node and put it into the `webspace` node after the `theme`.
- 
+
 The theme is now optional and can be used with a theme-bundle. Sulu has extracted this functionality to make it
 replaceable with any theming bundle you want. To keep the old directory-structure and functionality please read the
 next part of this file.
@@ -5878,7 +5885,7 @@ The twig function `sulu_content_path('/path')` now always returning the full-qua
 
 ### Custom-Routes
 
-The naming of the custom-routes with `type: portal` has changed. You can use now the configured name 
+The naming of the custom-routes with `type: portal` has changed. You can use now the configured name
 and pass the host and prefix in the parameter. The current parameter will be populated in the variable
 `request.routeParameters`.
 
@@ -5922,14 +5929,14 @@ Webspaces which have unused localizations by portals will now be not valid and i
 localizations or add them to a portal.
 
 ### New security permission for cache
- 
+
 To be able to clear the cache the user need the permission LIVE in the
 webspace context.
 
 ### Document-Manager
 
 The Behaviors `TimestampBehavior` and `BlameBehavior` now save the values in the non-localized
-properties. To keep the old behavior use the `LocalizedTimestampBehavior` and 
+properties. To keep the old behavior use the `LocalizedTimestampBehavior` and
 `LocalizedBlameBehavior` instead.
 
 ### Deprecated sulu:phpcr:init and sulu:webspace:init
@@ -6008,7 +6015,7 @@ that this user has a `Contact` entity. The following SQL will return you
 all users which have no contact entity. You need to update them manually.
 
 ```sql
-SELECT * FROM se_users WHERE se_users.idContacts IS NULL 
+SELECT * FROM se_users WHERE se_users.idContacts IS NULL
 ```
 
 ### Admin Commands
@@ -6036,7 +6043,7 @@ app/console sulu:document:initialize
 
 #### ORM
 
-The relational structure of categories, translations and users have changed. 
+The relational structure of categories, translations and users have changed.
 Use the following command to update:
 
 ```bash
@@ -6060,7 +6067,7 @@ $item->setPosition(10);
 ### Filter
 
 Update the schema `app/console doctrine:schema:update --force` and run following SQL-Statement:
- 
+
 ```sql
 UPDATE re_conditions SET value = CONCAT('"', value, '"') WHERE value NOT LIKE '"%"';
 INSERT INTO `re_operators` (`id`, `operator`, `type`, `inputType`) VALUES
@@ -6154,7 +6161,7 @@ app/console phpcr:migrations:migrate
 
 ### Media View Settings
 
-The media collection thumbnailLarge view was removed from the media, 
+The media collection thumbnailLarge view was removed from the media,
 to avoid an error, remove all `collectionEditListView` from the user settings table.
 
 ```sql
@@ -6168,7 +6175,7 @@ To index multiple fields (and `category_list` content-type) you have to add the 
 
 ### Category Content-Type
 
-The category content-type converts the selected ids into category data only for website rendering now. 
+The category content-type converts the selected ids into category data only for website rendering now.
 
 ### System Collections
 
@@ -6270,7 +6277,7 @@ values wont be supported anymore.
 
 ### Preview
 The preview can now handle attributes and nested properties. To differentiate blocks and nested properties, it is now
-necessary to add the property `typeof="collection"` to the root of a block `<div>` and 
+necessary to add the property `typeof="collection"` to the root of a block `<div>` and
 `typeof="block" rel="name of block property"` to each child - see example.
 
 __block:__
@@ -6297,8 +6304,8 @@ __nested properties:__
 
 ### Content Type Export Interface added
 
-All default content type implement the new `ContentTypeExportInterface`.  
-Content types which were exportable need to implement this interface and tag for which export `format` they are available.  
+All default content type implement the new `ContentTypeExportInterface`.
+Content types which were exportable need to implement this interface and tag for which export `format` they are available.
 
 ``` xml
         <service id="client_website.content.type.checkbox" class="%client_website.content.type.checkbox.class%">
@@ -6309,7 +6316,7 @@ Content types which were exportable need to implement this interface and tag for
 
 ### Extensions constructor changed
 
-Extensions can also be exportable for this they need to implement the new `ExportExtensionInterface`.  
+Extensions can also be exportable for this they need to implement the new `ExportExtensionInterface`.
 In the sulu excerpt extension the constructor changed, if you extend or overwrite this extension you maybe need to add
 the `sulu_content.export.manager` service to the constructor.
 
@@ -6417,7 +6424,7 @@ Also the call for `disable`, `enable` and `loading` state of the `save` button h
 ``` js
 this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', false); // enable
 this.sandbox.emit('sulu.header.toolbar.state.change', 'edit', true, true); // disabled
-this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button'); // loading 
+this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button'); // loading
 ```
 
 **After:**
@@ -6425,7 +6432,7 @@ this.sandbox.emit('sulu.header.toolbar.item.loading', 'save-button'); // loading
 ``` js
 this.sandbox.emit('sulu.header.toolbar.item.enable', 'save', false); // enable
 this.sandbox.emit('sulu.header.toolbar.item.disable', 'save', true); // disabled
-this.sandbox.emit('sulu.header.toolbar.item.loading', 'save'); // loading 
+this.sandbox.emit('sulu.header.toolbar.item.loading', 'save'); // loading
 ```
 
 #### Tabs
@@ -6535,7 +6542,7 @@ sulu_core:
 ### External link
 
 If you have external-link pages created before 1.0.0 you should run the following command to fix them.
- 
+
 ```
 app/console phpcr:migrations:migrate
 ```
@@ -6573,7 +6580,7 @@ app/console doctrine:phpcr:nodes:update --query="SELECT * FROM [nt:unstructured]
 
 1. The tag `sulu.rlp` is now mandatory for page templates.
 2. Page templates will now be filtered: only implemented templates in the theme will be displayed in the dropdown.
- 
+
 To find pages with not implemented templates run following command:
 
 ```bash
@@ -6584,7 +6591,7 @@ To fix that pages, you could implement the template in the theme or save the pag
 
 ### Webspaces
 
-1. The default-template config moved from global configuration to webspace config. For that it is needed to add this config to each webspace. 
+1. The default-template config moved from global configuration to webspace config. For that it is needed to add this config to each webspace.
 2. The excluded xml tag has been removed from the webspace configuration file, so you have to remove this tag from all these files.
 
 After that your webspace theme config should look like this:
@@ -6774,7 +6781,7 @@ do
 done
 ```
 
-After running this script please check the changed files for conflicts and wrong replaces! 
+After running this script please check the changed files for conflicts and wrong replaces!
 
 ### Website Navigation
 
@@ -6784,7 +6791,7 @@ up in the hierarchy, instead they won't show up in the navigation at all.
 ## 1.0.0-RC1
 
 ### Security Roles
-The identifiers in the acl_security_identities should be rename from SULU_ROLE_* to ROLE_SULU_*. This SQL snippet should 
+The identifiers in the acl_security_identities should be rename from SULU_ROLE_* to ROLE_SULU_*. This SQL snippet should
 do the job for you, you should adapt it to fit your needs:
 
 UPDATE `acl_security_identities` SET `identifier` = REPLACE(`identifier`, 'SULU_ROLE_', 'ROLE_SULU_');
@@ -6809,7 +6816,7 @@ The params for the texteditor content type where changed.
 ## Search index rebuild
 
 Old data in search index can cause problems. You should clear the folder `app/data` and rebuild the index.
- 
+
 ```bash
 rm -rf app/data/*
 app/console massive:search:index:rebuild
@@ -6859,7 +6866,7 @@ app/console sulu:upgrade:0.18.0:smart-content-operator tag and
 
 ### Media Format Cache Public Folder
 
-If you use the `sulu_media.format_cache.public_folder` parameter, 
+If you use the `sulu_media.format_cache.public_folder` parameter,
 the following configuration update need to be done,
 because the parameter does not longer exists:
 
@@ -6878,7 +6885,7 @@ your own code.
 
 ### Media image converter commands
 
-The image converter commands are now handled via service container tags. No need for the 
+The image converter commands are now handled via service container tags. No need for the
 `sulu_media.image.command.prefix` anymore. If you have created your own command, you have to
 tag your image converter command service with `sulu_media.image.command`.
 
@@ -6916,7 +6923,7 @@ To be sure that it is possible to generate a preview image you should check if t
 
 Variables of exception template `ClientWebsiteBundle:error404.html.twig` has changed.
 
-* `status_code`: response code 
+* `status_code`: response code
 * `status_text`: response text
 * `exception`: whole exception object
 * `currentContent`: content which was rendered before exception was thrown
@@ -6948,16 +6955,16 @@ To keep the backward compatibility you have to add following lines to your websp
 ```xml
 <webspace>
     ...
-    
+
     <theme>
         ...
-        
+
         <error-templates>
             <error-template code="404">ClientWebsiteBundle:views:error404.html.twig</error-template>
             <error-template default="true">ClientWebsiteBundle:views:error.html.twig</error-template>
         </error-templates>
     </theme>
-    
+
     ...
 </webspace>
 ```
@@ -6966,7 +6973,7 @@ To keep the backward compatibility you have to add following lines to your websp
 
 If a page has no url for a specific locale, it returns now the resource-locator to the index page (`'/'`) instead of a
 empty string (`''`).
- 
+
 __Before:__
 ```
 urls = array(
@@ -7052,7 +7059,7 @@ CRM-Components moved to a new bundle. If you enable the new Bundle everything sh
 BC-Breaks are:
 
  * AccountCategory replaced with standard Categories here is a migration needed
- 
+
 For a database upgrade you have to do following steps:
 
 * The Account has no `type` anymore. This column has to be removed from `co_accounts` table.
