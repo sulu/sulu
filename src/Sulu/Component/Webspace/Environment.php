@@ -14,13 +14,6 @@ namespace Sulu\Component\Webspace;
 class Environment
 {
     /**
-     * The type of the environment (dev, staging, prod, ...).
-     *
-     * @var string
-     */
-    private $type;
-
-    /**
      * The urls for this environment.
      *
      * @var Url[]
@@ -38,6 +31,14 @@ class Environment
      * @var Url
      */
     private $mainUrl;
+
+    /**
+     * @param string $type The type of the environment (dev, staging, prod, ...).
+     */
+    public function __construct(
+        private $type = null,
+    ) {
+    }
 
     /**
      * Sets the tye of this environment.

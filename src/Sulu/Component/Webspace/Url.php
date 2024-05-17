@@ -26,12 +26,12 @@ class Url implements ArrayableInterface
      */
     public function __construct(
         private $url = null,
+        private $environment = null,
         private $language = null,
         private $country = null,
         private $segment = null,
         private $redirect = null,
-        private $main = false,
-        private $environment = null
+        private $main = false
     ) {
     }
 

@@ -32,11 +32,11 @@ class EnvironmentTest extends TestCase
                     'segment' => null,
                     'redirect' => null,
                     'main' => true,
-                    'environment' => null,
+                    'environment' => 'test',
                 ],
             ],
         ];
-        $url = new Url('test');
+        $url = new Url('test', 'test');
 
         $environment = new Environment();
 
