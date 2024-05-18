@@ -135,6 +135,8 @@ class CollectionController extends AbstractRestController implements ClassResour
     /**
      * Shows a single collection with the given id.
      *
+     * @param int $id
+     *
      * @return Response
      */
     public function getAction($id, Request $request)
@@ -154,11 +156,12 @@ class CollectionController extends AbstractRestController implements ClassResour
 
         try {
             $locale = $this->getRequestParameter($request, 'locale', true);
-            $depth = \intval($request->get('depth', 0));
+            $depth = \intval($this->getRequestParameter($request, 'depth', false, 0));
             $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
             $children = $this->getBooleanRequestParameter($request, 'children', false, false);
 
             // filter children
+            /** @var int|null $limit */
             $limit = $request->get('limit', null);
             $offset = $this->getOffset($request, $limit);
             $search = $this->listRestHelper->getSearchPattern();
@@ -213,6 +216,7 @@ class CollectionController extends AbstractRestController implements ClassResour
             $flat = $this->getBooleanRequestParameter($request, 'flat', false);
             $depth = $request->get('depth', 0);
             $parentId = $request->get('parentId', null);
+            /** @var int|null $limit */
             $limit = $request->get('limit', null);
             $offset = $this->getOffset($request, $limit);
             $search = $this->listRestHelper->getSearchPattern();
@@ -291,6 +295,8 @@ class CollectionController extends AbstractRestController implements ClassResour
     /**
      * Edits the existing collection with the given id.
      *
+     * @param int $id
+     *
      * @return Response
      *
      * @throws EntityNotFoundException
@@ -303,10 +309,13 @@ class CollectionController extends AbstractRestController implements ClassResour
     /**
      * Delete a collection with the given id.
      *
+     * @param int $id
+     *
      * @return Response
      */
     public function deleteAction($id, Request $request)
     {
+        /** @var string|null $parent */
         $parent = $request->get('parent');
 
         $this->checkSystemCollection($id, $parent);
@@ -336,13 +345,10 @@ class CollectionController extends AbstractRestController implements ClassResour
         $action = $this->getRequestParameter($request, 'action', true);
 
         try {
-            switch ($action) {
-                case 'move':
-                    return $this->moveEntity($id, $request);
-                    break;
-                default:
-                    throw new RestException(\sprintf('Unrecognized action: "%s"', $action));
-            }
+            return match ($action) {
+                'move' => $this->moveEntity($id, $request),
+                default => throw new RestException(\sprintf('Unrecognized action: "%s"', $action)),
+            };
         } catch (RestException $ex) {
             $view = $this->view($ex->toArray(), 400);
 
@@ -368,7 +374,7 @@ class CollectionController extends AbstractRestController implements ClassResour
     }
 
     /**
-     * @return mixed[]
+     * @return array<string, mixed>
      */
     protected function getData(Request $request)
     {
@@ -387,10 +393,13 @@ class CollectionController extends AbstractRestController implements ClassResour
     }
 
     /**
+     * @param int|null $id
+     *
      * @return Response
      */
     protected function saveEntity($id, Request $request)
     {
+        /** @var string|null $parent */
         $parent = $request->get('parent');
         $breadcrumb = $this->getBooleanRequestParameter($request, 'breadcrumb', false, false);
 
@@ -412,6 +421,12 @@ class CollectionController extends AbstractRestController implements ClassResour
         return $this->handleView($view);
     }
 
+    /**
+     * @param string|int|null $id
+     * @param string|int|null $parent
+     *
+     * @return void
+     */
     private function checkSystemCollection($id, $parent)
     {
         if ((null !== $id && $this->systemCollectionManager->isSystemCollection(\intval($id)))
@@ -422,6 +437,8 @@ class CollectionController extends AbstractRestController implements ClassResour
     }
 
     /**
+     * @param int|null $limit
+     *
      * @return int
      */
     private function getOffset(Request $request, $limit)
@@ -439,6 +456,9 @@ class CollectionController extends AbstractRestController implements ClassResour
         return MediaAdmin::SECURITY_CONTEXT;
     }
 
+    /**
+     * @return string
+     */
     public function getSecuredClass()
     {
         return $this->collectionClass;

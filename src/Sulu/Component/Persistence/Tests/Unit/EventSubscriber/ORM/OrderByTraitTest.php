@@ -50,7 +50,7 @@ class OrderByTraitTest extends TestCase
         $this->addOrderByFunction->setAccessible(true);
     }
 
-    public function orderByProvider()
+    public static function orderByProvider()
     {
         return [
             ['user', ['firstName' => 'ASC'], ['user.firstName' => 'ASC']],

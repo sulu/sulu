@@ -20,15 +20,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'sulu:admin:info')]
 class InfoCommand extends Command
 {
-    /**
-     * @var string string
-     */
-    private $suluVersion;
-
-    public function __construct(string $suluVersion)
+    public function __construct(private string $suluVersion)
     {
         parent::__construct();
-        $this->suluVersion = $suluVersion;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

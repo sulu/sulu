@@ -15,20 +15,10 @@ use Psr\Cache\CacheItemPoolInterface;
 
 class CollaborationRepository
 {
-    /**
-     * @var CacheItemPoolInterface
-     */
-    private $cache;
-
-    /**
-     * @var int
-     */
-    private $threshold;
-
-    public function __construct(CacheItemPoolInterface $cache, int $threshold)
-    {
-        $this->cache = $cache;
-        $this->threshold = $threshold;
+    public function __construct(
+        private CacheItemPoolInterface $cache,
+        private int $threshold,
+    ) {
     }
 
     public function find(string $resourceKey, string $id, string $connectionId): ?Collaboration

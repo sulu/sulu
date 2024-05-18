@@ -41,77 +41,22 @@ class ActivityController extends AbstractRestController implements ClassResource
     use RequestParametersTrait;
 
     /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $listBuilderFactory;
-
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
-
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var string
-     */
-    private $activityClass;
-
-    /**
-     * @var string
-     */
-    private $contactClass;
-
-    /**
-     * @var string
-     */
-    private $userClass;
-
-    /**
-     * @var array<string, int>
-     */
-    private $permissions;
-
-    /**
      * @param array<string, int> $permissions Inject `sulu_security.permissions` parameter
      */
     public function __construct(
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        DoctrineListBuilderFactoryInterface $listBuilderFactory,
-        RestHelperInterface $restHelper,
-        SecurityCheckerInterface $securityChecker,
-        TranslatorInterface $translator,
-        string $activityClass,
-        string $contactClass,
-        string $userClass,
-        array $permissions,
+        private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        private DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        private RestHelperInterface $restHelper,
+        private SecurityCheckerInterface $securityChecker,
+        private TranslatorInterface $translator,
+        private string $activityClass,
+        private string $contactClass,
+        private string $userClass,
+        private array $permissions,
         ViewHandlerInterface $viewHandler,
         ?TokenStorageInterface $tokenStorage = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
-
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
-        $this->listBuilderFactory = $listBuilderFactory;
-        $this->restHelper = $restHelper;
-        $this->securityChecker = $securityChecker;
-        $this->translator = $translator;
-        $this->activityClass = $activityClass;
-        $this->contactClass = $contactClass;
-        $this->userClass = $userClass;
-        $this->permissions = $permissions;
     }
 
     public function cgetAction(Request $request): Response

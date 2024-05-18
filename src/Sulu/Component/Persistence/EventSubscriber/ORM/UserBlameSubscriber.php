@@ -11,10 +11,8 @@
 
 namespace Sulu\Component\Persistence\EventSubscriber\ORM;
 
-use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
-use Doctrine\ORM\Events;
 use Doctrine\Persistence\Event\LoadClassMetadataEventArgs;
 use Sulu\Component\Persistence\Model\UserBlameInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
@@ -28,7 +26,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
  * Persists the user that created and the last user that changed ORM classes
  * implementing UserBlameInterface.
  */
-class UserBlameSubscriber implements EventSubscriber
+class UserBlameSubscriber
 {
     public const CHANGER_FIELD = 'changer';
 
@@ -42,16 +40,6 @@ class UserBlameSubscriber implements EventSubscriber
     public function __construct(?TokenStorageInterface $tokenStorage = null)
     {
         $this->tokenStorage = $tokenStorage;
-    }
-
-    public function getSubscribedEvents()
-    {
-        $events = [
-            Events::loadClassMetadata,
-            Events::onFlush,
-        ];
-
-        return $events;
     }
 
     /**

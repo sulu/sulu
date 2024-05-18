@@ -47,7 +47,7 @@ class LocationContentTypeTest extends TestCase
             ->with($data);
     }
 
-    public function provideRead()
+    public static function provideRead()
     {
         return [
             [

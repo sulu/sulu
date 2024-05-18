@@ -21,7 +21,6 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryRepositoryInterface;
 use Sulu\Component\Rest\AbstractRestController;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\FieldDescriptorInterface;
 use Sulu\Component\Rest\ListBuilder\ListBuilderInterface;
@@ -42,41 +41,6 @@ class CategoryController extends AbstractRestController implements ClassResource
     use RequestParametersTrait;
 
     /**
-     * @var CategoryRepositoryInterface
-     */
-    private $categoryRepository;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
-
-    /**
-     * @var DoctrineListBuilderFactory
-     */
-    private $listBuilderFactory;
-
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
-
-    /**
-     * @var CategoryManagerInterface
-     */
-    private $categoryManager;
-
-    /**
-     * @var class-string
-     */
-    private $categoryClass;
-
-    /**
      * @deprecated Use the CategoryInterface::RESOURCE_KEY constant instead
      */
     protected static $entityKey = 'categories';
@@ -86,22 +50,15 @@ class CategoryController extends AbstractRestController implements ClassResource
      */
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        CategoryRepositoryInterface $categoryRepository,
-        TranslatorInterface $translator,
-        RestHelperInterface $restHelper,
-        DoctrineListBuilderFactoryInterface $listBuilderFactory,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        CategoryManagerInterface $categoryManager,
-        string $categoryClass
+        private CategoryRepositoryInterface $categoryRepository,
+        private TranslatorInterface $translator,
+        private RestHelperInterface $restHelper,
+        private DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        private CategoryManagerInterface $categoryManager,
+        private string $categoryClass
     ) {
         parent::__construct($viewHandler);
-        $this->categoryRepository = $categoryRepository;
-        $this->translator = $translator;
-        $this->restHelper = $restHelper;
-        $this->listBuilderFactory = $listBuilderFactory;
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
-        $this->categoryManager = $categoryManager;
-        $this->categoryClass = $categoryClass;
     }
 
     public function getAction($id, Request $request)
@@ -162,13 +119,10 @@ class CategoryController extends AbstractRestController implements ClassResource
         $action = $this->getRequestParameter($request, 'action', true);
 
         try {
-            switch ($action) {
-                case 'move':
-                    return $this->move($id, $request);
-                    break;
-                default:
-                    throw new RestException(\sprintf('Unrecognized action: "%s"', $action));
-            }
+            return match ($action) {
+                'move' => $this->move($id, $request),
+                default => throw new RestException(\sprintf('Unrecognized action: "%s"', $action)),
+            };
         } catch (RestException $ex) {
             $view = $this->view($ex->toArray(), 400);
 

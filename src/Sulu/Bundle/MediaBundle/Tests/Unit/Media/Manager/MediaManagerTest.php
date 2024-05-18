@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\MediaBundle\Media\Manager;
+namespace Sulu\Bundle\MediaBundle\Tests\Unit\Media\Manager;
 
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
@@ -36,11 +36,13 @@ use Sulu\Bundle\MediaBundle\Entity\MediaType;
 use Sulu\Bundle\MediaBundle\Media\Exception\InvalidMediaTypeException;
 use Sulu\Bundle\MediaBundle\Media\FileValidator\FileValidatorInterface;
 use Sulu\Bundle\MediaBundle\Media\FormatManager\FormatManagerInterface;
+use Sulu\Bundle\MediaBundle\Media\Manager\MediaManager;
 use Sulu\Bundle\MediaBundle\Media\PropertiesProvider\MediaPropertiesProviderInterface;
 use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
 use Sulu\Bundle\MediaBundle\Media\TypeManager\TypeManagerInterface;
 use Sulu\Bundle\SecurityBundle\Entity\User;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Component\PHPCR\PathCleanupInterface;
 use Sulu\Component\Security\Authentication\UserInterface as SuluUserInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
@@ -54,6 +56,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class MediaManagerTest extends TestCase
 {
     use ProphecyTrait;
+    use SetGetPrivatePropertyTrait;
 
     /**
      * @var MediaManager
@@ -523,16 +526,16 @@ class MediaManagerTest extends TestCase
         $media2 = $this->createMedia(2);
         $media3 = $this->createMedia(3);
 
-        $user = $this->prophesize(SuluUserInterface::class);
+        $user = new User();
 
         return [
             [[1, 2, 3], null, null, [$media1, $media2, $media3], [$media1, $media2, $media3]],
-            [[2, 1, 3], $user->reveal(), 64, [$media1, $media2, $media3], [$media2, $media1, $media3]],
+            [[2, 1, 3], $user, 64, [$media1, $media2, $media3], [$media2, $media1, $media3]],
             [[4, 1, 2], null, null, [$media1, $media2], [$media1, $media2]],
         ];
     }
 
-    public function provideSpecialCharacterFileName()
+    public static function provideSpecialCharacterFileName()
     {
         return [
             ['aäüßa', 'aäüßa', 'aaeuesa', ''],
@@ -540,7 +543,7 @@ class MediaManagerTest extends TestCase
         ];
     }
 
-    public function provideSpecialCharacterUrl()
+    public static function provideSpecialCharacterUrl()
     {
         return [
             [1, 'aäüßa.mp4', 2, '/download/1/media/a%C3%A4%C3%BC%C3%9Fa.mp4?v=2'],
@@ -551,11 +554,8 @@ class MediaManagerTest extends TestCase
 
     protected function createMedia($id)
     {
-        $mediaIdReflection = new \ReflectionProperty(Media::class, 'id');
-        $mediaIdReflection->setAccessible(true);
-
         $media = new Media();
-        $mediaIdReflection->setValue($media, $id);
+        self::setPrivateProperty($media, 'id', $id);
 
         $file = new File();
         $fileVersion = new FileVersion();

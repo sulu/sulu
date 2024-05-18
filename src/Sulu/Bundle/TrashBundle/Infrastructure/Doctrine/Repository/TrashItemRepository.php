@@ -19,7 +19,8 @@ use Sulu\Bundle\TrashBundle\Domain\Exception\TrashItemNotFoundException;
 use Sulu\Bundle\TrashBundle\Domain\Model\TrashItemInterface;
 use Sulu\Bundle\TrashBundle\Domain\Repository\TrashItemRepositoryInterface;
 use Sulu\Component\Security\Authentication\UserInterface;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Security as SymfonyCoreSecurity;
 
 final class TrashItemRepository implements TrashItemRepositoryInterface
 {
@@ -29,7 +30,7 @@ final class TrashItemRepository implements TrashItemRepositoryInterface
     private $entityManager;
 
     /**
-     * @var Security|null
+     * @var Security|SymfonyCoreSecurity|null
      */
     private $security;
 
@@ -38,7 +39,7 @@ final class TrashItemRepository implements TrashItemRepositoryInterface
      */
     private $entityRepository;
 
-    public function __construct(EntityManagerInterface $entityManager, ?Security $security)
+    public function __construct(EntityManagerInterface $entityManager, Security|SymfonyCoreSecurity|null $security)
     {
         $this->entityManager = $entityManager;
         $this->security = $security;

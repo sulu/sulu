@@ -26,7 +26,7 @@ use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Category\Request\CategoryRequestHandler;
 use Sulu\Component\Category\Request\CategoryRequestHandlerInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -76,7 +76,7 @@ class CategoryTwigExtensionTest extends TestCase
     /**
      * @return array<array{0:array<mixed>, 1?:string, 2?:string, 3?:int}>
      */
-    public function getProvider(): array
+    public static function getProvider(): array
     {
         return [
             [[]],
@@ -135,7 +135,7 @@ class CategoryTwigExtensionTest extends TestCase
     /**
      * @return array<array{string, string, string, string}>
      */
-    public function appendProvider(): array
+    public static function appendProvider(): array
     {
         return [
             ['c', '/test', '1,2', '1,2,3'],
@@ -185,7 +185,7 @@ class CategoryTwigExtensionTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$parameter => $string]);
+        $requestReveal->query = new InputBag([$parameter => $string]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($parameter, '')->willReturn($string);
         $request->getPathInfo()->willReturn($url);
@@ -207,7 +207,7 @@ class CategoryTwigExtensionTest extends TestCase
     /**
      * @return array<array{string, string, string, string}>
      */
-    public function setProvider(): array
+    public static function setProvider(): array
     {
         return [
             ['c', '/test', '1,2', '3'],
@@ -233,7 +233,7 @@ class CategoryTwigExtensionTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$parameter => $string]);
+        $requestReveal->query = new InputBag([$parameter => $string]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($parameter, '')->willReturn($string);
         $request->getPathInfo()->willReturn($url);
@@ -253,7 +253,7 @@ class CategoryTwigExtensionTest extends TestCase
     }
 
     /** @return array<array{string, string, string}> */
-    public function clearProvider(): array
+    public static function clearProvider(): array
     {
         return [
             ['c', '/test', '1,2'],
@@ -275,7 +275,7 @@ class CategoryTwigExtensionTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$parameter => $string]);
+        $requestReveal->query = new InputBag([$parameter => $string]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($parameter, '')->willReturn($string);
         $request->getPathInfo()->willReturn($url);

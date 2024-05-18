@@ -37,31 +37,27 @@ class MediaSelectionContainer implements ArrayableInterface
     private $displayOption;
 
     /**
-     * @Exclude
-     *
      * @var string
      */
+    #[Exclude]
     private $locale;
 
     /**
-     * @Exclude
-     *
      * @var Media[]
      */
+    #[Exclude]
     private $data;
 
     /**
-     * @Exclude
-     *
      * @var string
      */
+    #[Exclude]
     private $types;
 
     /**
-     * @Exclude
-     *
      * @var MediaManagerInterface
      */
+    #[Exclude]
     private $mediaManager;
 
     /**
@@ -148,20 +144,14 @@ class MediaSelectionContainer implements ArrayableInterface
 
     public function __get($name)
     {
-        switch ($name) {
-            case 'data':
-                return $this->getData();
-            case 'config':
-                return $this->getConfig();
-            case 'ids':
-                return $this->getIds();
-            case 'displayOption':
-                return $this->getDisplayOption();
-            case 'types':
-                return $this->getTypes();
-        }
-
-        return null;
+        return match ($name) {
+            'data' => $this->getData(),
+            'config' => $this->getConfig(),
+            'ids' => $this->getIds(),
+            'displayOption' => $this->getDisplayOption(),
+            'types' => $this->getTypes(),
+            default => null,
+        };
     }
 
     public function __isset($name)

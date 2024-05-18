@@ -49,7 +49,7 @@ class SinglePageSelectionTest extends TestCase
         $this->type = new SinglePageSelection($this->referenceStore->reveal());
     }
 
-    public function providePreResolve()
+    public static function providePreResolve()
     {
         return [
             [

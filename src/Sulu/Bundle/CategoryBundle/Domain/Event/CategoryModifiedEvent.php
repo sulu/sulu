@@ -19,33 +19,14 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 class CategoryModifiedEvent extends DomainEvent
 {
     /**
-     * @var CategoryInterface
-     */
-    private $category;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        CategoryInterface $category,
-        string $locale,
-        array $payload
+        private CategoryInterface $category,
+        private string $locale,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->category = $category;
-        $this->locale = $locale;
-        $this->payload = $payload;
     }
 
     public function getCategory(): CategoryInterface

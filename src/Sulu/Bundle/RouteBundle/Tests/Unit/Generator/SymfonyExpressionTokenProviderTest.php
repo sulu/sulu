@@ -130,15 +130,16 @@ class SymfonyExpressionTokenProviderTest extends TestCase
         );
     }
 
-    public function testResolveNotExists(): void
+    public function testResolveWithInvalidSyntax(): void
     {
         $this->expectException(CannotEvaluateTokenException::class);
+
         $translator = $this->prophesize(Translator::class);
         $translator->getLocale()->willReturn('en');
         $translator->setLocale('en')->shouldBeCalled();
         $entity = new \stdClass();
         $provider = new SymfonyExpressionTokenProvider($translator->reveal());
-        $provider->provide($entity, 'object.title');
+        $provider->provide($entity, 'object:title');
     }
 
     public function testResolveTranslationAddResource(): void

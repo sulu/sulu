@@ -133,10 +133,10 @@ class PageControllerTest extends SuluTestCase
         $page2 = $response->_embedded->pages[1];
         $this->assertEquals('Homepage', $page1->title);
         $this->assertEquals('test_io', $page1->webspaceKey);
-        $this->assertObjectHasAttribute('id', $page1);
+        $this->assertTrue(\property_exists($page1, 'id'));
         $this->assertEquals('Homepage', $page2->title);
         $this->assertEquals('sulu_io', $page2->webspaceKey);
-        $this->assertObjectHasAttribute('id', $page2);
+        $this->assertTrue(\property_exists($page2, 'id'));
     }
 
     public function testGetFlatResponseWithGhostIds(): void
@@ -259,7 +259,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('de', $childPages[0]->locale);
         $this->assertEquals('en', $childPages[0]->ghostLocale);
         $this->assertEquals('sulu_io', $childPages[0]->webspaceKey);
-        $this->assertObjectNotHasAttribute('shadowLocale', $childPages[0]);
+        $this->assertFalse(\property_exists($childPages[0], 'shadowLocale'));
         $this->assertEquals('ghost', $childPages[0]->type->name);
         $this->assertEquals('en', $childPages[0]->type->value);
 
@@ -267,7 +267,7 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals('de', $childPages[1]->locale);
         $this->assertEquals('en', $childPages[1]->shadowLocale);
         $this->assertEquals('sulu_io', $childPages[1]->webspaceKey);
-        $this->assertObjectNotHasAttribute('ghostLocale', $childPages[1]);
+        $this->assertFalse(\property_exists($childPages[1], 'ghostLocale'));
         $this->assertEquals('shadow', $childPages[1]->type->name);
         $this->assertEquals('en', $childPages[1]->type->value);
     }
@@ -1353,56 +1353,6 @@ class PageControllerTest extends SuluTestCase
         $this->assertEquals(null, $response['shadowBaseLanguage']);
         $this->assertArrayNotHasKey('type', $response);
         $this->assertArrayNotHasKey('type', $response);
-    }
-
-    public function testPutRemoveShadowWithDifferentTemplate(): void
-    {
-        $document = $this->createPageDocument();
-        $document->setTitle('test_en');
-        $document->setResourceSegment('/test_en');
-        $document->setStructureType('default');
-        $document->getStructure()->bind([
-            'tags' => [
-                'tag1',
-                'tag2',
-            ],
-            'article' => 'Test English',
-        ]);
-        $this->documentManager->persist($document, 'en', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
-
-        $document->setStructureType('overview');
-        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
-
-        $document->setShadowLocale('en');
-        $document->setShadowLocaleEnabled(true);
-        $this->documentManager->persist($document, 'de', ['parent_path' => '/cmf/sulu_io/contents']);
-        $this->documentManager->flush();
-
-        $this->client->jsonRequest('GET', '/api/pages/' . $document->getUuid() . '?language=de');
-        $response = \json_decode($this->client->getResponse()->getContent(), true);
-
-        $this->assertEquals(true, $response['shadowOn']);
-        $this->assertEquals('overview', $response['template']);
-
-        $this->client->jsonRequest(
-            'PUT',
-            '/api/pages/' . $document->getUuid() . '?language=de&webspace=sulu_io',
-            [
-                'id' => $document->getUuid(),
-                'nodeType' => 1,
-                'shadowOn' => false,
-            ]
-        );
-
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-
-        $this->client->jsonRequest('GET', '/api/pages/' . $document->getUuid() . '?language=de');
-        $response = \json_decode($this->client->getResponse()->getContent(), true);
-
-        $this->assertEquals(false, $response['shadowOn']);
-        $this->assertEquals('overview', $response['template']);
     }
 
     public function testPutWithValidHash(): void

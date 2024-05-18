@@ -73,7 +73,7 @@ interface MediaManagerInterface
     /**
      * Creates a new media or overrides an existing one.
      *
-     * @param UploadedFile $uploadedFile
+     * @param UploadedFile|null $uploadedFile
      * @param array $data The data of the category to save
      * @param int|null $userId The id of the user, who is doing this change
      *

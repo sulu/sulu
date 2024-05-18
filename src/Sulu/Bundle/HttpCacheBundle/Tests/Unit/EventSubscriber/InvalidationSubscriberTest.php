@@ -9,7 +9,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\EventListener;
+namespace Sulu\Bundle\HttpCacheBundle\Tests\Unit\EventSubscriber;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -120,23 +120,25 @@ class InvalidationSubscriberTest extends TestCase
         );
     }
 
-    public function provideRequest()
+    public static function provideRequest()
     {
         return [
-            [null, 'http'],
-            [$this->prophesize(Request::class), 'http'],
-            [$this->prophesize(Request::class), 'https'],
+            [false, 'http'],
+            [true, 'http'],
+            [true, 'https'],
         ];
     }
 
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforePublishing($request, $scheme): void
+    public function testInvalidateDocumentBeforePublishing(bool $hasRequest, $scheme): void
     {
         $documentUuid = '743389e6-2ac5-4673-9835-3e709a27a03d';
 
-        if ($request) {
+        $request = null;
+        if ($hasRequest) {
+            $request = $this->prophesize(Request::class);
             $request->getScheme()->willReturn($scheme);
             $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
         }
@@ -160,6 +162,7 @@ class InvalidationSubscriberTest extends TestCase
 
         $event = $this->prophesize(PublishEvent::class);
         $event->getDocument()->willReturn($document);
+        $event->getOption(InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION, true)->willReturn(true);
 
         $structureMetadata = $this->prophesize(StructureMetadata::class);
         $this->documentInspector->getStructureMetadata($document)->willReturn($structureMetadata);
@@ -216,6 +219,7 @@ class InvalidationSubscriberTest extends TestCase
 
         $event = $this->prophesize(PublishEvent::class);
         $event->getDocument()->willReturn($document);
+        $event->getOption(InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION, true)->willReturn(true);
 
         $structureMetadata = $this->prophesize(StructureMetadata::class);
         $this->documentInspector->getStructureMetadata($document)->willReturn($structureMetadata);
@@ -252,6 +256,7 @@ class InvalidationSubscriberTest extends TestCase
 
         $event = $this->prophesize(PublishEvent::class);
         $event->getDocument()->willReturn($document);
+        $event->getOption(InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION, true)->willReturn(true);
 
         $structureMetadata = $this->prophesize(StructureMetadata::class);
         $this->documentInspector->getStructureMetadata($document)->willReturn($structureMetadata);
@@ -274,6 +279,7 @@ class InvalidationSubscriberTest extends TestCase
         $document = new \stdClass();
         $event = $this->prophesize(PublishEvent::class);
         $event->getDocument()->willReturn($document);
+        $event->getOption(InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION, true)->willReturn(true);
 
         $this->cacheManager->invalidatePath(Argument::any())->shouldNotBeCalled();
 
@@ -283,12 +289,15 @@ class InvalidationSubscriberTest extends TestCase
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforeUnpublishing($request, $scheme): void
+    public function testInvalidateDocumentBeforeUnpublishing(bool $hasRequest, $scheme): void
     {
         $documentUuid = '743c89e6-2ac5-7777-9835-3e709a27a03d';
 
-        if ($request) {
+        $request = null;
+        if ($hasRequest) {
+            $request = $this->prophesize(Request::class);
             $request->getScheme()->willReturn($scheme);
+
             $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
         }
 
@@ -309,6 +318,7 @@ class InvalidationSubscriberTest extends TestCase
 
         $event = $this->prophesize(UnpublishEvent::class);
         $event->getDocument()->willReturn($document);
+        $event->getOption(InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION, true)->willReturn(true);
 
         $structureMetadata = $this->prophesize(StructureMetadata::class);
         $this->documentInspector->getStructureMetadata($document)->willReturn($structureMetadata);
@@ -362,6 +372,7 @@ class InvalidationSubscriberTest extends TestCase
 
         $event = $this->prophesize(UnpublishEvent::class);
         $event->getDocument()->willReturn($document);
+        $event->getOption(InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION, true)->willReturn(true);
 
         $structureMetadata = $this->prophesize(StructureMetadata::class);
         $this->documentInspector->getStructureMetadata($document)->willReturn($structureMetadata);
@@ -384,6 +395,7 @@ class InvalidationSubscriberTest extends TestCase
         $document = new \stdClass();
         $event = $this->prophesize(PublishEvent::class);
         $event->getDocument()->willReturn($document);
+        $event->getOption(InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION, true)->willReturn(true);
 
         $this->cacheManager->invalidatePath(Argument::any())->shouldNotBeCalled();
 
@@ -393,11 +405,13 @@ class InvalidationSubscriberTest extends TestCase
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforeRemoving($request, $scheme): void
+    public function testInvalidateDocumentBeforeRemoving(bool $hasRequest, $scheme): void
     {
         $documentUuid = '743c89e6-2ac5-7777-1234-3e709a27a0bb';
 
-        if ($request) {
+        $request = null;
+        if ($hasRequest) {
+            $request = $this->prophesize(Request::class);
             $request->getScheme()->willReturn($scheme);
             $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
         }
@@ -421,6 +435,7 @@ class InvalidationSubscriberTest extends TestCase
 
         $event = $this->prophesize(RemoveEvent::class);
         $event->getDocument()->willReturn($document);
+        $event->getOption(InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION, true)->willReturn(true);
 
         $structureMetadata = $this->prophesize(StructureMetadata::class);
         $this->documentInspector->getStructureMetadata($document)->willReturn($structureMetadata);
@@ -485,11 +500,13 @@ class InvalidationSubscriberTest extends TestCase
     /**
      * @dataProvider provideRequest
      */
-    public function testInvalidateDocumentBeforeRemovingLocale($request, $scheme): void
+    public function testInvalidateDocumentBeforeRemovingLocale(bool $hasRequest, $scheme): void
     {
         $documentUuid = '743c89e6-2ac5-7777-1234-3e709a27a0bb';
 
-        if ($request) {
+        $request = null;
+        if ($hasRequest) {
+            $request = $this->prophesize(Request::class);
             $request->getScheme()->willReturn($scheme);
             $this->requestStack->getCurrentRequest()->willReturn($request->reveal());
         }
@@ -512,6 +529,7 @@ class InvalidationSubscriberTest extends TestCase
         $event = $this->prophesize(RemoveLocaleEvent::class);
         $event->getDocument()->willReturn($document);
         $event->getLocale()->willReturn('en');
+        $event->getOption(InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION, true)->willReturn(true);
 
         $structureMetadata = $this->prophesize(StructureMetadata::class);
         $this->documentInspector->getStructureMetadata($document)->willReturn($structureMetadata);
@@ -567,6 +585,7 @@ class InvalidationSubscriberTest extends TestCase
         $document->getWebspaceName()->willReturn('sulu')->shouldBeCalled();
         $this->documentInspector->getPublishedLocales($document->reveal())->willReturn(['de']);
         $event->getDocument()->willReturn($document->reveal());
+        $event->getOption(InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION, true)->willReturn(true);
 
         $this->resourceLocatorStrategy->loadByContentUuid(Argument::cetera())
             ->willThrow(ResourceLocatorNotFoundException::class)->shouldBeCalled();
@@ -580,9 +599,50 @@ class InvalidationSubscriberTest extends TestCase
         $document = new \stdClass();
         $event = $this->prophesize(RemoveEvent::class);
         $event->getDocument()->willReturn($document);
+        $event->getOption(InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION, true)->willReturn(true);
 
         $this->cacheManager->invalidatePath(Argument::any())->shouldNotBeCalled();
 
         $this->invalidationSubscriber->invalidateDocumentBeforeRemoving($event->reveal());
+    }
+
+    public function testInvalidateDocumentBeforePublishingNoInvalidation(): void
+    {
+        $event = $this->prophesize(PublishEvent::class);
+        $event->getOption(InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION, true)->willReturn(false);
+
+        $this->cacheManager->invalidatePath(Argument::any())->shouldNotBeCalled();
+
+        $this->invalidationSubscriber->invalidateDocumentBeforePublishing($event->reveal());
+    }
+
+    public function testInvalidateDocumentBeforeUnpublishingNoInvalidation(): void
+    {
+        $event = $this->prophesize(UnpublishEvent::class);
+        $event->getOption(InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION, true)->willReturn(false);
+
+        $this->cacheManager->invalidatePath(Argument::any())->shouldNotBeCalled();
+
+        $this->invalidationSubscriber->invalidateDocumentBeforeUnpublishing($event->reveal());
+    }
+
+    public function testInvalidateDocumentBeforeRemovingNoInvalidation(): void
+    {
+        $event = $this->prophesize(RemoveEvent::class);
+        $event->getOption(InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION, true)->willReturn(false);
+
+        $this->cacheManager->invalidatePath(Argument::any())->shouldNotBeCalled();
+
+        $this->invalidationSubscriber->invalidateDocumentBeforeRemoving($event->reveal());
+    }
+
+    public function testInvalidateDocumentBeforeRemovingLocaleNoInvalidation(): void
+    {
+        $event = $this->prophesize(RemoveLocaleEvent::class);
+        $event->getOption(InvalidationSubscriber::HTTP_CACHE_INVALIDATION_OPTION, true)->willReturn(false);
+
+        $this->cacheManager->invalidatePath(Argument::any())->shouldNotBeCalled();
+
+        $this->invalidationSubscriber->invalidateDocumentBeforeRemovingLocale($event->reveal());
     }
 }

@@ -80,7 +80,7 @@ class SegmentRequestProcessorTest extends TestCase
         $this->assertNull($attributes->getAttribute('segment'));
     }
 
-    public function provideProcessWithDefaultSegmentValue()
+    public static function provideProcessWithDefaultSegmentValue()
     {
         return [
             [null, 's', 's'],

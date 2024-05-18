@@ -87,7 +87,11 @@ class WebspaceManagerTest extends WebspaceTestCase
     /**
      * @return array<array{string, bool}>
      */
+<<<<<<< HEAD
     public function provideFindPortalInformationByUrl(): array
+=======
+    public static function provideFindPortalInformationByUrl()
+>>>>>>> upstream/3.0
     {
         return [
             ['dan.lo/de-asd/test/test', false],

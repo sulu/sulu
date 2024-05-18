@@ -498,7 +498,7 @@ class RedirectExceptionSubscriberTest extends TestCase
     /**
      * @return mixed[]
      */
-    public function provideResolveData(): array
+    public static function provideResolveData(): array
     {
         return [
             ['http://sulu.lo/articles?foo=bar', 'sulu.lo', 'sulu.lo/en', 'http://sulu.lo/en/articles?foo=bar'],

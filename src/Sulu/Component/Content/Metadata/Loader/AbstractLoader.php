@@ -45,7 +45,7 @@ abstract class AbstractLoader implements LoaderInterface
     /**
      * @param string $resource
      */
-    public function load($resource, $type = null)
+    public function load($resource, $type = null): mixed
     {
         $schemaPath = __DIR__ . $this->schemaPath;
 
@@ -179,17 +179,17 @@ abstract class AbstractLoader implements LoaderInterface
         return $result;
     }
 
-    public function supports($resource, $type = null)
+    public function supports($resource, $type = null): bool
     {
         throw new FeatureNotImplementedException();
     }
 
-    public function getResolver()
+    public function getResolver(): LoaderResolverInterface
     {
         throw new FeatureNotImplementedException();
     }
 
-    public function setResolver(LoaderResolverInterface $resolver)
+    public function setResolver(LoaderResolverInterface $resolver): void
     {
         throw new FeatureNotImplementedException();
     }

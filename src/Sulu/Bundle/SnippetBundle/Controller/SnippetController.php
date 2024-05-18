@@ -11,10 +11,12 @@
 
 namespace Sulu\Bundle\SnippetBundle\Controller;
 
+use FOS\RestBundle\Context\Context;
 use FOS\RestBundle\View\View;
 use FOS\RestBundle\View\ViewHandler;
 use HandcraftedInTheAlps\RestRoutingBundle\Routing\ClassResourceInterface;
 use PHPCR\NodeInterface;
+use Sulu\Bundle\CoreBundle\Serializer\Exclusion\FieldsExclusionStrategy;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
 use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\SnippetBundle\Snippet\DefaultSnippetManagerInterface;
@@ -34,6 +36,7 @@ use Sulu\Component\Rest\ListBuilder\ListRestHelper;
 use Sulu\Component\Rest\RequestParametersTrait;
 use Sulu\Component\Security\SecuredControllerInterface;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -204,7 +207,16 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
             $total
         );
 
-        return $this->viewHandler->handle(View::create($data));
+        $view = View::create($data);
+
+        $requestedFields = $this->listRestHelper->getFields() ?? [];
+        if ([] !== $requestedFields) {
+            $context = new Context();
+            $context->addExclusionStrategy(new FieldsExclusionStrategy($requestedFields));
+            $view->setContext($context);
+        }
+
+        return $this->viewHandler->handle($view);
     }
 
     /**
@@ -492,6 +504,7 @@ class SnippetController implements SecuredControllerInterface, ClassResourceInte
         $data = $request->request->all();
         $data['workflowStage'] = $request->get('state', WorkflowStage::PUBLISHED);
 
+        /** @var class-string<FormTypeInterface> $formType */
         $formType = $this->metadataFactory->getMetadataForAlias(Structure::TYPE_SNIPPET)->getFormType();
         $form = $this->formFactory->create($formType, $document, [
             'csrf_protection' => false,

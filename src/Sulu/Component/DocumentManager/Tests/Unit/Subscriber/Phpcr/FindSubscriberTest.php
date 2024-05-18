@@ -82,7 +82,7 @@ class FindSubscriberTest extends TestCase
         $this->doTestFind(['type' => null]);
     }
 
-    public function provideFindWithTypeOrClass()
+    public static function provideFindWithTypeOrClass()
     {
         return [
             ['alias', 'page', false],

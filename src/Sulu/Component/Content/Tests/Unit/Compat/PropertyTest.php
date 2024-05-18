@@ -16,7 +16,7 @@ use Sulu\Component\Content\Compat\Property;
 
 class PropertyTest extends TestCase
 {
-    public function provideIsMultipleTest()
+    public static function provideIsMultipleTest()
     {
         return [
             [0, 1, true],

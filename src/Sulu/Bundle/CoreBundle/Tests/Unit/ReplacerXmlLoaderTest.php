@@ -49,7 +49,7 @@ class ReplacerXmlLoaderTest extends TestCase
         );
     }
 
-    public function examplesDataProvider()
+    public static function examplesDataProvider()
     {
         return [
             ['default', ' ', '-'],

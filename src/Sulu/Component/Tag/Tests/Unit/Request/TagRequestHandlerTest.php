@@ -14,7 +14,7 @@ namespace Sulu\Component\Tag\Tests\Unit\Request;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Sulu\Component\Tag\Request\TagRequestHandler;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -22,7 +22,7 @@ class TagRequestHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function getProvider()
+    public static function getProvider()
     {
         return [
             ['t', '', []],
@@ -43,7 +43,7 @@ class TagRequestHandlerTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$tagsParameter => $tagsString]);
+        $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($tagsParameter, '')->willReturn($tagsString);
 
@@ -53,7 +53,7 @@ class TagRequestHandlerTest extends TestCase
         $this->assertEquals($expected, $tags);
     }
 
-    public function appendProvider()
+    public static function appendProvider()
     {
         return [
             ['t', '/test', 'Sulu,Core', 'Sulu,Core,Test'],
@@ -76,7 +76,7 @@ class TagRequestHandlerTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$tagsParameter => $tagsString]);
+        $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
@@ -87,7 +87,7 @@ class TagRequestHandlerTest extends TestCase
         $this->assertEquals($url . '?' . $tagsParameter . '=' . \urlencode($expected), $result);
     }
 
-    public function setProvider()
+    public static function setProvider()
     {
         return [
             ['t', '/test', 'Sulu,Core', 'Test'],
@@ -110,7 +110,7 @@ class TagRequestHandlerTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$tagsParameter => $tagsString]);
+        $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
@@ -121,7 +121,7 @@ class TagRequestHandlerTest extends TestCase
         $this->assertEquals($url . '?' . $tagsParameter . '=' . \urlencode($expected), $result);
     }
 
-    public function removeProvider()
+    public static function removeProvider()
     {
         return [
             ['t', '/test', 'Sulu,Core'],
@@ -142,7 +142,7 @@ class TagRequestHandlerTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$tagsParameter => $tagsString]);
+        $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);

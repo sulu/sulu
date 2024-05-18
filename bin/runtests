@@ -223,9 +223,12 @@ function init_dbal()
     );
 
     write_info('Updating schema');
-    exec_sf_cmd(
+    $process = exec_sf_cmd(
         'doctrine:schema:update --force'
     );
+    if ($process->getExitCode() !== 0) {
+        exit($process->getExitCode());
+    }
 }
 
 function run_bundle_tests(\SplFileInfo $phpunitFile)
@@ -281,16 +284,7 @@ function get_phpunit_path()
 
 function init_bundle()
 {
-    if (!$console = get_test_console_path()) {
-        return;
-    }
-
-    $process = exec_cmd(sprintf(
-        PHP_BINARY . ' %s %s',
-        $console,
-        'debug:container doctrine.orm.entity_manager'
-    ), false, false);
-
+    $process = exec_sf_cmd('debug:container doctrine.orm.entity_manager', false, false);
     // bundle does not use Doctrine ORM
     if ($process->getExitCode() !== 0) {
         return;
@@ -298,17 +292,9 @@ function init_bundle()
 
     write_info('Doctrine ORM detected, updating the schema for the bundle.');
 
-    exec_cmd(sprintf(
-        PHP_BINARY . ' %s %s',
-        $console,
-        ' doctrine:schema:update --force'
-    ));
+    $process = exec_sf_cmd('doctrine:schema:update --force');
 
-    exec_cmd(sprintf(
-        PHP_BINARY . ' %s %s',
-        $console,
-        ' sulu:document:initialize --purge --force --ansi'
-    ));
+    $process = exec_sf_cmd('sulu:document:initialize --purge --force --ansi');
 }
 
 function is_everything_ok()

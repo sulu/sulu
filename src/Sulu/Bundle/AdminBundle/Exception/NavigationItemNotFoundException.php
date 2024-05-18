@@ -13,16 +13,9 @@ namespace Sulu\Bundle\AdminBundle\Exception;
 
 class NavigationItemNotFoundException extends \Exception
 {
-    /**
-     * @var string
-     */
-    private $navigationItem;
-
-    public function __construct(string $navigationItem)
+    public function __construct(private string $navigationItem)
     {
         parent::__construct(\sprintf('The NavigationItem with the name "%s" does not exist.', $navigationItem));
-
-        $this->navigationItem = $navigationItem;
     }
 
     public function getNavigationItem(): string

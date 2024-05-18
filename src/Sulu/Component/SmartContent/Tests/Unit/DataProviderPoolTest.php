@@ -13,8 +13,13 @@ namespace Sulu\Component\SmartContent\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
+use Sulu\Component\SmartContent\Configuration\ProviderConfiguration;
+use Sulu\Component\SmartContent\Configuration\ProviderConfigurationInterface;
 use Sulu\Component\SmartContent\DataProviderInterface;
 use Sulu\Component\SmartContent\DataProviderPool;
+use Sulu\Component\SmartContent\DataProviderResult;
+use Sulu\Component\SmartContent\DatasourceItem;
+use Sulu\Component\SmartContent\DatasourceItemInterface;
 use Sulu\Component\SmartContent\Exception\DataProviderAliasAlreadyExistsException;
 use Sulu\Component\SmartContent\Exception\DataProviderNotExistsException;
 
@@ -22,48 +27,93 @@ class DataProviderPoolTest extends TestCase
 {
     use ProphecyTrait;
 
-    public function addProvider()
+    public static function createDataProvider(): DataProviderInterface
+    {
+        return new class () implements DataProviderInterface {
+            public function getConfiguration(): ProviderConfigurationInterface
+            {
+                return new ProviderConfiguration();
+            }
+
+            public function getDefaultPropertyParameter(): array
+            {
+                return [];
+            }
+
+            public function resolveDataItems(
+                array $filters,
+                array $propertyParameter,
+                array $options = [],
+                $limit = null,
+                $page = 1,
+                $pageSize = null
+            ): DataProviderResult {
+                return new DataProviderResult([], false);
+            }
+
+            public function resolveResourceItems(
+                array $filters,
+                array $propertyParameter,
+                array $options = [],
+                $limit = null,
+                $page = 1,
+                $pageSize = null
+            ): DataProviderResult {
+                return new DataProviderResult([], false);
+            }
+
+            public function resolveDatasource(
+                $datasource,
+                array $propertyParameter,
+                array $options,
+            ): DatasourceItemInterface {
+                return new DatasourceItem('', '', '', '');
+            }
+        };
+    }
+
+    public static function addProvider()
     {
         $pool1 = new DataProviderPool(true);
         $pool2 = new DataProviderPool(true);
 
-        $provider1 = $this->prophesize(DataProviderInterface::class);
-        $provider2 = $this->prophesize(DataProviderInterface::class);
-        $provider3 = $this->prophesize(DataProviderInterface::class);
+        $provider1 = self::createDataProvider();
+        $provider2 = self::createDataProvider();
+        $provider3 = self::createDataProvider();
 
-        $pool2->add('test-1', $provider1->reveal());
+        $pool2->add('test-1', $provider1);
 
         return [
             [
                 $pool1,
                 [
-                    ['alias' => 'test', 'provider' => $provider1->reveal()],
+                    ['alias' => 'test', 'provider' => $provider1],
                 ],
                 [
-                    'test' => $provider1->reveal(),
+                    'test' => $provider1,
                 ],
             ],
             [
                 $pool1,
                 [
-                    ['alias' => 'test', 'provider' => $provider1->reveal()],
-                    ['alias' => 'test', 'provider' => $provider2->reveal()],
+                    ['alias' => 'test', 'provider' => $provider1],
+                    ['alias' => 'test', 'provider' => $provider2],
                 ],
                 [
-                    'test' => $provider1->reveal(),
+                    'test' => $provider1,
                 ],
                 DataProviderAliasAlreadyExistsException::class,
             ],
             [
                 $pool2,
                 [
-                    ['alias' => 'test-2', 'provider' => $provider2->reveal()],
-                    ['alias' => 'test-3', 'provider' => $provider3->reveal()],
+                    ['alias' => 'test-2', 'provider' => $provider2],
+                    ['alias' => 'test-3', 'provider' => $provider3],
                 ],
                 [
-                    'test-1' => $provider1->reveal(),
-                    'test-2' => $provider2->reveal(),
-                    'test-3' => $provider3->reveal(),
+                    'test-1' => $provider1,
+                    'test-2' => $provider2,
+                    'test-3' => $provider3,
                 ],
             ],
         ];
@@ -85,23 +135,14 @@ class DataProviderPoolTest extends TestCase
         $this->assertEquals($expectedProviders, $pool->getAll());
     }
 
-    public function existsProvider()
+    public static function existsProvider()
     {
         $pool = new DataProviderPool(true);
-        $provider = $this->prophesize(DataProviderInterface::class);
-        $pool->add('test', $provider->reveal());
+        $pool->add('test', self::createDataProvider());
 
         return [
-            [
-                $pool,
-                'test',
-                true,
-            ],
-            [
-                $pool,
-                'test-1',
-                false,
-            ],
+            [$pool, 'test', true],
+            [$pool, 'test-1', false],
         ];
     }
 
@@ -113,17 +154,17 @@ class DataProviderPoolTest extends TestCase
         $this->assertEquals($expected, $pool->exists($alias));
     }
 
-    public function getProvider()
+    public static function getProvider()
     {
         $pool = new DataProviderPool(true);
-        $provider = $this->prophesize(DataProviderInterface::class);
-        $pool->add('test', $provider->reveal());
+        $provider = self::createDataProvider();
+        $pool->add('test', $provider);
 
         return [
             [
                 $pool,
                 'test',
-                $provider->reveal(),
+                $provider,
             ],
             [
                 $pool,
@@ -150,17 +191,17 @@ class DataProviderPoolTest extends TestCase
     {
         $pool1 = new DataProviderPool(true);
         $pool2 = new DataProviderPool(true);
-        $provider1 = $this->prophesize(DataProviderInterface::class);
-        $provider2 = $this->prophesize(DataProviderInterface::class);
-        $pool1->add('test-1', $provider1->reveal());
-        $pool1->add('test-2', $provider2->reveal());
+        $provider1 = self::createDataProvider();
+        $provider2 = self::createDataProvider();
+        $pool1->add('test-1', $provider1);
+        $pool1->add('test-2', $provider2);
 
         return [
             [
                 $pool1,
                 [
-                    'test-1' => $provider1->reveal(),
-                    'test-2' => $provider2->reveal(),
+                    'test-1' => $provider1,
+                    'test-2' => $provider2,
                 ],
             ],
             [

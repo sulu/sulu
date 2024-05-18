@@ -349,6 +349,7 @@ test('React and update preview when data is changed', () => {
     previewStore.start.mockReturnValue(startPromise);
     previewStore.update.mockReturnValue(updatePromise);
     previewStore.starting = false;
+    previewStore.token = '123-123-123';
 
     preview.instance().handleStartClick();
 
@@ -356,6 +357,7 @@ test('React and update preview when data is changed', () => {
 
     return startPromise.then(() => {
         preview.update();
+        previewStore.token = '123-123-123';
         expect(previewStore.update).toBeCalledWith({title: 'New Test'});
 
         expect(preview.render()).toMatchSnapshot();
@@ -372,6 +374,11 @@ test('React and update preview in external window when data is changed', () => {
             close: jest.fn(),
             open: jest.fn(),
             write: jest.fn(),
+            document: {
+                body: {
+                    scrollTop: 10,
+                },
+            },
         },
     };
     window.open.mockReturnValue(previewWindow);
@@ -393,6 +400,7 @@ test('React and update preview in external window when data is changed', () => {
     previewStore.start.mockReturnValue(startPromise);
     previewStore.update.mockReturnValue(updatePromise);
     previewStore.starting = false;
+    previewStore.token = '123-123-123';
 
     preview.instance().handleStartClick();
     preview.update();
@@ -566,6 +574,7 @@ test('Change target group in PreviewStore when selection of target group has cha
     const previewStore = preview.instance().previewStore;
     previewStore.start.mockReturnValue(startPromise);
     previewStore.starting = false;
+    previewStore.token = '123-123-123';
 
     preview.instance().handleStartClick();
 

@@ -24,7 +24,7 @@ use Sulu\Component\Cache\MemoizeInterface;
 use Sulu\Component\Serializer\ArraySerializerInterface;
 use Sulu\Component\Tag\Request\TagRequestHandler;
 use Sulu\Component\Tag\Request\TagRequestHandlerInterface;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -42,7 +42,7 @@ class TagTwigExtensionTest extends TestCase
         return new Memoize(new ArrayCache(), 0);
     }
 
-    public function getProvider()
+    public static function getProvider()
     {
         return [
             [[]],
@@ -82,7 +82,7 @@ class TagTwigExtensionTest extends TestCase
         $this->assertEquals($tagData, $tagExtension->getTagsFunction());
     }
 
-    public function appendProvider()
+    public static function appendProvider()
     {
         return [
             ['t', '/test', 'Sulu,Core', 'Sulu,Core,Test'],
@@ -106,7 +106,7 @@ class TagTwigExtensionTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$tagsParameter => $tagsString]);
+        $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
@@ -125,7 +125,7 @@ class TagTwigExtensionTest extends TestCase
         $this->assertEquals($url . '?' . $tagsParameter . '=' . \urlencode($expected), $result);
     }
 
-    public function setProvider()
+    public static function setProvider()
     {
         return [
             ['t', '/test', 'Sulu,Core', 'Test'],
@@ -149,7 +149,7 @@ class TagTwigExtensionTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$tagsParameter => $tagsString]);
+        $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);
@@ -168,7 +168,7 @@ class TagTwigExtensionTest extends TestCase
         $this->assertEquals($url . '?' . $tagsParameter . '=' . \urlencode($expected), $result);
     }
 
-    public function clearProvider()
+    public static function clearProvider()
     {
         return [
             ['t', '/test', 'Sulu,Core'],
@@ -190,7 +190,7 @@ class TagTwigExtensionTest extends TestCase
         $request = $this->prophesize(Request::class);
 
         $requestReveal = $request->reveal();
-        $requestReveal->query = new ParameterBag([$tagsParameter => $tagsString]);
+        $requestReveal->query = new InputBag([$tagsParameter => $tagsString]);
         $requestStack->getCurrentRequest()->willReturn($requestReveal);
         $request->get($tagsParameter, '')->willReturn($tagsString);
         $request->getPathInfo()->willReturn($url);

@@ -27,7 +27,7 @@ class ResourceViewRegistry {
             return false;
         }
 
-        return this.resourceViews[resourceKey].views[view] !== undefined;
+        return this.resourceViews?.[resourceKey]?.views?.[view] !== undefined;
     }
 
     get(view: string, resourceKey: string): string {

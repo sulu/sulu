@@ -51,7 +51,7 @@ class FormOverlayListViewBuilderTest extends TestCase
             ->getView();
     }
 
-    public function provideBuildFormOverlayListView()
+    public static function provideBuildFormOverlayListView()
     {
         return [
             [

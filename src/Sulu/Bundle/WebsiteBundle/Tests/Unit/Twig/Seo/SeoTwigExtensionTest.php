@@ -151,7 +151,7 @@ class SeoTwigExtensionTest extends TestCase
         $this->seoTwigExtension->renderSeoTags([], [], [], null);
     }
 
-    public function provideSeoData()
+    public static function provideSeoData()
     {
         return [
             [

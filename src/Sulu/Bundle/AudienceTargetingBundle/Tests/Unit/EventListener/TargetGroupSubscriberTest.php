@@ -9,18 +9,20 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit;
+namespace Sulu\Bundle\AudienceTargetingBundle\Tests\Unit\EventListener;
 
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroup;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRepositoryInterface;
 use Sulu\Bundle\AudienceTargetingBundle\Entity\TargetGroupRuleInterface;
 use Sulu\Bundle\AudienceTargetingBundle\EventListener\TargetGroupSubscriber;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupEvaluatorInterface;
 use Sulu\Bundle\AudienceTargetingBundle\TargetGroup\TargetGroupStoreInterface;
+use Sulu\Bundle\TestBundle\Testing\SetGetPrivatePropertyTrait;
 use Sulu\Component\Content\Compat\Structure\StructureBridge;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,6 +37,7 @@ use Twig\Environment;
 class TargetGroupSubscriberTest extends TestCase
 {
     use ProphecyTrait;
+    use SetGetPrivatePropertyTrait;
 
     /**
      * @var ObjectProphecy<Environment>
@@ -138,7 +141,7 @@ class TargetGroupSubscriberTest extends TestCase
         $targetGroupSubscriber->setTargetGroup($event);
     }
 
-    public function provideSetTargetGroupFromHeader()
+    public static function provideSetTargetGroupFromHeader()
     {
         return [
             ['X-Sulu-Target-Group', '1', '1'],
@@ -206,7 +209,7 @@ class TargetGroupSubscriberTest extends TestCase
         $targetGroupSubscriber->setTargetGroup($event);
     }
 
-    public function provideSetTargetGroupFromCookie()
+    public static function provideSetTargetGroupFromCookie()
     {
         return [
             ['sulu-visitor-target-group', 'visitor-session', '1', true, null, '1', false],
@@ -250,17 +253,17 @@ class TargetGroupSubscriberTest extends TestCase
         $this->assertCount(0, $request->headers->all());
     }
 
-    public function provideSetTargetGroupFromEvaluation()
+    public static function provideSetTargetGroupFromEvaluation()
     {
-        $targetGroup1 = $this->prophesize(TargetGroupInterface::class);
-        $targetGroup1->getId()->willReturn(1);
+        $targetGroup1 = new TargetGroup();
+        self::setPrivateProperty($targetGroup1, 'id', 1);
 
-        $targetGroup2 = $this->prophesize(TargetGroupInterface::class);
-        $targetGroup2->getId()->willReturn(3);
+        $targetGroup2 = new TargetGroup();
+        self::setPrivateProperty($targetGroup2, 'id', 3);
 
         return [
-            [$targetGroup1->reveal(), 1],
-            [$targetGroup2->reveal(), 3],
+            [$targetGroup1, 1],
+            [$targetGroup2, 3],
             [null, 0],
         ];
     }
@@ -325,7 +328,7 @@ class TargetGroupSubscriberTest extends TestCase
         $this->assertEquals($varyHeaders, $response->getVary());
     }
 
-    public function provideAddVaryHeader()
+    public static function provideAddVaryHeader()
     {
         return [
             ['/_target_group', '/test', true, 'X-Sulu-Target-Group-Hash', ['X-Sulu-Target-Group-Hash']],
@@ -378,7 +381,7 @@ class TargetGroupSubscriberTest extends TestCase
         }
     }
 
-    public function provideAddSetCookieHeader()
+    public static function provideAddSetCookieHeader()
     {
         return [
             ['sulu-visitor-target-group', 'visitor-session', false, '/_target_group_hit', null],
@@ -438,7 +441,7 @@ class TargetGroupSubscriberTest extends TestCase
         $this->assertEquals('<body><script></script></body>', $response->getContent());
     }
 
-    public function provideAddTargetGroupHitScript()
+    public static function provideAddTargetGroupHitScript()
     {
         return [
             ['/_target_group_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer', 'X-Forwarded-UUID', 'some-uuid'],

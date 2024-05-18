@@ -73,18 +73,18 @@ class WebspaceCollectionCache extends WebspaceCollection
         // add navigation
         $navigation = new Navigation();
         $navigation->addContext(new NavigationContext('main', [
-                        'title' => [
-                        'de' => 'Hauptnavigation',
-                                'en' => 'Mainnavigation',
-                ],
-                ]
+            'title' => [
+                'de' => 'Hauptnavigation',
+                'en' => 'Mainnavigation',
+            ],
+        ]
         ));
         $navigation->addContext(new NavigationContext('footer', [
-                        'title' => [
-                        'de' => 'Unten',
-                                'en' => 'Footer',
-                ],
-                ]
+            'title' => [
+                'de' => 'Unten',
+                'en' => 'Footer',
+            ],
+        ]
         ));
         $webspace->setNavigation($navigation);
         $webspace->setResourceLocatorStrategy('short');
@@ -177,11 +177,11 @@ class WebspaceCollectionCache extends WebspaceCollection
         $segment = new Segment();
         $segment->setKey('w');
         $segment->setMetadata([
-                        'title' => [
-                        'en' => 'Winter',
-                                'de' => 'Winter',
-                ],
-                ]
+            'title' => [
+                'en' => 'Winter',
+                'de' => 'Winter',
+            ],
+        ]
         );
         $segment->setDefault(true);
         $webspace->addSegment($segment);
@@ -191,11 +191,11 @@ class WebspaceCollectionCache extends WebspaceCollection
         $segment = new Segment();
         $segment->setKey('s');
         $segment->setMetadata([
-                        'title' => [
-                        'en' => 'Summer',
-                                'de' => 'Sommer',
-                ],
-                ]
+            'title' => [
+                'en' => 'Summer',
+                'de' => 'Sommer',
+            ],
+        ]
         );
         $segment->setDefault(false);
         $webspace->addSegment($segment);
@@ -211,18 +211,18 @@ class WebspaceCollectionCache extends WebspaceCollection
         // add navigation
         $navigation = new Navigation();
         $navigation->addContext(new NavigationContext('main', [
-                        'title' => [
-                        'de' => 'Hauptnavigation',
-                                'en' => 'Mainnavigation',
-                ],
-                ]
+            'title' => [
+                'de' => 'Hauptnavigation',
+                'en' => 'Mainnavigation',
+            ],
+        ]
         ));
         $navigation->addContext(new NavigationContext('footer', [
-                        'title' => [
-                        'de' => 'Unten',
-                                'en' => 'Footer',
-                ],
-                ]
+            'title' => [
+                'de' => 'Unten',
+                'en' => 'Footer',
+            ],
+        ]
         ));
         $webspace->setNavigation($navigation);
         $webspace->setResourceLocatorStrategy('tree_leaf_edit');
@@ -395,18 +395,18 @@ class WebspaceCollectionCache extends WebspaceCollection
         // add navigation
         $navigation = new Navigation();
         $navigation->addContext(new NavigationContext('main', [
-                        'title' => [
-                        'de' => 'Hauptnavigation',
-                                'en' => 'Mainnavigation',
-                ],
-                ]
+            'title' => [
+                'de' => 'Hauptnavigation',
+                'en' => 'Mainnavigation',
+            ],
+        ]
         ));
         $navigation->addContext(new NavigationContext('footer', [
-                        'title' => [
-                        'de' => 'Unten',
-                                'en' => 'Footer',
-                ],
-                ]
+            'title' => [
+                'de' => 'Unten',
+                'en' => 'Footer',
+            ],
+        ]
         ));
         $webspace->setNavigation($navigation);
         $webspace->setResourceLocatorStrategy('tree_leaf_edit');
@@ -534,11 +534,11 @@ class WebspaceCollectionCache extends WebspaceCollection
         // add navigation
         $navigation = new Navigation();
         $navigation->addContext(new NavigationContext('main', [
-                        'title' => [
-                        'de' => 'Hauptnavigation',
-                                'en' => 'Mainnavigation',
-                ],
-                ]
+            'title' => [
+                'de' => 'Hauptnavigation',
+                'en' => 'Mainnavigation',
+            ],
+        ]
         ));
         $webspace->setNavigation($navigation);
         $webspace->setResourceLocatorStrategy('tree_leaf_edit');
@@ -598,18 +598,18 @@ class WebspaceCollectionCache extends WebspaceCollection
         // add navigation
         $navigation = new Navigation();
         $navigation->addContext(new NavigationContext('main', [
-                        'title' => [
-                        'de' => 'Hauptnavigation',
-                                'en' => 'Mainnavigation',
-                ],
-                ]
+            'title' => [
+                'de' => 'Hauptnavigation',
+                'en' => 'Mainnavigation',
+            ],
+        ]
         ));
         $navigation->addContext(new NavigationContext('footer', [
-                        'title' => [
-                        'de' => 'Unten',
-                                'en' => 'Footer',
-                ],
-                ]
+            'title' => [
+                'de' => 'Unten',
+                'en' => 'Footer',
+            ],
+        ]
         ));
         $webspace->setNavigation($navigation);
         $webspace->setResourceLocatorStrategy('short');
@@ -705,18 +705,18 @@ class WebspaceCollectionCache extends WebspaceCollection
         // add navigation
         $navigation = new Navigation();
         $navigation->addContext(new NavigationContext('main', [
-                        'title' => [
-                        'de' => 'Hauptnavigation',
-                                'en' => 'Mainnavigation',
-                ],
-                ]
+            'title' => [
+                'de' => 'Hauptnavigation',
+                'en' => 'Mainnavigation',
+            ],
+        ]
         ));
         $navigation->addContext(new NavigationContext('footer', [
-                        'title' => [
-                        'de' => 'Unten',
-                                'en' => 'Footer',
-                ],
-                ]
+            'title' => [
+                'de' => 'Unten',
+                'en' => 'Footer',
+            ],
+        ]
         ));
         $webspace->setNavigation($navigation);
         $webspace->setResourceLocatorStrategy('short');

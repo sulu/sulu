@@ -65,7 +65,7 @@ class ScheduleBlockVisitorTest extends TestCase
         $this->assertEquals($blockPropertyType, $this->scheduleBlockVisitor->visit($blockPropertyType));
     }
 
-    public function provideVisit()
+    public static function provideVisit()
     {
         return [
             [

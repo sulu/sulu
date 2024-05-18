@@ -29,36 +29,12 @@ use Sulu\Bundle\CategoryBundle\Exception\KeywordNotUniqueException;
  */
 class KeywordManager implements KeywordManagerInterface
 {
-    /**
-     * @var KeywordRepositoryInterface
-     */
-    private $keywordRepository;
-
-    /**
-     * @var CategoryTranslationRepositoryInterface
-     */
-    private $categoryTranslationRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
     public function __construct(
-        KeywordRepositoryInterface $keywordRepository,
-        CategoryTranslationRepositoryInterface $categoryTranslationRepository,
-        EntityManagerInterface $entityManager,
-        DomainEventCollectorInterface $domainEventCollector
+        private KeywordRepositoryInterface $keywordRepository,
+        private CategoryTranslationRepositoryInterface $categoryTranslationRepository,
+        private EntityManagerInterface $entityManager,
+        private DomainEventCollectorInterface $domainEventCollector
     ) {
-        $this->keywordRepository = $keywordRepository;
-        $this->categoryTranslationRepository = $categoryTranslationRepository;
-        $this->entityManager = $entityManager;
-        $this->domainEventCollector = $domainEventCollector;
     }
 
     public function save(KeywordInterface $keyword, CategoryInterface $category, $force = null)

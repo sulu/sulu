@@ -26,6 +26,7 @@ use Twig\Loader\FilesystemLoader;
 
 class ExceptionControllerTest extends TestCase
 {
+    use \Prophecy\PhpUnit\ProphecyTrait;
     /**
      * @var ExceptionController
      */

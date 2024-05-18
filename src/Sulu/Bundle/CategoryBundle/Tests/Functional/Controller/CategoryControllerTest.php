@@ -383,7 +383,7 @@ class CategoryControllerTest extends SuluTestCase
         $category3 = $category1->_embedded->categories[0];
         $this->assertEquals('Third Category', $category3->name);
         $this->assertTrue($category3->hasChildren);
-        $this->assertObjectNotHasAttribute('_embedded', $category3);
+        $this->assertFalse(\property_exists($category3, '_embedded'));
     }
 
     public function testCGetFlatWithExpandedIds(): void

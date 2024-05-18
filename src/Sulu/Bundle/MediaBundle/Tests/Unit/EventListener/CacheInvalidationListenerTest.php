@@ -50,7 +50,7 @@ class CacheInvalidationListenerTest extends TestCase
     /**
      * @return string[][]
      */
-    public function provideFunctionName(): array
+    public static function provideFunctionName(): array
     {
         return [
             ['postPersist'],

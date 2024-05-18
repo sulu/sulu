@@ -53,7 +53,7 @@ class BrowserRuleTest extends TestCase
         $this->assertEquals($result, $this->browserRule->evaluate($options));
     }
 
-    public function provideEvaluate()
+    public static function provideEvaluate()
     {
         return [
             ['CH', ['browser' => 'Chrome'], true],

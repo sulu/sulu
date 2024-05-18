@@ -11,31 +11,15 @@
 
 namespace Sulu\Bundle\ActivityBundle\Infrastructure\Doctrine\Subscriber;
 
-use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\OnClearEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
-use Doctrine\ORM\Events;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 
-class DomainEventCollectorSubscriber implements EventSubscriber
+class DomainEventCollectorSubscriber
 {
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
     public function __construct(
-        DomainEventCollectorInterface $domainEventDispatcher
+        private DomainEventCollectorInterface $domainEventCollector
     ) {
-        $this->domainEventCollector = $domainEventDispatcher;
-    }
-
-    public function getSubscribedEvents()
-    {
-        return [
-            Events::onClear,
-            Events::postFlush,
-        ];
     }
 
     public function onClear(OnClearEventArgs $args): void

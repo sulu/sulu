@@ -19,14 +19,9 @@ use Sulu\Component\Content\ContentTypeExportInterface;
 
 class CategorySelection extends ComplexContentType implements ContentTypeExportInterface
 {
-    /**
-     * @var CategoryManagerInterface
-     */
-    private $categoryManager;
-
-    public function __construct(CategoryManagerInterface $categoryManager)
-    {
-        $this->categoryManager = $categoryManager;
+    public function __construct(
+        private CategoryManagerInterface $categoryManager
+    ) {
     }
 
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)

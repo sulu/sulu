@@ -14,6 +14,7 @@ const LOADER_SIZE = 20;
 export default class Input<T: ?string | ?number> extends React.PureComponent<InputProps<T>> {
     static defaultProps = {
         alignment: 'left',
+        autoFocus: false,
         collapsed: false,
         disabled: false,
         skin: 'default',
@@ -57,6 +58,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
         const {
             alignment,
             autocomplete,
+            autoFocus,
             headline,
             id,
             inputClass,
@@ -144,6 +146,7 @@ export default class Input<T: ?string | ?number> extends React.PureComponent<Inp
 
                     <input
                         autoComplete={autocomplete}
+                        autoFocus={autoFocus}
                         className={inputClass}
                         disabled={disabled}
                         id={id}

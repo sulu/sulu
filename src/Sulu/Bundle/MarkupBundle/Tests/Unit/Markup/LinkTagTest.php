@@ -69,7 +69,7 @@ class LinkTagTest extends TestCase
     /**
      * @return mixed[]
      */
-    public function provideParseData(): array
+    public static function provideParseData(): array
     {
         return [
             [
@@ -196,10 +196,10 @@ class LinkTagTest extends TestCase
             [
                 '<sulu-link href="123-123-123#anchor?not=query" provider="article" title="Test-Title">Test-Content</sulu-link>',
                 [
-                  'href' => '123-123-123#anchor?not=query',
-                  'title' => 'Test-Title',
-                  'provider' => 'article',
-                  'content' => 'Test-Content',
+                    'href' => '123-123-123#anchor?not=query',
+                    'title' => 'Test-Title',
+                    'provider' => 'article',
+                    'content' => 'Test-Content',
                 ],
                 [new LinkItem('123-123-123', 'Page-Title', 'de/test', true)],
                 '<a href="http://sulu.lo/de/test#anchor?not=query" title="Test-Title">Test-Content</a>',
@@ -540,10 +540,11 @@ class LinkTagTest extends TestCase
             ->willReturn([new LinkItem('123-123-123', 'Page-Title', '/de/test', true)]);
 
         $result = $this->linkTag->parseAll(
-            [$tag => [
-                'href' => '123-123-123',
-                'title' => 'Test-Title',
-                'provider' => 'article',
+            [
+                $tag => [
+                    'href' => '123-123-123',
+                    'title' => 'Test-Title',
+                    'provider' => 'article',
                 ],
             ],
             'de'

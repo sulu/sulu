@@ -18,38 +18,13 @@ use Sulu\Bundle\CategoryBundle\Entity\CategoryTranslationInterface;
 
 class CategoryMovedEvent extends DomainEvent
 {
-    /**
-     * @var CategoryInterface
-     */
-    private $category;
-
-    /**
-     * @var int|null
-     */
-    private $previousParentId;
-
-    /**
-     * @var string|null
-     */
-    private $previousParentTitle;
-
-    /**
-     * @var string|null
-     */
-    private $previousParentTitleLocale;
-
     public function __construct(
-        CategoryInterface $category,
-        ?int $previousParentId,
-        ?string $previousParentTitle,
-        ?string $previousParentTitleLocale
+        private CategoryInterface $category,
+        private ?int $previousParentId,
+        private ?string $previousParentTitle,
+        private ?string $previousParentTitleLocale
     ) {
         parent::__construct();
-
-        $this->category = $category;
-        $this->previousParentId = $previousParentId;
-        $this->previousParentTitle = $previousParentTitle;
-        $this->previousParentTitleLocale = $previousParentTitleLocale;
     }
 
     public function getCategory(): CategoryInterface
