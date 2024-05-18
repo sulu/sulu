@@ -51,21 +51,6 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
  */
 class ContactManager extends AbstractContactManager implements DataProviderRepositoryInterface
 {
-    /**
-     * @var MediaRepositoryInterface
-     */
-    protected $mediaRepository;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    protected $domainEventCollector;
-
-    /**
-     * @var UserRepository
-     */
-    protected $userRepository;
-
     public function __construct(
         ObjectManager $em,
         TagManagerInterface $tagManager,
@@ -73,15 +58,12 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
         private AccountRepositoryInterface $accountRepository,
         private ContactTitleRepository $contactTitleRepository,
         private ContactRepository $contactRepository,
-        MediaRepositoryInterface $mediaRepository,
-        DomainEventCollectorInterface $domainEventCollector,
-        UserRepository $userRepository,
+        protected MediaRepositoryInterface $mediaRepository,
+        protected DomainEventCollectorInterface $domainEventCollector,
+        protected UserRepository $userRepository,
         private ?TrashManagerInterface $trashManager
     ) {
         parent::__construct($em, $tagManager, $mediaManager);
-        $this->mediaRepository = $mediaRepository;
-        $this->domainEventCollector = $domainEventCollector;
-        $this->userRepository = $userRepository;
     }
 
     /**

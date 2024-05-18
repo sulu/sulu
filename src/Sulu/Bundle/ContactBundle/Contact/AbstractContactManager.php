@@ -83,26 +83,11 @@ abstract class AbstractContactManager implements ContactManagerInterface
 
     protected static $categoryEntityName = CategoryInterface::class;
 
-    /**
-     * @var ObjectManager
-     */
-    protected $em;
-
-    /**
-     * @var TagManagerInterface
-     */
-    protected $tagManager;
-
-    /**
-     * @var MediaManagerInterface
-     */
-    protected $mediaManager;
-
-    public function __construct(ObjectManager $em, TagManagerInterface $tagManager, MediaManagerInterface $mediaManager)
-    {
-        $this->em = $em;
-        $this->tagManager = $tagManager;
-        $this->mediaManager = $mediaManager;
+    public function __construct(
+        protected ObjectManager $em,
+        protected TagManagerInterface $tagManager,
+        protected MediaManagerInterface $mediaManager,
+    ) {
     }
 
     /**
