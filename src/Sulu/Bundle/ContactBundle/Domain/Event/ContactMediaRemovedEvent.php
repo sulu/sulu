@@ -20,24 +20,11 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class ContactMediaRemovedEvent extends DomainEvent
 {
-    /**
-     * @var ContactInterface
-     */
-    private $contact;
-
-    /**
-     * @var MediaInterface
-     */
-    private $media;
-
     public function __construct(
-        ContactInterface $contact,
-        MediaInterface $media
+        private ContactInterface $contact,
+        private MediaInterface $media
     ) {
         parent::__construct();
-
-        $this->contact = $contact;
-        $this->media = $media;
     }
 
     public function getContact(): ContactInterface

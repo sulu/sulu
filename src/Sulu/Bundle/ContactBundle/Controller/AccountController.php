@@ -37,7 +37,6 @@ use Sulu\Component\Rest\Exception\EntityNotFoundException;
 use Sulu\Component\Rest\Exception\RestException;
 use Sulu\Component\Rest\ListBuilder\CollectionRepresentation;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilder;
-use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactory;
 use Sulu\Component\Rest\ListBuilder\Doctrine\DoctrineListBuilderFactoryInterface;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineConcatenationFieldDescriptor;
 use Sulu\Component\Rest\ListBuilder\Doctrine\FieldDescriptor\DoctrineFieldDescriptor;
@@ -99,98 +98,26 @@ class AccountController extends AbstractRestController implements ClassResourceI
     protected $accountAddressesFieldDescriptors;
 
     /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
-
-    /**
-     * @var DoctrineListBuilderFactory
-     */
-    private $listBuilderFactory;
-
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
-
-    /**
-     * @var AccountRepositoryInterface
-     */
-    private $accountRepository;
-
-    /**
-     * @var AccountManager
-     */
-    private $accountManager;
-
-    /**
-     * @var AccountFactoryInterface
-     */
-    private $accountFactory;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
-     * @var class-string
-     */
-    private $accountClass;
-
-    /**
-     * @var class-string
-     */
-    private $contactClass;
-
-    /**
-     * @var TrashManagerInterface|null
-     */
-    private $trashManager;
-
-    /**
      * @param class-string $accountClass
      * @param class-string $contactClass
      */
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
-        RestHelperInterface $restHelper,
-        DoctrineListBuilderFactoryInterface $listBuilderFactory,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        MediaManagerInterface $mediaManager,
-        AccountRepositoryInterface $accountRepository,
-        EntityManagerInterface $entityManager,
-        AccountManager $accountManager,
-        AccountFactoryInterface $accountFactory,
-        DomainEventCollectorInterface $domainEventCollector,
-        string $accountClass,
-        string $contactClass,
-        ?TrashManagerInterface $trashManager
+        private RestHelperInterface $restHelper,
+        private DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        private MediaManagerInterface $mediaManager,
+        private AccountRepositoryInterface $accountRepository,
+        private EntityManagerInterface $entityManager,
+        private AccountManager $accountManager,
+        private AccountFactoryInterface $accountFactory,
+        private DomainEventCollectorInterface $domainEventCollector,
+        private string $accountClass,
+        private string $contactClass,
+        private ?TrashManagerInterface $trashManager
     ) {
         parent::__construct($viewHandler, $tokenStorage);
-        $this->restHelper = $restHelper;
-        $this->listBuilderFactory = $listBuilderFactory;
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
-        $this->mediaManager = $mediaManager;
-        $this->accountRepository = $accountRepository;
-        $this->entityManager = $entityManager;
-        $this->accountManager = $accountManager;
-        $this->accountFactory = $accountFactory;
-        $this->domainEventCollector = $domainEventCollector;
-        $this->accountClass = $accountClass;
-        $this->contactClass = $contactClass;
-        $this->trashManager = $trashManager;
     }
 
     /**
@@ -213,9 +140,11 @@ class AccountController extends AbstractRestController implements ClassResourceI
             $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
             $listBuilder->addSelectField($fieldDescriptors['contactId']);
-            $listBuilder->setIdField($fieldDescriptors['id']);
-            $listBuilder->where($fieldDescriptors['account'], $id);
-            $listBuilder->sort($fieldDescriptors['lastName'], $listBuilder::SORTORDER_ASC);
+            if ($listBuilder instanceof DoctrineListBuilder) {
+                $listBuilder->setIdField($fieldDescriptors['id']);
+                $listBuilder->where($fieldDescriptors['account'], $id);
+                $listBuilder->sort($fieldDescriptors['lastName'], $listBuilder::SORTORDER_ASC);
+            }
 
             $values = $listBuilder->execute();
 

@@ -27,17 +27,11 @@ class SingleAccountSelection extends ComplexContentType implements PreResolvable
      */
     protected $accountManager;
 
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $accountReferenceStore;
-
     public function __construct(
         AccountManager $accountManager,
-        ReferenceStoreInterface $accountReferenceStore
+        private ReferenceStoreInterface $accountReferenceStore
     ) {
         $this->accountManager = $accountManager;
-        $this->accountReferenceStore = $accountReferenceStore;
     }
 
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)

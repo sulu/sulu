@@ -83,81 +83,21 @@ class ContactController extends AbstractRestController implements ClassResourceI
 
     protected $accountContactFieldDescriptors;
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
-
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
-
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $listBuilderFactory;
-
-    /**
-     * @var ContactManagerInterface
-     */
-    private $contactManager;
-
-    /**
-     * @var ContactRepositoryInterface
-     */
-    private $contactRepository;
-
-    /**
-     * @var IndexComparatorInterface
-     */
-    private $indexComparator;
-
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
-
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
-
-    /**
-     * @var string
-     */
-    private $contactClass;
-
-    /**
-     * @var string
-     */
-    private $suluSecuritySystem;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
-        RestHelperInterface $restHelper,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        DoctrineListBuilderFactoryInterface $listBuilderFactory,
-        ContactManagerInterface $contactManager,
-        ContactRepositoryInterface $contactRepository,
-        MediaManagerInterface $mediaManager,
-        UserRepositoryInterface $userRepository,
-        IndexComparatorInterface $indexComparator,
-        string $contactClass,
-        string $suluSecuritySystem
+        private RestHelperInterface $restHelper,
+        private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        private DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        private ContactManagerInterface $contactManager,
+        private ContactRepositoryInterface $contactRepository,
+        private MediaManagerInterface $mediaManager,
+        private UserRepositoryInterface $userRepository,
+        private IndexComparatorInterface $indexComparator,
+        private string $contactClass,
+        private string $suluSecuritySystem
     ) {
         parent::__construct($viewHandler, $tokenStorage);
-        $this->restHelper = $restHelper;
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
-        $this->listBuilderFactory = $listBuilderFactory;
-        $this->contactManager = $contactManager;
-        $this->contactRepository = $contactRepository;
-        $this->mediaManager = $mediaManager;
-        $this->userRepository = $userRepository;
-        $this->indexComparator = $indexComparator;
-        $this->contactClass = $contactClass;
-        $this->suluSecuritySystem = $suluSecuritySystem;
     }
 
     protected function getFieldDescriptors()

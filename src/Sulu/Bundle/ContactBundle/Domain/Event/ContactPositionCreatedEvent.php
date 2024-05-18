@@ -18,26 +18,13 @@ use Sulu\Bundle\ContactBundle\Entity\Position;
 class ContactPositionCreatedEvent extends DomainEvent
 {
     /**
-     * @var Position
-     */
-    private $position;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        Position $position,
-        array $payload
+        private Position $position,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->position = $position;
-        $this->payload = $payload;
     }
 
     public function getPosition(): Position

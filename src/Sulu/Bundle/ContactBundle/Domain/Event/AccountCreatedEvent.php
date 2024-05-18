@@ -18,24 +18,13 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 class AccountCreatedEvent extends DomainEvent
 {
     /**
-     * @var AccountInterface
-     */
-    private $account;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
-    public function __construct(AccountInterface $account, array $payload)
-    {
+    public function __construct(
+        private AccountInterface $account,
+        private array $payload
+    ) {
         parent::__construct();
-
-        $this->account = $account;
-        $this->payload = $payload;
     }
 
     public function getAccount(): AccountInterface

@@ -52,21 +52,6 @@ use Sulu\Component\SmartContent\Orm\DataProviderRepositoryInterface;
 class ContactManager extends AbstractContactManager implements DataProviderRepositoryInterface
 {
     /**
-     * @var AccountRepositoryInterface
-     */
-    private $accountRepository;
-
-    /**
-     * @var ContactTitleRepository
-     */
-    private $contactTitleRepository;
-
-    /**
-     * @var ContactRepository
-     */
-    private $contactRepository;
-
-    /**
      * @var MediaRepositoryInterface
      */
     protected $mediaRepository;
@@ -81,31 +66,22 @@ class ContactManager extends AbstractContactManager implements DataProviderRepos
      */
     protected $userRepository;
 
-    /**
-     * @var TrashManagerInterface|null
-     */
-    private $trashManager;
-
     public function __construct(
         ObjectManager $em,
         TagManagerInterface $tagManager,
         MediaManagerInterface $mediaManager,
-        AccountRepositoryInterface $accountRepository,
-        ContactTitleRepository $contactTitleRepository,
-        ContactRepository $contactRepository,
+        private AccountRepositoryInterface $accountRepository,
+        private ContactTitleRepository $contactTitleRepository,
+        private ContactRepository $contactRepository,
         MediaRepositoryInterface $mediaRepository,
         DomainEventCollectorInterface $domainEventCollector,
         UserRepository $userRepository,
-        ?TrashManagerInterface $trashManager
+        private ?TrashManagerInterface $trashManager
     ) {
         parent::__construct($em, $tagManager, $mediaManager);
-        $this->accountRepository = $accountRepository;
-        $this->contactTitleRepository = $contactTitleRepository;
-        $this->contactRepository = $contactRepository;
         $this->mediaRepository = $mediaRepository;
         $this->domainEventCollector = $domainEventCollector;
         $this->userRepository = $userRepository;
-        $this->trashManager = $trashManager;
     }
 
     /**

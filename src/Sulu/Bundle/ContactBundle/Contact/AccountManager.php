@@ -40,21 +40,6 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
     protected $addressEntity = 'SuluContactBundle:Address';
 
     /**
-     * @var AccountFactory
-     */
-    private $accountFactory;
-
-    /**
-     * @var AccountRepositoryInterface
-     */
-    private $accountRepository;
-
-    /**
-     * @var ContactRepository
-     */
-    private $contactRepository;
-
-    /**
      * @var MediaRepositoryInterface
      */
     protected $mediaRepository;
@@ -68,16 +53,14 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
         ObjectManager $em,
         TagManagerInterface $tagManager,
         MediaManagerInterface $mediaManager,
-        AccountFactory $accountFactory,
-        AccountRepositoryInterface $accountRepository,
-        ContactRepository $contactRepository,
+        private AccountFactory $accountFactory,
+        private AccountRepositoryInterface $accountRepository,
+        private ContactRepository $contactRepository,
         MediaRepositoryInterface $mediaRepository,
         DomainEventCollectorInterface $domainEventCollector
     ) {
         parent::__construct($em, $tagManager, $mediaManager);
-        $this->accountFactory = $accountFactory;
-        $this->accountRepository = $accountRepository;
-        $this->contactRepository = $contactRepository;
+
         $this->mediaRepository = $mediaRepository;
         $this->domainEventCollector = $domainEventCollector;
     }

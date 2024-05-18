@@ -44,29 +44,11 @@ class ContactAdmin extends Admin
 
     public const ACCOUNT_EDIT_FORM_VIEW = 'sulu_contact.account_edit_form';
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var ManagerRegistry
-     */
-    private $managerRegistry;
-
     public function __construct(
-        ViewBuilderFactoryInterface $viewBuilderFactory,
-        SecurityCheckerInterface $securityChecker,
-        ManagerRegistry $managerRegistry
+        private ViewBuilderFactoryInterface $viewBuilderFactory,
+        private SecurityCheckerInterface $securityChecker,
+        private ManagerRegistry $managerRegistry
     ) {
-        $this->viewBuilderFactory = $viewBuilderFactory;
-        $this->securityChecker = $securityChecker;
-        $this->managerRegistry = $managerRegistry;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void
