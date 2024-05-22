@@ -89,10 +89,13 @@ class RouteRepository extends EntityRepository implements RouteRepositoryInterfa
     public function persist(RouteInterface $route)
     {
         $this->getEntityManager()->persist($route);
+        $this->getEntityManager()->flush();
+        
     }
 
     public function remove(RouteInterface $route)
     {
         $this->getEntityManager()->remove($route);
+        $this->getEntityManager()->flush();
     }
 }
