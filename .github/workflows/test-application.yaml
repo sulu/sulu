@@ -205,8 +205,8 @@ jobs:
                   coverage: none
 
             - name: Remove Lint Tools
-              # This tools are not required for running tests and are so removed to improve dependency resolving and
-              # testing lowest versions
+              # These tools are not required to run tests, so we are removing them to improve dependency resolving and
+              # testing lowest versions.
               run: composer remove "*php-cs-fixer*" "*phpstan*" --dev --no-update
 
             - name: Require jackrabbit dependencies
