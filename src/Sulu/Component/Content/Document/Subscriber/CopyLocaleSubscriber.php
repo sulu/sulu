@@ -175,7 +175,7 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
             $destLocale
         );
 
-        if ($destParentDocument instanceof PageDocument && WorkflowStage::PUBLISHED === $destParentDocument->getWorkflowStage()) {
+        if ($destParentDocument instanceof PageDocument) {
             $destParentUrl = $destParentDocument->getStructure()->getProperty('url')->getValue();
         } else {
             $destParentUrl = '';
@@ -192,8 +192,6 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
             'suffix' => $routePath['suffix'],
         ];
         $destDocument->setRoutePath($routePathProp);
-        $destDocument->getRoute()->setPath($routePathProp);
-        $destDocument->getRoute()->setLocale($destLocale);
 
         return $documentStructure;
     }
