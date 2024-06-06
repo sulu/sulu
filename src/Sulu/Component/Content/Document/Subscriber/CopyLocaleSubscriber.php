@@ -13,6 +13,7 @@ namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
+use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
@@ -191,6 +192,12 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
             'suffix' => $routePath['suffix'],
         ];
         $destDocument->setRoutePath($routePathProp);
+
+        /** @var RouteInterface|null $route */
+        $route = $destDocument->getRoute();
+        if ($route && $route->getLocale() === $destLocale) {
+            $route->setPath($routePathProp);
+        }
 
         return $documentStructure;
     }

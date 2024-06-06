@@ -15,8 +15,10 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
+use Sulu\Bundle\RouteBundle\Entity\Route;
 use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Content\Compat\PropertyInterface;
+use Sulu\Component\Content\Document\Structure\PropertyValue;
 use Sulu\Component\Content\Document\Structure\StructureInterface;
 use Sulu\Component\Content\Document\Subscriber\CopyLocaleSubscriber;
 use Sulu\Component\Content\Document\WorkflowStage;
@@ -203,6 +205,8 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
         /** @var StructureInterface|ObjectProphecy $structure */
         $structure = $this->prophesize(StructureInterface::class);
         $structure->toArray()->willReturn($structureData);
+        $propertyValue = new PropertyValue('url', '/destParentPageUrl');
+        $structure->getProperty('url')->willReturn($propertyValue);
 
         /** @var PageDocument|ObjectProphecy $document */
         $document = $this->prophesize(PageDocument::class);
@@ -210,12 +214,13 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
         $document->getStructure()->willReturn($structure->reveal());
         $pageDocument = $this->prophesize(PageDocument::class);
         $pageDocument->getWorkflowStage()->willReturn(WorkflowStage::TEST);
+        $pageDocument->getStructure()->willReturn($structure->reveal());
         $this->documentManager->find('2ad86c23-04b7-41e0-b2bf-086b7d43d4a2', 'de')->willReturn($pageDocument->reveal());
 
         /** @var RoutableBehavior|ObjectProphecy $destDocument */
         $destDocument = $this->prophesize(RoutableBehavior::class);
         $routeInterface = $this->prophesize(RouteInterface::class);
-        $destDocument->setRoutePath('/new')->shouldBeCalled();
+        $destDocument->setRoutePath('/destParentPageUrl/new')->shouldBeCalled();
         $destDocument->getRoute()->willReturn($routeInterface->reveal());
 
         $structure = $this->subscriber->checkPageTreeRoute($destDocument->reveal(), $document->reveal(), 'de');
@@ -223,10 +228,10 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
             'foo' => 'bar',
             'routePath' => [
                 'page' => [
-                    'uuid' => null,
-                    'path' => '',
+                    'uuid' => '2ad86c23-04b7-41e0-b2bf-086b7d43d4a2',
+                    'path' => '/destParentPageUrl',
                 ],
-                'path' => '/new',
+                'path' => '/destParentPageUrl/new',
                 'suffix' => '/new',
             ],
         ];
@@ -292,5 +297,161 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
         ];
 
         $this->assertSame($expectedStructure, $structure);
+    }
+
+    public function testHandleCopyLocaleOnNotExistingRoute(): void
+    {
+        /** @var CopyLocaleEvent|ObjectProphecy $event */
+        $event = $this->prophesize(CopyLocaleEvent::class);
+        $event->getLocale()->willReturn('en');
+        $event->getDestLocale()->willReturn('de');
+
+        $structureData = [
+            'foo' => 'bar',
+            'routePath' => [
+                'page' => [
+                    'uuid' => null,
+                    'path' => '',
+                ],
+                'path' => '/overview/new',
+                'suffix' => '/new',
+            ],
+        ];
+
+        /** @var StructureInterface|ObjectProphecy $structure */
+        $structure = $this->prophesize(StructureInterface::class);
+        $structure->toArray()->willReturn($structureData);
+
+        /** @var PageDocument|ObjectProphecy $document */
+        $document = $this->prophesize(PageDocument::class);
+        $document->getStructure()->willReturn($structure->reveal());
+
+        /** @var RoutableBehavior|ObjectProphecy $destDocument */
+        $destDocument = $this->prophesize(RoutableBehavior::class);
+        $destDocument->setRoutePath('/new')->shouldBeCalled();
+        $destDocument->getRoute()->willReturn(null);
+
+        $structure = $this->subscriber->checkPageTreeRoute($destDocument->reveal(), $document->reveal(), 'de');
+        $expectedStructure = [
+            'foo' => 'bar',
+            'routePath' => [
+                'page' => [
+                    'uuid' => null,
+                    'path' => '',
+                ],
+                'path' => '/new',
+                'suffix' => '/new',
+            ],
+        ];
+
+        $this->assertSame($expectedStructure, $structure);
+    }
+
+    public function testHandleCopyLocaleOnExistingRoute(): void
+    {
+        /** @var CopyLocaleEvent|ObjectProphecy $event */
+        $event = $this->prophesize(CopyLocaleEvent::class);
+        $event->getLocale()->willReturn('en');
+        $event->getDestLocale()->willReturn('de');
+
+        $structureData = [
+            'foo' => 'bar',
+            'routePath' => [
+                'page' => [
+                    'uuid' => null,
+                    'path' => '',
+                ],
+                'path' => '/overview/new',
+                'suffix' => '/new',
+            ],
+        ];
+
+        /** @var StructureInterface|ObjectProphecy $structure */
+        $structure = $this->prophesize(StructureInterface::class);
+        $structure->toArray()->willReturn($structureData);
+
+        /** @var PageDocument|ObjectProphecy $document */
+        $document = $this->prophesize(PageDocument::class);
+        $document->getStructure()->willReturn($structure->reveal());
+
+        /** @var RoutableBehavior|ObjectProphecy $destDocument */
+        $destDocument = $this->prophesize(RoutableBehavior::class);
+        $destDocument->setRoutePath('/new')->shouldBeCalled();
+        $route = new Route();
+        $route->setLocale('de');
+        $destDocument->getRoute()->willReturn($route);
+
+        $structure = $this->subscriber->checkPageTreeRoute($destDocument->reveal(), $document->reveal(), 'de');
+        $expectedStructure = [
+            'foo' => 'bar',
+            'routePath' => [
+                'page' => [
+                    'uuid' => null,
+                    'path' => '',
+                ],
+                'path' => '/new',
+                'suffix' => '/new',
+            ],
+        ];
+
+        $this->assertSame($expectedStructure, $structure);
+
+        self::assertSame('/new', $route->getPath());
+        self::assertSame('de', $route->getLocale());
+    }
+
+    public function testHandleCopyLocaleOnExistingRouteWrongLocale(): void
+    {
+        /** @var CopyLocaleEvent|ObjectProphecy $event */
+        $event = $this->prophesize(CopyLocaleEvent::class);
+        $event->getLocale()->willReturn('en');
+        $event->getDestLocale()->willReturn('de');
+
+        $structureData = [
+            'foo' => 'bar',
+            'routePath' => [
+                'page' => [
+                    'uuid' => null,
+                    'path' => '',
+                ],
+                'path' => '/overview/new',
+                'suffix' => '/new',
+            ],
+        ];
+
+        /** @var StructureInterface|ObjectProphecy $structure */
+        $structure = $this->prophesize(StructureInterface::class);
+        $structure->toArray()->willReturn($structureData);
+
+        /** @var PageDocument|ObjectProphecy $document */
+        $document = $this->prophesize(PageDocument::class);
+        $document->getStructure()->willReturn($structure->reveal());
+
+        /** @var RoutableBehavior|ObjectProphecy $destDocument */
+        $destDocument = $this->prophesize(RoutableBehavior::class);
+        $destDocument->setRoutePath('/new')->shouldBeCalled();
+        $route = new Route();
+        $route->setPath('');
+        $route->setLocale('en');
+        $destDocument->getRoute()->willReturn($route);
+
+        $structure = $this->subscriber->checkPageTreeRoute($destDocument->reveal(), $document->reveal(), 'de');
+        $expectedStructure = [
+            'foo' => 'bar',
+            'routePath' => [
+                'page' => [
+                    'uuid' => null,
+                    'path' => '',
+                ],
+                'path' => '/new',
+                'suffix' => '/new',
+            ],
+        ];
+
+        $this->assertSame($expectedStructure, $structure);
+
+        // Route should net be changed
+        self::assertSame('', $route->getPath());
+        self::assertSame('en', $route->getLocale());
     }
 }
