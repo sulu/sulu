@@ -167,7 +167,7 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
             return $documentStructure;
         }
 
-        $parentPageUuid = $routePath['page']['uuid'];
+        $parentPageUuid = $routePath['page']['uuid'] ?? null;
 
         /** @var ?PageDocument $destParentDocument */
         $destParentDocument = $this->documentManager->find(
