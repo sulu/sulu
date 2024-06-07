@@ -163,7 +163,7 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
         $pageTreeRoutePropertyName = $this->getPageTreeRoutePropertyName($document);
         $routePath = $documentStructure[$pageTreeRoutePropertyName] ?? null;
 
-        if (!$routePath || !\array_key_exists('page', $routePath)) {
+        if (!$routePath || !\is_array($routePath) || !\array_key_exists('page', $routePath)) {
             return $documentStructure;
         }
 
