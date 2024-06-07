@@ -1831,11 +1831,6 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/FormXmlLoaderTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$resource of method Sulu\\\\Component\\\\Content\\\\Metadata\\\\PropertiesMetadata\\:\\:setResource\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/FormMetadata/StructureFormMetadataLoaderTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AdminBundle\\\\Tests\\\\Unit\\\\Metadata\\\\SchemaMetadata\\\\ArrayMetadataTest\\:\\:provideToJsonSchema\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AdminBundle/Tests/Unit/Metadata/SchemaMetadata/ArrayMetadataTest.php
@@ -15476,32 +15471,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/MediaImageExtractor.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ImageConverter\\\\MediaImageExtractor\\:\\:createTemporaryFile\\(\\) should return string but returns string\\|false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/MediaImageExtractor.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ImageConverter\\\\MediaImageExtractor\\:\\:createTemporaryResource\\(\\) should return resource but returns resource\\|false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/MediaImageExtractor.php
 
 		-
 			message: "#^Parameter \\#1 \\$content of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ImageConverter\\\\MediaImageExtractor\\:\\:createTemporaryResource\\(\\) expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/MediaImageExtractor.php
-
-		-
-			message: "#^Parameter \\#1 \\$filename of function file_get_contents expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/MediaImageExtractor.php
-
-		-
-			message: "#^Parameter \\#1 \\$filename of function fopen expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/MediaImageExtractor.php
-
-		-
-			message: "#^Parameter \\#1 \\$filename of function unlink expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/MediaImageExtractor.php
 
@@ -15522,11 +15497,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$to of function stream_copy_to_stream expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/MediaImageExtractor.php
-
-		-
-			message: "#^Parameter \\#3 \\$destination of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Video\\\\VideoThumbnailServiceInterface\\:\\:generate\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/MediaImageExtractor.php
 
@@ -17869,26 +17839,6 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManagerTest\\:\\:\\$categoryManager is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Manager/MediaManagerTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$stream of function stream_get_contents expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Storage/AzureBlobStorageTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$tempPath of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\FlysystemStorage\\:\\:save\\(\\) expects string, string\\|false given\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Storage/AzureBlobStorageTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$tempPath of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\FlysystemStorage\\:\\:save\\(\\) expects string, string\\|false given\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Storage/GoogleCloudStorageTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$tempPath of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\FlysystemStorage\\:\\:save\\(\\) expects string, string\\|false given\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Tests/Unit/Media/Storage/S3StorageTest.php
 
 		-
 			message: "#^If condition is always true\\.$#"
@@ -21301,22 +21251,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201512090753.php
 
 		-
-			message: "#^Parameter \\#1 \\$filename of function fopen expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201607181533.php
-
-		-
-			message: "#^Parameter \\#1 \\$filename of function unlink expects string, string\\|false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201607181533.php
-
-		-
 			message: "#^Parameter \\#2 \\$stream of method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\:\\:exportSystemView\\(\\) expects resource, resource\\|false given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201607181533.php
-
-		-
-			message: "#^Parameter \\#2 \\$uri of method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Session\\\\Session\\:\\:importXML\\(\\) expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Resources/phpcr-migrations/Version201607181533.php
 
@@ -34972,11 +34907,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$data of method Sulu\\\\Component\\\\Cache\\\\DataCache\\:\\:write\\(\\) expects array\\<Serializable\\>\\|Serializable, array\\<string, string\\> given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Cache/Tests/Unit/Cache/DataCacheTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$filename of function file_get_contents expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Cache/Tests/Unit/Cache/DataCacheTest.php
 
@@ -49177,11 +49107,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Listing/ListRepository.php
-
-		-
-			message: "#^Parameter \\#2 \\$haystack of function array_search expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Listing/ListRepository.php
 
