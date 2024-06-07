@@ -332,6 +332,8 @@ class DoctrineListBuilder extends AbstractListBuilder
         // group by
         $this->assignGroupBy($queryBuilder);
 
+        $this->assignSortFields($queryBuilder);
+
         $queryBuilder->distinct($this->distinct);
 
         return $queryBuilder;
@@ -360,7 +362,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         // assign sort-fields
-        $this->assignSortFields($queryBuilder);
+        $this->assignSortFields($queryBuilder, false);
 
         $queryBuilder->distinct($this->distinct);
 
@@ -379,6 +381,9 @@ class DoctrineListBuilder extends AbstractListBuilder
         if (null != $this->limit) {
             $subQueryBuilder->setMaxResults((int) $this->limit)->setFirstResult((int) ($this->limit * ($this->page - 1)));
         }
+
+        // TODO do we need this always?
+        $subQueryBuilder->addGroupBy($this->idField->getSelect());
 
         foreach ($this->sortFields as $index => $sortField) {
             if ($sortField->getName() !== $this->idField->getName()) {
@@ -422,7 +427,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param QueryBuilder $queryBuilder
      */
-    protected function assignSortFields($queryBuilder)
+    protected function assignSortFields($queryBuilder, bool $includeGroupBy = true)
     {
         // if no sort has been assigned add order by id ASC as default
         if (0 === \count($this->sortFields)) {
@@ -431,6 +436,10 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         foreach ($this->sortFields as $index => $sortField) {
             $statement = $this->getSelectAs($sortField);
+            if (!$includeGroupBy && $this->isGroupingFieldDescriptor($sortField)) {
+                continue;
+            }
+
             if (!$this->hasSelectStatement($queryBuilder, $statement)) {
                 $queryBuilder->addSelect($this->getSelectAs($sortField, true));
             }
