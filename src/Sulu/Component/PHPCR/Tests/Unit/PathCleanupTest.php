@@ -18,10 +18,7 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 
 class PathCleanupTest extends TestCase
 {
-    /**
-     * @var PathCleanupInterface
-     */
-    private $cleaner;
+    private PathCleanupInterface $cleaner;
 
     /**
      * @var bool
@@ -67,7 +64,7 @@ class PathCleanupTest extends TestCase
     /**
      * @dataProvider cleanupProvider
      */
-    public function testCleanup($a, $b, $locale): void
+    public function testCleanup(string $a, string $b, string $locale): void
     {
         $clean = $this->cleaner->cleanup($a, $locale);
         $this->assertEquals($b, $clean);

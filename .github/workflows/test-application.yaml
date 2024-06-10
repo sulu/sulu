@@ -205,6 +205,11 @@ jobs:
                   ini-values: memory_limit=-1
                   coverage: none
 
+            - name: Remove Lint Tools
+              # These tools are not required to run tests, so we are removing them to improve dependency resolving and
+              # testing lowest versions.
+              run: composer remove "*php-cs-fixer*" "*phpstan*" --dev --no-update
+
             - name: Require jackrabbit dependencies
               if: ${{ matrix.phpcr-transport == 'jackrabbit' }}
               run: |

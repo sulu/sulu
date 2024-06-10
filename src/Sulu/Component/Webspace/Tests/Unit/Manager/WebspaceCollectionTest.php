@@ -26,10 +26,7 @@ use Sulu\Component\Webspace\Webspace;
 
 class WebspaceCollectionTest extends TestCase
 {
-    /**
-     * @var WebspaceCollection
-     */
-    private $webspaceCollection;
+    private WebspaceCollection $webspaceCollection;
 
     public function setUp(): void
     {

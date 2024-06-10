@@ -17,8 +17,6 @@ class WebspaceTestCase extends TestCase
 {
     protected function getResourceDirectory()
     {
-        $dir = __DIR__ . '/../../../../../../tests/Resources';
-
-        return $dir;
+        return __DIR__ . '/../../../../../../tests/Resources';
     }
 }
