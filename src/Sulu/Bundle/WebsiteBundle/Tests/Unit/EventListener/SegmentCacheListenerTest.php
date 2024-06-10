@@ -34,7 +34,7 @@ class SegmentCacheListenerTest extends TestCase
     }
 
     /**
-     * @return iterable<string|null>
+     * @return iterable<array{0: string|null}>
      */
     public static function providePreHandleCookieValue(): iterable
     {
