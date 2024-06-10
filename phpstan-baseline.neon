@@ -3266,16 +3266,6 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Rule/TargetGroupEvaluatorTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\Rule\\\\TargetGroupEvaluatorTest\\:\\:testEvaluate\\(\\) has parameter \\$ruleWhitelists with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Rule/TargetGroupEvaluatorTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Unit\\\\Rule\\\\TargetGroupEvaluatorTest\\:\\:testEvaluate\\(\\) has parameter \\$targetGroups with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Unit/Rule/TargetGroupEvaluatorTest.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:addMeta\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CategoryBundle/Api/Category.php
@@ -34141,41 +34131,6 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/AppendAnalyticsListenerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\EventListener\\\\SegmentCacheListenerTest\\:\\:providePostHandleVary\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentCacheListenerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\EventListener\\\\SegmentCacheListenerTest\\:\\:providePreHandleCookieValue\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentCacheListenerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\EventListener\\\\SegmentCacheListenerTest\\:\\:testPostHandleWithVary\\(\\) has parameter \\$expectedMaxAge with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentCacheListenerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\EventListener\\\\SegmentCacheListenerTest\\:\\:testPostHandleWithVary\\(\\) has parameter \\$header with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentCacheListenerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\EventListener\\\\SegmentCacheListenerTest\\:\\:testPostHandleWithVary\\(\\) has parameter \\$maxAge with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentCacheListenerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\EventListener\\\\SegmentCacheListenerTest\\:\\:testPostHandleWithVary\\(\\) has parameter \\$sharedMaxAge with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentCacheListenerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\EventListener\\\\SegmentCacheListenerTest\\:\\:testPreHandleCookieValue\\(\\) has parameter \\$cookieValue with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentCacheListenerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Unit\\\\EventListener\\\\SegmentSubscriberTest\\:\\:provideAddCookieHeader\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Unit/EventListener/SegmentSubscriberTest.php
@@ -42126,21 +42081,6 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:testAdd\\(\\) has parameter \\$expected with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:testAdd\\(\\) has parameter \\$extensions with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:testAdd\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:testGet\\(\\) has parameter \\$expected with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
@@ -42177,11 +42117,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:testGetException\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:testHas\\(\\) has parameter \\$extensions with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
 
@@ -51206,23 +51141,8 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/ContentTypeTest.php
 
 		-
-			message: "#^Cannot access offset 'alias' on Sulu\\\\Component\\\\SmartContent\\\\DataProviderInterface\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/DataProviderPoolTest.php
-
-		-
-			message: "#^Cannot access offset 'provider' on Sulu\\\\Component\\\\SmartContent\\\\DataProviderInterface\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/DataProviderPoolTest.php
-
-		-
 			message: "#^Class Sulu\\\\Component\\\\SmartContent\\\\DataProviderPool does not have a constructor and must be instantiated without any parameters\\.$#"
 			count: 6
-			path: src/Sulu/Component/SmartContent/Tests/Unit/DataProviderPoolTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Tests\\\\Unit\\\\DataProviderPoolTest\\:\\:addProvider\\(\\) has no return type specified\\.$#"
-			count: 1
 			path: src/Sulu/Component/SmartContent/Tests/Unit/DataProviderPoolTest.php
 
 		-
@@ -51231,18 +51151,8 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Tests/Unit/DataProviderPoolTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Tests\\\\Unit\\\\DataProviderPoolTest\\:\\:getAllProvider\\(\\) should return array\\{Sulu\\\\Component\\\\SmartContent\\\\DataProviderPool, array\\<string, Sulu\\\\Component\\\\SmartContent\\\\DataProviderInterface\\>\\} but returns array\\{array\\{Sulu\\\\Component\\\\SmartContent\\\\DataProviderPool, array\\{test\\-1\\: Sulu\\\\Component\\\\SmartContent\\\\DataProviderInterface, test\\-2\\: Sulu\\\\Component\\\\SmartContent\\\\DataProviderInterface\\}\\}, array\\{Sulu\\\\Component\\\\SmartContent\\\\DataProviderPool, array\\{\\}\\}\\}\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/DataProviderPoolTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Tests\\\\Unit\\\\DataProviderPoolTest\\:\\:getProvider\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: src/Sulu/Component/SmartContent/Tests/Unit/DataProviderPoolTest.php
-
-		-
-			message: "#^Parameter \\#1 \\$exception of method PHPUnit\\\\Framework\\\\TestCase\\:\\:expectException\\(\\) expects class\\-string\\<Throwable\\>, string given\\.$#"
-			count: 2
 			path: src/Sulu/Component/SmartContent/Tests/Unit/DataProviderPoolTest.php
 
 		-
@@ -53482,16 +53392,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\Settings\\\\SettingsManagerTest\\:\\:loadStringDataProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Settings/SettingsManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\Settings\\\\SettingsManagerTest\\:\\:testLoad\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/Webspace/Tests/Unit/Settings/SettingsManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Webspace\\\\Tests\\\\Unit\\\\Settings\\\\SettingsManagerTest\\:\\:testSave\\(\\) has parameter \\$data with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Webspace/Tests/Unit/Settings/SettingsManagerTest.php
 
