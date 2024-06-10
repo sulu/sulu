@@ -13,12 +13,12 @@ namespace Sulu\Component\Content\Document\Subscriber;
 
 use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Bundle\PageBundle\Document\PageDocument;
+use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 use Sulu\Component\Content\Document\Behavior\ExtensionBehavior;
 use Sulu\Component\Content\Document\Behavior\ResourceSegmentBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WebspaceBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
-use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\Content\Metadata\PropertyMetadata;
 use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrategyPoolInterface;
 use Sulu\Component\DocumentManager\Behavior\Mapping\LocaleBehavior;
@@ -163,11 +163,11 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
         $pageTreeRoutePropertyName = $this->getPageTreeRoutePropertyName($document);
         $routePath = $documentStructure[$pageTreeRoutePropertyName] ?? null;
 
-        if (!$routePath || !\array_key_exists('page', $routePath)) {
+        if (!$routePath || !\is_array($routePath) || !\array_key_exists('page', $routePath)) {
             return $documentStructure;
         }
 
-        $parentPageUuid = $routePath['page']['uuid'];
+        $parentPageUuid = $routePath['page']['uuid'] ?? null;
 
         /** @var ?PageDocument $destParentDocument */
         $destParentDocument = $this->documentManager->find(
@@ -175,7 +175,7 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
             $destLocale
         );
 
-        if ($destParentDocument instanceof PageDocument && WorkflowStage::PUBLISHED === $destParentDocument->getWorkflowStage()) {
+        if ($destParentDocument instanceof PageDocument) {
             $destParentUrl = $destParentDocument->getStructure()->getProperty('url')->getValue();
         } else {
             $destParentUrl = '';
@@ -192,8 +192,12 @@ class CopyLocaleSubscriber implements EventSubscriberInterface
             'suffix' => $routePath['suffix'],
         ];
         $destDocument->setRoutePath($routePathProp);
-        $destDocument->getRoute()->setPath($routePathProp);
-        $destDocument->getRoute()->setLocale($destLocale);
+
+        /** @var RouteInterface|null $route */
+        $route = $destDocument->getRoute();
+        if ($route && $route->getLocale() === $destLocale) {
+            $route->setPath($routePathProp);
+        }
 
         return $documentStructure;
     }
