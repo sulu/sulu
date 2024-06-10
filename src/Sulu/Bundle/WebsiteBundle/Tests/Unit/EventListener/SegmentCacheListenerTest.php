@@ -38,11 +38,11 @@ class SegmentCacheListenerTest extends TestCase
      */
     public static function providePreHandleCookieValue(): iterable
     {
-        yield 's';
+        yield ['s'];
 
-        yield 'w';
+        yield ['w'];
 
-        yield null;
+        yield [null];
     }
 
     /**
