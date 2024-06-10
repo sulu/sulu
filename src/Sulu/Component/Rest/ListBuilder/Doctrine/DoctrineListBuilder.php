@@ -272,6 +272,12 @@ class DoctrineListBuilder extends AbstractListBuilder
         $select = $this->idField->getSelect();
         $this->queryBuilder->where($select . ' IN (:ids)')->setParameter('ids', $ids);
 
+        $sortFieldIsGrouped = \count(\array_filter($this->sortFields, fn (FieldDescriptorInterface $field) => $this->isGroupingFieldDescriptor($field))) > 0;
+        // index the result to properly merge the grouped and non-grouped results and do not mess up sorting
+        if ($sortFieldIsGrouped) {
+            $this->queryBuilder->indexBy($this->encodeAlias($this->entityName), $this->idField->getSelect());
+        }
+
         $this->assignParameters($this->queryBuilder);
 
         $nonGroupResult = $this->queryBuilder->getQuery()->getArrayResult();
@@ -297,8 +303,11 @@ class DoctrineListBuilder extends AbstractListBuilder
         $groupResult = $this->queryBuilder->getQuery()->getArrayResult();
 
         $result = [];
-        foreach ($nonGroupResult as $item) {
-            $result[] = \array_merge($item, $groupResult[$item[$this->idField->getName()]] ?? []);
+        $primaryResult = $sortFieldIsGrouped ? $groupResult : $nonGroupResult;
+        $secondaryResult = $sortFieldIsGrouped ? $nonGroupResult : $groupResult;
+
+        foreach ($primaryResult as $item) {
+            $result[] = \array_merge($item, $secondaryResult[$item[$this->idField->getName()]] ?? []);
         }
 
         return $result;
@@ -382,7 +391,6 @@ class DoctrineListBuilder extends AbstractListBuilder
             $subQueryBuilder->setMaxResults((int) $this->limit)->setFirstResult((int) ($this->limit * ($this->page - 1)));
         }
 
-        // TODO do we need this always?
         $subQueryBuilder->addGroupBy($this->idField->getSelect());
 
         foreach ($this->sortFields as $index => $sortField) {
@@ -893,10 +901,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         return $select . $field->getName();
     }
 
-    /**
-     * @return bool
-     */
-    protected function isGroupingFieldDescriptor(DoctrineFieldDescriptorInterface $field)
+    protected function isGroupingFieldDescriptor(FieldDescriptorInterface $field): bool
     {
         return $field instanceof DoctrineCountFieldDescriptor
             || $field instanceof DoctrineGroupConcatFieldDescriptor;
