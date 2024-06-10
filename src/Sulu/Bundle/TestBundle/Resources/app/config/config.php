@@ -30,10 +30,10 @@ return static function(PhpFileLoader $loader, ContainerBuilder $container) {
     }
 
     if ('admin' === $context) {
-        if (\version_compare(Kernel::VERSION, '6.0.0', '>=')) {
-            $loader->import('security-6.yml');
-        } else {
+        if (\class_exists(Symfony\Bundle\SecurityBundle\Command\UserPasswordEncoderCommand::class)) { // detect Symfony <= 5.4
             $loader->import('security-5-4.yml');
+        } else {
+            $loader->import('security-6.yml');
         }
     }
 
