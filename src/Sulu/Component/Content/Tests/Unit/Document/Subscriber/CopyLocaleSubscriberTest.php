@@ -134,6 +134,38 @@ class CopyLocaleSubscriberTest extends SubscriberTestCase
         $this->subscriber->handleCopyLocale($event->reveal());
     }
 
+    public function testHandleCopyLocalePageTreeRouteNonArrayRoutePath(): void
+    {
+        /** @var CopyLocaleEvent|ObjectProphecy $event */
+        $event = $this->prophesize(CopyLocaleEvent::class);
+        $event->getLocale()->willReturn('en');
+        $event->getDestLocale()->willReturn('de');
+
+        $structureData = [
+            'foo' => 'bar',
+            'routePath' => 'test',
+        ];
+
+        /** @var StructureInterface|ObjectProphecy $structure */
+        $structure = $this->prophesize(StructureInterface::class);
+        $structure->toArray()->willReturn($structureData);
+
+        /** @var PageDocument|ObjectProphecy $document */
+        $document = $this->prophesize(PageDocument::class);
+        $document->getStructure()->willReturn($structure->reveal());
+
+        /** @var RoutableBehavior|ObjectProphecy $destDocument */
+        $destDocument = $this->prophesize(RoutableBehavior::class);
+
+        $structure = $this->subscriber->checkPageTreeRoute($destDocument->reveal(), $document->reveal(), 'de');
+        $expectedStructure = [
+            'foo' => 'bar',
+            'routePath' => 'test',
+        ];
+
+        $this->assertSame($expectedStructure, $structure);
+    }
+
     public function testHandleCopyLocalePageTreeRoute(): void
     {
         /** @var CopyLocaleEvent|ObjectProphecy $event */
