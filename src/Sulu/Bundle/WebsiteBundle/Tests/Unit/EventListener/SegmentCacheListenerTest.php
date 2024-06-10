@@ -33,19 +33,22 @@ class SegmentCacheListenerTest extends TestCase
         $this->segmentCacheListener = new SegmentCacheListener();
     }
 
-    public static function providePreHandleCookieValue()
+    /**
+     * @return iterable<array{0: string|null}>
+     */
+    public static function providePreHandleCookieValue(): iterable
     {
-        return [
-            ['s'],
-            ['w'],
-            [null],
-        ];
+        yield ['s'];
+
+        yield ['w'];
+
+        yield [null];
     }
 
     /**
      * @dataProvider providePreHandleCookieValue
      */
-    public function testPreHandleCookieValue($cookieValue): void
+    public function testPreHandleCookieValue(?string $cookieValue): void
     {
         $request = new Request([], [], [], ['_ss' => $cookieValue]);
         $response = new Response();
@@ -55,7 +58,15 @@ class SegmentCacheListenerTest extends TestCase
         $this->assertEquals($cookieValue, $request->headers->get('X-Sulu-Segment'));
     }
 
-    public static function providePostHandleVary()
+    /**
+     * @return iterable<array{
+     *     0: string|null,
+     *     1: int,
+     *     2: int,
+     *     3: int,
+     * }>
+     */
+    public static function providePostHandleVary(): iterable
     {
         return [
             ['X-Something', 60, 120, 120],
@@ -67,7 +78,7 @@ class SegmentCacheListenerTest extends TestCase
     /**
      * @dataProvider providePostHandleVary
      */
-    public function testPostHandleWithVary($header, $maxAge, $sharedMaxAge, $expectedMaxAge): void
+    public function testPostHandleWithVary(?string $header, int $maxAge, int $sharedMaxAge, int $expectedMaxAge): void
     {
         $request = new Request();
         $response = new Response();
