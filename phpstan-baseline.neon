@@ -14211,32 +14211,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$changer type mapping mismatch\\: property can contain Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null but database expects Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$children type mapping mismatch\\: property can contain Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionInterface\\> but database expects Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$creator type mapping mismatch\\: property can contain Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface\\|null but database expects Sulu\\\\Bundle\\\\SecurityBundle\\\\Entity\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$defaultMeta \\(Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\) does not accept Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$defaultMeta type mapping mismatch\\: database can contain Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\|null but property expects Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\CollectionMeta\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Collection\\:\\:\\$media type mapping mismatch\\: property can contain Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaInterface\\> but database expects Doctrine\\\\Common\\\\Collections\\\\Collection&iterable\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\Media\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/Collection.php
 
