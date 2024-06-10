@@ -31837,7 +31837,7 @@ parameters:
 
 		-
 			message: "#^If condition is always true\\.$#"
-			count: 2
+			count: 1
 			path: src/Sulu/Bundle/TestBundle/Resources/app/config/config.php
 
 		-
