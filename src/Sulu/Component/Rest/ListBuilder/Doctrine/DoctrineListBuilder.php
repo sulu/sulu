@@ -391,11 +391,13 @@ class DoctrineListBuilder extends AbstractListBuilder
             $subQueryBuilder->setMaxResults((int) $this->limit)->setFirstResult((int) ($this->limit * ($this->page - 1)));
         }
 
-        $subQueryBuilder->addGroupBy($this->idField->getSelect());
-
-        foreach ($this->sortFields as $index => $sortField) {
+        foreach ($this->sortFields as $sortField) {
             if ($sortField->getName() !== $this->idField->getName()) {
                 $subQueryBuilder->addSelect($this->getSelectAs($sortField));
+
+                if ($this->isGroupingFieldDescriptor($sortField)) {
+                    $subQueryBuilder->addGroupBy($this->idField->getSelect());
+                }
             }
         }
 
