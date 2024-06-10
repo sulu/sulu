@@ -58,7 +58,6 @@ class SegmentCacheListenerTest extends TestCase
         $this->assertEquals($cookieValue, $request->headers->get('X-Sulu-Segment'));
     }
 
-
     /**
      * @return iterable<array{
      *     0: string|null,
