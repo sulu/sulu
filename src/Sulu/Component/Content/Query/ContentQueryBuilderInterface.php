@@ -21,7 +21,7 @@ interface ContentQueryBuilderInterface
      *
      * @return array{
      *     0: string,
-     *     1: array<string, array<string, string>>
+     *     1: array<string, array<array<string, string>>>
      * }
      */
     public function build($webspaceKey, $locales);
