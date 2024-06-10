@@ -80,9 +80,14 @@ class ExtensionManagerTest extends TestCase
     }
 
     /**
+     * @param array<array{
+     *     instance: ExtensionInterface,
+     *     type: string,
+     * }> $extensions
+     *
      * @dataProvider addProvider
      */
-    public function testAdd($extensions, $type, $expected): void
+    public function testAdd(array $extensions, string $type, ExtensionInterface $expected): void
     {
         $manager = new ExtensionManager();
 
@@ -126,6 +131,11 @@ class ExtensionManagerTest extends TestCase
     }
 
     /**
+     * @param array<array{
+     *     instance: ExtensionInterface,
+     *     type: string,
+     * }> $extensions
+     *
      * @dataProvider hasProvider
      */
     public function testHas(array $extensions, string $type, string $name, bool $expected): void

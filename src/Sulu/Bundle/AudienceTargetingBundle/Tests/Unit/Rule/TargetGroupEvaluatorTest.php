@@ -61,6 +61,9 @@ class TargetGroupEvaluatorTest extends TestCase
     }
 
     /**
+     * @param TargetGroup[] $targetGroups
+     * @param array<string, string[]> $ruleWhitelists
+     *
      * @dataProvider provideEvaluationData
      */
     public function testEvaluate(

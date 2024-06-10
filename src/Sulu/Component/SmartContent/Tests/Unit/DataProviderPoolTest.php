@@ -72,7 +72,15 @@ class DataProviderPoolTest extends TestCase
         };
     }
 
-    public static function addProvider()
+    /**
+     * @return iterable<array{
+     *     0: DataProviderPool,
+     *     1: array<array{alias: string, provider: DataProviderInterface}>,
+     *     2: array<string, DataProviderInterface>,
+     *     3?: class-string<\Throwable>,
+     * }>
+     */
+    public static function addProvider(): iterable
     {
         $pool1 = new DataProviderPool(true);
         $pool2 = new DataProviderPool(true);
@@ -122,8 +130,9 @@ class DataProviderPoolTest extends TestCase
     /**
      * @dataProvider addProvider
      *
-     * @param array<DataProviderInterface> $providers
-     * @param array<DataProviderInterface> $expectedProviders
+     * @param array<array{alias: string, provider: DataProviderInterface}> $providers
+     * @param array<string, DataProviderInterface> $expectedProviders
+     * @param class-string<\Throwable>|null $exceptionName
      */
     public function testAdd(DataProviderPool $pool, array $providers, array $expectedProviders, ?string $exceptionName = null): void
     {
@@ -180,6 +189,8 @@ class DataProviderPoolTest extends TestCase
 
     /**
      * @dataProvider getProvider
+     *
+     * @param class-string<\Throwable>|null $exceptionName
      */
     public function testGet(DataProviderPool $pool, string $alias, ?DataProviderInterface $expectedProvider, ?string $exceptionName = null): void
     {
@@ -191,7 +202,10 @@ class DataProviderPoolTest extends TestCase
     }
 
     /**
-     * @return array{DataProviderPool, array<string, DataProviderInterface>}
+     * @return iterable<array{
+     *     0: DataProviderPool,
+     *     1: array<string, DataProviderInterface>,
+     * }>
      */
     public static function getAllProvider()
     {

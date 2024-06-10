@@ -64,6 +64,8 @@ class SettingsManagerTest extends TestCase
     }
 
     /**
+     * @param array<string, string>|null|NodeInterface $data
+     *
      * @dataProvider dataProvider
      */
     public function testSave(string $webspaceKey, string $key, array|NodeInterface|null $data): void
@@ -96,6 +98,8 @@ class SettingsManagerTest extends TestCase
     }
 
     /**
+     * @param array<string, string>|null|NodeInterface $data
+     *
      * @dataProvider dataProvider
      */
     public function testLoad(string $webspaceKey, string $key, array|NodeInterface|null $data): void
