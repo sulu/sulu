@@ -42046,16 +42046,6 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:getExceptionProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:getProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:hasProvider\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
@@ -42077,26 +42067,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:testGet\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:testGetException\\(\\) has parameter \\$extensions with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:testGetException\\(\\) has parameter \\$exxceptionName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:testGetException\\(\\) has parameter \\$name with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Tests\\\\Unit\\\\Extension\\\\ExtensionManagerTest\\:\\:testGetException\\(\\) has parameter \\$type with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/Extension/ExtensionManagerTest.php
 
