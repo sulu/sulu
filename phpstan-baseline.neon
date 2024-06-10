@@ -31026,11 +31026,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetDataProviderTest.php
 
 		-
-			message: "#^Cannot use array destructuring on string\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetQueryBuilderTest.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Unit\\\\DependencyInjection\\\\Compiler\\\\SnippetAreaCompilerPassTest\\:\\:createStructureMetaData\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/DependencyInjection/Compiler/SnippetAreaCompilerPassTest.php
@@ -40551,11 +40546,6 @@ parameters:
 			path: src/Sulu/Component/Content/Query/ContentQueryBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Content\\\\Query\\\\ContentQueryBuilder\\:\\:build\\(\\) should return string but returns array\\<int, mixed\\>\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Content\\\\Query\\\\ContentQueryBuilder\\:\\:buildOrder\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Query/ContentQueryBuilder.php
@@ -40711,11 +40701,6 @@ parameters:
 			path: src/Sulu/Component/Content/Query/ContentQueryBuilderInterface.php
 
 		-
-			message: "#^Cannot use array destructuring on string\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 8
 			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
@@ -40757,11 +40742,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$haystack of function substr_count expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
-
-		-
-			message: "#^Parameter \\#4 \\$fields of method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapperInterface\\:\\:convertQueryResultToArray\\(\\) expects array, string given\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Query/ContentQueryExecutor.php
 

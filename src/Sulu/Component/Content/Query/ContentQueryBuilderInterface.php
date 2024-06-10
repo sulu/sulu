@@ -19,7 +19,10 @@ interface ContentQueryBuilderInterface
      * @param string $webspaceKey
      * @param string[] $locales
      *
-     * @return string
+     * @return array{
+     *     0: string,
+     *     1: array<string, array<string, string>>
+     * }
      */
     public function build($webspaceKey, $locales);
 
