@@ -1181,6 +1181,7 @@ class DoctrineListBuilderTest extends TestCase
         $queryBuilder3->setParameter('ids', [1, 2])->shouldBeCalled()->willReturn($queryBuilder3->reveal());
         $queryBuilder3->addGroupBy(self::$entityNameAlias . '.name')->shouldBeCalled()->willReturn($queryBuilder3->reveal());
         $queryBuilder3->indexBy(self::$entityNameAlias, self::$entityNameAlias . '.id')->shouldBeCalled()->willReturn($queryBuilder3->reveal());
+        $queryBuilder3->addOrderBy(self::$entityNameAlias . '.id', 'ASC')->willReturn($queryBuilder3->reveal());
 
         $this->doctrineListBuilder->setSelectFields([
             $nameFieldDescriptor,

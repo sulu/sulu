@@ -226,7 +226,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     public function count()
     {
-        $subQueryBuilder = $this->createSubQueryBuilder('COUNT(' . $this->idField->getSelect() . ')');
+        $subQueryBuilder = $this->createSubQueryBuilder('COUNT(distinct ' . $this->idField->getSelect() . ')');
 
         $this->assignParameters($subQueryBuilder);
 
