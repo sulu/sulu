@@ -80,9 +80,15 @@ class ExtensionManagerTest extends TestCase
     }
 
     /**
+     * @param array<array{
+     *     instance: ExtensionInterface,
+     *     type: string,
+     * }> $extensions
+     * @param array<string, ExtensionInterface> $expected
+     *
      * @dataProvider addProvider
      */
-    public function testAdd($extensions, $type, $expected): void
+    public function testAdd(array $extensions, string $type, array $expected): void
     {
         $manager = new ExtensionManager();
 
@@ -126,6 +132,11 @@ class ExtensionManagerTest extends TestCase
     }
 
     /**
+     * @param array<array{
+     *     instance: ExtensionInterface,
+     *     type: string,
+     * }> $extensions
+     *
      * @dataProvider hasProvider
      */
     public function testHas(array $extensions, string $type, string $name, bool $expected): void
@@ -139,6 +150,17 @@ class ExtensionManagerTest extends TestCase
         $this->assertEquals($expected, $manager->hasExtension($type, $name));
     }
 
+    /**
+     * @return iterable<array{
+     *     0: array<array{
+     *         instance: ExtensionInterface,
+     *         type: string,
+     *     }>,
+     *     1: string,
+     *     2: string,
+     *     3: ExtensionInterface,
+     * }>
+     */
     public static function getProvider()
     {
         $instances = [
@@ -179,6 +201,17 @@ class ExtensionManagerTest extends TestCase
         $this->assertEquals($expected, $manager->getExtension($type, $name));
     }
 
+    /**
+     * @return iterable<array{
+     *     0: array<array{
+     *         instance: ExtensionInterface,
+     *         type: string,
+     *     }>,
+     *     1: string,
+     *     2: string,
+     *     3: class-string<\Throwable>
+     * }>
+     */
     public static function getExceptionProvider()
     {
         $instances = [
@@ -206,9 +239,15 @@ class ExtensionManagerTest extends TestCase
     }
 
     /**
+     * @param array<array{
+     *      instance: ExtensionInterface,
+     *      type: string,
+     * }> $extensions
+     * @param class-string<\Throwable> $exxceptionName
+     *
      * @dataProvider getExceptionProvider
      */
-    public function testGetException($extensions, $type, $name, $exxceptionName): void
+    public function testGetException($extensions, string $type, string $name, string $exxceptionName): void
     {
         $this->expectException($exxceptionName);
 
