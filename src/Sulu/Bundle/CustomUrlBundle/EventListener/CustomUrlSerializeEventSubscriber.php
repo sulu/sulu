@@ -26,29 +26,11 @@ use Sulu\Component\CustomUrl\Generator\GeneratorInterface;
  */
 class CustomUrlSerializeEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var GeneratorInterface
-     */
-    private $generator;
-
-    /**
-     * @var UserManagerInterface
-     */
-    private $userManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
     public function __construct(
-        GeneratorInterface $generator,
-        UserManagerInterface $userManager,
-        DocumentInspector $documentInspector
+        private GeneratorInterface $generator,
+        private UserManagerInterface $userManager,
+        private DocumentInspector $documentInspector
     ) {
-        $this->generator = $generator;
-        $this->userManager = $userManager;
-        $this->documentInspector = $documentInspector;
     }
 
     public static function getSubscribedEvents()
