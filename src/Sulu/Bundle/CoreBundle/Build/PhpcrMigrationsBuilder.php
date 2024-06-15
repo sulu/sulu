@@ -17,25 +17,15 @@ use PHPCR\Migrations\VersionStorage;
 /**
  * Initialize the migrations when Sulu is built.
  *
- * After a repository has been intialized all migrations should be added to the
+ * After a repository has been initialized all migrations should be added to the
  * repository.
  */
 class PhpcrMigrationsBuilder extends SuluBuilder
 {
-    /**
-     * @var MigratorFactory
-     */
-    private $migratorFactory;
-
-    /**
-     * @var VersionStorage
-     */
-    private $versionStorage;
-
-    public function __construct(MigratorFactory $migratorFactory, VersionStorage $versionStorage)
-    {
-        $this->migratorFactory = $migratorFactory;
-        $this->versionStorage = $versionStorage;
+    public function __construct(
+        private MigratorFactory $migratorFactory,
+        private VersionStorage $versionStorage,
+    ) {
     }
 
     public function getName()
