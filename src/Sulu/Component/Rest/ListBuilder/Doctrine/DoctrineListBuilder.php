@@ -296,7 +296,9 @@ class DoctrineListBuilder extends AbstractListBuilder
         // use ids previously selected ids for query
         $select = $this->idField->getSelect();
         $this->queryBuilder->where($select . ' IN (:ids)')->setParameter('ids', $ids);
-        $this->queryBuilder->indexBy($this->encodeAlias($this->entityName), $this->idField->getSelect());
+        if (!$sortFieldIsGrouped) {
+            $this->queryBuilder->indexBy($this->encodeAlias($this->entityName), $this->idField->getSelect());
+        }
 
         $this->assignParameters($this->queryBuilder);
 
