@@ -16,6 +16,7 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\DocumentManager\Event\MoveEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveDraftEvent;
@@ -45,6 +46,7 @@ class StructureSubscriber implements EventSubscriberInterface
         return [
             Events::PERSIST => ['indexPersistedDocument', -10],
             Events::PUBLISH => ['indexPublishedDocument', -256],
+            Events::MOVE => ['indexMovedDocument', -256],
             Events::REMOVE => ['deindexRemovedDocument', 600],
             Events::UNPUBLISH => ['deindexUnpublishedDocument', -1024],
             Events::REMOVE_DRAFT => ['indexDocumentAfterRemoveDraft', -1024],
@@ -64,6 +66,14 @@ class StructureSubscriber implements EventSubscriberInterface
      * Indexes a published document.
      */
     public function indexPublishedDocument(PublishEvent $event)
+    {
+        $this->indexDocument($event->getDocument());
+    }
+
+    /**
+     * Indexes a moved document.
+     */
+    public function indexMovedDocument(MoveEvent $event)
     {
         $this->indexDocument($event->getDocument());
     }
