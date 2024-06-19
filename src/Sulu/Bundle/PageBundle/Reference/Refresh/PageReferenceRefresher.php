@@ -66,7 +66,13 @@ class PageReferenceRefresher implements ReferenceRefresherInterface
                     /** @var string $uuid */
                     $uuid = $row->getValue('jcr:uuid');
                     /** @var (UuidBehavior&TitleBehavior&StructureBehavior)|null $document */
-                    $document = $this->documentManager->find($uuid, $locale);
+                    $document = $this->documentManager->find(
+                        $uuid,
+                        $locale,
+                        [
+                            'load_ghost_content' => false,
+                        ]
+                    );
 
                     if (!$document) {
                         continue;
