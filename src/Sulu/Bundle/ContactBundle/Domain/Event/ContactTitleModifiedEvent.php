@@ -18,26 +18,13 @@ use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
 class ContactTitleModifiedEvent extends DomainEvent
 {
     /**
-     * @var ContactTitle
-     */
-    private $contactTitle;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        ContactTitle $contactTitle,
-        array $payload
+        private ContactTitle $contactTitle,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->contactTitle = $contactTitle;
-        $this->payload = $payload;
     }
 
     public function getContactTitle(): ContactTitle

@@ -17,24 +17,11 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 
 class AccountRemovedEvent extends DomainEvent
 {
-    /**
-     * @var int
-     */
-    private $accountId;
-
-    /**
-     * @var string
-     */
-    private $accountName;
-
     public function __construct(
-        int $accountId,
-        string $accountName
+        private int $accountId,
+        private string $accountName
     ) {
         parent::__construct();
-
-        $this->accountId = $accountId;
-        $this->accountName = $accountName;
     }
 
     public function getEventType(): string

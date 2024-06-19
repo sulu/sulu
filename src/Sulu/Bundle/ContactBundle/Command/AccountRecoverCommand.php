@@ -26,22 +26,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'sulu:contacts:accounts:recover')]
 class AccountRecoverCommand extends Command
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var AccountRepositoryInterface
-     */
-    private $accountRepository;
-
-    public function __construct(EntityManagerInterface $entityManager, AccountRepositoryInterface $accountRepository)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private AccountRepositoryInterface $accountRepository,
+    ) {
         parent::__construct();
-
-        $this->entityManager = $entityManager;
-        $this->accountRepository = $accountRepository;
     }
 
     protected function configure()

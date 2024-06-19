@@ -12,7 +12,7 @@
 namespace Sulu\Bundle\CoreBundle\Build;
 
 /**
- * Builder for loading the fictures.
+ * Builder for loading the fixtures.
  */
 class FixturesBuilder extends SuluBuilder
 {

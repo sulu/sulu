@@ -39,47 +39,17 @@ class AccountManager extends AbstractContactManager implements DataProviderRepos
 {
     protected $addressEntity = AddressEntity::class;
 
-    /**
-     * @var AccountFactory
-     */
-    private $accountFactory;
-
-    /**
-     * @var AccountRepositoryInterface
-     */
-    private $accountRepository;
-
-    /**
-     * @var ContactRepository
-     */
-    private $contactRepository;
-
-    /**
-     * @var MediaRepositoryInterface
-     */
-    protected $mediaRepository;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    protected $domainEventCollector;
-
     public function __construct(
         ObjectManager $em,
         TagManagerInterface $tagManager,
         MediaManagerInterface $mediaManager,
-        AccountFactory $accountFactory,
-        AccountRepositoryInterface $accountRepository,
-        ContactRepository $contactRepository,
-        MediaRepositoryInterface $mediaRepository,
-        DomainEventCollectorInterface $domainEventCollector
+        private AccountFactory $accountFactory,
+        private AccountRepositoryInterface $accountRepository,
+        private ContactRepository $contactRepository,
+        protected MediaRepositoryInterface $mediaRepository,
+        protected DomainEventCollectorInterface $domainEventCollector
     ) {
         parent::__construct($em, $tagManager, $mediaManager);
-        $this->accountFactory = $accountFactory;
-        $this->accountRepository = $accountRepository;
-        $this->contactRepository = $contactRepository;
-        $this->mediaRepository = $mediaRepository;
-        $this->domainEventCollector = $domainEventCollector;
     }
 
     /**

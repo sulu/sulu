@@ -20,14 +20,8 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
  */
 class StructureWarmer implements CacheWarmerInterface
 {
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
-
-    public function __construct(StructureManagerInterface $structureManager)
+    public function __construct(private StructureManagerInterface $structureManager)
     {
-        $this->structureManager = $structureManager;
     }
 
     /**

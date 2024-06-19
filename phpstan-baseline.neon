@@ -7521,16 +7521,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Content\\\\Types\\\\ContactAccountSelection\\:\\:\\$accountManager with generic interface Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface does not specify its types\\: DoctrineEntity, ApiEntity, AddressRelationEntity$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Content\\\\Types\\\\ContactAccountSelection\\:\\:\\$contactManager with generic interface Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface does not specify its types\\: DoctrineEntity, ApiEntity, AddressRelationEntity$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactAccountSelection.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Content\\\\Types\\\\ContactSelection\\:\\:preResolve\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Content/Types/ContactSelection.php
@@ -7726,6 +7716,11 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
+			message: "#^Call to an undefined method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:setIdField\\(\\)\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
+
+		-
 			message: "#^Call to an undefined method object\\:\\:getAccountContacts\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
@@ -7817,6 +7812,11 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\AccountController\\:\\:doPut\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
+
+		-
+			message: "#^Method Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\AccountController\\:\\:generateFlatListBuilder\\(\\) should return Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder but returns Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
@@ -8031,13 +8031,13 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\AbstractListBuilder\\:\\:where\\(\\) expects string, int given\\.$#"
-			count: 2
+			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\AbstractListBuilder\\:\\:where\\(\\) expects string, null given\\.$#"
+			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
-			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\AbstractListBuilder\\:\\:where\\(\\) expects string, null given\\.$#"
-			count: 1
+			message: "#^Parameter \\#2 \\$value of method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\ListBuilderInterface\\:\\:where\\(\\) expects string, int given\\.$#"
+			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
 		-
@@ -8077,11 +8077,6 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\AccountController\\:\\:\\$fieldDescriptors \\(array\\<Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineFieldDescriptor\\>\\) does not accept array\\<Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\FieldDescriptorInterface\\>\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\AccountController\\:\\:\\$listBuilderFactory \\(Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderFactory\\) does not accept Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderFactoryInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountController.php
 
@@ -8147,11 +8142,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$mediaId of method Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\AbstractMediaController\\:\\:removeMediaFromEntity\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/AccountMediaController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\AccountMediaController\\:\\:\\$accountManager with generic class Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager does not specify its types\\: DoctrineEntity, ApiEntity, AddressRelationEntity$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/AccountMediaController.php
 
@@ -8256,11 +8246,6 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\ContactController\\:\\:\\$contactManager with generic interface Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\ContactManagerInterface does not specify its types\\: DoctrineEntity, ApiEntity, AddressRelationEntity$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\ContactController\\:\\:\\$contactSerializationGroups has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactController.php
@@ -8312,11 +8297,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$mediaId of method Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\AbstractMediaController\\:\\:removeMediaFromEntity\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/ContactBundle/Controller/ContactMediaController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\ContactBundle\\\\Controller\\\\ContactMediaController\\:\\:\\$contactManager with generic class Sulu\\\\Bundle\\\\ContactBundle\\\\Contact\\\\AbstractContactManager does not specify its types\\: DoctrineEntity, ApiEntity, AddressRelationEntity$#"
 			count: 1
 			path: src/Sulu/Bundle/ContactBundle/Controller/ContactMediaController.php
 
@@ -10657,11 +10637,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method object\\:\\:getWorkflowStage\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Request/CustomUrlRequestProcessor.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\CustomUrlBundle\\\\Request\\\\CustomUrlRequestProcessor\\:\\:__construct\\(\\) has parameter \\$environment with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Request/CustomUrlRequestProcessor.php
 

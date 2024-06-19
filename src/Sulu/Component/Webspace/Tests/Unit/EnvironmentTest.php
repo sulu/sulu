@@ -23,25 +23,27 @@ class EnvironmentTest extends TestCase
     public function testToArray(): void
     {
         $expected = [
-            'type' => 'foo',
+            'type' => 'test',
             'urls' => [
                 0 => [
-                    'url' => 'test',
+                    'url' => 'sulu.io',
                     'language' => null,
                     'country' => null,
                     'segment' => null,
                     'redirect' => null,
                     'main' => true,
-                    'environment' => null,
+                    'environment' => 'test',
                 ],
             ],
         ];
-        $url = new Url('test', 'test');
+
+        // Testing that the environment of the url is overridden when adding it to the environment object
+        $url = new Url('sulu.io', 'I should be overwritten');
 
         $environment = new Environment();
+        $environment->setType($expected['type']);
 
         $environment->addUrl($url);
-        $environment->setType($expected['type']);
 
         $this->assertEquals($expected, $environment->toArray());
     }
