@@ -79,6 +79,7 @@ abstract class AbstractDocumentReferenceProvider implements DocumentReferencePro
         if (null === $document->getStructureType()) {
             // if there is no structureType we cannot update the references
             // this happens for pages/articles that were published once but have been unpublished
+
             return;
         }
 

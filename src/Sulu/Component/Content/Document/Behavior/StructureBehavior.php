@@ -38,7 +38,7 @@ interface StructureBehavior extends LocaleBehavior
     /**
      * Set the structure type used for the content.
      *
-     * @param string $structureType
+     * @param string|null $structureType
      */
     public function setStructureType($structureType);
 
