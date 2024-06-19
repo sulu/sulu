@@ -31,7 +31,7 @@ interface StructureBehavior extends LocaleBehavior
     /**
      * Return the type of the structure used for the content.
      *
-     * @return string
+     * @return string|null
      */
     public function getStructureType();
 
