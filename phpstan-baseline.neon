@@ -11161,11 +11161,6 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Bridge\\\\DocumentInspector\\:\\:getLocales\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Bridge\\\\DocumentInspector\\:\\:getLocalizedUrlsForPage\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
@@ -11182,31 +11177,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Bridge\\\\DocumentInspector\\:\\:getStructureMetadata\\(\\) should return Sulu\\\\Component\\\\Content\\\\Metadata\\\\StructureMetadata\\|null but empty return statement found\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Bridge\\\\DocumentInspector\\:\\:\\$encoder has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Bridge\\\\DocumentInspector\\:\\:\\$metadataFactory has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Bridge\\\\DocumentInspector\\:\\:\\$namespaceRegistry has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Bridge\\\\DocumentInspector\\:\\:\\$structureFactory has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Bridge\\\\DocumentInspector\\:\\:\\$webspaceManager has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Bridge/DocumentInspector.php
 
@@ -11446,16 +11416,6 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\Compiler\\\\RegisterListenersPass\\:\\:\\$dispatcherService has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\Compiler\\\\RegisterListenersPass\\:\\:\\$eventAliasesParameter has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\Compiler\\\\RegisterListenersPass\\:\\:\\$hotPathEvents has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
@@ -11466,22 +11426,12 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\Compiler\\\\RegisterListenersPass\\:\\:\\$listenerTag has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\Compiler\\\\RegisterListenersPass\\:\\:\\$noPreloadEvents has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\Compiler\\\\RegisterListenersPass\\:\\:\\$noPreloadTagName has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DependencyInjection\\\\Compiler\\\\RegisterListenersPass\\:\\:\\$subscriberTag has no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/RegisterListenersPass.php
 
@@ -11516,27 +11466,12 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Document/Subscriber/SecuritySubscriber.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Document\\\\Subscriber\\\\SecuritySubscriber\\:\\:\\$tokenStorage \\(Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\) does not accept Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Document/Subscriber/SecuritySubscriber.php
-
-		-
 			message: "#^Cannot call method initialize\\(\\) on object\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Initializer/Initializer.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Initializer\\\\Initializer\\:\\:__construct\\(\\) has parameter \\$initializerMap with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Initializer/Initializer.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Initializer\\\\Initializer\\:\\:initialize\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Initializer/Initializer.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Initializer\\\\Initializer\\:\\:\\$initializerMap type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Initializer/Initializer.php
 
@@ -11551,27 +11486,12 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Initializer/InitializerInterface.php
 
 		-
-			message: "#^Cannot call method getConnections\\(\\) on array\\<PHPCR\\\\SessionInterface\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Initializer/RootPathPurgeInitializer.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Initializer\\\\RootPathPurgeInitializer\\:\\:__construct\\(\\) has parameter \\$rootRole with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Initializer/RootPathPurgeInitializer.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Initializer\\\\RootPathPurgeInitializer\\:\\:initialize\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Initializer/RootPathPurgeInitializer.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Initializer\\\\RootPathPurgeInitializer\\:\\:initialize\\(\\) has parameter \\$purge with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Initializer/RootPathPurgeInitializer.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Initializer\\\\RootPathPurgeInitializer\\:\\:\\$connections \\(array\\<PHPCR\\\\SessionInterface\\>\\) does not accept Doctrine\\\\Persistence\\\\ConnectionRegistry\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Initializer/RootPathPurgeInitializer.php
 
@@ -28422,11 +28342,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Serializer\\\\Subscriber\\\\SecuritySubscriber\\:\\:onPostSerialize\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Serializer/Subscriber/SecuritySubscriber.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Serializer\\\\Subscriber\\\\SecuritySubscriber\\:\\:\\$tokenStorage \\(Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\) does not accept Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Serializer/Subscriber/SecuritySubscriber.php
 

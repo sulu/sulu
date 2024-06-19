@@ -19,14 +19,8 @@ use PHPCR\SessionInterface;
  */
 class Session implements SessionInterface
 {
-    /**
-     * @var SessionInterface
-     */
-    private $inner;
-
-    public function __construct(SessionInterface $inner)
+    public function __construct(private SessionInterface $inner)
     {
-        $this->inner = $inner;
     }
 
     public function getRepository()

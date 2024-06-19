@@ -31,6 +31,7 @@ use Sulu\Component\DocumentManager\NamespaceRegistry;
 use Sulu\Component\DocumentManager\PathSegmentRegistry;
 use Sulu\Component\DocumentManager\ProxyFactory;
 use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
+use Sulu\Component\Webspace\Webspace;
 
 /**
  * This class infers information about documents, for example
@@ -40,32 +41,17 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
  */
 class DocumentInspector extends BaseDocumentInspector
 {
-    private $metadataFactory;
-
-    private $structureFactory;
-
-    private $namespaceRegistry;
-
-    private $encoder;
-
-    private $webspaceManager;
-
     public function __construct(
         DocumentRegistry $documentRegistry,
         PathSegmentRegistry $pathSegmentRegistry,
-        NamespaceRegistry $namespaceRegistry,
+        private NamespaceRegistry $namespaceRegistry,
         ProxyFactory $proxyFactory,
-        MetadataFactoryInterface $metadataFactory,
-        StructureMetadataFactoryInterface $structureFactory,
-        PropertyEncoder $encoder,
-        WebspaceManagerInterface $webspaceManager
+        private MetadataFactoryInterface $metadataFactory,
+        private StructureMetadataFactoryInterface $structureFactory,
+        private PropertyEncoder $encoder,
+        private WebspaceManagerInterface $webspaceManager
     ) {
         parent::__construct($documentRegistry, $pathSegmentRegistry, $proxyFactory);
-        $this->metadataFactory = $metadataFactory;
-        $this->structureFactory = $structureFactory;
-        $this->namespaceRegistry = $namespaceRegistry;
-        $this->encoder = $encoder;
-        $this->webspaceManager = $webspaceManager;
     }
 
     /**
@@ -196,7 +182,7 @@ class DocumentInspector extends BaseDocumentInspector
      *
      * @param object $document
      *
-     * @return array
+     * @return array<string>
      */
     public function getLocales($document)
     {
@@ -301,6 +287,7 @@ class DocumentInspector extends BaseDocumentInspector
     {
         $localizedUrls = [];
         $webspaceKey = $this->getWebspace($page);
+        /** @var Webspace $webspace */
         $webspace = $this->webspaceManager->findWebspaceByKey($webspaceKey);
         $node = $this->getNode($page);
 
@@ -321,6 +308,7 @@ class DocumentInspector extends BaseDocumentInspector
                     ShadowLocaleSubscriber::SHADOW_LOCALE_FIELD,
                     $resolvedLocale
                 );
+                /** @var string $resolvedLocale */
                 $resolvedLocale = $node->getPropertyValue($shadowLocaleName);
             }
 
@@ -339,10 +327,9 @@ class DocumentInspector extends BaseDocumentInspector
                 continue;
             }
 
-            $url = $node->getPropertyValueWithDefault(
-                $this->encoder->localizedContentName($resourceLocatorProperty->getName(), $locale),
-                null
-            );
+            /** @var string $name */
+            $name = $resourceLocatorProperty->getName();
+            $url = $node->getPropertyValueWithDefault($this->encoder->localizedContentName($name, $locale), null);
 
             if (null === $url) {
                 continue;

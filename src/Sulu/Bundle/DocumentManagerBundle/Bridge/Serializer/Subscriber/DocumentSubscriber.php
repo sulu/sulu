@@ -28,29 +28,11 @@ use Sulu\Component\DocumentManager\NodeManager;
  */
 class DocumentSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentRegistry
-     */
-    private $registry;
-
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
-
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
-
     public function __construct(
-        DocumentRegistry $registry,
-        NodeManager $nodeManager,
-        MetadataFactoryInterface $metadataFactory
+        private DocumentRegistry $registry,
+        private NodeManager $nodeManager,
+        private MetadataFactoryInterface $metadataFactory
     ) {
-        $this->registry = $registry;
-        $this->nodeManager = $nodeManager;
-        $this->metadataFactory = $metadataFactory;
     }
 
     public static function getSubscribedEvents()
