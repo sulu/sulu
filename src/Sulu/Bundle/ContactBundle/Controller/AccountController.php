@@ -140,11 +140,9 @@ class AccountController extends AbstractRestController implements ClassResourceI
             $this->restHelper->initializeListBuilder($listBuilder, $fieldDescriptors);
 
             $listBuilder->addSelectField($fieldDescriptors['contactId']);
-            if ($listBuilder instanceof DoctrineListBuilder) {
-                $listBuilder->setIdField($fieldDescriptors['id']);
-                $listBuilder->where($fieldDescriptors['account'], $id);
-                $listBuilder->sort($fieldDescriptors['lastName'], $listBuilder::SORTORDER_ASC);
-            }
+            $listBuilder->setIdField($fieldDescriptors['id']);
+            $listBuilder->where($fieldDescriptors['account'], $id);
+            $listBuilder->sort($fieldDescriptors['lastName'], $listBuilder::SORTORDER_ASC);
 
             $values = $listBuilder->execute();
 
