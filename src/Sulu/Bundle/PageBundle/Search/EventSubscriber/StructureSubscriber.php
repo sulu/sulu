@@ -56,6 +56,8 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Indexes a persisted document.
+     *
+     * @return void
      */
     public function indexPersistedDocument(PersistEvent $event)
     {
@@ -64,6 +66,8 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Indexes a published document.
+     *
+     * @return void
      */
     public function indexPublishedDocument(PublishEvent $event)
     {
@@ -72,6 +76,8 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Indexes a moved document.
+     *
+     * @return void
      */
     public function indexMovedDocument(MoveEvent $event)
     {
@@ -80,6 +86,8 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Indexes a document after its draft have been removed.
+     *
+     * @return void
      */
     public function indexDocumentAfterRemoveDraft(RemoveDraftEvent $event)
     {
@@ -104,6 +112,8 @@ class StructureSubscriber implements EventSubscriberInterface
      * on the publish state.
      *
      * @param object $document
+     *
+     * @return void
      */
     private function indexDocument($document)
     {
@@ -120,6 +130,8 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Schedules a document to be deindexed.
+     *
+     * @return void
      */
     public function deindexRemovedDocument(RemoveEvent $event)
     {
@@ -145,6 +157,8 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Deindexes the document from the search index for the website.
+     *
+     * @return void
      */
     public function deindexUnpublishedDocument(UnpublishEvent $event)
     {
@@ -159,6 +173,8 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Deindexes the document from the search index for the website.
+     *
+     * @return void
      */
     public function deindexRemovedLocaleDocument(RemoveLocaleEvent $event)
     {

@@ -21436,41 +21436,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Search/EventSubscriber/BlameTimestampSubscriber.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Search\\\\EventSubscriber\\\\StructureSubscriber\\:\\:deindexRemovedDocument\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Search/EventSubscriber/StructureSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Search\\\\EventSubscriber\\\\StructureSubscriber\\:\\:deindexRemovedLocaleDocument\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Search/EventSubscriber/StructureSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Search\\\\EventSubscriber\\\\StructureSubscriber\\:\\:deindexUnpublishedDocument\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Search/EventSubscriber/StructureSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Search\\\\EventSubscriber\\\\StructureSubscriber\\:\\:indexDocument\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Search/EventSubscriber/StructureSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Search\\\\EventSubscriber\\\\StructureSubscriber\\:\\:indexDocumentAfterRemoveDraft\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Search/EventSubscriber/StructureSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Search\\\\EventSubscriber\\\\StructureSubscriber\\:\\:indexPersistedDocument\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Search/EventSubscriber/StructureSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Search\\\\EventSubscriber\\\\StructureSubscriber\\:\\:indexPublishedDocument\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Search/EventSubscriber/StructureSubscriber.php
-
-		-
 			message: "#^Argument of an invalid type string supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Search/Metadata/StructureProvider.php
