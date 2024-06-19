@@ -11926,16 +11926,6 @@ parameters:
 			path: src/Sulu/Bundle/HttpCacheBundle/Cache/SuluHttpCache.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\CacheLifetime\\\\CacheLifetimeEnhancer\\:\\:__construct\\(\\) has parameter \\$maxAge with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/CacheLifetime/CacheLifetimeEnhancer.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\CacheLifetime\\\\CacheLifetimeEnhancer\\:\\:__construct\\(\\) has parameter \\$sharedMaxAge with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/CacheLifetime/CacheLifetimeEnhancer.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\CacheLifetime\\\\CacheLifetimeEnhancer\\:\\:enhance\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/CacheLifetime/CacheLifetimeEnhancer.php
