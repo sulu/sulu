@@ -18,6 +18,7 @@ use Sulu\Bundle\SnippetBundle\Document\SnippetDocument;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
+use Sulu\Component\HttpKernel\SuluKernel;
 use Sulu\Component\Persistence\Repository\ORM\EntityRepository;
 use Sulu\Component\PHPCR\SessionManager\SessionManager;
 
@@ -112,9 +113,18 @@ class PageReferenceProviderTest extends SuluTestCase
         $this->documentManager->flush();
         $this->documentManager->clear();
 
+        static::ensureKernelShutdown();
+        static::bootKernel(['sulu.context' => SuluKernel::CONTEXT_WEBSITE]);
+        // refrech services from new kernel
+        $this->pageReferenceProvider = $this->getContainer()->get('sulu_page.reference_provider');
+        $this->documentManager = $this->getContainer()->get('sulu_document_manager.document_manager');
+        $this->sessionManager = $this->getContainer()->get('sulu.phpcr.session');
+        $this->referenceRepository = $this->getContainer()->get('sulu.repository.reference');
+
         /** @var PageDocument $page */
-        $page = $this->documentManager->find($page->getUuid(), 'en');
-        $page->setStructureType(null);
+        $page = $this->documentManager->find($page->getUuid(), 'en', [
+            'load_ghost_content' => false,
+        ]);
 
         $this->pageReferenceProvider->updateReferences($page, 'en', 'test');
         $this->getEntityManager()->flush();
