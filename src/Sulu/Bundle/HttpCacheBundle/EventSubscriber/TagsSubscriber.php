@@ -25,29 +25,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class TagsSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var ReferenceStorePoolInterface
-     */
-    private $referenceStorePool;
-
-    /**
-     * @var SymfonyResponseTagger
-     */
-    private $symfonyResponseTagger;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
     public function __construct(
-        ReferenceStorePoolInterface $referenceStorePool,
-        SymfonyResponseTagger $symfonyResponseTagger,
-        RequestStack $requestStack
+        private ReferenceStorePoolInterface $referenceStorePool,
+        private SymfonyResponseTagger $symfonyResponseTagger,
+        private RequestStack $requestStack
     ) {
-        $this->referenceStorePool = $referenceStorePool;
-        $this->symfonyResponseTagger = $symfonyResponseTagger;
-        $this->requestStack = $requestStack;
     }
 
     public static function getSubscribedEvents()
