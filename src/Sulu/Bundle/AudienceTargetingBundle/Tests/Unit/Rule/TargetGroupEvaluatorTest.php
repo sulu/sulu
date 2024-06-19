@@ -45,10 +45,7 @@ class TargetGroupEvaluatorTest extends TestCase
      */
     private $requestAnalyzer;
 
-    /**
-     * @var TargetGroupEvaluator
-     */
-    private $targetGroupEvaluator;
+    private TargetGroupEvaluator $targetGroupEvaluator;
 
     public function setUp(): void
     {
@@ -64,15 +61,18 @@ class TargetGroupEvaluatorTest extends TestCase
     }
 
     /**
+     * @param TargetGroup[] $targetGroups
+     * @param array<string, string[]> $ruleWhitelists
+     *
      * @dataProvider provideEvaluationData
      */
     public function testEvaluate(
-        $targetGroups,
-        $ruleWhitelists,
-        $webspaceKey,
-        $evaluatedTargetGroup,
-        $frequency = TargetGroupRuleInterface::FREQUENCY_SESSION,
-        $currentTargetGroup = null
+        array $targetGroups,
+        array $ruleWhitelists,
+        ?string $webspaceKey,
+        ?TargetGroup $evaluatedTargetGroup,
+        int $frequency = TargetGroupRuleInterface::FREQUENCY_SESSION,
+        ?TargetGroup $currentTargetGroup = null
     ): void {
         $webspace = null;
         if ($webspaceKey) {

@@ -17,12 +17,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 class ContainerExpressionLanguageProvider implements ExpressionFunctionProviderInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    public function __construct(ContainerInterface $container)
+    public function __construct(private ContainerInterface $container)
     {
         $this->container = $container;
     }

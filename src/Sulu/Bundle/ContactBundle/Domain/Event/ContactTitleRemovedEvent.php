@@ -17,24 +17,11 @@ use Sulu\Bundle\ContactBundle\Entity\ContactTitle;
 
 class ContactTitleRemovedEvent extends DomainEvent
 {
-    /**
-     * @var int
-     */
-    private $contactTitleId;
-
-    /**
-     * @var string
-     */
-    private $contactTitleName;
-
     public function __construct(
-        int $contactTitleId,
-        string $contactTitleName
+        private int $contactTitleId,
+        private string $contactTitleName
     ) {
         parent::__construct();
-
-        $this->contactTitleId = $contactTitleId;
-        $this->contactTitleName = $contactTitleName;
     }
 
     public function getEventType(): string

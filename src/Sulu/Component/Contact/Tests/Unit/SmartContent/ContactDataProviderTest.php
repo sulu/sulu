@@ -80,7 +80,7 @@ class ContactDataProviderTest extends TestCase
         $this->assertEquals([], $parameter);
     }
 
-    public function dataItemsDataProvider()
+    public static function dataItemsDataProvider()
     {
         $contacts = [
             self::createContact(1, 'Max', 'Mustermann'),
@@ -160,7 +160,7 @@ class ContactDataProviderTest extends TestCase
         $this->assertEquals($dataItems, $result->getItems());
     }
 
-    public function resourceItemsDataProvider()
+    public static function resourceItemsDataProvider()
     {
         $contacts = [
             self::createContact(1, 'Max', 'Mustermann'),

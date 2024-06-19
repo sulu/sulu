@@ -35,57 +35,15 @@ class ContactAccountSelection extends ComplexContentType implements ContentTypeE
 
     public const PREFIX_ACCOUNT = 'a';
 
-    /**
-     * @var ContactManagerInterface
-     */
-    private $contactManager;
-
-    /**
-     * @var ContactManagerInterface
-     */
-    private $accountManager;
-
-    /**
-     * @var ArraySerializerInterface
-     */
-    private $serializer;
-
-    /**
-     * @var IdConverterInterface
-     */
-    private $converter;
-
-    /**
-     * @var IndexComparatorInterface
-     */
-    private $comparator;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $accountReferenceStore;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $contactReferenceStore;
-
     public function __construct(
-        ContactManagerInterface $contactManager,
-        ContactManagerInterface $accountManager,
-        ArraySerializerInterface $serializer,
-        IdConverterInterface $converter,
-        IndexComparatorInterface $comparator,
-        ReferenceStoreInterface $accountReferenceStore,
-        ReferenceStoreInterface $contactReferenceStore
+        private ContactManagerInterface $contactManager,
+        private ContactManagerInterface $accountManager,
+        private ArraySerializerInterface $serializer,
+        private IdConverterInterface $converter,
+        private IndexComparatorInterface $comparator,
+        private ReferenceStoreInterface $accountReferenceStore,
+        private ReferenceStoreInterface $contactReferenceStore
     ) {
-        $this->contactManager = $contactManager;
-        $this->accountManager = $accountManager;
-        $this->serializer = $serializer;
-        $this->converter = $converter;
-        $this->comparator = $comparator;
-        $this->accountReferenceStore = $accountReferenceStore;
-        $this->contactReferenceStore = $contactReferenceStore;
     }
 
     /**

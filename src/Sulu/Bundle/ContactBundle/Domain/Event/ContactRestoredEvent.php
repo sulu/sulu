@@ -19,26 +19,13 @@ use Sulu\Bundle\ContactBundle\Entity\ContactInterface;
 class ContactRestoredEvent extends DomainEvent
 {
     /**
-     * @var ContactInterface
-     */
-    private $contact;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        ContactInterface $contact,
-        array $payload
+        private ContactInterface $contact,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->contact = $contact;
-        $this->payload = $payload;
     }
 
     public function getContact(): ContactInterface

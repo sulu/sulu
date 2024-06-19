@@ -44,31 +44,13 @@ class PositionController extends AbstractRestController implements ClassResource
      */
     protected static $entityKey = Position::RESOURCE_KEY;
 
-    /**
-     * @var PositionRepository
-     */
-    private $positionRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        PositionRepository $positionRepository,
-        EntityManagerInterface $entityManager,
-        DomainEventCollectorInterface $domainEventCollector
+        private PositionRepository $positionRepository,
+        private EntityManagerInterface $entityManager,
+        private DomainEventCollectorInterface $domainEventCollector
     ) {
         parent::__construct($viewHandler);
-        $this->positionRepository = $positionRepository;
-        $this->entityManager = $entityManager;
-        $this->domainEventCollector = $domainEventCollector;
     }
 
     /**

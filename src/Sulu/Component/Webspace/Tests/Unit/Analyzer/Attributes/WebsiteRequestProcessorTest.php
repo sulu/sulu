@@ -30,10 +30,7 @@ class WebsiteRequestProcessorTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var WebsiteRequestProcessor
-     */
-    private $provider;
+    private WebsiteRequestProcessor $provider;
 
     /**
      * @var ObjectProphecy<WebspaceManagerInterface>
@@ -199,7 +196,7 @@ class WebsiteRequestProcessorTest extends TestCase
         $this->assertEquals($portalInformation1, $attributes->getAttribute('portalInformation'));
     }
 
-    public function provideValidateData()
+    public static function provideValidateData()
     {
         $portalInformationReflection = new \ReflectionClass(PortalInformation::class);
         $portalInformation = $portalInformationReflection->newInstanceWithoutConstructor();

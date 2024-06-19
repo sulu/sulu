@@ -27,36 +27,12 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class CustomUrlRequestProcessor implements RequestProcessorInterface
 {
-    /**
-     * @var CustomUrlManagerInterface
-     */
-    private $customUrlManager;
-
-    /**
-     * @var GeneratorInterface
-     */
-    private $generator;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
     public function __construct(
-        CustomUrlManagerInterface $customUrlManager,
-        GeneratorInterface $generator,
-        WebspaceManagerInterface $webspaceManager,
-        $environment
+        private CustomUrlManagerInterface $customUrlManager,
+        private GeneratorInterface $generator,
+        private WebspaceManagerInterface $webspaceManager,
+        private ?string $environment
     ) {
-        $this->customUrlManager = $customUrlManager;
-        $this->generator = $generator;
-        $this->webspaceManager = $webspaceManager;
-        $this->environment = $environment;
     }
 
     public function process(Request $request, RequestAttributes $requestAttributes)
