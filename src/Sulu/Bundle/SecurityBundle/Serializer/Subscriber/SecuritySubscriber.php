@@ -29,22 +29,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class SecuritySubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
     public function __construct(
-        AccessControlManagerInterface $accessControlManager,
-        ?TokenStorageInterface $tokenStorage = null
+        private AccessControlManagerInterface $accessControlManager,
+        private ?TokenStorageInterface $tokenStorage = null
     ) {
-        $this->accessControlManager = $accessControlManager;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public static function getSubscribedEvents()
