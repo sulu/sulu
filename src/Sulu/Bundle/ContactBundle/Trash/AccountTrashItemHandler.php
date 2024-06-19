@@ -53,43 +53,13 @@ final class AccountTrashItemHandler implements
     RestoreTrashItemHandlerInterface,
     RestoreConfigurationProviderInterface
 {
-    /**
-     * @var TrashItemRepositoryInterface
-     */
-    private $trashItemRepository;
-
-    /**
-     * @var AccountRepositoryInterface
-     */
-    private $accountRepository;
-
-    /**
-     * @var DoctrineRestoreHelperInterface
-     */
-    private $doctrineRestoreHelper;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
     public function __construct(
-        TrashItemRepositoryInterface $trashItemRepository,
-        AccountRepositoryInterface $accountRepository,
-        DoctrineRestoreHelperInterface $doctrineRestoreHelper,
-        EntityManagerInterface $entityManager,
-        DomainEventCollectorInterface $domainEventCollector
+        private TrashItemRepositoryInterface $trashItemRepository,
+        private AccountRepositoryInterface $accountRepository,
+        private DoctrineRestoreHelperInterface $doctrineRestoreHelper,
+        private EntityManagerInterface $entityManager,
+        private DomainEventCollectorInterface $domainEventCollector
     ) {
-        $this->trashItemRepository = $trashItemRepository;
-        $this->accountRepository = $accountRepository;
-        $this->doctrineRestoreHelper = $doctrineRestoreHelper;
-        $this->entityManager = $entityManager;
-        $this->domainEventCollector = $domainEventCollector;
     }
 
     /**

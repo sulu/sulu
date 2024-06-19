@@ -25,17 +25,11 @@ class SingleContactSelection extends SimpleContentType implements PreResolvableC
      */
     protected $contactRepository;
 
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $contactReferenceStore;
-
     public function __construct(
         ContactRepositoryInterface $contactRepository,
-        ReferenceStoreInterface $contactReferenceStore
+        private ReferenceStoreInterface $contactReferenceStore
     ) {
         $this->contactRepository = $contactRepository;
-        $this->contactReferenceStore = $contactReferenceStore;
 
         parent::__construct('SingleContact');
     }

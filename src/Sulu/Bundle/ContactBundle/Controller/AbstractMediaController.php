@@ -52,74 +52,20 @@ abstract class AbstractMediaController extends AbstractRestController
 
     protected $fieldDescriptors = null;
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
-
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $listBuilderFactory;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var MediaRepositoryInterface
-     */
-    private $mediaRepository;
-
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
-
-    /**
-     * @var string
-     */
-    private $mediaClass;
-
-    /**
-     * @var MediaListBuilderFactory|null
-     */
-    private $mediaListBuilderFactory;
-
-    /**
-     * @var MediaListRepresentationFactory|null
-     */
-    private $mediaListRepresentationFactory;
-
-    /**
-     * @var FieldDescriptorFactoryInterface|null
-     */
-    private $fieldDescriptorFactory;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
-        RestHelperInterface $restHelper,
-        DoctrineListBuilderFactoryInterface $listBuilderFactory,
-        EntityManagerInterface $entityManager,
-        MediaRepositoryInterface $mediaRepository,
-        MediaManagerInterface $mediaManager,
-        string $mediaClass,
-        ?MediaListBuilderFactory $mediaListBuilderFactory = null,
-        ?MediaListRepresentationFactory $mediaListRepresentationFactory = null,
-        ?FieldDescriptorFactoryInterface $fieldDescriptorFactory = null
+        private RestHelperInterface $restHelper,
+        private DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        private EntityManagerInterface $entityManager,
+        private MediaRepositoryInterface $mediaRepository,
+        private MediaManagerInterface $mediaManager,
+        private string $mediaClass,
+        private ?MediaListBuilderFactory $mediaListBuilderFactory = null,
+        private ?MediaListRepresentationFactory $mediaListRepresentationFactory = null,
+        private ?FieldDescriptorFactoryInterface $fieldDescriptorFactory = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
-        $this->restHelper = $restHelper;
-        $this->listBuilderFactory = $listBuilderFactory;
-        $this->entityManager = $entityManager;
-        $this->mediaRepository = $mediaRepository;
-        $this->mediaClass = $mediaClass;
-        $this->mediaManager = $mediaManager;
-        $this->mediaListBuilderFactory = $mediaListBuilderFactory;
-        $this->mediaListRepresentationFactory = $mediaListRepresentationFactory;
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
 
         if (null === $this->mediaListBuilderFactory || null === $this->mediaListRepresentationFactory || null === $this->fieldDescriptorFactory) {
             @trigger_deprecation(

@@ -20,13 +20,10 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 class AccountFactory implements AccountFactoryInterface
 {
     /**
-     * @var string
+     * @param class-string $entityName
      */
-    private $entityName;
-
-    public function __construct(string $entityName)
+    public function __construct(private string $entityName)
     {
-        $this->entityName = $entityName;
     }
 
     public function createEntity()
