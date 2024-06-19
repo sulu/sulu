@@ -21,11 +21,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class ReplacersCompilerPass implements CompilerPassInterface
 {
     /**
-     * @var string
-     */
-    private $filename;
-
-    /**
      * @var LoaderInterface
      */
     private $loader;
@@ -35,9 +30,8 @@ class ReplacersCompilerPass implements CompilerPassInterface
      *
      * @param string $filename
      */
-    public function __construct($filename)
+    public function __construct(private $filename)
     {
-        $this->filename = $filename;
     }
 
     /**

@@ -310,7 +310,7 @@ class DoctrineAccessControlProviderTest extends TestCase
     /**
      * @dataProvider provideSupport
      */
-    public function testSupport($type, $supported): void
+    public function testSupport(string $type, bool $supported): void
     {
         $this->assertSame($supported, $this->doctrineAccessControlProvider->supports($type));
     }

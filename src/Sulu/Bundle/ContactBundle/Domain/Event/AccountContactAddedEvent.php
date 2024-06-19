@@ -18,16 +18,9 @@ use Sulu\Bundle\ContactBundle\Entity\AccountInterface;
 
 class AccountContactAddedEvent extends DomainEvent
 {
-    /**
-     * @var AccountContact
-     */
-    private $accountContact;
-
-    public function __construct(AccountContact $accountContact)
+    public function __construct(private AccountContact $accountContact)
     {
         parent::__construct();
-
-        $this->accountContact = $accountContact;
     }
 
     public function getAccountContact(): AccountContact

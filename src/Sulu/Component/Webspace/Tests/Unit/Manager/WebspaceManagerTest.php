@@ -36,25 +36,16 @@ class WebspaceManagerTest extends WebspaceTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var DelegatingLoader
-     */
-    protected $loader;
+    protected DelegatingLoader $loader;
 
     /**
      * @var ObjectProphecy<RequestStack>
      */
     private $requestStack;
 
-    /**
-     * @var WebspaceManager
-     */
-    protected $webspaceManager;
+    protected WebspaceManager $webspaceManager;
 
-    /**
-     * @var string
-     */
-    private $cacheDirectory;
+    private string $cacheDirectory;
 
     /**
      * @var ObjectProphecy<StructureMetadataFactoryInterface>

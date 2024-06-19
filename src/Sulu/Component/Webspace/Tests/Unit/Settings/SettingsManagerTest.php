@@ -17,6 +17,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\DocumentManagerBundle\Session\SessionManagerInterface;
+use Sulu\Component\Content\Document\Subscriber\PHPCR\SuluNode;
 use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface as DeprecatedSessionManagerInterface;
 use Sulu\Component\Webspace\Settings\SettingsManager;
 
@@ -50,21 +51,24 @@ class SettingsManagerTest extends TestCase
         );
     }
 
-    public function dataProvider()
+    /**
+     * @return \Generator<array{string, string, array<string, string>|null|NodeInterface}>
+     */
+    public static function dataProvider()
     {
-        $node = $this->prophesize(NodeInterface::class);
+        $node = (new \ReflectionClass(SuluNode::class))->newInstanceWithoutConstructor();
 
-        return [
-            ['sulu_io', 'test-1', ['property1' => 'test1', 'property2' => 'test2']],
-            ['sulu_io', 'test-2', null],
-            ['sulu_io', 'test-3', $node->reveal()],
-        ];
+        yield ['sulu_io', 'test-1', ['property1' => 'test1', 'property2' => 'test2']];
+        yield ['sulu_io', 'test-2', null];
+        yield ['sulu_io', 'test-3', $node];
     }
 
     /**
+     * @param array<string, string>|null|NodeInterface $data
+     *
      * @dataProvider dataProvider
      */
-    public function testSave($webspaceKey, $key, $data): void
+    public function testSave(string $webspaceKey, string $key, array|NodeInterface|null $data): void
     {
         $this->deprecatedSessionManager->getWebspacePath($webspaceKey)->willReturn('/cmf/' . $webspaceKey);
 
@@ -79,18 +83,11 @@ class SettingsManagerTest extends TestCase
         $this->settingsManager->save($webspaceKey, $key, $data);
     }
 
-    public static function removeDataProvider()
+    public function testRemove(): void
     {
-        return [
-            ['sulu_io', 'test-1'],
-        ];
-    }
+        $webspaceKey = 'sulu_io';
+        $key = 'test-1';
 
-    /**
-     * @dataProvider removeDataProvider
-     */
-    public function testRemove($webspaceKey, $key): void
-    {
         $this->deprecatedSessionManager->getWebspacePath($webspaceKey)->willReturn('/cmf/' . $webspaceKey);
 
         $this->sessionManager->setNodeProperty('/cmf/' . $webspaceKey, 'settings:' . $key, null)->shouldBeCalled();
@@ -101,9 +98,11 @@ class SettingsManagerTest extends TestCase
     }
 
     /**
+     * @param array<string, string>|null|NodeInterface $data
+     *
      * @dataProvider dataProvider
      */
-    public function testLoad($webspaceKey, $key, $data): void
+    public function testLoad(string $webspaceKey, string $key, array|NodeInterface|null $data): void
     {
         $node = $this->prophesize(NodeInterface::class);
 
@@ -120,16 +119,14 @@ class SettingsManagerTest extends TestCase
 
     public static function loadStringDataProvider()
     {
-        return [
-            ['sulu_io', 'test-1', '123-123-123', true],
-            ['sulu_io', 'test-1', '123-123-123', false],
-        ];
+        yield ['sulu_io', 'test-1', '123-123-123', true];
+        yield ['sulu_io', 'test-1', '123-123-123', false];
     }
 
     /**
      * @dataProvider loadStringDataProvider
      */
-    public function testLoadString($webspaceKey, $key, $data, $exists): void
+    public function testLoadString(string $webspaceKey, string $key, string $data, bool $exists): void
     {
         $node = $this->prophesize(NodeInterface::class);
         $property = $this->prophesize(PropertyInterface::class);

@@ -26,10 +26,7 @@ use Sulu\Component\Webspace\Webspace;
 
 class WebspaceCollectionTest extends TestCase
 {
-    /**
-     * @var WebspaceCollection
-     */
-    private $webspaceCollection;
+    private WebspaceCollection $webspaceCollection;
 
     public function setUp(): void
     {
@@ -42,12 +39,12 @@ class WebspaceCollectionTest extends TestCase
         $portal->setKey('portal1');
 
         $environment = new Environment();
+        $environment->setType('prod');
         $url = new Url();
         $url->setUrl('www.portal1.com');
         $url->setLanguage('en');
         $url->setCountry('us');
         $environment->addUrl($url);
-        $environment->setType('prod');
         $url = new Url();
         $url->setUrl('portal1.com');
         $url->setRedirect('www.portal1.com');

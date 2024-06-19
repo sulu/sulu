@@ -19,24 +19,11 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class AccountMediaRemovedEvent extends DomainEvent
 {
-    /**
-     * @var AccountInterface
-     */
-    private $account;
-
-    /**
-     * @var MediaInterface
-     */
-    private $media;
-
     public function __construct(
-        AccountInterface $account,
-        MediaInterface $media
+        private AccountInterface $account,
+        private MediaInterface $media
     ) {
         parent::__construct();
-
-        $this->account = $account;
-        $this->media = $media;
     }
 
     public function getAccount(): AccountInterface

@@ -33,17 +33,11 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class LocalizationController extends AbstractRestController implements ClassResourceInterface
 {
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        LocalizationManagerInterface $localizationManager
+        private LocalizationManagerInterface $localizationManager
     ) {
         parent::__construct($viewHandler);
-        $this->localizationManager = $localizationManager;
     }
 
     /**

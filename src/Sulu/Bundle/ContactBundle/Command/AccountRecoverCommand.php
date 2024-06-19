@@ -26,22 +26,11 @@ class AccountRecoverCommand extends Command
 {
     protected static $defaultName = 'sulu:contacts:accounts:recover';
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var AccountRepositoryInterface
-     */
-    private $accountRepository;
-
-    public function __construct(EntityManagerInterface $entityManager, AccountRepositoryInterface $accountRepository)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private AccountRepositoryInterface $accountRepository,
+    ) {
         parent::__construct();
-
-        $this->entityManager = $entityManager;
-        $this->accountRepository = $accountRepository;
     }
 
     protected function configure()

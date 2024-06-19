@@ -40,21 +40,6 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
 {
     protected static $mediaEntityKey = 'contact_media';
 
-    /**
-     * @var AbstractContactManager
-     */
-    private $contactManager;
-
-    /**
-     * @var string
-     */
-    private $contactClass;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
@@ -63,9 +48,9 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
         EntityManagerInterface $entityManager,
         MediaRepositoryInterface $mediaRepository,
         MediaManagerInterface $mediaManager,
-        AbstractContactManager $contactManager,
-        DomainEventCollectorInterface $domainEventCollector,
-        string $contactClass,
+        private AbstractContactManager $contactManager,
+        private DomainEventCollectorInterface $domainEventCollector,
+        private string $contactClass,
         string $mediaClass,
         ?MediaListBuilderFactory $mediaListBuilderFactory = null,
         ?MediaListRepresentationFactory $mediaListRepresentationFactory = null,
@@ -84,10 +69,6 @@ class ContactMediaController extends AbstractMediaController implements ClassRes
             $mediaListRepresentationFactory,
             $fieldDescriptorFactory
         );
-
-        $this->contactManager = $contactManager;
-        $this->contactClass = $contactClass;
-        $this->domainEventCollector = $domainEventCollector;
     }
 
     public function deleteAction(int $contactId, int $id)

@@ -44,31 +44,13 @@ class ContactTitleController extends AbstractRestController implements ClassReso
      */
     protected static $entityKey = ContactTitle::RESOURCE_KEY;
 
-    /**
-     * @var ContactTitleRepository
-     */
-    private $contactTitleRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        ContactTitleRepository $contactTitleRepository,
-        EntityManagerInterface $entityManager,
-        DomainEventCollectorInterface $domainEventCollector
+        private ContactTitleRepository $contactTitleRepository,
+        private EntityManagerInterface $entityManager,
+        private DomainEventCollectorInterface $domainEventCollector
     ) {
         parent::__construct($viewHandler);
-        $this->contactTitleRepository = $contactTitleRepository;
-        $this->entityManager = $entityManager;
-        $this->domainEventCollector = $domainEventCollector;
     }
 
     /**

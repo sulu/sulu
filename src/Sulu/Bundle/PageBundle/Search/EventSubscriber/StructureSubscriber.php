@@ -16,6 +16,7 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\StructureBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
+use Sulu\Component\DocumentManager\Event\MoveEvent;
 use Sulu\Component\DocumentManager\Event\PersistEvent;
 use Sulu\Component\DocumentManager\Event\PublishEvent;
 use Sulu\Component\DocumentManager\Event\RemoveDraftEvent;
@@ -45,6 +46,7 @@ class StructureSubscriber implements EventSubscriberInterface
         return [
             Events::PERSIST => ['indexPersistedDocument', -10],
             Events::PUBLISH => ['indexPublishedDocument', -256],
+            Events::MOVE => ['indexMovedDocument', -256],
             Events::REMOVE => ['deindexRemovedDocument', 600],
             Events::UNPUBLISH => ['deindexUnpublishedDocument', -1024],
             Events::REMOVE_DRAFT => ['indexDocumentAfterRemoveDraft', -1024],
@@ -54,6 +56,8 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Indexes a persisted document.
+     *
+     * @return void
      */
     public function indexPersistedDocument(PersistEvent $event)
     {
@@ -62,6 +66,8 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Indexes a published document.
+     *
+     * @return void
      */
     public function indexPublishedDocument(PublishEvent $event)
     {
@@ -69,7 +75,19 @@ class StructureSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * Indexes a moved document.
+     *
+     * @return void
+     */
+    public function indexMovedDocument(MoveEvent $event)
+    {
+        $this->indexDocument($event->getDocument());
+    }
+
+    /**
      * Indexes a document after its draft have been removed.
+     *
+     * @return void
      */
     public function indexDocumentAfterRemoveDraft(RemoveDraftEvent $event)
     {
@@ -94,6 +112,8 @@ class StructureSubscriber implements EventSubscriberInterface
      * on the publish state.
      *
      * @param object $document
+     *
+     * @return void
      */
     private function indexDocument($document)
     {
@@ -110,6 +130,8 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Schedules a document to be deindexed.
+     *
+     * @return void
      */
     public function deindexRemovedDocument(RemoveEvent $event)
     {
@@ -135,6 +157,8 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Deindexes the document from the search index for the website.
+     *
+     * @return void
      */
     public function deindexUnpublishedDocument(UnpublishEvent $event)
     {
@@ -149,6 +173,8 @@ class StructureSubscriber implements EventSubscriberInterface
 
     /**
      * Deindexes the document from the search index for the website.
+     *
+     * @return void
      */
     public function deindexRemovedLocaleDocument(RemoveLocaleEvent $event)
     {

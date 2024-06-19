@@ -28,19 +28,12 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Initializer
 {
     /**
-     * @var ContainerInterface
+     * @param array<string, int> $initializerMap
      */
-    private $container;
-
-    /**
-     * @var array
-     */
-    private $initializerMap;
-
-    public function __construct(ContainerInterface $container, array $initializerMap = [])
-    {
-        $this->container = $container;
-        $this->initializerMap = $initializerMap;
+    public function __construct(
+        private ContainerInterface $container,
+        private array $initializerMap = []
+    ) {
     }
 
     /**
