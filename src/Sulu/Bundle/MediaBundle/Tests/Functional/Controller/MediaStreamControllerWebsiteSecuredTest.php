@@ -58,6 +58,8 @@ class MediaStreamControllerWebsiteSecuredTest extends WebsiteTestCase
 
     /**
      * @runInSeparateProcess
+     *
+     * @preserveGlobalState disabled
      */
     public function testDownloadWithCollectionPermissions(): void
     {
