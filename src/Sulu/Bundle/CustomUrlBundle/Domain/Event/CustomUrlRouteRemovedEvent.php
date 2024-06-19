@@ -17,31 +17,12 @@ use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 
 class CustomUrlRouteRemovedEvent extends DomainEvent
 {
-    /**
-     * @var CustomUrlDocument
-     */
-    private $customUrlDocument;
-
-    /**
-     * @var string
-     */
-    private $webspaceKey;
-
-    /**
-     * @var string
-     */
-    private $routeUuid;
-
     public function __construct(
-        CustomUrlDocument $customUrlDocument,
-        string $webspaceKey,
-        string $routeUuid
+        private CustomUrlDocument $customUrlDocument,
+        private string $webspaceKey,
+        private string $routeUuid
     ) {
         parent::__construct();
-
-        $this->customUrlDocument = $customUrlDocument;
-        $this->webspaceKey = $webspaceKey;
-        $this->routeUuid = $routeUuid;
     }
 
     public function getCustomUrlDocument(): CustomUrlDocument

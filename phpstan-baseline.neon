@@ -10651,11 +10651,6 @@ parameters:
 			path: src/Sulu/Bundle/CustomUrlBundle/Request/CustomUrlRequestProcessor.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\CustomUrlBundle\\\\Request\\\\CustomUrlRequestProcessor\\:\\:__construct\\(\\) has parameter \\$environment with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/CustomUrlBundle/Request/CustomUrlRequestProcessor.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\CustomUrlBundle\\\\Request\\\\CustomUrlRequestProcessor\\:\\:matchCustomUrl\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/CustomUrlBundle/Request/CustomUrlRequestProcessor.php

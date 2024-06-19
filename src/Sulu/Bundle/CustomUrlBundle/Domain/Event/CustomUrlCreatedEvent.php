@@ -18,33 +18,14 @@ use Sulu\Component\CustomUrl\Document\CustomUrlDocument;
 class CustomUrlCreatedEvent extends DomainEvent
 {
     /**
-     * @var CustomUrlDocument
-     */
-    private $customUrlDocument;
-
-    /**
-     * @var string
-     */
-    private $webspaceKey;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        CustomUrlDocument $customUrlDocument,
-        string $webspaceKey,
-        array $payload
+        private CustomUrlDocument $customUrlDocument,
+        private string $webspaceKey,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->customUrlDocument = $customUrlDocument;
-        $this->webspaceKey = $webspaceKey;
-        $this->payload = $payload;
     }
 
     public function getCustomUrlDocument(): CustomUrlDocument

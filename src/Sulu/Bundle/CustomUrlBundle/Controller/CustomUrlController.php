@@ -35,31 +35,13 @@ class CustomUrlController extends AbstractRestController implements SecuredContr
 {
     use RequestParametersTrait;
 
-    /**
-     * @var CustomUrlManagerInterface
-     */
-    private $customUrlManager;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        CustomUrlManagerInterface $customUrlManager,
-        DocumentManagerInterface $documentManager,
-        RequestStack $requestStack
+        private CustomUrlManagerInterface $customUrlManager,
+        private DocumentManagerInterface $documentManager,
+        private RequestStack $requestStack
     ) {
         parent::__construct($viewHandler);
-        $this->customUrlManager = $customUrlManager;
-        $this->documentManager = $documentManager;
-        $this->requestStack = $requestStack;
     }
 
     /**
