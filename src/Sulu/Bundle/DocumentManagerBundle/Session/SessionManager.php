@@ -19,20 +19,10 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 class SessionManager implements SessionManagerInterface, ResetInterface
 {
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
-
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
-
-    public function __construct(SessionInterface $defaultSession, SessionInterface $liveSession)
-    {
-        $this->defaultSession = $defaultSession;
-        $this->liveSession = $liveSession;
+    public function __construct(
+        private SessionInterface $defaultSession,
+        private SessionInterface $liveSession,
+    ) {
     }
 
     public function setNodeProperty($nodePath, $propertyName, $value)

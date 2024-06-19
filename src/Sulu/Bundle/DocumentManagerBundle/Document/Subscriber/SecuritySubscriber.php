@@ -25,14 +25,8 @@ class SecuritySubscriber implements EventSubscriberInterface
 {
     public const USER_OPTION = 'user';
 
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    public function __construct(?TokenStorageInterface $tokenStorage = null)
+    public function __construct(private ?TokenStorageInterface $tokenStorage = null)
     {
-        $this->tokenStorage = $tokenStorage;
     }
 
     public static function getSubscribedEvents()

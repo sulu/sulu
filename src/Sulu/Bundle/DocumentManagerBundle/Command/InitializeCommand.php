@@ -24,22 +24,16 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 class InitializeCommand extends Command
 {
     /**
-     * @var Initializer
-     */
-    private $initializer;
-
-    /**
      * @var QuestionHelper
      */
     private $questionHelper;
 
     public function __construct(
-        Initializer $initializer,
+        private Initializer $initializer,
         ?QuestionHelper $questionHelper = null
     ) {
         parent::__construct();
 
-        $this->initializer = $initializer;
         $this->questionHelper = $questionHelper ?: new QuestionHelper();
     }
 

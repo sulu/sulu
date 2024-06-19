@@ -23,25 +23,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 class RootPathPurgeInitializer implements InitializerInterface
 {
     /**
-     * @var string
+     * @param string $rootRole
      */
-    private $rootRole;
-
-    /**
-     * @var SessionInterface[]
-     */
-    private $connections;
-
-    /**
-     * @var PathSegmentRegistry
-     */
-    private $pathSegments;
-
-    public function __construct(ConnectionRegistry $connections, PathSegmentRegistry $pathSegments, $rootRole = 'root')
-    {
-        $this->rootRole = $rootRole;
-        $this->connections = $connections;
-        $this->pathSegments = $pathSegments;
+    public function __construct(
+        private ConnectionRegistry $connections,
+        private PathSegmentRegistry $pathSegments,
+        private $rootRole = 'root',
+    ) {
     }
 
     public function initialize(OutputInterface $output, $purge = false)
@@ -52,6 +40,7 @@ class RootPathPurgeInitializer implements InitializerInterface
             return;
         }
 
+        /** @var array<SessionInterface> $sessions */
         $sessions = $this->connections->getConnections();
         $rootPath = '/' . $this->pathSegments->getPathSegment($this->rootRole);
 
