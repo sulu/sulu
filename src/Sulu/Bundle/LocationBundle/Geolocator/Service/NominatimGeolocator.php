@@ -26,25 +26,10 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class NominatimGeolocator implements GeolocatorInterface
 {
-    /**
-     * @var HttpClientInterface|ClientInterface
-     */
-    protected $client;
-
-    /**
-     * @var string
-     */
-    protected $baseUrl;
-
-    /**
-     * @var string
-     */
-    private $key;
-
     public function __construct(
-        $client,
-        string $baseUrl,
-        string $key
+        protected HttpClientInterface|ClientInterface $client,
+        protected string $baseUrl,
+        private string $key
     ) {
         if ($client instanceof ClientInterface) {
             @trigger_deprecation(
@@ -55,15 +40,7 @@ class NominatimGeolocator implements GeolocatorInterface
                     ClientInterface::class, HttpClientInterface::class
                 )
             );
-        } elseif (!($client instanceof HttpClientInterface)) {
-            throw new \InvalidArgumentException(
-                \sprintf('Please provide a %s as client', HttpClientInterface::class)
-            );
         }
-
-        $this->client = $client;
-        $this->baseUrl = $baseUrl;
-        $this->key = $key;
     }
 
     public function locate(string $query): GeolocatorResponse
