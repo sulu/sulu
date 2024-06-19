@@ -177,7 +177,7 @@ class BasePageDocument implements
     /**
      * Document's type of structure ie default, complex...
      *
-     * @var string
+     * @var string|null
      */
     protected $structureType;
 
