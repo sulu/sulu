@@ -21,16 +21,9 @@ class ClearCacheCommand extends Command
 {
     protected static $defaultName = 'sulu:media:format:cache:clear';
 
-    /**
-     * @var FormatCacheClearerInterface
-     */
-    private $cacheClearer;
-
-    public function __construct(FormatCacheClearerInterface $cacheClearer)
+    public function __construct(private FormatCacheClearerInterface $cacheClearer)
     {
         parent::__construct();
-
-        $this->cacheClearer = $cacheClearer;
     }
 
     protected function configure()

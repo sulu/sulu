@@ -26,15 +26,9 @@ class MediaRedirectController
 {
     use RequestParametersTrait;
 
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
-
     public function __construct(
-        MediaManagerInterface $mediaManager
+        private MediaManagerInterface $mediaManager
     ) {
-        $this->mediaManager = $mediaManager;
     }
 
     /**

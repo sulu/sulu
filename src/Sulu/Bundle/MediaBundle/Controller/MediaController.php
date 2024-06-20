@@ -64,103 +64,24 @@ class MediaController extends AbstractMediaController implements
      */
     protected static $entityKey = MediaInterface::RESOURCE_KEY;
 
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
-
-    /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
-
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
-
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $doctrineListBuilderFactory;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var StorageInterface
-     */
-    private $storage;
-
-    /**
-     * @var CollectionRepositoryInterface
-     */
-    private $collectionRepository;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
-
-    /**
-     * @var string
-     */
-    private $mediaClass;
-
-    /**
-     * @var string
-     */
-    private $collectionClass;
-
-    /**
-     * @var MediaListBuilderFactory|null
-     */
-    private $mediaListBuilderFactory;
-
-    /**
-     * @var MediaListRepresentationFactory|null
-     */
-    private $mediaListRepresentationFactory;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
-        MediaManagerInterface $mediaManager,
-        FormatManagerInterface $formatManager,
-        RestHelperInterface $restHelper,
-        DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
-        EntityManagerInterface $entityManager,
-        StorageInterface $storage,
-        CollectionRepositoryInterface $collectionRepository,
-        SecurityCheckerInterface $securityChecker,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        string $mediaClass,
-        string $collectionClass,
-        ?MediaListBuilderFactory $mediaListBuilderFactory = null,
-        ?MediaListRepresentationFactory $mediaListRepresentationFactory = null
+        private MediaManagerInterface $mediaManager,
+        private FormatManagerInterface $formatManager,
+        private RestHelperInterface $restHelper,
+        private DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
+        private EntityManagerInterface $entityManager,
+        private StorageInterface $storage,
+        private CollectionRepositoryInterface $collectionRepository,
+        private SecurityCheckerInterface $securityChecker,
+        private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        private string $mediaClass,
+        private string $collectionClass,
+        private ?MediaListBuilderFactory $mediaListBuilderFactory = null,
+        private ?MediaListRepresentationFactory $mediaListRepresentationFactory = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
-
-        $this->mediaManager = $mediaManager;
-        $this->formatManager = $formatManager;
-        $this->restHelper = $restHelper;
-        $this->doctrineListBuilderFactory = $doctrineListBuilderFactory;
-        $this->entityManager = $entityManager;
-        $this->storage = $storage;
-        $this->collectionRepository = $collectionRepository;
-        $this->securityChecker = $securityChecker;
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
-        $this->mediaClass = $mediaClass;
-        $this->collectionClass = $collectionClass;
-        $this->mediaListBuilderFactory = $mediaListBuilderFactory;
-        $this->mediaListRepresentationFactory = $mediaListRepresentationFactory;
 
         if (null === $this->mediaListBuilderFactory || null === $this->mediaListRepresentationFactory) {
             @trigger_deprecation(

@@ -58,46 +58,6 @@ class CollectionManager implements CollectionManagerInterface
     private static $entityContact = ContactInterface::class;
 
     /**
-     * @var CollectionRepositoryInterface
-     */
-    private $collectionRepository;
-
-    /**
-     * @var MediaRepositoryInterface
-     */
-    private $mediaRepository;
-
-    /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
-
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
-
-    /**
-     * @var EntityManager
-     */
-    protected $em;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
-     * @var TokenStorageInterface|null
-     */
-    private $tokenStorage;
-
-    /**
-     * @var TrashManagerInterface|null
-     */
-    private $trashManager;
-
-    /**
      * @var DoctrineFieldDescriptor[]
      */
     private $fieldDescriptors;
@@ -108,37 +68,21 @@ class CollectionManager implements CollectionManagerInterface
     private $count;
 
     /**
-     * @var int
+     * @param string $collectionPreviewFormat;
+     * @param array<string, int> $permissions;
      */
-    private $collectionPreviewFormat;
-
-    /**
-     * @var array
-     */
-    private $permissions;
-
     public function __construct(
-        CollectionRepositoryInterface $collectionRepository,
-        MediaRepositoryInterface $mediaRepository,
-        FormatManagerInterface $formatManager,
-        UserRepositoryInterface $userRepository,
-        EntityManager $em,
-        DomainEventCollectorInterface $domainEventCollector,
-        ?TokenStorageInterface $tokenStorage,
-        ?TrashManagerInterface $trashManager,
-        $collectionPreviewFormat,
-        $permissions
+        private CollectionRepositoryInterface $collectionRepository,
+        private MediaRepositoryInterface $mediaRepository,
+        private FormatManagerInterface $formatManager,
+        private UserRepositoryInterface $userRepository,
+        private EntityManager $em,
+        private DomainEventCollectorInterface $domainEventCollector,
+        private ?TokenStorageInterface $tokenStorage,
+        private ?TrashManagerInterface $trashManager,
+        private $collectionPreviewFormat,
+        private $permissions
     ) {
-        $this->collectionRepository = $collectionRepository;
-        $this->mediaRepository = $mediaRepository;
-        $this->formatManager = $formatManager;
-        $this->userRepository = $userRepository;
-        $this->em = $em;
-        $this->domainEventCollector = $domainEventCollector;
-        $this->tokenStorage = $tokenStorage;
-        $this->trashManager = $trashManager;
-        $this->collectionPreviewFormat = $collectionPreviewFormat;
-        $this->permissions = $permissions;
     }
 
     public function getById(

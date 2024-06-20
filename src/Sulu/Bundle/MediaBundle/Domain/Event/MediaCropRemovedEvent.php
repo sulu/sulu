@@ -19,24 +19,11 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class MediaCropRemovedEvent extends DomainEvent
 {
-    /**
-     * @var MediaInterface
-     */
-    private $media;
-
-    /**
-     * @var string
-     */
-    private $formatKey;
-
     public function __construct(
-        MediaInterface $media,
-        string $formatKey
+        private MediaInterface $media,
+        private string $formatKey
     ) {
         parent::__construct();
-
-        $this->media = $media;
-        $this->formatKey = $formatKey;
     }
 
     public function getMedia(): MediaInterface

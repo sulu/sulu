@@ -19,30 +19,20 @@ use Symfony\Component\Filesystem\Filesystem;
 class LocalFormatCache implements FormatCacheInterface
 {
     /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var string
-     */
-    protected $path;
-
-    /**
-     * @var string
-     */
-    protected $pathUrl;
-
-    /**
      * @var int
      */
     protected $segments;
 
-    public function __construct(Filesystem $filesystem, $path, $pathUrl, $segments)
-    {
-        $this->filesystem = $filesystem;
-        $this->path = $path;
-        $this->pathUrl = $pathUrl;
+    /**
+     * @param string $path
+     * @param string $pathUrl
+     */
+    public function __construct(
+        private Filesystem $filesystem,
+        protected $path,
+        protected $pathUrl,
+        $segments,
+    ) {
         $this->segments = \intval($segments);
     }
 

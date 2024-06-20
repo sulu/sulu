@@ -20,26 +20,13 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 class MediaRestoredEvent extends DomainEvent
 {
     /**
-     * @var MediaInterface
-     */
-    private $media;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        MediaInterface $media,
-        array $payload
+        private MediaInterface $media,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->media = $media;
-        $this->payload = $payload;
     }
 
     public function getMedia(): MediaInterface
