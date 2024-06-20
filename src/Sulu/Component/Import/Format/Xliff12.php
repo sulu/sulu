@@ -209,7 +209,7 @@ class Xliff12 implements FormatImportInterface
             }
 
             if (\function_exists('iconv')) {
-                return iconv('UTF-8', $encoding, $content);
+                return \iconv('UTF-8', $encoding, $content);
             }
 
             throw new \RuntimeException('No suitable convert encoding function (use UTF-8 as your encoding or install the iconv or mbstring extension).');
