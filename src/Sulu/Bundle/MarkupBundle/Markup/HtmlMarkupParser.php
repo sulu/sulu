@@ -18,20 +18,10 @@ use Sulu\Bundle\MarkupBundle\Tag\TagRegistryInterface;
  */
 class HtmlMarkupParser implements MarkupParserInterface
 {
-    /**
-     * @var TagRegistryInterface
-     */
-    private $tagRegistry;
-
-    /**
-     * @var TagExtractorInterface
-     */
-    private $tagExtractor;
-
-    public function __construct(TagRegistryInterface $tagRegistry, TagExtractorInterface $tagExtractor)
-    {
-        $this->tagRegistry = $tagRegistry;
-        $this->tagExtractor = $tagExtractor;
+    public function __construct(
+        private TagRegistryInterface $tagRegistry,
+        private TagExtractorInterface $tagExtractor,
+    ) {
     }
 
     public function parse($content, $locale)

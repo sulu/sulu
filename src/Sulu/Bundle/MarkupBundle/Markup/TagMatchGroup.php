@@ -17,29 +17,11 @@ namespace Sulu\Bundle\MarkupBundle\Markup;
 class TagMatchGroup
 {
     /**
-     * @var string
-     */
-    private $namespace;
-
-    /**
-     * @var string
-     */
-    private $tagName;
-
-    /**
-     * @var array
-     */
-    private $tags;
-
-    /**
      * @param string $namespace
      * @param string $tagName
      */
-    public function __construct($namespace, $tagName, array $tags = [])
+    public function __construct(private $namespace, private $tagName, private array $tags = [])
     {
-        $this->namespace = $namespace;
-        $this->tagName = $tagName;
-        $this->tags = $tags;
     }
 
     /**

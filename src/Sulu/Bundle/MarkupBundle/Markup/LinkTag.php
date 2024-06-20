@@ -24,37 +24,12 @@ class LinkTag implements TagInterface
 
     public const DEFAULT_PROVIDER = 'page';
 
-    /**
-     * @var LinkProviderPoolInterface
-     */
-    private $linkProviderPool;
-
-    /**
-     * @var bool
-     */
-    private $isPreview;
-
-    /**
-     * @var UrlHelper
-     */
-    private $urlHelper;
-
-    /**
-     * @var ?string
-     */
-    private $providerAttribute;
-
     public function __construct(
-        LinkProviderPoolInterface $linkProviderPool,
-        bool $isPreview = false,
-        ?UrlHelper $urlHelper = null,
-        ?string $providerAttribute = null
+        private LinkProviderPoolInterface $linkProviderPool,
+        private bool $isPreview = false,
+        private ?UrlHelper $urlHelper = null,
+        private ?string $providerAttribute = null
     ) {
-        $this->linkProviderPool = $linkProviderPool;
-        $this->isPreview = $isPreview;
-        $this->urlHelper = $urlHelper;
-        $this->providerAttribute = $providerAttribute;
-
         if (null === $this->urlHelper) {
             @trigger_deprecation(
                 'sulu/sulu',
