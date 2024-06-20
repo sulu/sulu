@@ -12,6 +12,7 @@
 namespace Sulu\Bundle\ContactBundle\Tests\Functional\Controller;
 
 use Doctrine\ORM\EntityManager;
+use Sulu\Bundle\CategoryBundle\Entity\Category;
 use Sulu\Bundle\ContactBundle\Entity\Account;
 use Sulu\Bundle\ContactBundle\Entity\AccountContact;
 use Sulu\Bundle\ContactBundle\Entity\Address;
@@ -1896,6 +1897,59 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals($contact3->getId(), $response->_embedded->contacts[0]->id);
         $this->assertEquals($contact1->getId(), $response->_embedded->contacts[1]->id);
         $this->assertEquals($contact2->getId(), $response->_embedded->contacts[2]->id);
+    }
+
+    public function testGetListOrderByCategoryNames(): void
+    {
+        $category1 = $this->createCategory('category-1', 'de', 'Category 1', 'description');
+        $category2 = $this->createCategory('category-2', 'de', 'Category 2', 'description');
+        $contact1 = $this->createContact('Erika', 'Test', categories: [$category1]);
+        $contact2 = $this->createContact('Anne', 'Test', categories: [$category1, $category2]);
+        $this->em->flush();
+
+        $this->client->jsonRequest('GET', '/api/contacts?sortBy=categoryNames&sortOrder=asc&flat=true&fields=id,categoryNames');
+
+        /**
+         * @var array{
+         *    total: int,
+         *    _embedded: array{
+         *        contacts: array<array{
+         *            id: string,
+         *            categoryNames: string,
+         *        }>
+         *    }
+         * } $response
+         */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+
+        $this->assertEquals(3, $response['total']); // total is 3 because a test user contact is also created automatically
+        $this->assertEquals($contact1->getId(), $response['_embedded']['contacts'][1]['id']);
+        $this->assertEquals('Category 1', $response['_embedded']['contacts'][1]['categoryNames']);
+        $this->assertEquals($contact2->getId(), $response['_embedded']['contacts'][2]['id']);
+        $this->assertStringContainsString('Category 1', $response['_embedded']['contacts'][2]['categoryNames']);
+        $this->assertStringContainsString('Category 2', $response['_embedded']['contacts'][2]['categoryNames']);
+
+        $this->client->jsonRequest('GET', '/api/contacts?sortBy=categoryNames&sortOrder=desc&flat=true&fields=id,categoryNames');
+
+        /**
+         * @var array{
+         *    total: int,
+         *    _embedded: array{
+         *        contacts: array<array{
+         *            id: string,
+         *            categoryNames: string,
+         *        }>
+         *    }
+         * } $response
+         */
+        $response = \json_decode((string) $this->client->getResponse()->getContent(), true);
+
+        $this->assertEquals(3, $response['total']); // total is 3 because a test user contact is also created automatically
+        $this->assertEquals($contact2->getId(), $response['_embedded']['contacts'][0]['id']);
+        $this->assertStringContainsString('Category 1', $response['_embedded']['contacts'][0]['categoryNames']);
+        $this->assertStringContainsString('Category 2', $response['_embedded']['contacts'][0]['categoryNames']);
+        $this->assertEquals($contact1->getId(), $response['_embedded']['contacts'][1]['id']);
+        $this->assertEquals('Category 1', $response['_embedded']['contacts'][1]['categoryNames']);
     }
 
     public function testDelete(): void
