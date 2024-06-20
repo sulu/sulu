@@ -12471,16 +12471,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Listener/MarkupListener.php
 
 		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\MarkupParserInterface given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Listener/MarkupListener.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MarkupBundle\\\\Listener\\\\MarkupListener\\:\\:\\$markupParser \\(Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\MarkupParserInterface\\) does not accept array\\<Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\MarkupParserInterface\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Listener/MarkupListener.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\HtmlTagExtractor\\:\\:count\\(\\) should return int but returns int\\<0, max\\>\\|false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Markup/HtmlTagExtractor.php
@@ -12541,11 +12531,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Markup/LinkTag.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Markup/LinkTag.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\LinkTag\\:\\:getContent\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Markup/LinkTag.php
@@ -12596,11 +12581,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Markup/LinkTag.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\LinkTag\\:\\:\\$urlHelper \\(Symfony\\\\Component\\\\HttpFoundation\\\\UrlHelper\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\UrlHelper\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Markup/LinkTag.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\TagMatchGroup\\:\\:__construct\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Markup/TagMatchGroup.php
@@ -12612,11 +12592,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\TagMatchGroup\\:\\:getTags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Markup/TagMatchGroup.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\TagMatchGroup\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Markup/TagMatchGroup.php
 

@@ -21,21 +21,12 @@ class SwiftMailerListener implements \Swift_Events_SendListener
      */
     private $markupParser;
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var string
-     */
-    private $defaultLocale;
-
-    public function __construct(\Traversable $markupParser, RequestStack $requestStack, string $defaultLocale)
-    {
+    public function __construct(
+        \Traversable $markupParser,
+        private RequestStack $requestStack,
+        private string $defaultLocale,
+    ) {
         $this->markupParser = \iterator_to_array($markupParser);
-        $this->requestStack = $requestStack;
-        $this->defaultLocale = $defaultLocale;
     }
 
     public function beforeSendPerformed(\Swift_Events_SendEvent $event)
