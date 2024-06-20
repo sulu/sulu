@@ -12261,11 +12261,6 @@ parameters:
 			path: src/Sulu/Bundle/LocationBundle/Geolocator/Service/GoogleGeolocator.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\LocationBundle\\\\Geolocator\\\\Service\\\\GoogleGeolocator\\:\\:__construct\\(\\) has parameter \\$client with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/LocationBundle/Geolocator/Service/GoogleGeolocator.php
-
-		-
 			message: "#^Parameter \\#1 \\$displayTitle of method Sulu\\\\Bundle\\\\LocationBundle\\\\Geolocator\\\\GeolocatorLocation\\:\\:setDisplayTitle\\(\\) expects string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/LocationBundle/Geolocator/Service/GoogleGeolocator.php
@@ -12312,11 +12307,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'place_id' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/LocationBundle/Geolocator/Service/NominatimGeolocator.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\LocationBundle\\\\Geolocator\\\\Service\\\\NominatimGeolocator\\:\\:__construct\\(\\) has parameter \\$client with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/LocationBundle/Geolocator/Service/NominatimGeolocator.php
 

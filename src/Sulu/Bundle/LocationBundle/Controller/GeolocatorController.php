@@ -17,14 +17,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 class GeolocatorController
 {
-    /**
-     * @var GeolocatorInterface
-     */
-    private $geolocator;
-
-    public function __construct(GeolocatorInterface $geolocator)
-    {
-        $this->geolocator = $geolocator;
+    public function __construct(
+        private GeolocatorInterface $geolocator
+    ) {
     }
 
     /**
