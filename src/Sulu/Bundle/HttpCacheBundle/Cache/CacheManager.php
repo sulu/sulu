@@ -21,14 +21,9 @@ use Ramsey\Uuid\Uuid;
  */
 class CacheManager implements CacheManagerInterface
 {
-    /**
-     * @var FOSCacheManager
-     */
-    private $fosCacheManager;
-
-    public function __construct(FOSCacheManager $fosCacheManager)
-    {
-        $this->fosCacheManager = $fosCacheManager;
+    public function __construct(
+        private FOSCacheManager $fosCacheManager
+    ) {
     }
 
     public function invalidatePath(string $path, array $headers = []): void

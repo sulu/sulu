@@ -11931,16 +11931,6 @@ parameters:
 			path: src/Sulu/Bundle/HttpCacheBundle/Cache/SuluHttpCache.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\CacheLifetime\\\\CacheLifetimeEnhancer\\:\\:__construct\\(\\) has parameter \\$maxAge with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/CacheLifetime/CacheLifetimeEnhancer.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\CacheLifetime\\\\CacheLifetimeEnhancer\\:\\:__construct\\(\\) has parameter \\$sharedMaxAge with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/HttpCacheBundle/CacheLifetime/CacheLifetimeEnhancer.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\HttpCacheBundle\\\\CacheLifetime\\\\CacheLifetimeEnhancer\\:\\:enhance\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/HttpCacheBundle/CacheLifetime/CacheLifetimeEnhancer.php
@@ -12276,11 +12266,6 @@ parameters:
 			path: src/Sulu/Bundle/LocationBundle/Geolocator/Service/GoogleGeolocator.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\LocationBundle\\\\Geolocator\\\\Service\\\\GoogleGeolocator\\:\\:__construct\\(\\) has parameter \\$client with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/LocationBundle/Geolocator/Service/GoogleGeolocator.php
-
-		-
 			message: "#^Parameter \\#1 \\$displayTitle of method Sulu\\\\Bundle\\\\LocationBundle\\\\Geolocator\\\\GeolocatorLocation\\:\\:setDisplayTitle\\(\\) expects string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/LocationBundle/Geolocator/Service/GoogleGeolocator.php
@@ -12327,11 +12312,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'place_id' on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/LocationBundle/Geolocator/Service/NominatimGeolocator.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\LocationBundle\\\\Geolocator\\\\Service\\\\NominatimGeolocator\\:\\:__construct\\(\\) has parameter \\$client with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/LocationBundle/Geolocator/Service/NominatimGeolocator.php
 
@@ -12496,16 +12476,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Listener/MarkupListener.php
 
 		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\MarkupParserInterface given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Listener/MarkupListener.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MarkupBundle\\\\Listener\\\\MarkupListener\\:\\:\\$markupParser \\(Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\MarkupParserInterface\\) does not accept array\\<Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\MarkupParserInterface\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Listener/MarkupListener.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\HtmlTagExtractor\\:\\:count\\(\\) should return int but returns int\\<0, max\\>\\|false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Markup/HtmlTagExtractor.php
@@ -12566,11 +12536,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Markup/LinkTag.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Markup/LinkTag.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\LinkTag\\:\\:getContent\\(\\) has parameter \\$attributes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Markup/LinkTag.php
@@ -12621,11 +12586,6 @@ parameters:
 			path: src/Sulu/Bundle/MarkupBundle/Markup/LinkTag.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\LinkTag\\:\\:\\$urlHelper \\(Symfony\\\\Component\\\\HttpFoundation\\\\UrlHelper\\) does not accept Symfony\\\\Component\\\\HttpFoundation\\\\UrlHelper\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Markup/LinkTag.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\TagMatchGroup\\:\\:__construct\\(\\) has parameter \\$tags with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Markup/TagMatchGroup.php
@@ -12637,11 +12597,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\TagMatchGroup\\:\\:getTags\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MarkupBundle/Markup/TagMatchGroup.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\TagMatchGroup\\:\\:\\$tags type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MarkupBundle/Markup/TagMatchGroup.php
 

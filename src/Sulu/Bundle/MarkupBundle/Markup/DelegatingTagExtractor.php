@@ -17,16 +17,10 @@ namespace Sulu\Bundle\MarkupBundle\Markup;
 class DelegatingTagExtractor implements TagExtractorInterface
 {
     /**
-     * @var TagExtractorInterface[]
+     * @param array<TagExtractorInterface> $pool
      */
-    private $pool;
-
-    /**
-     * @param TagExtractorInterface[] $pool
-     */
-    public function __construct(array $pool)
+    public function __construct(private array $pool)
     {
-        $this->pool = $pool;
     }
 
     public function count($html)

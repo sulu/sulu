@@ -22,16 +22,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class MarkupListener implements EventSubscriberInterface
 {
     /**
-     * @var MarkupParserInterface
+     * @param array<string, MarkupParserInterface> $markupParser
      */
-    private $markupParser;
-
-    /**
-     * @param MarkupParserInterface[] $markupParser
-     */
-    public function __construct(array $markupParser)
+    public function __construct(private array $markupParser)
     {
-        $this->markupParser = $markupParser;
     }
 
     public static function getSubscribedEvents(): array
