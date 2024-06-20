@@ -226,7 +226,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     public function count()
     {
-        $subQueryBuilder = $this->createSubQueryBuilder('COUNT(distinct ' . $this->idField->getSelect() . ')');
+        $subQueryBuilder = $this->createSubQueryBuilder('COUNT( ' . $this->idField->getSelect() . ')', false);
 
         $this->assignParameters($subQueryBuilder);
 
@@ -549,13 +549,16 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @return DoctrineFieldDescriptorInterface[]
      */
-    protected function getAllFields($onlyReturnFilterFields = false)
+    protected function getAllFields(bool $onlyReturnFilterFields = false, bool $returnSortFields = true)
     {
         $fields = \array_merge(
             $this->searchFields,
-            $this->sortFields,
             $this->getUniqueExpressionFieldDescriptors($this->expressions)
         );
+
+        if ($returnSortFields) {
+            $fields = \array_merge($fields, $this->sortFields);
+        }
 
         if (true !== $onlyReturnFilterFields) {
             $fields = \array_merge($fields, $this->selectFields);
@@ -571,10 +574,10 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @return QueryBuilder
      */
-    protected function createSubQueryBuilder(string $select)
+    protected function createSubQueryBuilder(string $select, bool $includeSortFields = true)
     {
         // get all filter-fields
-        $filterFields = $this->getAllFields(true);
+        $filterFields = $this->getAllFields(true, $includeSortFields);
 
         // get entity names
         $entityNames = $this->getEntityNamesOfFieldDescriptors($filterFields);
