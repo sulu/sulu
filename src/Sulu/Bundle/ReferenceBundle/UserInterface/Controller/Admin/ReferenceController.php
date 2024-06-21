@@ -85,14 +85,6 @@ class ReferenceController extends AbstractRestController implements ClassResourc
             'offset' => $offset,
         ]);
 
-        /** @var string|null $sortBy */
-        $sortBy = $request->query->get('sortBy');
-        /** @var 'asc'|'desc' $sortOrder */
-        $sortOrder = $request->query->get('sortOrder', 'asc');
-        $sortBys = $sortBy ? [
-            $sortBy => $sortOrder,
-        ] : [];
-
         $fields = \explode(',', $request->query->get('fields', ''));
         $removeFields = ['id']; // the frontend always add the id field, but we don't need it in this case as we group by other fields
         $fields = [
@@ -102,6 +94,15 @@ class ReferenceController extends AbstractRestController implements ClassResourc
             'referenceLocale',
             'referenceRouterAttributes',
         ];
+
+        $sortBys = [];
+        /** @var string|null $sortBy */
+        $sortBy = $request->query->get('sortBy');
+        if (\in_array($sortBy, $fields, true)) {
+            /** @var 'asc'|'desc' $sortOrder */
+            $sortOrder = $request->query->get('sortOrder', 'asc');
+            $sortBys = [$sortBy => $sortOrder];
+        }
 
         if ($rootLevel) {
             $removeFields[] = 'referenceContext';

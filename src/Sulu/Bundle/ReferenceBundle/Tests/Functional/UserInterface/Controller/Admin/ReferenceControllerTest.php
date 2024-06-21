@@ -45,7 +45,10 @@ class ReferenceControllerTest extends SuluTestCase
         );
     }
 
-    public function testCgetActionFiltersAndFields(): void
+    /**
+     * @dataProvider dataCgetActionFiltersAndFields
+     */
+    public function testCgetActionFiltersAndFields(string $url): void
     {
         $client = $this->createAuthenticatedClient();
 
@@ -61,7 +64,7 @@ class ReferenceControllerTest extends SuluTestCase
         self::getEntityManager()->flush();
 
         // represents a real request of the admin list UI
-        $client->request('GET', '/admin/api/references?resourceKey=media&resourceId=1&fields=referenceTitle,referenceLocale,referenceResourceKey,referenceContext,referenceProperty,id');
+        $client->request('GET', $url);
         $response = $client->getResponse();
 
         $this->assertHttpStatusCode(200, $response);
@@ -100,6 +103,17 @@ class ReferenceControllerTest extends SuluTestCase
             ],
             $json,
         );
+    }
+
+    public static function dataCgetActionFiltersAndFields(): \Generator
+    {
+        yield 'no sorting' => [
+            '/admin/api/references?resourceKey=media&resourceId=1&fields=referenceTitle,referenceLocale,referenceResourceKey,referenceContext,referenceProperty,id',
+        ];
+
+        yield 'non existing sorting' => [
+            '/admin/api/references?resourceKey=media&resourceId=1&fields=referenceTitle,referenceLocale,referenceResourceKey,referenceContext,referenceProperty,id&sortBy=does_not_exist&sortOrder=asc',
+        ];
     }
 
     public function testCgetActionChild(): void
