@@ -110,6 +110,65 @@ class GlobalBlocksTypedFormMetadataVisitorTest extends TestCase
         $this->assertSame('Test Block Title', $fieldType1->getTitle());
     }
 
+    public function testDefinitionIsAddedInFormDataForGlobalBlock(): void
+    {
+        $locale = 'en';
+        $globalBlockName = 'test_block';
+
+        $formMetadata = new FormMetadata();
+        $formMetadata->setKey('test');
+        $formMetadata->setSchema(new SchemaMetadata());
+
+        $sectionMetadata = new SectionMetadata('test1');
+        $formMetadata->addItem($sectionMetadata);
+
+        $fieldMetadata = new FieldMetadata('test2');
+        $formMetadata->addItem($fieldMetadata);
+
+        $fieldTag = new TagMetadata();
+        $fieldTag->setName('sulu.global_block');
+        $fieldTag->setAttributes(['global_block' => $globalBlockName]);
+
+        $fieldType1 = new FormMetadata();
+        $fieldType1->setName('test3');
+        $fieldType1->addTag($fieldTag);
+        $fieldMetadata->addType($fieldType1);
+
+        $fieldType2 = new FormMetadata();
+        $fieldType2->setName('test4');
+        $fieldMetadata->addType($fieldType2);
+
+        $globalBlockFormMetadata = new TypedFormMetadata();
+        $globalBlockFormTypeMetadata = new FormMetadata();
+        $globalBlockFormMetadata->addForm($globalBlockName, $globalBlockFormTypeMetadata);
+
+        $globalBlockFormTypeMetadata->setSchema(new SchemaMetadata());
+        $globalBlockFormTypeMetadata->setName($globalBlockName);
+        $globalBlockFormTypeMetadata->setTitle('Test Block Title');
+
+        $this->metadataProviderProphecy->getMetadata('block', $locale, [
+            'ignore_global_blocks' => true,
+        ])->shouldBeCalledTimes(1)->willReturn($globalBlockFormMetadata);
+
+        // Simulate visiting the TypedFormMetadata with a FieldMetadata that has a global block tag
+        $this->globalBlocksTypedFormMetadataVisitor->visitFormMetadata(
+            $formMetadata,
+            $locale,
+        );
+
+        $definitions = $formMetadata->getSchema()->toJsonSchema()['definitions'] ?? [];
+        $this->assertSame(
+            [
+                $globalBlockName => [
+                    'type' => ['number', 'string', 'boolean', 'object', 'array', 'null'],
+                ],
+            ],
+            $definitions
+        );
+
+        $this->assertSame('Test Block Title', $fieldType1->getTitle());
+    }
+
     public function testDefinitionIgnore(): void
     {
         $locale = 'en';

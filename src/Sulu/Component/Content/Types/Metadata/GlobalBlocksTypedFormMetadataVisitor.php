@@ -15,6 +15,7 @@ namespace Sulu\Component\Content\Types\Metadata;
 
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FieldMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadata;
+use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\FormMetadataVisitorInterface;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\ItemMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\SectionMetadata;
 use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadata;
@@ -22,7 +23,7 @@ use Sulu\Bundle\AdminBundle\Metadata\FormMetadata\TypedFormMetadataVisitorInterf
 use Sulu\Bundle\AdminBundle\Metadata\MetadataProviderRegistry;
 use Sulu\Bundle\AdminBundle\Metadata\SchemaMetadata\SchemaMetadata;
 
-class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorInterface
+class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorInterface, FormMetadataVisitorInterface
 {
     public function __construct(
         private MetadataProviderRegistry $metadataProviderRegistry,
@@ -96,5 +97,14 @@ class GlobalBlocksTypedFormMetadataVisitor implements TypedFormMetadataVisitorIn
         }
 
         return $this->globalBlocksMetadata->getForms()[$name] ?? null;
+    }
+
+    public function visitFormMetadata(FormMetadata $formMetadata, string $locale, array $metadataOptions = []): void
+    {
+        if ($metadataOptions['ignore_global_blocks'] ?? false) {
+            return;
+        }
+
+        $this->enhanceGlobalBlockTypes($formMetadata->getItems(), $locale, $formMetadata->getSchema());
     }
 }
