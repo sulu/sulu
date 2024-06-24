@@ -20,33 +20,14 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionMeta;
 class CollectionCreatedEvent extends DomainEvent
 {
     /**
-     * @var CollectionInterface
-     */
-    private $collection;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        CollectionInterface $collection,
-        string $locale,
-        array $payload
+        private CollectionInterface $collection,
+        private string $locale,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->collection = $collection;
-        $this->locale = $locale;
-        $this->payload = $payload;
     }
 
     public function getCollection(): CollectionInterface

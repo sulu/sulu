@@ -24,22 +24,11 @@ class MediaTypeUpdateCommand extends Command
 {
     protected static $defaultName = 'sulu:media:type:update';
 
-    /**
-     * @var TypeManagerInterface
-     */
-    private $mediaTypeManager;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    public function __construct(TypeManagerInterface $mediaTypeManager, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private TypeManagerInterface $mediaTypeManager,
+        private EntityManagerInterface $entityManager,
+    ) {
         parent::__construct();
-
-        $this->mediaTypeManager = $mediaTypeManager;
-        $this->entityManager = $entityManager;
     }
 
     protected function configure()

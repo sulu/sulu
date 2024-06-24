@@ -21,31 +21,11 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class MediaMovedEvent extends DomainEvent
 {
-    /**
-     * @var MediaInterface
-     */
-    private $media;
-
-    /**
-     * @var int
-     */
-    private $previousCollectionId;
-
-    /**
-     * @var string|null
-     */
-    private $previousCollectionTitle;
-
-    /**
-     * @var string|null
-     */
-    private $previousCollectionTitleLocale;
-
     public function __construct(
-        MediaInterface $media,
-        int $previousCollectionId,
-        ?string $previousCollectionTitle,
-        ?string $previousCollectionTitleLocale
+        private MediaInterface $media,
+        private int $previousCollectionId,
+        private ?string $previousCollectionTitle,
+        private ?string $previousCollectionTitleLocale
     ) {
         parent::__construct();
 

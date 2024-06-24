@@ -41,42 +41,15 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 class MediaSelectionContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, PropertyMetadataMapperInterface
 {
     /**
-     * @var MediaManagerInterface
+     * @param array<string,int>|null $permissions;
      */
-    private $mediaManager;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $referenceStore;
-
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var ?array
-     */
-    private $permissions;
-
-    /**
-     * @var PropertyMetadataMinMaxValueResolver|null
-     */
-    private $propertyMetadataMinMaxValueResolver;
-
     public function __construct(
-        MediaManagerInterface $mediaManager,
-        ReferenceStoreInterface $referenceStore,
-        ?RequestAnalyzerInterface $requestAnalyzer = null,
-        $permissions = null,
-        ?PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver = null
+        private MediaManagerInterface $mediaManager,
+        private ReferenceStoreInterface $referenceStore,
+        private ?RequestAnalyzerInterface $requestAnalyzer = null,
+        private $permissions = null,
+        private ?PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver = null
     ) {
-        $this->mediaManager = $mediaManager;
-        $this->referenceStore = $referenceStore;
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->permissions = $permissions;
-        $this->propertyMetadataMinMaxValueResolver = $propertyMetadataMinMaxValueResolver;
     }
 
     public function getDefaultParams(?PropertyInterface $property = null)
@@ -150,7 +123,7 @@ class MediaSelectionContentType extends ComplexContentType implements ContentTyp
         $params = $this->getParams($property->getParams());
         $types = $params['types']->getValue();
 
-        $webspace = $this->requestAnalyzer->getWebspace();
+        $webspace = $this->requestAnalyzer?->getWebspace();
 
         $container = new MediaSelectionContainer(
             isset($data['config']) ? $data['config'] : [],

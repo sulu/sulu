@@ -20,22 +20,11 @@ class InitCommand extends Command
 {
     protected static $defaultName = 'sulu:media:init';
 
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var string
-     */
-    private $formatCacheDir;
-
-    public function __construct(Filesystem $filesystem, string $formatCacheDir)
-    {
+    public function __construct(
+        private Filesystem $filesystem,
+        private string $formatCacheDir,
+    ) {
         parent::__construct();
-
-        $this->filesystem = $filesystem;
-        $this->formatCacheDir = $formatCacheDir;
     }
 
     protected function configure()

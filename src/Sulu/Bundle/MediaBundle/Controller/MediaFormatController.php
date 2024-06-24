@@ -28,25 +28,12 @@ class MediaFormatController extends AbstractRestController implements ClassResou
 {
     use RequestParametersTrait;
 
-    /**
-     * @var FormatOptionsManagerInterface
-     */
-    private $formatOptionsManager;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        FormatOptionsManagerInterface $formatOptionsManager,
-        EntityManagerInterface $entityManager
+        private FormatOptionsManagerInterface $formatOptionsManager,
+        private EntityManagerInterface $entityManager
     ) {
         parent::__construct($viewHandler);
-
-        $this->formatOptionsManager = $formatOptionsManager;
-        $this->entityManager = $entityManager;
     }
 
     /**

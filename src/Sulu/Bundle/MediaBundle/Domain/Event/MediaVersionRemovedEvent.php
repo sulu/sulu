@@ -19,24 +19,11 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class MediaVersionRemovedEvent extends DomainEvent
 {
-    /**
-     * @var MediaInterface
-     */
-    private $media;
-
-    /**
-     * @var int
-     */
-    private $version;
-
     public function __construct(
-        MediaInterface $media,
-        int $version
+        private MediaInterface $media,
+        private int $version
     ) {
         parent::__construct();
-
-        $this->media = $media;
-        $this->version = $version;
     }
 
     public function getMedia(): MediaInterface

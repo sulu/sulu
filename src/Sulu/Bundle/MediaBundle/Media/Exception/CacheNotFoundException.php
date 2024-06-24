@@ -16,16 +16,12 @@ namespace Sulu\Bundle\MediaBundle\Media\Exception;
  */
 class CacheNotFoundException extends MediaException
 {
-    private $alias;
-
     /**
      * @param string $alias
      */
-    public function __construct($alias)
+    public function __construct(private $alias)
     {
-        $this->alias = $alias;
-
-        parent::__construct('Format cache with the alias ' . $alias . ' was not found', self::EXCEPTION_CACHE_NOT_FOUND);
+        parent::__construct('Format cache with the alias ' . $this->alias . ' was not found', self::EXCEPTION_CACHE_NOT_FOUND);
     }
 
     /**

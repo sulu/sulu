@@ -24,31 +24,12 @@ class FormatCacheRegenerateCommand extends Command
 {
     protected static $defaultName = 'sulu:media:regenerate-formats';
 
-    /**
-     * @var Filesystem
-     */
-    private $fileSystem;
-
-    /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
-
-    /**
-     * @var string
-     */
-    private $localFormatCachePath;
-
     public function __construct(
-        Filesystem $filesystem,
-        FormatManagerInterface $formatManager,
-        string $localFormatCachePath
+        private Filesystem $filesystem,
+        private FormatManagerInterface $formatManager,
+        private string $localFormatCachePath
     ) {
         parent::__construct();
-
-        $this->fileSystem = $filesystem;
-        $this->formatManager = $formatManager;
-        $this->localFormatCachePath = $localFormatCachePath;
     }
 
     protected function configure()

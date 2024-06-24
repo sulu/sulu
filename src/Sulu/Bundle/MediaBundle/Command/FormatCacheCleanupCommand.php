@@ -26,31 +26,12 @@ class FormatCacheCleanupCommand extends Command
 {
     protected static $defaultName = 'sulu:media:format:cache:cleanup';
 
-    /**
-     * @var EntityRepository
-     */
-    private $mediaRepository;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var string
-     */
-    private $localFormatCachePath;
-
     public function __construct(
-        EntityRepository $mediaRepository,
-        Filesystem $filesystem,
-        $localFormatCachePath
+        private EntityRepository $mediaRepository,
+        private Filesystem $filesystem,
+        private string $localFormatCachePath
     ) {
         parent::__construct();
-
-        $this->mediaRepository = $mediaRepository;
-        $this->filesystem = $filesystem;
-        $this->localFormatCachePath = $localFormatCachePath;
     }
 
     protected function configure()

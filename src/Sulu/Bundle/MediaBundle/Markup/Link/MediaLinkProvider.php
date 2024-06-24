@@ -18,22 +18,10 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 
 class MediaLinkProvider implements LinkProviderInterface
 {
-    /**
-     * @var MediaRepositoryInterface
-     */
-    private $mediaRepository;
-
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
-
     public function __construct(
-        MediaRepositoryInterface $mediaRepository,
-        MediaManagerInterface $mediaManager
+        private MediaRepositoryInterface $mediaRepository,
+        private MediaManagerInterface $mediaManager,
     ) {
-        $this->mediaRepository = $mediaRepository;
-        $this->mediaManager = $mediaManager;
     }
 
     public function getConfiguration()

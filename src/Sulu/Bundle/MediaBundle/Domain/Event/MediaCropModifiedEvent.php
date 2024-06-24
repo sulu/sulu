@@ -20,33 +20,14 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 class MediaCropModifiedEvent extends DomainEvent
 {
     /**
-     * @var MediaInterface
-     */
-    private $media;
-
-    /**
-     * @var string
-     */
-    private $formatKey;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        MediaInterface $media,
-        string $formatKey,
-        array $payload
+        private MediaInterface $media,
+        private string $formatKey,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->media = $media;
-        $this->formatKey = $formatKey;
-        $this->payload = $payload;
     }
 
     public function getMedia(): MediaInterface
