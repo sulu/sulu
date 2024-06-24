@@ -31,41 +31,16 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
     }
 
     /**
-     * @var EntityManagerInterface
+     * @param string $mediaEntityName
+     * @param string $collectionEntityName
      */
-    private $entityManager;
-
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
-
-    /**
-     * @var string
-     */
-    private $mediaEntityName;
-
-    /**
-     * @var string
-     */
-    private $collectionEntityName;
-
-    /**
-     * @var ?AccessControlQueryEnhancer
-     */
-    private $accessControlQueryEnhancer;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        MediaManagerInterface $mediaManager,
-        $mediaEntityName,
-        $collectionEntityName,
+        private EntityManagerInterface $entityManager,
+        private MediaManagerInterface $mediaManager,
+        private $mediaEntityName,
+        private $collectionEntityName,
         ?AccessControlQueryEnhancer $accessControlQueryEnhancer = null
     ) {
-        $this->entityManager = $entityManager;
-        $this->mediaEntityName = $mediaEntityName;
-        $this->collectionEntityName = $collectionEntityName;
-        $this->mediaManager = $mediaManager;
         $this->accessControlQueryEnhancer = $accessControlQueryEnhancer;
     }
 

@@ -31,78 +31,18 @@ use Sulu\Bundle\MediaBundle\Media\Storage\StorageInterface;
  */
 class ImagineImageConverter implements ImageConverterInterface
 {
-    /**
-     * @var ImagineInterface
-     */
-    private $imagine;
-
-    /**
-     * @var ImagineInterface
-     */
-    private $svgImagine;
-
-    /**
-     * @var StorageInterface
-     */
-    private $storage;
-
-    /**
-     * @var MediaImageExtractorInterface
-     */
-    private $mediaImageExtractor;
-
-    /**
-     * @var TransformationPoolInterface
-     */
-    private $transformationPool;
-
-    /**
-     * @var FocusInterface
-     */
-    private $focus;
-
-    /**
-     * @var ScalerInterface
-     */
-    private $scaler;
-
-    /**
-     * @var CropperInterface
-     */
-    private $cropper;
-
-    /**
-     * @var array
-     */
-    private $formats;
-
-    /**
-     * @var array
-     */
-    private $supportedMimeTypes;
-
     public function __construct(
-        ImagineInterface $imagine,
-        StorageInterface $storage,
-        MediaImageExtractorInterface $mediaImageExtractor,
-        TransformationPoolInterface $transformationPool,
-        FocusInterface $focus,
-        ScalerInterface $scaler,
-        CropperInterface $cropper,
-        array $formats,
-        array $supportedMimeTypes,
-        ?ImagineInterface $svgImagine = null
+        private ImagineInterface $imagine,
+        private StorageInterface $storage,
+        private MediaImageExtractorInterface $mediaImageExtractor,
+        private TransformationPoolInterface $transformationPool,
+        private FocusInterface $focus,
+        private ScalerInterface $scaler,
+        private CropperInterface $cropper,
+        private array $formats,
+        private array $supportedMimeTypes,
+        private ?ImagineInterface $svgImagine = null,
     ) {
-        $this->imagine = $imagine;
-        $this->storage = $storage;
-        $this->mediaImageExtractor = $mediaImageExtractor;
-        $this->transformationPool = $transformationPool;
-        $this->focus = $focus;
-        $this->scaler = $scaler;
-        $this->cropper = $cropper;
-        $this->formats = $formats;
-        $this->supportedMimeTypes = $supportedMimeTypes;
-        $this->svgImagine = $svgImagine;
     }
 
     public function getSupportedOutputImageFormats(?string $mimeType): array

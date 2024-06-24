@@ -18,22 +18,10 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class ImagePropertiesProvider implements MediaPropertiesProviderInterface
 {
-    /**
-     * @var ImagineInterface
-     */
-    private $imagine;
-
-    /**
-     * @var ImagineInterface|null
-     */
-    private $svgImagine;
-
     public function __construct(
-        ImagineInterface $imagine,
-        ?ImagineInterface $svgImagine = null
+        private ImagineInterface $imagine,
+        private ?ImagineInterface $svgImagine = null,
     ) {
-        $this->imagine = $imagine;
-        $this->svgImagine = $svgImagine;
     }
 
     public function provide(File $file): array

@@ -18,20 +18,10 @@ use Sulu\Component\Rest\ListBuilder\ListRepresentation;
 
 class MediaListRepresentationFactory
 {
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
-
-    /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
-
-    public function __construct(MediaManagerInterface $mediaManager, FormatManagerInterface $formatManager)
-    {
-        $this->mediaManager = $mediaManager;
-        $this->formatManager = $formatManager;
+    public function __construct(
+        private MediaManagerInterface $mediaManager,
+        private FormatManagerInterface $formatManager,
+    ) {
     }
 
     public function getListRepresentation(

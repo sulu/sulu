@@ -22,21 +22,6 @@ use Sulu\Bundle\MediaBundle\Media\Exception\MediaTypeNotFoundException;
 class TypeManager implements TypeManagerInterface
 {
     /**
-     * @var ObjectManager
-     */
-    private $objectManager;
-
-    /**
-     * @var array
-     */
-    private $mediaTypes;
-
-    /**
-     * @var array
-     */
-    private $blockedMimeTypes;
-
-    /**
      * @var MediaType[]
      */
     private $mediaTypeEntities;
@@ -46,13 +31,10 @@ class TypeManager implements TypeManagerInterface
      * @param array $blockedMimeTypes
      */
     public function __construct(
-        ObjectManager $objectManager,
-        $mediaTypes,
-        $blockedMimeTypes
+        private ObjectManager $objectManager,
+        private $mediaTypes,
+        private $blockedMimeTypes,
     ) {
-        $this->objectManager = $objectManager;
-        $this->mediaTypes = $mediaTypes;
-        $this->blockedMimeTypes = $blockedMimeTypes;
     }
 
     public function get($id)

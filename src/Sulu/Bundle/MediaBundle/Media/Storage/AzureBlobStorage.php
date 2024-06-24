@@ -23,20 +23,10 @@ class AzureBlobStorage extends FlysystemStorage
      */
     private $adapter;
 
-    /**
-     * @var string
-     */
-    private $container;
-
-    /**
-     * @var BlobRestProxy
-     */
-    private $client;
-
     public function __construct(
         FilesystemInterface $filesystem,
-        BlobRestProxy $client,
-        string $container,
+        private BlobRestProxy $client,
+        private string $container,
         int $segments
     ) {
         parent::__construct($filesystem, $segments);
@@ -44,9 +34,6 @@ class AzureBlobStorage extends FlysystemStorage
         if (!$filesystem instanceof Filesystem || !$filesystem->getAdapter() instanceof AzureBlobStorageAdapter) {
             throw new \RuntimeException();
         }
-
-        $this->client = $client;
-        $this->container = $container;
         $this->adapter = $filesystem->getAdapter();
     }
 
