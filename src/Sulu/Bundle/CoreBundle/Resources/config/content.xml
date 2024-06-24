@@ -211,6 +211,7 @@
             <argument type="service" id="sulu_admin.metadata_provider_registry" />
 
             <tag name="sulu_admin.typed_form_metadata_visitor"/>
+            <tag name="sulu_admin.form_metadata_visitor" />
         </service>
 
         <!-- content query -->
