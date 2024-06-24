@@ -12,9 +12,11 @@ declare(strict_types=1);
  */
 
 use Rector\Config\RectorConfig;
+use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\PHPUnit\PHPUnit100\Rector\Class_\StaticDataProviderClassMethodRector;
 use Rector\Set\ValueObject\LevelSetList;
 use Rector\Set\ValueObject\SetList;
+use Rector\Symfony\Set\SymfonySetList;
 
 return RectorConfig::configure()
     ->withRootFiles()
@@ -28,9 +30,16 @@ return RectorConfig::configure()
     ->withSkipPath('*/var/cache')
     ->withSkipPath('*/tests/Resources/cache')
     ->withSkipPath('*/node_modules')
+    ->withPHPStanConfigs([
+        __DIR__ . '/phpstan.neon',
+    ])
+    ->withSymfonyContainerXml(__DIR__ . '/var/cache/admin/dev/App_KernelDevDebugContainer.xml')
     // ->withImportNames(importShortClasses: false)
     ->withSets([
+        // Currently disabled as code is not typed enough:
         // SetList::CODE_QUALITY,
+        // SymfonySetList::SYMFONY_CODE_QUALITY,
+        // DoctrineSetList::DOCTRINE_CODE_QUALITY,
         // LevelSetList::UP_TO_PHP_80,
     ])
     ->withRules([
