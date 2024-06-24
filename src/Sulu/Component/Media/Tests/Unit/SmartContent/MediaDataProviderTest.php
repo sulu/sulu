@@ -346,7 +346,7 @@ class MediaDataProviderTest extends TestCase
         $this->assertEquals($dataItems, $result->getItems());
     }
 
-    public function resourceItemsDataProvider()
+    public static function resourceItemsDataProvider()
     {
         $medias = [
             self::createMedia(1, 'Test-1'),
