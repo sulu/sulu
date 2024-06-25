@@ -23,28 +23,13 @@ use Sulu\Bundle\MediaBundle\Media\Video\VideoThumbnailServiceInterface;
 class MediaImageExtractor implements MediaImageExtractorInterface
 {
     /**
-     * @var ImagineInterface
+     * @param string $ghostScriptPath
      */
-    private $imagine;
-
-    /**
-     * @var string
-     */
-    private $ghostScriptPath;
-
-    /**
-     * @var VideoThumbnailServiceInterface
-     */
-    private $videoThumbnail;
-
     public function __construct(
-        ImagineInterface $imagine,
-        VideoThumbnailServiceInterface $videoThumbnail,
-        $ghostScriptPath
+        private ImagineInterface $imagine,
+        private VideoThumbnailServiceInterface $videoThumbnail,
+        private $ghostScriptPath,
     ) {
-        $this->imagine = $imagine;
-        $this->ghostScriptPath = $ghostScriptPath;
-        $this->videoThumbnail = $videoThumbnail;
     }
 
     public function extract($resource/*, string $resourceMimeType*/)

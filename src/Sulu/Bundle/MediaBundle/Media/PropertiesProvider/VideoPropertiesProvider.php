@@ -17,14 +17,8 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class VideoPropertiesProvider implements MediaPropertiesProviderInterface
 {
-    /**
-     * @var FFProbe
-     */
-    private $ffprobe;
-
-    public function __construct(FFProbe $ffprobe)
+    public function __construct(private FFProbe $ffprobe)
     {
-        $this->ffprobe = $ffprobe;
     }
 
     public function provide(File $file): array

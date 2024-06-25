@@ -32,52 +32,16 @@ use Sulu\Bundle\MediaBundle\Media\Manager\MediaManagerInterface;
 class FormatOptionsManager implements FormatOptionsManagerInterface
 {
     /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * @var EntityRepository
-     */
-    private $formatOptionsRepository;
-
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
-
-    /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
-     * @var array<string, mixed>
-     */
-    private $formats;
-
-    /**
      * @param array<string, mixed> $formats
      */
     public function __construct(
-        EntityManagerInterface $em,
-        EntityRepository $formatOptionsRepository,
-        MediaManagerInterface $mediaManager,
-        FormatManagerInterface $formatManager,
-        DomainEventCollectorInterface $domainEventCollector,
-        array $formats
+        private EntityManagerInterface $em,
+        private EntityRepository $formatOptionsRepository,
+        private MediaManagerInterface $mediaManager,
+        private FormatManagerInterface $formatManager,
+        private DomainEventCollectorInterface $domainEventCollector,
+        private array $formats,
     ) {
-        $this->em = $em;
-        $this->formatOptionsRepository = $formatOptionsRepository;
-        $this->mediaManager = $mediaManager;
-        $this->formatManager = $formatManager;
-        $this->domainEventCollector = $domainEventCollector;
-        $this->formats = $formats;
     }
 
     /**

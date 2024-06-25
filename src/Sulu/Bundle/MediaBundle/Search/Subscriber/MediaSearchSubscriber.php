@@ -28,28 +28,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class MediaSearchSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var MediaManagerInterface
-     */
-    protected $mediaManager;
-
-    /**
-     * The format of the image, which will be returned in the search.
-     *
-     * @var string
-     */
-    protected $searchImageFormat;
-
-    /**
-     * @var Factory
-     */
-    protected $factory;
-
-    /**
-     * @var array
-     */
-    protected $thumbnailMimeTypes;
-
-    /**
      * @var LoggerInterface
      */
     protected $logger;
@@ -60,16 +38,15 @@ class MediaSearchSubscriber implements EventSubscriberInterface
      * @param string $searchImageFormat
      */
     public function __construct(
-        MediaManagerInterface $mediaManager,
-        Factory $factory,
-        $thumbnailMimeTypes,
-        $searchImageFormat,
+        protected MediaManagerInterface $mediaManager,
+        protected Factory $factory,
+        protected $thumbnailMimeTypes,
+        /**
+         * The format of the image, which will be returned in the search.
+         */
+        protected $searchImageFormat,
         ?LoggerInterface $logger = null
     ) {
-        $this->mediaManager = $mediaManager;
-        $this->factory = $factory;
-        $this->searchImageFormat = $searchImageFormat;
-        $this->thumbnailMimeTypes = $thumbnailMimeTypes;
         $this->logger = $logger ?: new NullLogger();
     }
 
