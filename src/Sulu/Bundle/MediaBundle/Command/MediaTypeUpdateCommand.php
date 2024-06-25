@@ -24,7 +24,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'sulu:media:type:update', description: 'Update all media type by the set configuration')]
 class MediaTypeUpdateCommand extends Command
 {
-
     public function __construct(
         private TypeManagerInterface $mediaTypeManager,
         private EntityManagerInterface $entityManager,

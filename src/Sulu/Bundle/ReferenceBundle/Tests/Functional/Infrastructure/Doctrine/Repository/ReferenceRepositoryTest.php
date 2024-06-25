@@ -336,7 +336,7 @@ class ReferenceRepositoryTest extends SuluTestCase
     /**
      * @return array<int, array<int, string>>
      */
-    public function filterProvider(): array
+    public static function filterProvider(): array
     {
         return [
             ['id'],

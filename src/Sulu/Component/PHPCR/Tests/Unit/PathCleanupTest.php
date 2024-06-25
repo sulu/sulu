@@ -113,7 +113,7 @@ class PathCleanupTest extends TestCase
         $this->assertEquals($b, $clean);
     }
 
-    public function emojiCleanupProvider(): \Generator
+    public static function emojiCleanupProvider(): \Generator
     {
         yield 'default' => ['a 😺, and a 🦁 go to 🏞️', 'a-grinning-cat-and-a-lion-go-to-national-park', 'en'];
         yield 'locale code with dash' => ['Menus with 🍕 or 🍝', 'menus-with-pizza-or-spaghetti', 'en-US'];
