@@ -205,26 +205,29 @@ class MediaStreamController
      */
     protected function getFileVersion($id, $version)
     {
-        /** @var MediaInterface $mediaEntity */
-        $mediaEntity = $this->mediaRepository->findMediaByIdForRendering($id, null);
+        $version = empty($version) ? null : (int)$version;
 
-        if (!$mediaEntity) {
+        /** @var MediaInterface|null $mediaEntity */
+        $mediaEntity = $this->mediaRepository->findMediaByIdForRendering($id, null, $version);
+
+        if ($mediaEntity === null) {
             return null;
         }
 
-        $file = $mediaEntity->getFiles()[0];
+        /** @var File|null $file */
+        $file = $mediaEntity->getFiles()->get(0);
 
-        if (!$file) {
+        if ($file === null) {
             return null;
         }
 
-        if (!$version) {
-            $version = $mediaEntity->getFiles()[0]->getVersion();
+        if ($version === null) {
+            $version = $file->getVersion();
         }
 
-        $fileVersion = $file->getFileVersion((int) $version);
+        $fileVersion = $file->getFileVersion($version);
 
-        if (!$fileVersion) {
+        if ($fileVersion === null) {
             throw new FileVersionNotFoundException($id, $version);
         }
 
