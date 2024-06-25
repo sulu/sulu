@@ -14,6 +14,7 @@ namespace Sulu\Bundle\MediaBundle\Entity;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sulu\Bundle\SecurityBundle\AccessControl\AccessControlQueryEnhancer;
 use Sulu\Component\Media\SystemCollections\SystemCollectionManagerInterface;
@@ -91,34 +92,41 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         }
     }
 
-    public function findMediaByIdForRendering($id, $formatKey)
+    public function findMediaByIdForRendering($id, $formatKey, $specificFileVersion = null)
     {
-        try {
-            $queryBuilder = $this->createQueryBuilder('media')
-                ->leftJoin('media.files', 'file')
-                ->leftJoin('file.fileVersions', 'fileVersion', Join::WITH, 'file.version = fileVersion.version')
-                ->addSelect('file')
-                ->addSelect('fileVersion')
-                ->where('media.id = :mediaId')
-                ->setParameter('mediaId', $id);
+       try {
+           $queryBuilder = $this->createQueryBuilder('media')
+               ->leftJoin('media.files', 'file')
+               ->leftJoin('file.fileVersions', 'fileVersion', Join::WITH, 'file.version = fileVersion.version')
+               ->addSelect('file')
+               ->addSelect('fileVersion')
+               ->where('media.id = :mediaId')
+               ->setParameter('mediaId', $id);
 
-            if (null !== $formatKey) {
-                $queryBuilder
-                    ->addSelect('formatOptions')
-                    ->leftJoin(
-                        'fileVersion.formatOptions',
-                        'formatOptions',
-                        Join::WITH,
-                        'formatOptions.formatKey = :formatKey'
-                    )
-                    ->setParameter('formatKey', $formatKey);
-            }
+           if ($formatKey !== null) {
+               $queryBuilder
+                   ->addSelect('formatOptions')
+                   ->leftJoin(
+                       'fileVersion.formatOptions',
+                       'formatOptions',
+                       Join::WITH,
+                       'formatOptions.formatKey = :formatKey'
+                   )
+                   ->setParameter('formatKey', $formatKey);
+           }
 
-            /** @var MediaInterface */
-            return $queryBuilder->getQuery()->getSingleResult();
-        } catch (NoResultException $ex) {
-            return null;
-        }
+           if ($specificFileVersion !== null) {
+               $queryBuilder
+                   ->addSelect('specificFileVersion')
+                   ->leftJoin('file.fileVersions', 'specificFileVersion', Join::WITH, 'specificFileVersion.version = :specificFileVersion')
+                   ->setParameter('specificFileVersion', $specificFileVersion);
+           }
+
+           /** @var MediaInterface */
+           return $queryBuilder->getQuery()->getSingleResult();
+       } catch (NoResultException $ex) {
+           return null;
+       }
     }
 
     public function findMedia(
