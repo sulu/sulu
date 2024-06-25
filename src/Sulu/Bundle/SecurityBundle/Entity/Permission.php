@@ -161,6 +161,6 @@ class Permission
 
     public function __toString()
     {
-        return $this->context;
+        return (string) $this->context;
     }
 }
