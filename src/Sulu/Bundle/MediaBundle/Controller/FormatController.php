@@ -24,18 +24,11 @@ class FormatController extends AbstractRestController implements ClassResourceIn
 {
     use RequestParametersTrait;
 
-    /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        FormatManagerInterface $formatManager
+        private FormatManagerInterface $formatManager
     ) {
         parent::__construct($viewHandler);
-
-        $this->formatManager = $formatManager;
     }
 
     /**

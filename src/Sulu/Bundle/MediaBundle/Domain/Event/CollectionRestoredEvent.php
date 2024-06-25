@@ -19,26 +19,13 @@ use Sulu\Bundle\MediaBundle\Entity\CollectionInterface;
 class CollectionRestoredEvent extends DomainEvent
 {
     /**
-     * @var CollectionInterface
-     */
-    private $collection;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        CollectionInterface $collection,
-        array $payload
+        private CollectionInterface $collection,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->collection = $collection;
-        $this->payload = $payload;
     }
 
     public function getCollection(): CollectionInterface

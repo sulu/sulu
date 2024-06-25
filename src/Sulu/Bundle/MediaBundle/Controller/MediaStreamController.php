@@ -37,64 +37,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MediaStreamController
 {
-    /**
-     * @var FormatManagerInterface
-     */
-    protected $formatManager;
-
-    /**
-     * @var FormatCacheInterface
-     */
-    protected $formatCache;
-
-    /**
-     * @var MediaManagerInterface
-     */
-    protected $mediaManager;
-
-    /**
-     * @var StorageInterface
-     */
-    protected $storage;
-
-    /**
-     * @var DispositionTypeResolver
-     */
-    protected $dispositionTypeResolver;
-
-    /**
-     * @var MediaRepositoryInterface
-     */
-    protected $mediaRepository;
-
-    /**
-     * @var PathCleanupInterface
-     */
-    protected $pathCleaner;
-
-    /**
-     * @var SecurityCheckerInterface|null
-     */
-    protected $securityChecker;
-
     public function __construct(
-        DispositionTypeResolver $dispositionTypeResolver,
-        MediaRepositoryInterface $mediaRepository,
-        PathCleanupInterface $pathCleaner,
-        FormatManagerInterface $formatManager,
-        FormatCacheInterface $formatCache,
-        MediaManagerInterface $mediaManager,
-        StorageInterface $storage,
-        ?SecurityCheckerInterface $securityChecker = null
+        protected DispositionTypeResolver $dispositionTypeResolver,
+        protected MediaRepositoryInterface $mediaRepository,
+        protected PathCleanupInterface $pathCleaner,
+        protected FormatManagerInterface $formatManager,
+        protected FormatCacheInterface $formatCache,
+        protected MediaManagerInterface $mediaManager,
+        protected StorageInterface $storage,
+        protected ?SecurityCheckerInterface $securityChecker = null
     ) {
-        $this->dispositionTypeResolver = $dispositionTypeResolver;
-        $this->mediaRepository = $mediaRepository;
-        $this->pathCleaner = $pathCleaner;
-        $this->formatManager = $formatManager;
-        $this->formatCache = $formatCache;
-        $this->mediaManager = $mediaManager;
-        $this->storage = $storage;
-        $this->securityChecker = $securityChecker;
     }
 
     /**

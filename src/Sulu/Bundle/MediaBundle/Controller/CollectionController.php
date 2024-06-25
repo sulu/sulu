@@ -56,57 +56,17 @@ class CollectionController extends AbstractRestController implements ClassResour
      */
     protected static $entityKey = CollectionInterface::RESOURCE_KEY;
 
-    /**
-     * @var ListRestHelperInterface
-     */
-    private $listRestHelper;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var SystemCollectionManagerInterface
-     */
-    private $systemCollectionManager;
-
-    /**
-     * @var CollectionManagerInterface
-     */
-    private $collectionManager;
-
-    /**
-     * @var array
-     */
-    private $defaultCollectionType;
-
-    /**
-     * @var array
-     */
-    private $permissions;
-
-    /**
-     * @var string
-     */
-    private $collectionClass;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
-        ListRestHelperInterface $listRestHelper,
-        SecurityCheckerInterface $securityChecker,
-        TranslatorInterface $translator,
-        SystemCollectionManagerInterface $systemCollectionManager,
-        CollectionManagerInterface $collectionManager,
-        array $defaultCollectionType,
-        array $permissions,
-        ?string $collectionClass = null
+        private ListRestHelperInterface $listRestHelper,
+        private SecurityCheckerInterface $securityChecker,
+        private TranslatorInterface $translator,
+        private SystemCollectionManagerInterface $systemCollectionManager,
+        private CollectionManagerInterface $collectionManager,
+        private array $defaultCollectionType,
+        private array $permissions,
+        private ?string $collectionClass = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
 

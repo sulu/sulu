@@ -19,31 +19,12 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 
 class MediaPreviewImageModifiedEvent extends DomainEvent
 {
-    /**
-     * @var MediaInterface
-     */
-    private $media;
-
-    /**
-     * @var MediaInterface
-     */
-    private $newPreviewImage;
-
-    /**
-     * @var int|null
-     */
-    private $previousPreviewImageId;
-
     public function __construct(
-        MediaInterface $media,
-        MediaInterface $newPreviewImage,
-        ?int $previousPreviewImageId
+        private MediaInterface $media,
+        private MediaInterface $newPreviewImage,
+        private ?int $previousPreviewImageId
     ) {
         parent::__construct();
-
-        $this->media = $media;
-        $this->newPreviewImage = $newPreviewImage;
-        $this->previousPreviewImageId = $previousPreviewImageId;
     }
 
     public function getMedia(): MediaInterface

@@ -135,6 +135,7 @@
         "phpstan/phpstan-webmozart-assert": "^1.0",
         "phpunit/phpunit": "^9.5.20",
         "psr/event-dispatcher": "^1.0",
+        "rector/rector": "^1.1",
         "scheb/2fa-backup-code": "^6.0 || ^7.0",
         "scheb/2fa-bundle": "^6.0 || ^7.0",
         "scheb/2fa-email": "^6.0 || ^7.0",
@@ -232,6 +233,7 @@
             "@lint-container",
             "@lint-composer",
             "@lint-doctrine",
+            "@lint-rector",
             "@php-cs",
             "@phpstan"
         ],
@@ -243,8 +245,21 @@
             "@php bin/adminconsole cache:warmup --env=dev",
             "@php vendor/bin/phpstan analyse"
         ],
+        "fix": [
+            "@rector",
+            "@php-cs-fix"
+        ],
         "php-cs": "@php vendor/bin/php-cs-fixer fix --verbose --diff --dry-run",
         "php-cs-fix": "@php vendor/bin/php-cs-fixer fix",
+        "lint-rector": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php bin/websiteconsole cache:warmup --env=dev",
+            "@php vendor/bin/rector process --dry-run"
+        ],
+        "rector": [
+            "Composer\\Config::disableProcessTimeout",
+            "@php vendor/bin/rector process"
+        ],
         "lint-composer": "@composer validate --strict",
         "lint-twig": "@php bin/adminconsole lint:twig templates",
         "lint-yaml": "@php bin/adminconsole lint:yaml config",

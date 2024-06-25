@@ -34,40 +34,15 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class MediaPreviewController extends AbstractMediaController implements ClassResourceInterface
 {
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
-
-    /**
-     * @var SystemCollectionManagerInterface
-     */
-    private $systemCollectionManager;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
-        MediaManagerInterface $mediaManager,
-        SystemCollectionManagerInterface $systemCollectionManager,
-        EntityManagerInterface $entityManager,
-        DomainEventCollectorInterface $domainEventCollector
+        private MediaManagerInterface $mediaManager,
+        private SystemCollectionManagerInterface $systemCollectionManager,
+        private EntityManagerInterface $entityManager,
+        private DomainEventCollectorInterface $domainEventCollector
     ) {
         parent::__construct($viewHandler, $tokenStorage);
-
-        $this->mediaManager = $mediaManager;
-        $this->systemCollectionManager = $systemCollectionManager;
-        $this->entityManager = $entityManager;
-        $this->domainEventCollector = $domainEventCollector;
     }
 
     /**

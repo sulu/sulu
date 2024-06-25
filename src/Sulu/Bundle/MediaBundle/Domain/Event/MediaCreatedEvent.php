@@ -20,33 +20,14 @@ use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 class MediaCreatedEvent extends DomainEvent
 {
     /**
-     * @var MediaInterface
-     */
-    private $media;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        MediaInterface $media,
-        string $locale,
-        array $payload
+        private MediaInterface $media,
+        private string $locale,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->media = $media;
-        $this->locale = $locale;
-        $this->payload = $payload;
     }
 
     public function getMedia(): MediaInterface

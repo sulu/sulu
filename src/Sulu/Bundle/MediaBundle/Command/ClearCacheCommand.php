@@ -21,16 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'sulu:media:format:cache:clear', description: 'Clear all or the given Sulu media format cache')]
 class ClearCacheCommand extends Command
 {
-    /**
-     * @var FormatCacheClearerInterface
-     */
-    private $cacheClearer;
-
-    public function __construct(FormatCacheClearerInterface $cacheClearer)
+    public function __construct(private FormatCacheClearerInterface $cacheClearer)
     {
         parent::__construct();
-
-        $this->cacheClearer = $cacheClearer;
     }
 
     protected function configure()

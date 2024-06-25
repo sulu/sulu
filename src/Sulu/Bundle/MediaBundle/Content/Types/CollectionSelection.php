@@ -21,23 +21,10 @@ use Sulu\Component\Content\SimpleContentType;
 
 class CollectionSelection extends SimpleContentType implements PreResolvableContentTypeInterface
 {
-    /**
-     * @var CollectionManagerInterface
-     */
-    protected $collectionManager;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $collectionReferenceStore;
-
     public function __construct(
-        CollectionManagerInterface $collectionManager,
-        ReferenceStoreInterface $collectionReferenceStore
+        protected CollectionManagerInterface $collectionManager,
+        private ReferenceStoreInterface $collectionReferenceStore
     ) {
-        $this->collectionManager = $collectionManager;
-        $this->collectionReferenceStore = $collectionReferenceStore;
-
         parent::__construct('CollectionSelection');
     }
 

@@ -38,22 +38,10 @@ use Sulu\Component\Content\PreResolvableContentTypeInterface;
 
 class ImageMapContentType extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface, PropertyMetadataMapperInterface, ReferenceContentTypeInterface
 {
-    /**
-     * @var ContentTypeManagerInterface
-     */
-    private $contentTypeManager;
-
-    /**
-     * @var FormMetadataMapper
-     */
-    private $formMetadataMapper;
-
     public function __construct(
-        ContentTypeManagerInterface $contentTypeManager,
-        FormMetadataMapper $formMetadataMapper,
+        private ContentTypeManagerInterface $contentTypeManager,
+        private FormMetadataMapper $formMetadataMapper,
     ) {
-        $this->contentTypeManager = $contentTypeManager;
-        $this->formMetadataMapper = $formMetadataMapper;
     }
 
     public function read(

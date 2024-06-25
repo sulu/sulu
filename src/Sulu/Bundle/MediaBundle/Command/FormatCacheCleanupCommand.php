@@ -26,31 +26,12 @@ use Symfony\Component\Finder\SplFileInfo;
 #[AsCommand(name: 'sulu:media:format:cache:cleanup', description: 'Remove media formats which medias not longer exist in the database')]
 class FormatCacheCleanupCommand extends Command
 {
-    /**
-     * @var EntityRepository
-     */
-    private $mediaRepository;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var string
-     */
-    private $localFormatCachePath;
-
     public function __construct(
-        EntityRepository $mediaRepository,
-        Filesystem $filesystem,
-        $localFormatCachePath
+        private EntityRepository $mediaRepository,
+        private Filesystem $filesystem,
+        private string $localFormatCachePath
     ) {
         parent::__construct();
-
-        $this->mediaRepository = $mediaRepository;
-        $this->filesystem = $filesystem;
-        $this->localFormatCachePath = $localFormatCachePath;
     }
 
     protected function configure()

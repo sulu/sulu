@@ -15,7 +15,6 @@ use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
-use Sulu\Bundle\MediaBundle\Entity\MediaRepository;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
 use Sulu\Bundle\MediaBundle\Media\Exception\FormatNotFoundException;
 use Sulu\Bundle\MediaBundle\Media\Exception\ImageProxyInvalidImageFormat;
@@ -35,41 +34,14 @@ use Symfony\Component\HttpFoundation\Response;
 class FormatManager implements FormatManagerInterface
 {
     /**
-     * The repository for communication with the database.
-     *
-     * @var MediaRepository
-     */
-    private $mediaRepository;
-
-    /**
-     * @var FormatCacheInterface
-     */
-    private $formatCache;
-
-    /**
-     * @var ImageConverterInterface
-     */
-    private $converter;
-
-    /**
      * @var bool
      */
     private $saveImage = false;
 
     /**
-     * @var array
-     */
-    private $responseHeaders = [];
-
-    /**
      * @var Filesystem
      */
     private $fileSystem;
-
-    /**
-     * @var array
-     */
-    private $formats;
 
     /**
      * @var LoggerInterface
@@ -87,21 +59,16 @@ class FormatManager implements FormatManagerInterface
      * @param array $formats
      */
     public function __construct(
-        MediaRepositoryInterface $mediaRepository,
-        FormatCacheInterface $formatCache,
-        ImageConverterInterface $converter,
+        private MediaRepositoryInterface $mediaRepository,
+        private FormatCacheInterface $formatCache,
+        private ImageConverterInterface $converter,
         $saveImage,
-        $responseHeaders,
-        $formats,
+        private $responseHeaders,
+        private $formats,
         ?LoggerInterface $logger = null
     ) {
-        $this->mediaRepository = $mediaRepository;
-        $this->formatCache = $formatCache;
-        $this->converter = $converter;
         $this->saveImage = 'true' == $saveImage ? true : false;
-        $this->responseHeaders = $responseHeaders;
         $this->fileSystem = new Filesystem();
-        $this->formats = $formats;
         $this->logger = $logger ?: new NullLogger();
     }
 

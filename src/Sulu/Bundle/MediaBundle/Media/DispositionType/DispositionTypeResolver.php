@@ -19,11 +19,6 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class DispositionTypeResolver implements DispositionTypeResolverInterface
 {
     /**
-     * @var string
-     */
-    protected $defaultType;
-
-    /**
      * @var array
      */
     protected $mimeTypesInline = [];
@@ -38,9 +33,11 @@ class DispositionTypeResolver implements DispositionTypeResolverInterface
      *
      * @param string $defaultType
      */
-    public function __construct($defaultType, array $mimeTypesInline = [], array $mimeTypesAttachment = [])
-    {
-        $this->defaultType = $defaultType;
+    public function __construct(
+        protected $defaultType,
+        array $mimeTypesInline = [],
+        array $mimeTypesAttachment = [],
+    ) {
         $this->mimeTypesInline = $mimeTypesInline;
         $this->mimeTypesAttachment = $mimeTypesAttachment;
     }

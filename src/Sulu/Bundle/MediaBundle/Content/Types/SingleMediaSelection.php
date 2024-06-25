@@ -39,37 +39,12 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
 
 class SingleMediaSelection extends SimpleContentType implements PreResolvableContentTypeInterface, PropertyMetadataMapperInterface, ReferenceContentTypeInterface
 {
-    /**
-     * @var MediaManagerInterface
-     */
-    private $mediaManager;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $mediaReferenceStore;
-
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var ?SecurityCheckerInterface
-     */
-    private $securityChecker;
-
     public function __construct(
-        MediaManagerInterface $mediaManager,
-        ReferenceStoreInterface $referenceStore,
-        RequestAnalyzerInterface $requestAnalyzer,
-        ?SecurityCheckerInterface $securityChecker = null
+        private MediaManagerInterface $mediaManager,
+        private ReferenceStoreInterface $mediaReferenceStore,
+        private RequestAnalyzerInterface $requestAnalyzer,
+        private ?SecurityCheckerInterface $securityChecker = null
     ) {
-        $this->mediaManager = $mediaManager;
-        $this->mediaReferenceStore = $referenceStore;
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->securityChecker = $securityChecker;
-
         parent::__construct('SingleMediaSelection', '{"id": null}');
     }
 
