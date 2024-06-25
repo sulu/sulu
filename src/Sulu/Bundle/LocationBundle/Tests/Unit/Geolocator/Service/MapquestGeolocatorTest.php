@@ -22,7 +22,7 @@ class MapquestGeolocatorTest extends TestCase
     /**
      * @return array<mixed>
      */
-    public function provideLocate(): array
+    public static function provideLocate(): array
     {
         return [
             [

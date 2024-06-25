@@ -237,7 +237,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         return $accessControl;
     }
 
-    public function findByProvider()
+    public static function findByProvider()
     {
         // when pagination is active the result count is pageSize + 1 to determine has next page
 

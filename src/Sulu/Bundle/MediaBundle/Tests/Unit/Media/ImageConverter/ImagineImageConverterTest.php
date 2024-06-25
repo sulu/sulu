@@ -327,7 +327,7 @@ class ImagineImageConverterTest extends TestCase
         $this->assertEquals($result, $this->imagineImageConverter->getSupportedOutputImageFormats($mimeType));
     }
 
-    public function getSimpleExtensionsByMimeTypes(): \Generator
+    public static function getSimpleExtensionsByMimeTypes(): \Generator
     {
         yield ['image/png', 'png'];
         yield ['image/webp', 'webp'];
@@ -357,7 +357,7 @@ class ImagineImageConverterTest extends TestCase
         $this->assertEquals('png', $this->imagineImageConverter->getSupportedOutputImageFormats($mimeType)[0]);
     }
 
-    public function getSvgMimeTypes(): \Generator
+    public static function getSvgMimeTypes(): \Generator
     {
         yield ['image/svg+xml'];
         yield ['image/svg'];
