@@ -26,7 +26,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class StructureMediaSearchSubscriber implements EventSubscriberInterface
 {
     /**
-     * @param string $searchImageFormat The format of the image, which will be returned in the search.
+     * @param string $searchImageFormat the format of the image which will be returned in the search
      */
     public function __construct(
         protected MediaManagerInterface $mediaManager,
