@@ -50,43 +50,13 @@ class StructureProvider implements ProviderInterface
 
     public const FIELD_WEBSPACE_KEY = 'webspace_key';
 
-    /**
-     * @var Factory
-     */
-    private $factory;
-
-    /**
-     * @var string
-     */
-    private $mapping;
-
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $structureFactory;
-
-    /**
-     * @var ExtensionManagerInterface
-     */
-    private $extensionManager;
-
-    /**
-     * @var MetadataFactory
-     */
-    private $metadataFactory;
-
     public function __construct(
-        Factory $factory,
-        MetadataFactory $metadataFactory,
-        StructureMetadataFactoryInterface $structureFactory,
-        ExtensionManagerInterface $extensionManager,
-        array $mapping = []
+        private Factory $factory,
+        private MetadataFactory $metadataFactory,
+        private StructureMetadataFactoryInterface $structureFactory,
+        private ExtensionManagerInterface $extensionManager,
+        private array $mapping = [],
     ) {
-        $this->factory = $factory;
-        $this->mapping = $mapping;
-        $this->metadataFactory = $metadataFactory;
-        $this->structureFactory = $structureFactory;
-        $this->extensionManager = $extensionManager;
     }
 
     /**

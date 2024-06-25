@@ -23,22 +23,10 @@ class ResourcelocatorController implements ClassResourceInterface
 {
     use RequestParametersTrait;
 
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
-
-    /**
-     * @var ViewHandler
-     */
-    private $viewHandler;
-
     public function __construct(
-        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
-        ViewHandler $viewHandler
+        private ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
+        private ViewHandler $viewHandler,
     ) {
-        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
-        $this->viewHandler = $viewHandler;
     }
 
     public function postAction(Request $request)

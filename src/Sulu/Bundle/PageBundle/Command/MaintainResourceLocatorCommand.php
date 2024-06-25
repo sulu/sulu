@@ -33,52 +33,15 @@ class MaintainResourceLocatorCommand extends Command
 {
     protected static $defaultName = 'sulu:content:resource-locator:maintain';
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
-
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
-
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $structureMetadataFactory;
-
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
-
     public function __construct(
-        WebspaceManagerInterface $webspaceManager,
-        SessionManagerInterface $sessionManager,
-        SessionInterface $liveSession,
-        MetadataFactoryInterface $metadataFactory,
-        StructureMetadataFactoryInterface $structureMetadataFactory,
-        PropertyEncoder $propertyEncoder
+        private WebspaceManagerInterface $webspaceManager,
+        private SessionManagerInterface $sessionManager,
+        private SessionInterface $liveSession,
+        private MetadataFactoryInterface $metadataFactory,
+        private StructureMetadataFactoryInterface $structureMetadataFactory,
+        private PropertyEncoder $propertyEncoder
     ) {
         parent::__construct();
-
-        $this->webspaceManager = $webspaceManager;
-        $this->sessionManager = $sessionManager;
-        $this->liveSession = $liveSession;
-        $this->metadataFactory = $metadataFactory;
-        $this->structureMetadataFactory = $structureMetadataFactory;
-        $this->propertyEncoder = $propertyEncoder;
     }
 
     protected function configure()

@@ -17,16 +17,10 @@ namespace Sulu\Bundle\PageBundle\Teaser\Provider;
 class TeaserProviderPool implements TeaserProviderPoolInterface
 {
     /**
-     * @var TeaserProviderInterface[]
-     */
-    private $providers;
-
-    /**
      * @param TeaserProviderInterface[] $providers
      */
-    public function __construct(array $providers)
+    public function __construct(private array $providers)
     {
-        $this->providers = $providers;
     }
 
     public function getProvider($name)

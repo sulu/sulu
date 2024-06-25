@@ -32,50 +32,14 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class WebspaceSerializeEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var WebspaceUrlProviderInterface
-     */
-    private $webspaceUrlProvider;
-
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
-
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
     public function __construct(
-        WebspaceManagerInterface $webspaceManager,
-        WebspaceUrlProviderInterface $webspaceUrlProvider,
-        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
-        AccessControlManagerInterface $accessControlManager,
-        TokenStorageInterface $tokenStorage,
-        $environment
+        private WebspaceManagerInterface $webspaceManager,
+        private WebspaceUrlProviderInterface $webspaceUrlProvider,
+        private ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
+        private AccessControlManagerInterface $accessControlManager,
+        private TokenStorageInterface $tokenStorage,
+        private string $environment,
     ) {
-        $this->webspaceManager = $webspaceManager;
-        $this->webspaceUrlProvider = $webspaceUrlProvider;
-        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
-        $this->accessControlManager = $accessControlManager;
-        $this->tokenStorage = $tokenStorage;
-        $this->environment = $environment;
     }
 
     public static function getSubscribedEvents()

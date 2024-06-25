@@ -36,36 +36,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class PublishSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
-
-    /**
-     * @var NodeHelperInterface
-     */
-    private $nodeHelper;
-
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
-
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
-
     public function __construct(
-        SessionInterface $liveSession,
-        NodeHelperInterface $nodeHelper,
-        PropertyEncoder $propertyEncoder,
-        MetadataFactoryInterface $metadataFactory
+        private SessionInterface $liveSession,
+        private NodeHelperInterface $nodeHelper,
+        private PropertyEncoder $propertyEncoder,
+        private MetadataFactoryInterface $metadataFactory,
     ) {
-        $this->liveSession = $liveSession;
-        $this->nodeHelper = $nodeHelper;
-        $this->propertyEncoder = $propertyEncoder;
-        $this->metadataFactory = $metadataFactory;
     }
 
     public static function getSubscribedEvents()

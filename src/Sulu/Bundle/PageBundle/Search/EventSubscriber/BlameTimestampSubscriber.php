@@ -31,20 +31,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class BlameTimestampSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var Factory
-     */
-    private $factory;
-
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    public function __construct(Factory $factory, EntityManager $entityManager)
+    public function __construct(private Factory $factory, private EntityManager $entityManager)
     {
-        $this->factory = $factory;
-        $this->entityManager = $entityManager;
     }
 
     public static function getSubscribedEvents()

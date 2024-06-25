@@ -26,39 +26,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PageTeaserProvider implements TeaserProviderInterface
 {
     /**
-     * @var SearchManagerInterface
-     */
-    private $searchManager;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var bool
-     */
-    private $showDrafts;
-
-    /**
-     * @var TeaserProviderInterface|null
-     */
-    private $phpcrPageTeaserProvider;
-
-    /**
      * @param PHPCRPageTeaserProvider|null $phpcrPageTeaserProvider
      */
     public function __construct(
-        SearchManagerInterface $searchManager,
-        TranslatorInterface $translator,
-        bool $showDrafts = false,
-        ?TeaserProviderInterface $phpcrPageTeaserProvider = null
+        private SearchManagerInterface $searchManager,
+        private TranslatorInterface $translator,
+        private bool $showDrafts = false,
+        private ?TeaserProviderInterface $phpcrPageTeaserProvider = null
     ) {
-        $this->searchManager = $searchManager;
-        $this->translator = $translator;
-        $this->showDrafts = $showDrafts;
-        $this->phpcrPageTeaserProvider = $phpcrPageTeaserProvider;
-
         if (null === $this->phpcrPageTeaserProvider) {
             @trigger_deprecation(
                 'sulu/sulu',
