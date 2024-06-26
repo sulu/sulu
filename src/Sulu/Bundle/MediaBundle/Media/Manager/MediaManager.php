@@ -70,108 +70,9 @@ class MediaManager implements MediaManagerInterface
     public const ENTITY_NAME_COLLECTION = \Sulu\Bundle\MediaBundle\Entity\Collection::class;
 
     /**
-     * The repository for communication with the database.
-     *
-     * @var MediaRepositoryInterface
-     */
-    protected $mediaRepository;
-
-    /**
-     * The repository for communication with the database.
-     *
-     * @var CollectionRepository
-     */
-    protected $collectionRepository;
-
-    /**
-     * @var CategoryRepositoryInterface
-     */
-    protected $categoryRepository;
-
-    /**
-     * @var TargetGroupRepositoryInterface
-     */
-    protected $targetGroupRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * @var FileValidatorInterface
-     */
-    private $validator;
-
-    /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
-
-    /**
-     * @var TypeManagerInterface
-     */
-    protected $typeManager;
-
-    /**
-     * @var StorageInterface
-     */
-    protected $storage;
-
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
-
-    /**
-     * @var TagManagerInterface
-     */
-    private $tagManager;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var PathCleanupInterface
-     */
-    private $pathCleaner;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
-     * @var string
-     */
-    private $downloadPath;
-
-    /**
      * @var int
      */
     public $count;
-
-    /**
-     * @var string
-     */
-    private $adminDownloadPath;
-
-    /**
-     * @var MediaPropertiesProviderInterface[]
-     */
-    private $mediaPropertiesProviders;
-
-    /**
-     * @var TrashManagerInterface|null
-     */
-    private $trashManager;
 
     /**
      * @param CollectionRepository $collectionRepository
@@ -180,44 +81,26 @@ class MediaManager implements MediaManagerInterface
      * @param string $adminDownloadPath
      */
     public function __construct(
-        MediaRepositoryInterface $mediaRepository,
-        CollectionRepositoryInterface $collectionRepository,
-        UserRepositoryInterface $userRepository,
-        CategoryRepositoryInterface $categoryRepository,
-        EntityManagerInterface $em,
-        StorageInterface $storage,
-        FileValidatorInterface $validator,
-        FormatManagerInterface $formatManager,
-        TagManagerInterface $tagManager,
-        TypeManagerInterface $typeManager,
-        PathCleanupInterface $pathCleaner,
-        DomainEventCollectorInterface $domainEventCollector,
-        ?TokenStorageInterface $tokenStorage,
-        ?SecurityCheckerInterface $securityChecker,
-        $mediaPropertiesProviders,
-        $downloadPath,
-        ?TargetGroupRepositoryInterface $targetGroupRepository,
-        $adminDownloadPath = null,
-        ?TrashManagerInterface $trashManager = null
+        protected MediaRepositoryInterface $mediaRepository,
+        protected CollectionRepositoryInterface $collectionRepository,
+        private UserRepositoryInterface $userRepository,
+        protected CategoryRepositoryInterface $categoryRepository,
+        private EntityManagerInterface $em,
+        protected StorageInterface $storage,
+        private FileValidatorInterface $validator,
+        private FormatManagerInterface $formatManager,
+        private TagManagerInterface $tagManager,
+        protected TypeManagerInterface $typeManager,
+        private PathCleanupInterface $pathCleaner,
+        private DomainEventCollectorInterface $domainEventCollector,
+        private ?TokenStorageInterface $tokenStorage,
+        private ?SecurityCheckerInterface $securityChecker,
+        protected $mediaPropertiesProviders,
+        private $downloadPath,
+        protected ?TargetGroupRepositoryInterface $targetGroupRepository,
+        private $adminDownloadPath = null,
+        private ?TrashManagerInterface $trashManager = null
     ) {
-        $this->mediaRepository = $mediaRepository;
-        $this->collectionRepository = $collectionRepository;
-        $this->userRepository = $userRepository;
-        $this->categoryRepository = $categoryRepository;
-        $this->targetGroupRepository = $targetGroupRepository;
-        $this->em = $em;
-        $this->storage = $storage;
-        $this->validator = $validator;
-        $this->formatManager = $formatManager;
-        $this->tagManager = $tagManager;
-        $this->typeManager = $typeManager;
-        $this->pathCleaner = $pathCleaner;
-        $this->domainEventCollector = $domainEventCollector;
-        $this->tokenStorage = $tokenStorage;
-        $this->securityChecker = $securityChecker;
-        $this->downloadPath = $downloadPath;
-        $this->trashManager = $trashManager;
-
         if (!$adminDownloadPath) {
             @trigger_deprecation(
                 'sulu/sulu',

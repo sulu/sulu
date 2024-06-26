@@ -14331,16 +14331,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:__construct\\(\\) has parameter \\$collectionEntityName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:__construct\\(\\) has parameter \\$mediaEntityName with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaDataProviderRepository\\:\\:append\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaDataProviderRepository.php
@@ -15036,11 +15026,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManager\\:\\:\\$formatOptionsRepository with generic class Doctrine\\\\ORM\\\\EntityRepository does not specify its types\\: TEntityClass$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManager.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManagerInterface\\:\\:delete\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/FormatOptions/FormatOptionsManagerInterface.php
@@ -15116,11 +15101,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ImageConverter\\\\ImagineImageConverter\\:\\:__construct\\(\\) has parameter \\$formats with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
@@ -15191,32 +15171,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ImageConverter\\\\ImagineImageConverter\\:\\:\\$formats type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ImageConverter\\\\ImagineImageConverter\\:\\:\\$supportedMimeTypes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ImageConverter\\\\ImagineImageConverter\\:\\:\\$svgImagine \\(Imagine\\\\Image\\\\ImagineInterface\\) does not accept Imagine\\\\Image\\\\ImagineInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
-
-		-
-			message: "#^Right side of && is always true\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/ImagineImageConverter.php
-
-		-
 			message: "#^Cannot call method get\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/MediaImageExtractor.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ImageConverter\\\\MediaImageExtractor\\:\\:__construct\\(\\) has parameter \\$ghostScriptPath with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ImageConverter/MediaImageExtractor.php
 
@@ -15319,6 +15274,21 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\ListRepresentationFactory\\\\MediaListRepresentationFactory\\:\\:getListRepresentation\\(\\) has parameter \\$parameters with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/ListRepresentationFactory/MediaListRepresentationFactory.php
+
+		-
+			message: "#^Argument of an invalid type array\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\PropertiesProvider\\\\MediaPropertiesProviderInterface\\>\\|FFMpeg\\\\FFProbe\\|null supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
+
+		-
+			message: "#^Cannot call method checkPermission\\(\\) on Sulu\\\\Component\\\\Security\\\\Authorization\\\\SecurityCheckerInterface\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
+
+		-
+			message: "#^Cannot call method findByIds\\(\\) on Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupRepositoryInterface\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
 			message: "#^Cannot call method getFileVersions\\(\\) on Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\File\\|null\\.$#"
@@ -15426,11 +15396,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
 			message: "#^Offset 'extension' does not exist on array\\{dirname\\: string, basename\\: string, extension\\?\\: string, filename\\: string\\}\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
@@ -15462,21 +15427,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$storageOptions of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\StorageInterface\\:\\:save\\(\\) expects array\\<string, string\\|null\\>, array given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManager\\:\\:\\$securityChecker \\(Sulu\\\\Component\\\\Security\\\\Authorization\\\\SecurityCheckerInterface\\) does not accept Sulu\\\\Component\\\\Security\\\\Authorization\\\\SecurityCheckerInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManager\\:\\:\\$targetGroupRepository \\(Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupRepositoryInterface\\) does not accept Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Entity\\\\TargetGroupRepositoryInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Manager\\\\MediaManager\\:\\:\\$tokenStorage \\(Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\) does not accept Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Manager/MediaManager.php
 
@@ -15546,12 +15496,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/Storage/FlysystemStorage.php
 
 		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 59\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
+			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 47\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Storage/FlysystemStorage.php
 
 		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 72\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
+			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 60\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Storage/FlysystemStorage.php
 
@@ -15566,17 +15516,12 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/Storage/LocalStorage.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function strlen expects string, int given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/Storage/LocalStorage.php
-
-		-
 			message: "#^Parameter \\#2 \\$fileName of method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\LocalStorage\\:\\:getUniqueFileName\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Storage/LocalStorage.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\Storage\\\\LocalStorage\\:\\:\\$segments \\(int\\) does not accept string\\.$#"
+			message: "#^Parameter \\#2 \\$max of function rand expects int, string given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/Storage/LocalStorage.php
 
@@ -15606,17 +15551,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\TypeManager\\\\TypeManager\\:\\:\\$blockedMimeTypes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\TypeManager\\\\TypeManager\\:\\:\\$mediaTypeEntities \\(array\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaType\\>\\) does not accept array\\<Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaType\\|null\\>\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\TypeManager\\\\TypeManager\\:\\:\\$mediaTypes type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Media/TypeManager/TypeManager.php
 
@@ -15706,11 +15641,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Search/Subscriber/MediaSearchSubscriber.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Search\\\\Subscriber\\\\MediaSearchSubscriber\\:\\:\\$thumbnailMimeTypes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Search/Subscriber/MediaSearchSubscriber.php
-
-		-
 			message: "#^Cannot call method getLocale\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Search/Subscriber/StructureMediaSearchSubscriber.php
@@ -15742,11 +15672,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$imageUrl of method Massive\\\\Bundle\\\\SearchBundle\\\\Search\\\\Document\\:\\:setImageUrl\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Search/Subscriber/StructureMediaSearchSubscriber.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\MediaBundle\\\\Search\\\\Subscriber\\\\StructureMediaSearchSubscriber\\:\\:\\$requestAnalyzer \\(Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\RequestAnalyzerInterface\\) does not accept Sulu\\\\Component\\\\Webspace\\\\Analyzer\\\\RequestAnalyzerInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Search/Subscriber/StructureMediaSearchSubscriber.php
 

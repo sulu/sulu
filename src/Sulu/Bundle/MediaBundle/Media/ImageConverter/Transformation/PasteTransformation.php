@@ -22,25 +22,10 @@ use Symfony\Component\Config\FileLocator;
  */
 class PasteTransformation implements TransformationInterface
 {
-    /**
-     * @var ImagineInterface
-     */
-    private $imagine;
-
-    /**
-     * @var FileLocator
-     */
-    private $fileLocator;
-
-    /**
-     * MaskTransformation constructor.
-     */
     public function __construct(
-        ImagineInterface $imagine,
-        FileLocator $fileLocator
+        private ImagineInterface $imagine,
+        private FileLocator $fileLocator,
     ) {
-        $this->imagine = $imagine;
-        $this->fileLocator = $fileLocator;
     }
 
     public function execute(ImageInterface $image, $parameters)

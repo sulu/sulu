@@ -20,34 +20,16 @@ use Symfony\Component\Filesystem\Filesystem;
 class LocalStorage implements StorageInterface
 {
     /**
-     * @var string
-     */
-    private $uploadPath;
-
-    /**
-     * @var int
-     */
-    private $segments;
-
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
 
     public function __construct(
-        string $uploadPath,
-        string $segments,
-        Filesystem $filesystem,
+        private string $uploadPath,
+        private string $segments,
+        private Filesystem $filesystem,
         ?LoggerInterface $logger = null
     ) {
-        $this->uploadPath = $uploadPath;
-        $this->segments = $segments;
-        $this->filesystem = $filesystem;
         $this->logger = $logger ?: new NullLogger();
     }
 

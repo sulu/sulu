@@ -24,50 +24,14 @@ use Sulu\Component\Security\Authorization\SecurityCheckerInterface;
 
 class MediaListBuilderFactory
 {
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
-
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $doctrineListBuilderFactory;
-
-    /**
-     * @var CollectionRepositoryInterface
-     */
-    private $collectionRepository;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var string
-     */
-    private $mediaClass;
-
-    /**
-     * @var string
-     */
-    private $collectionClass;
-
     public function __construct(
-        RestHelperInterface $restHelper,
-        DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
-        CollectionRepositoryInterface $collectionRepository,
-        SecurityCheckerInterface $securityChecker,
-        string $mediaClass,
-        string $collectionClass
+        private RestHelperInterface $restHelper,
+        private DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
+        private CollectionRepositoryInterface $collectionRepository,
+        private SecurityCheckerInterface $securityChecker,
+        private string $mediaClass,
+        private string $collectionClass,
     ) {
-        $this->restHelper = $restHelper;
-        $this->doctrineListBuilderFactory = $doctrineListBuilderFactory;
-        $this->collectionRepository = $collectionRepository;
-        $this->securityChecker = $securityChecker;
-        $this->mediaClass = $mediaClass;
-        $this->collectionClass = $collectionClass;
     }
 
     public function getListBuilder(
