@@ -60,11 +60,12 @@ class MediaStreamControllerTest extends WebsiteTestCase
 
     public function testOldExistVersionDownloadAction(): void
     {
-        $filePath = $this->createMediaFile('test.jpg');
-        $oldMedia = $this->createMedia($filePath, 'file-without-extension');
-        $newMedia = $this->createMediaVersion($oldMedia->getId(), $filePath, 'new-file-without-extension');
+        $filePath1 = $this->createMediaFile('test-1.jpg');
+        $filePath2 = $this->createMediaFile('test-2.jpg');
+        $oldMedia = $this->createMedia($filePath1, 'file-without-extension');
+        $newMedia = $this->createMediaVersion($oldMedia->getId(), $filePath2, 'new-file-without-extension');
 
-        $this->client->jsonRequest('GET', $oldMedia->getUrl());
+        $this->client->request('GET', $oldMedia->getUrl());
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
         $this->assertEquals(
@@ -78,6 +79,12 @@ class MediaStreamControllerTest extends WebsiteTestCase
             'noindex, follow',
             $response->headers->get('X-Robots-Tag')
         );
+        $this->assertSame('attachment; filename=test-1.jpg', $response->headers->get('Content-Disposition'));
+
+        $this->client->request('GET', $newMedia->getUrl());
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(200, $response);
+        $this->assertSame('attachment; filename=test-2.jpg', $response->headers->get('Content-Disposition'));
     }
 
     public function testDownloadWithoutExtensionAction(): void
