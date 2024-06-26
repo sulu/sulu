@@ -102,6 +102,16 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                 ->where('media.id = :mediaId')
                 ->setParameter('mediaId', $id);
 
+            $fileVersionJoinCondition = 'file.version = fileVersion.version';
+            if (null !== $version) {
+                $fileVersionJoinCondition = 'fileVersion.version IN (:version, fileVersion.version)'; // for the x-robots canonical we require latest version and old version
+                $queryBuilder->setParameter('version', $version);
+            }
+
+            $queryBuilder
+                ->addSelect('fileVersion')
+                ->leftJoin('file.fileVersions', 'fileVersion', Join::WITH, $fileVersionJoinCondition);
+
             if (null !== $formatKey) {
                 $queryBuilder
                     ->addSelect('formatOptions')
@@ -113,16 +123,6 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
                     )
                     ->setParameter('formatKey', $formatKey);
             }
-
-            $fileVersionJoinCondition = 'file.version = fileVersion.version';
-            if (null !== $version) {
-                $fileVersionJoinCondition = 'fileVersion.version IN (:version, fileVersion.version)'; // for the x-robots canonical we require latest version and old version
-                $queryBuilder->setParameter('version', $version);
-            }
-
-            $queryBuilder
-                ->addSelect('fileVersion')
-                ->leftJoin('file.fileVersions', 'fileVersion', Join::WITH, $fileVersionJoinCondition);
 
             /** @var MediaInterface */
             return $queryBuilder->getQuery()->getSingleResult();
