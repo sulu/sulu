@@ -356,6 +356,10 @@ class ContactControllerTest extends SuluTestCase
                             'email' => 'erika.mustermann@muster.de',
                             'emailType' => $emailType->getId(),
                         ],
+                        [
+                            'email' => null,
+                            'emailType' => $emailType->getId(),
+                        ],
                     ],
                     'phones' => [
                         [
@@ -366,6 +370,10 @@ class ContactControllerTest extends SuluTestCase
                             'phone' => '987654321',
                             'phoneType' => $phoneType->getId(),
                         ],
+                        [
+                            'phone' => null,
+                            'phoneType' => $phoneType->getId(),
+                        ],
                     ],
                     'faxes' => [
                         [
@@ -374,6 +382,10 @@ class ContactControllerTest extends SuluTestCase
                         ],
                         [
                             'fax' => '987654321-1',
+                            'faxType' => $faxType->getId(),
+                        ],
+                        [
+                            'fax' => null,
                             'faxType' => $faxType->getId(),
                         ],
                     ],
