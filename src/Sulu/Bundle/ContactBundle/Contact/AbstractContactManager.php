@@ -577,7 +577,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         $urls = $this->getProperty($contactDetailsData, 'websites');
         if (!empty($urls)) {
             foreach ($urls as $urlData) {
-                if(!empty($urlData['website'])) {
+                if (!empty($urlData['website'])) {
                     $this->addUrl($contact, $urlData);
                 }
             }
@@ -588,7 +588,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         $faxes = $this->getProperty($contactDetailsData, 'faxes');
         if (!empty($faxes)) {
             foreach ($faxes as $faxData) {
-                if(!empty($faxData['fax'])) {
+                if (!empty($faxData['fax'])) {
                     $this->addFax($contact, $faxData);
                 }
             }
@@ -607,7 +607,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         $emails = $this->getProperty($contactDetailsData, 'emails');
         if (!empty($emails)) {
             foreach ($emails as $emailData) {
-                if(!empty($emailData['email'])) {
+                if (!empty($emailData['email'])) {
                     $this->addEmail($contact, $emailData);
                 }
             }
@@ -618,7 +618,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         $phones = $this->getProperty($contactDetailsData, 'phones');
         if (!empty($phones)) {
             foreach ($phones as $phoneData) {
-                if(!empty($phoneData['phone'])) {
+                if (!empty($phoneData['phone'])) {
                     $this->addPhone($contact, $phoneData);
                 }
             }
