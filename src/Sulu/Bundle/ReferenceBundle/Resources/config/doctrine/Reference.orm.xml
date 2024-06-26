@@ -15,7 +15,7 @@
         <field name="resourceId" column="resourceId" type="string" nullable="false" length="191"/>
         <field name="referenceResourceKey" column="referenceResourceKey" type="string" nullable="false" length="191"/>
         <field name="referenceResourceId" column="referenceResourceId" type="string" nullable="false" length="191"/>
-        <field name="referenceLocale" column="referenceLocale" type="string" nullable="true" length="5"/>
+        <field name="referenceLocale" column="referenceLocale" type="string" nullable="true" length="15"/>
         <field name="referenceRouterAttributes" column="referenceRouterAttributes" type="json">
             <options>
                 <option name="jsonb">true</option>

@@ -1,5 +1,24 @@
 # Upgrade
 
+## 2.6.3
+
+### Change locale length
+
+Change length of the locale fields to support longer locales.
+
+```sql
+ALTER TABLE re_references CHANGE referenceLocale referenceLocale VARCHAR(15) DEFAULT NULL;
+ALTER TABLE me_collection_meta CHANGE locale locale VARCHAR(15) NOT NULL;
+ALTER TABLE me_file_version_publish_languages CHANGE locale locale VARCHAR(15) NOT NULL;
+ALTER TABLE me_file_version_meta CHANGE locale locale VARCHAR(15) NOT NULL;
+ALTER TABLE me_file_version_content_languages CHANGE locale locale VARCHAR(15) NOT NULL;
+ALTER TABLE ca_category_meta CHANGE locale locale VARCHAR(15) DEFAULT NULL;
+ALTER TABLE ca_category_translations CHANGE locale locale VARCHAR(15) NOT NULL;
+ALTER TABLE ca_categories CHANGE default_locale default_locale VARCHAR(15) NOT NULL;
+ALTER TABLE ca_keywords CHANGE locale locale VARCHAR(15) NOT NULL;
+ALTER TABLE ro_routes CHANGE locale locale VARCHAR(15) NOT NULL;
+```
+
 ## 2.6.0
 
 ### PHP 8.2 upgrade
