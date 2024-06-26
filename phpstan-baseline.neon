@@ -13831,12 +13831,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
 
 		-
-			message: "#^Cannot call method getVersion\\(\\) on Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\File\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepositoryInterface\\:\\:findMediaByIdForRendering\\(\\) invoked with 3 parameters, 2 required\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
 
@@ -13856,22 +13851,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
 
 		-
-			message: "#^Parameter \\#2 \\$version of method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaStreamController\\:\\:getFileVersion\\(\\) expects int, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
-
-		-
 			message: "#^Parameter \\#3 \\$extension of method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaStreamController\\:\\:cleanUpFileName\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
-
-		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 124\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
-
-		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 72\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
 
@@ -14587,6 +14567,11 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepositoryInterface\\:\\:findMediaDisplayInfo\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepositoryInterface.php
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$version$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Entity/MediaRepositoryInterface.php
 
