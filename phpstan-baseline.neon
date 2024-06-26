@@ -24896,27 +24896,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Twig/ExportTwigExtension.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PersistenceBundle\\\\DependencyInjection\\\\Compiler\\\\ResolveTargetEntitiesPass\\:\\:__construct\\(\\) has parameter \\$interfaces with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/DependencyInjection/Compiler/ResolveTargetEntitiesPass.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PersistenceBundle\\\\DependencyInjection\\\\Compiler\\\\ResolveTargetEntitiesPass\\:\\:getClass\\(\\) should return string but returns array\\|bool\\|float\\|int\\|string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/DependencyInjection/Compiler/ResolveTargetEntitiesPass.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PersistenceBundle\\\\DependencyInjection\\\\Compiler\\\\ResolveTargetEntitiesPass\\:\\:resolve\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/DependencyInjection/Compiler/ResolveTargetEntitiesPass.php
-
-		-
 			message: "#^Parameter \\#1 \\.\\.\\.\\$arrays of function array_merge expects array, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/DependencyInjection/Compiler/ResolveTargetEntitiesPass.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PersistenceBundle\\\\DependencyInjection\\\\Compiler\\\\ResolveTargetEntitiesPass\\:\\:\\$interfaces type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PersistenceBundle/DependencyInjection/Compiler/ResolveTargetEntitiesPass.php
 
