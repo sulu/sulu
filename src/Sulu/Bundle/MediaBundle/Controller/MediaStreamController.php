@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
@@ -86,6 +87,7 @@ class MediaStreamController
             }
 
             $version = $request->get('v', null);
+            $version = \is_numeric($version) ? ((int) $version) : null;
             $noCount = $request->get('no-count', false);
 
             $fileVersion = $this->getFileVersion($id, $version);
@@ -197,7 +199,7 @@ class MediaStreamController
 
     /**
      * @param int $id
-     * @param int $version
+     * @param int|null $version
      *
      * @return FileVersion|null
      *
@@ -205,29 +207,27 @@ class MediaStreamController
      */
     protected function getFileVersion($id, $version)
     {
-        $version = empty($version) ? null : (int)$version;
-
         /** @var MediaInterface|null $mediaEntity */
         $mediaEntity = $this->mediaRepository->findMediaByIdForRendering($id, null, $version);
 
-        if ($mediaEntity === null) {
+        if (!$mediaEntity) {
             return null;
         }
 
         /** @var File|null $file */
-        $file = $mediaEntity->getFiles()->get(0);
+        $file = $mediaEntity->getFiles()[0];
 
-        if ($file === null) {
+        if (!$file) {
             return null;
         }
 
-        if ($version === null) {
+        if (!$version) {
             $version = $file->getVersion();
         }
 
         $fileVersion = $file->getFileVersion($version);
 
-        if ($fileVersion === null) {
+        if (!$fileVersion) {
             throw new FileVersionNotFoundException($id, $version);
         }
 

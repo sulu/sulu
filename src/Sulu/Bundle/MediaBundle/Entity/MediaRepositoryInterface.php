@@ -38,11 +38,11 @@ interface MediaRepositoryInterface extends RepositoryInterface
      *
      * @param int $id
      * @param string|null $formatKey
-     * @param int|null $specificFileVersion
+     * @param int<1, max>|null $version
      *
      * @return MediaInterface|null
      */
-    public function findMediaByIdForRendering($id, $formatKey, $specificFileVersion = null);
+    public function findMediaByIdForRendering($id, $formatKey /*, $version = null */);
 
     /**
      * Finds all media, can be filtered with parent.
