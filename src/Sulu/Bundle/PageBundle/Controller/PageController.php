@@ -66,81 +66,21 @@ class PageController extends AbstractRestController implements ClassResourceInte
      */
     protected static $relationName = BasePageDocument::RESOURCE_KEY;
 
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
-
-    /**
-     * @var ContentRepositoryInterface
-     */
-    private $contentRepository;
-
-    /**
-     * @var RequestHashCheckerInterface
-     */
-    private $requestHashChecker;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
-     * @var NodeRepositoryInterface
-     */
-    private $nodeRepository;
-
-    /**
-     * @var BaseMetadataFactory
-     */
-    private $metadataFactory;
-
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
         TokenStorageInterface $tokenStorage,
-        SecurityCheckerInterface $securityChecker,
-        DocumentManagerInterface $documentManager,
-        ContentMapperInterface $contentMapper,
-        ContentRepositoryInterface $contentRepository,
-        RequestHashCheckerInterface $requestHashChecker,
-        WebspaceManagerInterface $webspaceManager,
-        SessionManagerInterface $sessionManager,
-        NodeRepositoryInterface $nodeRepository,
-        BaseMetadataFactory $metadataFactory,
-        FormFactoryInterface $formFactory
+        private SecurityCheckerInterface $securityChecker,
+        private DocumentManagerInterface $documentManager,
+        private ContentMapperInterface $contentMapper,
+        private ContentRepositoryInterface $contentRepository,
+        private RequestHashCheckerInterface $requestHashChecker,
+        private WebspaceManagerInterface $webspaceManager,
+        private SessionManagerInterface $sessionManager,
+        private NodeRepositoryInterface $nodeRepository,
+        private BaseMetadataFactory $metadataFactory,
+        private FormFactoryInterface $formFactory
     ) {
         parent::__construct($viewHandler, $tokenStorage);
-        $this->securityChecker = $securityChecker;
-        $this->documentManager = $documentManager;
-        $this->contentMapper = $contentMapper;
-        $this->contentRepository = $contentRepository;
-        $this->requestHashChecker = $requestHashChecker;
-        $this->webspaceManager = $webspaceManager;
-        $this->sessionManager = $sessionManager;
-        $this->nodeRepository = $nodeRepository;
-        $this->metadataFactory = $metadataFactory;
-        $this->formFactory = $formFactory;
     }
 
     public function getAction(Request $request, string $id): Response

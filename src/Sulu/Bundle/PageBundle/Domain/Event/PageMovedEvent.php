@@ -21,45 +21,14 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 
 class PageMovedEvent extends DomainEvent
 {
-    /**
-     * @var PageDocument
-     */
-    private $pageDocument;
-
-    /**
-     * @var string|null
-     */
-    private $previousParentId;
-
-    /**
-     * @var string|null
-     */
-    private $previousParentWebspaceKey;
-
-    /**
-     * @var string|null
-     */
-    private $previousParentTitle;
-
-    /**
-     * @var string|null
-     */
-    private $previousParentTitleLocale;
-
     public function __construct(
-        PageDocument $pageDocument,
-        ?string $previousParentId,
-        ?string $previousParentWebspaceKey,
-        ?string $previousParentTitle,
-        ?string $previousParentTitleLocale
+        private PageDocument $pageDocument,
+        private ?string $previousParentId,
+        private ?string $previousParentWebspaceKey,
+        private ?string $previousParentTitle,
+        private ?string $previousParentTitleLocale
     ) {
         parent::__construct();
-
-        $this->pageDocument = $pageDocument;
-        $this->previousParentId = $previousParentId;
-        $this->previousParentWebspaceKey = $previousParentWebspaceKey;
-        $this->previousParentTitle = $previousParentTitle;
-        $this->previousParentTitleLocale = $previousParentTitleLocale;
     }
 
     public function getPageDocument(): PageDocument

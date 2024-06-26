@@ -44,32 +44,13 @@ class WebspaceController extends AbstractRestController implements ClassResource
 {
     use RequestParametersTrait;
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        WebspaceManagerInterface $webspaceManager,
-        SecurityCheckerInterface $securityChecker,
-        RequestStack $requestStack
+        private WebspaceManagerInterface $webspaceManager,
+        private SecurityCheckerInterface $securityChecker,
+        private RequestStack $requestStack
     ) {
         parent::__construct($viewHandler);
-
-        $this->webspaceManager = $webspaceManager;
-        $this->securityChecker = $securityChecker;
-        $this->requestStack = $requestStack;
     }
 
     /**

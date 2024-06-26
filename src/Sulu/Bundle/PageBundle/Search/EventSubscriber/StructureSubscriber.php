@@ -31,14 +31,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class StructureSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var SearchManagerInterface
-     */
-    protected $searchManager;
-
-    public function __construct(SearchManagerInterface $searchManager)
+    public function __construct(protected SearchManagerInterface $searchManager)
     {
-        $this->searchManager = $searchManager;
     }
 
     public static function getSubscribedEvents()

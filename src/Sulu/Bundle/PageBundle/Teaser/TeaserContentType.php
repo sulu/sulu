@@ -37,38 +37,13 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class TeaserContentType extends SimpleContentType implements PreResolvableContentTypeInterface, PropertyMetadataMapperInterface
 {
-    /**
-     * @var TeaserProviderPoolInterface
-     */
-    private $teaserProviderPool;
-
-    /**
-     * @var TeaserManagerInterface
-     */
-    private $teaserManager;
-
-    /**
-     * @var ReferenceStorePoolInterface
-     */
-    private $referenceStorePool;
-
-    /**
-     * @var PropertyMetadataMinMaxValueResolver|null
-     */
-    private $propertyMetadataMinMaxValueResolver;
-
     public function __construct(
-        TeaserProviderPoolInterface $providerPool,
-        TeaserManagerInterface $teaserManager,
-        ReferenceStorePoolInterface $referenceStorePool,
-        ?PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver = null
+        private TeaserProviderPoolInterface $teaserProviderPool,
+        private TeaserManagerInterface $teaserManager,
+        private ReferenceStorePoolInterface $referenceStorePool,
+        private ?PropertyMetadataMinMaxValueResolver $propertyMetadataMinMaxValueResolver = null
     ) {
         parent::__construct('teaser_selection');
-
-        $this->teaserProviderPool = $providerPool;
-        $this->teaserManager = $teaserManager;
-        $this->referenceStorePool = $referenceStorePool;
-        $this->propertyMetadataMinMaxValueResolver = $propertyMetadataMinMaxValueResolver;
     }
 
     public function getDefaultParams(?PropertyInterface $property = null)

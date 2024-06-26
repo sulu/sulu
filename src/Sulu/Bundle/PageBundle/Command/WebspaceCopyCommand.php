@@ -49,26 +49,6 @@ class WebspaceCopyCommand extends Command
     private $output;
 
     /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
-     * @var HtmlTagExtractor
-     */
-    private $htmlTagExtractor;
-
-    /**
      * @var string
      */
     protected $webspaceKeySource;
@@ -79,17 +59,12 @@ class WebspaceCopyCommand extends Command
     protected $webspaceKeyDestination;
 
     public function __construct(
-        DocumentManagerInterface $documentManager,
-        SessionManagerInterface $sessionManager,
-        DocumentInspector $documentInspector,
-        HtmlTagExtractor $htmlTagExtractor
+        private DocumentManagerInterface $documentManager,
+        private SessionManagerInterface $sessionManager,
+        private DocumentInspector $documentInspector,
+        private HtmlTagExtractor $htmlTagExtractor
     ) {
         parent::__construct();
-
-        $this->documentManager = $documentManager;
-        $this->sessionManager = $sessionManager;
-        $this->documentInspector = $documentInspector;
-        $this->htmlTagExtractor = $htmlTagExtractor;
     }
 
     protected function configure()

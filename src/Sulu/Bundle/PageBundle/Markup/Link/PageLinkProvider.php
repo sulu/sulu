@@ -27,57 +27,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PageLinkProvider implements LinkProviderInterface
 {
-    /**
-     * @var ContentRepositoryInterface
-     */
-    protected $contentRepository;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    protected $webspaceManager;
-
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var string
-     */
-    protected $environment;
-
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
     public function __construct(
-        ContentRepositoryInterface $contentRepository,
-        WebspaceManagerInterface $webspaceManager,
-        RequestStack $requestStack,
-        TranslatorInterface $translator,
-        string $environment,
-        AccessControlManagerInterface $accessControlManager,
-        ?TokenStorageInterface $tokenStorage = null
+        protected ContentRepositoryInterface $contentRepository,
+        protected WebspaceManagerInterface $webspaceManager,
+        protected RequestStack $requestStack,
+        private TranslatorInterface $translator,
+        protected string $environment,
+        private AccessControlManagerInterface $accessControlManager,
+        private ?TokenStorageInterface $tokenStorage = null
     ) {
-        $this->contentRepository = $contentRepository;
-        $this->webspaceManager = $webspaceManager;
-        $this->requestStack = $requestStack;
-        $this->translator = $translator;
-        $this->environment = $environment;
-        $this->accessControlManager = $accessControlManager;
-        $this->tokenStorage = $tokenStorage;
     }
 
     public function getConfiguration()
