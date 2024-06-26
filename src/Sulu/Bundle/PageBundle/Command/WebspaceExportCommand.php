@@ -23,16 +23,9 @@ class WebspaceExportCommand extends Command
 {
     protected static $defaultName = 'sulu:webspaces:export';
 
-    /**
-     * @var WebspaceExportInterface
-     */
-    private $webspaceExporter;
-
-    public function __construct(WebspaceExportInterface $webspaceExporter)
+    public function __construct(private WebspaceExportInterface $webspaceExporter)
     {
         parent::__construct();
-
-        $this->webspaceExporter = $webspaceExporter;
     }
 
     protected function configure()

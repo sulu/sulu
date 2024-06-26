@@ -29,36 +29,12 @@ use Sulu\Component\Webspace\PortalInformation;
  */
 class PagesSitemapProvider extends AbstractSitemapProvider
 {
-    /**
-     * @var ContentRepositoryInterface
-     */
-    private $contentRepository;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
-     * @var ?AccessControlManagerInterface
-     */
-    private $accessControlManager;
-
     public function __construct(
-        ContentRepositoryInterface $contentRepository,
-        WebspaceManagerInterface $webspaceManager,
-        string $environment,
-        ?AccessControlManagerInterface $accessControlManager = null
+        private ContentRepositoryInterface $contentRepository,
+        private WebspaceManagerInterface $webspaceManager,
+        private string $environment,
+        private ?AccessControlManagerInterface $accessControlManager = null,
     ) {
-        $this->contentRepository = $contentRepository;
-        $this->webspaceManager = $webspaceManager;
-        $this->environment = $environment;
-        $this->accessControlManager = $accessControlManager;
     }
 
     public function build($page, $scheme, $host)

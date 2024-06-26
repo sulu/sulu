@@ -46,70 +46,22 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class NodeRepository implements NodeRepositoryInterface
 {
     /**
-     * @var ContentMapperInterface
-     */
-    private $mapper;
-
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
      * for returning self link in get action.
      *
      * @var string
      */
     private $apiBasePath = '/admin/api/nodes';
 
-    /**
-     * @var UserManagerInterface
-     */
-    private $userManager;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var ContentQueryBuilderInterface
-     */
-    private $queryBuilder;
-
-    /**
-     * @var ContentQueryExecutorInterface
-     */
-    private $queryExecutor;
-
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
     public function __construct(
-        ContentMapperInterface $mapper,
-        SessionManagerInterface $sessionManager,
-        UserManagerInterface $userManager,
-        WebspaceManagerInterface $webspaceManager,
-        ContentQueryBuilderInterface $queryBuilder,
-        ContentQueryExecutorInterface $queryExecutor,
-        AccessControlManagerInterface $accessControlManager,
-        ?TokenStorageInterface $tokenStorage = null
+        private ContentMapperInterface $mapper,
+        private SessionManagerInterface $sessionManager,
+        private UserManagerInterface $userManager,
+        private WebspaceManagerInterface $webspaceManager,
+        private ContentQueryBuilderInterface $queryBuilder,
+        private ContentQueryExecutorInterface $queryExecutor,
+        private AccessControlManagerInterface $accessControlManager,
+        private ?TokenStorageInterface $tokenStorage = null,
     ) {
-        $this->mapper = $mapper;
-        $this->sessionManager = $sessionManager;
-        $this->userManager = $userManager;
-        $this->webspaceManager = $webspaceManager;
-        $this->queryBuilder = $queryBuilder;
-        $this->queryExecutor = $queryExecutor;
-        $this->accessControlManager = $accessControlManager;
-        $this->tokenStorage = $tokenStorage;
     }
 
     /**

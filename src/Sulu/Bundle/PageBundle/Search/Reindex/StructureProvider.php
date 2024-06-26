@@ -16,7 +16,6 @@ use Sulu\Bundle\DocumentManagerBundle\Bridge\DocumentInspector;
 use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\Behavior\WorkflowStageBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
-use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactory;
 use Sulu\Component\Content\Metadata\Factory\StructureMetadataFactoryInterface;
 use Sulu\Component\DocumentManager\DocumentManagerInterface;
 use Sulu\Component\DocumentManager\MetadataFactoryInterface;
@@ -28,42 +27,15 @@ use Sulu\Component\HttpKernel\SuluKernel;
 class StructureProvider implements LocalizedReindexProviderInterface
 {
     /**
-     * @var MetadataFactoryInterface
+     * @param string $context
      */
-    private $metadataFactory;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var StructureMetadataFactory
-     */
-    private $structureFactory;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
-     * @var string
-     */
-    private $context;
-
     public function __construct(
-        DocumentManagerInterface $documentManager,
-        MetadataFactoryInterface $metadataFactory,
-        StructureMetadataFactoryInterface $structureFactory,
-        DocumentInspector $inspector,
-        $context
+        private DocumentManagerInterface $documentManager,
+        private MetadataFactoryInterface $metadataFactory,
+        private StructureMetadataFactoryInterface $structureFactory,
+        private DocumentInspector $inspector,
+        private $context
     ) {
-        $this->documentManager = $documentManager;
-        $this->metadataFactory = $metadataFactory;
-        $this->structureFactory = $structureFactory;
-        $this->inspector = $inspector;
-        $this->context = $context;
     }
 
     public function getLocalesForObject($object)

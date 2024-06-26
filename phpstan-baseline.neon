@@ -18241,11 +18241,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Command/ValidateWebspacesCommand.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Command\\\\ValidateWebspacesCommand\\:\\:\\$errors type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Command/ValidateWebspacesCommand.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Command\\\\ValidateWebspacesCommand\\:\\:\\$structureProvider is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Command/ValidateWebspacesCommand.php
@@ -18861,16 +18856,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Content/Types/PageSelection.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\PageSelection\\:\\:__construct\\(\\) has parameter \\$permissions with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Content/Types/PageSelection.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\PageSelection\\:\\:__construct\\(\\) has parameter \\$showDrafts with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Content/Types/PageSelection.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\PageSelection\\:\\:exportData\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Content/Types/PageSelection.php
@@ -18902,16 +18887,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Content/Types/PageSelection.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\PageSelection\\:\\:\\$enabledTwigAttributes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Content/Types/PageSelection.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Content\\\\Types\\\\PageSelection\\:\\:\\$permissions type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Content/Types/PageSelection.php
 
@@ -19691,11 +19666,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/DocumentManager/ContentInitializer.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\DocumentManager\\\\ContentInitializer\\:\\:__construct\\(\\) has parameter \\$languageNamespace with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/DocumentManager/ContentInitializer.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\DocumentManager\\\\ContentInitializer\\:\\:initialize\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/DocumentManager/ContentInitializer.php
@@ -19827,11 +19797,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method getUser\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\TokenInterface\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/EventListener/WebspaceSerializeEventSubscriber.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\EventListener\\\\WebspaceSerializeEventSubscriber\\:\\:__construct\\(\\) has parameter \\$environment with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/EventListener/WebspaceSerializeEventSubscriber.php
 
@@ -20001,17 +19966,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
 			message: "#^Parameter \\#3 \\$url of class Sulu\\\\Bundle\\\\MarkupBundle\\\\Markup\\\\Link\\\\LinkItem constructor expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Markup\\\\Link\\\\PageLinkProvider\\:\\:\\$tokenStorage \\(Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\) does not accept Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Markup/Link/PageLinkProvider.php
 
@@ -20113,11 +20068,6 @@ parameters:
 		-
 			message: "#^Cannot call method getName\\(\\) on Sulu\\\\Component\\\\Webspace\\\\Webspace\\|null\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
-
-		-
-			message: "#^Left side of && is always true\\.$#"
-			count: 2
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
 		-
@@ -20287,11 +20237,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#5 \\$destLanguageCodes of method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapperInterface\\:\\:copyLanguage\\(\\) expects string, array\\<string\\> given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Repository\\\\NodeRepository\\:\\:\\$tokenStorage \\(Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\) does not accept Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\Storage\\\\TokenStorageInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Repository/NodeRepository.php
 
@@ -21126,11 +21071,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Search/EventSubscriber/BlameTimestampSubscriber.php
 
 		-
-			message: "#^Argument of an invalid type string supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Search/Metadata/StructureProvider.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Search\\\\Metadata\\\\StructureProvider\\:\\:__construct\\(\\) has parameter \\$mapping with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Search/Metadata/StructureProvider.php
@@ -21186,16 +21126,6 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Search/Metadata/StructureProvider.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Search\\\\Metadata\\\\StructureProvider\\:\\:\\$mapping \\(string\\) does not accept array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Search/Metadata/StructureProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Search\\\\Reindex\\\\StructureProvider\\:\\:__construct\\(\\) has parameter \\$context with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Search/Reindex/StructureProvider.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Search\\\\Reindex\\\\StructureProvider\\:\\:cleanUp\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Search/Reindex/StructureProvider.php
@@ -21212,11 +21142,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Search\\\\Reindex\\\\StructureProvider\\:\\:getQuery\\(\\) has parameter \\$classFqn with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Search/Reindex/StructureProvider.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Search\\\\Reindex\\\\StructureProvider\\:\\:\\$structureFactory \\(Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactory\\) does not accept Sulu\\\\Component\\\\Content\\\\Metadata\\\\Factory\\\\StructureMetadataFactoryInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Search/Reindex/StructureProvider.php
 
@@ -21637,11 +21562,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PageBundle\\\\Teaser\\\\Teaser\\:\\:merge\\(\\) has parameter \\$item with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PageBundle/Teaser/Teaser.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\Teaser\\\\Teaser\\:\\:\\$attributes type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/Teaser/Teaser.php
 

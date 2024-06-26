@@ -46,57 +46,15 @@ class PageAdmin extends Admin
 
     public const EDIT_FORM_VIEW = 'sulu_page.page_edit_form';
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
-     * @var TeaserProviderPoolInterface
-     */
-    private $teaserProviderPool;
-
-    /**
-     * @var bool
-     */
-    private $versioningEnabled;
-
-    /**
-     * @var ActivityViewBuilderFactoryInterface
-     */
-    private $activityViewBuilderFactory;
-
     public function __construct(
-        ViewBuilderFactoryInterface $viewBuilderFactory,
-        WebspaceManagerInterface $webspaceManager,
-        SecurityCheckerInterface $securityChecker,
-        SessionManagerInterface $sessionManager,
-        TeaserProviderPoolInterface $teaserProviderPool,
-        bool $versioningEnabled,
-        ActivityViewBuilderFactoryInterface $activityViewBuilderFactory
+        private ViewBuilderFactoryInterface $viewBuilderFactory,
+        private WebspaceManagerInterface $webspaceManager,
+        private SecurityCheckerInterface $securityChecker,
+        private SessionManagerInterface $sessionManager,
+        private TeaserProviderPoolInterface $teaserProviderPool,
+        private bool $versioningEnabled,
+        private ActivityViewBuilderFactoryInterface $activityViewBuilderFactory,
     ) {
-        $this->viewBuilderFactory = $viewBuilderFactory;
-        $this->webspaceManager = $webspaceManager;
-        $this->securityChecker = $securityChecker;
-        $this->sessionManager = $sessionManager;
-        $this->teaserProviderPool = $teaserProviderPool;
-        $this->versioningEnabled = $versioningEnabled;
-        $this->activityViewBuilderFactory = $activityViewBuilderFactory;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void

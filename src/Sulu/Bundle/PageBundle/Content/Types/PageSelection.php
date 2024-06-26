@@ -31,53 +31,20 @@ use Sulu\Component\Util\ArrayableInterface;
 class PageSelection extends ComplexContentType implements ContentTypeExportInterface, PreResolvableContentTypeInterface
 {
     /**
-     * @var ContentQueryExecutorInterface
+     * @param bool $showDrafts
+     * @param mixed[] $permissions
      */
-    private $contentQueryExecutor;
-
-    /**
-     * @var ContentQueryBuilderInterface
-     */
-    private $contentQueryBuilder;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $referenceStore;
-
-    /**
-     * @var bool
-     */
-    private $showDrafts;
-
-    /**
-     * @var array
-     */
-    private $permissions;
-
-    /**
-     * @var array
-     */
-    private $enabledTwigAttributes = [];
-
     public function __construct(
-        ContentQueryExecutorInterface $contentQueryExecutor,
-        ContentQueryBuilderInterface $contentQueryBuilder,
-        ReferenceStoreInterface $referenceStore,
-        $showDrafts,
-        $permissions = null,
-        array $enabledTwigAttributes = [
+        private ContentQueryExecutorInterface $contentQueryExecutor,
+        private ContentQueryBuilderInterface $contentQueryBuilder,
+        private ReferenceStoreInterface $referenceStore,
+        private $showDrafts,
+        private $permissions = null,
+        private array $enabledTwigAttributes = [
             'path' => true,
         ]
     ) {
-        $this->contentQueryExecutor = $contentQueryExecutor;
-        $this->contentQueryBuilder = $contentQueryBuilder;
-        $this->referenceStore = $referenceStore;
-        $this->showDrafts = $showDrafts;
-        $this->permissions = $permissions;
-        $this->enabledTwigAttributes = $enabledTwigAttributes;
-
-        if ($enabledTwigAttributes['path'] ?? true) {
+        if ($this->enabledTwigAttributes['path'] ?? true) {
             @trigger_deprecation('sulu/sulu', '2.3', 'Enabling the "path" parameter is deprecated.');
         }
     }

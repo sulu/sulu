@@ -28,38 +28,13 @@ class ValidatePagesCommand extends Command
 {
     protected static $defaultName = 'sulu:content:validate';
 
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
-
-    /**
-     * @var WebspaceStructureProviderInterface
-     */
-    private $structureProvider;
-
     public function __construct(
-        SessionInterface $session,
-        WebspaceManagerInterface $webspaceManager,
-        StructureManagerInterface $structureManager,
-        WebspaceStructureProviderInterface $structureProvider
+        private SessionInterface $session,
+        private WebspaceManagerInterface $webspaceManager,
+        private StructureManagerInterface $structureManager,
+        private WebspaceStructureProviderInterface $structureProvider
     ) {
         parent::__construct();
-
-        $this->session = $session;
-        $this->webspaceManager = $webspaceManager;
-        $this->structureManager = $structureManager;
-        $this->structureProvider = $structureProvider;
     }
 
     protected function configure()

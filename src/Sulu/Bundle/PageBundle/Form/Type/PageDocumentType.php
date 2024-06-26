@@ -22,29 +22,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PageDocumentType extends BasePageDocumentType
 {
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var MetadataFactory
-     */
-    private $metadataFactory;
-
     public function __construct(
-        SessionManagerInterface $sessionManager,
-        DocumentManagerInterface $documentManager,
-        MetadataFactory $metadataFactory
+        private SessionManagerInterface $sessionManager,
+        private DocumentManagerInterface $documentManager,
+        private MetadataFactory $metadataFactory,
     ) {
-        $this->sessionManager = $sessionManager;
-        $this->documentManager = $documentManager;
-        $this->metadataFactory = $metadataFactory;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

@@ -20,38 +20,13 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 
 class PageRemovedEvent extends DomainEvent
 {
-    /**
-     * @var string
-     */
-    private $pageId;
-
-    /**
-     * @var string
-     */
-    private $webspaceKey;
-
-    /**
-     * @var string|null
-     */
-    private $pageTitle;
-
-    /**
-     * @var string|null
-     */
-    private $pageTitleLocale;
-
     public function __construct(
-        string $pageId,
-        string $webspaceKey,
-        ?string $pageTitle,
-        ?string $pageTitleLocale
+        private string $pageId,
+        private string $webspaceKey,
+        private ?string $pageTitle,
+        private ?string $pageTitleLocale
     ) {
         parent::__construct();
-
-        $this->pageId = $pageId;
-        $this->webspaceKey = $webspaceKey;
-        $this->pageTitle = $pageTitle;
-        $this->pageTitleLocale = $pageTitleLocale;
     }
 
     public function getEventType(): string

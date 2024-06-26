@@ -36,63 +36,20 @@ class ValidateWebspacesCommand extends Command
     private $output;
 
     /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $structureMetadataFactory;
-
-    /**
-     * @var ControllerNameParser|null
-     */
-    private $controllerNameConverter;
-
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
-
-    /**
-     * @var WebspaceStructureProvider
-     */
-    private $structureProvider;
-
-    /**
-     * @var array
+     * @var array<string>
      */
     private $errors = [];
 
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
     public function __construct(
-        Environment $twig,
-        StructureMetadataFactoryInterface $structureMetadataFactory,
-        ?ControllerNameParser $controllerNameConverter,
-        StructureManagerInterface $structureManager,
-        WebspaceStructureProvider $structureProvider,
-        WebspaceManagerInterface $webspaceManager,
-        EventDispatcherInterface $eventDispatcher
+        private Environment $twig,
+        private StructureMetadataFactoryInterface $structureMetadataFactory,
+        private ?ControllerNameParser $controllerNameConverter,
+        private StructureManagerInterface $structureManager,
+        private WebspaceStructureProvider $structureProvider,
+        private WebspaceManagerInterface $webspaceManager,
+        private EventDispatcherInterface $eventDispatcher
     ) {
         parent::__construct();
-
-        $this->twig = $twig;
-        $this->structureMetadataFactory = $structureMetadataFactory;
-        $this->controllerNameConverter = $controllerNameConverter;
-        $this->structureManager = $structureManager;
-        $this->structureProvider = $structureProvider;
-        $this->webspaceManager = $webspaceManager;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     protected function configure()

@@ -36,45 +36,15 @@ class PageRemoveSubscriber implements EventSubscriberInterface
     public const FORCE_REMOVE_CHILDREN_OPTION = 'force_remove_children';
 
     /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
-     * @var AccessControlRepositoryInterface
-     */
-    private $accessControlRepository;
-
-    /**
-     * @var SystemStoreInterface
-     */
-    private $systemStore;
-
-    /**
-     * @var Security|null
-     */
-    private $security;
-
-    /**
-     * @var array<string, int>
-     */
-    private $permissions;
-
-    /**
      * @param array<string, int> $permissions
      */
     public function __construct(
-        SessionManagerInterface $sessionManager,
-        AccessControlRepositoryInterface $accessControlRepository,
-        SystemStoreInterface $systemStore,
-        ?Security $security,
-        array $permissions
+        private SessionManagerInterface $sessionManager,
+        private AccessControlRepositoryInterface $accessControlRepository,
+        private SystemStoreInterface $systemStore,
+        private ?Security $security,
+        private array $permissions,
     ) {
-        $this->sessionManager = $sessionManager;
-        $this->accessControlRepository = $accessControlRepository;
-        $this->systemStore = $systemStore;
-        $this->security = $security;
-        $this->permissions = $permissions;
     }
 
     /**

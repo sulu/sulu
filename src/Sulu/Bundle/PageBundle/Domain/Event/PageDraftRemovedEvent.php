@@ -20,24 +20,11 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 
 class PageDraftRemovedEvent extends DomainEvent
 {
-    /**
-     * @var BasePageDocument
-     */
-    private $pageDocument;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
     public function __construct(
-        BasePageDocument $pageDocument,
-        string $locale
+        private BasePageDocument $pageDocument,
+        private string $locale
     ) {
         parent::__construct();
-
-        $this->pageDocument = $pageDocument;
-        $this->locale = $locale;
     }
 
     public function getPageDocument(): BasePageDocument

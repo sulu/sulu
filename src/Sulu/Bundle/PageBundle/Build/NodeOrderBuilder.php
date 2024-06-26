@@ -26,26 +26,6 @@ use Sulu\Component\Webspace\Manager\WebspaceManagerInterface;
 class NodeOrderBuilder implements BuilderInterface
 {
     /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
-
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
      * @var string
      */
     private $propertyName;
@@ -56,17 +36,12 @@ class NodeOrderBuilder implements BuilderInterface
     private $context;
 
     public function __construct(
-        SessionManagerInterface $sessionManager,
-        SessionInterface $defaultSession,
-        SessionInterface $liveSession,
-        WebspaceManagerInterface $webspaceManager,
+        private SessionManagerInterface $sessionManager,
+        private SessionInterface $defaultSession,
+        private SessionInterface $liveSession,
+        private WebspaceManagerInterface $webspaceManager,
         PropertyEncoder $propertyEncoder
     ) {
-        $this->sessionManager = $sessionManager;
-        $this->defaultSession = $defaultSession;
-        $this->liveSession = $liveSession;
-        $this->webspaceManager = $webspaceManager;
-
         $this->propertyName = $propertyEncoder->systemName(OrderSubscriber::FIELD);
     }
 

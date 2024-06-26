@@ -22,26 +22,13 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 class PageRestoredEvent extends DomainEvent
 {
     /**
-     * @var PageDocument
-     */
-    private $pageDocument;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        PageDocument $pageDocument,
-        array $payload
+        private PageDocument $pageDocument,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->pageDocument = $pageDocument;
-        $this->payload = $payload;
     }
 
     public function getPageDocument(): PageDocument

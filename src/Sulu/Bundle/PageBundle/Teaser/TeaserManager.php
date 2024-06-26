@@ -18,14 +18,8 @@ use Sulu\Bundle\PageBundle\Teaser\Provider\TeaserProviderPoolInterface;
  */
 class TeaserManager implements TeaserManagerInterface
 {
-    /**
-     * @var TeaserProviderPoolInterface
-     */
-    private $providerPool;
-
-    public function __construct(TeaserProviderPoolInterface $providerPool)
+    public function __construct(private TeaserProviderPoolInterface $providerPool)
     {
-        $this->providerPool = $providerPool;
     }
 
     public function find(array $items, $locale)
