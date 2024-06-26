@@ -18,6 +18,7 @@ use Sulu\Bundle\SecurityBundle\Entity\Permission;
 use Sulu\Bundle\SecurityBundle\Entity\Role;
 use Sulu\Bundle\SecurityBundle\Entity\SecurityType;
 use Sulu\Bundle\TestBundle\Testing\SuluTestCase;
+use Sulu\Component\Util\SortUtils;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 class RoleControllerTest extends SuluTestCase
@@ -284,91 +285,76 @@ class RoleControllerTest extends SuluTestCase
 
     public function testPut(): void
     {
+        $putData = [
+            'name' => 'Portal Manager',
+            'key' => 'portal_manager',
+            'system' => 'Sulu',
+            'permissions' => [
+                [
+                    'id' => $this->permission1->getId(),
+                    'context' => 'portal1',
+                    'module' => null,
+                    'permissions' => [
+                        'view' => true,
+                        'add' => true,
+                        'edit' => true,
+                        'delete' => true,
+                        'archive' => false,
+                        'live' => false,
+                        'security' => false,
+                    ],
+                ],
+                [
+                    'id' => $this->permission2->getId(),
+                    'context' => 'portal2',
+                    'module' => null,
+                    'permissions' => [
+                        'view' => false,
+                        'add' => false,
+                        'edit' => false,
+                        'delete' => false,
+                        'archive' => true,
+                        'live' => true,
+                        'security' => true,
+                    ],
+                ],
+                [
+                    'context' => 'portal3',
+                    'module' => null,
+                    'permissions' => [
+                        'view' => false,
+                        'add' => false,
+                        'edit' => false,
+                        'delete' => false,
+                        'archive' => true,
+                        'live' => true,
+                        'security' => true,
+                    ],
+                ],
+            ],
+            'securityType' => [
+                'id' => $this->securityType2->getId(),
+            ],
+        ];
+
         $this->client->jsonRequest(
             'PUT',
             '/api/roles/' . $this->role1->getId(),
-            [
-                'name' => 'Portal Manager',
-                'key' => 'portal_manager',
-                'system' => 'Sulu',
-                'permissions' => [
-                    [
-                        'id' => $this->permission1->getId(),
-                        'context' => 'portal1',
-                        'permissions' => [
-                            'view' => true,
-                            'add' => true,
-                            'edit' => true,
-                            'delete' => true,
-                            'archive' => false,
-                            'live' => false,
-                            'security' => false,
-                        ],
-                    ],
-                    [
-                        'id' => $this->permission2->getId(),
-                        'context' => 'portal2',
-                        'permissions' => [
-                            'view' => false,
-                            'add' => false,
-                            'edit' => false,
-                            'delete' => false,
-                            'archive' => true,
-                            'live' => true,
-                            'security' => true,
-                        ],
-                    ],
-                    [
-                        'context' => 'portal3',
-                        'permissions' => [
-                            'view' => false,
-                            'add' => false,
-                            'edit' => false,
-                            'delete' => false,
-                            'archive' => true,
-                            'live' => true,
-                            'security' => true,
-                        ],
-                    ],
-                ],
-                'securityType' => [
-                    'id' => $this->securityType2->getId(),
-                ],
-            ]
+            $putData
         );
+
+        $expectedData = $putData;
 
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $response = \json_decode($this->client->getResponse()->getContent());
-
-        $this->assertEquals('Portal Manager', $response->name);
-        $this->assertEquals('portal_manager', $response->key);
-        $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals('portal1', $response->permissions[0]->context);
-        $this->assertEquals(true, $response->permissions[0]->permissions->view);
-        $this->assertEquals(true, $response->permissions[0]->permissions->add);
-        $this->assertEquals(true, $response->permissions[0]->permissions->edit);
-        $this->assertEquals(true, $response->permissions[0]->permissions->delete);
-        $this->assertEquals(false, $response->permissions[0]->permissions->archive);
-        $this->assertEquals(false, $response->permissions[0]->permissions->live);
-        $this->assertEquals(false, $response->permissions[0]->permissions->security);
-        $this->assertEquals('portal2', $response->permissions[1]->context);
-        $this->assertEquals(false, $response->permissions[1]->permissions->view);
-        $this->assertEquals(false, $response->permissions[1]->permissions->add);
-        $this->assertEquals(false, $response->permissions[1]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[1]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[1]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[1]->permissions->live);
-        $this->assertEquals(true, $response->permissions[1]->permissions->security);
-        $this->assertEquals('portal3', $response->permissions[2]->context);
-        $this->assertEquals(false, $response->permissions[2]->permissions->view);
-        $this->assertEquals(false, $response->permissions[2]->permissions->add);
-        $this->assertEquals(false, $response->permissions[2]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[2]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[2]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[2]->permissions->live);
-        $this->assertEquals(true, $response->permissions[2]->permissions->security);
-        $this->assertEquals('Security Type 2', $response->securityType->name);
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        $this->assertIsArray($response);
+        unset($response['id']);
+        $this->assertSame('ROLE_SULU_PORTAL_MANAGER', $response['identifier']);
+        unset($response['identifier']);
+        $response['permissions'] = SortUtils::multisort($response['permissions'], '[id]');
+        $expectedData['securityType']['name'] = $this->securityType2->getName();
+        unset($response['permissions'][2]['id']);
 
         /** @var ActivityInterface $activity */
         $activity = $this->activityRepository->findOneBy(['type' => 'modified']);
@@ -379,151 +365,81 @@ class RoleControllerTest extends SuluTestCase
             '/api/roles/' . $this->role1->getId()
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        $this->assertIsArray($response);
+        unset($response['id']);
+        $this->assertSame('ROLE_SULU_PORTAL_MANAGER', $response['identifier']);
+        unset($response['identifier']);
+        $response['permissions'] = SortUtils::multisort($response['permissions'], '[id]');
+        $expectedData['securityType']['name'] = $this->securityType2->getName();
+        unset($response['permissions'][2]['id']);
 
-        $this->assertEquals('Portal Manager', $response->name);
-        $this->assertEquals('portal_manager', $response->key);
-        $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals(true, $response->permissions[0]->permissions->view);
-        $this->assertEquals(true, $response->permissions[0]->permissions->add);
-        $this->assertEquals(true, $response->permissions[0]->permissions->edit);
-        $this->assertEquals(true, $response->permissions[0]->permissions->delete);
-        $this->assertEquals(false, $response->permissions[0]->permissions->archive);
-        $this->assertEquals(false, $response->permissions[0]->permissions->live);
-        $this->assertEquals(false, $response->permissions[0]->permissions->security);
-        $this->assertEquals('portal2', $response->permissions[1]->context);
-        $this->assertEquals(false, $response->permissions[1]->permissions->view);
-        $this->assertEquals(false, $response->permissions[1]->permissions->add);
-        $this->assertEquals(false, $response->permissions[1]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[1]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[1]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[1]->permissions->live);
-        $this->assertEquals(true, $response->permissions[1]->permissions->security);
-        $this->assertEquals('portal3', $response->permissions[2]->context);
-        $this->assertEquals(false, $response->permissions[2]->permissions->view);
-        $this->assertEquals(false, $response->permissions[2]->permissions->add);
-        $this->assertEquals(false, $response->permissions[2]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[2]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[2]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[2]->permissions->live);
-        $this->assertEquals(true, $response->permissions[2]->permissions->security);
-        $this->assertEquals('Security Type 2', $response->securityType->name);
+        $this->assertSame($expectedData, $response);
     }
 
     public function testPutRemoveSecurityType(): void
     {
+        $putData = [
+            'name' => 'Portal Manager',
+            'system' => 'Sulu',
+            'permissions' => [
+                [
+                    'id' => $this->permission1->getId(),
+                    'context' => 'portal1',
+                    'permissions' => [
+                        'view' => true,
+                        'add' => true,
+                        'edit' => true,
+                        'delete' => true,
+                        'archive' => false,
+                        'live' => false,
+                        'security' => false,
+                    ],
+                ],
+                [
+                    'id' => $this->permission2->getId(),
+                    'context' => 'portal2',
+                    'permissions' => [
+                        'view' => false,
+                        'add' => false,
+                        'edit' => false,
+                        'delete' => false,
+                        'archive' => true,
+                        'live' => true,
+                        'security' => true,
+                    ],
+                ],
+                [
+                    'context' => 'portal3',
+                    'permissions' => [
+                        'view' => false,
+                        'add' => false,
+                        'edit' => false,
+                        'delete' => false,
+                        'archive' => true,
+                        'live' => true,
+                        'security' => true,
+                    ],
+                ],
+            ],
+        ];
+
         $this->client->jsonRequest(
             'PUT',
             '/api/roles/' . $this->role1->getId(),
-            [
-                'name' => 'Portal Manager',
-                'system' => 'Sulu',
-                'permissions' => [
-                    [
-                        'id' => $this->permission1->getId(),
-                        'context' => 'portal1',
-                        'permissions' => [
-                            'view' => true,
-                            'add' => true,
-                            'edit' => true,
-                            'delete' => true,
-                            'archive' => false,
-                            'live' => false,
-                            'security' => false,
-                        ],
-                    ],
-                    [
-                        'id' => $this->permission2->getId(),
-                        'context' => 'portal2',
-                        'permissions' => [
-                            'view' => false,
-                            'add' => false,
-                            'edit' => false,
-                            'delete' => false,
-                            'archive' => true,
-                            'live' => true,
-                            'security' => true,
-                        ],
-                    ],
-                    [
-                        'context' => 'portal3',
-                        'permissions' => [
-                            'view' => false,
-                            'add' => false,
-                            'edit' => false,
-                            'delete' => false,
-                            'archive' => true,
-                            'live' => true,
-                            'security' => true,
-                        ],
-                    ],
-                ],
-            ]
+            $putData
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
-
-        $this->assertEquals('Portal Manager', $response->name);
-        $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals('portal1', $response->permissions[0]->context);
-        $this->assertEquals(true, $response->permissions[0]->permissions->view);
-        $this->assertEquals(true, $response->permissions[0]->permissions->add);
-        $this->assertEquals(true, $response->permissions[0]->permissions->edit);
-        $this->assertEquals(true, $response->permissions[0]->permissions->delete);
-        $this->assertEquals(false, $response->permissions[0]->permissions->archive);
-        $this->assertEquals(false, $response->permissions[0]->permissions->live);
-        $this->assertEquals(false, $response->permissions[0]->permissions->security);
-        $this->assertEquals('portal2', $response->permissions[1]->context);
-        $this->assertEquals(false, $response->permissions[1]->permissions->view);
-        $this->assertEquals(false, $response->permissions[1]->permissions->add);
-        $this->assertEquals(false, $response->permissions[1]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[1]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[1]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[1]->permissions->live);
-        $this->assertEquals(true, $response->permissions[1]->permissions->security);
-        $this->assertEquals('portal3', $response->permissions[2]->context);
-        $this->assertEquals(false, $response->permissions[2]->permissions->view);
-        $this->assertEquals(false, $response->permissions[2]->permissions->add);
-        $this->assertEquals(false, $response->permissions[2]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[2]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[2]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[2]->permissions->live);
-        $this->assertEquals(true, $response->permissions[2]->permissions->security);
-        $this->assertFalse(\property_exists($response, 'securityType'));
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        $this->assertArrayNotHasKey('securityType', $response);
 
         $this->client->jsonRequest(
             'GET',
             '/api/roles/' . $this->role1->getId()
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
-
-        $this->assertEquals('Portal Manager', $response->name);
-        $this->assertEquals('Sulu', $response->system);
-        $this->assertEquals(true, $response->permissions[0]->permissions->view);
-        $this->assertEquals(true, $response->permissions[0]->permissions->add);
-        $this->assertEquals(true, $response->permissions[0]->permissions->edit);
-        $this->assertEquals(true, $response->permissions[0]->permissions->delete);
-        $this->assertEquals(false, $response->permissions[0]->permissions->archive);
-        $this->assertEquals(false, $response->permissions[0]->permissions->live);
-        $this->assertEquals(false, $response->permissions[0]->permissions->security);
-        $this->assertEquals('portal2', $response->permissions[1]->context);
-        $this->assertEquals(false, $response->permissions[1]->permissions->view);
-        $this->assertEquals(false, $response->permissions[1]->permissions->add);
-        $this->assertEquals(false, $response->permissions[1]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[1]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[1]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[1]->permissions->live);
-        $this->assertEquals(true, $response->permissions[1]->permissions->security);
-        $this->assertEquals('portal3', $response->permissions[2]->context);
-        $this->assertEquals(false, $response->permissions[2]->permissions->view);
-        $this->assertEquals(false, $response->permissions[2]->permissions->add);
-        $this->assertEquals(false, $response->permissions[2]->permissions->edit);
-        $this->assertEquals(false, $response->permissions[2]->permissions->delete);
-        $this->assertEquals(true, $response->permissions[2]->permissions->archive);
-        $this->assertEquals(true, $response->permissions[2]->permissions->live);
-        $this->assertEquals(true, $response->permissions[2]->permissions->security);
-        $this->assertFalse(\property_exists($response, 'securityType'));
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        $this->assertArrayNotHasKey('securityType', $response);
     }
 
     public function testPutNotExisting(): void
@@ -657,7 +573,12 @@ class RoleControllerTest extends SuluTestCase
         $this->assertEquals('Sulu', $response->_embedded->roles[0]->system);
         $this->assertEquals('Sulu', $response->_embedded->roles[1]->system);
 
-        $this->assertEquals('context1', $response->_embedded->roles[0]->permissions[0]->context);
-        $this->assertEquals('context2', $response->_embedded->roles[1]->permissions[1]->context);
+        $contexts = [
+            $response->_embedded->roles[0]->permissions[0]->context,
+            $response->_embedded->roles[1]->permissions[1]->context,
+        ];
+
+        $this->assertContains('context1', $contexts);
+        $this->assertContains('context2', $contexts);
     }
 }

@@ -31,9 +31,6 @@
                     <join-column name="domain" referenced-column-name="id" on-delete="CASCADE" />
                 </inverse-join-columns>
             </join-table>
-            <order-by>
-                <order-by-field name="id" direction="ASC"/>
-            </order-by>
         </many-to-many>
     </mapped-superclass>
 </doctrine-mapping>
