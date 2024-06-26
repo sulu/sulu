@@ -214,8 +214,7 @@ class MediaStreamController
             return null;
         }
 
-        /** @var File|null $file */
-        $file = $mediaEntity->getFiles()[0];
+        $file = $mediaEntity->getFiles()[0] ?? null;
 
         if (!$file) {
             return null;
