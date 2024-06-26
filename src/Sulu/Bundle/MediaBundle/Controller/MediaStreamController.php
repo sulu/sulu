@@ -70,7 +70,7 @@ class MediaStreamController
                 $mediaProperties['fileName']
             );
         } catch (ImageProxyException $e) {
-            throw new NotFoundHttpException('Image create error. Code: ' . $e->getCode());
+            throw new NotFoundHttpException('Image create error. Code: ' . $e->getCode(), $e);
         }
     }
 
@@ -123,7 +123,7 @@ class MediaStreamController
 
             return $response;
         } catch (MediaException $e) {
-            throw new NotFoundHttpException('File not found: ' . $e->getCode() . ' ' . $e->getMessage());
+            throw new NotFoundHttpException('File not found: ' . $e->getCode() . ' ' . $e->getMessage(), $e);
         }
     }
 
