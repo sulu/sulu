@@ -116,7 +116,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
 
             $fileVersionJoinCondition = 'file.version = fileVersion.version';
             if (null !== $version) {
-                $fileVersionJoinCondition = 'fileVersion.version = :version';
+                $fileVersionJoinCondition = 'fileVersion.version IN (:version, fileVersion.version)'; // for the x-robots canonical we require latest version and old version
                 $queryBuilder->setParameter('version', $version);
             }
 
