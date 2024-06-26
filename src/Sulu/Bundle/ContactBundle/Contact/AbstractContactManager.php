@@ -577,7 +577,7 @@ abstract class AbstractContactManager implements ContactManagerInterface
         $urls = $this->getProperty($contactDetailsData, 'websites');
         if (!empty($urls)) {
             foreach ($urls as $urlData) {
-                if(!empty($urlData['url'])) {
+                if(!empty($urlData['website'])) {
                     $this->addUrl($contact, $urlData);
                 }
             }
