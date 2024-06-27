@@ -17,11 +17,6 @@ use Sulu\Component\DocumentManager\Exception\DocumentManagerException;
 class DocumentAccessor
 {
     /**
-     * @var object
-     */
-    private $document;
-
-    /**
      * @var \ReflectionClass
      */
     private $reflection;
@@ -29,12 +24,11 @@ class DocumentAccessor
     /**
      * @param object $document
      */
-    public function __construct($document)
+    public function __construct(private $document)
     {
-        $this->document = $document;
-        $documentClass = \get_class($document);
+        $documentClass = \get_class($this->document);
 
-        if ($document instanceof LazyLoadingInterface) {
+        if ($this->document instanceof LazyLoadingInterface) {
             $documentClass = ClassNameInflector::getUserClassName($documentClass);
         }
 

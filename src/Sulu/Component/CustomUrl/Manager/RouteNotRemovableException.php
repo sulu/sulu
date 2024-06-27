@@ -21,30 +21,17 @@ use Sulu\Component\Rest\Exception\RestException;
 class RouteNotRemovableException extends RestException
 {
     /**
-     * @var RouteDocument
+     * @param string $route
      */
-    private $routeDocument;
-
-    /**
-     * @var CustomUrlDocument
-     */
-    private $customUrl;
-
-    /**
-     * @var string
-     */
-    private $route;
-
-    public function __construct($route, RouteDocument $routeDocument, CustomUrlDocument $customUrl)
-    {
+    public function __construct(
+        private $route,
+        private RouteDocument $routeDocument,
+        private CustomUrlDocument $customUrl,
+    ) {
         parent::__construct(
             \sprintf('Cannot delete current route "%s" of custom-url "%s"', $route, $customUrl->getTitle()),
             9000
         );
-
-        $this->route = $route;
-        $this->routeDocument = $routeDocument;
-        $this->customUrl = $customUrl;
     }
 
     /**

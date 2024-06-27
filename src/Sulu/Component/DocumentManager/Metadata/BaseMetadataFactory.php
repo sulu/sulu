@@ -44,19 +44,12 @@ class BaseMetadataFactory implements MetadataFactoryInterface
     private $phpcrTypeMap = [];
 
     /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    /**
      * @var Metadata[]
      */
     private $metadata = [];
 
-    public function __construct(EventDispatcherInterface $dispatcher, array $mapping)
+    public function __construct(private EventDispatcherInterface $dispatcher, array $mapping)
     {
-        $this->dispatcher = $dispatcher;
-
         foreach ($mapping as $map) {
             $this->aliasMap[$map['alias']] = $map;
             $this->classMap[$map['class']] = $map;

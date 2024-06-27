@@ -22,20 +22,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RefreshSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
-
-    public function __construct(EventDispatcherInterface $eventDispatcher, DocumentRegistry $documentRegistry)
-    {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->documentRegistry = $documentRegistry;
+    public function __construct(
+        private EventDispatcherInterface $eventDispatcher,
+        private DocumentRegistry $documentRegistry,
+    ) {
     }
 
     public static function getSubscribedEvents()

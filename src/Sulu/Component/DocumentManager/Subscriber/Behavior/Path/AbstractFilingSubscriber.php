@@ -23,22 +23,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 abstract class AbstractFilingSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
-
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
-
     public function __construct(
-        SessionInterface $defaultSession,
-        SessionInterface $liveSession
+        private SessionInterface $defaultSession,
+        private SessionInterface $liveSession,
     ) {
-        $this->defaultSession = $defaultSession;
-        $this->liveSession = $liveSession;
     }
 
     public static function getSubscribedEvents()

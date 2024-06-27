@@ -33,31 +33,6 @@ class Query
     public const HYDRATE_PHPCR = 'phpcr_node';
 
     /**
-     * @var QueryInterface
-     */
-    private $phpcrQuery;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
-    /**
-     * @var null|string
-     */
-    private $primarySelector;
-
-    /**
-     * @var null|string
-     */
-    private $locale;
-
-    /**
-     * @var array
-     */
-    private $options;
-
-    /**
      * @var int
      */
     private $maxResults;
@@ -72,17 +47,12 @@ class Query
      * @param null|string $primarySelector
      */
     public function __construct(
-        QueryInterface $phpcrQuery,
-        EventDispatcherInterface $dispatcher,
-        $locale = null,
-        array $options = [],
-        $primarySelector = null
+        private QueryInterface $phpcrQuery,
+        private EventDispatcherInterface $dispatcher,
+        private $locale = null,
+        private array $options = [],
+        private $primarySelector = null,
     ) {
-        $this->phpcrQuery = $phpcrQuery;
-        $this->dispatcher = $dispatcher;
-        $this->locale = $locale;
-        $this->options = $options;
-        $this->primarySelector = $primarySelector;
     }
 
     /**

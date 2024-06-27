@@ -17,37 +17,13 @@ namespace Sulu\Component\DocumentManager;
 class Version
 {
     /**
-     * @var string
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @var int
-     */
-    private $author;
-
-    /**
-     * @var \DateTime
-     */
-    private $authored;
-
-    /**
      * @param string $id
      * @param string $locale
      * @param int $author
      * @param \DateTime $authored
      */
-    public function __construct($id, $locale, $author, $authored)
+    public function __construct(private $id, private $locale, private $author, private $authored)
     {
-        $this->id = $id;
-        $this->locale = $locale;
-        $this->author = $author;
-        $this->authored = $authored;
     }
 
     /**

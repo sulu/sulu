@@ -22,16 +22,10 @@ namespace Sulu\Component\DocumentManager;
 class PathSegmentRegistry
 {
     /**
-     * @var array
-     */
-    private $pathSegments;
-
-    /**
      * @param array $pathSegments Array of roles to pathSegments
      */
-    public function __construct(array $pathSegments = [])
+    public function __construct(private array $pathSegments = [])
     {
-        $this->pathSegments = $pathSegments;
     }
 
     /**

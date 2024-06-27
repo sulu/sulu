@@ -23,21 +23,15 @@ use Symfony\Component\Stopwatch\Stopwatch;
 class DebugEventDispatcher extends EventDispatcher
 {
     /**
-     * @var Stopwatch
-     */
-    private $stopwatch;
-
-    /**
      * @var LoggerInterface
      */
     private $logger;
 
     public function __construct(
-        Stopwatch $stopwatch,
+        private Stopwatch $stopwatch,
         ?LoggerInterface $logger = null
     ) {
         parent::__construct();
-        $this->stopwatch = $stopwatch;
         $this->logger = $logger ?: new NullLogger();
     }
 

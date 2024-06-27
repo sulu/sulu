@@ -20,36 +20,22 @@ class QueryCreateEvent extends AbstractEvent
     use EventOptionsTrait;
 
     /**
-     * @var string|QueryInterface
-     */
-    private $innerQuery;
-
-    /**
      * @var Query
      */
     private $query;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @var null|string
-     */
-    private $primarySelector;
 
     /**
      * @param string|QueryInterface $innerQuery
      * @param string $locale
      * @param null|string $primarySelector
      */
-    public function __construct($innerQuery, $locale, array $options = [], $primarySelector = null)
-    {
-        $this->innerQuery = $innerQuery;
-        $this->locale = $locale;
+    public function __construct(
+        private $innerQuery,
+        private $locale,
+        array $options = [],
+        private $primarySelector = null,
+    ) {
         $this->options = $options;
-        $this->primarySelector = $primarySelector;
     }
 
     /**

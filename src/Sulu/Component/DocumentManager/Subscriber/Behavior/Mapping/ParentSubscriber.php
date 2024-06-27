@@ -27,29 +27,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ParentSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var ProxyFactory
-     */
-    private $proxyFactory;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
     public function __construct(
-        ProxyFactory $proxyFactory,
-        DocumentInspector $inspector,
-        DocumentManagerInterface $documentManager
+        private ProxyFactory $proxyFactory,
+        private DocumentInspector $inspector,
+        private DocumentManagerInterface $documentManager,
     ) {
-        $this->proxyFactory = $proxyFactory;
-        $this->inspector = $inspector;
-        $this->documentManager = $documentManager;
     }
 
     public static function getSubscribedEvents()

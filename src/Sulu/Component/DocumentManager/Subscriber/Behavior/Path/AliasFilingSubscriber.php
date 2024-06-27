@@ -25,11 +25,6 @@ use Sulu\Component\DocumentManager\MetadataFactoryInterface;
 class AliasFilingSubscriber extends AbstractFilingSubscriber
 {
     /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
-
-    /**
      * @var Inflector
      */
     private $inflector;
@@ -37,10 +32,9 @@ class AliasFilingSubscriber extends AbstractFilingSubscriber
     public function __construct(
         SessionInterface $defaultSession,
         SessionInterface $liveSession,
-        MetadataFactoryInterface $metadataFactory
+        private MetadataFactoryInterface $metadataFactory
     ) {
         parent::__construct($defaultSession, $liveSession);
-        $this->metadataFactory = $metadataFactory;
         $this->inflector = InflectorFactory::create()->build();
     }
 

@@ -20,14 +20,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class MixinSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var MetadataFactoryInterface
-     */
-    private $metadataFactory;
-
-    public function __construct(MetadataFactoryInterface $metadataFactory)
+    public function __construct(private MetadataFactoryInterface $metadataFactory)
     {
-        $this->metadataFactory = $metadataFactory;
     }
 
     public static function getSubscribedEvents()

@@ -30,29 +30,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class GeneralSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
-
-    /**
-     * @var NodeManager
-     */
-    private $nodeManager;
-
-    /**
-     * @var NodeHelperInterface
-     */
-    private $nodeHelper;
-
     public function __construct(
-        DocumentRegistry $documentRegistry,
-        NodeManager $nodeManager,
-        NodeHelperInterface $nodeHelper
+        private DocumentRegistry $documentRegistry,
+        private NodeManager $nodeManager,
+        private NodeHelperInterface $nodeHelper,
     ) {
-        $this->documentRegistry = $documentRegistry;
-        $this->nodeManager = $nodeManager;
-        $this->nodeHelper = $nodeHelper;
     }
 
     public static function getSubscribedEvents()

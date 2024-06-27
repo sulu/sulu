@@ -19,16 +19,10 @@ class CreateEvent extends AbstractEvent
     private $document;
 
     /**
-     * @var string
-     */
-    private $alias;
-
-    /**
      * @param string $alias
      */
-    public function __construct($alias)
+    public function __construct(private $alias)
     {
-        $this->alias = $alias;
     }
 
     /**

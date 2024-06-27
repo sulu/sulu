@@ -29,15 +29,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class RegistratorSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
-
-    public function __construct(
-        DocumentRegistry $documentRegistry
-    ) {
-        $this->documentRegistry = $documentRegistry;
+    public function __construct(private DocumentRegistry $documentRegistry)
+    {
     }
 
     public static function getSubscribedEvents()

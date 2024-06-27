@@ -26,36 +26,12 @@ use Sulu\Component\PHPCR\SessionManager\SessionManagerInterface;
  */
 class CustomUrlRepository
 {
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
-     * @var ContentRepositoryInterface
-     */
-    private $contentRepository;
-
-    /**
-     * @var GeneratorInterface
-     */
-    private $generator;
-
-    /**
-     * @var UserManagerInterface
-     */
-    private $userManager;
-
     public function __construct(
-        SessionManagerInterface $sessionManager,
-        ContentRepositoryInterface $contentRepository,
-        GeneratorInterface $generator,
-        UserManagerInterface $userManager
+        private SessionManagerInterface $sessionManager,
+        private ContentRepositoryInterface $contentRepository,
+        private GeneratorInterface $generator,
+        private UserManagerInterface $userManager,
     ) {
-        $this->sessionManager = $sessionManager;
-        $this->contentRepository = $contentRepository;
-        $this->generator = $generator;
-        $this->userManager = $userManager;
     }
 
     /**
