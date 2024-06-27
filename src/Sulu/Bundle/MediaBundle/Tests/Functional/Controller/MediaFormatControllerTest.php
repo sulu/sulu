@@ -131,8 +131,8 @@ class MediaFormatControllerTest extends SuluTestCase
         $this->assertEquals(32, $response->{'big-squared'}->cropHeight);
         $this->assertEquals(33, $response->{'big-squared'}->cropWidth);
 
-        $this->assertObjectNotHasAttribute('small-inset', $response);
-        $this->assertObjectNotHasAttribute('one-side', $response);
+        $this->assertFalse(\property_exists($response, 'small-inset'));
+        $this->assertFalse(\property_exists($response, 'one-side'));
     }
 
     public function testPatch(): void
@@ -151,8 +151,8 @@ class MediaFormatControllerTest extends SuluTestCase
         $this->assertEquals(32, $response->{'big-squared'}->cropHeight);
         $this->assertEquals(33, $response->{'big-squared'}->cropWidth);
 
-        $this->assertObjectNotHasAttribute('small-inset', $response);
-        $this->assertObjectNotHasAttribute('one-side', $response);
+        $this->assertFalse(\property_exists($response, 'small-inset'));
+        $this->assertFalse(\property_exists($response, 'one-side'));
 
         $this->client->jsonRequest(
             'PATCH',
@@ -176,7 +176,7 @@ class MediaFormatControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $this->assertObjectNotHasAttribute('big-squared', $response);
+        $this->assertFalse(\property_exists($response, 'big-squared'));
 
         $this->assertNotNull($response->{'small-inset'});
         $this->assertEquals(50, $response->{'small-inset'}->cropX);
@@ -184,7 +184,7 @@ class MediaFormatControllerTest extends SuluTestCase
         $this->assertEquals(52, $response->{'small-inset'}->cropHeight);
         $this->assertEquals(53, $response->{'small-inset'}->cropWidth);
 
-        $this->assertObjectNotHasAttribute('one-side', $response);
+        $this->assertFalse(\property_exists($response, 'one-side'));
     }
 
     public function testPutWithFormatOptions(): void
@@ -249,7 +249,7 @@ class MediaFormatControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
         $this->assertHttpStatusCode(200, $this->client->getResponse());
 
-        $this->assertObjectNotHasAttribute('big-squared', $response);
+        $this->assertFalse(\property_exists($response, 'big-squared'));
     }
 
     public function testPutNotExistingFormat(): void
