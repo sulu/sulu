@@ -22,15 +22,8 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 final class DoctrineRestoreHelper implements DoctrineRestoreHelperInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    public function __construct(
-        EntityManagerInterface $entityManager
-    ) {
-        $this->entityManager = $entityManager;
+    public function __construct(private EntityManagerInterface $entityManager)
+    {
     }
 
     public function persistAndFlushWithId(object $entity, $id): void

@@ -23,14 +23,8 @@ use Sulu\Bundle\TrashBundle\Tests\Application\Entity\TestResource;
 
 class TestTrashItemHandler implements StoreTrashItemHandlerInterface, RestoreTrashItemHandlerInterface, RestoreConfigurationProviderInterface
 {
-    /**
-     * @var TrashItemRepositoryInterface
-     */
-    private $trashItemRepository;
-
-    public function __construct(TrashItemRepositoryInterface $trashItemRepository)
+    public function __construct(private TrashItemRepositoryInterface $trashItemRepository)
     {
-        $this->trashItemRepository = $trashItemRepository;
     }
 
     public function restore(TrashItemInterface $trashItem, array $restoreFormData = []): object
