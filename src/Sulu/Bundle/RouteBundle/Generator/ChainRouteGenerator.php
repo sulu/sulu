@@ -21,28 +21,14 @@ use Sulu\Bundle\RouteBundle\Model\RoutableInterface;
 class ChainRouteGenerator implements ChainRouteGeneratorInterface
 {
     /**
-     * @var array
-     */
-    private $mappings;
-
-    /**
-     * @var RouteGeneratorInterface[]
-     */
-    private $routeGenerators;
-
-    /**
-     * @var RouteRepositoryInterface
-     */
-    private $routeRepository;
-
-    /**
+     * @param array<string, mixed> $mappings
      * @param RouteGeneratorInterface[] $routeGenerators
      */
-    public function __construct(array $mappings, array $routeGenerators, RouteRepositoryInterface $routeRepository)
-    {
-        $this->mappings = $mappings;
-        $this->routeGenerators = $routeGenerators;
-        $this->routeRepository = $routeRepository;
+    public function __construct(
+        private array $mappings,
+        private array $routeGenerators,
+        private RouteRepositoryInterface $routeRepository,
+    ) {
     }
 
     public function generate(RoutableInterface $entity, $path = null)

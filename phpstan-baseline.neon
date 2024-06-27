@@ -25431,11 +25431,6 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Command/MovePageTreeCommand.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Contracts\\\\Translation\\\\LocaleAwareInterface\\|Symfony\\\\Contracts\\\\Translation\\\\TranslatorInterface\\:\\:setLocale\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Command/UpdateRouteCommand.php
-
-		-
 			message: "#^Cannot access offset 0 on mixed\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/RouteBundle/Command/UpdateRouteCommand.php
@@ -25562,11 +25557,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Controller\\\\RouteController\\:\\:\\$resourceKeyMappings type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
 
@@ -25731,19 +25721,9 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Entity/RouteRepositoryInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Generator\\\\CannotEvaluateTokenException\\:\\:__construct\\(\\) has parameter \\$entity with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Generator/CannotEvaluateTokenException.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Generator\\\\CannotEvaluateTokenException\\:\\:getEntity\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Generator/CannotEvaluateTokenException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Generator\\\\ChainRouteGenerator\\:\\:__construct\\(\\) has parameter \\$mappings with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Generator/ChainRouteGenerator.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Generator\\\\ChainRouteGenerator\\:\\:getClassMappingConfiguration\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -25752,11 +25732,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$objectOrClass of class ReflectionClass constructor expects class\\-string\\<T of object\\>\\|T of object, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Generator/ChainRouteGenerator.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Generator\\\\ChainRouteGenerator\\:\\:\\$mappings type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Generator/ChainRouteGenerator.php
 
@@ -25961,11 +25936,6 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Routing/RouteProvider.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Routing\\\\RouteProvider\\:\\:\\$defaultOptions type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Routing/RouteProvider.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Routing\\\\RouteProvider\\:\\:\\$routeCache \\(array\\<Sulu\\\\Bundle\\\\RouteBundle\\\\Entity\\\\Route\\>\\) does not accept array\\<Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Routing/RouteProvider.php
@@ -26056,12 +26026,12 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/ChainRouteGeneratorTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Unit\\\\Generator\\\\ChainRouteGeneratorTest\\:\\:\\$mappings type has no value type specified in iterable type array\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Unit\\\\Generator\\\\TestRoutable\\:\\:getRoute\\(\\) should return Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface but returns Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/ChainRouteGeneratorTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Unit\\\\Generator\\\\TestRoutable\\:\\:\\$route \\(Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\) does not accept Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Unit\\\\Generator\\\\ChainRouteGeneratorTest\\:\\:\\$mappings type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/ChainRouteGeneratorTest.php
 
@@ -26081,7 +26051,7 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Manager/RouteManagerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Unit\\\\Manager\\\\TestRoutable\\:\\:\\$route \\(Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\) does not accept Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Unit\\\\Manager\\\\TestRoutable\\:\\:getRoute\\(\\) should return Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface but returns Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Manager/RouteManagerTest.php
 

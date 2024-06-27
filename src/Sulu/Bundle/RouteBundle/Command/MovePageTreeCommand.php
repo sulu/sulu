@@ -26,30 +26,12 @@ class MovePageTreeCommand extends Command
 {
     protected static $defaultName = 'sulu:route:page-tree:move';
 
-    /**
-     * @var PageTreeMoverInterface
-     */
-    private $pageTreeMover;
-
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
     public function __construct(
-        PageTreeMoverInterface $pageTreeMover,
-        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
-        DocumentManagerInterface $documentManager
+        private PageTreeMoverInterface $pageTreeMover,
+        private ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
+        private DocumentManagerInterface $documentManager
     ) {
         parent::__construct();
-        $this->pageTreeMover = $pageTreeMover;
-        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
-        $this->documentManager = $documentManager;
     }
 
     public function configure()

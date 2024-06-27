@@ -31,45 +31,14 @@ class PageTreeRouteContentType extends SimpleContentType
 {
     public const NAME = 'page_tree_route';
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
-
-    /**
-     * @var ChainRouteGeneratorInterface
-     */
-    private $chainRouteGenerator;
-
-    /**
-     * @var ConflictResolverInterface
-     */
-    private $conflictResolver;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
     public function __construct(
-        DocumentManagerInterface $documentManager,
-        DocumentRegistry $documentRegistry,
-        ChainRouteGeneratorInterface $chainRouteGenerator,
-        ConflictResolverInterface $conflictResolver,
-        EntityManagerInterface $entityManager
+        private DocumentManagerInterface $documentManager,
+        private DocumentRegistry $documentRegistry,
+        private ChainRouteGeneratorInterface $chainRouteGenerator,
+        private ConflictResolverInterface $conflictResolver,
+        private EntityManagerInterface $entityManager
     ) {
         parent::__construct('PageTreeRoute');
-
-        $this->documentManager = $documentManager;
-        $this->documentRegistry = $documentRegistry;
-        $this->chainRouteGenerator = $chainRouteGenerator;
-        $this->conflictResolver = $conflictResolver;
-        $this->entityManager = $entityManager;
     }
 
     public function read(NodeInterface $node, PropertyInterface $property, $webspaceKey, $languageCode, $segmentKey)
