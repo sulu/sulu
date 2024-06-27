@@ -24951,24 +24951,9 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Admin/PreviewAdmin.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PreviewBundle\\\\Admin\\\\PreviewAdmin\\:\\:\\$bundles type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Admin/PreviewAdmin.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Domain\\\\Model\\\\PreviewLink\\:\\:__construct\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Domain/Model/PreviewLink.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Events\\\\PreRenderEvent\\:\\:getAttribute\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Events/PreRenderEvent.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\PreviewRendererException\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/PreviewRendererException.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\PreviewRendererException\\:\\:getId\\(\\) should return string but returns int\\|string\\.$#"
@@ -24979,36 +24964,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\PreviewRendererException\\:\\:getObject\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/PreviewRendererException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\RouteDefaultsProviderNotFoundException\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/RouteDefaultsProviderNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\TemplateNotFoundException\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/TemplateNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\TwigException\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/TwigException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\UnexpectedException\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/UnexpectedException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\WebspaceLocalizationNotFoundException\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/WebspaceLocalizationNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\WebspaceNotFoundException\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/WebspaceNotFoundException.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Object\\\\PreviewObjectProviderInterface\\:\\:deserialize\\(\\) has no return type specified\\.$#"
@@ -25171,7 +25126,7 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
 
 		-
-			message: "#^Call to an undefined method Psr\\\\Cache\\\\CacheItemPoolInterface\\:\\:delete\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\Common\\\\Cache\\\\Cache\\|Psr\\\\Cache\\\\CacheItemPoolInterface\\:\\:delete\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCache.php
 
@@ -25179,21 +25134,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\PreviewCache\\:\\:fetch\\(\\) should return string but returns mixed\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCache.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\PreviewCache\\:\\:\\$cache \\(Psr\\\\Cache\\\\CacheItemPoolInterface\\) does not accept Doctrine\\\\Common\\\\Cache\\\\Cache\\|Psr\\\\Cache\\\\CacheItemPoolInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCache.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCache.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\PreviewCacheItem\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCacheItem.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\PreviewCacheItem\\:\\:getObject\\(\\) has no return type specified\\.$#"
@@ -25321,17 +25261,7 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Renderer\\\\PreviewRenderer\\:\\:\\$previewDefaults type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Renderer\\\\PreviewRenderer\\:\\:\\$targetGroupHeader \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 224\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
+			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 172\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
