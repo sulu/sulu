@@ -152,9 +152,9 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
         $this->assertEquals($addressType->getId(), $response->addresses[0]->addressType);
 
-        $this->assertObjectHasAttribute('avatar', $response);
-        $this->assertObjectHasAttribute('thumbnails', $response->avatar);
-        $this->assertObjectHasAttribute('sulu-100x100', $response->avatar->thumbnails);
+        $this->assertTrue(\property_exists($response, 'avatar'));
+        $this->assertTrue(\property_exists($response->avatar, 'thumbnails'));
+        $this->assertTrue(\property_exists($response->avatar->thumbnails, 'sulu-100x100'));
         $this->assertTrue(\is_string($response->avatar->thumbnails->{'sulu-100x100'}));
 
         $this->assertEquals(1, $response->formOfAddress);
@@ -458,9 +458,9 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
 
-        $this->assertObjectHasAttribute('avatar', $response);
-        $this->assertObjectHasAttribute('thumbnails', $response->avatar);
-        $this->assertObjectHasAttribute('sulu-100x100', $response->avatar->thumbnails);
+        $this->assertTrue(\property_exists($response, 'avatar'));
+        $this->assertTrue(\property_exists($response->avatar, 'thumbnails'));
+        $this->assertTrue(\property_exists($response->avatar->thumbnails, 'sulu-100x100'));
         $this->assertTrue(\is_string($response->avatar->thumbnails->{'sulu-100x100'}));
 
         $this->assertEquals(0, $response->formOfAddress);
@@ -1110,9 +1110,9 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
 
-        $this->assertObjectHasAttribute('avatar', $response);
-        $this->assertObjectHasAttribute('thumbnails', $response->avatar);
-        $this->assertObjectHasAttribute('sulu-100x100', $response->avatar->thumbnails);
+        $this->assertTrue(\property_exists($response, 'avatar'));
+        $this->assertTrue(\property_exists($response->avatar, 'thumbnails'));
+        $this->assertTrue(\property_exists($response->avatar->thumbnails, 'sulu-100x100'));
         $this->assertTrue(\is_string($response->avatar->thumbnails->{'sulu-100x100'}));
 
         $this->assertEquals(1, \count($response->categories));
@@ -1150,9 +1150,9 @@ class ContactControllerTest extends SuluTestCase
         $this->assertEquals(0, $response->formOfAddress);
         $this->assertEquals('Sehr geehrter John', $response->salutation);
 
-        $this->assertObjectHasAttribute('avatar', $response);
-        $this->assertObjectHasAttribute('thumbnails', $response->avatar);
-        $this->assertObjectHasAttribute('sulu-100x100', $response->avatar->thumbnails);
+        $this->assertTrue(\property_exists($response, 'avatar'));
+        $this->assertTrue(\property_exists($response->avatar, 'thumbnails'));
+        $this->assertTrue(\property_exists($response->avatar->thumbnails, 'sulu-100x100'));
         $this->assertTrue(\is_string($response->avatar->thumbnails->{'sulu-100x100'}));
 
         $this->assertEquals(1, \count($response->categories));
