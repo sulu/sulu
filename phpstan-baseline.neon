@@ -9492,12 +9492,12 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$addresses on mixed\\.$#"
-			count: 117
+			count: 92
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$avatar on mixed\\.$#"
-			count: 12
+			count: 6
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -9507,22 +9507,22 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$categories on mixed\\.$#"
-			count: 8
+			count: 4
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$contactDetails on mixed\\.$#"
-			count: 59
+			count: 47
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$firstName on mixed\\.$#"
-			count: 18
+			count: 16
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$formOfAddress on mixed\\.$#"
-			count: 16
+			count: 14
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -9532,12 +9532,12 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$id on mixed\\.$#"
-			count: 8
+			count: 7
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$lastName on mixed\\.$#"
-			count: 18
+			count: 16
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -9551,13 +9551,8 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
-			message: "#^Cannot access property \\$note on mixed\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
-
-		-
 			message: "#^Cannot access property \\$notes on mixed\\.$#"
-			count: 19
+			count: 15
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -9572,12 +9567,12 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$salutation on mixed\\.$#"
-			count: 15
+			count: 13
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$title on mixed\\.$#"
-			count: 15
+			count: 13
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -9747,12 +9742,12 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 47
+			count: 46
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, mixed given\\.$#"
-			count: 4
+			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -28127,7 +28122,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$key on mixed\\.$#"
-			count: 6
+			count: 4
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
@@ -28137,22 +28132,22 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$name on mixed\\.$#"
-			count: 7
+			count: 3
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$permissions on mixed\\.$#"
-			count: 145
+			count: 51
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$securityType on mixed\\.$#"
-			count: 5
+			count: 3
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$system on mixed\\.$#"
-			count: 7
+			count: 3
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
@@ -28161,7 +28156,7 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, mixed given\\.$#"
+			message: "#^Parameter \\#2 \\$array of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayNotHasKey\\(\\) expects array\\|ArrayAccess, mixed given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
