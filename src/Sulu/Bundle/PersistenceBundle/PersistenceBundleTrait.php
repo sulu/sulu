@@ -23,8 +23,8 @@ trait PersistenceBundleTrait
     /**
      * Build persistence adds a `ResolveTargetEntitiesPass` for the given interfaces.
      *
-     * @param mixed[] $interfaces Target entities resolver configuration.
-     *                            Mapping interfaces to a concrete implementation
+     * @param array<class-string, string> $interfaces Target entities resolver configuration.
+     *                                                Mapping interfaces to a concrete implementation
      *
      * @return void
      */
