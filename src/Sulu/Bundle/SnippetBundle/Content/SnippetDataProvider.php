@@ -41,73 +41,18 @@ class SnippetDataProvider implements DataProviderInterface
      */
     private $configuration;
 
-    /**
-     * @var ContentQueryExecutorInterface
-     */
-    private $contentQueryExecutor;
-
-    /**
-     * @var ContentQueryBuilderInterface
-     */
-    private $snippetQueryBuilder;
-
-    /**
-     * @var SuluNodeHelper
-     */
-    private $nodeHelper;
-
-    /**
-     * @var LazyLoadingValueHolderFactory
-     */
-    private $proxyFactory;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $referenceStore;
-
-    /**
-     * @var bool
-     */
-    private $hasAudienceTargeting;
-
-    /**
-     * @var MetadataProviderInterface|null
-     */
-    private $formMetadataProvider;
-
-    /**
-     * @var TokenStorageInterface|null
-     */
-    private $tokenStorage;
-
     public function __construct(
-        ContentQueryExecutorInterface $contentQueryExecutor,
-        ContentQueryBuilderInterface $snippetQueryBuilder,
-        SuluNodeHelper $nodeHelper,
-        LazyLoadingValueHolderFactory $proxyFactory,
-        DocumentManagerInterface $documentManager,
-        ReferenceStoreInterface $referenceStore,
-        bool $hasAudienceTargeting = false,
-        ?MetadataProviderInterface $formMetadataProvider = null,
-        ?TokenStorageInterface $tokenStorage = null
+        private ContentQueryExecutorInterface $contentQueryExecutor,
+        private ContentQueryBuilderInterface $snippetQueryBuilder,
+        private SuluNodeHelper $nodeHelper,
+        private LazyLoadingValueHolderFactory $proxyFactory,
+        private DocumentManagerInterface $documentManager,
+        private ReferenceStoreInterface $referenceStore,
+        private bool $hasAudienceTargeting = false,
+        private ?MetadataProviderInterface $formMetadataProvider = null,
+        private ?TokenStorageInterface $tokenStorage = null
     ) {
-        $this->contentQueryExecutor = $contentQueryExecutor;
-        $this->snippetQueryBuilder = $snippetQueryBuilder;
-        $this->nodeHelper = $nodeHelper;
-        $this->proxyFactory = $proxyFactory;
-        $this->documentManager = $documentManager;
-        $this->referenceStore = $referenceStore;
-        $this->hasAudienceTargeting = $hasAudienceTargeting;
-        $this->formMetadataProvider = $formMetadataProvider;
-        $this->tokenStorage = $tokenStorage;
-
-        if (!$formMetadataProvider) {
+        if (!$this->formMetadataProvider) {
             @trigger_deprecation('sulu/sulu', '2.3', 'The usage of the "SnippetDataProvider" without setting the "FormMetadataProvider" is deprecated. Please inject the "FormMetadataProvider".');
         }
     }

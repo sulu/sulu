@@ -25,8 +25,11 @@ class MemoizedSnippetTwigExtension extends AbstractExtension
     /**
      * @param int $lifeTime
      */
-    public function __construct(SnippetTwigExtensionInterface $extension, MemoizeInterface $memoizeCache, $lifeTime)
-    {
+    public function __construct(
+        SnippetTwigExtensionInterface $extension,
+        MemoizeInterface $memoizeCache,
+        $lifeTime,
+    ) {
         $this->extension = $extension;
         $this->memoizeCache = $memoizeCache;
         $this->lifeTime = $lifeTime;

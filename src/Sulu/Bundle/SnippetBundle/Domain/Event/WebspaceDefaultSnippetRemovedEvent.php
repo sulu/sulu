@@ -16,24 +16,11 @@ use Sulu\Bundle\SnippetBundle\Admin\SnippetAdmin;
 
 class WebspaceDefaultSnippetRemovedEvent extends DomainEvent
 {
-    /**
-     * @var string
-     */
-    private $webspaceKey;
-
-    /**
-     * @var string
-     */
-    private $snippetAreaKey;
-
     public function __construct(
-        string $webspaceKey,
-        string $snippetAreaKey
+        private string $webspaceKey,
+        private string $snippetAreaKey
     ) {
         parent::__construct();
-
-        $this->webspaceKey = $webspaceKey;
-        $this->snippetAreaKey = $snippetAreaKey;
     }
 
     public function getSnippetAreaKey(): string

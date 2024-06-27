@@ -38,26 +38,6 @@ class SnippetAdmin extends Admin
     public const EDIT_FORM_VIEW = 'sulu_snippet.edit_form';
 
     /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var bool
-     */
-    private $defaultEnabled;
-
-    /**
      * Returns security context for default-snippets in given webspace.
      *
      * @param string $webspaceKey
@@ -69,16 +49,15 @@ class SnippetAdmin extends Admin
         return \sprintf('%s%s.%s', PageAdmin::SECURITY_CONTEXT_PREFIX, $webspaceKey, 'default-snippets');
     }
 
+    /**
+     * @param bool $defaultEnabled
+     */
     public function __construct(
-        ViewBuilderFactoryInterface $viewBuilderFactory,
-        SecurityCheckerInterface $securityChecker,
-        WebspaceManagerInterface $webspaceManager,
-        $defaultEnabled
+        private ViewBuilderFactoryInterface $viewBuilderFactory,
+        private SecurityCheckerInterface $securityChecker,
+        private WebspaceManagerInterface $webspaceManager,
+        private $defaultEnabled,
     ) {
-        $this->viewBuilderFactory = $viewBuilderFactory;
-        $this->securityChecker = $securityChecker;
-        $this->webspaceManager = $webspaceManager;
-        $this->defaultEnabled = $defaultEnabled;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void

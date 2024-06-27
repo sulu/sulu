@@ -28701,11 +28701,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Util/TokenGenerator.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Admin\\\\SnippetAdmin\\:\\:__construct\\(\\) has parameter \\$defaultEnabled with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Admin/SnippetAdmin.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Admin\\\\SnippetAdmin\\:\\:getGlobalSnippetsSecurityContext\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Admin/SnippetAdmin.php
@@ -28991,11 +28986,6 @@ parameters:
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetAreaController\\:\\:__construct\\(\\) has parameter \\$sulu_snippet_area with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetAreaController\\:\\:getLocalizedAreas\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
@@ -29012,11 +29002,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$uuid of method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\DefaultSnippetManagerInterface\\:\\:save\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SnippetBundle\\\\Controller\\\\SnippetAreaController\\:\\:\\$sulu_snippet_areas type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Controller/SnippetAreaController.php
 
@@ -29429,16 +29414,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\SnippetResolverInterface\\:\\:resolve\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Snippet/SnippetResolverInterface.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\WrongSnippetTypeException\\:\\:__construct\\(\\) has parameter \\$actual with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Snippet/WrongSnippetTypeException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Snippet\\\\WrongSnippetTypeException\\:\\:__construct\\(\\) has parameter \\$expected with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Snippet/WrongSnippetTypeException.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SnippetBundle\\\\Tests\\\\Functional\\\\BaseFunctionalTestCase\\:\\:createSnippet\\(\\) has no return type specified\\.$#"
@@ -30062,11 +30037,6 @@ parameters:
 
 		-
 			message: "#^Class Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetContent constructor invoked with 5 parameters, 4 required\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetContentTest.php
-
-		-
-			message: "#^Parameter \\#4 \\$defaultEnabled of class Sulu\\\\Bundle\\\\SnippetBundle\\\\Content\\\\SnippetContent constructor expects true, false given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SnippetBundle/Tests/Unit/Content/SnippetContentTest.php
 
