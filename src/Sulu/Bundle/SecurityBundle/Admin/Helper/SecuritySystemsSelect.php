@@ -15,20 +15,10 @@ use Sulu\Bundle\AdminBundle\Admin\AdminPool;
 
 class SecuritySystemsSelect
 {
-    /**
-     * @var AdminPool
-     */
-    private $adminPool;
-
-    /**
-     * @var string
-     */
-    private $suluSecuritySystem;
-
-    public function __construct(AdminPool $adminPool, string $suluSecuritySystem)
-    {
-        $this->adminPool = $adminPool;
-        $this->suluSecuritySystem = $suluSecuritySystem;
+    public function __construct(
+        private AdminPool $adminPool,
+        private string $suluSecuritySystem,
+    ) {
     }
 
     public function getValues(): array

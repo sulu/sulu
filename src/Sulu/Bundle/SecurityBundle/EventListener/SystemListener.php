@@ -21,34 +21,14 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class SystemListener implements EventSubscriberInterface
 {
-    /**
-     * @var SystemStoreInterface
-     */
-    private $systemStore;
-
-    /**
-     * @var RequestAnalyzerInterface|null
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var string
-     */
-    private $context;
-
     public function __construct(
-        SystemStoreInterface $systemStore,
-        ?RequestAnalyzerInterface $requestAnalyzer,
-        string $context
+        private SystemStoreInterface $systemStore,
+        private ?RequestAnalyzerInterface $requestAnalyzer,
+        private string $context
     ) {
-        $this->systemStore = $systemStore;
-
         if (null !== $requestAnalyzer) {
             @trigger_deprecation('sulu/sulu', '2.4', 'The argument "%s" in class "%s" is deprecated and not longer required set `null` instead.', RequestAnalyzerInterface::class, __CLASS__);
         }
-
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->context = $context;
     }
 
     public static function getSubscribedEvents(): array

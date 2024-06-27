@@ -28,30 +28,11 @@ class SyncPhpcrPermissionsCommand extends Command
 {
     protected static $defaultName = 'sulu:security:sync-phpcr-permissions';
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var DoctrineAccessControlProvider
-     */
-    private $doctrineAccessControlProvider;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        DocumentManagerInterface $documentManager,
-        DoctrineAccessControlProvider $doctrineAccessControlProvider
+        private EntityManagerInterface $entityManager,
+        private DocumentManagerInterface $documentManager,
+        private DoctrineAccessControlProvider $doctrineAccessControlProvider
     ) {
-        $this->entityManager = $entityManager;
-        $this->documentManager = $documentManager;
-        $this->doctrineAccessControlProvider = $doctrineAccessControlProvider;
-
         parent::__construct();
     }
 

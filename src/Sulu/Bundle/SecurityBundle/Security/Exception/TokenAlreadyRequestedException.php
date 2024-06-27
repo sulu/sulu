@@ -19,16 +19,11 @@ namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 class TokenAlreadyRequestedException extends SecurityException
 {
     /**
-     * The time interval in which only one token can be requested.
-     *
-     * @var \DateInterval
+     * @param \DateInterval $interval the time interval in which only one token can be requested
      */
-    private $interval;
-
-    public function __construct($interval)
+    public function __construct(private \DateInterval $interval)
     {
         parent::__construct('a token has already been generated', 1003);
-        $this->interval = $interval;
     }
 
     public function getInterval()

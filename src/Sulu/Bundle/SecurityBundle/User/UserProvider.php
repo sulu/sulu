@@ -28,20 +28,10 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class UserProvider implements UserProviderInterface
 {
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
-
-    /**
-     * @var SystemStoreInterface
-     */
-    private $systemStore;
-
-    public function __construct(UserRepositoryInterface $userRepository, SystemStoreInterface $systemStore)
-    {
-        $this->userRepository = $userRepository;
-        $this->systemStore = $systemStore;
+    public function __construct(
+        private UserRepositoryInterface $userRepository,
+        private SystemStoreInterface $systemStore,
+    ) {
     }
 
     /**

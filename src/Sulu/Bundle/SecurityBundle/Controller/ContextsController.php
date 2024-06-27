@@ -34,18 +34,11 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ContextsController extends AbstractRestController implements ClassResourceInterface
 {
-    /**
-     * @var AdminPool
-     */
-    private $adminPool;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        AdminPool $adminPool
+        private AdminPool $adminPool
     ) {
         parent::__construct($viewHandler);
-
-        $this->adminPool = $adminPool;
     }
 
     public function cgetAction(Request $request)

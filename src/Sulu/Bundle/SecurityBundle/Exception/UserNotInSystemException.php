@@ -18,25 +18,12 @@ use Sulu\Bundle\SecurityBundle\Security\Exception\SecurityException;
  */
 class UserNotInSystemException extends SecurityException
 {
-    /**
-     * @var string
-     */
-    private $system;
-
-    /**
-     * @var string
-     */
-    private $identifier;
-
-    public function __construct($system, $identifier)
+    public function __construct(private $system, private $identifier)
     {
         parent::__construct(
             'User with identifier "' . $identifier . '" does not exists in system "' . $system . '"',
             1009
         );
-
-        $this->system = $system;
-        $this->identifier = $identifier;
     }
 
     public function getIdentifier()

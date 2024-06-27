@@ -28,25 +28,12 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class RoleSettingController extends AbstractRestController implements ClassResourceInterface
 {
-    /**
-     * @var RoleSettingRepositoryInterface
-     */
-    private $roleSettingRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        RoleSettingRepositoryInterface $roleSettingRepository,
-        EntityManagerInterface $entityManager
+        private RoleSettingRepositoryInterface $roleSettingRepository,
+        private EntityManagerInterface $entityManager
     ) {
         parent::__construct($viewHandler);
-
-        $this->roleSettingRepository = $roleSettingRepository;
-        $this->entityManager = $entityManager;
     }
 
     /**

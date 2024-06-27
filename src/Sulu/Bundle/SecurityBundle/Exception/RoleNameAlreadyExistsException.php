@@ -19,17 +19,11 @@ use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 class RoleNameAlreadyExistsException extends \Exception implements TranslationErrorMessageExceptionInterface
 {
     /**
-     * @var string
-     */
-    private $name;
-
-    /**
      * @param string $name
      */
-    public function __construct($name, ?\Throwable $previous = null)
+    public function __construct(private $name, ?\Throwable $previous = null)
     {
-        $this->name = $name;
-        parent::__construct(\sprintf('Role "%s" already exists', $name), 1101, $previous);
+        parent::__construct(\sprintf('Role "%s" already exists', $this->name), 1101, $previous);
     }
 
     /**

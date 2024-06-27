@@ -22,20 +22,8 @@ use Twig\TwigFunction;
  */
 class UserTwigExtension extends AbstractExtension
 {
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
-     * @var Cache
-     */
-    private $cache;
-
-    public function __construct(Cache $cache, UserRepository $userRepository)
+    public function __construct(private Cache $cache, private UserRepository $userRepository)
     {
-        $this->cache = $cache;
-        $this->userRepository = $userRepository;
     }
 
     /**

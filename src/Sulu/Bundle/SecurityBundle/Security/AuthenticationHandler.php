@@ -32,22 +32,10 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
 class AuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
 {
     /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var string[]
-     */
-    private array $twoFactorMethods;
-
-    /**
      * @param string[] $twoFactorMethods
      */
-    public function __construct(RouterInterface $router, array $twoFactorMethods = [])
+    public function __construct(private RouterInterface $router, private array $twoFactorMethods = [])
     {
-        $this->router = $router;
-        $this->twoFactorMethods = $twoFactorMethods;
     }
 
     /**

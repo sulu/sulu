@@ -47,42 +47,17 @@ class GroupController extends AbstractRestController implements ClassResourceInt
      */
     protected $fieldDescriptors;
 
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
-
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $doctrineListBuilderFactory;
-
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
     public const ENTITY_NAME_ROLE = 'SuluSecurityBundle:Role';
 
     // TODO: move the field descriptors to a manager
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        RestHelperInterface $restHelper,
-        DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
-        RoleRepositoryInterface $roleRepository,
-        EntityManagerInterface $entityManager
+        private RestHelperInterface $restHelper,
+        private DoctrineListBuilderFactoryInterface $doctrineListBuilderFactory,
+        private RoleRepositoryInterface $roleRepository,
+        private EntityManagerInterface $entityManager
     ) {
         parent::__construct($viewHandler);
-
-        $this->restHelper = $restHelper;
-        $this->doctrineListBuilderFactory = $doctrineListBuilderFactory;
-        $this->roleRepository = $roleRepository;
-        $this->entityManager = $entityManager;
 
         $this->fieldDescriptors = [];
         $this->fieldDescriptors['id'] = new DoctrineFieldDescriptor('id', 'id', static::$entityName);

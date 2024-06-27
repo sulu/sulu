@@ -16,13 +16,12 @@ namespace Sulu\Bundle\SecurityBundle\Security\Exception;
  */
 class InvalidTokenException extends SecurityException
 {
-    /** @var string */
-    private $token;
-
-    public function __construct($token, ?\Throwable $previous = null)
+    /**
+     * @param string $token
+     */
+    public function __construct(private $token, ?\Throwable $previous = null)
     {
-        $this->token = $token;
-        parent::__construct(\sprintf('The token "%s" does not exist!', $token), 1005, $previous);
+        parent::__construct(\sprintf('The token "%s" does not exist!', $this->token), 1005, $previous);
     }
 
     public function getToken()

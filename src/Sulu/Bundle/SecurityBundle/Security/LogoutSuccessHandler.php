@@ -22,16 +22,9 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class LogoutSuccessHandler implements LogoutSuccessHandlerInterface
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    public function __construct(RouterInterface $router)
+    public function __construct(private RouterInterface $router)
     {
         @trigger_deprecation('sulu/sulu', '2.5', __CLASS__ . '() is deprecated and will be removed in 3.0. Use LogoutEventSubscriber instead.');
-
-        $this->router = $router;
     }
 
     /**

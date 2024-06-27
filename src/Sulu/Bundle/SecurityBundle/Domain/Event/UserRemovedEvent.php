@@ -17,22 +17,9 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 class UserRemovedEvent extends DomainEvent
 {
-    /**
-     * @var int
-     */
-    private $userId;
-
-    /**
-     * @var string
-     */
-    private $username;
-
-    public function __construct(int $userId, string $username)
+    public function __construct(private int $userId, private string $username)
     {
         parent::__construct();
-
-        $this->userId = $userId;
-        $this->username = $username;
     }
 
     public function getEventType(): string

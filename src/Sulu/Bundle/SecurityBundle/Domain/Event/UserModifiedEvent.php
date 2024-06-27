@@ -18,24 +18,11 @@ use Sulu\Component\Security\Authentication\UserInterface;
 class UserModifiedEvent extends DomainEvent
 {
     /**
-     * @var UserInterface
-     */
-    private $resourceUser;
-
-    /**
-     * @var mixed[]|null
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
-    public function __construct(UserInterface $resourceUser, array $payload)
+    public function __construct(private UserInterface $resourceUser, private array $payload)
     {
         parent::__construct();
-
-        $this->resourceUser = $resourceUser;
-        $this->payload = $payload;
     }
 
     public function getEventType(): string

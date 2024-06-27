@@ -26151,22 +26151,12 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Admin/Helper/SystemLanguageSelect.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Admin\\\\Helper\\\\SystemLanguageSelect\\:\\:\\$translatedLocales type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Admin/Helper/SystemLanguageSelect.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Admin\\\\SecurityAdmin\\:\\:__construct\\(\\) has parameter \\$resources with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Admin/SecurityAdmin.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Admin\\\\SecurityAdmin\\:\\:getConfig\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Admin/SecurityAdmin.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Admin\\\\SecurityAdmin\\:\\:\\$resources type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Admin/SecurityAdmin.php
 
@@ -26232,11 +26222,6 @@ parameters:
 
 		-
 			message: "#^Call to method getEncoder\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Encoder\\\\EncoderFactoryInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Command\\\\CreateUserCommand\\:\\:__construct\\(\\) has parameter \\$locales with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Command/CreateUserCommand.php
 
@@ -26426,14 +26411,14 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/PermissionController.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\PermissionController\\:\\:\\$resources type has no value type specified in iterable type array\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\PermissionController\\:\\:\\$roleRepository is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/PermissionController.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\PermissionController\\:\\:\\$roleRepository is never read, only written\\.$#"
+			message: "#^Call to an undefined method Sulu\\\\Bundle\\\\AdminBundle\\\\UserManager\\\\UserManagerInterface\\:\\:save\\(\\)\\.$#"
 			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/PermissionController.php
+			path: src/Sulu/Bundle/SecurityBundle/Controller/ProfileController.php
 
 		-
 			message: "#^Call to an undefined method object\\:\\:setValue\\(\\)\\.$#"
@@ -26447,16 +26432,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\ProfileController\\:\\:checkArguments\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ProfileController.php
-
-		-
-			message: "#^PHPDoc tag @param for parameter \\$userManager with type Sulu\\\\Bundle\\\\AdminBundle\\\\UserManager\\\\UserManagerInterface is not subtype of native type Sulu\\\\Bundle\\\\SecurityBundle\\\\UserManager\\\\UserManager\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ProfileController.php
-
-		-
-			message: "#^Parameter \\#2 \\$locale of method Sulu\\\\Bundle\\\\SecurityBundle\\\\UserManager\\\\UserManager\\:\\:save\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ProfileController.php
 
@@ -26531,11 +26506,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\ResettingController\\:\\:__construct\\(\\) has parameter \\$mailer with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\ResettingController\\:\\:changePassword\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
@@ -26576,6 +26546,11 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
 
 		-
+			message: "#^Parameter \\#1 \\$limit of class Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenEmailsLimitReachedException constructor expects int, string given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
+
+		-
 			message: "#^Parameter \\#1 \\$token of method Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\ResettingController\\:\\:generateTokenHash\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
@@ -26592,6 +26567,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$user of class Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenEmailsLimitReachedException constructor expects Sulu\\\\Component\\\\Security\\\\Authentication\\\\UserInterface, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
+
+		-
+			message: "#^Parameter \\$mailer of method Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\ResettingController\\:\\:__construct\\(\\) has invalid type Swift_Mailer\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
 
@@ -26776,52 +26756,7 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Controller/RoleSettingController.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:create\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:delete\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:enableUser\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:findAll\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:getUserById\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:lockUser\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:save\\(\\)\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:unlockUser\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<object\\>\\:\\:findUserByContact\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Call to an undefined method Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManagerInterface\\:\\:initializeListBuilder\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
@@ -26857,21 +26792,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$className of method Doctrine\\\\ORM\\\\EntityManagerInterface\\:\\:getRepository\\(\\) expects class\\-string\\<object\\>, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\UserController\\:\\:\\$doctrineListBuilderFactory \\(Doctrine\\\\ORM\\\\EntityManagerInterface\\) does not accept Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilderFactoryInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\UserController\\:\\:\\$restHelper \\(Sulu\\\\Bundle\\\\MediaBundle\\\\Media\\\\FormatOptions\\\\FormatOptionsManagerInterface\\) does not accept Sulu\\\\Component\\\\Rest\\\\RestHelperInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Controller\\\\UserController\\:\\:\\$userManager \\(Doctrine\\\\ORM\\\\EntityManagerInterface\\) does not accept Sulu\\\\Bundle\\\\AdminBundle\\\\UserManager\\\\UserManagerInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Controller/UserController.php
 
@@ -27421,11 +27341,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/SystemListener.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Contracts\\\\Translation\\\\LocaleAwareInterface\\|Symfony\\\\Contracts\\\\Translation\\\\TranslatorInterface\\:\\:setLocale\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/EventListener/UserLocaleListener.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\EventListener\\\\UserLocaleListener\\:\\:copyUserLocaleToRequest\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/EventListener/UserLocaleListener.php
@@ -27496,19 +27411,9 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/EmailNotUniqueException.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\EmailNotUniqueException\\:\\:\\$email has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/EmailNotUniqueException.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\EmailTemplateException\\:\\:toArray\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/EmailTemplateException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\InvalidTokenException\\:\\:__construct\\(\\) has parameter \\$token with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/InvalidTokenException.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\InvalidTokenException\\:\\:getToken\\(\\) has no return type specified\\.$#"
@@ -27531,11 +27436,6 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/SecurityException.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenAlreadyRequestedException\\:\\:__construct\\(\\) has parameter \\$interval with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/TokenAlreadyRequestedException.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenAlreadyRequestedException\\:\\:getInterval\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/TokenAlreadyRequestedException.php
@@ -27544,11 +27444,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenAlreadyRequestedException\\:\\:toArray\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/TokenAlreadyRequestedException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenEmailsLimitReachedException\\:\\:__construct\\(\\) has parameter \\$limit with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/TokenEmailsLimitReachedException.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenEmailsLimitReachedException\\:\\:getLimit\\(\\) has no return type specified\\.$#"
@@ -27564,11 +27459,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\TokenEmailsLimitReachedException\\:\\:toArray\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/TokenEmailsLimitReachedException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\UsernameNotUniqueException\\:\\:__construct\\(\\) has parameter \\$username with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SecurityBundle/Security/Exception/UsernameNotUniqueException.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\Exception\\\\UsernameNotUniqueException\\:\\:getUsername\\(\\) has no return type specified\\.$#"
