@@ -21,36 +21,12 @@ use Symfony\Component\Routing\RouterInterface;
 
 class PreviewLinkManager implements PreviewLinkManagerInterface
 {
-    /**
-     * @var PreviewLinkRepositoryInterface
-     */
-    private $previewLinkRepository;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
-     * @var PreviewObjectProviderRegistryInterface
-     */
-    private $previewObjectProviderRegistry;
-
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
     public function __construct(
-        PreviewLinkRepositoryInterface $previewLinkRepository,
-        DomainEventCollectorInterface $domainEventCollector,
-        PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry,
-        RouterInterface $router
+        private PreviewLinkRepositoryInterface $previewLinkRepository,
+        private DomainEventCollectorInterface $domainEventCollector,
+        private PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry,
+        private RouterInterface $router,
     ) {
-        $this->previewLinkRepository = $previewLinkRepository;
-        $this->domainEventCollector = $domainEventCollector;
-        $this->previewObjectProviderRegistry = $previewObjectProviderRegistry;
-        $this->router = $router;
     }
 
     public function generate(

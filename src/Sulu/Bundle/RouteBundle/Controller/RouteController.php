@@ -37,53 +37,16 @@ class RouteController extends AbstractRestController implements ClassResourceInt
 {
     use RequestParametersTrait;
 
-    /**
-     * @var array
-     */
-    private $resourceKeyMappings;
-
-    /**
-     * @var RouteRepositoryInterface
-     */
-    private $routeRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var RouteGeneratorInterface
-     */
-    private $routeGenerator;
-
-    /**
-     * @var ConflictResolverInterface|null
-     */
-    private $conflictResolver;
-
-    /**
-     * @var DomainEventCollectorInterface|null
-     */
-    private $domainEventCollector;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        RouteRepositoryInterface $routeRepository,
-        EntityManagerInterface $entityManager,
-        RouteGeneratorInterface $routeGenerator,
-        array $resourceKeyMappings,
-        ?ConflictResolverInterface $conflictResolver = null,
-        ?DomainEventCollectorInterface $domainEventCollector = null
+        private RouteRepositoryInterface $routeRepository,
+        private EntityManagerInterface $entityManager,
+        private RouteGeneratorInterface $routeGenerator,
+        private array $resourceKeyMappings,
+        private ?ConflictResolverInterface $conflictResolver = null,
+        private ?DomainEventCollectorInterface $domainEventCollector = null
     ) {
         parent::__construct($viewHandler);
-
-        $this->routeRepository = $routeRepository;
-        $this->entityManager = $entityManager;
-        $this->routeGenerator = $routeGenerator;
-        $this->resourceKeyMappings = $resourceKeyMappings;
-        $this->conflictResolver = $conflictResolver;
-        $this->domainEventCollector = $domainEventCollector;
 
         if (null === $this->conflictResolver) {
             @trigger_deprecation(

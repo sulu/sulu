@@ -20,16 +20,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class TranslatorWrapper implements TranslatorInterface, LocaleAwareInterface
 {
     /**
-     * @var TranslatorInterface&LocaleAwareInterface
-     */
-    private $translator;
-
-    /**
      * @param TranslatorInterface&LocaleAwareInterface $translator
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
     /**

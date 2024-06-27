@@ -356,6 +356,10 @@ class ContactControllerTest extends SuluTestCase
                             'email' => 'erika.mustermann@muster.de',
                             'emailType' => $emailType->getId(),
                         ],
+                        [
+                            'email' => null,
+                            'emailType' => $emailType->getId(),
+                        ],
                     ],
                     'phones' => [
                         [
@@ -366,6 +370,10 @@ class ContactControllerTest extends SuluTestCase
                             'phone' => '987654321',
                             'phoneType' => $phoneType->getId(),
                         ],
+                        [
+                            'phone' => null,
+                            'phoneType' => $phoneType->getId(),
+                        ],
                     ],
                     'faxes' => [
                         [
@@ -374,6 +382,10 @@ class ContactControllerTest extends SuluTestCase
                         ],
                         [
                             'fax' => '987654321-1',
+                            'faxType' => $faxType->getId(),
+                        ],
+                        [
+                            'fax' => null,
                             'faxType' => $faxType->getId(),
                         ],
                     ],
@@ -983,168 +995,129 @@ class ContactControllerTest extends SuluTestCase
 
         $this->em->flush();
 
+        $putData = [
+            'firstName' => 'John',
+            'lastName' => 'Doe',
+            'note' => 'A small notice',
+            'title' => $title->getId(),
+            'position' => $position->getId(),
+            'account' => ['id' => $account->getId()],
+            'avatar' => [
+                'id' => $media->getId(),
+            ],
+            'birthday' => '1980-01-01T00:00:00',
+            'contactDetails' => [
+                'emails' => [
+                    [
+                        'id' => $email->getId(),
+                        'email' => 'john.doe@muster.at',
+                        'emailType' => $emailType->getId(),
+                    ],
+                    [
+                        'email' => 'john.doe@muster.de',
+                        'emailType' => $emailType->getId(),
+                    ],
+                ],
+                'phones' => [
+                    [
+                        'id' => $phone->getId(),
+                        'phone' => '321654987',
+                        'phoneType' => $phoneType->getId(),
+                    ],
+                    [
+                        'phone' => '789456123',
+                        'phoneType' => $phoneType->getId(),
+                    ],
+                ],
+                'faxes' => [
+                    [
+                        'id' => $fax->getId(),
+                        'fax' => '321654987-1',
+                        'faxType' => $faxType->getId(),
+                    ],
+                    [
+                        'fax' => '789456123-1',
+                        'faxType' => $faxType->getId(),
+                    ],
+                ],
+                'socialMedia' => [],
+                'websites' => [],
+            ],
+            'addresses' => [
+                [
+                    'id' => $address->getId(),
+                    'title' => 'work',
+                    'street' => 'Street',
+                    'number' => '2',
+                    'zip' => '9999',
+                    'city' => 'Springfield',
+                    'state' => 'Colorado',
+                    'countryCode' => 'ML',
+                    'addressType' => $addressType->getId(),
+                    'billingAddress' => true,
+                    'primaryAddress' => true,
+                    'deliveryAddress' => false,
+                    'postboxCity' => 'Dornbirn',
+                    'postboxPostcode' => '6850',
+                    'postboxNumber' => '4711',
+                    'note' => 'note',
+                    'addition' => 'addition',
+                    'latitude' => 20.5,
+                    'longitude' => 30.7,
+                ],
+            ],
+            'notes' => [
+                [
+                    'id' => $note->getId(),
+                    'value' => 'Note 1_1',
+                ],
+            ],
+            'salutation' => 'Sehr geehrter John',
+            'formOfAddress' => 0,
+            'categories' => [
+                $category3->getId(),
+            ],
+            'tags' => ['Tag A', 'Tag B'],
+        ];
+
         $this->client->jsonRequest(
             'PUT',
             '/api/contacts/' . $contact->getId(),
-            [
-                'firstName' => 'John',
-                'lastName' => 'Doe',
-                'note' => 'A small notice',
-                'title' => $title->getId(),
-                'position' => $position->getId(),
-                'avatar' => [
-                    'id' => $media->getId(),
-                ],
-                'contactDetails' => [
-                    'emails' => [
-                        [
-                            'id' => $email->getId(),
-                            'email' => 'john.doe@muster.at',
-                            'emailType' => $emailType->getId(),
-                        ],
-                        [
-                            'email' => 'john.doe@muster.de',
-                            'emailType' => $emailType->getId(),
-                        ],
-                    ],
-                    'phones' => [
-                        [
-                            'id' => $phone->getId(),
-                            'phone' => '321654987',
-                            'phoneType' => $phoneType->getId(),
-                        ],
-                        [
-                            'phone' => '789456123',
-                            'phoneType' => $phoneType->getId(),
-                        ],
-                    ],
-                    'faxes' => [
-                        [
-                            'id' => $fax->getId(),
-                            'fax' => '321654987-1',
-                            'faxType' => $faxType->getId(),
-                        ],
-                        [
-                            'fax' => '789456123-1',
-                            'faxType' => $faxType->getId(),
-                        ],
-                    ],
-                ],
-                'addresses' => [
-                    [
-                        'id' => $address->getId(),
-                        'title' => 'work',
-                        'street' => 'Street',
-                        'number' => '2',
-                        'zip' => '9999',
-                        'city' => 'Springfield',
-                        'state' => 'Colorado',
-                        'countryCode' => 'ML',
-                        'addressType' => $addressType->getId(),
-                        'billingAddress' => true,
-                        'primaryAddress' => true,
-                        'deliveryAddress' => false,
-                        'postboxCity' => 'Dornbirn',
-                        'postboxPostcode' => '6850',
-                        'postboxNumber' => '4711',
-                        'note' => 'note',
-                    ],
-                ],
-                'notes' => [
-                    [
-                        'id' => $note->getId(),
-                        'value' => 'Note 1_1',
-                    ],
-                ],
-                'salutation' => 'Sehr geehrter John',
-                'formOfAddress' => [
-                    'id' => 0,
-                ],
-                'categories' => [
-                    $category3->getId(),
-                ],
-            ]
+            $putData,
         );
 
-        $response = \json_decode($this->client->getResponse()->getContent());
+        $response = \json_decode($this->client->getResponse()->getContent(), true, \JSON_THROW_ON_ERROR);
+        $this->assertIsArray($response);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
+        unset($response['_hash']);
+        unset($response['id']);
+        $accountId = $response['account']['id'] ?? null;
+        unset($response['account']);
+        $response['account']['id'] = $accountId;
+        unset($response['created']);
+        unset($response['changed']);
+        unset($response['locales']);
+        unset($response['middleName']);
+        unset($response['fullName']);
+        unset($response['titleName']);
+        unset($response['avatar']['url']);
+        unset($response['avatar']['thumbnails']);
+        // TODO add more data do tests:
+        unset($response['bankAccounts']);
+        unset($response['newsletter']);
+        unset($response['gender']);
+        unset($response['mainEmail']);
+        unset($response['mainPhone']);
+        unset($response['mainFax']);
+        unset($response['mainUrl']);
+        unset($response['mainAddress']);
+        unset($response['positionName']);
+        unset($response['medias']);
+        unset($response['contactDetails']['emails'][1]['id']);
+        unset($response['contactDetails']['phones'][1]['id']);
+        unset($response['contactDetails']['faxes'][1]['id']);
 
-        $this->assertEquals('John', $response->firstName);
-        $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('A small notice', $response->note);
-        $this->assertEquals($title->getId(), $response->title);
-        $this->assertEquals('john.doe@muster.at', $response->contactDetails->emails[0]->email);
-        $this->assertEquals('john.doe@muster.de', $response->contactDetails->emails[1]->email);
-        $this->assertEquals('321654987', $response->contactDetails->phones[0]->phone);
-        $this->assertEquals('789456123', $response->contactDetails->phones[1]->phone);
-        $this->assertEquals('321654987-1', $response->contactDetails->faxes[0]->fax);
-        $this->assertEquals('789456123-1', $response->contactDetails->faxes[1]->fax);
-        $this->assertEquals('Street', $response->addresses[0]->street);
-        $this->assertEquals('2', $response->addresses[0]->number);
-        $this->assertEquals('9999', $response->addresses[0]->zip);
-        $this->assertEquals('Springfield', $response->addresses[0]->city);
-        $this->assertEquals('Colorado', $response->addresses[0]->state);
-        $this->assertEquals('ML', $response->addresses[0]->countryCode);
-        $this->assertEquals('Note 1_1', $response->notes[0]->value);
-        $this->assertEquals(1, \count($response->notes));
-        $this->assertEquals('note', $response->addresses[0]->note);
-        $this->assertEquals(true, $response->addresses[0]->billingAddress);
-        $this->assertEquals(true, $response->addresses[0]->primaryAddress);
-        $this->assertEquals(false, $response->addresses[0]->deliveryAddress);
-        $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
-        $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
-        $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
-
-        $this->assertEquals(0, $response->formOfAddress);
-        $this->assertEquals('Sehr geehrter John', $response->salutation);
-
-        $this->assertTrue(\property_exists($response, 'avatar'));
-        $this->assertTrue(\property_exists($response->avatar, 'thumbnails'));
-        $this->assertTrue(\property_exists($response->avatar->thumbnails, 'sulu-100x100'));
-        $this->assertTrue(\is_string($response->avatar->thumbnails->{'sulu-100x100'}));
-
-        $this->assertEquals(1, \count($response->categories));
-        $this->assertEquals($category3->getId(), $response->categories[0]);
-
-        $this->client->jsonRequest('GET', '/api/contacts/' . $response->id);
-        $response = \json_decode($this->client->getResponse()->getContent());
-
-        $this->assertEquals('John', $response->firstName);
-        $this->assertEquals('Doe', $response->lastName);
-        $this->assertEquals('A small notice', $response->note);
-        $this->assertEquals($title->getId(), $response->title);
-        $this->assertEquals('john.doe@muster.at', $response->contactDetails->emails[0]->email);
-        $this->assertEquals('john.doe@muster.de', $response->contactDetails->emails[1]->email);
-        $this->assertEquals('321654987', $response->contactDetails->phones[0]->phone);
-        $this->assertEquals('789456123', $response->contactDetails->phones[1]->phone);
-        $this->assertEquals('321654987-1', $response->contactDetails->faxes[0]->fax);
-        $this->assertEquals('789456123-1', $response->contactDetails->faxes[1]->fax);
-        $this->assertEquals('Street', $response->addresses[0]->street);
-        $this->assertEquals('2', $response->addresses[0]->number);
-        $this->assertEquals('9999', $response->addresses[0]->zip);
-        $this->assertEquals('Springfield', $response->addresses[0]->city);
-        $this->assertEquals('Colorado', $response->addresses[0]->state);
-        $this->assertEquals('Note 1_1', $response->notes[0]->value);
-        $this->assertEquals(1, \count($response->notes));
-
-        $this->assertEquals('work', $response->addresses[0]->title);
-        $this->assertEquals(true, $response->addresses[0]->billingAddress);
-        $this->assertEquals(true, $response->addresses[0]->primaryAddress);
-        $this->assertEquals(false, $response->addresses[0]->deliveryAddress);
-        $this->assertEquals('Dornbirn', $response->addresses[0]->postboxCity);
-        $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
-        $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
-
-        $this->assertEquals(0, $response->formOfAddress);
-        $this->assertEquals('Sehr geehrter John', $response->salutation);
-
-        $this->assertTrue(\property_exists($response, 'avatar'));
-        $this->assertTrue(\property_exists($response->avatar, 'thumbnails'));
-        $this->assertTrue(\property_exists($response->avatar->thumbnails, 'sulu-100x100'));
-        $this->assertTrue(\is_string($response->avatar->thumbnails->{'sulu-100x100'}));
-
-        $this->assertEquals(1, \count($response->categories));
-        $this->assertEquals($category3->getId(), $response->categories[0]);
+        $this->assertEquals($putData, $response);
     }
 
     public function testPutEmptyContactDetails(): void

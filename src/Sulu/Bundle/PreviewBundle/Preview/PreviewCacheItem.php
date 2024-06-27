@@ -16,34 +16,17 @@ class PreviewCacheItem
     /**
      * @var string
      */
-    private $id;
-
-    /**
-     * @var int
-     */
-    private $userId;
-
-    /**
-     * @var string
-     */
-    private $providerKey;
-
-    /**
-     * @var mixed
-     */
-    private $object;
-
-    /**
-     * @var string
-     */
     private $html;
 
-    public function __construct(string $id, int $userId, string $providerKey, $object)
-    {
-        $this->id = $id;
-        $this->userId = $userId;
-        $this->providerKey = $providerKey;
-        $this->object = $object;
+    /**
+     * @param mixed $object
+     */
+    public function __construct(
+        private string $id,
+        private int $userId,
+        private string $providerKey,
+        private $object,
+    ) {
     }
 
     public function getId(): string

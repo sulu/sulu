@@ -19,19 +19,13 @@ class RouteDefaultsProvider implements RouteDefaultsProviderInterface
     /**
      * @var RouteDefaultsProviderInterface[]
      */
-    private $defaultsProvider;
-
-    /**
-     * @var RouteDefaultsProviderInterface[]
-     */
     private $defaultsProviderMap = [];
 
     /**
      * @param RouteDefaultsProviderInterface[] $defaultsProvider
      */
-    public function __construct(array $defaultsProvider)
+    public function __construct(private array $defaultsProvider)
     {
-        $this->defaultsProvider = $defaultsProvider;
     }
 
     public function getByEntity($entityClass, $id, $locale, $object = null)

@@ -25,29 +25,11 @@ class PreviewController
 {
     use RequestParametersTrait;
 
-    /**
-     * @var PreviewInterface
-     */
-    private $preview;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
-    /**
-     * @var Profiler|null
-     */
-    private $profiler;
-
     public function __construct(
-        PreviewInterface $preview,
-        TokenStorageInterface $tokenStorage,
-        ?Profiler $profiler = null
+        private PreviewInterface $preview,
+        private TokenStorageInterface $tokenStorage,
+        private ?Profiler $profiler = null,
     ) {
-        $this->preview = $preview;
-        $this->tokenStorage = $tokenStorage;
-        $this->profiler = $profiler;
     }
 
     public function startAction(Request $request): Response

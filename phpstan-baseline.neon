@@ -9482,12 +9482,12 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$addresses on mixed\\.$#"
-			count: 117
+			count: 92
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$avatar on mixed\\.$#"
-			count: 12
+			count: 6
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -9497,22 +9497,22 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$categories on mixed\\.$#"
-			count: 8
+			count: 4
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$contactDetails on mixed\\.$#"
-			count: 59
+			count: 47
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$firstName on mixed\\.$#"
-			count: 18
+			count: 16
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$formOfAddress on mixed\\.$#"
-			count: 16
+			count: 14
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -9522,12 +9522,12 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$id on mixed\\.$#"
-			count: 8
+			count: 7
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$lastName on mixed\\.$#"
-			count: 18
+			count: 16
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -9541,13 +9541,8 @@ parameters:
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
-			message: "#^Cannot access property \\$note on mixed\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
-
-		-
 			message: "#^Cannot access property \\$notes on mixed\\.$#"
-			count: 19
+			count: 15
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -9562,12 +9557,12 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$salutation on mixed\\.$#"
-			count: 15
+			count: 13
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$title on mixed\\.$#"
-			count: 15
+			count: 13
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -9737,12 +9732,12 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 47
+			count: 46
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
 			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, mixed given\\.$#"
-			count: 4
+			count: 2
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/ContactControllerTest.php
 
 		-
@@ -13826,12 +13821,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
 
 		-
-			message: "#^Cannot call method getVersion\\(\\) on Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\File\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
-
-		-
-			message: "#^Negated boolean expression is always false\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\MediaBundle\\\\Entity\\\\MediaRepositoryInterface\\:\\:findMediaByIdForRendering\\(\\) invoked with 3 parameters, 2 required\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
 
@@ -13851,22 +13841,7 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
 
 		-
-			message: "#^Parameter \\#2 \\$version of method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaStreamController\\:\\:getFileVersion\\(\\) expects int, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
-
-		-
 			message: "#^Parameter \\#3 \\$extension of method Sulu\\\\Bundle\\\\MediaBundle\\\\Controller\\\\MediaStreamController\\:\\:cleanUpFileName\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
-
-		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 124\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
-			count: 1
-			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
-
-		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 72\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
 			count: 1
 			path: src/Sulu/Bundle/MediaBundle/Controller/MediaStreamController.php
 
@@ -24606,27 +24581,7 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/Twig/ExportTwigExtension.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\PersistenceBundle\\\\DependencyInjection\\\\Compiler\\\\ResolveTargetEntitiesPass\\:\\:__construct\\(\\) has parameter \\$interfaces with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/DependencyInjection/Compiler/ResolveTargetEntitiesPass.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PersistenceBundle\\\\DependencyInjection\\\\Compiler\\\\ResolveTargetEntitiesPass\\:\\:getClass\\(\\) should return string but returns array\\|bool\\|float\\|int\\|string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/DependencyInjection/Compiler/ResolveTargetEntitiesPass.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PersistenceBundle\\\\DependencyInjection\\\\Compiler\\\\ResolveTargetEntitiesPass\\:\\:resolve\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/DependencyInjection/Compiler/ResolveTargetEntitiesPass.php
-
-		-
 			message: "#^Parameter \\#1 \\.\\.\\.\\$arrays of function array_merge expects array, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PersistenceBundle/DependencyInjection/Compiler/ResolveTargetEntitiesPass.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PersistenceBundle\\\\DependencyInjection\\\\Compiler\\\\ResolveTargetEntitiesPass\\:\\:\\$interfaces type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PersistenceBundle/DependencyInjection/Compiler/ResolveTargetEntitiesPass.php
 
@@ -24661,24 +24616,9 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Admin/PreviewAdmin.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PreviewBundle\\\\Admin\\\\PreviewAdmin\\:\\:\\$bundles type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Admin/PreviewAdmin.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Domain\\\\Model\\\\PreviewLink\\:\\:__construct\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Domain/Model/PreviewLink.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Events\\\\PreRenderEvent\\:\\:getAttribute\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Events/PreRenderEvent.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\PreviewRendererException\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/PreviewRendererException.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\PreviewRendererException\\:\\:getId\\(\\) should return string but returns int\\|string\\.$#"
@@ -24689,36 +24629,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\PreviewRendererException\\:\\:getObject\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/PreviewRendererException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\RouteDefaultsProviderNotFoundException\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/RouteDefaultsProviderNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\TemplateNotFoundException\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/TemplateNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\TwigException\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/TwigException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\UnexpectedException\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/UnexpectedException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\WebspaceLocalizationNotFoundException\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/WebspaceLocalizationNotFoundException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Exception\\\\WebspaceNotFoundException\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Exception/WebspaceNotFoundException.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Object\\\\PreviewObjectProviderInterface\\:\\:deserialize\\(\\) has no return type specified\\.$#"
@@ -24881,7 +24791,7 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Preview.php
 
 		-
-			message: "#^Call to an undefined method Psr\\\\Cache\\\\CacheItemPoolInterface\\:\\:delete\\(\\)\\.$#"
+			message: "#^Call to an undefined method Doctrine\\\\Common\\\\Cache\\\\Cache\\|Psr\\\\Cache\\\\CacheItemPoolInterface\\:\\:delete\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCache.php
 
@@ -24889,21 +24799,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\PreviewCache\\:\\:fetch\\(\\) should return string but returns mixed\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCache.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\PreviewCache\\:\\:\\$cache \\(Psr\\\\Cache\\\\CacheItemPoolInterface\\) does not accept Doctrine\\\\Common\\\\Cache\\\\Cache\\|Psr\\\\Cache\\\\CacheItemPoolInterface\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCache.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCache.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\PreviewCacheItem\\:\\:__construct\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/PreviewCacheItem.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\PreviewCacheItem\\:\\:getObject\\(\\) has no return type specified\\.$#"
@@ -25031,17 +24926,7 @@ parameters:
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Renderer\\\\PreviewRenderer\\:\\:\\$previewDefaults type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\PreviewBundle\\\\Preview\\\\Renderer\\\\PreviewRenderer\\:\\:\\$targetGroupHeader \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
-
-		-
-			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 224\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
+			message: "#^Thrown exceptions in a catch block must bundle the previous exception \\(see throw statement line 172\\)\\. More info\\: http\\://bit\\.ly/bundleexception$#"
 			count: 1
 			path: src/Sulu/Bundle/PreviewBundle/Preview/Renderer/PreviewRenderer.php
 
@@ -25211,11 +25096,6 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Command/MovePageTreeCommand.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Contracts\\\\Translation\\\\LocaleAwareInterface\\|Symfony\\\\Contracts\\\\Translation\\\\TranslatorInterface\\:\\:setLocale\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Command/UpdateRouteCommand.php
-
-		-
 			message: "#^Cannot access offset 0 on mixed\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/RouteBundle/Command/UpdateRouteCommand.php
@@ -25342,11 +25222,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$string of function explode expects string, mixed given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Controller\\\\RouteController\\:\\:\\$resourceKeyMappings type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Controller/RouteController.php
 
@@ -25511,19 +25386,9 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Entity/RouteRepositoryInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Generator\\\\CannotEvaluateTokenException\\:\\:__construct\\(\\) has parameter \\$entity with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Generator/CannotEvaluateTokenException.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Generator\\\\CannotEvaluateTokenException\\:\\:getEntity\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Generator/CannotEvaluateTokenException.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Generator\\\\ChainRouteGenerator\\:\\:__construct\\(\\) has parameter \\$mappings with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Generator/ChainRouteGenerator.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Generator\\\\ChainRouteGenerator\\:\\:getClassMappingConfiguration\\(\\) return type has no value type specified in iterable type array\\.$#"
@@ -25532,11 +25397,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$objectOrClass of class ReflectionClass constructor expects class\\-string\\<T of object\\>\\|T of object, string given\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Generator/ChainRouteGenerator.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Generator\\\\ChainRouteGenerator\\:\\:\\$mappings type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Generator/ChainRouteGenerator.php
 
@@ -25746,11 +25606,6 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Routing/RouteProvider.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Routing\\\\RouteProvider\\:\\:\\$defaultOptions type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/RouteBundle/Routing/RouteProvider.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Routing\\\\RouteProvider\\:\\:\\$routeCache \\(array\\<Sulu\\\\Bundle\\\\RouteBundle\\\\Entity\\\\Route\\>\\) does not accept array\\<Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null\\>\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Routing/RouteProvider.php
@@ -25841,12 +25696,12 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/ChainRouteGeneratorTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Unit\\\\Generator\\\\ChainRouteGeneratorTest\\:\\:\\$mappings type has no value type specified in iterable type array\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Unit\\\\Generator\\\\TestRoutable\\:\\:getRoute\\(\\) should return Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface but returns Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/ChainRouteGeneratorTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Unit\\\\Generator\\\\TestRoutable\\:\\:\\$route \\(Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\) does not accept Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null\\.$#"
+			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Unit\\\\Generator\\\\ChainRouteGeneratorTest\\:\\:\\$mappings type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Generator/ChainRouteGeneratorTest.php
 
@@ -25866,7 +25721,7 @@ parameters:
 			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Manager/RouteManagerTest.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Unit\\\\Manager\\\\TestRoutable\\:\\:\\$route \\(Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\) does not accept Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\RouteBundle\\\\Tests\\\\Unit\\\\Manager\\\\TestRoutable\\:\\:getRoute\\(\\) should return Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface but returns Sulu\\\\Bundle\\\\RouteBundle\\\\Model\\\\RouteInterface\\|null\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/RouteBundle/Tests/Unit/Manager/RouteManagerTest.php
 
@@ -27957,7 +27812,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$key on mixed\\.$#"
-			count: 6
+			count: 4
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
@@ -27967,22 +27822,22 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$name on mixed\\.$#"
-			count: 7
+			count: 3
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$permissions on mixed\\.$#"
-			count: 145
+			count: 51
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$securityType on mixed\\.$#"
-			count: 5
+			count: 3
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
 			message: "#^Cannot access property \\$system on mixed\\.$#"
-			count: 7
+			count: 3
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
@@ -27991,7 +27846,7 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 
 		-
-			message: "#^Parameter \\#1 \\$object_or_class of function property_exists expects object\\|string, mixed given\\.$#"
+			message: "#^Parameter \\#2 \\$array of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertArrayNotHasKey\\(\\) expects array\\|ArrayAccess, mixed given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/RoleControllerTest.php
 

@@ -17,40 +17,15 @@ use Sulu\Bundle\PreviewBundle\Domain\Model\PreviewLinkInterface;
 class PreviewLinkGeneratedEvent extends DomainEvent
 {
     /**
-     * @var PreviewLinkInterface
-     */
-    private $previewLink;
-
-    /**
-     * @var string
-     */
-    private $link;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
-     * @var string|null
-     */
-    private $securityContext;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        PreviewLinkInterface $previewLink,
-        string $link,
-        array $payload,
-        ?string $securityContext
+        private PreviewLinkInterface $previewLink,
+        private string $link,
+        private array $payload,
+        private ?string $securityContext
     ) {
         parent::__construct();
-
-        $this->previewLink = $previewLink;
-        $this->link = $link;
-        $this->payload = $payload;
-        $this->securityContext = $securityContext;
     }
 
     public function getPreviewLink(): PreviewLinkInterface

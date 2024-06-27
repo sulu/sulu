@@ -23,26 +23,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class CacheCommandSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var KernelFactoryInterface
-     */
-    private $kernelFactory;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
      * @var Application|null
      */
     private $application;
 
-    public function __construct(
-        KernelFactoryInterface $kernelFactory,
-        string $environment
-    ) {
-        $this->kernelFactory = $kernelFactory;
-        $this->environment = $environment;
+    public function __construct(private KernelFactoryInterface $kernelFactory, private string $environment)
+    {
     }
 
     /**

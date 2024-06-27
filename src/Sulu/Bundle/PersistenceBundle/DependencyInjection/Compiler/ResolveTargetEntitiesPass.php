@@ -20,21 +20,16 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class ResolveTargetEntitiesPass implements CompilerPassInterface
 {
     /**
-     * @var array
+     * @param array<class-string, string> $interfaces Class name of the interface => either parameter name or class name
      */
-    private $interfaces;
-
-    public function __construct(array $interfaces)
+    public function __construct(private array $interfaces)
     {
-        $this->interfaces = $interfaces;
     }
 
+    /**
+     * @return void
+     */
     public function process(ContainerBuilder $container)
-    {
-        $this->resolve($container);
-    }
-
-    private function resolve(ContainerBuilder $container)
     {
         if (!$container->hasDefinition('doctrine.orm.listeners.resolve_target_entity')) {
             throw new \RuntimeException('Cannot find Doctrine Target Entity Resolver Listener.');
@@ -61,13 +56,11 @@ class ResolveTargetEntitiesPass implements CompilerPassInterface
     }
 
     /**
-     * @param string $key
-     *
-     * @return string
+     * @return mixed[]|bool|float|int|string|null
      *
      * @throws \InvalidArgumentException
      */
-    private function getClass(ContainerBuilder $container, $key)
+    private function getClass(ContainerBuilder $container, string $key)
     {
         if ($container->hasParameter($key)) {
             return $container->getParameter($key);

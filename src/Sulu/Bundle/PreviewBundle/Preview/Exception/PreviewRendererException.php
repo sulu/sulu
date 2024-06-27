@@ -19,40 +19,21 @@ abstract class PreviewRendererException extends PreviewException
     public const BASE_CODE = 9900;
 
     /**
-     * @var mixed
-     */
-    private $object;
-
-    /**
-     * @var int|string
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $webspaceKey;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @param string $message
-     * @param int $code
      * @param int|string $id
      * @param string $webspaceKey
      * @param string $locale
+     * @param mixed $object
      */
-    public function __construct($message, $code, $object, $id, $webspaceKey, $locale, ?\Exception $previous = null)
-    {
+    public function __construct(
+        string $message,
+        int $code,
+        private $object,
+        private $id,
+        private $webspaceKey,
+        private $locale,
+        ?\Exception $previous = null,
+    ) {
         parent::__construct($message, $code, $previous);
-
-        $this->object = $object;
-        $this->id = $id;
-        $this->webspaceKey = $webspaceKey;
-        $this->locale = $locale;
     }
 
     public function getObject()

@@ -44,71 +44,17 @@ class RoutableSubscriber implements EventSubscriberInterface
 
     public const TAG_NAME = 'sulu_route.route_path';
 
-    /**
-     * @var ChainRouteGeneratorInterface
-     */
-    private $chainRouteGenerator;
-
-    /**
-     * @var RouteManagerInterface
-     */
-    private $routeManager;
-
-    /**
-     * @var RouteRepositoryInterface
-     */
-    private $routeRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
-
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $metadataFactory;
-
-    /**
-     * @var ConflictResolverInterface
-     */
-    private $conflictResolver;
-
     public function __construct(
-        ChainRouteGeneratorInterface $chainRouteGenerator,
-        RouteManagerInterface $routeManager,
-        RouteRepositoryInterface $routeRepository,
-        EntityManagerInterface $entityManager,
-        DocumentManagerInterface $documentManager,
-        DocumentInspector $documentInspector,
-        PropertyEncoder $propertyEncoder,
-        StructureMetadataFactoryInterface $metadataFactory,
-        ConflictResolverInterface $conflictResolver
+        private ChainRouteGeneratorInterface $chainRouteGenerator,
+        private RouteManagerInterface $routeManager,
+        private RouteRepositoryInterface $routeRepository,
+        private EntityManagerInterface $entityManager,
+        private DocumentManagerInterface $documentManager,
+        private DocumentInspector $documentInspector,
+        private PropertyEncoder $propertyEncoder,
+        private StructureMetadataFactoryInterface $metadataFactory,
+        private ConflictResolverInterface $conflictResolver,
     ) {
-        $this->chainRouteGenerator = $chainRouteGenerator;
-        $this->routeManager = $routeManager;
-        $this->routeRepository = $routeRepository;
-        $this->entityManager = $entityManager;
-        $this->documentManager = $documentManager;
-        $this->documentInspector = $documentInspector;
-        $this->propertyEncoder = $propertyEncoder;
-        $this->metadataFactory = $metadataFactory;
-        $this->conflictResolver = $conflictResolver;
     }
 
     public static function getSubscribedEvents()

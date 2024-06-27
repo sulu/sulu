@@ -9,12 +9,19 @@
  * with this source code in the file LICENSE.
  */
 
-namespace Sulu\Bundle\LocationBundle\Tests\Unit\DependencyInjection\Compiler;
+namespace Sulu\Bundle\PersistenceBundle\Tests\Unit\DependencyInjection\Compiler;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
 use Sulu\Bundle\PersistenceBundle\DependencyInjection\Compiler\ResolveTargetEntitiesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+
+interface FooInterface
+{
+}
+interface BarInterface
+{
+}
 
 class ResolveTargetEntitiesPassTest extends AbstractCompilerPassTestCase
 {
@@ -23,8 +30,8 @@ class ResolveTargetEntitiesPassTest extends AbstractCompilerPassTestCase
         $container->addCompilerPass(
             new ResolveTargetEntitiesPass(
                 [
-                    'Sulu\Component\Persistence\Model\FooInterface' => 'sulu.model.foo.class',
-                    'Sulu\Component\Persistence\Model\BarInterface' => '\stdClass',
+                    FooInterface::class => 'sulu.model.foo.class',
+                    BarInterface::class => '\stdClass',
                 ]
             )
         );
@@ -44,7 +51,7 @@ class ResolveTargetEntitiesPassTest extends AbstractCompilerPassTestCase
             'doctrine.orm.listeners.resolve_target_entity',
             'addResolveTargetEntity',
             [
-                'Sulu\Component\Persistence\Model\FooInterface',
+                FooInterface::class,
                 '\stdClass',
                 [],
             ]
@@ -54,7 +61,7 @@ class ResolveTargetEntitiesPassTest extends AbstractCompilerPassTestCase
             'doctrine.orm.listeners.resolve_target_entity',
             'addResolveTargetEntity',
             [
-                'Sulu\Component\Persistence\Model\BarInterface',
+                BarInterface::class,
                 '\stdClass',
                 [],
             ]

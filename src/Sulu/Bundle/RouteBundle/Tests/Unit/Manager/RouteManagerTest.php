@@ -594,14 +594,8 @@ class RouteManagerTest extends TestCase
 
 class TestRoutable implements RoutableInterface
 {
-    /**
-     * @var RouteInterface
-     */
-    private $route;
-
-    public function __construct(?RouteInterface $route = null)
+    public function __construct(private ?RouteInterface $route = null)
     {
-        $this->route = $route;
     }
 
     public function getId()

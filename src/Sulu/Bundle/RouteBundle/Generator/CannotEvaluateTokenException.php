@@ -17,20 +17,14 @@ namespace Sulu\Bundle\RouteBundle\Generator;
 class CannotEvaluateTokenException extends \Exception
 {
     /**
-     * @var string
-     */
-    private $token;
-
-    /**
-     * @var mixed
-     */
-    private $entity;
-
-    /**
      * @param string $token
+     * @param mixed $entity
      */
-    public function __construct($token, $entity, \Exception $previous)
-    {
+    public function __construct(
+        private $token,
+        private $entity,
+        \Exception $previous,
+    ) {
         parent::__construct(
             \sprintf(
                 'Cannot evaluate token "%s" for entity with type "%s"',
@@ -40,9 +34,6 @@ class CannotEvaluateTokenException extends \Exception
             0,
             $previous
         );
-
-        $this->token = $token;
-        $this->entity = $entity;
     }
 
     /**

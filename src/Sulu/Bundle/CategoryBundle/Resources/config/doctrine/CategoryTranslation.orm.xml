@@ -16,9 +16,6 @@
             <cascade>
                 <cascade-persist />
             </cascade>
-            <order-by>
-                <order-by-field name="position" direction="ASC"/>
-            </order-by>
         </one-to-many>
 
         <many-to-one field="category" target-entity="Sulu\Bundle\CategoryBundle\Entity\CategoryInterface" inversed-by="translations">

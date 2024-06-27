@@ -22,45 +22,16 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsCommand(name: 'sulu:route:update', description: 'Update the routes for all entities.')]
 class UpdateRouteCommand extends Command
 {
-    /**
-     * @var TranslatorInterface|LocaleAwareInterface
-     */
-    private $translator;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var RouteManagerInterface
-     */
-    private $routeManager;
-
     public function __construct(
-        TranslatorInterface $translator,
-        EntityManagerInterface $entityManager,
-        RouteManagerInterface $routeManager
+        private LocaleAwareInterface $translator,
+        private EntityManagerInterface $entityManager,
+        private RouteManagerInterface $routeManager
     ) {
-        if (!$translator instanceof LocaleAwareInterface) {
-            throw new \LogicException(\sprintf(
-                'Expected "translator" in "%s" to be instance of "%s" but "%s" given.',
-                __CLASS__,
-                LocaleAwareInterface::class,
-                \get_class($translator)
-            ));
-        }
-
         parent::__construct();
-
-        $this->translator = $translator;
-        $this->entityManager = $entityManager;
-        $this->routeManager = $routeManager;
     }
 
     protected function configure()
