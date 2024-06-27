@@ -20,18 +20,13 @@ use Sulu\Bundle\PreviewBundle\Domain\Repository\PreviewLinkRepositoryInterface;
 class PreviewLinkRepository implements PreviewLinkRepositoryInterface
 {
     /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
      * @var EntityRepository<PreviewLinkInterface>
      */
     protected $entityRepository;
 
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
+    public function __construct(
+        protected EntityManager $entityManager,
+    ) {
         $this->entityRepository = $entityManager->getRepository(PreviewLinkInterface::class);
     }
 

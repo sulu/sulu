@@ -23,38 +23,20 @@ class Preview implements PreviewInterface
     public const CONTENT_REPLACER = '<!-- CONTENT-REPLACER -->';
 
     /**
-     * @var PreviewObjectProviderRegistryInterface
-     */
-    private $previewObjectProviderRegistry;
-
-    /**
-     * @var PreviewRendererInterface
-     */
-    private $renderer;
-
-    /**
      * @var PreviewCache
      */
     private $cache;
 
     /**
-     * @var int
-     */
-    private $cacheLifeTime;
-
-    /**
      * @param CacheItemPoolInterface|Cache $cache
      */
     public function __construct(
-        PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry,
+        private PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry,
         $cache,
-        PreviewRendererInterface $renderer,
-        int $cacheLifeTime = 3600
+        private PreviewRendererInterface $renderer,
+        private int $cacheLifeTime = 3600
     ) {
-        $this->previewObjectProviderRegistry = $previewObjectProviderRegistry;
-        $this->renderer = $renderer;
         $this->cache = new PreviewCache($cache);
-        $this->cacheLifeTime = $cacheLifeTime;
     }
 
     public function start(string $providerKey, string $id, int $userId, array $data = [], array $options = []): string

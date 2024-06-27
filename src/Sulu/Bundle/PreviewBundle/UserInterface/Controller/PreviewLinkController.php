@@ -30,26 +30,13 @@ class PreviewLinkController extends AbstractRestController implements ClassResou
 {
     use RequestParametersTrait;
 
-    /**
-     * @var PreviewLinkRepositoryInterface
-     */
-    private $previewLinkRepository;
-
-    /**
-     * @var PreviewLinkManagerInterface
-     */
-    private $previewLinkManager;
-
     public function __construct(
-        PreviewLinkRepositoryInterface $previewLinkRepository,
-        PreviewLinkManagerInterface $previewLinkManager,
+        private PreviewLinkRepositoryInterface $previewLinkRepository,
+        private PreviewLinkManagerInterface $previewLinkManager,
         ViewHandlerInterface $viewHandler,
         ?TokenStorageInterface $tokenStorage = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
-
-        $this->previewLinkRepository = $previewLinkRepository;
-        $this->previewLinkManager = $previewLinkManager;
     }
 
     public function getAction(Request $request, string $resourceId): Response

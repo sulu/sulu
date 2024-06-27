@@ -23,43 +23,13 @@ class PublicPreviewController
 {
     use RequestParametersTrait;
 
-    /**
-     * @var PreviewRendererInterface
-     */
-    private $previewRenderer;
-
-    /**
-     * @var PreviewObjectProviderRegistryInterface
-     */
-    private $previewObjectProviderRegistry;
-
-    /**
-     * @var PreviewLinkRepositoryInterface
-     */
-    private $previewLinkRepository;
-
-    /**
-     * @var Environment
-     */
-    private $twig;
-
-    /**
-     * @var Profiler|null
-     */
-    private $profiler;
-
     public function __construct(
-        PreviewRendererInterface $previewRenderer,
-        PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry,
-        PreviewLinkRepositoryInterface $previewLinkRepository,
-        Environment $twig,
-        ?Profiler $profiler = null
+        private PreviewRendererInterface $previewRenderer,
+        private PreviewObjectProviderRegistryInterface $previewObjectProviderRegistry,
+        private PreviewLinkRepositoryInterface $previewLinkRepository,
+        private Environment $twig,
+        private ?Profiler $profiler = null,
     ) {
-        $this->previewRenderer = $previewRenderer;
-        $this->previewObjectProviderRegistry = $previewObjectProviderRegistry;
-        $this->previewLinkRepository = $previewLinkRepository;
-        $this->twig = $twig;
-        $this->profiler = $profiler;
     }
 
     public function previewAction(string $token): Response

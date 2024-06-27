@@ -17,18 +17,11 @@ namespace Sulu\Bundle\PreviewBundle\Preview\Exception;
 class TokenNotFoundException extends PreviewException
 {
     /**
-     * @var string
-     */
-    private $token;
-
-    /**
      * @param string $token
      */
-    public function __construct($token)
+    public function __construct(private $token)
     {
         parent::__construct(\sprintf('Token "%s" not found', $token));
-
-        $this->token = $token;
     }
 
     /**
