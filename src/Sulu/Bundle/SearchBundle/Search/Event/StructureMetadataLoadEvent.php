@@ -21,24 +21,10 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class StructureMetadataLoadEvent extends Event
 {
-    /**
-     * The structure, which has been loaded for indexing.
-     *
-     * @var StructureInterface
-     */
-    private $structure;
-
-    /**
-     * The metadata based on which the data has been loaded.
-     *
-     * @var IndexMetadata
-     */
-    private $indexMetadata;
-
-    public function __construct(StructureInterface $structure, IndexMetadata $indexMetadata)
-    {
-        $this->structure = $structure;
-        $this->indexMetadata = $indexMetadata;
+    public function __construct(
+        private StructureInterface $structure,
+        private IndexMetadata $indexMetadata
+    ) {
     }
 
     /**
