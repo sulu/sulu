@@ -52,6 +52,10 @@ class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
     }
 
     /**
+     * @param mixed $exception
+     * @param string|null $format
+     * @param array<string, mixed> $context
+     *
      * @return array<int|string, mixed>
      */
     public function normalize($exception, $format = null, array $context = []): array
@@ -105,6 +109,9 @@ class FlattenExceptionNormalizer implements ContextAwareNormalizerInterface
         return $data;
     }
 
+    /**
+     * @param array<string, mixed> $context
+     */
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
         return $data instanceof FlattenException && !($context['messenger_serialization'] ?? false);

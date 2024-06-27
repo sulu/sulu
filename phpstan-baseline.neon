@@ -1,6 +1,21 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Call to method getUser\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ActivityBundle/Application/Subscriber/SetDomainEventUserSubscriber.php
+
+		-
+			message: "#^Parameter \\$security of method Sulu\\\\Bundle\\\\ActivityBundle\\\\Application\\\\Subscriber\\\\SetDomainEventUserSubscriber\\:\\:__construct\\(\\) has invalid type Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ActivityBundle/Application/Subscriber/SetDomainEventUserSubscriber.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\ActivityBundle\\\\Application\\\\Subscriber\\\\SetDomainEventUserSubscriber\\:\\:\\$security has unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security as its type\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ActivityBundle/Application/Subscriber/SetDomainEventUserSubscriber.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\ActivityBundle\\\\Domain\\\\Repository\\\\NullActivityRepository\\:\\:createFromDomainEvent\\(\\) should return Sulu\\\\Bundle\\\\ActivityBundle\\\\Domain\\\\Model\\\\ActivityInterface but returns object\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ActivityBundle/Domain/Repository/NullActivityRepository.php
@@ -39,6 +54,16 @@ parameters:
 			message: "#^Unsafe call to private method Sulu\\\\Bundle\\\\ActivityBundle\\\\Tests\\\\Functional\\\\UserInterface\\\\Controller\\\\ActivityControllerTest\\:\\:setUpUserRole\\(\\) through static\\:\\:\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/ActivityBundle/Tests/Functional/UserInterface/Controller/ActivityControllerTest.php
+
+		-
+			message: "#^Class Symfony\\\\Component\\\\Security\\\\Core\\\\Security not found\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ActivityBundle/Tests/Unit/Application/Subscriber/SetDomainEventUserSubscriberTest.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\ActivityBundle\\\\Tests\\\\Unit\\\\Application\\\\Subscriber\\\\SetDomainEventUserSubscriberTest\\:\\:\\$security has unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security as its type\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/ActivityBundle/Tests/Unit/Application/Subscriber/SetDomainEventUserSubscriberTest.php
 
 		-
 			message: "#^Cannot cast mixed to string\\.$#"
@@ -1491,6 +1516,11 @@ parameters:
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/CollaborationControllerTest.php
 
 		-
+			message: "#^Parameter \\#1 \\$kernel of class Symfony\\\\Component\\\\HttpKernel\\\\Event\\\\RequestEvent constructor expects Symfony\\\\Component\\\\HttpKernel\\\\HttpKernelInterface, Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\|null given\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/CollaborationControllerTest.php
+
+		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, mixed given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/AdminBundle/Tests/Functional/Controller/CollaborationControllerTest.php
@@ -2521,7 +2551,17 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/TargetGroup/TargetGroupStoreInterface.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Application\\\\AppCache\\:\\:boot\\(\\) with return type void returns mixed but should not return anything\\.$#"
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\:\\:getName\\(\\)\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
+
+		-
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\:\\:serialize\\(\\)\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
+
+		-
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\:\\:unserialize\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
 
@@ -2556,22 +2596,22 @@ parameters:
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Application\\\\AppCache\\:\\:registerContainerConfiguration\\(\\) with return type void returns mixed but should not return anything\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Application\\\\AppCache\\:\\:serialize\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Application\\\\AppCache\\:\\:shutdown\\(\\) with return type void returns mixed but should not return anything\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Application\\\\AppCache\\:\\:unserialize\\(\\) has parameter \\$serialized with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\AudienceTargetingBundle\\\\Tests\\\\Application\\\\AppCache\\:\\:unserialize\\(\\) has parameter \\$serialized with no type specified\\.$#"
+			message: "#^Method Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\:\\:getBundle\\(\\) invoked with 2 parameters, 1 required\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
+
+		-
+			message: "#^Method Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\:\\:locateResource\\(\\) invoked with 3 parameters, 1 required\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/AudienceTargetingBundle/Tests/Application/AppCache.php
 
@@ -11261,6 +11301,11 @@ parameters:
 			path: src/Sulu/Bundle/DocumentManagerBundle/Command/FixturesLoadCommand.php
 
 		-
+			message: "#^Class Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface not found\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/DocumentManagerBundle/Command/FixturesLoadCommand.php
+
+		-
 			message: "#^Method Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Command\\\\FixturesLoadCommand\\:\\:__construct\\(\\) has parameter \\$fixtures with no value type specified in iterable type Traversable\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Command/FixturesLoadCommand.php
@@ -11374,6 +11419,11 @@ parameters:
 			message: "#^PHPDoc tag @param has invalid value \\(string\\[\\]\\)\\: Unexpected token \"\\\\n     \", expected variable at offset 26$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/DataFixtures/DocumentFixtureGroupInterface.php
+
+		-
+			message: "#^Class Symfony\\\\Component\\\\DependencyInjection\\\\ContainerAwareInterface not found\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/DocumentManagerBundle/DependencyInjection/Compiler/DocumentFixturePass.php
 
 		-
 			message: "#^Parameter \\#1 \\$object_or_class of function is_subclass_of expects object\\|string, class\\-string\\|null given\\.$#"
@@ -11889,11 +11939,6 @@ parameters:
 			message: "#^Class Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\DataFixtures\\\\DocumentExecutor constructor invoked with 3 parameters, 2 required\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/DocumentManagerBundle/Tests/Unit/DataFixtures/DocumentExecutorTest.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\DocumentManagerBundle\\\\Tests\\\\Unit\\\\DataFixtures\\\\fixtures\\\\ContainerFixture\\:\\:\\$container has no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/DocumentManagerBundle/Tests/Unit/DataFixtures/fixtures/ContainerFixture.php
 
 		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, mixed given\\.$#"
@@ -19696,12 +19741,27 @@ parameters:
 			path: src/Sulu/Bundle/PageBundle/EventListener/DomainEventSubscriber.php
 
 		-
+			message: "#^Call to method getUser\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/EventListener/PageRemoveSubscriber.php
+
+		-
 			message: "#^Parameter \\#1 \\$resources of method Sulu\\\\Bundle\\\\PageBundle\\\\EventListener\\\\PageRemoveSubscriber\\:\\:groupResourcesByDepth\\(\\) expects array\\<array\\{id\\: string, resourceKey\\: string, depth\\: int\\}\\>, non\\-empty\\-array\\<int\\<0, max\\>, array\\{id\\: mixed, depth\\: int\\<0, max\\>, resourceKey\\: 'pages'\\}\\> given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/EventListener/PageRemoveSubscriber.php
 
 		-
 			message: "#^Parameter \\#4 \\$entityIds of method Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlRepositoryInterface\\:\\:findIdsWithGrantedPermissions\\(\\) expects array\\<int\\|string\\>, array\\<int, mixed\\> given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/EventListener/PageRemoveSubscriber.php
+
+		-
+			message: "#^Parameter \\$security of method Sulu\\\\Bundle\\\\PageBundle\\\\EventListener\\\\PageRemoveSubscriber\\:\\:__construct\\(\\) has invalid type Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/PageBundle/EventListener/PageRemoveSubscriber.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\PageBundle\\\\EventListener\\\\PageRemoveSubscriber\\:\\:\\$security has unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security as its type\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/PageBundle/EventListener/PageRemoveSubscriber.php
 
@@ -27451,6 +27511,31 @@ parameters:
 			path: src/Sulu/Bundle/SecurityBundle/Exception/UserNotInSystemException.php
 
 		-
+			message: "#^Call to method getUser\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Metadata/TwoFactorFormMetadataVisitor.php
+
+		-
+			message: "#^Parameter \\$security of method Sulu\\\\Bundle\\\\SecurityBundle\\\\Metadata\\\\TwoFactorFormMetadataVisitor\\:\\:__construct\\(\\) has invalid type Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Metadata/TwoFactorFormMetadataVisitor.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\SecurityBundle\\\\Metadata\\\\TwoFactorFormMetadataVisitor\\:\\:\\$security has unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security as its type\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Metadata/TwoFactorFormMetadataVisitor.php
+
+		-
+			message: "#^Access to constant AUTHENTICATION_ERROR on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Security/AuthenticationHandler.php
+
+		-
+			message: "#^Access to undefined constant Symfony\\\\Bundle\\\\SecurityBundle\\\\Security\\:\\:AUTHENTICATION_ERROR\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Security/AuthenticationHandler.php
+
+		-
 			message: "#^Parameter \\#1 \\$haystack of function strpos expects string, mixed given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Security/AuthenticationHandler.php
@@ -27654,6 +27739,11 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SecurityBundle\\\\Tests\\\\Functional\\\\Command\\\\CreateUserCommandTest\\:\\:createUser\\(\\) has parameter \\$username with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Command/CreateUserCommandTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$kernel of class Symfony\\\\Bundle\\\\FrameworkBundle\\\\Console\\\\Application constructor expects Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface, Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Command/InitCommandTest.php
 
 		-
 			message: "#^Cannot access property \\$_embedded on mixed\\.$#"
@@ -28184,6 +28274,16 @@ parameters:
 			message: "#^Class Sulu\\\\Bundle\\\\SecurityBundle\\\\Security\\\\AuthenticationEntryPoint does not have a constructor and must be instantiated without any parameters\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/Security/AuthenticationEntryPointTest.php
+
+		-
+			message: "#^Access to constant AUTHENTICATION_ERROR on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/Security/AuthenticationHandlerTest.php
+
+		-
+			message: "#^Access to undefined constant Symfony\\\\Bundle\\\\SecurityBundle\\\\Security\\:\\:AUTHENTICATION_ERROR\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/SecurityBundle/Tests/Unit/Security/AuthenticationHandlerTest.php
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
@@ -30946,6 +31046,11 @@ parameters:
 			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
 
 		-
+			message: "#^Parameter \\#1 \\$object of function get_class expects object, Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\|null given\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
+
+		-
 			message: "#^Parameter \\#1 \\$string of function rawurldecode expects string, string\\|null given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
@@ -30961,7 +31066,7 @@ parameters:
 			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
 
 		-
-			message: "#^Parameter \\#3 \\$previous of class TypeError constructor expects Throwable\\|null, class\\-string\\<Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\> given\\.$#"
+			message: "#^Parameter \\#3 \\$previous of class TypeError constructor expects Throwable\\|null, class\\-string\\<Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\>\\|false given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TestBundle/Testing/SuluTestCase.php
 
@@ -31084,6 +31189,21 @@ parameters:
 			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Application\\\\TrashManager\\\\TrashManager\\:\\:\\$storeTrashItemHandlerLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
+
+		-
+			message: "#^Call to method getUser\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/TrashBundle/Infrastructure/Doctrine/Repository/TrashItemRepository.php
+
+		-
+			message: "#^Parameter \\$security of method Sulu\\\\Bundle\\\\TrashBundle\\\\Infrastructure\\\\Doctrine\\\\Repository\\\\TrashItemRepository\\:\\:__construct\\(\\) has invalid type Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/TrashBundle/Infrastructure/Doctrine/Repository/TrashItemRepository.php
+
+		-
+			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Infrastructure\\\\Doctrine\\\\Repository\\\\TrashItemRepository\\:\\:\\$security has unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security as its type\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/TrashBundle/Infrastructure/Doctrine/Repository/TrashItemRepository.php
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Tests\\\\Application\\\\Entity\\\\TestResource\\:\\:\\$property1 is never read, only written\\.$#"
@@ -32506,7 +32626,17 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Sitemap/XmlSitemapRenderer.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Application\\\\AppCache\\:\\:boot\\(\\) with return type void returns mixed but should not return anything\\.$#"
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\:\\:getName\\(\\)\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/AppCache.php
+
+		-
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\:\\:serialize\\(\\)\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/AppCache.php
+
+		-
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\:\\:unserialize\\(\\)\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/AppCache.php
 
@@ -32546,14 +32676,24 @@ parameters:
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/AppCache.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Application\\\\AppCache\\:\\:shutdown\\(\\) with return type void returns mixed but should not return anything\\.$#"
+			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Application\\\\AppCache\\:\\:unserialize\\(\\) has parameter \\$serialized with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/AppCache.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Application\\\\AppCache\\:\\:unserialize\\(\\) has parameter \\$serialized with no type specified\\.$#"
+			message: "#^Method Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\:\\:getBundle\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/AppCache.php
+
+		-
+			message: "#^Method Symfony\\\\Component\\\\HttpKernel\\\\KernelInterface\\:\\:locateResource\\(\\) invoked with 3 parameters, 1 required\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/AppCache.php
+
+		-
+			message: "#^Right side of && is always false\\.$#"
+			count: 1
+			path: src/Sulu/Bundle/WebsiteBundle/Tests/Application/Kernel.php
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\WebsiteBundle\\\\Tests\\\\Application\\\\TestController\\:\\:index\\(\\) has no return type specified\\.$#"
@@ -37966,6 +38106,11 @@ parameters:
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
 		-
+			message: "#^Call to method getUser\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
+
+		-
 			message: "#^Cannot access offset mixed on mixed\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
@@ -38366,6 +38511,11 @@ parameters:
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
 		-
+			message: "#^Parameter \\$security of method Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:__construct\\(\\) has invalid type Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
+
+		-
 			message: "#^Property Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:\\$contentTypeManager \\(Sulu\\\\Component\\\\Content\\\\ContentTypeManager\\) does not accept Sulu\\\\Component\\\\Content\\\\ContentTypeManagerInterface\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
@@ -38377,6 +38527,11 @@ parameters:
 
 		-
 			message: "#^Property Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:\\$permissions type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
+
+		-
+			message: "#^Property Sulu\\\\Component\\\\Content\\\\Mapper\\\\ContentMapper\\:\\:\\$security has unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security as its type\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Mapper/ContentMapper.php
 
@@ -41183,6 +41338,11 @@ parameters:
 		-
 			message: "#^Cannot access offset 1 on mixed\\.$#"
 			count: 1
+			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/Orm/BaseDataProviderTest.php
+
+		-
+			message: "#^Class Symfony\\\\Component\\\\Security\\\\Core\\\\Security not found\\.$#"
+			count: 2
 			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/Orm/BaseDataProviderTest.php
 
 		-
@@ -45466,6 +45626,11 @@ parameters:
 			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
 
 		-
+			message: "#^Parameter \\$security of method Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider\\:\\:__construct\\(\\) has invalid type Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Component/Media/SmartContent/MediaDataProvider.php
+
+		-
 			message: "#^Method Sulu\\\\Component\\\\Media\\\\SystemCollections\\\\SystemCollectionBuilder\\:\\:getDependencies\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/SystemCollections/SystemCollectionBuilder.php
@@ -45621,6 +45786,11 @@ parameters:
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
 
 		-
+			message: "#^Class Symfony\\\\Component\\\\Security\\\\Core\\\\Security not found\\.$#"
+			count: 1
+			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
+
+		-
 			message: "#^Method Sulu\\\\Component\\\\Media\\\\Tests\\\\Unit\\\\SmartContent\\\\MediaDataProviderTest\\:\\:createDataItem\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
@@ -45761,7 +45931,12 @@ parameters:
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
 
 		-
-			message: "#^Parameter \\#6 \\$security of class Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider constructor expects Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\|null, object given\\.$#"
+			message: "#^Parameter \\#6 \\$security of class Sulu\\\\Component\\\\Media\\\\SmartContent\\\\MediaDataProvider constructor expects Symfony\\\\Bundle\\\\SecurityBundle\\\\Security\\|Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\|null, object given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
+
+		-
+			message: "#^Property Sulu\\\\Component\\\\Media\\\\Tests\\\\Unit\\\\SmartContent\\\\MediaDataProviderTest\\:\\:\\$security has unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security as its type\\.$#"
 			count: 1
 			path: src/Sulu/Component/Media/Tests/Unit/SmartContent/MediaDataProviderTest.php
 
@@ -48801,6 +48976,11 @@ parameters:
 			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
 
 		-
+			message: "#^Call to method getUser\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
+
+		-
 			message: "#^Expression on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
@@ -48951,7 +49131,17 @@ parameters:
 			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
 
 		-
+			message: "#^Parameter \\$security of method Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlManager\\:\\:__construct\\(\\) has invalid type Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
+
+		-
 			message: "#^Property Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlManager\\:\\:\\$descendantProviders \\(array\\<Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\DescendantProviderInterface\\>\\) does not accept iterable\\.$#"
+			count: 1
+			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
+
+		-
+			message: "#^Property Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlManager\\:\\:\\$security has unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security as its type\\.$#"
 			count: 1
 			path: src/Sulu/Component/Security/Authorization/AccessControl/AccessControlManager.php
 
@@ -49181,6 +49371,11 @@ parameters:
 			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/AccessControlManagerTest.php
 
 		-
+			message: "#^Class Symfony\\\\Component\\\\Security\\\\Core\\\\Security not found\\.$#"
+			count: 1
+			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/AccessControlManagerTest.php
+
+		-
 			message: "#^Method Sulu\\\\Component\\\\Security\\\\Tests\\\\Unit\\\\Authorization\\\\AccessControl\\\\AccessControlManagerTest\\:\\:provideUserPermission\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/AccessControlManagerTest.php
@@ -49226,7 +49421,12 @@ parameters:
 			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/AccessControlManagerTest.php
 
 		-
-			message: "#^Parameter \\#7 \\$security of class Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlManager constructor expects Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\|null, object given\\.$#"
+			message: "#^Parameter \\#7 \\$security of class Sulu\\\\Component\\\\Security\\\\Authorization\\\\AccessControl\\\\AccessControlManager constructor expects Symfony\\\\Bundle\\\\SecurityBundle\\\\Security\\|Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\|null, object given\\.$#"
+			count: 1
+			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/AccessControlManagerTest.php
+
+		-
+			message: "#^Property Sulu\\\\Component\\\\Security\\\\Tests\\\\Unit\\\\Authorization\\\\AccessControl\\\\AccessControlManagerTest\\:\\:\\$security has unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security as its type\\.$#"
 			count: 1
 			path: src/Sulu/Component/Security/Tests/Unit/Authorization/AccessControl/AccessControlManagerTest.php
 
@@ -49671,6 +49871,11 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 
 		-
+			message: "#^Call to method getUser\\(\\) on an unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
+
+		-
 			message: "#^Default value of the parameter \\#3 \\$options \\(array\\{\\}\\) of method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveDataItems\\(\\) is incompatible with type array\\{locale\\: string\\}\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
@@ -49786,12 +49991,22 @@ parameters:
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 
 		-
+			message: "#^Parameter \\$security of method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:__construct\\(\\) has invalid type Symfony\\\\Component\\\\Security\\\\Core\\\\Security\\.$#"
+			count: 1
+			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
+
+		-
 			message: "#^Property Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:\\$permissions type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 
 		-
 			message: "#^Property Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:\\$referenceStore \\(Sulu\\\\Bundle\\\\WebsiteBundle\\\\ReferenceStore\\\\ReferenceStoreInterface\\) does not accept Sulu\\\\Bundle\\\\WebsiteBundle\\\\ReferenceStore\\\\ReferenceStoreInterface\\|null\\.$#"
+			count: 1
+			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
+
+		-
+			message: "#^Property Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:\\$security has unknown class Symfony\\\\Component\\\\Security\\\\Core\\\\Security as its type\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 
