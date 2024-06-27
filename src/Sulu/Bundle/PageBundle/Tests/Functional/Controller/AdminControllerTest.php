@@ -61,7 +61,7 @@ class AdminControllerTest extends SuluTestCase
 
         $adminConfig = $response->sulu_admin;
 
-        $this->assertObjectHasAttribute('pages', $adminConfig->smartContent);
+        $this->assertTrue(\property_exists($adminConfig->smartContent, 'pages'));
         $this->assertEquals('sulu_page.page_edit_form', $adminConfig->smartContent->pages->view);
         $this->assertEquals(
             ['id' => 'id', 'webspace' => 'webspace'],
@@ -116,9 +116,9 @@ class AdminControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $client->getResponse());
         $response = \json_decode($client->getResponse()->getContent());
 
-        $this->assertObjectHasAttribute('id', $response);
-        $this->assertObjectHasAttribute('title', $response);
-        $this->assertObjectHasAttribute('published', $response);
+        $this->assertTrue(\property_exists($response, 'id'));
+        $this->assertTrue(\property_exists($response, 'title'));
+        $this->assertTrue(\property_exists($response, 'published'));
 
         $this->assertEquals('ID', $response->id->label);
         $this->assertEquals('string', $response->id->type);
@@ -135,34 +135,34 @@ class AdminControllerTest extends SuluTestCase
 
         $types = $response->types;
 
-        $this->assertObjectHasAttribute('default', $types);
-        $this->assertObjectHasAttribute('overview', $types);
-        $this->assertObjectHasAttribute('blocks', $types);
+        $this->assertTrue(\property_exists($types, 'default'));
+        $this->assertTrue(\property_exists($types, 'overview'));
+        $this->assertTrue(\property_exists($types, 'blocks'));
 
         $defaultType = $types->default;
-        $this->assertObjectHasAttribute('name', $defaultType);
+        $this->assertTrue(\property_exists($defaultType, 'name'));
         $this->assertEquals('default', $defaultType->name);
-        $this->assertObjectHasAttribute('title', $defaultType);
+        $this->assertTrue(\property_exists($defaultType, 'title'));
         $this->assertEquals('Standard page', $defaultType->title);
-        $this->assertObjectHasAttribute('form', $defaultType);
-        $this->assertObjectHasAttribute('title', $defaultType->form);
-        $this->assertObjectHasAttribute('url', $defaultType->form);
+        $this->assertTrue(\property_exists($defaultType, 'form'));
+        $this->assertTrue(\property_exists($defaultType->form, 'title'));
+        $this->assertTrue(\property_exists($defaultType->form, 'url'));
         $this->assertEquals('sulu.rlp.part', $defaultType->form->title->tags[0]->name);
         $this->assertEquals(1, $defaultType->form->title->tags[0]->priority);
-        $this->assertObjectHasAttribute('schema', $defaultType);
+        $this->assertTrue(\property_exists($defaultType, 'schema'));
         $this->assertEquals(['title'], $defaultType->schema->required);
 
         $overviewType = $types->overview;
-        $this->assertObjectHasAttribute('name', $overviewType);
+        $this->assertTrue(\property_exists($overviewType, 'name'));
         $this->assertEquals('overview', $overviewType->name);
-        $this->assertObjectHasAttribute('title', $overviewType);
+        $this->assertTrue(\property_exists($overviewType, 'title'));
         $this->assertEquals('Overview', $overviewType->title);
-        $this->assertObjectHasAttribute('form', $overviewType);
-        $this->assertObjectHasAttribute('title', $overviewType->form);
-        $this->assertObjectHasAttribute('tags', $overviewType->form);
-        $this->assertObjectHasAttribute('url', $overviewType->form);
-        $this->assertObjectHasAttribute('article', $overviewType->form);
-        $this->assertObjectHasAttribute('schema', $overviewType);
+        $this->assertTrue(\property_exists($overviewType, 'form'));
+        $this->assertTrue(\property_exists($overviewType->form, 'title'));
+        $this->assertTrue(\property_exists($overviewType->form, 'tags'));
+        $this->assertTrue(\property_exists($overviewType->form, 'url'));
+        $this->assertTrue(\property_exists($overviewType->form, 'article'));
+        $this->assertTrue(\property_exists($overviewType, 'schema'));
         $this->assertCount(5, (array) $overviewType->schema->properties);
         $this->assertEquals('array', $overviewType->schema->properties->block->type);
 
@@ -210,11 +210,11 @@ class AdminControllerTest extends SuluTestCase
 
         $form = $response->form;
 
-        $this->assertObjectHasAttribute('search_result', $form);
-        $this->assertObjectHasAttribute('ext/seo/title', $form);
-        $this->assertObjectHasAttribute('ext/seo/description', $form);
+        $this->assertTrue(\property_exists($form, 'search_result'));
+        $this->assertTrue(\property_exists($form, 'ext/seo/title'));
+        $this->assertTrue(\property_exists($form, 'ext/seo/description'));
 
-        $this->assertObjectHasAttribute('properties', $response->schema);
+        $this->assertTrue(\property_exists($response->schema, 'properties'));
     }
 
     public function testPageExcerptFormMetadataAction(): void
@@ -228,12 +228,12 @@ class AdminControllerTest extends SuluTestCase
 
         $form = $response->form;
 
-        $this->assertObjectHasAttribute('ext/excerpt/title', $form);
-        $this->assertObjectHasAttribute('ext/excerpt/more', $form);
-        $this->assertObjectHasAttribute('ext/excerpt/description', $form);
-        $this->assertObjectHasAttribute('ext/excerpt/segments', $form);
+        $this->assertTrue(\property_exists($form, 'ext/excerpt/title'));
+        $this->assertTrue(\property_exists($form, 'ext/excerpt/more'));
+        $this->assertTrue(\property_exists($form, 'ext/excerpt/description'));
+        $this->assertTrue(\property_exists($form, 'ext/excerpt/segments'));
 
-        $this->assertObjectHasAttribute('properties', $response->schema);
+        $this->assertTrue(\property_exists($response->schema, 'properties'));
     }
 
     public function testPageSettingFormMetadataAction(): void
@@ -247,9 +247,9 @@ class AdminControllerTest extends SuluTestCase
 
         $form = $response->form;
 
-        $this->assertObjectHasAttribute('navContexts', $form);
-        $this->assertObjectHasAttribute('pageType', $form);
-        $this->assertObjectHasAttribute('shadowPage', $form);
+        $this->assertTrue(\property_exists($form, 'navContexts'));
+        $this->assertTrue(\property_exists($form, 'pageType'));
+        $this->assertTrue(\property_exists($form, 'shadowPage'));
 
         $schema = $response->schema;
 

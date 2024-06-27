@@ -149,10 +149,10 @@ class AdminControllerTest extends SuluTestCase
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $response = \json_decode($this->client->getResponse()->getContent());
 
-        $this->assertObjectHasAttribute('id', $response);
-        $this->assertObjectHasAttribute('name', $response);
-        $this->assertObjectHasAttribute('zip', $response);
-        $this->assertObjectHasAttribute('city', $response);
+        $this->assertTrue(\property_exists($response, 'id'));
+        $this->assertTrue(\property_exists($response, 'name'));
+        $this->assertTrue(\property_exists($response, 'zip'));
+        $this->assertTrue(\property_exists($response, 'city'));
     }
 
     public function testContactFormMetadataAction(): void
@@ -166,8 +166,8 @@ class AdminControllerTest extends SuluTestCase
 
         $form = $response->form;
 
-        $this->assertObjectHasAttribute('avatar', $form);
-        $this->assertObjectHasAttribute('contact', $form);
+        $this->assertTrue(\property_exists($form, 'avatar'));
+        $this->assertTrue(\property_exists($form, 'contact'));
 
         $schema = $response->schema;
 
@@ -185,8 +185,8 @@ class AdminControllerTest extends SuluTestCase
 
         $form = $response->form;
 
-        $this->assertObjectHasAttribute('logo', $form);
-        $this->assertObjectHasAttribute('account', $form);
+        $this->assertTrue(\property_exists($form, 'logo'));
+        $this->assertTrue(\property_exists($form, 'account'));
 
         $schema = $response->schema;
 

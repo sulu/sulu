@@ -251,10 +251,10 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('6850', $response->addresses[0]->postboxPostcode);
         $this->assertEquals('4711', $response->addresses[0]->postboxNumber);
 
-        $this->assertObjectHasAttribute('logo', $response);
+        $this->assertTrue(\property_exists($response, 'logo'));
         $this->assertEquals($logo->getId(), $response->logo->id);
-        $this->assertObjectHasAttribute('thumbnails', $response->logo);
-        $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
+        $this->assertTrue(\property_exists($response->logo, 'thumbnails'));
+        $this->assertTrue(\property_exists($response->logo->thumbnails, 'sulu-100x100'));
         $this->assertTrue(\is_string($response->logo->thumbnails->{'sulu-100x100'}));
     }
 
@@ -532,10 +532,10 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals(47.4049309, $response->addresses[0]->latitude);
         $this->assertEquals(9.7593077, $response->addresses[0]->longitude);
 
-        $this->assertObjectHasAttribute('logo', $response);
+        $this->assertTrue(\property_exists($response, 'logo'));
         $this->assertEquals($logo->getId(), $response->logo->id);
-        $this->assertObjectHasAttribute('thumbnails', $response->logo);
-        $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
+        $this->assertTrue(\property_exists($response->logo, 'thumbnails'));
+        $this->assertTrue(\property_exists($response->logo->thumbnails, 'sulu-100x100'));
         $this->assertTrue(\is_string($response->logo->thumbnails->{'sulu-100x100'}));
 
         $this->assertEquals(2, \count($response->categories));
@@ -1064,10 +1064,10 @@ class AccountControllerTest extends SuluTestCase
         $this->assertEquals('Note1', $response->notes[0]->value);
         $this->assertEquals('Note2', $response->notes[1]->value);
 
-        $this->assertObjectHasAttribute('logo', $response);
+        $this->assertTrue(\property_exists($response, 'logo'));
         $this->assertEquals($logo->getId(), $response->logo->id);
-        $this->assertObjectHasAttribute('thumbnails', $response->logo);
-        $this->assertObjectHasAttribute('sulu-100x100', $response->logo->thumbnails);
+        $this->assertTrue(\property_exists($response->logo, 'thumbnails'));
+        $this->assertTrue(\property_exists($response->logo->thumbnails, 'sulu-100x100'));
         $this->assertTrue(\is_string($response->logo->thumbnails->{'sulu-100x100'}));
 
         $this->assertEquals(1, \count($response->categories));
