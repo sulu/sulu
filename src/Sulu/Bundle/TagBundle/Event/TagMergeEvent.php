@@ -23,24 +23,10 @@ use Symfony\Contracts\EventDispatcher\Event;
 class TagMergeEvent extends Event
 {
     /**
-     * The deleted Tag.
-     *
-     * @var array
-     */
-    protected $srcTags;
-
-    /**
-     * The Tag the deleted Tag got merged into.
-     *
-     * @var TagInterface
-     */
-    protected $destTag;
-
-    /**
      * @param array $srcTags The deleted Tag
      * @param TagInterface $destTag The Tag the deleted Tag got merged into
      */
-    public function __construct(array $srcTags, TagInterface $destTag)
+    public function __construct(protected array $srcTags, protected TagInterface $destTag)
     {
         @trigger_deprecation(
             'sulu/sulu',
@@ -49,9 +35,6 @@ class TagMergeEvent extends Event
             __CLASS__,
             TagMergedEvent::class
         );
-
-        $this->srcTags = $srcTags;
-        $this->destTag = $destTag;
     }
 
     /**

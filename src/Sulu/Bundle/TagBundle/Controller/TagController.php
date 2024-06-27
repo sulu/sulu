@@ -51,59 +51,17 @@ class TagController extends AbstractRestController implements ClassResourceInter
 
     protected $bundlePrefix = 'tags.';
 
-    /**
-     * @var TagManagerInterface
-     */
-    private $tagManager;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var DoctrineListBuilderFactoryInterface
-     */
-    private $listBuilderFactory;
-
-    /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    private $fieldDescriptorFactory;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
-
-    /**
-     * @var RestHelperInterface
-     */
-    private $restHelper;
-
-    /**
-     * @var string
-     */
-    private $tagClass;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        RestHelperInterface $restHelper,
-        FieldDescriptorFactoryInterface $fieldDescriptorFactory,
-        DoctrineListBuilderFactoryInterface $listBuilderFactory,
-        TagManagerInterface $tagManager,
-        EntityManagerInterface $entityManager,
-        UrlGeneratorInterface $router,
-        string $tagClass
+        private RestHelperInterface $restHelper,
+        private FieldDescriptorFactoryInterface $fieldDescriptorFactory,
+        private DoctrineListBuilderFactoryInterface $listBuilderFactory,
+        private TagManagerInterface $tagManager,
+        private EntityManagerInterface $entityManager,
+        private UrlGeneratorInterface $router,
+        private string $tagClass
     ) {
         parent::__construct($viewHandler);
-        $this->restHelper = $restHelper;
-        $this->fieldDescriptorFactory = $fieldDescriptorFactory;
-        $this->listBuilderFactory = $listBuilderFactory;
-        $this->tagManager = $tagManager;
-        $this->entityManager = $entityManager;
-        $this->router = $router;
-        $this->tagClass = $tagClass;
     }
 
     /**

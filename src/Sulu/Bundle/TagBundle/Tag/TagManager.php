@@ -18,7 +18,6 @@ use Sulu\Bundle\TagBundle\Domain\Event\TagCreatedEvent;
 use Sulu\Bundle\TagBundle\Domain\Event\TagMergedEvent;
 use Sulu\Bundle\TagBundle\Domain\Event\TagModifiedEvent;
 use Sulu\Bundle\TagBundle\Domain\Event\TagRemovedEvent;
-use Sulu\Bundle\TagBundle\Entity\TagRepository;
 use Sulu\Bundle\TagBundle\Event\TagDeleteEvent;
 use Sulu\Bundle\TagBundle\Event\TagEvents;
 use Sulu\Bundle\TagBundle\Event\TagMergeEvent;
@@ -32,45 +31,13 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class TagManager implements TagManagerInterface
 {
-    /**
-     * The repository for communication with the database.
-     *
-     * @var TagRepository
-     */
-    private $tagRepository;
-
-    /**
-     * @var ObjectManager
-     */
-    private $em;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
-     * @var TrashManagerInterface|null
-     */
-    private $trashManager;
-
     public function __construct(
-        TagRepositoryInterface $tagRepository,
-        ObjectManager $em,
-        EventDispatcherInterface $eventDispatcher,
-        DomainEventCollectorInterface $domainEventCollector,
-        ?TrashManagerInterface $trashManager = null
+        private TagRepositoryInterface $tagRepository,
+        private ObjectManager $em,
+        private EventDispatcherInterface $eventDispatcher,
+        private DomainEventCollectorInterface $domainEventCollector,
+        private ?TrashManagerInterface $trashManager = null
     ) {
-        $this->tagRepository = $tagRepository;
-        $this->em = $em;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->domainEventCollector = $domainEventCollector;
-        $this->trashManager = $trashManager;
     }
 
     /**

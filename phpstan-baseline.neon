@@ -30571,11 +30571,6 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Event/TagMergeEvent.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\TagBundle\\\\Event\\\\TagMergeEvent\\:\\:\\$srcTags type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Event/TagMergeEvent.php
-
-		-
 			message: "#^Argument of an invalid type float\\|int supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
@@ -30636,22 +30631,17 @@ parameters:
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\TagBundle\\\\Entity\\\\TagRepository\\:\\:findTagById\\(\\) expects int, float\\|int given\\.$#"
+			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagRepositoryInterface\\:\\:findTagById\\(\\) expects int, float\\|int given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\TagBundle\\\\Entity\\\\TagRepository\\:\\:findTagById\\(\\) expects int, float\\|int\\<min, \\-1\\>\\|int\\<1, max\\> given\\.$#"
+			message: "#^Parameter \\#1 \\$id of method Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagRepositoryInterface\\:\\:findTagById\\(\\) expects int, float\\|int\\<min, \\-1\\>\\|int\\<1, max\\> given\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
 
 		-
 			message: "#^Parameter \\#1 \\$srcTagIds \\(float\\|int\\) of method Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagManager\\:\\:merge\\(\\) should be compatible with parameter \\$srcTagIds \\(array\\) of method Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagManagerInterface\\:\\:merge\\(\\)$#"
-			count: 1
-			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagManager\\:\\:\\$tagRepository \\(Sulu\\\\Bundle\\\\TagBundle\\\\Entity\\\\TagRepository\\) does not accept Sulu\\\\Bundle\\\\TagBundle\\\\Tag\\\\TagRepositoryInterface\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tag/TagManager.php
 

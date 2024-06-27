@@ -18,26 +18,13 @@ use Sulu\Bundle\TagBundle\Tag\TagInterface;
 class TagCreatedEvent extends DomainEvent
 {
     /**
-     * @var TagInterface
-     */
-    private $tag;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        TagInterface $tag,
-        array $payload
+        private TagInterface $tag,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->tag = $tag;
-        $this->payload = $payload;
     }
 
     public function getTag(): TagInterface

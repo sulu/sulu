@@ -21,36 +21,12 @@ use Twig\TwigFunction;
 
 class TagTwigExtension extends AbstractExtension
 {
-    /**
-     * @var TagManagerInterface
-     */
-    private $tagManager;
-
-    /**
-     * @var TagRequestHandlerInterface
-     */
-    private $tagRequestHandler;
-
-    /**
-     * @var ArraySerializerInterface
-     */
-    private $serializer;
-
-    /**
-     * @var MemoizeInterface
-     */
-    private $memoizeCache;
-
     public function __construct(
-        TagManagerInterface $tagManager,
-        TagRequestHandlerInterface $tagRequestHandler,
-        ArraySerializerInterface $serializer,
-        MemoizeInterface $memoizeCache
+        private TagManagerInterface $tagManager,
+        private TagRequestHandlerInterface $tagRequestHandler,
+        private ArraySerializerInterface $serializer,
+        private MemoizeInterface $memoizeCache,
     ) {
-        $this->tagManager = $tagManager;
-        $this->tagRequestHandler = $tagRequestHandler;
-        $this->serializer = $serializer;
-        $this->memoizeCache = $memoizeCache;
     }
 
     public function getFunctions()
