@@ -19,23 +19,12 @@ use Sulu\Bundle\RouteBundle\Model\RouteInterface;
  */
 class RouteIsNotUniqueException extends \DomainException
 {
-    /**
-     * @var RouteInterface
-     */
-    private $route;
-
-    /**
-     * @var RoutableInterface
-     */
-    private $entity;
-
-    public function __construct(RouteInterface $route, RoutableInterface $entity)
-    {
-        $this->route = $route;
-        $this->entity = $entity;
-
+    public function __construct(
+        private RouteInterface $route,
+        private RoutableInterface $entity,
+    ) {
         parent::__construct(
-            \sprintf('Route "%s" is not unique "%s"(%s)', $route->getPath(), \get_class($entity), $entity->getId())
+            \sprintf('Route "%s" is not unique "%s"(%s)', $this->route->getPath(), \get_class($this->entity), $this->entity->getId())
         );
     }
 

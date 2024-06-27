@@ -36,34 +36,9 @@ class RouteProvider implements RouteProviderInterface
     public const ROUTE_PREFIX = 'sulu_route_';
 
     /**
-     * @var RouteRepositoryInterface
-     */
-    private $routeRepository;
-
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var RouteDefaultsProviderInterface
-     */
-    private $routeDefaultsProvider;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
      * @var LazyLoadingValueHolderFactory
      */
     private $proxyFactory;
-
-    /**
-     * @var array
-     */
-    private $defaultOptions;
 
     /**
      * @var Route[]
@@ -76,19 +51,14 @@ class RouteProvider implements RouteProviderInterface
     private $routeCache = [];
 
     public function __construct(
-        RouteRepositoryInterface $routeRepository,
-        RequestAnalyzerInterface $requestAnalyzer,
-        RouteDefaultsProviderInterface $routeDefaultsProvider,
-        RequestStack $requestStack,
+        private RouteRepositoryInterface $routeRepository,
+        private RequestAnalyzerInterface $requestAnalyzer,
+        private RouteDefaultsProviderInterface $routeDefaultsProvider,
+        private RequestStack $requestStack,
         ?LazyLoadingValueHolderFactory $proxyFactory = null,
-        array $defaultOptions = []
+        private array $defaultOptions = []
     ) {
-        $this->routeRepository = $routeRepository;
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->routeDefaultsProvider = $routeDefaultsProvider;
-        $this->requestStack = $requestStack;
         $this->proxyFactory = $proxyFactory ?: new LazyLoadingValueHolderFactory();
-        $this->defaultOptions = $defaultOptions;
     }
 
     public function getRouteCollectionForRequest(Request $request): RouteCollection

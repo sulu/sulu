@@ -31,50 +31,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class PageTreeRouteSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    protected $documentManager;
-
-    /**
-     * @var PropertyEncoder
-     */
-    protected $propertyEncoder;
-
-    /**
-     * @var DocumentInspector
-     */
-    protected $documentInspector;
-
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    protected $metadataFactory;
-
-    /**
-     * @var SessionInterface
-     */
-    protected $liveSession;
-
-    /**
-     * @var PageTreeUpdaterInterface
-     */
-    protected $routeUpdater;
-
     public function __construct(
-        DocumentManagerInterface $documentManager,
-        PropertyEncoder $propertyEncoder,
-        DocumentInspector $documentInspector,
-        StructureMetadataFactoryInterface $metadataFactory,
-        SessionInterface $liveSession,
-        PageTreeUpdaterInterface $routeUpdater
+        protected DocumentManagerInterface $documentManager,
+        protected PropertyEncoder $propertyEncoder,
+        protected DocumentInspector $documentInspector,
+        protected StructureMetadataFactoryInterface $metadataFactory,
+        protected SessionInterface $liveSession,
+        protected PageTreeUpdaterInterface $routeUpdater
     ) {
-        $this->documentManager = $documentManager;
-        $this->propertyEncoder = $propertyEncoder;
-        $this->documentInspector = $documentInspector;
-        $this->metadataFactory = $metadataFactory;
-        $this->liveSession = $liveSession;
-        $this->routeUpdater = $routeUpdater;
     }
 
     public static function getSubscribedEvents()
