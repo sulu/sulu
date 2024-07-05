@@ -36,6 +36,7 @@ yarn.lock
 .phpunit
 phpunit.xml
 .phpunit.result.cache
+.phpunit.cache
 
 # IDEs
 /.idea

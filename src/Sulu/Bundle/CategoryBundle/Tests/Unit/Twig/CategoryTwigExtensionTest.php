@@ -101,9 +101,8 @@ class CategoryTwigExtensionTest extends TestCase
 
     /**
      * @param array<array{id:int, name: string}> $categoryData
-     *
-     * @dataProvider getProvider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getProvider')]
     public function testGet(array $categoryData, string $locale = 'en', ?string $parent = null, ?int $depth = null): void
     {
         $categoryEntities = [];
@@ -173,9 +172,7 @@ class CategoryTwigExtensionTest extends TestCase
         $this->assertSame([], $result);
     }
 
-    /**
-     * @dataProvider appendProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('appendProvider')]
     public function testAppendUrl(string $parameter, string $url, string $string, string $expected): void
     {
         $category = ['id' => 3, 'name' => 'test'];
@@ -221,9 +218,7 @@ class CategoryTwigExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider setProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('setProvider')]
     public function testSetUrl(string $parameter, string $url, string $string, string $expected): void
     {
         $category = ['id' => 3, 'name' => 'test'];
@@ -265,9 +260,7 @@ class CategoryTwigExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider clearProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('clearProvider')]
     public function testClearUrl(string $parameter, string $url, string $string): void
     {
         $manager = $this->prophesize(CategoryManagerInterface::class);

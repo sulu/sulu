@@ -22,9 +22,7 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 use Sulu\Component\Content\Document\WorkflowStage;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
-/**
- * @runTestsInSeparateProcesses This is necessary because the kernel is booted with different configurations.
- */
+#[\PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses]
 class SecurityListenerTest extends SuluTestCase
 {
     /**

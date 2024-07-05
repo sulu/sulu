@@ -87,9 +87,7 @@ class ExceptionControllerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideShowAction
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideShowAction')]
     public function testShowActionFormat($retrievedFormat, $templateAvailable, $expectExceptionFormat): void
     {
         $request = new Request();
@@ -146,9 +144,7 @@ class ExceptionControllerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideShowActionErrorTemplate
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideShowActionErrorTemplate')]
     public function testShowActionErrorTemplate($templates, $errorCode, $expectedTemplate): void
     {
         $request = new Request();

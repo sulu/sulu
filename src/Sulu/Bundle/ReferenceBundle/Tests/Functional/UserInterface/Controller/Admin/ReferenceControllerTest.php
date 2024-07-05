@@ -45,9 +45,7 @@ class ReferenceControllerTest extends SuluTestCase
         );
     }
 
-    /**
-     * @dataProvider dataCgetActionFiltersAndFields
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataCgetActionFiltersAndFields')]
     public function testCgetActionFiltersAndFields(string $url): void
     {
         $client = $this->createAuthenticatedClient();

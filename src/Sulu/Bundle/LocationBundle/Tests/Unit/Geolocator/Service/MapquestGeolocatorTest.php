@@ -44,9 +44,8 @@ class MapquestGeolocatorTest extends TestCase
 
     /**
      * @param array<mixed> $expectationMap
-     *
-     * @dataProvider provideLocate
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideLocate')]
     public function testLocate(string $query, int $expectedCount, array $expectationMap): void
     {
         $fixtureName = __DIR__ . '/mapquest-responses/' . \md5($query) . '.json';

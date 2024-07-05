@@ -1035,9 +1035,7 @@ class MediaControllerTest extends SuluTestCase
         $this->assertNotNull($response->id);
     }
 
-    /**
-     * @group postWithoutDetails
-     */
+    #[\PHPUnit\Framework\Attributes\Group('postWithoutDetails')]
     public function testPostWithoutExtension(): void
     {
         $imagePath = $this->getImagePath();

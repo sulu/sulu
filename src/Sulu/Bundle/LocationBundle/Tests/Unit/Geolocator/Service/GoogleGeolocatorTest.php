@@ -59,9 +59,7 @@ class GoogleGeolocatorTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideLocate
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideLocate')]
     public function testLocate($query, $expectedCount, $expectationMap): void
     {
         $fixtureName = __DIR__ . '/google-responses/' . \md5($query) . '.json';
@@ -113,9 +111,8 @@ class GoogleGeolocatorTest extends TestCase
 
     /**
      * Test if BC is maintained and guzzle client still works.
-     *
-     * @dataProvider provideLocate
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideLocate')]
     public function testLegacyGuzzleLocate($query, $expectedCount, $expectationMap): void
     {
         if (!\class_exists(Client::class)) {

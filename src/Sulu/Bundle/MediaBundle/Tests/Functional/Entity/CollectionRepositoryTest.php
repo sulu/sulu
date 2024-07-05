@@ -159,9 +159,7 @@ class CollectionRepositoryTest extends SuluTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideTreeData
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideTreeData')]
     public function testTree($index, $expectedIndexes): void
     {
         $expected = [];

@@ -219,9 +219,7 @@ class LinkTagTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideParseData
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideParseData')]
     public function testParseAll($tag, $attributes, $items, $expected): void
     {
         $uuid = \preg_split('/[#?]/', $attributes['href'], 2);
