@@ -99,12 +99,9 @@ class WebspaceStructureProviderTest extends TestCase
     }
 
     /**
-     * @param string $key
-     * @param string $view
-     *
      * @return StructureInterface
      */
-    private function generateStructure($key, $view)
+    private function generateStructure(string $key, string $view)
     {
         $mock = $this->prophesize(PageBridge::class);
 

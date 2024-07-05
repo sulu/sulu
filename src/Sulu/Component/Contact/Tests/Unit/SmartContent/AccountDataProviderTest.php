@@ -80,7 +80,20 @@ class AccountDataProviderTest extends TestCase
         $this->assertEquals([], $parameter);
     }
 
-    public static function dataItemsDataProvider()
+    /**
+     * @return iterable<array{
+     *     0: array{
+     *         tags: string[],
+     *     },
+     *     1: int|null,
+     *     2: int,
+     *     3: int,
+     *     4: Account[],
+     *     5: bool,
+     *     6: AccountDataItem[],
+     * }>
+     */
+    public static function dataItemsDataProvider(): iterable
     {
         $accounts = [
             self::createAccount(1, 'Massive Art'),
@@ -94,15 +107,25 @@ class AccountDataProviderTest extends TestCase
         }
 
         return [
-            [['tags' => [1]], null, 1, 3, $accounts, false, $dataItems],
-            [['tags' => [1]], null, 1, 2, $accounts, true, \array_slice($dataItems, 0, 2)],
-            [['tags' => [1]], 5, 1, 2, $accounts, true, \array_slice($dataItems, 0, 2)],
-            [['tags' => [1]], 1, 1, 2, \array_slice($accounts, 0, 1), false, \array_slice($dataItems, 0, 1)],
+            [['tags' => ['A']], null, 1, 3, $accounts, false, $dataItems],
+            [['tags' => ['A']], null, 1, 2, $accounts, true, \array_slice($dataItems, 0, 2)],
+            [['tags' => ['A']], 5, 1, 2, $accounts, true, \array_slice($dataItems, 0, 2)],
+            [['tags' => ['A']], 1, 1, 2, \array_slice($accounts, 0, 1), false, \array_slice($dataItems, 0, 1)],
         ];
     }
 
     /**
      * @dataProvider dataItemsDataProvider
+     *
+     * @param array{
+     *     tags: string[],
+     * } $filters
+     * @param int|null $limit
+     * @param int $page
+     * @param int $pageSize
+     * @param Account[] $repositoryResult
+     * @param bool $hasNextPage
+     * @param AccountDataItem[] $items
      */
     public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items): void
     {
@@ -132,7 +155,21 @@ class AccountDataProviderTest extends TestCase
         $this->assertEquals($items, $result->getItems());
     }
 
-    public static function resourceItemsDataProvider()
+
+    /**
+     * @return iterable<array{
+     *     0: array{
+     *         tags: string[],
+     *     },
+     *     1: int|null,
+     *     2: int,
+     *     3: int,
+     *     4: Account[],
+     *     5: bool,
+     *     6: ArrayAccessItem[],
+     * }>
+     */
+    public static function resourceItemsDataProvider(): iterable
     {
         $accounts = [
             self::createAccount(1, 'Massive Art'),
@@ -146,15 +183,25 @@ class AccountDataProviderTest extends TestCase
         }
 
         return [
-            [['tags' => [1]], null, 1, 3, $accounts, false, $dataItems],
-            [['tags' => [1]], null, 1, 2, $accounts, true, \array_slice($dataItems, 0, 2)],
-            [['tags' => [1]], 5, 1, 2, $accounts, true, \array_slice($dataItems, 0, 2)],
-            [['tags' => [1]], 1, 1, 2, \array_slice($accounts, 0, 1), false, \array_slice($dataItems, 0, 1)],
+            [['tags' => ['A']], null, 1, 3, $accounts, false, $dataItems],
+            [['tags' => ['A']], null, 1, 2, $accounts, true, \array_slice($dataItems, 0, 2)],
+            [['tags' => ['A']], 5, 1, 2, $accounts, true, \array_slice($dataItems, 0, 2)],
+            [['tags' => ['A']], 1, 1, 2, \array_slice($accounts, 0, 1), false, \array_slice($dataItems, 0, 1)],
         ];
     }
 
     /**
      * @dataProvider resourceItemsDataProvider
+     *
+     * @param array{
+     *      tags: string[],
+     *  } $filters
+     * @param int|null $limit
+     * @param int $page
+     * @param int $pageSize
+     * @param Account[] $repositoryResult
+     * @param bool $hasNextPage
+     * @param AccountDataItem[] $items
      */
     public function testResolveResourceItems(
         $filters,
@@ -220,6 +267,15 @@ class AccountDataProviderTest extends TestCase
     }
 
     /**
+     * @param array{
+     *     tags?: string[],
+     * } $filters
+     * @param int $page
+     * @param int $pageSize
+     * @param int|null $limit
+     * @param AccountDataItem[] $result
+     * @param array<string, mixed> $options
+     *
      * @return DataProviderRepositoryInterface
      */
     private function getRepository(
@@ -255,12 +311,12 @@ class AccountDataProviderTest extends TestCase
         return new Account($entity, 'de');
     }
 
-    private static function createDataItem(Account $account)
+    private static function createDataItem(Account $account): AccountDataItem
     {
         return new AccountDataItem($account);
     }
 
-    private static function createResourceItem(Account $account)
+    private static function createResourceItem(Account $account): ArrayAccessItem
     {
         return new ArrayAccessItem($account->getId(), self::serialize($account), $account);
     }
