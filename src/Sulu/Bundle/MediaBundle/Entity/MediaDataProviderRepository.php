@@ -194,7 +194,7 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
             ->setParameter('locale', $locale);
     }
 
-    public function createQueryBuilder($alias, $indexBy = null)
+    public function createQueryBuilder($alias, $indexBy = null): \Doctrine\ORM\QueryBuilder
     {
         return $this->entityManager->createQueryBuilder()
             ->select($alias)

@@ -250,7 +250,7 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         return $queryBuilder->getQuery()->getArrayResult();
     }
 
-    public function count(array $filter)
+    public function count(array $filter = []): int
     {
         list($collection, $systemCollections, $types, $search) = $this->extractFilterVars($filter);
 
