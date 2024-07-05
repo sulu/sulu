@@ -133,8 +133,6 @@ class BaseFunctional extends SuluTestCase
     /**
      * Returns property of data with given name.
      * If this property does not exists this function returns given default.
-     *
-     * @param string $name
      */
     protected function getValue(array $data, string $name, $default = null)
     {

@@ -155,7 +155,6 @@ class AccountDataProviderTest extends TestCase
         $this->assertEquals($items, $result->getItems());
     }
 
-
     /**
      * @return iterable<array{
      *     0: array{
