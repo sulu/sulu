@@ -103,7 +103,12 @@ class ActivityRepository implements ActivityRepositoryInterface
 
         // set value of id explicitly if class has a pre-insert identity-generator to be compatible with postgresql
         if (!$classMetadata->idGenerator->isPostInsertGenerator()) {
-            $queryBuilder->setValue($classMetadata->getColumnName('id'), $classMetadata->idGenerator->generate($this->entityManager, $activity));
+            $queryBuilder->setValue(
+                $classMetadata->getColumnName('id'),
+                \method_exists($classMetadata->idGenerator, 'generate')
+                    ? $classMetadata->idGenerator->generate($this->entityManager, $activity)
+                    : $classMetadata->idGenerator->generateId($this->entityManager, $activity)
+            );
         }
 
         return $queryBuilder;
