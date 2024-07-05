@@ -59,9 +59,7 @@ class BaseDataProviderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider configurationProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('configurationProvider')]
     public function testInitConfiguration($tags, $categories, $limit, $presentAs, $paginated, $sorting): void
     {
         $repository = $this->prophesize(DataProviderRepositoryInterface::class);
@@ -201,9 +199,7 @@ class BaseDataProviderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider filtersProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('filtersProvider')]
     public function testResolveFilters(
         array $filters,
         $limit,
@@ -236,9 +232,7 @@ class BaseDataProviderTest extends TestCase
         $this->assertEquals($hasNextPage, $result[1]);
     }
 
-    /**
-     * @dataProvider filtersProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('filtersProvider')]
     public function testResolveDataItems(
         array $filters,
         $limit,
@@ -277,9 +271,7 @@ class BaseDataProviderTest extends TestCase
         $this->assertEquals($items, $result->getItems());
     }
 
-    /**
-     * @dataProvider filtersProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('filtersProvider')]
     public function testResolveResourceItems(
         array $filters,
         $limit,
@@ -429,9 +421,7 @@ class BaseDataProviderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider filtersProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('filtersProvider')]
     public function testResolveResourceItemsWithReferenceStore(
         array $filters,
         $limit,

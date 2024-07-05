@@ -304,9 +304,7 @@ class AccessControlManagerTest extends TestCase
         $this->assertNull($this->accessControlManager->getPermissions(\stdClass::class, '1'));
     }
 
-    /**
-     * @dataProvider provideUserPermission
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideUserPermission')]
     public function testGetUserPermissions(
         $rolePermissions,
         $securityContextPermissions,

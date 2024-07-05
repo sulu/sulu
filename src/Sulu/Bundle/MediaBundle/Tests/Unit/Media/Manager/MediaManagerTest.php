@@ -194,12 +194,11 @@ class MediaManagerTest extends TestCase
     }
 
     /**
-     * @dataProvider provideGetByIds
-     *
      * @param int[] $ids
      * @param Media[] $media
      * @param Media[] $result
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideGetByIds')]
     public function testGetByIds(array $ids, ?SuluUserInterface $user, ?int $permissions, array $media, array $result): void
     {
         /** @var TokenInterface|ObjectProphecy $token */
@@ -345,9 +344,7 @@ class MediaManagerTest extends TestCase
         $this->mediaManager->delete(1, true);
     }
 
-    /**
-     * @dataProvider provideSpecialCharacterFileName
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSpecialCharacterFileName')]
     public function testSpecialCharacterFileName(string $fileName, string $cleanUpArgument, string $cleanUpResult, string $extension): void
     {
         /** @var UploadedFile|ObjectProphecy $uploadedFile */
@@ -377,9 +374,7 @@ class MediaManagerTest extends TestCase
         $this->assertEquals($fileName, $media->getName());
     }
 
-    /**
-     * @dataProvider provideSpecialCharacterUrl
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSpecialCharacterUrl')]
     public function testSpecialCharacterUrl(int $id, string $filename, int $version, string $expected): void
     {
         $this->assertEquals($expected, $this->mediaManager->getUrl($id, $filename, $version));

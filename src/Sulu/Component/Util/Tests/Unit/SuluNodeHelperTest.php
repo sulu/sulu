@@ -164,9 +164,7 @@ class SuluNodeHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideExtractWebspaceFromPath
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideExtractWebspaceFromPath')]
     public function testExtractWebspaceFromPath($path, $expected): void
     {
         $res = $this->helper->extractWebspaceFromPath($path);
@@ -186,9 +184,7 @@ class SuluNodeHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideExtractSnippetTypeFromPath
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideExtractSnippetTypeFromPath')]
     public function testExtractSnippetTypeFromPath($path, $expected, $valid = true): void
     {
         if (false === $valid) {
@@ -209,9 +205,7 @@ class SuluNodeHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideGetStructureTypeForNode
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideGetStructureTypeForNode')]
     public function testGetStructureTypeForNode($nodeType, $expected): void
     {
         $this->node->expects($this->any())
@@ -233,9 +227,7 @@ class SuluNodeHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideHasSuluNodeType
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideHasSuluNodeType')]
     public function testHasSuluNodeType($nodeTypes, $expected): void
     {
         $this->node->expects($this->any())

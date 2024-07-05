@@ -61,9 +61,7 @@ class PathCleanupTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider cleanupProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('cleanupProvider')]
     public function testCleanup(string $a, string $b, string $locale): void
     {
         $clean = $this->cleaner->cleanup($a, $locale);
@@ -101,9 +99,7 @@ class PathCleanupTest extends TestCase
         $this->assertFalse($this->cleaner->validate('/asdf.xml'));
     }
 
-    /**
-     * @dataProvider emojiCleanupProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('emojiCleanupProvider')]
     public function testEmojiCleanup(string $a, string $b, string $locale): void
     {
         if (!$this->hasEmojiSupport) {

@@ -126,7 +126,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $this->em->flush();
     }
 
-    private function createCollection($name, $parent = null)
+    private function createCollection($name, $parent = null): Collection
     {
         $collection = new Collection();
         $collectionType = new CollectionType();
@@ -605,8 +605,6 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     }
 
     /**
-     * @dataProvider findByProvider
-     *
      * @param array{
      *     dataSource: mixed,
      *     tags?: array<int>,
@@ -630,6 +628,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
      * @param array<int> $tags
      * @param array<string, mixed> $options
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('findByProvider')]
     public function testFindByFilters($filters, $page, $pageSize, $limit, $expected, $tags = [], $options = []): void
     {
         foreach ($this->collectionData as $collection) {
@@ -714,10 +713,9 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     }
 
     /**
-     * @dataProvider provideFindByFiltersWithAudienceTargeting
-     *
      * @param int[] $expectedIndexes
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideFindByFiltersWithAudienceTargeting')]
     public function testFindByFiltersWithAudienceTargeting(?int $targetGroupIndex, array $expectedIndexes): void
     {
         /** @var TargetGroupInterface[] $targetGroups */

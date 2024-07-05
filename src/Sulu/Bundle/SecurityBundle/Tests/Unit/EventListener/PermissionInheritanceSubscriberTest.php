@@ -55,9 +55,7 @@ class PermissionInheritanceSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providePostPersist
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providePostPersist')]
     public function testPostPersist($id, $parentId, $permissions): void
     {
         $entity = $this->prophesize(PermissionInheritanceInterface::class);
