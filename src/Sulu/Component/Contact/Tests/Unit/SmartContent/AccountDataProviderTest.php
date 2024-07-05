@@ -212,7 +212,7 @@ class AccountDataProviderTest extends TestCase
         $items
     ): void {
         $serializeCallback = function(Account $account) {
-            return $this->serialize($account);
+            return self::serialize($account);
         };
 
         $context = SerializationContext::create()->setSerializeNull(true)->setGroups(
