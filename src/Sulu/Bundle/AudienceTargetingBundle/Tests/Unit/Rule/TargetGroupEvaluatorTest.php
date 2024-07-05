@@ -61,7 +61,7 @@ class TargetGroupEvaluatorTest extends TestCase
     }
 
     /**
-     * @param TargetGroup[] $targetGroups
+     * @param array<TargetGroup> $targetGroups
      * @param array<string, string[]> $ruleWhitelists
      *
      * @dataProvider provideEvaluationData
@@ -99,7 +99,17 @@ class TargetGroupEvaluatorTest extends TestCase
         $this->assertEquals($evaluatedTargetGroup, $this->targetGroupEvaluator->evaluate($frequency, $currentTargetGroup));
     }
 
-    public static function provideEvaluationData()
+    /**
+     * @return iterable<array{
+     *     0: array<TargetGroup>,
+     *     1: array<string, string[]>,
+     *     2: string|null,
+     *     3: TargetGroup|null,
+     *     4?: int,
+     *     5?: TargetGroup|null,
+     * }>
+     */
+    public static function provideEvaluationData(): iterable
     {
         $targetGroup1 = new TargetGroup();
 

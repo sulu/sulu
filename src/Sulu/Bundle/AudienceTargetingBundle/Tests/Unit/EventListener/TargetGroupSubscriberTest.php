@@ -395,11 +395,11 @@ class TargetGroupSubscriberTest extends TestCase
      * @dataProvider provideAddTargetGroupHitScript
      */
     public function testAddTargetGroupHitScript(
-        $targetGroupHitUrl,
-        $forwardedUrlHeader,
-        $forwardedRefererHeader,
-        $forwardedUuidHeader,
-        $uuid
+        string $targetGroupHitUrl,
+        string $forwardedUrlHeader,
+        string $forwardedRefererHeader,
+        string $forwardedUuidHeader,
+        ?string $uuid
     ): void {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
@@ -417,7 +417,7 @@ class TargetGroupSubscriberTest extends TestCase
             'visitor-session'
         );
         $request = new Request();
-        if ($uuid) {
+        if (null !== $uuid) {
             $structureBridge = $this->prophesize(StructureBridge::class);
             $structureBridge->getUuid()->willReturn($uuid);
             $request->attributes->set('structure', $structureBridge->reveal());
@@ -441,7 +441,16 @@ class TargetGroupSubscriberTest extends TestCase
         $this->assertEquals('<body><script></script></body>', $response->getContent());
     }
 
-    public static function provideAddTargetGroupHitScript()
+    /**
+     * @return iterable<array{
+     *     0: string,
+     *     1: string,
+     *     2: string,
+     *     3: string,
+     *     4: string|null,
+     * }>
+     */
+    public static function provideAddTargetGroupHitScript(): iterable
     {
         return [
             ['/_target_group_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer', 'X-Forwarded-UUID', 'some-uuid'],

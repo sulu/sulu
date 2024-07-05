@@ -27,10 +27,7 @@ class ImageTransformationCompilerPassTest extends AbstractCompilerPassTestCase
         $container->addCompilerPass(new ImageTransformationCompilerPass());
     }
 
-    /**
-     * @test
-     */
-    public function ifCompilerPassCollectsServicesByAddingMethodCallsTheseWillExist(): void
+    public function testCollectingTaggedServices(): void
     {
         $transformationManager = new Definition();
         $this->setDefinition(ImageTransformationCompilerPass::POOL_SERVICE_ID, $transformationManager);
