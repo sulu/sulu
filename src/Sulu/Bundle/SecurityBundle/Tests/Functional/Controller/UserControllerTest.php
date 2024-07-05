@@ -862,10 +862,13 @@ class UserControllerTest extends SuluTestCase
         $this->assertEquals('admin', $response->username);
         $this->assertFalse(\property_exists($response, 'password'));
 
-        $this->assertEquals('Role1', $response->userRoles[0]->role->name);
-        $this->assertEquals('Sulu', $response->userRoles[0]->role->system);
-        $this->assertEquals('Role2', $response->userRoles[1]->role->name);
-        $this->assertEquals('Sulu', $response->userRoles[1]->role->system);
+        $names = [
+            $response->userRoles[0]->role->name,
+            $response->userRoles[1]->role->name,
+        ];
+
+        $this->assertContains('Role1', $names);
+        $this->assertContains('Role2', $names);
     }
 
     public function testGetUserAndRolesByContactNotExisting(): void

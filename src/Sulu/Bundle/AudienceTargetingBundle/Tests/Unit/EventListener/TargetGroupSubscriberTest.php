@@ -328,6 +328,15 @@ class TargetGroupSubscriberTest extends TestCase
         $this->assertEquals($varyHeaders, $response->getVary());
     }
 
+    /**
+     * @return iterable<array{
+     *     0: string,
+     *     1: string,
+     *     2: bool,
+     *     3: string,
+     *     4: string[],
+     * }>
+     */
     public static function provideAddVaryHeader()
     {
         return [
@@ -342,7 +351,7 @@ class TargetGroupSubscriberTest extends TestCase
     /**
      * @dataProvider provideAddSetCookieHeader
      */
-    public function testAddSetCookieHeader($targetGroupCookie, $visitorSession, $hasChanged, $url, $cookieValue): void
+    public function testAddSetCookieHeader(string $targetGroupCookie, string $visitorSession, bool $hasChanged, string $url, ?int $cookieValue): void
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
@@ -381,7 +390,16 @@ class TargetGroupSubscriberTest extends TestCase
         }
     }
 
-    public static function provideAddSetCookieHeader()
+    /**
+     * @return iterable<array{
+     *     0: string,
+     *     1: string,
+     *     2: bool,
+     *     3: string,
+     *     4: int|null,
+     * }>
+     */
+    public static function provideAddSetCookieHeader(): iterable
     {
         return [
             ['sulu-visitor-target-group', 'visitor-session', false, '/_target_group_hit', null],
