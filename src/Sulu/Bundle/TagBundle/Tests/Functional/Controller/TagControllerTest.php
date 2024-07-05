@@ -194,7 +194,7 @@ class TagControllerTest extends SuluTestCase
         $response = \json_decode($this->client->getResponse()->getContent());
 
         $this->assertEquals(0, $response->code);
-        $this->assertTrue(isset($response->message));
+        $this->assertObjectHasProperty('message', $response);
     }
 
     public function testPost(): void

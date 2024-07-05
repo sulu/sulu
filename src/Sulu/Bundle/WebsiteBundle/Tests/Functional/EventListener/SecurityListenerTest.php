@@ -41,9 +41,6 @@ class SecurityListenerTest extends SuluTestCase
         $this->initPhpcr();
     }
 
-    /**
-     * @preserveGlobalState disabled
-     */
     public function testNoPermissions(): void
     {
         $pageDocument = $this->createSecuredPage();
@@ -55,9 +52,6 @@ class SecurityListenerTest extends SuluTestCase
         $this->assertNull($response->headers->get('Location'));
     }
 
-    /**
-     * @preserveGlobalState disabled
-     */
     public function testRedirectToLoginWhenNoAccess(): void
     {
         $pageDocument = $this->createSecuredPage();
