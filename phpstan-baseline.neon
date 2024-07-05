@@ -27982,7 +27982,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$userRoles on mixed\\.$#"
-			count: 40
+			count: 38
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/UserControllerTest.php
 
 		-
