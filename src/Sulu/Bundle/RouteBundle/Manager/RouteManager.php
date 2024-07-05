@@ -22,29 +22,11 @@ use Sulu\Bundle\RouteBundle\Model\RouteInterface;
  */
 class RouteManager implements RouteManagerInterface
 {
-    /**
-     * @var ChainRouteGeneratorInterface
-     */
-    private $chainRouteGenerator;
-
-    /**
-     * @var ConflictResolverInterface
-     */
-    private $conflictResolver;
-
-    /**
-     * @var RouteRepositoryInterface
-     */
-    private $routeRepository;
-
     public function __construct(
-        ChainRouteGeneratorInterface $chainRouteGenerator,
-        ConflictResolverInterface $conflictResolver,
-        RouteRepositoryInterface $routeRepository
+        private ChainRouteGeneratorInterface $chainRouteGenerator,
+        private ConflictResolverInterface $conflictResolver,
+        private RouteRepositoryInterface $routeRepository,
     ) {
-        $this->chainRouteGenerator = $chainRouteGenerator;
-        $this->conflictResolver = $conflictResolver;
-        $this->routeRepository = $routeRepository;
     }
 
     public function create(RoutableInterface $entity, $path = null, $resolveConflict = true)

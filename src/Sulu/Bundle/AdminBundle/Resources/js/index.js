@@ -404,7 +404,7 @@ function startAdmin() {
     }
 
     if (!('config' in applicationElement.dataset)) {
-        throw new Error('Configuration not found');
+        throw new Error(`Attribute "data-config" not found on element with ID "${id}"!`);
     }
 
     Object.assign(Config, JSON.parse(applicationElement.dataset.config));

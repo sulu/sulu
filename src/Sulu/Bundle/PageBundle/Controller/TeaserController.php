@@ -21,17 +21,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TeaserController extends AbstractRestController implements ClassResourceInterface
 {
-    /**
-     * @var TeaserManagerInterface
-     */
-    private $teaserManager;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        TeaserManagerInterface $teaserManager
+        private TeaserManagerInterface $teaserManager
     ) {
         parent::__construct($viewHandler);
-        $this->teaserManager = $teaserManager;
     }
 
     /**

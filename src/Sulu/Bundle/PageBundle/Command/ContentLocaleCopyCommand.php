@@ -27,23 +27,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ContentLocaleCopyCommand extends Command
 {
     /**
-     * The namespace for languages.
-     *
-     * @var string
-     */
-    private $languageNamespace;
-
-    /**
-     * @var ContentMapperInterface
-     */
-    private $contentMapper;
-
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
      * @var QueryManager
      */
     private $queryManager;
@@ -53,13 +36,12 @@ class ContentLocaleCopyCommand extends Command
      */
     private $output;
 
-    public function __construct(ContentMapperInterface $contentMapper, SessionInterface $session, string $languageNamespace)
-    {
+    public function __construct(
+        private ContentMapperInterface $contentMapper,
+        private SessionInterface $session,
+        private string $languageNamespace,
+    ) {
         parent::__construct();
-
-        $this->languageNamespace = $languageNamespace;
-        $this->contentMapper = $contentMapper;
-        $this->session = $session;
     }
 
     public function configure()

@@ -59,9 +59,7 @@ class CacheInvalidationListenerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideFunctionName
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideFunctionName')]
     public function testPostUpdate($functionName): void
     {
         $entity = $this->prophesize(MediaInterface::class);
@@ -75,9 +73,7 @@ class CacheInvalidationListenerTest extends TestCase
         $this->listener->{$functionName}($eventArgs->reveal());
     }
 
-    /**
-     * @dataProvider provideFunctionName
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideFunctionName')]
     public function testPostUpdateFile($functionName): void
     {
         $media = $this->prophesize(MediaInterface::class);
@@ -93,9 +89,7 @@ class CacheInvalidationListenerTest extends TestCase
         $this->listener->{$functionName}($eventArgs->reveal());
     }
 
-    /**
-     * @dataProvider provideFunctionName
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideFunctionName')]
     public function testPostUpdateFileVersion($functionName): void
     {
         $media = $this->prophesize(MediaInterface::class);
@@ -127,9 +121,7 @@ class CacheInvalidationListenerTest extends TestCase
         $this->listener->{$functionName}($eventArgs->reveal());
     }
 
-    /**
-     * @dataProvider provideFunctionName
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideFunctionName')]
     public function testPostUpdateFileVersionMeta($functionName): void
     {
         $media = $this->prophesize(MediaInterface::class);
@@ -151,9 +143,7 @@ class CacheInvalidationListenerTest extends TestCase
         $this->listener->{$functionName}($eventArgs->reveal());
     }
 
-    /**
-     * @dataProvider provideFunctionName
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideFunctionName')]
     public function testPostUpdateOther($functionName): void
     {
         $entity = $this->prophesize(\stdClass::class);

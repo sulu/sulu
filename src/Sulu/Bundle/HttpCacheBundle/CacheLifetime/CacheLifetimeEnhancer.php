@@ -17,36 +17,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CacheLifetimeEnhancer implements CacheLifetimeEnhancerInterface
 {
-    /**
-     * @var CacheLifetimeResolverInterface
-     */
-    private $cacheLifetimeResolver;
-
-    /**
-     * @var int
-     */
-    private $maxAge;
-
-    /**
-     * @var int
-     */
-    private $sharedMaxAge;
-
-    /**
-     * @var CacheLifetimeRequestStore
-     */
-    private $cacheLifetimeRequestStore;
-
     public function __construct(
-        CacheLifetimeResolverInterface $cacheLifetimeResolver,
-        $maxAge,
-        $sharedMaxAge,
-        CacheLifetimeRequestStore $cacheLifetimeRequestStore
+        private CacheLifetimeResolverInterface $cacheLifetimeResolver,
+        private int $maxAge,
+        private int $sharedMaxAge,
+        private CacheLifetimeRequestStore $cacheLifetimeRequestStore
     ) {
-        $this->cacheLifetimeResolver = $cacheLifetimeResolver;
-        $this->maxAge = $maxAge;
-        $this->sharedMaxAge = $sharedMaxAge;
-        $this->cacheLifetimeRequestStore = $cacheLifetimeRequestStore;
     }
 
     public function enhance(Response $response, StructureInterface $structure)

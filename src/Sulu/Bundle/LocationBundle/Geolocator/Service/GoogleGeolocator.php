@@ -29,19 +29,9 @@ class GoogleGeolocator implements GeolocatorInterface
 {
     public const ENDPOINT = 'https://maps.googleapis.com/maps/api/geocode/json';
 
-    /**
-     * @var HttpClientInterface|ClientInterface
-     */
-    protected $client;
-
-    /**
-     * @var string
-     */
-    protected $apiKey;
-
     public function __construct(
-        $client,
-        string $apiKey
+        protected HttpClientInterface|ClientInterface $client,
+        protected string $apiKey
     ) {
         if ($client instanceof ClientInterface) {
             @trigger_deprecation(
@@ -52,14 +42,7 @@ class GoogleGeolocator implements GeolocatorInterface
                     ClientInterface::class, HttpClientInterface::class
                 )
             );
-        } elseif (!($client instanceof HttpClientInterface)) {
-            throw new \InvalidArgumentException(
-                \sprintf('Please provide a %s as client', HttpClientInterface::class)
-            );
         }
-
-        $this->client = $client;
-        $this->apiKey = $apiKey;
     }
 
     public function locate(string $query, ?GeolocatorOptions $options = null): GeolocatorResponse

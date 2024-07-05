@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
@@ -37,64 +38,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MediaStreamController
 {
-    /**
-     * @var FormatManagerInterface
-     */
-    protected $formatManager;
-
-    /**
-     * @var FormatCacheInterface
-     */
-    protected $formatCache;
-
-    /**
-     * @var MediaManagerInterface
-     */
-    protected $mediaManager;
-
-    /**
-     * @var StorageInterface
-     */
-    protected $storage;
-
-    /**
-     * @var DispositionTypeResolver
-     */
-    protected $dispositionTypeResolver;
-
-    /**
-     * @var MediaRepositoryInterface
-     */
-    protected $mediaRepository;
-
-    /**
-     * @var PathCleanupInterface
-     */
-    protected $pathCleaner;
-
-    /**
-     * @var SecurityCheckerInterface|null
-     */
-    protected $securityChecker;
-
     public function __construct(
-        DispositionTypeResolver $dispositionTypeResolver,
-        MediaRepositoryInterface $mediaRepository,
-        PathCleanupInterface $pathCleaner,
-        FormatManagerInterface $formatManager,
-        FormatCacheInterface $formatCache,
-        MediaManagerInterface $mediaManager,
-        StorageInterface $storage,
-        ?SecurityCheckerInterface $securityChecker = null
+        protected DispositionTypeResolver $dispositionTypeResolver,
+        protected MediaRepositoryInterface $mediaRepository,
+        protected PathCleanupInterface $pathCleaner,
+        protected FormatManagerInterface $formatManager,
+        protected FormatCacheInterface $formatCache,
+        protected MediaManagerInterface $mediaManager,
+        protected StorageInterface $storage,
+        protected ?SecurityCheckerInterface $securityChecker = null
     ) {
-        $this->dispositionTypeResolver = $dispositionTypeResolver;
-        $this->mediaRepository = $mediaRepository;
-        $this->pathCleaner = $pathCleaner;
-        $this->formatManager = $formatManager;
-        $this->formatCache = $formatCache;
-        $this->mediaManager = $mediaManager;
-        $this->storage = $storage;
-        $this->securityChecker = $securityChecker;
     }
 
     /**
@@ -117,7 +70,7 @@ class MediaStreamController
                 $mediaProperties['fileName']
             );
         } catch (ImageProxyException $e) {
-            throw new NotFoundHttpException('Image create error. Code: ' . $e->getCode());
+            throw new NotFoundHttpException('Image create error. Code: ' . $e->getCode(), $e);
         }
     }
 
@@ -134,6 +87,7 @@ class MediaStreamController
             }
 
             $version = $request->get('v', null);
+            $version = \is_numeric($version) ? ((int) $version) : null;
             $noCount = $request->get('no-count', false);
 
             $fileVersion = $this->getFileVersion($id, $version);
@@ -169,7 +123,7 @@ class MediaStreamController
 
             return $response;
         } catch (MediaException $e) {
-            throw new NotFoundHttpException('File not found: ' . $e->getCode() . ' ' . $e->getMessage());
+            throw new NotFoundHttpException('File not found: ' . $e->getCode() . ' ' . $e->getMessage(), $e);
         }
     }
 
@@ -245,7 +199,7 @@ class MediaStreamController
 
     /**
      * @param int $id
-     * @param int $version
+     * @param int|null $version
      *
      * @return FileVersion|null
      *
@@ -253,24 +207,24 @@ class MediaStreamController
      */
     protected function getFileVersion($id, $version)
     {
-        /** @var MediaInterface $mediaEntity */
-        $mediaEntity = $this->mediaRepository->findMediaByIdForRendering($id, null);
+        /** @var MediaInterface|null $mediaEntity */
+        $mediaEntity = $this->mediaRepository->findMediaByIdForRendering($id, null, $version);
 
         if (!$mediaEntity) {
             return null;
         }
 
-        $file = $mediaEntity->getFiles()[0];
+        $file = $mediaEntity->getFiles()[0] ?? null;
 
         if (!$file) {
             return null;
         }
 
         if (!$version) {
-            $version = $mediaEntity->getFiles()[0]->getVersion();
+            $version = $file->getVersion();
         }
 
-        $fileVersion = $file->getFileVersion((int) $version);
+        $fileVersion = $file->getFileVersion($version);
 
         if (!$fileVersion) {
             throw new FileVersionNotFoundException($id, $version);

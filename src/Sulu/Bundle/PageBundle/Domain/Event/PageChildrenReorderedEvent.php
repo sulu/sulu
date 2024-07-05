@@ -20,17 +20,10 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 
 class PageChildrenReorderedEvent extends DomainEvent
 {
-    /**
-     * @var BasePageDocument
-     */
-    private $pageDocument;
-
     public function __construct(
-        BasePageDocument $pageDocument
+        private BasePageDocument $pageDocument
     ) {
         parent::__construct();
-
-        $this->pageDocument = $pageDocument;
     }
 
     public function getPageDocument(): BasePageDocument

@@ -41,72 +41,20 @@ use Twig\Error\Error;
 class PreviewRenderer implements PreviewRendererInterface
 {
     /**
-     * @var RouteDefaultsProviderInterface
-     */
-    private $routeDefaultsProvider;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var KernelFactoryInterface
-     */
-    private $kernelFactory;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var array
-     */
-    private $previewDefaults;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
      * @var string
      */
     private $defaultHost;
 
-    /**
-     * @var string
-     */
-    private $targetGroupHeader;
-
-    /**
-     * @param string $environment
-     * @param string $targetGroupHeader
-     */
     public function __construct(
-        RouteDefaultsProviderInterface $routeDefaultsProvider,
-        RequestStack $requestStack,
-        KernelFactoryInterface $kernelFactory,
-        WebspaceManagerInterface $webspaceManager,
-        EventDispatcherInterface $eventDispatcher,
-        array $previewDefaults,
-        $environment,
-        $targetGroupHeader = null
+        private RouteDefaultsProviderInterface $routeDefaultsProvider,
+        private RequestStack $requestStack,
+        private KernelFactoryInterface $kernelFactory,
+        private WebspaceManagerInterface $webspaceManager,
+        private EventDispatcherInterface $eventDispatcher,
+        private array $previewDefaults,
+        private string $environment,
+        private ?string $targetGroupHeader = null,
     ) {
-        $this->routeDefaultsProvider = $routeDefaultsProvider;
-        $this->requestStack = $requestStack;
-        $this->kernelFactory = $kernelFactory;
-        $this->webspaceManager = $webspaceManager;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->previewDefaults = $previewDefaults;
-        $this->environment = $environment;
-        $this->targetGroupHeader = $targetGroupHeader;
     }
 
     public function render(

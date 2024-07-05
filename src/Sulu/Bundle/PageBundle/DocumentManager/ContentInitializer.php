@@ -28,19 +28,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ContentInitializer implements InitializerInterface
 {
     /**
-     * @var ConnectionRegistry
+     * @param string $languageNamespace
      */
-    private $connectionRegistry;
-
-    /**
-     * @var string
-     */
-    private $languageNamespace;
-
-    public function __construct(ConnectionRegistry $connectionRegistry, $languageNamespace)
+    public function __construct(private ConnectionRegistry $connectionRegistry, private $languageNamespace)
     {
-        $this->connectionRegistry = $connectionRegistry;
-        $this->languageNamespace = $languageNamespace;
     }
 
     public function initialize(OutputInterface $output, $purge = false)

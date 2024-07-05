@@ -226,7 +226,7 @@ class DoctrineListBuilder extends AbstractListBuilder
 
     public function count()
     {
-        $subQueryBuilder = $this->createSubQueryBuilder('COUNT(' . $this->idField->getSelect() . ')');
+        $subQueryBuilder = $this->createSubQueryBuilder('COUNT( ' . $this->idField->getSelect() . ')', false);
 
         $this->assignParameters($subQueryBuilder);
 
@@ -272,6 +272,12 @@ class DoctrineListBuilder extends AbstractListBuilder
         $select = $this->idField->getSelect();
         $this->queryBuilder->where($select . ' IN (:ids)')->setParameter('ids', $ids);
 
+        $sortFieldIsGrouped = \count(\array_filter($this->sortFields, fn (FieldDescriptorInterface $field) => $this->isGroupingFieldDescriptor($field))) > 0;
+        // index the result to properly merge the grouped and non-grouped results and do not mess up sorting
+        if ($sortFieldIsGrouped) {
+            $this->queryBuilder->indexBy($this->encodeAlias($this->entityName), $this->idField->getSelect());
+        }
+
         $this->assignParameters($this->queryBuilder);
 
         $nonGroupResult = $this->queryBuilder->getQuery()->getArrayResult();
@@ -290,15 +296,20 @@ class DoctrineListBuilder extends AbstractListBuilder
         // use ids previously selected ids for query
         $select = $this->idField->getSelect();
         $this->queryBuilder->where($select . ' IN (:ids)')->setParameter('ids', $ids);
-        $this->queryBuilder->indexBy($this->encodeAlias($this->entityName), $this->idField->getSelect());
+        if (!$sortFieldIsGrouped) {
+            $this->queryBuilder->indexBy($this->encodeAlias($this->entityName), $this->idField->getSelect());
+        }
 
         $this->assignParameters($this->queryBuilder);
 
         $groupResult = $this->queryBuilder->getQuery()->getArrayResult();
 
         $result = [];
-        foreach ($nonGroupResult as $item) {
-            $result[] = \array_merge($item, $groupResult[$item[$this->idField->getName()]] ?? []);
+        $primaryResult = $sortFieldIsGrouped ? $groupResult : $nonGroupResult;
+        $secondaryResult = $sortFieldIsGrouped ? $nonGroupResult : $groupResult;
+
+        foreach ($primaryResult as $item) {
+            $result[] = \array_merge($item, $secondaryResult[$item[$this->idField->getName()]] ?? []);
         }
 
         return $result;
@@ -332,6 +343,8 @@ class DoctrineListBuilder extends AbstractListBuilder
         // group by
         $this->assignGroupBy($queryBuilder);
 
+        $this->assignSortFields($queryBuilder);
+
         $queryBuilder->distinct($this->distinct);
 
         return $queryBuilder;
@@ -360,7 +373,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         }
 
         // assign sort-fields
-        $this->assignSortFields($queryBuilder);
+        $this->assignSortFields($queryBuilder, false);
 
         $queryBuilder->distinct($this->distinct);
 
@@ -380,9 +393,13 @@ class DoctrineListBuilder extends AbstractListBuilder
             $subQueryBuilder->setMaxResults((int) $this->limit)->setFirstResult((int) ($this->limit * ($this->page - 1)));
         }
 
-        foreach ($this->sortFields as $index => $sortField) {
+        foreach ($this->sortFields as $sortField) {
             if ($sortField->getName() !== $this->idField->getName()) {
                 $subQueryBuilder->addSelect($this->getSelectAs($sortField));
+
+                if ($this->isGroupingFieldDescriptor($sortField)) {
+                    $subQueryBuilder->addGroupBy($this->idField->getSelect());
+                }
             }
         }
 
@@ -422,7 +439,7 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @param QueryBuilder $queryBuilder
      */
-    protected function assignSortFields($queryBuilder)
+    protected function assignSortFields($queryBuilder, bool $includeGroupBy = true)
     {
         // if no sort has been assigned add order by id ASC as default
         if (0 === \count($this->sortFields)) {
@@ -431,6 +448,10 @@ class DoctrineListBuilder extends AbstractListBuilder
 
         foreach ($this->sortFields as $index => $sortField) {
             $statement = $this->getSelectAs($sortField);
+            if (!$includeGroupBy && $this->isGroupingFieldDescriptor($sortField)) {
+                continue;
+            }
+
             if (!$this->hasSelectStatement($queryBuilder, $statement)) {
                 $queryBuilder->addSelect($this->getSelectAs($sortField, true));
             }
@@ -528,13 +549,16 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @return DoctrineFieldDescriptorInterface[]
      */
-    protected function getAllFields($onlyReturnFilterFields = false)
+    protected function getAllFields(bool $onlyReturnFilterFields = false, bool $returnSortFields = true)
     {
         $fields = \array_merge(
             $this->searchFields,
-            $this->sortFields,
             $this->getUniqueExpressionFieldDescriptors($this->expressions)
         );
+
+        if ($returnSortFields) {
+            $fields = \array_merge($fields, $this->sortFields);
+        }
 
         if (true !== $onlyReturnFilterFields) {
             $fields = \array_merge($fields, $this->selectFields);
@@ -550,10 +574,10 @@ class DoctrineListBuilder extends AbstractListBuilder
      *
      * @return QueryBuilder
      */
-    protected function createSubQueryBuilder(string $select)
+    protected function createSubQueryBuilder(string $select, bool $includeSortFields = true)
     {
         // get all filter-fields
-        $filterFields = $this->getAllFields(true);
+        $filterFields = $this->getAllFields(true, $includeSortFields);
 
         // get entity names
         $entityNames = $this->getEntityNamesOfFieldDescriptors($filterFields);
@@ -884,10 +908,7 @@ class DoctrineListBuilder extends AbstractListBuilder
         return $select . $field->getName();
     }
 
-    /**
-     * @return bool
-     */
-    protected function isGroupingFieldDescriptor(DoctrineFieldDescriptorInterface $field)
+    protected function isGroupingFieldDescriptor(FieldDescriptorInterface $field): bool
     {
         return $field instanceof DoctrineCountFieldDescriptor
             || $field instanceof DoctrineGroupConcatFieldDescriptor;

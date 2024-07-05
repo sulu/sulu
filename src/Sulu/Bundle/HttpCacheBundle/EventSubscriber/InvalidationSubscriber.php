@@ -44,66 +44,18 @@ class InvalidationSubscriber implements EventSubscriberInterface
     public const HTTP_CACHE_INVALIDATION_OPTION = 'http_cache_invalidation';
 
     /**
-     * @var null|CacheManager
-     */
-    private $cacheManager;
-
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var TagManagerInterface
-     */
-    private $tagManager;
-
-    /**
-     * @var string
-     */
-    private $environment;
-
-    /**
      * @param string $environment - kernel envionment, dev, prod, etc
      */
     public function __construct(
-        ?CacheManager $cacheManager,
-        StructureManagerInterface $structureManager,
-        DocumentInspector $documentInspector,
-        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
-        WebspaceManagerInterface $webspaceManager,
-        RequestStack $requestStack,
-        TagManagerInterface $tagManager,
-        $environment
+        private ?CacheManager $cacheManager,
+        private StructureManagerInterface $structureManager,
+        private DocumentInspector $documentInspector,
+        private ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
+        private WebspaceManagerInterface $webspaceManager,
+        private RequestStack $requestStack,
+        private TagManagerInterface $tagManager,
+        private ?string $environment
     ) {
-        $this->cacheManager = $cacheManager;
-        $this->structureManager = $structureManager;
-        $this->documentInspector = $documentInspector;
-        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
-        $this->webspaceManager = $webspaceManager;
-        $this->requestStack = $requestStack;
-        $this->tagManager = $tagManager;
-        $this->environment = $environment;
     }
 
     public static function getSubscribedEvents()

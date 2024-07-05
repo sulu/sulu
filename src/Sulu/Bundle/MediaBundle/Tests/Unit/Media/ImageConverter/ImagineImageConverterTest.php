@@ -310,9 +310,7 @@ class ImagineImageConverterTest extends TestCase
         $this->assertEquals('jpg', $this->imagineImageConverter->getSupportedOutputImageFormats('image/ico')[0]);
     }
 
-    /**
-     * @dataProvider getSimpleExtensionsByMimeTypes
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getSimpleExtensionsByMimeTypes')]
     public function testSupportedOutputFormatsWithSimpleValidMimeType(string $mimeType, string $extension): void
     {
         $result = \array_unique([
@@ -327,7 +325,7 @@ class ImagineImageConverterTest extends TestCase
         $this->assertEquals($result, $this->imagineImageConverter->getSupportedOutputImageFormats($mimeType));
     }
 
-    public function getSimpleExtensionsByMimeTypes(): \Generator
+    public static function getSimpleExtensionsByMimeTypes(): \Generator
     {
         yield ['image/png', 'png'];
         yield ['image/webp', 'webp'];
@@ -335,19 +333,16 @@ class ImagineImageConverterTest extends TestCase
         yield ['image/avif', 'avif'];
     }
 
-    /**
-     * @dataProvider getSvgMimeTypes
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getSvgMimeTypes')]
     public function testSupportedOutputFormatsWithValidSvgMimeType(string $mimeType): void
     {
         $this->assertEquals('svg', $this->imagineImageConverter->getSupportedOutputImageFormats($mimeType)[0]);
     }
 
     /**
-     * @dataProvider getSvgMimeTypes
-     *
      * @throws \ReflectionException
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getSvgMimeTypes')]
     public function testSupportedOutputFormatsWithValidSvgMimeTypeWithoutSvhImagine(string $mimeType): void
     {
         $reflection = new \ReflectionClass($this->imagineImageConverter);
@@ -357,7 +352,7 @@ class ImagineImageConverterTest extends TestCase
         $this->assertEquals('png', $this->imagineImageConverter->getSupportedOutputImageFormats($mimeType)[0]);
     }
 
-    public function getSvgMimeTypes(): \Generator
+    public static function getSvgMimeTypes(): \Generator
     {
         yield ['image/svg+xml'];
         yield ['image/svg'];

@@ -18,15 +18,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class DocumentDomainEventCollectorSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentDomainEventCollectorInterface
-     */
-    private $documentDomainEventCollector;
-
     public function __construct(
-        DocumentDomainEventCollectorInterface $documentDomainEventCollector
+        private DocumentDomainEventCollectorInterface $documentDomainEventCollector
     ) {
-        $this->documentDomainEventCollector = $documentDomainEventCollector;
     }
 
     public static function getSubscribedEvents()

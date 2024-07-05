@@ -24,31 +24,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'sulu:content:cleanup-history', description: 'Cleanup resource-locator history')]
 class CleanupHistoryCommand extends Command
 {
-    /**
-     * @var SessionManagerInterface
-     */
-    private $sessionManager;
-
-    /**
-     * @var SessionInterface
-     */
-    private $defaultSession;
-
-    /**
-     * @var SessionInterface
-     */
-    private $liveSession;
-
     public function __construct(
-        SessionManagerInterface $sessionManager,
-        SessionInterface $defaultSession,
-        SessionInterface $liveSession
+        private SessionManagerInterface $sessionManager,
+        private SessionInterface $defaultSession,
+        private SessionInterface $liveSession
     ) {
         parent::__construct();
-
-        $this->sessionManager = $sessionManager;
-        $this->defaultSession = $defaultSession;
-        $this->liveSession = $liveSession;
     }
 
     public function configure()

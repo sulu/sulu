@@ -47,7 +47,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     private $medias = [];
 
     /**
-     * @var array
+     * @var array<string>
      */
     private $tagData = [
         'Tag-0',
@@ -57,7 +57,13 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     ];
 
     /**
-     * @var array
+     * @var array<array{
+     *     0: string,
+     *     1: int,
+     *     2: string,
+     *     3: string,
+     *     4: array<int>,
+     * }>
      */
     private static $mediaData = [
         ['Bild 1', 1, 'image/jpg', 'image', [0, 1, 2]],
@@ -71,7 +77,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     ];
 
     /**
-     * @var array
+     * @var array<string>
      */
     private $mediaTypeData = ['image', 'video', 'document'];
 
@@ -81,7 +87,10 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     private $mediaTypes = [];
 
     /**
-     * @var array
+     * @var array<array{
+     *     0: string,
+     *     1: ?int,
+     * }>
      */
     private $collectionData = [
         ['Test-2', null],
@@ -117,7 +126,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         $this->em->flush();
     }
 
-    private function createCollection($name, $parent = null)
+    private function createCollection($name, $parent = null): Collection
     {
         $collection = new Collection();
         $collectionType = new CollectionType();
@@ -145,10 +154,8 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
 
     /**
      * @param string $name
-     *
-     * @return TargetGroup
      */
-    public function createTargetGroup($name)
+    public function createTargetGroup($name): TargetGroup
     {
         $targetGroup = new TargetGroup();
         $targetGroup->setTitle($name);
@@ -159,7 +166,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         return $targetGroup;
     }
 
-    private function createType($name)
+    private function createType($name): MediaType
     {
         $type = new MediaType();
         $type->setName($name);
@@ -169,7 +176,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         return $type;
     }
 
-    private function createTag($name)
+    private function createTag($name): TagInterface
     {
         $tag = $this->em->getRepository(TagInterface::class)->createNew();
         $tag->setName($name);
@@ -179,7 +186,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         return $tag;
     }
 
-    private function createMedia($title, $collection, $mimeType, $type, $tags = [], $targetGroups = [])
+    private function createMedia($title, $collection, $mimeType, $type, $tags = [], $targetGroups = []): Media
     {
         $media = new Media();
         $file = new File();
@@ -214,7 +221,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         return $media;
     }
 
-    private function createRole($name, $system)
+    private function createRole($name, $system): Role
     {
         $role = new Role();
         $role->setName($name);
@@ -225,7 +232,7 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         return $role;
     }
 
-    private function createAccessControl($entityClass, $id, $permissions, Role $role)
+    private function createAccessControl($entityClass, $id, $permissions, Role $role): AccessControl
     {
         $accessControl = new AccessControl();
         $accessControl->setPermissions($permissions);
@@ -237,7 +244,33 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         return $accessControl;
     }
 
-    public function findByProvider()
+    /**
+     * @return iterable<array{
+     *     0: array{
+     *         dataSource?: mixed,
+     *         tags?: array<int>,
+     *         tagOperator?: string,
+     *         websiteTags?: array<int>,
+     *         websiteTagsOperator?: string,
+     *         sortBy?: string,
+     *         sortMethod?: string,
+     *         includeSubFolders?: bool|string
+     *     },
+     *     1: ?int,
+     *     2: ?int,
+     *     3: ?int,
+     *     4: array<array{
+     *         0: string,
+     *         1: int,
+     *         2: string,
+     *         3: string,
+     *         4: array<int>,
+     *     }>,
+     *     5?: array<int>,
+     *     6?: array<string, mixed>,
+     * }>
+     */
+    public static function findByProvider(): iterable
     {
         // when pagination is active the result count is pageSize + 1 to determine has next page
 
@@ -572,8 +605,30 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     }
 
     /**
-     * @dataProvider findByProvider
+     * @param array{
+     *     dataSource: mixed,
+     *     tags?: array<int>,
+     *     tagOperator?: string,
+     *     websiteTags?: array<int>,
+     *     websiteTagsOperator?: string,
+     *     sortBy?: string,
+     *     sortMethod?: string,
+     *     includeSubFolders?: bool|string
+     * } $filters
+     * @param int|null $page
+     * @param int|null $pageSize
+     * @param int|null $limit
+     * @param array<array{
+     *      0: string,
+     *      1: int,
+     *      2: string,
+     *      3: string,
+     *      4: array<int>,
+     * }> $expected
+     * @param array<int> $tags
+     * @param array<string, mixed> $options
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('findByProvider')]
     public function testFindByFilters($filters, $page, $pageSize, $limit, $expected, $tags = [], $options = []): void
     {
         foreach ($this->collectionData as $collection) {
@@ -642,7 +697,13 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
         }
     }
 
-    public static function provideFindByFiltersWithAudienceTargeting()
+    /**
+     * @return iterable<array{
+     *     0: int|null,
+     *     1: int[],
+     * }>
+     */
+    public static function provideFindByFiltersWithAudienceTargeting(): iterable
     {
         return [
             [null, [0, 1, 2, 3]],
@@ -652,9 +713,10 @@ class MediaDataProviderRepositoryTest extends SuluTestCase
     }
 
     /**
-     * @dataProvider provideFindByFiltersWithAudienceTargeting
+     * @param int[] $expectedIndexes
      */
-    public function testFindByFiltersWithAudienceTargeting($targetGroupIndex, $expectedIndexes): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideFindByFiltersWithAudienceTargeting')]
+    public function testFindByFiltersWithAudienceTargeting(?int $targetGroupIndex, array $expectedIndexes): void
     {
         /** @var TargetGroupInterface[] $targetGroups */
         $targetGroups = [];

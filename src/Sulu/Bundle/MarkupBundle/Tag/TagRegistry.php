@@ -17,16 +17,10 @@ namespace Sulu\Bundle\MarkupBundle\Tag;
 class TagRegistry implements TagRegistryInterface
 {
     /**
-     * @var TagInterface[]
-     */
-    private $tags;
-
-    /**
      * @param TagInterface[] $tags
      */
-    public function __construct(array $tags)
+    public function __construct(private array $tags)
     {
-        $this->tags = $tags;
     }
 
     public function getTag($name, $type, $namespace = 'sulu')

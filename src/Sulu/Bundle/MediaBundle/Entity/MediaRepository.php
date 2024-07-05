@@ -91,16 +91,26 @@ class MediaRepository extends EntityRepository implements MediaRepositoryInterfa
         }
     }
 
-    public function findMediaByIdForRendering($id, $formatKey)
+    public function findMediaByIdForRendering($id, $formatKey /*, $version = null */)
     {
+        $version = \func_num_args() > 2 ? \func_get_arg(2) : null;
+
         try {
             $queryBuilder = $this->createQueryBuilder('media')
                 ->leftJoin('media.files', 'file')
-                ->leftJoin('file.fileVersions', 'fileVersion', Join::WITH, 'file.version = fileVersion.version')
                 ->addSelect('file')
-                ->addSelect('fileVersion')
                 ->where('media.id = :mediaId')
                 ->setParameter('mediaId', $id);
+
+            $fileVersionJoinCondition = 'file.version = fileVersion.version';
+            if (null !== $version) {
+                $fileVersionJoinCondition = 'fileVersion.version IN (:version, fileVersion.version)'; // for the x-robots canonical we require latest version and old version
+                $queryBuilder->setParameter('version', $version);
+            }
+
+            $queryBuilder
+                ->addSelect('fileVersion')
+                ->leftJoin('file.fileVersions', 'fileVersion', Join::WITH, $fileVersionJoinCondition);
 
             if (null !== $formatKey) {
                 $queryBuilder

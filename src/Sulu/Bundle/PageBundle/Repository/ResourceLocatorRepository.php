@@ -23,16 +23,6 @@ use Sulu\Component\Content\Types\ResourceLocator\Strategy\ResourceLocatorStrateg
 class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
 {
     /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
-
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
-
-    /**
      * @var string[]
      */
     private $apiBasePath = [
@@ -42,11 +32,9 @@ class ResourceLocatorRepository implements ResourceLocatorRepositoryInterface
     ];
 
     public function __construct(
-        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
-        StructureManagerInterface $structureManager
+        private ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
+        private StructureManagerInterface $structureManager,
     ) {
-        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
-        $this->structureManager = $structureManager;
     }
 
     public function generate($parts, $parentUuid, $webspaceKey, $languageCode, $templateKey, $segmentKey = null)

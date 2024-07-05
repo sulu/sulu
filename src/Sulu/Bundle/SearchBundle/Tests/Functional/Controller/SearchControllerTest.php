@@ -198,9 +198,7 @@ class SearchControllerTest extends SuluTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideSearch
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSearch')]
     public function testSearch($params, $expectedResult): void
     {
         foreach ($expectedResult['_embedded']['result'] as &$hitResult) {

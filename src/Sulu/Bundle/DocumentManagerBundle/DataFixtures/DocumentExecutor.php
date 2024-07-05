@@ -26,22 +26,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DocumentExecutor
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var Initializer
-     */
-    private $initializer;
-
     public function __construct(
-        DocumentManagerInterface $documentManager,
-        Initializer $initializer
+        private DocumentManagerInterface $documentManager,
+        private Initializer $initializer
     ) {
-        $this->documentManager = $documentManager;
-        $this->initializer = $initializer;
     }
 
     /**

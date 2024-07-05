@@ -23,22 +23,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class PermissionListener implements EventSubscriberInterface
 {
-    /**
-     * @var FileVersionMetaRepository
-     */
-    private $fileVersionMetaRepository;
-
-    /**
-     * @var SearchManagerInterface
-     */
-    private $searchManager;
-
     public function __construct(
-        FileVersionMetaRepository $fileVersionMetaRepository,
-        SearchManagerInterface $searchManager
+        private FileVersionMetaRepository $fileVersionMetaRepository,
+        private SearchManagerInterface $searchManager,
     ) {
-        $this->fileVersionMetaRepository = $fileVersionMetaRepository;
-        $this->searchManager = $searchManager;
     }
 
     public static function getSubscribedEvents(): array

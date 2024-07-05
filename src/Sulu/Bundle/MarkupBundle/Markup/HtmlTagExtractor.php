@@ -23,16 +23,10 @@ class HtmlTagExtractor implements TagExtractorInterface
     public const TAG_REGEX = '/(?<tag><%1$s-(?<name>[a-z]+)(?<attributes>(?:(?!>|\/>).)*)(?:\/>|>(?<content>(?:(?!<\/%1$s-\2>).)*)<\/%1$s-\2>))/s';
 
     /**
-     * @var string
-     */
-    private $namespace;
-
-    /**
      * @param string $namespace
      */
-    public function __construct($namespace)
+    public function __construct(private $namespace)
     {
-        $this->namespace = $namespace;
     }
 
     public function count($html)

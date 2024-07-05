@@ -24,22 +24,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'sulu:media:type:update', description: 'Update all media type by the set configuration')]
 class MediaTypeUpdateCommand extends Command
 {
-    /**
-     * @var TypeManagerInterface
-     */
-    private $mediaTypeManager;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    public function __construct(TypeManagerInterface $mediaTypeManager, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private TypeManagerInterface $mediaTypeManager,
+        private EntityManagerInterface $entityManager,
+    ) {
         parent::__construct();
-
-        $this->mediaTypeManager = $mediaTypeManager;
-        $this->entityManager = $entityManager;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

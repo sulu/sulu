@@ -28,22 +28,17 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class RegisterListenersPass implements CompilerPassInterface
 {
-    protected $dispatcherService;
-    protected $listenerTag;
-    protected $subscriberTag;
-    protected $eventAliasesParameter;
-
     private $hotPathEvents = [];
     private $hotPathTagName = 'container.hot_path';
     private $noPreloadEvents = [];
     private $noPreloadTagName = 'container.no_preload';
 
-    public function __construct(string $dispatcherService = 'event_dispatcher', string $listenerTag = 'kernel.event_listener', string $subscriberTag = 'kernel.event_subscriber', string $eventAliasesParameter = 'event_dispatcher.event_aliases')
-    {
-        $this->dispatcherService = $dispatcherService;
-        $this->listenerTag = $listenerTag;
-        $this->subscriberTag = $subscriberTag;
-        $this->eventAliasesParameter = $eventAliasesParameter;
+    public function __construct(
+        private string $dispatcherService = 'event_dispatcher',
+        private string $listenerTag = 'kernel.event_listener',
+        private string $subscriberTag = 'kernel.event_subscriber',
+        private string $eventAliasesParameter = 'event_dispatcher.event_aliases',
+    ) {
     }
 
     /**

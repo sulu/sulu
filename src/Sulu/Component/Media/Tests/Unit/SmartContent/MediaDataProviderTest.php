@@ -262,9 +262,7 @@ class MediaDataProviderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataItemsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataItemsDataProvider')]
     public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items): void
     {
         $this->dataProviderRepository
@@ -347,7 +345,7 @@ class MediaDataProviderTest extends TestCase
         $this->assertEquals($dataItems, $result->getItems());
     }
 
-    public function resourceItemsDataProvider()
+    public static function resourceItemsDataProvider()
     {
         $medias = [
             self::createMedia(1, 'Test-1'),
@@ -370,9 +368,7 @@ class MediaDataProviderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider resourceItemsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('resourceItemsDataProvider')]
     public function testResolveResourceItems(
         $filters,
         $limit,

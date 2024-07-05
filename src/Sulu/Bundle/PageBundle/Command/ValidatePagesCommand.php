@@ -28,38 +28,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand(name: 'sulu:content:validate', description: 'Dumps pages without valid templates')]
 class ValidatePagesCommand extends Command
 {
-    /**
-     * @var SessionInterface
-     */
-    private $session;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
-
-    /**
-     * @var WebspaceStructureProviderInterface
-     */
-    private $structureProvider;
-
     public function __construct(
-        SessionInterface $session,
-        WebspaceManagerInterface $webspaceManager,
-        StructureManagerInterface $structureManager,
-        WebspaceStructureProviderInterface $structureProvider
+        private SessionInterface $session,
+        private WebspaceManagerInterface $webspaceManager,
+        private StructureManagerInterface $structureManager,
+        private WebspaceStructureProviderInterface $structureProvider
     ) {
         parent::__construct();
-
-        $this->session = $session;
-        $this->webspaceManager = $webspaceManager;
-        $this->structureManager = $structureManager;
-        $this->structureProvider = $structureProvider;
     }
 
     protected function configure()

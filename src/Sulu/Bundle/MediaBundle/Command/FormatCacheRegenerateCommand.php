@@ -24,31 +24,12 @@ use Symfony\Component\Finder\SplFileInfo;
 #[AsCommand(name: 'sulu:media:regenerate-formats', description: 'Loops over sulu image cache, and regenerates the existing images')]
 class FormatCacheRegenerateCommand extends Command
 {
-    /**
-     * @var Filesystem
-     */
-    private $fileSystem;
-
-    /**
-     * @var FormatManagerInterface
-     */
-    private $formatManager;
-
-    /**
-     * @var string
-     */
-    private $localFormatCachePath;
-
     public function __construct(
-        Filesystem $filesystem,
-        FormatManagerInterface $formatManager,
-        string $localFormatCachePath
+        private Filesystem $filesystem,
+        private FormatManagerInterface $formatManager,
+        private string $localFormatCachePath
     ) {
         parent::__construct();
-
-        $this->fileSystem = $filesystem;
-        $this->formatManager = $formatManager;
-        $this->localFormatCachePath = $localFormatCachePath;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

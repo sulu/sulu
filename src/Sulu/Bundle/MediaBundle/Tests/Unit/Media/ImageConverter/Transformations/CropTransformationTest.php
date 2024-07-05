@@ -19,7 +19,19 @@ class CropTransformationTest extends AbstractTransformation
 {
     protected $transformationServiceName = 'sulu_media.image.transformation.crop';
 
-    protected function getDataList()
+    /**
+     * @return array<array{
+     *     options: array{
+     *         x: int,
+     *         y: int,
+     *         w: int,
+     *         h: int,
+     *     },
+     *     width: int,
+     *     height: int,
+     * }>
+     */
+    protected function getDataList(): array
     {
         return [
             [

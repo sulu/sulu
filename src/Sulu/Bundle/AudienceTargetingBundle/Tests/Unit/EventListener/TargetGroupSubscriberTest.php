@@ -103,9 +103,7 @@ class TargetGroupSubscriberTest extends TestCase
         $targetGroupSubscriber->setTargetGroup($event);
     }
 
-    /**
-     * @dataProvider provideSetTargetGroupFromHeader
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSetTargetGroupFromHeader')]
     public function testSetTargetGroupFromHeader(
         $targetGroupHeader,
         $headerTargetGroup,
@@ -150,9 +148,7 @@ class TargetGroupSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideSetTargetGroupFromCookie
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSetTargetGroupFromCookie')]
     public function testSetTargetGroupFromCookie(
         $targetGroupCookie,
         $visitorSessionCookie,
@@ -219,9 +215,7 @@ class TargetGroupSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideSetTargetGroupFromEvaluation
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSetTargetGroupFromEvaluation')]
     public function testSetTargetGroupFromEvaluation($evaluatedTargetGroup, $result): void
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
@@ -297,9 +291,7 @@ class TargetGroupSubscriberTest extends TestCase
         $targetGroupSubscriber->setTargetGroup($event);
     }
 
-    /**
-     * @dataProvider provideAddVaryHeader
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideAddVaryHeader')]
     public function testAddVaryHeader($targetGroupUrl, $requestUrl, $hasInfluencedContent, $header, $varyHeaders): void
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
@@ -328,6 +320,15 @@ class TargetGroupSubscriberTest extends TestCase
         $this->assertEquals($varyHeaders, $response->getVary());
     }
 
+    /**
+     * @return iterable<array{
+     *     0: string,
+     *     1: string,
+     *     2: bool,
+     *     3: string,
+     *     4: string[],
+     * }>
+     */
     public static function provideAddVaryHeader()
     {
         return [
@@ -339,10 +340,8 @@ class TargetGroupSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideAddSetCookieHeader
-     */
-    public function testAddSetCookieHeader($targetGroupCookie, $visitorSession, $hasChanged, $url, $cookieValue): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideAddSetCookieHeader')]
+    public function testAddSetCookieHeader(string $targetGroupCookie, string $visitorSession, bool $hasChanged, string $url, ?int $cookieValue): void
     {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
@@ -381,7 +380,16 @@ class TargetGroupSubscriberTest extends TestCase
         }
     }
 
-    public static function provideAddSetCookieHeader()
+    /**
+     * @return iterable<array{
+     *     0: string,
+     *     1: string,
+     *     2: bool,
+     *     3: string,
+     *     4: int|null,
+     * }>
+     */
+    public static function provideAddSetCookieHeader(): iterable
     {
         return [
             ['sulu-visitor-target-group', 'visitor-session', false, '/_target_group_hit', null],
@@ -391,15 +399,13 @@ class TargetGroupSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideAddTargetGroupHitScript
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideAddTargetGroupHitScript')]
     public function testAddTargetGroupHitScript(
-        $targetGroupHitUrl,
-        $forwardedUrlHeader,
-        $forwardedRefererHeader,
-        $forwardedUuidHeader,
-        $uuid
+        string $targetGroupHitUrl,
+        string $forwardedUrlHeader,
+        string $forwardedRefererHeader,
+        string $forwardedUuidHeader,
+        ?string $uuid
     ): void {
         $targetGroupSubscriber = new TargetGroupSubscriber(
             $this->twig->reveal(),
@@ -417,7 +423,7 @@ class TargetGroupSubscriberTest extends TestCase
             'visitor-session'
         );
         $request = new Request();
-        if ($uuid) {
+        if (null !== $uuid) {
             $structureBridge = $this->prophesize(StructureBridge::class);
             $structureBridge->getUuid()->willReturn($uuid);
             $request->attributes->set('structure', $structureBridge->reveal());
@@ -441,7 +447,16 @@ class TargetGroupSubscriberTest extends TestCase
         $this->assertEquals('<body><script></script></body>', $response->getContent());
     }
 
-    public static function provideAddTargetGroupHitScript()
+    /**
+     * @return iterable<array{
+     *     0: string,
+     *     1: string,
+     *     2: string,
+     *     3: string,
+     *     4: string|null,
+     * }>
+     */
+    public static function provideAddTargetGroupHitScript(): iterable
     {
         return [
             ['/_target_group_hit', 'X-Forwarded-URL', 'X-Fowarded-Referer', 'X-Forwarded-UUID', 'some-uuid'],

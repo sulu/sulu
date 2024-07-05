@@ -25,53 +25,17 @@ class PageRule implements RuleInterface
     public const PAGE = 'page';
 
     /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var ResourceLocatorStrategyPoolInterface
-     */
-    private $resourceLocatorStrategyPool;
-
-    /**
-     * @var string
-     */
-    private $uuidHeader;
-
-    /**
-     * @var string
-     */
-    private $urlHeader;
-
-    /**
      * @param string $uuidHeader
      * @param string $urlHeader
      */
     public function __construct(
-        RequestStack $requestStack,
-        RequestAnalyzerInterface $requestAnalyzer,
-        TranslatorInterface $translator,
-        ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
-        $uuidHeader,
-        $urlHeader
+        private RequestStack $requestStack,
+        private RequestAnalyzerInterface $requestAnalyzer,
+        private TranslatorInterface $translator,
+        private ResourceLocatorStrategyPoolInterface $resourceLocatorStrategyPool,
+        private $uuidHeader,
+        private $urlHeader,
     ) {
-        $this->requestStack = $requestStack;
-        $this->requestAnalyzer = $requestAnalyzer;
-        $this->translator = $translator;
-        $this->resourceLocatorStrategyPool = $resourceLocatorStrategyPool;
-        $this->uuidHeader = $uuidHeader;
-        $this->urlHeader = $urlHeader;
     }
 
     public function evaluate(array $options)

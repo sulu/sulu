@@ -24,20 +24,10 @@ use Sulu\Component\DocumentManager\DocumentRegistry;
  */
 class ShadowLocaleSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
-     * @var DocumentRegistry
-     */
-    private $documentRegistry;
-
-    public function __construct(DocumentInspector $documentInspector, DocumentRegistry $documentRegistry)
-    {
-        $this->documentInspector = $documentInspector;
-        $this->documentRegistry = $documentRegistry;
+    public function __construct(
+        private DocumentInspector $documentInspector,
+        private DocumentRegistry $documentRegistry,
+    ) {
     }
 
     public static function getSubscribedEvents()

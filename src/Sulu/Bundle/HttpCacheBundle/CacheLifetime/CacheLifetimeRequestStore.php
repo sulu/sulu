@@ -17,14 +17,8 @@ class CacheLifetimeRequestStore
 {
     public const ATTRIBUTE_KEY = '_cacheLifetime';
 
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    public function __construct(RequestStack $requestStack)
+    public function __construct(private RequestStack $requestStack)
     {
-        $this->requestStack = $requestStack;
     }
 
     public function setCacheLifetime(int $cacheLifetime)

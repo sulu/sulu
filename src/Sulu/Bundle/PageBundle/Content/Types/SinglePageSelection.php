@@ -22,17 +22,10 @@ use Sulu\Component\Content\SimpleContentType;
  */
 class SinglePageSelection extends SimpleContentType implements PreResolvableContentTypeInterface
 {
-    /**
-     * @var ReferenceStoreInterface
-     */
-    private $referenceStore;
-
     public function __construct(
-        ReferenceStoreInterface $referenceStore
+        private ReferenceStoreInterface $referenceStore
     ) {
         parent::__construct('SinglePageSelection', '');
-
-        $this->referenceStore = $referenceStore;
     }
 
     public function write(

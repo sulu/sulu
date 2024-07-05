@@ -20,22 +20,11 @@ use Symfony\Component\Filesystem\Filesystem;
 #[AsCommand(name: 'sulu:media:init', description: 'Init Sulu Media Bundle')]
 class InitCommand extends Command
 {
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    /**
-     * @var string
-     */
-    private $formatCacheDir;
-
-    public function __construct(Filesystem $filesystem, string $formatCacheDir)
-    {
+    public function __construct(
+        private Filesystem $filesystem,
+        private string $formatCacheDir,
+    ) {
         parent::__construct();
-
-        $this->filesystem = $filesystem;
-        $this->formatCacheDir = $formatCacheDir;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

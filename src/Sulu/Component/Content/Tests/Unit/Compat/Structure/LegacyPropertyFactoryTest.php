@@ -165,9 +165,8 @@ class LegacyPropertyFactoryTest extends TestCase
 
     /**
      * It should create a translated property.
-     *
-     * @depends testCreateProperty
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testCreateProperty')]
     public function testCreateTranslated(): void
     {
         $this->setUpProperty($this->property1);
@@ -180,10 +179,9 @@ class LegacyPropertyFactoryTest extends TestCase
     /**
      * It should create a section property.
      *
-     * @depends testCreateProperty
-     *
      * @param ObjectProphecy<PropertyMetadata> $property
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testCreateProperty')]
     public function testCreateSection(ObjectProphecy $property): void
     {
         $name = 'foo';
@@ -214,10 +212,9 @@ class LegacyPropertyFactoryTest extends TestCase
     /**
      * It should create a block property.
      *
-     * @depends testCreateProperty
-     *
      * @param ObjectProphecy<PropertyMetadata> $property
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testCreateProperty')]
     public function testCreateBlock(ObjectProphecy $property): void
     {
         $this->setUpProperty($this->block);
@@ -256,10 +253,9 @@ class LegacyPropertyFactoryTest extends TestCase
     /**
      * It should create a block property.
      *
-     * @depends testCreateProperty
-     *
      * @param ObjectProphecy<PropertyMetadata> $property
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testCreateProperty')]
     public function testCreateBlockWithGlobalBlock(ObjectProphecy $property): void
     {
         $this->setUpProperty($this->block);
@@ -291,9 +287,8 @@ class LegacyPropertyFactoryTest extends TestCase
 
     /**
      * It should create a block property.
-     *
-     * @depends testCreateProperty
      */
+    #[\PHPUnit\Framework\Attributes\Depends('testCreateProperty')]
     public function testCreatePropertyWithTypes($child): void
     {
         $this->setUpProperty($this->property2);

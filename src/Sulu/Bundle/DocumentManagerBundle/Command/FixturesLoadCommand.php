@@ -27,22 +27,16 @@ use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 class FixturesLoadCommand extends Command
 {
     /**
-     * @var DocumentExecutor
-     */
-    private $executor;
-
-    /**
      * @var \Traversable<DocumentFixtureInterface>
      */
     private $fixtures;
 
     public function __construct(
-        DocumentExecutor $executor,
+        private DocumentExecutor $executor,
         ?\Traversable $fixtures = null
     ) {
         parent::__construct();
 
-        $this->executor = $executor;
         $this->fixtures = $fixtures ?: new \ArrayObject([]);
     }
 

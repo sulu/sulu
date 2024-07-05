@@ -27,26 +27,11 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
  */
 class PageObjectProvider implements PreviewObjectProviderInterface
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    public function __construct(DocumentManagerInterface $documentManager, SerializerInterface $serializer, DocumentInspector $documentInspector)
-    {
-        $this->documentManager = $documentManager;
-        $this->serializer = $serializer;
-        $this->documentInspector = $documentInspector;
+    public function __construct(
+        private DocumentManagerInterface $documentManager,
+        private SerializerInterface $serializer,
+        private DocumentInspector $documentInspector,
+    ) {
     }
 
     public function getObject($id, $locale)

@@ -19,23 +19,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class RouteGenerator implements RouteGeneratorInterface
 {
-    /**
-     * @var TokenProviderInterface
-     */
-    private $tokenProvider;
-
-    /**
-     * @var SlugifierInterface
-     */
-    private $slugifier;
-
-    /**
-     * RouteGenerator constructor.
-     */
-    public function __construct(TokenProviderInterface $tokenProvider, SlugifierInterface $slugifier)
-    {
-        $this->tokenProvider = $tokenProvider;
-        $this->slugifier = $slugifier;
+    public function __construct(
+        private TokenProviderInterface $tokenProvider,
+        private SlugifierInterface $slugifier,
+    ) {
     }
 
     public function generate($entity, array $options)

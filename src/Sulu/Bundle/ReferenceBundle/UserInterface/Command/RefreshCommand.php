@@ -28,8 +28,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand(name: 'sulu:reference:refresh')]
 class RefreshCommand extends Command
 {
-    protected static $defaultName = 'sulu:reference:refresh';
-
     /**
      * @param iterable<ReferenceRefresherInterface> $referenceRefreshers
      */

@@ -23,22 +23,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class MediaPermissionsSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
-
-    /**
-     * @var TokenStorageInterface
-     */
-    private $tokenStorage;
-
     public function __construct(
-        AccessControlManagerInterface $accessControlManagerInterface,
-        TokenStorageInterface $tokenStorage
+        private AccessControlManagerInterface $accessControlManager,
+        private TokenStorageInterface $tokenStorage,
     ) {
-        $this->accessControlManager = $accessControlManagerInterface;
-        $this->tokenStorage = $tokenStorage;
     }
 
     /**

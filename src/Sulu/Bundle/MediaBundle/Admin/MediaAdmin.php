@@ -42,57 +42,15 @@ class MediaAdmin extends Admin
 
     public const EDIT_FORM_HISTORY_VIEW = 'sulu_media.form.history';
 
-    /**
-     * @var ViewBuilderFactoryInterface
-     */
-    private $viewBuilderFactory;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
-
-    /**
-     * @var WebspaceManagerInterface
-     */
-    private $webspaceManager;
-
-    /**
-     * @var ActivityViewBuilderFactoryInterface
-     */
-    private $activityViewBuilderFactory;
-
-    /**
-     * @var ReferenceViewBuilderFactoryInterface
-     */
-    private $referenceViewBuilderFactory;
-
     public function __construct(
-        ViewBuilderFactoryInterface $viewBuilderFactory,
-        SecurityCheckerInterface $securityChecker,
-        LocalizationManagerInterface $localizationManager,
-        UrlGeneratorInterface $urlGenerator,
-        WebspaceManagerInterface $webspaceManager,
-        ActivityViewBuilderFactoryInterface $activityViewBuilderFactory,
-        ReferenceViewBuilderFactoryInterface $referenceViewBuilderFactory
+        private ViewBuilderFactoryInterface $viewBuilderFactory,
+        private SecurityCheckerInterface $securityChecker,
+        private LocalizationManagerInterface $localizationManager,
+        private UrlGeneratorInterface $urlGenerator,
+        private WebspaceManagerInterface $webspaceManager,
+        private ActivityViewBuilderFactoryInterface $activityViewBuilderFactory,
+        private ReferenceViewBuilderFactoryInterface $referenceViewBuilderFactory
     ) {
-        $this->viewBuilderFactory = $viewBuilderFactory;
-        $this->securityChecker = $securityChecker;
-        $this->localizationManager = $localizationManager;
-        $this->urlGenerator = $urlGenerator;
-        $this->webspaceManager = $webspaceManager;
-        $this->activityViewBuilderFactory = $activityViewBuilderFactory;
-        $this->referenceViewBuilderFactory = $referenceViewBuilderFactory;
     }
 
     public function configureNavigationItems(NavigationItemCollection $navigationItemCollection): void

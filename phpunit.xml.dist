@@ -5,19 +5,17 @@
          colors="true"
          failOnIncomplete="true"
          failOnWarning="true"
-         failOnRisky="true"
->
-    <coverage>
+         failOnRisky="true">
+    <source>
         <include>
             <directory>./src/Sulu/Component/</directory>
         </include>
-
         <exclude>
             <directory>./tests</directory>
             <directory>./vendor</directory>
             <directory>./*/Tests</directory>
         </exclude>
-    </coverage>
+    </source>
 
     <testsuites>
         <testsuite name="components">
@@ -31,7 +29,4 @@
         <ini name="date.timezone" value="UTC"/>
     </php>
 
-    <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
-    </listeners>
 </phpunit>

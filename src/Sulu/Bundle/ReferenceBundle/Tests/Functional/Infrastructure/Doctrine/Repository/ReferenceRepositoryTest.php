@@ -118,9 +118,7 @@ class ReferenceRepositoryTest extends SuluTestCase
         $this->assertSame($referenceId, $reference->getId());
     }
 
-    /**
-     * @dataProvider filterProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('filterProvider')]
     public function testFindOneByFilter(string $filterKey): void
     {
         self::purgeDatabase();
@@ -138,9 +136,7 @@ class ReferenceRepositoryTest extends SuluTestCase
         $this->assertSame($referenceId, $reference->getId());
     }
 
-    /**
-     * @dataProvider filterProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('filterProvider')]
     public function testGetOneByFilter(string $filterKey): void
     {
         self::purgeDatabase();
@@ -159,9 +155,7 @@ class ReferenceRepositoryTest extends SuluTestCase
         $this->assertSame($referenceId, $reference->getId());
     }
 
-    /**
-     * @dataProvider filterProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('filterProvider')]
     public function testFindFlatFilter(string $filterKey): void
     {
         self::purgeDatabase();
@@ -336,7 +330,7 @@ class ReferenceRepositoryTest extends SuluTestCase
     /**
      * @return array<int, array<int, string>>
      */
-    public function filterProvider(): array
+    public static function filterProvider(): array
     {
         return [
             ['id'],

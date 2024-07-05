@@ -20,16 +20,10 @@ use Symfony\Component\Routing\RouteCollection;
 class VersionRouteLoader extends Loader
 {
     /**
-     * @var bool
-     */
-    private $enabled;
-
-    /**
      * @param bool $enabled
      */
-    public function __construct($enabled)
+    public function __construct(private $enabled)
     {
-        $this->enabled = $enabled;
     }
 
     /**

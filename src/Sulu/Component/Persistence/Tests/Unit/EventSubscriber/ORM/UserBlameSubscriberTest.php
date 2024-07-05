@@ -210,9 +210,8 @@ class UserBlameSubscriberTest extends TestCase
     /**
      * @param $changeset The changeset for the entity
      * @param $expectedFields List of filds which should be updated/set
-     *
-     * @dataProvider provideLifecycle
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideLifecycle')]
     public function testOnFlush($changeset, $expectedFields, $insert = true): void
     {
         $entity = $this->userBlameObject->reveal();
@@ -257,9 +256,8 @@ class UserBlameSubscriberTest extends TestCase
 
     /**
      * @param $changeset The changeset for the entity
-     *
-     * @dataProvider provideLifecycle
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideLifecycle')]
     public function testOnFlushOtherUser($changeset): void
     {
         $symfonyUser = $this->prophesize(SymfonyUserInterface::class);

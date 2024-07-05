@@ -223,7 +223,7 @@ class ContentMapper implements ContentMapperInterface
         }
 
         // save data of extensions
-        $extension = $this->extensionManager->getExtension($document->getStructureType(), $extensionName);
+        $extension = $this->extensionManager->getExtension((string) $document->getStructureType(), $extensionName);
         $node = $this->inspector->getNode($document);
 
         $extension->save($node, $data, $webspaceKey, $locale);

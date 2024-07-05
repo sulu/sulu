@@ -113,10 +113,12 @@ class CategoryTranslation implements CategoryTranslationInterface
         $medias = [];
 
         foreach ($this->medias as $media) {
-            $medias[] = $media->getMedia();
+            $medias[$media->getPosition()] = $media->getMedia();
         }
 
-        return $medias;
+        \ksort($medias);
+
+        return \array_values($medias);
     }
 
     public function setMedias($medias)

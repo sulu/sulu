@@ -23,20 +23,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class PermissionListener implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var SearchManagerInterface
-     */
-    private $searchManager;
-
-    public function __construct(DocumentManagerInterface $documentManager, SearchManagerInterface $searchManager)
-    {
-        $this->documentManager = $documentManager;
-        $this->searchManager = $searchManager;
+    public function __construct(
+        private DocumentManagerInterface $documentManager,
+        private SearchManagerInterface $searchManager,
+    ) {
     }
 
     public static function getSubscribedEvents(): array
