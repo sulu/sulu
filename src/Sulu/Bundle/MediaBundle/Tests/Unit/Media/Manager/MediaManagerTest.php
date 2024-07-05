@@ -580,7 +580,7 @@ class MediaManagerTest extends TestCase
         ];
     }
 
-    protected static function createMedia($id): Media
+    protected static function createMedia(int $id): Media
     {
         $media = new Media();
         self::setPrivateProperty($media, 'id', $id);
