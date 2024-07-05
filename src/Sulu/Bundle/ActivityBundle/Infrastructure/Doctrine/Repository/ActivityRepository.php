@@ -105,9 +105,9 @@ class ActivityRepository implements ActivityRepositoryInterface
         if (!$classMetadata->idGenerator->isPostInsertGenerator()) {
             $queryBuilder->setValue(
                 $classMetadata->getColumnName('id'),
-                \method_exists($classMetadata->idGenerator, 'generate')
-                    ? $classMetadata->idGenerator->generate($this->entityManager, $activity)
-                    : $classMetadata->idGenerator->generateId($this->entityManager, $activity)
+                \method_exists($classMetadata->idGenerator, 'generateId')
+                    ? $classMetadata->idGenerator->generateId($this->entityManager, $activity)
+                    : $classMetadata->idGenerator->generate($this->entityManager, $activity) // remove when doctrine/orm or greater 2.18 is min version
             );
         }
 
