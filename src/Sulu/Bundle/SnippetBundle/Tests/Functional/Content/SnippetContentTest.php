@@ -94,14 +94,14 @@ class SnippetContentTest extends BaseFunctionalTestCase
     public function testPropertyRead(): void
     {
         $this->property->expects($this->exactly(2))
-            ->method('getName')->will($this->returnValue('i18n:de-hotels'));
+            ->method('getName')->willReturn('i18n:de-hotels');
         $this->property->expects($this->once())
             ->method('setValue')
-            ->will($this->returnCallback(function($snippets): void {
+            ->willReturnCallback(function($snippets): void {
                 foreach ($snippets as $snippet) {
                     $this->assertTrue(UUIDHelper::isUUID($snippet));
                 }
-            }));
+            });
 
         $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $this->contentType->read($pageNode, $this->property, 'sulu_io', 'de', null);
@@ -127,7 +127,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->property->expects($this->once())
             ->method('getValue')
-            ->will($this->returnValue(['ids' => 'this-aint-nuffin']));
+            ->willReturn(['ids' => 'this-aint-nuffin']);
 
         $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $this->contentType->write($pageNode, $this->property, 0, 'sulu_io', 'de', null);
@@ -213,7 +213,7 @@ class SnippetContentTest extends BaseFunctionalTestCase
     public function testRemove(): void
     {
         $this->property->expects($this->any())
-            ->method('getName')->will($this->returnValue('i18n:de-hotels'));
+            ->method('getName')->willReturn('i18n:de-hotels');
 
         $pageNode = $this->session->getNode('/cmf/sulu_io/contents/hotels');
         $this->contentType->remove($pageNode, $this->property, 'sulu_io', 'de', null);
