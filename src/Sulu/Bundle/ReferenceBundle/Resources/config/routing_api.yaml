@@ -1,5 +1,5 @@
 sulu_reference.references:
-    path: /admin/api/references.{_format}
+    path: /references.{_format}
     methods: GET
     controller: sulu_reference.reference_controller:cgetAction
     format: json|csv
