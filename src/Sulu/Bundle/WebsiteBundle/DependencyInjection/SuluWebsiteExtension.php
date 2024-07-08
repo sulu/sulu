@@ -125,6 +125,9 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
+        if ($container->getParameter('%kernel.debug%', false)) {
+            $loader->load('services_debug.xml');
+        }
         $loader->load('sitemap.xml');
         $loader->load('command.xml');
 
