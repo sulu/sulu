@@ -99,24 +99,17 @@ class MediaSelectionContentTypeTest extends TestCase
             ['getValue', 'getParams']
         );
 
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
+        $property->expects($this->any())->method('getName')->willReturn('property');
 
-        $property->expects($this->any())->method('getValue')->will(
-            $this->returnValue(
-                [
-                    'ids' => [1, 2, 3, 4],
-                    'displayOption' => 'right',
-                    'config' => ['conf1' => 1, 'conf2' => 2],
-                ]
-            )
+        $property->expects($this->any())->method('getValue')->willReturn(
+            [
+                'ids' => [1, 2, 3, 4],
+                'displayOption' => 'right',
+                'config' => ['conf1' => 1, 'conf2' => 2],
+            ]
         );
 
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(
-                [
-                ]
-            )
-        );
+        $property->expects($this->any())->method('getParams')->willReturn([]);
 
         $node->expects($this->once())->method('setProperty')->with(
             'property',
@@ -154,25 +147,18 @@ class MediaSelectionContentTypeTest extends TestCase
             ['getValue', 'getParams']
         );
 
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
+        $property->expects($this->any())->method('getName')->willReturn('property');
 
-        $property->expects($this->any())->method('getValue')->will(
-            $this->returnValue(
-                [
-                    'ids' => [1, 2, 3, 4],
-                    'displayOption' => 'right',
-                    'config' => ['conf1' => 1, 'conf2' => 2],
-                    'data' => ['data1', 'data2'],
-                ]
-            )
+        $property->expects($this->any())->method('getValue')->willReturn(
+            [
+                'ids' => [1, 2, 3, 4],
+                'displayOption' => 'right',
+                'config' => ['conf1' => 1, 'conf2' => 2],
+                'data' => ['data1', 'data2'],
+            ]
         );
 
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(
-                [
-                ]
-            )
-        );
+        $property->expects($this->any())->method('getParams')->willReturn([]);
 
         $node->expects($this->once())->method('setProperty')->with(
             'property',
@@ -212,30 +198,19 @@ class MediaSelectionContentTypeTest extends TestCase
             ['setValue', 'getParams']
         );
 
-        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
-            $this->returnValueMap(
+        $node->expects($this->any())->method('getPropertyValueWithDefault')->willReturnMap(
+            [
                 [
-                    [
-                        'property',
-                        '{"ids": []}',
-                        $config,
-                    ],
-                ]
-            )
+                    'property',
+                    '{"ids": []}',
+                    $config,
+                ],
+            ]
         );
 
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
-
-        $property->expects($this->once())->method('setValue')->with(\json_decode($config, true))->will(
-            $this->returnValue(null)
-        );
-
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(
-                [
-                ]
-            )
-        );
+        $property->expects($this->any())->method('getName')->willReturn('property');
+        $property->expects($this->once())->method('setValue')->with(\json_decode($config, true))->willReturn(null);
+        $property->expects($this->any())->method('getParams')->willReturn([]);
 
         $this->mediaSelection->read($node, $property, 'test', 'en', 's');
     }
@@ -264,30 +239,19 @@ class MediaSelectionContentTypeTest extends TestCase
             ['setValue', 'getParams']
         );
 
-        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
-            $this->returnValueMap(
+        $node->expects($this->any())->method('getPropertyValueWithDefault')->willReturnMap(
+            [
                 [
-                    [
-                        'property',
-                        '{"ids": []}',
-                        $config,
-                    ],
-                ]
-            )
+                    'property',
+                    '{"ids": []}',
+                    $config,
+                ],
+            ]
         );
 
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
-
-        $property->expects($this->once())->method('setValue')->with(null)->will(
-            $this->returnValue(null)
-        );
-
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(
-                [
-                ]
-            )
-        );
+        $property->expects($this->any())->method('getName')->willReturn('property');
+        $property->expects($this->once())->method('setValue')->with(null)->willReturn(null);
+        $property->expects($this->any())->method('getParams')->willReturn([]);
 
         $this->mediaSelection->read($node, $property, 'test', 'en', 's');
     }
@@ -316,31 +280,19 @@ class MediaSelectionContentTypeTest extends TestCase
             ['setValue', 'getParams']
         );
 
-        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
-            $this->returnValueMap(
+        $node->expects($this->any())->method('getPropertyValueWithDefault')->willReturnMap(
+            [
                 [
-                    [
-                        'property',
-                        '{"ids": []}',
-                        $config,
-                    ],
-                ]
-            )
+                    'property',
+                    '{"ids": []}',
+                    $config,
+                ],
+            ]
         );
 
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
-
-        $property->expects($this->once())->method('setValue')->with(\json_decode($config, true))->will(
-            $this->returnValue(null)
-        );
-
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(
-                [
-                    'types' => 'document',
-                ]
-            )
-        );
+        $property->expects($this->any())->method('getName')->willReturn('property');
+        $property->expects($this->once())->method('setValue')->with(\json_decode($config, true))->willReturn(null);
+        $property->expects($this->any())->method('getParams')->willReturn(['types' => 'document']);
 
         $this->mediaSelection->read($node, $property, 'test', 'en', 's');
     }
@@ -369,31 +321,19 @@ class MediaSelectionContentTypeTest extends TestCase
             ['setValue', 'getParams']
         );
 
-        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
-            $this->returnValueMap(
+        $node->expects($this->any())->method('getPropertyValueWithDefault')->willReturnMap(
+            [
                 [
-                    [
-                        'property',
-                        '{"ids": []}',
-                        $config,
-                    ],
-                ]
-            )
+                    'property',
+                    '{"ids": []}',
+                    $config,
+                ],
+            ]
         );
 
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
-
-        $property->expects($this->once())->method('setValue')->with(\json_decode($config, true))->will(
-            $this->returnValue(null)
-        );
-
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(
-                [
-                    'types' => 'document,image',
-                ]
-            )
-        );
+        $property->expects($this->any())->method('getName')->willReturn('property');
+        $property->expects($this->once())->method('setValue')->with(\json_decode($config, true))->willReturn(null);
+        $property->expects($this->any())->method('getParams')->willReturn(['types' => 'document,image']);
 
         $this->mediaSelection->read($node, $property, 'test', 'en', 's');
     }

@@ -112,22 +112,18 @@ class TagManagerTest extends TestCase
             false
         );
 
-        $this->tagRepository->expects($this->any())->method('findTagByName')->will($this->returnValueMap(
-            [
-                ['Tag1', (new Tag())->setId(1)],
-                ['Tag2', (new Tag())->setId(2)],
-                ['Tag3', (new Tag())->setId(3)],
-            ]
-        )
+        $this->tagRepository->expects($this->any())->method('findTagByName')->willReturnMap([
+            ['Tag1', (new Tag())->setId(1)],
+            ['Tag2', (new Tag())->setId(2)],
+            ['Tag3', (new Tag())->setId(3)],
+        ]
         );
 
-        $this->tagRepository->expects($this->any())->method('findTagById')->will($this->returnValueMap(
-            [
-                [1, (new Tag())->setName('Tag1')],
-                [2, (new Tag())->setName('Tag2')],
-                [3, (new Tag())->setName('Tag3')],
-            ]
-        )
+        $this->tagRepository->expects($this->any())->method('findTagById')->willReturnMap([
+            [1, (new Tag())->setName('Tag1')],
+            [2, (new Tag())->setName('Tag2')],
+            [3, (new Tag())->setName('Tag3')],
+        ]
         );
 
         $this->tagManager = new TagManager(

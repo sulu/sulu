@@ -117,8 +117,8 @@ class ContentTypeTest extends TestCase
         $this->requestStack = $this->getMockBuilder(RequestStack::class)->getMock();
         $this->request = $this->getMockBuilder(Request::class)->getMock();
 
-        $this->requestStack->expects($this->any())->method('getCurrentRequest')->will(
-            $this->returnValue($this->request)
+        $this->requestStack->expects($this->any())->method('getCurrentRequest')->willReturn(
+            $this->request
         );
 
         $this->tagRequestHandler = $this->prophesize(TagRequestHandlerInterface::class);
@@ -127,22 +127,18 @@ class ContentTypeTest extends TestCase
         $this->categoryRequestHandler = $this->prophesize(CategoryRequestHandlerInterface::class);
         $this->categoryRequestHandler->getCategories('categories')->willReturn([]);
 
-        $this->tagManager->expects($this->any())->method('resolveTagIds')->will(
-            $this->returnValueMap(
-                [
-                    [[1, 2], ['Tag1', 'Tag2']],
-                ]
-            )
+        $this->tagManager->expects($this->any())->method('resolveTagIds')->willReturnMap(
+            [
+                [[1, 2], ['Tag1', 'Tag2']],
+            ]
         );
 
-        $this->tagManager->expects($this->any())->method('resolveTagNames')->will(
-            $this->returnValueMap(
-                [
-                    [['Tag1', 'Tag2'], [1, 2]],
-                    [['Tag1'], [1]],
-                    [['Tag2'], [2]],
-                ]
-            )
+        $this->tagManager->expects($this->any())->method('resolveTagNames')->willReturnMap(
+            [
+                [['Tag1', 'Tag2'], [1, 2]],
+                [['Tag1'], [1]],
+                [['Tag2'], [2]],
+            ]
         );
 
         $this->targetGroupStore = $this->prophesize(TargetGroupStoreInterface::class);
@@ -199,19 +195,17 @@ class ContentTypeTest extends TestCase
             ['getValue']
         );
 
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
+        $property->expects($this->any())->method('getName')->willReturn('property');
 
-        $property->expects($this->any())->method('getValue')->will(
-            $this->returnValue(
-                [
-                    'dataSource' => [
-                        'home/products',
-                    ],
-                    'sortBy' => [
-                        'published',
-                    ],
-                ]
-            )
+        $property->expects($this->any())->method('getValue')->willReturn(
+            [
+                'dataSource' => [
+                    'home/products',
+                ],
+                'sortBy' => [
+                    'published',
+                ],
+            ]
         );
 
         $node->expects($this->once())->method('setProperty')->with(
@@ -270,17 +264,15 @@ class ContentTypeTest extends TestCase
             ['setValue']
         );
 
-        $node->expects($this->any())->method('getPropertyValueWithDefault')->will(
-            $this->returnValueMap(
-                [
-                    ['property', '{}', '{"tags":[1,2],"limitResult":"2"}'],
-                ]
-            )
+        $node->expects($this->any())->method('getPropertyValueWithDefault')->willReturnMap(
+            [
+                ['property', '{}', '{"tags":[1,2],"limitResult":"2"}'],
+            ]
         );
 
-        $property->expects($this->any())->method('getName')->will($this->returnValue('property'));
-        $property->expects($this->any())->method('getParams')->will(
-            $this->returnValue(['properties' => ['my_title' => 'title']])
+        $property->expects($this->any())->method('getName')->willReturn('property');
+        $property->expects($this->any())->method('getParams')->willReturn(
+            ['properties' => ['my_title' => 'title']]
         );
 
         $property->expects($this->exactly(1))->method('setValue')->with($config);
@@ -320,9 +312,9 @@ class ContentTypeTest extends TestCase
             ->willReturn(\array_merge($config, ['page' => 1, 'hasNextPage' => true]));
 
         $property->expects($this->any())->method('getParams')
-            ->will($this->returnValue($parameter));
+            ->willReturn($parameter);
         $property->expects($this->exactly(2))->method('getStructure')
-            ->will($this->returnValue($structure->reveal()));
+            ->willReturn($structure->reveal());
 
         $this->pageDataProvider->resolveResourceItems(
             [
@@ -520,12 +512,12 @@ class ContentTypeTest extends TestCase
             ->willReturn(1);
 
         $property->expects($this->exactly(1))->method('getValue')
-            ->will($this->returnValue(['dataSource' => '123-123-123']));
+            ->willReturn(['dataSource' => '123-123-123']);
 
         $property->expects($this->any())->method('getParams')
-            ->will($this->returnValue(['max_per_page' => new PropertyParameter('max_per_page', '5')]));
+            ->willReturn(['max_per_page' => new PropertyParameter('max_per_page', '5')]);
         $property->expects($this->exactly(2))->method('getStructure')
-            ->will($this->returnValue($structure->reveal()));
+            ->willReturn($structure->reveal());
 
         $this->pageDataProvider->resolveResourceItems(
             [
@@ -713,11 +705,11 @@ class ContentTypeTest extends TestCase
         )->willReturn(new DataProviderResult($expectedData, $hasNextPage));
 
         $property->expects($this->exactly(1))->method('getValue')
-            ->will($this->returnValue($config));
+            ->willReturn($config);
         $property->expects($this->any())->method('getParams')
-            ->will($this->returnValue(['max_per_page' => new PropertyParameter('max_per_page', $pageSize)]));
+            ->willReturn(['max_per_page' => new PropertyParameter('max_per_page', $pageSize)]);
         $property->expects($this->exactly(2))->method('getStructure')
-            ->will($this->returnValue($structure->reveal()));
+            ->willReturn($structure->reveal());
 
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
@@ -834,9 +826,9 @@ class ContentTypeTest extends TestCase
             ->willReturn(\array_merge($config, ['page' => $page, 'hasNextPage' => $hasNextPage]));
 
         $property->expects($this->any())->method('getParams')
-            ->will($this->returnValue(['max_per_page' => new PropertyParameter('max_per_page', $pageSize)]));
+            ->willReturn(['max_per_page' => new PropertyParameter('max_per_page', $pageSize)]);
         $property->expects($this->exactly(2))->method('getStructure')
-            ->will($this->returnValue($structure->reveal()));
+            ->willReturn($structure->reveal());
 
         $webspace = new Webspace();
         $webspace->setKey('sulu_io');
@@ -887,13 +879,13 @@ class ContentTypeTest extends TestCase
         $structure = $this->prophesize(StructureInterface::class);
 
         $property->expects($this->exactly(1))->method('getValue')
-            ->will($this->returnValue($value));
+            ->willReturn($value);
 
         $property->expects($this->any())->method('getParams')
-            ->will($this->returnValue([]));
+            ->willReturn([]);
 
         $property->expects($this->any())->method('getStructure')
-            ->will($this->returnValue($structure->reveal()));
+            ->willReturn($structure->reveal());
 
         $this->pageDataProvider->resolveResourceItems(
             [
