@@ -223,7 +223,7 @@ class SnippetAdmin extends Admin
             );
         }
 
-        if ($this->activityViewBuilderFactory->hasActivityListPermission() || $this->referenceViewBuilderFactory->hasReferenceListPermission()) {
+        if (($this->activityViewBuilderFactory->hasActivityListPermission() || $this->referenceViewBuilderFactory->hasReferenceListPermission()) && $this->securityChecker->hasPermission(static::SECURITY_CONTEXT, PermissionTypes::EDIT)) {
             $insightsResourceTabViewName = SnippetAdmin::EDIT_FORM_VIEW . '.insights';
 
             $viewCollection->add(
