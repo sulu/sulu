@@ -1,5 +1,12 @@
 # Upgrade
 
+## master
+
+### Replacing compiler passes with `tagged_iterator`s
+We have replaced the manual logic of getting a list of tagged services to the Symfony `tagged_iterator` argument. This
+means that the following classes have been deprecated:
+- src/Sulu/Component/Symfony/CompilerPass/TaggedServiceCollectorCompilerPass.php
+
 ## 2.6.3
 
 ### Change locale length

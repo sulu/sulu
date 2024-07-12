@@ -24,7 +24,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
     public const SULU_ATTRIBUTE = '_sulu';
 
     /**
-     * @var RequestProcessorInterface[]
+     * @var iterable<RequestProcessorInterface>
      */
     private $requestProcessors;
 
@@ -33,9 +33,12 @@ class RequestAnalyzer implements RequestAnalyzerInterface
      */
     private $requestStack;
 
+    /**
+     * @param iterable<RequestProcessorInterface> $requestProcessors
+     */
     public function __construct(
         RequestStack $requestStack,
-        array $requestProcessors
+        iterable $requestProcessors
     ) {
         $this->requestStack = $requestStack;
         $this->requestProcessors = $requestProcessors;
