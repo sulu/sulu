@@ -307,7 +307,7 @@ test('Rel value should be transformed correctly', () => {
 
     externalLinkOverlay.find('Toggler').prop('onChange')(true);
     externalLinkOverlay.update();
-    expect(relChangeSpy).toBeCalledWith('noopener noreferrer nofollow');
+    expect(relChangeSpy).toBeCalledWith('noopener noreferrer nofollow noindex');
 
     externalLinkOverlay.find('Toggler').prop('onChange')(false);
     externalLinkOverlay.update();

@@ -147,6 +147,31 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
         }
     };
 
+    handleRelNoIndexChange = (noIndex: boolean) => {
+        const {
+            onRelChange,
+            rel,
+        } = this.props;
+
+        if (!onRelChange) {
+            return;
+        }
+
+        let rels = (rel || '').toLowerCase().trim().split(' ').map((v) => v.trim()).filter((v) => !!v);
+
+        if (noIndex && !rels.includes('noindex')) {
+            rels = [...rels, 'nofollow'];
+        } else if (!noIndex && rels.includes('noindex')) {
+            rels = rels.filter((v) => v !== 'noindex');
+        }
+
+        const newRel = rels.join(' ') || undefined;
+
+        if (rel !== newRel) {
+            onRelChange(newRel);
+        }
+    };
+
     @computed get isRelNoFollow(): boolean {
         const {
             rel,
@@ -157,6 +182,18 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
         }
 
         return rel.toLowerCase().includes('nofollow');
+    }
+
+    @computed get isRelNoIndex(): boolean {
+        const {
+            rel,
+        } = this.props;
+
+        if (!rel) {
+            return false;
+        }
+
+        return rel.toLowerCase().includes('noindex');
     }
 
     render() {
@@ -234,6 +271,14 @@ class ExternalLinkTypeOverlay extends React.Component<LinkTypeOverlayProps> {
                         && <Form.Field>
                             <Toggler checked={this.isRelNoFollow} onChange={this.handleRelNoFollowChange}>
                                 {translate('sulu_admin.no_follow')}
+                            </Toggler>
+                        </Form.Field>
+                    }
+
+                    {onRelChange
+                        && <Form.Field>
+                            <Toggler checked={this.isRelNoIndex} onChange={this.handleRelNoIndexChange}>
+                                {translate('sulu_admin.no_index')}
                             </Toggler>
                         </Form.Field>
                     }

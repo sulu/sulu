@@ -294,7 +294,7 @@ class PortalInformationRequestProcessorTest extends TestCase
                 [
                     'redirect' => null,
                     'resource_locator_prefix' => '/test',
-                    'resource_locator' => '/path/to/test',
+                    'resource_locator' => '/path/to/test.min',
                     'portal_url' => 'sulu.lo/test',
                     'format' => 'css',
                 ],
