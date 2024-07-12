@@ -48,8 +48,8 @@ class RouteDefaultsProvider implements RouteDefaultsProviderInterface
     }
 
     /**
-    * @param string $entityClass
-    */
+     * @param string $entityClass
+     */
     private function getDefaultProvider($entityClass)
     {
         if (\array_key_exists($entityClass, $this->defaultsProviderMap)) {
