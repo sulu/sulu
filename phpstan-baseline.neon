@@ -9127,7 +9127,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$message on mixed\\.$#"
-			count: 12
+			count: 5
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -9338,6 +9338,11 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, mixed given\\.$#"
 			count: 2
+			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$object of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertObjectHasProperty\\(\\) expects object, mixed given\\.$#"
+			count: 7
 			path: src/Sulu/Bundle/ContactBundle/Tests/Functional/Controller/AccountControllerTest.php
 
 		-
@@ -15801,11 +15806,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
-			message: "#^Cannot access property \\$message on mixed\\.$#"
-			count: 3
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
-
-		-
 			message: "#^Cannot access property \\$page on mixed\\.$#"
 			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
@@ -15943,6 +15943,11 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, mixed given\\.$#"
 			count: 1
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$object of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertObjectHasProperty\\(\\) expects object, mixed given\\.$#"
+			count: 3
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/CollectionControllerTest.php
 
 		-
@@ -16171,11 +16176,6 @@ parameters:
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
 		-
-			message: "#^Cannot access property \\$message on mixed\\.$#"
-			count: 2
-			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
-
-		-
 			message: "#^Cannot access property \\$name on mixed\\.$#"
 			count: 6
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
@@ -16292,6 +16292,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$haystack of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertCount\\(\\) expects Countable\\|iterable, mixed given\\.$#"
+			count: 2
+			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$object of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertObjectHasProperty\\(\\) expects object, mixed given\\.$#"
 			count: 2
 			path: src/Sulu/Bundle/MediaBundle/Tests/Functional/Controller/MediaControllerTest.php
 
@@ -30472,7 +30477,7 @@ parameters:
 
 		-
 			message: "#^Cannot access property \\$message on mixed\\.$#"
-			count: 5
+			count: 4
 			path: src/Sulu/Bundle/TagBundle/Tests/Functional/Controller/TagControllerTest.php
 
 		-
@@ -30518,6 +30523,11 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
 			count: 19
+			path: src/Sulu/Bundle/TagBundle/Tests/Functional/Controller/TagControllerTest.php
+
+		-
+			message: "#^Parameter \\#2 \\$object of method PHPUnit\\\\Framework\\\\Assert\\:\\:assertObjectHasProperty\\(\\) expects object, mixed given\\.$#"
+			count: 1
 			path: src/Sulu/Bundle/TagBundle/Tests/Functional/Controller/TagControllerTest.php
 
 		-

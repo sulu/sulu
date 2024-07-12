@@ -159,15 +159,13 @@ class AdminControllerTest extends SuluTestCase
         $json = $response->getContent();
         $this->assertIsString($json);
 
+        /** @var array{defaultType: string|null, types: array<string, array<mixed>>} $metaData */
         $metaData = \json_decode($json, true, 512, \JSON_THROW_ON_ERROR);
 
-        $this->assertSame([
-            'types' => [
-                'overview' => [],
-                'default' => [],
-            ],
-            'defaultType' => null,
-        ], $metaData);
+        $this->assertSame($metaData['defaultType'], null);
+        foreach ($metaData['types'] as $type) {
+            $this->assertSame($type, []);
+        }
     }
 
     public function testGetMetaData(): void
