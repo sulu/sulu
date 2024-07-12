@@ -91,9 +91,8 @@ class PortalInformationRequestProcessor implements RequestProcessorInterface
         // extract file and extension info
         $pathParts = \explode('/', $path);
         $fileInfo = \explode('.', \array_pop($pathParts));
-        $pathInfo = \implode('.', array_slice($fileInfo, 0, -1));
 
-        $path = \rtrim(\implode('/', $pathParts), '/') . '/' . $pathInfo;
+        $path = \rtrim(\implode('/', $pathParts), '/') . '/' . $fileInfo[0];
         $formatResult = null;
         if (\count($fileInfo) > 1) {
             $formatResult = \end($fileInfo);
