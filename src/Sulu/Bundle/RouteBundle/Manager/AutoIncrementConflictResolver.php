@@ -16,14 +16,8 @@ use Sulu\Bundle\RouteBundle\Model\RouteInterface;
 
 class AutoIncrementConflictResolver implements ConflictResolverInterface
 {
-    /**
-     * @var RouteRepositoryInterface
-     */
-    private $routeRepository;
-
-    public function __construct(RouteRepositoryInterface $routeRepository)
+    public function __construct(private RouteRepositoryInterface $routeRepository)
     {
-        $this->routeRepository = $routeRepository;
     }
 
     public function resolve(RouteInterface $route)

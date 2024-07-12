@@ -39,36 +39,12 @@ final class PageTrashItemHandler implements
     RestoreTrashItemHandlerInterface,
     RestoreConfigurationProviderInterface
 {
-    /**
-     * @var TrashItemRepositoryInterface
-     */
-    private $trashItemRepository;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $documentInspector;
-
-    /**
-     * @var DocumentDomainEventCollectorInterface
-     */
-    private $documentDomainEventCollector;
-
     public function __construct(
-        TrashItemRepositoryInterface $trashItemRepository,
-        DocumentManagerInterface $documentManager,
-        DocumentInspector $documentInspector,
-        DocumentDomainEventCollectorInterface $documentDomainEventCollector,
+        private TrashItemRepositoryInterface $trashItemRepository,
+        private DocumentManagerInterface $documentManager,
+        private DocumentInspector $documentInspector,
+        private DocumentDomainEventCollectorInterface $documentDomainEventCollector,
     ) {
-        $this->trashItemRepository = $trashItemRepository;
-        $this->documentManager = $documentManager;
-        $this->documentInspector = $documentInspector;
-        $this->documentDomainEventCollector = $documentDomainEventCollector;
     }
 
     /**

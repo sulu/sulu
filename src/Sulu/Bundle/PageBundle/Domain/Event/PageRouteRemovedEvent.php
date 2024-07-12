@@ -20,45 +20,14 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 
 class PageRouteRemovedEvent extends DomainEvent
 {
-    /**
-     * @var string
-     */
-    private $pageId;
-
-    /**
-     * @var string
-     */
-    private $webspaceKey;
-
-    /**
-     * @var string|null
-     */
-    private $pageTitle;
-
-    /**
-     * @var string|null
-     */
-    private $pageTitleLocale;
-
-    /**
-     * @var string
-     */
-    private $route;
-
     public function __construct(
-        string $pageId,
-        string $webspaceKey,
-        string $pageTitle,
-        string $pageTitleLocale,
-        string $route
+        private string $pageId,
+        private string $webspaceKey,
+        private string $pageTitle,
+        private string $pageTitleLocale,
+        private string $route
     ) {
         parent::__construct();
-
-        $this->pageId = $pageId;
-        $this->webspaceKey = $webspaceKey;
-        $this->pageTitle = $pageTitle;
-        $this->pageTitleLocale = $pageTitleLocale;
-        $this->route = $route;
     }
 
     public function getEventType(): string

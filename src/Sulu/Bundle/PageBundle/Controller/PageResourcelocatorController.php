@@ -25,24 +25,12 @@ class PageResourcelocatorController extends AbstractRestController implements Cl
 {
     use RequestParametersTrait;
 
-    /**
-     * @var ResourceLocatorRepositoryInterface
-     */
-    private $resourceLocatorRepository;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        ResourceLocatorRepositoryInterface $resourceLocatorRepository,
-        DocumentManagerInterface $documentManager
+        private ResourceLocatorRepositoryInterface $resourceLocatorRepository,
+        private DocumentManagerInterface $documentManager
     ) {
         parent::__construct($viewHandler);
-        $this->resourceLocatorRepository = $resourceLocatorRepository;
-        $this->documentManager = $documentManager;
     }
 
     /**

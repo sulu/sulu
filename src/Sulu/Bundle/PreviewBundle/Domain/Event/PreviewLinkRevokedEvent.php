@@ -15,34 +15,13 @@ use Sulu\Bundle\ActivityBundle\Domain\Event\DomainEvent;
 
 class PreviewLinkRevokedEvent extends DomainEvent
 {
-    /**
-     * @var string
-     */
-    private $resourceKey;
-
-    /**
-     * @var string
-     */
-    private $resourceId;
-
-    /**
-     * @var string
-     */
-    private $link;
-
-    /**
-     * @var string|null
-     */
-    private $securityContext;
-
-    public function __construct(string $resourceKey, string $resourceId, string $link, ?string $securityContext)
-    {
+    public function __construct(
+        private string $resourceKey,
+        private string $resourceId,
+        private string $link,
+        private ?string $securityContext,
+    ) {
         parent::__construct();
-
-        $this->resourceKey = $resourceKey;
-        $this->resourceId = $resourceId;
-        $this->link = $link;
-        $this->securityContext = $securityContext;
     }
 
     public function getEventType(): string

@@ -20,15 +20,7 @@ use Psr\Cache\CacheItemPoolInterface;
  */
 class PreviewCache
 {
-    /**
-     * @var CacheItemPoolInterface
-     */
-    private $cache;
-
-    /**
-     * @param CacheItemPoolInterface|Cache $cache
-     */
-    public function __construct($cache)
+    public function __construct(private CacheItemPoolInterface|Cache $cache)
     {
         if ($cache instanceof Cache) {
             @trigger_deprecation(
@@ -39,19 +31,6 @@ class PreviewCache
                 CacheItemPoolInterface::class
             );
         }
-
-        if (!$cache instanceof Cache && !$cache instanceof CacheItemPoolInterface) {
-            throw new \RuntimeException(
-                \sprintf(
-                    'The $cache need to be an instance of "%s" or "%s" but got "%s".',
-                    CacheItemPoolInterface::class,
-                    Cache::class,
-                    \get_class($cache)
-                )
-            );
-        }
-
-        $this->cache = $cache;
     }
 
     public function delete(string $id): void

@@ -44,14 +44,14 @@ class AppCache extends SuluHttpCache implements KernelInterface
         $this->kernel->registerContainerConfiguration($loader);
     }
 
-    public function boot()
+    public function boot(): void
     {
-        return $this->kernel->boot();
+        $this->kernel->boot();
     }
 
-    public function shutdown()
+    public function shutdown(): void
     {
-        return $this->kernel->shutdown();
+        $this->kernel->shutdown();
     }
 
     public function getBundles(): array

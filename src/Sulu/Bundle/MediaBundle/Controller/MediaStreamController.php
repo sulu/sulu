@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Controller;
 
 use Sulu\Bundle\MediaBundle\Admin\MediaAdmin;
 use Sulu\Bundle\MediaBundle\Entity\Collection;
+use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
@@ -69,7 +70,7 @@ class MediaStreamController
                 $mediaProperties['fileName']
             );
         } catch (ImageProxyException $e) {
-            throw new NotFoundHttpException('Image create error. Code: ' . $e->getCode());
+            throw new NotFoundHttpException('Image create error. Code: ' . $e->getCode(), $e);
         }
     }
 
@@ -86,6 +87,7 @@ class MediaStreamController
             }
 
             $version = $request->get('v', null);
+            $version = \is_numeric($version) ? ((int) $version) : null;
             $noCount = $request->get('no-count', false);
 
             $fileVersion = $this->getFileVersion($id, $version);
@@ -121,7 +123,7 @@ class MediaStreamController
 
             return $response;
         } catch (MediaException $e) {
-            throw new NotFoundHttpException('File not found: ' . $e->getCode() . ' ' . $e->getMessage());
+            throw new NotFoundHttpException('File not found: ' . $e->getCode() . ' ' . $e->getMessage(), $e);
         }
     }
 
@@ -197,7 +199,7 @@ class MediaStreamController
 
     /**
      * @param int $id
-     * @param int $version
+     * @param int|null $version
      *
      * @return FileVersion|null
      *
@@ -205,24 +207,24 @@ class MediaStreamController
      */
     protected function getFileVersion($id, $version)
     {
-        /** @var MediaInterface $mediaEntity */
-        $mediaEntity = $this->mediaRepository->findMediaByIdForRendering($id, null);
+        /** @var MediaInterface|null $mediaEntity */
+        $mediaEntity = $this->mediaRepository->findMediaByIdForRendering($id, null, $version);
 
         if (!$mediaEntity) {
             return null;
         }
 
-        $file = $mediaEntity->getFiles()[0];
+        $file = $mediaEntity->getFiles()[0] ?? null;
 
         if (!$file) {
             return null;
         }
 
         if (!$version) {
-            $version = $mediaEntity->getFiles()[0]->getVersion();
+            $version = $file->getVersion();
         }
 
-        $fileVersion = $file->getFileVersion((int) $version);
+        $fileVersion = $file->getFileVersion($version);
 
         if (!$fileVersion) {
             throw new FileVersionNotFoundException($id, $version);

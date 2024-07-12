@@ -60,21 +60,6 @@ use Webmozart\Assert\Assert;
 class DomainEventSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var DocumentDomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var PropertyEncoder
-     */
-    private $propertyEncoder;
-
-    /**
      * @var array<array<string, mixed>>
      */
     private $eventsToBeDispatchedAfterFlush = [];
@@ -95,13 +80,10 @@ class DomainEventSubscriber implements EventSubscriberInterface
     private $moveEventsWithPreviousParentDocument = [];
 
     public function __construct(
-        DocumentDomainEventCollectorInterface $domainEventCollector,
-        DocumentManagerInterface $documentManager,
-        PropertyEncoder $propertyEncoder
+        private DocumentDomainEventCollectorInterface $domainEventCollector,
+        private DocumentManagerInterface $documentManager,
+        private PropertyEncoder $propertyEncoder,
     ) {
-        $this->domainEventCollector = $domainEventCollector;
-        $this->documentManager = $documentManager;
-        $this->propertyEncoder = $propertyEncoder;
     }
 
     /**

@@ -21,14 +21,8 @@ use Sulu\Component\Webspace\Analyzer\RequestAnalyzerInterface;
  */
 class HitListener
 {
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    public function __construct(RequestAnalyzerInterface $requestAnalyzer)
+    public function __construct(private RequestAnalyzerInterface $requestAnalyzer)
     {
-        $this->requestAnalyzer = $requestAnalyzer;
     }
 
     /**

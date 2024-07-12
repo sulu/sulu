@@ -17,20 +17,10 @@ namespace Sulu\Bundle\PageBundle\Teaser\Provider;
 class ProviderNotFoundException extends \Exception
 {
     /**
-     * @var string
-     */
-    private $name;
-
-    /**
-     * @var string[]
-     */
-    private $available;
-
-    /**
      * @param string $name
      * @param string[] $available
      */
-    public function __construct($name, array $available)
+    public function __construct(private $name, private array $available)
     {
         parent::__construct(
             \sprintf(
@@ -39,9 +29,6 @@ class ProviderNotFoundException extends \Exception
                 \implode('", "', $available)
             )
         );
-
-        $this->name = $name;
-        $this->available = $available;
     }
 
     /**

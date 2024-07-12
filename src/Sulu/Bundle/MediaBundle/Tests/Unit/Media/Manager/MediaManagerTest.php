@@ -194,9 +194,12 @@ class MediaManagerTest extends TestCase
     }
 
     /**
-     * @dataProvider provideGetByIds
+     * @param int[] $ids
+     * @param Media[] $media
+     * @param Media[] $result
      */
-    public function testGetByIds($ids, $user, $permissions, $media, $result): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideGetByIds')]
+    public function testGetByIds(array $ids, ?SuluUserInterface $user, ?int $permissions, array $media, array $result): void
     {
         /** @var TokenInterface|ObjectProphecy $token */
         $token = $this->prophesize(TokenInterface::class);
@@ -341,10 +344,8 @@ class MediaManagerTest extends TestCase
         $this->mediaManager->delete(1, true);
     }
 
-    /**
-     * @dataProvider provideSpecialCharacterFileName
-     */
-    public function testSpecialCharacterFileName($fileName, $cleanUpArgument, $cleanUpResult, $extension): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSpecialCharacterFileName')]
+    public function testSpecialCharacterFileName(string $fileName, string $cleanUpArgument, string $cleanUpResult, string $extension): void
     {
         /** @var UploadedFile|ObjectProphecy $uploadedFile */
         $uploadedFile = $this->prophesize(UploadedFile::class)->willBeConstructedWith([__DIR__ . \DIRECTORY_SEPARATOR . 'test.txt', 1, null, null, 1, true]);
@@ -373,10 +374,8 @@ class MediaManagerTest extends TestCase
         $this->assertEquals($fileName, $media->getName());
     }
 
-    /**
-     * @dataProvider provideSpecialCharacterUrl
-     */
-    public function testSpecialCharacterUrl($id, $filename, $version, $expected): void
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSpecialCharacterUrl')]
+    public function testSpecialCharacterUrl(int $id, string $filename, int $version, string $expected): void
     {
         $this->assertEquals($expected, $this->mediaManager->getUrl($id, $filename, $version));
     }
@@ -520,11 +519,20 @@ class MediaManagerTest extends TestCase
         $this->assertSame(['key' => 'value'], $media->getProperties());
     }
 
-    public function provideGetByIds()
+    /**
+     * @return iterable<array{
+     *     0: int[],
+     *     1: User|null,
+     *     2: int|null,
+     *     3: Media[],
+     *     4: Media[],
+     * }>
+     */
+    public static function provideGetByIds(): iterable
     {
-        $media1 = $this->createMedia(1);
-        $media2 = $this->createMedia(2);
-        $media3 = $this->createMedia(3);
+        $media1 = static::createMedia(1);
+        $media2 = static::createMedia(2);
+        $media3 = static::createMedia(3);
 
         $user = new User();
 
@@ -535,6 +543,14 @@ class MediaManagerTest extends TestCase
         ];
     }
 
+    /**
+     * @return iterable<array{
+     *     0: string,
+     *     1: string,
+     *     2: string,
+     *     3: string
+     * }>
+     */
     public static function provideSpecialCharacterFileName()
     {
         return [
@@ -543,6 +559,14 @@ class MediaManagerTest extends TestCase
         ];
     }
 
+    /**
+     * @return iterable<array{
+     *     0: int,
+     *     1: string,
+     *     2: int,
+     *     3: string
+     * }>
+     */
     public static function provideSpecialCharacterUrl()
     {
         return [
@@ -552,7 +576,7 @@ class MediaManagerTest extends TestCase
         ];
     }
 
-    protected function createMedia($id)
+    protected static function createMedia(int $id): Media
     {
         $media = new Media();
         self::setPrivateProperty($media, 'id', $id);

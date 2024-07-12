@@ -21,18 +21,12 @@ use Twig\TwigFunction;
 class ExportTwigExtension extends AbstractExtension
 {
     /**
-     * @var ExportManagerInterface
-     */
-    private $exportManager;
-
-    /**
      * @var int
      */
     private $counter = 0;
 
-    public function __construct(ExportManagerInterface $exportManager)
+    public function __construct(private ExportManagerInterface $exportManager)
     {
-        $this->exportManager = $exportManager;
     }
 
     /**

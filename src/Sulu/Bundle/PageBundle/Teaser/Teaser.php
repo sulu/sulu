@@ -17,51 +17,6 @@ namespace Sulu\Bundle\PageBundle\Teaser;
 class Teaser
 {
     /**
-     * @var string|int
-     */
-    private $id;
-
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @var string
-     */
-    private $title;
-
-    /**
-     * @var string
-     */
-    private $description;
-
-    /**
-     * @var string
-     */
-    private $moreText;
-
-    /**
-     * @var int
-     */
-    private $mediaId;
-
-    /**
-     * @var string
-     */
-    private $url;
-
-    /**
-     * @var array
-     */
-    private $attributes;
-
-    /**
      * @param int|string $id
      * @param string $type
      * @param string $locale
@@ -72,17 +27,17 @@ class Teaser
      * @param int $mediaId
      * @param array $attributes
      */
-    public function __construct($id, $type, $locale, $title, $description, $moreText, $url, $mediaId, $attributes = [])
-    {
-        $this->id = $id;
-        $this->type = $type;
-        $this->locale = $locale;
-        $this->title = $title;
-        $this->description = $description;
-        $this->moreText = $moreText;
-        $this->url = $url;
-        $this->mediaId = $mediaId;
-        $this->attributes = $attributes;
+    public function __construct(
+        private $id,
+        private $type,
+        private $locale,
+        private $title,
+        private $description,
+        private $moreText,
+        private $url,
+        private $mediaId,
+        private $attributes = [],
+    ) {
     }
 
     /**

@@ -21,40 +21,15 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 class PageTranslationCopiedEvent extends DomainEvent
 {
     /**
-     * @var BasePageDocument
-     */
-    private $pageDocument;
-
-    /**
-     * @var string
-     */
-    private $locale;
-
-    /**
-     * @var string
-     */
-    private $sourceLocale;
-
-    /**
-     * @var mixed[]
-     */
-    private $payload;
-
-    /**
      * @param mixed[] $payload
      */
     public function __construct(
-        BasePageDocument $pageDocument,
-        string $locale,
-        string $sourceLocale,
-        array $payload
+        private BasePageDocument $pageDocument,
+        private string $locale,
+        private string $sourceLocale,
+        private array $payload
     ) {
         parent::__construct();
-
-        $this->pageDocument = $pageDocument;
-        $this->locale = $locale;
-        $this->sourceLocale = $sourceLocale;
-        $this->payload = $payload;
     }
 
     public function getPageDocument(): BasePageDocument

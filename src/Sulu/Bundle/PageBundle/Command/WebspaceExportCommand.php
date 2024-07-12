@@ -23,16 +23,9 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 #[AsCommand(name: 'sulu:webspaces:export', description: 'Export webspace page translations from given language into xliff file for translating into a new language.')]
 class WebspaceExportCommand extends Command
 {
-    /**
-     * @var WebspaceExportInterface
-     */
-    private $webspaceExporter;
-
-    public function __construct(WebspaceExportInterface $webspaceExporter)
+    public function __construct(private WebspaceExportInterface $webspaceExporter)
     {
         parent::__construct();
-
-        $this->webspaceExporter = $webspaceExporter;
     }
 
     protected function configure()

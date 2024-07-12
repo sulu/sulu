@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 class WebspaceTestCase extends TestCase
 {
-    protected function getResourceDirectory()
+    protected function getResourceDirectory(): string
     {
         return __DIR__ . '/../../../../../../tests/Resources';
     }

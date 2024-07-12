@@ -129,9 +129,7 @@ class SortUtilsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideSortObjects
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideSortObjects')]
     public function testSortObjects($data, $methodName, $direction, $checkField, $expectedOrder): void
     {
         $accessor = PropertyAccess::createPropertyAccessor();
@@ -174,8 +172,6 @@ class SortUtilsTest extends TestCase
         $result = SortUtils::sortLocaleAware($array, 'de');
 
         if (!\class_exists(\Collator::class)) {
-            $this->addWarning('Could not test sorting with \\Collator, because intl extension is not loaded');
-
             $this->assertSame(['A', 'D', 'E', 'M', 'Ä', 'Ê'], $result);
         } else {
             $this->assertSame(['A', 'Ä', 'D', 'E', 'Ê', 'M'], $result);
@@ -196,8 +192,6 @@ class SortUtilsTest extends TestCase
         $result = SortUtils::sortLocaleAware($array, 'de', fn ($item) => $item['value']);
 
         if (!\class_exists(\Collator::class)) {
-            $this->addWarning('Could not test sorting with \\Collator, because intl extension is not loaded');
-
             $this->assertSame([
                 ['value' => 'A'],
                 ['value' => 'D'],

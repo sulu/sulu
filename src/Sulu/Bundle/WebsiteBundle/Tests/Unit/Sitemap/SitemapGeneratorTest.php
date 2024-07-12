@@ -167,7 +167,7 @@ class SitemapGeneratorTest extends SuluTestCase
         $this->webspaceManager
             ->expects($this->any())
             ->method('findWebspaceByKey')
-            ->will($this->returnValue($this->webspace));
+            ->willReturn($this->webspace);
     }
 
     public function getExtensionCallback()

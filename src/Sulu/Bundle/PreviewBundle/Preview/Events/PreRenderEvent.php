@@ -19,14 +19,8 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 class PreRenderEvent extends Event
 {
-    /**
-     * @var RequestAttributes
-     */
-    private $requestAttributes;
-
-    public function __construct(RequestAttributes $requestAttributes)
+    public function __construct(private RequestAttributes $requestAttributes)
     {
-        $this->requestAttributes = $requestAttributes;
     }
 
     /**

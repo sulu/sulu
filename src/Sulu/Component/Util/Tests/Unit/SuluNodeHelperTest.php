@@ -102,16 +102,16 @@ class SuluNodeHelperTest extends TestCase
         ] as $propertyName => $propertyValue) {
             $this->{'property' . $propertyIndex}->expects($this->any())
                 ->method('getName')
-                ->will($this->returnValue($propertyName));
+                ->willReturn($propertyName);
             $this->{'property' . $propertyIndex}->expects($this->any())
                 ->method('getValue')
-                ->will($this->returnValue($propertyValue));
+                ->willReturn($propertyValue);
             ++$propertyIndex;
         }
 
         $this->node->expects($this->any())
             ->method('getProperties')
-            ->will($this->returnValue(new \ArrayIterator([
+            ->willReturn(new \ArrayIterator([
                 $this->property1,
                 $this->property2,
                 $this->property3,
@@ -119,7 +119,7 @@ class SuluNodeHelperTest extends TestCase
                 $this->property5,
                 $this->property6,
                 $this->property7,
-            ])));
+            ]));
 
         $this->helper = new SuluNodeHelper(
             $this->session,
@@ -164,9 +164,7 @@ class SuluNodeHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideExtractWebspaceFromPath
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideExtractWebspaceFromPath')]
     public function testExtractWebspaceFromPath($path, $expected): void
     {
         $res = $this->helper->extractWebspaceFromPath($path);
@@ -186,9 +184,7 @@ class SuluNodeHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideExtractSnippetTypeFromPath
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideExtractSnippetTypeFromPath')]
     public function testExtractSnippetTypeFromPath($path, $expected, $valid = true): void
     {
         if (false === $valid) {
@@ -209,15 +205,13 @@ class SuluNodeHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideGetStructureTypeForNode
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideGetStructureTypeForNode')]
     public function testGetStructureTypeForNode($nodeType, $expected): void
     {
         $this->node->expects($this->any())
             ->method('getPropertyValueWithDefault')
             ->with('jcr:mixinTypes', [])
-            ->will($this->returnValue([$nodeType]));
+            ->willReturn([$nodeType]);
 
         $this->assertEquals($expected, $this->helper->getStructureTypeForNode($this->node));
     }
@@ -233,15 +227,13 @@ class SuluNodeHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideHasSuluNodeType
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideHasSuluNodeType')]
     public function testHasSuluNodeType($nodeTypes, $expected): void
     {
         $this->node->expects($this->any())
             ->method('getPropertyValueWithDefault')
             ->with('jcr:mixinTypes', [])
-            ->will($this->returnValue(['sulu:snippet']));
+            ->willReturn(['sulu:snippet']);
 
         $this->assertEquals($expected, $this->helper->hasSuluNodeType($this->node, $nodeTypes));
     }
@@ -252,17 +244,17 @@ class SuluNodeHelperTest extends TestCase
             ${'node' . $i} = $this->getMockBuilder(Node::class)->disableOriginalConstructor()->getMock();
             ${'node' . $i}->expects($this->any())
                 ->method('getPath')
-                ->will($this->returnValue('/foobar/foobar-' . $i));
+                ->willReturn('/foobar/foobar-' . $i);
         }
         $iterator = new \ArrayIterator([
             $node1, $node2, $node3,
         ]);
         $node2->expects($this->any())
             ->method('getParent')
-            ->will($this->returnValue($this->node));
+            ->willReturn($this->node);
         $this->node->expects($this->any())
             ->method('getNodes')
-            ->will($this->returnValue($iterator));
+            ->willReturn($iterator);
 
         $res = $this->helper->getNextNode($node2);
         $this->assertSame($node3->getPath(), $res->getPath());
@@ -277,12 +269,12 @@ class SuluNodeHelperTest extends TestCase
         $baseSnippetNode = $this->getMockBuilder(Node::class)->disableOriginalConstructor()->getMock();
         $baseSnippetNode->expects($this->any())
             ->method('getIdentifier')
-            ->will($this->returnValue('some-uuid'));
+            ->willReturn('some-uuid');
 
         $this->session->expects($this->any())
             ->method('getNode')
             ->with('/cmf/snippets/snippet')
-            ->will($this->returnValue($baseSnippetNode));
+            ->willReturn($baseSnippetNode);
 
         $this->assertEquals('some-uuid', $this->helper->getBaseSnippetUuid('snippet'));
     }

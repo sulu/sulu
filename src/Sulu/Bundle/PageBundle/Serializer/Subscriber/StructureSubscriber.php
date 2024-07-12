@@ -28,14 +28,8 @@ use Sulu\Component\Content\Metadata\StructureMetadata;
  */
 class StructureSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    public function __construct(DocumentInspector $inspector)
+    public function __construct(private DocumentInspector $inspector)
     {
-        $this->inspector = $inspector;
     }
 
     public static function getSubscribedEvents()

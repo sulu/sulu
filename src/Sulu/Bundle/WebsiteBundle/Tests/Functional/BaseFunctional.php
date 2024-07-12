@@ -58,16 +58,33 @@ class BaseFunctional extends SuluTestCase
         $this->domainRepository = $domainRepository;
     }
 
+    /**
+     * @param array{
+     *     title?: string,
+     *     type?: string,
+     *     content?: mixed,
+     *     allDomains?: bool,
+     * } $data
+     */
     protected function create(string $webspaceKey, array $data): AnalyticsInterface
     {
-        $entity = $this->setData($this->analyticsRepository->createNew(), $webspaceKey, $data);
+        $entity = $this->setAnalyticsData($this->analyticsRepository->createNew(), $webspaceKey, $data);
         $this->entityManager->persist($entity);
         $this->entityManager->flush();
 
         return $entity;
     }
 
-    protected function setData(AnalyticsInterface $analytics, string $webspaceKey, array $data): AnalyticsInterface
+    /**
+     * @param array{
+     *     title?: string,
+     *     type?: string,
+     *     content?: mixed,
+     *     allDomains?: bool,
+     *     domains?: array<array{}>,
+     * } $data
+     */
+    protected function setAnalyticsData(AnalyticsInterface $analytics, string $webspaceKey, array $data): AnalyticsInterface
     {
         $analytics->setTitle($this->getValue($data, 'title'));
         $analytics->setType($this->getValue($data, 'type'));
@@ -88,6 +105,11 @@ class BaseFunctional extends SuluTestCase
     /**
      * Returns domain.
      * If the domain does not exists this function creates a new one.
+     *
+     * @param array{
+     *     url: string,
+     *     environment: string,
+     * } $domain
      *
      * @return Domain
      */
@@ -111,10 +133,8 @@ class BaseFunctional extends SuluTestCase
     /**
      * Returns property of data with given name.
      * If this property does not exists this function returns given default.
-     *
-     * @param string $name
      */
-    protected function getValue(array $data, $name, $default = null)
+    protected function getValue(array $data, string $name, $default = null)
     {
         if (!\array_key_exists($name, $data)) {
             return $default;

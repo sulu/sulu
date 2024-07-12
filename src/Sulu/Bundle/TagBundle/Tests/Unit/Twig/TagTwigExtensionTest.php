@@ -52,9 +52,7 @@ class TagTwigExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('getProvider')]
     public function testGetTags($tagData): void
     {
         $tags = [];
@@ -94,9 +92,7 @@ class TagTwigExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider appendProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('appendProvider')]
     public function testAppendTagUrl($tagsParameter, $url, $tagsString, $expected): void
     {
         $tag = ['name' => 'Test'];
@@ -137,9 +133,7 @@ class TagTwigExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider setProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('setProvider')]
     public function testSetTagUrl($tagsParameter, $url, $tagsString, $expected): void
     {
         $tag = ['name' => 'Test'];
@@ -180,9 +174,7 @@ class TagTwigExtensionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider clearProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('clearProvider')]
     public function testClearTagUrl($tagsParameter, $url, $tagsString): void
     {
         $tagManager = $this->prophesize(TagManagerInterface::class);

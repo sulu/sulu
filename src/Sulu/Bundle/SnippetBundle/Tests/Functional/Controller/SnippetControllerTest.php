@@ -79,9 +79,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->loadFixtures();
     }
 
-    /**
-     * @dataProvider provideGet
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideGet')]
     public function testGet($locale, $expected): void
     {
         $this->client->jsonRequest('GET', '/api/snippets/' . $this->hotel1->getUuid() . '?locale=' . $locale);
@@ -264,9 +262,7 @@ class SnippetControllerTest extends SuluTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideIndex
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideIndex')]
     public function testIndex($params, $expectedResultCount): void
     {
         $params = \array_merge([
@@ -332,9 +328,7 @@ class SnippetControllerTest extends SuluTestCase
         ];
     }
 
-    /**
-     * @dataProvider providePost
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providePost')]
     public function testPost($params, $data): void
     {
         $params = \array_merge([
@@ -370,9 +364,7 @@ class SnippetControllerTest extends SuluTestCase
         $this->assertNotNull($activity);
     }
 
-    /**
-     * @dataProvider providePost
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('providePost')]
     public function testPostPublished($params, $data): void
     {
         $params = \array_merge([

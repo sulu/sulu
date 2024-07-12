@@ -21,45 +21,14 @@ use Sulu\Component\Content\Document\Behavior\SecurityBehavior;
 
 class PageCopiedEvent extends DomainEvent
 {
-    /**
-     * @var PageDocument
-     */
-    private $pageDocument;
-
-    /**
-     * @var string
-     */
-    private $sourcePageId;
-
-    /**
-     * @var string
-     */
-    private $sourcePageWebspaceKey;
-
-    /**
-     * @var string|null
-     */
-    private $sourcePageTitle;
-
-    /**
-     * @var string|null
-     */
-    private $sourcePageTitleLocale;
-
     public function __construct(
-        PageDocument $pageDocument,
-        string $sourcePageId,
-        string $sourcePageWebspaceKey,
-        ?string $sourcePageTitle,
-        ?string $sourcePageTitleLocale
+        private PageDocument $pageDocument,
+        private string $sourcePageId,
+        private string $sourcePageWebspaceKey,
+        private ?string $sourcePageTitle,
+        private ?string $sourcePageTitleLocale
     ) {
         parent::__construct();
-
-        $this->pageDocument = $pageDocument;
-        $this->sourcePageId = $sourcePageId;
-        $this->sourcePageWebspaceKey = $sourcePageWebspaceKey;
-        $this->sourcePageTitle = $sourcePageTitle;
-        $this->sourcePageTitleLocale = $sourcePageTitleLocale;
     }
 
     public function getPageDocument(): PageDocument

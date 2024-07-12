@@ -95,9 +95,7 @@ class TimestampableSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideOnPreUpdate
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideOnPreUpdate')]
     public function testOnPreUpdate($created): void
     {
         $entity = $this->timestampableObject->reveal();

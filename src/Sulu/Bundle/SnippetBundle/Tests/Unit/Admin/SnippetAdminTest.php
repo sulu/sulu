@@ -76,9 +76,7 @@ class SnippetAdminTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideConfigureViews
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideConfigureViews')]
     public function testConfigureViews($locales): void
     {
         $snippetAdmin = new SnippetAdmin(

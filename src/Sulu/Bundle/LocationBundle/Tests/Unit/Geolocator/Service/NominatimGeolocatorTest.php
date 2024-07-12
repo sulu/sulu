@@ -45,9 +45,8 @@ class NominatimGeolocatorTest extends TestCase
 
     /**
      * Test if BC is maintained and guzzle client still works.
-     *
-     * @dataProvider provideLocate
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideLocate')]
     public function testGuzzleLocate($query, $expectedCount, $expectationMap): void
     {
         $fixtureName = __DIR__ . '/responses/' . \md5($query) . '.json';
@@ -71,9 +70,7 @@ class NominatimGeolocatorTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider provideLocate
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provideLocate')]
     public function testLocate($query, $expectedCount, $expectationMap): void
     {
         $fixtureName = __DIR__ . '/responses/' . \md5($query) . '.json';

@@ -17,20 +17,10 @@ namespace Sulu\Bundle\RouteBundle\Exception;
 class MissingClassMappingConfigurationException extends \Exception
 {
     /**
-     * @var string
-     */
-    private $className;
-
-    /**
-     * @var string[]
-     */
-    private $available;
-
-    /**
      * @param string $className
      * @param string[] $available
      */
-    public function __construct($className, array $available)
+    public function __construct(private $className, private array $available)
     {
         parent::__construct(
             \sprintf(
@@ -39,8 +29,6 @@ class MissingClassMappingConfigurationException extends \Exception
                 \implode('", "', $available)
             )
         );
-        $this->className = $className;
-        $this->available = $available;
     }
 
     /**

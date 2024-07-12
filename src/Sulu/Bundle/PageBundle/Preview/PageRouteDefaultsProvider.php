@@ -27,29 +27,11 @@ use Sulu\Component\DocumentManager\DocumentInspector;
  */
 class PageRouteDefaultsProvider implements RouteDefaultsProviderInterface
 {
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $structureMetadataFactory;
-
-    /**
-     * @var DocumentInspector
-     */
-    private $inspector;
-
-    /**
-     * @var StructureManagerInterface
-     */
-    private $structureManager;
-
     public function __construct(
-        StructureMetadataFactoryInterface $structureMetadataFactory,
-        DocumentInspector $inspector,
-        StructureManagerInterface $structureManager
+        private StructureMetadataFactoryInterface $structureMetadataFactory,
+        private DocumentInspector $inspector,
+        private StructureManagerInterface $structureManager,
     ) {
-        $this->structureMetadataFactory = $structureMetadataFactory;
-        $this->inspector = $inspector;
-        $this->structureManager = $structureManager;
     }
 
     /**

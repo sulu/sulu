@@ -72,9 +72,7 @@ class DoctrineWhereExpressionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider nullProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('nullProvider')]
     public function testGetStatementNullValue($comparator, $expected): void
     {
         $fieldDescriptor = new DoctrineFieldDescriptor('name', 'name', self::$entityName);
@@ -111,9 +109,7 @@ class DoctrineWhereExpressionTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider andOrProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('andOrProvider')]
     public function testGetStatementAndOr($comparator): void
     {
         $value = [1, 2, 3];

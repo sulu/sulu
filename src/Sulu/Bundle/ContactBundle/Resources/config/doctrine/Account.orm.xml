@@ -86,9 +86,6 @@
                     <join-column name="idCategories" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
                 </inverse-join-columns>
             </join-table>
-            <order-by>
-                <order-by-field name="id" direction="ASC"/>
-            </order-by>
         </many-to-many>
 
         <many-to-many field="medias" target-entity="Sulu\Bundle\MediaBundle\Entity\MediaInterface">
@@ -100,9 +97,6 @@
                     <join-column name="idMedias" referenced-column-name="id" on-delete="CASCADE" nullable="false"/>
                 </inverse-join-columns>
             </join-table>
-            <order-by>
-                <order-by-field name="id" direction="ASC"/>
-            </order-by>
         </many-to-many>
 
         <many-to-many field="urls" target-entity="Sulu\Bundle\ContactBundle\Entity\Url" inversed-by="accounts">
@@ -117,9 +111,6 @@
                     <join-column name="idUrls" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
-            <order-by>
-                <order-by-field name="id" direction="ASC"/>
-            </order-by>
         </many-to-many>
         <many-to-many field="phones" target-entity="Sulu\Bundle\ContactBundle\Entity\Phone" inversed-by="accounts">
             <cascade>
@@ -133,9 +124,6 @@
                     <join-column name="idPhones" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
-            <order-by>
-                <order-by-field name="id" direction="ASC"/>
-            </order-by>
         </many-to-many>
         <many-to-many field="emails" target-entity="Sulu\Bundle\ContactBundle\Entity\Email" inversed-by="accounts">
             <cascade>
@@ -149,9 +137,6 @@
                     <join-column name="idEmails" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
-            <order-by>
-                <order-by-field name="id" direction="ASC"/>
-            </order-by>
         </many-to-many>
         <many-to-many field="notes" target-entity="Sulu\Bundle\ContactBundle\Entity\Note" inversed-by="accounts">
             <cascade>
@@ -165,9 +150,6 @@
                     <join-column name="idNotes" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
-            <order-by>
-                <order-by-field name="id" direction="ASC"/>
-            </order-by>
         </many-to-many>
         <many-to-many field="faxes" target-entity="Sulu\Bundle\ContactBundle\Entity\Fax" inversed-by="accounts">
             <cascade>
@@ -181,9 +163,6 @@
                     <join-column name="idFaxes" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
-            <order-by>
-                <order-by-field name="id" direction="ASC"/>
-            </order-by>
         </many-to-many>
         <many-to-many field="socialMediaProfiles"
                       target-entity="Sulu\Bundle\ContactBundle\Entity\SocialMediaProfile"
@@ -199,9 +178,6 @@
                     <join-column name="idSocialMediaProfiles" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
-            <order-by>
-                <order-by-field name="id" direction="ASC"/>
-            </order-by>
         </many-to-many>
         <many-to-many field="bankAccounts" target-entity="Sulu\Bundle\ContactBundle\Entity\BankAccount" inversed-by="accounts">
             <cascade>
@@ -215,9 +191,6 @@
                     <join-column name="idBankAccounts" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
-            <order-by>
-                <order-by-field name="id" direction="ASC"/>
-            </order-by>
         </many-to-many>
         <many-to-many field="tags" target-entity="Sulu\Bundle\TagBundle\Tag\TagInterface">
             <join-table name="co_account_tags">
@@ -228,9 +201,6 @@
                     <join-column name="idTags" referenced-column-name="id" on-delete="CASCADE"/>
                 </inverse-join-columns>
             </join-table>
-            <order-by>
-                <order-by-field name="name" direction="ASC"/>
-            </order-by>
         </many-to-many>
         <gedmo:tree type="nested"/>
     </mapped-superclass>

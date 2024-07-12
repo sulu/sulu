@@ -39,38 +39,14 @@ class VersionController extends AbstractRestController implements
 {
     use RequestParametersTrait;
 
-    /**
-     * @var ListRestHelperInterface
-     */
-    private $listRestHelper;
-
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var RequestAnalyzerInterface
-     */
-    private $requestAnalyzer;
-
-    /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        ListRestHelperInterface $listRestHelper,
-        UserRepositoryInterface $userRepository,
-        DocumentManagerInterface $documentManager,
-        RequestAnalyzerInterface $requestAnalyzer
+        private ListRestHelperInterface $listRestHelper,
+        private UserRepositoryInterface $userRepository,
+        private DocumentManagerInterface $documentManager,
+        private RequestAnalyzerInterface $requestAnalyzer
     ) {
         parent::__construct($viewHandler);
-        $this->listRestHelper = $listRestHelper;
-        $this->userRepository = $userRepository;
-        $this->documentManager = $documentManager;
-        $this->requestAnalyzer = $requestAnalyzer;
     }
 
     /**

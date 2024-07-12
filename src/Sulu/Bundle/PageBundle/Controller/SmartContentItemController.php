@@ -31,25 +31,13 @@ class SmartContentItemController extends AbstractRestController
 {
     use RequestParametersTrait;
 
-    /**
-     * @var TagManagerInterface
-     */
-    private $tagManager;
-
-    /**
-     * @var DataProviderPoolInterface
-     */
-    private $dataProviderPool;
-
     public function __construct(
         ViewHandlerInterface $viewHandler,
-        TagManagerInterface $tagManager,
-        DataProviderPoolInterface $dataProviderPool,
+        private TagManagerInterface $tagManager,
+        private DataProviderPoolInterface $dataProviderPool,
         ?TokenStorageInterface $tokenStorage = null
     ) {
         parent::__construct($viewHandler, $tokenStorage);
-        $this->tagManager = $tagManager;
-        $this->dataProviderPool = $dataProviderPool;
     }
 
     /**

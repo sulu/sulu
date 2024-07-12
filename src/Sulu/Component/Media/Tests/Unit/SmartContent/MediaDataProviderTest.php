@@ -262,9 +262,7 @@ class MediaDataProviderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider dataItemsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('dataItemsDataProvider')]
     public function testResolveDataItems($filters, $limit, $page, $pageSize, $repositoryResult, $hasNextPage, $items): void
     {
         $this->dataProviderRepository
@@ -370,9 +368,7 @@ class MediaDataProviderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider resourceItemsDataProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('resourceItemsDataProvider')]
     public function testResolveResourceItems(
         $filters,
         $limit,

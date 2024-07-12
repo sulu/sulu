@@ -60,9 +60,7 @@ class OrderByTraitTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider orderByProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('orderByProvider')]
     public function testAddOrderBy($alias, $orderBy, $expectedOrderBy): void
     {
         if (0 === \count($expectedOrderBy)) {

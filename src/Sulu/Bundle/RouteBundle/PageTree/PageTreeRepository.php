@@ -31,36 +31,12 @@ class PageTreeRepository implements PageTreeUpdaterInterface, PageTreeMoverInter
 
     public const TAG_NAME = 'sulu_route.route_path';
 
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    protected $metadataFactory;
-
-    /**
-     * @var PropertyEncoder
-     */
-    protected $propertyEncoder;
-
-    /**
-     * @var DocumentInspector
-     */
-    protected $documentInspector;
-
     public function __construct(
-        DocumentManagerInterface $documentManager,
-        StructureMetadataFactoryInterface $metadataFactory,
-        PropertyEncoder $propertyEncoder,
-        DocumentInspector $documentInspector
+        private DocumentManagerInterface $documentManager,
+        protected StructureMetadataFactoryInterface $metadataFactory,
+        protected PropertyEncoder $propertyEncoder,
+        protected DocumentInspector $documentInspector
     ) {
-        $this->documentManager = $documentManager;
-        $this->metadataFactory = $metadataFactory;
-        $this->propertyEncoder = $propertyEncoder;
-        $this->documentInspector = $documentInspector;
     }
 
     public function update(BasePageDocument $parentDocument)

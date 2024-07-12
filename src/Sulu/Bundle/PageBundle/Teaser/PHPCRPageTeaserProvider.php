@@ -26,53 +26,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PHPCRPageTeaserProvider implements TeaserProviderInterface
 {
     /**
-     * @var ContentQueryExecutorInterface
-     */
-    private $contentQueryExecutor;
-
-    /**
-     * @var ContentQueryBuilderInterface
-     */
-    private $contentQueryBuilder;
-
-    /**
-     * @var StructureMetadataFactoryInterface
-     */
-    private $structureMetadataFactory;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var bool
-     */
-    private $showDrafts;
-
-    /**
-     * @var array<string, int>
-     */
-    private $permissions;
-
-    /**
      * @param bool $showDrafts Parameter "sulu_document_manager.show_drafts"
      * @param array<string, int> $permissions Parameter "sulu_security.permissions"
      */
     public function __construct(
-        ContentQueryExecutorInterface $contentQueryExecutor,
-        ContentQueryBuilderInterface $contentQueryBuilder,
-        StructureMetadataFactoryInterface $structureMetadataFactory,
-        TranslatorInterface $translator,
-        bool $showDrafts,
-        array $permissions
+        private ContentQueryExecutorInterface $contentQueryExecutor,
+        private ContentQueryBuilderInterface $contentQueryBuilder,
+        private StructureMetadataFactoryInterface $structureMetadataFactory,
+        private TranslatorInterface $translator,
+        private bool $showDrafts,
+        private array $permissions,
     ) {
-        $this->contentQueryExecutor = $contentQueryExecutor;
-        $this->contentQueryBuilder = $contentQueryBuilder;
-        $this->structureMetadataFactory = $structureMetadataFactory;
-        $this->translator = $translator;
-        $this->showDrafts = $showDrafts;
-        $this->permissions = $permissions;
     }
 
     public function getConfiguration(): TeaserConfiguration
