@@ -86,19 +86,33 @@ class ResourceLocatorStrategyTest extends TestCase
         $this->documentManager = $this->prophesize(DocumentManagerInterface::class);
         $this->resourceLocatorGenerator = $this->prophesize(ResourceLocatorGeneratorInterface::class);
 
-        $this->resourceLocatorStrategy = $this->getMockForAbstractClass(
-            ResourceLocatorStrategy::class,
-            [
-                $this->mapper->reveal(),
-                $this->cleaner->reveal(),
-                $this->structureManager->reveal(),
-                $this->contentTypeManager->reveal(),
-                $this->nodeHelper->reveal(),
-                $this->documentInspector->reveal(),
-                $this->documentManager->reveal(),
-                $this->resourceLocatorGenerator->reveal(),
-            ]
-        );
+        $this->resourceLocatorStrategy = new class(
+            $this->mapper->reveal(),
+            $this->cleaner->reveal(),
+            $this->structureManager->reveal(),
+            $this->contentTypeManager->reveal(),
+            $this->nodeHelper->reveal(),
+            $this->documentInspector->reveal(),
+            $this->documentManager->reveal(),
+            $this->resourceLocatorGenerator->reveal(),
+        ) extends ResourceLocatorStrategy {
+            /**
+             * Returns the child part from the given resource segment.
+             *
+             * @param string $resourceSegment
+             *
+             * @return string
+             */
+            public function getChildPart($resourceSegment)
+            {
+                return '';
+            }
+
+            public function getInputType(): string
+            {
+                return '';
+            }
+        };
     }
 
     public function testGenerate(): void

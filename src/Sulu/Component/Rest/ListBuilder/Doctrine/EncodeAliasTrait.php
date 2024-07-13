@@ -16,6 +16,9 @@ namespace Sulu\Component\Rest\ListBuilder\Doctrine;
  */
 trait EncodeAliasTrait
 {
+    /**
+     * @param array<string>|string $value
+     */
     protected function encodeAlias($value)
     {
         return \preg_replace_callback(

@@ -41256,11 +41256,6 @@ parameters:
 			path: src/Sulu/Component/Content/Tests/Unit/Rlp/Strategy/TreeLeafEditStrategyTest.php
 
 		-
-			message: "#^Call to an undefined method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:expects\\(\\)\\.$#"
-			count: 1
-			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/Orm/BaseDataProviderTest.php
-
-		-
 			message: "#^Call to method PHPUnit\\\\Framework\\\\Assert\\:\\:assertNull\\(\\) with Sulu\\\\Component\\\\SmartContent\\\\DatasourceItemInterface will always evaluate to false\\.$#"
 			count: 1
 			path: src/Sulu/Component/Content/Tests/Unit/SmartContent/Orm/BaseDataProviderTest.php
@@ -46901,11 +46896,6 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder\\:\\:encodeAlias\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\DoctrineListBuilder\\:\\:execute\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/DoctrineListBuilder.php
@@ -47051,22 +47041,12 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineDescriptor.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineDescriptor\\:\\:encodeAlias\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineDescriptor.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineFieldDescriptor\\:\\:__construct\\(\\) has parameter \\$joins with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineFieldDescriptor.php
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineFieldDescriptor\\:\\:encodeAlias\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineFieldDescriptor.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineFieldDescriptor\\:\\:encodeAlias\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineFieldDescriptor.php
 
@@ -47086,17 +47066,7 @@ parameters:
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineIdentityFieldDescriptor.php
 
 		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineIdentityFieldDescriptor\\:\\:encodeAlias\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineIdentityFieldDescriptor.php
-
-		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineJoinDescriptor\\:\\:encodeAlias\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineJoinDescriptor.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\FieldDescriptor\\\\DoctrineJoinDescriptor\\:\\:encodeAlias\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/ListBuilder/Doctrine/FieldDescriptor/DoctrineJoinDescriptor.php
 
@@ -48326,27 +48296,12 @@ parameters:
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/DoctrineListBuilderTest.php
 
 		-
+			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\ListBuilder\\\\Doctrine\\\\EncodeAliasTraitTest\\:\\:encodeAlias\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/EncodeAliasTraitTest.php
+
+		-
 			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\ListBuilder\\\\Doctrine\\\\EncodeAliasTraitTest\\:\\:encodeAliasDataProvider\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/EncodeAliasTraitTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\ListBuilder\\\\Doctrine\\\\EncodeAliasTraitTest\\:\\:testEncodeAlias\\(\\) has parameter \\$expected with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/EncodeAliasTraitTest.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\ListBuilder\\\\Doctrine\\\\EncodeAliasTraitTest\\:\\:testEncodeAlias\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/EncodeAliasTraitTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\ListBuilder\\\\Doctrine\\\\EncodeAliasTraitTest\\:\\:\\$encodeAlias \\(Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\EncodeAliasTrait\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
-			count: 1
-			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/EncodeAliasTraitTest.php
-
-		-
-			message: "#^Property Sulu\\\\Component\\\\Rest\\\\Tests\\\\Unit\\\\ListBuilder\\\\Doctrine\\\\EncodeAliasTraitTest\\:\\:\\$encodeAlias has invalid type Sulu\\\\Component\\\\Rest\\\\ListBuilder\\\\Doctrine\\\\EncodeAliasTrait\\.$#"
 			count: 1
 			path: src/Sulu/Component/Rest/Tests/Unit/ListBuilder/Doctrine/EncodeAliasTraitTest.php
 
@@ -49927,11 +49882,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveFilters\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Component\\\\SmartContent\\\\Orm\\\\BaseDataProvider\\:\\:resolveFilters\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Component/SmartContent/Orm/BaseDataProvider.php
 

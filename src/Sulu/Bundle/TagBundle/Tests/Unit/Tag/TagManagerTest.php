@@ -13,20 +13,23 @@ namespace Sulu\Bundle\TagBundle\Tests\Unit\Tag;
 
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
+use Prophecy\Prophecy\ObjectProphecy;
 use Sulu\Bundle\ActivityBundle\Application\Collector\DomainEventCollectorInterface;
 use Sulu\Bundle\TagBundle\Entity\Tag;
 use Sulu\Bundle\TagBundle\Tag\TagManager;
 use Sulu\Bundle\TagBundle\Tag\TagManagerInterface;
 use Sulu\Bundle\TagBundle\Tag\TagRepositoryInterface;
 use Sulu\Bundle\TrashBundle\Application\TrashManager\TrashManagerInterface;
-use Sulu\Component\Rest\ListBuilder\Metadata\FieldDescriptorFactoryInterface;
 use Sulu\Component\Security\Authentication\UserRepositoryInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class TagManagerTest extends TestCase
 {
+    use ProphecyTrait;
+
     /**
-     * @var TagRepositoryInterface
+     * @var ObjectProphecy<TagRepositoryInterface>
      */
     protected $tagRepository;
 
@@ -36,27 +39,22 @@ class TagManagerTest extends TestCase
     protected $userRepository;
 
     /**
-     * @var FieldDescriptorFactoryInterface
-     */
-    protected $fieldDescriptorFactory;
-
-    /**
-     * @var ObjectManager
+     * @var ObjectProphecy<ObjectManager>
      */
     protected $em;
 
     /**
-     * @var EventDispatcherInterface
+     * @var ObjectProphecy<EventDispatcherInterface>
      */
     protected $eventDispatcher;
 
     /**
-     * @var DomainEventCollectorInterface
+     * @var ObjectProphecy<DomainEventCollectorInterface>
      */
     private $domainEventCollector;
 
     /**
-     * @var TrashManagerInterface
+     * @var ObjectProphecy<TrashManagerInterface>
      */
     private $trashManager;
 
@@ -67,77 +65,33 @@ class TagManagerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->tagRepository = $this->getMockForAbstractClass(
-            TagRepositoryInterface::class,
-            [],
-            '',
-            false,
-            true,
-            true,
-            ['findTagByName']
-        );
+        $this->em = $this->prophesize(ObjectManager::class);
 
-        $this->fieldDescriptorFactory = $this->getMockForAbstractClass(
-            FieldDescriptorFactoryInterface::class,
-            [],
-            '',
-            false
-        );
+        $this->eventDispatcher = $this->prophesize(EventDispatcherInterface::class);
 
-        $this->em = $this->getMockForAbstractClass(
-            ObjectManager::class,
-            [],
-            '',
-            false
-        );
+        $this->domainEventCollector = $this->prophesize(DomainEventCollectorInterface::class);
 
-        $this->eventDispatcher = $this->getMockForAbstractClass(
-            EventDispatcherInterface::class,
-            [],
-            '',
-            false
-        );
+        $this->trashManager = $this->prophesize(TrashManagerInterface::class);
 
-        $this->domainEventCollector = $this->getMockForAbstractClass(
-            DomainEventCollectorInterface::class,
-            [],
-            '',
-            false
-        );
-
-        $this->trashManager = $this->getMockForAbstractClass(
-            TrashManagerInterface::class,
-            [],
-            '',
-            false
-        );
-
-        $this->tagRepository->expects($this->any())->method('findTagByName')->willReturnMap([
-            ['Tag1', (new Tag())->setId(1)],
-            ['Tag2', (new Tag())->setId(2)],
-            ['Tag3', (new Tag())->setId(3)],
-        ]
-        );
-
-        $this->tagRepository->expects($this->any())->method('findTagById')->willReturnMap([
-            [1, (new Tag())->setName('Tag1')],
-            [2, (new Tag())->setName('Tag2')],
-            [3, (new Tag())->setName('Tag3')],
-        ]
-        );
+        $this->tagRepository = $this->prophesize(TagRepositoryInterface::class);
 
         $this->tagManager = new TagManager(
-            $this->tagRepository,
-            $this->em,
-            $this->eventDispatcher,
-            $this->domainEventCollector,
-            $this->trashManager
+            $this->tagRepository->reveal(),
+            $this->em->reveal(),
+            $this->eventDispatcher->reveal(),
+            $this->domainEventCollector->reveal(),
+            $this->trashManager->reveal()
         );
     }
 
     public function testResolveTagNames(): void
     {
         $tagNames = ['Tag1', 'Tag2', 'Tag3', 'InvalidTag'];
+
+        $this->tagRepository->findTagByName('Tag1')->shouldBeCalled()->willReturn((new Tag())->setId(1));
+        $this->tagRepository->findTagByName('Tag2')->shouldBeCalled()->willReturn((new Tag())->setId(2));
+        $this->tagRepository->findTagByName('Tag3')->shouldBeCalled()->willReturn((new Tag())->setId(3));
+        $this->tagRepository->findTagByName('InvalidTag')->shouldBeCalled()->willReturn(null);
 
         $tagIds = $this->tagManager->resolveTagNames($tagNames);
 
@@ -146,6 +100,11 @@ class TagManagerTest extends TestCase
 
     public function testResolveTagIds(): void
     {
+        $this->tagRepository->findTagById(1)->shouldBeCalled()->willReturn((new Tag())->setName('Tag1'));
+        $this->tagRepository->findTagById(2)->shouldBeCalled()->willReturn((new Tag())->setName('Tag2'));
+        $this->tagRepository->findTagById(3)->shouldBeCalled()->willReturn((new Tag())->setName('Tag3'));
+        $this->tagRepository->findTagById(99)->shouldBeCalled()->willReturn(null);
+
         $tagIds = [1, 2, 3, 99];
 
         $tagNames = $this->tagManager->resolveTagIds($tagIds);
