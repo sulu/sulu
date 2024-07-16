@@ -92,7 +92,6 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
         $queryBuilder
             ->addSelect('type')
             ->addSelect('file')
-            ->addSelect('tag')
             ->addSelect('fileVersion')
             ->addSelect('fileVersionMeta')
             ->addSelect('fileVersionDefaultMeta')
@@ -105,9 +104,6 @@ class MediaDataProviderRepository implements DataProviderRepositoryInterface
             ->leftJoin($alias . '.type', 'type')
             ->leftJoin($alias . '.files', 'file')
             ->leftJoin('file.fileVersions', 'fileVersion', 'WITH', 'fileVersion.version = file.version')
-            ->leftJoin('fileVersion.tags', 'tag')
-            ->leftJoin('fileVersion.categories', 'categories')
-            ->leftJoin('categories.translations', 'categoryTranslations')
             ->leftJoin(
                 'fileVersion.meta',
                 'fileVersionMeta',

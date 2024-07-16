@@ -355,28 +355,6 @@ class AccountRepository extends NestedTreeRepository implements DataProviderRepo
      */
     protected function appendJoins(QueryBuilder $queryBuilder, $alias, $locale)
     {
-        $queryBuilder->addSelect('emails')
-            ->addSelect('emailType')
-            ->addSelect('phones')
-            ->addSelect('phoneType')
-            ->addSelect('faxes')
-            ->addSelect('faxType')
-            ->addSelect('urls')
-            ->addSelect('urlType')
-            ->addSelect('tags')
-            ->addSelect('categories')
-            ->addSelect('translations')
-            ->leftJoin($alias . '.emails', 'emails')
-            ->leftJoin('emails.emailType', 'emailType')
-            ->leftJoin($alias . '.phones', 'phones')
-            ->leftJoin('phones.phoneType', 'phoneType')
-            ->leftJoin($alias . '.faxes', 'faxes')
-            ->leftJoin('faxes.faxType', 'faxType')
-            ->leftJoin($alias . '.urls', 'urls')
-            ->leftJoin('urls.urlType', 'urlType')
-            ->leftJoin($alias . '.tags', 'tags')
-            ->leftJoin($alias . '.categories', 'categories')
-            ->leftJoin('categories.translations', 'translations');
     }
 
     public function createNew()
