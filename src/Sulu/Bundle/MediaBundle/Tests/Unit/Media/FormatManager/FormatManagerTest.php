@@ -124,20 +124,25 @@ class FormatManagerTest extends TestCase
         $file->addFileVersion($fileVersion);
         $media->addFile($file);
 
-        $this->mediaRepository->findMediaByIdForRendering(1, '640x480')->willReturn($media);
+        $this->mediaRepository->findMediaByIdForRendering(1, '640x480', 1)
+            ->willReturn($media)
+            ->shouldBeCalled();
 
         $this->imageConverter->getSupportedOutputImageFormats(Argument::any())->willReturn(['jpg', 'png', 'gif'])->shouldBeCalled();
-        $this->imageConverter->convert($fileVersion, '640x480', 'gif')->willReturn("\x47\x49\x46\x38image-content");
+        $this->imageConverter->convert($fileVersion, '640x480', 'gif')->willReturn("\x47\x49\x46\x38image-content")->shouldBeCalled();
 
         $this->formatCache->save(
             "\x47\x49\x46\x38image-content",
             1,
             'dummy.gif',
             '640x480'
-        )->willReturn(null);
+        )
+            ->willReturn(null)
+            ->shouldBeCalled();
 
-        $result = $this->formatManager->returnImage(1, '640x480', 'test.gif');
+        $result = $this->formatManager->returnImage(1, '640x480', 'dummy.gif', 1);
 
+        $this->assertSame(200, $result->getStatusCode());
         $this->assertEquals("\x47\x49\x46\x38image-content", $result->getContent());
         $this->assertEquals(200, $result->getStatusCode());
     }
@@ -160,19 +165,28 @@ class FormatManagerTest extends TestCase
         $file->addFileVersion($fileVersion);
         $media->addFile($file);
 
-        $this->mediaRepository->findMediaByIdForRendering(1, '640x480')->willReturn($media);
+        $this->mediaRepository->findMediaByIdForRendering(
+            1,
+            '640x480',
+            1
+        )
+            ->willReturn($media)
+            ->shouldBeCalled();
 
         $this->imageConverter->getSupportedOutputImageFormats(Argument::any())->willReturn(['jpg', 'png', 'gif'])->shouldBeCalled();
-        $this->imageConverter->convert($fileVersion, '640x480', 'jpg')->willReturn('image-content');
+        $this->imageConverter->convert($fileVersion, '640x480', 'jpg')->willReturn('image-content')->shouldBeCalled();
 
         $this->formatCache->save(
             'image-content',
             1,
             'dummy.jpg',
             '640x480'
-        )->willReturn(null);
+        )
+            ->willReturn(null)
+            ->shouldBeCalled()
+        ;
 
-        $result = $this->formatManager->returnImage(1, '640x480', 'test.jpg');
+        $result = $this->formatManager->returnImage(1, '640x480', 'dummy.jpg', 1);
 
         $this->assertEquals('image-content', $result->getContent());
         $this->assertEquals(200, $result->getStatusCode());
