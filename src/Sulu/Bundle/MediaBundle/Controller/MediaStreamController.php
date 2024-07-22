@@ -81,10 +81,11 @@ class MediaStreamController
 
     /**
      * @param int $id
+     * @param string $slug
      *
      * @return Response
      */
-    public function downloadAction(Request $request, $id)
+    public function downloadAction(Request $request, $id, $slug)
     {
         try {
             if (\ob_get_length()) {
@@ -98,7 +99,11 @@ class MediaStreamController
             $fileVersion = $this->getFileVersion($id, $version);
 
             if (!$fileVersion) {
-                return new Response(null, 404);
+                return new Response('Invalid version "' . $version . '" for media with ID "' . $id . '".', 404);
+            }
+
+            if ($fileVersion->getName() !== $slug) {
+                return new Response('Invalid file name "' . $slug . '" for media with ID "' . $id . '".', 404);
             }
 
             if ($this->securityChecker) {
