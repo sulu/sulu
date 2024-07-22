@@ -67,7 +67,6 @@ class SitemapControllerTest extends WebsiteTestCase
         $this->assertCount(1, $crawler->filterXPath('//x:urlset/x:url/x:lastmod'));
         $this->assertCount(0, $crawler->filterXPath('//x:urlset/x:url/xhtml:link'));
         $this->assertEquals('http://sulu.lo/', $crawler->filterXPath('//x:urlset/x:url[1]/x:loc[1]')->text());
-
     }
 
     public function testIndexMultipleLanguage(): void
