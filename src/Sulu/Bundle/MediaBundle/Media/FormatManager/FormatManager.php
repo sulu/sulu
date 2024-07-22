@@ -96,8 +96,6 @@ class FormatManager implements FormatManagerInterface
 
             $media = $this->mediaRepository->findMediaByIdForRendering($id, $formatKey, $version);
 
-            $fileVersion = $this->getLatestFileVersion($media);
-
             if (!$media) {
                 throw new ImageProxyMediaNotFoundException('Media was not found');
             }
@@ -121,6 +119,7 @@ class FormatManager implements FormatManagerInterface
 
             if ($fileVersion->getVersion() !== $requestedFileVersion->getVersion()) {
                 $formats = $this->getFormats($id, $fileVersion->getName(), $fileVersion->getVersion(), $fileVersion->getSubVersion(), $fileVersion->getMimeType());
+
                 $formatUrl = $formats[$formatKey . '.' . $imageFormat] ?? null;
                 if (null === $formatUrl) {
                     throw new ImageProxyMediaNotFoundException('Image format "' . $formatKey . '.' . $imageFormat . '" was not found');
