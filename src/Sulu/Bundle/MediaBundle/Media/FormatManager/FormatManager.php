@@ -76,6 +76,7 @@ class FormatManager implements FormatManagerInterface
 
     public function returnImage($id, $formatKey, $fileName /*, int<1, max>|null $version = null */)
     {
+        /** @var int|null $version */
         $version = \func_num_args() > 3 ? \func_get_arg(3) : null;
 
         if (null === $version) {
@@ -100,14 +101,16 @@ class FormatManager implements FormatManagerInterface
             }
 
             $fileVersion = $this->getLatestFileVersion($media);
-            /** @var File $file */
-            $file = $media->getFiles()[0] ?? null;
+            $version = null !== $version ? $version : $fileVersion->getVersion(); // TODO remove this line in Sulu 3.0 currently bc layer when version is not given
 
-            if (!$file) {
-                throw new ImageProxyMediaNotFoundException('File for media was not found');
+            /** @var File|null $file */
+            $file = $media->getFiles()[0] ?? null;
+            $requestedFileVersion = $file?->getFileVersion($version);
+
+            if (!$requestedFileVersion) {
+                throw new ImageProxyMediaNotFoundException('Requested FileVersion for media was not found');
             }
 
-            $requestedFileVersion = $file->getFileVersion($version);
             $requestedFileVersionImageFormatName = $this->replaceExtension($requestedFileVersion->getName(), $imageFormat);
 
             if ($requestedFileVersionImageFormatName !== $fileName) {
@@ -117,7 +120,7 @@ class FormatManager implements FormatManagerInterface
             if ($fileVersion->getVersion() !== $requestedFileVersion->getVersion()) {
                 $formats = $this->getFormats($id, $fileVersion->getName(), $fileVersion->getVersion(), $fileVersion->getSubVersion(), $fileVersion->getMimeType());
                 $formatUrl = $formats[$formatKey . '.' . $imageFormat] ?? null;
-                if (null === $formatKey) {
+                if (null === $formatUrl) {
                     throw new ImageProxyMediaNotFoundException('Image format "' . $formatKey . '.' . $imageFormat . '" was not found');
                 }
 

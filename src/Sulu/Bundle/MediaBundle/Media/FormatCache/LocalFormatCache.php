@@ -158,7 +158,7 @@ class LocalFormatCache implements FormatCacheInterface
             throw new ImageProxyInvalidUrl('The founded `id` was not a valid integer');
         }
 
-        return $id;
+        return (int) $id;
     }
 
     /**
@@ -207,7 +207,7 @@ class LocalFormatCache implements FormatCacheInterface
     protected function getFileNameFromUrl($url)
     {
         $fileNameParts = \explode('-', \basename($url), 2); // the basename is {id}-{filename}
-        $fileName = $fileNameParts[1] ?? ull;
+        $fileName = $fileNameParts[1] ?? null;
 
         if (null === $fileName) {
             throw new ImageProxyInvalidUrl('No `filename` was found in the url');
