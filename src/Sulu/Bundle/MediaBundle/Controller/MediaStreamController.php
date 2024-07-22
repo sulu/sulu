@@ -61,8 +61,8 @@ class MediaStreamController
             }
 
             $url = $request->getPathInfo();
-            // there are some projects which do not call this action with ?v=1-0 because of they didn't wanted query strings in the image urls ( unnecessary SEO mystic reasons )
-            // to not break this projects we will fallback to 1-0 if no version is given
+            // Some projects do not call this action with ?v=1-0 because they don't want query strings in the image urls ( unnecessary SEO mystic reasons )
+            // To maintain compatibility with these projects, we will fallback to version 1-0 if no version is specified.
             $version = (string) $request->query->get('v', '1-0');
             $version = (int) (\explode('-', $version)[0] ?? '1');
 
