@@ -153,7 +153,7 @@ class RequestAnalyzer implements RequestAnalyzerInterface
 
     public function getResourceLocatorPrefix()
     {
-        return $this->getAttribute('resourceLocatorPrefix');
+        return $this->getAttribute('resourceLocatorPrefix', '');
     }
 
     public function getPortalInformation()
