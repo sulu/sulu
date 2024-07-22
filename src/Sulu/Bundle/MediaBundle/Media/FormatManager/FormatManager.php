@@ -13,6 +13,7 @@ namespace Sulu\Bundle\MediaBundle\Media\FormatManager;
 
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Sulu\Bundle\MediaBundle\Entity\File;
 use Sulu\Bundle\MediaBundle\Entity\FileVersion;
 use Sulu\Bundle\MediaBundle\Entity\MediaInterface;
 use Sulu\Bundle\MediaBundle\Entity\MediaRepositoryInterface;
@@ -26,6 +27,7 @@ use Sulu\Bundle\MediaBundle\Media\FormatCache\FormatCacheInterface;
 use Sulu\Bundle\MediaBundle\Media\ImageConverter\ImageConverterInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -72,8 +74,14 @@ class FormatManager implements FormatManagerInterface
         $this->logger = $logger ?: new NullLogger();
     }
 
-    public function returnImage($id, $formatKey, $fileName)
+    public function returnImage($id, $formatKey, $fileName /*, int<1, max>|null $version = null */)
     {
+        $version = \func_num_args() > 3 ? \func_get_arg(3) : null;
+
+        if (null === $version) {
+            @trigger_deprecation('sulu/sulu', '2.5', 'The $version parameter in ' . __CLASS__ . '::' . __METHOD__ . ' is required.');
+        }
+
         $setExpireHeaders = false;
 
         try {
@@ -85,13 +93,36 @@ class FormatManager implements FormatManagerInterface
 
             $imageFormat = $info['extension'];
 
-            $media = $this->mediaRepository->findMediaByIdForRendering($id, $formatKey);
+            $media = $this->mediaRepository->findMediaByIdForRendering($id, $formatKey, $version);
 
             if (!$media) {
                 throw new ImageProxyMediaNotFoundException('Media was not found');
             }
 
             $fileVersion = $this->getLatestFileVersion($media);
+            /** @var File $file */
+            $file = $media->getFiles()[0] ?? null;
+
+            if (!$file) {
+                throw new ImageProxyMediaNotFoundException('File for media was not found');
+            }
+
+            $requestedFileVersion = $file->getFileVersion($version);
+            $requestedFileVersionImageFormatName = $this->replaceExtension($requestedFileVersion->getName(), $imageFormat);
+
+            if ($requestedFileVersionImageFormatName !== $fileName) {
+                throw new ImageProxyMediaNotFoundException('File version was not found');
+            }
+
+            if ($fileVersion->getVersion() !== $requestedFileVersion->getVersion()) {
+                $formats = $this->getFormats($id, $fileVersion->getName(), $fileVersion->getVersion(), $fileVersion->getSubVersion(), $fileVersion->getMimeType());
+                $formatUrl = $formats[$formatKey . '.' . $imageFormat] ?? null;
+                if (null === $formatKey) {
+                    throw new ImageProxyMediaNotFoundException('Image format "' . $formatKey . '.' . $imageFormat . '" was not found');
+                }
+
+                return new RedirectResponse($formatUrl, 301);
+            }
 
             $supportedImageFormats = $this->converter->getSupportedOutputImageFormats($fileVersion->getMimeType());
             if (empty($supportedImageFormats)) {

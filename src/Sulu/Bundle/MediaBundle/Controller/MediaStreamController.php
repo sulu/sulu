@@ -61,13 +61,18 @@ class MediaStreamController
             }
 
             $url = $request->getPathInfo();
+            // there are some projects which do not call this actionw ith ?v=1-0 because of they didn't wanted query strings in the image urls ( unnecessary SEO mystic reasons )
+            // to not break this projects we will fallback to 1-0 if no version is given
+            $version = (string) $request->query->get('v', '1-0');
+            $version = (int) (\explode('-', $version)[0] ?? '1');
 
             $mediaProperties = $this->formatCache->analyzedMediaUrl($url);
 
             return $this->formatManager->returnImage(
-                $mediaProperties['id'],
+                (int) $mediaProperties['id'],
                 $mediaProperties['format'],
-                $mediaProperties['fileName']
+                $mediaProperties['fileName'],
+                $version,
             );
         } catch (ImageProxyException $e) {
             throw new NotFoundHttpException('Image create error. Code: ' . $e->getCode(), $e);

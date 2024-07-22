@@ -1,5 +1,12 @@
 # Upgrade
 
+## 2.5.20
+
+### Stricter Image Format Url Handling
+
+The image formats url need a direct match of filename to get the image format returned.
+Old versions will be redirected to the new version and none direct matches return 404 now.
+
 ## 2.5.15
 
 ### Run Shadow migrations
