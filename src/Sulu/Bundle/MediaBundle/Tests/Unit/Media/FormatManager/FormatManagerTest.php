@@ -124,20 +124,25 @@ class FormatManagerTest extends TestCase
         $file->addFileVersion($fileVersion);
         $media->addFile($file);
 
-        $this->mediaRepository->findMediaByIdForRendering(1, '640x480')->willReturn($media);
+        $this->mediaRepository->findMediaByIdForRendering(1, '640x480', 1)
+            ->willReturn($media)
+            ->shouldBeCalled();
 
         $this->imageConverter->getSupportedOutputImageFormats(Argument::any())->willReturn(['jpg', 'png', 'gif'])->shouldBeCalled();
-        $this->imageConverter->convert($fileVersion, '640x480', 'gif')->willReturn("\x47\x49\x46\x38image-content");
+        $this->imageConverter->convert($fileVersion, '640x480', 'gif')->willReturn("\x47\x49\x46\x38image-content")->shouldBeCalled();
 
         $this->formatCache->save(
             "\x47\x49\x46\x38image-content",
             1,
             'dummy.gif',
             '640x480'
-        )->willReturn(null);
+        )
+            ->willReturn(null)
+            ->shouldBeCalled();
 
-        $result = $this->formatManager->returnImage(1, '640x480', 'test.gif');
+        $result = $this->formatManager->returnImage(1, '640x480', 'dummy.gif', 1);
 
+        $this->assertSame(200, $result->getStatusCode());
         $this->assertEquals("\x47\x49\x46\x38image-content", $result->getContent());
         $this->assertEquals(200, $result->getStatusCode());
     }
@@ -160,22 +165,146 @@ class FormatManagerTest extends TestCase
         $file->addFileVersion($fileVersion);
         $media->addFile($file);
 
-        $this->mediaRepository->findMediaByIdForRendering(1, '640x480')->willReturn($media);
+        $this->mediaRepository->findMediaByIdForRendering(
+            1,
+            '640x480',
+            1
+        )
+            ->willReturn($media)
+            ->shouldBeCalled();
 
         $this->imageConverter->getSupportedOutputImageFormats(Argument::any())->willReturn(['jpg', 'png', 'gif'])->shouldBeCalled();
-        $this->imageConverter->convert($fileVersion, '640x480', 'jpg')->willReturn('image-content');
+        $this->imageConverter->convert($fileVersion, '640x480', 'jpg')->willReturn('image-content')->shouldBeCalled();
 
         $this->formatCache->save(
             'image-content',
             1,
             'dummy.jpg',
             '640x480'
-        )->willReturn(null);
+        )
+            ->willReturn(null)
+            ->shouldBeCalled()
+        ;
 
-        $result = $this->formatManager->returnImage(1, '640x480', 'test.jpg');
+        $result = $this->formatManager->returnImage(1, '640x480', 'dummy.jpg', 1);
 
+        $this->assertSame(200, $result->getStatusCode());
         $this->assertEquals('image-content', $result->getContent());
         $this->assertEquals(200, $result->getStatusCode());
+    }
+
+    public function testReturnNewFileVersion(): void
+    {
+        $media = new Media();
+        $reflection = new \ReflectionClass(\get_class($media));
+        $property = $reflection->getProperty('id');
+        $property->setAccessible(true);
+        $property->setValue($media, 1);
+
+        $file = new File();
+        $file->setVersion(2);
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName('dummy.gif');
+        $fileVersion->setMimeType('image/gif');
+        $fileVersion->setStorageOptions(['a' => 'b']);
+        $file->addFileVersion($fileVersion);
+        $fileVersion2 = new FileVersion();
+        $fileVersion2->setVersion(2);
+        $fileVersion2->setName('test.gif');
+        $fileVersion2->setMimeType('image/gif');
+        $fileVersion2->setStorageOptions(['a' => 'b2']);
+        $file->addFileVersion($fileVersion2);
+        $media->addFile($file);
+
+        $this->mediaRepository->findMediaByIdForRendering(1, '640x480', 1)
+            ->willReturn($media)
+            ->shouldBeCalled();
+
+        $this->imageConverter->getSupportedOutputImageFormats(Argument::cetera())->willReturn(['jpg', 'png', 'gif'])->shouldBeCalled();
+        $this->formatCache->getMediaUrl(Argument::cetera())->will(function($args) {
+            return '/' . $args[2] . '/' . $args[0] . '-' . $args[1] . '?v=' . $args[3] . '-' . $args[4];
+        })->shouldBeCalled();
+        $this->imageConverter->convert(Argument::cetera())->shouldNotBeCalled();
+        $this->formatCache->save(Argument::cetera())->shouldNotBeCalled();
+
+        $result = $this->formatManager->returnImage(1, '640x480', 'dummy.gif', 1);
+
+        $this->assertSame(301, $result->getStatusCode());
+        $this->assertSame('/640x480/1-test.gif?v=2-0', $result->headers->get('location'));
+    }
+
+    public function testReturn404NoFileNameMatch(): void
+    {
+        $media = new Media();
+        $reflection = new \ReflectionClass(\get_class($media));
+        $property = $reflection->getProperty('id');
+        $property->setAccessible(true);
+        $property->setValue($media, 1);
+
+        $file = new File();
+        $file->setVersion(1);
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName('dummy.gif');
+        $fileVersion->setMimeType('image/gif');
+        $fileVersion->setStorageOptions(['a' => 'b']);
+        $file->addFileVersion($fileVersion);
+        $media->addFile($file);
+
+        $this->mediaRepository->findMediaByIdForRendering(1, '640x480', 1)
+            ->willReturn($media)
+            ->shouldBeCalled();
+
+        $this->imageConverter->getSupportedOutputImageFormats(Argument::cetera())->shouldNotBeCalled();
+        $this->formatCache->getMediaUrl(Argument::cetera())->shouldNotBeCalled();
+        $this->imageConverter->convert(Argument::cetera())->shouldNotBeCalled();
+        $this->formatCache->save(Argument::cetera())->shouldNotBeCalled();
+
+        $result = $this->formatManager->returnImage(1, '640x480', 'other.gif', 1);
+
+        $this->assertSame(404, $result->getStatusCode());
+    }
+
+    public function testReturnNewFileVersionWebp(): void
+    {
+        $media = new Media();
+        $reflection = new \ReflectionClass(\get_class($media));
+        $property = $reflection->getProperty('id');
+        $property->setAccessible(true);
+        $property->setValue($media, 1);
+
+        $file = new File();
+        $file->setVersion(2);
+        $fileVersion = new FileVersion();
+        $fileVersion->setVersion(1);
+        $fileVersion->setName('dummy.gif');
+        $fileVersion->setMimeType('image/gif');
+        $fileVersion->setStorageOptions(['a' => 'b']);
+        $file->addFileVersion($fileVersion);
+        $fileVersion2 = new FileVersion();
+        $fileVersion2->setVersion(2);
+        $fileVersion2->setName('test.gif');
+        $fileVersion2->setMimeType('image/gif');
+        $fileVersion2->setStorageOptions(['a' => 'b2']);
+        $file->addFileVersion($fileVersion2);
+        $media->addFile($file);
+
+        $this->mediaRepository->findMediaByIdForRendering(1, '640x480', 1)
+            ->willReturn($media)
+            ->shouldBeCalled();
+
+        $this->imageConverter->getSupportedOutputImageFormats(Argument::cetera())->willReturn(['jpg', 'png', 'gif', 'webp'])->shouldBeCalled();
+        $this->formatCache->getMediaUrl(Argument::cetera())->will(function($args) {
+            return '/' . $args[2] . '/' . $args[0] . '-' . $args[1] . '?v=' . $args[3] . '-' . $args[4];
+        })->shouldBeCalled();
+        $this->imageConverter->convert(Argument::cetera())->shouldNotBeCalled();
+        $this->formatCache->save(Argument::cetera())->shouldNotBeCalled();
+
+        $result = $this->formatManager->returnImage(1, '640x480', 'dummy.webp', 1);
+
+        $this->assertSame(301, $result->getStatusCode());
+        $this->assertSame('/640x480/1-test.webp?v=2-0', $result->headers->get('location'));
     }
 
     public function testGetFormats(): void

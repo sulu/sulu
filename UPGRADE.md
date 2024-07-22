@@ -1,5 +1,12 @@
 # Upgrade
 
+## 2.6.4
+
+### Stricter Image Format Url Handling
+
+The image formats URL requires an exact filename match to retrieve the correct image format. 
+Old versions will be redirected to the new version and any non-matching filenames will now return a 404 error.
+
 ## 2.6.3
 
 ### Change locale length
@@ -395,6 +402,13 @@ sulu_website:
 
 In the previous version the `SnippetController` would return the entire content of the snippet in the `cgetAction`. Now
 it respects the list of fields provided in the query parameter and only returns those.
+
+## 2.5.20
+
+### Stricter Image Format Url Handling
+
+The image formats URL requires an exact filename match to retrieve the correct image format. 
+Old versions will be redirected to the new version and any non-matching filenames will now return a 404 error.
 
 ## 2.5.15
 
