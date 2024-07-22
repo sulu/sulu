@@ -43,9 +43,19 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $filePath = $this->createMediaFile('test.jpg');
         $media = $this->createMedia($filePath, 'file-without-extension');
 
-        $this->client->jsonRequest('GET', $media->getUrl());
+        $this->client->request('GET', $media->getUrl());
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
+    }
+
+    public function testDownloadActionNotMatchingFileName(): void
+    {
+        $filePath = $this->createMediaFile('test.jpg');
+        $media = $this->createMedia($filePath, 'test.jpg');
+
+        $this->client->request('GET', \str_replace('test.jpg', 'other.jpg', $media->getUrl()));
+        $response = $this->client->getResponse();
+        $this->assertHttpStatusCode(404, $response);
     }
 
     public function testNotExistVersionDownloadAction(): void
@@ -53,7 +63,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $filePath = $this->createMediaFile('test.jpg');
         $media = $this->createMedia($filePath, 'file-without-extension');
 
-        $this->client->jsonRequest('GET', \str_replace('v=1', 'v=99', $media->getUrl()));
+        $this->client->request('GET', \str_replace('v=1', 'v=99', $media->getUrl()));
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(404, $response);
     }
@@ -92,7 +102,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $filePath = $this->createMediaFile('file-without-extension');
         $media = $this->createMedia($filePath, 'File without Extension');
 
-        $this->client->jsonRequest('GET', $media->getUrl());
+        $this->client->request('GET', $media->getUrl());
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
     }
@@ -102,7 +112,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $filePath = $this->createMediaFile('fitness-seasons.agency--C-&-C--Rodach,-Johannes');
         $media = $this->createMedia($filePath, 'fitness-seasons.agency--C-&-C--Rodach,-Johannes');
 
-        $this->client->jsonRequest('GET', $media->getUrl());
+        $this->client->request('GET', $media->getUrl());
         $response = $this->client->getResponse();
         $this->assertHttpStatusCode(200, $response);
 
@@ -118,7 +128,7 @@ class MediaStreamControllerTest extends WebsiteTestCase
 
     public function testGetImageActionForNonExistingMedia(): void
     {
-        $this->client->jsonRequest('GET', '/uploads/media/sulu-400x400/01/test.jpg?v=1');
+        $this->client->request('GET', '/uploads/media/sulu-400x400/01/test.jpg?v=1');
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
@@ -128,11 +138,11 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $filePath = $this->createMediaFile('test.jpg');
         $media = $this->createMedia($filePath, 'Test jpg');
 
-        $this->client->jsonRequest('GET', $media->getFormats()['small-inset']);
+        $this->client->request('GET', $media->getFormats()['small-inset']);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertSame('image/jpeg', $this->client->getResponse()->headers->get('Content-Type'));
 
-        $this->client->jsonRequest('GET', $media->getFormats()['small-inset.gif']);
+        $this->client->request('GET', $media->getFormats()['small-inset.gif']);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertSame('image/gif', $this->client->getResponse()->headers->get('Content-Type'));
     }
@@ -142,11 +152,11 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $filePath = $this->createMediaFile('test.svg', 'sulu.svg');
         $media = $this->createMedia($filePath, 'Test svg');
 
-        $this->client->jsonRequest('GET', $media->getFormats()['small-inset']);
+        $this->client->request('GET', $media->getFormats()['small-inset']);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertSame('image/svg+xml', $this->client->getResponse()->headers->get('Content-Type'));
 
-        $this->client->jsonRequest('GET', $media->getFormats()['small-inset.svg']);
+        $this->client->request('GET', $media->getFormats()['small-inset.svg']);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertSame('image/svg+xml', $this->client->getResponse()->headers->get('Content-Type'));
     }
@@ -162,14 +172,14 @@ class MediaStreamControllerTest extends WebsiteTestCase
         $filePath = $this->createMediaFile('test.svg', 'sulu.svg');
         $media = $this->createMedia($filePath, 'Test svg');
 
-        $this->client->jsonRequest('GET', $media->getFormats()['small-inset.jpg']);
+        $this->client->request('GET', $media->getFormats()['small-inset.jpg']);
         $this->assertHttpStatusCode(200, $this->client->getResponse());
         $this->assertSame('image/jpeg', $this->client->getResponse()->headers->get('Content-Type'));
     }
 
     public function testDownloadActionForNonExistingMedia(): void
     {
-        $this->client->jsonRequest('GET', '/media/999/download/test.jpg?v=1');
+        $this->client->request('GET', '/media/999/download/test.jpg?v=1');
 
         $this->assertHttpStatusCode(404, $this->client->getResponse());
     }
