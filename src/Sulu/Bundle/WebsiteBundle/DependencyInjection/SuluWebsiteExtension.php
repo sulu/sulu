@@ -98,7 +98,7 @@ class SuluWebsiteExtension extends Extension implements PrependExtensionInterfac
         );
         $container->setParameter(
             'sulu_website.sitemap.cache.lifetime',
-            $config['twig']['content']['cache_lifetime']
+            $config['twig']['sitemap']['cache_lifetime']
         );
         $container->setParameter(
             'sulu_website.sitemap.dump_dir',
