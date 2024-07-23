@@ -1,11 +1,12 @@
-sulu_category_api:
+caching_test_homepage:
     path: "/"
     defaults:
-        _controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController::templateAction
+        _controller: Sulu\Bundle\AudienceTargetingBundle\Tests\Application\Controller\TemplateController::templateAction
         _requestAnalyzer: false
         template: "empty.html.twig"
         maxAge: 60
         sharedAge: 60
+        reverseProxyTtl: 60
 
 sulu_audience_targeting:
     resource: "@SuluAudienceTargetingBundle/Resources/config/routing_website.yml"
