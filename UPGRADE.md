@@ -7,6 +7,26 @@
 The image formats URL requires an exact filename match to retrieve the correct image format. 
 Old versions will be redirected to the new version and any non-matching filenames will now return a 404 error.
 
+### The s-maxage header does not longer effect server side http caching
+
+Sulu accidently cached big media files of the image / thumbnail generator controller.
+As it was never expected that Sulu caches based on `s-maxage` behaviour instead it always did use
+its own Custom TTL Header `X-Reverse-Proxy-TTL` instead.
+The CustomTtlListener currently did unexpectly fallback to `s-maxage`
+
+An upgrade of the `friendsofsymfony/http-cache` to atleast `2.16.0` or `3.1.0` is required.
+
+```bash
+composer update friendsofsymfony/http-cache
+```
+
+For custom controllers which you currently did cache on `s-maxage` define also the `X-Reverse-Proxy-TTL`
+if you still want to cache that response in the Symfony Http Cache:
+
+```php
+$response->headers->set(SuluHttpCache::HEADER_REVERSE_PROXY_TTL, $cacheLifetime);
+```
+
 ## 2.5.15
 
 ### Run Shadow migrations
