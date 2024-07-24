@@ -239,6 +239,56 @@ class LegacyResettingControllerTest extends SuluTestCase
         $this->assertEquals($counter, $user->getPasswordResetTokenEmailsSent());
     }
 
+    public function testResetCounterAfterTokenExpiration(): void
+    {
+        $this->client->enableProfiler();
+
+        // starting counter at 1 - because user3 already has one sent email
+        $counter = 1;
+        $maxNumberEmails = $this->getContainer()->getParameter('sulu_security.reset_password.mail.token_send_limit');
+        for (; $counter < $maxNumberEmails; ++$counter) {
+            $this->client->jsonRequest('GET', '/security/reset/email', [
+                'user' => $this->users[2]->getEmail(),
+            ]);
+
+            $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+            $response = \json_decode($this->client->getResponse()->getContent());
+
+            $this->assertHttpStatusCode(204, $this->client->getResponse());
+            $this->assertEquals(null, $response);
+            $this->assertEquals(1, $mailCollector->getMessageCount());
+        }
+
+        static::ensureKernelShutdown(); // shutdown to fix lowest test with: `Error: Cannot use object of type Doctrine\ORM\EntityNotFoundException as array` when try to flush the entity manager next
+        $this->client = $this->createAuthenticatedClient();
+
+        $user = $this->em->find(
+            User::class,
+            $this->users[2]->getId(),
+        );
+
+        $user->setPasswordResetTokenExpiresAt(new \DateTime('-1 day'));
+        $this->em->flush();
+        $this->em->clear();
+
+        $this->client->jsonRequest('GET', '/security/reset/email', [
+            'user' => $user->getEmail(),
+        ]);
+
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        $response = \json_decode($this->client->getResponse()->getContent());
+        $user = $this->client->getContainer()->get('doctrine')->getManager()->find(
+            'SuluSecurityBundle:User',
+            $user->getId()
+        );
+
+        $this->assertHttpStatusCode(204, $this->client->getResponse());
+        $this->assertEquals(null, $response);
+        $this->assertEquals(1, $mailCollector->getMessageCount());
+        $this->assertEquals(1, $user->getPasswordResetTokenEmailsSent());
+        $this->assertGreaterThanOrEqual(new \DateTime(), $user->getPasswordResetTokenExpiresAt());
+    }
+
     public function testSendEmailActionWithMissingUser(): void
     {
         $this->client->enableProfiler();
