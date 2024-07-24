@@ -26242,7 +26242,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\:\\:setPasswordResetTokenEmailsSent\\(\\)\\.$#"
-			count: 2
+			count: 3
 			path: src/Sulu/Bundle/SecurityBundle/Controller/ResettingController.php
 
 		-
@@ -27447,7 +27447,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method getCollector\\(\\) on Symfony\\\\Component\\\\HttpKernel\\\\Profiler\\\\Profile\\|false\\|null\\.$#"
-			count: 9
+			count: 11
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
 
 		-
@@ -27477,7 +27477,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$json of function json_decode expects string, string\\|false given\\.$#"
-			count: 13
+			count: 15
 			path: src/Sulu/Bundle/SecurityBundle/Tests/Functional/Controller/ResettingControllerTest.php
 
 		-

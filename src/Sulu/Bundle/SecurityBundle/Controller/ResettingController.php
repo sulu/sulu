@@ -119,9 +119,21 @@ class ResettingController
         try {
             /** @var UserInterface $user */
             $user = $this->findUser($request->get('user'));
+            $maxNumberEmails = $this->tokenSendLimit;
+
+            if (new \DateTime() >= $user->getPasswordResetTokenExpiresAt()) {
+                $user->setPasswordResetTokenEmailsSent(0);
+            } elseif ($user->getPasswordResetTokenEmailsSent() === \intval($maxNumberEmails)) {
+                throw new TokenEmailsLimitReachedException($maxNumberEmails, $user);
+            }
+
             $token = $this->generateTokenForUser($user);
             $email = $this->getEmail($user);
             $this->sendTokenEmail($user, $this->getSenderAddress($request), $email, $token);
+            $user->setPasswordResetTokenEmailsSent($user->getPasswordResetTokenEmailsSent() + 1);
+
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
         } catch (\Exception $ex) {
             $this->logger->debug($ex->getMessage(), ['exception' => $ex]);
         }
@@ -328,12 +340,6 @@ class ResettingController
      */
     private function sendTokenEmail(UserInterface $user, string $from, string $to, string $token)
     {
-        $maxNumberEmails = $this->tokenSendLimit;
-
-        if (new \DateTime() < $user->getPasswordResetTokenExpiresAt() && $user->getPasswordResetTokenEmailsSent() === \intval($maxNumberEmails)) {
-            throw new TokenEmailsLimitReachedException($maxNumberEmails, $user);
-        }
-
         if ($this->mailer instanceof \Swift_Mailer) {
             $message = $this->mailer->createMessage()
                 ->setSubject($this->getSubject())
@@ -351,10 +357,6 @@ class ResettingController
 
             $this->mailer->send($message);
         }
-
-        $user->setPasswordResetTokenEmailsSent($user->getPasswordResetTokenEmailsSent() + 1);
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
     }
 
     /**
