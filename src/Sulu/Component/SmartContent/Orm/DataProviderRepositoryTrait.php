@@ -17,6 +17,8 @@ use Sulu\Component\Security\Authentication\UserInterface;
 
 /**
  * Provides basic implementation of orm DataProvider repository.
+ *
+ * @method abstract createQueryBuilder(string $alias, ?string $indexBy = null): \Doctrine\ORM\QueryBuilder;
  */
 trait DataProviderRepositoryTrait
 {
@@ -337,16 +339,6 @@ trait DataProviderRepositoryTrait
 
         return $parameter;
     }
-
-    /**
-     * Creates a new QueryBuilder instance that is prepopulated for this entity name.
-     *
-     * @param string $alias
-     * @param string $indexBy
-     *
-     * @return QueryBuilder
-     */
-    abstract public function createQueryBuilder($alias, $indexBy = null);
 
     /**
      * Append joins to query builder for "findByFilters" function.
