@@ -31166,21 +31166,6 @@ parameters:
 			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Application\\\\TrashManager\\\\TrashManager\\:\\:\\$removeTrashItemHandlerLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Application\\\\TrashManager\\\\TrashManager\\:\\:\\$restoreTrashItemHandlerLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Application\\\\TrashManager\\\\TrashManager\\:\\:\\$storeTrashItemHandlerLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/Application/TrashManager/TrashManager.php
-
-		-
 			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\Tests\\\\Application\\\\Entity\\\\TestResource\\:\\:\\$property1 is never read, only written\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/Tests/Application/Entity/TestResource.php
@@ -31272,11 +31257,6 @@ parameters:
 
 		-
 			message: "#^Method Sulu\\\\Bundle\\\\TrashBundle\\\\UserInterface\\\\Controller\\\\Admin\\\\TrashItemController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\TrashBundle\\\\UserInterface\\\\Controller\\\\Admin\\\\TrashItemController\\:\\:\\$restoreConfigurationProviderLocator with generic class Symfony\\\\Component\\\\DependencyInjection\\\\ServiceLocator does not specify its types\\: T$#"
 			count: 1
 			path: src/Sulu/Bundle/TrashBundle/UserInterface/Controller/Admin/TrashItemController.php
 
