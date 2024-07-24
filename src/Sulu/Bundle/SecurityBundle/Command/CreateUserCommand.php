@@ -36,68 +36,20 @@ class CreateUserCommand extends Command
     protected static $defaultName = 'sulu:security:user:create';
 
     /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
-
-    /**
-     * @var ContactRepositoryInterface
-     */
-    private $contactRepository;
-
-    /**
-     * @var LocalizationManagerInterface
-     */
-    private $localizationManager;
-
-    /**
-     * @var SaltGenerator
-     */
-    private $saltGenerator;
-
-    /**
-     * @var PasswordHasherFactoryInterface|EncoderFactoryInterface
-     */
-    private $passwordHasherFactory;
-
-    /**
-     * @var string[]
-     */
-    private $locales;
-
-    /**
+     * @param string[] $locales
      * @param PasswordHasherFactoryInterface|EncoderFactoryInterface $passwordHasherFactory
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
-        UserRepository $userRepository,
-        RoleRepositoryInterface $roleRepository,
-        ContactRepositoryInterface $contactRepository,
-        LocalizationManagerInterface $localizationManager,
-        SaltGenerator $saltGenerator,
-        $passwordHasherFactory,
-        array $locales
+        private EntityManagerInterface $entityManager,
+        private UserRepository $userRepository,
+        private RoleRepositoryInterface $roleRepository,
+        private ContactRepositoryInterface $contactRepository,
+        private LocalizationManagerInterface $localizationManager,
+        private SaltGenerator $saltGenerator,
+        private $passwordHasherFactory,
+        private array $locales
     ) {
         parent::__construct();
-
-        $this->entityManager = $entityManager;
-        $this->userRepository = $userRepository;
-        $this->roleRepository = $roleRepository;
-        $this->contactRepository = $contactRepository;
-        $this->localizationManager = $localizationManager;
-        $this->saltGenerator = $saltGenerator;
-        $this->passwordHasherFactory = $passwordHasherFactory;
-        $this->locales = $locales;
     }
 
     protected function configure()

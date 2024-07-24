@@ -19,16 +19,11 @@ use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
 class UsernameNotUniqueException extends SecurityException implements TranslationErrorMessageExceptionInterface
 {
     /**
-     * The username which is not unique.
-     *
-     * @var string
+     * @param string $username
      */
-    private $username;
-
-    public function __construct($username)
+    public function __construct(private $username)
     {
         parent::__construct('a username has to be unique!', 1001);
-        $this->username = $username;
     }
 
     public function getUsername()

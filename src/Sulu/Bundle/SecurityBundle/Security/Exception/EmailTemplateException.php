@@ -17,16 +17,9 @@ namespace Sulu\Bundle\SecurityBundle\Security\Exception;
 class EmailTemplateException extends SecurityException
 {
     /**
-     * @var string
-     */
-    private $template;
-
-    /**
-     * EmailTemplateException constructor.
-     *
      * @param string $template
      */
-    public function __construct($template)
+    public function __construct(private $template)
     {
         parent::__construct(\sprintf('Email template "%s" does not exist!', $template), 1008);
         $this->template = $template;

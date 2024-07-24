@@ -43,77 +43,19 @@ class UserManager implements UserManagerInterface
     use RelationTrait;
 
     /**
-     * @var UserRepositoryInterface
-     */
-    protected $userRepository;
-
-    /**
-     * @var ObjectManager
-     */
-    protected $em;
-
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
-
-    /**
-     * @var GroupRepository
-     */
-    private $groupRepository;
-
-    /**
-     * @var ContactManager
-     */
-    protected $contactManager;
-
-    /**
-     * @var SaltGenerator
-     */
-    private $saltGenerator;
-
-    /**
-     * @var PasswordHasherFactoryInterface|EncoderFactoryInterface|null
-     */
-    private $passwordHasherFactory;
-
-    /**
-     * @var DomainEventCollectorInterface
-     */
-    private $domainEventCollector;
-
-    /**
-     * @param PasswordHasherFactoryInterface|EncoderFactoryInterface|null $passwordHasherFactory
-     */
-
-    /**
-     * @var string|null
-     */
-    private $passwordPattern;
-
-    /**
      * @param PasswordHasherFactoryInterface|EncoderFactoryInterface|null $passwordHasherFactory
      */
     public function __construct(
-        ObjectManager $em,
-        $passwordHasherFactory,
-        RoleRepositoryInterface $roleRepository,
-        GroupRepository $groupRepository,
-        ContactManager $contactManager,
-        SaltGenerator $saltGenerator,
-        UserRepositoryInterface $userRepository,
-        DomainEventCollectorInterface $domainEventCollector,
-        ?string $passwordPattern = null
+        protected ObjectManager $em,
+        private $passwordHasherFactory,
+        private RoleRepositoryInterface $roleRepository,
+        private GroupRepository $groupRepository,
+        protected ContactManager $contactManager,
+        private SaltGenerator $saltGenerator,
+        protected UserRepositoryInterface $userRepository,
+        private DomainEventCollectorInterface $domainEventCollector,
+        private ?string $passwordPattern = null
     ) {
-        $this->em = $em;
-        $this->passwordHasherFactory = $passwordHasherFactory;
-        $this->roleRepository = $roleRepository;
-        $this->groupRepository = $groupRepository;
-        $this->contactManager = $contactManager;
-        $this->saltGenerator = $saltGenerator;
-        $this->userRepository = $userRepository;
-        $this->domainEventCollector = $domainEventCollector;
-        $this->passwordPattern = $passwordPattern;
     }
 
     /**

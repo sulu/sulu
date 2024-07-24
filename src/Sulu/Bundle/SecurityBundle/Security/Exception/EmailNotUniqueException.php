@@ -18,12 +18,9 @@ use Sulu\Component\Rest\Exception\TranslationErrorMessageExceptionInterface;
  */
 class EmailNotUniqueException extends SecurityException implements TranslationErrorMessageExceptionInterface
 {
-    private $email;
-
-    public function __construct($email)
+    public function __construct(private $email)
     {
-        $this->email = $email;
-        parent::__construct(\sprintf('The email "%s" is not unique!', $email), 1004);
+        parent::__construct(\sprintf('The email "%s" is not unique!', $this->email), 1004);
     }
 
     public function getEmail()

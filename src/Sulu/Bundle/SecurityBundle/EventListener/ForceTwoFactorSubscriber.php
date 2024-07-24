@@ -22,11 +22,8 @@ use Sulu\Bundle\SecurityBundle\Entity\UserTwoFactor;
  */
 class ForceTwoFactorSubscriber implements EventSubscriber
 {
-    private string $twoFactorForcePattern;
-
-    public function __construct(string $twoFactorForcePattern)
+    public function __construct(private string $twoFactorForcePattern)
     {
-        $this->twoFactorForcePattern = $twoFactorForcePattern;
     }
 
     public function getSubscribedEvents(): array

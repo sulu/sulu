@@ -27,43 +27,13 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class PermissionController implements ClassResourceInterface
 {
-    /**
-     * @var AccessControlManagerInterface
-     */
-    private $accessControlManager;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var RoleRepositoryInterface
-     */
-    private $roleRepository;
-
-    /**
-     * @var ViewHandlerInterface
-     */
-    private $viewHandler;
-
-    /**
-     * @var array
-     */
-    private $resources;
-
     public function __construct(
-        AccessControlManagerInterface $accessControlManager,
-        SecurityCheckerInterface $securityChecker,
-        RoleRepositoryInterface $roleRepository,
-        ViewHandlerInterface $viewHandler,
-        array $resources
+        private AccessControlManagerInterface $accessControlManager,
+        private SecurityCheckerInterface $securityChecker,
+        private RoleRepositoryInterface $roleRepository,
+        private ViewHandlerInterface $viewHandler,
+        private array $resources,
     ) {
-        $this->accessControlManager = $accessControlManager;
-        $this->securityChecker = $securityChecker;
-        $this->roleRepository = $roleRepository;
-        $this->viewHandler = $viewHandler;
-        $this->resources = $resources;
     }
 
     public function cgetAction(Request $request)

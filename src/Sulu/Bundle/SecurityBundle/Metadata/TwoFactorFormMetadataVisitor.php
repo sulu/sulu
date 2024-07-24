@@ -24,25 +24,13 @@ use Symfony\Component\Security\Core\Security;
 class TwoFactorFormMetadataVisitor implements FormMetadataVisitorInterface
 {
     /**
-     * @var string[]
-     */
-    private array $twoFactorMethods;
-
-    private ?string $twoFactorForcePattern;
-
-    private ?Security $security;
-
-    /**
      * @param string[] $twoFactorMethods
      */
     public function __construct(
-        array $twoFactorMethods,
-        ?string $twoFactorForcePattern,
-        ?Security $security
+        private array $twoFactorMethods,
+        private ?string $twoFactorForcePattern,
+        private ?Security $security,
     ) {
-        $this->twoFactorMethods = $twoFactorMethods;
-        $this->twoFactorForcePattern = $twoFactorForcePattern;
-        $this->security = $security;
     }
 
     public function visitFormMetadata(FormMetadata $formMetadata, string $locale, array $metadataOptions = []): void

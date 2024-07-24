@@ -19,22 +19,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class PhpcrSecuritySubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var PhpcrAccessControlProvider
-     */
-    private $phpcrAccessControlProvider;
-
-    /**
-     * @var DoctrineAccessControlProvider
-     */
-    private $doctrineAccessControlProvider;
-
     public function __construct(
-        PhpcrAccessControlProvider $phpcrAccessControlProvider,
-        DoctrineAccessControlProvider $doctrineAccessControlProvider
+        private PhpcrAccessControlProvider $phpcrAccessControlProvider,
+        private DoctrineAccessControlProvider $doctrineAccessControlProvider,
     ) {
-        $this->phpcrAccessControlProvider = $phpcrAccessControlProvider;
-        $this->doctrineAccessControlProvider = $doctrineAccessControlProvider;
     }
 
     /**
