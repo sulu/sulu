@@ -26,36 +26,12 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class StructureConverter implements ConverterInterface
 {
-    /**
-     * @var DocumentManagerInterface
-     */
-    private $documentManager;
-
-    /**
-     * @var SearchManagerInterface
-     */
-    private $searchManager;
-
-    /**
-     * @var ObjectToDocumentConverter
-     */
-    private $objectToDocumentConverter;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
     public function __construct(
-        DocumentManagerInterface $documentManager,
-        SearchManagerInterface $searchManager,
-        ObjectToDocumentConverter $objectToDocumentConverter,
-        EventDispatcherInterface $eventDispatcher
+        private DocumentManagerInterface $documentManager,
+        private SearchManagerInterface $searchManager,
+        private ObjectToDocumentConverter $objectToDocumentConverter,
+        private EventDispatcherInterface $eventDispatcher,
     ) {
-        $this->documentManager = $documentManager;
-        $this->searchManager = $searchManager;
-        $this->objectToDocumentConverter = $objectToDocumentConverter;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function convert($value, ?Document $document = null)

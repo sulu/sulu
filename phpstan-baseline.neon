@@ -25786,11 +25786,6 @@ parameters:
 			path: src/Sulu/Bundle/SearchBundle/Controller/SearchController.php
 
 		-
-			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Controller\\\\WebsiteSearchController\\:\\:__construct\\(\\) has parameter \\$indexes with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Controller/WebsiteSearchController.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Controller\\\\WebsiteSearchController\\:\\:getRequestParameter\\(\\) should return string but returns mixed\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SearchBundle/Controller/WebsiteSearchController.php
@@ -25866,16 +25861,6 @@ parameters:
 			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfiguration.php
 
 		-
-			message: "#^Property Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfiguration\\:\\:\\$contexts type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfiguration.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfiguration\\:\\:\\$securityContext \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfiguration.php
-
-		-
 			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfigurationProvider\\:\\:__construct\\(\\) has parameter \\$searchIndexes with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfigurationProvider.php
@@ -25884,26 +25869,6 @@ parameters:
 			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfigurationProvider\\:\\:getIndexConfiguration\\(\\) should return Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfiguration but empty return statement found\\.$#"
 			count: 1
 			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfigurationProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfigurationProvider\\:\\:getIndexConfigurations\\(\\) should return array\\<Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfiguration\\> but returns array\\|null\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfigurationProvider.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfigurationProvider\\:\\:\\$indexConfigurations type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfigurationProvider.php
-
-		-
-			message: "#^Property Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\IndexConfigurationProvider\\:\\:\\$searchIndexes type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/IndexConfigurationProvider.php
-
-		-
-			message: "#^Method Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\Route\\:\\:__construct\\(\\) has parameter \\$resultToRoute with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: src/Sulu/Bundle/SearchBundle/Search/Configuration/Route.php
 
 		-
 			message: "#^Property Sulu\\\\Bundle\\\\SearchBundle\\\\Search\\\\Configuration\\\\Route\\:\\:\\$name is never read, only written\\.$#"

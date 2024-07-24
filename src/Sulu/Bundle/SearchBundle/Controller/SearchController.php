@@ -27,50 +27,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SearchController
 {
-    /**
-     * @var SearchManagerInterface
-     */
-    private $searchManager;
-
-    /**
-     * @var ProviderInterface
-     */
-    private $metadataProvider;
-
-    /**
-     * @var SecurityCheckerInterface
-     */
-    private $securityChecker;
-
-    /**
-     * @var ViewHandlerInterface
-     */
-    private $viewHandler;
-
-    /**
-     * @var ListRestHelperInterface
-     */
-    private $listRestHelper;
-
-    /**
-     * @var IndexConfigurationProviderInterface
-     */
-    private $indexConfigurationProvider;
-
     public function __construct(
-        SearchManagerInterface $searchManager,
-        ProviderInterface $metadataProvider,
-        SecurityCheckerInterface $securityChecker,
-        ViewHandlerInterface $viewHandler,
-        ListRestHelperInterface $listRestHelper,
-        IndexConfigurationProviderInterface $indexConfigurationProvider
+        private SearchManagerInterface $searchManager,
+        private ProviderInterface $metadataProvider,
+        private SecurityCheckerInterface $securityChecker,
+        private ViewHandlerInterface $viewHandler,
+        private ListRestHelperInterface $listRestHelper,
+        private IndexConfigurationProviderInterface $indexConfigurationProvider,
     ) {
-        $this->searchManager = $searchManager;
-        $this->metadataProvider = $metadataProvider;
-        $this->securityChecker = $securityChecker;
-        $this->viewHandler = $viewHandler;
-        $this->listRestHelper = $listRestHelper;
-        $this->indexConfigurationProvider = $indexConfigurationProvider;
     }
 
     /**
