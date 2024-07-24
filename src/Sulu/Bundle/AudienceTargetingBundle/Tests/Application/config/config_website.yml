@@ -1,2 +1,11 @@
 framework:
     router: { resource: "%kernel.project_dir%/config/routing_website.yml" }
+
+
+services:
+    Sulu\Bundle\AudienceTargetingBundle\Tests\Application\Controller\TemplateController:
+        public: true
+        arguments:
+            - '@twig'
+        tags:
+            - { name: controller.service_arguments }
